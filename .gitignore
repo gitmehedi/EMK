@@ -1,0 +1,9 @@
+.project
+.pydevproject
+.settings/org.eclipse.core.resources.prefs
+*.pyc
+.pyc
+aeroolib/build/lib.linux-i686-2.7/aeroolib/*
+aeroolib/build/*
+*.egg
+/aeroolib/
