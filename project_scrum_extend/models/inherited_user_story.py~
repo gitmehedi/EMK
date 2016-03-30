@@ -1,0 +1,41 @@
+from openerp import api, fields, models
+import re
+
+class InheritedResBuyer(models.Model):
+	_inherit = 'res.partner'
+
+	name = fields.Char(string='Name', size=30, required=True)
+	dept_ids = fields.Many2many(comodel_name='merchandising.dept',
+                          relation='merchandising_dept_relation',
+                          column1='partner_id',
+                          column2='merchandising_dept_id')
+	
+	season_ids = fields.Many2many(comodel_name='res.season',
+                          relation='season_partner_rel',
+                          column1='partner_id',
+                          column2='season_id')
+	courier = fields.Boolean(string='Courier', default=False)
+
+	@api.multi
+	def _check_special_char(self):
+		for buyer in self:
+			if re.search("[^A-Za-z0-9 ]", buyer.name) == None:
+				return True
+		return False
+	
+	_constraints = [
+        (_check_special_char, 'Please remove special character.', ['name'])
+    ]
+
+
+	def create(self, cr, uid, vals, context=None):
+		name_value = vals.get('name', False)
+		if name_value:
+			vals['name'] = name_value.strip()
+		return super(InheritedResBuyer, self).create(cr, uid, vals, context=context)
+	
+	def write(self, cr, uid, ids, vals, context=None):
+		name_value = vals.get('name', False)
+		if name_value:
+			vals['name'] = name_value.strip()
+		return super(InheritedResBuyer, self).write(cr, uid, ids, vals, context=context)

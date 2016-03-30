@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+	<data>
+		<record id="sample_development_request_view_form" model="ir.ui.view" >
+			<field name="name">Sample Development Request</field>
+			<field name="model">sample.development.request</field>
+			<field name="priority" eval="16"/>
+			
+			<field name="arch" type="xml">
+				<form string="Sample Development Request">
+					<sheet>
+						<group>
+							<group>
+								<field name="sample_dev_req_date"/>
+								<label  for="sample_dev_req_qty" string="Quantity" />
+								<div >
+									<field name="sample_dev_req_qty" class="oe_inline"/>
+<!--									<field name="uom" class="oe_inline" options='{"no_open": True,"no_create": 1,-->
+<!--										"no_create_edit": 1}'/> -->
+								</div>
+								
+							</group>
+						</group>
+					</sheet>
+				</form>
+			</field>
+		</record>
+		<record id="sample_development_request_view_tree" model="ir.ui.view">
+			<field name="name">Sample Development Request</field>
+			<field name="model">sample.development.request</field>
+			<field name="priority" eval="16"/>
+			<field name="arch" type="xml">
+				<tree string="Sample Development Request">
+					<field name="sample_dev_req_date"/>
+					<field name="sample_dev_req_qty" class="oe_inline"/>
+					<field name="uom" class="oe_inline"/>
+				</tree>
+			</field>
+		</record>
+	</data>
+</openerp>

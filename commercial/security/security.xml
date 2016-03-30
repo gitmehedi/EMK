@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="0">
+    	
+    	<record id="module_category_commercial" model="ir.module.category" >
+            <field name="name">Commercial</field>
+            <field name="sequence">90</field>
+        </record>
+    	
+        <record id="commercial_group_user" model="res.groups">
+        	<field name="name">Commercial User</field>
+        	<field name="category_id" ref="module_category_commercial"/>
+        </record>
+        
+        <record id="commercial_group_manager" model="res.groups">
+        	<field name="name">Commercial Manager</field>
+        	<field name="category_id" ref="module_category_commercial"/>
+        </record>
+        
+    </data>
+</openerp>

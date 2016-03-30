@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+	<data>
+		<record  id="inherited_res_country_view_" model="ir.ui.view">
+			<field name="name">Country View Form</field>
+			<field name="model">res.country</field>
+			<field name="inherit_id" ref="base.view_country_form"/>
+			<field name="arch" type="xml">
+				<xpath expr="//form/group/group/field[@name='code']" position="after">
+					<field name="state_required" string="State Required"/>
+				</xpath>
+			</field>
+		</record>
+	</data>
+</openerp>

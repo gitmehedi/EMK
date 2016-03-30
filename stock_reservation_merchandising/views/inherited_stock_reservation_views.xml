@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+	<data>
+		<record id="inherited_reservation_view_form_inherit_stock_resv" model="ir.ui.view">
+			<field name="name">Reservation View Form</field>
+			<field name="model">stock.reservation</field>
+			<field name="inherit_id" ref="stock_reservation.view_stock_reservation_form" />
+			<field name="arch" type="xml">
+				<xpath expr="//field[@name='analytic_account_id']" position="after">
+					<field name="work_order_id"/>
+					<field name="bom_id"/>
+					<field name="set_product"/>
+				</xpath>
+				<xpath expr="//field[@name='product_id']" position="replace">
+					<field name="product_id"/>
+				</xpath>
+			</field>
+		</record>
+	</data>
+</openerp>

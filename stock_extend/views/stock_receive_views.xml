@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+	<data>
+		<record id="stock_receive_view_form" model="ir.ui.view">
+			<field name="name">Stock Receive</field>
+			<field name="model">stock.receive</field>
+			<field name="priority" eval="16"/>
+			
+			<field name="arch" type="xml">
+				<form string="Stock Receive">
+					<header>
+						<button name="%(stock_receive_wizard_action)d" string="Get PO Item" class="oe_highlight"
+							states="draft" type="action" domain="[('state','=','draft')]" />
+						
+						<button name="action_receive" type="object" string="Received" states="submission"
+							class="oe_highlight"/>
+						<button name="action_cancel" string="Cancel" type="object" states="draft"/>
+						<field name="state" widget="statusbar"/>
+						
+					</header>
+					<sheet>
+						<h1>
+							<field name="name"/>
+						</h1>
+						<group>
+							<group>
+								<field name="name" />
+								<field name="grn_date" />
+								<field name="inventory" />
+								<field name="po_no" />
+							</group>
+						</group>
+						<notebook position="inside">
+							<page string="Stock Receive By PO" >
+								<div>
+									<div>
+										<field name="line_ids" />
+									</div>
+								</div>
+							</page>
+							
+						</notebook>
+					</sheet>
+				</form>
+			</field>
+		</record>
+		<record id="stock_receive_view_tree" model="ir.ui.view">
+			<field name="name">Stock Receive View</field>
+			<field name="model">stock.receive</field>
+			<field name="priority" eval="16"/>
+			
+			<field name="arch" type="xml">
+				<tree string="Stock Receive By PO">
+					<field name="name" />
+					<field name="grn_date" />
+					<field name="inventory" />
+					<field name="po_no" />
+				</tree>
+			</field>
+		</record>
+		
+		<record id="seq_type_stock_receive" model="ir.sequence.type">
+			<field name="name">Stock Receive</field>
+			<field name="code">stock.receive</field>
+		</record>
+		
+		<record id="seq_stock_receive" model="ir.sequence">
+			<field name="name">Stock Receive</field>
+			<field name="code">stock.receive</field>
+			<field name="prefix">STOCK-R-</field>
+			<field name="padding">10</field>
+		</record>
+		
+		<record id="stock_receive_action" model="ir.actions.act_window" >
+			<field name="name">Stock Receive</field>
+			<field name="res_model">stock.receive</field>
+			<field name="view_mode">tree,form</field>
+		</record>
+		
+		<menuitem name="Stock Receive" id="stock_receive_menu" parent="merchandising.products_sub_menu"
+			sequence="251" action="stock_receive_action"/>
+		
+	</data>
+</openerp>

@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+	<data>
+		<!-- TT Receive Tree or List view -->
+		<record model="ir.ui.view" id="tt_receive_tree_view">
+			<field name="name">tt.receive.tree</field>
+			<field name="model">tt.receive</field>
+			<field name="arch" type="xml">
+				<tree string="TT Receive Tree">
+					<field name="name" />
+					<field name="buyer_id" />
+					<field name="tt_payment_bank_id" />
+					<field name="tt_receive_bank_id" />
+					<field name="currency" />
+					<field name="receive_process" />
+					<field name="state" />
+				</tree>
+			</field>
+		</record>
+		<!-- TT Receive Form Views -->
+		<record model="ir.ui.view" id="tt_receive_form_view">
+			<field name="name">tt.receive.form</field>
+			<field name="model">tt.receive</field>
+			<field name="arch" type="xml">
+				<form string="TT Receive Form">
+					<header>
+						<button name="action_confirm" type="object" states="draft"
+							string="Confirm" class="oe_highlight" />
+
+						<field name="state" widget="statusbar" />
+					</header>
+					<sheet>
+						<h1>
+							<field name="name" string="Serial No" />
+						</h1>
+						<group>
+							<group>
+
+								<field name="buyer_id"
+									options='{"no_open": True,"no_create": 1, "no_create_edit": 1}' />
+								<field name="tt_payment_bank_id"
+									options='{"no_open": True,"no_create": 1, "no_create_edit": 1}' />
+								<field name="tt_receive_bank_id"
+									options='{"no_open": True,"no_create": 1, "no_create_edit": 1}' />
+							</group>
+							<group>
+								<field name="tt_receive_date" />
+								<field name="currency"
+									options='{"no_open": True,"no_create": 1, "no_create_edit": 1}' />
+							</group>
+							<group>
+								<field name="receive_process" widget="radio" />
+							</group>
+						</group>
+						<notebook colspan="4">
+							<page string="Distribution Head">
+								<field name="tt_recv_distribution_head_ids">
+									<tree string="" editable="bottom">
+										<field name="account_id"
+											options='{"no_open": True,"no_create": 1, "no_create_edit": 1}' />
+										<field name="fc_value" />
+										<field name="lc_value" />
+										<field name="exchange_rate" />
+									</tree>
+								</field>
+							</page>
+							<page string="Deduction Head">
+								<field name="tt_recv_deduction_head_ids">
+									<tree string="" editable="bottom">
+										<field name="account_id"
+											options='{"no_open": True,"no_create": 1, "no_create_edit": 1}' />
+										<field name="fc_value" />
+										<field name="lc_value" />
+										<field name="exchange_rate" />
+									</tree>
+								</field>
+							</page>
+							<page string="Charge Head">
+								<field name="tt_recv_charge_head_ids">
+									<tree string="" editable="bottom">
+										<field name="account_id"
+											options='{"no_open": True,"no_create": 1, "no_create_edit": 1}' />
+										<field name="fc_value" />
+										<field name="lc_value" />
+										<field name="exchange_rate" />
+									</tree>
+								</field>
+							</page>
+						</notebook>
+						<separator string="Remarks" />
+						<field name="remarks" placeholder="Put an remarks..................." />
+					</sheet>
+				</form>
+			</field>
+		</record>
+
+		<!-- TT Receive Search View -->
+		<record model="ir.ui.view" id="tt_receive_view_search">
+			<field name="name">tt.receive.search</field>
+			<field name="model">tt.receive</field>
+			<field eval="10" name="priority" />
+			<field name="arch" type="xml">
+				<search string="TT Receive">
+					<field name="name" />
+					<field name="buyer_id" />
+					<field name="tt_payment_bank_id" />
+					<field name="tt_receive_bank_id" />
+					<field name="receive_process" />
+				</search>
+			</field>
+		</record>
+
+		<!-- Sequences for TT Receive -->
+		<record model="ir.sequence.type" id="seq_type_tt_receive">
+			<field name="name">TT Receive Type</field>
+			<field name="code">ttr_code</field>
+		</record>
+
+		<record model="ir.sequence" id="seq_tt_receive">
+			<field name="name">TT Receive</field>
+			<field name="code">ttr_code</field>
+			<field name="prefix">TTR-</field>
+			<field name="padding">10</field>
+		</record>
+
+
+		<!-- TT Receive Menu and Action -->
+		<record model="ir.actions.act_window" id="tt_receive_list_action">
+			<field name="name">TT Receive</field>
+			<field name="res_model">tt.receive</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+		</record>
+
+		<menuitem id="tt_receive_main_menu" name="TT Receive" parent="commercial_menu"
+			sequence="135" action="tt_receive_list_action" />
+	</data>
+</openerp>

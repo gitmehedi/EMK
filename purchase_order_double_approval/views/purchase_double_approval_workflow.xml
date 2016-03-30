@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+		
+<!-- 		<record id="act_confirmed_abc" model="workflow.activity"> -->
+<!--             <field name="wkf_id" ref="purchase.purchase_order"/> -->
+<!--             <field name="name">confirmed</field> -->
+<!--             <field name="split_mode">OR</field> -->
+<!--             <field name="kind">function</field> -->
+<!--             <field name="action">wkf_confirm_order_abc()</field> -->
+<!--         </record> -->
+        
+		<record id="act_double_wait_1" model="workflow.activity">
+            <field name="wkf_id" ref="purchase.purchase_order"/>
+            <field name="name">WaitForApproval1</field>
+            <field name="split_mode">OR</field>
+            <field name="kind">function</field>
+<!--             <field name="action">wkf_approval_1st()</field> -->
+            <field name="action">write({'state':'confirmed1'})</field>
+        </record>
+        
+        
+        
+        <record id="act_double_wait" model="workflow.activity">
+            <field name="wkf_id" ref="purchase.purchase_order"/>
+            <field name="name">WaitForApproval</field>
+            <field name="kind">dummy</field>
+        </record>
+        
+        <record id="act_double_check" model="workflow.activity">
+            <field name="wkf_id" ref="purchase.purchase_order"/>
+            <field name="name">CheckForApproval</field>
+            <field name="split_mode">OR</field>
+            <field name="kind">dummy</field>
+        </record>
+        
+<!--         <record id="trans_confirmed_double_check_1" model="workflow.transition"> -->
+<!--             <field name="act_from" ref="purchase.act_confirmed"/> -->
+<!--             <field name="act_to" ref="act_double_wait_1"/> -->
+<!--         </record> -->
+       
+       <record id="trans_draft_confirm_1" model="workflow.transition">
+            <field name="act_from" ref="act_double_wait_1"/>
+            <field name="act_to" ref="purchase.act_confirmed"/>
+            <field name="signal">purchase_confirm_1</field>
+<!--             <field name="group_id" ref="purchase.group_purchase_manager"/> -->
+        </record> 
+        
+        <record id="trans_confirmed_double_gt" model="workflow.transition">
+            <field name="act_from" ref="act_double_check"/>
+            <field name="act_to" ref="act_double_wait"/>
+            <field name="condition">amount_untaxed &gt;= 50</field>
+            <field name="signal">purchase_approve</field>
+            <field name="group_id" ref="purchase.group_purchase_manager"/>
+        </record>
+
+        <record id="trans_confirmed_double_lt" model="workflow.transition">
+            <field name="act_from" ref="act_double_check"/>
+            <field name="act_to" ref="act_double_wait_1"/>
+            <field name="condition">amount_untaxed &lt; 50</field>
+<!--             <field name="group_id" ref="purchase.group_purchase_manager"/> -->
+        </record>
+
+        <record id="trans_double_app_conf" model="workflow.transition">
+            <field name="act_from" ref="act_double_wait"/>
+            <field name="act_to" ref="purchase.act_router"/>
+        </record>
+		
+		
+	    
+	    <record id="purchase.trans_draft_confirmed" model="workflow.transition">
+            <field name="act_from" ref="purchase.act_draft"/>
+            <field name="act_to" ref="act_double_wait_1"/>
+            <field name="signal">purchase_confirm</field>
+        </record>
+        
+
+    </data>
+</openerp>

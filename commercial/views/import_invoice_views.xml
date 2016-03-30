@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+	<data>
+		<!-- Import Invoice Form Views -->
+		<record model="ir.ui.view" id="import_invoice_form_view">
+			<field name="name">import.invoice.form</field>
+			<field name="model">import.invoice</field>
+			<field name="arch" type="xml">
+				<form string="Import Invoice Form">
+					<header>
+						<button name="action_confirm" type="object" states="draft"
+							string="Confirm" class="oe_highlight" />
+						<field name="state" widget="statusbar" />
+					</header>
+					<sheet>
+						<h1>
+							<field name="name" string="Serial No" />
+						</h1>
+						<group>
+							<group>
+								<field name="invoice_against"
+									options='{"no_open": True,"no_create": 1, "no_create_edit": 1}' />
+								<field name="lc_tt_no" />
+								<field name="import_invoice_id"
+									options='{"no_open": True,"no_create": 1, "no_create_edit": 1}' />
+								<field name="ii_date" />
+								<field name="port_of_loading"
+									options='{"no_open": True,"no_create": 1, "no_create_edit": 1}' />
+								<field name="port_of_discharge"
+									options='{"no_open": True,"no_create": 1, "no_create_edit": 1}' />
+								<field name="destination" />
+							</group>
+							<group>
+								<field name="eta" />
+								<field name="import_invoice_value" />
+								<field name="currency"
+									options='{"no_open": True,"no_create": 1, "no_create_edit": 1}' />
+
+							</group>
+						</group>
+
+						<separator string="Remarks" />
+						<field name="remarks" placeholder="Put an remarks..................." />
+					</sheet>
+				</form>
+			</field>
+		</record>
+
+
+		<!-- Import Invoice Tree or List view -->
+		<record id="import_invoice_tree_view" model="ir.ui.view">
+			<field name="name">import.invoice.tree</field>
+			<field name="model">import.invoice</field>
+			<field name="arch" type="xml">
+				<tree string="Import Invoice Tree">
+					<field name="invoice_against" />
+					<field name="lc_tt_no" />
+					<field name="ii_date" />
+					<field name="destination" />
+					<field name="eta" />
+					<field name="import_invoice_value" />
+					<field name="state" />
+				</tree>
+			</field>
+		</record>
+
+		<!-- Import Invoice Search View -->
+		<record id="import_invoice_view_search" model="ir.ui.view">
+			<field name="name">import.invoice.search</field>
+			<field name="model">import.invoice</field>
+			<field eval="10" name="priority" />
+			<field name="arch" type="xml">
+				<search string="Product Costing">
+					<field name="invoice_against" />
+				</search>
+			</field>
+		</record>
+
+		<!-- Sequences for Import Invoice -->
+		<record id="seq_type_import_invoice" model="ir.sequence.type">
+			<field name="name">Import Invoice Type</field>
+			<field name="code">ii_code</field>
+		</record>
+
+		<record id="seq_import_invoice" model="ir.sequence">
+			<field name="name">Import Invoice</field>
+			<field name="code">ii_code</field>
+			<field name="prefix">II-</field>
+			<field name="padding">10</field>
+		</record>
+
+
+		<!-- Import Invoice Menu and Action -->
+		<record id="import_invoice_list_action" model="ir.actions.act_window">
+			<field name="name">Import Invoice</field>
+			<field name="res_model">import.invoice</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+		</record>
+
+		<menuitem id="import_invoice_main_menu" name="Import Invoice"
+			parent="commercial_menu" sequence="150" action="import_invoice_list_action" />
+	</data>
+</openerp>

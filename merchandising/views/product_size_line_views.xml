@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+		<record id="product_size_line_view_form" model="ir.ui.view">
+            <field name="name">product.size.line.form</field>
+            <field name="model">product.size.line</field>
+            <field name="arch" type="xml">
+                <form string="product size line Form">
+                	<sheet>
+		                <div class="">
+			                <group>
+			                	<field name="region_id"/>
+			                    <field name="remark"/>
+			                </group>
+			            </div>
+		            </sheet>
+                </form>
+            </field>
+        </record>
+		
+		<!-- season tree/list view -->
+        <record  id="product_size_line_view_tree" model="ir.ui.view">
+            <field name="name">product.size.line.tree</field>
+            <field name="model">product.size.line</field>
+            <field name="arch" type="xml">
+                <tree string="product size line Tree">
+                   <field name="region_id"/>
+		           <field name="remark"/>
+                </tree>
+            </field>
+        </record>
+		
+		<!-- season search view -->
+		<record id="product_size_line_view_search" model="ir.ui.view">
+		    <field name="name">product size line search view</field>
+		    <field name="model">product.size.line</field>
+		    <field eval="10" name="priority"/>
+		    <field name="arch" type="xml">
+		        <search string="season">
+		            <field name="remark"/>
+                    <group string="Group By">
+                        <filter name="region" string="Region"
+                                context="{'group_by': 'region_id'}"/>
+                    </group>
+                    <group string="Group By">
+                        <filter name="product_size" string="Product Size"
+                                context="{'group_by': 'product_size_id'}"/>
+                    </group>
+		        </search>
+		    </field>
+		</record>
+		
+		<record id="product_size_line_action" model="ir.actions.act_window">
+            <field name="name">Product Size Lines</field>
+            <field name="res_model">product.size.line</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+    </data>
+</openerp>

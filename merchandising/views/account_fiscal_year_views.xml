@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+	<data>
+		<record  id="account_fiscal_year_action" model="ir.actions.act_window">
+			<field name="name">Fiscal Years</field>
+			<field name="res_model">account.fiscalyear</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+		</record>
+		
+		<!-- <menuitem name="Fiscal Years" id="account_fiscal_year_menu" parent="configuration_menu"
+			sequence="560" action="account_fiscal_year_action"/> -->
+	</data>
+</openerp>

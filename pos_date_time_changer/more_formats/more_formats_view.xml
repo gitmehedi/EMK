@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <record id="net2do_tree_grades_view" model="ir.ui.view">
+            <field name="name">more.formats.tree</field>
+            <field name="model">more.formats</field>
+            <field name="arch" type="xml">
+                <tree string="Date Time Formats">
+                    <field name="name"/>
+                    <field name="date_format"/>
+                    <field name="time_format"/>
+                </tree>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="view_grades_form">
+            <field name="name">more.formats.form</field>
+            <field name="model">more.formats</field>
+            <field name="arch" type="xml">
+                <form string="DateTime Formats" version="7.0">
+                    <sheet>
+                        <group>
+                            <field name="name"/>
+                        </group>
+                        <group col="6" colspan="4">
+                            <newline/>
+                            <field name="date_format"/>
+                            <field name="time_format"/>
+                        </group>
+                        <separator colspan="4" string="Legends for Date and Time Formats"/>
+                        <group col="4" colspan="4">
+                            <label align="0.0" string="%a - Abbreviated weekday name."/>
+                            <label align="0.0" string="%A - Full weekday name."/>
+                            <newline/>
+                            <label align="0.0" string="%b - Abbreviated month name."/>
+                            <label align="0.0" string="%B - Full month name."/>
+                            <newline/>
+                            <label align="0.0" string="%c - Appropriate date and time representation."/>
+                            <label align="0.0" string="%d - Day of the month [01,31]."/>
+                            <newline/>
+                            <label align="0.0" string="%H - Hour (24-hour clock) [00,23]."/>
+                            <label align="0.0" string="%I - Hour (12-hour clock) [01,12]."/>
+                            <newline/>
+                            <label align="0.0" string="%j - Day of the year [001,366]."/>
+                            <label align="0.0" string="%m - Month number [01,12]."/>
+                            <newline/>
+                            <label align="0.0" string="%M - Minute [00,59]."/>
+                            <label align="0.0" string="%p - Equivalent of either AM or PM."/>
+                            <newline/>
+                            <label align="0.0" string="%S - Seconds [00,61]."/>
+                            <label align="0.0" string="%w - Weekday number [0(Sunday),6]."/>
+                            <newline/>
+                            <label align="0.0" string="%x - Appropriate date representation."/>
+                            <label align="0.0" string="%X - Appropriate time representation."/>
+                            <newline/>
+                            <label align="0.0" string="%y - Year without century [00,99]."/>
+                            <label align="0.0" string="%Y - Year with century."/>
+                            <newline/>
+                            <label align="0.0"
+                                   string="%U - Week number of the year (Sunday as the first day of the week) as a decimal number [00,53]. All days in a new year preceding the first Sunday are considered to be in week 0."/>
+                            <label align="0.0"
+                                   string="%W - Week number of the year (Monday as the first day of the week) as a decimal number [00,53]. All days in a new year preceding the first Monday are considered to be in week 0."/>
+                            <newline/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="net2do_search_grade_view">
+            <field name="name">more.formats.search</field>
+            <field name="model">more.formats</field>
+            <field name="arch" type="xml">
+                <search string="Search">
+                    <group col="10" colspan="4">
+                        <field name="name"/>
+                        <field name="date_format"/>
+                        <field name="time_format"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="net2do_grade">
+            <field name="name">DateTime Formats</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">more.formats</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="net2do_search_grade_view"/>
+            <field name="domain">[]</field>
+            <field name="context">{}</field>
+        </record>
+        <record model="ir.actions.act_window.view" id="net2do_form_super_view">
+            <field name="act_window_id" ref="net2do_grade"/>
+            <field name="sequence" eval="20"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_grades_form"/>
+        </record>
+        <record model="ir.actions.act_window.view" id="net2do_exam_view_tree">
+            <field name="act_window_id" ref="net2do_grade"/>
+            <field name="sequence" eval="10"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="net2do_tree_grades_view"/>
+        </record>
+
+
+    </data>
+</openerp>

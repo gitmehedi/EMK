@@ -1,0 +1,6 @@
+"id","name","model_id:id","group_id:id","perm_read","perm_write","perm_create","perm_unlink"
+"access_stock_gatepass_in","stock.gatepass.in","model_stock_gatepass_in","stock.group_stock_user",1,1,1,1
+"access_stock_gatepass_out","stock.gatepass.out","model_stock_gatepass_out","stock.group_stock_user",1,1,1,1
+"access__gatepass_type","gatepass.type","model_gatepass_type","stock.group_stock_user",1,1,1,1
+"access_stock_gatepass_in_line","stock.gatepass.in.line","model_stock_gatepass_in_line","stock.group_stock_user",1,1,1,1
+"access_stock_gatepass_out_line","stock.gatepass.out.line","model_stock_gatepass_out_line","stock.group_stock_user",1,1,1,1

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+	<data>
+		<!-- Shipping Destination Tree Views -->
+		<record model="ir.ui.view" id="shipping_destination_tree_view">
+			<field name="name">shipping.destination.tree</field>
+			<field name="model">shipping.destination</field>
+			<field name="type">tree</field>
+			<field name="arch" type="xml">
+				<tree string="Shipping Destination">
+					<field name="name" />
+					<field name="country_id" />
+				</tree>
+			</field>
+		</record>
+
+		<!-- Shipping Destination Form Views -->
+		<record model="ir.ui.view" id="shipping_destination_form_view">
+			<field name="name">shipping.destination.form</field>
+			<field name="model">shipping.destination</field>
+			<field name="type">form</field>
+			<field name="arch" type="xml">
+				<form string="Shipping Destination">
+					<sheet>
+						<group>
+							<field name="name" select="1" class="oe_inline" />
+							<field name="country_id" class="oe_inline"
+								options='{"no_open": True,"no_create": 1, "no_create_edit": 1}' />
+						</group>
+					</sheet>
+				</form>
+			</field>
+		</record>
+
+		<!-- Shipping Destination Action Views -->
+		<record model="ir.actions.act_window" id="action_shipping_destination_tree_view">
+			<field name="name">Shipping Destination</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">shipping.destination</field>
+			<!-- <field name="domain">[('field_name','condition',criteria)]</field> -->
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+			<field name="view_id" ref="shipping_destination_tree_view" />
+		</record>
+
+		<!-- Shipping Destination Menu -->
+		<menuitem id="shipping_destination_menu" name="Shipping Destination"
+			parent="shipping_sub_menu" sequence="297"
+			action="action_shipping_destination_tree_view" />
+
+	</data>
+</openerp>

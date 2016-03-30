@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+	<data>
+		<!-- International Commercial Term Tree Views -->
+		<record model="ir.ui.view" id="commercial_term_tree_view">
+			<field name="name">commercial.term.tree</field>
+			<field name="model">commercial.term</field>
+			<field name="type">tree</field>
+			<field name="arch" type="xml">
+				<tree string="Commercial Term">
+					<field name="name" />
+					<field name="code" />
+					<field name="status" />
+				</tree>
+			</field>
+		</record>
+
+		<!-- International Commercial Term Form Views -->
+		<record model="ir.ui.view" id="commercial_term_form_view">
+			<field name="name">commercial.term.form</field>
+			<field name="model">commercial.term</field>
+			<field name="type">form</field>
+			<field name="arch" type="xml">
+				<form string="Commercial Term">
+					<sheet>
+						<group>
+							<field name="name" class="oe_inline"/>
+							<field name="code" class="oe_inline"/>
+							<field name="status" />
+						</group>
+					</sheet>
+				</form>
+			</field>
+		</record>
+
+		<!-- International Commercial Term Search View -->
+		<record id="commercial_term_view_search" model="ir.ui.view">
+			<field name="name">commercial.term.search</field>
+			<field name="model">commercial.term</field>
+			<field eval="10" name="priority" />
+			<field name="arch" type="xml">
+				<search string="Commercial Term">
+					<field name="name" />
+					<field name="code" />
+					<field name="status" />
+				</search>
+			</field>
+		</record>
+
+		<!-- International Commercial Term Action Views -->
+		<record model="ir.actions.act_window" id="action_commercial_term_tree_view_one">
+			<field name="name">Internation Commercial Term</field>
+			<field name="res_model">commercial.term</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+		</record>
+
+		<!-- Commercial Term Menu -->
+		<menuitem id="commercial_term_menu" name="International Com Term"
+			parent="commercial_configuration_menu" sequence="110"
+			action="action_commercial_term_tree_view_one" />
+
+	</data>
+</openerp>

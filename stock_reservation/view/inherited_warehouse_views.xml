@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+	<data>
+		<record id="inherited_warehouse_view_form_inherit_stock_resv" model="ir.ui.view">
+			<field name="name">Warehouse View Form</field>
+			<field name="model">stock.warehouse</field>
+			<field name="inherit_id" ref="stock.view_warehouse" />
+			<field name="arch" type="xml">
+				<xpath expr="//field[@name='wh_output_stock_loc_id']" position="after">
+					<field name="wh_stock_ana_resv_id"/>
+				</xpath>
+			</field>
+		</record>
+	</data>
+</openerp>

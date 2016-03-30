@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+	<data>
+		<!-- Bill of Material Consumption Form View -->
+		<record id="material_consumption_bill_view_form" model="ir.ui.view">
+			<field name="name">bom.consumption.form</field>
+			<field name="model">bom.consumption</field>
+			<field name="arch" type="xml">
+				<form string="Material Consumption Bill">
+					<header>
+						<button name="generate_bom" type="object" string="Generate BOM"
+							class="oe_highlight" />
+					</header>
+					<sheet>
+						<h1>
+							<field name="name" string="Serial No" />
+						</h1>
+						<group colspan="4">
+							<group colspan="2" col="2">
+								<field name="mc_id" class="oe_inline"
+									options='{"no_open": True,"no_create": 1, "no_create_edit": 1}' />
+								<field name="style_id" class="oe_inline" attrs="{'readonly':[('style_id','=',False)]}"
+									 options='{"no_open": True,"no_create": 1, "no_create_edit": 1}'
+									domain="[('style_id', 'in', mc_ids)]" />
+								<field name="export_po_id" class="oe_inline"
+									attrs="{'readonly':[('style_id','=',False)]}" options='{"no_open": True,"no_create": 1, "no_create_edit": 1}'
+									domain="[('style_id', '=', style_id),('state', '=', 'confirm')]" />
+
+							</group>
+						</group>
+						<notebook colspan="4">
+							<page string="Yarn">
+								<field name="yarn_ids">
+									<tree string="Yarns List" editable="top">
+										<field name="product_id"
+											options='{"no_open": True,"no_create": 1, "no_create_edit": 1}' />
+										<field name="quantity" />
+										<field name="uom_category" invisible="1" />
+										<field name="uom_id"
+											options='{"no_open": True,"no_create": 1, "no_create_edit": 1}'
+											domain="[('category_id', '=', uom_category)]" />
+										<field name="buyer_mentioned_supplier_id"
+											options='{"no_open": True,"no_create": 1, "no_create_edit": 1}' />
+										<field name="preffered_supplier_id"
+											options='{"no_open": True,"no_create": 1, "no_create_edit": 1}'
+											attrs="{'readonly': [('buyer_mentioned_supplier_id','=',True)]}" />
+										<field name="status" invisible="1" value="yarn" />
+									</tree>
+								</field>
+							</page>
+							<page string="Accessories">
+								<field name="acc_ids">
+									<tree string="Acc List" editable="top">
+										<field name="product_id"
+											options='{"no_open": True,"no_create": 1, "no_create_edit": 1}' />
+										<field name="quantity" />
+										<field name="uom_category" invisible="1" />
+										<field name="uom_id"
+											options='{"no_open": True,"no_create": 1, "no_create_edit": 1}'
+											domain="[('category_id', '=', uom_category)]" />
+										<field name="buyer_mentioned_supplier_id"
+											options='{"no_open": True,"no_create": 1, "no_create_edit": 1}' />
+										<field name="preffered_supplier_id"
+											options='{"no_open": True,"no_create": 1, "no_create_edit": 1}'
+											attrs="{'readonly': [('buyer_mentioned_supplier_id','=',True)]}" />
+										<field name="status" invisible="1" value="acc" />
+									</tree>
+								</field>
+							</page>
+						</notebook>
+					</sheet>
+				</form>
+			</field>
+		</record>
+
+		<!-- Bill of Material Consumption Tree/List View -->
+		<record id="material_consumption_bill_view_tree" model="ir.ui.view">
+			<field name="name">bom.consumption.tree</field>
+			<field name="model">bom.consumption</field>
+			<field name="arch" type="xml">
+				<tree string="Material Consumption Bill">
+					<field name="name" />
+					<field name="mc_id" />
+					<field name="style_id" />
+					<field name="export_po_id" />
+				</tree>
+			</field>
+		</record>
+
+
+
+		<!-- Bill of Material Consumption Search Views -->
+	<!--  -->	<record id="material_consumption_bill_view_search" model="ir.ui.view">
+			<field name="name">Bill of Materials Search View</field>
+			<field name="model">bom.consumption</field>
+			<field eval="10" name="priority" />
+			<field name="arch" type="xml">
+				<search string="Bill of Materials Consumption">
+					<field name="mc_id" />
+					<group string="Group By">
+						<filter name="Export_PO" string="Export PO"
+							context="{'group_by': 'export_po_id'}" />
+					</group>
+					<group string="Group By">
+						<filter name="style_id" string="style" context="{'group_by': 'style_id'}" />
+					</group>
+				</search>
+			</field>
+		</record>
+
+
+		<!-- Bill of Material Consumption Bill Sequences -->
+		<record id="sequence_type_material_consumption_bill_" model="ir.sequence.type">
+			<field name="name">Bill of Materials Type</field>
+			<field name="code">bill_code</field>
+		</record>
+
+		<record id="sequence_material_consumption_bill" model="ir.sequence">
+			<field name="name">Bill of Materials</field>
+			<field name="code">bill_code</field>
+			<field name="prefix">BOM-</field>
+			<field name="padding">10</field>
+		</record>
+
+		<!-- Bill of Material Consumption Action -->
+		<record id="material_consumption_bill_list_action" model="ir.actions.act_window">
+			<field name="name">Bill of Materials</field>
+			<field name="res_model">bom.consumption</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+		</record>
+
+		<!-- Bill of Material Consumption Menu -->
+		<menuitem name="Bill of Materials" id="menu_material_consumption_bill"
+			parent="bom_menu" sequence="410" action="material_consumption_bill_list_action" />
+	</data>
+</openerp>

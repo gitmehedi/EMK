@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+	<data>
+		<!-- TT Payment Form Views -->
+		<record model="ir.ui.view" id="tt_payment_form_view">
+			<field name="name">tt.payment.form</field>
+			<field name="model">tt.payment</field>
+			<field name="arch" type="xml">
+				<form string="TT Payment Form">
+					<header>
+						<button name="action_confirm" type="object" states="draft"
+							string="Confirm" class="oe_highlight" />
+
+						<field name="state" widget="statusbar" />
+					</header>
+					<sheet>
+						<h1>
+							<field name="name" string="Serial No" />
+						</h1>
+						<group>
+							<group>
+
+								<field name="supplier_id"
+									options='{"no_open": True,"no_create": 1, "no_create_edit": 1}' />
+								<field name="tt_payment_bank_id"
+									options='{"no_open": True,"no_create": 1, "no_create_edit": 1}' />
+								<field name="supplier_bank_id"
+									options='{"no_open": True,"no_create": 1, "no_create_edit": 1}' />
+								<field name="currency"
+									options='{"no_open": True,"no_create": 1, "no_create_edit": 1}' />
+							</group>
+							<group>
+								<field name="tt_payment_date" />
+							</group>
+						</group>
+						<notebook colspan="4">
+							<page string="Payment Head">
+								<field name="tt_pay_payment_head_ids">
+									<tree string="" editable="bottom">
+										<field name="account_id"
+											options='{"no_open": True,"no_create": 1, "no_create_edit": 1}' />
+										<field name="fc_value" />
+										<field name="lc_value" />
+										<field name="exchange_rate" />
+									</tree>
+								</field>
+							</page>
+							<page string="Charge Head">
+								<field name="tt_pay_charge_head_ids">
+									<tree string="" editable="bottom">
+										<field name="account_id"
+											options='{"no_open": True,"no_create": 1, "no_create_edit": 1}' />
+										<field name="fc_value" />
+										<field name="lc_value" />
+										<field name="exchange_rate" />
+									</tree>
+								</field>
+							</page>
+						</notebook>
+						<separator string="Remarks" />
+						<field name="remarks" placeholder="Put an remarks..................." />
+					</sheet>
+				</form>
+			</field>
+		</record>
+
+
+		<!-- TT Payment Tree or List view -->
+		<record id="tt_payment_tree_view" model="ir.ui.view">
+			<field name="name">tt.payment.tree</field>
+			<field name="model">tt.payment</field>
+			<field name="arch" type="xml">
+				<tree string="TT Payment Tree">
+					<field name="name" />
+					<field name="supplier_id" />
+					<field name="tt_payment_bank_id" />
+					<field name="supplier_bank_id" />
+					<field name="currency" />
+					<field name="state" />
+				</tree>
+			</field>
+		</record>
+
+		<!-- TT Payment Search View -->
+		<record id="tt_payment_view_search" model="ir.ui.view">
+			<field name="name">tt.payment.search</field>
+			<field name="model">tt.payment</field>
+			<field eval="10" name="priority" />
+			<field name="arch" type="xml">
+				<search string="TT Payment">
+					<field name="name" />
+				</search>
+			</field>
+		</record>
+
+		<!-- Sequences for TT Payment -->
+		<record id="seq_type_tt_payment" model="ir.sequence.type">
+			<field name="name">TT Payment Type</field>
+			<field name="code">ttp_code</field>
+		</record>
+
+		<record id="seq_tt_payment" model="ir.sequence">
+			<field name="name">TT Payment</field>
+			<field name="code">ttp_code</field>
+			<field name="prefix">TTP-</field>
+			<field name="padding">10</field>
+		</record>
+
+
+		<!-- TT Payment Menu and Action -->
+		<record id="tt_payment_list_action" model="ir.actions.act_window">
+			<field name="name">TT Payment</field>
+			<field name="res_model">tt.payment</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+		</record>
+
+		<menuitem id="tt_payment_main_menu" name="TT Payment" parent="commercial_menu"
+			sequence="160" action="tt_payment_list_action" />
+	</data>
+</openerp>

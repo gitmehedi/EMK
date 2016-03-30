@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+		<record model="ir.ui.view" id="res_region_form_view">
+            <field name="name">res_region.form</field>
+            <field name="model">res.region</field>
+            <field name="arch" type="xml">
+                <form string="region Form">
+	                <sheet>
+		                <group>
+		                    <field name="name" class="oe_inline"/>
+		                    <field name="active"/>
+		                    <separator string="Countries"/>
+		                </group>
+	                	<div>
+	                   		<field name="country_ids"/>
+                		</div>
+		            </sheet>
+                </form>
+            </field>
+        </record>
+		
+		<!-- season tree/list view -->
+        <record model="ir.ui.view" id="res_region_tree_view">
+            <field name="name">res.region.tree</field>
+            <field name="model">res.region</field>
+            <field name="arch" type="xml">
+                <tree string="region Tree">
+                    <field name="name"/>
+                    <field name="active"/>
+                </tree>
+            </field>
+        </record>
+		
+		<!-- season search view -->
+		<record id="res_region_search_view" model="ir.ui.view">
+		    <field name="name">region search view</field>
+		    <field name="model">res.region</field>
+		    <field eval="10" name="priority"/>
+		    <field name="arch" type="xml">
+		        <search string="region">
+		            <field name="name"/>
+		            <field name="active"/>
+                    <group string="Group By">
+                        <filter name="status" string="active"
+                                context="{'group_by': 'active'}"/>
+                    </group>
+		        </search>
+		    </field>
+		</record>
+		
+		<record model="ir.actions.act_window" id="res_region_list_action">
+            <field name="name">Regions</field>
+            <field name="res_model">res.region</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <menuitem name="Regions" id="menu_regions" parent="configuration_menu"
+            sequence="570" action="res_region_list_action"/>
+    </data>
+</openerp>

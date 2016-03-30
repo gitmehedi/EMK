@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+	<data>
+		<!-- LC Amendment Form Views -->
+		<record model="ir.ui.view" id="lc_amendment_new_wizard_view_form">
+			<field name="name">lc.amendment.new.form</field>
+			<field name="model">lc.amendment.new</field>
+			<field name="type">form</field>
+			<field name="arch" type="xml">
+				<form string="LC Amendment">
+					<sheet>
+						<group>
+							<field name="exp_dt" />
+							<field name="update_amend_to" width = "50%"/>					
+							<field name="current_lc_value" />
+							<field name="update_amend_to" />	
+						</group>
+					</sheet>
+				</form>
+			</field>
+		</record>
+		<record id="lc_amendment_new_action_wizard_v" model="ir.actions.act_window">
+			<field name="name">LC Amendment New</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">lc.amendment.new</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">form</field>
+			<field name="target">new</field>
+		</record>
+
+	</data>
+</openerp>

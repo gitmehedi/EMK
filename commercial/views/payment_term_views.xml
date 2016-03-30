@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+	<data>
+		<!-- Payment Term Tree Views -->
+		<record model="ir.ui.view" id="payment_term_tree_view">
+			<field name="name">payment.term.tree</field>
+			<field name="model">payment.term</field>
+			<field name="type">tree</field>
+			<field name="arch" type="xml">
+				<tree string="Payment Term">
+					<field name="name" />
+				</tree>
+			</field>
+		</record>
+
+		<!-- Payment Term Form Views -->
+		<record model="ir.ui.view" id="payment_term_form_view">
+			<field name="name">payment.term.form</field>
+			<field name="model">payment.term</field>
+			<field name="type">form</field>
+			<field name="arch" type="xml">
+				<form string="Payment Term">
+					<sheet>
+						<group>
+							<field name="name" select="1" class="oe_inline" />
+						</group>
+					</sheet>
+				</form>
+			</field>
+		</record>
+
+		<!-- Payment Term Action Views -->
+		<record model="ir.actions.act_window" id="action_payment_term_tree_view">
+			<field name="name">Payment Term</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">payment.term</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+			<field name="view_id" ref="payment_term_tree_view" />
+		</record>
+
+		<!-- Payment Term Menu -->
+		<menuitem id="payment_term_menu" name="Payment Term"
+			parent="commercial_configuration_menu" sequence="297"
+			action="action_payment_term_tree_view" />
+
+	</data>
+</openerp>

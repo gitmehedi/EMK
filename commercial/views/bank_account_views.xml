@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+	<data>
+		<!-- Bank Account Tree Views -->
+		<record model="ir.ui.view" id="bank_account_tree_view">
+			<field name="name">bank.account.tree</field>
+			<field name="model">bank.account</field>
+			<field name="type">tree</field>
+			<field name="arch" type="xml">
+				<tree string="Bank Account">
+					<field name="name" />
+					<field name="country_id" />
+				</tree>
+			</field>
+		</record>
+
+		<!-- Bank Account Form Views -->
+		<record model="ir.ui.view" id="bank_account_form_view">
+			<field name="name">bank.account.form</field>
+			<field name="model">bank.account</field>
+			<field name="type">form</field>
+			<field name="arch" type="xml">
+				<form string="Bank Account">
+					<sheet>
+						<group>
+							<field name="name" select="1" class="oe_inline" />
+							<field name="country_id" class="oe_inline"
+								options='{"no_open": True,"no_create": 1, "no_create_edit": 1}' />
+						</group>
+					</sheet>
+				</form>
+			</field>
+		</record>
+
+		<!-- Bank Account Action Views -->
+		<record model="ir.actions.act_window" id="action_bank_account_tree_view">
+			<field name="name">Bank Account</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">bank.account</field>
+			<!-- <field name="domain">[('field_name','condition',criteria)]</field> -->
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+			<field name="view_id" ref="bank_account_tree_view" />
+		</record>
+
+		<!-- Bank Account Menu -->
+		<menuitem id="bank_account_menu" name="Bank Account"
+			parent="commercial_configuration_menu" sequence="297"
+			action="action_bank_account_tree_view" />
+
+	</data>
+</openerp>

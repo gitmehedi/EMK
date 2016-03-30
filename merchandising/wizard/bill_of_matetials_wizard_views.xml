@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+	<data>
+		<record id="bill_of_matetials_wizard_view_form" model="ir.ui.view">
+			<field name="name">bill.materials.wizard.form</field>
+			<field name="model">bill.materials.wizard</field>
+			<field name="arch" type="xml">
+				<form string="Bill of Matetials Wizard Form">
+					<sheet>
+						<group>
+							<group>
+								<field name="export_po_id" options='{"no_open": True,"no_create": 1, "no_create_edit": 1}' />
+							</group>
+						</group>
+					</sheet>
+					<footer>
+						<button name="generate_bill_materials" type="object" string="Generate"
+							class="oe_highlight" />
+						<button string="Cancel" special="cancel" class="oe_link" />
+					</footer>
+				</form>
+			</field>
+		</record>
+
+		<record id="bill_of_matetials_action_wizard_views" model="ir.actions.act_window">
+			<field name="name">Bill of Materials</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">bill.materials.wizard</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">form</field>
+			<field name="target">new</field>
+		</record>
+
+	</data>
+</openerp>

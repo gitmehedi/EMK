@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<templates id="loyality_custom_template" inherit_id="point_of_sale.template">
+	
+	 <t t-name="Paymentline">
+        <div t-attf-class="paymentline #{line.selected ? 'selected' : ''}">
+            <div class='paymentline-name'>
+                <t t-esc="line.name"/>
+            </div>
+
+            <input t-attf-class="paymentline-input #{line.is_redemption ? 'is_redemption' : ''}"
+                t-att-type="widget.decimal_point === '.' ? 'number' : 'text'"
+                t-attf-pattern="[0-9]+([\\#{widget.decimal_point || '.' }][0-9]+)?"
+                step="0.01" t-att-value="line.get_amount_str()" t-attf-r_check="#{line.is_redemption}" />
+            <span  class='paymentline-delete'>
+                <img src="/point_of_sale/static/src/img/search_reset.gif" />
+            </span>
+        </div>
+    </t>
+
+	<t t-extend="OrderWidget">
+		<t t-jquery=".summary.clearfix" t-operation="before">
+			<div class="point clearfix">
+				<div t-attf-class="line #{orderlines.length === 0 ? 'empty' : ''}">
+					<div class='entry total'>
+						<t t-if="orderlines.length != 0">
+							<span class="label">Total Point:</span>
+							<span class="label ">
+								<t t-esc="order.getPoint()"/>
+							</span>
+						</t>
+						<t t-if="orderlines.length == 0">
+							<span class="loyl_entry">
+							</span>
+						</t>
+					</div>
+				</div>
+			</div>
+		</t>
+	</t>
+	
+	
+	<t t-extend='ClientLine'>
+		<t t-jquery='.client-line td:nth-child(3)' t-operation='after'>
+			<td>
+				<t t-esc='partner.point_loyalty or ""' />
+			</td>
+			
+		</t>
+	</t>
+	<t t-extend='ClientListScreenWidget'>
+		<t t-jquery='.subwindow .subwindow-container .client-list tr th:nth-child(3)' t-operation='after'>
+			<th>Point</th>
+		</t>
+	</t>
+	
+	<t t-extend='ClientDetails'>
+		<t t-jquery='section .client-details-box .client-details-right' t-operation='append'>
+			<div class='client-detail'>
+				<span class='label'>Point</span>
+				<t t-if='partner.point_loyalty'>
+					
+					<span class='detail client-phone'>
+						<t t-esc='partner.point_loyalty'/>
+					</span>
+					
+				</t>
+				<t t-if='!partner.point_loyalty'>
+					<span class='detail client-phone empty'>N/A</span>
+				</t>
+			</div>
+		</t>
+	</t>
+	
+	<t t-extend='ClientDetailsEdit'>
+		<t t-jquery='.client-details .client-details-right ' t-operation='append'>
+			<div class='client-detail'>
+				<span class='label'>Point</span>
+				
+				<input class='detail vat' name='point_loyalty' t-att-value='partner.point_loyalty
+					|| ""' placeholder='Point' readonly='1'/>
+				
+			</div>
+		</t>
+	</t>
+	
+	
+	<t t-extend='PosTicket'>
+		<t t-jquery=".pos-sale-ticket" t-operation='append'>
+			<br />
+			<table>
+				<tr>
+					<td>Total Earned Points:</td>
+					<td class="pos-right-align">
+						<t t-esc="widget.format_currency(order.getPoint())"/>
+					</td>
+				</tr>
+			</table>
+		</t>
+		<!-- This is not needed for loyalty point -->	
+		<!--<t t-jquery=".pos-sale-ticket table:first" t-operation='after'>
+			<br />
+			<table>
+				<tr>
+					<td>Loyalty Benefits:</td>
+					<td class="pos-right-align">
+						<t t-esc="widget.format_currency(order.getPoint())"/>
+					</td>
+				</tr>
+			</table>
+		</t>-->
+	</t>
+	
+	<t t-extend='PaymentScreenWidget'>
+		<t t-jquery=".payment-screen .pos-payment-container .payment-info .infoline.bigger"
+			t-operation='after'>
+			<div class="infoline bigger" >
+				<span class='left-block'>Loyalty Value:</span>
+				<span class="right-block payment-loyalty-total">
+				</span>
+			</div>
+		</t>
+		
+	</t>
+	
+	
+	
+</templates>

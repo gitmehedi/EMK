@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+	<data>
+		<!-- Notify Party Tree Views -->
+		<record model="ir.ui.view" id="notify_party_tree_view">
+			<field name="name">notify.party.tree</field>
+			<field name="model">notify.party</field>
+			<field name="type">tree</field>
+			<field name="arch" type="xml">
+				<tree string="Notify Party">
+					<field name="name" />
+				</tree>
+			</field>
+		</record>
+		
+		<!-- Notify Party Form Views -->
+		<record model="ir.ui.view" id="notify_party_form_view">
+			<field name="name">notify.party.form</field>
+			<field name="model">notify.party</field>
+			<field name="type">form</field>
+			<field name="arch" type="xml">
+				<form string="Notify Party">
+					<sheet>
+						<group>
+							<field name="name" select="1" class="oe_inline" />
+						</group>
+					</sheet>
+				</form>
+			</field>
+		</record>
+		
+		<!-- Notify Party Action Views -->
+		<record model="ir.actions.act_window" id="action_notify_party_tree_view">
+			<field name="name">Notify Party</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">notify.party</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+			<field name="view_id" ref="notify_party_tree_view" />
+		</record>
+		
+		<!-- Notify Party Menu -->
+		<menuitem id="notify_party_menu" name="Notify Party" parent="commercial_configuration_menu"
+		sequence="297" action="action_notify_party_tree_view"/>
+	</data>
+</openerp>

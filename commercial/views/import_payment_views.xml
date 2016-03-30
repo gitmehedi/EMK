@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+	<data>
+		<!-- Import Payment Form Views -->
+		<record model="ir.ui.view" id="import_payment_form_view">
+			<field name="name">import.payment.form</field>
+			<field name="model">import.payment</field>
+			<field name="arch" type="xml">
+				<form string="Import Payment Form">
+					<header>
+						<button name="action_confirm" type="object" states="draft"
+							string="Confirm" class="oe_highlight" />
+
+						<field name="state" widget="statusbar" />
+					</header>
+					<sheet>
+						<h1>
+							<field name="name" string="Serial No" />
+						</h1>
+						<group>
+							<group>
+
+								<field name="invoice_no" />
+								<field name="import_payment_date" />
+								<field name="import_payment_bank_id"
+									options='{"no_open": True,"no_create": 1, "no_create_edit": 1}' />
+							</group>
+							<group>
+								<field name="acceptance_value" />
+							</group>
+						</group>
+						<notebook colspan="4">
+							<page string="Payment Head">
+								<field name="import_pay_payment_head_ids">
+									<tree string="" editable="bottom">
+										<field name="account_id"
+											options='{"no_open": True,"no_create": 1, "no_create_edit": 1}' />
+										<field name="fc_value" />
+										<field name="lc_value" />
+										<field name="exchange_rate" />
+									</tree>
+								</field>
+							</page>
+							<page string="Charge Head">
+								<field name="import_pay_charge_head_ids">
+									<tree string="" editable="bottom">
+										<field name="account_id"
+											options='{"no_open": True,"no_create": 1, "no_create_edit": 1}' />
+										<field name="fc_value" />
+										<field name="lc_value" />
+										<field name="exchange_rate" />
+									</tree>
+								</field>
+							</page>
+						</notebook>
+						<separator string="Remarks" />
+						<field name="remarks" placeholder="Put an remarks..................." />
+					</sheet>
+				</form>
+			</field>
+		</record>
+
+
+		<!-- Import Payment Tree or List view -->
+		<record id="import_payment_tree_view" model="ir.ui.view">
+			<field name="name">import.payment.tree</field>
+			<field name="model">import.payment</field>
+			<field name="arch" type="xml">
+				<tree string="Import Payment Tree">
+					<field name="name" />
+					<field name="invoice_no" />
+					<field name="import_payment_date" />
+					<field name="import_payment_bank_id" />
+					<field name="acceptance_value" />
+					<field name="state" />
+				</tree>
+			</field>
+		</record>
+
+		<!-- Import Payment Search View -->
+		<record id="import_payment_view_search" model="ir.ui.view">
+			<field name="name">import.payment.search</field>
+			<field name="model">import.payment</field>
+			<field eval="10" name="priority" />
+			<field name="arch" type="xml">
+				<search string="Import Payment">
+					<field name="name" />
+				</search>
+			</field>
+		</record>
+
+		<!-- Sequences for Import Payment -->
+		<record id="seq_type_import_payment" model="ir.sequence.type">
+			<field name="name">Import Payment Type</field>
+			<field name="code">ip_code</field>
+		</record>
+
+		<record id="seq_import_payment" model="ir.sequence">
+			<field name="name">Import Payment</field>
+			<field name="code">ip_code</field>
+			<field name="prefix">IP-</field>
+			<field name="padding">10</field>
+		</record>
+
+
+		<!-- Import Payment Menu and Action -->
+		<record id="import_payment_list_action" model="ir.actions.act_window">
+			<field name="name">Import Payment</field>
+			<field name="res_model">import.payment</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+		</record>
+
+		<menuitem id="import_payment_main_menu" name="Import Payment"
+			parent="commercial_menu" sequence="155" action="import_payment_list_action" />
+	</data>
+</openerp>

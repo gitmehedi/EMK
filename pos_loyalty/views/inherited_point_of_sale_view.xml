@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+	<data>
+		<record  id="inherited_point_of_sale" model="ir.ui.view">
+			<field name="name">Inherited point of sale for loyalty point</field>
+			<field name="model">pos.category</field>
+			<field name="inherit_id" ref="point_of_sale.product_pos_category_form_view"/>
+			<field name="arch" type="xml">
+				<xpath expr="//form/sheet/div/group/field[@name='sequence']" position="after">
+					<field name="loyalty_point" string="Loyalty Point"/>
+				</xpath>
+			</field>
+		</record>
+	</data>
+</openerp>

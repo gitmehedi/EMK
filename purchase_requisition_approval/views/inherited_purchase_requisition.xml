@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+	<data>
+		<record id="inherited_purchase_requisition_view_form_inherit_state"
+			model="ir.ui.view">
+			<field name="name">Purchase Requisition Form</field>
+			<field name="model">purchase.requisition</field>
+			<field name="inherit_id" ref="purchase_requisition.view_purchase_requisition_form" />
+			<field name="arch" type="xml">
+				<xpath expr="//form/header/button[@name='sent_suppliers']" position="after">
+					<button name="action_approved" states="in_progress" string="Approved" type="object" class="oe_highlight"  groups="purchase_requisition_approval.group_purchase_requisition_user_approval"/>
+				</xpath>
+				<xpath expr="//form/header/button[@name='open_bid']" position="replace">
+					 <button name="open_bid" type="object" states="approved" string="Close Call for Bids" class="oe_highlight"/>
+				</xpath>
+				<xpath expr="//form/header/field[@name='state']" position="replace">
+					 <field name="state" widget="statusbar" statusbar_visible="draft,in_progress,approved,open,done" statusbar_colors="{&quot;in_progress&quot;:&quot;blue&quot;}"/>
+				</xpath>
+			</field>
+		</record>
+	</data>
+</openerp>

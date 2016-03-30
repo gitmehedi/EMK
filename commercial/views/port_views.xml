@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+	<data>
+		<!-- Port Tree Views -->
+		<record model="ir.ui.view" id="port_tree_view">
+			<field name="name">port.tree</field>
+			<field name="model">port</field>
+			<field name="type">tree</field>
+			<field name="arch" type="xml">
+				<tree string="Port">
+					<field name="name" />
+				</tree>
+			</field>
+		</record>
+		
+		<!-- Port Form Views -->
+		<record model="ir.ui.view" id="port_form_view">
+			<field name="name">port.form</field>
+			<field name="model">port</field>
+			<field name="type">form</field>
+			<field name="arch" type="xml">
+				<form string="Port">
+					<sheet>
+						<group>
+							<field name="name" select="1" class="oe_inline" />
+						</group>
+					</sheet>
+				</form>
+			</field>
+		</record>
+		
+		<!-- Port Action Views -->
+		<record model="ir.actions.act_window" id="action_port_tree_view">
+			<field name="name">Port</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">port</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+			<field name="view_id" ref="port_tree_view" />
+		</record>
+		
+		<!-- Port Menu -->
+		<menuitem id="port_menu" name="Port" parent="commercial_configuration_menu"
+		sequence="297" action="action_port_tree_view"/>
+	</data>
+</openerp>

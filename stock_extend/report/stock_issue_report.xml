@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+		<!-- Definition of the report (picking Move) -->
+		<report id="report_stock_issue" model="stock.move" string="Stock Issue Report"
+			name="stock_extend.report_stock_issue_qweb" multi="True" file="stock_extend.report_stock_issue_qweb"
+			report_type="qweb-pdf" />
+	</data>
+</openerp>

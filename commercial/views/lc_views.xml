@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+	<data>
+		<!-- LC Tree Views -->
+		<record model="ir.ui.view" id="lc2_tree_view">
+			<field name="name">lc.tree</field>
+			<field name="model">lc</field>
+			<field name="type">tree</field>
+			<field name="arch" type="xml">
+				<tree string="LC">
+					<field name="name" />
+				</tree>
+			</field>
+		</record>
+		
+		<!-- LC Form Views -->
+		<record model="ir.ui.view" id="lc_form_view">
+			<field name="name">lc.form</field>
+			<field name="model">lc</field>
+			<field name="type">form</field>
+			<field name="arch" type="xml">
+				<form string="LC">
+					<sheet>
+						<group>
+							<field name="name" select="1" class="oe_inline" />
+						</group>
+					</sheet>
+				</form>
+			</field>
+		</record>
+		
+		<!-- LC Action Views -->
+		<record model="ir.actions.act_window" id="action_lc_tree_view">
+			<field name="name">LC</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">lc</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+		</record>
+		
+		<!-- LC Menu -->
+		<menuitem id="lc_menu" name="LC" parent="commercial_configuration_menu"
+		sequence="297" action="action_lc_tree_view"/>
+	</data>
+</openerp>

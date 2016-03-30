@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>     
+        <record id="sample_development_request_view_form1" model="ir.ui.view">
+			<field name="name">Sample Development Request</field>
+			<field name="model">sample.development.request.wizard</field>
+			<field name="priority" eval="16"/>
+		
+			<field name="arch" type="xml">
+			   <form string="Sample Development Request">
+
+                    <sheet>
+                    <h1><field name="sample_dev_req_no"/></h1>
+					<group>
+						<group >
+						    <field name="sample_dev_req_ref" class="oe_inline" options='{"no_open": True,"no_create": 1, "no_create_edit": 1}'/>
+							<field name="sample_dev_req_date"/>
+							<field name="sample_dev_req_by" class="oe_inline" options='{"no_open": True,"no_create": 1, "no_create_edit": 1}'/>
+					
+				            <label  for="sample_dev_req_qty" string="Quantity" />
+				            	<div >
+									<field name="sample_dev_req_qty" class="oe_inline"/> 
+									<field name="uom" class="oe_inline" options='{"no_open": True,"no_create": 1, "no_create_edit": 1}'/>
+								</div>
+                           													
+						</group>
+					</group>
+					</sheet>
+					<footer>
+			            <button name="action_development" type="object"
+	                                string="Submit" class="oe_highlight"/>        
+	                    <button string="Cancel" special="cancel" class="oe_link"/>
+                    </footer>
+				</form>
+			</field>
+		</record>
+	    <record id="sample_development_request_tree" model="ir.ui.view">
+			<field name="name">Sample Development Request</field>
+			<field name="model">sample.development.request.wizard</field>
+			<field name="priority" eval="16"/>
+		
+			<field name="arch" type="xml">
+				<tree string="Sample Development Request">
+					<field name="sample_dev_req_no"/>
+					<field name="sample_dev_req_ref"/>
+					<field name="sample_dev_req_date"/>
+					<field name="sample_dev_req_by"/>
+					<field name="sample_dev_req_qty"/>
+					<field name="uom"/>
+					
+				</tree>
+	      </field>
+		</record>
+		
+		<record id="seq_type_sample_development_request" model="ir.sequence.type">
+            <field name="name">Sample Development Request No</field>
+            <field name="code">sample.development.request.wizard</field>
+        </record>
+
+        <record id="seq_sample_development_request" model="ir.sequence">
+            <field name="name">Sample Development Request No</field>
+            <field name="code">sample.development.request.wizard</field>
+            <field name="prefix">SDR-NO-</field>
+            <field name="padding">10</field>
+        </record>
+        
+  
+		<record id="sample_development_request_action" model="ir.actions.act_window">
+            <field name="name">Sample Development Request</field>
+            <field name="type">ir.actions.act_window</field>
+			<field name="res_model">sample.development.request.wizard</field>
+            <field name="view_type">form</field>
+        	<field name="view_mode">form</field>
+        	<field name="view_id" ref="sample_development_request_view_form1" />
+        	<field name="target">new</field>
+        </record>
+        
+        <record id="sample_development_request_list_action" model="ir.actions.act_window">
+            <field name="name">Sample Development Request</field>
+			<field name="res_model">sample.development.request.wizard</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+        
+		   <menuitem name="Sample Development Request" id="sample_development_request_menu" parent="merchandising_menu"
+            sequence="251" action="sample_development_request_list_action"/>
+            
+    </data>
+</openerp>

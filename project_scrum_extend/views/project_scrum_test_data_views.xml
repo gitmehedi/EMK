@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+	<data>
+		<record model="ir.ui.view" id="project_scrum_test_data_form_view">
+			<field name="name">project scrum test data form</field>
+			<field name="model">project.scrum.test.data</field>
+			<field name="arch" type="xml">
+				<form string="Project Scrum Test Data Form">
+					<sheet>
+						<group>
+							<field name="pre_condition" string="Pre Condition"/>
+							<field name="name" string="Description"/>
+							<field name="expected_result"/>
+							<field name="actual_result"/>
+						</group>
+					</sheet>
+				</form>
+			</field>
+		</record>
+		
+		<record model="ir.ui.view" id="proejct_scrum_test_data_tree_view">
+			<field name="name">project scrum test data tree</field>
+			<field name="model">project.scrum.test.data</field>
+			<field name="arch" type="xml">
+				<tree string="Project Scrum Test Data Tree" >
+					<field name="name"/>
+					<field name="expected_result"/>
+					<field name="actual_result"/>
+				</tree>
+			</field>
+		</record>
+		
+	</data>
+</openerp>

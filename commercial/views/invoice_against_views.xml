@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+	<data>
+		<!-- Invoice Against Tree Views -->
+		<record model="ir.ui.view" id="invoice_against_tree_view">
+			<field name="name">invoice.against.tree</field>
+			<field name="model">invoice.against</field>
+			<field name="type">tree</field>
+			<field name="arch" type="xml">
+				<tree string="Invoice Against">
+					<field name="name" />
+				</tree>
+			</field>
+		</record>
+		
+		<!-- Invoice Against Form Views -->
+		<record model="ir.ui.view" id="invoice_against_form_view">
+			<field name="name">invoice.against.form</field>
+			<field name="model">invoice.against</field>
+			<field name="type">form</field>
+			<field name="arch" type="xml">
+				<form string="Invoice Against">
+					<sheet>
+						<group>
+							<field name="name" select="1" class="oe_inline" />
+						</group>
+					</sheet>
+				</form>
+			</field>
+		</record>
+		
+		<!-- Invoice Against Action Views -->
+		<record model="ir.actions.act_window" id="action_invoice_against_tree_view">
+			<field name="name">Invoice Against</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">invoice.against</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+			<field name="view_id" ref="invoice_against_tree_view" />
+		</record>
+		
+		<!-- Invoice Against Menu -->
+		<menuitem id="invoice_against_menu" name="Invoice Against" parent="commercial_configuration_menu"
+		sequence="297" action="action_invoice_against_tree_view" />
+	</data>
+</openerp>

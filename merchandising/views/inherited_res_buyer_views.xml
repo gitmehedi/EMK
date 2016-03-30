@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+	<data>
+		<record id="inherited_res_partner_view_form_inherit_res_buyer" model="ir.ui.view">
+			<field name="name">Buyer View Form</field>
+			<field name="model">res.partner</field>
+			<field name="inherit_id" ref="base.view_partner_form"/>
+			<field name="arch" type="xml">
+				<xpath expr="//form/sheet/group/group/div/div/field[@name='state_id']" position="replace">
+					<field name="state_visible" invisible="1"/>
+					<field name="state_id" class="oe_no_button" placeholder="State" style="width: 37%"
+						options="{&quot;no_open&quot;: True}" on_change="onchange_state(state_id)" attrs="{'readonly':
+						[('use_parent_address','=',True)],'invisible': [('state_visible','=', False)]}"/>
+				</xpath>
+				<xpath expr="//form/sheet/group/group/div/field[@name='country_id']" position="replace">
+					<field name="country_id" placeholder="Country" class="oe_no_button" options="{&quot;no_open&quot;:
+						True, &quot;no_create&quot;: True}" attrs="{'readonly': [('use_parent_address','=',True)]}"
+						/>
+				</xpath>
+				
+				<notebook position="inside">
+					<page string="Merchandising">
+						<group>
+							<field name="dept_ids" widget="many2many_tags" string="Department" class="oe_inline" options='{"no_open": True,"no_create": 1, "no_create_edit": 1}'/>
+						</group>
+						<group>
+							<field name="season_ids" widget="many2many_tags" string="Season" class="oe_inline" options='{"no_open": True,"no_create": 1, "no_create_edit": 1}'/>
+						</group>
+					</page>
+				</notebook>
+			</field>
+		</record>
+		
+		<record  id="inherited_res_buyer_action" model="ir.actions.act_window" >
+			<field name="name">Buyers</field>
+			<field name="res_model">res.partner</field>
+			<field name="view_mode">tree,form</field>
+			<field name="domain">[('customer','=',True)]</field>
+		</record>
+		
+		<menuitem name="Buyers" id="inherited_res_buyer_menu" parent="merchandising_menu"
+			sequence="210" action="inherited_res_buyer_action"/>
+		
+	</data>
+</openerp>

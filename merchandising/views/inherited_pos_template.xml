@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--<openerp>-->
+<!--	<data>-->
+<!--		<template id="my_view_name" inherit_id="point_of_sale.template">-->
+<!--			<xpath expr="//templates[@t-name='PosTicket']" position="replace">				-->
+<!--				<div id="my_new_div">Hello, World!</div>-->
+<!--			</xpath>-->
+<!--		</template>-->
+<!--	</data>-->
+<!--</openerp>-->
+
+<openerp>
+	<data>
+		<templates id="template" xml:space="preserve" inherit_id="point_of_sale.template">
+<!--		<templates id="my_template" inherit_id="point_of_sale.template"-->
+			
+			<t t-extend="PosTicket">
+				
+				<t t-jquery="div.pos-branding" t-operation="inner">
+					
+					<img src="/pos_module/static/src/img/logo.png" style="max-height: 40px; padding-left:5px;
+						margin-top:2px;"/>
+					<div id="my_new_div">Hello, World!</div>
+					<span class="placeholder-UsernameWidget">
+					</span>
+					
+				</t>
+				
+			</t>
+			
+		</templates>
+	</data>
+</openerp>
+
+<!--
+ <t t-extend="PosTicket">
+                <t t-jquery="div.pos-payment-container" t-operation="after">
+                    <div>
+                       Payment Screen Modified
+                    </div>  
+                </t>
+            </t> -->

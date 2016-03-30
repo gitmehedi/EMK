@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+	<data>
+		<record id="inherited_project_scrum_test_form" model="ir.ui.view">
+			<field name="name">Project Scrum Form</field>
+			<field name="model">project.scrum.test</field>
+			<field name="inherit_id" ref="project_scrum.view_ps_tc_form"/>
+			<field name="arch" type="xml">
+				<notebook position="replace">
+					<notebook>
+						<page string="Test Data">
+							<field name="description_test" string="Test Data" />
+						</page>
+						<page string="Description">
+							<field name="test_data_ids" string="Description" />
+						</page>
+					</notebook>
+				</notebook>
+			</field>
+		</record>
+	</data>
+</openerp>

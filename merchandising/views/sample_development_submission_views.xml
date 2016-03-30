@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+	<data>
+		<record id="sample_development_submission_view_form" model="ir.ui.view" >
+			<field name="name">Sample Development Submission</field>
+			<field name="model">sample.development.submission</field>
+			<field name="priority" eval="16"/>
+			
+			<field name="arch" type="xml">
+				<form string="Sample Development Submission">
+					<sheet>
+						<group>
+							<group>
+								<field name="sample_dev_sub_date"/>
+								<label  for="sample_dev_sub_qty" string="Quantity" />
+								<div >
+									<field name="sample_dev_sub_qty" class="oe_inline"/>
+								</div>
+								
+							</group>
+						</group>
+					</sheet>
+				</form>
+			</field>
+		</record>
+		<record id="sample_development_submission_view_tree" model="ir.ui.view">
+			<field name="name">Sample Development Submission</field>
+			<field name="model">sample.development.submission</field>
+			<field name="priority" eval="16"/>
+			<field name="arch" type="xml">
+				<tree string="Sample Development Submission">
+					<field name="sample_dev_sub_date"/>
+					<field name="sample_dev_sub_qty" class="oe_inline"/>
+					<field name="uom" class="oe_inline"/>
+				</tree>
+			</field>
+		</record>
+		
+	</data>
+</openerp>

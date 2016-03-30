@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<openerp>
+  <data>
+    	<record id="hr_holidays.property_rule_holidays_officer" model="ir.rule">
+	        <field name="name">Holidays Officer</field>
+	        <field name="model_id" ref="model_hr_holidays"/>
+	        <field name="domain_force">['|',('officer_id','=',user.id),('officer_id','=',False)]</field>
+	        <field name="groups" eval="[(4,ref('base.group_hr_user'))]"/>
+	    </record>
+	    
+	    <record id="property_rule_holidays_manager" model="ir.rule">
+	        <field name="name">Holidays Manager</field>
+	        <field name="model_id" ref="model_hr_holidays"/>
+	        <field name="domain_force">[(1,'=',1)]</field>
+	        <field name="groups" eval="[(4,ref('base.group_hr_manager'))]"/>
+	    </record>
+
+  </data>
+</openerp>

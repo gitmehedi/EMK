@@ -1,0 +1,1 @@
+import inherited_product_category,inherited_product_template,inherited_stock_inventory

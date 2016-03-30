@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+	<data>
+		<record id="res_season_view_form" model="ir.ui.view">
+			<field name="name">res.season.form</field>
+			<field name="model">res.season</field>
+			<field name="arch" type="xml">
+				<form string="Season Form">
+					<sheet>
+						<div class="">
+							<group>
+								<field name="name" class="oe_inline"/>
+								<field name="active" />
+							</group>
+							<separator string="Buyers" />
+							<div>
+								<field name="buyer_ids" />
+							</div>
+						</div>
+					</sheet>
+				</form>
+			</field>
+		</record>
+
+		<!-- season tree/list view -->
+		<record id="res_season_view_tree" model="ir.ui.view">
+			<field name="name">res.season.tree</field>
+			<field name="model">res.season</field>
+			<field name="arch" type="xml">
+				<tree string="season Tree">
+					<field name="name" />
+					<field name="active" />
+				</tree>
+			</field>
+		</record>
+
+		<!-- season search view -->
+		<record id="res_season_view_search" model="ir.ui.view">
+			<field name="name">season search view</field>
+			<field name="model">res.season</field>
+			<field eval="10" name="priority" />
+			<field name="arch" type="xml">
+				<search string="season">
+					<field name="name" />
+					<field name="active" />
+					<group string="Group By">
+						<filter name="status" string="active" context="{'group_by': 'active'}" />
+					</group>
+				</search>
+			</field>
+		</record>
+
+		<record id="res_season_action" model="ir.actions.act_window">
+			<field name="name">Seasons</field>
+			<field name="res_model">res.season</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+		</record>
+
+		<menuitem id="res_season_menu" name="Seasons" parent="configuration_menu"
+			sequence="580" action="res_season_action" />
+	</data>
+</openerp>

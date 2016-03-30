@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+	<data>
+<!--		<menuitem id="postdated_cheque_root_menu" name="Post Dated Cheque" sequence="10" /-->
+		<menuitem id="post_dated_root_menu" name="Post Dated Cheque" sequence="90" />
+
+		<menuitem id="post_dated_cheque_menu" name="Post Dated Cheque" parent="post_dated_root_menu" sequence="20" />
+		
+		<!-- Main Sub Menu Section -->	
+		<menuitem id="post_dated_cheque_configuration_menu" name="Configuration" parent="post_dated_root_menu" sequence="30" />
+	</data>
+</openerp>

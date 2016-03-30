@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+		<!-- Definition of the report (picking Move) -->
+		<report id="report_gate_pass_in_11" model="stock.gatepass.in"
+			string="Gate Pass Report In" name="stock_gatepass.report_gate_pass_in_view"
+			file="stock_gatepass.report_gate_pass_in" report_type="qweb-pdf" />
+			
+		<template id="report_gate_pass_in_view">
+			<t t-call="report.html_container">
+				<t t-foreach="docs" t-as="doc">
+					<t t-call="report.external_layout">
+						<div class="page">
+							<h2 class="text-center">Gate Pass In</h2>
+							<div class="row">
+								<div class="col-xs-6">
+									<p>
+										Sl :
+										<span t-field="doc.gete_pass_no" />
+									</p>
+									<p>
+										Date :
+										<span t-field="doc.date" />
+									</p>
+									<p>
+										Store Location :
+										<span t-field="doc.store_location" />
+									</p>
+									<p>
+										From Location :
+										<span t-field="doc.source_location" />
+									</p>
+									<p>
+										Sending Authority :
+										<span t-field="doc.sending_auth" />
+									</p>
+								</div>
+								<div class="col-xs-6">
+									<p>
+										Receiving Authority :
+										<span t-field="doc.receiving_auth" />
+									</p>
+									<p>
+										Purpose :
+										<span t-field="doc.purpose" />
+									</p>
+									<p>
+										Chalan No :
+										<span t-field="doc.chalan_no" />
+									</p>
+									<p>
+										Gate pass Out No :
+										<span t-field="doc.get_pass_out_no" />
+									</p>
+									<p>
+										Gate Security :
+										<span t-field="doc.security_id" />
+									</p>
+								</div>
+							</div>
+
+							<h3>Details:</h3>
+							<table class="table table-stripped">
+								<thead>
+									<tr>
+										<th class="text-center">
+											Description
+										</th>
+										<th class="text-center">
+											Quantity
+										</th>
+										<th class="text-center">
+											Unit of Measurement
+										</th>
+										<th class="text-center">
+											Remarks
+										</th>
+									</tr>
+								</thead>
+								<tbody>
+									<t t-foreach="doc.gate_pass_in_lines" t-as="line">
+										<tr>
+											<td class="text-center">
+												<span t-field="line.description" />
+											</td>
+											<td class="text-center">
+												<span t-field="line.product_qty" />
+											</td>
+											<td class="text-center">
+												<span t-field="line.product_qom" />
+											</td>
+											<td class="text-center">
+												<span t-field="line.remarks" />
+											</td>
+										</tr>
+									</t>
+								</tbody>
+							</table>
+						</div>
+					</t>
+				</t>
+			</t>
+		</template>
+	</data>
+</openerp>

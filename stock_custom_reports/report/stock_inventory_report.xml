@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<openerp>
+<data>
+
+    	<record id="view_stock_inventory_report_tree" model="ir.ui.view">
+            <field name="name">stock.inventory.report.tree</field>
+            <field name="model">stock.inventory.report</field>
+            <field name="arch" type="xml">
+                <tree string="Stock Inventory Report">
+                	<field name="id"/>
+                	<field name="product_id" invisible="1"/>
+                	<field name="code"/>
+                    <field name="name"/>
+                    <field name="qty_dk"/>
+                    <field name="val_dk"/>
+                    <field name="qty_in_tk"/>
+                    <field name="val_in_tk"/>
+                    <field name="qty_out_tk"/>
+                    <field name="val_out_tk"/>
+                    <field name="qty_ck"/>
+                    <field name="val_ck"/>
+                </tree>
+            </field>
+        </record>
+    
+</data>
+</openerp>

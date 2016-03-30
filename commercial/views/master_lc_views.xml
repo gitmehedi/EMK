@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+	<data>
+		<!-- Master LC Tree or List view -->
+		<record model="ir.ui.view" id="master_lc_tree_view">
+			<field name="name">master.lc.tree</field>
+			<field name="model">master.lc</field>
+			<field name="arch" type="xml">
+				<tree string="Master LC Tree">
+					<field name="name" />
+					<field name="buyer_id" />
+					<field name="lc_no" />
+					<field name="lc_open_bank_id" />
+					<field name="lc_lien_bank_id" />
+					<field name="lc_advising_bank_id" />
+					<field name="lc_expiry_date" />
+					<field name="lc_value" />
+					<field name="payment_term" />
+					<field name="state" />
+				</tree>
+			</field>
+		</record>
+
+		<!-- Master LC Form Views -->
+		<record model="ir.ui.view" id="master_lc_form_view_new">
+			<field name="name">master.lc.form</field>
+			<field name="model">master.lc</field>
+			<field name="arch" type="xml">
+				<form string="Master LC Form">
+					<header>
+						<button name="action_confirm" type="object" states="draft"
+							string="Confirm" class="oe_highlight" />
+						<field name="state" widget="statusbar" />
+					</header>
+					<sheet>
+						<h1>
+							<field name="name" string="Serial No" />
+						</h1>
+						<group>
+							<group>
+								<field name="buyer_id"
+									options='{"no_open": True,"no_create": 1, "no_create_edit": 1}' />
+								<field name="lc_no"
+									options='{"no_open": True,"no_create": 1, "no_create_edit": 1}' />
+								<field name="lc_open_date" />
+								<field name="lc_open_bank_id"
+									options='{"no_open": True,"no_create": 1, "no_create_edit": 1}' />
+								<field name="lc_lien_date" />
+								<field name="lc_lien_bank_id"
+									options='{"no_open": True,"no_create": 1, "no_create_edit": 1}' />
+								<field name="lc_advising_bank_id"
+									options='{"no_open": True,"no_create": 1, "no_create_edit": 1}' />
+								<field name="receive_user_id"
+									options='{"no_open": True,"no_create": 1, "no_create_edit": 1}' />
+								<field name="currency"
+									options='{"no_open": True,"no_create": 1, "no_create_edit": 1}' />
+								<field name="lc_expiry_date" />
+								<field name="lc_value" class="oe_inline"/>
+								<field name="tolerance" />
+								<field name="bb_lc" />
+								<field name="payment_term" />
+								<field name="tenor" />
+								<field name="inco_term"
+									options='{"no_open": True,"no_create": 1, "no_create_edit": 1}' />
+								<field name="inco_term_place" />
+							</group>
+							<group>
+								<field name="allow_partial_shipment" />
+								<field name="allow_trans_shipment" />
+								<field name="lc_close" />	
+							</group>
+						</group>
+						<notebook colspan="4">
+							<page string="Master LC Details">
+								<field name="master_lc_details_ids">
+									<tree string="" editable="top">
+										<field name="po_related"
+											options='{"no_open": True,"no_create": 1, "no_create_edit": 1}' />
+										<field name="tagged_po"
+											options='{"no_open": True,"no_create": 1, "no_create_edit": 1}' />
+									</tree>
+								</field>
+							</page>
+						</notebook>
+						<separator string="Remarks" />
+						<field name="remarks" placeholder="Put an remarks..................." />
+					</sheet>
+				</form>
+			</field>
+		</record>
+
+
+		<!-- Master LC Search View -->
+		<record model="ir.ui.view" id="master_lc_view_search">
+			<field name="name">master.lc.search</field>
+			<field name="model">master.lc</field>
+			<field eval="10" name="priority" />
+			<field name="arch" type="xml">
+				<search string="Master LC">
+					<field name="name" />
+					<field name="buyer_id" />
+					<field name="lc_no" />
+					<field name="lc_open_bank_id" />
+					<field name="lc_lien_bank_id" />
+					<field name="lc_advising_bank_id" />
+					<field name="lc_expiry_date" />
+					<field name="lc_value" />
+					<field name="payment_term" />
+				</search>
+			</field>
+		</record>
+
+		<!-- Master LC of Sequences -->
+		<record model="ir.sequence.type" id="seq_type_master_lc">
+			<field name="name">Master LC Type</field>
+			<field name="code">mlc_code</field>
+		</record>
+
+		<record model="ir.sequence" id="seq_master_lc">
+			<field name="name">Master LC</field>
+			<field name="code">mlc_code</field>
+			<field name="prefix">MLC-</field>
+			<field name="padding">10</field>
+		</record>
+
+
+		<!-- Master LC Menu and Action -->
+		<record model="ir.actions.act_window" id="master_lc_list_action">
+			<field name="name">Master LC</field>
+			<field name="res_model">master.lc</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+		</record>
+
+		<menuitem id="master_lc_main_menu" name="Master LC" parent="commercial_menu"
+			sequence="115" action="master_lc_list_action" />
+	</data>
+</openerp>

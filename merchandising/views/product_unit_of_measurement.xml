@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+		
+		<record model="ir.actions.act_window" id="product_unit_of_measurement_list_for_merchandising_action">
+            <field name="name">Unit of Measurements</field>
+            <field name="res_model">product.uom</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <menuitem name="Product UoM" id="menu_product_unit_of_measurement" parent="products_sub_menu"
+            sequence="320" action="product_unit_of_measurement_list_for_merchandising_action"/>
+    </data>
+</openerp>

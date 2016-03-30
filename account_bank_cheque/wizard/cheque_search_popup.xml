@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+	<data>
+		<!-- Post Dated Cheque Search Form Views -->
+		<record id="search_cheque_popup_form_view" model="ir.ui.view">
+			<field name="name">search cheque popup form view</field>
+			<field name="model">account.postdated.cheque.search.popup</field>
+			<field name="priority" eval="16"/>
+			<field name="arch" type="xml">
+				<form string="Search Cheque">
+					<sheet>
+						<group>
+							<group >
+								<field name="partner_info" options='{"no_open": True,"no_create": 1, "no_create_edit":1}' />
+								<field name="issuing_bank" options='{"no_open": True,"no_create": 1, "no_create_edit":1}' />								
+								<field name="cheque_number" />
+								<field name="date_from" />
+								<field name="date_to" />
+							</group>
+						</group>
+					</sheet>
+					<footer>
+						<button name="search_cheque" type="object" string="Submit" class="oe_highlight"/>
+						<button string="Cancel" special="cancel" class="oe_link"/>
+					</footer>
+				</form>
+			</field>
+		</record>
+		
+		
+		<!-- Post Dated Cheque Search Action Views -->
+		<record id="action_search_cheque_view" model="ir.actions.act_window">
+			<field name="name">Search Cheque Wizard</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="src_model">account.postdated.cheque</field>
+			<field name="res_model">account.postdated.cheque.search.popup</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">form</field>
+			<field name="view_id" ref="search_cheque_popup_form_view" />
+			<field name="target">new</field>
+		</record>
+		
+		<!-- Post Dated Cheque Menu -->
+		<menuitem id="cheque_search_menu" name="Search Cheque" parent="post_dated_cheque_menu"
+			sequence="10" action="action_search_cheque_view" />
+	</data>
+</openerp>

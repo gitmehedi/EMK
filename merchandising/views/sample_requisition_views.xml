@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+	<data>
+		<record id="sample_requisition_view_form" model="ir.ui.view">
+			<field name="name">Sample Requisition</field>
+			<field name="model">sample.requisition</field>
+			<field name="priority" eval="16" />
+
+			<field name="arch" type="xml">
+				<form string="Sample Requisition">
+					<header>
+
+						<button name="%(sample_development_request_wizard_action)d"
+							string="Development" class="oe_highlight" states="confirmed"
+							type="action" />
+
+						<button name="%(sample_development_request_wizard_action)d"
+							string="Development" states="received,submission" type="action" />
+
+						<button name="%(sample_development_receive_wizard_action)d"
+							string="Received" class="oe_highlight" states="development" type="action"
+							domain="[('state','=','development')]" />
+
+						<button name="%(sample_development_submission_wizard_action)d"
+							string="Submission" class="oe_highlight" states="received" type="action"
+							domain="[('state','=','received')]" />
+
+						<button name="action_done" type="object" string="Accepted"
+							states="submission" class="oe_highlight" />
+
+						<button name="confirm" type="workflow" string="Confirm"
+							states="draft" class="oe_highlight" />
+						<button name="action_cancel" string="Cancel" type="object"
+							states="confirmed,development,received,submission" />
+
+						<field name="state" widget="statusbar" />
+
+					</header>
+					<sheet>
+						<h1>
+							<field name="name" />
+						</h1>
+						<group>
+							<group>
+								<field name="buyer_id"
+									options='{"no_open": True,"no_create": 1, "no_create_edit":1}' />
+								<field name="style_id" widget="selection"
+									attrs="{'invisible': [('buyer_id', '=',False)]}" domain="[('buyer_id', '=', buyer_id),('visible', '=', True)]" />
+								<field name="ref_no" />
+								<field name="sample_type" options='{"no_open": True,"no_create": 0}' />
+								<field name="work_type" options='{"no_open": True,"no_create": 0}' />
+								<label for="quantity" string="Quantity" />
+								<div>
+									<div class="col-md-7 multifield_combination">
+										<field name="quantity" />
+									</div>
+									<div class="col-md-5 multifield_combination">
+										<field name="uom"
+											options='{"no_open": True,"no_create": 1, "no_create_edit": 1}' />
+									</div>
+								</div>
+								<label for="unit_price" string="Unit Price" />
+								<div>
+									<div class="col-md-7 multifield_combination">
+										<field name="unit_price" class="oe_inline" />
+									</div>
+									<div class="col-md-5 multifield_combination">
+										<field name="currency" class="oe_inline"
+											options='{"no_open": True,"no_create": 1,"no_create_edit": 1}' />
+									</div>
+								</div>
+							</group>
+							<group>
+								<field name="assigned_id"
+									options='{"no_open": True,"no_create": 1, "no_create_edit":1}' />
+								<field name="raw_material_source" string="Source"
+									options='{"no_open": True,"no_create":0}' />
+								<field name="req_instruction" string="Instruction" />
+							</group>
+						</group>
+						<notebook position="inside">
+							<page string="Development Request"
+								attrs="{'invisible': ['|', ('state','=','draft'),('state','=','confirmed')]}">
+								<div>
+									<div>
+										<field name="sample_development_ids" />
+									</div>
+								</div>
+							</page>
+							<page string="Development Receive"
+								attrs="{'invisible': ['|','|', ('state','=','draft'),
+								('state','=','confirmed'), ('state','=','development')]}">
+								<div>
+									<div>
+										<field name="sample_development_rec_ids" />
+									</div>
+								</div>
+							</page>
+							<page string="Development Submission"
+								attrs="{'invisible': ['|','|','|', ('state','=','draft'),('state','=','confirmed'), ('state','=','development'), ('state','=','received')]}">
+								<div>
+									<div>
+										<field name="sample_development_sub_ids" />
+									</div>
+								</div>
+							</page>
+						</notebook>
+					</sheet>
+				</form>
+			</field>
+		</record>
+
+		<!-- Sample Requisition Tree/List View -->
+		<record id="sample_requisition_view_tree" model="ir.ui.view">
+			<field name="name">Sample Requisition</field>
+			<field name="model">sample.requisition</field>
+			<field name="arch" type="xml">
+				<tree string="Sample Requisition">
+					<field name="name" />
+					<field name="style_id" />
+					<field name="quantity" />
+					<field name="uom" />
+					<field name="unit_price" />
+					<field name="buyer_id" />
+					<field name="state" />
+				</tree>
+			</field>
+		</record>
+
+		<!-- Quotation Request search view -->
+		<record id="sample_requisition_view_search" model="ir.ui.view">
+			<field name="name">Sample Requisition search view</field>
+			<field name="model">sample.requisition</field>
+			<field eval="10" name="priority" />
+			<field name="arch" type="xml">
+				<search string="Sample Requisition">
+					<group string="Group By">
+						<filter name="buyer" string="Buyer" context="{'group_by': 'buyer_id'}" />
+					</group>
+					<group string="Group By">
+						<filter name="style" string="Style" context="{'group_by': 'style_id'}" />
+					</group>
+				</search>
+			</field>
+		</record>
+
+		<record id="seq_type_sample_requisition" model="ir.sequence.type">
+			<field name="name">Sample Requisition</field>
+			<field name="code">sample.requisition</field>
+		</record>
+
+		<record id="seq_sample_requisition" model="ir.sequence">
+			<field name="name">Sample Requisition</field>
+			<field name="code">sample.requisition</field>
+			<field name="prefix">SR-NO-</field>
+			<field name="padding">10</field>
+		</record>
+
+		<record id="sample_requisition_action" model="ir.actions.act_window">
+			<field name="name">Sample Requisition</field>
+			<field name="res_model">sample.requisition</field>
+			<field name="view_mode">tree,form</field>
+		</record>
+
+		<menuitem name="Sample Requisition" id="sample_requisition_menu"
+			parent="sample_development_menu" sequence="310" action="sample_requisition_action" />
+
+	</data>
+</openerp>

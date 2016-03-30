@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+	<data>
+		<record id="product_style_amendment_wizard_view_form" model="ir.ui.view">
+			<field name="name">product.style.wizard.form</field>
+			<field name="model">product.style.wizard</field>
+			<field name="arch" type="xml">
+				<form string="Product Style Amendment Wizard Form">
+					<group>
+						<h4>
+							Do you want to add Amendment
+							<br />
+							or
+							<br />
+							new Style?
+						</h4>
+					</group>
+					<footer>
+						<button name="amaendment_copy" type="object" string="Create Amendment"
+							context="{'create_version': True}" class="oe_highlight" />
+						<button name="amaendment_copy" type="object" string="Copy Style"
+							context="{'create_version': False}" class="oe_highlight" />
+						<button string="Cancel" special="cancel" class="oe_link" />
+					</footer>
+				</form>
+			</field>
+		</record>
+
+
+		<record id="product_style_amendment_action_wizard_views" model="ir.actions.act_window">
+			<field name="name">Confirmation</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">product.style.wizard</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">form</field>
+			<field name="target">new</field>
+		</record>
+	</data>
+</openerp>
+
+
+<!-- <style> .modal.in .modal-dialog { transform: translate3d(2px, 101px, 
+	0px); } .modal-lg { width: 300px !important; } </style> -->

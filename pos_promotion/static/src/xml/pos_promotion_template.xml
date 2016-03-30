@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<templates id="pos_promotion_template" inherit_id="point_of_sale.template">
+
+    <t t-extend='PosTicket'>
+        <!--$('#content_area').find('table:eq(1)').after('<table><td>Data</td></table>');-->
+        <t t-jquery=".pos-sale-ticket table:eq(1) " t-operation='replace'>
+
+            <table>
+                <tr>
+                    <td>Subtotal:</td>
+                    <td class="pos-right-align">
+                        <t t-esc="widget.format_currency(order.getTotalTaxExcluded())"/>
+                    </td>
+                </tr>
+                <t t-foreach="order.getTaxDetails()" t-as="taxdetail">
+                    <tr>
+                        <td>
+                            <t t-esc="taxdetail.name"/>
+                        </td>
+                        <td class="pos-right-align">
+                            <t t-esc="widget.format_currency(taxdetail.amount)"/>
+                        </td>
+                    </tr>
+                </t>
+
+                <tr class="emph">
+                    <td>Discount Amount:</td>
+                    <td class="pos-right-align">
+                        <t t-esc="widget.format_currency(order.getDiscountAmount())"/>
+                    </td>
+                </tr>
+
+                <tr class="emph">
+                    <td>TotalAmount:</td>
+                    <td class="pos-right-align">
+                        <t t-esc="widget.format_currency(order.getDisTotal())"/>
+                    </td>
+                </tr>
+
+
+            </table>
+
+
+        </t>
+
+    </t>
+    <t t-extend='Orderline'>
+        <t t-jquery="li ul.info-list " t-operation='replace'>
+            <ul class="info-list">
+                <t t-if="line.get_quantity_str() !== '1' || line.selected ">
+                    <li class="info">
+                        <em>
+                            <t t-esc="line.get_quantity_str()" />
+                        </em>
+                        <t t-esc="line.get_unit().name" />
+                        at
+                        <t t-esc="widget.format_currency(line.get_unit_price(),'Product Price')" />
+                        /
+                        <t t-esc="line.get_unit().name" />
+                    </li>
+                </t>
+                <t t-if="line.get_discount_str() !== '0'">
+                    <li class="info">
+                        With
+                        <em>
+                            <t t-esc="line.get_discount_str()" />
+                        </em>
+                        discount
+                    </li>
+                </t>
+            </ul>
+        </t>
+
+    </t>
+
+
+</templates>

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+	<data>
+		<!-- LC Through Tree Views -->
+		<record model="ir.ui.view" id="lc_through_tree_view">
+			<field name="name">lc.through.tree</field>
+			<field name="model">lc.through</field>
+			<field name="type">tree</field>
+			<field name="arch" type="xml">
+				<tree string="LC Through">
+					<field name="name" />
+				</tree>
+			</field>
+		</record>
+		
+		<!-- LC Opening Form Views -->
+		<record model="ir.ui.view" id="lc_through_form_view">
+			<field name="name">lc.through.form</field>
+			<field name="model">lc.through</field>
+			<field name="type">form</field>
+			<field name="arch" type="xml">
+				<form string="LC Through">
+					<sheet>
+						<group>
+							<field name="name" select="1" class="oe_inline" />
+							
+						</group>
+					</sheet>
+				</form>
+			</field>
+		</record>
+		
+		<!-- LC Through Action Views -->
+		<record model="ir.actions.act_window" id="action_lc_through_tree_view">
+			<field name="name">LC Through</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">lc.through</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+			<field name="view_id" ref="lc_through_tree_view" />
+		</record>
+		
+		<!-- LC Through Menu -->
+		<menuitem id="lc_through_menu" name="LC Through" parent="commercial_configuration_menu"
+		sequence="297" action="action_lc_through_tree_view" />
+	</data>
+</openerp>

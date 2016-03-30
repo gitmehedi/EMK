@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+<data noupdate="0">
+
+    <record id="group_promo_manager" model="res.groups">
+        <field name="name">Sales Promotion Manager</field>
+    </record>
+    
+    <record id="group_promo_user" model="res.groups">
+        <field name="name">Sales Promotion User</field>
+    </record>
+
+</data>
+</openerp>

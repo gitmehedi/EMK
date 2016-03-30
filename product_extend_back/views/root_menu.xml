@@ -1,0 +1,6 @@
+<openerp>
+    <data>
+    
+    <menuitem id="product_exted_root_menu" name="Product Entend" sequence="110"/>
+   </data>
+</openerp>

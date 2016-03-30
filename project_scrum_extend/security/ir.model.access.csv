@@ -1,0 +1,5 @@
+id,name,model_id/id,group_id/id,perm_read,perm_write,perm_create,perm_unlink
+
+access_project_scrum_test_data_manager,project.scrum.test.data.manager,model_project_scrum_test_data,project.group_project_manager,1,1,1,1
+access_project_scrum_test_data_user,project.scrum.test.data.user,model_project_scrum_test_data,project.group_project_user,1,1,1,1
+

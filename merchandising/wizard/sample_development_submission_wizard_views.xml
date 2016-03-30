@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+	<data>
+		<record id="sample_development_submission_wizard_view_form" model="ir.ui.view">
+			<field name="name">Sample Development Submission Wizard</field>
+			<field name="model">sample.development.submission.wizard</field>
+			<field name="priority" eval="16"/>
+			
+			<field name="arch" type="xml">
+				<form string="Sample Development Submission">
+					<sheet>
+						<group>
+							<group >
+								<field name="sample_dev_sub_date"/>
+								<label  for="sample_dev_sub_qty" string="Quantity" />
+								<div >
+									<field name="sample_dev_sub_qty" class="oe_inline"/>
+									<field name="uom" class="oe_inline" options='{"no_open": True,"no_create": 1, "no_create_edit":
+										1}'/>
+								</div>
+							</group>
+						</group>
+					</sheet>
+					<footer>
+						<button name="action_submit" type="object" string="Submit" class="oe_highlight"/>
+						<button string="Cancel" special="cancel" class="oe_link"/>
+					</footer>
+				</form>
+			</field>
+		</record>
+		
+		<record id="sample_development_submission_wizard_action" model="ir.actions.act_window">
+			<field name="name">Create Sample Development Submission</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="src_model">sample.requisition</field>
+			<field name="res_model">sample.development.submission.wizard</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">form</field>
+			<field name="target">new</field>
+		</record>
+		
+		
+	</data>
+</openerp>

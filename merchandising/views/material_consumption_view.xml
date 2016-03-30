@@ -1,0 +1,269 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+	<data>
+		<!-- Material Consumption Form Views -->
+		<record model="ir.ui.view" id="material_consumption_form_view">
+			<field name="name">material_consumption_form</field>
+			<field name="model">material.consumption</field>
+			<field name="arch" type="xml">
+				<form string="Material Consumption Form" copy="false">
+					<header>
+						<button name="action_confirm" type="object" states="draft"
+							string="Confirm Consumption" class="oe_highlight" />
+
+						<button name="%(material_consumption_action_wizard_views)d"
+							states="draft" type="action" string="Generate" class="oe_highlight" />
+
+						<button name="create_template" type="object" class="oe_highlight"
+							string="Create Template" attrs="{'invisible': [('template','=',True)]}" />
+
+						<field name="state" widget="statusbar" />
+					</header>
+					<sheet>
+						<h1>
+							<field name="name" string="Material Consumption" />
+						</h1>
+
+						<group>
+							<group>
+
+								<field name="style_id"
+									options='{"no_open": True,"no_create": 1, "no_create_edit": 1}' />
+								<field name="po_id"
+									options='{"no_open": True,"no_create": 1, "no_create_edit": 1}'
+									domain="[('style_id', '=', 6),('state', '=', 'confirm')]"
+									attrs="{'invisible': [('style_id', '=', False)]}" />
+
+								<label for="consumtion_qty" string="Consumption For" />
+								<div>
+									<div class="col-md-6 multifield_combination">
+										<field name="consumtion_qty" class="oe_inline" />
+									</div>
+									<div class="col-md-6 multifield_combination">
+										<field name="uom_id" class="oe_inline"
+											options='{"no_open": True,"no_create": 1, "no_create_edit": 1}' />
+									</div>
+								</div>
+							</group>
+							<group>
+								<field name="template" invisible="1" />
+							</group>
+						</group>
+
+
+						<notebook colspan="4">
+							<page string="Yarn">
+								<field name="yarn_ids">
+									<tree>
+										<!-- -->
+										<field name="product_tmp_id"
+											options='{"no_open": True,"no_create": 1, "no_create_edit": 1}' />
+										<field name="variant_ids" widget="many2many_tags"
+											options='{"no_open": True,"no_create": 1, "no_create_edit": 1}' />
+										<field name="quantity" />
+										<field name="uom_id"
+											options='{"no_open": True,"no_create": 1, "no_create_edit": 1}'
+											domain="[('category_id', '=', uom_category)]" />
+										<field name="wastage" />
+										<field name="finish_goods" />
+										<field name="uom_category" invisible="1" />
+										<field name="buyer_mentioned_supplier_id"
+											options='{"no_open": True,"no_create": 1, "no_create_edit": 1}' />
+										<field name="preffered_supplier_id"
+											options='{"no_open": True,"no_create": 1, "no_create_edit": 1}'
+											attrs="{'readonly': [('buyer_mentioned_supplier_id','=',True)]}"
+											domain="[('supplier', '=', True)]" />
+										<field name="status" invisible="1" value="yarn" />
+									</tree>
+									<form string="Yarns List">
+										<sheet>
+											<group>
+												<group>
+													<field name="product_tmp_id" domain="[('yarn', '=', True)]"
+														options='{"no_open": True,"no_create": 1, "no_create_edit": 1}' />
+													<field name="variant_ids" widget="many2many_tags"
+														options='{"no_open": True,"no_create": 1, "no_create_edit": 1}' />
+
+													<label for="quantity" string="Quantity" />
+													<div>
+														<div class="col-md-6 multifield_combination">
+															<field name="quantity" class="oe_inline" />
+														</div>
+														<div class="col-md-6 multifield_combination">
+															<field name="uom_id" class="oe_inline"
+																options='{"no_open": True,"no_create": 1, "no_create_edit": 1}'
+																domain="[('category_id', '=', uom_category)]" />
+														</div>
+													</div>
+													<field name="finish_goods" />
+												</group>
+												<group>
+													<field name="wastage" />
+													<field name="uom_category" invisible="1" />
+													<field name="buyer_mentioned_supplier_id"
+														options='{"no_open": True,"no_create": 1, "no_create_edit": 1}'
+														domain="[('supplier', '=', True)]" />
+													<field name="preffered_supplier_id"
+														options='{"no_open": True,"no_create": 1, "no_create_edit": 1}'
+														attrs="{'readonly': [('buyer_mentioned_supplier_id','=',True)]}"
+														domain="[('supplier', '=', True)]" />
+													<field name="status" invisible="1" value="yarn" />
+												</group>
+											</group>
+
+											<notebook>
+												<page string="Size wise quantity">
+													<field name="size_qty_ids" editable='top'>
+														<tree name="Size wise quantity" editable='top'>
+															<field name="attr_size_id"
+																options='{"no_open": True,"no_create": 1, "no_create_edit": 1}' />
+															<field name="quantity" />
+														</tree>
+													</field>
+												</page>
+
+												<page string="Size wise mapping">
+													<field name="variant_mapping_ids" editable='top'>
+														<tree name="Size wise mapping" editable='top'>
+															<field name="attr_size_id"
+																options='{"no_open": True,"no_create": 1, "no_create_edit": 1}' />
+															<field name="prod_variant_ids" widget="many2many_tags"
+																options='{"no_open": True,"no_create": 1, "no_create_edit": 1}' />
+														</tree>
+													</field>
+												</page>
+											</notebook>
+										</sheet>
+									</form>
+								</field>
+							</page>
+							<page string="Accessories">
+								<field name="acc_ids">
+									<tree string="Acc List">
+										<field name="product_tmp_id"
+											options='{"no_open": True,"no_create": 1, "no_create_edit": 1}' />
+										<field name="variant_ids" widget="many2many_tags"
+											options='{"no_open": True,"no_create": 1, "no_create_edit": 1}' />
+										<field name="quantity" />
+										<field name="uom_id"
+											options='{"no_open": True,"no_create": 1, "no_create_edit": 1}'
+											domain="[('category_id', '=', uom_category)]" />
+										<field name="wastage" />
+										<field name="finish_goods" />
+										<field name="uom_category" invisible="1" />
+										<field name="buyer_mentioned_supplier_id"
+											options='{"no_open": True,"no_create": 1, "no_create_edit": 1}' />
+										<field name="preffered_supplier_id"
+											options='{"no_open": True,"no_create": 1, "no_create_edit": 1}'
+											attrs="{'readonly': [('buyer_mentioned_supplier_id','=',True)]}"
+											domain="[('supplier', '=', True)]" />
+										<field name="status" invisible="1" value="acc" />
+									</tree>
+									<form string="Yarns List">
+										<sheet>
+											<group>
+												<group>
+													<field name="product_tmp_id" domain="[('accessories', '=', True)]"
+														options='{"no_open": True,"no_create": 1, "no_create_edit": 1}' />
+													<field name="variant_ids" widget="many2many_tags"
+														options='{"no_open": True,"no_create": 1, "no_create_edit": 1}' />
+
+													<label for="quantity" string="Quantity" />
+													<div>
+														<div class="col-md-6 multifield_combination">
+															<field name="quantity" class="oe_inline" />
+														</div>
+														<div class="col-md-6 multifield_combination">
+															<field name="uom_id" class="oe_inline"
+																options='{"no_open": True,"no_create": 1, "no_create_edit": 1}'
+																domain="[('category_id', '=', uom_category)]" />
+														</div>
+													</div>
+													<field name="finish_goods" />
+												</group>
+												<group>
+													<field name="wastage" />
+													<field name="uom_category" invisible="1" />
+													<field name="buyer_mentioned_supplier_id"
+														options='{"no_open": True,"no_create": 1, "no_create_edit": 1}'
+														domain="[('supplier', '=', True)]" />
+													<field name="preffered_supplier_id"
+														options='{"no_open": True,"no_create": 1, "no_create_edit": 1}'
+														attrs="{'readonly': [('buyer_mentioned_supplier_id','=',True)]}"
+														domain="[('supplier', '=', True)]" />
+													<field name="status" invisible="1" value="yarn" />
+												</group>
+											</group>
+
+											<notebook>
+												<page string="Size wise quantity">
+													<field name="size_qty_ids" editable='top'>
+														<tree name="Size wise quantity" editable='top'>
+															<field name="attr_size_id"
+																options='{"no_open": True,"no_create": 1, "no_create_edit": 1}' />
+															<field name="quantity" />
+														</tree>
+													</field>
+												</page>
+
+												<page string="Size wise mapping">
+													<field name="variant_mapping_ids" editable='top'>
+														<tree name="Size wise mapping" editable='top'>
+															<field name="attr_size_id"
+																options='{"no_open": True,"no_create": 1, "no_create_edit": 1}' />
+															<field name="prod_variant_ids" widget="many2many_tags"
+																options='{"no_open": True,"no_create": 1, "no_create_edit": 1}' />
+														</tree>
+													</field>
+												</page>
+											</notebook>
+										</sheet>
+									</form>
+								</field>
+							</page>
+						</notebook>
+					</sheet>
+				</form>
+			</field>
+		</record>
+
+		<!-- Material Consumption Tree or List view -->
+		<record model="ir.ui.view" id="material_consumption_tree_view">
+			<field name="name">material_consumption_tree</field>
+			<field name="model">material.consumption</field>
+			<field name="arch" type="xml">
+				<tree string="Material Consumption Tree">
+					<field name="name" />
+					<field name="style_id" />
+					<field name="po_id" />
+					<field name="state" />
+				</tree>
+			</field>
+		</record>
+
+
+		<!-- Material Consumption Sequences -->
+		<record id="seq_type_material_consumption" model="ir.sequence.type">
+			<field name="name">Material Type</field>
+			<field name="code">material_seq</field>
+		</record>
+
+		<record id="seq_material_consumption" model="ir.sequence">
+			<field name="name">Material Sequence</field>
+			<field name="code">material_seq</field>
+			<field name="prefix">MC-</field>
+			<field name="padding">10</field>
+		</record>
+
+		<!-- Material Consumption Menu and Action -->
+		<record model="ir.actions.act_window" id="material_consumption_list_action">
+			<field name="name">Material Consumption</field>
+			<field name="res_model">material.consumption</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+		</record>
+
+		<menuitem name="Material Consumptions" id="menu_material_consumption"
+			parent="bom_menu" sequence="420" action="material_consumption_list_action" />
+	</data>
+</openerp>

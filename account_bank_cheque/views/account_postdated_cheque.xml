@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+	<data>
+		<!-- Post Dated Cheque Form Views -->
+		<record id="postdated_cheque_form_view" model="ir.ui.view">
+			<field name="name">postdatedcheque.form</field>
+			<field name="model">account.postdated.cheque</field>
+			<field name="type">form</field>
+			<field name="arch" type="xml">
+				<form string="Post Dated Cheque Form">
+					<header>
+						<field name="id" invisible="1" />
+<!--						<button name="action_draft" type="object" states="draft" string="Draft " class="oe_highlight"-->
+<!--							attrs="{'invisible': ['|',('id', '=', False),('state', 'not in', 'draft')]}"-->
+<!--							/>-->
+<!--						<button name="action_deposit" type="object" states="deposit" string="Deposit" class="oe_highlight"-->
+<!--							/>-->
+						<button name="action_confirm" type="object" states="confirm" string="Confirm" class="oe_highlight"
+							attrs="{'invisible': [('state', 'not in', 'deposit')]}"						
+							/>
+						<button name="action_reject" type="object" states="reject" string="Reject"
+							attrs="{'invisible': [('state', 'not in', 'deposit')]}"						
+							/>
+						
+						<field name="state" widget="statusbar" />				
+					</header>
+					<sheet>
+						<group>
+							<!--<field name="name" select="1" class="oe_inline" />-->
+							<field name="partner_info" />
+							<field name="cheque_number" />
+							<field name="cheque_received_date" />
+							<field name="cheque_amount" />
+							<field name="posting_date" />
+							<field name="issuing_bank" options='{"no_open": True,"no_create": 1, "no_create_edit":1}'
+								/>
+							<field name="bank_branch_name" />
+						</group>
+					</sheet>
+				</form>
+			</field>
+		</record>
+		
+		<!-- Post Dated Cheque Tree Views -->
+		<record id="postdated_cheque_tree_view" model="ir.ui.view">
+			<field name="name">postdatedcheque.tree</field>
+			<field name="model">account.postdated.cheque</field>
+			<field name="type">tree</field>
+			<field name="arch" type="xml">
+				<tree string="Post Dated Cheque Tree" colors="#4c4c4c:state == 'draft'">
+					<field name="partner_info" />
+					<field name="cheque_number" />
+					<field name="cheque_received_date" />
+					<field name="cheque_amount" />
+					<field name="posting_date" />
+					<field name="issuing_bank" />
+					<field name="bank_branch_name" />
+					<field name="state" />
+					<!--					<field name="account_number_id" />				-->
+				</tree>
+			</field>
+		</record>
+		
+		<!-- Post Dated Cheque Search Views -->
+		<record id="postdated_cheque_search_view" model="ir.ui.view">
+			<field name="name">postdatedcheque.search</field>
+			<field name="model">account.postdated.cheque</field>
+			<field name="arch" type="xml">
+				<search string="Search">
+					<field name="partner_info" string="Customer Name" filter_domain="[('partner_info','ilike','self')]"
+						/>
+					<field name="cheque_number" string="Cheque Number" filter_domain="[('cheque_number','ilike','self')]"
+						/>
+					<field name="cheque_received_date" string="Cheque Received Date" filter_domain="[('cheque_received_date','ilike','self')]"
+						/>
+					<field name="cheque_amount" string="Cheque Amount" filter_domain="[('cheque_amount','ilike','self')]"/>
+					<field name="posting_date" string="Posting Date" filter_domain="[('posting_date','ilike','self')]"
+						/>
+					<field name="issuing_bank" string="Issuing Bank" filter_domain="[('issuing_bank','ilike','self')]"
+						/>
+					<field name="bank_branch_name" string="Bank Branch Name" filter_domain="[('bank_branch_name','ilike','self')]"
+						/>
+					
+					<filter string="Draft" domain="[('state','=','draft')]" />
+					<filter string="Deposit" domain="[('state','=','deposit')]" />
+					<filter string="Confirm" domain="[('state','=','confirm')]" />
+					<filter string="Reject" domain="[('state','=','reject')]" />
+					
+					<group expand="0" string="Group By">
+						<filter string="Status" context="{'group_by': 'state'}" />
+					</group>
+				</search>
+			</field>
+		</record>
+		
+		<!-- Post Dated Cheque Action Views -->
+		<record id="action_postdated_cheque_view" model="ir.actions.act_window">
+			<field name="name">Post Dated Cheque</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">account.postdated.cheque</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+			<field name='context'>{'search_default_state':'draft'}</field>
+			<field name="view_id" ref="postdated_cheque_tree_view" />
+		</record>
+		
+		<!-- Post Dated Cheque State Change -->
+		<record id="cheque_deposited_form_view" model="ir.ui.view">
+			<field name="name">account.postdated.cheque.search.popup.form</field>
+			<field name="model">account.postdated.cheque.search.popup</field>
+			<field name="arch" type="xml">
+				<form string="Cheque Deposit Form">
+					<separator colspan="4" string="The cheque should be deposited on a company account." />
+					<group>
+						<field name="deposit_date" />
+
+						<field name="account_number_id" required="True" options='{"no_open": True,"no_create":
+							1, "no_create_edit":1}' />
+					</group>
+					<footer>
+						<button string="Deposit" name="action_deposit_cheque" type="object" default_focus="1"
+							class="oe_highlight" />
+						or
+						<button string="Cancel" class="oe_link" special="cancel" />
+					</footer>
+				</form>
+			</field>
+		</record>
+		
+		<act_window id="action_cheque_deposited_to_Bank" multi="True" key2="client_action_multi"
+			name="Cheque Deposit" res_model="account.postdated.cheque.search.popup" src_model="account.postdated.cheque"
+			view_mode="form" target="new" view_type="form" />
+		
+		
+		<!-- Post Dated Cheque Menu -->
+		<menuitem id="cheque_entry_menu" name="Cheque Entry" parent="post_dated_cheque_menu"
+			sequence="10" action="action_postdated_cheque_view" />
+	</data>
+</openerp>

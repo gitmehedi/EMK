@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+     <record model="ir.ui.view" id="purchase_order_double_search_inherit">
+        <field name="name">purchase.order.list.select.inherit</field>
+        <field name="model">purchase.order</field>
+        <field name="inherit_id" ref="purchase.view_purchase_order_filter"/>
+        <field name="arch" type="xml">
+            <xpath expr="//filter[@name='draft']" position="after">
+                <filter icon="terp-gtk-jump-to-ltr" name="to_approve_1" string="To Approve-1" domain="[('state','in',('wait','confirmed1'))]" help="Purchase orders which are not approved-1 yet."/>
+                <filter icon="terp-gtk-jump-to-gtr" name="to_approve" string="To Approve-2" domain="[('state','in',('wait','confirmed'))]" help="Purchase orders which are not approved-2 yet."/>
+            </xpath>
+        </field>
+    </record>
+    </data>
+</openerp>

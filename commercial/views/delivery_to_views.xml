@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+	<data>
+		<!-- Delivery To Tree Views -->
+		<record model="ir.ui.view" id="delivery_to_tree_view">
+			<field name="name">delivery.to.tree</field>
+			<field name="model">delivery.to</field>
+			<field name="type">tree</field>
+			<field name="arch" type="xml">
+				<tree string="Delivery To">
+					<field name="name" />
+				</tree>
+			</field>
+		</record>
+		
+		<!-- Delivery To Form Views -->
+		<record model="ir.ui.view" id="delivery_to_tree_view">
+			<field name="name">delivery.to.form</field>
+			<field name="model">delivery.to</field>
+			<field name="type">form</field>
+			<field name="arch" type="xml">
+				<form string="Delivery To">
+					<sheet>
+						<group>
+							<field name="name" select="1" class="oe_inline" />
+						</group>
+					</sheet>
+				</form>
+			</field>
+		</record>
+		
+		<!-- Delivery To Action Views -->
+		<record model="ir.actions.act_window" id="action_delivery_to_tree_view">
+			<field name="name">Delivery To</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">delivery.to</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+			<field name="view_id" ref="delivery_to_tree_view" />
+		</record>
+		
+		<!-- Delivery To Menu -->
+		<menuitem id="delivery_to_menu" name="Delivery To" parent="commercial_configuration_menu"
+		sequence="297" action="action_delivery_to_tree_view"/>
+	</data>
+</openerp>

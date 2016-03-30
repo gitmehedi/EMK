@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- vim:fdn=3:
+-->
+<openerp>
+    <data>
+    	<!-- Inherited_Id :::: point_of_sale/view/template.xml -->
+        <template id="pos_custom_invoice_format_asset" name="pos custom invoice format" inherit_id="point_of_sale.index">
+        	<xpath expr="//link[@id='pos-stylesheet']" position="after">
+                 <link rel="stylesheet" href="/pos_invoice_format/static/src/css/pos_custom_invoice_format.css"/>
+            </xpath>
+        </template>
+    </data>
+</openerp>

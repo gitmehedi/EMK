@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>     
+        <record id="quotation_request_view_form" model="ir.ui.view" >
+			<field name="name">quotation.request.form</field>
+			<field name="model">quotation.request</field>
+			<field name="arch" type="xml">
+				<form string="Quotation Request Form">
+					<header>
+                       <!--<button name="action_submission" 
+                                string="Submission" class="oe_highlight"
+                                states="confirmed" type="object" domain="[('state','=','confirmed')]"
+                                 /> -->
+                       <button name="%(quotation_submission_wizard_action)d" 
+                                string="Submission" class="oe_highlight"
+                                states="confirmed" type="action" domain="[('state','=','confirmed')]"
+                                />      
+                        <button name="action_resubmission" type="object" string="Re submission"
+                                states="submission"/>
+                        <button name="action_accepted" type="object" string="Accepted"
+                                states="submission" class="oe_highlight"/>                  
+                        <button name="confirm" type="workflow"
+                                string="Confirm" states="draft" class="oe_highlight"/>
+                        <button name="action_cancel" string="Cancel" type="object"  states="confirmed,submission"/>
+                         
+                        <field name="state" widget="statusbar"/>
+                    </header>
+                    <sheet>
+	                    <h1>
+	                       <field name="quotation_ref_no"/>
+	                    </h1>
+			            <group>
+				            <group>
+				                <field name="buyer_id" options='{"no_open": True,"no_create": 1, "no_create_edit": 1}'/>
+				                <field name="style_id" widget="selection" attrs="{'invisible': [('buyer_id', '=', False)]}" 
+				                domain="[('buyer_id', '=', buyer_id),('visible', '=', True),('state', '=', 'confirm')]"/>
+				                <field name="attention_id"  options='{"no_open": True,"no_create": 1, "no_create_edit": 1}'/>
+				            </group>
+				            <group>
+				            	<field name="quotation_request_date"/>
+				                <field name="deadline"/>
+				            </group>
+			            </group>
+			            <div attrs="{'invisible':['|', ('state','=','draft'), ('state','=','confirmed')]}">
+			            <separator string="Quotation Submission"/>
+			                <div>
+			                   	<field name="quotation_submission_ids"/>
+			                </div>
+			            </div>    
+		            </sheet>
+                </form>
+            </field>
+        </record>
+		
+		<!-- Quotation Request tree/list view -->
+        <record id="quotation_request_view_tree" model="ir.ui.view" >
+            <field name="name">quotation.request.tree</field>
+            <field name="model">quotation.request</field>
+            <field name="arch" type="xml">
+                <tree string="Quotation Request Tree">
+                	<field name="quotation_ref_no" />
+                    <field name="buyer_id"/>
+                    <field name="style_id"/>
+                    <field name="quotation_request_date"/>
+                    <field name="deadline"/>
+                    <field name="attention_id"/>
+                    <field name="state"/>
+                </tree>
+            </field>
+        </record>
+		
+		<!-- Quotation Request search view -->
+		<record id="quotation_request_view_search" model="ir.ui.view">
+		    <field name="name">Quotation Request search view</field>
+		    <field name="model">quotation.request</field>
+		    <field eval="10" name="priority"/>
+		    <field name="arch" type="xml">
+		        <search string="Quotation Request">
+                    <group string="Group By">
+                        <filter name="buyer" string="Buyer"
+                                context="{'group_by': 'buyer_id'}"/>
+                    </group>
+                    <group string="Group By">
+                        <filter name="style" string="Style"
+                                context="{'group_by': 'style_id'}"/>
+                    </group>
+		        </search>
+		    </field>
+		</record>
+		
+		<record id="quotation_request_view_sequence_type" model="ir.sequence.type">
+            <field name="name">Quotation Request No</field>
+            <field name="code">quotation.request</field>
+        </record>
+
+        <record id="quotation_request_view_sequence" model="ir.sequence">
+            <field name="name">Quotation Request No</field>
+            <field name="code">quotation.request</field>
+            <field name="prefix">QR-Ref-NO-</field>
+            <field name="padding">10</field>
+        </record>
+        
+       
+		<record id="quotation_request_action" model="ir.actions.act_window" >
+            <field name="name">Quotation Request</field>
+            <field name="res_model">quotation.request</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <menuitem id="quotation_request_menu" name="Quotation Request"  parent="merchandising_menu"
+            sequence="230" action="quotation_request_action"/>
+
+    </data>
+</openerp>

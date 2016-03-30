@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+	<data>
+		<record id="inherited_pebbles_purchase_order_form" model="ir.ui.view">
+			<field name="name">purchase.order.form</field>
+			<field name="model">purchase.order</field>
+			<field name="inherit_id" ref="purchase.purchase_order_form"/>
+			<field name="arch" type="xml">
+				<xpath expr="//button[@name='view_picking']" position="replace">
+					<button name="view_picking" string="Receive Products" type="object" invisible="1"
+						class="oe_highlight"/>
+				</xpath>
+				<xpath expr="//button[@name='view_invoice']" position="replace">
+					<button name="view_invoice" string="Receive Invoice" type="object" invisible="1" class="oe_highlight"/>
+				</xpath>
+				<xpath expr="//button[@string='Send PO by Email']" position="replace">
+					<button name="wkf_send_rfq" states="approved" string="Send PO by Email" type="object"
+						invisible="1" context="{'send_rfq':False}"/>
+				</xpath>
+				<xpath expr="//tree/field[@name='name']" position="replace">
+					<field name="name" invisible="1"/>
+				</xpath>
+			</field>
+		</record>
+	</data>
+</openerp>

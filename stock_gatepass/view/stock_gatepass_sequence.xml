@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data noupdate="0">
+
+		<record id="seq_gate_pass_cylinder_type" model="ir.sequence.type">
+			<field name="name">Gate Pass</field>
+			<field name="code">gate_pass_in_code</field>
+		</record>
+
+		<record id="seq_gate_pass_cylinder" model="ir.sequence">
+			<field name="name">Gate Pass</field>
+			<field name="code">gate_pass_in_code</field>
+			<field name="prefix">Gatepass/In/%(year)s/</field>
+			<field name="padding">5</field>
+		</record>
+
+		<record id="seq_gate_out_pass_cylinder_type" model="ir.sequence.type">
+			<field name="name">Gate Pass Out</field>
+			<field name="code">gate_pass_out_code</field>
+		</record>
+
+		<record id="seq_gate_out_pass_cylinder" model="ir.sequence">
+			<field name="name">GatePass Out</field>
+			<field name="code">gate_pass_out_code</field>
+			<field name="prefix">Gatepass/Out/%(year)s/</field>
+			<field name="padding">5</field>
+		</record>
+
+	</data>
+</openerp>
