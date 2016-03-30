@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+	<data>
+		<record id="product_size_view_form" model="ir.ui.view">
+			<field name="name">product.size.form</field>
+			<field name="model">product.size</field>
+			<field name="arch" type="xml">
+				<form string="product size Form">
+					<sheet>
+						<group colspan="4">
+							<group colspan="2" col="2">
+								<field name="name" class="oe_inline" sting="Name" />
+								<field name="active" class="oe_inline" />
+							</group>
+						</group>
+
+						<separator string="Region wise remarks" />
+						<div>
+							<field name="product_size_line_ids">
+								<tree editable="bottom">
+									<field name="region_id" options='{"no_open": True,"no_create": 1}'/>
+									<field name="remark" />
+								</tree>
+							</field>
+						</div>
+
+					</sheet>
+				</form>
+			</field>
+		</record>
+
+		<!-- season tree/list view -->
+		<record id="product_size_view_tree" model="ir.ui.view">
+			<field name="name">product.size.tree</field>
+			<field name="model">product.size</field>
+			<field name="arch" type="xml">
+				<tree string="product size Tree">
+					<field name="name" />
+					<field name="active" />
+				</tree>
+			</field>
+		</record>
+
+		<!-- season search view -->
+		<record id="product_size_view_search" model="ir.ui.view">
+			<field name="name">product size search view</field>
+			<field name="model">product.size</field>
+			<field eval="10" name="priority" />
+			<field name="arch" type="xml">
+				<search string="Product Size">
+					<field name="name" />
+					<field name="active" />
+					<group string="Group By">
+						<filter name="status" string="active" context="{'group_by': 'active'}" />
+					</group>
+				</search>
+			</field>
+		</record>
+
+		<record id="product_size_action" model="ir.actions.act_window">
+			<field name="name">Product Sizes</field>
+			<field name="res_model">product.size</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+		</record>
+
+		<menuitem id="product_size_menu" name="Product Sizes" parent="products_sub_menu"
+			sequence="310" action="product_size_action" />
+	</data>
+</openerp>

@@ -1,0 +1,220 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+	<data>
+		<!-- Product Style Form Views -->
+		<record model="ir.ui.view" id="product_style_form_view">
+			<field name="name">product_style_form</field>
+			<field name="model">product.style</field>
+			<field name="arch" type="xml">
+				<form string="Product Style Form" duplicate="false" copy="false">
+					<header attrs="{'invisible': [('visible','=',False)]}">
+						<button name="action_confirm" type="object" states="draft"
+							string="Confirm Style" class="oe_highlight" />
+
+						<button name="%(product_style_amendment_action_wizard_views)d"
+							states="confirm" type="action" string="Amendment or Copy" class="oe_highlight" />
+
+						<field name="state" widget="statusbar" />
+					</header>
+					<sheet>
+						<h1>
+							<field name="name" string="Style No" />
+						</h1>
+						<group>
+							<group>
+								<field name="style_ref" />
+								<field name="buyer_id"
+									options='{"no_open": True,"no_create": 1, "no_create_edit": 1}' />
+								<field name="year_id"
+									options='{"no_open": True,"no_create": 1, "no_create_edit": 1}' />
+							</group>
+							<group>
+								<field name="season_id"
+									options='{"no_open": True,"no_create": 1, "no_create_edit": 1}' />
+								<field name="version" attrs="{'invisible': [('version','&lt;',2)]}" />
+								<field name="visible" invisible="1" />
+							</group>
+						</group>
+
+
+						<notebook colspan="4">
+							<page string="Technical Specification">
+								<field name="specification_ids">
+									<tree string="Specification Lines" editable="top">
+										<field name="part_id" />
+										<field name="spec_ids" widget="many2many_tags" />
+										<field name="remarks" class="tree-remarks" />
+									</tree>
+								</field>
+							</page>
+							<page string="Size Group Details">
+								<field name="line_ids">
+									<tree string="Invoice Lines" editable="top">
+										<field name="size_group_id"
+											options='{"no_open": True,"no_create": 1, "no_create_edit": 1}' />
+										<field name="size_id"
+											options='{"no_open": True,"no_create": 1, "no_create_edit": 1}' />
+									</tree>
+								</field>
+							</page>
+							<page string="Images">
+								<field name="image_ids" mode="kanban" label="Add Images"
+									attrs="{'readonly': [('state','=','confirm')]}" options='{"create_text": "Add Images"}'>
+									<kanban>
+										<field name="title" />
+										<field name="image" />
+										<templates>
+											<div t-name="KanbanView.buttons" class="oe_kanban_buttons">
+												<t t-if="widget.options.action_buttons !== false">
+													<t t-if="widget.is_action_enabled('create')">
+														<button type="button" class="oe_kanban_button_new oe_highlight">
+															<t t-esc="widget.options.create_text || _t('ADD images')" />
+														</button>
+														<span t-if="widget.is_action_enabled('group_create')"
+															class="oe_alternative" style="display: none">
+															<span class="oe_fade">or</span>
+															<div class="oe_bounce_container">
+																<a href="#" class="oe_bold oe_kanban_add_column">Add a new column</a>
+															</div>
+														</span>
+													</t>
+												</t>
+											</div>
+											<t t-name="kanban-box">
+												<div style="position: relative">
+
+													<a t-if="! read_only_mode" type="delete"
+														style="position: absolute; right: 13px; top: 5px; font-size: 18px; diplay: inline-block; color: red;">X</a>
+													<div class="oe_module_vignette">
+														<a type="open">
+															<t t-if="record.image.raw_value === true">
+																<img
+																	t-att-src="kanban_image('product.style.image', '', record.id.value)"
+																	height="150" width="190"
+																	style="margin: 0 5px 0 -7px; border: 1px solid gray;"
+																	class="oe_avatar" />
+															</t>
+															<t t-if="record.image and record.image.raw_value !== false">
+																<img t-att-src="'data:image/png;base64,'+record.image.raw_value"
+																	height="150" width="190"
+																	style="margin: 0 5px 0 -7px; border: 1px solid gray;"
+																	class="oe_avatar" />
+															</t>
+															<t t-if="record.image.raw_value === false">
+																<img t-att-src="_s + '/base/static/src/img/company_image.png'"
+																	height="150" width="190"
+																	style="margin: 0 5px 0 -7px; border: 1px solid gray;"
+																	class="oe_avatar" />
+															</t>
+															<h2 style="margin-top: 5px; text-align:center;">
+																<a type="open">
+																	<field name="title" />
+																</a>
+															</h2>
+														</a>
+													</div>
+												</div>
+											</t>
+										</templates>
+									</kanban>
+									<form string="Contact">
+										<sheet>
+											<field name="image" widget="image" class="oe_left"
+												width="200px" height="200px" style="border: 1px solid gray;" />
+											<div class="oe_title">
+												<label for="title" class="oe_edit_only" />
+												<h1>
+													<field name="title" style="width: 70%" />
+												</h1>
+											</div>
+										</sheet>
+									</form>
+								</field>
+							</page>
+
+							<page string="Vesions"
+								attrs="{'invisible': ['|',('version','&lt;',2),('visible','=',False)]}">
+								<field name="style_ids">
+									<tree>
+										<field name="name" />
+										<field name="buyer_id" />
+										<field name="year_id" />
+										<field name="version" />
+										<field name="season_id" />
+										<field name="state" invisible="1" />
+										<field name="visible" invisible="1" />
+									</tree>
+								</field>
+							</page>
+
+						</notebook>
+						<separator string="Remarks" />
+						<field name="remarks" placeholder="Put an remarks..................." />
+					</sheet>
+				</form>
+			</field>
+		</record>
+
+		<!-- Product Style Tree or List view -->
+		<record model="ir.ui.view" id="product_style_tree_view">
+			<field name="name">product_style_tree</field>
+			<field name="model">product.style</field>
+			<field name="arch" type="xml">
+				<tree string="Product Style Tree">
+					<field name="name" />
+					<field name="style_ref" />
+					<field name="buyer_id" />
+					<field name="year_id" />
+					<field name="season_id" />
+					<field name="version" style="align: left !important;" />
+					<field name="state" />
+				</tree>
+			</field>
+		</record>
+
+		<!-- Product Style Search Views -->
+		<record id="product_style__view_search" model="ir.ui.view">
+			<field name="name">Product Style Search View</field>
+			<field name="model">product.style</field>
+			<field eval="10" name="priority" />
+			<field name="arch" type="xml">
+				<search string="Product Style">
+					<field name="name"
+						filter_domain="['|', ('name', 'ilike', self), ('style_ref', 'ilike', self)]" />
+					<group string="Group By">
+						<filter name="name" string="Name" context="{'group_by': 'name'}" />
+					</group>
+					<group string="Group By">
+						<filter name="style_ref" string="Reference Style" context="{'group_by': 'style_ref'}" />
+					</group>
+				</search>
+			</field>
+		</record>
+
+
+		<!-- Sequences for Product Styles
+		<record id="seq_type_product_style_order_2" model="ir.sequence.type">
+			<field name="name">Style Type</field>
+			<field name="code">style_code</field>
+		</record>-->
+
+		<record id="seq_product_style_order_2" model="ir.sequence">
+			<field name="name">style</field>
+			<field name="code">style_code</field>
+			<field name="prefix">PS-</field>
+			<field name="padding">10</field>
+		</record>
+
+		<!-- Product Style Menu and Action -->
+		<record model="ir.actions.act_window" id="product_style_list_action">
+			<field name="name">Styles</field>
+			<field name="res_model">product.style</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+			<field name="domain">[('visible','=',True)]</field>
+		</record>
+
+		<menuitem name="Styles" id="menu_styles" parent="merchandising_menu"
+			sequence="220" action="product_style_list_action" />
+	</data>
+</openerp>

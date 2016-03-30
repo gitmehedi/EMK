@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+        <record id="sample_development_request_wkf" model="workflow" >
+            <field name="name">Sample Development Request Workflow</field>
+            <field name="osv">sample.development.request</field>
+            <field name="on_create">True</field>
+        </record>
+
+        <record id="sample_development_request_draft" model="workflow.activity" >
+            <field name="name">Draft</field>
+            <field name="wkf_id" ref="sample_development_request_wkf"/>
+            <field name="flow_start" eval="True"/>
+            <field name="kind">function</field>
+            <field name="action">action_draft()</field>
+        </record>
+        <record id="sample_development_request_confirmed" model="workflow.activity" >
+            <field name="name">Confirmed</field>
+            <field name="wkf_id" ref="sample_development_request_wkf"/>
+            <field name="kind">function</field>
+            <field name="action">action_confirm()</field>
+        </record>
+        <record id="sample_development_request_done" model="workflow.activity" >
+            <field name="name">Done</field>
+            <field name="wkf_id" ref="sample_development_request_wkf"/>
+            <field name="kind">function</field>
+            <field name="action">action_done()</field>
+        </record>
+
+        <record id="sample_development_request_draft_to_confirmed" model="workflow.transition" >
+            <field name="act_from" ref="sample_development_request_draft"/>
+            <field name="act_to" ref="sample_development_request_confirmed"/>
+            <field name="signal">confirm</field>
+        </record>
+        <record id="sample_development_request_confirmed_to_draft" model="workflow.transition" >
+            <field name="act_from" ref="sample_development_request_confirmed"/>
+            <field name="act_to" ref="sample_development_request_draft"/>
+            <field name="signal">draft</field>
+        </record>
+        <record id="sample_development_request_done_to_draft" model="workflow.transition">
+            <field name="act_from" ref="sample_development_request_done"/>
+            <field name="act_to" ref="sample_development_request_draft"/>
+            <field name="signal">draft</field>
+        </record>
+        <record id="sample_development_request_confirmed_to_done" model="workflow.transition">
+            <field name="act_from" ref="sample_development_request_confirmed"/>
+            <field name="act_to" ref="sample_development_request_done"/>
+            <field name="signal">done</field>
+        </record>
+    </data>
+</openerp>

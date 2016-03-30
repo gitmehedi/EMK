@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+	<data>
+		<menuitem id="root_menu" name="Merchandising" sequence="50"
+			groups="merchandising_group_manager,merchandising_group_user" />
+
+		<menuitem id="merchandising_menu" name="Merchandising"
+			parent="root_menu" sequence="200" />
+		<menuitem id="sample_development_menu" name="Sample Development"
+			parent="root_menu" sequence="300" />
+		<menuitem id="bom_menu" name="Bill of Materials" parent="root_menu"
+			sequence="400" />
+		<menuitem id="configuration_menu" name="Configuration"
+			parent="root_menu" sequence="500" />
+
+		<menuitem id="products_sub_menu" name="Products" parent="configuration_menu"
+			sequence="510" />
+		<menuitem id="shipping_sub_menu" name="Shipping" parent="configuration_menu"
+			sequence="530" />
+
+	</data>
+</openerp>

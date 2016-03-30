@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>     
+        <record id="merchandising_dept_view_form" model="ir.ui.view">
+			<field name="name">Merchandising Department</field>
+			<field name="model">merchandising.dept</field>
+			<field name="priority" eval="16"/>
+		
+			<field name="arch" type="xml">
+			   <form string="Product Size Group Form">
+			    <sheet>
+					<group colspan="4">
+						<group colspan="2" col="2">
+						    <field name="name"  class="oe_inline" sting="Name"/>
+							<field name="buyer_ids" widget="many2many_tags" string="Buyer"  class="oe_inline"/>
+						</group>
+					</group>
+				 </sheet>
+				</form>
+			</field>
+		</record>
+	    <record id="merchandising_dept_view_tree" model="ir.ui.view">
+			<field name="name">Merchandising Department</field>
+			<field name="model">merchandising.dept</field>
+			<field name="priority" eval="16"/>
+			<field name="arch" type="xml">
+				<tree string="Merchandising Department">
+					<field name="name"/>
+				</tree>
+	      </field>
+		</record>
+  
+		<record id="merchandising_dept_action" model="ir.actions.act_window">
+            <field name="name">Merchandising Department</field>
+			<field name="res_model">merchandising.dept</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+        
+		   <menuitem name="Departments" id="merchandising_dept_menu" parent="configuration_menu"
+            sequence="550" action="merchandising_dept_action"/>
+            
+    </data>
+</openerp>

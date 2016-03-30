@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+	<data>
+		<record id="res_shipping_courier_view_form" model="ir.ui.view" >
+			<field name="name">Shipping Courier</field>
+			<field name="model">res.shipping.courier</field>
+			<field name="priority" eval="16"/>
+			
+			<field name="arch" type="xml">
+				<form string="Shipping Courier">
+					<sheet>
+						<group colspan="4">
+							<group colspan="2" col="2">
+								<field name="name" class="oe_inline"/>								
+								<field name="branch" class="oe_inline"/>
+								<field name="contact_number" class="oe_inline"/>
+								<field name="address" string="Address" class="oe_inline"/>								
+							</group>
+						</group>
+					</sheet>
+				</form>
+			</field>
+		</record>
+		<record id="res_shipping_courier_view_tree" model="ir.ui.view">
+			<field name="name">Shipping Courier</field>
+			<field name="model">res.shipping.courier</field>
+			<field name="priority" eval="16"/>
+			
+			<field name="arch" type="xml">
+				<tree string="Shipping Courier">
+					<field name="name"/>
+					<field name="branch"/>
+				</tree>
+			</field>
+		</record>
+		
+		<record id="res_shipping_courier_action" model="ir.actions.act_window">
+			<field name="name">Shipping Courier</field>
+			<field name="res_model">res.shipping.courier</field>
+			<field name="view_mode">tree,form</field>
+		</record>
+		
+		<menuitem name="Shipping Courier" id="res_shipping_courier_menu" parent="configuration_menu"
+			sequence="280" action="res_shipping_courier_action"/>
+		
+	</data>
+</openerp>

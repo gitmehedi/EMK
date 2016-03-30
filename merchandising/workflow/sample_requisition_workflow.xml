@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+	<data>
+		<record id="sample_requisition_wkf" model="workflow">
+			<field name="name">Sample Requisition Workflow</field>
+			<field name="osv">sample.requisition</field>
+			<field name="on_create">True</field>
+		</record>
+		
+		<record id="sample_requisition_draft" model="workflow.activity">
+			<field name="name">Draft</field>
+			<field name="wkf_id" ref="sample_requisition_wkf"/>
+			<field name="flow_start" eval="True"/>
+			<field name="kind">function</field>
+			<field name="action">action_draft()</field>
+		</record>
+		<record id="sample_requisition_confirmed" model="workflow.activity">
+			<field name="name">Confirmed</field>
+			<field name="wkf_id" ref="sample_requisition_wkf"/>
+			<field name="kind">function</field>
+			<field name="action">action_confirm()</field>
+		</record>
+		<record id="sample_requisition_development" model="workflow.activity">
+			<field name="name">Confirmed</field>
+			<field name="wkf_id" ref="sample_requisition_wkf"/>
+			<field name="kind">function</field>
+			<field name="action">action_development()</field>
+		</record>
+		<record id="sample_requisition_redevelopment" model="workflow.activity">
+			<field name="name">Confirmed</field>
+			<field name="wkf_id" ref="sample_requisition_wkf"/>
+			<field name="kind">function</field>
+			<field name="action">action_redevelopment()</field>
+		</record>
+		
+		<record id="sample_requisition_receive" model="workflow.activity">
+			<field name="name">development</field>
+			<field name="wkf_id" ref="sample_requisition_wkf"/>
+			<field name="kind">function</field>
+			<field name="action">action_receive()</field>
+		</record>
+		
+		<record id="sample_requisition_done" model="workflow.activity">
+			<field name="name">Done</field>
+			<field name="wkf_id" ref="sample_requisition_wkf"/>
+			<field name="kind">function</field>
+			<field name="action">action_done()</field>
+		</record>
+		
+		<record id="sample_requisition_draft_to_confirmed" model="workflow.transition">
+			<field name="act_from" ref="sample_requisition_draft"/>
+			<field name="act_to" ref="sample_requisition_confirmed"/>
+			<field name="signal">confirm</field>
+		</record>
+		<record id="sample_requisition_confirmed_to_draft" model="workflow.transition" >
+			<field name="act_from" ref="sample_requisition_confirmed"/>
+			<field name="act_to" ref="sample_requisition_draft"/>
+			<field name="signal">draft</field>
+		</record>
+		<record id="sample_requisition_done_to_draft" model="workflow.transition" >
+			<field name="act_from" ref="sample_requisition_done"/>
+			<field name="act_to" ref="sample_requisition_draft"/>
+			<field name="signal">draft</field>
+		</record>
+		<record id="sample_requisition_confirmed_to_done" model="workflow.transition">
+			<field name="act_from" ref="sample_requisition_confirmed"/>
+			<field name="act_to" ref="sample_requisition_done"/>
+			<field name="signal">done</field>
+		</record>
+	</data>
+</openerp>

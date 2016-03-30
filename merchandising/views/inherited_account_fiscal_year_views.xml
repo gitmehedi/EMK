@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+		
+		<record model="ir.actions.act_window" id="inherited_account_fiscal_year_menu_action">
+            <field name="name">Fical Year</field>
+            <field name="res_model">account.fiscalyear</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <menuitem name="Fiscal Year" id="inherited_account_fiscal_year_menu" parent="configuration_menu"
+            sequence="320" action="inherited_account_fiscal_year_menu_action"/>
+    </data>
+</openerp>

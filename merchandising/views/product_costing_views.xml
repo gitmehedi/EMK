@@ -1,0 +1,434 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+	<data>
+		<record id="product_costing_view_form" model="ir.ui.view">
+			<field name="name">product.costing.form</field>
+			<field name="model">product.costing</field>
+			<field name="arch" type="xml">
+				<form string="Product Costing Form" duplicate="false" copy="false">
+					<header attrs="{'invisible': [('product_costing_visible','=',False)]}">
+						<button name="action_confirm" type="object" states="draft"
+							string="Confirm " class="oe_highlight" />
+
+						<button name="action_approve" type="object" class="oe_highlight"
+							states="confirm" string="Approve"
+							groups="merchandising.merchandising_group_manager" />
+
+						<button name="action_reject" type="object" class="" states="confirm"
+							string="Reject" groups="merchandising.merchandising_group_manager" />
+
+						<button name="action_revise" type="object" class="" states="confirm"
+							string="Revise" groups="merchandising.merchandising_group_manager" />
+
+						<button name="costing_copy" type="object" class="oe_highlight"
+							states="approve" string="Amendment" confirm="Do you want to Amendment?"
+							context="{'create_version':True}" />
+
+						<button name="costing_copy" type="object" states="approve"
+							string="Copy Costing" confirm="Do you want to create new Costing?"
+							context="{'create_version': False}" />
+
+						<button name="action_cancel" type="object" states="confirm, approve"
+							string="Cancel" class="" />
+
+						<field name="state" widget="statusbar" />
+					</header>
+					<div>
+						<h1>
+							<field name="name" string="Serial No" />
+						</h1>
+						<div class="oe_button_box" name="button_box">
+							<button name="toggle_active" type="object" class="oe_stat_button" icon="fa-check">
+								<field name="for_bidding" widget="boolean_button" options="{&quot;terminology&quot;: &quot;Bidding&quot;}"/>
+							</button>
+                        </div>
+						<group>
+							<group>
+
+								<field name="buyer_id"
+									options='{"no_open": True,"no_create": 1, "no_create_edit":1}' />
+								<field name="style_id"
+									options='{"no_open": True,"no_create": 1, "no_create_edit":1}'
+									attrs="{'required': [('for_bidding','=',False)]}" />
+								<field name="quotation_type" attrs="{'required': [('for_bidding','=',False)]}"
+									options='{"no_open": True,"no_create": 1, "no_create_edit":1}' />
+								<field name="version" attrs="{'invisible': [('version','&lt;',2)]}" />
+								<field name="version_date" />
+								<field name="dept_id" domain="[('buyer_ids', '=', buyer_id)]"
+									attrs="{'required': [('for_bidding','=',False)]}" options='{"no_open": True,"no_create": 1, "no_create_edit": 1}' />
+							</group>
+							<group>
+								<field name="buyer_ref" />
+								<label for="qty" string="Quantity" />
+								<div>
+									<div class="col-md-5 multifield_combination">
+										<field name="qty" attrs="{'required': [('for_bidding','=',False)]}" />
+									</div>
+									<div class="col-md-5 multifield_combination">
+										<field name="uom" attrs="{'required': [('for_bidding','=',False)]}"
+											options='{"no_open": True,"no_create": 1, "no_create_edit": 1}' />
+									</div>
+								</div>
+								<field name="product_currency_id"
+									options='{"no_open": True,"no_create": 1, "no_create_edit":1}' />
+
+								<field name="product_size_group_id" widget="selection"
+									attrs="{'invisible': [('buyer_id','=', False)],'required': [('for_bidding','=',False)]}"
+									domain="[('buyer_id', '=', buyer_id)]" options='{"no_open": True,"no_create": 1, "no_create_edit":1}' />
+								<field name="gauge_id" attrs="{'required': [('for_bidding','=',False)]}"/>
+								<label for="weight_per_pcs" />
+								<div>
+									<div class="col-md-4 multifield_combination">
+										<field name="weight_type"
+											options='{"no_open": True,"no_create": 1, "no_create_edit": 1}' />
+									</div>
+									<div class="col-md-4 multifield_combination">
+										<field name="weight_per_pcs" />
+									</div>
+									<div class="col-md-4 multifield_combination">
+										<field name="weight_uom"
+											options='{"no_open": True,"no_create": 1, "no_create_edit": 1}' />
+									</div>
+								</div>
+								<field name="weight_per_dzn" invisible="1" />
+								<field name="product_costing_visible" invisible="1" />
+								<field name="yarn_amount_flag" invisible="1" />
+								<field name="accessories_amount_flag" invisible="1" />
+								<field name="yarn_sum_percentage" invisible="1" />
+							</group>
+						</group>
+						<notebook>
+							<page string="Summary">
+								<group name="total_summery" class="col-span-2">
+									<table class="table table-striped">
+										<thead>
+											<tr>
+												<th class='col-md-3'>Summary Head</th>
+												<th class='col-md-4'>Amount</th>
+											</tr>
+										</thead>
+										<tbody>
+											<tr>
+												<td class='col-md-3'>
+													<label for="total_yarn_cost" />
+												</td>
+												<td class='col-md-4'>
+													<field name="total_yarn_cost" widget="monetary" />
+												</td>
+											</tr>
+											<tr>
+												<td class='col-md-3'>
+													<label for="linking_yarn_cost" />
+												</td>
+												<td class='col-md-4'>
+													<field name="linking_yarn_cost" widget="monetary" />
+												</td>
+											</tr>
+											<tr>
+												<td class='col-md-3'>
+													<label for="total_accessories_cost" />
+												</td>
+												<td class='col-md-4'>
+													<field name="total_accessories_cost" widget="monetary" />
+												</td>
+											</tr>
+											<tr>
+												<td class='col-md-3'>
+													<label for="fabric_cost" />
+												</td>
+												<td class='col-md-4'>
+													<field name="fabric_cost" widget="monetary" />
+												</td>
+											</tr>
+											<tr>
+												<td class='col-md-3'>
+													<label for="embrodery_cost" />
+												</td>
+												<td class='col-md-4'>
+													<field name="embrodery_cost" widget="monetary" />
+												</td>
+											</tr>
+											<tr>
+												<td class='col-md-3'>
+													<label for="print_cost" />
+												</td>
+												<td class='col-md-4'>
+													<field name="print_cost" widget="monetary" />
+												</td>
+											</tr>
+											<tr>
+												<td class='col-md-3'>
+													<label for="lab_test_cost" />
+												</td>
+												<td class='col-md-4'>
+													<field name="lab_test_cost" widget="monetary" />
+												</td>
+											</tr>
+											<tr>
+												<td class='col-md-3'>
+													<label for="total_cm_cost" />
+												</td>
+												<td class='col-md-4'>
+													<field name="total_cm_cost" widget="monetary" />
+												</td>
+											</tr>
+											<tr>
+												<td class='col-md-3'>
+													<label for="total_summary_cost" />
+												</td>
+												<td class='col-md-4'>
+													<field name="total_summary_cost" widget="monetary" />
+												</td>
+											</tr>
+										</tbody>
+									</table>
+
+
+									<table class="table table-striped">
+										<thead>
+											<tr>
+												<th class='col-md-3'>Head</th>
+												<th class='col-md-3'>Percentage</th>
+												<th class='col-md-3'>Amount</th>
+											</tr>
+										</thead>
+										<tbody>
+											<tr>
+												<td class='col-md-3'>
+													<label for="commercial_cost" />
+												</td>
+												<td class='col-md-3'>
+													<field name="commercial_cost_percentage" />
+												</td>
+												<td class='col-md-4'>
+													<field name="commercial_cost" widget="monetary" />
+												</td>
+											</tr>
+											<tr>
+												<td class='col-md-3'>
+													<label for="profit" />
+												</td>
+												<td class='col-md-3'>
+													<field name="profit_percentage" />
+												</td>
+												<td class='col-md-4'>
+													<field name="profit" widget="monetary" />
+												</td>
+											</tr>
+											<tr>
+												<td class='col-md-3'>
+													<label for="total_head_commission" />
+												</td>
+												<td class='col-md-3'>
+													<label for="" />
+												</td>
+												<td class='col-md-4'>
+													<field name="total_head_commission" widget="monetary" />
+												</td>
+											</tr>
+
+											<tr>
+												<td class='col-md-3'>
+													<label for="buying_house_commission" />
+												</td>
+												<td class='col-md-3'>
+													<field name="buying_house_percentage" />
+												</td>
+												<td class='col-md-4'>
+													<field name="buying_house_commission" widget="monetary" />
+												</td>
+											</tr>
+											<tr>
+												<td class='col-md-3'>
+													<label for="grand_total" />
+												</td>
+												<td class='col-md-3'>
+													<label for="" />
+												</td>
+												<td class='col-md-4'>
+													<field name="grand_total" widget="monetary"
+														class="oe_subtotal_footer_separator" />
+												</td>
+											</tr>
+											<tr>
+												<td class='col-md-3'>
+													<label for="fob_cost" />
+												</td>
+												<td class='col-md-3'>
+													<label for="" />
+												</td>
+												<td class='col-md-4'>
+													<field name="fob_cost" widget="monetary" />
+												</td>
+											</tr>
+										</tbody>
+
+									</table>
+								</group>
+							</page>
+							<page string="Yarns">
+								<separator string="Cost Per Dozen" />
+								<field name="yarn_ids">
+									<tree editable="bottom">
+										<field name="product_id" domain="[('yarn', '=', True)]"
+											options='{"no_open": True,"no_create":1, "no_create_edit":1}' />
+										<field name="percentage" sum="percentage" />
+										<field name="weight" />
+										<field name="wastage_percentage" />
+										<field name="wastage_quantity" />
+										<field name="total_qty_required" sum="Total Qty" />
+										<field name="yarn_rate" />
+										<field name="line_currency_id"
+											options='{"no_open": True,"no_create": 1, "no_create_edit":1}' />
+										<field name="total_cost" />
+										<field name="yarn_rate_selected_curr" sum="yarn_rate_selected_curr" />
+										<field name="cost_selected_curr" sum="cost_selected_curr" />
+									</tree>
+								</field>
+
+							</page>
+							<page string="Accessories">
+								<field name="accessories_ids">
+									<tree editable="bottom">
+										<field name="product_id" domain="[('accessories', '=', True)]"
+											options='{"no_open": True,"no_create":1, "no_create_edit":1}' />
+										<field name="quantity" />
+										<field name="wastage_percentage" />
+										<field name="wastage_quantity" />
+										<field name="total_qty_required" />
+										<field name="yarn_rate" />
+										<field name="line_currency_id"
+											options='{"no_open": True,"no_create": 1, "no_create_edit":1}' />
+										<field name="total_cost" />
+										<field name="cost_selected_curr" sum="cost_selected_curr" />
+									</tree>
+								</field>
+							</page>
+							<page string="CM">
+								<field name="cm_ids">
+									<tree editable="bottom">
+										<field name="product_id" domain="[('type', '=', 'service')]"
+											options='{"no_open":True,"no_create": 1, "no_create_edit":1}' />
+										<field name="standard_wage" />
+										<field name="line_currency_id"
+											options='{"no_open":True,"no_create": 1, "no_create_edit":1}' />
+										<field name="productivity" />
+										<field name="amount" />
+										<field name="bonus" />
+										<field name="bonus_amount" />
+										<field name="total_cost" sum="Total USD" />
+										<field name="total_cost_usd" sum="Total BDT" />
+									</tree>
+								</field>
+								<table class="table table-striped">
+									<tbody>
+										<tr>
+											<td colspan="3">
+												<label for="fixed_overhead_cm_cost_usd" />
+											</td>
+											<td>
+												<field name="fixed_overhead_currency_id"
+													options='{"no_open":True,"no_create": 1, "no_create_edit":1}' />
+											</td>
+											<td>
+												<field name="fixed_overhead_bonus_percentage" />
+											</td>
+											<td style="text-align:right;">
+												<field name="fixed_overhead_cm_cost_bdt" />
+											</td>
+											<td style="text-align:right; padding-right: 10px;">
+												<field name="fixed_overhead_cm_cost_usd" />
+											</td>
+										</tr>
+										<tr>
+											<td colspan="5">
+												<label for="total_cm_cost_usd" />
+											</td>
+
+											<td style="text-align:right;">
+												<field name="total_cm_cost_bdt" />
+											</td>
+											<td style="text-align:right; padding-right: 10px;">
+												<field name="total_cm_cost_usd" />
+											</td>
+										</tr>
+
+									</tbody>
+								</table>
+
+							</page>
+							<page string="Vesions"
+								attrs="{'invisible': ['|',('version','&lt;',2),('product_costing_visible','=',False)]}">
+								<field name="costing_ids">
+									<tree>
+										<field name="name" />
+										<field name="buyer_id" />
+										<field name="version" />
+										<field name="version_date" />
+										<field name="state" invisible="1" />
+										<field name="product_costing_visible" invisible="1" />
+									</tree>
+								</field>
+							</page>
+						</notebook>
+						<separator string="Remarks" />
+						<field name="remarks" placeholder="Put an remarks..................." />
+					</div>
+				</form>
+			</field>
+		</record>
+
+		<!-- product costing tree/list view -->
+		<record id="product_costing_view_tree" model="ir.ui.view">
+			<field name="name">product.costing.tree</field>
+			<field name="model">product.costing</field>
+			<field name="arch" type="xml">
+				<tree string="Product Costing Tree">
+					<field name="name" />
+					<field name="buyer_id" />
+					<field name="quotation_type" />
+					<field name="dept_id" />
+					<field name="state" />
+				</tree>
+			</field>
+		</record>
+
+		<!-- product costing search view -->
+		<record id="product_costing_view_search" model="ir.ui.view">
+			<field name="name">product.costing.search</field>
+			<field name="model">product.costing</field>
+			<field eval="10" name="priority" />
+			<field name="arch" type="xml">
+				<search string="Product Costing">
+					<field name="name" />
+				</search>
+			</field>
+		</record>
+
+		<!-- Sequences for Product Costing
+		<record id="seq_type_product_costing_mer" model="ir.sequence.type">
+			<field name="name">Product Costing</field>
+			<field name="code">procos_code</field>
+		</record>-->
+
+		<record id="seq_product_costing_mer" model="ir.sequence">
+			<field name="name">Costing</field>
+			<field name="code">procos_code</field>
+			<field name="prefix">PC-</field>
+			<field name="padding">10</field>
+		</record>
+
+
+		<!-- Product Costing Action -->
+		<record id="product_costing_action" model="ir.actions.act_window">
+			<field name="name">Product Costing</field>
+			<field name="res_model">product.costing</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+			<field name="domain">[('product_costing_visible','=',True)]</field>
+		</record>
+
+		<menuitem id="product_costing_menu" name="Product Costing"
+			parent="merchandising_menu" sequence="240" action="product_costing_action" />
+	</data>
+</openerp>

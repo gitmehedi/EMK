@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+	<data>
+		<record id="inherited_product_template_view_form_inherit_yarn"
+			model="ir.ui.view">
+			<field name="name">Product View Form</field>
+			<field name="model">product.template</field>
+			<field name="inherit_id" ref="product.product_template_form_view" />
+			<field name="arch" type="xml">
+				<xpath expr="//form/sheet/notebook/page/group/group/field[@name='list_price']"
+					position="before">
+					<field name="yarn" />
+					<field name="accessories" />
+					<field name="finish_goods" />
+				</xpath>
+			</field>
+		</record>
+	</data>
+</openerp>

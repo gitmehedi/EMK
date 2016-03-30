@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="0">
+    	
+    	<record id="module_category_merchandising" model="ir.module.category" >
+            <field name="name">Merchandising</field>
+            <field name="sequence">90</field>
+        </record>
+    	
+        <record id="merchandising_group_user" model="res.groups">
+        	<field name="name">User</field>
+        	<field name="category_id" ref="module_category_merchandising"/>
+        </record>
+        
+        <record id="merchandising_group_manager" model="res.groups">
+        	<field name="name">Manager</field>
+        	<field name="category_id" ref="module_category_merchandising"/>
+        </record>
+        
+    </data>
+</openerp>

@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+		<!-- Delivery Term Form Views -->
+		<record model="ir.ui.view" id="delivery_term_form_view">
+            <field name="name">delivery_term_form</field>
+            <field name="model">delivery.term</field>
+            <field name="arch" type="xml">
+                <form string="Delivery Term Form">
+	                <sheet>
+		                <group>
+		                    <field name="name" class="oe_inline"/>
+		                    <field name="status" class="oe_inline"/>
+		                </group>
+	                </sheet>
+                </form>
+            </field>
+        </record>
+		
+		<!-- Delivery Term Tree and List View -->
+        <record model="ir.ui.view" id="delivery_term_tree_view">
+            <field name="name">delivery.term.tree</field>
+            <field name="model">delivery.term</field>
+            <field name="arch" type="xml">
+                <tree string="Delivery Term Tree">
+                    <field name="name"/>
+                    <field name="status"/>
+                </tree>
+            </field>
+        </record>
+		
+		<!-- Delivery Term Search View -->
+		<record id="delivery_term__search_view" model="ir.ui.view">
+		    <field name="name">delivery_term_search_view</field>
+		    <field name="model">delivery.term</field>
+		    <field eval="10" name="priority"/>
+		    <field name="arch" type="xml">
+		        <search string="delivery_term">
+		            <field name="name"/>
+		            <field name="status"/>
+                    <group string="Group By">
+                        <filter name="status" string="active"
+                                context="{'group_by': 'active'}"/>
+                    </group>
+		        </search>
+		    </field>
+		</record>
+		
+		<!-- Delivery Term Actions -->
+		<record model="ir.actions.act_window" id="delivery_term_list_action">
+            <field name="name">Delivery Term</field>
+            <field name="res_model">delivery.term</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <menuitem name="Delivery Term" id="menu_delivery_term" parent="shipping_sub_menu"
+            sequence="299" action="delivery_term_list_action"/>
+    </data>
+</openerp>
