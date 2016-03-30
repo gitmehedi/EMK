@@ -37,11 +37,10 @@
 						<h1>
 							<field name="name" string="Serial No" />
 						</h1>
-						<div class="oe_button_box" name="button_box">
-							<button name="toggle_active" type="object" class="oe_stat_button" icon="fa-check">
-								<field name="for_bidding" widget="boolean_button" options="{&quot;terminology&quot;: &quot;Bidding&quot;}"/>
-							</button>
-                        </div>
+						<h1>
+							<field name="for_bidding" />
+							<label for="for_bidding" string="For Bidding" />
+						</h1>
 						<group>
 							<group>
 

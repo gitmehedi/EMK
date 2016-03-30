@@ -56,7 +56,7 @@ class BuyerWorkOrder(models.Model):
     buyer_inspection_date = fields.Date(compute='_compute_com_buyer_inspection_date', string="Buyer Inspection Date")
     inhouse_inspection_date = fields.Date(compute='_compute_com_inhouse_inspection_date', string="In House Insspection Date",)
     total_quantity = fields.Float(compute='_compute_com_quantity', string="Order Quantity")
-    production_ratio = fields.Float(compute='_compute_production_ratio')
+    production_ratio = fields.Float(compute='_compute_production_ratio', store=True)
     shipment_mode = fields.Selection([("sea", "Sea"), ("air", "Air"), ("road", "By Road")], string='Ship Mode', required=True,
                                      readonly=True, states={'draft':[('readonly', False)]})
     

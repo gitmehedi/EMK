@@ -8,11 +8,11 @@ class BOMConsumption(models.Model):
     """
     _name = 'bom.consumption'
     
-    # Product Style fields
+    """Product Style fields"""
     name = fields.Char(size=30, readonly=True)
     bill_code = fields.Char(string='Code')
     
-    # Model Relationship
+    """Model Relationship"""
     mc_id = fields.Many2one('material.consumption', string="Material Consumption", required=True,
                             domain=[('state', '=', 'confirm')])
     style_id = fields.Many2one('product.style', string="Style", required=True,
@@ -25,7 +25,7 @@ class BOMConsumption(models.Model):
     acc_ids = fields.One2many('bom.consumption.line', 'mc_acc_id', string="Accessories", readonly=True)
     
     
-    # All function which process data and operation
+    """All function which process data and operation"""
         
     @api.model
     def create(self, vals):
@@ -33,18 +33,18 @@ class BOMConsumption(models.Model):
             
         return super(BOMConsumption, self).create(vals)
 
-    # All function which process data and operation
+    """All function which process data and operation"""
     
     @api.onchange('mc_id')
     def _onchange_mc_id(self):
-        res = {'domain': {'style_id':[]}}
+        res,ids = {},[]
         self.style_id = 0
         self.export_po_id = 0
         if self.mc_id:
             res['domain'] = {
                     'style_id':[('id', 'in', self.mc_id.style_id.ids)],
             }
-            self.style_id = self.mc_id.style_id.id
+
         return res
     
     @api.onchange('style_id')
