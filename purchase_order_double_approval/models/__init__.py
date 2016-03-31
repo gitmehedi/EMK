@@ -18,9 +18,9 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-import inherited_purchase_config_settings
+# import inherited_purchase_config_settings
 import inherited_purchase_order
-import purchase_order_double_approval
+# import purchase_order_double_approval
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -35,7 +35,7 @@ exceeds minimum amount and minimum item Quantity set by configuration wizard.
     'website': 'www.genweb2.com',
     'data': [
         'views/inherited_purchase_order.xml',
-        'views/inherited_purchase_settings.xml',
+#         'views/inherited_purchase_settings.xml',
         'views/purchase_double_approval_workflow.xml',
 #         'views/purchase_double_approval_installer.xml',
         'views/purchase_double_approval_view.xml',
