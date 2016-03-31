@@ -7,10 +7,6 @@
 			<field name="arch" type="xml">
 				<form string="Quotation Request Form">
 					<header>
-                       <!--<button name="action_submission" 
-                                string="Submission" class="oe_highlight"
-                                states="confirmed" type="object" domain="[('state','=','confirmed')]"
-                                 /> -->
                        <button name="%(quotation_submission_wizard_action)d" 
                                 string="Submission" class="oe_highlight"
                                 states="confirmed" type="action" domain="[('state','=','confirmed')]"
@@ -32,7 +28,7 @@
 			            <group>
 				            <group>
 				                <field name="buyer_id" options='{"no_open": True,"no_create": 1, "no_create_edit": 1}'/>
-				                <field name="style_id" widget="selection" attrs="{'invisible': [('buyer_id', '=', False)]}" 
+				                <field name="style_id" attrs="{'invisible': [('buyer_id', '=', False)]}" options='{"no_open": True,"no_create": 1, "no_create_edit": 1}'
 				                domain="[('buyer_id', '=', buyer_id),('visible', '=', True),('state', '=', 'confirm')]"/>
 				                <field name="attention_id"  options='{"no_open": True,"no_create": 1, "no_create_edit": 1}'/>
 				            </group>
@@ -87,16 +83,11 @@
 		        </search>
 		    </field>
 		</record>
-		<!--
-		<record id="quotation_request_view_sequence_type" model="ir.sequence.type">
-            <field name="name">Quotation Request No</field>
-            <field name="code">quotation.request</field>
-        </record>-->
 
-        <record id="quotation_request_view_sequence" model="ir.sequence">
+        <record id="quotation_request_view_no_sequence" model="ir.sequence">
             <field name="name">Quotation Request No</field>
             <field name="code">quotation.request</field>
-            <field name="prefix">QR-Ref-NO-</field>
+            <field name="prefix">QR-</field>
             <field name="padding">10</field>
         </record>
         

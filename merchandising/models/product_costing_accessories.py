@@ -112,6 +112,6 @@ class ProductCostingAccessories(models.Model):
         if to_cur:
             t_cur = currency_obj.search([('id', '=', to_cur)], limit=1)    
 
-        return t_cur.rate_silent / f_cur.rate_silent
+        return t_cur.rate / f_cur.rate
     
     
