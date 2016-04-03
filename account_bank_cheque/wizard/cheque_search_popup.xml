@@ -20,14 +20,13 @@
 						</group>
 					</sheet>
 					<footer>
-						<button name="search_cheque" type="object" string="Submit" class="oe_highlight"/>
+						<button name="action_search_cheque" type="object" string="Submit" class="oe_highlight"/>
 						<button string="Cancel" special="cancel" class="oe_link"/>
 					</footer>
 				</form>
 			</field>
 		</record>
-		
-		
+				
 		<!-- Post Dated Cheque Search Action Views -->
 		<record id="action_search_cheque_view" model="ir.actions.act_window">
 			<field name="name">Search Cheque Wizard</field>

@@ -11,6 +11,8 @@ class ChequeSearchPopup(models.TransientModel):
     issuing_bank = fields.Many2one('account.postdated.bank', string='Name of Bank', help='Please enter bank name.')
     cheque_number = fields.Char(string='Cheque Number', size=50, help='Please enter cheque number.')
     deposit_date = fields.Date(string='Cheque Deposit Date', default=fields.Date.today(), help='Please enter cheque deposit date.')
+    confirm_date = fields.Date(string='Cheque Confirm Date', default=fields.Date.today(), help='Please enter cheque confirm date.')
+    reject_date = fields.Date(string='Cheque Reject Date', default=fields.Date.today(), help='Please enter cheque reject date.')
     account_number_id = fields.Many2one('res.partner.bank', ondelete='set null', string='Company Account')
     
     @api.multi
@@ -27,15 +29,36 @@ class ChequeSearchPopup(models.TransientModel):
         return {'type': 'ir.actions.act_window_close'}
     
     @api.multi
-    def search_cheque(self,val):
+    def action_confirm_cheque(self):
+        active_ids = self.env.context.get('active_ids', []) or []
+        proxy = self.env['account.postdated.cheque']
+        
+        for record in proxy.search([('id', 'in', active_ids)]):
+            if record.state not in ('deposit'):
+                raise osv.except_osv(_('Warning!'), _("Selected Data cannot be accessible as they are not in 'Deposit' state."))
+            record.confirm_date = self.confirm_date
+            record.confirm_cheque();
+        return {'type': 'ir.actions.act_window_close'}
+    
+    @api.multi
+    def action_reject_cheque(self):
+        active_ids = self.env.context.get('active_ids', []) or []
+        proxy = self.env['account.postdated.cheque']
+        
+        for record in proxy.search([('id', 'in', active_ids)]):
+            if record.state not in ('deposit'):
+                raise osv.except_osv(_('Warning!'), _("Selected Data cannot be accessible as they are not in 'Deposit' state."))
+            record.reject_date = self.reject_date
+            record.reject_cheque();
+        return {'type': 'ir.actions.act_window_close'}
+    
+    @api.multi
+    def action_search_cheque(self,val):
         date_from=self.date_from
         date_to=self.date_to
                 
         domain = ['&',('posting_date', '>=', self.date_from),('posting_date', '<=', self.date_to)]
-        
-#         obj=self.env['account.postdated.cheque']
-#         records=obj.search([('posting_date','>=',date_from),('posting_date','<=',date_to)])    
-    
+      
         if self.partner_info:
             domain += [('partner_info', '=', self.partner_info.id)]
             
