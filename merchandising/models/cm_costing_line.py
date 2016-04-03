@@ -10,9 +10,11 @@ class CmCostingLine(models.Model):
     standard_wage = fields.Float(digits=(20, 2), string='Standard Wage', default=None)
     percentage = fields.Float(digits=(20, 2), string='Percentage', default=None)
     amount = fields.Float(compute="_compute_amount", digits=(20, 2), string='Amount', default=None)
-    bonus = fields.Float(digits=(20, 2), string='Bonus%', default=None)
+    bonus = fields.Float(digits=(20, 2), string='Bonus %', default=None)
     bonus_amount = fields.Float(compute="_compute_bonus_amount", digits=(20, 2), string='Bonus Amount', default=None)
     productivity = fields.Float(digits=(20, 4), string='Productivity', default=None)
+
+    product_costing_type = fields.Selection([('pcs','Pcs'),('dzn','Dzn')], string="Costing Type",)
 
     total_cost = fields.Float(digits=(20, 4), string='Total Cost')
     total_cost_usd = fields.Float(compute="_compute_total_cost_usd", digits=(20, 4), string='Cost in USD')
@@ -58,32 +60,44 @@ class CmCostingLine(models.Model):
     """
     Computed Fields
     """
-    @api.depends('standard_wage', 'productivity')
+    @api.depends('standard_wage', 'productivity','product_costing_type')
     def _compute_amount(self):
         for cm in self:
+            pc_val =1
+            if cm.product_costing_type=='pcs':
+                pc_val=12
+
             if cm.standard_wage and cm.productivity:
-                cm.amount = (cm.standard_wage / cm.productivity) 
+                cm.amount = (cm.standard_wage / cm.productivity) / pc_val
                 
-                
-    @api.depends('amount', 'bonus')
+    @api.depends('amount', 'bonus','product_costing_type')
     def _compute_bonus_amount(self):
         for cm in self:
             if cm.amount and cm.bonus:
                 cm.bonus_amount = (cm.amount * (cm.bonus / 100))
+
     
-    @api.onchange('amount', 'bonus_amount')
-    def onchange_total_cost(self):
-        for cm in self:
-            if cm.amount and cm.bonus_amount:
-                cm.total_cost = cm.amount + cm.bonus_amount      
-    
-    @api.depends('total_cost', 'line_currency_id')
+    @api.depends('total_cost', 'line_currency_id','product_costing_type')
     def _compute_total_cost_usd(self):
         for cm in self:
             if cm.total_cost and cm.line_currency_id and cm.cm_costing_id.product_currency_id:
                 cm.total_cost_usd = cm.total_cost / cm.convert_currency(cm.cm_costing_id.product_currency_id.id, cm.line_currency_id.id)  
-            
-   
+
+    """
+    On Change functionality
+    """
+
+    @api.onchange('product_id')
+    def onchange_product_id(self):
+        for cm in self:
+            self.product_costing_type = self.product_id.costing_type
+
+    @api.onchange('amount', 'bonus_amount','product_costing_type')
+    def onchange_total_cost(self):
+        for cm in self:
+            if cm.amount and cm.bonus_amount:
+                cm.total_cost = cm.amount + cm.bonus_amount
+
     
     @api.model
     def convert_currency(self, from_cur, to_cur):

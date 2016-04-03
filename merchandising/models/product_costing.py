@@ -201,13 +201,11 @@ class ProductCosting(models.Model):
             default['version'] = self.version + 1
             default['ref_costing_id'] = self.id
             default['name'] = self.name
-            print "-------------------- Create version--------                 1"
         else:
             print "create version"
             default['costing_id'] = ''
             default['version'] = 1
             default['name'] = ''
-            print "-------------------- Create version--------                 2"
 
         res = super(ProductCosting, self).copy(default)
         
