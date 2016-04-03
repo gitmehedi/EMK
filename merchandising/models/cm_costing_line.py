@@ -68,7 +68,7 @@ class CmCostingLine(models.Model):
                 pc_val=12
 
             if cm.standard_wage and cm.productivity:
-                cm.amount = (cm.standard_wage / cm.productivity) / pc_val
+                cm.amount = (cm.standard_wage / cm.productivity) * pc_val
                 
     @api.depends('amount', 'bonus','product_costing_type')
     def _compute_bonus_amount(self):
@@ -76,12 +76,19 @@ class CmCostingLine(models.Model):
             if cm.amount and cm.bonus:
                 cm.bonus_amount = (cm.amount * (cm.bonus / 100))
 
-    
-    @api.depends('total_cost', 'line_currency_id','product_costing_type')
+    @api.onchange('product_costing_type','standard_wage','line_currency_id', 'productivity','amount','bonus_amount')
+    def onchange_total_cost(self):
+        for cm in self:
+            if cm.amount:
+                cm.total_cost = cm.amount + cm.bonus_amount
+
+
+    @api.depends('product_costing_type','standard_wage','line_currency_id', 'productivity','amount','bonus_amount')
     def _compute_total_cost_usd(self):
         for cm in self:
-            if cm.total_cost and cm.line_currency_id and cm.cm_costing_id.product_currency_id:
-                cm.total_cost_usd = cm.total_cost / cm.convert_currency(cm.cm_costing_id.product_currency_id.id, cm.line_currency_id.id)  
+            if cm.amount and cm.line_currency_id and cm.cm_costing_id.product_currency_id:
+                cm.total_cost_usd = (cm.amount + cm.bonus_amount) / cm.convert_currency(cm.cm_costing_id.product_currency_id.id, cm.line_currency_id.id)
+
 
     """
     On Change functionality
@@ -92,11 +99,7 @@ class CmCostingLine(models.Model):
         for cm in self:
             self.product_costing_type = self.product_id.costing_type
 
-    @api.onchange('amount', 'bonus_amount','product_costing_type')
-    def onchange_total_cost(self):
-        for cm in self:
-            if cm.amount and cm.bonus_amount:
-                cm.total_cost = cm.amount + cm.bonus_amount
+
 
     
     @api.model
