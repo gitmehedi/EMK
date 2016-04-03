@@ -1,0 +1,5 @@
+<openerp>
+	<data>
+		<menuitem id="pebbles_purchase_root_menu" name="Purchase Process" sequence="110"/>
+	</data>
+</openerp>

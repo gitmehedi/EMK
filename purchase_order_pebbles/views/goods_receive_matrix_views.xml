@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+	<data>
+		<record id="goods_receive_matrix_view_form" model="ir.ui.view">
+			<field name="name">Goods Receive Matrix</field>
+			<field name="model">goods.receive.matrix</field>
+			<field name="priority" eval="16"/>
+			<field name="arch" type="xml">
+				<form string="Goods Receive Matrix" >
+					<header>
+						<button name="action_receive" type="object" string="Receive Product" class="oe_highlight"
+							attrs="{'invisible':['|','|','|',('receive_visible','=',False),('state','=','waiting'),('state','=','received'),('state','=','cancelled')]}"
+							groups="stock.group_stock_user,stock.group_stock_manager"/>
+						<button name="action_approved" type="object" string="Approve" class="oe_highlight"
+							states="waiting" groups="purchase_order_pebbles.warehouse_group_user_admin"/>
+						
+						<button name="prepare_receive_matrix" string="Populate Matrix" type="object" class="oe_highlight"
+							attrs="{'invisible':[('readonly_check','!=',False)]}" groups="stock.group_stock_user,stock.group_stock_manager"/>
+						
+						<button name="action_adjustment" type="object" string="Send For Adjustment" states="waiting"
+							groups="purchase_order_pebbles.warehouse_group_user_admin"/>
+						
+						<button name="action_cancel" type="object" string="Cancel Receive" states="waiting"
+							groups="purchase_order_pebbles.warehouse_group_user_admin" />
+						<field name="state" widget="statusbar" statusbar_colors="{'waiting': 'red'}"/>
+					</header>
+					<sheet>
+						<group>
+							<group>
+								<field name="readonly_check" attrs="{'invisible':1 }" />
+								<field name="receive_visible" attrs="{'invisible':1 }" />
+								
+								<field name="po_no" attrs="{'readonly':[('readonly_check','!=',False)]}" class="oe_inline"
+									options='{"no_open": True,"no_create": 1, "no_create_edit": 1}' />
+								
+								<field name="line_id" class="oe_inline" string="Product" options='{"no_open": True,"no_create":
+									1, "no_create_edit": 1}' widget="selection" domain="[('order_id','=', po_no),('state','=',
+									'confirmed')]" attrs="{'readonly':[('readonly_check','!=',False)]}" />
+							</group>
+							<group>
+								<field name="warehouse_id" class="oe_inline" options='{"no_open": True,"no_create":
+									1, "no_create_edit": 1}' attrs="{'readonly':[('readonly_check','!=',False)]}"
+									/>
+								
+								<field name="quantity"/>
+								<field name="uom"  groups="product.group_uom" string="Product Unit" />
+							</group>
+						</group>
+						
+						<group name="product_variant_matrix" string="Goods Receive Matrix" attrs="{'invisible':[('readonly_check','=',False)]}">
+							<div>
+								<field name="matrix_line_ids" widget="goods_receive_matrix" field_x_axis="size_variant_id"
+									field_y_axis="other_variant_id" field_value="product_qty" attrs="{'readonly':
+									['|','|',('state','=','approved'),('state','=','received'),('state','=','cancelled')
+									],'invisible':[('readonly_check','=',False)]}"/>
+							</div>
+						</group>
+					</sheet>
+				</form>
+			</field>
+		</record>
+		<record id="goods_receive_matrix_view_tree" model="ir.ui.view">
+			<field name="name">Goods Receive Matrix</field>
+			<field name="model">goods.receive.matrix</field>
+			<field name="priority" eval="16"/>
+			<field name="arch" type="xml">
+				<tree string="Goods Receive Matrix" colors="blue:state=='draft';red:state in ('waiting','adjustment')">
+					<field name="po_no"/>
+					<field name="state" />
+				</tree>
+			</field>
+		</record>
+		<!-- Goods Receive search view -->
+		<record id="goods_receive_matrix_view_search" model="ir.ui.view">
+			<field name="name">Goods Receive search view</field>
+			<field name="model">goods.receive.matrix</field>
+			<field eval="10" name="priority" />
+			<field name="arch" type="xml">
+				<search string="Goods Receive Search">
+					<filter name="state_approved" string="Approved" domain="[('state','=','approved')]"
+						/>
+					<filter name="state_waiting" string="Waiting For Approval" domain="[('state','=','waiting')]"
+						/>
+					<group string="Group By">
+						<filter name="po" string="Purchase Order" context="{'group_by': 'po_no'}" />
+					</group>
+					<group string="Group By">
+						<filter name="product" string="Product" context="{'group_by': 'line_id'}" />
+					</group>
+					<group string="Group By">
+						<filter name="state" string="State" context="{'group_by': 'state'}" />
+					</group>
+				</search>
+			</field>
+		</record>
+		
+		<record  id="goods_receive_matrix_action" model="ir.actions.act_window" >
+			<field name="name">Goods Receive Matrix</field>
+			<field name="res_model">goods.receive.matrix</field>
+			<field name="view_mode">tree,form</field>
+			<field name="context">{"search_default_state_approved":1}</field>
+		</record>
+		
+		<record id="goods_receive_matrix_waiting_action" model="ir.actions.act_window" >
+			<field name="name">Goods Receive Waiting For Approval</field>
+			<field name="res_model">goods.receive.matrix</field>
+			<field name="view_mode">tree,form</field>
+			<field name="context">{"search_default_state_waiting":1}</field>
+		</record>
+		<report id="report_receive_matrix" string="Receive Matrix Report" model="goods.receive.matrix" report_type="qweb-pdf"
+			file="sale.report_saleorder" name="sale.report_saleorder" />
+		
+		<!-- <menuitem name="Goods Receive" id="goods_receive_maxtix_sub" parent="stock.menu_stock_root"
+			/-->
+		<menuitem name="Goods Receive Matrix" id="goods_receive_maxtix" parent="stock.menu_stock_warehouse_mgmt"
+			sequence="251" action="goods_receive_matrix_action"/>
+		
+		<menuitem name="Waiting For Approval" id="goods_receive_maxtix_waiting" parent="stock.menu_stock_warehouse_mgmt"
+			sequence="252" action="goods_receive_matrix_waiting_action" groups="purchase_order_pebbles.warehouse_group_user_admin"/>
+		
+		<menuitem id="stock.menu_stock_warehouse_mgmt" name="Operations" parent="stock.menu_stock_root" sequence="1" groups='stock.group_stock_manager'/>
+		
+	</data>
+</openerp>
