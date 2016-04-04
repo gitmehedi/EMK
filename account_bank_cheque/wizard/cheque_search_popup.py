@@ -1,8 +1,10 @@
 from openerp import models, fields, api, exceptions
 import datetime
+from duplicity.tempdir import default
+from docutils.nodes import Invisible
 
 class ChequeSearchPopup(models.TransientModel):
-    _name='account.postdated.cheque.search.popup'
+    _name = 'account.postdated.cheque.search.popup'
     
     # Database field
     date_from = fields.Date(string="From Date", default=fields.Date.today(), required=True)
@@ -14,6 +16,13 @@ class ChequeSearchPopup(models.TransientModel):
     confirm_date = fields.Date(string='Cheque Confirm Date', default=fields.Date.today(), help='Please enter cheque confirm date.')
     reject_date = fields.Date(string='Cheque Reject Date', default=fields.Date.today(), help='Please enter cheque reject date.')
     account_number_id = fields.Many2one('res.partner.bank', ondelete='set null', string='Company Account')
+    state = fields.Selection([
+               ('select', 'Select'),
+               ('draft', 'Draft'),
+               ('deposit', 'Deposit'),
+               ('confirm', 'Confirm'),
+               ('reject', 'Reject'),
+           ], default='select', string='Status', copy=False)
     
     @api.multi
     def action_deposit_cheque(self):
@@ -53,11 +62,11 @@ class ChequeSearchPopup(models.TransientModel):
         return {'type': 'ir.actions.act_window_close'}
     
     @api.multi
-    def action_search_cheque(self,val):
-        date_from=self.date_from
-        date_to=self.date_to
-                
-        domain = ['&',('posting_date', '>=', self.date_from),('posting_date', '<=', self.date_to)]
+    def action_search_cheque(self, val):
+        date_from = self.date_from
+        date_to = self.date_to
+        
+        domain = ['&', ('posting_date', '>=', self.date_from), ('posting_date', '<=', self.date_to)]
       
         if self.partner_info:
             domain += [('partner_info', '=', self.partner_info.id)]
@@ -67,8 +76,10 @@ class ChequeSearchPopup(models.TransientModel):
         
         if self.cheque_number:
             domain += [('cheque_number', '=', self.cheque_number)]
-               
-        print "----------------------", domain
+            
+        if self.state != 'select':
+            domain += [('state', '=', self.state)]
+                     
         return {
             'name': 'Cheque List',
             'view_type': 'form',
