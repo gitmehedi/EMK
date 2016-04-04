@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+		
+        <record model="ir.actions.act_window" id="action_bank_account_tree_view">
+			<field name="name">Bank Account</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">product.uom</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+		</record>
+
+		<!-- Bank Account Menu -->
+		<menuitem id="bank_account_menu" name="Bank Account"
+			parent="commercial_configuration_menu" sequence="297"
+			action="action_bank_account_tree_view" />
+    </data>
+</openerp>

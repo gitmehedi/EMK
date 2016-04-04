@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+	<data>
+		<!-- Insurance Agency Tree Views -->
+		<record model="ir.ui.view" id="insurance_agency_tree_view">
+			<field name="name">insurance.agency.tree</field>
+			<field name="model">insurance.agency</field>
+			<field name="type">tree</field>
+			<field name="arch" type="xml">
+				<tree string="Insurance Agency">
+					<field name="name" />
+				</tree>
+			</field>
+		</record>
+		
+		<!-- Insurance Agency Form Views -->
+		<record model="ir.ui.view" id="insurance_agency_form_view">
+			<field name="name">insurance.agency.form</field>
+			<field name="model">insurance.agency</field>
+			<field name="type">form</field>
+			<field name="arch" type="xml">
+				<form string="Insurance Agency">
+					<sheet>
+						<group>
+							<field name="name" select="1" class="oe_inline" />
+						</group>
+					</sheet>
+				</form>
+			</field>
+		</record>
+		
+		<!-- Insurance Agency Action Views -->
+		<record model="ir.actions.act_window" id="action_insurance_agency_tree_view">
+			<field name="name">Insurance Agency</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">insurance.agency</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+			<field name="view_id" ref="insurance_agency_tree_view" />
+		</record>
+		
+		<!-- Insurance Agency Menu -->
+		<menuitem id="insurance_agency_menu" name="Insurance Agency" parent="commercial_configuration_menu"
+		sequence="297" action="action_insurance_agency_tree_view"/>
+	</data>
+</openerp>

@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+	<data>
+		<!-- Proforma Invoice Tree or List view -->
+		<record id="proforma_invoice_tree_view" model="ir.ui.view">
+			<field name="name">proforma.invoice.tree</field>
+			<field name="model">proforma.invoice</field>
+			<field name="arch" type="xml">
+				<tree string="Proforma Invoice Tree">
+					<field name="name" />
+					<field name="pi_no" />
+					<field name="pi_date" />
+					<field name="supplier_id" />
+					<field name="delivery_term" />
+					<field name="delivery_to" />
+					<field name="state" />
+				</tree>
+			</field>
+		</record>
+		<!-- Proforma Invoice Form Views -->
+		<record model="ir.ui.view" id="proforma_invoice_form_view">
+			<field name="name">proforma.invoice.form</field>
+			<field name="model">proforma.invoice</field>
+			<field name="arch" type="xml">
+				<form string="Proforma Invoice Form">
+					<header>
+						<button name="action_confirm" type="object" states="draft"
+							string="Confirm" class="oe_highlight" />
+
+						<field name="state" widget="statusbar" />
+					</header>
+					<sheet>
+						<h1>
+							<field name="name" string="Serial No" />
+						</h1>
+						<group>
+							<group>
+								<field name="pi_no" />
+								<field name="pi_date" />
+								<field name="supplier_id"
+									options='{"no_open": True,"no_create": 1, "no_create_edit": 1}' />
+							</group>
+							<group>
+								<field name="currency"
+									options='{"no_open": True,"no_create": 1, "no_create_edit": 1}' />
+								<field name="delivery_term"
+									options='{"no_open": True,"no_create": 1, "no_create_edit": 1}' />
+								<field name="delivery_to"
+									options='{"no_open": True,"no_create": 1, "no_create_edit": 1}' />
+							</group>
+						</group>
+						<notebook colspan="4">
+							<page string="Proforma Invoice Details">
+								<field name="proforma_invoice_details_ids">
+									<tree string="" editable="top">
+										<field name="product_id"
+											options='{"no_open": True,"no_create": 1, "no_create_edit": 1}' />
+										<field name="qty" />
+										<field name="uom_id"
+											options='{"no_open": True,"no_create": 1, "no_create_edit": 1}' />
+										<field name="schedule_date" />
+										<field name="rate" />
+										<field name="price" />
+										<field name="tax" />
+										<field name="sub_total" />
+										<field name="description" />
+									</tree>
+								</field>
+							</page>
+						</notebook>
+						<separator string="Remarks" />
+						<field name="remarks" placeholder="Put an remarks..................." />
+					</sheet>
+				</form>
+			</field>
+		</record>
+
+		<!-- Proforma Invoice Search View -->
+		<record model="ir.ui.view" id="sales_contract_view_search">
+			<field name="name">proforma.invoice.search</field>
+			<field name="model">proforma.invoice</field>
+			<field eval="10" name="priority" />
+			<field name="arch" type="xml">
+				<search string="Proforma Invoice">
+					<field name="name" />
+					<field name="pi_no" />
+					<field name="supplier_id" />
+					<field name="delivery_term" />
+				</search>
+			</field>
+		</record>
+
+		<!-- Proforma Invoice for Sequences -->
+		<record id="seq_type_proforma_invoice" model="ir.sequence.type">
+			<field name="name">Proforma Invoice Type</field>
+			<field name="code">pi_code</field>
+		</record>
+
+		<record id="seq_proforma_invoice" model="ir.sequence">
+			<field name="name">Proforma Invoice</field>
+			<field name="code">pi_code</field>
+			<field name="prefix">MLC-</field>
+			<field name="padding">10</field>
+		</record>
+
+
+		<!-- Proforma Invoice Menu and Action -->
+		<record id="proforma_invoice_list_action" model="ir.actions.act_window">
+			<field name="name">Proforma Invoice</field>
+			<field name="res_model">proforma.invoice</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+		</record>
+
+		<menuitem id="proforma_invoice_main_menu" name="Proforma Invoice"
+			parent="commercial_menu" sequence="140" action="proforma_invoice_list_action" />
+	</data>
+</openerp>

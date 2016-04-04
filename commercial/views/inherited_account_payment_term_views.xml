@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+	<data>
+		<record model="ir.actions.act_window" id="inherited_commercial_account_payment_term_action">
+            <field name="name">Payment Terms</field>
+            <field name="res_model">account.payment.term</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <menuitem name="Payment Terms" id="inherited_commercial_account_payment_term_menu" parent="commercial_configuration_menu"
+            sequence="195" action="inherited_commercial_account_payment_term_action"/>
+		<!--<menuitem action="account.action_payment_term_form"
+            id="menu_action_payment_term_form" name="Payment Terms" parent="commercial_menu"/>-->
+	</data>
+</openerp>

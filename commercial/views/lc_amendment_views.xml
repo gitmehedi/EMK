@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+	<data>
+		<!-- LC Amendment Form Views -->
+		<record model="ir.ui.view" id="lc_amendment_wizard_view_form">
+			<field name="name">lc.amendment.form</field>
+			<field name="model">lc.amendment</field>
+			<field name="type">form</field>
+			<field name="arch" type="xml">
+				<form string="LC Amendment">
+					<sheet>
+						<group>
+							<field name="exp_dt" />
+							<field name="update_amend_to" width = "50%"/>					
+							<field name="current_lc_value" />
+							<field name="update_amend_to" />	
+						</group>
+						<group>
+							<field name="margin_builts" string = "Margin Built">
+								<form>
+								<group col = "5">
+											<field name = "sn"/>
+											<field name = "account"/>
+											<field name = "fc_value"/>
+											<field name = "lc_value"/>
+											<field name = "exchange_rate"/>
+								</group>
+								</form>
+								<tree>
+									<field name = "sn"/>
+									<field name = "account"/>
+									<field name = "fc_value"/>
+									<field name = "lc_value"/>
+									<field name = "exchange_rate"/>									
+								</tree>
+							</field>							
+						</group>
+					</sheet>
+				</form>
+			</field>
+		</record>
+		<record id="lc_amendment_action_wizard_views" model="ir.actions.act_window">
+			<field name="name">LC Amendment</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">lc.amendment</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">form</field>
+			<field name="target">new</field>
+		</record>
+
+	</data>
+</openerp>

@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+	<data>
+		<!-- Submission Type Tree Views -->
+		<record model="ir.ui.view" id="submission_type_tree_view">
+			<field name="name">submission.type.tree</field>
+			<field name="model">submission.type</field>
+			<field name="type">tree</field>
+			<field name="arch" type="xml">
+				<tree string="Submission Type">
+					<field name="name" />
+				</tree>
+			</field>
+		</record>
+		
+		<!-- Submission Type Views -->
+		<record model="ir.ui.view" id="submission_type_tree_view">
+			<field name="name">submission.type.form</field>
+			<field name="model">submission.type</field>
+			<field name="type">form</field>
+			<field name="arch" type="xml">
+				<form string="Submission Type">
+					<sheet>
+						<group>
+							<field name="name" select="1" class="oe_inline" />
+						</group>
+					</sheet>
+				</form>
+			</field>
+		</record>
+		
+		<!-- Submission Type Action Views -->
+		<record model="ir.actions.act_window" id="action_submission_type_tree_view">
+			<field name="name">Submission Type</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">submission.type</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+			<field name="view_id" ref="submission_type_tree_view" />
+		</record>
+		
+		<!-- Submission Type Menu -->
+		<menuitem id="submission_type_menu" name="Submission Type" parent="commercial_configuration_menu"
+		sequence="297" action="action_submission_type_tree_view"/>
+	</data>
+</openerp>

@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+	<data>
+		<!-- BB/Import LC Form Views -->
+		<record model="ir.ui.view" id="bb_import_lc_form_view">
+			<field name="name">bb.import.lc.form</field>
+			<field name="model">bb.import.lc</field>
+			<field name="arch" type="xml">
+				<form string="BB/Import LC Form">
+					<header>
+						<button name="action_confirm" type="object" states="draft"
+							string="Confirm" class="oe_highlight" />
+						
+						<field name="state" widget="statusbar" />
+					</header>
+					<sheet>
+						<h1>
+							<field name="name" string="Serial No" />
+						</h1>
+						<group>
+							<group>
+								<field name="supplier_id"
+									options='{"no_open": True,"no_create": 1, "no_create_edit": 1}' />
+								<field name="lc_apply_date" />
+								<field name="lc_open_date" />
+								<field name="lc_open_bank_id"
+									options='{"no_open": True,"no_create": 1, "no_create_edit": 1}' />
+								<field name="lc_supplier_bank_id"
+									options='{"no_open": True,"no_create": 1, "no_create_edit": 1}' />
+								<field name="lc_value" />
+								<field name="currency"
+									options='{"no_open": True,"no_create": 1, "no_create_edit": 1}' />
+								<field name="lc_expiry_date" />
+								<field name="margin" />
+								<field name="payment_term" />
+								<field name="tenor" />
+								<field name="inco_term"
+									options='{"no_open": True,"no_create": 1, "no_create_edit": 1}' />
+								<field name="inco_term_place" />
+							</group>
+						<group>							
+								<field name="lc_type"
+									options='{"no_open": True,"no_create": 1, "no_create_edit": 1}' style="width:40%%" />
+								<field name="export_po"
+									options='{"no_open": True,"no_create": 1, "no_create_edit": 1}' style="width:40%%" />
+								<field name="export_po_value"
+									options='{"no_open": True,"no_create": 1, "no_create_edit": 1}' style="width:40%%" />								
+								<field name="export_lc_currency"
+									options='{"no_open": True,"no_create": 1, "no_create_edit": 1}' style="width:40%%" />
+								<field name="exchange_rate" style="width:20%%"/>								
+								<field name="allow_partial_shipment" />
+								<field name="allow_trans_shipment" />
+								<field name="lc_close" />							
+						</group>
+						</group>
+						<notebook colspan="4">
+							<page string="BB/Import LC Details">
+								<field name="bb_import_lc_details_ids">
+									<tree string="" editable="top">
+										<field name="po_related"
+											options='{"no_open": True,"no_create": 1, "no_create_edit": 1}' />
+										<field name="tagged_po"
+											options='{"no_open": True,"no_create": 1, "no_create_edit": 1}' />
+									</tree>
+								</field>
+							</page>
+						</notebook>
+						<separator string="Remarks" />
+						<field name="remarks" placeholder="Put an remarks..................." />
+					</sheet>
+				</form>
+			</field>
+		</record>
+
+
+		<!-- BB/Import LC Tree or List view -->
+		<record id="bb_import_lc2_tree_view" model="ir.ui.view">
+			<field name="name">bb.import.lc.tree</field>
+			<field name="model">bb.import.lc</field>
+			<field name="arch" type="xml">
+				<tree string="BB/Import LC Tree">
+					<field name="supplier_id" />
+					<field name="payment_term" />
+					<field name="inco_term" />
+					<field name="inco_term_place" />
+					<field name="state" />
+				</tree>
+			</field>
+		</record>
+
+
+		<!-- Sequences for Product Styles -->
+		<record id="seq_type_bb_import_lc" model="ir.sequence.type">
+			<field name="name">BB/Import LC Type</field>
+			<field name="code">bblc_code</field>
+		</record>
+
+		<record id="seq_bb_import_lc" model="ir.sequence">
+			<field name="name">BB/Import LC</field>
+			<field name="code">bblc_code</field>
+			<field name="prefix">BBLC-</field>
+			<field name="padding">10</field>
+		</record>
+
+
+		<!-- BB/Import LC Menu and Action -->
+		<record id="bb_import_lc_list_action" model="ir.actions.act_window">
+			<field name="name">BB/Import LC</field>
+			<field name="res_model">bb.import.lc</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+		</record>
+
+		<menuitem id="bb_import_lc_main_menu" name="BB/Import LC"
+			parent="commercial_menu" sequence="145" action="bb_import_lc_list_action" />
+	</data>
+</openerp>
