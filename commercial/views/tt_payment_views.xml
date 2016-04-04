@@ -94,10 +94,6 @@
 		</record>
 
 		<!-- Sequences for TT Payment -->
-		<record id="seq_type_tt_payment" model="ir.sequence.type">
-			<field name="name">TT Payment Type</field>
-			<field name="code">ttp_code</field>
-		</record>
 
 		<record id="seq_tt_payment" model="ir.sequence">
 			<field name="name">TT Payment</field>

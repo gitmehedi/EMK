@@ -97,11 +97,6 @@
 		</record>
 
 		<!-- Sequences for Export Invoice Realization -->
-		<record id="seq_type_export_invoice_realization" model="ir.sequence.type">
-			<field name="name">Export Invoice Realization Type</field>
-			<field name="code">eirel_code</field>
-		</record>
-
 		<record id="seq_export_invoice_realization" model="ir.sequence">
 			<field name="name">Export Invoice Realization</field>
 			<field name="code">eirel_code</field>

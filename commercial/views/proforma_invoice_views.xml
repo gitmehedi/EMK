@@ -91,10 +91,6 @@
 		</record>
 
 		<!-- Proforma Invoice for Sequences -->
-		<record id="seq_type_proforma_invoice" model="ir.sequence.type">
-			<field name="name">Proforma Invoice Type</field>
-			<field name="code">pi_code</field>
-		</record>
 
 		<record id="seq_proforma_invoice" model="ir.sequence">
 			<field name="name">Proforma Invoice</field>

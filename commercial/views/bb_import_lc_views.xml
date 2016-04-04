@@ -88,13 +88,6 @@
 			</field>
 		</record>
 
-
-		<!-- Sequences for Product Styles -->
-		<record id="seq_type_bb_import_lc" model="ir.sequence.type">
-			<field name="name">BB/Import LC Type</field>
-			<field name="code">bblc_code</field>
-		</record>
-
 		<record id="seq_bb_import_lc" model="ir.sequence">
 			<field name="name">BB/Import LC</field>
 			<field name="code">bblc_code</field>

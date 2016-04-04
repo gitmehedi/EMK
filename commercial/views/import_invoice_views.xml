@@ -77,10 +77,6 @@
 		</record>
 
 		<!-- Sequences for Import Invoice -->
-		<record id="seq_type_import_invoice" model="ir.sequence.type">
-			<field name="name">Import Invoice Type</field>
-			<field name="code">ii_code</field>
-		</record>
 
 		<record id="seq_import_invoice" model="ir.sequence">
 			<field name="name">Import Invoice</field>

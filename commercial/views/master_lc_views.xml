@@ -111,11 +111,6 @@
 		</record>
 
 		<!-- Master LC of Sequences -->
-		<record model="ir.sequence.type" id="seq_type_master_lc">
-			<field name="name">Master LC Type</field>
-			<field name="code">mlc_code</field>
-		</record>
-
 		<record model="ir.sequence" id="seq_master_lc">
 			<field name="name">Master LC</field>
 			<field name="code">mlc_code</field>

@@ -111,10 +111,6 @@
 		</record>
 
 		<!-- Sequences for TT Receive -->
-		<record model="ir.sequence.type" id="seq_type_tt_receive">
-			<field name="name">TT Receive Type</field>
-			<field name="code">ttr_code</field>
-		</record>
 
 		<record model="ir.sequence" id="seq_tt_receive">
 			<field name="name">TT Receive</field>

@@ -95,10 +95,6 @@
 		</record>
 
 		<!-- Sequences for Export Invoice -->
-		<record id="seq_type_export_invoice" model="ir.sequence.type">
-			<field name="name">Export Invoice Type</field>
-			<field name="code">ei_code</field>
-		</record>
 
 		<record id="seq_export_invoice" model="ir.sequence">
 			<field name="name">Export Invoice</field>

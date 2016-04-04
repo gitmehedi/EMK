@@ -89,10 +89,6 @@
 		</record>
 
 		<!-- Sales Contract for Sequences -->
-		<record id="seq_type_sales_contract" model="ir.sequence.type">
-			<field name="name">Sales Contract Type</field>
-			<field name="code">sc_code</field>
-		</record>
 
 		<record id="seq_sales_contract" model="ir.sequence">
 			<field name="name">Sales Contract</field>

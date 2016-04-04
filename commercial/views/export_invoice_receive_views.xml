@@ -94,10 +94,6 @@
 		</record>
 
 		<!-- Sequences for Export Invoice Receive -->
-		<record model="ir.sequence.type" id="seq_type_export_invoice_receive" >
-			<field name="name">Export Invoice Receive Type</field>
-			<field name="code">eir_code</field>
-		</record>
 
 		<record model="ir.sequence" id="seq_export_invoice_receive" >
 			<field name="name">Export Invoice Receive</field>

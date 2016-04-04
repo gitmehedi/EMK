@@ -90,10 +90,6 @@
 		</record>
 
 		<!-- Sequences for Import Payment -->
-		<record id="seq_type_import_payment" model="ir.sequence.type">
-			<field name="name">Import Payment Type</field>
-			<field name="code">ip_code</field>
-		</record>
 
 		<record id="seq_import_payment" model="ir.sequence">
 			<field name="name">Import Payment</field>
