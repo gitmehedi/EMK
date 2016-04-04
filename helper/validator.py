@@ -48,7 +48,7 @@ def _validate_number(values):
     msg_store = {}
     for val in values:
         floatVal = float(values[val])
-        if floatVal <= 0.0:
+        if floatVal < 0.0:
             msg_store[val] = val + ': ' + msg['valid_number']
     return msg_store
 

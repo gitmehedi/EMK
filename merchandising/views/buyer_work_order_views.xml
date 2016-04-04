@@ -112,94 +112,108 @@
 			</field>
 		</record>
 
-		<!-- Buyer Work Order Kanban View -->
-		<record id="buyer_work_order2_kanban" model="ir.ui.view">
+
+        <record id="buyer_work_order_kanban" model="ir.ui.view">
 			<field name="name">buyer.work.order.kanban</field>
 			<field name="model">buyer.work.order</field>
 			<field name="arch" type="xml">
-				<kanban class="oe_background_grey" create="1">
-					<field name="name" />
-					<field name="buyer_id" />
-					<field name="style_id" />
-					<field name="buyer_department" />
-					<field name="color" />
-					<templates>
-						<t t-name="kanban-box">
-							<div
-								t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_card oe_kanban_stock_picking_type">
-								<div class="oe_dropdown_toggle oe_dropdown_kanban" groups="">
-									<span class="oe_e">í</span>
-									<ul class="oe_dropdown_menu">
-										<!-- <t t-if="widget.view.is_action_enabled('edit')"> <li> <a type="edit">Edit...</a> 
-											</li> </t> <t t-if="widget.view.is_action_enabled('delete')"> <li> <a type="delete">Delete</a> 
-											</li> </t> -->
-										<t t-if="widget.view.is_action_enabled('edit')">
-											<li>
-												<ul class="oe_kanban_colorpicker" data-field="color" />
-											</li>
-										</t>
-									</ul>
-								</div>
-								<div class="oe_kanban_content">
-									<h4 class="text-center">
-										<strong>
-											<a type="edit">
-												<field name="name" string="Buyer Work Order No: " />
-											</a>
-										</strong>
-									</h4>
-									<div class="oe_items_list oe_kanban_ellipsis">
-										<div>
-											<a name="#" type="action">
-												Buyer:
-												<field name="buyer_id" />
-											</a>
-										</div>
-										<div>
-											<a name="#" type="action">
-												Order Quantity:
-												<field name="total_quantity" />
-											</a>
-										</div>
-										<div>
-											<a name="#" type="action">
-												Shipment Date:
-												<field name="shipment_date" />
-											</a>
-										</div>
-									</div>
+                <kanban class="oe_background_grey o_kanban_dashboard o_stock_kanban" create="0">
+                    <field name="name" />
+                    <field name="buyer_id" />
+                    <field name="style_id" />
+                    <field name="buyer_department" />
+                    <field name="production_qty" />
+                    <field name="production_ratio" />
 
+                    <field name="color" />
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div t-attf-class="#{kanban_color(record.color.raw_value)}">
+                                <div class="o_kanban_card_header">
+                                    <div class="o_kanban_card_header_title">
+                                        <div class="o_primary"><field name="name"/></div>
+                                    </div>
+                                    <div class="o_kanban_manage_button_section">
+                                        <a class="o_kanban_manage_toggle_button" href="#">More <i class="fa fa-caret-down"/></a>
+                                    </div>
+                                </div>
+                                <div class="container o_kanban_card_content o_visible">
+                                    <div class="row">
+                                        <div class="col-xs-6 o_kanban_primary_left">
+                                            <button class="btn btn-primary">
+                                                <span><t t-esc="record.delay.value"/> To Receive</span>
+                                            </button>
+                                        </div>
+                                        <div class="col-xs-6 o_kanban_primary_right">
+                                            <!--<div t-if="record.production_ratio.raw_value &gt; 0" class="row"></div>
 
+                                            <div t-if="record.count_picking_waiting.raw_value &gt; 0" class="row">
+                                                <div class="col-xs-9">
+                                                    <a name="get_action_picking_tree_waiting" type="object">
+                                                        Waiting
+                                                    </a>
+                                                </div>
+                                                <div class="col-xs-3">
+                                                    <field name="production_ratio"/>
+                                                </div>
+                                            </div>-->
 
-									<div class="oe_picking_type_gauge">
-										<field name="production_ratio" widget="gauge"
-											style="width:150px; height: 110px;" options="{'levelcolors': ['#a9d70b', '#f9c802', '#ff0000']}">Production (%%)
-										</field>
-										<field name="delay" widget="gauge" style="width:150px; height: 110px;">Delay (%%)
-										</field>
-										<div class="oe_gauge_labels">
-											<div class="oe_gauge_label_column">
-												<a name="#" type="action">
-													Production:
-													<field name="production_ratio" />
-												</a>
-											</div>
-											<div class="oe_gauge_label_column">
-												<a name="#" type="action">
-													Delay:
-													<field name="delay" />
-												</a>
-											</div>
-										</div>
-									</div>
-								</div>
-							</div>
-						</t>
-					</templates>
-				</kanban>
-			</field>
+                                            <div t-if="record.delay.raw_value &gt; 0" class="row">
+                                                <div class="col-xs-9">
+                                                    <a class="oe_kanban_stock_picking_type_list" name="get_action_picking_tree_late" type="object">
+                                                        Late
+                                                    </a>
+                                                </div>
+                                                <div class="col-xs-3">
+                                                    <field name="delay"/>
+                                                </div>
+                                            </div>
+
+                                             <!--<div t-if="record.count_picking_backorders.raw_value &gt; 0" class="row">
+                                                <div class="col-xs-9">
+                                                    <a class="oe_kanban_stock_picking_type_list" name="get_action_picking_tree_backorder" type="object">
+                                                        Back Orders
+                                                    </a>
+                                                </div>
+                                                <div class="col-xs-3">
+                                                    <field name="count_picking_backorders"/>
+                                                </div>
+                                            </div>-->
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="container o_kanban_card_manage_pane o_invisible">
+                                    <div class="row">
+                                        <!--<div class="col-xs-6 o_kanban_card_manage_section o_kanban_manage_view">
+                                            <div class="o_kanban_card_manage_title">
+                                                <span>View</span>
+                                            </div>
+                                            <div>
+                                                <a name="get_stock_picking_action_picking_type" type="object">All</a>
+                                            </div>
+                                            <div>
+                                                <a name="154" type="action">Ready</a>
+                                            </div>
+                                            <div>
+                                                <a name="get_action_picking_tree_waiting" type="object">Waiting</a>
+                                            </div>
+                                        </div>-->
+                                        <div class="col-xs-6 o_kanban_card_manage_section o_kanban_manage_new">
+                                            <div class="o_kanban_card_manage_title">
+                                                <span>New</span>
+                                            </div>
+                                            <div>
+                                                <a name="160">Transfer</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </t>
+                        </templates>
+                </kanban>
+            </field>
 		</record>
-
 		<!-- Sequences for Product Styles
 		<record id="seq_type_buyer_work_order" model="ir.sequence.type">
 			<field name="name">Buyer Work Order Type</field>

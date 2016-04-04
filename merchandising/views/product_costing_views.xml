@@ -37,11 +37,10 @@
 						<h1>
 							<field name="name" string="Serial No" />
 						</h1>
-						<div class="oe_button_box" name="button_box">
-							<button name="toggle_active" type="object" class="oe_stat_button" icon="fa-check">
-								<field name="for_bidding" widget="boolean_button" options="{&quot;terminology&quot;: &quot;Bidding&quot;}"/>
-							</button>
-                        </div>
+						<h1>
+							<field name="for_bidding" />
+							<label for="for_bidding" string="For Bidding" />
+						</h1>
 						<group>
 							<group>
 
@@ -309,6 +308,8 @@
 									<tree editable="bottom">
 										<field name="product_id" domain="[('type', '=', 'service')]"
 											options='{"no_open":True,"no_create": 1, "no_create_edit":1}' />
+										<field name="product_costing_type"
+											   options='{"no_open":True,"no_create": 1, "no_create_edit":1}'/>
 										<field name="standard_wage" />
 										<field name="line_currency_id"
 											options='{"no_open":True,"no_create": 1, "no_create_edit":1}' />
@@ -316,6 +317,7 @@
 										<field name="amount" />
 										<field name="bonus" />
 										<field name="bonus_amount" />
+
 										<field name="total_cost" sum="Total USD" />
 										<field name="total_cost_usd" sum="Total BDT" />
 									</tree>

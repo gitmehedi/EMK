@@ -26,7 +26,7 @@ class ProductCosting(models.Model):
                                  readonly=True, states={'draft':[('readonly', False)]})
     weight_per_pcs = fields.Float(string="Weight", required=True,
                                   readonly=True, states={'draft':[('readonly', False)]})
-    weight_per_dzn = fields.Float(compute="_compute_weight_per_dzn", required=True,
+    weight_per_dzn = fields.Float(compute="_compute_weight_per_dzn", required=True, store=True,copy=True,
                                   readonly=True, states={'draft':[('readonly', False)]})
     remarks = fields.Text(string="Remarks", size=300,
                           readonly=True, states={'draft':[('readonly', False)]})
@@ -53,7 +53,7 @@ class ProductCosting(models.Model):
     weight_uom = fields.Many2one('product.uom', ondelete='set null', required=True,
                                  domain=[('category_id', '=', 'Weight')], default=lambda self: self._get_default_uom('lb(s)'),
                                  readonly=True, states={'draft':[('readonly', False)]})
-    weight_type = fields.Selection([ ('dzn', 'Dzn'), ('pcs', 'Pcs')], default='dzn', required=True,
+    weight_type = fields.Selection([ ('dzn', 'Dzn'), ('pcs', 'Pcs')], default='dzn', required=True, store=True,
                                        readonly=True, states={'draft':[('readonly', False)]})
     product_currency_id = fields.Many2one('res.currency', string="Currency", required=True,
            readonly=True, states={'draft':[('readonly', False)]}, default=lambda self: self._get_default_currency('USD'))
@@ -122,7 +122,7 @@ class ProductCosting(models.Model):
     fob_cost = fields.Float(compute="_computed_fob_cost", string='Cost Per Piece (FOB)', digits=(20, 4), default=0.0, store=True)
     
     """
-    CM Calculation Fields
+    CM Calculation Fieldsstore=True,
     """
     fixed_overhead_currency_id = fields.Many2one('res.currency', readonly=True, states={'draft':[('readonly', False)]})
     fixed_overhead_bonus_percentage = fields.Float(digits=(20, 4), default=0.0,
@@ -193,7 +193,7 @@ class ProductCosting(models.Model):
         return super(ProductCosting, self).write(vals)
  
          
-    @api.multi
+    @api.one
     def costing_copy(self, default=None):
         
         default = dict(default or {})
@@ -201,13 +201,12 @@ class ProductCosting(models.Model):
             default['version'] = self.version + 1
             default['ref_costing_id'] = self.id
             default['name'] = self.name
-            
         else:
             print "create version"
             default['costing_id'] = ''
             default['version'] = 1
             default['name'] = ''
-          
+
         res = super(ProductCosting, self).copy(default)
         
         # Update the current record
@@ -303,7 +302,8 @@ class ProductCosting(models.Model):
             self.weight_per_dzn = self.weight_per_pcs
         elif self.weight_type == 'dzn':
             self.weight_per_dzn = self.weight_per_pcs * 12
-        
+        # return True
+
     """
     Onchange fields 
     """

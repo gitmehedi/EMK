@@ -30,8 +30,7 @@
 								<field name="style_id"
 									options='{"no_open": True,"no_create": 1, "no_create_edit": 1}' />
 								<field name="po_id"
-									options='{"no_open": True,"no_create": 1, "no_create_edit": 1}'
-									domain="[('style_id', '=', 6),('state', '=', 'confirm')]"
+									   options='{"no_open": True,"no_create": 1, "no_create_edit": 1}'
 									attrs="{'invisible': [('style_id', '=', False)]}" />
 
 								<label for="consumtion_qty" string="Consumption For" />

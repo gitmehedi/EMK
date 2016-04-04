@@ -10,3 +10,4 @@ class InheritedProductTemplate(models.Model):
 	yarn = fields.Boolean(string="Yarn", default=False)
 	accessories = fields.Boolean(string="Accessories", default=False)
 	finish_goods = fields.Boolean(string="Finish Goods", default=False)
+	costing_type = fields.Selection([('pcs','Pcs'),('dzn','Dzn')], default='pcs',string="Costing Type",)
