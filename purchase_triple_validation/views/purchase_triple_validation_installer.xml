@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+
+        <record id="view_double_purchase_configuration_2" model="ir.ui.view">
+            <field name="name">Purchase Application 2</field>
+            <field name="model">purchase.config.settings</field>
+            <field name="inherit_id" ref="purchase.view_purchase_configuration"/>
+            <field name="arch" type="xml">
+                <xpath
+					expr="//form/group/div/div[@name='module_purchase_double_validation']"
+					position="after">
+                    <span class="oe_separate-from-text">
+                        <label for="min_limit_amount"/>
+                        <field name="min_limit_amount" attrs="{'required': [('module_purchase_order_double_approval','=',True)]}" class="oe_inline"/>
+                    </span>
+                </xpath>
+            </field>
+        </record>
+
+    </data>
+</openerp>
