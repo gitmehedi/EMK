@@ -7,7 +7,7 @@ class InheritedPurchaseRequisition(models.Model):
 
 	state = fields.Selection([('draft', 'Draft'), ('in_progress', 'Confirmed'),('approved', 'Approved'),
                                    ('open', 'Bid Selection'), ('done', 'PO Created'),
-                                   ('cancel', 'Cancelled')],
+                                   ('close', 'Close'),('cancel', 'Cancelled')],
                                   'Status', required=True, readonly=True, states={'draft': [('readonly', False)]},
                                   copy=False)
 	
@@ -15,6 +15,10 @@ class InheritedPurchaseRequisition(models.Model):
 	def action_approved(self):
 		self.state = "approved"
 	
+	@api.multi
+	def action_close(self):
+		self.state = "close"
+		
 	@api.one
 	def open_bid(self):
 		self.state = "open"	

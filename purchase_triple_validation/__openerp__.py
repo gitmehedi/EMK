@@ -20,26 +20,25 @@
 ##############################################################################
 
 {
-    'name' : 'Purchase Triple Validation',
-    'version' : '1.0',
+    'name' : 'Purchases Triple Validation',
+    'version' : '0.1',
     'category': 'Purchase Management',
-    'depends' : ['purchase'],
+    'depends' : ['purchase_double_validation'],
     'author' : 'OpenERP SA',
     'description': """
-Triple-Approval for purchases Order exceeding minimum amount and minimum item Quantity.
+Triple-validation for purchases exceeding minimum amount.
 =========================================================
 
 This module modifies the purchase workflow in order to validate purchases that
-exceeds minimum amount and minimum item Quantity set by configuration wizard.
+exceeds minimum amount set by configuration wizard.
     """,
-    'website': 'www.genweb2.com',
+    'website': 'http://www.openerp.com',
     'data': [
-         'views/inherited_purchase_settings.xml',
-         'views/purchase_triple_validation_workflow.xml',
-         'views/purchase_triple_validation_installer.xml',
-         'views/purchase_triple_validation_view.xml',
+        'security/purchase_triple_validation_security.xml',
+        'views/purchase_triple_validation_workflow.xml',
+        'views/pruchase_config_view.xml',
+        'views/pruchase_view.xml',
     ],
-    'demo': [],
     'installable': True,
     'auto_install': False
 }

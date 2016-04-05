@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+    	
+    	<record id="view_purchase_form" model="ir.ui.view">
+            <field name="name">purchase.order.form.inherit</field>
+            <field name="model">purchase.order</field>
+            <field name="inherit_id" ref="purchase.purchase_order_form"/>
+            <field name="arch" type="xml">                
+                <xpath expr='//header/button[@name="purchase_approve"]' position="replace">
+                	<button name="wkf_send_rfq" states="validated" string="Resend Purchase Order" type="object"/>
+                    <button name="purchase_approve1" states="confirmed" string="First Approval" class="oe_highlight" groups="purchase_triple_validation.group_purchase_approver1"/>
+                    <button name="purchase_approve2" states="validated" string="Second Approval" class="oe_highlight" groups="purchase_triple_validation.group_purchase_approver2"/>                    
+                    <button name="action_cancel_draft" states="validated" string="Set to Draft" type="object" />                    
+                </xpath>
+<!--                 <xpath expr='//header/button[@name="purchase_cancel"]' position="replace"> -->
+<!--                 	<button name="purchase_cancel" states="draft,sent" string="Cancel Order"/>                     -->
+<!--                 </xpath> -->
+                <xpath expr='//header/field[@name="state"]' position="replace">
+                	<field name="state" widget="statusbar" statusbar_visible="draft,sent,validated,approved,done" statusbar_colors='{"except_picking":"red","except_invoice":"red","confirmed":"blue"}' readonly="1"/>                    
+                </xpath>                
+            </field>
+        </record>
+
+    </data>
+</openerp>
