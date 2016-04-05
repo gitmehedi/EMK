@@ -46,8 +46,12 @@ class ChequeSearchPopup(models.TransientModel):
             if record.state not in ('deposit'):
                 raise osv.except_osv(_('Warning!'), _("Selected Data cannot be accessible as they are not in 'Deposit' state."))
             record.confirm_date = self.confirm_date
-            record.confirm_cheque();
+            record.confirm_cheque();         
         return {'type': 'ir.actions.act_window_close'}
+    
+    @api.multi
+    def confirm_message(self):
+        return {'value':{},'warning':{'title':'warning','message':'Your message here.'}}        
     
     @api.multi
     def action_reject_cheque(self):
@@ -88,5 +92,6 @@ class ChequeSearchPopup(models.TransientModel):
             'type': 'ir.actions.act_window',
             'target': 'current',
             'domain': domain,
+            'nodestroy': False,
             }
         
