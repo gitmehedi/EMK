@@ -140,3 +140,9 @@ class InheritedPurchaseRequisition(models.Model):
 	     self.write(cr, uid, ids, {'state': 'done'})
 	 return True
 	 """
+	 
+	 
+class InheritPurchaseOrder(models.Model):
+    _inherit = "purchase.order"
+
+    requisition_id =fields.Many2one('purchase.requisition', 'Purchase Requisition', domain=[('state','=','approved')], copy=False)

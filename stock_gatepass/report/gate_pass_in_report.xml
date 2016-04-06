@@ -5,7 +5,7 @@
 		<report id="report_gate_pass_in_11" model="stock.gatepass.in"
 			string="Gate Pass Report In" name="stock_gatepass.report_gate_pass_in_view"
 			file="stock_gatepass.report_gate_pass_in" report_type="qweb-pdf" />
-			
+
 		<template id="report_gate_pass_in_view">
 			<t t-call="report.html_container">
 				<t t-foreach="docs" t-as="doc">
@@ -96,6 +96,10 @@
 									</t>
 								</tbody>
 							</table>
+							<p>
+								<h5>Notes:</h5>
+								<span t-field="doc.notes" />
+							</p>
 						</div>
 					</t>
 				</t>
