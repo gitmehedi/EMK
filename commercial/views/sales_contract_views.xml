@@ -43,7 +43,17 @@
 									options='{"no_open": True,"no_create": 1, "no_create_edit": 1}' />
 							</group>
 							<group>
-								<field name="sc_value" />
+								<label for="sc_value" string="SC Value" />
+								<div>
+									<div class="col-md-5 multifield_combination">
+										<field name="sc_value" />
+									</div>
+									<div class="col-md-5 multifield_combination">
+										<field name="sc_currency_id"
+											options='{"no_open": True,"no_create": 1, "no_create_edit": 1}' />
+									</div>
+								</div>
+
 								<field name="payment_term_id"
 									options='{"no_open": True,"no_create": 1, "no_create_edit": 1}' />
 								<field name="inco_term"
@@ -56,9 +66,9 @@
 							<page string="Sales Contract Details">
 								<field name="sales_contract_details_ids">
 									<tree string="" editable="top">
-										<field name="po_related"
+										<field name="po_related_id"
 											options='{"no_open": True,"no_create": 1, "no_create_edit": 1}' />
-										<field name="tagged_po"
+										<field name="tagged_po_id"
 											options='{"no_open": True,"no_create": 1, "no_create_edit": 1}' />
 									</tree>
 								</field>

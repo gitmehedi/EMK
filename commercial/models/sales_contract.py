@@ -1,5 +1,5 @@
 from openerp import models, fields, api, exceptions
-from openerp.addons.helper import validator
+from openerp.addons.helper import validator,utility
 from datetime import date
 
 
@@ -9,7 +9,7 @@ class SalesContract(models.Model):
     
     _name = 'sales.contract'
     
-    # Buyer Work Order fields
+    """ All required and optional fields """
     name = fields.Char(string="Serial", size=30, readonly=True)
     sc_code = fields.Char(string='Code')
     sc_date = fields.Date(string="SC Date", required=True, default=date.today().strftime('%Y-%m-%d'))
@@ -20,37 +20,44 @@ class SalesContract(models.Model):
     
     remarks = fields.Text(string='Remarks')
     
-    # Relationship fields
+    """ Relationship fields """
     buyer_id = fields.Many2one('res.partner', string="Buyer", required=True,
                                domain=[('customer', '=', 'True')])
-    sc_bank_id = fields.Many2one('res.bank', string="SC Bank", required=True)
-    payment_term_id = fields.Many2one('account.payment.term', string="Payment Terms/Tenor", required=True)
+    sc_bank_id = fields.Many2one('res.bank', string="SC Bank",
+                                 required=True)
+    payment_term_id = fields.Many2one('account.payment.term', string="Payment Terms/Tenor",
+                                      required=True)
+    sc_currency_id = fields.Many2one('res.currency', required=True,
+                                     readonly=True, states={'draft':[('readonly', False)]}, default=lambda self: self._set_default_currency('USD'))
     
-#     payment_term = fields.Selection([("10", "10 Days"), ("15", "15 Days"), ("30", "30 Days")], string='Payment Terms', required=True)
-    inco_term = fields.Many2one('commercial.term', string="Inco Term", required=True)
+    inco_term = fields.Many2one('commercial.term', string="Inco Term",
+                                required=True)
     
     state = fields.Selection([('draft', "Draft"), ('confirm', "Confirm")], default='draft')
     
-    # One2many relationships
+    """ One2many relationships """
     sales_contract_details_ids = fields.One2many('sales.contract.details', 'sales_contract_id')
     
     
-    # All kinds of validation message
+    """ All kinds of validation message """
     @api.multi
     def _validate_data(self, value):
         msg , filterChar, filterNum = {}, {}, {}
         filterChar['SC No'] = value.get('sc_no', False)
         filterNum['SC Value'] = value.get('sc_value', False)
-        filterNum['Tenor'] = value.get('tenor', False)
-        
+
         msg.update(validator._validate_number(filterNum))
         msg.update(validator._validate_character(filterChar, True))
         validator.validation_msg(msg)
         
         return True
+
+    def _set_default_currency(self, name):
+        res = self.env['res.currency'].search([('name', '=like', name)])
+        return res and res[0] or False
     
     
-    # All function which process data and operation
+    """ All function which process data and operation """
     
     @api.model
     def create(self, vals):

@@ -30,19 +30,19 @@ class CommercialTerm(models.Model):
     
     @api.model
     def create(self, vals):
-        self._validate_data(vals)
+        # self._validate_data(vals)
         vals['name'] = vals.get('name', False).strip()
-        vals['code'] = vals.get('code', False).strip()
+        vals['code'] = vals.get('code', False)
         
         return super(CommercialTerm, self).create(vals)
     
     @api.multi
     def write(self, vals):
-        self._validate_data(vals)
+        # self._validate_data(vals)
         
         if vals.get('name', False):
             vals['name'] = vals.get('name', False).strip()
-            vals['code'] = vals.get('code', False).strip()
+            vals['code'] = vals.get('code', False)
         
         return super(CommercialTerm, self).write(vals)
     
