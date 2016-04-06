@@ -1,5 +1,5 @@
 from openerp import api, fields, models
-from openerp.addons.helper import validator
+from openerp.addons.helper import validator, utility
 from openerp.osv import osv
 import re
 import copy

@@ -8,12 +8,12 @@
         </record>
     	
         <record id="merchandising_group_user" model="res.groups">
-        	<field name="name">User</field>
+        	<field name="name">Merchandising User</field>
         	<field name="category_id" ref="module_category_merchandising"/>
         </record>
         
         <record id="merchandising_group_manager" model="res.groups">
-        	<field name="name">Manager</field>
+        	<field name="name">Merchandising Manager</field>
         	<field name="category_id" ref="module_category_merchandising"/>
         </record>
         
