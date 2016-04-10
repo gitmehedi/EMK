@@ -19,10 +19,7 @@ class ProductPart(models.Model):
     @api.multi
     def _validate_data(self, value):
         msg , filterChar = {}, {}
-        
-        filterChar['Name'] = value.get('name', False)
-        
-        msg.update(validator._validate_character(filterChar,True))
+
         validator.validation_msg(msg)
         
         return True

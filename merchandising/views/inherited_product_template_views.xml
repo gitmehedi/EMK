@@ -19,5 +19,18 @@
 				</xpath>
 			</field>
 		</record>
+
+		<record model="ir.actions.act_window" id="inherited_product_template_actions">
+			<field name="name">Product </field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">product.template</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+		</record>
+
+		<!-- Bank Account Menu -->
+		<menuitem id="product_product_menu" name="Products"
+			parent="products_sub_menu" sequence="297"
+			action="inherited_product_template_actions" />
 	</data>
 </openerp>

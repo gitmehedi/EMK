@@ -69,23 +69,22 @@ class ProductCostingAccessories(models.Model):
     def _get_default_currency(self, name):
         res = self.env['res.currency'].search([('name', '=like', name)])
         return res and res[0] or False
-    """
-    Computed Fields
-    """
+
+
+    """ Computed Fields """
+
     @api.depends('wastage_percentage', 'quantity')
     def _compute_wastage_quantity(self):
        for line in self:
-            if line.quantity and line.wastage_percentage:
-                line.wastage_quantity = (line.quantity * line.wastage_percentage) / 100 
-#     @api.multi
+            line.wastage_quantity = (line.quantity * line.wastage_percentage) / 100
+
     @api.depends('wastage_percentage', 'quantity')
     def _compute_total_yarn_required(self):
         
         for line in self:
-            if line.quantity and line.wastage_quantity:
+            if line.quantity:
                 line.total_qty_required = line.quantity + line.wastage_quantity
     
-#     @api.multi
     @api.depends('total_qty_required', 'yarn_rate')
     def _compute_total_cost(self):
         
@@ -93,7 +92,6 @@ class ProductCostingAccessories(models.Model):
             if line.total_qty_required and line.yarn_rate:
                 line.total_cost = line.total_qty_required * line.yarn_rate
                                                                       
-#     @api.multi
     @api.depends('total_cost', 'line_currency_id')
     def _compute_cost_selected_currency(self):
         

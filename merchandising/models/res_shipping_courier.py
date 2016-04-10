@@ -9,16 +9,7 @@ class ResShippingCourier(models.Model):
 	contact_number = fields.Char(string='Contact Number', size=30, required=True)
 	address = fields.Text(string='Address')
 	
-	@api.multi
-	def _check_special_char(self):
-		for courier in self:
-			if re.search("[^A-Za-z0-9 ]",courier.name)==None:
-				return True
-		return False
-	
-	_constraints = [
-        (_check_special_char, 'Please remove special character.', ['name'])
-    ]
+
 	
 	def create(self, cr, uid, vals, context=None):
 		name_value = vals.get('name', False)

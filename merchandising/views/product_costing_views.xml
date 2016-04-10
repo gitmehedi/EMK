@@ -287,6 +287,7 @@
 
 							</page>
 							<page string="Accessories">
+                                <separator string="Cost Per Dozen" />
 								<field name="accessories_ids">
 									<tree editable="bottom">
 										<field name="product_id" domain="[('accessories', '=', True)]"
@@ -306,18 +307,18 @@
 							<page string="CM">
 								<field name="cm_ids">
 									<tree editable="bottom">
+										<field name="total_cost_flag" />
 										<field name="product_id" domain="[('type', '=', 'service')]"
 											options='{"no_open":True,"no_create": 1, "no_create_edit":1}' />
 										<field name="product_costing_type"
 											   options='{"no_open":True,"no_create": 1, "no_create_edit":1}'/>
-										<field name="standard_wage" />
+										<field name="standard_wage" attrs="{'invisible': [('total_cost_flag','=', True)]}"/>
 										<field name="line_currency_id"
 											options='{"no_open":True,"no_create": 1, "no_create_edit":1}' />
-										<field name="productivity" />
-										<field name="amount" />
-										<field name="bonus" />
-										<field name="bonus_amount" />
-
+										<field name="productivity" attrs="{'invisible': [('total_cost_flag','=', True)]}" />
+										<field name="amount" attrs="{'invisible': [('total_cost_flag','=', True)]}" />
+										<field name="bonus" attrs="{'invisible': [('total_cost_flag','=', True)]}" />
+										<field name="bonus_amount" attrs="{'invisible': [('total_cost_flag','=', True)]}" />
 										<field name="total_cost" sum="Total USD" />
 										<field name="total_cost_usd" sum="Total BDT" />
 									</tree>

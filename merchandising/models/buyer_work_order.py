@@ -81,12 +81,9 @@ class BuyerWorkOrder(models.Model):
         
         filterInt['Tolerance'] = value.get('tolerance', False)
         filterInt['Delay'] = value.get('delay', False)
-        # filterNum['Production Quantity'] = value.get('production_qty', False)
-        filterChar['Hs Code'] = value.get('hs_code', False)
-        
+
         msg.update(validator._validate_percentage(filterInt))
         msg.update(validator._validate_number(filterNum))
-        msg.update(validator._validate_character(filterChar, True))
         validator.validation_msg(msg)
         
         return True

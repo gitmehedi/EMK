@@ -66,6 +66,7 @@
              'views/inherited_res_users_views.xml',
              'views/inherited_product_template_views.xml',
              'views/inherited_product_attribute.xml',
+             'views/inherited_product_product_views.xml',
              ],
 
     'description': '''''',

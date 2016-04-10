@@ -22,9 +22,7 @@ class ProductSize(models.Model):
         validator.generate_validation_msg(check_space, check_special_char)
         return True
     
-    _sql_constraints = [
-        ('_check_product_size_uniq', 'unique(name)', "Name already exists!"),
-    ]
+
     
     @api.multi
     def check_duplicate(self, value):

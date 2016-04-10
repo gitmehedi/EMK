@@ -29,17 +29,17 @@ def _validate_percentage(values):
 
 def _validate_character(values, special=False):
     msg_store = {}
-    
+
     for val in values:
         if values[val]:
             checkIllegal = values[val].strip()
             if special:
                 if re.search("[^A-Za-z0-9 ]", checkIllegal) != None:
-                    msg_store[val] = val + ': ' + msg['special_char'] 
-            
+                    msg_store[val] = val + ': ' + msg['special_char']
+
             if not checkIllegal:
-                msg_store[val] = val + ': ' + msg['space'] 
-            
+                msg_store[val] = val + ': ' + msg['space']
+
     return msg_store
 
 
@@ -56,7 +56,7 @@ def _validate_number(values):
 def _check_illegal_char(self, values, msg):
     flag = True
     for value in values:
-        checkIllegal = values[value].strip()    
+        checkIllegal = values[value].strip()
         if checkIllegal:
             if re.search("[^A-Za-z0-9 ]", checkIllegal) == None:
                 flag = True
@@ -98,14 +98,14 @@ def _check_space(self, values, msg):
 def _check_special_char(self, values, msg):
     flag = True
     msg_store = {}
-    for value in values:
-        checkIllegal = values[value].strip()    
-        if checkIllegal:
-            if re.search("[^A-Za-z0-9 ]", checkIllegal) == None:
-                flag = True
-            else:
-                msg_store[value] = value + ': ' + msg['special_char']
-                flag = False
+    # for value in values:
+    #     checkIllegal = values[value].strip()
+    #     if checkIllegal:
+    #         if re.search("[^A-Za-z0-9 ]", checkIllegal) == None:
+    #             flag = True
+    #         else:
+    #             msg_store[value] = value + ': ' + msg['special_char']
+    #             flag = False
     return msg_store
 
 # Check for special character 

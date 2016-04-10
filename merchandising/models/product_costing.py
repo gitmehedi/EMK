@@ -19,6 +19,7 @@ class ProductCosting(models.Model):
     version = fields.Integer(string="Version", required=True, size=3, default=1, readonly=True)
     version_date = fields.Date(string='Version Date', default=fields.Date.today,
                                     size=30, required=True, readonly=True, states={'draft':[('readonly', False)]})
+
     qty = fields.Float(string='Quantity', digits=(20, 2),
                        readonly=True, states={'draft':[('readonly', False)]})
     product_costing_visible = fields.Boolean(default=True)
@@ -77,7 +78,7 @@ class ProductCosting(models.Model):
                                 readonly=True, states={'draft':[('readonly', False)]}, copy=True)
     accessories_ids = fields.One2many('product.costing.accessories', 'accessories_costing_id', string="Accessories",
                                        readonly=True, states={'draft':[('readonly', False)]}, copy=True)
-    cm_ids = fields.One2many('cm.costing.line', 'cm_costing_id', string="CM", required=True,
+    cm_ids = fields.One2many('cm.costing.line', 'cm_costing_id', string="CM",
                                 readonly=True, states={'draft':[('readonly', False)]}, copy=True)
     costing_ids = fields.One2many('product.costing', 'costing_id', string="Costing", readonly=True)
     
@@ -140,10 +141,7 @@ class ProductCosting(models.Model):
     state = fields.Selection([('draft', "Draft"), ('confirm', "Confirm"), ('approve', "Approve"), ('revise', "Revise"),
                               ('reject', "Reject"), ('cancel', "Cancel")], default='draft',
                              readonly=True, states={'draft':[('readonly', False)]})
-    _sql_constraints = [
-        ('_check_product_quantity_uniq', "CHECK (qty > 0)", "Quantity must be greater than 0")
-    ]
-   
+
     """
     Default Models Functions
     """
@@ -151,8 +149,9 @@ class ProductCosting(models.Model):
     def _validate_data(self, value):
         msg , filterFloat = {}, {}
         
-        if value.get('for_bidding') == False:
+        if not value.get('for_bidding'):
             filterFloat['Quantity'] = value.get('qty', False)
+
         filterFloat['Weight/pcs'] = value.get('weight_per_pcs', False)
        
         msg.update(validator._validate_number(filterFloat))
@@ -299,10 +298,10 @@ class ProductCosting(models.Model):
     @api.depends('weight_type', 'weight_per_pcs')
     def _compute_weight_per_dzn(self):
         if self.weight_type == 'pcs':
-            self.weight_per_dzn = self.weight_per_pcs
+            self.weight_per_dzn = self.weight_per_pcs *12
         elif self.weight_type == 'dzn':
-            self.weight_per_dzn = self.weight_per_pcs * 12
-        # return True
+            self.weight_per_dzn = self.weight_per_pcs
+
 
     """
     Onchange fields 

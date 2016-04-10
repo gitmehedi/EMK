@@ -14,12 +14,13 @@ class CmCostingLine(models.Model):
     bonus_amount = fields.Float(compute="_compute_bonus_amount", digits=(20, 2), string='Bonus Amount', default=None)
     productivity = fields.Float(digits=(20, 4), string='Productivity', default=None)
 
-    product_costing_type = fields.Selection([('pcs','Pcs'),('dzn','Dzn')], string="Costing Type",)
+    product_costing_type = fields.Selection([('pcs','Pcs'),('dzn','Dzn')], string="Costing Type",required=True)
 
     total_cost = fields.Float(digits=(20, 4), string='Total Cost')
     total_cost_usd = fields.Float(compute="_compute_total_cost_usd", digits=(20, 4), string='Cost in USD')
+    total_cost_flag = fields.Boolean(string="Flag")
     
-    # relational fields
+    """ relational fields """
     
     product_id = fields.Many2one('product.template', string="Product", required=True, domain=[('type', '=', 'service')])
     cm_costing_id = fields.Many2one('product.costing', string="CM", ondelete='set null')
@@ -83,11 +84,15 @@ class CmCostingLine(models.Model):
                 cm.total_cost = cm.amount + cm.bonus_amount
 
 
-    @api.depends('product_costing_type','standard_wage','line_currency_id', 'productivity','amount','bonus_amount')
+    @api.depends('product_costing_type','standard_wage','line_currency_id', 'productivity','amount','bonus_amount','total_cost')
     def _compute_total_cost_usd(self):
         for cm in self:
-            if cm.amount and cm.line_currency_id and cm.cm_costing_id.product_currency_id:
-                cm.total_cost_usd = (cm.amount + cm.bonus_amount) / cm.convert_currency(cm.cm_costing_id.product_currency_id.id, cm.line_currency_id.id)
+            if cm.line_currency_id and cm.cm_costing_id.product_currency_id:
+                if not cm.total_cost_flag:
+                    cm.total_cost_usd = (cm.amount + cm.bonus_amount) / cm.convert_currency(cm.cm_costing_id.product_currency_id.id, cm.line_currency_id.id)
+                else:
+                    cm.total_cost_usd = (cm.total_cost) / cm.convert_currency(cm.cm_costing_id.product_currency_id.id, cm.line_currency_id.id)
+
 
 
     """
@@ -99,7 +104,18 @@ class CmCostingLine(models.Model):
         for cm in self:
             self.product_costing_type = self.product_id.costing_type
 
-
+    @api.onchange('total_cost_flag')
+    def onchange_total_cost_flag(self):
+        for cm in self:
+            if self.total_cost_flag:
+                self.percentage = 0
+                self.standard_wage=0
+                self.productivity=0
+                self.amount=0
+                self.bonus=0
+                self.bonus_amount=0
+                self.total_cost=0
+                self.total_cost_usd=0
 
     
     @api.model

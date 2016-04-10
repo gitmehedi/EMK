@@ -5,17 +5,8 @@ class ProductGauge(models.Model):
 	_name = 'product.gauge'
 	
 	name = fields.Char(string='Name', size=30, required=True)
-	
-	@api.multi
-	def _check_special_char(self):
-		for gauge in self:
-			if re.search("[^A-Za-z0-9 ]",gauge.name)==None:
-				return True
-		return False
-	
-	_constraints = [
-        (_check_special_char, 'Please remove special character.', ['name'])
-    ]
+
+
 	
 	def create(self, cr, uid, vals, context=None):
 		name_value = vals.get('name', False)
