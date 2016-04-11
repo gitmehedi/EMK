@@ -78,7 +78,7 @@
 			<field name="model">bom.consumption</field>
 			<field name="arch" type="xml">
 				<tree string="Material Consumption Bill">
-					<field name="name" />
+					<field name="name"/>
 					<field name="mc_id" />
 					<field name="style_id" />
 					<field name="export_po_id" />

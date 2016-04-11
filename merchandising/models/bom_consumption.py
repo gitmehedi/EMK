@@ -9,7 +9,7 @@ class BOMConsumption(models.Model):
     _name = 'bom.consumption'
     
     """Product Style fields"""
-    name = fields.Char(size=30, readonly=True)
+    name = fields.Char(size=30, string="Serial No", readonly=True)
     bill_code = fields.Char(string='Code')
     
     """Model Relationship"""

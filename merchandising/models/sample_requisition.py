@@ -8,7 +8,7 @@ class SampleRequisition(models.Model):
 			}
 	
 	
-	name = fields.Char(string='Name', required=True, readonly=True)
+	name = fields.Char(required=True, string="Serial No", readonly=True)
 	ref_no = fields.Char(string='Reference No', size=30, readonly=True,
 						states={'draft':[('readonly', False)]})
 	quantity = fields.Float(size=6, digits=(14, 2), string='Quantity', readonly=True, required=True,

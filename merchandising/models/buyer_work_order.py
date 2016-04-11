@@ -10,7 +10,7 @@ class BuyerWorkOrder(models.Model):
     _name = 'buyer.work.order'
     
     # Buyer Work Order fields
-    name = fields.Char(string="Serial", size=30, readonly=True)
+    name = fields.Char(size=30, string="Serial No", readonly=True)
     bwo_code = fields.Char(string='Code')
     epo_date = fields.Date(string="Date", required=True, default=date.today().strftime('%Y-%m-%d'),
                            readonly=True, states={'draft':[('readonly', False)]})

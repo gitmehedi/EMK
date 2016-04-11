@@ -11,7 +11,7 @@ class ProductCosting(models.Model):
     """
     _name = "product.costing"
 
-    name = fields.Char(string="Style", size=30, readonly=True)
+    name = fields.Char(size=30, string="Serial No", readonly=True)
     procos_code = fields.Char(string='Code')
     buyer_ref = fields.Char(string="Reference", size=30, required=True,
                              readonly=True, states={'draft':[('readonly', False)]})

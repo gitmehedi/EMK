@@ -14,7 +14,7 @@ class ProductStyle(models.Model):
     """
     required and optional fields
     """ 
-    name = fields.Char(string="Style", size=30, readonly=True)
+    name = fields.Char(size=30, string="Serial No", readonly=True)
     style_code = fields.Char(string='Code')
     style_ref = fields.Char(string="Reference Style", size=30, required=True,
                             readonly=True, states={'draft':[('readonly', False)]})

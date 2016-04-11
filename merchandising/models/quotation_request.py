@@ -6,7 +6,7 @@ class QuotationRequest(models.Model):
                 'quotation_ref_no': lambda obj, cr, uid, context: obj.pool.get('ir.sequence').get(cr, uid, 'quotation.request'),
                 }
     
-    quotation_ref_no = fields.Char(string="Quotation Ref No", required=True, readonly=True, copy=False)
+    quotation_ref_no = fields.Char(required=True, string="Serial No", readonly=True, copy=False)
     buyer_id = fields.Many2one('res.partner', string="Buyer", required=True, ondelete='set null', 
                                domain=[('customer', '=', True)], readonly=True, states = {'draft':[('readonly',False)]})
     style_id = fields.Many2one('product.style', string="Style", required=True,

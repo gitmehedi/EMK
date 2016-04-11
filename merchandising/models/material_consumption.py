@@ -9,7 +9,7 @@ class MaterialConsumption(models.Model):
     _name = 'material.consumption'
     
     """Requied and Optional Fields"""
-    name = fields.Char(string="Material Consumption", size=50, readonly=True)
+    name = fields.Char(size=50, string="Serial No", readonly=True)
     material_seq = fields.Char()
     consumtion_qty = fields.Integer(string='Consumption For', size=11, default=1, required=True,
                                     readonly=True, states={'draft':[('readonly', False)]})
