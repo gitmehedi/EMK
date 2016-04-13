@@ -34,7 +34,7 @@ class ProductCostingAccessories(models.Model):
     Relational Fields
     """
     product_id = fields.Many2one('product.product', string="Product", required=True)
-    uom = fields.Many2one('product.uom', string="UoM")
+    uom_id = fields.Many2one('product.uom',string="UoM")
     line_currency_id = fields.Many2one('res.currency', string="Currency", required=True, default=lambda self: self._get_default_currency('USD'))
     accessories_costing_id = fields.Many2one('product.costing', string="Accessories", ondelete='set null')
     
@@ -98,7 +98,23 @@ class ProductCostingAccessories(models.Model):
         for line in self:
             if line.total_cost and line.line_currency_id and line.accessories_costing_id.product_currency_id:
                 line.cost_selected_curr = line.total_cost / line.convert_currency(line.accessories_costing_id.product_currency_id.id, line.line_currency_id.id)    
-    
+
+
+    @api.onchange('product_id')
+    def onchange_product_id(self):
+        res, ids = {}, []
+        self.uom_id = self.product_id.uom_id.id
+        print "--------------------------",self.product_id.uom_id.category_id.id
+        if self.product_id:
+            cat_implement = self.env['product.uom'].search([('category_id','=',self.product_id.uom_id.category_id.id)])
+            for obj in cat_implement :
+                    ids.append(obj.id)
+
+        res['domain'] = {
+                    'uom_id':[('id', 'in', ids)],
+                }
+        return res
+
     @api.model
     def convert_currency(self, from_cur, to_cur):
         currency_obj = self.env['res.currency']

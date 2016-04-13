@@ -5,7 +5,7 @@
 			<field name="name">product.costing.form</field>
 			<field name="model">product.costing</field>
 			<field name="arch" type="xml">
-				<form string="Product Costing Form" duplicate="false" copy="false">
+				<form string="Product Costing Form" duplicate="0" copy="0">
 					<header attrs="{'invisible': [('product_costing_visible','=',False)]}">
 						<button name="action_confirm" type="object" states="draft"
 							string="Confirm " class="oe_highlight" />
@@ -51,7 +51,7 @@
 									attrs="{'required': [('for_bidding','=',False)]}" />
 								<field name="quotation_type" attrs="{'required': [('for_bidding','=',False)]}"
 									options='{"no_open": True,"no_create": 1, "no_create_edit":1}' />
-								<field name="version" attrs="{'invisible': [('version','&lt;',2)]}" />
+								<field name="version"/>
 								<field name="version_date" />
 								<field name="dept_id" domain="[('buyer_ids', '=', buyer_id)]"
 									attrs="{'required': [('for_bidding','=',False)]}" options='{"no_open": True,"no_create": 1, "no_create_edit": 1}' />
@@ -292,6 +292,7 @@
 									<tree editable="bottom">
 										<field name="product_id" domain="[('accessories', '=', True)]"
 											options='{"no_open": True,"no_create":1, "no_create_edit":1}' />
+										<field name="uom_id" options='{"no_open": True,"no_create":1, "no_create_edit":1}' />
 										<field name="quantity" />
 										<field name="wastage_percentage" />
 										<field name="wastage_quantity" />
@@ -305,6 +306,7 @@
 								</field>
 							</page>
 							<page string="CM">
+								<separator string="Cost Per Dozen" />
 								<field name="cm_ids">
 									<tree editable="bottom">
 										<field name="total_cost_flag" />
@@ -333,21 +335,24 @@
 												<field name="fixed_overhead_currency_id"
 													options='{"no_open":True,"no_create": 1, "no_create_edit":1}' />
 											</td>
+                                            <td>
+												<field name="fob_cal_flag" />
+											</td>
+
 											<td>
-												<field name="fixed_overhead_bonus_percentage" />
+												<field name="fixed_overhead_bonus_percentage" attrs="{'readonly': [('fob_cal_flag','=', False)]}"/>
 											</td>
 											<td style="text-align:right;">
-												<field name="fixed_overhead_cm_cost_bdt" />
+												<field name="fixed_overhead_cm_cost_bdt" attrs="{'readonly': [('fob_cal_flag','=', True)]}"/>
 											</td>
 											<td style="text-align:right; padding-right: 10px;">
 												<field name="fixed_overhead_cm_cost_usd" />
 											</td>
 										</tr>
 										<tr>
-											<td colspan="5">
+											<td colspan="6">
 												<label for="total_cm_cost_usd" />
 											</td>
-
 											<td style="text-align:right;">
 												<field name="total_cm_cost_bdt" />
 											</td>
