@@ -161,6 +161,10 @@
 				</form>
 			</field>
 		</record>
+				
+		<!-- Post Dated Cheque Actions in Print Buttons -->
+		<act_window id="action_cheque_print" multi="True" key2="client_print_multi" name="Cheque List"
+			res_model="account.postdated.cheque" src_model="account.postdated.cheque" /> 
 		
 		<!-- Post Dated Cheque Actions in More Buttons -->
 		<act_window id="action_cheque_deposited_to_bank" multi="True" key2="client_action_multi"
