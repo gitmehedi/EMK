@@ -321,8 +321,8 @@
 										<field name="amount" attrs="{'invisible': [('total_cost_flag','=', True)]}" />
 										<field name="bonus" attrs="{'invisible': [('total_cost_flag','=', True)]}" />
 										<field name="bonus_amount" attrs="{'invisible': [('total_cost_flag','=', True)]}" />
-										<field name="total_cost" sum="Total USD" />
-										<field name="total_cost_usd" sum="Total BDT" />
+										<field name="total_cost" sum="Total BDT" />
+										<field name="total_cost_usd" sum="Total USD" />
 									</tree>
 								</field>
 								<table class="table table-striped">
@@ -340,10 +340,10 @@
 											</td>
 
 											<td>
-												<field name="fixed_overhead_bonus_percentage" attrs="{'readonly': [('fob_cal_flag','=', False)]}"/>
+												<field name="fixed_overhead_bonus_percentage" />
 											</td>
 											<td style="text-align:right;">
-												<field name="fixed_overhead_cm_cost_bdt" attrs="{'readonly': [('fob_cal_flag','=', True)]}"/>
+												<field name="fixed_overhead_cm_cost_bdt" />
 											</td>
 											<td style="text-align:right; padding-right: 10px;">
 												<field name="fixed_overhead_cm_cost_usd" />
