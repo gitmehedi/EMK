@@ -104,7 +104,7 @@ class StockInventoryWizard(models.TransientModel):
                         ELSE (SELECT pph1.cost FROM product_price_history pph1 
                         where pph1.product_template_id = pt.id ORDER BY pph1.datetime DESC LIMIT 1) 
                     END AS cost_val,
-            COALESCE(sum(sm.product_qty),0) AS product_qty_out
+                    COALESCE(sum(sm.product_qty),0) AS product_qty_out
                 FROM stock_picking sp
                 LEFT JOIN stock_move sm ON sm.picking_id = sp.id
                 LEFT JOIN product_product pp ON sm.product_id = pp.id
@@ -159,15 +159,12 @@ class StockInventoryWizard(models.TransientModel):
                 
                 ) table_dk GROUP BY product_id,name ,code, cost_val
                 ''' % (date_start, date_start, location_outsource,location_outsource, date_start, date_start,location_outsource,location_outsource,date_start,date_start, location_outsource,location_outsource)
-        
+        print '-----sql_dk---',sql_dk
         
         sql_in_tk = '''
             select product_id,name,code, sum(qty_in_tk) as qty_in_tk,sum(val_in_tk) as val_in_tk 
                 from (SELECT sm.product_id,pt.name , pp.default_code as code,
-                    sm.product_qty AS qty_in_tk,
-                    sm.product_qty*COALESCE((Select cost from product_price_history where date_trunc('day',datetime)<=date_trunc('day',sm.date) and product_template_id=pt.id
-                    order by id desc limit 1),0)
-                    AS val_in_tk
+                    sm.product_qty AS qty_in_tk, sm.product_qty*COALESCE(price_unit,0) AS val_in_tk
                 FROM stock_picking sp
                 LEFT JOIN stock_move sm ON sm.picking_id = sp.id
                 LEFT JOIN product_product pp ON sm.product_id = pp.id
@@ -183,7 +180,7 @@ class StockInventoryWizard(models.TransientModel):
                     )t1
             GROUP BY product_id,name,code
         '''% (date_start, date_end, location_outsource,location_outsource)
-        
+        print '-----sql_in_tk---',sql_in_tk
         sql_out_tk = '''
             select product_id,name,code, sum(qty_out_tk) as qty_out_tk,
                 sum(val_out_tk) as val_out_tk 
