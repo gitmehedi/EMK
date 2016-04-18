@@ -27,11 +27,12 @@
              #'security/security.xml',
              #'security/ir.model.access.csv',
              'views/root_menu.xml',
+             'report_menu.xml',
              'views/account_postdated_cheque.xml',
              'views/account_postdated_bank.xml',
              'wizard/cheque_search_popup.xml',
              ],
-    'depends': ['base',],
+    'depends': ['base','jasper_reports'],
     'description': '''
 ''',
     'installable': True,
