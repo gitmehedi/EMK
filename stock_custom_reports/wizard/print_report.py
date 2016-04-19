@@ -64,25 +64,19 @@ class StockInventoryWizard(models.TransientModel):
 #         location_outsource = 12
         
         
-        sql_dk = '''SELECT product_id,name, code, sum(product_qty_in - product_qty_out) as qty_dk, (cost_val*sum(product_qty_in - product_qty_out)) as val_dk
+        sql_dk = '''SELECT product_id,name, code, sum(product_qty_in - product_qty_out) as qty_dk,cost_val, (cost_val*sum(product_qty_in - product_qty_out)) as val_dk
                 FROM  (SELECT sm.product_id,pt.name , pp.default_code as code,
                     COALESCE(sum(sm.product_qty),0) AS product_qty_in,
-                    CASE
-                        WHEN pph.cost > 0 THEN pph.cost
-                        ELSE (SELECT pph1.cost FROM product_price_history pph1 
-                        where pph1.product_template_id = pt.id ORDER BY pph1.datetime DESC LIMIT 1) 
-                    END AS cost_val,
+                    COALESCE((Select ph.cost from product_price_history ph where date_trunc('day',ph.datetime)<'%s' AND pt.id = ph.product_template_id
+                        order by ph.datetime desc limit 1),0)
+                        AS cost_val,
                     0 AS product_qty_out
                 FROM stock_picking sp
                 LEFT JOIN stock_move sm ON sm.picking_id = sp.id
                 LEFT JOIN product_product pp ON sm.product_id = pp.id
                 LEFT JOIN product_template pt ON pp.product_tmpl_id = pt.id
                 LEFT JOIN stock_location sl ON sm.location_id = sl.id
-                LEFT JOIN product_price_history pph ON pph.id = (
-                    SELECT id FROM product_price_history pph WHERE 
-                    pt.id = pph.product_template_id AND  pph.datetime <= '%s' 
-                    ORDER BY pph.datetime DESC LIMIT 1
-                )
+                
                 WHERE date_trunc('day',sm.date) < '%s'
                 AND sm.state = 'done'
                 --AND sp.location_type = 'outsource_out'
@@ -92,29 +86,22 @@ class StockInventoryWizard(models.TransientModel):
                 GROUP BY sm.product_id,
                 pt.name ,
                 pp.default_code,
-                pt.id,
-                pph.cost
+                pt.id
 
                 UNION ALL
 
                 SELECT sm.product_id,pt.name , pp.default_code as code,
                     0 AS product_qty_in,
-                    CASE
-                        WHEN pph.cost > 0 THEN pph.cost
-                        ELSE (SELECT pph1.cost FROM product_price_history pph1 
-                        where pph1.product_template_id = pt.id ORDER BY pph1.datetime DESC LIMIT 1) 
-                    END AS cost_val,
+                    COALESCE((Select ph.cost from product_price_history ph where date_trunc('day',ph.datetime)<'%s' AND pt.id = ph.product_template_id
+                        order by ph.datetime desc limit 1),0)
+                        AS cost_val,
                     COALESCE(sum(sm.product_qty),0) AS product_qty_out
                 FROM stock_picking sp
                 LEFT JOIN stock_move sm ON sm.picking_id = sp.id
                 LEFT JOIN product_product pp ON sm.product_id = pp.id
                 LEFT JOIN product_template pt ON pp.product_tmpl_id = pt.id
                 LEFT JOIN stock_location sl ON sm.location_id = sl.id
-                LEFT JOIN product_price_history pph ON pph.id = (
-                    SELECT id FROM product_price_history pph WHERE 
-                    pt.id = pph.product_template_id AND  pph.datetime <= '%s' 
-                    ORDER BY pph.datetime DESC LIMIT 1
-                )
+                
                 WHERE date_trunc('day',sm.date) <'%s'
                 AND sm.state = 'done'
                 --AND sp.location_type = 'outsource_in'
@@ -124,29 +111,22 @@ class StockInventoryWizard(models.TransientModel):
                 GROUP BY sm.product_id,
                 pt.name ,
                 pp.default_code,
-                pt.id,
-                pph.cost
+                pt.id
                 
                 UNION ALL
 
             SELECT sm.product_id,pt.name , pp.default_code as code,
                     COALESCE(sum(sm.product_qty),0) AS product_qty_in,
-                    CASE
-                        WHEN pph.cost > 0 THEN pph.cost
-                        ELSE (SELECT pph1.cost FROM product_price_history pph1 
-                        where pph1.product_template_id = pt.id ORDER BY pph1.datetime DESC LIMIT 1) 
-                    END AS cost_val,
+                    COALESCE((Select ph.cost from product_price_history ph where date_trunc('day',ph.datetime)<'%s' AND pt.id = ph.product_template_id
+                        order by ph.datetime desc limit 1),0)
+                        AS cost_val,
                     0 AS product_qty_out
                 FROM stock_move sm
                 LEFT JOIN product_product pp ON sm.product_id = pp.id
                 LEFT JOIN product_template pt ON pp.product_tmpl_id = pt.id
                 LEFT JOIN stock_location sl ON sm.location_id = sl.id
-                LEFT JOIN product_price_history pph ON pph.id = (
-                    SELECT id FROM product_price_history pph WHERE 
-                    pt.id = pph.product_template_id AND  pph.datetime <= '%s' 
-                    ORDER BY pph.datetime DESC LIMIT 1
-                )
-                WHERE date_trunc('day',sm.date) <= '%s'
+                
+                WHERE date_trunc('day',sm.date) < '%s'
                 AND sm.state = 'done'
                 AND sm.location_id <> %s
                 AND sm.location_dest_id = %s
@@ -154,8 +134,7 @@ class StockInventoryWizard(models.TransientModel):
                 GROUP BY sm.product_id,
                 pt.name ,
                 pp.default_code,
-                pt.id,
-                pph.cost
+                pt.id
                 
                 ) table_dk GROUP BY product_id,name ,code, cost_val
                 ''' % (date_start, date_start, location_outsource,location_outsource, date_start, date_start,location_outsource,location_outsource,date_start,date_start, location_outsource,location_outsource)
@@ -170,7 +149,6 @@ class StockInventoryWizard(models.TransientModel):
                 LEFT JOIN product_product pp ON sm.product_id = pp.id
                 LEFT JOIN product_template pt ON pp.product_tmpl_id = pt.id
                 LEFT JOIN stock_location sl ON sm.location_id = sl.id
-                
                     WHERE date_trunc('day',sm.date) between '%s' and '%s'
                     AND sm.state = 'done'
                     --AND sp.location_type = 'outsource_out'
@@ -183,18 +161,17 @@ class StockInventoryWizard(models.TransientModel):
         print '-----sql_in_tk---',sql_in_tk
         sql_out_tk = '''
             select product_id,name,code, sum(qty_out_tk) as qty_out_tk,
-                sum(val_out_tk) as val_out_tk 
+                sum(qty_out_tk)*val_out_tk AS val_out_tk
                 from (SELECT sm.product_id,pt.name , pp.default_code as code,
                                 sm.product_qty AS qty_out_tk,
-                                sm.product_qty*COALESCE((Select cost from product_price_history where date_trunc('day',datetime)<=date_trunc('day',sm.date) and product_template_id=pt.id
-                        order by id desc limit 1),0)
+                                COALESCE((Select ph.cost from product_price_history ph where date_trunc('day',ph.datetime)<='%s' AND pt.id = ph.product_template_id
+                        order by ph.datetime desc limit 1),0)
                         AS val_out_tk
                 FROM stock_picking sp
                 LEFT JOIN stock_move sm ON sm.picking_id = sp.id
                 LEFT JOIN product_product pp ON sm.product_id = pp.id
                 LEFT JOIN product_template pt ON pp.product_tmpl_id = pt.id
                 LEFT JOIN stock_location sl ON sm.location_id = sl.id
-                
                 WHERE date_trunc('day',sm.date) between '%s' and '%s'
                 AND sm.state = 'done'
                 --AND sp.location_type = 'outsource_out'
@@ -202,29 +179,22 @@ class StockInventoryWizard(models.TransientModel):
                 AND sm.location_dest_id <> %s
                 --AND usage like 'internal'
                 )t1
-            GROUP BY product_id,name,code
-        '''% (date_start, date_end, location_outsource,location_outsource)
-        
+            GROUP BY product_id,name,code,val_out_tk
+        '''% (date_end, date_start, date_end, location_outsource,location_outsource)
+        print '-----sql_out_tk---',sql_out_tk
 
         sql_ck = '''SELECT product_id,name, code, sum(product_qty_in - product_qty_out) as qty_ck, (cost_val*sum(product_qty_in - product_qty_out)) as val_ck
                 FROM  (SELECT sm.product_id,pt.name , pp.default_code as code,
                     COALESCE(sum(sm.product_qty),0) AS product_qty_in,
-                    CASE
-                        WHEN pph.cost > 0 THEN pph.cost
-                        ELSE (SELECT pph1.cost FROM product_price_history pph1 
-                        where pph1.product_template_id = pt.id ORDER BY pph1.datetime DESC LIMIT 1) 
-                        END AS cost_val,
+                    COALESCE((Select ph.cost from product_price_history ph where date_trunc('day',ph.datetime)<='%s' AND pt.id = ph.product_template_id
+                        order by ph.datetime desc limit 1),0)
+                        AS cost_val,
                     0 AS product_qty_out
                 FROM stock_picking sp
                 LEFT JOIN stock_move sm ON sm.picking_id = sp.id
                 LEFT JOIN product_product pp ON sm.product_id = pp.id
                 LEFT JOIN product_template pt ON pp.product_tmpl_id = pt.id
                 LEFT JOIN stock_location sl ON sm.location_id = sl.id
-                LEFT JOIN product_price_history pph ON pph.id = (
-                    SELECT id FROM product_price_history pph WHERE 
-                    pt.id = pph.product_template_id AND  pph.datetime <= '%s' 
-                    ORDER BY pph.datetime DESC LIMIT 1
-                )
                 WHERE date_trunc('day',sm.date) <= '%s'
                 AND sm.state = 'done'
                 --AND sp.location_type = 'outsource_out'
@@ -234,29 +204,21 @@ class StockInventoryWizard(models.TransientModel):
                 GROUP BY sm.product_id,
                 pt.name ,
                 pp.default_code,
-                pt.id,
-                pph.cost
+                pt.id
 
                 UNION ALL
 
                 SELECT sm.product_id,pt.name , pp.default_code as code,
                     0 AS product_qty_in,
-                    CASE
-                        WHEN pph.cost > 0 THEN pph.cost
-                        ELSE (SELECT pph1.cost FROM product_price_history pph1 
-                        where pph1.product_template_id = pt.id ORDER BY pph1.datetime DESC LIMIT 1) 
-                    END AS cost_val,
+                    COALESCE((Select ph.cost from product_price_history ph where date_trunc('day',ph.datetime)<='%s' AND pt.id = ph.product_template_id
+                        order by ph.datetime desc limit 1),0)
+                        AS cost_val,
                     COALESCE(sum(sm.product_qty),0) AS product_qty_out
                 FROM stock_picking sp
                 LEFT JOIN stock_move sm ON sm.picking_id = sp.id
                 LEFT JOIN product_product pp ON sm.product_id = pp.id
                 LEFT JOIN product_template pt ON pp.product_tmpl_id = pt.id
                 LEFT JOIN stock_location sl ON sm.location_id = sl.id
-                LEFT JOIN product_price_history pph ON pph.id = (
-                    SELECT id FROM product_price_history pph WHERE 
-                    pt.id = pph.product_template_id AND  pph.datetime <= '%s' 
-                    ORDER BY pph.datetime DESC LIMIT 1
-                )
                 WHERE date_trunc('day',sm.date) <='%s'
                 AND sm.state = 'done'
                 --AND sp.location_type = 'outsource_in'
@@ -266,28 +228,20 @@ class StockInventoryWizard(models.TransientModel):
                 GROUP BY sm.product_id,
                 pt.name ,
                 pp.default_code,
-                pt.id,
-                pph.cost
+                pt.id
                 
                 UNION ALL
 
             SELECT sm.product_id,pt.name , pp.default_code as code,
                     COALESCE(sum(sm.product_qty),0) AS product_qty_in,
-                    CASE
-                        WHEN pph.cost > 0 THEN pph.cost
-                        ELSE (SELECT pph1.cost FROM product_price_history pph1 
-                        where pph1.product_template_id = pt.id ORDER BY pph1.datetime DESC LIMIT 1) 
-                        END AS cost_val,
+                    COALESCE((Select ph.cost from product_price_history ph where date_trunc('day',ph.datetime)<='%s' AND pt.id = ph.product_template_id
+                        order by ph.datetime desc limit 1),0)
+                        AS cost_val,
                     0 AS product_qty_out
                 FROM stock_move sm
                 LEFT JOIN product_product pp ON sm.product_id = pp.id
                 LEFT JOIN product_template pt ON pp.product_tmpl_id = pt.id
                 LEFT JOIN stock_location sl ON sm.location_id = sl.id
-                LEFT JOIN product_price_history pph ON pph.id = (
-                    SELECT id FROM product_price_history pph WHERE 
-                    pt.id = pph.product_template_id AND  pph.datetime <= '%s' 
-                    ORDER BY pph.datetime DESC LIMIT 1
-                )
                 WHERE date_trunc('day',sm.date) <= '%s'
                 AND sm.state = 'done'
                 AND sm.location_id <> %s
@@ -296,11 +250,10 @@ class StockInventoryWizard(models.TransientModel):
                 GROUP BY sm.product_id,
                 pt.name ,
                 pp.default_code,
-                pt.id,
-                pph.cost
+                pt.id
                 ) table_ck GROUP BY product_id,name ,code,cost_val
-                    ''' % (date_start,date_end, location_outsource,location_outsource, date_start, date_end, location_outsource,location_outsource, date_start, date_end, location_outsource,location_outsource)
-                
+                    ''' % (date_end,date_end, location_outsource,location_outsource, date_end, date_end, location_outsource,location_outsource, date_end, date_end, location_outsource,location_outsource)
+        print '-----sql_ck---',sql_ck        
         sql = '''
             CREATE OR REPLACE VIEW stock_inventory_report AS (
             SELECT ROW_NUMBER() OVER(ORDER BY table_ck.code DESC) AS id ,
