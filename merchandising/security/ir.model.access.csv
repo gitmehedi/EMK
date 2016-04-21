@@ -84,11 +84,11 @@ access_bom_consumption_user,bom.consumption.user,model_bom_consumption,merchandi
 access_bom_consumption_line_manager,bom.consumption.line.manager,model_bom_consumption_line,merchandising_group_manager,1,1,1,1
 access_bom_consumption_line_user,bom.consumption.line.user,model_bom_consumption_line,merchandising_group_user,1,1,1,0
 
-access_buyer_work_order_manager,buyer.work.order.manager,model_buyer_work_order,merchandising_group_manager,1,1,1,1
-access_buyer_work_order_user,buyer.work.order.user,model_buyer_work_order,merchandising_group_user,1,1,1,0
+access_sale_order_manager,sale.order.manager,model_sale_order,merchandising_group_manager,1,1,1,1
+access_sale_order_user,sale.order.user,model_sale_order,merchandising_group_user,1,1,1,0
 
-access_bwo_product_details_manager,bwo.product.details.manager,model_bwo_product_details,merchandising_group_manager,1,1,1,1
-access_bwo_product_details_user,bwo.product.details.user,model_bwo_product_details,merchandising_group_user,1,1,1,0
+access_sale_order_line_manager,sale.order.line.manager,model_sale_order_line,merchandising_group_manager,1,1,1,1
+access_sale_order_line_user,sale.order.line.user,model_sale_order_line,merchandising_group_user,1,1,1,0
 
 access_bwo_shipment_details_manager,bwo.shipment.details.manager,model_bwo_shipment_details,merchandising_group_manager,1,1,1,1
 access_bwo_shipment_details_user,bwo.shipment.details.user,model_bwo_shipment_details,merchandising_group_user,1,1,1,0

@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <openerp>
 	<data>
-		<!-- Buyer Work Order Form Views -->
+		<!-- Work Order Form Views -->
 		<record model="ir.ui.view" id="buyer_work_order_form_view">
-			<field name="name">buyer_work_order_form</field>
-			<field name="model">buyer.work.order</field>
+			<field name="name">sale.order.form</field>
+			<field name="model">sale.order</field>
 			<field name="arch" type="xml">
-				<form string="Buyer Work Order Form">
+				<form string="Sales Order Form">
 					<header>
 						<button name="action_confirm" type="object" states="draft"
 							string="Confirm" class="oe_highlight" />
@@ -17,16 +17,13 @@
 						<h1>
 							<field name="name" string="Serial No" />
 						</h1>
-						<!-- <button icon="fa-star" class='oe_inline oe_stat_button oe_right oe_button_box'>
-								<field name="total_quantity" widget="statinfo"/>
-						</button> -->
 						<group>
 							<group>
 
-								<field name="buyer_id"
+								<field name="partner_id"
 									options='{"no_open": True,"no_create": 1, "no_create_edit": 1}' />
 								
-								<field name="buyer_department" domain="[('buyer_ids', '=', buyer_id)]"
+								<field name="department_id" domain="[('buyer_ids', '=', partner_id)]"
 									options='{"no_open": True,"no_create": 1, "no_create_edit": 1}' />
 								<field name="style_id"
 									options='{"no_open": True,"no_create": 1, "no_create_edit": 1}' />
@@ -58,13 +55,14 @@
 						</group>
 						<notebook colspan="4">
 							<page string="Products Details">
-								<field name="bwo_product_ids">
+								<field name="order_line">
 									<tree string="" editable="top">
 										<field name="product_id"
 											options='{"no_open": True,"no_create": 1, "no_create_edit": 1}'
 											domain="[('product_tmpl_id', '=', parent.product_template_id)]" />
+										<field name="name" invisible="1"/>
 										<field name="qty" />
-										<field name="uom_id"
+										<field name="product_uom"
 											options='{"no_open": True,"no_create": 1, "no_create_edit": 1}' />
 										<field name="rate" />
 									</tree>
@@ -94,19 +92,19 @@
 		</record>
 
 
-		<!-- Buyer Work Order Tree or List view -->
+		<!-- Work Order  Tree or List view -->
 		<record id="buyer_work_order2_tree_view" model="ir.ui.view">
-			<field name="name">buyer.work.order.tree</field>
-			<field name="model">buyer.work.order</field>
+			<field name="name">sale.order.tree</field>
+			<field name="model">sale.order</field>
 			<field name="arch" type="xml">
-				<tree string="Buyer Work Order Tree">
+				<tree string="Sales Order Tree">
 					<field name="name" />
-					<field name="buyer_id" />
+					<field name="partner_id" />
 					<field name="style_id" />
 					<field name="season_id" />
 					<field name="year_id" />
 					<field name="currency_id" />
-					<field name="buyer_department" />
+					<field name="department_id" />
 					<field name="state" />
 				</tree>
 			</field>
@@ -114,14 +112,14 @@
 
 
         <record id="buyer_work_order_kanban" model="ir.ui.view">
-			<field name="name">buyer.work.order.kanban</field>
-			<field name="model">buyer.work.order</field>
+			<field name="name">sale.order.kanban</field>
+			<field name="model">sale.order</field>
 			<field name="arch" type="xml">
                 <kanban class="oe_background_grey o_kanban_dashboard o_stock_kanban" create="0">
                     <field name="name" />
-                    <field name="buyer_id" />
+                    <field name="partner_id" />
                     <field name="style_id" />
-                    <field name="buyer_department" />
+                    <field name="department_id" />
                     <field name="production_qty" />
                     <field name="production_ratio" />
 
@@ -214,29 +212,17 @@
                 </kanban>
             </field>
 		</record>
-		<!-- Sequences for Product Styles
-		<record id="seq_type_buyer_work_order" model="ir.sequence.type">
-			<field name="name">Buyer Work Order Type</field>
-			<field name="code">bwo_code</field>
-		</record>-->
-
-		<record id="seq_buyer_work_order" model="ir.sequence">
-			<field name="name">Buyer Work Order</field>
-			<field name="code">bwo_code</field>
-			<field name="prefix">BWO-</field>
-			<field name="padding">10</field>
-		</record>
 
 
-		<!-- Buyer Work Order Menu and Action -->
+		<!-- Work Order  Menu and Action -->
 		<record id="buyer_work_order_list_action" model="ir.actions.act_window">
-			<field name="name">Work Orders</field>
-			<field name="res_model">buyer.work.order</field>
+			<field name="name">Work Order</field>
+			<field name="res_model">sale.order</field>
 			<field name="view_type">form</field>
 			<field name="view_mode">kanban,tree,form</field>
 		</record>
 
-		<menuitem id="buyer_work_order_main_menu" name="Work Orders"
+		<menuitem id="buyer_work_order_main_menu" name="Work Order"
 			parent="merchandising_menu" sequence="250" action="buyer_work_order_list_action" />
 	</data>
 </openerp>

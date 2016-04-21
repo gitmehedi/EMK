@@ -4,23 +4,21 @@ from string import digits
 
 
 class BwoProductDetails(models.Model):
-    _name = 'bwo.product.details'
-    
-    # Buyer Work Order fields
+    _inherit = 'sale.order.line'
+
+    name = fields.Char()
     qty = fields.Float(string='Order Quantity', required=True)
     status = fields.Boolean(string='Status')
     rate = fields.Float(string='Rate', digits=(15, 2))
     
-    # Relationship fields
+    """ Relationship fields """
     product_id = fields.Many2one('product.product', string="Product", required=True)  
-    uom_id = fields.Many2one('product.uom', string="UoM", ondelete='set null', required=True,
-                             domain=[('category_id', '=', 'Unit')])
-    bwo_details_id = fields.Many2one('buyer.work.order')
+    # uom_id = fields.Many2one('product.uom', string="UoM", ondelete='set null', required=True,
+    #                          domain=[('category_id', '=', 'Unit')])
+    bwo_details_id = fields.Many2one('sale.order')
     
-    # variable
-    getData = []
-    
-    
+
+
     @api.multi
     def _validate_data(self, value):
         msg , filterInt = {}, {}
@@ -32,8 +30,9 @@ class BwoProductDetails(models.Model):
         validator.validation_msg(msg)
         
         return True
+
     
-    # All function which process data and operation
+    """ All function which process data and operation """
     @api.model
     def create(self, vals):
         self._validate_data(vals)
@@ -49,24 +48,7 @@ class BwoProductDetails(models.Model):
     @api.onchange('qty')
     def onchange_qty(self):
         self.qty = self.qty
-        
-#     @api.model
-#     def _get_product(self):
-#         return 'fasdfsad' 
-       
-#     @api.onchange('product_id')
-#     def onchange_product_id(self):
-#         res = {'domain': {'product_id': []}}
-#          
-#         if self.product_id:
-#             self.getData.append(self.product_id.id)
-#              
-#             prod_data = list(set(self.getData).symmetric_difference(self.product_id.product_tmpl_id.product_variant_ids.ids))
-#             res['domain'] = {
-#                 'product_id': [('id', 'in', prod_data)]
-#             } 
-#              
-#             return res
+
      
     
     

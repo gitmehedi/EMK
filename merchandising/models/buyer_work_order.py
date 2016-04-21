@@ -7,23 +7,21 @@ from curses.has_key import has_key
 
 
 class BuyerWorkOrder(models.Model):
-    _name = 'buyer.work.order'
+    _inherit = 'sale.order'
     
-    # Buyer Work Order fields
-    name = fields.Char(size=30, string="Serial No", readonly=True)
-    bwo_code = fields.Char(string='Code')
+    """ Buyer Work Order fields """
+
     epo_date = fields.Date(string="Date", required=True, default=date.today().strftime('%Y-%m-%d'),
                            readonly=True, states={'draft':[('readonly', False)]})
     
-    # temporary fields
+    """ Temporary fields """
+
     production_qty = fields.Float(string='Production Quantity', digits=(15, 2),
                                   readonly=True, states={'draft':[('readonly', False)]})
     delay = fields.Float(string='Delay', digits=(15, 2),
                         readonly=True, states={'draft':[('readonly', False)]})
     color = fields.Char(default='#c7d5ff')
 
-    
-#     status = fields.Boolean(string='Status', default=True)
     hs_code = fields.Char(string='HS Code', size=20, required=True,
                           readonly=True, states={'draft':[('readonly', False)]})
     tolerance = fields.Float(string='Tolerance (%)', digits=(3, 2),
@@ -31,12 +29,12 @@ class BuyerWorkOrder(models.Model):
     remarks = fields.Text(string='Remarks',
                           readonly=True, states={'draft':[('readonly', False)]})
     
-    # Relationship fields
+    """ Relationship fields """
     product_template_id = fields.Many2one('product.template', string='Product', required=True,
                                           readonly=True, states={'draft':[('readonly', False)]}) 
-    buyer_id = fields.Many2one('res.partner', string="Buyer", required=True,
+    partner_id = fields.Many2one('res.partner', string="Buyer", required=True,
                                domain=[('customer', '=', 'True')],
-                               readonly=True, states={'draft':[('readonly', False)]})  
+                               readonly=True, states={'draft':[('readonly', False)]})
     season_id = fields.Many2one('res.season', string="Season", required=True,
                                 readonly=True, states={'draft':[('readonly', False)]})  
     year_id = fields.Many2one('account.fiscalyear', string="Year", required=True,
@@ -48,10 +46,11 @@ class BuyerWorkOrder(models.Model):
                                   readonly=True, states={'draft':[('readonly', False)]})
     delivery_term_id = fields.Many2one('delivery.term', string="Delivery Term", required=True,
                                        readonly=True, states={'draft':[('readonly', False)]})
-    buyer_department = fields.Many2one('merchandising.dept', string="Department", required=True,
+    department_id  = fields.Many2one('merchandising.dept', string="Department", required=True,
                                        readonly=True, states={'draft':[('readonly', False)]})
        
-    # All calculative fields in here 
+    """ All calculative fields in here """
+
     shipment_date = fields.Date(compute='_compute_com_ship_date', string="Shipment Date")
     buyer_inspection_date = fields.Date(compute='_compute_com_buyer_inspection_date', string="Buyer Inspection Date")
     inhouse_inspection_date = fields.Date(compute='_compute_com_inhouse_inspection_date', string="In House Insspection Date",)
@@ -60,21 +59,19 @@ class BuyerWorkOrder(models.Model):
     shipment_mode = fields.Selection([("sea", "Sea"), ("air", "Air"), ("road", "By Road")], string='Ship Mode', required=True,
                                      readonly=True, states={'draft':[('readonly', False)]})
     
-    # One to Many Relationship
-    
-    bwo_product_ids = fields.One2many('bwo.product.details', 'bwo_details_id', ondelete='CASCADE',
-                                      readonly=True, states={'draft':[('readonly', False)]}) 
+    """ One to Many Relationship """
+
     bwo_shipment_ids = fields.One2many('bwo.shipment.details', 'bwo_details_id', ondelete='CASCADE',
                                        readonly=True, states={'draft':[('readonly', False)]})
 
     bwo_destination_ids = fields.Many2many('shipping.destination', string="Destination",
                                            readonly=True, states={'draft':[('readonly', False)]})
     
-    # State fields for containing vaious states
+    """ State fields for containing vaious states """
     state = fields.Selection([('draft', "Draft"), ('confirm', "Confirm")], default='draft')
     
     
-    # All kinds of validation message
+    """ All kinds of validation message """
     @api.multi
     def _validate_data(self, value):
         msg , filterInt, filterNum, filterChar = {}, {}, {}, {}
@@ -89,12 +86,12 @@ class BuyerWorkOrder(models.Model):
         return True
     
     
-    # All function which process data and operation
+    """ All function which process data and operation """
     
     @api.model
     def create(self, vals):
         self._validate_data(vals)
-        vals['name'] = self.env['ir.sequence'].get('bwo_code')
+        # vals['name'] = self.env['ir.sequence'].get('mso')
             
         return super(BuyerWorkOrder, self).create(vals)
     
@@ -105,24 +102,36 @@ class BuyerWorkOrder(models.Model):
         return super(BuyerWorkOrder, self).write(vals)      
     
     """ onchange fields """
-    @api.onchange('buyer_id')
-    def _onchange_buyer_id(self):
+
+    @api.onchange('partner_id')
+    def _onchange_partner_id(self):
         res, ids = {}, []
         self.style_id = 0
-        self.buyer_department = 0
+        self.department_id = 0
 
-        if self.buyer_id:
-            for obj in self.buyer_id.styles_ids:
+        if self.partner_id:
+            for obj in self.partner_id.styles_ids:
                 if obj.version==1 and obj.state == 'confirm':
-                    ids.append(obj.id)
-        
+                   ids.append(obj.id)
+
         res['domain'] = {
                     'style_id':[('id', 'in', ids)],
                 }
         
         return res
-    
-    # all computed fields
+
+    @api.onchange('style_id')
+    def _onchange_style_id(self):
+        res = {'domain': {'season_id':[]}}
+
+        if self.style_id:
+            res['domain'] = {
+                    'season_id':[('id', 'in', [self.style_id.season_id.id])]
+            }
+        return res
+
+    """ All computed fields """
+
     def _compute_com_ship_date(self):
         for record in self:
             if record.bwo_shipment_ids:
@@ -141,8 +150,8 @@ class BuyerWorkOrder(models.Model):
     def _compute_com_quantity(self):
         
         for record in self:
-            if record.bwo_product_ids:
-                record.total_quantity = sum(qty.qty for qty in record.bwo_product_ids)
+            if record.order_line:
+                record.total_quantity = sum(qty.qty for qty in record.order_line)
             else:
                 record.total_quantity = 0.00
                 
@@ -158,8 +167,8 @@ class BuyerWorkOrder(models.Model):
     def calculate_bwo_prod_attr(self):
         valueList = {}
          
-        if self.bwo_product_ids:
-            for prod in self.bwo_product_ids:
+        if self.order_line:
+            for prod in self.order_line:
                 for id in prod.product_id.attribute_value_ids.ids:
                     if valueList.has_key(id):
                         valueList[id] = valueList[id] + prod.qty
@@ -192,8 +201,8 @@ class BuyerWorkOrder(models.Model):
         prod_attr_val = {}
         prod_attr_obj = self.env['product.attribute']
         
-        if self.bwo_product_ids:
-            for prod in self.bwo_product_ids:
+        if self.order_line:
+            for prod in self.order_line:
                 for id in prod.product_id.attribute_value_ids.ids:
                     if prod_attr_val.has_key(id):
                         prod_attr_val[id] = prod_attr_val[id] + prod.qty
@@ -214,15 +223,7 @@ class BuyerWorkOrder(models.Model):
         return prod_attr_val
     
                 
-    @api.onchange('style_id')
-    def _onchange_style_id(self):
-        res = {'domain': {'season_id':[]}}
-        
-        if self.style_id:
-            res['domain'] = {
-                    'season_id':[('id', 'in', [self.style_id.season_id.id])]       
-            }
-        return res
+
     
     
     @api.multi

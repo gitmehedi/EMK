@@ -12,7 +12,7 @@ class BwoShipmentDetails(models.Model):
     in_house_inspection_date = fields.Date(string="In House Inspection Date", size=30, required=True)
     
     # Relationship fields
-    bwo_details_id = fields.Many2one('buyer.work.order')
+    bwo_details_id = fields.Many2one('sale.order')
     
     # All function which process data and operation
     

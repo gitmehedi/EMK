@@ -17,7 +17,7 @@ class BOMConsumption(models.Model):
                             domain=[('state', '=', 'confirm')])
     style_id = fields.Many2one('product.style', string="Style", required=True,
                                domain=[('visible', '=', 'True'), ('state', '=', 'confirm')])
-    export_po_id = fields.Many2one('buyer.work.order', string="Work Order No", required=True,
+    export_po_id = fields.Many2one('sale.order', string="Work Order No", required=True,
                                   domain=[('state', '=', 'confirm')])
     
     
@@ -54,7 +54,7 @@ class BOMConsumption(models.Model):
     
     @api.multi
     def generate_bom(self):
-        bwo_obj = self.env['buyer.work.order']
+        bwo_obj = self.env['sale.order']
         mc_obj = self.env['material.consumption']
         mcbl_obj = self.env['bom.consumption.line']
         
@@ -72,7 +72,7 @@ class BOMConsumption(models.Model):
         else:
             raise exceptions.ValidationError(validator.msg['mc_data'])
         
-        if not bwo_data.bwo_product_ids:
+        if not bwo_data.order_line:
             raise exceptions.ValidationError(validator.msg['bwo_data'])
 
 
@@ -152,7 +152,7 @@ class BOMConsumption(models.Model):
         
         if line.variant_mapping_ids:
             print "Call---------------------------2"
-            for bwo_val in bwo_data.bwo_product_ids:
+            for bwo_val in bwo_data.order_line:
                 line.prod_id = self.get_products_id(line, bwo_val, False, 'goods')
                 line.total_qty = self.calculate_quantity(line, bwo_val, 200, sizes)
                 
@@ -179,7 +179,7 @@ class BOMConsumption(models.Model):
             
     def gen_size_wise_mapping(self, line, bwo_data, colors, sizes, flag='yarn'):
         print colors, "----", sizes
-        for bwo_val in bwo_data.bwo_product_ids:
+        for bwo_val in bwo_data.order_line:
             line.prod_id = self.get_products_id(line, bwo_val, False, 'map')
             line.total_qty = self.calculate_quantity(line, bwo_val, False, sizes) 
     
@@ -211,7 +211,7 @@ class BOMConsumption(models.Model):
         if mc_obj.finish_goods:
             if mc_obj.variant_mapping_ids:
                 """
-                    1.Loop over Buyer Work Order using bwo_obj.bwo_product_ids 
+                    1.Loop over Buyer Work Order using bwo_obj.order_line
                     2.Loop over Material Consumption variant_mapping_ids
                     3.Again Loop over variant_mapping_ids.prod_variant_ids.
                     4.Get all attributes of this variant
@@ -247,7 +247,7 @@ class BOMConsumption(models.Model):
             else:    
                 rm_color = list(set(mc_obj.variant_ids.ids) - set(color_list.value_ids.ids))
                 
-                for bwo_val in bwo_obj.bwo_product_ids:
+                for bwo_val in bwo_obj.order_line:
                     for obj in gen_prod_obj:
                         print bwo_val.product_id.attribute_value_ids.ids, "Call---------------------------4---2", color_list.value_ids.ids
                         get_com_attr = list(set(list(set(bwo_val.product_id.attribute_value_ids.ids).intersection(color_list.value_ids.ids))))
@@ -306,7 +306,7 @@ class BOMConsumption(models.Model):
             total = cal_after_was + (cal_after_was * (bwo_data.bwo_details_id.tolerance / 100))
             
         elif mc_obj.size_qty_ids:
-            for mc_prod in bwo_data.bwo_product_ids:
+            for mc_prod in bwo_data.order_line:
                 for data in mc_prod.product_id.attribute_value_ids:
                     for size in mc_obj.size_qty_ids:
                         if data.id == size.attr_size_id.id:

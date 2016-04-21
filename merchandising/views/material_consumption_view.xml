@@ -9,7 +9,7 @@
 				<form string="Material Consumption Form" copy="false">
 					<header>
 						<button name="action_confirm" type="object" states="draft"
-							string="Confirm Consumption" class="oe_highlight" />
+							string="Confirm" class="oe_highlight" />
 
 						<button name="%(material_consumption_action_wizard_views)d"
 							states="draft" type="action" string="Generate" class="oe_highlight" />
@@ -240,12 +240,6 @@
 			</field>
 		</record>
 
-
-		<!-- Material Consumption Sequences
-		<record id="seq_type_material_consumption" model="ir.sequence.type">
-			<field name="name">Material Type</field>
-			<field name="code">material_seq</field>
-		</record>-->
 
 		<record id="seq_material_consumption" model="ir.sequence">
 			<field name="name">Material Sequence</field>

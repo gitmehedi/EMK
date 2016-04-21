@@ -20,7 +20,7 @@ class MaterialConsumption(models.Model):
     """Model Relationship"""
     style_id = fields.Many2one('product.style', string="Style No", required=True,
                                readonly=True, states={'draft':[('readonly', False)]}, domain=[('visible', '=', 'True'), ('state', '=', 'confirm')])
-    po_id = fields.Many2one('buyer.work.order', string="Work Order No",
+    po_id = fields.Many2one('sale.order', string="Work Order No",
                             readonly=True, states={'draft':[('readonly', False)]},domain=[('state', '=', 'confirm')])
     uom_id = fields.Many2one('product.uom', string="UoM", ondelete='set null', required=True,
                              readonly=True, states={'draft':[('readonly', False)]}, domain=[('category_id', '=', 'Unit')])
@@ -69,7 +69,7 @@ class MaterialConsumption(models.Model):
         self.po_id = 0
 
         if self.style_id:
-            bwo_obj = self.env['buyer.work.order'].search([('style_id','=',self.style_id.id)])
+            bwo_obj = self.env['sale.order'].search([('style_id','=',self.style_id.id)])
             res['domain'] = {
                     'po_id': [('id', 'in', bwo_obj.ids)],
             }
