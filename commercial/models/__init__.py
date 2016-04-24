@@ -31,5 +31,5 @@ import bb_import_lc_details
 import lc_amendment
 import margin_built
 import lc_amendment_new
-import inherited_sale_order
+
 
