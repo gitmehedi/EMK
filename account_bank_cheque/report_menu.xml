@@ -15,6 +15,5 @@
 		<field name="jasper_report">True</field>
 		<field name="jasper_output">pdf</field>
 		</record>
-	
 	</data>
 </openerp>

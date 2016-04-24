@@ -10,7 +10,7 @@ class ChequeSearchPopup(models.TransientModel):
     date_from = fields.Date(string="From Date", default=fields.Date.today(), required=True)
     date_to = fields.Date(string="To Date", default=fields.Date.today(), required=True)
     partner_info = fields.Many2one('res.partner', string='Name of Customer', help='Please enter customer name.')
-    issuing_bank = fields.Many2one('account.postdated.bank', string='Name of Bank', help='Please enter bank name.')
+    issuing_bank = fields.Many2one('res.bank', string='Name of Bank', help='Please enter bank name.')
     cheque_number = fields.Char(string='Cheque Number', size=50, help='Please enter cheque number.')
     deposit_date = fields.Date(string='Cheque Deposit Date', default=fields.Date.today(), help='Please enter cheque deposit date.')
     confirm_date = fields.Date(string='Cheque Confirm Date', default=fields.Date.today(), help='Please enter cheque confirm date.')
