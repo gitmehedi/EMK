@@ -61,19 +61,12 @@
 								<field name="inco_term_place" />
 
 							</group>
+
 						</group>
-						<notebook colspan="4">
-							<page string="Sales Contract Details">
-								<field name="sales_contract_details_ids">
-									<tree string="" editable="top">
-										<field name="po_related_id"
-											options='{"no_open": True,"no_create": 1, "no_create_edit": 1}' />
-										<field name="tagged_po_id"
-											options='{"no_open": True,"no_create": 1, "no_create_edit": 1}' />
-									</tree>
-								</field>
-							</page>
-						</notebook>
+						<group>
+                            <field name="so_ids" widget="many2many_tags"
+                                   options='{"no_open": True,"no_create": 1, "no_create_edit": 1}'/>
+                        </group>
 						<separator string="Remarks" />
 						<field name="remarks" placeholder="Put an remarks..................." />
 					</sheet>

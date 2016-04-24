@@ -66,6 +66,8 @@ class BuyerWorkOrder(models.Model):
 
     bwo_destination_ids = fields.Many2many('shipping.destination', string="Destination",
                                            readonly=True, states={'draft':[('readonly', False)]})
+
+
     
     """ State fields for containing vaious states """
     state = fields.Selection([('draft', "Draft"), ('confirm', "Confirm")], default='draft')
