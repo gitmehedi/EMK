@@ -30,7 +30,7 @@ class SalesContract(models.Model):
     sc_currency_id = fields.Many2one('res.currency', required=True,
                                      readonly=True, states={'draft':[('readonly', False)]}, default=lambda self: self._set_default_currency('USD'))
     
-    inco_term = fields.Many2one('commercial.term', string="Inco Term",
+    inco_term = fields.Many2one('stock.incoterms', string="Inco Term",
                                 required=True)
     
     state = fields.Selection([('draft', "Draft"), ('confirm', "Confirm")], default='draft')

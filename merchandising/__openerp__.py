@@ -20,10 +20,17 @@
 ##############################################################################
 {   
     'name': 'Merchandising',
+    'summary': """ Lakshma Merchandising Module """,
     'author':  'Genweb2 Limited',
     'website': 'www.genweb2.com',
     'category': 'Garments & Apparels',
     'depends': ['base','account', 'sale','account_period'],
+    'description': '''Merchandising Module:
+    Merchandising is the heart of the Garments industries. Though the overall process of merchandising
+    involves any sort of direct and indirect activities which is associated with any certain order
+    given by buyer from inquiry to shipment but core activities are Quotation management,
+    Sampling management, Consumption and Bill of Materials generation.
+    ''',
     'data': [
              'security/security.xml',
              'security/ir.model.access.csv',
@@ -69,7 +76,7 @@
              'views/inherited_product_product_views.xml',
              ],
 
-    'description': '''''',
+
     'installable': True,
     'version': '0.1',
 }

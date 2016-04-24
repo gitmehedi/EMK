@@ -1,8 +1,4 @@
 # -*- coding: utf-8 -*-
-import bank_account
-import commercial_term
-import lc_opening_bank
-import lc_through
 import invoice_against
 import export_invoice
 import import_invoice

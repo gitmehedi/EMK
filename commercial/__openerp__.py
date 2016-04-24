@@ -20,10 +20,15 @@
 ##############################################################################
 {   
     'name': 'Commercial',
+    'summary': """Lakshma Commercial Module""",
     'version': '0.1',
     'author':  'Genweb2 Limited',
     'website': 'www.genweb2.com',
     'category': 'Garments & Apparels',
+    'description': '''Commercial Module:
+     Commercial department works for resolving the issues where Buyers and Sellers are from different countries
+     and they needs to be ensured about the product and payment. Commercial (Export & Import) department handles all the internationally
+     accepted procedures to make sure successful international sales and purchase.''',
     'data': [
              'security/security.xml',
              'security/ir.model.access.csv',
@@ -46,14 +51,11 @@
              'views/master_lc_views.xml',
              'views/proforma_invoice_views.xml',
              'views/bb_import_lc_views.xml',
-             'views/lc_through_views.xml',
              'views/lc_amendment_views.xml',
              'views/lc_amendment_new_views.xml',
 
              ],
-    'depends': ['account'],
-    'description': '''
-''',
+    'depends': ['account','stock'],
     'installable': True,
     'application': True,
 }
