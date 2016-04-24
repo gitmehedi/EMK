@@ -28,7 +28,7 @@ class IndentIndent(models.Model):
     department_id = fields.Many2one('stock.location', 'Department',  required=True, track_visibility='onchange', readonly=True, states={'draft': [('readonly', False)]}, domain=[('can_request', '=', True)])
     analytic_account_id = fields.Many2one('account.analytic.account', 'Project', ondelete="cascade", readonly=True, track_visibility='onchange', states={'draft': [('readonly', False)]})
     requirement = fields.Selection([('1', 'Ordinary'), ('2', 'Urgent')], 'Requirement', readonly=True, required=True, track_visibility='onchange', states={'draft': [('readonly', False)]})
-    type =  fields.Selection([('gen', 'General Item'), ('bom', 'BOM Item')], 'Type', required=True, track_visibility='onchange', readonly=True, states={'draft': [('readonly', False)]})
+    type =  fields.Selection([('gen', 'General Item')], 'Type', required=True, track_visibility='onchange', readonly=True, states={'draft': [('readonly', False)]})
     product_lines = fields.One2many('indent.product.lines', 'indent_id', string='Products', readonly=True, states={'draft': [('readonly', False)], 'waiting_approval': [('readonly', False)]})
     picking_id = fields.Many2one('stock.picking', 'Picking')
     in_picking_id = fields.Many2one('stock.picking', 'Picking')
