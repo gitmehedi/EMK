@@ -11,11 +11,8 @@
 					<field name="buyer_id" />
 					<field name="lc_no" />
 					<field name="lc_open_bank_id" />
-					<field name="lc_lien_bank_id" />
-					<field name="lc_advising_bank_id" />
 					<field name="lc_expiry_date" />
 					<field name="lc_value" />
-					<field name="payment_term" />
 					<field name="state" />
 				</tree>
 			</field>
@@ -52,22 +49,30 @@
 									options='{"no_open": True,"no_create": 1, "no_create_edit": 1}' />
 								<field name="receive_user_id"
 									options='{"no_open": True,"no_create": 1, "no_create_edit": 1}' />
-								<field name="currency"
-									options='{"no_open": True,"no_create": 1, "no_create_edit": 1}' />
+
 								<field name="lc_expiry_date" />
-								<field name="lc_value" class="oe_inline"/>
-								<field name="tolerance" />
-								<field name="bb_lc" />
-								<field name="payment_term" />
-								<field name="tenor" />
-								<field name="inco_term"
-									options='{"no_open": True,"no_create": 1, "no_create_edit": 1}' />
-								<field name="inco_term_place" />
+
 							</group>
 							<group>
+								<label for="lc_value" class="oe_inline" />
+								<div>
+									<div class="col-md-5 multifield_combination">
+										<field name="lc_value" />
+									</div>
+									<div class="col-md-5 multifield_combination">
+										<field name="currency_id"
+											options='{"no_open": True,"no_create": 1, "no_create_edit": 1}' />
+									</div>
+								</div>
+								<field name="tolerance" />
+								<field name="bb_lc" />
+								<field name="payment_term_id"
+									options='{"no_open": True,"no_create": 1, "no_create_edit": 1}'/>
+								<field name="inco_term_id"
+									options='{"no_open": True,"no_create": 1, "no_create_edit": 1}' />
+								<field name="inco_term_place" />
 								<field name="allow_partial_shipment" />
 								<field name="allow_trans_shipment" />
-								<field name="lc_close" />	
 							</group>
 						</group>
 						<notebook colspan="4">
@@ -105,7 +110,7 @@
 					<field name="lc_advising_bank_id" />
 					<field name="lc_expiry_date" />
 					<field name="lc_value" />
-					<field name="payment_term" />
+					<field name="payment_term_id" />
 				</search>
 			</field>
 		</record>
