@@ -10,7 +10,7 @@ class InheritedStockReservation(models.Model):
 	
 	work_order_id = fields.Many2one('buyer.work.order',"Work Order", compute='_computed_work_order', required=True,readonly=True, states={'draft':[('readonly', False)]})
 	bom_id = fields.Many2one('bom.consumption',"Bill of Materials", required=True, compute='_computed_bom',readonly=True, states={'draft':[('readonly', False)]})
-	set_product = fields.Many2one('product.product', string="Product")
+# 	set_product = fields.Many2one('product.product', string="Product")
 	
 	#@api.multi
 	@api.depends('analytic_account_id')

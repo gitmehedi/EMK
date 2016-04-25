@@ -19,19 +19,15 @@
 #
 ##############################################################################
 {   
-    'name': 'Post Dated Cheque Management',
-    'author':  'Genweb2 Limited',
+    'name': 'Stock Indent Merchandising',
+    'author':  'Stock Indent Merchandising',
     'website': 'www.genweb2.com',
-    'category': 'Accounting',
+    'category': 'Warehouse Management',
     'data': [
-             'security/security.xml',
-             'security/ir.model.access.csv',
-             'views/root_menu.xml',
-             'report_menu.xml',
-             'views/account_postdated_cheque.xml',
-             'wizard/cheque_search_popup.xml',
+             'views/inherited_product_template_views.xml',
+             'views/inherited_stock_indent_views.xml'
              ],
-    'depends': ['base','jasper_reports'],
+    'depends': ['stock','stock_indent'],
     'description': '''
 ''',
     'installable': True,

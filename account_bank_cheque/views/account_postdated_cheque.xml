@@ -24,8 +24,8 @@
 						<group>
 							<!--<field name="name" select="1" class="oe_inline" />-->
 							<field name="partner_info" />
-							<field name="cheque_number" />
 							<field name="cheque_received_date" />
+							<field name="cheque_number" />
 							<field name="cheque_amount" />
 							<field name="posting_date" />
 							<field name="issuing_bank" options='{"no_open": True,"no_create": 1, "no_create_edit":1}'
@@ -45,8 +45,8 @@
 			<field name="arch" type="xml">
 				<tree string="Post Dated Cheque Tree" colors="#4c4c4c:state == 'draft'">
 					<field name="partner_info" />
-					<field name="cheque_number" />
 					<field name="cheque_received_date" />
+					<field name="cheque_number" />
 					<field name="cheque_amount" />
 					<field name="posting_date" />
 					<field name="issuing_bank" />
@@ -64,9 +64,9 @@
 				<search string="Search">
 					<field name="partner_info" string="Customer Name" filter_domain="[('partner_info','ilike','self')]"
 						/>
-					<field name="cheque_number" string="Cheque Number" filter_domain="[('cheque_number','ilike','self')]"
-						/>
 					<field name="cheque_received_date" string="Cheque Received Date" filter_domain="[('cheque_received_date','ilike','self')]"
+						/>
+					<field name="cheque_number" string="Cheque Number" filter_domain="[('cheque_number','ilike','self')]"
 						/>
 					<field name="cheque_amount" string="Cheque Amount" filter_domain="[('cheque_amount','ilike','self')]"/>
 					<field name="posting_date" string="Posting Date" filter_domain="[('posting_date','ilike','self')]"
@@ -161,6 +161,10 @@
 				</form>
 			</field>
 		</record>
+				
+		<!-- Post Dated Cheque Actions in Print Buttons -->
+		<act_window id="action_cheque_print" multi="True" key2="client_print_multi" name="Cheque List"
+			res_model="account.postdated.cheque" src_model="account.postdated.cheque" /> 
 		
 		<!-- Post Dated Cheque Actions in More Buttons -->
 		<act_window id="action_cheque_deposited_to_bank" multi="True" key2="client_action_multi"

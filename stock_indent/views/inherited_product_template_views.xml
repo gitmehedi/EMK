@@ -28,11 +28,7 @@
 					<div>
 						<field name="general_item" />
 						<label for="general_item" />
-					</div>
-					<div>
-						<field name="bom_item" />
-						<label for="bom_item" />
-						<field name="gen_bom_flag"  invisible="1"/>
+						<field name="gen_bom_flag" invisible="1" />
 					</div>
 				</xpath>
 			</field>

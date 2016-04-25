@@ -28,7 +28,7 @@ class IndentIndent(models.Model):
     department_id = fields.Many2one('stock.location', 'Department',  required=True, track_visibility='onchange', readonly=True, states={'draft': [('readonly', False)]}, domain=[('can_request', '=', True)])
     analytic_account_id = fields.Many2one('account.analytic.account', 'Project', ondelete="cascade", readonly=True, track_visibility='onchange', states={'draft': [('readonly', False)]})
     requirement = fields.Selection([('1', 'Ordinary'), ('2', 'Urgent')], 'Requirement', readonly=True, required=True, track_visibility='onchange', states={'draft': [('readonly', False)]})
-    type =  fields.Selection([('gen', 'General Item'), ('bom', 'BOM Item')], 'Type', required=True, track_visibility='onchange', readonly=True, states={'draft': [('readonly', False)]})
+    type =  fields.Selection([('gen', 'General Item')], 'Type', required=True, track_visibility='onchange', readonly=True, states={'draft': [('readonly', False)]})
     product_lines = fields.One2many('indent.product.lines', 'indent_id', string='Products', readonly=True, states={'draft': [('readonly', False)], 'waiting_approval': [('readonly', False)]})
     picking_id = fields.Many2one('stock.picking', 'Picking')
     in_picking_id = fields.Many2one('stock.picking', 'Picking')
@@ -269,7 +269,6 @@ class IndentIndent(models.Model):
             #new_seq = self.pool.get('ir.sequence').get(cr, 1, 'indent.indent')
             if new_seq:
                 res['name'] = new_seq
-            print 'new_seq ', new_seq   
             self.write(res)
             self.action_picking_create()
         return True
@@ -328,7 +327,6 @@ class IndentIndent(models.Model):
             if req_id:
                 self._create_purchase_req_line(cr, uid, indent, line, req_id, context=context)
         """
-        print 'product_lines ', product_lines
         for line in product_lines:
             date_planned = self._get_date_planned(indent, line, indent.indent_date)
 
@@ -336,7 +334,6 @@ class IndentIndent(models.Model):
                 move_id = False
                 if not picking_id:
                     picking_id = picking_obj.create(self._prepare_indent_picking(indent))
-                print 'picking_id ', picking_id.id
                 move_id = move_obj.create(self._prepare_indent_line_move(indent, line, picking_id.id, date_planned))
         
         
@@ -368,7 +365,6 @@ class IndentIndent(models.Model):
     @api.multi
     def _prepare_indent_line_move(self, indent, line, picking_id, date_planned):
         location_id = indent.warehouse_id.lot_stock_id.id
-        print 'date planner ', date_planned
         
         res = {
             'name': line.name,
@@ -403,7 +399,6 @@ class IndentIndent(models.Model):
         """
         if indent.company_id:
             res = dict(res, company_id = indent.company_id.id)
-        print 'res ', res
         return res
     
     
@@ -415,8 +410,6 @@ class IndentIndent(models.Model):
         assert len(self.ids) == 1, 'This option should only be used for a single id at a time'
         picking_id = self._get_picking_id()
         res = self.env.ref('stock.view_picking_form')
-        print '430 ', picking_id
-        print '431 ', res.id
         result = {
             'name': _('Receive Product'),
             'view_type': 'form',
@@ -795,27 +788,24 @@ class StockPicking(models.Model):
         #Implement method that will check further verification for authority
         return super(StockPicking, self).action_stock_picking_confirm(id)
     
-    """
-    #@api.cr_uid_ids_context
+    
     @api.multi
-    def do_transfer(self,vals):
-        print 'vals ', vals
-        res = super(StockPicking, self).do_transfer(vals)
+    def do_transfer(self):
+        res = super(StockPicking, self).do_transfer()
         if res:
-            picking = self.browse(vals)[0]
+            picking = self.browse(self.ids)[0]
             indent_obj = self.env['indent.indent']
-            print 'picking ', picking
             indent_ids = indent_obj.search([('name', '=', picking.origin)])
-            vals = self.search([('origin','=', picking.origin)])
- 
+            picking_ids = self.search([('origin','=', picking.origin)])
             flag = True
-            for picking in self.browse(vals):
+            for picking in self.browse(self.ids):
                 if picking.state not in ('done', 'cancel'):
                     flag = False
                 if flag:
-                    indent_obj.write(indent_ids, {'state': 'received'})
+                    indent_ids.write({'state': 'received'})
         return res 
-           
+
+    """       
     
     @api.cr_uid_ids_context
     def do_transfer(self, cr, uid, picking_ids, context=None):

@@ -87,6 +87,10 @@
 									</t>
 								</tbody>
 							</table>
+							<p>
+								<h5>Notes:</h5>
+								<span t-field="doc.notes" />
+							</p>
 						</div>
 					</t>
 				</t>

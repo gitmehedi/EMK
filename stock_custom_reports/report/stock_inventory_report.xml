@@ -12,12 +12,16 @@
                 	<field name="code"/>
                     <field name="name"/>
                     <field name="qty_dk"/>
+                    <field name="avg_cost_dk"/>
                     <field name="val_dk"/>
                     <field name="qty_in_tk"/>
+                    <field name="avg_cost_in_tk"/>
                     <field name="val_in_tk"/>
                     <field name="qty_out_tk"/>
+                    <field name="avg_cost_out_tk"/>
                     <field name="val_out_tk"/>
                     <field name="qty_ck"/>
+                    <field name="avg_cost_ck"/>
                     <field name="val_ck"/>
                 </tree>
             </field>

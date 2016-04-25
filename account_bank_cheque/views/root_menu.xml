@@ -8,6 +8,6 @@
 		<menuitem id="post_dated_cheque_menu" name="Post Dated Cheque" parent="post_dated_root_menu" sequence="20" />
 		
 		<!-- Main Menu Section Left Panel -->
-		<menuitem id="post_dated_cheque_configuration_menu" name="Configuration" parent="post_dated_root_menu" sequence="30" />
+		<!-- <menuitem id="post_dated_cheque_configuration_menu" name="Configuration" parent="post_dated_root_menu" sequence="30" /> -->
 	</data>
 </openerp>

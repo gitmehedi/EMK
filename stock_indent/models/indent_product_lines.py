@@ -12,11 +12,11 @@ class IndentProductLines(models.Model):
         else:
             return False
     
-    def _get_indent_type_bom_flag_value(self):
-        if self._context.get('indent_type', False) == "bom":
-            return True
-        else:
-            return False
+#     def _get_indent_type_bom_flag_value(self):
+#         if self._context.get('indent_type', False) == "bom":
+#             return True
+#         else:
+#             return False
         
     indent_id = fields.Many2one('indent.indent', 'Indent', required=True, ondelete='cascade')
     
@@ -64,7 +64,7 @@ class IndentProductLines(models.Model):
     indent_type = fields.Selection([('new', 'Purchase Indent'), ('existing', 'Repairing Indent')], 'Type')
     
     indent_type_gen_flag = fields.Boolean(default=_get_indent_type_gen_flag_value)
-    indent_type_bom_flag = fields.Boolean(default=_get_indent_type_bom_flag_value)
+#     indent_type_bom_flag = fields.Boolean(default=_get_indent_type_bom_flag_value)
     #indent_type = fields.Char('Type', required=True, related="indent_id.type")
     """
     def _amount_subtotal(self, cr, uid, ids, name, args, context=None):

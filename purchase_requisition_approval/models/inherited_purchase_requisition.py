@@ -7,7 +7,7 @@ class InheritedPurchaseRequisition(models.Model):
 
 	state = fields.Selection([('draft', 'Draft'), ('in_progress', 'Confirmed'),('approved', 'Approved'),
                                    ('open', 'Bid Selection'), ('done', 'PO Created'),
-                                   ('cancel', 'Cancelled')],
+                                   ('close', 'Close'),('cancel', 'Cancelled')],
                                   'Status', required=True, readonly=True, states={'draft': [('readonly', False)]},
                                   copy=False)
 	
@@ -15,6 +15,10 @@ class InheritedPurchaseRequisition(models.Model):
 	def action_approved(self):
 		self.state = "approved"
 	
+	@api.multi
+	def action_close(self):
+		self.state = "close"
+		
 	@api.one
 	def open_bid(self):
 		self.state = "open"	
@@ -136,3 +140,9 @@ class InheritedPurchaseRequisition(models.Model):
 	     self.write(cr, uid, ids, {'state': 'done'})
 	 return True
 	 """
+	 
+	 
+class InheritPurchaseOrder(models.Model):
+    _inherit = "purchase.order"
+
+    requisition_id =fields.Many2one('purchase.requisition', 'Purchase Requisition', domain=[('state','=','approved')], copy=False)

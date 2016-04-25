@@ -47,7 +47,7 @@ The report to print the details of gate pass with products and shipping details.
 
 This module was developed by TinyERP Pvt Ltd (OpenERP India). Not covered under OpenERP / Odoo Maintenance Contract or Business Pack. Contact at india@openerp.com if you are looking for support or customization.
 """,
-    'depends' : ['stock'],
+    'depends' : ['stock','stock_gatepass_hr'],
     'data' : [
         'security/ir.model.access.csv',
         'view/stock_gatepass_type_view.xml',

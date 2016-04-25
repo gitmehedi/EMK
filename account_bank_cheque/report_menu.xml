@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<openerp>
+	<data>
+		<record id="rpt_account_postdated_cheque" model="ir.actions.report.xml">
+		<field name="string">Cheque List</field>
+		<field name="auto">True</field>
+		<field name="model">account.postdated.cheque</field>
+		<field name="jasper_model_id" ref="account_bank_cheque.model_account_postdated_cheque"/>
+		<field name="name">Cheque List</field>
+		<field name="report_name">rpt.account.postdated.cheque</field>
+		<field name="rml">account_bank_cheque/report/cheque_list.jrxml</field>
+		<field name="report_rml">account_bank_cheque/report/cheque_list.jrxml</field>
+		<field name="menu">True</field>
+		<field name="header">False</field>
+		<field name="jasper_report">True</field>
+		<field name="jasper_output">pdf</field>
+		</record>
+	</data>
+</openerp>
