@@ -33,7 +33,7 @@
  'demo': [],
  'data': [
           'security/security.xml',
-         #'security/ir.model.access.csv',
+          'security/ir.model.access.csv',
           'view/inherited_warehouse_views.xml',
           'view/stock_reservation.xml',
           'view/stock_de_allocation.xml',

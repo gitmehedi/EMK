@@ -26,7 +26,7 @@ class IndentIndent(models.Model):
                                related='department_id', store=True, states={'draft': [('readonly', False)]})
     source_department_id = fields.Many2one('stock.location', 'From Department', required=True, readonly=True, track_visibility='onchange', states={'draft': [('readonly', False)]})
     department_id = fields.Many2one('stock.location', 'Department',  required=True, track_visibility='onchange', readonly=True, states={'draft': [('readonly', False)]}, domain=[('can_request', '=', True)])
-    analytic_account_id = fields.Many2one('account.analytic.account', 'Project', ondelete="cascade", readonly=True, track_visibility='onchange', states={'draft': [('readonly', False)]})
+#     analytic_account_id = fields.Many2one('account.analytic.account', 'Project', ondelete="cascade", readonly=True, track_visibility='onchange', states={'draft': [('readonly', False)]})
     requirement = fields.Selection([('1', 'Ordinary'), ('2', 'Urgent')], 'Requirement', readonly=True, required=True, track_visibility='onchange', states={'draft': [('readonly', False)]})
     type =  fields.Selection([('gen', 'General Item')], 'Type', required=True, track_visibility='onchange', readonly=True, states={'draft': [('readonly', False)]})
     product_lines = fields.One2many('indent.product.lines', 'indent_id', string='Products', readonly=True, states={'draft': [('readonly', False)], 'waiting_approval': [('readonly', False)]})
@@ -43,7 +43,7 @@ class IndentIndent(models.Model):
 #         }),
     amount_total = fields.Float(digits=(20, 4), compute='_computed_total_amount', string='Total', store=True)
     amount_flag = fields.Boolean(default=False)    
-    state = fields.Selection([('draft', 'Draft'), ('confirm', 'Confirm'), ('waiting_approval', 'Waiting for Approval'), ('inprogress', 'In Progress'), ('received', 'Received'), ('reject', 'Rejected'),('cancel', 'Cancel')], 'State', readonly=True, track_visibility='onchange')
+    state = fields.Selection([('draft', 'Draft'), ('confirm', 'Confirm'), ('waiting_approval', 'Waiting for Approval'), ('inprogress', 'In Progress'), ('received', 'Received'), ('reject', 'Rejected'),('cancel', 'Cancel'),('close', 'Close')], 'State', readonly=True, track_visibility='onchange')
     approver_id = fields.Many2one('res.users', 'Authority', readonly=True, track_visibility='always', states={'draft': [('readonly', False)]}, help="who have approve or reject indent.")
     #product_id = fields.related('product_lines', 'product_id', string='Products', type='many2one', relation='product.product')
     #product_id = fields.Many2one(string='Products', related='product_lines')
@@ -52,9 +52,7 @@ class IndentIndent(models.Model):
     
     warehouse_id = fields.Many2one('stock.warehouse', 'Warehouse', help="default warehose where inward will be taken", readonly=True, states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]})
     move_type = fields.Selection([('direct', 'Partial'), ('one', 'All at once')], 'Receive Method', track_visibility='onchange', readonly=True, required=True, states={'draft':[('readonly', False)], 'cancel':[('readonly', True)]}, help="It specifies goods to be deliver partially or all at once")
-    picking_type_id = fields.Many2one('stock.picking.type', 'Picking Type', states={'done': [('readonly', True)], 'cancel': [('readonly', True)]}, required=True
-                                      ,default=lambda self: self.env['stock.picking.type'].search([])[0].id)
-    
+    picking_type_id = fields.Many2one('stock.picking.type', 'Picking Type', required=True , readonly=True, states={'draft': [('readonly', False)]}, default=lambda self: self.env['stock.picking.type'].search([])[0].id)
     
     
     _sql_constraints = [
@@ -88,6 +86,7 @@ class IndentIndent(models.Model):
     def _onchange_type(self, context=None):
         if self._context.get('indent_type',False) and self.product_lines:
             self.product_type_flag = True
+            
             
     @api.multi
     @api.depends('amount_flag','product_lines')
@@ -287,6 +286,10 @@ class IndentIndent(models.Model):
     @api.one
     def indent_reject(self):
         self.state = 'reject'
+    
+    @api.one
+    def action_close(self):
+        self.state = "close"
     
     @api.one
     def action_picking_create(self):
