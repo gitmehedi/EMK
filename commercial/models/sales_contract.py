@@ -84,7 +84,7 @@ class SalesContract(models.Model):
 
     @api.onchange('buyer_id')
     def _onchange_buyer_id(self):
-        res,domain_ids= {},[]
+        res,domain_ids,ids= {},[],[]
         self.so_ids=0
 
         if self.buyer_id:
@@ -92,16 +92,16 @@ class SalesContract(models.Model):
             sc_obj = self.env['sales.contract'].search([('buyer_id','=',self.buyer_id.id)])
 
             if sc_obj:
-                ids=[]
                 for obj in sc_obj:
                     for id in obj.so_ids.ids:
                         ids.append(id)
 
-                domain_ids = list(set(bwo_obj.ids)-set(ids))
+            domain_ids = list(set(bwo_obj.ids)-set(ids))
 
-        res['domain'] = {
-            'so_ids':[('id', 'in', domain_ids)]
-        }
+            res['domain'] = {
+                'so_ids':[('id', 'in', domain_ids)]
+            }
+
         return res
 
     @api.multi
