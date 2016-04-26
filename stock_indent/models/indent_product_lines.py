@@ -58,11 +58,11 @@ class IndentProductLines(models.Model):
     qty_available = fields.Float('In Stock')
     virtual_available = fields.Float('Forecasted Qty')
     delay = fields.Float('Lead Time', required=True)
-    name = fields.Text('Purpose', required=True)
+    name = fields.Char('Purpose', size=255, required=True)
     specification = fields.Text('Specification')
     sequence = fields.Integer('Sequence')
     indent_type = fields.Selection([('new', 'Purchase Indent'), ('existing', 'Repairing Indent')], 'Type')
-    
+    required_date= fields.Date('Required Date',default=fields.Date.today(), required=True)
     indent_type_gen_flag = fields.Boolean(default=_get_indent_type_gen_flag_value)
 #     indent_type_bom_flag = fields.Boolean(default=_get_indent_type_bom_flag_value)
     #indent_type = fields.Char('Type', required=True, related="indent_id.type")
@@ -138,6 +138,9 @@ class IndentProductLines(models.Model):
             self.price_unit = self.product_id.standard_price
             self.qty_available = self.product_id.qty_available
             self.virtual_available = self.product_id.virtual_available
+            self.name = self.product_id.name
+        if self._context.get('required_date', False):
+            self.required_date = self._context.get('required_date', False)
     
     @api.onchange('product_uom_qty','price_unit')
     def onchange_product_qty_price(self):

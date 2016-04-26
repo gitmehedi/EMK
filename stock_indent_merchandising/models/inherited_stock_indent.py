@@ -3,14 +3,15 @@ from openerp import api, fields, models
 class InheritedStockIndent(models.Model):
 	_inherit = 'indent.indent'
 	
-	type =  fields.Selection([('gen', 'General Item'), ('bom', 'BOM Item')], 'Type', required=True, track_visibility='onchange', readonly=True, states={'draft': [('readonly', False)]})
+	analytic_account_id = fields.Many2one('account.analytic.account', 'EPO No',readonly=True, states={'draft': [('readonly', False)]})
+	type =  fields.Selection([('gen', 'General Item'), ('bom', 'BOM Item')], 'Type', required=True, readonly=True, states={'draft': [('readonly', False)]})
 	bom_flag = fields.Boolean(default=False)
 
 	
-	@api.onchange('bom_item')
+	@api.onchange('type')
 	def onchnage_bom_item(self):
-		print 'bom_item ',self.bom_item
-		if self.general_item == True:
+		print 'type ',self.type
+		if self.type == "bom":
 		   self.bom_flag = True
 		else:
 			self.bom_flag = False
