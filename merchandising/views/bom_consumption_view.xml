@@ -21,7 +21,7 @@
 									options='{"no_open": True,"no_create": 1, "no_create_edit": 1}' />
 								<field name="style_id" class="oe_inline"
 									 options='{"no_open": True,"no_create": 1, "no_create_edit": 1}'
-									domain="[('style_id', 'in', mc_ids)]" />
+									domain="[('style_id', 'in', mc_id)]" />
 								<field name="export_po_id" class="oe_inline"
 									attrs="{'readonly':[('style_id','=',False)]}" options='{"no_open": True,"no_create": 1, "no_create_edit": 1}'
 									domain="[('style_id', '=', style_id),('state', '=', 'confirm')]" />
