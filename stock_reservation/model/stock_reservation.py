@@ -62,7 +62,7 @@ class StockReservation(models.Model):
         
     @api.multi
     def action_reserve(self):
-        print '---self++++++++++',self.id
+        
         obj_stock_picking = self.env['stock.picking']
         pick_vals = {
                 'picking_type_id': self.env['stock.picking.type'].search([('name', '=', 'Stock Reservation')], limit=1).id,

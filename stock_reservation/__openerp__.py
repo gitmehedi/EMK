@@ -38,6 +38,10 @@
           'view/stock_reservation.xml',
           'view/stock_de_allocation.xml',
           'view/stock_re_allocation.xml',
+          'wizard/product_reservation_status_wizard_views.xml',
+          'report/product_reservation_status_report.xml',
+          'wizard/epo_reservation_status_wizard_views.xml',
+          'report/epo_reservation_status_report.xml'
           ],
  'auto_install': False,
  'installable': True,

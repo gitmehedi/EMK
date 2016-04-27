@@ -183,3 +183,12 @@ class InheritedStockReservationLine(models.Model):
 			raise Warning(_('Quantity can not be Greater than Allocate Qty'))
 # 			raise except_orm('res','Quantity can not be Greater than Allocate Qty')
 	
+	@api.multi
+	def write(self, vals):
+		print '------allocate_qty---',self.allocate_qty
+		print '------vals---',vals.get('quantity', False)
+		allocate_qty = self.allocate_qty
+		quantity = vals.get('quantity', False)
+		if quantity > self.allocate_qty:
+			raise Warning(_('Quantity can not be Greater than Allocate Qty')) 
+		return super(InheritedStockReservationLine, self).write(vals)	

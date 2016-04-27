@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+	<data>
+		<record id="epo_reservation_wizard_view_form" model="ir.ui.view">
+			<field name="name">epo.reservation.status.form</field>
+			<field name="model">epo.reservation.status.wizard</field>
+			<field name="arch" type="xml">
+				<form string="Confirmation wizard Form">
+					<group>
+						<field name="analytic_acc_id" options='{"no_open": True,"no_create": 1, "no_create_edit":1}'></field>
+					</group>
+					<footer>
+						<button name="print_report" type="object" string="Report"
+							class="oe_highlight" />
+						<button string="No" special="cancel" class="oe_link" />
+					</footer>
+				</form>
+			</field>
+		</record>
+
+		<record id="epo_reservation_status_wizard_action" model="ir.actions.act_window">
+			<field name="name">EPO Reservation Status</field>
+			<field name="type">ir.actions.act_window</field>
+<!-- 			<field name="src_model">stock.reservation</field> -->
+			<field name="res_model">epo.reservation.status.wizard</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">form</field>
+			<field name="target">new</field>
+		</record>
+		<menuitem name="EPO Reservation Status" id="epo_reservation_status_menu"
+			parent="stock.menu_stock_inventory_control" sequence="252"
+			action="epo_reservation_status_wizard_action" />
+	</data>
+</openerp>

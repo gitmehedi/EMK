@@ -211,8 +211,8 @@ class InheritedStockReservationLine(models.Model):
 	@api.onchange('quantity')
 	def onchange_quantity(self):
 		if self.quantity and self.allocate_qty and self.quantity > self.allocate_qty:
-			print '---------self.allocate_qty------',self.allocate_qty
-			print '---------self.quantity------',self.quantity
+# 			print '---------self.allocate_qty------',self.allocate_qty
+# 			print '---------self.quantity------',self.quantity
 			self.quantity = self.allocate_qty
 # 			res = {
 #             'value': {
@@ -226,3 +226,10 @@ class InheritedStockReservationLine(models.Model):
 # 			raise except_orm('res','Quantity can not be Greater than Allocate Qty')
 			
 		
+	@api.multi
+	def write(self, vals):
+		allocate_qty = self.allocate_qty
+		quantity = vals.get('quantity', False)
+		if quantity > self.allocate_qty:
+			raise Warning(_('Quantity can not be Greater than Allocate Qty')) 
+		return super(InheritedStockReservationLine, self).write(vals)	
