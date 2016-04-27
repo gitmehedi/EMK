@@ -24,12 +24,12 @@
                     </tr>
                 </t>
 
-                <tr class="emph">
-                    <td>Discount Amount:</td>
+               <!-- <tr class="emph">
+                    <td>Discount:</td>
                     <td class="pos-right-align">
                         <t t-esc="widget.format_currency(order.getDiscountAmount())"/>
                     </td>
-                </tr>
+                </tr>-->
 
                 <tr class="emph">
                     <td>TotalAmount:</td>
@@ -51,20 +51,20 @@
                 <t t-if="line.get_quantity_str() !== '1' || line.selected ">
                     <li class="info">
                         <em>
-                            <t t-esc="line.get_quantity_str()" />
+                            <t t-esc="line.get_quantity_str()"/>
                         </em>
-                        <t t-esc="line.get_unit().name" />
+                        <t t-esc="line.get_unit().name"/>
                         at
-                        <t t-esc="widget.format_currency(line.get_unit_price(),'Product Price')" />
+                        <t t-esc="widget.format_currency(line.get_unit_price(),'Product Price')"/>
                         /
-                        <t t-esc="line.get_unit().name" />
+                        <t t-esc="line.get_unit().name"/>
                     </li>
                 </t>
                 <t t-if="line.get_discount_str() !== '0'">
                     <li class="info">
                         With
                         <em>
-                            <t t-esc="line.get_discount_str()" />
+                            <t t-esc="line.get_discount_str()"/>
                         </em>
                         discount
                     </li>
@@ -72,6 +72,32 @@
             </ul>
         </t>
 
+    </t>
+    <t t-extend='OrderWidget'>
+        <t t-jquery=".order-container .order-scroller .order .summary.clearfix" t-operation='replace'>
+            <div class="summary clearfix">
+                <div t-attf-class="line #{orderlines.length === 0 ? 'empty' : ''}">
+                    <div class='entry total'>
+                        <div>
+                            <span class="label ">Subtotal:</span>
+                            <span class="value subtotal">0.00 €</span>
+                        </div>
+                       <!-- <div>
+                            <span class="label ">Discount:</span>
+                            <span class="discount_value discount">0.00 €</span>
+                        </div>-->
+
+                        <div>
+                            <span class="label ">Total:</span>
+                            <span class="total_value total">0.00 €</span>
+                        </div>
+                        <div class='subentry '>Taxes:
+                            <span class="value taxes">0.00€</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </t>
     </t>
 
 

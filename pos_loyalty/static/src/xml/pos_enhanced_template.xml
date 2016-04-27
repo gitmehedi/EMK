@@ -24,10 +24,12 @@
 				<div t-attf-class="line #{orderlines.length === 0 ? 'empty' : ''}">
 					<div class='entry total'>
 						<t t-if="orderlines.length != 0">
+							<div t-attf-class="loyalty-point #{order.getPoint() > 0 ? 'display-block' : 'display-none'}">
 							<span class="label">Total Point:</span>
 							<span class="label ">
 								<t t-esc="order.getPoint()"/>
 							</span>
+							</div>
 						</t>
 						<t t-if="orderlines.length == 0">
 							<span class="loyl_entry">
@@ -88,14 +90,16 @@
 	<t t-extend='PosTicket'>
 		<t t-jquery=".pos-sale-ticket" t-operation='append'>
 			<br />
+			<div t-attf-class="earned-point #{order.getPoint() > 0 ? 'display-block' : 'display-none'}">
 			<table>
 				<tr>
-					<td>Total Earned Points:</td>
+					<td>Total Available Points:</td>
 					<td class="pos-right-align">
 						<t t-esc="widget.format_currency(order.getPoint())"/>
 					</td>
 				</tr>
 			</table>
+			</div>
 		</t>
 		<!-- This is not needed for loyalty point -->	
 		<!--<t t-jquery=".pos-sale-ticket table:first" t-operation='after'>

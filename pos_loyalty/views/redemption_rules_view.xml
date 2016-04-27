@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+	<data>
+		<!-- Your Form View Definition -->
+		<record model="ir.ui.view" id="redemption_form_view">
+			<field name="name">Name</field>
+			<field name="model">redemption.rule</field>
+			<field name="arch" type="xml">
+				<form string="Redemption Rule Form">
+					<div class="">
+						<group col = "4">
+							<field name="redemption_rule_name" string = "Redemptiomn Rule" width = "100%"/>
+							
+						</group>
+						<group>
+							<div class="col-md-10">
+								<div>
+									<div class="col-md-2">
+										<label  for="point_start_margin" string="Points between" class="oe_inline"/>
+									</div>
+									<div class="col-md-2">
+										<field name="point_start_margin" string="Points between"/>
+									</div>
+									<div class="col-md-1">
+										<label  for="point_end_margin" string="and" class="oe_inline"/>
+									</div>
+									<div class="col-md-2">
+										<field name="point_end_margin" string = "and"/>
+									</div>
+									<div class="col-md-2">
+										<label  for="reward_point_unit" string=":1reward point" class="oe_inline"/>
+									</div>
+									<div class="col-md-1">
+										<field name="reward_point_unit" string = ":1reward point ="/>
+									</div>
+								</div>
+							</div>
+						</group>
+					</div>
+				</form>
+			</field>
+		</record>
+		
+		<!-- Your Tree View Definition -->
+		<record  model="ir.ui.view" id="redemption_tree_view">
+			<field name="name">Name</field>
+			<field name="model">redemption.rule</field>
+			<field name="priority" eval="16"/>
+			<field name="arch" type="xml">
+				<tree string="Redemption Rule Tree">
+					<field name="redemption_rule_name" string = "Redemptiomn Rule"/>
+				</tree>
+				<form>
+					<div class="">
+						<group col = "4">
+							<field name="redemption_rule_name" string = "Redemptiomn Rule" width = "100%"/>
+							
+						</group>
+						<group>
+							<div class="col-md-10">
+								<div>
+									<div class="col-md-2">
+										<label  for="point_start_margin" string="Points between" class="oe_inline"/>
+									</div>
+									<div class="col-md-2">
+										<field name="point_start_margin" string="Points between"/>
+									</div>
+									<div class="col-md-1">
+										<label  for="point_end_margin" string="and" class="oe_inline"/>
+									</div>
+									<div class="col-md-2">
+										<field name="point_end_margin" string = "and"/>
+									</div>
+									<div class="col-md-2">
+										<label  for="reward_point_unit" string=":1reward point" class="oe_inline"/>
+									</div>
+									<div class="col-md-1">
+										<field name="reward_point_unit" string = ":1reward point ="/>
+									</div>
+								</div>
+							</div>
+						</group>
+					</div>
+				</form>
+			</field>
+		</record>
+		
+		
+		<record id="redemption_menu_action" model="ir.actions.act_window">
+			<field name="name">Redemption Rules</field>
+			<field name="res_model">redemption.rule</field>
+			<field name="view_mode">form</field>
+		</record>
+		
+		<menuitem name="Redemptions" id="redemptions" action="redemption_menu_action" parent
+			= "loyalty_config"/>
+		
+	</data>
+</openerp>

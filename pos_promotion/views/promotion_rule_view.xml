@@ -50,17 +50,23 @@
                                     editable="bottom">
                                     <field name="sequence" />
                                     <field name="stop_further" />
+                                    <!--<field name="attribute"-->
+                                        <!--on_change="on_change(attribute, value)" />-->
                                     <field name="attribute"
-                                        on_change="on_change(attribute, value)" />
+                                        />
                                     <field name="comparator" />
                                     <field name="value" />
+                                    <field name="quantity" />
                                 </tree>
                                 <form>
                                     <field name="sequence" />
+                                    <!--<field name="attribute"-->
+                                        <!--on_change="_on_change(attribute, value)" />-->
                                     <field name="attribute"
-                                        on_change="_on_change(attribute, value)" />
+                                        />
                                     <field name="comparator" />
                                     <field name="value" />
+                                     <field name="quantity" />
                                     <field name="stop_further" />
                                 </form>
                             </field>
@@ -69,15 +75,19 @@
                             <field name="actions" nolabel="1">
                                 <tree editable="bottom" string="Actions">
                                     <field name="sequence" />
+                                    <!--<field name="action_type"-->
+                                        <!--on_change="on_change(action_type, product_code, arguments)" />-->
                                     <field name="action_type"
-                                        on_change="on_change(action_type, product_code, arguments)" />
+                                        />
                                     <field name="product_code" />
                                     <field name="arguments" />
                                 </tree>
                                 <form>
                                     <field name="sequence" />
+                                    <!--<field name="action_type"-->
+                                        <!--on_change="_on_change(action_type, product_code, arguments)" />-->
                                     <field name="action_type"
-                                        on_change="_on_change(action_type, product_code, arguments)" />
+                                         />
                                     <field name="product_code" />
                                     <field name="arguments" />
                                 </form>
