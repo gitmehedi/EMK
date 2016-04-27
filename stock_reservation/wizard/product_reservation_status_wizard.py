@@ -23,7 +23,7 @@ class ConfirmationWizard(models.TransientModel):
         tools.drop_view_if_exists(self.env.cr,'product_reservation_status_report')
         product_id = res.product_id.id
         
-           
+        """   
         sql = '''
             CREATE OR REPLACE VIEW product_reservation_status_report AS (
             SELECT sr.id AS id, sr.analytic_account_id, aa.name as epo_no, sr.analytic_resv_loc_id
@@ -37,9 +37,56 @@ class ConfirmationWizard(models.TransientModel):
                 LEFT JOIN account_analytic_account aa on(sr.source_loc_id=aa.id)
                 where sr.state = 'reserve' AND srl.product_id = %s )
         ''' %(product_id)
+        """
+        sql = '''
+        CREATE OR REPLACE VIEW product_reservation_status_report AS (
+                SELECT ROW_NUMBER() OVER(ORDER BY product_id DESC) AS id, analytic_account_id, epo_no, sum(qty) as quantity, product_name,product_id, location_name
+                    FROM (
+                    SELECT sr.analytic_account_id, aa.name as epo_no
+                     ,sr.source_loc_id,  sr.analytic_resv_loc_id, sum(srl.quantity) as qty
+                     , p.name_template as product_name, srl.product_id, l.name as location_name
+                        FROM stock_reservation sr
+                    LEFT JOIN stock_reservation_line srl on(sr.id=srl.stock_reservation_id)
+                    LEFT JOIN product_product p on(srl.product_id=p.id)
+                    LEFT JOIN stock_location l on(sr.analytic_resv_loc_id=l.id)
+                    LEFT JOIN account_analytic_account aa on(sr.analytic_account_id=aa.id)
+                    where sr.state = 'reserve' and sr.allocate_flag = 1 AND srl.product_id = %s
+                    Group by sr.analytic_account_id,aa.name,sr.source_loc_id, 
+                        sr.analytic_resv_loc_id, p.name_template, srl.product_id,l.name
+                    
+                    UNION ALL
+                    
+                    SELECT sr.analytic_account_id, aa.name as epo_no
+                     ,sr.source_loc_id, sr.analytic_resv_loc_id, (-1)*sum(srl.quantity) as qty
+                     , p.name_template as product_name, srl.product_id, l.name as location_name
+                        FROM stock_reservation sr
+                    LEFT JOIN stock_reservation_line srl on(sr.id=srl.stock_reservation_id)
+                    LEFT JOIN product_product p on(srl.product_id=p.id)
+                    LEFT JOIN stock_location l on(sr.source_loc_id=l.id)
+                    LEFT JOIN account_analytic_account aa on(sr.analytic_account_id=aa.id)
+                    where sr.state = 'release' and sr.allocate_flag = 2 AND srl.product_id = %s
+                    Group by sr.analytic_account_id,aa.name,sr.source_loc_id,
+                        sr.analytic_resv_loc_id, p.name_template,srl.product_id,l.name
+                    
+                    UNION ALL
+                    
+                    SELECT sr.analytic_account_id, aa.name as epo_no
+                     ,sr.source_loc_id,sr.analytic_resv_loc_id, sum(srl.quantity) as qty
+                     , p.name_template as product_name, srl.product_id, l.name as location_name
+                        FROM stock_reservation sr
+                    LEFT JOIN stock_reservation_line srl on(sr.id=srl.stock_reservation_id)
+                    LEFT JOIN product_product p on(srl.product_id=p.id)
+                    LEFT JOIN stock_location l on(sr.source_loc_id=l.id)
+                    LEFT JOIN account_analytic_account aa on(sr.analytic_account_id=aa.id)
+                    where sr.state = 'release' and sr.allocate_flag = 3 AND srl.product_id = %s
+                    Group by sr.analytic_account_id,aa.name,sr.source_loc_id,
+                        sr.analytic_resv_loc_id, p.name_template,srl.product_id,l.name
+                    ) AS reserve_tble GROUP BY analytic_account_id, epo_no,
+                         product_name,product_id,location_name  )
+        ''' %(product_id,product_id,product_id)
         print '------sql--------',sql
         self.env.cr.execute(sql)
-        print '------sql--------',sql
+
         return {
             'name': ('Product Reservation Status Report'),
             'view_type': 'form',
