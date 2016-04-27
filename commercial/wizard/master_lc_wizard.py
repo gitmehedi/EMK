@@ -9,10 +9,10 @@ class MasterLCWizard(models.TransientModel):
 
     @api.multi
     def amaendment_copy(self, context=None):
-        
+
         obj = self.env['master.lc'].browse(context['active_id'])
         res = obj.extend_copy(context)
-        
+
         
         return {
             'view_type': 'form',
