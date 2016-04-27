@@ -34,7 +34,7 @@ class ConfirmationWizard(models.TransientModel):
                 LEFT JOIN stock_reservation_line srl on(sr.id=srl.stock_reservation_id)
                 LEFT JOIN product_product p on(srl.product_id=p.id)
                 LEFT JOIN stock_location l on(srl.destination_loc_id=l.id)
-                LEFT JOIN account_analytic_account aa on(sr.analytic_account_id=aa.id)
+                LEFT JOIN account_analytic_account aa on(sr.source_loc_id=aa.id)
                 where sr.state = 'reserve' AND srl.product_id = %s )
         ''' %(product_id)
         print '------sql--------',sql
