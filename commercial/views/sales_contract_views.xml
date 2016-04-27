@@ -24,6 +24,9 @@
 			<field name="arch" type="xml">
 				<form string="Sales Contract Form">
 					<header>
+						<button name="%(sales_contract_conversion_wizard_action)d"
+                                string="Convert to LC" states="confirm" class="oe_highlight" type="action" />
+
 						<button name="action_confirm" type="object" states="draft"
 							string="Confirm" class="oe_highlight" />
 
@@ -56,13 +59,12 @@
 
 								<field name="payment_term_id"
 									options='{"no_open": True,"no_create": 1, "no_create_edit": 1}' />
-								<field name="inco_term"
+								<field name="inco_term_id"
 									options='{"no_open": True,"no_create": 1, "no_create_edit": 1}' />
 								<field name="inco_term_place" />
 
 							</group>
-
-						</group>
+                        </group>
 						<group>
                             <field name="so_ids" widget="many2many_tags"
                                    options='{"no_open": True,"no_create": 1, "no_create_edit": 1}'/>

@@ -32,6 +32,8 @@
     'data': [
              'security/security.xml',
              'security/ir.model.access.csv',
+             'wizard/master_lc_wizard_views.xml',
+             'wizard/sales_contract_conversion_wizard_views.xml',
              'views/root_menu.xml',
              'views/inherited_account_payment_term_views.xml',
              'views/inherited_bank_views.xml',

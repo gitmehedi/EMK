@@ -13,7 +13,7 @@ class MasterLC(models.Model):
     name = fields.Char(string="Serial", size=30, readonly=True)
     mlc_code = fields.Char(string='Code')
     
-    lc_no = fields.Char(string="LC No", size=30, required=True)
+    lc_no = fields.Char(string="LC No", size=30)
     
     lc_open_date = fields.Date(string="LC Opening Date", default=date.today().strftime('%Y-%m-%d'), required=True,
                                readonly=True, states={'draft':[('readonly', False)]})
@@ -60,7 +60,7 @@ class MasterLC(models.Model):
     inco_term_id = fields.Many2one('stock.incoterms', string="Inco Term",
                                    readonly=True, states={'draft':[('readonly', False)]})
 
-    shipment_mode = fields.Selection([("sea", "Sea"), ("air", "Air"), ("road", "By Road")], string='Ship Mode', required=True,
+    shipment_mode = fields.Selection([("sea", "Sea"), ("air", "Air"), ("road", "By Road")], string='Ship Mode',
                                      readonly=True, states={'draft':[('readonly', False)]})
     
     state = fields.Selection([('draft', "Draft"), ('confirm', "Confirm")], default='draft')
@@ -70,6 +70,14 @@ class MasterLC(models.Model):
 
     so_ids = fields.Many2many('sale.order', string="Related PO", required=True,
                               readonly=True, states={'draft':[('readonly', False)]})
+
+    """ Versioning functionality """
+    version = fields.Integer(string='Version', size=3, default=1, readonly=True)
+    visible = fields.Boolean(default=True)
+
+    lc_id = fields.Many2one('master.lc', string="LC No", readonly=True)
+    ref_lc = fields.Many2one('master.lc', string="Reference LC", index=True, readonly=True)
+    lc_ids = fields.One2many('master.lc', 'lc_id', readonly=True)
     
 
 
@@ -95,22 +103,53 @@ class MasterLC(models.Model):
     def _set_default_currency(self, name):
         res = self.env['res.currency'].search([('name', '=like', name)])
         return res and res[0] or False
-    
-    
-    """ All function which process data and operation """
-    
+
+    """All function which process data and operation"""
+
     @api.model
     def create(self, vals):
-        self._validate_data(vals)
-        vals['name'] = self.env['ir.sequence'].get('mlc_code')
-            
+        version = vals.get('version', 0)
+        if (version in [0, 1]):
+            vals['name'] = self.env['ir.sequence'].get('mlc_code')
+
         return super(MasterLC, self).create(vals)
-    
+
+
     @api.multi
-    def write(self, vals):
-        self._validate_data(vals)
-        
-        return super(MasterLC, self).write(vals)      
+    def extend_copy(self, default=None):
+        default = dict(default or {})
+        if default['create_version']:
+            default['version'] = self.version + 1
+            default['ref_lc'] = self.id
+            default['name'] = self.name
+        else:
+            default['lc_id'] = ''
+            default['version'] = 1
+
+        res = super(MasterLC, self).copy(default)
+
+        """ update the current record """
+        if default['create_version']:
+            self.write({'visible':False, 'lc_id':res.id})
+            for st in self.lc_ids:
+                st.write({'lc_id':res.id})
+        return res
+
+
+    """ Delete record if it states in draft """
+
+    def unlink(self, cr, uid, ids, context=None):
+        obj = self.pool['master.lc']
+
+        for item in self.browse(cr, uid, ids, context=context):
+            if item.state != 'draft':
+                raise exceptions.ValidationError(validator.msg['delete_style'])
+
+            obj.unlink(cr, uid, [line.id for line in item.line_ids], context=context)
+        return super(MasterLC, self).unlink(cr, uid, ids, context=context)
+
+
+
 
     """ Onchange functionality """
 

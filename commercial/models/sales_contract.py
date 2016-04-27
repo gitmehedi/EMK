@@ -30,12 +30,12 @@ class SalesContract(models.Model):
                                readonly=True, states={'draft':[('readonly', False)]})
     sc_bank_id = fields.Many2one('res.bank', string="SC Bank",required=True,
                                  readonly=True, states={'draft':[('readonly', False)]})
-    payment_term_id = fields.Many2one('account.payment.term', string="Payment Terms/Tenor",required=True,
+    payment_term_id = fields.Many2one('account.payment.term', string="Payment Terms/Tenor",
                                       readonly=True, states={'draft':[('readonly', False)]})
     sc_currency_id = fields.Many2one('res.currency', required=True,
                                      readonly=True, states={'draft':[('readonly', False)]}, default=lambda self: self._set_default_currency('USD'))
     
-    inco_term = fields.Many2one('stock.incoterms', string="Inco Term", required=True,
+    inco_term_id = fields.Many2one('stock.incoterms', string="Inco Term",
                                 readonly=True, states={'draft':[('readonly', False)]})
     
     state = fields.Selection([('draft', "Draft"), ('confirm', "Confirm")], default='draft')
@@ -64,21 +64,21 @@ class SalesContract(models.Model):
         res = self.env['res.currency'].search([('name', '=like', name)])
         return res and res[0] or False
     
-    
+
     """ All function which process data and operation """
     
     @api.model
     def create(self, vals):
         self._validate_data(vals)
         vals['name'] = self.env['ir.sequence'].get('sc_code')
-            
+
         return super(SalesContract, self).create(vals)
-    
+
     @api.multi
     def write(self, vals):
         self._validate_data(vals)
-        
-        return super(SalesContract, self).write(vals)      
+
+        return super(SalesContract, self).write(vals)
 
     """ Onchange functionality """
 
@@ -104,6 +104,7 @@ class SalesContract(models.Model):
 
         return res
 
+    """ states functionality """
     @api.multi
     def action_draft(self):
         self.state = 'draft'

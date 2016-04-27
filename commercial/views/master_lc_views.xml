@@ -19,14 +19,18 @@
 		</record>
 
 		<!-- Master LC Form Views -->
-		<record model="ir.ui.view" id="master_lc_form_view_new">
+		<record model="ir.ui.view" id="master_lc_form_view">
 			<field name="name">master.lc.form</field>
 			<field name="model">master.lc</field>
 			<field name="arch" type="xml">
 				<form string="Master LC Form">
-					<header>
+					<header attrs="{'invisible': [('visible','=',False)]}">
 						<button name="action_confirm" type="object" states="draft"
 							string="Confirm" class="oe_highlight" />
+
+						<button name="%(master_lc_action_wizard_views)d"
+							states="confirm" type="action" string="Amendment or Copy" class="oe_highlight" />
+
 						<field name="state" widget="statusbar" />
 					</header>
 					<sheet>
@@ -51,6 +55,7 @@
 									options='{"no_open": True,"no_create": 1, "no_create_edit": 1}' />
 
 								<field name="lc_expiry_date" />
+                                <field name="version" attrs="{'invisible': [('version','&lt;',2)]}" />
 
 							</group>
 							<group>
@@ -75,12 +80,27 @@
                                 <field name="inco_term_place" />
 								<field name="allow_partial_shipment" />
 								<field name="allow_trans_shipment" />
+                                <field name="visible" invisible="1" />
 							</group>
 						</group>
                         <group>
                             <field name="so_ids" widget="many2many_tags"
                                    options='{"no_open": True,"no_create": 1, "no_create_edit": 1}'/>
                         </group>
+                        <notebook attrs="{'invisible': ['|',('version','&lt;',2),('visible','=',False)]}">
+                            <page string="Vesions">
+								<field name="lc_ids">
+									<tree>
+										<field name="name" />
+										<field name="buyer_id" />
+										<field name="lc_open_bank_id" />
+										<field name="version" />
+										<field name="state" invisible="1" />
+										<field name="visible" invisible="1" />
+									</tree>
+								</field>
+							</page>
+                        </notebook>
 
 						<separator string="Remarks" />
 						<field name="remarks" placeholder="Put an remarks..................." />
