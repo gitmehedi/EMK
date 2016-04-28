@@ -25,10 +25,10 @@ class ConfirmationWizard(models.TransientModel):
            
         sql = '''
             CREATE OR REPLACE VIEW epo_reservation_status_report AS (
-                SELECT ROW_NUMBER() OVER(ORDER BY product_id DESC) AS id, analytic_account_id, epo_no, sum(qty) as quantity, product_name, location_name
+                SELECT ROW_NUMBER() OVER(ORDER BY product_id DESC) AS id, analytic_account_id, epo_no, COALESCE(sum(qty),0) as quantity, product_name, location_name
                     FROM (
                     SELECT sr.analytic_account_id, aa.name as epo_no
-                     ,sr.source_loc_id,  sr.analytic_resv_loc_id, sum(srl.quantity) as qty
+                     ,sr.source_loc_id,  sr.analytic_resv_loc_id, COALESCE(sum(srl.quantity),0) as qty
                      , p.name_template as product_name, srl.product_id, l.name as location_name
                         FROM stock_reservation sr
                     LEFT JOIN stock_reservation_line srl on(sr.id=srl.stock_reservation_id)
@@ -42,7 +42,7 @@ class ConfirmationWizard(models.TransientModel):
                     UNION ALL
                     
                     SELECT sr.analytic_account_id, aa.name as epo_no
-                     ,sr.source_loc_id, sr.analytic_resv_loc_id, (-1)*sum(srl.quantity) as qty
+                     ,sr.source_loc_id, sr.analytic_resv_loc_id, (-1)*COALESCE(sum(srl.quantity),0) as qty
                      , p.name_template as product_name, srl.product_id, l.name as location_name
                         FROM stock_reservation sr
                     LEFT JOIN stock_reservation_line srl on(sr.id=srl.stock_reservation_id)
@@ -56,7 +56,7 @@ class ConfirmationWizard(models.TransientModel):
                     UNION ALL
                     
                     SELECT sr.analytic_account_id, aa.name as epo_no
-                     ,sr.source_loc_id,sr.analytic_resv_loc_id, sum(srl.quantity) as qty
+                     ,sr.source_loc_id,sr.analytic_resv_loc_id, COALESCE(sum(srl.quantity),0) as qty
                      , p.name_template as product_name, srl.product_id, l.name as location_name
                         FROM stock_reservation sr
                     LEFT JOIN stock_reservation_line srl on(sr.id=srl.stock_reservation_id)
