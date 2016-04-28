@@ -16,8 +16,20 @@
 #
 #    You should have received a copy of the Genweb2 Ltd
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+#--------------- Configuration Setup----------------------
 #    Create a Picking type (Type of Operation) where name will be "Stock Reservation"
+#    go to setting menu and click warehouse menu. 
+#    checked 
+    #    - Manage multiple locations and warehouses
+    #    - Manage advanced routes for your warehouse
+    #    - Track lots or serial numbers
+    #    - Expiry date on serial numbers
+#    Then go to warehouse menu -> configuration menu->click warehouse->select warehouse
+#    ->click Edit Btn
+# go to Tab - Technical Information -> select - Stock Analytic Reservation Location
 ##############################################################################
+
 
 {'name': 'Stock Reservation',
  'summary': 'Stock reservations on products',
