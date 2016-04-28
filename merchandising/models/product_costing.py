@@ -102,7 +102,7 @@ class ProductCosting(models.Model):
                                  readonly=True, states={'draft':[('readonly', False)]})
     total_cm_cost = fields.Float(compute="_compute_cm_costs", string='Total CM Cost', digits=(20, 4),
                                  default=0.0, store=True, copy=True)
-    total_summary_cost = fields.Float(compute="_compute_total_summary_cost", string='Total Cost',
+    total_summary_cost = fields.Float(compute="_compute_total_summary_cost", string='Total Sub Cost',
                                       digits=(20, 4), default=0.0, store=True, copy=True)
 
     commercial_cost = fields.Float(compute='_compute_commercial_cost', string='Commercial Cost/Dzn',

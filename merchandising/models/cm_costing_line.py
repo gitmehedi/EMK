@@ -10,7 +10,7 @@ class CmCostingLine(models.Model):
     standard_wage = fields.Float(digits=(20, 2), string='Standard Wage', default=None)
     percentage = fields.Float(digits=(20, 2), string='Percentage', default=None)
     amount = fields.Float(compute="_compute_amount", digits=(20, 2), string='Amount', default=None)
-    bonus = fields.Float(digits=(20, 2), string='Bonus %', default=None)
+    bonus = fields.Float(digits=(20, 2), string='Bonus(%)', default=None)
     bonus_amount = fields.Float(compute="_compute_bonus_amount", digits=(20, 2), string='Bonus Amount', default=None)
     productivity = fields.Float(digits=(20, 4), string='Productivity', default=None)
 
@@ -18,7 +18,7 @@ class CmCostingLine(models.Model):
 
     total_cost = fields.Float(digits=(20, 4), string='Total Cost',store=True)
     total_cost_usd = fields.Float(compute="_compute_total_cost_usd", digits=(20, 4), string='Cost in USD')
-    total_cost_flag = fields.Boolean(string="Flag")
+    total_cost_flag = fields.Boolean(string=" ")
     
     """ relational fields """
     
@@ -103,6 +103,8 @@ class CmCostingLine(models.Model):
     def onchange_product_id(self):
         for cm in self:
             self.product_costing_type = self.product_id.costing_type
+            self.standard_wage = self.product_id.standard_wage
+            self.productivity = self.product_id.productivity
 
     @api.onchange('total_cost_flag')
     def onchange_total_cost_flag(self):

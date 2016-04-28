@@ -194,7 +194,10 @@ class ProductCostingLine(models.Model):
 #     def calculate_total_qty_required(self):
 #         if self.weight > 0:
 #             self.total_qty_required = self.weight + self.wastage_quantity
-            
+    @api.onchange('buyer_id')
+    def _onchange_buyer_id(self):
+        self.yarn_rate = self.product_id.standard_price
+        print self.product_id.standard_price,"---------------------------"
             
     @api.model
     def convert_currency(self, from_cur, to_cur):

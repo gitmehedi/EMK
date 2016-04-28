@@ -10,6 +10,8 @@
 				<xpath expr="//form/sheet/notebook/page/group/group/field[@name='type']"
 					position="after" sequence="1">
 					<field name="costing_type" attrs="{'invisible': [('type','!=','service')]}"/>
+					<field name="standard_wage" attrs="{'invisible': [('type','!=','service')]}"/>
+					<field name="productivity" attrs="{'invisible': [('type','!=','service')]}"/>
 				</xpath>
 				<xpath expr="//form/sheet/notebook/page/group/group/field[@name='list_price']"
 					position="before">

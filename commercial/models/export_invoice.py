@@ -5,11 +5,12 @@ from datetime import date
 
 class ExportInvoice(models.Model):
     """ 
-    Export Invoice
+    Inherit Account Invoice master model and names as Export Invoice
     """
-    _name = 'export.invoice'
-    
-    # Buyer Work Order fields
+    _inherit = 'account.invoice'
+
+
+    """ Export invoice fields """
     name = fields.Char(string="Serial", size=30, readonly=True)
     ei_code = fields.Char(string='Code')
     
@@ -36,15 +37,21 @@ class ExportInvoice(models.Model):
     
     remarks = fields.Text(string='Remarks')
     
-    # Relational fields
+    """ Relational fields """
     export_invoice_id = fields.Many2one('res.bank', string='Export Invoice No', required=True)
     consignee = fields.Many2one('res.bank', string='Consignee', required=True)
     notify_party = fields.Many2one('res.partner', string='Notify Party', required=True)
     port_of_loading = fields.Many2one('port', string='Port of Loading', required=True)
     port_of_discharge = fields.Many2one('port', string='Port of Discharge', required=True)
     currency = fields.Many2one('res.currency', string="Currency", required=True)
+    payment_term_id = fields.Many2one('account.payment.term', string="Payment Terms/Tenor",
+                                      readonly=True, states={'draft':[('readonly', False)]})
+    inco_term_id = fields.Many2one('stock.incoterms', string="Inco Term",
+                                   readonly=True, states={'draft':[('readonly', False)]})
     
     # One2many relationships
+    shipment_mode = fields.Selection([("sea", "Sea"), ("air", "Air"), ("road", "By Road")], string='Ship Mode',
+                                     readonly=True, states={'draft':[('readonly', False)]})
     state = fields.Selection([('draft', "Draft"), ('confirm', "Confirm")], default='draft')
     
     # All kinds of validation message

@@ -173,10 +173,10 @@
 											</tr>
 											<tr>
 												<td class='col-md-3'>
-													<label for="total_summary_cost" />
+													<label for="total_summary_cost" class="control-label" />
 												</td>
 												<td class='col-md-4'>
-													<field name="total_summary_cost" widget="monetary" />
+													<strong><field name="total_summary_cost" widget="monetary" /></strong>
 												</td>
 											</tr>
 										</tbody>
@@ -186,7 +186,7 @@
 									<table class="table table-striped">
 										<thead>
 											<tr>
-												<th class='col-md-3'>Head</th>
+												<th class='col-md-3'>Particular</th>
 												<th class='col-md-3'>Percentage</th>
 												<th class='col-md-3'>Amount</th>
 											</tr>
@@ -239,7 +239,7 @@
 											</tr>
 											<tr>
 												<td class='col-md-3'>
-													<label for="grand_total" />
+													<b><label for="grand_total" /></b>
 												</td>
 												<td class='col-md-3'>
 													<label for="" />

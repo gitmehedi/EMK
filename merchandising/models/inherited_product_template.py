@@ -10,4 +10,6 @@ class InheritedProductTemplate(models.Model):
 	yarn = fields.Boolean(string="Yarn", default=False)
 	accessories = fields.Boolean(string="Accessories", default=False)
 	finish_goods = fields.Boolean(string="Finish Goods", default=False)
-	costing_type = fields.Selection([('pcs','Pcs'),('dzn','Dzn')], default='pcs',string="Costing Type",)
+	standard_wage  = fields.Float(string="Standard Wage ",digits=(15, 2))
+	productivity = fields.Float(string="Productivity",digits=(15, 2))
+	costing_type = fields.Selection([('pcs','Pcs'),('dzn','Dzn')], default='pcs',string="Costing Type")
