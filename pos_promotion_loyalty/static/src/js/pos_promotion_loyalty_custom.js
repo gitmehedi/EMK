@@ -258,7 +258,7 @@ function openerp_pos_promotion_loyalty(instance, module) { // module is
                     fields: ['name', 'street', 'city', 'state_id',
                         'country_id', 'vat', 'phone', 'zip',
                         'mobile', 'email', 'ean13', 'write_date',
-                        'point_loyalty','category_id'],
+                        'point_loyalty', 'category_id'],
                     domain: [['customer', '=', true]],
                     loaded: function (self, partners) {
                         self.partners = partners;
@@ -491,35 +491,30 @@ function openerp_pos_promotion_loyalty(instance, module) { // module is
                     fields: [],
                     loaded: function (self, promotion_rules) {
                         self.promotion_rules = promotion_rules;
-                        //console.log(' rules:: ' + JSON.stringify(self.promotion_rules));
                     }
                 }, {
                     model: 'promos.rules.conditions.exps',
                     fields: [],
                     loaded: function (self, promos_rules_conditions_exps) {
                         self.promos_rules_conditions_exps = promos_rules_conditions_exps;
-                        //console.log(' conditions:: ' + JSON.stringify(self.promos_rules_conditions_exps));
                     }
                 }, {
                     model: 'promos.rules.actions',
                     fields: [],
                     loaded: function (self, promos_rules_actions) {
                         self.promos_rules_actions = promos_rules_actions;
-                        //console.log(' actions:: ' + JSON.stringify(self.promos_rules_actions));
                     }
                 }, {
                     model: 'res.partner.category',
                     fields: [],
                     loaded: function (self, res_partner_category) {
                         self.res_partner_category = res_partner_category;
-                        //console.log(' category:: ' + JSON.stringify(self.res_partner_category));
                     }
                 }, {
                     model: 'promotion.groups',
                     fields: [],
                     loaded: function (self, promotion_groups) {
                         self.promotion_groups = promotion_groups;
-                        //console.log(' group:: ' + JSON.stringify(self.promotion_groups));
                     }
                 },
                 {
@@ -769,8 +764,7 @@ function openerp_pos_promotion_loyalty(instance, module) { // module is
                             var rule = loyaltyRule[i];
 
                             if (rule.is_active == true
-                                && rule.loyalty_basis == purchaseStr
-                                    .trim()) {
+                                && rule.loyalty_basis == purchaseStr.trim()) {
 
                                 var endDate = rule.end_date;
                                 var startDate = rule.start_date;
@@ -779,11 +773,12 @@ function openerp_pos_promotion_loyalty(instance, module) { // module is
                                 var month = date.getMonth() + 1;
                                 var year = date.getFullYear();
                                 var today = year + '-' + month + '-' + day;
-
-                                if (process(today) >= process(startDate)
-                                    && process(today) <= process(endDate)) {
-                                    minPurchase = rule.min_purchase;
-                                    ruleArray.push(minPurchase);
+                                if (startDate <= endDate) {
+                                    if (process(today) >= process(startDate)
+                                        && process(today) <= process(endDate)) {
+                                        minPurchase = rule.min_purchase;
+                                        ruleArray.push(minPurchase);
+                                    }
                                 }
                             }
 
@@ -1229,7 +1224,6 @@ function openerp_pos_promotion_loyalty(instance, module) { // module is
 
     module.Order = module.Order.extend({
 
-        /// promotion start
         initialize: function (attributes) {
             Backbone.Model.prototype.initialize.apply(this, arguments);
             this.pos = attributes.pos;
@@ -1643,22 +1637,28 @@ function openerp_pos_promotion_loyalty(instance, module) { // module is
              then retun 'True'
              or return 'False'
              */
-            if (self.promotionLineDate(today) >= self.promotionLineDate(fromDate)
-                && self.promotionLineDate(today) <= self.promotionLineDate(toDate)) {
-                if (partners != null && partnerCategorys.length > 0) {// promotion apply for particular user
-                    for (var i = 0, len = partnerCategorys.length; i < len; i++) {
-                        if (partners.category_id[0] == partnerCategorys[i]) {
-                            return true;
+            if (self.promotionLineDate(fromDate) <= self.promotionLineDate(toDate)) {
+                if (self.promotionLineDate(today) >= self.promotionLineDate(fromDate)
+                    && self.promotionLineDate(today) <= self.promotionLineDate(toDate)) {
+                    if (partners != null && partnerCategorys.length > 0) {// promotion apply for particular user
+                        for (var i = 0, len = partnerCategorys.length; i < len; i++) {
+                            if (partners.category_id[0] == partnerCategorys[i]) {
+                                return true;
+                            }
                         }
+                    } else if (partnerCategorys.length == 0) {//promotion apply for every if user is not set
+                        return true;
+                    } else {
+                        return false;
                     }
-                } else if (partnerCategorys.length == 0) {//promotion apply for every if user is not set
-                    return true;
                 } else {
                     return false;
                 }
+
             } else {
                 return false;
             }
+
 
         },
         /*
@@ -1979,9 +1979,6 @@ function openerp_pos_promotion_loyalty(instance, module) { // module is
             return discountCalculation;
 
         },
-        action_prod_x_get_y: function (promosRule, posOrder) {
-            return 20;
-        },
 
 
         ///
@@ -2083,7 +2080,7 @@ function openerp_pos_promotion_loyalty(instance, module) { // module is
                     return rewordPoint;
                 }
 
-            }else{
+            } else {
                 return;
             }
 
@@ -2091,7 +2088,7 @@ function openerp_pos_promotion_loyalty(instance, module) { // module is
         },
         getRewardToLoyaltyPoint: function () {
             var client = this.get('client');
-             var redemRule = this.getRedemptionRule();
+            var redemRule = this.getRedemptionRule();
             if (client != null && redemRule !== undefined) {
                 var rewardPoint = this.getRewardPoint();
 
@@ -2106,7 +2103,7 @@ function openerp_pos_promotion_loyalty(instance, module) { // module is
                 } else {
                     return 0;
                 }
-            }else if(redemRule == undefined){
+            } else if (redemRule == undefined) {
                 alert('need to defined redemption rule');
             } else {
                 return 0;
