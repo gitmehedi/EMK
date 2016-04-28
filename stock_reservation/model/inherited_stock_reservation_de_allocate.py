@@ -39,14 +39,22 @@ class InheritedStockReservation(models.Model):
 					UNION ALL
 					SELECT srl.product_id, sum(srl.quantity*-1) AS quantity  FROM stock_reservation sr
 						LEFT JOIN stock_reservation_line srl on sr.id = srl.stock_reservation_id
-						where sr.allocate_flag = %s 
+						where sr.allocate_flag = 2 
 						AND sr.analytic_account_id = %s 
 						AND sr.warehouse_id = %s 
 						AND sr.state='release'
 						GROUP BY srl.product_id	
+					UNION ALL
+					SELECT srl.product_id, sum(srl.quantity) AS quantity  FROM stock_reservation sr
+						LEFT JOIN stock_reservation_line srl on sr.id = srl.stock_reservation_id
+						where sr.allocate_flag = 3 
+						AND sr.analytic_account_id = %s 
+						AND sr.warehouse_id = %s 
+						AND sr.state='release'
+						GROUP BY srl.product_id
 					)generate_line
 				GROUP BY product_id
-			''' % (self.analytic_account_id.id, self.warehouse_id.id,self.allocate_flag,self.analytic_account_id.id, self.warehouse_id.id)
+			''' % (self.analytic_account_id.id, self.warehouse_id.id,self.analytic_account_id.id, self.warehouse_id.id,self.analytic_account_id.id, self.warehouse_id.id)
 # 			self.ensure_one()
 			res_ext = self.env.cr.execute(query)
 			result = self.env.cr.dictfetchall()
@@ -102,14 +110,22 @@ class InheritedStockReservation(models.Model):
 					UNION ALL
 					SELECT srl.product_id, sum(srl.quantity*-1) AS quantity  FROM stock_reservation sr
 						LEFT JOIN stock_reservation_line srl on sr.id = srl.stock_reservation_id
-						where sr.allocate_flag = %s 
+						where sr.allocate_flag = 2 
+						AND sr.analytic_account_id = %s 
+						AND sr.warehouse_id = %s 
+						AND sr.state='release'
+						GROUP BY srl.product_id
+					UNION ALL
+					SELECT srl.product_id, sum(srl.quantity) AS quantity  FROM stock_reservation sr
+						LEFT JOIN stock_reservation_line srl on sr.id = srl.stock_reservation_id
+						where sr.allocate_flag = 3 
 						AND sr.analytic_account_id = %s 
 						AND sr.warehouse_id = %s 
 						AND sr.state='release'
 						GROUP BY srl.product_id	
 					)generate_line
 				GROUP BY product_id
-			''' % (self.analytic_account_id.id, self.warehouse_id.id,self.allocate_flag,self.analytic_account_id.id, self.warehouse_id.id)
+			''' % (self.analytic_account_id.id, self.warehouse_id.id,self.analytic_account_id.id, self.warehouse_id.id,self.analytic_account_id.id, self.warehouse_id.id)
 # 			self.ensure_one()
 			res_ext = self.env.cr.execute(query)
 			result = self.env.cr.dictfetchall()
@@ -228,8 +244,11 @@ class InheritedStockReservationLine(models.Model):
 		
 	@api.multi
 	def write(self, vals):
-		allocate_qty = self.allocate_qty
+		if 'allocate_qty' in vals:
+			allocate_qty = vals['allocate_qty']
+		else:
+			allocate_qty = self.allocate_qty
 		quantity = vals.get('quantity', False)
-		if quantity > self.allocate_qty:
+		if quantity > allocate_qty:
 			raise Warning(_('Quantity can not be Greater than Allocate Qty')) 
 		return super(InheritedStockReservationLine, self).write(vals)	

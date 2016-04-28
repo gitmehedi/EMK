@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+	<data>
+		<record id="view_vendor_receipt_form_inherit" model="ir.ui.view">
+			<field name="name">account.voucher.receipt.form.inherit</field>
+		   	<field name="model">account.voucher</field>
+		  	<field name="inherit_id" ref="account_voucher.view_vendor_receipt_form" />
+		  	<field name="arch" type="xml">
+		  		<xpath expr="//form/sheet/group/group/field[@name='partner_id']" position="after">
+		  			<field name="cheque_received_date" />
+		  			<field name="posting_date" />
+		  			<field name="cheque_number" />
+		  		</xpath>
+		  		<xpath expr="//form/sheet/group/group/field[@name='name']" position="after">
+		  			<field name="issuing_bank" options='{"no_open": True,"no_create": 1, "no_create_edit": 1, "limit": 10}' />
+		  			<field name="bank_branch_name" />
+		  		</xpath>
+		  	</field>	
+  		</record>
+	</data>
+</openerp>

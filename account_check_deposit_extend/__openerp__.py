@@ -32,11 +32,12 @@
     'website': 'http://www.genweb2.com/',
     'depends': [
         'account_accountant',
-        'report_webkit',
-        'account_check_deposit'
+        'account_voucher',
+        'account_check_deposit',
+        'report_webkit'
     ],
     'data': [
-        
+        'views/voucher_payment_receipt_view_extend.xml',
     ],
     'installable': True,
     'application': True,
