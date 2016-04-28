@@ -10,6 +10,6 @@ class EpoReservationStatus(models.Model):
 
     id= fields.Integer('Product id')
     product_name= fields.Char('Product')
-    quantity= fields.Float('Qty')
+    quantity= fields.Float('Reserve Qty')
     location_name= fields.Char('Location')
     epo_no = fields.Char('EPO No')
