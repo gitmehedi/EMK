@@ -29,17 +29,17 @@ class StockReservation(models.Model):
     _name = 'stock.reservation'
     _description = 'Stock Reservation'
     
-    date = fields.Date('Date',default=fields.Date.today, required=True, readonly=True, states={'draft':[('readonly', False)]})
+    date = fields.Date('Date', default=fields.Date.today, required=True, readonly=True, states={'draft':[('readonly', False)]})
     name = fields.Char("Reservation")
-    warehouse_id = fields.Many2one('stock.warehouse',"Warehouse", required=True,readonly=True, states={'draft':[('readonly', False)]})
-    state = fields.Selection([('draft', "Draft"), ('generate', "Generate"),('confirmed', "Confirmed"), ('reserve', "Reserve"),('release', "Release"),  ('done', "Done"), ('cancel', "Cancel")],
+    warehouse_id = fields.Many2one('stock.warehouse', "Warehouse", required=True, readonly=True, states={'draft':[('readonly', False)]})
+    state = fields.Selection([('draft', "Draft"), ('generate', "Generate"), ('confirmed', "Confirmed"), ('reserve', "Reserve"), ('release', "Release"), ('done', "Done"), ('cancel', "Cancel")],
                             default="draft", readonly=True, states={'draft':[('readonly', False)]})
     stock_reservation_line_ids = fields.One2many('stock.reservation.line', 'stock_reservation_id', string="Stock Reservation", required=True
-                               ,readonly=True, states={'draft':[('readonly', False)]}, copy=True)
+                               , readonly=True, states={'draft':[('readonly', False)]}, copy=True)
     
-    source_loc_id = fields.Many2one('stock.location', 'Stock Location',required=True,readonly=True, states={'draft':[('readonly', False)]})
-    analytic_resv_loc_id = fields.Many2one('stock.location', 'Analytic Reservation Location',required=True,readonly=True, states={'draft':[('readonly', False)]})
-    analytic_account_id = fields.Many2one('account.analytic.account', 'Analytic Account',required=True, readonly=True, states={'draft':[('readonly', False)]})
+    source_loc_id = fields.Many2one('stock.location', 'Stock Location', required=True, readonly=True, states={'draft':[('readonly', False)]})
+    analytic_resv_loc_id = fields.Many2one('stock.location', 'Analytic Reservation Location', required=True, readonly=True, states={'draft':[('readonly', False)]})
+    analytic_account_id = fields.Many2one('account.analytic.account', 'Analytic Account', required=True, readonly=True, states={'draft':[('readonly', False)]})
     remarks = fields.Text(string="Remarks", size=300,
                           readonly=True, states={'draft':[('readonly', False)]})
     allocate_flag = fields.Integer(default=1)
@@ -54,11 +54,11 @@ class StockReservation(models.Model):
     
     @api.multi
     def action_confirmed(self):
-        self.state="confirmed"
+        self.state = "confirmed"
     
     @api.multi
     def action_cancel(self):
-        self.state="cancel"
+        self.state = "cancel"
         
     @api.multi
     def action_reserve(self):
@@ -70,7 +70,7 @@ class StockReservation(models.Model):
                 'date':fields.Datetime.now(),
                 'stock_reservation_id':self.id
                 }
-        picking_id=obj_stock_picking.create(pick_vals)
+        picking_id = obj_stock_picking.create(pick_vals)
         self.state = 'reserve'
         if picking_id and self.stock_reservation_line_ids:
             for res in self:
@@ -93,8 +93,47 @@ class StockReservation(models.Model):
                         
                     }
                     
-                    move_id  = obj_stock_move.create(move_vals)
+                    move_id = obj_stock_move.create(move_vals)
                     
+    @api.multi
+    def write(self, vals):
+        print "+++++++++++>>>>>>>>>>>>>>", vals
+        print "+++++++++++>>>>>>>>>>>>>>self:", self.state
+#         obj_reservation_quant = self.env['reservation.quant']
+        '''
+        updating reserve qty start
+        '''
+        if('state' in vals):
+            if(vals['state'] == 'reserve' or vals['state'] == 'release'):
+                for res in self:
+                    for line in res.stock_reservation_line_ids:
+                        if vals['state'] == 'reserve':
+                            reservation_quant_obj = self.env['reservation.quant'].search([['product_id', '=', line.product_id.id], ['location', '=', self.analytic_resv_loc_id.id], ['analytic_account_id', '=', line.analytic_account_id.id]])
+                        if vals['state'] == 'release':
+                            reservation_quant_obj = self.env['reservation.quant'].search([['product_id', '=', line.product_id.id], ['location', '=', self.source_loc_id.id], ['analytic_account_id', '=', line.analytic_account_id.id]])
+                        print "reservation_quant_obj", reservation_quant_obj
+                        if not reservation_quant_obj:
+                            move_vals = {
+                                'product_id': line.product_id.id,
+                                'reserve_quantity': line.quantity,
+                                'uom':line.uom.id,
+                                'location': self.analytic_resv_loc_id.id,
+                                'analytic_account_id':line.analytic_account_id.id
+                            }
+                                
+                            move_id = reservation_quant_obj.create(move_vals)
+                        else:
+                            reserve_qty = 0;
+                            if(self.allocate_flag == 1 or self.allocate_flag == 3):
+                                reserve_qty = reservation_quant_obj.reserve_quantity + line.quantity
+                            if(self.allocate_flag == 2):
+                                reserve_qty = reservation_quant_obj.reserve_quantity - line.quantity
+                            move_vals = {
+                            'reserve_quantity': reserve_qty
+                        }
+                            
+                            move_id = reservation_quant_obj.write(move_vals)  
+        return super(StockReservation, self).write(vals)
     
     """
     @api.multi

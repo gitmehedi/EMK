@@ -266,18 +266,7 @@
 
         </t>
 
-        <!-- This is not needed for loyalty point -->
-        <!--<t t-jquery=".pos-sale-ticket table:first" t-operation='after'>
-            <br />
-            <table>
-                <tr>
-                    <td>Loyalty Benefits:</td>
-                    <td class="pos-right-align">
-                        <t t-esc="widget.format_currency(order.getPoint())"/>
-                    </td>
-                </tr>
-            </table>
-        </t>-->
+
     </t>
 
     <t t-extend='PaymentScreenWidget'>
