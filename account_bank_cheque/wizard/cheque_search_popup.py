@@ -2,6 +2,7 @@ from openerp import models, fields, api, exceptions
 import datetime
 from duplicity.tempdir import default
 from docutils.nodes import Invisible
+from openerp.osv import osv
 
 class ChequeSearchPopup(models.TransientModel):
     _name = 'account.postdated.cheque.search.popup'
