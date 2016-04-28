@@ -107,7 +107,10 @@ class StockReservation(models.Model):
             if(vals['state'] == 'reserve' or vals['state'] == 'release'):
                 for res in self:
                     for line in res.stock_reservation_line_ids:
-                        reservation_quant_obj = self.env['reservation.quant'].search([['product_id', '=', line.product_id.id], ['location', '=', self.analytic_resv_loc_id.id], ['analytic_account_id', '=', line.analytic_account_id.id]])
+                        if vals['state'] == 'reserve':
+                            reservation_quant_obj = self.env['reservation.quant'].search([['product_id', '=', line.product_id.id], ['location', '=', self.analytic_resv_loc_id.id], ['analytic_account_id', '=', line.analytic_account_id.id]])
+                        if vals['state'] == 'release':
+                            reservation_quant_obj = self.env['reservation.quant'].search([['product_id', '=', line.product_id.id], ['location', '=', self.source_loc_id.id], ['analytic_account_id', '=', line.analytic_account_id.id]])
                         print "reservation_quant_obj", reservation_quant_obj
                         if not reservation_quant_obj:
                             move_vals = {
@@ -121,9 +124,9 @@ class StockReservation(models.Model):
                             move_id = reservation_quant_obj.create(move_vals)
                         else:
                             reserve_qty = 0;
-                            if(self.allocate_flag == 1):
+                            if(self.allocate_flag == 1 or self.allocate_flag == 3):
                                 reserve_qty = reservation_quant_obj.reserve_quantity + line.quantity
-                            if(self.allocate_flag == 2 or self.allocate_flag == 3):
+                            if(self.allocate_flag == 2):
                                 reserve_qty = reservation_quant_obj.reserve_quantity - line.quantity
                             move_vals = {
                             'reserve_quantity': reserve_qty
