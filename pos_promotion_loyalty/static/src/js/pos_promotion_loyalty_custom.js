@@ -258,7 +258,7 @@ function openerp_pos_promotion_loyalty(instance, module) { // module is
                     fields: ['name', 'street', 'city', 'state_id',
                         'country_id', 'vat', 'phone', 'zip',
                         'mobile', 'email', 'ean13', 'write_date',
-                        'point_loyalty'],
+                        'point_loyalty','category_id'],
                     domain: [['customer', '=', true]],
                     loaded: function (self, partners) {
                         self.partners = partners;
@@ -1387,7 +1387,7 @@ function openerp_pos_promotion_loyalty(instance, module) { // module is
                     totalWithDiscount = currentOrder.getDisTotal();
                     totalWithTax = totalWithDiscount + taxes;
 
-                    return totalWithTax;
+                    return totalWithTax.toFixed(2);
 
 
                 } else {
@@ -1396,13 +1396,13 @@ function openerp_pos_promotion_loyalty(instance, module) { // module is
                     totalWithDiscount = currentOrder.getDisTotal();
                     totalWithTax = totalWithDiscount + taxes;
 
-                    return totalWithTax;
+                    return totalWithTax.toFixed(2);
 
                 }
             }
 
 
-            return totalWithTax;
+            return totalWithTax.toFixed(2);
         },
 
         getDueTotal: function () {
@@ -1647,7 +1647,7 @@ function openerp_pos_promotion_loyalty(instance, module) { // module is
                 && self.promotionLineDate(today) <= self.promotionLineDate(toDate)) {
                 if (partners != null && partnerCategorys.length > 0) {// promotion apply for particular user
                     for (var i = 0, len = partnerCategorys.length; i < len; i++) {
-                        if (partners.id == partnerCategorys[i]) {
+                        if (partners.category_id[0] == partnerCategorys[i]) {
                             return true;
                         }
                     }
@@ -1665,7 +1665,6 @@ function openerp_pos_promotion_loyalty(instance, module) { // module is
          -Evaluate the expression in a given environment
          */
         expressionEvaluateLine: function (promosRuleExp, posOrder, product, cart_quantity, splitArray) {
-            //TODO: What to do
             var self = this;
             // var promosRuleExp = posOrder.get('pos').promos_rules_conditions_exps;
 
@@ -2055,41 +2054,47 @@ function openerp_pos_promotion_loyalty(instance, module) { // module is
         getRedemptionRule: function () {
 
             var self = this;
-            var redemArray = [];
+            var redemRules = [];
             var redemptionRules = this.get('pos').redemption_rules;
             for (i = 0, len = redemptionRules.length; i < len; i++) {
                 var redemRule = redemptionRules[i];
                 if (redemRule.is_active == true) {
-                    redemArray.push(redemRule);
+                    redemRules.push(redemRule);
                 }
             }
-            return redemArray[0];
+            return redemRules[0];
         },
 
         getRewardPoint: function () {
+            if (redemRule !== undefined) {
+                var redemRule = this.getRedemptionRule();
+                var loyaltyPoint = this.getRedemPoint();
+                var rewordPoint = 0;
+                var DEFAULT_UNIT = 1;
+                var pointStartMargin = redemRule.point_start_margin;
+                var pointEndMargin = redemRule.point_end_margin;
+                var rewardPointUnit = redemRule.reward_point_unit;
+                if (loyaltyPoint >= pointStartMargin
+                    && loyaltyPoint <= pointEndMargin) {
+                    rewordPoint = loyaltyPoint * rewardPointUnit;
+                    return rewordPoint;
+                } else {
+                    rewordPoint = loyaltyPoint * DEFAULT_UNIT;
+                    return rewordPoint;
+                }
 
-            var redemArray = this.getRedemptionRule();
-            var loyaltyPoint = this.getRedemPoint();
-            var rewordPoint = 0;
-            var DEFAULT_UNIT = 1;
-            var redemObject = redemArray;
-            var pointStartMargin = redemObject.point_start_margin;
-            var pointEndMargin = redemObject.point_end_margin;
-            var rewardPointUnit = redemObject.reward_point_unit;
-            if (loyaltyPoint >= pointStartMargin
-                && loyaltyPoint <= pointEndMargin) {
-                rewordPoint = loyaltyPoint * rewardPointUnit;
-                return rewordPoint;
-            } else {
-                rewordPoint = loyaltyPoint * DEFAULT_UNIT;
-                return rewordPoint;
+            }else{
+                return;
             }
+
+
         },
         getRewardToLoyaltyPoint: function () {
             var client = this.get('client');
-            if (client != null) {
+             var redemRule = this.getRedemptionRule();
+            if (client != null && redemRule !== undefined) {
                 var rewardPoint = this.getRewardPoint();
-                var redemRule = this.getRedemptionRule();
+
                 var redemTotal = this.getRedemTotal();
                 var rewardChange = rewardPoint - redemTotal;
                 var rewardPointUnit = redemRule.reward_point_unit;
@@ -2101,6 +2106,8 @@ function openerp_pos_promotion_loyalty(instance, module) { // module is
                 } else {
                     return 0;
                 }
+            }else if(redemRule == undefined){
+                alert('need to defined redemption rule');
             } else {
                 return 0;
             }
@@ -2172,7 +2179,6 @@ function openerp_pos_promotion_loyalty(instance, module) { // module is
 
 
                 if (promosRule !== undefined && promosRule.active == true) {
-                    //TODO: check stop_farther
                     var primaryCondition = posOrder.checkPrimaryConditionsLine(promosRule, posOrder);
                     if (primaryCondition) {
                         try {
@@ -2190,6 +2196,7 @@ function openerp_pos_promotion_loyalty(instance, module) { // module is
                             }
 
                         } catch (error) {
+                            console.log(error);
                         }
 
                     }
@@ -2461,8 +2468,12 @@ function openerp_pos_promotion_loyalty(instance, module) { // module is
                             var rewardChange = 0;
                             if (rewardPoint > redemTotal) {
                                 var rewardChange = rewardPoint - redemTotal;
+
                             } else if (rewardPoint < 0) {
 
+                                return;
+                            } else if (redemTotal > rewardPoint) {
+                                alert(' point exceed limitations');
                                 return;
                             }
                         }
