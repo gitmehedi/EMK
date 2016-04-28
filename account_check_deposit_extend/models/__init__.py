@@ -1,3 +1,2 @@
-# -*- coding: utf-8 -*-
-
-from . import account_deposit_extend
+import account_deposit_extend
+import account_voucher_extend
