@@ -4,14 +4,14 @@
 		<!-- Export Invoice Tree or List view -->
 		<record model="ir.ui.view" id="export_invoice_tree_view">
 			<field name="name">export.invoice.tree</field>
-			<field name="model">export.invoice</field>
+			<field name="model">account.invoice</field>
 			<field name="arch" type="xml">
 				<tree string="Export Invoice Tree">
 					<field name="name" />
 					<field name="invoice_against" />
 					<field name="lc_tt_no" />
 					<field name="ei_date" />
-					<field name="invoice_value" />
+					<field name="invoice_value_bdt" />
 					<field name="state" />
 				</tree>
 			</field>
@@ -19,8 +19,8 @@
 
 		<!-- Export Invoice Form Views -->
 		<record model="ir.ui.view" id="export_invoice_form_view">
-			<field name="name">export.invoice.form</field>
-			<field name="model">export.invoice</field>
+			<field name="name">account.invoice.form</field>
+			<field name="model">account.invoice</field>
 			<field name="arch" type="xml">
 				<form string="Export Invoice Form">
 					<header>
@@ -79,8 +79,8 @@
 
 		<!-- Export Invoice Search View -->
 		<record model="ir.ui.view" id="export_invoice_view_search">
-			<field name="name">export.invoice.search</field>
-			<field name="model">export.invoice</field>
+			<field name="name">account.invoice.search</field>
+			<field name="model">account.invoice</field>
 			<field eval="10" name="priority" />
 			<field name="arch" type="xml">
 				<search string="Product Costing">
@@ -107,7 +107,7 @@
 		<!-- Export Invoice Menu and Action -->
 		<record id="export_invoice_list_action" model="ir.actions.act_window">
 			<field name="name">Export Invoice</field>
-			<field name="res_model">export.invoice</field>
+			<field name="res_model">account.invoice</field>
 			<field name="view_type">form</field>
 			<field name="view_mode">tree,form</field>
 		</record>
