@@ -739,6 +739,12 @@ function openerp_pos_promotion_loyalty(instance, module) { // module is
                     'reason': 'abandon'
                 });
             },
+            processDate: function (date) {
+                var parts = date.split("-");
+                return new Date(parts[0], parts[1] - 1,
+                    parts[2]);
+            },
+
 
             // saves the order locally and try to send it to the backend.
             // it returns a deferred that succeeds after having tried to
@@ -774,8 +780,8 @@ function openerp_pos_promotion_loyalty(instance, module) { // module is
                                 var year = date.getFullYear();
                                 var today = year + '-' + month + '-' + day;
                                 if (startDate <= endDate) {
-                                    if (process(today) >= process(startDate)
-                                        && process(today) <= process(endDate)) {
+                                    if (self.processDate(today) >= self.processDate(startDate)
+                                        && self.processDate(today) <= self.processDate(endDate)) {
                                         minPurchase = rule.min_purchase;
                                         ruleArray.push(minPurchase);
                                     }
@@ -783,18 +789,14 @@ function openerp_pos_promotion_loyalty(instance, module) { // module is
                             }
 
                         }
-                        function process(date) {
-                            var parts = date.split("-");
-                            return new Date(parts[0], parts[1] - 1,
-                                parts[2]);
-                        }
 
                         var sortedRule = ruleArray.sort(function (a, b) {
-                            console.log(a);
-                            console.log(b);
-                            return a - b
+                            return a - b;
                         });
 
+                        /*
+                            -calculate loyalty point with existing loyalty point
+                         */
                         if (sortedRule[0] != minPurchase) {
                             partner['point_loyalty'] = order
                                 .getRewardToLoyaltyPoint();
@@ -803,7 +805,9 @@ function openerp_pos_promotion_loyalty(instance, module) { // module is
                             var rewardToLoyaltyPoint = order
                                 .getRewardToLoyaltyPoint();
                             var redemTotal = order.getRedemTotal();
-                            var dueTotal = order.getTotalTaxIncluded();
+                            //var dueTotal = order.getTotalTaxIncluded();
+                            var dueTotal = order.getTotalWithTax();
+
                             var redemRemain = order.getRedemLeft();
                             if (minPurchase >= totalAmount) {
                                 result = rewardToLoyaltyPoint;
@@ -1376,8 +1380,9 @@ function openerp_pos_promotion_loyalty(instance, module) { // module is
             for (var m = 0, mLen = promosRulesActions.length; m < mLen; m++) {
                 promosRuleAction = promosRulesActions[m];
                 if (promosRuleAction.action_type == 'cart_disc_tax_perc') {
-                    var discountTaxes = (currentOrder.getTax() * promosRuleAction.arguments) / 100;
-                    taxes = currentOrder.getTax() - discountTaxes;
+                    //var discountTaxes = (currentOrder.getTax() * promosRuleAction.arguments) / 100;
+                    //taxes = currentOrder.getTax() - discountTaxes;
+                    taxes = currentOrder.getTax();
                     totalWithDiscount = currentOrder.getDisTotal();
                     totalWithTax = totalWithDiscount + taxes;
 
@@ -1416,7 +1421,7 @@ function openerp_pos_promotion_loyalty(instance, module) { // module is
             return {
                 name: this.getName(),
                 amount_paid: this.getPaidTotal(),
-                amount_total: this.getTotalTaxIncluded(),
+                amount_total: this.getTotalWithTax(),
                 amount_tax: this.getTax(),
                 amount_return: this.getChange(),
                 lines: orderLines,
@@ -1428,8 +1433,8 @@ function openerp_pos_promotion_loyalty(instance, module) { // module is
                 sequence_number: this.sequence_number,
                 total_order_amount: this.getDisTotal(),
                 cal_discount_amount: this.getDiscountAmount(),
-                discount_type: 'percent',
-                percent_discount: 10,
+                //discount_type: 'percent',
+                // percent_discount: 10,
             };
         },
         currentSubtotal: function (posOrder, product, cart_quantity) {
@@ -1638,23 +1643,24 @@ function openerp_pos_promotion_loyalty(instance, module) { // module is
              or return 'False'
              */
             if (self.promotionLineDate(fromDate) <= self.promotionLineDate(toDate)) {
-                if (self.promotionLineDate(today) >= self.promotionLineDate(fromDate)
-                    && self.promotionLineDate(today) <= self.promotionLineDate(toDate)) {
-                    if (partners != null && partnerCategorys.length > 0) {// promotion apply for particular user
-                        for (var i = 0, len = partnerCategorys.length; i < len; i++) {
-                            if (partners.category_id[0] == partnerCategorys[i]) {
-                                return true;
+                if (self.promotionLineDate(fromDate) <= self.promotionLineDate(toDate)) {
+                    if (self.promotionLineDate(today) >= self.promotionLineDate(fromDate)) {
+                        if (partners != null && partnerCategorys.length > 0) {// promotion apply for particular user
+                            for (var i = 0, len = partnerCategorys.length; i < len; i++) {
+                                if (partners.category_id[0] == partnerCategorys[i]) {
+                                    return true;
+                                }
                             }
+                        } else if (partnerCategorys.length == 0) {//promotion apply for every if user is not set
+                            return true;
+                        } else {
+                            return false;
                         }
-                    } else if (partnerCategorys.length == 0) {//promotion apply for every if user is not set
-                        return true;
                     } else {
                         return false;
                     }
-                } else {
-                    return false;
-                }
 
+                }
             } else {
                 return false;
             }
@@ -1913,16 +1919,20 @@ function openerp_pos_promotion_loyalty(instance, module) { // module is
         },
         action_cart_disc_tax_perc: function (promosRulesAction, posOrder, product, cart_quantity) {
             var subTotal = posOrder.getSubtotal();
+            var selectedOrderLine = this.pos.get('selectedOrder').selected_orderline;
             var discountObject = {};
             var discountAmount = 0;
+            var total = 0;
 
             var currentSubTotal = this.currentSubtotal(posOrder, product, cart_quantity);
             try {
                 if (subTotal == 0) {
                     subTotal = product.price;
+                    //total = subTotal + posOrder.getTax();
                     discountAmount = (subTotal) * (promosRulesAction.arguments / 100);
                 } else {
-                    discountAmount = currentSubTotal * (promosRulesAction.arguments / 100);
+                    var taxes = posOrder.getTax();
+                    discountAmount = (currentSubTotal)* (promosRulesAction.arguments / 100);
                 }
                 //var arguments = promosRulesAction.arguments;
                 discountObject['action_type'] = promosRulesAction.action_type;
@@ -2003,7 +2013,8 @@ function openerp_pos_promotion_loyalty(instance, module) { // module is
         },
         get_custom_amount_to_text: function () {
             var currentorder = this.pos.get('selectedOrder');
-            var totalamount = currentorder.getTotalTaxIncluded();
+            //var totalamount = currentorder.getTotalTaxIncluded();
+            var totalamount = currentorder.getTotalWithTax();
             var amount = this.amount_to_words(totalamount);
 
             return amount;
@@ -2063,7 +2074,7 @@ function openerp_pos_promotion_loyalty(instance, module) { // module is
         },
 
         getRewardPoint: function () {
-            if (redemRule !== undefined) {
+
                 var redemRule = this.getRedemptionRule();
                 var loyaltyPoint = this.getRedemPoint();
                 var rewordPoint = 0;
@@ -2080,9 +2091,7 @@ function openerp_pos_promotion_loyalty(instance, module) { // module is
                     return rewordPoint;
                 }
 
-            } else {
-                return;
-            }
+
 
 
         },
@@ -2275,8 +2284,7 @@ function openerp_pos_promotion_loyalty(instance, module) { // module is
                     }
                     else if (method == 'cart_disc_tax_perc' || method == 'cart_disc_tax_fix') {
                         if (method == 'cart_disc_tax_perc') {//
-                            var discountTaxes = (order.getTax() * arguments) / 100;
-                            taxes = order.getTax() - discountTaxes;
+                           taxes = order.getTax();
                             totalWithDiscount = order.getDisTotal();
                             total = totalWithDiscount + taxes;
                             totalDiscount = order.getDiscountAmount();
@@ -2414,7 +2422,6 @@ function openerp_pos_promotion_loyalty(instance, module) { // module is
 
                                 var validate = isValidate(this.value);
                                 alert('check value');
-                                console.log(validate);
                                 amount = 0;
                                 node.line.set_amount(amount);
                             }
@@ -2469,10 +2476,10 @@ function openerp_pos_promotion_loyalty(instance, module) { // module is
                             } else if (rewardPoint < 0) {
 
                                 return;
-                            } else if (redemTotal > rewardPoint) {
+                            } /*else if (redemTotal > rewardPoint) {
                                 alert(' point exceed limitations');
                                 return;
-                            }
+                            }*/
                         }
                     }
                 }
@@ -2521,6 +2528,102 @@ function openerp_pos_promotion_loyalty(instance, module) { // module is
                 return (total < 0.000001
                 || currentOrder.getPaidTotal() + 0.000001 >= total);
 
+            },
+            validate_order: function (options) {
+                var self = this;
+                options = options || {};
+
+                var currentOrder = this.pos.get('selectedOrder');
+
+                if (currentOrder.get('orderLines').models.length === 0) {
+                    this.pos_widget.screen_selector.show_popup('error', {
+                        'message': _t('Empty Order'),
+                        'comment': _t('There must be at least one product in your order before it can be validated'),
+                    });
+                    return;
+                }
+
+                var plines = currentOrder.get('paymentLines').models;
+                for (var i = 0; i < plines.length; i++) {
+                    if (plines[i].get_type() === 'bank' && plines[i].get_amount() < 0) {
+                        this.pos_widget.screen_selector.show_popup('error', {
+                            'message': _t('Negative Bank Payment'),
+                            'comment': _t('You cannot have a negative amount in a Bank payment. Use a cash payment method to return money to the customer.'),
+                        });
+                        return;
+                    }
+                }
+
+                if (!this.is_paid()) {
+                    return;
+                }
+
+                // The exact amount must be paid if there is no cash payment method defined.
+                if (Math.abs(currentOrder.getTotalWithTax() - currentOrder.getPaidTotal()) > 0.00001) {
+                    var cash = false;
+                    for (var i = 0; i < this.pos.cashregisters.length; i++) {
+                        cash = cash || (this.pos.cashregisters[i].journal.type === 'cash');
+                    }
+                    if (!cash) {
+                        this.pos_widget.screen_selector.show_popup('error', {
+                            message: _t('Cannot return change without a cash payment method'),
+                            comment: _t('There is no cash payment method available in this point of sale to handle the change.\n\n Please pay the exact amount or add a cash payment method in the point of sale configuration'),
+                        });
+                        return;
+                    }
+                }
+
+                if (this.pos.config.iface_cashdrawer) {
+                    this.pos.proxy.open_cashbox();
+                }
+
+                if (options.invoice) {
+                    // deactivate the validation button while we try to send the order
+                    this.pos_widget.action_bar.set_button_disabled('validation', true);
+                    this.pos_widget.action_bar.set_button_disabled('invoice', true);
+
+                    var invoiced = this.pos.push_and_invoice_order(currentOrder);
+
+                    invoiced.fail(function (error) {
+                        if (error === 'error-no-client') {
+                            self.pos_widget.screen_selector.show_popup('error', {
+                                message: _t('An anonymous order cannot be invoiced'),
+                                comment: _t('Please select a client for this order. This can be done by clicking the order tab'),
+                            });
+                        } else {
+                            self.pos_widget.screen_selector.show_popup('error', {
+                                message: _t('The order could not be sent'),
+                                comment: _t('Check your internet connection and try again.'),
+                            });
+                        }
+                        self.pos_widget.action_bar.set_button_disabled('validation', false);
+                        self.pos_widget.action_bar.set_button_disabled('invoice', false);
+                    });
+
+                    invoiced.done(function () {
+                        self.pos_widget.action_bar.set_button_disabled('validation', false);
+                        self.pos_widget.action_bar.set_button_disabled('invoice', false);
+                        self.pos.get('selectedOrder').destroy();
+                    });
+
+                } else {
+                    this.pos.push_order(currentOrder)
+                    if (this.pos.config.iface_print_via_proxy) {
+                        var receipt = currentOrder.export_for_printing();
+                        this.pos.proxy.print_receipt(QWeb.render('XmlReceipt', {
+                            receipt: receipt, widget: self,
+                        }));
+                        this.pos.get('selectedOrder').destroy();    //finish order and go back to scan screen
+                    } else {
+                        this.pos_widget.screen_selector.set_current_screen(this.next_screen);
+                    }
+                }
+
+                // hide onscreen (iOS) keyboard
+                setTimeout(function () {
+                    document.activeElement.blur();
+                    $("input").blur();
+                }, 250);
             },
         });
 
