@@ -98,7 +98,7 @@ class StockReservation(models.Model):
     @api.multi
     def write(self, vals):
         print "+++++++++++>>>>>>>>>>>>>>", vals
-        print "+++++++++++>>>>>>>>>>>>>>self:", self.state
+        print "+++++++++++>>>>>>>>>>>>>>self:", self.source_loc_id.id
 #         obj_reservation_quant = self.env['reservation.quant']
         '''
         updating reserve qty start
@@ -107,17 +107,19 @@ class StockReservation(models.Model):
             if(vals['state'] == 'reserve' or vals['state'] == 'release'):
                 for res in self:
                     for line in res.stock_reservation_line_ids:
-                        if vals['state'] == 'reserve':
-                            reservation_quant_obj = self.env['reservation.quant'].search([['product_id', '=', line.product_id.id], ['location', '=', self.analytic_resv_loc_id.id], ['analytic_account_id', '=', line.analytic_account_id.id]])
-                        if vals['state'] == 'release':
+                        if (vals['state'] == 'reserve') or (vals['state'] == 'release' and self.allocate_flag == 3):
                             reservation_quant_obj = self.env['reservation.quant'].search([['product_id', '=', line.product_id.id], ['location', '=', self.source_loc_id.id], ['analytic_account_id', '=', line.analytic_account_id.id]])
-                        print "reservation_quant_obj", reservation_quant_obj
+                            print "reservation_quant_obj11", reservation_quant_obj
+                        if vals['state'] == 'release' and self.allocate_flag == 2:
+                            reservation_quant_obj = self.env['reservation.quant'].search([['product_id', '=', line.product_id.id], ['location', '=', self.analytic_resv_loc_id.id], ['analytic_account_id', '=', line.analytic_account_id.id]])
+                            print "reservation_quant_obj", reservation_quant_obj
+                        
                         if not reservation_quant_obj:
                             move_vals = {
                                 'product_id': line.product_id.id,
                                 'reserve_quantity': line.quantity,
                                 'uom':line.uom.id,
-                                'location': self.analytic_resv_loc_id.id,
+                                'location': self.source_loc_id.id,
                                 'analytic_account_id':line.analytic_account_id.id
                             }
                                 

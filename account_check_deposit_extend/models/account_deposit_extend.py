@@ -7,6 +7,7 @@ from openerp.exceptions import Warning as UserError
 
 class AccountCheckDepositExtend(models.Model):
     _inherit = "account.check.deposit"
+                
     @api.model
     def _prepare_counterpart_move_lines_vals(
             self, deposit, total_debit, total_amount_currency):
