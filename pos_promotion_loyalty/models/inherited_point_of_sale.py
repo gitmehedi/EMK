@@ -38,6 +38,6 @@ class InheritedPurchaseOrderLine(models.Model):
             # 			'total_order_amount':ui_order['amount_total'],
             'total_order_amount': ui_order['total_order_amount'],
             'cal_discount_amount': ui_order['cal_discount_amount'],
-            'discount_type': ui_order['discount_type'],
-            'percent_discount': ui_order['percent_discount'],
+            #'discount_type': ui_order['discount_type'],
+            #'percent_discount': ui_order['percent_discount'],
         }
