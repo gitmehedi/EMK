@@ -102,7 +102,7 @@
 									<table class="table table-striped">
 										<thead>
 											<tr>
-												<th class='col-md-3'>Summary Head</th>
+												<th class='col-md-3'>Summary Particular</th>
 												<th class='col-md-4'>Amount</th>
 											</tr>
 										</thead>
@@ -172,8 +172,9 @@
 												</td>
 											</tr>
 											<tr>
+
 												<td class='col-md-3'>
-													<label for="total_summary_cost" class="control-label" />
+													<label for="total_summary_cost" style="font-weight: bold;" />
 												</td>
 												<td class='col-md-4'>
 													<strong><field name="total_summary_cost" widget="monetary" /></strong>
@@ -239,25 +240,25 @@
 											</tr>
 											<tr>
 												<td class='col-md-3'>
-													<b><label for="grand_total" /></b>
+													<label for="grand_total" style="font-weight: bold;"  />
 												</td>
 												<td class='col-md-3'>
 													<label for="" />
 												</td>
 												<td class='col-md-4'>
-													<field name="grand_total" widget="monetary"
-														class="oe_subtotal_footer_separator" />
+													<strong><field name="grand_total" widget="monetary"
+														class="oe_subtotal_footer_separator" /></strong>
 												</td>
 											</tr>
 											<tr>
 												<td class='col-md-3'>
-													<label for="fob_cost" />
+													<label for="fob_cost" style="font-weight: bold;" />
 												</td>
 												<td class='col-md-3'>
 													<label for="" />
 												</td>
 												<td class='col-md-4'>
-													<field name="fob_cost" widget="monetary" />
+													<strong><field name="fob_cost" widget="monetary" /></strong>
 												</td>
 											</tr>
 										</tbody>
@@ -321,7 +322,7 @@
 										<field name="amount" attrs="{'invisible': [('total_cost_flag','=', True)]}" />
 										<field name="bonus" attrs="{'invisible': [('total_cost_flag','=', True)]}" />
 										<field name="bonus_amount" attrs="{'invisible': [('total_cost_flag','=', True)]}" />
-										<field name="total_cost" sum="Total BDT" />
+										<field name="total_cost" />
 										<field name="total_cost_usd" sum="Total USD" />
 									</tree>
 								</field>
@@ -331,32 +332,33 @@
 											<td colspan="3">
 												<label for="fixed_overhead_cm_cost_usd" />
 											</td>
-											<td>
-												<field name="fixed_overhead_currency_id"
-													options='{"no_open":True,"no_create": 1, "no_create_edit":1}' />
+                                            <td colspan="3">
+												<field name="fob_cal_flag" />
+                                                <label for="fob_cal_flag" />
 											</td>
                                             <td>
-												<field name="fob_cal_flag" />
+												<field name="fixed_overhead_currency_id"
+													options='{"no_open":True,"no_create": 1, "no_create_edit":1}'
+                                                    attrs="{'invisible': [('fob_cal_flag','=', False)]}" />
 											</td>
-
-											<td>
-												<field name="fixed_overhead_bonus_percentage" />
+                                            <td>
+												<field name="fixed_overhead_bonus_percentage" attrs="{'invisible': [('fob_cal_flag','=', True)]}" />
+												<field name="fixed_overhead_bonus_percentage_readonly" attrs="{'invisible': [('fob_cal_flag','=', False)]}"  />
 											</td>
 											<td style="text-align:right;">
-												<field name="fixed_overhead_cm_cost_bdt" />
+												<field name="fixed_overhead_cm_cost_bdt" attrs="{'invisible': [('fob_cal_flag','=', False)]}"  />
+												<field name="fixed_overhead_cm_cost_bdt_readonly" attrs="{'invisible': [('fob_cal_flag','=', True)]}"  />
 											</td>
-											<td style="text-align:right; padding-right: 10px;">
+											<td style="text-align:right; padding-right: 15px;">
 												<field name="fixed_overhead_cm_cost_usd" />
 											</td>
+
 										</tr>
 										<tr>
-											<td colspan="6">
+											<td colspan="9">
 												<label for="total_cm_cost_usd" />
 											</td>
-											<td style="text-align:right;">
-												<field name="total_cm_cost_bdt" />
-											</td>
-											<td style="text-align:right; padding-right: 10px;">
+											<td style="text-align:right; padding-right: 15px;">
 												<field name="total_cm_cost_usd" />
 											</td>
 										</tr>
