@@ -2009,6 +2009,10 @@ function openerp_pos_promotion_loyalty(instance, module) { // module is
             }
             return redemRules[0];
         },
+        /*
+            -rewardPoint calculation
+            - default value is 1
+         */
 
         getRewardPoint: function () {
 
