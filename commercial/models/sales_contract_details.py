@@ -8,8 +8,8 @@ class SalesContractDetails(models.Model):
     # Relationship fields
     sales_contract_id = fields.Many2one('sales.contract', ondelete="cascade")
     
-    po_related_id = fields.Many2one('buyer.work.order', ondelete="cascade", string="PO's to Relate", required=True)
-    tagged_po_id = fields.Many2one('buyer.work.order', ondelete="cascade", string="Tagged PO", required=True)
+    po_related_id = fields.Many2one('sale.order', ondelete="cascade", string="PO's to Relate", required=True)
+    tagged_po_id = fields.Many2one('sale.order', ondelete="cascade", string="Tagged PO", required=True)
     
     
     

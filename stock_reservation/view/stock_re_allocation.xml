@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+	<data>
+		<record id="view_stock_re_allocation_form" model="ir.ui.view">
+			<field name="name">stock.reallocation.form</field>
+			<field name="model">stock.reservation</field>
+			<field name="arch" type="xml">
+				<form string="Stock Re-Allocation">
+					<header>
+						<button name="action_generate_line" type="object" string="Generate Line"
+							class="oe_highlight" states="draft" />
+						<button name="action_re_generate_line" type="object" string="Regenerate Line"
+							class="" states="generate" />
+						<button name="action_confirmed" type="object" string="Confirmed"
+							class="oe_highlight" states="generate" />
+						<button name="action_release" type="object" string="Release"
+							class="oe_highlight" states="confirmed"
+							groups="stock_reservation.inventory_group_user_allocation" />
+						<button name="action_cancel" type="object" string="Cancel"
+							states="generate,confirmed,reserve,done" />
+						<field name="state" widget="statusbar" statusbar_visible="draft,generate,confirmed,release,done,cancel"/>
+					</header>
+					<sheet>
+						<group>
+							<group name="main_grp">
+								<field name="date" invisible="1" />
+								<field name="analytic_account_id"
+									options='{"no_open": True,"no_create": 1, "no_create_edit":
+											1}' />
+								<field name="allocate_flag" invisible="1" />
+							</group>
+							<group name="main_grp">
+								<field name="warehouse_id"
+									options='{"no_open": True,"no_create": 1, "no_create_edit": 1}' />
+								<field name="source_loc_id"
+									options='{"no_open": True,"no_create": 1, "no_create_edit": 1}'
+									invisible="1" />
+								<field name="analytic_resv_loc_id"
+									options='{"no_open": True,"no_create": 1, "no_create_edit": 1}'
+									invisible="1"/>
+							</group>
+
+
+						</group>
+						<notebook>
+							<page string="Products">
+								<field name="stock_reservation_line_ids" >
+									<tree string="Re-Alloacation List" editable="bottom" create="false">
+										<field name="product_id"
+											options='{"no_open": True,"no_create":
+											1, "no_create_edit":1}' readonly='1'/>
+										<field name="allocate_qty" string="Max Allocate Qty" readonly='1' />
+										<field name="quantity" string="Qty" />
+										<field name="uom_category" invisible="1" />
+										<field name="uom"
+											options='{"no_open": True,"no_create": 1, "no_create_edit": 1}'
+											domain="[('category_id', '=', uom_category)]" readonly='1'/>
+										<field name="destination_loc_id"
+											options='{"no_open": True,"no_create": 1, "no_create_edit":
+											1}' readonly='1'/>
+										<field name="analytic_account_id"
+											options='{"no_open": True,"no_create": 1, "no_create_edit":
+											1}' readonly='1'/>
+									</tree>
+								</field>
+
+							</page>
+						</notebook>
+						<div class="oe_clear">
+							<label for="remarks" />
+						</div>
+						<field name="remarks" class="" placeholder="Additional Information" />
+					</sheet>
+				</form>
+			</field>
+		</record>
+
+		<record id="view_stock_re_allocation_tree" model="ir.ui.view">
+			<field name="name">stock.Reallocation.tree</field>
+			<field name="model">stock.reservation</field>
+			<field name="arch" type="xml">
+				<tree string="Stock Re-allocation">
+					<field name="date" />
+					<field name="warehouse_id" />
+					<field name="analytic_resv_loc_id" />
+					<field name="state" />
+				</tree>
+			</field>
+		</record>
+
+		<record id="view_stock_re_allocation_search" model="ir.ui.view">
+			<field name="name">stock.reservation.search</field>
+			<field name="model">stock.reservation</field>
+			<field name="arch" type="xml">
+				<search string="Stock Re-allocation">
+					<field name="date" />
+				</search>
+			</field>
+		</record>
+		<record id="action_stock_reallocation_tree" model="ir.actions.act_window">
+			<field name="name">Stock Re-Allocation</field>
+			<field name="res_model">stock.reservation</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+			<field name="domain">[('allocate_flag','=',3)]</field>
+			<field name="context">{'default_allocate_flag': 3,
+				'search_default_allocate_flag': 3}
+			</field>
+
+		</record>
+		
+		<record id="action_stock_reallocation_tree_view1" model="ir.actions.act_window.view">
+            <field eval="1" name="sequence"/>
+            <field name="view_mode">tree</field>
+            <field name="act_window_id" ref="action_stock_reallocation_tree"/>
+        </record>
+
+        <record id="action_stock_reallocation_tree_view2" model="ir.actions.act_window.view">
+            <field eval="2" name="sequence"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_stock_re_allocation_form"/>
+            <field name="act_window_id" ref="action_stock_reallocation_tree"/>
+        </record>
+		
+		<menuitem action="action_stock_reallocation_tree" id="menu_action_stock_re_allocation"
+			parent="stock.menu_stock_inventory_control" sequence="31" />
+			
+	</data>
+</openerp>

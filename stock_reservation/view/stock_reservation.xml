@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+		<record id="view_stock_reservation_form" model="ir.ui.view">
+			<field name="name">stock.reservation.form</field>
+			<field name="model">stock.reservation</field>
+			<field name="arch" type="xml">
+				<form string="Stock Reservations">
+					<header>
+						<button name="action_confirmed" type="object" string="Confirmed"
+							class="oe_highlight" states="draft" />
+						<button name="action_reserve" type="object" string="Reserve"
+							class="oe_highlight" states="confirmed"  groups="stock_reservation.inventory_group_user_allocation"/>
+						<button name="action_cancel" type="object" string="Cancel" 
+							states="confirmed,reserve,done" />
+						<field name="state" widget="statusbar" statusbar_visible="draft,confirmed,reserve,done,cancel"/>
+					</header>
+					<sheet>
+						<group>
+							<group name="main_grp">
+								<field name="warehouse_id"
+									options='{"no_open": True,"no_create": 1, "no_create_edit": 1}' />
+								<field name="source_loc_id"
+									options='{"no_open": True,"no_create": 1, "no_create_edit": 1}' />
+								<field name="analytic_resv_loc_id"
+									options='{"no_open": True,"no_create": 1, "no_create_edit": 1}' />
+							</group>
+							<group name="main_grp">
+								<field name="date" />
+								<field name="analytic_account_id"
+									options='{"no_open": True,"no_create": 1, "no_create_edit":
+											1}' />
+								<field name="allocate_flag" invisible="1" />
+								
+							</group>
+
+						</group>
+						<notebook>
+							<page string="Products">
+								<field name="stock_reservation_line_ids">
+									<tree editable="bottom">
+										<field name="product_id"
+											options='{"no_open": True,"no_create":
+											1, "no_create_edit":1}' />
+										<field name="quantity" string="Qty" />
+										<field name="uom_category" invisible="1" />
+										<field name="uom"
+											options='{"no_open": True,"no_create": 1, "no_create_edit": 1}'
+											domain="[('category_id', '=', uom_category)]" />
+										<field name="destination_loc_id"
+											options='{"no_open": True,"no_create": 1, "no_create_edit":
+											1}' />
+										<field name="analytic_account_id"
+											options='{"no_open": True,"no_create": 1, "no_create_edit":
+											1}' />
+									</tree>
+								</field>
+
+							</page>
+						</notebook>
+						<div class="oe_clear">
+							<label for="remarks" />
+						</div>
+						<field name="remarks" class="" placeholder="Additional Information" />
+					</sheet>
+				</form>
+			</field>
+		</record>
+
+		<record id="view_stock_reservation_tree" model="ir.ui.view">
+			<field name="name">stock.reservation.tree</field>
+			<field name="model">stock.reservation</field>
+			<field name="arch" type="xml">
+				<tree string="Stock Reservations">
+					<field name="date" />
+					<field name="warehouse_id" />
+					<field name="analytic_resv_loc_id" />
+					<field name="state" />
+				</tree>
+			</field>
+		</record>
+
+		<record id="view_stock_reservation_search" model="ir.ui.view">
+			<field name="name">stock.reservation.search</field>
+			<field name="model">stock.reservation</field>
+			<field name="arch" type="xml">
+				<search string="Stock Reservations">
+					<field name="date" />
+				</search>
+			</field>
+		</record>
+
+		<record id="action_stock_reservation_tree" model="ir.actions.act_window">
+			<field name="name">Stock Reservations</field>
+			<field name="res_model">stock.reservation</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+			<field name="domain">[('allocate_flag','=',1)]</field>
+			<field name="context">{'search_default_draft': 1,
+				'search_default_allocate_flag': 1, 'default_allocate_flag':1
+				}
+			</field>
+
+		</record>
+		
+		<record id="action_stock_reservation_tree_view1" model="ir.actions.act_window.view">
+            <field eval="1" name="sequence"/>
+            <field name="view_mode">tree</field>
+            <field name="act_window_id" ref="action_stock_reservation_tree"/>
+        </record>
+
+        <record id="action_stock_reservation_tree_view2" model="ir.actions.act_window.view">
+            <field eval="2" name="sequence"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_stock_reservation_form"/>
+            <field name="act_window_id" ref="action_stock_reservation_tree"/>
+        </record>
+		
+		<menuitem action="action_stock_reservation_tree" id="menu_action_stock_reservation"
+			parent="stock.menu_stock_inventory_control" sequence="30" />
+	</data>
+</openerp>
