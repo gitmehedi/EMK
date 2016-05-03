@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+	<data>
+		<record id="stock_goods_price_view_form" model="ir.ui.view">
+			<field name="name">Stock Goods Price</field>
+			<field name="model">stock.goods.price</field>
+			<field name="priority" eval="16"/>
+			<field name="arch" type="xml">
+				<form string="Stock Goods Price">
+					<header>
+						<button name="action_submit" type="object" string="Confirm" class="oe_highlight" states="draft"/>
+						<field name="state" widget="statusbar"/>
+					</header>
+					<sheet>
+						<group>
+							<group>
+								<field name="product_id" options='{"no_open": True,"no_create": 1, "no_create_edit":
+									1}' class="oe_inline"/>
+								
+								<label  for="quantity" string="Quantity" />
+								<div>
+									<div class="col-md-2 multifield_combination">
+										<field name="quantity"/>
+									</div>
+									<div class="col-md-3 multifield_combination">
+										<field name="uom" options='{"no_open": True,"no_create": 1, "no_create_edit": 1}'
+											attrs="{'readonly': True}" class="oe_inline"/>
+									</div>
+								</div>
+								<label  for="unit_price" string="Unit Price" />
+								<div>
+									<div class="col-md-2 multifield_combination">
+										<field name="unit_price" class="oe_inline" />
+									</div>
+									<div class="col-md-3 multifield_combination">
+										<field name="currency" class="oe_inline" options='{"no_open": True,"no_create": 1,
+											"no_create_edit": 1}' attrs="{'readonly': True}"/>
+									</div>
+								</div>
+								<field name="cost_date"  attrs="{'readonly': True}"/>
+							</group>
+						</group>
+					</sheet>
+				</form>
+			</field>
+		</record>
+		<record id="stock_goods_price_view_tree" model="ir.ui.view">
+			<field name="name">Stock Goods Price View</field>
+			<field name="model">stock.goods.price</field>
+			<field name="priority" eval="16"/>
+			
+			<field name="arch" type="xml">
+				<tree string="Stock Goods Avg. Price">
+					<field name="product_id" />
+					<field name="quantity" />
+					<field name="uom" />
+					<field name="unit_price" />
+					<field name="cost_date" />
+					<field name="state" widget="statusbar"/>
+				</tree>
+			</field>
+		</record>
+		
+		<!-- Stock Goods Price search view -->
+		<record id="stock_goods_price_view_search" model="ir.ui.view">
+			<field name="name">Stock Goods Price search view</field>
+			<field name="model">stock.goods.price</field>
+			<field eval="10" name="priority"/>
+			<field name="arch" type="xml">
+				<search string="Stock Goods Avg. Price">
+					<field name="product_id"/>
+					<field name="cost_date"/>
+					<group string="Group By">
+						<filter name="product_id" string="Product Name" context="{'group_by': 'product_id'}"/>
+						<filter name="cost_date" string="Date" context="{'group_by': 'cost_date'}"/>
+					</group>
+				</search>
+			</field>
+		</record>
+		
+		<record id="stock_goods_price_action" model="ir.actions.act_window" >
+			<field name="name">Stock Goods Price</field>
+			<field name="res_model">stock.goods.price</field>
+			<field name="view_mode">tree,form</field>
+		</record>
+		
+		<record model="ir.values" id="confirm_stock_goods_price">
+            <field name="model_id" ref="model_stock_goods_price" />
+            <field name="name">Make Confirm</field>
+            <field name="key2">action_submit</field>
+            <field name="key">action</field>
+            <field name="model">stock.goods.price</field>
+        </record>
+        
+		<menuitem name="Stock Goods Cost Price" id="stock_goods_price_menu" parent="stock.menu_stock_warehouse_mgmt"
+			sequence="251" action="stock_goods_price_action"/>
+	</data>
+</openerp>

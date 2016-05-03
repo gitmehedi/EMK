@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+	<data>
+		<!-- Main template -->
+		<report id="report_gate_pass" model="stock.gatepass"
+			string="Gate Pass Report" name="stock_gatepass.report_gate_pass_qweb"
+			file="stock_gatepass.report_gate_pass" report_type="qweb-pdf" />
+		<template id="report_gate_pass_qweb">
+			<t t-call="report.html_container">
+				<t t-call="report.external_layout">
+					<div class="page">
+						<h2 class="text-center">
+							Stock
+							<t t-if="form['gate_pass_type']=='1'">Gate Pass In</t>
+							<t t-if="form['gate_pass_type']=='2'">Gate Pass Out</t>
+							Report
+						</h2>
+
+						<div class="row">
+							<div class="col-xs-2">
+								<strong>From Date:</strong>
+								<p t-esc="form['start_date']" />
+							</div>
+							<div class="col-xs-2">
+								<strong>To Date:</strong>
+								<p t-esc="form['end_date']" />
+							</div>
+							<t t-if="other['source_location'] !=''">
+								<div class="col-xs-2">
+									<strong>Store:</strong>
+									<p t-esc="other['source_location']" />
+								</div>
+							</t>
+							<t t-if="other['desti_location'] !='' and form['gate_pass_type']=='1'">
+								<div class="col-xs-3">
+									<strong>Source:</strong>
+									<p t-esc="other['desti_location']" />
+								</div>
+							</t>
+							<t t-if="other['desti_location'] !='' and form['gate_pass_type']=='2'">
+								<div class="col-xs-3">
+									<strong>Destination:</strong>
+									<p t-esc="other['desti_location']" />
+								</div>
+							</t>
+							<div class="col-xs-3">
+								<strong>Printing Date:</strong>
+								<p t-esc="time.strftime('%Y-%m-%d %H:%M:%S')" />
+							</div>
+						</div>
+						<table class="table table-bordered">
+							<thead>
+								<tr>
+									<th>Date</th>
+									<th>Sl. No</th>
+									<t t-if="other['source_location'] ==''">
+										<th>Store</th>
+									</t>
+									<t t-if="other['desti_location'] =='' and form['gate_pass_type']=='1'">
+										<th>Source</th>
+									</t>
+									<t t-if="other['desti_location'] =='' and form['gate_pass_type']=='2'">
+										<th>Destination</th>
+									</t>
+									<th>Product Name</th>
+									<th>Quantity</th>
+									<th>UOM</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr t-foreach="docs" t-as="line">
+									<td>
+										<span t-esc="line['date']" />
+									</td>
+									<td>
+										<span t-esc="line['sl_no']" />
+									</td>
+									<t t-if="other['source_location'] ==''">
+										<td>
+											<span t-esc="line['store_loc']" />
+										</td>
+									</t>
+									<t t-if="other['desti_location'] ==''">
+										<td>
+											<span t-esc="line['dest_loc']" />
+										</td>
+									</t>
+									<td>
+										<span t-esc="line['product_name']" />
+									</td>
+									<td>
+										<span t-esc="line['product_qty']" />
+									</td>
+									<td>
+										<span t-esc="line['product_uom']" />
+									</td>
+	
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</t>
+			</t>
+		</template>
+
+
+	</data>
+</openerp>

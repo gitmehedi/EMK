@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+	<data>
+
+		<!-- Gate Pass Form View -->
+		<record id='view_gatepass_out_form' model='ir.ui.view'>
+			<field name="name">stock.gatepass.out.form</field>
+			<field name="model">stock.gatepass.out</field>
+			<field name="arch" type="xml">
+				<form string="Gate Pass Out">
+					<header>
+						<button name="action_confirm" string="Confirm" states="draft" type="object"
+							class="oe_highlight" />
+						<field name="state" widget="statusbar" />
+					</header>
+					<sheet>
+						<h1>
+							<field name="gete_pass_no" />
+						</h1>
+						<group>
+							<group>
+								<field name="date" />
+								<field name="store_location" options='{"no_open": True,"no_create": 1, "no_create_edit": 1}'/>
+								<field name="destination_location" options='{"no_open": True,"no_create": 1, "no_create_edit": 1}'/>
+								<field name="receiving_auth" options='{"no_open": True,"no_create": 1, "no_create_edit": 1}'/>
+							</group>
+							<group>
+								<field name="purpose" />
+								<field name="gete_pass_type" options='{"no_open": True,"no_create": 1, "no_create_edit": 1}'/>
+								<field name="chalan_no" />
+								<field name="security_id" options='{"no_open": True,"no_create": 1, "no_create_edit": 1}'/>
+							</group>
+						</group>
+						<notebook>
+							<page string="Details">
+								<field name="gate_pass_out_lines">
+									<tree editable="bottom">
+										<field name="description"/>
+										<field name="product_qty" string="Qty" />
+										<field name="product_qom"
+											options='{"no_open": True,"no_create": 1, "no_create_edit": 1}'/>
+										<field name="remarks"/>
+									</tree>
+								</field>
+
+							</page>
+						</notebook>
+						<separator string="Notes" />
+						<field name="notes" placeholder="Put an remarks..................." />
+					</sheet>
+				</form>
+			</field>
+		</record>
+
+		<!-- Gate Pass Tree View -->
+		<record id='view_gate_pass_out_tree' model='ir.ui.view'>
+			<field name="name">stock.gatepass.out.tree</field>
+			<field name="model">stock.gatepass.out</field>
+			<field name="arch" type="xml">
+				<tree string="Gate Passes Out">
+					<field name="gete_pass_no" />
+					<field name="date" />
+					<field name="store_location" />
+					<field name="destination_location" />
+					<field name="gete_pass_type" />
+					<field name="state" />
+				</tree>
+			</field>
+		</record>
+
+		<!-- Gate Pass Search View -->
+		<record id="view_gate_pass_out_search" model="ir.ui.view">
+			<field name="name">stock.gatepass.out.search</field>
+			<field name="model">stock.gatepass.out</field>
+			<field name="arch" type="xml">
+				<search string="Gate Passes Out">
+					<field name="gete_pass_no" filter_domain="[('gete_pass_no', 'ilike', self)]"
+						string="Gate Pass  No" />
+					<field name="date" />
+
+					<filter string="Draft" name="state_draft" domain="[('state','=','draft')]" />
+					<filter string="Confirm" name="state_done" domain="[('state','=','confirm')]" />
+					<field name="gete_pass_type" />
+					<group expand="0" string="Group By...">
+						<filter string="Gatepass Type"
+							context="{'group_by': 'gete_pass_type', 'type_view':True}" />
+						<filter string="Store Location" context="{'group_by': 'store_location'}" />
+						<filter string="Destination Location" context="{'group_by': 'destination_location'}" />
+						<filter string="Status" context="{'group_by': 'state'}" />
+					</group>
+				</search>
+			</field>
+		</record>
+
+		<!-- Gate Pass Action -->
+		<record id='action_gate_pass_out' model='ir.actions.act_window'>
+			<field name="name">Gate Passes Out</field>
+			<field name="res_model">stock.gatepass.out</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+			<field name="context">{'search_default_state_draft':1}</field>
+			<field name="help" type="html">
+				<p class="oe_view_nocontent_create">
+					Click to create a new gate pass.
+				</p>
+			</field>
+		</record>
+		<menuitem action="action_gate_pass_out" name="Gate Passe Out"
+			parent="menu_gate_pass_main" id="menu_gate_pass_out" sequence="20" />
+	</data>
+</openerp>

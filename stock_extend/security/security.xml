@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="0">
+
+        <record id="inventory_group_user_qc" model="res.groups">
+        	<field name="name">QC</field>
+        	<field name="category_id" ref="base.module_category_warehouse_management"/>
+        </record>
+        
+        <record id="inventory_group_user_floor_manager" model="res.groups">
+        	<field name="name">Floor Manager</field>
+        	<field name="category_id" ref="base.module_category_warehouse_management"/>
+        </record>
+       
+    </data>
+</openerp>

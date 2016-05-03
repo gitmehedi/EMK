@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+	<data>
+		<record id="inherited_hr_emp_view_form_inherit_security_guard"
+			model="ir.ui.view">
+			<field name="name">HR Employee Form</field>
+			<field name="model">hr.employee</field>
+			<field name="inherit_id" ref="hr.view_employee_form" />
+			<field name="arch" type="xml">
+				<xpath expr="//field[@name='work_location']" position="after">
+					<field name="security_guard"/>
+				</xpath>
+			</field>
+		</record>
+	</data>
+</openerp>
