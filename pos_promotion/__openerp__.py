@@ -10,12 +10,12 @@
         'views/pos_promotion_assets.xml',
         'views/inherited_point_of_sale_view.xml'
     ],
-    'summary': 'Test Summary for POS Promotion',
+    'summary': 'POS promotion for applying prmotion on product',
     'qweb': [
         'static/src/xml/pos_promotion_template.xml'
     ],
     'depends': ['point_of_sale'],
-    'description': 'Test Description for POS Promotion',
+    'description': """POS promotion for applying prmotion on product""",
     'installable': True,
     'application': False,
     'auto_install': False,

@@ -1,8 +1,0 @@
-// only for custom logic
-get partner object :
-
-	i)set_client(client) -> model.js
-	ii)set_client(this.new_client) -save_change() / set_client(self.pos.db.get_partner_by_id(curr_client.id))->reload_partner()
-	iii)this.new_client = this.old_client;  --> this.old_client = this.pos.get('selectedOrder').get('client');
-	
-	--get('client') depend on get ('selectedOrder')

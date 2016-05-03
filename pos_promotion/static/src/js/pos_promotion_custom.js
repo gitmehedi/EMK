@@ -253,35 +253,30 @@ function openerp_pos_promotion(instance, module) { // module is
                 fields: [],
                 loaded: function (self, promotion_rules) {
                     self.promotion_rules = promotion_rules;
-                    console.log(' rules:: ' + JSON.stringify(self.promotion_rules));
                 }
             }, {
                 model: 'promos.rules.conditions.exps',
                 fields: [],
                 loaded: function (self, promos_rules_conditions_exps) {
                     self.promos_rules_conditions_exps = promos_rules_conditions_exps;
-                    console.log(' conditions:: ' + JSON.stringify(self.promos_rules_conditions_exps));
                 }
             }, {
                 model: 'promos.rules.actions',
                 fields: [],
                 loaded: function (self, promos_rules_actions) {
                     self.promos_rules_actions = promos_rules_actions;
-                    console.log(' actions:: ' + JSON.stringify(self.promos_rules_actions));
                 }
             }, {
                 model: 'res.partner.category',
                 fields: [],
                 loaded: function (self, res_partner_category) {
                     self.res_partner_category = res_partner_category;
-                    //console.log(' category:: ' + JSON.stringify(self.res_partner_category));
                 }
             }, {
                 model: 'promotion.groups',
                 fields: [],
                 loaded: function (self, promotion_groups) {
                     self.promotion_groups = promotion_groups;
-                    //console.log(' group:: ' + JSON.stringify(self.promotion_groups));
                 }
             }, {
                 label: 'fonts',
@@ -456,30 +451,31 @@ function openerp_pos_promotion(instance, module) { // module is
         get_arguments: function () {
             return this.arguments;
         },
-
+        get_display_price: function () {
+            return this.get_base_price();
+        },
 
         get_base_price: function () {
             var rounding = this.pos.currency.rounding;
-            var promos_rules_actions = this.pos.promos_rules_actions;
-            var orderLine = this.discountAmount;
-            if (promos_rules_actions !== undefined && promos_rules_actions.length > 0) {
-
-                if (promos_rules_actions[0].action_type == 'prod_sub_disc_perc') {
-                    return round_pr(((this.get_unit_price() * this.get_quantity()) - (this.get_arguments())), rounding);
-                } else if (promos_rules_actions[0].action_type == 'prod_sub_disc_fix') {
-                    return round_pr(((this.get_unit_price() * this.get_quantity()) - this.get_arguments()), rounding);
-                } else if (promos_rules_actions[0].action_type == 'cart_disc_perc' || promos_rules_actions[0].action_type == 'cart_disc_fix') {
-                    return round_pr((this.get_unit_price() * this.get_quantity()), rounding);
-                } else {
-                    //return round_pr((this.get_unit_price() * this.get_quantity()) - (this.get_discount() * this.get_quantity()), rounding);
-                    return round_pr(((this.get_unit_price() * this.get_quantity()) - (this.get_discount())), rounding);
+            var promosRulesActions = this.pos.promos_rules_actions;
+            //var orderLine = this.discountAmount;
+            if (promosRulesActions !== undefined && promosRulesActions.length > 0) {
+                for (var n = 0, len = promosRulesActions.length; len > n; n++) {
+                    if (promosRulesActions[n].action_type == 'prod_sub_disc_perc') {
+                        return round_pr(((this.get_unit_price() * this.get_quantity()) - (this.get_discount())), rounding);
+                    } else if (promosRulesActions[n].action_type == 'prod_sub_disc_fix') {
+                        return round_pr(((this.get_unit_price() * this.get_quantity()) - this.get_arguments()), rounding);
+                    } else if (promosRulesActions[n].action_type == 'cart_disc_perc' || promosRulesActions[n].action_type == 'cart_disc_fix') {
+                        return round_pr((this.get_unit_price() * this.get_quantity()), rounding);
+                    }  else {
+                        //return round_pr((this.get_unit_price() * this.get_quantity()) - (this.get_discount() * this.get_quantity()), rounding);
+                        return round_pr(((this.get_unit_price() * this.get_quantity()) - (this.get_discount())), rounding);
+                    }
                 }
             } else {
                 var rounding = this.pos.currency.rounding;
                 return round_pr(this.get_unit_price() * this.get_quantity() * (1 - this.get_discount() / 100), rounding);
             }
-
-
         },
 
         get_all_prices: function () {
@@ -525,10 +521,10 @@ function openerp_pos_promotion(instance, module) { // module is
         set_discount: function (discount, actionType, arguments) {
             var disc = discount;
             this.discount = disc;
-            if (actionType == 'prod_disc_fix' || actionType == 'cat_disc_fix') {
-                this.discountStr = 'fix amount: ' + arguments + '';
+            if (actionType == 'prod_disc_fix' || actionType == 'cat_disc_fix' || actionType == 'prod_sub_disc_fix') {
+                this.discountStr = 'fixed amount: ' + arguments + '';
 
-            } else if (actionType == 'prod_disc_perc' || actionType == 'cat_disc_perc') {
+            } else if (actionType == 'prod_disc_perc' || actionType == 'cat_disc_perc' || actionType == 'prod_sub_disc_perc') {
                 this.discountStr = ': ' + arguments + '%';
 
             }
@@ -563,11 +559,11 @@ function openerp_pos_promotion(instance, module) { // module is
             }
             else if (actionType == 'prod_sub_disc_perc' || actionType == 'prod_sub_disc_fix') {
                 //this.set_discount(orderline.discount, actionType, arguments);
-                this.set_arguments(discount, actionType, arguments);
+                this.set_discount(discount, actionType, arguments);
             }
 
         },
-        customMerge: function (product, actionType, discountPrice, arguments) {
+        customMerge: function (actionType, discountPrice, arguments) {
 
             var posOrder = this.pos.get('selectedOrder');
             var discount = discountPrice;
@@ -579,8 +575,8 @@ function openerp_pos_promotion(instance, module) { // module is
             }
             else if (actionType == 'prod_sub_disc_perc' || actionType == 'prod_sub_disc_fix') {
                 //this.set_discount(orderline.discount, actionType, arguments);
-                this.set_arguments(discount, actionType, arguments);
-            } else if (actionType == 'cart_disc_perc' || actionType == 'cart_disc_perc') {
+                this.set_discount(discount, actionType, arguments);
+            } else if (actionType == 'cart_disc_perc' || actionType == 'cart_disc_perc' || actionType == 'cart_disc_fix_perc' || actionType == 'cart_disc_fix_perc') {
                 posOrder.setDiscountAmount(discount);
             }
         }
@@ -607,7 +603,7 @@ function openerp_pos_promotion(instance, module) { // module is
             this.screen_data = {};  // see ScreenSelector
             this.receipt_type = 'receipt';  // 'receipt' || 'invoice'
             this.temporary = attributes.temporary || false;
-            this.discountAmount = 0;
+            this.discountAmounts = 0;
 
             return this;
         },
@@ -620,16 +616,16 @@ function openerp_pos_promotion(instance, module) { // module is
             }
             return null;
         },
-        setDiscountAmount: function (discountAmount) {
-            this.discountAmount = discountAmount;
+        setDiscountAmount: function (discountAmounts) {
+            this.discountAmounts = discountAmounts;
             //this.trigger('change',this);
         },
         getDiscountAmount: function () {
-            return this.discountAmount;
+            return this.discountAmounts;
         },
 
         getDisTotal: function () {
-            return this.getSubtotal()>0? (this.getSubtotal()- this.discountAmount):0;
+            return this.getSubtotal() > 0 ? (this.getSubtotal() - this.discountAmounts) : 0;
         },
         getSubtotal: function () {
             return round_pr((this.get('orderLines')).reduce((function (sum, orderLine) {
@@ -659,19 +655,28 @@ function openerp_pos_promotion(instance, module) { // module is
             }
 
             var last_orderline = this.getLastOrderline();
-            if (actionType !== 'prod_sub_disc_perc' || actionType !== 'prod_sub_disc_fix' ) {
-                line.set_discount(prodDiscPrice, actionType, arguments);
+            if (actionType !== undefined) {
 
-            }
+                if (actionType == 'cart_disc_perc' || actionType == 'cart_disc_fix' ) {
+                    var posOrder = this.pos.get('selectedOrder');
+                    posOrder.setDiscountAmount(prodDiscPrice);
 
-            if (actionType == 'prod_sub_disc_perc' || actionType == 'prod_sub_disc_fix') {
+                }
+                if (actionType !== 'prod_sub_disc_perc' || actionType !== 'prod_sub_disc_fix') {
+                    line.set_discount(prodDiscPrice, actionType, arguments);
 
-                line.set_arguments(prodDiscPrice, actionType, arguments);
+                }
+
+                if (actionType == 'cat_disc_perc' || actionType == 'cat_disc_fix') {
+
+                    line.set_discount(prodDiscPrice, actionType, arguments);
+                }
+
             }
 
             if (last_orderline && last_orderline.can_be_merged_with(line) && options.merge !== false) {
                 last_orderline.merge(line, actionType, arguments);
-            }else {
+            } else {
                 this.get('orderLines').add(line);
             }
             this.selectLine(this.getLastOrderline());
@@ -692,7 +697,7 @@ function openerp_pos_promotion(instance, module) { // module is
             if (promosRulesActions !== undefined) {
 
 
-                if (promosRulesActions.action_type == 'cart_disc_perc' || promosRulesActions.action_type == 'prod_disc_perc') {
+                if (promosRulesActions.action_type == 'cart_disc_perc'|| promosRulesActions.action_type == 'prod_disc_perc') {
                     return this.getSubtotal() - disCountTotal;
                     //return this.getSubtotal();
 
@@ -719,6 +724,35 @@ function openerp_pos_promotion(instance, module) { // module is
             return this.getCustomSubtotal();
             //return this.getTotalTaxExcluded() + this.getTax();
         },
+        getChange: function () {
+
+            return this.getPaidTotal() - this.getTotalWithTax();
+        },
+        getTotalWithTax: function () {
+            var currentOrder = this.pos.get('selectedOrder');
+
+            var promosRulesActions = currentOrder.get('pos').promos_rules_actions;
+            var promosRuleAction = {};
+            var taxes = 0;
+            var totalWithDiscount = 0;
+            var totalWithTax = 0;
+            for (var m = 0, mLen = promosRulesActions.length; m < mLen; m++) {
+
+                    taxes = currentOrder.getTax();
+                    totalWithDiscount = currentOrder.getDisTotal();
+                    totalWithTax = totalWithDiscount + taxes;
+
+                    return totalWithTax.toFixed(2);
+
+            }
+
+
+            return totalWithTax.toFixed(2);
+        },
+
+        getDueTotal: function () {
+            return this.getTotalWithTax() - this.getPaidTotal();
+        },
 
         export_as_JSON: function () {
             var orderLines, paymentLines;
@@ -733,7 +767,7 @@ function openerp_pos_promotion(instance, module) { // module is
             return {
                 name: this.getName(),
                 amount_paid: this.getPaidTotal(),
-                amount_total: this.getTotalTaxIncluded(),
+                amount_total: this.getTotalWithTax(),
                 amount_tax: this.getTax(),
                 amount_return: this.getChange(),
                 lines: orderLines,
@@ -745,20 +779,17 @@ function openerp_pos_promotion(instance, module) { // module is
                 sequence_number: this.sequence_number,
                 total_order_amount: this.getDisTotal(),
                 cal_discount_amount: this.getDiscountAmount(),
-                discount_type: 'percent',
-                percent_discount: 10,
+                //discount_type: 'percent',
+                //percent_discount: 10,
             };
         },
-        currentSubtotal: function (posOrder, product, cart_quantity, promosRulesAction) {
+        currentSubtotal: function (posOrder, product, cart_quantity) {
             var selectedOrderLine = this.pos.get('selectedOrder').selected_orderline;
             var prevSubTotal = 0;
             var currentSubTotal = 0;
             var storeSubTotal = 0;
-            var actionType = promosRulesAction.action_type;
-            if (selectedOrderLine != undefined && (actionType == 'cart_disc_perc' || actionType == 'cart_disc_fix')) {
-                var currentPrice = product.price;
-                var currentOrderLinePrice = 0;
-                var sum = 0;
+
+            if (selectedOrderLine != undefined) {
 
                 var selectedQty = selectedOrderLine.quantity;
                 var selectedPrice = selectedOrderLine.price;
@@ -774,20 +805,7 @@ function openerp_pos_promotion(instance, module) { // module is
                 }
 
             }
-            else if (selectedOrderLine != undefined & (actionType == 'cat_disc_perc' || actionType == 'cat_disc_fix' || actionType == 'prod_disc_perc' || actionType == 'prod_disc_fix')) {
-                var selectedQty = selectedOrderLine.quantity;
-                var selectedPrice = selectedOrderLine.price;
-                var selectedTotalPrice = (selectedQty * selectedPrice);
-
-                if (product.id != posOrder.selected_orderline.product.id) {
-                    prevSubTotal = posOrder.getSubtotal();
-                    currentSubTotal = (product.price) + (prevSubTotal);
-                } else {
-                    prevSubTotal = posOrder.getSubtotal();
-                    currentSubTotal = (cart_quantity * product.price) + (prevSubTotal - selectedTotalPrice);
-                }
-
-            } else {
+            else {
                 currentSubTotal = product.price;
                 storeSubTotal = currentSubTotal;
             }
@@ -803,112 +821,147 @@ function openerp_pos_promotion(instance, module) { // module is
          -after evaluation
          -execute_action(promos_id, order_id)
          */
-        applyPromotionLine: function (product, posOrder, cart_quantity, promosRulesActionObject) {
-            /*
-             -search for active rule
-             */
+        applyPromotionLine: function (posOrder, product, quantityFlag, cart_quantity) {
+
             var self = this;
-            var promosRules = posOrder.get('pos').promotion_rules;
-            //var promosRulesActions = posOrder.get('pos').promos_rules_actions;
             var executeAction = {};
-            var promotionArray = [];
-            for (i = 0, len = promosRules.length; i < len; i++) {
+            var category = self.pos.db.get_category_by_id(product.pos_categ_id[0]);
+            var cartQuantity = 1;
 
-                if (promosRules[i].active == true) {
 
-                    promotionArray.push(promosRules[i]);
-                    var promosRule = promotionArray[0];
-                    var result = self.evaluateLine(promosRule, posOrder, product, cart_quantity, promosRulesActionObject);
-                    if (result) {
-                        try {
-                            //Execute the action here
-                            executeAction = self.executeActionsLine(promosRule, posOrder, product, cart_quantity, promosRulesActionObject)
-                            return executeAction;
-                        } catch (error) {
-                            //TODO:
+            var promosRuleConditionExp = {};
+            var result = false;
+            var promosRulesConditionsExp = posOrder.get('pos').promos_rules_conditions_exps;
+            //var promosLen = promosRulesConditionsExp.length;
+
+            for (var m = 0, promosLen = promosRulesConditionsExp.length; m < promosLen; m++) {
+                promosRuleConditionExp = promosRulesConditionsExp[m];
+                // stop checking rule if stop-further is true
+                if (promosRuleConditionExp.stop_further !== true) {
+
+                    var isFalse = promosRuleConditionExp.value;
+
+                    var orderLine = posOrder.getSelectedLine();
+                    //var selectedPrice = orderLine.price;
+                    // var cart_quantity = 1;
+                    var splitArray = [];
+
+                    if (isFalse == false) {
+                        if (orderLine == undefined) {
+                            cartQuantity = 1;
+
+                        } else if (product.id == orderLine.product.id) {
+                            if (quantityFlag !== true) {
+                                cartQuantity = orderLine.quantity + 1;
+
+                            } else {
+                                cartQuantity = cart_quantity;
+                            }
+                        } else {
+                            cartQuantity = 1;
+
                         }
-                        if (promosRule.stop_further) {
-                            return true;
+                        result = self.evaluateLine(posOrder, product, cartQuantity, promosRuleConditionExp, product.price);
+                        if (result == false) {
+                            continue;
+                        } else {
+                            result = true;
+                            break;
+                        }
+                    } else {
+                        var promosExpCodeSplit = promosRuleConditionExp.value.split(',');
+                        var count = 0;
+                        for (var i = 0, proLen = promosExpCodeSplit.length; proLen > i; i++) {
+                            if ((orderLine == undefined && category.code == promosExpCodeSplit[i]) || (orderLine == undefined && product.default_code == promosExpCodeSplit[i])) {
+                                splitArray.push(promosExpCodeSplit[i]);
+                                cartQuantity = 1;
+                                break;
+
+                            } else if ((orderLine != undefined && category.code == promosExpCodeSplit[i] && product.id == orderLine.product.id) || (orderLine != undefined && product.default_code == promosExpCodeSplit[i] && product.id == orderLine.product.id)) {
+                                if (quantityFlag !== true) {
+                                    splitArray.push(promosExpCodeSplit[i]);
+                                    cartQuantity = orderLine.quantity + 1;
+                                    break;
+
+                                } else {
+                                    splitArray.push(promosExpCodeSplit[i]);
+                                    cartQuantity = cart_quantity;
+                                    break;
+                                }
+
+                            } else if ((orderLine != undefined && category.code == promosExpCodeSplit[i] && product.id !== orderLine.product.id) || (orderLine != undefined && product.default_code == promosExpCodeSplit[i] && product.id != orderLine.product.id)) {
+                                if (count == 0) {
+                                    splitArray.push(promosExpCodeSplit[i]);
+                                    cartQuantity = 1;
+                                    count = count + 1;
+                                    break;
+
+                                } else {
+                                    if (quantityFlag !== true) {
+                                        splitArray.push(promosExpCodeSplit[i]);
+                                        cartQuantity = orderLine.quantity + 1;
+                                        break;
+
+                                    } else {
+                                        splitArray.push(promosExpCodeSplit[i]);
+                                        cartQuantity = cart_quantity;
+                                        break;
+
+                                    }
+
+
+                                }
+                            }
+                        }
+                        result = self.evaluateLine(posOrder, product, cartQuantity, promosRuleConditionExp, splitArray[0]);
+                        if (result == false) {
+                            continue;
+                        } else {
+                            result = true;
+                            break;
                         }
                     }
-                } else {
-                    console('no promotion rule set');
-                }
+                }//
+                //var result = self.evaluateLine(promosRule, posOrder, product, cart_quantity);
             }
-            return false;
+            if (result) {
+                try {
+                    //Execute the action here
+                    executeAction = self.executeActionsLine(posOrder, product, cartQuantity, category)
+                    return executeAction;
+                } catch (error) {
+                    //TODO:
+                }
+
+            }
+
+
+            //var result = self.evaluateLine(promosRule, posOrder, product, cart_quantity, promosRulesActionObject);
+
+            return executeAction;
+
         },
         /*
          evaluate if the promotion is valid
          sales.py: evaluate_line()
          */
-        evaluateLine: function (promosRule, posOrder, product, cart_quantity, promosRulesActionObject) {
+        evaluateLine: function (posOrder, product, cart_quantity, promosRuleExp, splitArray) {
 
             var self = this;
-            var promosRuleExp = posOrder.get('pos').promos_rules_conditions_exps;
+
+
+            var result = 'Execution Failed';
             try {
-                /*
-                 will check Date and partner category
-                 -return true if condition is satisfied
-                 -return false if condition is not satisfied
-                 */
-                var primaryCondition = self.checkPrimaryConditionsLine(promosRule, posOrder);
+                result = self.expressionEvaluateLine(promosRuleExp, posOrder, product, cart_quantity, splitArray);
+                return result;
+
             } catch (error) {
                 return false;
             }
-            if (primaryCondition) {
 
-                var expectedResult = promosRule.expected_logic_result;
-                var logic = promosRule.logic;
-                var expression = promosRule.expressions;
-                var flag = false;
-                if (expression.length > 0) {
-                    for (var i = 0, len = expression.length; i < len; i++) {
-                        var result = 'Execution Failed';
-                        try {
-                            result = self.expressionEvaluateLine(expression[0], posOrder, product, cart_quantity, promosRulesActionObject[0])
-                            flag = false;
-                            if ((result.toLowerCase() == expectedResult.toLowerCase()) && (logic == 'and')) {
-                                flag = true;
-                            }
-                            //For OR logic any True is completely True
-                            else if ((result.toLowerCase() == expectedResult.toLowerCase()) && (logic == 'or')) {
-                                return true;
-                            }
-                            else if ((result.toLowerCase() == expectedResult.toLowerCase()) && promosRule.stop_further) {
-                                return true;
-                            }
-                        } catch (error) {
-                            return false;
-                        }
-                    }
-                    //if (logic == 'and') {
-                    //    //If control comes here for and logic, then all conditions were
-                    //    //satisfied
-                    //    return true;
-                    //}
-
-                } else {
-                    return false;
-                }
-
-            } else {
-                return false;
-            }
-            if (flag == true) {
-                return true;
-            }
             return false;
         },
-        executeActionsLine: function (promosRule, posOrder, product, cart_quantity, promosRulesActionObject) {
-            var self = this;
-            var actionRuleExecute = {};
-            var actionId = [];
-            for (var i = 0, len = promosRule.actions.length; i < len; i++) {
-                actionId.push(promosRule.actions[i]);
-                return actionRuleExecute = self.executeWorkOrder(actionId[i], posOrder, product, cart_quantity, promosRulesActionObject);
-            }
-            return actionRuleExecute;
-        },
+
         checkPrimaryConditionsLine: function (promosRule, posOrder) {
             var self = this;
             /*
@@ -935,18 +988,24 @@ function openerp_pos_promotion(instance, module) { // module is
              then retun 'True'
              or return 'False'
              */
-            if (self.promotionLineDate(today) >= self.promotionLineDate(fromDate)
-                && self.promotionLineDate(today) <= self.promotionLineDate(toDate)) {
-                if (partners != null && partnerCategorys.length > 0) {// promotion apply for particular user
-                    for (var i = 0, len = partnerCategorys.length; i < len; i++) {
-                        if (partners.id == partnerCategorys[i]) {
+            if (self.promotionLineDate(fromDate) <= self.promotionLineDate(toDate)) {
+                if (self.promotionLineDate(fromDate) <= self.promotionLineDate(toDate)) {
+                    if (self.promotionLineDate(today) >= self.promotionLineDate(fromDate)) {
+                        if (partners != null && partnerCategorys.length > 0) {// promotion apply for particular user
+                            for (var i = 0, len = partnerCategorys.length; i < len; i++) {
+                                if (partners.category_id[0] == partnerCategorys[i]) {
+                                    return true;
+                                }
+                            }
+                        } else if (partnerCategorys.length == 0) {//promotion apply for every if user is not set
                             return true;
+                        } else {
+                            return false;
                         }
+                    } else {
+                        return false;
                     }
-                } else if (partnerCategorys.length == 0) {//promotion apply for every if user is not set
-                    return true;
-                } else {
-                    return false;
+
                 }
             } else {
                 return false;
@@ -956,101 +1015,172 @@ function openerp_pos_promotion(instance, module) { // module is
         /*
          -Evaluate the expression in a given environment
          */
-        expressionEvaluateLine: function (expression, posOrder, product, cart_quantity, promosRulesAction) {
+        expressionEvaluateLine: function (promosRuleExp, posOrder, product, cart_quantity, splitArray) {
             var self = this;
-            var promosRuleExp = posOrder.get('pos').promos_rules_conditions_exps;
-            var currentSubTotal = this.currentSubtotal(posOrder, product, cart_quantity, promosRulesAction);
+            // var promosRuleExp = posOrder.get('pos').promos_rules_conditions_exps;
+
+
+            var promosRuleExpAttribute = promosRuleExp.attribute;
+            var ruleTrue = true;
+            var ruleFalse = false;
+            var exp = promosRuleExp;
+
+            var comparator = exp.comparator;
             var category = self.pos.db.get_category_by_id(product.pos_categ_id[0]);
+            if (promosRuleExpAttribute == 'prod_qty') {
 
-            var var_true = 'True';
-            var var_false = 'False';
-            for (var i = 0, len = promosRuleExp.length; i < len; i++) {
-                if (promosRuleExp[i].id == expression) {
-                    var exp = promosRuleExp[i];
+                if (product !== undefined && category !== undefined) {
 
-                    var expValue = exp.value;
-                    if (expValue == product.default_code || expValue == category.code || currentSubTotal >= expValue) {
-                        var comparator = exp.comparator;
-                        if (comparator == '==' && cart_quantity == exp.quantity || (comparator == '==' && currentSubTotal == expValue)) {
-                            return var_true;
+                    if ((product.default_code !== undefined && splitArray == product.default_code) || (category.code !== undefined && splitArray == category.code )) {
+
+                        if (comparator == '==' && cart_quantity == exp.quantity) {
+                            return ruleTrue;
                         }
-                        else if (comparator == '>=' && cart_quantity >= exp.quantity || (comparator == '>=' && currentSubTotal >= expValue)) {
-                            return var_true;
+                        else if (comparator == '>=' && cart_quantity >= exp.quantity) {
+                            return ruleTrue;
                         }
-                        else if (comparator == '<=' && cart_quantity <= exp.quantity || (comparator == '<=' && currentSubTotal <= expValue)) {
-                            return var_true;
+                        else if (comparator == '!=' && cart_quantity != exp.quantity) {
+                            return ruleTrue;
                         }
-                        else if (comparator == '!=' && cart_quantity != exp.quantity || (comparator == '!=' && currentSubTotal != expValue)) {
-                            return var_true;
-                        }
-                        else if (comparator == '>' && cart_quantity > exp.quantity || (comparator == '>' && currentSubTotal > expValue)) {
-                            return var_true;
-                        }
-                        else if (comparator == '<' && cart_quantity < exp.quantity || (comparator == '<' && currentSubTotal < expValue)) {
-                            return var_true;
+                        else if (comparator == '>' && cart_quantity > exp.quantity) {
+                            return ruleTrue;
                         }
                         else {
-                            return var_false;
+                            return ruleFalse;
                         }
                     }
+                }
+
+            } else if (promosRuleExpAttribute == 'amount_total' || promosRuleExpAttribute == 'amount_include_total') {// promotion will be on total amount
+                var currentSubTotal = 0;
+                var expValue = exp.price;
+
+                if (promosRuleExpAttribute == 'amount_total') {
+                    currentSubTotal = this.currentSubtotal(posOrder, product, cart_quantity);
+
                 } else {
-                    return var_false;
+                    var totalIncludedTax = this.currentSubtotal(posOrder, product, cart_quantity);
+                    var tax = posOrder.getTax();
+                    currentSubTotal = totalIncludedTax + tax;
+
+                }
+
+                if (currentSubTotal >= expValue) {
+                    if ((comparator == '==' && currentSubTotal == expValue)) {
+                        return ruleTrue;
+                    }
+                    else if ((comparator == '>=' && currentSubTotal >= expValue)) {
+                        return ruleTrue;
+                    }
+
+                    else if ((comparator == '!=' && currentSubTotal != expValue)) {
+                        return ruleTrue;
+                    }
+                    else if ((comparator == '>' && currentSubTotal > expValue)) {
+                        return ruleTrue;
+                    }
+
+                    else {
+                        return ruleFalse;
+                    }
+                }
+            } else if (promosRuleExpAttribute == 'prod_unit_price') { // same category but product.price>500
+                if (product !== undefined && category !== undefined) {
+
+                    if ((product.default_code !== undefined && splitArray == product.default_code) || (category.code !== undefined && splitArray == category.code )) {
+
+                        if (comparator == '==' && cart_quantity == exp.quantity && product.price == exp.price) {
+                            return ruleTrue;
+                        }
+                        else if (comparator == '>=' && cart_quantity >= exp.quantity && product.price >= exp.price) {
+                            return ruleTrue;
+                        }
+
+                        else if (comparator == '!=' && cart_quantity != exp.quantity && product.price != exp.price) {
+                            return ruleTrue;
+                        }
+                        else if (comparator == '>' && cart_quantity > exp.quantity && product.price > exp.price) {
+                            return ruleTrue;
+                        }
+                        else {
+                            return ruleFalse;
+                        }
+                    }
                 }
             }
-            return var_false;
+            return ruleFalse;
 
         },
-        executeWorkOrder: function (actionId, posOrder, product, cart_quantity, promosRulesActionObject) {
 
+        executeActionsLine: function (posOrder, product, cart_quantity, category) {
             var self = this;
             var discountObject = {};
-            var promosRulesActions = promosRulesActionObject[0];
-            for (var i = 0, len = promosRulesActionObject.length; i < len; i++) {
-                if (actionId == promosRulesActions.id) {
-                    //promosRuleArray.push(promosRulesActions[i]);
-                    var method_prefix = 'action_';
-                    var method = promosRulesActions.action_type;
-                    discountObject = self[method_prefix + method](promosRulesActions, posOrder, product, cart_quantity);
+            var promosRulesActions = posOrder.get('pos').promos_rules_actions;
+            var promosRuleAction = {};
+            for (var m = 0, mLen = promosRulesActions.length; m < mLen; m++) {
+                promosRuleAction = promosRulesActions[m];
+
+
+                var methodPrefix = 'action_';
+                var method = '';
+                if (promosRuleAction.product_code == false) {
+                    method = promosRuleAction.action_type;
+                    discountObject = self[methodPrefix + method](promosRuleAction, posOrder, product, cart_quantity);
 
                     return discountObject;
                 }
+                else if (promosRuleAction.product_code !== false) {
+                    var promosActionCodeSplit = promosRuleAction.product_code.split(',');
+
+                    for (var n = 0, nLen = promosActionCodeSplit.length; n < nLen; n++) {
+                        if ((promosActionCodeSplit[n] == product.default_code) || (promosActionCodeSplit[n] == category.code)) {
+                            method = promosRuleAction.action_type;
+                            discountObject = self[methodPrefix + method](promosRuleAction, product, cart_quantity);
+
+                            return discountObject;
+                        }
+                    }
+                }
+
+
             }
             return discountObject;
         },
         promotionLineDate: function (strDate) {
+            //TODO: conversion on date('%Y-%m-%d %H:%M:%S' or '%Y-%m-%d')
             var parts = strDate.split("-");
 
             return new Date(parts[0], parts[1] - 1, parts[2]);
         },
-        action_prod_disc_perc: function (promosRuleAction, posOrder, product, cart_quantity) {
+        action_prod_disc_perc: function (promosRuleAction, product, cart_quantity) {
 
             var discountObject = {};
             discountObject = this.discountCalculationPerc(promosRuleAction, product, cart_quantity);
 
             return discountObject;
         },
-        action_prod_disc_fix: function (promosRuleAction, posOrder, product, cart_quantity) {
+        action_prod_disc_fix: function (promosRuleAction, product, cart_quantity) {
 
             var discountObject = {};
             discountObject = this.discountCalculationFix(promosRuleAction, product, cart_quantity);
 
             return discountObject;
         },
-        action_prod_sub_disc_perc: function (promosRuleAction, posOrder, product, cart_quantity) {
+        action_prod_sub_disc_perc: function (promosRuleAction, product, cart_quantity) {
 
             var discountObject = {};
             discountObject = this.discountCalculationPerc(promosRuleAction, product, cart_quantity);
 
             return discountObject;
         },
-        action_prod_sub_disc_fix: function (promosRuleAction, posOrder, product, cart_quantity) {
+        action_prod_sub_disc_fix: function (promosRuleAction, product, cart_quantity) {
 
             var discountObject = {};
             discountObject = this.discountCalculationSubFix(promosRuleAction, product, cart_quantity);
 
             return discountObject;
         },
-        action_cat_disc_perc: function (promosRuleAction, posOrder, product, cart_quantity) {
+        action_cat_disc_perc: function (promosRuleAction, product, cart_quantity) {
 
             var discountObject = {};
             discountObject = this.discountCalculationPerc(promosRuleAction, product, cart_quantity);
@@ -1058,7 +1188,7 @@ function openerp_pos_promotion(instance, module) { // module is
             return discountObject;
         },
 
-        action_cat_disc_fix: function (promosRuleAction, posOrder, product, cart_quantity) {
+        action_cat_disc_fix: function (promosRuleAction, product, cart_quantity) {
 
             var discountObject = {};
             discountObject = this.discountCalculationFix(promosRuleAction, product, cart_quantity);
@@ -1093,7 +1223,7 @@ function openerp_pos_promotion(instance, module) { // module is
             var discountObject = {};
             var discountAmount = 0;
 
-            var currentSubTotal = this.currentSubtotal(posOrder, product, cart_quantity, promosRulesAction);
+            var currentSubTotal = this.currentSubtotal(posOrder, product, cart_quantity);
             try {
                 if (subTotal == 0) {
                     subTotal = product.price;
@@ -1111,6 +1241,7 @@ function openerp_pos_promotion(instance, module) { // module is
             }
             return discountObject;
         },
+
 
         discountCalculationFix: function (promosRuleAction, product, cart_quantity) {
             var self = this;
@@ -1155,9 +1286,6 @@ function openerp_pos_promotion(instance, module) { // module is
             return discountCalculation;
 
         },
-        action_prod_x_get_y: function (promosRule, posOrder) {
-            return 20;
-        }
     });
 
     module.ProductListWidget.include({
@@ -1172,66 +1300,28 @@ function openerp_pos_promotion(instance, module) { // module is
 
             this.click_product_handler = function (event) {
                 var product = self.pos.db.get_product_by_id(this.dataset['productId']);
-                var category = self.pos.db.get_category_by_id(product.pos_categ_id[0]);
-                //var category = self.pos.db.get_category_by_id(product.pos_categ_id[0]);
                 var posOrder = self.pos.get('selectedOrder');
-                var promosRulesActionObject = posOrder.get('pos').promos_rules_actions;
-                var promosRulesActions = promosRulesActionObject[0];
-                var promosRuleExp = posOrder.get('pos').promos_rules_conditions_exps;
 
-                var orderLine = posOrder.getSelectedLine();
-                var cart_quantity = 1;
-                var splitArray = [];
-                var promosExpCodeSplit = promosRuleExp[0].value.split(',');
-                if (promosRulesActions.action_type == "cart_disc_perc" || promosRulesActions.action_type == "cart_disc_fix") {
-                    if (orderLine == undefined) {
-                        cart_quantity = 1;
+                var promosRules = posOrder.get('pos').promotion_rules;
+                var promosRule = promosRules[0];
 
-                    } else if (product.id == orderLine.product.id) {
-                        cart_quantity = orderLine.quantity + 1;
 
-                    } else {
-                        cart_quantity = 1;
-
-                    }
-                } else {
-                    var count = 0;
-                    for (var i = 0, len = promosExpCodeSplit.length; len > i; i++) {
-                        if ((orderLine == undefined && category.code == promosExpCodeSplit[i]) || (orderLine == undefined && product.default_code == promosExpCodeSplit[i])) {
-                            splitArray.push(promosExpCodeSplit[i]);
-                            cart_quantity = 1;
-
-                        } else if ((orderLine != undefined && category.code == promosExpCodeSplit[i] && product.id == orderLine.product.id) || (orderLine != undefined && product.default_code == promosExpCodeSplit[i] && product.id == orderLine.product.id)) {
-                            splitArray.push(promosExpCodeSplit[i]);
-                            cart_quantity = orderLine.quantity + 1;
-
-                        } else if ((orderLine != undefined && category.code == promosExpCodeSplit[i] && product.id !== orderLine.product.id) || (orderLine != undefined && product.default_code == promosExpCodeSplit[i] && product.id != orderLine.product.id)) {
-                            if (count == 0) {
-                                splitArray.push(promosExpCodeSplit[i]);
-                                cart_quantity = 1;
-                                count = count + 1;
-
-                            } else {
-                                splitArray.push(promosExpCodeSplit[i]);
-                                cart_quantity = orderLine.quantity + 1;
-
-                            }
-                        }
-
-                    }
-                }
                 var actionType = "";
                 var arguments = "";
                 var prodDiscPrice = "";
+                //var promosRulesActions = {};
+                //check primary condition here
 
-                if (promosRulesActionObject !== undefined && promosRulesActionObject.length > 0) {
-                    try {
-                        var posProductObject = {};
-                        var method = promosRulesActionObject[0].action_type;
-                        if (method == 'prod_disc_perc' || method == 'prod_disc_fix' || method == 'cat_disc_perc' || method == 'cat_disc_fix' || method == 'prod_sub_disc_fix' || method == 'prod_sub_disc_perc') {
-                            posProductObject = posOrder.applyPromotionLine(product, posOrder, cart_quantity, promosRulesActionObject);
 
-                            if (posProductObject != false) {
+                if (promosRule !== undefined && promosRule.active == true) {
+                    var primaryCondition = posOrder.checkPrimaryConditionsLine(promosRule, posOrder);
+                    if (primaryCondition) {
+                        try {
+                            var posProductObject = {};
+                            var quantityFlag = false;
+                            posProductObject = posOrder.applyPromotionLine(posOrder, product, quantityFlag);
+
+                            if (posProductObject !== undefined || posProductObject !== '') {
                                 prodDiscPrice = posProductObject.discountPrice;
                                 arguments = posProductObject.arguments;
                                 product['discPrice'] = posProductObject.discountPrice;
@@ -1239,24 +1329,16 @@ function openerp_pos_promotion(instance, module) { // module is
                                 product['arguments'] = posProductObject.arguments;
                                 actionType = product['discType'];
                             }
-                        } else if (method == 'cart_disc_perc' || method == 'cart_disc_fix') {
-                            posProductObject = posOrder.applyPromotionLine(product, posOrder, cart_quantity, promosRulesActionObject);
 
-                            if (posProductObject != false) {
-
-                                prodDiscPrice = posProductObject.discountPrice;
-                                arguments = posProductObject.arguments;
-                                product['discPrice'] = posProductObject.discountPrice;
-                                product['discType'] = posProductObject.action_type;
-                                product['arguments'] = posProductObject.arguments;
-                                actionType = product['discType'];
-                                posOrder.setDiscountAmount(prodDiscPrice);
-                            }
+                        } catch (error) {
+                            console.log(error);
                         }
-                    } catch (error) {
+
                     }
+
+
                 }
-                options.click_product_action(product, prodDiscPrice, actionType, arguments, promosRulesActions[0]);
+                options.click_product_action(product, prodDiscPrice, actionType, arguments);
             };
 
             this.product_list = options.product_list || [];
@@ -1271,18 +1353,18 @@ function openerp_pos_promotion(instance, module) { // module is
             //var product = this.pos.db.get_product_by_id(this.dataset['productId']);
 
             var posOrder = this.pos.get('selectedOrder');
-            var promosRulesActionObject = posOrder.get('pos').promos_rules_actions;
             var orderLine = posOrder.selected_orderline;
             if (this.editable && posOrder.getSelectedLine() && cart_quantity != '') {
                 var product = orderLine.product;
-                var mode = this.numpad_state.get('mode');
+                var mode = this.numpad_state.get('mode');//posOrder, product
                 if (mode === 'quantity') {
-                    var promotionObject = posOrder.applyPromotionLine(product, posOrder, cart_quantity, promosRulesActionObject);
+                    var quantityFlag = true;
+                    var promotionObject = posOrder.applyPromotionLine(posOrder, product, quantityFlag, cart_quantity);
 
                     var actionType = promotionObject.action_type;
                     var arguments = promotionObject.arguments;
                     var discountPrice = promotionObject.discountPrice;
-                    orderLine.customMerge(product, actionType, discountPrice, arguments);
+                    orderLine.customMerge(actionType, discountPrice, arguments);
                     posOrder.getSelectedLine().set_quantity(val);
                 } else if (mode === 'price') {
                     posOrder.getSelectedLine().set_unit_price(val);
@@ -1294,15 +1376,42 @@ function openerp_pos_promotion(instance, module) { // module is
             var order = this.pos.get('selectedOrder');
             var promosRulesActions = order.get('pos').promos_rules_actions;
             if (promosRulesActions !== undefined && promosRulesActions.length > 0) {
-                var total = order ? order.getCustomTotalTaxIncluded() : 0;
-                var taxes = order ? total - order.getTotalTaxExcluded() : 0;
-                var method = promosRulesActions[0].action_type;
+                //var total = order ? order.getCustomTotalTaxIncluded() : 0;
+                //var taxes = order ? total - order.getTotalTaxExcluded() : 0;
+                var taxes = 0;
+                var totalWithDiscount = 0;
+                var total = 0;
+                var totalDiscount = 0;
 
-                if (method == 'cart_disc_perc' || method == 'cart_disc_fix' || method == 'prod_disc_perc' || method == 'prod_disc_fix' || method == 'cat_disc_perc' || method == 'cat_disc_fix' || method == 'prod_sub_disc_perc' || method == 'prod_sub_disc_fix') {
-                    var totalWithDiscount = order.getDisTotal();
-                    this.el.querySelector('.summary .total div > .value').textContent = this.format_currency(total);
-                    this.el.querySelector('.summary .total div > .total_value').textContent = this.format_currency(totalWithDiscount);
-                    this.el.querySelector('.summary .total .subentry .value').textContent = this.format_currency(taxes);
+                for (var n = 0, len = promosRulesActions.length; len > n; n++) {
+                    var method = promosRulesActions[n].action_type;
+                    var arguments = promosRulesActions[n].arguments;
+
+
+                    if (method == 'prod_disc_perc' || method == 'prod_disc_fix' || method == 'cat_disc_perc' || method == 'cat_disc_fix' || method == 'prod_sub_disc_perc' || method == 'prod_sub_disc_fix') {
+
+                        taxes = order.getTax();
+                        totalWithDiscount = order.getDisTotal();
+                        total = totalWithDiscount + taxes;
+                        totalDiscount = order.getDiscountAmount();
+
+                        this.el.querySelector('.summary .total div > .subtotal').textContent = this.format_currency(totalWithDiscount);
+                        this.el.querySelector('.summary .total div > .total_value').textContent = this.format_currency(total);
+                        this.el.querySelector('.summary .total .subentry .value').textContent = this.format_currency(taxes);
+                    }
+                    else if (method == 'cart_disc_perc' || method == 'cart_disc_fix') {
+                        taxes = order.getTax();
+                        totalWithDiscount = order.getDisTotal();
+                        total = totalWithDiscount + taxes;
+                        totalDiscount = order.getDiscountAmount();
+
+                        $(".discount_hide_show").css("display", "block");
+                        this.el.querySelector('.summary .total div > .subtotal').textContent = this.format_currency(totalWithDiscount);
+                        this.el.querySelector('.summary .total div > .discount_value').textContent = this.format_currency(totalDiscount);
+                        this.el.querySelector('.summary .total div > .total_value').textContent = this.format_currency(total);
+                        this.el.querySelector('.summary .total .subentry .value').textContent = this.format_currency(taxes);
+                    }
+
                 }
             }
         },

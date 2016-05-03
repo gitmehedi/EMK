@@ -19,27 +19,38 @@
     </t>
 
 	<t t-extend="OrderWidget">
-		<t t-jquery=".summary.clearfix" t-operation="before">
-			<div class="point clearfix">
-				<div t-attf-class="line #{orderlines.length === 0 ? 'empty' : ''}">
-					<div class='entry total'>
-						<t t-if="orderlines.length != 0">
-							<div t-attf-class="loyalty-point #{order.getPoint() > 0 ? 'display-block' : 'display-none'}">
-							<span class="label">Total Point:</span>
-							<span class="label ">
-								<t t-esc="order.getPoint()"/>
-							</span>
-							</div>
-						</t>
-						<t t-if="orderlines.length == 0">
-							<span class="loyl_entry">
-							</span>
-						</t>
-					</div>
-				</div>
-			</div>
-		</t>
-	</t>
+
+        <t t-jquery=".order-container .order-scroller .order .summary.clearfix" t-operation='replace'>
+
+            <div class="summary clearfix">
+                <div t-attf-class="line #{orderlines.length === 0 ? 'empty' : ''}">
+                    <div class='entry total'>
+                        <div>
+                            <span class="label ">Total:</span>
+                            <span class="value total">0.00 €</span>
+                        </div>
+
+                        <div class='subentry label'>Taxes:
+                            <span class="value taxes">0.00€</span>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="total_point_block ">
+                <t t-if="orderlines.length != 0">
+                    <div t-attf-class="loyalty-point #{order.getPoint() > 0 ? 'display-block' : 'display-none'}">
+                        <span class="label ">Loyalty Point:</span>
+                        <span class="label ">
+                            <t t-esc="order.getPoint()"/>
+                        </span>
+                    </div>
+                </t>
+            </div>
+        </t>
+
+    </t>
 	
 	
 	<t t-extend='ClientLine'>
@@ -93,7 +104,7 @@
 			<div t-attf-class="earned-point #{order.getPoint() > 0 ? 'display-block' : 'display-none'}">
 			<table>
 				<tr>
-					<td>Total Available Points:</td>
+					<td>Total Avail. Points :</td>
 					<td class="pos-right-align">
 						<t t-esc="widget.format_currency(order.getPoint())"/>
 					</td>
@@ -101,18 +112,7 @@
 			</table>
 			</div>
 		</t>
-		<!-- This is not needed for loyalty point -->	
-		<!--<t t-jquery=".pos-sale-ticket table:first" t-operation='after'>
-			<br />
-			<table>
-				<tr>
-					<td>Loyalty Benefits:</td>
-					<td class="pos-right-align">
-						<t t-esc="widget.format_currency(order.getPoint())"/>
-					</td>
-				</tr>
-			</table>
-		</t>-->
+
 	</t>
 	
 	<t t-extend='PaymentScreenWidget'>

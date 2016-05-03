@@ -795,7 +795,7 @@ function openerp_pos_promotion_loyalty(instance, module) { // module is
                         });
 
                         /*
-                            -calculate loyalty point with existing loyalty point
+                         -calculate loyalty point with existing loyalty point
                          */
                         if (sortedRule[0] != minPurchase) {
                             partner['point_loyalty'] = order
@@ -1107,7 +1107,7 @@ function openerp_pos_promotion_loyalty(instance, module) { // module is
                         return round_pr(((this.get_unit_price() * this.get_quantity()) - this.get_arguments()), rounding);
                     } else if (promosRulesActions[n].action_type == 'cart_disc_perc' || promosRulesActions[n].action_type == 'cart_disc_fix') {
                         return round_pr((this.get_unit_price() * this.get_quantity()), rounding);
-                    }  else {
+                    } else {
                         //return round_pr((this.get_unit_price() * this.get_quantity()) - (this.get_discount() * this.get_quantity()), rounding);
                         return round_pr(((this.get_unit_price() * this.get_quantity()) - (this.get_discount())), rounding);
                     }
@@ -1297,7 +1297,7 @@ function openerp_pos_promotion_loyalty(instance, module) { // module is
             var last_orderline = this.getLastOrderline();
             if (actionType !== undefined) {
 
-                if (actionType == 'cart_disc_perc' || actionType == 'cart_disc_fix' ) {
+                if (actionType == 'cart_disc_perc' || actionType == 'cart_disc_fix') {
                     var posOrder = this.pos.get('selectedOrder');
                     posOrder.setDiscountAmount(prodDiscPrice);
 
@@ -1336,7 +1336,7 @@ function openerp_pos_promotion_loyalty(instance, module) { // module is
             if (promosRulesActions !== undefined) {
 
 
-                if (promosRulesActions.action_type == 'cart_disc_perc'|| promosRulesActions.action_type == 'prod_disc_perc') {
+                if (promosRulesActions.action_type == 'cart_disc_perc' || promosRulesActions.action_type == 'prod_disc_perc') {
                     return this.getSubtotal() - disCountTotal;
                     //return this.getSubtotal();
 
@@ -1377,11 +1377,11 @@ function openerp_pos_promotion_loyalty(instance, module) { // module is
             var totalWithTax = 0;
             for (var m = 0, mLen = promosRulesActions.length; m < mLen; m++) {
 
-                    taxes = currentOrder.getTax();
-                    totalWithDiscount = currentOrder.getDisTotal();
-                    totalWithTax = totalWithDiscount + taxes;
+                taxes = currentOrder.getTax();
+                totalWithDiscount = currentOrder.getDisTotal();
+                totalWithTax = totalWithDiscount + taxes;
 
-                    return totalWithTax.toFixed(2);
+                return totalWithTax.toFixed(2);
 
 
             }
@@ -1936,7 +1936,6 @@ function openerp_pos_promotion_loyalty(instance, module) { // module is
             return client ? client.point_loyalty : "";
         },
 
-        /////
         get_client_address: function () {
             var client = this.get('client');
             return client ? client.address : "";
@@ -1952,8 +1951,8 @@ function openerp_pos_promotion_loyalty(instance, module) { // module is
         get_custom_amount_to_text: function () {
             var currentorder = this.pos.get('selectedOrder');
             //var totalamount = currentorder.getTotalTaxIncluded();
-            var totalamount = currentorder.getTotalWithTax();
-            var amount = this.amount_to_words(totalamount);
+            var totalAmount = currentorder.getTotalWithTax();
+            var amount = this.amount_to_words(totalAmount);
 
             return amount;
         },
@@ -2013,7 +2012,9 @@ function openerp_pos_promotion_loyalty(instance, module) { // module is
 
         getRewardPoint: function () {
 
-                var redemRule = this.getRedemptionRule();
+            var redemRule = this.getRedemptionRule();
+            if (redemRule !== undefined) {
+
                 var loyaltyPoint = this.getRedemPoint();
                 var rewordPoint = 0;
                 var DEFAULT_UNIT = 1;
@@ -2029,7 +2030,9 @@ function openerp_pos_promotion_loyalty(instance, module) { // module is
                     return rewordPoint.toFixed(2);
                 }
 
-
+            } else {
+                return;
+            }
 
 
         },
@@ -2093,9 +2096,6 @@ function openerp_pos_promotion_loyalty(instance, module) { // module is
             this.selectPaymentline(newPaymentline);
         },
     });
-
-
-    //promotion
 
     module.ProductListWidget.include({
         init: function (parent, options) {
@@ -2251,7 +2251,6 @@ function openerp_pos_promotion_loyalty(instance, module) { // module is
     });
 
 
-    //
 
     module.ClientListScreenWidget = module.ClientListScreenWidget
         .extend({

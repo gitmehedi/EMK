@@ -25,7 +25,7 @@
         'static/src/xml/pos_enhanced_template.xml',
     ],
     'css': [
-        'static/src/css/pos_loyalty_custom.css',
+        'static/src/css/loyalty_promotion_custom.css',
     ],
     'js': [
         'static/src/js/pos_promotion_loyalty_custom.js',

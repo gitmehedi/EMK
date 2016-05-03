@@ -6,7 +6,7 @@
     	<!-- Inherited_Id :::: point_of_sale/view/template.xml -->
         <template id="loyality_promotion_assets" name="loyality point" inherit_id="point_of_sale.index">
         	<xpath expr="//link[@id='pos-stylesheet']" position="after">
-                 <link rel="stylesheet" href="/pos_promotion_loyalty/static/src/css/pos_loyalty_custom.css"/>
+                 <link rel="stylesheet" href="/pos_promotion_loyalty/static/src/css/loyalty_promotion_custom.css"/>
             </xpath>
             <xpath expr="//script[@id='loading-script']" position="before">
                <script type="text/javascript" src="/pos_promotion_loyalty/static/src/js/pos_promotion_loyalty_custom.js"></script>

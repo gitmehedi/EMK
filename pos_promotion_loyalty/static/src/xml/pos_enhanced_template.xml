@@ -247,7 +247,7 @@
                 <div t-attf-class="earned-point #{order.getPoint() > 0 ? 'display-block' : 'display-none'}">
                     <table>
                         <tr>
-                            <td>Total Available Points:</td>
+                            <td>Total Avail. Points:</td>
                             <td class="pos-right-align">
                                 <t t-esc="widget.format_currency(order.getPoint())"/>
                             </td>
