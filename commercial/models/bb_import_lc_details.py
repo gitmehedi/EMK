@@ -8,9 +8,9 @@ class BBImportLCDetails(models.Model):
     # Relationship fields
     bb_import_lc_id = fields.Many2one('bb.import.lc', ondelete="CASCADE")
     
-    po_related = fields.Many2one('buyer.work.order', string="PO's to Relate", required=True,
+    po_related = fields.Many2one('sale.order', string="PO's to Relate", required=True,
                                domain=[('state', '=', 'confirm')])
-    tagged_po = fields.Many2one('buyer.work.order', string="Tagged PO", required=True,
+    tagged_po = fields.Many2one('sale.order', string="Tagged PO", required=True,
                                domain=[('state', '=', 'confirm')])
     
     

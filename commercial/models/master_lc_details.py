@@ -8,9 +8,9 @@ class MasterLCDetails(models.Model):
     # Relationship fields
     master_lc_id = fields.Many2one('master.lc', delegate=True, ondelete="cascade")
     
-    po_related = fields.Many2one('buyer.work.order', ondelete="cascade", string="PO's to Relate", required=True,
+    po_related = fields.Many2one('sale.order', ondelete="cascade", string="PO's to Relate", required=True,
                                domain=[('state', '=', 'confirm')])
-    tagged_po = fields.Many2one('buyer.work.order', ondelete="cascade", string="Tagged PO", required=True,
+    tagged_po = fields.Many2one('sale.order', ondelete="cascade", string="Tagged PO", required=True,
                                domain=[('state', '=', 'confirm')])
     
     

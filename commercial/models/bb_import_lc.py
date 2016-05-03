@@ -38,7 +38,7 @@ class BBImportLC(models.Model):
     lc_type = fields.Many2one('res.bank', string="LC Type", required=True)
     
    
-    export_po = fields.Many2one('buyer.work.order', string="Export PO", #required=True,
+    export_po = fields.Many2one('sale.order', string="Export PO", #required=True,
                                domain=[('state', '=', 'confirm')])
     export_lc_currency = fields.Many2one('res.bank', string="Export PO Currency", required=True)
     
