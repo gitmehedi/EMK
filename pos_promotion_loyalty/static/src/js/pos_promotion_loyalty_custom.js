@@ -1107,9 +1107,7 @@ function openerp_pos_promotion_loyalty(instance, module) { // module is
                         return round_pr(((this.get_unit_price() * this.get_quantity()) - this.get_arguments()), rounding);
                     } else if (promosRulesActions[n].action_type == 'cart_disc_perc' || promosRulesActions[n].action_type == 'cart_disc_fix') {
                         return round_pr((this.get_unit_price() * this.get_quantity()), rounding);
-                    } else if (promosRulesActions[n].action_type == 'cart_disc_tax_perc' || promosRulesActions[n].action_type == 'cart_disc_tax_fix') {
-                        return round_pr((this.get_unit_price() * this.get_quantity()), rounding);
-                    } else {
+                    }  else {
                         //return round_pr((this.get_unit_price() * this.get_quantity()) - (this.get_discount() * this.get_quantity()), rounding);
                         return round_pr(((this.get_unit_price() * this.get_quantity()) - (this.get_discount())), rounding);
                     }
@@ -1299,7 +1297,7 @@ function openerp_pos_promotion_loyalty(instance, module) { // module is
             var last_orderline = this.getLastOrderline();
             if (actionType !== undefined) {
 
-                if (actionType == 'cart_disc_perc' || actionType == 'cart_disc_fix' || actionType == 'cart_disc_tax_perc' || actionType == 'cart_disc_tax_fix') {
+                if (actionType == 'cart_disc_perc' || actionType == 'cart_disc_fix' ) {
                     var posOrder = this.pos.get('selectedOrder');
                     posOrder.setDiscountAmount(prodDiscPrice);
 
@@ -1338,12 +1336,12 @@ function openerp_pos_promotion_loyalty(instance, module) { // module is
             if (promosRulesActions !== undefined) {
 
 
-                if (promosRulesActions.action_type == 'cart_disc_perc' || promosRulesActions.action_type == 'cart_disc_tax_perc' || promosRulesActions.action_type == 'prod_disc_perc') {
+                if (promosRulesActions.action_type == 'cart_disc_perc'|| promosRulesActions.action_type == 'prod_disc_perc') {
                     return this.getSubtotal() - disCountTotal;
                     //return this.getSubtotal();
 
                 }
-                else if (promosRulesActions.action_type == 'cart_disc_fix' || promosRulesActions.action_type == 'cart_disc_tax_fix') {
+                else if (promosRulesActions.action_type == 'cart_disc_fix') {
                     return this.getSubtotal() - disCountTotal;
                     // return this.getSubtotal();
                 }
@@ -1378,18 +1376,6 @@ function openerp_pos_promotion_loyalty(instance, module) { // module is
             var totalWithDiscount = 0;
             var totalWithTax = 0;
             for (var m = 0, mLen = promosRulesActions.length; m < mLen; m++) {
-                promosRuleAction = promosRulesActions[m];
-                if (promosRuleAction.action_type == 'cart_disc_tax_perc') {
-                    //var discountTaxes = (currentOrder.getTax() * promosRuleAction.arguments) / 100;
-                    //taxes = currentOrder.getTax() - discountTaxes;
-                    taxes = currentOrder.getTax();
-                    totalWithDiscount = currentOrder.getDisTotal();
-                    totalWithTax = totalWithDiscount + taxes;
-
-                    return totalWithTax.toFixed(2);
-
-
-                } else {
 
                     taxes = currentOrder.getTax();
                     totalWithDiscount = currentOrder.getDisTotal();
@@ -1397,7 +1383,7 @@ function openerp_pos_promotion_loyalty(instance, module) { // module is
 
                     return totalWithTax.toFixed(2);
 
-                }
+
             }
 
 
@@ -1896,54 +1882,6 @@ function openerp_pos_promotion_loyalty(instance, module) { // module is
             }
             return discountObject;
         },
-        action_cart_disc_tax_fix: function (promosRulesAction, posOrder, product) {
-            var subTotal = posOrder.getSubtotal() + posOrder.getTax();
-            var discountObject = {};
-            var discountAmount = 0;
-
-
-            try {
-                if (subTotal == 0) {
-                    subTotal = product.price;
-                }
-                discountAmount = promosRulesAction.arguments;
-                discountObject['action_type'] = promosRulesAction.action_type;
-                discountObject['arguments'] = promosRulesAction.arguments;
-                discountObject['discountPrice'] = discountAmount;
-                return discountObject;
-            } catch (error) {
-                alert('action_cart_disc_tax_fix' + ' method error ');
-
-            }
-
-        },
-        action_cart_disc_tax_perc: function (promosRulesAction, posOrder, product, cart_quantity) {
-            var subTotal = posOrder.getSubtotal();
-            var selectedOrderLine = this.pos.get('selectedOrder').selected_orderline;
-            var discountObject = {};
-            var discountAmount = 0;
-            var total = 0;
-
-            var currentSubTotal = this.currentSubtotal(posOrder, product, cart_quantity);
-            try {
-                if (subTotal == 0) {
-                    subTotal = product.price;
-                    //total = subTotal + posOrder.getTax();
-                    discountAmount = (subTotal) * (promosRulesAction.arguments / 100);
-                } else {
-                    var taxes = posOrder.getTax();
-                    discountAmount = (currentSubTotal)* (promosRulesAction.arguments / 100);
-                }
-                //var arguments = promosRulesAction.arguments;
-                discountObject['action_type'] = promosRulesAction.action_type;
-                discountObject['arguments'] = promosRulesAction.arguments;
-                discountObject['discountPrice'] = discountAmount;
-                return discountObject;
-            } catch (error) {
-                alert('action_cart_disc_tax_perc' + ' method error ');
-            }
-            return discountObject;
-        },
 
 
         discountCalculationFix: function (promosRuleAction, product, cart_quantity) {
@@ -2282,29 +2220,7 @@ function openerp_pos_promotion_loyalty(instance, module) { // module is
                         this.el.querySelector('.summary .total div > .total_value').textContent = this.format_currency(total);
                         this.el.querySelector('.summary .total .subentry .value').textContent = this.format_currency(taxes);
                     }
-                    else if (method == 'cart_disc_tax_perc' || method == 'cart_disc_tax_fix') {
-                        if (method == 'cart_disc_tax_perc') {//
-                           taxes = order.getTax();
-                            totalWithDiscount = order.getDisTotal();
-                            total = totalWithDiscount + taxes;
-                            totalDiscount = order.getDiscountAmount();
 
-                        } else {
-
-                            taxes = order.getTax();
-                            totalWithDiscount = order.getDisTotal();
-                            total = totalWithDiscount + taxes;
-                            totalDiscount = order.getDiscountAmount();
-                        }
-
-
-                        $(".discount_hide_show").css("display", "block");
-                        this.el.querySelector('.summary .total div > .subtotal').textContent = this.format_currency(totalWithDiscount);
-                        this.el.querySelector('.summary .total div > .discount_value').textContent = this.format_currency(totalDiscount);
-                        this.el.querySelector('.summary .total div > .total_value').textContent = this.format_currency(total);
-                        this.el.querySelector('.summary .total .subentry .value').textContent = this.format_currency(taxes);
-
-                    }
                 }
             }
         },

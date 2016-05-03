@@ -61,10 +61,8 @@ ACTION_TYPES = [
     ('prod_disc_fix', _('Fixed amount on Product')),
     ('prod_sub_disc_perc', _('Discount % on Product Sub Total')),
     ('prod_sub_disc_fix', _('Fixed amount on Product Sub Total')),
-    ('cart_disc_perc', _('Discount % on Sub Total(excluding tax)')),
-    ('cart_disc_fix', _('Fixed amount on Sub Total(excluding tax)')),
-    ('cart_disc_tax_perc', _('Discount % on Sub Total(including tax)')),
-    ('cart_disc_tax_fix', _('Fixed amount on Sub Total(including tax)')),
+    ('cart_disc_perc', _('Discount % on Sub Total')),
+    ('cart_disc_fix', _('Fixed amount on Sub Total')),
     # ('prod_x_get_y', _('Buy X get Y free'))
 ]
 
