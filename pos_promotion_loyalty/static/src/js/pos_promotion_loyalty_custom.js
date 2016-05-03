@@ -2085,10 +2085,10 @@ function openerp_pos_promotion_loyalty(instance, module) { // module is
                 if (loyaltyPoint >= pointStartMargin
                     && loyaltyPoint <= pointEndMargin) {
                     rewordPoint = loyaltyPoint * rewardPointUnit;
-                    return rewordPoint;
+                    return rewordPoint.toFixed(2);
                 } else {
                     rewordPoint = loyaltyPoint * DEFAULT_UNIT;
-                    return rewordPoint;
+                    return rewordPoint.toFixed(2);
                 }
 
 
@@ -2101,7 +2101,7 @@ function openerp_pos_promotion_loyalty(instance, module) { // module is
             if (client != null && redemRule !== undefined) {
                 var rewardPoint = this.getRewardPoint();
 
-                var redemTotal = this.getRedemTotal();
+                var redemTotal = this.getRedemTotal().toFixed(2);
                 var rewardChange = rewardPoint - redemTotal;
                 var rewardPointUnit = redemRule.reward_point_unit;
                 var loyaltyPoint = rewardPoint / rewardPointUnit;
@@ -2470,16 +2470,16 @@ function openerp_pos_promotion_loyalty(instance, module) { // module is
                                 .getRewardPoint();
                             var redemTotal = currentOrder.getRedemTotal();
                             var rewardChange = 0;
-                            if (rewardPoint > redemTotal) {
+                            if (rewardPoint >= redemTotal) {
                                 var rewardChange = rewardPoint - redemTotal;
 
                             } else if (rewardPoint < 0) {
 
                                 return;
-                            } /*else if (redemTotal > rewardPoint) {
+                            } else if (redemTotal > rewardPoint) {
                                 alert(' point exceed limitations');
                                 return;
-                            }*/
+                            }
                         }
                     }
                 }
