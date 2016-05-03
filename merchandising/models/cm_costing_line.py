@@ -17,7 +17,7 @@ class CmCostingLine(models.Model):
     product_costing_type = fields.Selection([('pcs','Pcs'),('dzn','Dzn')], string="Costing Type",required=True)
 
     total_cost = fields.Float(digits=(20, 4), string='Total Cost',store=True)
-    total_cost_usd = fields.Float(compute="_compute_total_cost_usd", digits=(20, 4), string='Cost in USD')
+    total_cost_usd = fields.Float(compute="_compute_total_cost_usd", digits=(20, 4), string='Cost in Selected Cur')
     total_cost_flag = fields.Boolean(string=" ")
     
     """ relational fields """

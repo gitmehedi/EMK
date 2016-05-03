@@ -100,7 +100,7 @@ class ProductCosting(models.Model):
                               readonly=True, states={'draft':[('readonly', False)]})
     lab_test_cost = fields.Float(string='Lab Test/Dzn', digits=(20, 4), default=0.0, store=True, copy=True,
                                  readonly=True, states={'draft':[('readonly', False)]})
-    total_cm_cost = fields.Float(compute="_compute_cm_costs", string='Total CM Cost', digits=(20, 4),
+    total_cm_cost = fields.Float(compute="_compute_cm_costs", string='Total CM', digits=(20, 4),
                                  default=0.0, store=True, copy=True)
     total_summary_cost = fields.Float(compute="_compute_total_summary_cost", string='Total Sub Cost',
                                       digits=(20, 4), default=0.0, store=True, copy=True)
@@ -128,13 +128,16 @@ class ProductCosting(models.Model):
     fixed_overhead_currency_id = fields.Many2one('res.currency', readonly=True, states={'draft':[('readonly', False)]})
     fixed_overhead_bonus_percentage = fields.Float(digits=(20, 4), default=0.0,
                                                    readonly=True, states={'draft':[('readonly', False)]})
+    fixed_overhead_bonus_percentage_readonly = fields.Float(related="fixed_overhead_bonus_percentage", digits=(20, 4),
+                                                   readonly=True)
 
     fixed_overhead_cm_cost_bdt = fields.Float(digits=(20, 4), default=0.0, store=True, copy=True)
+    fixed_overhead_cm_cost_bdt_readonly = fields.Float(related="fixed_overhead_cm_cost_bdt", digits=(20, 4),  readonly=True)
     fixed_overhead_cm_cost_usd = fields.Float(compute="_compute_fixed_overhead_cm_cost_usd", string="Fixed Overhead Cost on Service (%)", digits=(20, 4), default=0.0, store=True, copy=True)
 
     total_cm_cost_usd = fields.Float(compute="_compute_total_cm_cost_usd", string="Total CM", digits=(20, 4), default=0.0, store=True, copy=True)
     total_cm_cost_bdt = fields.Float(compute="_compute_total_cm_cost_bdt", digits=(20, 4), default=0.0, store=True, copy=True)
-    fob_cal_flag = fields.Boolean(default=True)
+    fob_cal_flag = fields.Boolean(default=True, string="Will you give a fixed overhead cost?")
 
     """
     States and Constraints
@@ -419,11 +422,20 @@ class ProductCosting(models.Model):
     def onchange_fixed_overhead_cm_cost_bdt(self):
         sum_cost = 0
         if self.cm_ids:
-            sum_cost = sum([x.total_cost for x in self.cm_ids])
+            sum_cost = sum([x.total_cost_usd for x in self.cm_ids])
             if self.fob_cal_flag:
-                self.fixed_overhead_cm_cost_bdt = sum_cost * (self.fixed_overhead_bonus_percentage / 100)
+                fix_overhead_currency = self.fixed_overhead_cm_cost_bdt * (self.convert_currency(self.fixed_overhead_currency_id.id, self.product_currency_id.id))
+                percentage_val =  ((fix_overhead_currency/sum_cost)*100)
+                self.fixed_overhead_bonus_percentage = percentage_val
+                self.fixed_overhead_bonus_percentage_readonly = percentage_val
             else:
-                self.fixed_overhead_bonus_percentage = ((self.fixed_overhead_cm_cost_bdt/sum_cost)*100)
+                percentage_val =  sum_cost * (self.fixed_overhead_bonus_percentage / 100)
+                self.fixed_overhead_cm_cost_bdt = percentage_val
+                self.fixed_overhead_cm_cost_bdt_readonly = percentage_val
+
+
+            self.total_cm_cost_usd = sum_cost + self.fixed_overhead_cm_cost_usd
+
     @api.multi
     @api.depends('cm_ids', 'fixed_overhead_cm_cost_usd')
     def _compute_total_cm_cost_usd(self):
@@ -431,12 +443,6 @@ class ProductCosting(models.Model):
         if self.cm_ids:
             self.total_cm_cost_usd = sum([x.total_cost_usd for x in self.cm_ids]) + self.fixed_overhead_cm_cost_usd
 
-    @api.multi
-    @api.depends('cm_ids', 'fixed_overhead_cm_cost_bdt')
-    def _compute_total_cm_cost_bdt(self):
-        sum_cost = 0
-        if self.cm_ids:
-            self.total_cm_cost_bdt = sum([x.total_cost for x in self.cm_ids]) + self.fixed_overhead_cm_cost_bdt
 
     """
     State Actions
@@ -463,3 +469,19 @@ class ProductCosting(models.Model):
     @api.one
     def action_cancel(self):
         self.state = 'cancel'
+
+
+    """
+    Currency conversion
+    """
+
+    @api.model
+    def convert_currency(self, from_cur, to_cur):
+        currency_obj = self.env['res.currency']
+        t_cur, f_cur = 0, 0
+        if from_cur:
+            f_cur = currency_obj.search([('id', '=', from_cur)], limit=1)
+
+        if to_cur:
+            t_cur = currency_obj.search([('id', '=', to_cur)], limit=1)
+        return t_cur.rate / f_cur.rate
