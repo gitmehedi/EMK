@@ -4,7 +4,7 @@
 <openerp>
     <data>
     	<!-- Inherited_Id :::: point_of_sale/view/template.xml -->
-        <template id="pos_loyality_template" name="loyality point" inherit_id="point_of_sale.index">
+        <template id="loyality_promotion_assets" name="loyality point" inherit_id="point_of_sale.index">
         	<xpath expr="//link[@id='pos-stylesheet']" position="after">
                  <link rel="stylesheet" href="/pos_promotion_loyalty/static/src/css/pos_loyalty_custom.css"/>
             </xpath>

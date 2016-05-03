@@ -6,7 +6,7 @@
     'website': 'www.genweb2.com',
     'category': 'Garments & Apparels',
     'data': ['views/loyalty_rules_view.xml',
-             'views/pos_loyality_template.xml',
+             'views/loyality_promotion_assets.xml',
              'views/assets.xml',
              'views/inherited_account_view.xml',
              'views/inherited_point_of_sale_view.xml',
