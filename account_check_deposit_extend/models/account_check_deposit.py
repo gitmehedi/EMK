@@ -246,7 +246,11 @@ class AccountMoveLine(models.Model):
 
     check_entry_id = fields.Many2one(
         'account.check.entry', string='Check Deposit', copy=False)
-
+#     state = fields.Selection([
+#                ('draft','Draft'),
+#                ('deposit','Deposit'),
+#                ('reject','Reject'),
+#            ], string='Status', default='draft', index=True, readonly=True)
 
 class ResCompany(models.Model):
     _inherit = 'res.company'
