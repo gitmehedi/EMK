@@ -39,6 +39,7 @@
     'data': [
         'views/voucher_payment_receipt_view_extend.xml',
         'views/account_view_extend.xml',
+        'views/account_check_deposit_view.xml'
     ],
     'installable': True,
     'application': True,
