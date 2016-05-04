@@ -8,9 +8,10 @@
 			<field name="inherit_id" ref="account.view_move_line_tree" />
 			<field name="arch" type="xml">
 				<field name="reconcile_ref" position="after">
-					<field name="cheque_received_date" />
-					<field name="posting_date" />
+					<field name="cheque_date" />
 					<field name="cheque_number" />
+					<field name="issuing_bank" />
+					<field name="bank_branch_name" />
 				</field>
 			</field>
 		</record>
