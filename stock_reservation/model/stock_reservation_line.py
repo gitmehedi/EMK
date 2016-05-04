@@ -28,12 +28,10 @@ class StockReservationLine(models.Model):
     
     
     product_id = fields.Many2one('product.product', string="Product")
-    quantity = fields.Float(digits=(20, 2), string='Quantity', required=True, default=0.0)
+    quantity = fields.Float(digits=(20, 2), string='Quantity', default=0.0)
     uom = fields.Many2one('product.uom', string="UOM")
     uom_category = fields.Integer(invisible=True)
-    destination_loc_id = fields.Many2one('stock.location', 'Destination Location',  required=True)
-    #analytic_account_id = fields.Many2one('account.analytic.account', 'Analytic Account', required=True)
-    
+
     stock_reservation_id = fields.Many2one('stock.reservation',"Stock Reservation")
     analytic_account_id = fields.Many2one(string='Analytic Account', 
                                           related='stock_reservation_id.analytic_account_id')
@@ -42,10 +40,8 @@ class StockReservationLine(models.Model):
     @api.onchange('product_id')
     def onchange_product_id(self):
         if self.product_id:
-            print '-------------41-----------',self.stock_reservation_id.analytic_resv_loc_id
             self.uom_category=self.product_id.uom_id.category_id.id
             self.uom=self.product_id.uom_id.id
-            self.destination_loc_id = self.stock_reservation_id.analytic_resv_loc_id
             self.analytic_account_id = self.stock_reservation_id.analytic_account_id
     
     

@@ -34,10 +34,7 @@
 									options='{"no_open": True,"no_create": 1, "no_create_edit": 1}' />
 								<field name="source_loc_id"
 									options='{"no_open": True,"no_create": 1, "no_create_edit": 1}'
-									invisible="1" />
-								<field name="analytic_resv_loc_id"
-									options='{"no_open": True,"no_create": 1, "no_create_edit": 1}'
-									invisible="1"/>
+									invisible="0" />
 							</group>
 
 
@@ -55,9 +52,7 @@
 										<field name="uom"
 											options='{"no_open": True,"no_create": 1, "no_create_edit": 1}'
 											domain="[('category_id', '=', uom_category)]" readonly='1'/>
-										<field name="destination_loc_id"
-											options='{"no_open": True,"no_create": 1, "no_create_edit":
-											1}' readonly='1'/>
+
 										<field name="analytic_account_id"
 											options='{"no_open": True,"no_create": 1, "no_create_edit":
 											1}' readonly='1'/>
@@ -82,7 +77,6 @@
 				<tree string="Stock Re-allocation">
 					<field name="date" />
 					<field name="warehouse_id" />
-					<field name="analytic_resv_loc_id" />
 					<field name="state" />
 				</tree>
 			</field>

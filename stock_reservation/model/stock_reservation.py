@@ -34,11 +34,10 @@ class StockReservation(models.Model):
     warehouse_id = fields.Many2one('stock.warehouse', "Warehouse", required=True, readonly=True, states={'draft':[('readonly', False)]})
     state = fields.Selection([('draft', "Draft"), ('generate', "Generate"), ('confirmed', "Confirmed"), ('reserve', "Reserve"), ('release', "Release"), ('done', "Done"), ('cancel', "Cancel")],
                             default="draft", readonly=True, states={'draft':[('readonly', False)]})
-    stock_reservation_line_ids = fields.One2many('stock.reservation.line', 'stock_reservation_id', string="Stock Reservation", required=True
-                               , readonly=True, states={'draft':[('readonly', False)]}, copy=True)
+    stock_reservation_line_ids = fields.One2many('stock.reservation.line', 'stock_reservation_id', string="Stock Reservation", readonly=True, states={'draft':[('readonly', False)]}, copy=True)
     
     source_loc_id = fields.Many2one('stock.location', 'Stock Location', required=True, readonly=True, states={'draft':[('readonly', False)]})
-    analytic_resv_loc_id = fields.Many2one('stock.location', 'Analytic Reservation Location', required=True, readonly=True, states={'draft':[('readonly', False)]})
+    
     analytic_account_id = fields.Many2one('account.analytic.account', 'Analytic Account', required=True, readonly=True, states={'draft':[('readonly', False)]})
     remarks = fields.Text(string="Remarks", size=300,
                           readonly=True, states={'draft':[('readonly', False)]})
@@ -49,7 +48,6 @@ class StockReservation(models.Model):
     @api.onchange('warehouse_id')
     def onchange_warehouse(self):
         if self.warehouse_id and self.allocate_flag == 1:
-            self.analytic_resv_loc_id = self.warehouse_id.wh_stock_ana_resv_id.id
             self.source_loc_id = self.warehouse_id.lot_stock_id
     
     @api.multi
@@ -59,7 +57,11 @@ class StockReservation(models.Model):
     @api.multi
     def action_cancel(self):
         self.state = "cancel"
-        
+     
+    @api.multi
+    def action_reserve(self):
+        self.state = "reserve"
+    '''     
     @api.multi
     def action_reserve(self):
         
@@ -94,15 +96,13 @@ class StockReservation(models.Model):
                     }
                     
                     move_id = obj_stock_move.create(move_vals)
-                    
+    '''              
     @api.multi
     def write(self, vals):
         print "+++++++++++>>>>>>>>>>>>>>", vals
         print "+++++++++++>>>>>>>>>>>>>>self:", self.source_loc_id.id
 #         obj_reservation_quant = self.env['reservation.quant']
-        '''
-        updating reserve qty start
-        '''
+
         if('state' in vals):
             if(vals['state'] == 'reserve' or vals['state'] == 'release'):
                 for res in self:
@@ -111,7 +111,7 @@ class StockReservation(models.Model):
                             reservation_quant_obj = self.env['reservation.quant'].search([['product_id', '=', line.product_id.id], ['location', '=', self.source_loc_id.id], ['analytic_account_id', '=', line.analytic_account_id.id]])
                             print "reservation_quant_obj11", reservation_quant_obj
                         if vals['state'] == 'release' and self.allocate_flag == 2:
-                            reservation_quant_obj = self.env['reservation.quant'].search([['product_id', '=', line.product_id.id], ['location', '=', self.analytic_resv_loc_id.id], ['analytic_account_id', '=', line.analytic_account_id.id]])
+                            reservation_quant_obj = self.env['reservation.quant'].search([['product_id', '=', line.product_id.id], ['location', '=', self.source_loc_id.id], ['analytic_account_id', '=', line.analytic_account_id.id]])
                             print "reservation_quant_obj", reservation_quant_obj
                         
                         if not reservation_quant_obj:
@@ -136,8 +136,8 @@ class StockReservation(models.Model):
                             
                             move_id = reservation_quant_obj.write(move_vals)  
         return super(StockReservation, self).write(vals)
+    '''
     
-    """
     @api.multi
     @api.onchange('analytic_account_id')
     def onchange_analytic(self):
@@ -145,4 +145,4 @@ class StockReservation(models.Model):
             for line in self:
                 for res in line.stock_reservation_line_ids:
                     res.analytic_account_id = self.analytic_account_id
-    """
+    '''

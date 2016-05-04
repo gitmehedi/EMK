@@ -7,19 +7,10 @@ class InheritedStockReservation(models.Model):
 	_inherit = 'stock.reservation'
 	_description = 'Stock Re-Allocation'
 	
-	stock_reservation_line_ids = fields.One2many('stock.reservation.line', 'stock_reservation_id', string="Stock Reservation", required=True
+	stock_reservation_line_ids = fields.One2many('stock.reservation.line', 'stock_reservation_id', string="Stock Reservation"
     
                                ,readonly=True, states={'draft':[('readonly', False)],'generate':[('readonly',False)]}, copy=True)
 	
-	@api.multi
-	@api.onchange('analytic_account_id', 'warehouse_id')
-	def onchange_analytic_account(self):
-		obj_reservation = ''
-		if self.analytic_account_id and self.warehouse_id and self.allocate_flag == 3:
-			print '-----analytic_account_id-----',self.analytic_account_id
-			obj_reservation = self.env['stock.reservation'].search([['analytic_account_id','=',self.analytic_account_id.id],['warehouse_id','=',self.warehouse_id.id]], limit=1)
-			self.analytic_resv_loc_id = obj_reservation.analytic_resv_loc_id.id
-			self.source_loc_id = obj_reservation.analytic_resv_loc_id.id
             
 	@api.multi
 	def action_generate_line(self):
@@ -67,7 +58,6 @@ class InheritedStockReservation(models.Model):
 				uom_id=product_id.uom_id.id
  				res_vals = {
  				    'analytic_account_id':self.analytic_account_id.id,
- 				    'destination_loc_id': obj_reservation.analytic_resv_loc_id.id,
  				    'product_id': line['product_id'],
  				    'stock_reservation_id': self.id,
  				    'uom_category':product_id,
@@ -128,7 +118,6 @@ class InheritedStockReservation(models.Model):
 				uom_id=product_id.uom_id.id
  				res_vals = {
  				    'analytic_account_id':self.analytic_account_id.id,
- 				    'destination_loc_id': obj_reservation.analytic_resv_loc_id.id,
  				    'product_id': line['product_id'],
  				    'stock_reservation_id': self.id,
  				    'uom_category':product_id,
@@ -141,7 +130,10 @@ class InheritedStockReservation(models.Model):
  				if(res_vals['allocate_qty'] > 0):
 					res_line_obj.write(res_vals)
 					self.write({'state':'generate'})
-	
+	@api.multi
+	def action_release(self):
+		self.state = 'release'	
+	'''
 	@api.multi
 	def action_release(self):
 	    obj_stock_picking = self.env['stock.picking']
@@ -175,7 +167,7 @@ class InheritedStockReservation(models.Model):
 	                }
 	                move_id  = obj_stock_move.create(move_vals)
 	                
-	               
+	'''               
 	
 class InheritedStockReservationLine(models.Model):
 	_inherit = 'stock.reservation.line'

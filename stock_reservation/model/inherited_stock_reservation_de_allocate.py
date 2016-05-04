@@ -7,8 +7,8 @@ class InheritedStockReservation(models.Model):
 	_inherit = 'stock.reservation'
 	_description = 'Stock De-Allocation'
 	
-	stock_reservation_line_ids = fields.One2many('stock.reservation.line', 'stock_reservation_id', string="Stock Reservation", required=True
-                               ,readonly=True, states={'draft':[('readonly', False)],'generate':[('readonly',False)]}, copy=True)
+	stock_reservation_line_ids = fields.One2many('stock.reservation.line', 'stock_reservation_id', string="Stock Reservation", readonly=True, states={'draft':[('readonly', False)],'generate':[('readonly',False)]}, copy=True)
+	
 	@api.multi
 	@api.onchange('analytic_account_id', 'warehouse_id')
 	def onchange_analytic_warehouse(self):
@@ -16,15 +16,14 @@ class InheritedStockReservation(models.Model):
 		if self.analytic_account_id and self.warehouse_id:
 			obj_reservation = self.env['stock.reservation'].search([['analytic_account_id','=',self.analytic_account_id.id],['warehouse_id','=',self.warehouse_id.id]], limit=1)
 			if self.allocate_flag == 2:
-				self.analytic_resv_loc_id = obj_reservation.source_loc_id.id
-				self.source_loc_id = obj_reservation.analytic_resv_loc_id.id
-			
+				self.source_loc_id = obj_reservation.source_loc_id.id
 			if self.allocate_flag == 3:
-				self.analytic_resv_loc_id = obj_reservation.analytic_resv_loc_id.id
-				self.source_loc_id = obj_reservation.analytic_resv_loc_id.id
-            
+				self.source_loc_id = obj_reservation.source_loc_id.id
+	
 	@api.multi
 	def action_generate_line(self):
+		print "----self---",self
+		print "----analytic_account_id---",self.analytic_account_id
 		if self.analytic_account_id and self.warehouse_id:
 			obj_reservation = self.env['stock.reservation'].search([['analytic_account_id','=',self.analytic_account_id.id],['warehouse_id','=',self.warehouse_id.id]], limit=1)
 			query = '''
@@ -56,6 +55,7 @@ class InheritedStockReservation(models.Model):
 				GROUP BY product_id
 			''' % (self.analytic_account_id.id, self.warehouse_id.id,self.analytic_account_id.id, self.warehouse_id.id,self.analytic_account_id.id, self.warehouse_id.id)
 # 			self.ensure_one()
+			print query
 			res_ext = self.env.cr.execute(query)
 			result = self.env.cr.dictfetchall()
 			res_vals = []
@@ -67,7 +67,6 @@ class InheritedStockReservation(models.Model):
  				if self.allocate_flag == 2:
 	 				res_vals = {
 	 				    'analytic_account_id':self.analytic_account_id.id,
-	 				    'destination_loc_id': obj_reservation.source_loc_id.id,
 	 				    'product_id': line['product_id'],
 	 				    'stock_reservation_id': self.id,
 	 				    'uom_category':product_id,
@@ -79,7 +78,6 @@ class InheritedStockReservation(models.Model):
 	 			if self.allocate_flag == 3:
 	 				res_vals = {
  				    'analytic_account_id':self.analytic_account_id.id,
- 				    'destination_loc_id': obj_reservation.source_loc_id.id,
  				    'product_id': line['product_id'],
  				    'stock_reservation_id': self.id,
  				    'uom_category':product_id,
@@ -138,7 +136,6 @@ class InheritedStockReservation(models.Model):
  				if self.allocate_flag == 2:
 	 				res_vals = {
 	 				    'analytic_account_id':self.analytic_account_id.id,
-	 				    'destination_loc_id': obj_reservation.source_loc_id.id,
 	 				    'product_id': line['product_id'],
 	 				    'stock_reservation_id': self.id,
 	 				    'uom_category':product_id,
@@ -150,7 +147,6 @@ class InheritedStockReservation(models.Model):
 	 			if self.allocate_flag == 3:
 	 				res_vals = {
 	 				    'analytic_account_id':self.analytic_account_id.id,
-	 				    'destination_loc_id': obj_reservation.source_loc_id.id,
 	 				    'product_id': line['product_id'],
 	 				    'stock_reservation_id': self.id,
 	 				    'uom_category':product_id,
@@ -164,7 +160,11 @@ class InheritedStockReservation(models.Model):
 					res_line_obj.write(res_vals)
 					self.write({'state':'generate'})
 			
-				
+	@api.multi
+	def action_release(self):
+		self.state = 'release'	
+		
+	'''			
 	@api.multi
 	def action_release(self):
 	    obj_stock_picking = self.env['stock.picking']
@@ -215,7 +215,7 @@ class InheritedStockReservation(models.Model):
 		                }
 	                move_id  = obj_stock_move.create(move_vals)
 	                
-	               
+	'''               
 	
 class InheritedStockReservationLine(models.Model):
 	_inherit = 'stock.reservation.line'
