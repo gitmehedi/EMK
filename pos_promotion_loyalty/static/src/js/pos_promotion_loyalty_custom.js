@@ -1700,9 +1700,23 @@ function openerp_pos_promotion_loyalty(instance, module) { // module is
                     currentSubTotal = this.currentSubtotal(posOrder, product, cart_quantity);
 
                 } else {
+                     var productTaxes = this.pos.taxes;
+
+                    var taxAmount = 0;
+                    for(var m = 0, len = productTaxes.length; m < len; m++){
+                        if(product.taxes_id[0] == productTaxes[m].id){
+                            taxAmount = productTaxes[m].amount;
+
+                        }
+                    }
+                    /*
+                        productTax -> for calculating 1st product tax
+                        tax -> it will be the selected orderLine tax
+                     */
+                    var productTax = product.price * taxAmount;
                     var totalIncludedTax = this.currentSubtotal(posOrder, product, cart_quantity);
                     var tax = posOrder.getTax();
-                    currentSubTotal = totalIncludedTax + tax;
+                    currentSubTotal = totalIncludedTax + tax + productTax;
 
                 }
 
