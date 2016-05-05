@@ -1296,13 +1296,18 @@ function openerp_pos_promotion_loyalty(instance, module) { // module is
 
             var last_orderline = this.getLastOrderline();
             if (actionType !== undefined) {
+                var posOrder = this.pos.get('selectedOrder');
 
                 if (actionType == 'cart_disc_perc' || actionType == 'cart_disc_fix') {
-                    var posOrder = this.pos.get('selectedOrder');
+
                     posOrder.setDiscountAmount(prodDiscPrice);
 
                 }
-                if (actionType !== 'prod_sub_disc_perc' || actionType !== 'prod_sub_disc_fix') {
+                if (actionType == 'prod_sub_disc_perc' || actionType == 'prod_sub_disc_fix') {
+                    posOrder.setDiscountAmount(prodDiscPrice, actionType, arguments);
+
+                }
+                if (actionType == 'prod_disc_perc' || actionType == 'prod_disc_fix') {
                     line.set_discount(prodDiscPrice, actionType, arguments);
 
                 }
@@ -1700,18 +1705,18 @@ function openerp_pos_promotion_loyalty(instance, module) { // module is
                     currentSubTotal = this.currentSubtotal(posOrder, product, cart_quantity);
 
                 } else {
-                     var productTaxes = this.pos.taxes;
+                    var productTaxes = this.pos.taxes;
 
                     var taxAmount = 0;
-                    for(var m = 0, len = productTaxes.length; m < len; m++){
-                        if(product.taxes_id[0] == productTaxes[m].id){
+                    for (var m = 0, len = productTaxes.length; m < len; m++) {
+                        if (product.taxes_id[0] == productTaxes[m].id) {
                             taxAmount = productTaxes[m].amount;
 
                         }
                     }
                     /*
-                        productTax -> for calculating 1st product tax
-                        tax -> it will be the selected orderLine tax
+                     productTax -> for calculating 1st product tax
+                     tax -> it will be the selected orderLine tax
                      */
                     var productTax = product.price * taxAmount;
                     var totalIncludedTax = this.currentSubtotal(posOrder, product, cart_quantity);
@@ -2024,8 +2029,8 @@ function openerp_pos_promotion_loyalty(instance, module) { // module is
             return redemRules[0];
         },
         /*
-            -rewardPoint calculation
-            - default value is 1
+         -rewardPoint calculation
+         - default value is 1
          */
 
         getRewardPoint: function () {
@@ -2269,7 +2274,6 @@ function openerp_pos_promotion_loyalty(instance, module) { // module is
     });
 
 
-
     module.ClientListScreenWidget = module.ClientListScreenWidget
         .extend({
             update_point_from_order: function (partner) {
@@ -2335,34 +2339,71 @@ function openerp_pos_promotion_loyalty(instance, module) { // module is
                     while (node && !node.classList.contains('paymentline')) {
                         node = node.parentNode;
                     }
-                    if (node) {
-                        var amount;
-                        var isValidate = function (value) {
-                            var value = this.value
-                            if (value < 0) {
-                                alert('negetive no');
-                            }
-                        }
-                        try {
+                    for (var m = 0, len = journal.length; m < len; m++) {
+                        if (journal[m].is_redemption == true) {
 
-                            if (this.value >= 0 && this.value !== '') {
-                                amount = instance.web.parse_value(
-                                    this.value, {
-                                        type: "float"
-                                    });
-                                node.line.set_amount(amount);
-                            } else {
+                            if (node) {
+                                var amount;
+                                var isValidate = function (value) {
+                                    var value = this.value
+                                    if (value < 0) {
+                                        alert('negetive no');
+                                    }
+                                }
+                                try {
 
-                                var validate = isValidate(this.value);
-                                alert('check value');
-                                amount = 0;
-                                node.line.set_amount(amount);
+                                    if (this.value !== '' && this.value <= order.getRewardToLoyaltyPoint()) {
+                                        amount = instance.web.parse_value(
+                                            this.value, {
+                                                type: "float"
+                                            });
+                                        node.line.set_amount(amount);
+                                    } else {
+
+                                        var validate = isValidate(this.value);
+                                        alert('check loyalty value');
+                                        amount = 0;
+                                        node.line.set_amount(amount);
+                                    }
+                                } catch (e) {
+                                    amount = 0;
+                                    node.line.set_amount(amount);
+                                }
                             }
-                        } catch (e) {
-                            amount = 0;
-                            node.line.set_amount(amount);
+
+                        } else {
+                            if (node) {
+                                var amount;
+                                var isValidate = function (value) {
+                                    var value = this.value
+                                    if (value < 0) {
+                                        alert('negetive no');
+                                    }
+                                }
+                                try {
+
+                                    if (this.value >= 0 && this.value !== '') {
+                                        amount = instance.web.parse_value(
+                                            this.value, {
+                                                type: "float"
+                                            });
+                                        node.line.set_amount(amount);
+                                    } else {
+
+                                        var validate = isValidate(this.value);
+                                        alert('check value');
+                                        amount = 0;
+                                        node.line.set_amount(amount);
+                                    }
+                                } catch (e) {
+                                    amount = 0;
+                                    node.line.set_amount(amount);
+                                }
+                            }
+
                         }
                     }
+
                 };
 
                 this.line_click_handler = function (event) {
@@ -2397,6 +2438,7 @@ function openerp_pos_promotion_loyalty(instance, module) { // module is
                     var redemptionJournal = [];
                     for (i = 0, len = cashRegisters.length; i < len; i++) {
                         if (cashRegisters[i].journal.is_redemption == true) {
+                            var count = 0;
                             var rewardToLoyaltyPoint = currentOrder
                                 .getRewardToLoyaltyPoint();
                             var rewardPoint = currentOrder
@@ -2409,10 +2451,11 @@ function openerp_pos_promotion_loyalty(instance, module) { // module is
                             } else if (rewardPoint < 0) {
 
                                 return;
-                            } else if (redemTotal > rewardPoint) {
+                            } else if (count !== 0 && redemTotal > rewardPoint) {
                                 alert(' point exceed limitations');
                                 return;
                             }
+                            count++;
                         }
                     }
                 }
