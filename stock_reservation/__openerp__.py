@@ -53,7 +53,8 @@
           'wizard/product_reservation_status_wizard_views.xml',
           'report/product_reservation_status_report.xml',
           'wizard/epo_reservation_status_wizard_views.xml',
-          'report/epo_reservation_status_report.xml'
+          'report/epo_reservation_status_report.xml',
+        'view/inherited_product_template_views.xml'
           ],
  'auto_install': False,
  'installable': True,

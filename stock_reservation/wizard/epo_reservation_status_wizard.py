@@ -22,7 +22,23 @@ class ConfirmationWizard(models.TransientModel):
         tools.drop_view_if_exists(self.env.cr,'epo_reservation_status_report')
         analytic_account_id = res.analytic_acc_id.id
         
-           
+        sql = '''
+            CREATE OR REPLACE VIEW epo_reservation_status_report AS (
+             SELECT ROW_NUMBER() OVER(ORDER BY rq.product_id DESC) AS id, rq.analytic_account_id,
+             aa.name as epo_no, rq.location,rq.product_id, COALESCE(sum(rq.reserve_quantity),0) as quantity
+                 ,concat(p.name_template,' ',pav.name) as product_name, l.name as location_name
+                    FROM reservation_quant rq
+                LEFT JOIN product_product p on(rq.product_id=p.id)
+                LEFT JOIN stock_location l on(rq.location=l.id)
+                LEFT JOIN account_analytic_account aa on(rq.analytic_account_id=aa.id)
+                LEFT JOIN product_attribute_value_product_product_rel par on(p.id=par.prod_id)
+                LEFT JOIN product_attribute_value pav on(par.att_id=pav.id)
+                where rq.analytic_account_id = %s 
+                Group by rq.analytic_account_id,aa.name,rq.location, 
+                        p.name_template, rq.product_id,l.name,pav.name)
+        ''' %(analytic_account_id)
+        
+        """   
         sql = '''
             CREATE OR REPLACE VIEW epo_reservation_status_report AS (
                 SELECT ROW_NUMBER() OVER(ORDER BY product_id DESC) AS id, analytic_account_id, epo_no, COALESCE(sum(qty),0) as quantity,
@@ -76,6 +92,7 @@ class ConfirmationWizard(models.TransientModel):
                     ) AS reserve_tble GROUP BY analytic_account_id, epo_no,
                          product_name,product_id,location_name  )
         ''' %(analytic_account_id,analytic_account_id,analytic_account_id)
+        """
         print '------sql--------',sql
         self.env.cr.execute(sql)
         print '------sql--------',sql

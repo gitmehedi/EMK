@@ -23,20 +23,23 @@ class ConfirmationWizard(models.TransientModel):
         tools.drop_view_if_exists(self.env.cr,'product_reservation_status_report')
         product_id = res.product_id.id
         
-        """   
+          
         sql = '''
             CREATE OR REPLACE VIEW product_reservation_status_report AS (
-            SELECT sr.id AS id, sr.analytic_account_id, aa.name as epo_no, sr.analytic_resv_loc_id
-                 ,sr.source_loc_id,sr.warehouse_id, sr.state
-                 ,srl.destination_loc_id,srl.product_id, srl.quantity
-                 , p.name_template as name, l.name as location_name
-                    FROM stock_reservation sr
-                LEFT JOIN stock_reservation_line srl on(sr.id=srl.stock_reservation_id)
-                LEFT JOIN product_product p on(srl.product_id=p.id)
-                LEFT JOIN stock_location l on(srl.destination_loc_id=l.id)
-                LEFT JOIN account_analytic_account aa on(sr.source_loc_id=aa.id)
-                where sr.state = 'reserve' AND srl.product_id = %s )
+             SELECT ROW_NUMBER() OVER(ORDER BY rq.product_id DESC) AS id, rq.analytic_account_id,
+             aa.name as epo_no, rq.location,rq.product_id, COALESCE(sum(rq.reserve_quantity),0) as quantity
+                 ,concat(p.name_template,' ',pav.name) as product_name, l.name as location_name
+                    FROM reservation_quant rq
+                LEFT JOIN product_product p on(rq.product_id=p.id)
+                LEFT JOIN stock_location l on(rq.location=l.id)
+                LEFT JOIN account_analytic_account aa on(rq.analytic_account_id=aa.id)
+                LEFT JOIN product_attribute_value_product_product_rel par on(p.id=par.prod_id)
+                LEFT JOIN product_attribute_value pav on(par.att_id=pav.id)
+                where rq.product_id = %s 
+                Group by rq.analytic_account_id,aa.name,rq.location, 
+                        p.name_template, rq.product_id,l.name,pav.name)
         ''' %(product_id)
+        
         """
         sql = '''
         CREATE OR REPLACE VIEW product_reservation_status_report AS (
@@ -92,9 +95,10 @@ class ConfirmationWizard(models.TransientModel):
                          product_name,product_id,location_name
                          )
         ''' %(product_id,product_id,product_id)
+        """
         print '------sql--------',sql
         self.env.cr.execute(sql)
-
+        
         return {
             'name': ('Product Reservation Status Report'),
             'view_type': 'form',
