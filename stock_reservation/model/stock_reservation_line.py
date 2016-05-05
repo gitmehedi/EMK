@@ -28,7 +28,7 @@ class StockReservationLine(models.Model):
     
     
     product_id = fields.Many2one('product.product', string="Product")
-    quantity = fields.Float(digits=(20, 2), string='Quantity', default=0.0)
+    quantity = fields.Float(digits=(20, 2), string='Quantity', required=True, default=0.0)
     uom = fields.Many2one('product.uom', string="UOM")
     uom_category = fields.Integer(invisible=True)
 
