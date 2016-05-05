@@ -2,3 +2,4 @@ import account_deposit_extend
 import account_voucher_extend
 import account_move_line_extend
 import account_check_deposit
+import account_check_reject
