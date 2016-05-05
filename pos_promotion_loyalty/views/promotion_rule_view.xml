@@ -13,7 +13,7 @@
 	                    </h1>
                     <group col="4">
                         <field name="sequence" colspan="2" />
-                        <field name="active" colspan="2" select="1"/>
+                        <field name="is_active" colspan="2" select="1"/>
                         <!-- field name="shop" colspan="2" /-->
                         <field name="stop_further" colspan="2" />
                     </group>
@@ -119,7 +119,7 @@
                     <field name="sequence" />
                     <field name="name" />
                     <!-- field name="shop" /-->
-                    <field name="active" />
+                    <field name="is_active" />
                     <field name="coupon_code" />
                     <field name="from_date" />
                     <field name="to_date" />

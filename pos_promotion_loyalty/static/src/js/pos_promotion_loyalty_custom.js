@@ -779,7 +779,7 @@ function openerp_pos_promotion_loyalty(instance, module) { // module is
                                 var month = date.getMonth() + 1;
                                 var year = date.getFullYear();
                                 var today = year + '-' + month + '-' + day;
-                                if (startDate <= endDate) {
+                                if (startDate <= endDate && startDate !== false && endDate !== false) {
                                     if (self.processDate(today) >= self.processDate(startDate)
                                         && self.processDate(today) <= self.processDate(endDate)) {
                                         minPurchase = rule.min_purchase;
@@ -2140,7 +2140,7 @@ function openerp_pos_promotion_loyalty(instance, module) { // module is
                 //check primary condition here
 
 
-                if (promosRule !== undefined && promosRule.active == true) {
+                if (promosRule !== undefined && promosRule.is_active == true) {
                     var primaryCondition = posOrder.checkPrimaryConditionsLine(promosRule, posOrder);
                     if (primaryCondition) {
                         try {

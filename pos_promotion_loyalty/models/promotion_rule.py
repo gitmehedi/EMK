@@ -88,7 +88,7 @@ class PromotionsRules(models.Model):
     to_date = fields.Date(string="End Date")
     stop_further = fields.Boolean()
     logic = fields.Selection([('and', 'All'), ('or', 'Any')], default='and', required=True)
-    active = fields.Boolean()
+    is_active = fields.Boolean(string = "Active")
     uses_per_partner = fields.Integer(string="Uses Per Partner")
 
     expected_logic_result = fields.Selection([('True', 'True'), ('False', 'False')], string="Output", required=True,
