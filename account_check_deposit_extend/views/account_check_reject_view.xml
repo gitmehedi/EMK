@@ -2,12 +2,12 @@
 
 <openerp>
     <data>
-    
-        <record id="account_check_entry_view_form" model="ir.ui.view">
-            <field name="name">account.check.entry.form</field>
-            <field name="model">account.check.entry</field>
+
+        <record id="account_check_reject_view_form" model="ir.ui.view">
+            <field name="name">account.check.reject.form</field>
+            <field name="model">account.check.reject</field>
             <field name="arch" type="xml">
-                <form string="Checks Entry">
+                <form string="Checks Reject">
                     <header>
                         <button name="validate_deposit" states="draft"
                                 string="Validate"
@@ -19,7 +19,7 @@
                     </header>
                     <sheet>
                         <h1>
-                            <label string="Checks Entry" />
+                            <label string="Check Reject" />
                             <field name="name" class="oe_inline" />
                         </h1>
                         <group name="main">
@@ -60,11 +60,11 @@
             </field>
         </record>
 
-        <record id="account_check_entry_view_tree" model="ir.ui.view">
-            <field name="name">account.check.entry.tree</field>
-            <field name="model">account.check.entry</field>
+        <record id="account_check_reject_view_tree" model="ir.ui.view">
+            <field name="name">account.check.reject.tree</field>
+            <field name="model">account.check.reject</field>
             <field name="arch" type="xml">
-                <tree string="Checks Entry" colors="blue:state=='draft';">
+                <tree string="Checks Reject" colors="blue:state=='draft';">
                     <field name="name"/>
                     <field name="deposit_date"/>
                     <field name="journal_id"/>
@@ -79,12 +79,12 @@
             </field>
         </record>
 
-        <record id="view_check_entry_extend_search" model="ir.ui.view">
-            <field name="name">account.check.entry.search</field>
-            <field name="model">account.check.entry</field>
+        <record id="view_check_reject_search" model="ir.ui.view">
+            <field name="name">account.check.reject.search</field>
+            <field name="model">account.check.reject</field>
             <field name="arch" type="xml">
-                <search string="Checks Entry Search">
-                    <field name="name" string="Checks Deposit"/>
+                <search string="Checks Reject Search">
+                    <field name="name" string="Checks Reject"/>
                     <filter name="draft" string="Draft"
                         domain="[('state', '=', 'draft')]" />
                     <filter name="done" string="Done"
@@ -103,16 +103,16 @@
             </field>
         </record>
 
-        <record id="action_check_entry_tree" model="ir.actions.act_window">
-            <field name="name">Checks Entry</field>
-            <field name="res_model">account.check.entry</field>
+        <record id="action_check_reject_tree" model="ir.actions.act_window">
+            <field name="name">Checks Reject</field>
+            <field name="res_model">account.check.reject</field>
             <field name="view_mode">tree,form</field>
         </record>
 
-        <menuitem action="action_check_entry_tree"
-                  id="menu_check_entry_tree"
+        <menuitem action="action_check_reject_tree"
+                  id="menu_check_rejects_tree"
                   parent="account.menu_finance_bank_and_cash"
-                  sequence="19"/>
+                  sequence="21"/>
 
     </data>
 </openerp>

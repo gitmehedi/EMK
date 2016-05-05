@@ -5,8 +5,8 @@ from openerp.exceptions import ValidationError
 from openerp.exceptions import Warning as UserError
 
 
-class AccountCheckEntry(models.Model):
-    _name = "account.check.entry"
+class AccountCheckReject(models.Model):
+    _name = "account.check.reject"
     _inherit = "account.check.deposit"
                 
     @api.model
