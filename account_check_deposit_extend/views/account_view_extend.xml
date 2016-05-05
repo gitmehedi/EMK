@@ -10,8 +10,6 @@
 				<field name="reconcile_ref" position="after">
 					<field name="cheque_date" />
 					<field name="cheque_number" />
-					<field name="issuing_bank" />
-					<field name="bank_branch_name" />
 				</field>
 			</field>
 		</record>
