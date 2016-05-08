@@ -12,7 +12,8 @@ class AccountCheckEntry(models.Model):
     state = fields.Selection([
         ('draft', 'Draft'),
         ('posting', 'Posting'),
-        ('done', 'Done'),
+        ('deposit', 'Deposit'),
+        ('reject', 'Reject')
         ], string='Status', default='draft', readonly=True)
                 
     @api.model
@@ -31,12 +32,11 @@ class AccountCheckEntry(models.Model):
 
     @api.multi
     def validate_posting(self):
-        print ""
         am_obj = self.env['account.move']
         aml_obj = self.env['account.move.line']
         for deposit in self:
             for line in deposit.check_payment_ids:
                 line.write({'is_postedtobank':True})
-#
+
             deposit.write({'state': 'posting'})
         return True

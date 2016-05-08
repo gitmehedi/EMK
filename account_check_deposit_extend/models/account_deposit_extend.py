@@ -39,6 +39,7 @@ class AccountCheckDepositExtend(models.Model):
                 line_vals['move_id'] = move.id
                 move_line = aml_obj.create(line_vals)
                 to_reconcile_lines.append(line + move_line)
+                line.write({'is_depositedtobank':True})
 
             # Create counter-part
             if not deposit.partner_bank_id.journal_id:
@@ -52,7 +53,7 @@ class AccountCheckDepositExtend(models.Model):
             aml_obj.create(counter_vals)
 
             move.post()
-            deposit.write({'state': 'done', 'move_id': move.id})
+            deposit.write({'state': 'deposit', 'move_id': move.id})
             # We have to reconcile after post()
             for reconcile_lines in to_reconcile_lines:
                 reconcile_lines.reconcile()

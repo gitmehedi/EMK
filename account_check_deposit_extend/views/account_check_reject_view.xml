@@ -5,17 +5,15 @@
 
         <record id="account_check_reject_view_form" model="ir.ui.view">
             <field name="name">account.check.reject.form</field>
-            <field name="model">account.check.reject</field>
+            <field name="model">account.check.deposit</field>
             <field name="arch" type="xml">
                 <form string="Checks Reject">
                     <header>
-                        <button name="validate_deposit" states="draft"
-                                string="Validate"
+                        <button name="validate_reject" states="posting"
+                                string="Reject"
                                 type="object" class="oe_highlight"/>
-                        <button name="backtodraft" states="done"
-                                string="Back to Draft" type="object" />
                         <field name="state" widget="statusbar"
-                               statusbar_visible="draft,done" />
+                               statusbar_visible="posting,reject" />
                     </header>
                     <sheet>
                         <h1>
@@ -62,7 +60,7 @@
 
         <record id="account_check_reject_view_tree" model="ir.ui.view">
             <field name="name">account.check.reject.tree</field>
-            <field name="model">account.check.reject</field>
+            <field name="model">account.check.deposit</field>
             <field name="arch" type="xml">
                 <tree string="Checks Reject" colors="blue:state=='draft';">
                     <field name="name"/>
@@ -81,7 +79,7 @@
 
         <record id="view_check_reject_search" model="ir.ui.view">
             <field name="name">account.check.reject.search</field>
-            <field name="model">account.check.reject</field>
+            <field name="model">account.check.deposit</field>
             <field name="arch" type="xml">
                 <search string="Checks Reject Search">
                     <field name="name" string="Checks Reject"/>
@@ -103,16 +101,30 @@
             </field>
         </record>
 
-        <record id="action_check_reject_tree" model="ir.actions.act_window">
+		<record id="action_check_reject_tree" model="ir.actions.act_window">
             <field name="name">Checks Reject</field>
-            <field name="res_model">account.check.reject</field>
+            <field name="res_model">account.check.deposit</field>
             <field name="view_mode">tree,form</field>
         </record>
+	
+		<record id="action_check_reject_form_view_extend" model="ir.actions.act_window.view">
+			<field eval="2" name="sequence" />
+			<field name="view_mode">form</field>
+			<field name="view_id" ref="account_check_reject_view_form" />
+			<field name="act_window_id" ref="action_check_reject_tree" />
+		</record>
 
-        <menuitem action="action_check_reject_tree"
-                  id="menu_check_rejects_tree"
+		<record id="action_check_reject_tree_view_extend" model="ir.actions.act_window.view">
+			<field eval="1" name="sequence" />
+			<field name="view_mode">tree</field>
+			<field name="view_id" ref="account_check_reject_view_tree" />
+			<field name="act_window_id" ref="action_check_reject_tree" />
+		</record>
+		
+        <menuitem action="action_check_reject_tree" name="Checks Reject"
+                  id="menu_check_reject_tree"
                   parent="account.menu_finance_bank_and_cash"
-                  sequence="21"/>
+                  sequence="23"/>
 
     </data>
 </openerp>
