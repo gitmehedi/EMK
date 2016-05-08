@@ -1947,9 +1947,6 @@ function openerp_pos_promotion_loyalty(instance, module) { // module is
 
         },
 
-
-        ///
-
         getPoint: function () {
             var client = this.get('client');
             return client ? client.point_loyalty : "";
@@ -1976,7 +1973,6 @@ function openerp_pos_promotion_loyalty(instance, module) { // module is
             return amount;
         },
 
-        // ////
         get_client_name: function () {
             var client = this.get('client');
             $('.loyl_entry').text("Total Point:" + client.point_loyalty);
@@ -2097,18 +2093,27 @@ function openerp_pos_promotion_loyalty(instance, module) { // module is
                 if (clientInfo != null) {
                     currentOrder = this.pos.get('selectedOrder');
 
-                    var rewardPoint = currentOrder.getRewardPoint();
-                    //var redemPoint = currentOrder.getRewardToLoyaltyPoint();
-                    var redemTotal = currentOrder.getRedemTotal();
-                    var paidTotal = currentOrder.getPaidTotal();
-                    var rewardChange = rewardPoint - redemTotal;
-                    var dueTotal = currentOrder.getTotalWithTax();
-                    var remaining = dueTotal > paidTotal ? dueTotal - paidTotal
-                        : 0;
-                    if (rewardChange >= remaining) {
-                        newPaymentline.set_amount(remaining);
-                    } else {
-                        newPaymentline.set_amount(rewardChange);
+                    var loyaltyRule = currentOrder.get('pos').loyalty_rules;
+                    for (var i = 0, len = loyaltyRule.length; i < len; i++) {
+                        if (loyaltyRule[i].is_active !== false) {
+                            var rewardPoint = currentOrder.getRewardPoint();
+                            //var redemPoint = currentOrder.getRewardToLoyaltyPoint();
+                            var redemTotal = currentOrder.getRedemTotal();
+                            var paidTotal = currentOrder.getPaidTotal();
+                            var rewardChange = rewardPoint - redemTotal;
+                            var dueTotal = currentOrder.getTotalWithTax();
+                            var remaining = dueTotal > paidTotal ? dueTotal - paidTotal
+                                : 0;
+                            if (rewardChange >= remaining) {
+                                newPaymentline.set_amount(remaining);
+                            } else {
+                                newPaymentline.set_amount(rewardChange);
+                            }
+
+                        } else {
+                            console.log('loyalty rule is not active');
+                        }
+
                     }
                 }
             }
@@ -2117,6 +2122,18 @@ function openerp_pos_promotion_loyalty(instance, module) { // module is
             }
             paymentLines.add(newPaymentline);
             this.selectPaymentline(newPaymentline);
+        },
+        selectPaymentline: function (line) {
+            if (line !== this.selected_paymentline) {
+                if (this.selected_paymentline) {
+                    this.selected_paymentline.set_selected(false);
+                }
+                this.selected_paymentline = line;
+                if (this.selected_paymentline) {
+                    this.selected_paymentline.set_selected(true);
+                }
+                this.trigger('change:selected_paymentline', this.selected_paymentline);
+            }
         },
     });
 
@@ -2339,71 +2356,66 @@ function openerp_pos_promotion_loyalty(instance, module) { // module is
                     while (node && !node.classList.contains('paymentline')) {
                         node = node.parentNode;
                     }
-                    for (var m = 0, len = journal.length; m < len; m++) {
-                        if (journal[m].is_redemption == true) {
+                    /*for (var m = 0, len = journal.length; m < len; m++) {
+                     if (journal[m].is_redemption == true) {
+                     //check selected line is redemption line
 
-                            if (node) {
-                                var amount;
-                                var isValidate = function (value) {
-                                    var value = this.value
-                                    if (value < 0) {
-                                        alert('negetive no');
-                                    }
-                                }
-                                try {
+                     }
+                     }*/
+                    if (node) {
+                        var amount;
+                        var selectedPaymentLine = order.selected_paymentline;
 
-                                    if (this.value !== '' && this.value <= order.getRewardToLoyaltyPoint()) {
-                                        amount = instance.web.parse_value(
-                                            this.value, {
-                                                type: "float"
-                                            });
-                                        node.line.set_amount(amount);
-                                    } else {
+                        var isValidate = function (value) {
+                            var value = this.value
+                            if (value < 0) {
+                                alert('negetive no');
+                            } else if (value > order.getRewardToLoyaltyPoint()) {
+                                alert('exceed loyalty limit');
+                            }
+                        }
+                        try {
+                            if (selectedPaymentLine.is_redemption !== true) {
+                                if (this.value >= 0 && this.value !== '') {
+                                    amount = instance.web.parse_value(this.value, {type: "float"});
+                                    node.line.set_amount(amount);
+                                } else {
 
-                                        var validate = isValidate(this.value);
-                                        alert('check loyalty value');
-                                        amount = 0;
-                                        node.line.set_amount(amount);
-                                    }
-                                } catch (e) {
+                                    var validate = isValidate(this.value);
+                                    //alert('check value');
                                     amount = 0;
                                     node.line.set_amount(amount);
                                 }
-                            }
 
-                        } else {
-                            if (node) {
-                                var amount;
-                                var isValidate = function (value) {
-                                    var value = this.value
-                                    if (value < 0) {
-                                        alert('negetive no');
-                                    }
-                                }
-                                try {
-
-                                    if (this.value >= 0 && this.value !== '') {
-                                        amount = instance.web.parse_value(
-                                            this.value, {
-                                                type: "float"
-                                            });
+                            } else {
+                                if (this.value >= 0 && this.value !== '') {
+                                    amount = instance.web.parse_value(this.value, {type: "float"});
+                                    if (amount <= order.getRewardToLoyaltyPoint() && order.getRewardToLoyaltyPoint() >= 0) {
                                         node.line.set_amount(amount);
-                                    } else {
+                                    } else if(order.getRewardToLoyaltyPoint() > 0 && (amount - order.getRewardToLoyaltyPoint()) <= order.getRewardToLoyaltyPoint()){
+                                        node.line.set_amount(amount);
 
-                                        var validate = isValidate(this.value);
-                                        alert('check value');
+                                    }else {
                                         amount = 0;
                                         node.line.set_amount(amount);
                                     }
-                                } catch (e) {
+
+                                } else {
+
+                                    var validate = isValidate(this.value);
+                                    //alert('check value');
                                     amount = 0;
                                     node.line.set_amount(amount);
                                 }
+
                             }
 
+
+                        } catch (e) {
+                            amount = 0;
+                            node.line.set_amount(amount);
                         }
                     }
-
                 };
 
                 this.line_click_handler = function (event) {
@@ -2412,8 +2424,7 @@ function openerp_pos_promotion_loyalty(instance, module) { // module is
                         node = node.parentNode;
                     }
                     if (node) {
-                        self.pos.get('selectedOrder').selectPaymentline(
-                            node.line);
+                        self.pos.get('selectedOrder').selectPaymentline(node.line);
                     }
                 };
                 this.hotkey_handler = function (event) {
@@ -2483,7 +2494,7 @@ function openerp_pos_promotion_loyalty(instance, module) { // module is
 
                 this.$('.paymentline-input').attr('min', 0);
 
-                if ((client == null || client == '') || ( client != null && redemTotal < 1)) {
+                if ((client == null || client == '') || ( client != null && redemTotal < 0)) {
                     this.$('.is_redemption').attr('readonly', true);
                 }
 
