@@ -2356,12 +2356,6 @@ function openerp_pos_promotion_loyalty(instance, module) { // module is
                     while (node && !node.classList.contains('paymentline')) {
                         node = node.parentNode;
                     }
-                    /*for (var m = 0, len = journal.length; m < len; m++) {
-                     if (journal[m].is_redemption == true) {
-                     //check selected line is redemption line
-
-                     }
-                     }*/
                     if (node) {
                         var amount;
                         var selectedPaymentLine = order.selected_paymentline;

@@ -656,13 +656,18 @@ function openerp_pos_promotion(instance, module) { // module is
 
             var last_orderline = this.getLastOrderline();
             if (actionType !== undefined) {
+                var posOrder = this.pos.get('selectedOrder');
 
-                if (actionType == 'cart_disc_perc' || actionType == 'cart_disc_fix' ) {
-                    var posOrder = this.pos.get('selectedOrder');
+                if (actionType == 'cart_disc_perc' || actionType == 'cart_disc_fix') {
+
                     posOrder.setDiscountAmount(prodDiscPrice);
 
                 }
-                if (actionType !== 'prod_sub_disc_perc' || actionType !== 'prod_sub_disc_fix') {
+                if (actionType == 'prod_sub_disc_perc' || actionType == 'prod_sub_disc_fix') {
+                    posOrder.setDiscountAmount(prodDiscPrice, actionType, arguments);
+
+                }
+                if (actionType == 'prod_disc_perc' || actionType == 'prod_disc_fix') {
                     line.set_discount(prodDiscPrice, actionType, arguments);
 
                 }
@@ -673,7 +678,6 @@ function openerp_pos_promotion(instance, module) { // module is
                 }
 
             }
-
             if (last_orderline && last_orderline.can_be_merged_with(line) && options.merge !== false) {
                 last_orderline.merge(line, actionType, arguments);
             } else {

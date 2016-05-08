@@ -749,7 +749,7 @@ function openerp_pos_loyalty(instance, module) { // module is
                                 var month = date.getMonth() + 1;
                                 var year = date.getFullYear();
                                 var today = year + '-' + month + '-' + day;
-                                if (startDate <= endDate) {
+                                if (startDate <= endDate && startDate !== false && endDate !== false) {
                                     if (self.processDate(today) >= self.processDate(startDate)
                                         && self.processDate(today) <= self.processDate(endDate)) {
                                         minPurchase = rule.min_purchase;
@@ -1168,18 +1168,27 @@ var orderline_id = 1;
                 if (clientInfo != null) {
                     currentOrder = this.pos.get('selectedOrder');
 
-                    var rewardPoint = currentOrder.getRewardPoint();
-                    //var redemPoint = currentOrder.getRewardToLoyaltyPoint();
-                    var redemTotal = currentOrder.getRedemTotal();
-                    var paidTotal = currentOrder.getPaidTotal();
-                    var rewardChange = rewardPoint - redemTotal;
-                    var dueTotal = currentOrder.getTotalTaxIncluded();
-                    var remaining = dueTotal > paidTotal ? dueTotal - paidTotal
-                        : 0;
-                    if (rewardChange >= remaining) {
-                        newPaymentline.set_amount(remaining);
-                    } else {
-                        newPaymentline.set_amount(rewardChange);
+                    var loyaltyRule = currentOrder.get('pos').loyalty_rules;
+                    for (var i = 0, len = loyaltyRule.length; i < len; i++) {
+                        if (loyaltyRule[i].is_active !== false) {
+                            var rewardPoint = currentOrder.getRewardPoint();
+                            //var redemPoint = currentOrder.getRewardToLoyaltyPoint();
+                            var redemTotal = currentOrder.getRedemTotal();
+                            var paidTotal = currentOrder.getPaidTotal();
+                            var rewardChange = rewardPoint - redemTotal;
+                            var dueTotal = currentOrder.getTotalWithTax();
+                            var remaining = dueTotal > paidTotal ? dueTotal - paidTotal
+                                : 0;
+                            if (rewardChange >= remaining) {
+                                newPaymentline.set_amount(remaining);
+                            } else {
+                                newPaymentline.set_amount(rewardChange);
+                            }
+
+                        } else {
+                            console.log('loyalty rule is not active');
+                        }
+
                     }
                 }
             }
@@ -1270,27 +1279,53 @@ var orderline_id = 1;
                     }
                     if (node) {
                         var amount;
+                        var selectedPaymentLine = order.selected_paymentline;
+
                         var isValidate = function (value) {
                             var value = this.value
                             if (value < 0) {
                                 alert('negetive no');
+                            } else if (value > order.getRewardToLoyaltyPoint()) {
+                                alert('exceed loyalty limit');
                             }
                         }
                         try {
+                            if (selectedPaymentLine.is_redemption !== true) {
+                                if (this.value >= 0 && this.value !== '') {
+                                    amount = instance.web.parse_value(this.value, {type: "float"});
+                                    node.line.set_amount(amount);
+                                } else {
 
-                            if (this.value >= 0 && this.value !== '') {
-                                amount = instance.web.parse_value(
-                                    this.value, {
-                                        type: "float"
-                                    });
-                                node.line.set_amount(amount);
+                                    var validate = isValidate(this.value);
+                                    //alert('check value');
+                                    amount = 0;
+                                    node.line.set_amount(amount);
+                                }
+
                             } else {
+                                if (this.value >= 0 && this.value !== '') {
+                                    amount = instance.web.parse_value(this.value, {type: "float"});
+                                    if (amount <= order.getRewardToLoyaltyPoint() && order.getRewardToLoyaltyPoint() >= 0) {
+                                        node.line.set_amount(amount);
+                                    } else if(order.getRewardToLoyaltyPoint() > 0 && (amount - order.getRewardToLoyaltyPoint()) <= order.getRewardToLoyaltyPoint()){
+                                        node.line.set_amount(amount);
 
-                                var validate = isValidate(this.value);
-                                alert('check value');
-                                amount = 0;
-                                node.line.set_amount(amount);
+                                    }else {
+                                        amount = 0;
+                                        node.line.set_amount(amount);
+                                    }
+
+                                } else {
+
+                                    var validate = isValidate(this.value);
+                                    //alert('check value');
+                                    amount = 0;
+                                    node.line.set_amount(amount);
+                                }
+
                             }
+
+
                         } catch (e) {
                             amount = 0;
                             node.line.set_amount(amount);
@@ -1373,7 +1408,7 @@ var orderline_id = 1;
 
                 this.$('.paymentline-input').attr('min', 0);
 
-                if ((client == null || client == '') || ( client != null && redemTotal < 1)) {
+                if ((client == null || client == '') || ( client != null && redemTotal < 0)) {
                     this.$('.is_redemption').attr('readonly', true);
                 }
 
