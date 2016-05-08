@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <record id="account_check_posting_view_form" model="ir.ui.view">
+            <field name="name">account.check.posting.form</field>
+            <field name="model">account.check.deposit</field>
+            <field name="mode">primary</field>
+			<field name="priority" eval="20" />
+            <field name="arch" type="xml">
+                <form string="Checks Posting">
+                    <header>
+                        <button name="validate_posting" states="draft"
+                                string="Posting"
+                                type="object" class="oe_highlight"/>
+                        <field name="state" widget="statusbar"
+                               statusbar_visible="draft,posting" />
+                    </header>
+                    <sheet>
+                        <h1>
+                            <label string="Check Posting" />
+                            <field name="name" class="oe_inline" />
+                        </h1>
+                        <group name="main">
+                            <group name="left">
+                                <field name="deposit_date" />
+                                <field name="journal_id"
+                                    widget="selection"/>
+                                <field name="journal_default_account_id"
+                                    invisible="1"/>
+                                <field name="currency_id"
+                                    groups="base.group_multi_currency"/>
+                                <field name="partner_bank_id"/>
+                            </group>
+                            <group name="right">
+                                <field name="company_id"
+                                       groups="base.group_multi_company"/>
+                                <field name="currency_none_same_company_id"
+                                    invisible="1"/>
+                                <field name="check_count"/>
+                                <field name="total_amount" widget="monetary"
+                                    options="{'currency_field': 'currency_id'}"/>
+                                <field name="move_id"/>
+                            </group>
+                        </group>
+                        <group string="Check Payments" name="check_payments">
+                            <field name="check_payment_ids" nolabel="1"
+                                   widget="many2many"
+                                   domain="[('reconcile_id', '=', False),
+                                            ('debit', '>', 0),
+                                            ('check_deposit_id', '=', False),
+                                            ('currency_id', '=', currency_none_same_company_id),
+                                            ('account_id', '=', journal_default_account_id)]"
+                                    context="{'currency': currency_id,
+                                        'journal_id': journal_id}" />
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="account_check_posting_view_tree" model="ir.ui.view">
+            <field name="name">account.check.posting.tree</field>
+            <field name="model">account.check.deposit</field>
+            <field name="arch" type="xml">
+                <tree string="Checks Posting" colors="blue:state=='draft';">
+                    <field name="name"/>
+                    <field name="deposit_date"/>
+                    <field name="journal_id"/>
+                    <field name="partner_bank_id"/>
+                    <field name="check_count"/>
+                    <field name="total_amount"/>
+                    <field name="currency_id" groups="base.group_multi_currency"/>
+                    <field name="is_reconcile"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
+                    <field name="state"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_check_posting_search" model="ir.ui.view">
+            <field name="name">account.check.posting.search</field>
+            <field name="model">account.check.deposit</field>
+            <field name="arch" type="xml">
+                <search string="Checks Deposit Search">
+                    <field name="name" string="Checks Deposit"/>
+                    <filter name="draft" string="Draft"
+                        domain="[('state', '=', 'draft')]" />
+                    <filter name="done" string="Done"
+                        domain="[('state', '=', 'done')]" />
+                    <group string="Group By" name="groupby">
+                        <filter name="date_groupby" string="Deposit Date"
+                            context="{'group_by': 'deposit_date'}"/>
+                        <filter name="journal_groupby" string="Journal"
+                            context="{'group_by': 'journal_id'}" />
+                        <filter name="currency_groupby" string="Currency"
+                            context="{'group_by': 'currency_id'}" />
+                        <filter name="partner_bank_groupby" string="Bank Account"
+                            context="{'group_by': 'partner_bank_id'}" />
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record id="action_check_posting_tree" model="ir.actions.act_window">
+            <field name="name">Checks Posting</field>
+            <field name="res_model">account.check.deposit</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+	
+		<record id="action_check_posting_form_view_extend" model="ir.actions.act_window.view">
+			<field eval="2" name="sequence" />
+			<field name="view_mode">form</field>
+			<field name="view_id" ref="account_check_posting_view_form" />
+			<field name="act_window_id" ref="action_check_posting_tree" />
+		</record>
+
+		<record id="action_check_posting_tree_view_extend" model="ir.actions.act_window.view">
+			<field eval="1" name="sequence" />
+			<field name="view_mode">tree</field>
+			<field name="view_id" ref="account_check_posting_view_tree" />
+			<field name="act_window_id" ref="action_check_posting_tree" />
+		</record>
+		
+        <menuitem action="action_check_posting_tree" name="Checks Posting"
+                  id="menu_check_posting_tree"
+                  parent="account.menu_finance_bank_and_cash"
+                  sequence="21"/>
+
+    </data>
+</openerp>

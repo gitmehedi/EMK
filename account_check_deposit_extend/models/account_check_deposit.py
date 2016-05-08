@@ -6,8 +6,14 @@ from openerp.exceptions import Warning as UserError
 
 
 class AccountCheckEntry(models.Model):
-    _name = "account.check.entry"
     _inherit = "account.check.deposit"
+    
+    
+    state = fields.Selection([
+        ('draft', 'Draft'),
+        ('posting', 'Posting'),
+        ('done', 'Done'),
+        ], string='Status', default='draft', readonly=True)
                 
     @api.model
     def _prepare_counterpart_move_lines_vals(
@@ -24,37 +30,13 @@ class AccountCheckEntry(models.Model):
             }
 
     @api.multi
-    def validate_deposit(self):
+    def validate_posting(self):
+        print ""
         am_obj = self.env['account.move']
         aml_obj = self.env['account.move.line']
         for deposit in self:
-            move_vals = self._prepare_account_move_vals(deposit)
-            move = am_obj.create(move_vals)
-            total_debit = 0.0
-            total_amount_currency = 0.0
-            to_reconcile_lines = []
             for line in deposit.check_payment_ids:
-                total_debit += line.debit
-                total_amount_currency += line.amount_currency
-                line_vals = self._prepare_move_line_vals(line)
-                line_vals['move_id'] = move.id
-                move_line = aml_obj.create(line_vals)
-                to_reconcile_lines.append(line + move_line)
-
-            # Create counter-part
-            if not deposit.partner_bank_id.journal_id:
-                raise UserError(
-                    _("Missing Account for Check Deposits on the "
-                        "company '%s'.") % deposit.company_id.name)
-
-            counter_vals = self._prepare_counterpart_move_lines_vals(
-                deposit, total_debit, total_amount_currency)
-            counter_vals['move_id'] = move.id
-            aml_obj.create(counter_vals)
-
-            move.post()
-            deposit.write({'state': 'done', 'move_id': move.id})
-            # We have to reconcile after post()
-            for reconcile_lines in to_reconcile_lines:
-                reconcile_lines.reconcile()
+                line.write({'is_postedtobank':True})
+#
+            deposit.write({'state': 'posting'})
         return True
