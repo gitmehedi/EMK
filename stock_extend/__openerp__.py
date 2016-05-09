@@ -37,7 +37,8 @@
             'wizard/stock_report_wizard_view.xml',
             'report/stock_issue_report.xml',
             'report/stock_issue_report_view.xml',
-            'views/inherited_stock_inventory_line_views.xml'
+            'views/inherited_stock_inventory_line_views.xml',
+#             'wizard/confirmation_wizard_views.xml'
              ],
     'depends': ['stock','purchase'],
     'description': '''
