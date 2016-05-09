@@ -20,8 +20,6 @@ class ConfirmationWizard(models.TransientModel):
                'amount_total': 0.0
                }
         indent_indent_obj.write(vals)
-        print '...........16......', active_id
-        print 'context ',line_data 
         return {
             'type': 'ir.actions.act_window_close',
         }
