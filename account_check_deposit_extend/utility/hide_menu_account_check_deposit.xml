@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+    	<delete id="account_check_deposit.menu_check_deposit_tree" model="ir.ui.menu"></delete>    
+    </data>
+</openerp>

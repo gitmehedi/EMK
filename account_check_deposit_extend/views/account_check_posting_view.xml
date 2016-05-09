@@ -77,7 +77,7 @@
                 </tree>
             </field>
         </record>
-
+ 
         <record id="view_check_posting_search" model="ir.ui.view">
             <field name="name">account.check.posting.search</field>
             <field name="model">account.check.deposit</field>
@@ -86,8 +86,10 @@
                     <field name="name" string="Checks Deposit"/>
                     <filter name="draft" string="Draft"
                         domain="[('state', '=', 'draft')]" />
-                    <filter name="done" string="Done"
-                        domain="[('state', '=', 'done')]" />
+                    <filter name="posting" string="Posting"
+                        domain="[('state', '=', 'posting')]" />
+<!--                     <filter name="done" string="Done"
+                        domain="[('state', '=', 'done')]" /> -->
                     <group string="Group By" name="groupby">
                         <filter name="date_groupby" string="Deposit Date"
                             context="{'group_by': 'deposit_date'}"/>
