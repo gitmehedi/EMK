@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+	<data>
+		<record model="ir.ui.view"
+			id="inherited_product_template_view_form_reservation">
+			<field name="name">Product Template Kanban Stock</field>
+			<field name="model">product.template</field>
+			<field name="inherit_id" ref="product.product_template_kanban_view" />
+			<field name="arch" type="xml">
+				<ul position="inside">
+					<li t-if="record.type.raw_value == 'product'">
+						Reserve Qty:
+						<field name="reserve_qty" />
+						<field name="uom_id" />
+					</li>
+				</ul>
+			</field>
+		</record>
+		<record model="ir.ui.view" id="product_form_view_reserve_qty_button">
+			<field name="name">product.template_procurement</field>
+			<field name="model">product.template</field>
+			<field name="inherit_id"
+				ref="stock.product_template_form_view_procurement_button" />
+			<field name="arch" type="xml">
+				<data>
+					<div name="button_box" position="inside">
+						<button  class="oe_stat_button"
+							icon="fa-building-o" attrs="{'invisible':[('type', '!=', 'product')]}">
+							<field name="reserve_qty" widget="statinfo" string="Reserve Qty" />
+						</button>
+
+					</div>
+				</data>
+			</field>
+		</record>
+<!-- 		<record id="reserve_qty_wizard_action" model="ir.actions.act_window"> -->
+<!-- 			<field name="name">Product Reservation Status Report</field> -->
+<!-- 			<field name="type">ir.actions.act_window</field> -->
+<!-- 			<field name="src_model">product.template</field> -->
+<!-- 			<field name="res_model">product.reservation.status.report</field> -->
+<!-- 			<field name="view_type">form</field> -->
+<!-- 			<field name="view_mode">tree,graph</field> -->
+<!-- 			<field name="context">{'default_product_id':active_id}</field> -->
+<!-- 		</record> -->
+<!-- 		<record id="action_stock_level_forecast_report_template" model="ir.actions.act_window"> -->
+<!-- 			<field name="name">Stock Level Forecast</field> -->
+<!-- 			<field name="res_model">report.stock.forecast</field> -->
+<!-- 			<field name="view_type">tree,graph</field> -->
+<!-- 			<field name="view_mode">pivot,graph</field> -->
+<!-- 			<field name="search_view_id" ref="view_stock_level_forecast_filter" /> -->
+<!-- 			<field name="context">{'search_default_pivot_by':1, -->
+<!-- 				'search_default_graph_by':1, 'search_default_product_tmpl_id': -->
+<!-- 				active_id}</field> -->
+<!-- 			<field name="view_id" ref="view_stock_level_forecast_pivot" /> -->
+<!-- 		</record> -->
+	</data>
+</openerp>

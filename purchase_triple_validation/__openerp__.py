@@ -23,7 +23,7 @@
     'name' : 'Purchases Triple Validation',
     'version' : '0.1',
     'category': 'Purchase Management',
-    'depends' : ['purchase_double_validation'],
+    'depends' : ['base'],
     'author' : 'OpenERP SA',
     'description': """
 Triple-validation for purchases exceeding minimum amount.
