@@ -81,24 +81,18 @@
         <record id="view_check_deposit_search" model="ir.ui.view">
             <field name="name">account.check.deposit.search</field>
             <field name="model">account.check.deposit</field>
+  			<field name="mode">primary</field>
+			<field name="priority" eval="20" />
+			<field name="inherit_id" ref="account_check_deposit.view_check_deposit_search" />
             <field name="arch" type="xml">
-                <search string="Checks Deposit Search">
-                    <field name="name" string="Checks Deposit"/>
-                    <filter name="draft" string="Draft"
-                        domain="[('state', '=', 'draft')]" />
-                    <filter name="done" string="Done"
-                        domain="[('state', '=', 'done')]" />
-                    <group string="Group By" name="groupby">
-                        <filter name="date_groupby" string="Deposit Date"
-                            context="{'group_by': 'deposit_date'}"/>
-                        <filter name="journal_groupby" string="Journal"
-                            context="{'group_by': 'journal_id'}" />
-                        <filter name="currency_groupby" string="Currency"
-                            context="{'group_by': 'currency_id'}" />
-                        <filter name="partner_bank_groupby" string="Bank Account"
-                            context="{'group_by': 'partner_bank_id'}" />
-                    </group>
-                </search>
+    			<xpath expr="filter[@string='Done']" position="replace">
+					<filter string="Posting" domain="[('state', '=', 'posting')]" />
+				</xpath>
+				
+				<!-- add your group at the end -->
+<!-- 				<xpath expr="//filter[@string='Creation']" position="after">
+					<filter string="My Groupe" domain="[]" context="{'group_by':'name'}" />
+				</xpath> -->
             </field>
         </record>
 
@@ -106,6 +100,8 @@
             <field name="name">Checks Deposit</field>
             <field name="res_model">account.check.deposit</field>
             <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="view_check_deposit_search" />
+           	<field name="domain">[('state','=','posting')]</field>
         </record>
 	
 		<record id="action_check_deposit_form_view_extend" model="ir.actions.act_window.view">

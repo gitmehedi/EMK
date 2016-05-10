@@ -7,8 +7,7 @@ from openerp.exceptions import Warning as UserError
 
 class AccountCheckEntry(models.Model):
     _inherit = "account.check.deposit"
-    
-    
+        
     state = fields.Selection([
         ('draft', 'Draft'),
         ('posting', 'Posting'),
