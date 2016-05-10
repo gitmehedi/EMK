@@ -5,27 +5,32 @@
 			model="ir.ui.view">
 			<field name="name">Purchase Requisition Form</field>
 			<field name="model">purchase.requisition</field>
-			<field name="inherit_id" ref="purchase_requisition.view_purchase_requisition_form" />
+			<field name="inherit_id"
+				ref="purchase_requisition.view_purchase_requisition_form" />
 			<field name="arch" type="xml">
-				<xpath expr="//form/header/button[@name='sent_suppliers']" position="after">
-					<button name="action_approved" states="in_progress" string="Approved" type="object" class="oe_highlight"  groups="purchase_requisition_approval.group_purchase_requisition_user_approval"/>
+				<xpath expr="//form/header/button[@name='sent_suppliers']"
+					position="after">
+					<button name="action_approved" states="in_progress" string="Approved"
+						type="object" class="oe_highlight"
+						groups="purchase_requisition_approval.group_purchase_requisition_user_approval" />
 				</xpath>
 				<xpath expr="//form/header/button[@name='open_bid']" position="replace">
-					 <button name="open_bid" type="object" states="approved" string="Close Call for Bids" class="oe_highlight"/>
-					 <button name="action_close" states="approved" string="Close" type="object" class="" />
+					<button name="open_bid" type="object" states="approved"
+						string="Close Call for Bids" class="oe_highlight" />
+					<button name="action_close" states="approved" string="Close"
+						type="object" class="" />
 				</xpath>
 				<xpath expr="//form/header/field[@name='state']" position="replace">
-					 <field name="state" widget="statusbar" statusbar_visible="draft,in_progress,approved,open,done" statusbar_colors="{&quot;in_progress&quot;:&quot;blue&quot;}"/>
+					<field name="state" widget="statusbar"
+						statusbar_visible="draft,in_progress,approved,open,done"
+						statusbar_colors="{&quot;in_progress&quot;:&quot;blue&quot;}" />
 				</xpath>
 			</field>
 		</record>
-		
-        
-<!-- 		<menuitem -->
-<!--         id="purchase_requisition.menu_purchase_requisition_pro_mgt" name="Purchase Requisition" -->
-<!--         sequence="10" -->
-<!--         parent="purchase.menu_procurement_management" -->
-<!--         action="purchase_requisition.action_purchase_requisition"/> -->
-		
+
+		<menuitem id="purchase_requisition.menu_purchase_requisition_pro_mgt"
+			name="Purchase Requisition" sequence="10"
+			parent="purchase.menu_procurement_management" action="purchase_requisition.action_purchase_requisition" />
+
 	</data>
 </openerp>
