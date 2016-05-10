@@ -31,7 +31,7 @@
              'views/indent_indent_view.xml',
              'wizard/confirmation_wizard_views.xml',
              ],
-    'depends': ['hr','stock'],
+    'depends': ['hr','stock','account'],
     'description': '''
 ''',
     'installable': True,

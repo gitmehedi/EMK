@@ -54,7 +54,9 @@
           'report/product_reservation_status_report.xml',
           'wizard/epo_reservation_status_wizard_views.xml',
           'report/epo_reservation_status_report.xml',
-        'view/inherited_product_template_views.xml'
+          'view/inherited_product_template_views.xml',
+          'view/inherited_product_product_views.xml',
+          'view/reservation_quant.xml'
           ],
  'auto_install': False,
  'installable': True,

@@ -10,16 +10,6 @@ class ConfirmationWizard(models.TransientModel):
     @api.multi
     def action_yes(self):
 
-        active_id = self._context.get('active_id', False)
-#         indent_indent_obj = self.env['indent.indent'].search([('id', '=', active_id)])
-        indent_indent_obj = self.env['indent.indent'].browse(active_id)
-        indent_product_line_obj = self.env['indent.product.lines']
-        line_data = indent_product_line_obj.search([('indent_id', '=', active_id)]).unlink()
-        vals = {
-               'product_type_flag':False,
-               'amount_total': 0.0
-               }
-        indent_indent_obj.write(vals)
         return {
             'type': 'ir.actions.act_window_close',
         }

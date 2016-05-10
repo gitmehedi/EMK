@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+
+		<record id="view_reservation_quant_tree" model="ir.ui.view">
+			<field name="name">reservation.quant.tree</field>
+			<field name="model">reservation.quant</field>
+			<field name="arch" type="xml">
+				<tree string="Reservation Quant">
+					<field name="product_id" />
+					<field name="analytic_account_id" />
+					<field name="location" />
+					<field name="reserve_quantity" />
+					<field name="uom" />
+				</tree>
+			</field>
+		</record>
+
+		<record id="view_reservation_quant_search" model="ir.ui.view">
+			<field name="name">reservation.quant.search</field>
+			<field name="model">reservation.quant</field>
+			<field name="arch" type="xml">
+				<search string="Reservation Quant">
+					<field name="product_id" />
+					<field name="location" />
+					<field name="analytic_account_id" />
+<!-- 					<filter string="Product" name="product_id" domain="[('product_id','=',1)]" /> -->
+					<group expand="0" string="Group By...">
+						<filter name="productgroup" string="Product" context="{'group_by': 'product_id'}" />
+						<filter name="analyticgroup" string="Analytic Account" context="{'group_by': 'analytic_account_id'}" />
+						<filter name="locationgroup" string="Location" context="{'group_by': 'location'}" />
+					</group>
+				</search>
+			</field>
+		</record>
+
+		<record id="action_reservation_quant_tree" model="ir.actions.act_window">
+			<field name="name">Reservation Quantity</field>
+			<field name="res_model">reservation.quant</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+		</record>
+		
+		<menuitem action="action_reservation_quant_tree" id="menu_action_reservation_quant_abc"
+			parent="stock.menu_stock_inventory_control" sequence="32" />
+	</data>
+</openerp>
