@@ -421,7 +421,7 @@ class ProductCosting(models.Model):
     @api.onchange('cm_ids','fixed_overhead_cm_cost_bdt','fixed_overhead_bonus_percentage', 'fixed_overhead_currency_id')
     def onchange_fixed_overhead_cm_cost_bdt(self):
         sum_cost = 0
-        if self.cm_ids:
+        if self.cm_ids and self.fixed_overhead_currency_id:
             sum_cost = sum([x.total_cost_usd for x in self.cm_ids])
             if self.fob_cal_flag:
                 fix_overhead_currency = self.fixed_overhead_cm_cost_bdt * (self.convert_currency(self.fixed_overhead_currency_id.id, self.product_currency_id.id))
@@ -480,8 +480,10 @@ class ProductCosting(models.Model):
         currency_obj = self.env['res.currency']
         t_cur, f_cur = 0, 0
         if from_cur:
+            print "-----------------Fist"
             f_cur = currency_obj.search([('id', '=', from_cur)], limit=1)
 
         if to_cur:
+            print "-----------------Second"
             t_cur = currency_obj.search([('id', '=', to_cur)], limit=1)
         return t_cur.rate / f_cur.rate
