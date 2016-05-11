@@ -6,6 +6,7 @@ import product_size
 import product_size_line
 import product_style
 import product_style_image
+import product_style_docs
 import product_size_group
 import merchandising_dept
 import product_style_line

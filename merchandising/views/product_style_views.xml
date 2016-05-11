@@ -131,6 +131,15 @@
 									</form>
 								</field>
 							</page>
+							<page string="Documents">
+							  <field name="docs_ids">
+									<tree string="Documents" editable="top">
+										<field name="title" />
+										<field name="file" />
+
+									</tree>
+								</field>
+							</page>
 
 							<page string="Vesions"
 								attrs="{'invisible': ['|',('version','&lt;',2),('visible','=',False)]}">

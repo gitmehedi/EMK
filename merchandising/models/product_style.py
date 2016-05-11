@@ -23,6 +23,8 @@ class ProductStyle(models.Model):
     
     
     image_ids = fields.One2many('product.style.image', 'style_id', string="Images")
+    docs_ids = fields.One2many('product.style.docs', 'doc_id', string="Documents")
+
     buyer_id = fields.Many2one('res.partner', string="Buyer", required=True, domain=[('customer', '=', 'True')],
                                readonly=True, states={'draft':[('readonly', False)]})  
     season_id = fields.Many2one('res.season', string="Season", required=True,
@@ -34,19 +36,18 @@ class ProductStyle(models.Model):
     specification_ids = fields.One2many('product.specification.line', 'style_id', string="Specification",
                                         readonly=True, states={'draft':[('readonly', False)]})
     
-    # Product Revised Style fields
+    """ Product Revised Style fields """
     version = fields.Integer(string='Version', size=3, default=1, readonly=True)
     visible = fields.Boolean(default=True)
     
     style_id = fields.Many2one('product.style', string="Style No", readonly=True)
     ref_style = fields.Many2one('product.style', string="Reference Style", index=True, readonly=True)
     style_ids = fields.One2many('product.style', 'style_id', string="Styles", readonly=True)
-    
-    
-    # State fields for containing vaious states
+
+    """ State fields for containing vaious states """
     state = fields.Selection([('draft', "Draft"), ('confirm', "Confirm")], default='draft')
-    
-    
+
+
     """All function which process data and operation"""
     
     @api.model
