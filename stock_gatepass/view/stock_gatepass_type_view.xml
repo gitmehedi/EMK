@@ -48,7 +48,7 @@
 	
 		<!-- Gate Pass Type Menu -->
 		<menuitem action="action_gate_pass_type" id="menu_gate_pass_type"
-			name="Gate Pass Types" parent="stock.menu_stock_warehouse_mgmt" />
+			name="Gate Pass Types" parent="menu_gate_pass_main" />
 
 	</data>
 </openerp>
