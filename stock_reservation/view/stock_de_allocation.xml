@@ -110,7 +110,7 @@
 		</record>
 		
 		<menuitem action="action_stock_deallocation_tree" id="menu_action_stock_de_allocation"
-			parent="stock.menu_stock_inventory_control" sequence="31" />
+			parent="sub_group_menu_stock_reservation" sequence="31" />
 		
 	</data>
 </openerp>

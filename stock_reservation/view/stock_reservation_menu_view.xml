@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+	<data>
+		<!-- Stock Transfer Menu -->
+		<menuitem name="Stock Reservation" parent="stock.menu_stock_root"
+			id="sub_group_menu_stock_reservation" sequence="2"
+			groups="stock.group_stock_user" />
+	</data>
+</openerp>
