@@ -15,9 +15,10 @@ class AccountCheckDepositExtend(models.Model):
             'name': _('Check Deposit %s') % deposit.name,
             'debit': total_debit,
             'credit': 0.0,
-#             'account_id': deposit.company_id.check_deposit_account_id.id,
-            'account_id': deposit.partner_bank_id.journal_id.default_debit_account_id.id,
+            'account_id': deposit.company_id.check_deposit_account_id.id,
+#             'account_id': deposit.partner_bank_id.journal_id.default_debit_account_id.id,
             'partner_id': False,
+#             'partner_id': self.partner_id.id,
             'currency_id': deposit.currency_none_same_company_id.id or False,
             'amount_currency': total_amount_currency,
             }

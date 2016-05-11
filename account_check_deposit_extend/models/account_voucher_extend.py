@@ -12,7 +12,6 @@ class AccountVoucherExtend(models.Model):
     bank_branch_name = fields.Char(string='Branch Name', size=100, help='Please enter branch name.')
     
     def _is_select_cheque_journal(self):
-        print ""
         if self.journal_id.id==self.env.ref('account_check_deposit.check_received_journal').id:
             self.is_select_cheque=True
         else:
