@@ -158,6 +158,8 @@ class ProductCosting(models.Model):
 
         filterFloat['Weight/pcs'] = value.get('weight_per_pcs', False)
         filterPercent['FOB Bonus'] = value.get('fixed_overhead_bonus_percentage', False)
+        filterFloat['FOB Bonus'] = value.get('fixed_overhead_bonus_percentage', False)
+        filterFloat['Fixed Overhead Cost'] = value.get('fixed_overhead_cm_cost_bdt', False)
 
         msg.update(validator._validate_number(filterFloat))
         msg.update(validator._validate_percentage(filterPercent))
