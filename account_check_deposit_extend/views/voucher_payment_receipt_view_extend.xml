@@ -8,8 +8,8 @@
 		  	<field name="arch" type="xml">
 		  		<xpath expr="//form/sheet/group/group/field[@name='journal_id']" position="after">
 		  			<field name="is_select_cheque" invisible="1"/>
-		  			<field name="cheque_date"  attrs="{'invisible':[('is_select_cheque','=',False)]}" />
-		  			<field name="cheque_number" attrs="{'invisible':[('is_select_cheque','=',False)]}" />
+		  			<field name="cheque_date"  attrs="{'invisible':[('is_select_cheque','=',False)]}" required="True" />
+		  			<field name="cheque_number" attrs="{'invisible':[('is_select_cheque','=',False)]}" required="True" />
 		  		</xpath>
 		  		<xpath expr="//form/sheet/group/group/field[@name='name']" position="after">
 		  			<field name="issuing_bank" attrs="{'invisible':[('is_select_cheque','=',False)]}" options='{"no_open": True,"no_create": 1, "no_create_edit": 1, "limit": 10}' />

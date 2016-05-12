@@ -11,18 +11,8 @@ class AccountMoveLineExtends(models.Model):
     is_rejectedfrombank=fields.Boolean(string='Is Rejected From Bank?',default=False)
     
     def get_computed_columns(self):
-        move_ids = self.env.context.get('move_id', []) or []
-        cur_obj = self.env['account.voucher']
-                                                         
-        for record in cur_obj.search([('move_id', 'in', move_ids)]):
-            self.cheque_date = record.cheque_date
-            self.cheque_number = record.cheque_number
-            
-            print "==========" + self.cheque_date
-            print "==========" + self.cheque_number
-            
-
-#         res =self.env['account.voucher'].search([('move_id', '=', self.move_id.id)])
-#         self.cheque_date=res[0].cheque_date
-#         self.cheque_number=res[0].cheque_number
+        for rec in self:   
+            res =self.env['account.voucher'].search([('move_id', '=', rec.move_id.id)])
+            rec.cheque_date=res[0].cheque_date
+            rec.cheque_number=res[0].cheque_number
         
