@@ -22,8 +22,6 @@ class InheritedStockReservation(models.Model):
 	
 	@api.multi
 	def action_generate_line(self):
-		print "----self---",self
-		print "----analytic_account_id---",self.analytic_account_id
 		if self.analytic_account_id and self.warehouse_id:
 			obj_reservation = self.env['stock.reservation'].search([['analytic_account_id','=',self.analytic_account_id.id],['warehouse_id','=',self.warehouse_id.id]], limit=1)
 			query = '''
@@ -55,7 +53,7 @@ class InheritedStockReservation(models.Model):
 				GROUP BY product_id
 			''' % (self.analytic_account_id.id, self.warehouse_id.id,self.analytic_account_id.id, self.warehouse_id.id,self.analytic_account_id.id, self.warehouse_id.id)
 # 			self.ensure_one()
-			print query
+
 			res_ext = self.env.cr.execute(query)
 			result = self.env.cr.dictfetchall()
 			res_vals = []
