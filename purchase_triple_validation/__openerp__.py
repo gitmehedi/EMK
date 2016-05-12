@@ -16,7 +16,10 @@
 #
 #    You should have received a copy of the GNU Affero General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
+#    ################  -------Configuration++++++++++++++++++++++
+#    Go to settings -> General Settings -> Configure your company Data
+#    Go to "Configuration Tab -> Levels of Approvals -> Select Radio Button: Get 2 levels of approvals to confirm a purchase order
+#    Give Amount-> Double validation amount
 ##############################################################################
 
 {

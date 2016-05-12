@@ -143,15 +143,16 @@ class IndentIndent(models.Model):
     def _get_required_date(self, cr, uid, context=None):
         return datetime.datetime.strftime(datetime.datetime.today() + timedelta(days=7), DEFAULT_SERVER_DATETIME_FORMAT)
     
-       
-    def _default_stock_location(self, cr, uid, context=None):
+    """
+    @api.multi
+    def _default_stock_location(self):
         #TODO: need to improve this try except with some better option
         try:
-            stock_location = self.pool.get('ir.model.data').get_object(cr, uid, 'stock_indent', 'location_production1').id
+            stock_location = self.env['ir.model.data'].get_object('stock_indent', 'location_production1').id
         except:
             stock_location = False
         return stock_location
-    """
+    
     
     
     @api.one
@@ -159,7 +160,6 @@ class IndentIndent(models.Model):
         days = line.delay or 0.0
         date_1 = datetime.datetime.strptime(start_date, "%Y-%m-%d")
         date_planned = datetime.datetime.strftime(date_1 + timedelta(days), DEFAULT_SERVER_DATETIME_FORMAT)
-        print 'date_planned ', date_planned
         return date_planned
     
     
@@ -186,7 +186,7 @@ class IndentIndent(models.Model):
         #'indentor_id': lambda self, cr, uid, context: uid,
         'requirement': '1',
         'type': 'gen',
-        #'department_id':_default_stock_location,
+        'department_id':_default_stock_location,
         'item_for':'store',
         'company_id': lambda self, cr, uid, c: self.pool.get('res.company')._company_default_get(cr, uid, 'indent.indent', context=c),
         #'company_id': lambda self: self.env('res.company').get('indent.indent'),
@@ -297,11 +297,10 @@ class IndentIndent(models.Model):
         #wf_service = netsvc.LocalService("workflow")
         assert len(self.ids) == 1, 'This option should only be used for a single id at a time.'
         picking_id = False
-
+        
         indent = self.browse(self.ids[0])
         if indent.product_lines:
             picking_id = self._create_pickings_and_procurements(indent, indent.product_lines)
-            
         move_ids = move_obj.search([('picking_id','=',picking_id.id)])
         vals= {
                'picking_id': picking_id.id,
@@ -339,7 +338,6 @@ class IndentIndent(models.Model):
                     picking_id = picking_obj.create(self._prepare_indent_picking(indent))
                 move_id = move_obj.create(self._prepare_indent_line_move(indent, line, picking_id.id, date_planned))
         
-        
         if picking_id:
             self.env['stock.picking'].action_stock_picking_confirm(picking_id.id)
 
@@ -348,8 +346,9 @@ class IndentIndent(models.Model):
     @api.multi
     def _prepare_indent_picking(self, indent):
         pick_name = self.env['ir.sequence'].get('stock.picking')
+        location_id = indent.warehouse_id.lot_stock_id.id
         res = {
-            'invoice_state': 'none',
+#             'invoice_state': 'none',
             'picking_type_id': indent.picking_type_id.id,
             'priority': indent.requirement,
             'name': pick_name,
@@ -358,11 +357,15 @@ class IndentIndent(models.Model):
             #'type': 'internal',
             'move_type':indent.move_type,
             'partner_id': indent.indentor_id.id or False,
-            'stock_issue':True
+#             'stock_issue':True
+            'location_id': location_id,
+            'location_dest_id': indent.department_id.id,
             
         }
+        
         if indent.company_id:
             res = dict(res, company_id = indent.company_id.id)
+        
         return res
     
     @api.multi

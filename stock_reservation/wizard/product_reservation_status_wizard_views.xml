@@ -28,7 +28,7 @@
 			<field name="target">new</field>
 		</record>
 		<menuitem name="Product Reservation Status" id="product_reservation_status_menu"
-			parent="stock.menu_stock_inventory_control" sequence="251"
+			parent="sub_group_menu_stock_reservation" sequence="251"
 			action="product_reservation_status_wizard_action" />
 	</data>
 </openerp>

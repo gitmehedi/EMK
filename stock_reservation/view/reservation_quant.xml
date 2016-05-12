@@ -42,6 +42,6 @@
 		</record>
 		
 		<menuitem action="action_reservation_quant_tree" id="menu_action_reservation_quant_abc"
-			parent="stock.menu_stock_inventory_control" sequence="32" />
+			parent="sub_group_menu_stock_reservation" sequence="32" />
 	</data>
 </openerp>

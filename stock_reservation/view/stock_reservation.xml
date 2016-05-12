@@ -112,6 +112,6 @@
         </record>
 		
 		<menuitem action="action_stock_reservation_tree" id="menu_action_stock_reservation"
-			parent="stock.menu_stock_inventory_control" sequence="30" />
+			parent="sub_group_menu_stock_reservation" sequence="30" />
 	</data>
 </openerp>

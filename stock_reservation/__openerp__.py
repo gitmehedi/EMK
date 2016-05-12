@@ -47,6 +47,7 @@
           'security/security.xml',
           'security/ir.model.access.csv',
           'view/inherited_warehouse_views.xml',
+          'view/stock_reservation_menu_view.xml',
           'view/stock_reservation.xml',
           'view/stock_de_allocation.xml',
           'view/stock_re_allocation.xml',

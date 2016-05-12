@@ -50,9 +50,9 @@ This module was developed by TinyERP Pvt Ltd (OpenERP India). Not covered under 
     'depends' : ['stock','stock_gatepass_hr'],
     'data' : [
         'security/ir.model.access.csv',
-        'view/stock_gatepass_type_view.xml',
         'view/stock_gatepass_in_view.xml',
         'view/stock_gatepass_out_view.xml',
+        'view/stock_gatepass_type_view.xml',
 #         'stock_gatepass_workflow.xml',
         'view/stock_gatepass_sequence.xml',
 #         'stock_gatepass_data.xml',
