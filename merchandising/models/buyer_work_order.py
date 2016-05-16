@@ -10,7 +10,7 @@ class BuyerWorkOrder(models.Model):
     _inherit = 'sale.order'
     
     """ Buyer Work Order fields """
-
+    bwo_ref_no = fields.Char(string="Reference No", size=20)
     epo_date = fields.Date(string="Date", required=True, default=date.today().strftime('%Y-%m-%d'),
                            readonly=True, states={'draft':[('readonly', False)]})
     
@@ -101,7 +101,15 @@ class BuyerWorkOrder(models.Model):
     def write(self, vals):
         self._validate_data(vals)
         
-        return super(BuyerWorkOrder, self).write(vals)      
+        return super(BuyerWorkOrder, self).write(vals)
+
+    @api.multi
+    @api.depends('name', 'bwo_ref_no')
+    def name_get(self):
+        result = []
+        for record in self:
+            result.append((record.id, '[%s] %s' % (record.name, record.bwo_ref_no)))
+        return result
     
     """ onchange fields """
 
@@ -188,7 +196,7 @@ class BuyerWorkOrder(models.Model):
             }
                
             if self.bwo_prod_attr_sum_ids:
-#                 print "--------",self._get_sum_attr_ids()
+
                 if attr_val in self._get_sum_attr_ids():
                     for wr in self.bwo_prod_attr_sum_ids:
                         if wr.attr_ids.id == attr_val:

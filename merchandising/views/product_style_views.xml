@@ -201,12 +201,6 @@
 		</record>
 
 
-		<!-- Sequences for Product Styles
-		<record id="seq_type_product_style_order_2" model="ir.sequence.type">
-			<field name="name">Style Type</field>
-			<field name="code">style_code</field>
-		</record>-->
-
 		<record id="seq_product_style_order_2" model="ir.sequence">
 			<field name="name">style</field>
 			<field name="code">style_code</field>

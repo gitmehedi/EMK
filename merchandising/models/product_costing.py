@@ -13,6 +13,7 @@ class ProductCosting(models.Model):
 
     name = fields.Char(size=30, string="Serial No", readonly=True)
     procos_code = fields.Char(string='Code')
+    faccos_code = fields.Char(string='Code')
     buyer_ref = fields.Char(string="Reference", size=30, required=True,
                              readonly=True, states={'draft':[('readonly', False)]})
 
@@ -121,6 +122,8 @@ class ProductCosting(models.Model):
                                            readonly=True, states={'draft':[('readonly', False)]})
     grand_total = fields.Float(compute="_computed_grand_total", string='Grand Total/Dzn', digits=(20, 4), default=0.0, store=True)
     fob_cost = fields.Float(compute="_computed_fob_cost", string='Cost Per Piece (FOB)', digits=(20, 4), default=0.0, store=True)
+    prod_cost_flag = fields.Boolean(string='Product Costing', store=True)
+    fac_cost_flag = fields.Boolean(string='Factory Costing', store=True)
 
     """
     CM Calculation Fields
@@ -186,11 +189,14 @@ class ProductCosting(models.Model):
         self._validate_data(vals)
 #         self._check_sum_percentage(vals)
         version = vals.get('version', 0)
-        print version
         if (version in [0, 1]):
-            vals['name'] = self.env['ir.sequence'].get('procos_code')
+            if vals.get('prod_cost_flag'):
+                vals['name'] = self.env['ir.sequence'].get('procos_code')
+            else:
+                vals['name'] = self.env['ir.sequence'].get('faccos_code')
 
         return super(ProductCosting, self).create(vals)
+
 
 
     @api.multi

@@ -6,9 +6,6 @@ access_sales_contract_user,sales.contract.user,model_sales_contract,commercial_g
 access_sales_contract_details_manager,sales.contract.details.manager,model_sales_contract_details,commercial_group_manager,1,1,1,1
 access_sales_contract_details_user,sales.contract.details.user,model_sales_contract_details,commercial_group_user,1,1,1,0
 
-access_export_invoice_manager,export.invoice.manager,model_export_invoice,commercial_group_manager,1,1,1,1
-access_export_invoice_user,export.invoice.user,model_export_invoice,commercial_group_user,1,1,1,0
-
 access_import_invoice_manager,import.invoice.manager,model_import_invoice,commercial_group_manager,1,1,1,1
 access_import_invoice_user,import.invoice.user,model_import_invoice,commercial_group_user,1,1,1,0
 
@@ -29,9 +26,6 @@ access_export_invoice_realization_head_details_user,export.invoice.realization.h
 
 access_invoice_against_manager,invoice.against.manager,model_invoice_against,commercial_group_manager,1,1,1,1
 access_invoice_against_user,invoice.against.user,model_invoice_against,commercial_group_user,1,1,1,0
-
-access_export_invoice_manager,export.invoice.manager,model_export_invoice,commercial_group_manager,1,1,1,1
-access_export_invoice_user,export.invoice.user,model_export_invoice,commercial_group_user,1,1,1,0
 
 access_notify_party_manager,notify.party.manager,model_notify_party,commercial_group_manager,1,1,1,1
 access_notify_party_user,notify.party.user,model_notify_party,commercial_group_user,1,1,1,0

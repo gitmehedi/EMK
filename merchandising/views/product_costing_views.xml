@@ -89,11 +89,14 @@
 											options='{"no_open": True,"no_create": 1, "no_create_edit": 1}' />
 									</div>
 								</div>
+								<field name="prod_cost_flag" invisible="1" />
+								<field name="fac_cost_flag" invisible="1" />
 								<field name="weight_per_dzn" invisible="1" />
 								<field name="product_costing_visible" invisible="1" />
 								<field name="yarn_amount_flag" invisible="1" />
 								<field name="accessories_amount_flag" invisible="1" />
 								<field name="yarn_sum_percentage" invisible="1" />
+
 							</group>
 						</group>
 						<notebook>
@@ -415,16 +418,19 @@
 			</field>
 		</record>
 
-		<!-- Sequences for Product Costing
-		<record id="seq_type_product_costing_mer" model="ir.sequence.type">
-			<field name="name">Product Costing</field>
-			<field name="code">procos_code</field>
-		</record>-->
+		<!-- Sequences for Product Costing-->
 
 		<record id="seq_product_costing_mer" model="ir.sequence">
 			<field name="name">Costing</field>
 			<field name="code">procos_code</field>
 			<field name="prefix">PC-</field>
+			<field name="padding">10</field>
+		</record>
+
+        <record id="seq_factory_costing_mer" model="ir.sequence">
+			<field name="name">Costing</field>
+			<field name="code">faccos_code</field>
+			<field name="prefix">FC-</field>
 			<field name="padding">10</field>
 		</record>
 
@@ -435,10 +441,24 @@
 			<field name="res_model">product.costing</field>
 			<field name="view_type">form</field>
 			<field name="view_mode">tree,form</field>
-			<field name="domain">[('product_costing_visible','=',True)]</field>
+            <field name="domain">[('product_costing_visible','=',True),('prod_cost_flag','=',True)]</field>
+            <field name="context">{'default_prod_cost_flag': True}</field>
+		</record>
+
+		<!-- Factory Costing Action -->
+		<record id="factory_costing_action" model="ir.actions.act_window">
+			<field name="name">Product Costing</field>
+			<field name="res_model">product.costing</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+            <field name="domain">[('product_costing_visible','=',True),('fac_cost_flag','=',True)]</field>
+			<field name="context">{'default_fac_cost_flag': True}</field>
 		</record>
 
 		<menuitem id="product_costing_menu" name="Product Costing"
 			parent="merchandising_menu" sequence="240" action="product_costing_action" />
+
+		<menuitem id="factory_costing_menu" name="Factory Costing"
+			parent="merchandising_menu" sequence="241" action="factory_costing_action" />
 	</data>
 </openerp>
