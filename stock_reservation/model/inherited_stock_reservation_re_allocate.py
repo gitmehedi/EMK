@@ -179,8 +179,6 @@ class InheritedStockReservationLine(models.Model):
 	@api.onchange('quantity')
 	def onchange_quantity(self):
 		if self.quantity and self.allocate_qty and self.quantity > self.allocate_qty:
-			print '---------self.allocate_qty------',self.allocate_qty
-			print '---------self.quantity------',self.quantity
 # 			res = {
 #             'value': {
 # 				#This sets the total price on the field standard_price.
