@@ -224,7 +224,7 @@ class InheritedStockReservationLine(models.Model):
 	@api.one
 	@api.onchange('quantity')
 	def onchange_quantity(self):
-		if self.quantity and self.allocate_qty and self.quantity > self.allocate_qty:
+		if self.stock_reservation_id.allocate_flag != 1 and self.quantity and self.allocate_qty and self.quantity > self.allocate_qty:
 # 			print '---------self.allocate_qty------',self.allocate_qty
 # 			print '---------self.quantity------',self.quantity
 			self.quantity = self.allocate_qty
@@ -242,11 +242,12 @@ class InheritedStockReservationLine(models.Model):
 		
 	@api.multi
 	def write(self, vals):
-		if 'allocate_qty' in vals:
-			allocate_qty = vals['allocate_qty']
-		else:
-			allocate_qty = self.allocate_qty
-		quantity = vals.get('quantity', False)
-		if quantity > allocate_qty:
-			raise Warning(_('Quantity can not be Greater than Allocate Qty')) 
+		if self.stock_reservation_id.allocate_flag != 1:
+			if 'allocate_qty' in vals:
+				allocate_qty = vals['allocate_qty']
+			else:
+				allocate_qty = self.allocate_qty
+			quantity = vals.get('quantity', False)
+			if quantity > allocate_qty:
+				raise Warning(_('Quantity can not be Greater than Allocate Qty')) 
 		return super(InheritedStockReservationLine, self).write(vals)	

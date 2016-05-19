@@ -1,48 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <openerp>
 	<data>
-		<record id="view_picking_internal_search_11" model="ir.ui.view">
-            <field name="name">stock.picking.internal.search</field>
-            <field name="model">stock.picking</field>
-            <field name="arch" type="xml">
-                <search string="Picking Lists">
-                    <filter name="good_receive" string="Good Receive" domain="[('good_receive_flag','=',True),('qc_receive_flag','=',False),('state','=','assigned')]"/>
-                    <filter name="qc_receive" string="QC Receive" domain="[('qc_receive_flag','=',True),('good_receive_flag','=',True),('state','=','done')]"/>
-                    <field name="name" string="Picking List" filter_domain="['|',('name','ilike', self),('origin','ilike',self)]"/>
-                    <filter name="draft" string="Draft" domain="[('state','=','draft')]" help="Draft Moves"/>
-                    <filter name="available" string="Ready" domain="[('state','in',('assigned', 'partially_available'))]" help="Assigned Moves"/>
-                    <filter name="waiting" string="Waiting Availability" domain="[('state','in', ('confirmed', 'waiting'))]" help="Waiting Moves"/>
-                    <filter name="confirmed" string="Confirmed" domain="[('state','in', ('confirmed', 'waiting', 'assigned'))]" help="Confirmed Moves"/>
-                    <filter name="done" string="Done" domain="[('state','=','done')]" help="Pickings already processed"/>
-                    <separator/>
-                    <filter name="late" string="Late" domain="[('min_date','&lt;', time.strftime('%%Y-%%m-%%d %%H:%%M:%%S'))]" help="Pickings that are late on scheduled time"/>
-                    <separator/>
-                    <filter name="backorder" string="Backorders" domain="[('backorder_id','&lt;&gt;', False)]" help="Remaining parts of picking partially processed"/>
-                    <field name="partner_id" filter_domain="[('partner_id','child_of',self)]"/>
-                    <field name="product_id"/>
-                    <field name="picking_type_id"/>
-                    <field name="group_id"/>
-                    <group expand="0" string="Group By">
-                        <filter string="Status" domain="[]" context="{'group_by':'state'}"/>
-                        <filter string="Order Date" domain="[]"  context="{'group_by':'date'}"/>
-                        <filter string="Expected Date" domain="[]"  context="{'group_by':'min_date'}"/>
-                        <filter string="Origin" domain="[]" context="{'group_by':'origin'}"/>
-                        <filter name="picking_type" string="Picking Type" domain="[]" context="{'group_by':'picking_type_id'}"/>
-                        <filter string="Procurement Group" domain="[]" context="{'group_by':'group_id'}"/>
-                    </group>
-                </search>
-            </field>
-        </record>
-	
+		
 		<record id='action_stock_receive' model='ir.actions.act_window'>
 			<field name="name">Good Receive</field>
 			<field name="res_model">stock.picking</field>
 			<field name="view_type">form</field>
 			<field name="view_mode">tree,form</field>
 			<field eval="False" name="view_id" />
-			<field name="domain"></field>
-			<field name="context">{'search_default_good_receive': 1,
-			'default_good_receive_flag': 1}</field>
+			<field name="domain">[('good_receive_flag','=',True),('qc_receive_flag','=',False),('state','=','assigned')]</field>
 		</record>
 		
 		<menuitem action="action_stock_receive" name="Good Receive"
@@ -55,13 +21,25 @@
 			<field name="view_type">form</field>
 			<field name="view_mode">tree,form</field>
 			<field eval="False" name="view_id" />
-			<field name="domain"></field>
-			<field name="context">{'search_default_qc_receive': 1,
-			'default_qc_receive_flag': 1}</field>
+			<field name="domain">[('good_receive_flag','=',False),('qc_receive_flag','=',True),('state','in',('assigned','partially_available'))]</field>
 		</record>
 		
 		<menuitem action="action_qc_receive" name="QC Receive"
 			parent="sub_group_menu_indent_stock_transfer" id="menu_qc_receive"
 			sequence="5" groups="stock.group_stock_user" />
+		
+		<record id='action_qc_pass' model='ir.actions.act_window'>
+			<field name="name">QC Pass</field>
+			<field name="res_model">stock.picking</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+			<field eval="False" name="view_id" />
+			<field name="domain">[('good_receive_flag','=',False),('qc_receive_flag','=',False),('qc_pass_flag','=',True),('state','in',('assigned','partially_available'))]</field>
+		</record>
+		
+		<menuitem action="action_qc_pass" name="QC Pass"
+			parent="sub_group_menu_indent_stock_transfer" id="menu_qc_pass"
+			sequence="6" groups="stock.group_stock_user" />	
+		
 	</data>
 </openerp>
