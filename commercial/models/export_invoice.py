@@ -11,12 +11,12 @@ class ExportInvoice(models.Model):
 
 
     """ Export invoice fields """
-    # name = fields.Char(string="Serial", size=30, readonly=True)
-    # ei_code = fields.Char(string='Code')
+    ei_name = fields.Char(string="Serial", size=30, readonly=True)
+    ei_code = fields.Char(string='Code')
     
-    invoice_against = fields.Selection([('lc', 'LC'), ('tt', 'TT')], string="Invoice Against", required=True)
-    lc_tt_no = fields.Char(string="Export LC/TT No", size=30, required=True)
-    ei_date = fields.Date(string="Export Invoice Date", required=True, default=date.today().strftime('%Y-%m-%d'))
+    invoice_against = fields.Selection([('lc', 'LC'), ('tt', 'TT')], string="Invoice Against")
+    lc_tt_no = fields.Char(string="Export LC/TT No", size=30)
+    ei_date = fields.Date(string="Export Invoice Date", default=date.today().strftime('%Y-%m-%d'))
 
     destination = fields.Char(string="Destination", size=30)
     mother_vessel = fields.Char(string="Mother Vessel", size=30)
@@ -38,7 +38,7 @@ class ExportInvoice(models.Model):
     
     """ Relational fields """
     export_invoice_id = fields.Many2one('res.bank', string='Export Invoice No')
-    consignee = fields.Many2one('res.bank', string='Consignee', required=True)
+    consignee = fields.Many2one('res.bank', string='Consignee')
     notify_party = fields.Many2one('res.partner', string='Notify Party')
     port_of_loading = fields.Many2one('port', string='Port of Loading')
     port_of_discharge = fields.Many2one('port', string='Port of Discharge')
@@ -83,7 +83,7 @@ class ExportInvoice(models.Model):
     @api.model
     def create(self, vals):
         self._validate_data(vals)
-        # vals['name'] = self.env['ir.sequence'].get('ei_code')
+        vals['ei_name'] = self.env['ir.sequence'].get('ei_code')
             
         return super(ExportInvoice, self).create(vals)
     

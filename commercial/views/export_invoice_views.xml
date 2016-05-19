@@ -7,7 +7,8 @@
 			<field name="model">account.invoice</field>
 			<field name="arch" type="xml">
 				<tree string="Export Invoice Tree">
-					<field name="name" />
+					<field name="partner_id" string="Customer"/>
+					<field name="ei_name" />
 					<field name="invoice_against" />
 					<field name="lc_tt_no" />
 					<field name="ei_date" />
@@ -33,12 +34,20 @@
 					</header>
 					<sheet>
 						<h1>
-							<field name="name" string="Serial No" />
+							<field name="ei_name" string="Serial No" />
 						</h1>
 						<group>
 							<group>
 								<field name="invoice_against"
 									options='{"no_open": True,"no_create": 1, "no_create_edit": 1}' />
+								<field name="partner_id" domain="[('customer', '=', 'True')]" string="Customer"
+									options='{"no_open": True,"no_create": 1, "no_create_edit": 1}' />
+								<field name="journal_id"
+									options='{"no_open": True,"no_create": 1, "no_create_edit": 1}' />
+								<field name="account_id"
+									options='{"no_open": True,"no_create": 1, "no_create_edit": 1}' />
+
+
 								<field name="lc_tt_no" />
 								<field name="export_invoice_id"
 									options='{"no_open": True,"no_create": 1, "no_create_edit": 1}' />
@@ -96,14 +105,14 @@
 			</field>
 		</record>
 
-		<!-- Sequences for Export Invoice
+		<!-- Sequences for Export Invoice -->
 
 		<record id="seq_export_invoice" model="ir.sequence">
 			<field name="name">Export Invoice</field>
 			<field name="code">ei_code</field>
 			<field name="prefix">EI-</field>
 			<field name="padding">10</field>
-		</record>-->
+		</record>
 
 
 		<!-- Export Invoice Menu and Action -->

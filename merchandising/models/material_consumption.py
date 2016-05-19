@@ -30,7 +30,10 @@ class MaterialConsumption(models.Model):
                                readonly=True, states={'draft':[('readonly', False)]})
     acc_ids = fields.One2many('material.consumption.details', 'mc_acc_id', string="Accessories",
                               readonly=True, states={'draft':[('readonly', False)]})
-    
+
+    """ Computed fields """
+    style_ref_code = fields.Char(compute='_compute_style_ref_code', store=True)
+
     """State fields for containing vaious states"""
     state = fields.Selection([('draft', "Draft"), ('confirm', "Confirm")], default='draft')
     
@@ -75,6 +78,12 @@ class MaterialConsumption(models.Model):
             }
 
         return res
+
+    @api.depends('style_id')
+    def _compute_style_ref_code(self):
+        for record in self:
+            if record.style_id:
+                record.style_ref_code = self.style_id.name
 
     def create_template(self, cr, uid, ids, context=None):
         res = self.write(cr, uid, ids, {'template':True}, context)

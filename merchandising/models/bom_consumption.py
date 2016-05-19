@@ -49,8 +49,17 @@ class BOMConsumption(models.Model):
     
     @api.onchange('style_id')
     def _onchange_style_id(self):
+        res, ids = {}, []
+        export_env = self.env['sale.order'].search([('style_ref_code','=',self.mc_id.style_ref_code),('state','=','confirm')])
         self.export_po_id = 0
-    
+
+        if self.style_id:
+            print self.export_po_id,"-----------", export_env.ids
+            res['domain'] = {
+                'export_po_id': [('id', 'in', export_env.ids)],
+            }
+
+        return res
     
     @api.multi
     def generate_bom(self):
@@ -84,8 +93,7 @@ class BOMConsumption(models.Model):
                 if line.finish_goods: 
                     """ If bom generate as per finish goods color.It will generate multiple
                      rows of product with exact color variant of BWO """
-                    print "Call---------------------------1"
-                    self.gen_finish_goods(line, bwo_data, colors, sizes) 
+                    self.gen_finish_goods(line, bwo_data, colors, sizes)
                      
                 elif line.variant_mapping_ids:
                     """ If bom generate as per variant mapping.It will generate multiple
@@ -151,7 +159,7 @@ class BOMConsumption(models.Model):
     def gen_finish_goods(self, line, bwo_data, colors, sizes, flag='yarn'):
         
         if line.variant_mapping_ids:
-            print "Call---------------------------2"
+
             for bwo_val in bwo_data.order_line:
                 line.prod_id = self.get_products_id(line, bwo_val, False, 'goods')
                 line.total_qty = self.calculate_quantity(line, bwo_val, 200, sizes)
@@ -159,7 +167,7 @@ class BOMConsumption(models.Model):
                 if line.prod_id:  
                     self.bom_generate(line, flag) 
         else:
-            print "Call---------------------------3"
+
             for  key, value in colors.iteritems():
                 line.prod_id = self.get_products_id(line, bwo_data, key, 'goods')
                 line.total_qty = self.calculate_quantity(line, bwo_data, value, sizes)
@@ -178,7 +186,7 @@ class BOMConsumption(models.Model):
             self.bom_generate(line, flag)
             
     def gen_size_wise_mapping(self, line, bwo_data, colors, sizes, flag='yarn'):
-        print colors, "----", sizes
+
         for bwo_val in bwo_data.order_line:
             line.prod_id = self.get_products_id(line, bwo_val, False, 'map')
             line.total_qty = self.calculate_quantity(line, bwo_val, False, sizes) 
@@ -249,7 +257,7 @@ class BOMConsumption(models.Model):
                 
                 for bwo_val in bwo_obj.order_line:
                     for obj in gen_prod_obj:
-                        print bwo_val.product_id.attribute_value_ids.ids, "Call---------------------------4---2", color_list.value_ids.ids
+
                         get_com_attr = list(set(list(set(bwo_val.product_id.attribute_value_ids.ids).intersection(color_list.value_ids.ids))))
                         merge_attr = list(set(rm_color + get_com_attr))
                         if (variant_id in obj.attribute_value_ids.ids):     

@@ -10,7 +10,7 @@ class BuyerWorkOrder(models.Model):
     _inherit = 'sale.order'
     
     """ Buyer Work Order fields """
-    bwo_ref_no = fields.Char(string="Reference No", size=20)
+    bwo_ref_no = fields.Char(string="Reference No", size=20, required=True)
     epo_date = fields.Date(string="Date", required=True, default=date.today().strftime('%Y-%m-%d'),
                            readonly=True, states={'draft':[('readonly', False)]})
     
@@ -42,6 +42,9 @@ class BuyerWorkOrder(models.Model):
     style_id = fields.Many2one('product.style', string="Style", required=True,
                               domain=[('version', '=', '1'), ('state', '=', 'confirm')],
                               readonly=True, states={'draft':[('readonly', False)]})
+    # style_id = fields.Many2one('product.style', string="Style No", required=True,
+    #                             states={'draft': [('readonly', False)]},
+    #                            domain=[('visible', '=', 'True'), ('state', '=', 'confirm')])
     currency_id = fields.Many2one('res.currency', string="Currency", required=True,
                                   readonly=True, states={'draft':[('readonly', False)]})
     delivery_term_id = fields.Many2one('delivery.term', string="Delivery Term", required=True,
@@ -56,6 +59,8 @@ class BuyerWorkOrder(models.Model):
     inhouse_inspection_date = fields.Date(compute='_compute_com_inhouse_inspection_date', string="In House Insspection Date",)
     total_quantity = fields.Float(compute='_compute_com_quantity', string="Order Quantity")
     production_ratio = fields.Float(compute='_compute_production_ratio', store=True)
+    style_ref_code = fields.Char(compute='_compute_style_ref_code', store=True)
+
     shipment_mode = fields.Selection([("sea", "Sea"), ("air", "Air"), ("road", "By Road")], string='Ship Mode', required=True,
                                      readonly=True, states={'draft':[('readonly', False)]})
     
@@ -151,6 +156,13 @@ class BuyerWorkOrder(models.Model):
         for record in self:
             if record.bwo_shipment_ids:
                 record.buyer_inspection_date = min(qty.buyer_inspection_date for qty in record.bwo_shipment_ids)
+
+    @api.depends('style_id')
+    def _compute_style_ref_code(self):
+        for record in self:
+            if record.style_id:
+                record.style_ref_code = self.style_id.name
+
                 
     def _compute_com_inhouse_inspection_date(self):
         for record in self:

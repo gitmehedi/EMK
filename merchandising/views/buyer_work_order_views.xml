@@ -92,7 +92,7 @@
 
 
 		<!-- Work Order  Tree or List view -->
-		<record id="buyer_work_order2_tree_view" model="ir.ui.view">
+		<record id="buyer_work_order_tree_view" model="ir.ui.view">
 			<field name="name">sale.order.tree</field>
 			<field name="model">sale.order</field>
 			<field name="arch" type="xml">
@@ -240,6 +240,28 @@
 			<field name="view_type">form</field>
 			<field name="view_mode">kanban,tree,form</field>
 		</record>
+
+		<record id="action_buyer_work_order_kanban_view" model="ir.actions.act_window.view">
+			<field eval="1" name="sequence" />
+			<field name="view_mode">kanban</field>
+			<field name="view_id" ref="buyer_work_order_kanban" />
+			<field name="act_window_id" ref="buyer_work_order_list_action" />
+		</record>
+
+		<record id="action_buyer_work_order_tree_view" model="ir.actions.act_window.view">
+			<field eval="2" name="sequence" />
+			<field name="view_mode">tree</field>
+			<field name="view_id" ref="buyer_work_order_tree_view" />
+			<field name="act_window_id" ref="buyer_work_order_list_action" />
+		</record>
+
+		<record id="action_buyer_work_order_form_view" model="ir.actions.act_window.view">
+			<field eval="3" name="sequence" />
+			<field name="view_mode">form</field>
+			<field name="view_id" ref="buyer_work_order_form_view" />
+			<field name="act_window_id" ref="buyer_work_order_list_action" />
+		</record>
+
 
 		<menuitem id="buyer_work_order_main_menu" name="Work Order"
 			parent="merchandising_menu" sequence="250" action="buyer_work_order_list_action" />
