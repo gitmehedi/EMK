@@ -21,10 +21,11 @@
             <field name="arch" type="xml">
 				<!-- add your filter at the end -->
 				<xpath expr="//field[@name='date']" position="after">
-					<field name="cheque_date" domain="[('cheque_date','=','cheque_date')]" string="Cheque Date" />
-					<field name="cheque_number" domain="[('cheque_number','=','cheque_number')]" string="Cheque Number" />					
-					<!-- <filter string="Cheque Date" domain="[('cheque_date', '=', 'cheque_date')]" />
-					<filter string="Cheque Number" domain="[('cheque_number', '=', 'cheque_number')]" /> -->
+ 					<field name="cheque_date" domain="[('cheque_date','=','cheque_date')]" context="{'cheque_date':self}" string="Cheque Date" />
+					<field name="cheque_number" domain="[('cheque_number','=','cheque_number')]" context="{'cheque_number':self}" string="Cheque Number" />
+ 					
+<!--  					<filter string="Cheque Date" domain="[('cheque_date', '=', 'cheque_date')]" /> -->
+<!-- 					<filter string="Cheque Number" domain="[('cheque_number', '=', 'cheque_number')]" /> -->
 				</xpath>
            	</field>
         </record>
