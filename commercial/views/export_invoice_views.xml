@@ -10,10 +10,9 @@
 					<field name="partner_id" string="Customer"/>
 					<field name="ei_name" />
 					<field name="invoice_against" />
-					<field name="lc_tt_no" />
 					<field name="ei_date" />
 					<field name="invoice_value_bdt" />
-					<field name="state" />
+					<!--<field name="ei_state" />-->
 				</tree>
 			</field>
 		</record>
@@ -27,10 +26,10 @@
 			<field name="arch" type="xml">
 				<form string="Export Invoice Form">
 					<header>
-						<button name="action_confirm" type="object" states="draft"
-							string="Confirm" class="oe_highlight" />
+						<!--<button name="action_confirm" type="object" ei_states="draft"-->
+							<!--string="Confirm" class="oe_highlight" />-->
 
-						<field name="state" widget="statusbar" />
+						<!--<field name="ei_state" widget="statusbar" />-->
 					</header>
 					<sheet>
 						<h1>
@@ -40,17 +39,19 @@
 							<group>
 								<field name="invoice_against"
 									options='{"no_open": True,"no_create": 1, "no_create_edit": 1}' />
+								<field name="lc_id" attrs="{'invisible':[('invoice_against','=','lc')]}"
+									options='{"no_open": True,"no_create": 1, "no_create_edit": 1}'/>
+								<field name="tt_id" attrs="{'invisible':[('invoice_against','=','tt')]}"
+									options='{"no_open": True,"no_create": 1, "no_create_edit": 1}' />
+
 								<field name="partner_id" domain="[('customer', '=', 'True')]" string="Customer"
 									options='{"no_open": True,"no_create": 1, "no_create_edit": 1}' />
-								<field name="journal_id"
+								<field name="journal_id" readonly="1"
 									options='{"no_open": True,"no_create": 1, "no_create_edit": 1}' />
-								<field name="account_id"
+								<field name="account_id" readonly="1"
 									options='{"no_open": True,"no_create": 1, "no_create_edit": 1}' />
+								<field name="export_invoice_no" />
 
-
-								<field name="lc_tt_no" />
-								<field name="export_invoice_id"
-									options='{"no_open": True,"no_create": 1, "no_create_edit": 1}' />
 								<field name="ei_date" />
 								<field name="consignee"
 									options='{"no_open": True,"no_create": 1, "no_create_edit": 1}' />
@@ -60,15 +61,22 @@
 									options='{"no_open": True,"no_create": 1, "no_create_edit": 1}' />
 								<field name="port_of_discharge"
 									options='{"no_open": True,"no_create": 1, "no_create_edit": 1}' />
-								<field name="destination" />
 								<field name="mother_vessel" />
 								<field name="feader_vessel" />
 
 							</group>
 							<group>
+								<field name="destination" />
+								<field name="inco_term_place" />
+								<field name="inco_term_id"
+                                    options='{"no_open": True,"no_create": 1, "no_create_edit": 1}' />
+								<field name="shipment_mode"
+                                    options='{"no_open": True,"no_create": 1, "no_create_edit": 1}' />
 								<field name="shipping_mark" />
 								<field name="no_of_container" />
-								<field name="eta" />
+								<field name="etd" />
+								<field name="bill_of_living_no" />
+                                <field name="acceptace_date" />
 								<field name="invoice_value" />
 								<field name="discount" />
 								<field name="discount_amount" />
@@ -97,7 +105,8 @@
 				<search string="Product Costing">
 					<field name="name" />
 					<field name="invoice_against" />
-					<field name="lc_tt_no" />
+					<field name="lc_id" />
+					<field name="tt_id" />
 					<field name="ei_date" />
 					<field name="invoice_value" />
 					<field name="invoice_value" />
