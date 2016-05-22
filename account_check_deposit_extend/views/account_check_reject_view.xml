@@ -105,7 +105,8 @@
             <field name="res_model">account.check.deposit</field>
             <field name="view_mode">tree,form</field>
             <field name="search_view_id" ref="view_check_reject_search" />
-           	<field name="domain">[('state','in',['deposit','posting'])]</field>
+            <field name="domain">[('state','=','posting')]</field>
+           	<!-- <field name="domain">[('state','in',['deposit','posting'])]</field> -->
         </record>
 	
 		<record id="action_check_reject_form_view_extend" model="ir.actions.act_window.view">
