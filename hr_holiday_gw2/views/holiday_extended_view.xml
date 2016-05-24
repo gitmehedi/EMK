@@ -1,39 +1,66 @@
 <?xml version='1.0' encoding='UTF-8' ?>
 <openerp>
     <data>
-        	<record id="holiday_extended_view" model="ir.ui.view">
-	    	<field name="model">hr.holidays</field>
-			<field name="inherit_id" ref="hr_holidays.edit_holiday_new"/>
-			<field name = "groups_id" eval = "[(6, 0, [ref('base.group_hr_user') ])]"/>
-			<field name="arch" type="xml">
-				<xpath expr="//form/header/button[@name='second_validate']" position="replace">
-					<button string="Validate" name="second_validate" states="validate1" type="workflow" groups="base.group_hr_manager" class="oe_highlight"/>
-				</xpath>
-				<xpath expr="//form/sheet/group/group/field[@name='name']" position = "replace">
-					<field name="name" attrs="{'readonly':[('state','!=','draft')], 'required': [('type', '=', 'add')]}"/>
-				</xpath>
-				<xpath expr="//form/sheet/group/group/field[@name='employee_id']" position = "replace">
-					 <field name="employee_id" attrs="{'required':[('holiday_type','=','employee')],'invisible':[('holiday_type','=','category')],'readonly':[('state','!=','draft')]}" on_change="onchange_employee(employee_id)" groups="base.group_hr_user"/>
-				</xpath>
-				<xpath expr="//form/sheet/group/group/field[@name='category_id']" position = "replace">
-					 <field name="category_id" attrs="{'required':[('holiday_type','=','category')], 'readonly': [('type', '=', 'remove'),('state','!=','draft')], 'invisible':[('holiday_type','=','employee')]}"/>
-				</xpath>
-				<xpath expr="//form/sheet/group/group/field[@name='department_id']" position = "replace">
-					  <field name="department_id" attrs="{'readonly':['|', ('type','=','add'),('holiday_type','=','category'),('state','!=','draft')],'invisible':[('holiday_type','=','category')]}" groups="base.group_hr_user"/>
-				</xpath>
-				<xpath expr="//form/sheet/group/group/div/group/field[@name='date_from']" position = "replace">
-					  <field name="date_from" nolabel="1" on_change="onchange_date_from(date_to, date_from)" attrs="{'required':[('type', '=', 'remove')],'readonly':[('state','!=','draft')]}" class="oe_inline"/><label string="-" class="oe_inline"/>
-				</xpath>
-				<xpath expr="//form/sheet/group/group/div/group/field[@name='date_to']" position = "replace">
-					  <field name="date_to" nolabel="1" on_change="onchange_date_to(date_to, date_from)"  attrs="{'required':[('type', '=', 'remove')],'readonly':[('state','!=','draft')]}" class="oe_inline"/>
-				</xpath>
-				<xpath expr="//form/sheet/group/group/div/div/field[@name='number_of_days_temp']" position = "replace">
-					  <field name="number_of_days_temp" class="oe_inline" attrs="{'readonly':[('state','!=','draft')]}"/>
-				</xpath>
-				<xpath expr="//form/sheet/group/group/field[@name='holiday_status_id']" position = "replace">
-					  <field name="holiday_status_id" context="{'employee_id':employee_id}" attrs="{'readonly':[('state','!=','draft')]}"/>
-				</xpath>
-			</field>	    		    	
-		</record>
+        <record id="holiday_extended_view" model="ir.ui.view">
+            <field name="model">hr.holidays</field>
+            <field name="inherit_id" ref="hr_holidays.edit_holiday_new"/>
+            <field name="groups_id" eval="[(6, 0, [ref('base.group_hr_user') ])]"/>
+            <field name="arch" type="xml">
+                <xpath expr="//form/header/button[@name='second_validate']" position="replace">
+                    <button string="Validate" name="second_validate" states="validate1" type="workflow"
+                            groups="base.group_hr_manager" class="oe_highlight"/>
+                </xpath>
+                <xpath expr="//form/sheet/group/group/field[@name='name']" position="replace">
+                    <field name="name"
+                           attrs="{'readonly':[('state','!=','draft')], 'required': [('type', '=', 'add')]}"/>
+                </xpath>
+                <xpath expr="//form/sheet/group/group/field[@name='employee_id']" position="replace">
+                    <field name="employee_id"
+                           attrs="{'required':[('holiday_type','=','employee')],'invisible':[('holiday_type','=','category')],'readonly':[('state','!=','draft')]}"
+                           on_change="onchange_employee(employee_id)" groups="base.group_hr_user"/>
+                </xpath>
+                <xpath expr="//form/sheet/group/group/field[@name='category_id']" position="replace">
+                    <field name="category_id"
+                           attrs="{'required':[('holiday_type','=','category')], 'readonly': [('type', '=', 'remove'),('state','!=','draft')], 'invisible':[('holiday_type','=','employee')]}"/>
+                </xpath>
+                <xpath expr="//form/sheet/group/group/field[@name='department_id']" position="replace">
+                    <field name="department_id"
+                           attrs="{'readonly':['|', ('type','=','add'),('holiday_type','=','category'),('state','!=','draft')],'invisible':[('holiday_type','=','category')]}"
+                           groups="base.group_hr_user"/>
+                </xpath>
+
+
+                <group col="3" attrs="{'invisible': [('type', '=', 'add')]}">
+                    <field name="date_from" nolabel="1" on_change="onchange_date_from(date_to, date_from)"
+                           attrs="{'required':[('type', '=', 'remove')]}" class="oe_inline"/>
+                    <label string="-" class="oe_inline"/>
+                    <field name="date_to" nolabel="1" on_change="onchange_date_to(date_to, date_from)"
+                           attrs="{'required':[('type', '=', 'remove')]}" class="oe_inline"/>
+                </group>
+
+
+                <xpath expr="//form/sheet/group/group/div/group" position="replace">
+                    <group col="3" attrs="{'invisible': [('type', '=', 'add')]}">
+                        <field name="date_from" nolabel="1" on_change="onchange_date_from(date_to, date_from)"
+                               attrs="{'required':[('type', '=', 'remove')],'readonly':[('state','!=','draft')]}"
+                               class="oe_inline oe_lin"/>
+                        <label string="-" class="oe_inline lin"/>
+                        <field name="date_to" nolabel="1" on_change="onchange_date_to(date_to, date_from)"
+                               attrs="{'required':[('type', '=', 'remove')],'readonly':[('state','!=','draft')]}"
+                               class="oe_inline"/>
+                    </group>
+                </xpath>
+                <!--<xpath expr="//form/sheet/group/group/div/group/field[@name='date_to']" position = "replace">
+                      <field name="date_to" nolabel="1" on_change="onchange_date_to(date_to, date_from)"  attrs="{'required':[('type', '=', 'remove')],'readonly':[('state','!=','draft')]}" class="oe_inline"/>
+                </xpath>-->
+                <xpath expr="//form/sheet/group/group/div/div/field[@name='number_of_days_temp']" position="replace">
+                    <field name="number_of_days_temp" class="oe_inline" attrs="{'readonly':[('state','!=','draft')]}"/>
+                </xpath>
+                <xpath expr="//form/sheet/group/group/field[@name='holiday_status_id']" position="replace">
+                    <field name="holiday_status_id" context="{'employee_id':employee_id}"
+                           attrs="{'readonly':[('state','!=','draft')]}"/>
+                </xpath>
+            </field>
+        </record>
     </data>
 </openerp>
