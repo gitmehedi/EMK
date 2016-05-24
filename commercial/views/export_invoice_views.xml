@@ -12,7 +12,7 @@
 					<field name="invoice_against" />
 					<field name="ei_date" />
 					<field name="invoice_value_bdt" />
-					<!--<field name="ei_state" />-->
+					<field name="state" />
 				</tree>
 			</field>
 		</record>
@@ -29,7 +29,7 @@
 						<!--<button name="action_confirm" type="object" ei_states="draft"-->
 							<!--string="Confirm" class="oe_highlight" />-->
 
-						<!--<field name="ei_state" widget="statusbar" />-->
+						<field name="state" widget="statusbar" />
 					</header>
 					<sheet>
 						<h1>
@@ -46,9 +46,9 @@
 
 								<field name="partner_id" domain="[('customer', '=', 'True')]" string="Customer"
 									options='{"no_open": True,"no_create": 1, "no_create_edit": 1}' />
-								<field name="journal_id" readonly="1"
+								<field name="journal_id" invisible="1"
 									options='{"no_open": True,"no_create": 1, "no_create_edit": 1}' />
-								<field name="account_id" readonly="1"
+								<field name="account_id" invisible="1"
 									options='{"no_open": True,"no_create": 1, "no_create_edit": 1}' />
 								<field name="export_invoice_no" />
 

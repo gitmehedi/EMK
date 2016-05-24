@@ -45,6 +45,7 @@
              'views/import_invoice_views.xml',
              'views/sales_contract_views.xml',
              'views/export_invoice_views.xml',
+             'views/export_invoice_submission_views.xml',
              'views/export_invoice_receive_views.xml',
              'views/export_invoice_realization_views.xml',
              'views/tt_receive_views.xml',

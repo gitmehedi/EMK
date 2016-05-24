@@ -18,8 +18,7 @@ class ExportInvoice(models.Model):
     export_invoice_no = fields.Char(string="Export Invoice No", size=30)
     ei_date = fields.Date(string="Export Invoice Date", default=date.today().strftime('%Y-%m-%d'))
     acceptace_date = fields.Date(string="Acceptance Date")
-    inco_term_place = fields.Char(string="Inco Term Place", size=30,
-                                  readonly=True, ei_states={'draft': [('readonly', False)]})
+    inco_term_place = fields.Char(string="Inco Term Place", size=30)
 
     destination = fields.Char(string="Destination", size=30)
     mother_vessel = fields.Char(string="Mother Vessel", size=30)
@@ -48,17 +47,13 @@ class ExportInvoice(models.Model):
     port_of_loading = fields.Many2one('port', string='Port of Loading')
     port_of_discharge = fields.Many2one('port', string='Port of Discharge')
     currency = fields.Many2one('res.currency', string="Currency")
-    payment_term_id = fields.Many2one('account.payment.term', string="Payment Terms/Tenor",
-                                      readonly=True, ei_states={'draft':[('readonly', False)]})
-    inco_term_id = fields.Many2one('stock.incoterms', ei_string="Inco Term",
-                                   readonly=True, ei_states={'draft':[('readonly', False)]})
-    shipment_mode = fields.Selection([("sea", "Sea"), ("air", "Air"), ("road", "By Road")], string='Ship Mode',
-                                 readonly=True, ei_states={'draft': [('readonly', False)]})
+    payment_term_id = fields.Many2one('account.payment.term', string="Payment Terms/Tenor")
+    inco_term_id = fields.Many2one('stock.incoterms', ei_string="Inco Term")
+    shipment_mode = fields.Selection([("sea", "Sea"), ("air", "Air"), ("road", "By Road")], string='Ship Mode')
 
     """ One2many relationships """
-    shipment_mode = fields.Selection([("sea", "Sea"), ("air", "Air"), ("road", "By Road")], string='Ship Mode',
-                                     readonly=True, ei_states={'draft':[('readonly', False)]})
-    ei_state= fields.Selection([('draft', "Draft"), ('submission', "Submission"),('acceptance', "Acceptance"),('realization', "Realization")], default='draft')
+    shipment_mode = fields.Selection([("sea", "Sea"), ("air", "Air"), ("road", "By Road")], string='Ship Mode')
+    state = fields.Selection(selection=[('draft', "Draft"), ('submission', "Submission"),('acceptance', "Acceptance"),('realization', "Realization")])
 
     """ All kinds of validation message """
     @api.multi
@@ -100,6 +95,13 @@ class ExportInvoice(models.Model):
 
         return super(ExportInvoice, self).write(vals)
 
+    @api.multi
+    @api.depends('ei_name')
+    def name_get(self):
+        result = []
+        for record in self:
+            result.append((record.id, '%s' % (record.ei_name)))
+        return result
 
     @api.multi
     def action_draft(self):

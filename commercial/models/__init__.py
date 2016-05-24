@@ -10,6 +10,8 @@ import insurance_agency
 import sales_contract
 import sales_contract_details
 import export_invoice
+import export_invoice_submission
+import export_invoice_submission_details
 import export_invoice_receive
 import export_invoice_receive_details
 import export_invoice_receive_negotiation
