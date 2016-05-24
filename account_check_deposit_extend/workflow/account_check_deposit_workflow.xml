@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+	<data>
+		<record id="wkf" model="workflow">
+			<field name="name">account.check.deposit.extend</field>
+			<field name="osv">account.check.deposit</field>
+			<field name="on_create">True</field>
+		</record>
+		
+        <record id="act_customer_payment" model="workflow.activity">
+            <field name="wkf_id" ref="wkf"/>
+            <field name="flow_start">True</field>
+            <field name="name">Customer Payment</field>
+        </record>
+        
+        <record id="act_check_posting" model="workflow.activity">
+            <field name="wkf_id" ref="wkf"/>
+            <field name="flow_start">True</field>
+            <field name="name">Check Posting</field>
+        </record>
+        
+		<record id="act_check_deposit" model="workflow.activity">
+            <field name="wkf_id" ref="wkf"/>
+            <field name="flow_start">True</field>
+            <field name="name">Check Deposit</field>
+        </record>
+        
+		<record id="act_check_reject" model="workflow.activity">
+            <field name="wkf_id" ref="wkf"/>
+            <field name="flow_stop">True</field>
+            <field name="name">Check Reject</field>
+        </record>
+        
+       	<record id="act_done" model="workflow.activity">
+            <field name="wkf_id" ref="wkf"/>
+            <field name="flow_stop">True</field>
+            <field name="name">Done</field>
+        </record>
+        
+		<record id="t1" model="workflow.transition">
+            <field name="act_from" ref="act_customer_payment"/>
+            <field name="act_to" ref="act_check_posting"/>
+            <field name="signal">check_posting</field>
+            <field name="condition">True</field>
+        </record>
+        
+        <record id="t2" model="workflow.transition">
+            <field name="act_from" ref="act_check_posting"/>
+            <field name="act_to" ref="act_check_deposit"/>
+            <field name="signal">check_deposit</field>
+            <field name="condition">True</field>
+        </record>
+        
+        <record id="t3" model="workflow.transition">
+            <field name="act_from" ref="act_check_posting"/>
+            <field name="act_to" ref="act_check_reject"/>
+            <field name="signal">check_reject</field>
+            <field name="condition">True</field>
+        </record>
+        
+       	<record id="t4" model="workflow.transition">
+            <field name="act_from" ref="act_check_deposit"/>
+            <field name="act_to" ref="act_done"/>
+            <field name="signal">check_done</field>
+            <field name="condition">True</field>
+        </record>
+        
+		<record id="t5" model="workflow.transition">
+            <field name="act_from" ref="act_check_reject"/>
+            <field name="act_to" ref="act_check_posting"/>
+            <field name="signal">check_repost</field>
+            <field name="condition">True</field>
+        </record>
+	</data>
+</openerp>
