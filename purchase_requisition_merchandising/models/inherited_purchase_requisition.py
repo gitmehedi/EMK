@@ -86,10 +86,6 @@ class InheritedPurchaseRequisition(models.Model):
 				bom_li_id.append(line.bom_line_id.id)
 				pro_qty.append(line.product_qty)
 				
-			print '-----prod_id----',prod_id
-			print '-----bom_li_id----',bom_li_id
-			print '-----pro_qty----',pro_qty
-			
 			obj_bom_line = self.env['bom.consumption.line']
 				
 			bom_line_id = obj_bom_line.search(['&',['id','in',bom_li_id],'&',['product_id','in',prod_id],'|',['mc_yarn_id','=',self.bom_id.id],['mc_acc_id','=',self.bom_id.id]])
@@ -125,7 +121,6 @@ class InheritedPurchaseRequisition(models.Model):
 							'schedule_date':self.schedule_date,
 							'bom_line_id':line.id
 						}
-					print '-----res----',res
 					obj_purchase_line.create(res)
 				self.bom_flag = False
 				self.bom_flag1 = True

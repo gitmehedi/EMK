@@ -19,10 +19,11 @@
 #
 ##############################################################################
 
-from openerp import models, fields, api
+from openerp import api, exceptions, fields, models
 from openerp.exceptions import except_orm
 from openerp.tools.translate import _
-
+from openerp import _
+from openerp.exceptions import Warning
 
 class StockReservation(models.Model):
 
@@ -51,8 +52,31 @@ class StockReservation(models.Model):
             self.source_loc_id = self.warehouse_id.lot_stock_id
     
     @api.multi
-    def action_confirmed(self):
-        self.state = "confirmed"
+    def action_confirmed(self,vals):
+        obj_stock_quant = self.env["stock.quant"]
+        res_line = vals.get('stock_reservation_line_ids', False)
+        loc_id = self.source_loc_id
+        if self.stock_reservation_line_ids:
+            for val in self.stock_reservation_line_ids:
+                for line in val:
+                    sql = '''
+                         SELECT COALESCE(sum(qty),0) AS qty from (
+                            SELECT  COALESCE(sum(sq.qty),0) AS qty
+                                FROM stock_quant sq
+                            where sq.product_id = %s and sq.location_id = %s
+                            Group by sq.location_id,sq.product_id
+                            UNION
+                            SELECT COALESCE(sum(rq.reserve_quantity*(-1)),0) AS qty from reservation_quant rq
+                            where  rq.product_id = %s and rq.location = %s
+                                Group by rq.location, rq.product_id
+                            ) as res
+                    ''' %(line.product_id.id,loc_id.id,line.product_id.id,loc_id.id)
+                    self.env.cr.execute(sql)
+                    result = self.env.cr.dictfetchone()
+                    if line.quantity > result['qty']:
+                        raise Warning(_('Reserve Quantity can not be greater than stock quantity.'))
+            
+            self.state = "confirmed"
     
     @api.multi
     def action_cancel(self):
