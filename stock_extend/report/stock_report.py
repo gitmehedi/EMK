@@ -58,7 +58,6 @@ class ReportStockQweb(models.AbstractModel):
             'form': data['form'],
             'other':data['other']
         }
-        print '+++++++++=== docargs -----',docargs
         return report_obj.render('stock_extend.report_stock_issue_qweb', docargs)
 
 

@@ -91,14 +91,14 @@ class StockReportWizard(models.TransientModel):
 			picking_id.append(pick_id.id)
 		
 		if(self.source_loc and self.desti_loc):
-			source_location_name = self.source_loc.name
-			desti_location_name = self.desti_loc.name
+			source_location_name = self.source_loc.location_id.name+ "/"+ self.source_loc.name
+			desti_location_name = self.desti_loc.location_id.name+ "/"+ self.desti_loc.name
 			ids = obj_move.search([['picking_id','in',picking_id],['location_id','=',self.source_loc.id],['location_dest_id','=',self.desti_loc.id]])
 		elif(self.source_loc and not self.desti_loc):
-			source_location_name = self.source_loc.name
+			source_location_name = self.source_loc.location_id.name+ "/"+ self.source_loc.name
 			ids = obj_move.search([['picking_id','in',picking_id],['location_id','=',self.source_loc.id]])
 		elif(not self.source_loc and self.desti_loc):
-			desti_location_name = self.desti_loc.name
+			desti_location_name = self.desti_loc.location_id.name+ "/"+ self.desti_loc.name
 			ids = obj_move.search([['picking_id','in',picking_id],['location_dest_id','=',self.desti_loc.id]])
 		else:
 			ids = obj_move.search([['picking_id','in',picking_id]])

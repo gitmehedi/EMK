@@ -132,6 +132,7 @@ class InheritedPurchaseRequisitionLine(models.Model):
 	_inherit = 'purchase.requisition.line'
 
 	bom_line_id = fields.Many2one('bom.consumption.line', string="BOM Line")
+	
 	@api.onchange('requisition_id')
 	def onchange_requisition_id(self):
 		res = {}

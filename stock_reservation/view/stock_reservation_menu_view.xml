@@ -5,5 +5,8 @@
 		<menuitem name="Stock Reservation" parent="stock.menu_stock_root"
 			id="sub_group_menu_stock_reservation" sequence="2"
 			groups="stock.group_stock_user" />
+		<menuitem name="Stock Reservation Report" parent="stock.menu_warehouse_report"
+			id="sub_group_menu_stock_reservation_report" sequence="4"
+			groups="stock.group_stock_user" />
 	</data>
 </openerp>
