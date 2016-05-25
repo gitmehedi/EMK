@@ -14,8 +14,8 @@ class ExportInvoice(models.Model):
     ei_name = fields.Char(string="Serial", size=30, readonly=True)
     ei_code = fields.Char(string='Code')
 
-    invoice_against = fields.Selection([('lc', 'LC'), ('tt', 'TT')], string="Invoice Against")
-    export_invoice_no = fields.Char(string="Export Invoice No", size=30)
+    invoice_against = fields.Selection([('lc', 'LC'), ('tt', 'TT')], string="Invoice Against", required="True")
+    export_invoice_no = fields.Char(string="Export Invoice No", size=30, required="True")
     ei_date = fields.Date(string="Export Invoice Date", default=date.today().strftime('%Y-%m-%d'))
     acceptace_date = fields.Date(string="Acceptance Date")
     inco_term_place = fields.Char(string="Inco Term Place", size=30)
@@ -94,6 +94,27 @@ class ExportInvoice(models.Model):
         self._validate_data(vals)
 
         return super(ExportInvoice, self).write(vals)
+
+    """ Onchange functionality """
+
+    @api.onchange('partner_id')
+    def _onchange_partner_id(self):
+        res = {}
+        self.lc_no_id = 0
+        self.invoice_submission_details_ids = 0
+
+        if self.partner_id and self.invoice_against=='lc':
+            lc_obj = self.env['master.lc'].search([('buyer_id', '=', self.partner_id.id)])
+
+            print "-------------------- lc_obj----------------", lc_obj
+
+            res['domain'] = {
+                'lc_id': [('id', 'in', lc_obj.ids)],
+            }
+
+        return res
+
+
 
     @api.multi
     @api.depends('ei_name')
