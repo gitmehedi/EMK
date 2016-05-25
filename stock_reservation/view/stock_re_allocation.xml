@@ -77,7 +77,7 @@
 				<tree string="Stock Re-allocation">
 					<field name="date" />
 					<field name="warehouse_id" />
-					<field name="state" />
+					<field name="state" string="Status"/>
 				</tree>
 			</field>
 		</record>

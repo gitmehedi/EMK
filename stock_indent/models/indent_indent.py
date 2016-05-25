@@ -278,6 +278,7 @@ class IndentIndent(models.Model):
     def indent_inprogress(self):
         self.state = 'inprogress'
         self.approve_date = fields.Date.today()
+        self.approver_id = self.env.uid
         
     @api.one
     def indent_cancel(self):

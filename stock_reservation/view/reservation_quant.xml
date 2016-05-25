@@ -6,7 +6,7 @@
 			<field name="name">reservation.quant.tree</field>
 			<field name="model">reservation.quant</field>
 			<field name="arch" type="xml">
-				<tree string="Reservation Quant">
+				<tree string="Reservation Quant" create="false" edit="false">
 					<field name="product_id" />
 					<field name="analytic_account_id" />
 					<field name="location" />
@@ -42,6 +42,6 @@
 		</record>
 		
 		<menuitem action="action_reservation_quant_tree" id="menu_action_reservation_quant_abc"
-			parent="sub_group_menu_stock_reservation" sequence="32" />
+			parent="sub_group_menu_stock_reservation_report" sequence="32" />
 	</data>
 </openerp>

@@ -40,63 +40,6 @@ class ConfirmationWizard(models.TransientModel):
                         p.name_template, rq.product_id,l.name,pav.name)
         ''' %(product_id)
         
-        """
-        sql = '''
-        CREATE OR REPLACE VIEW product_reservation_status_report AS (
-                 SELECT ROW_NUMBER() OVER(ORDER BY product_id DESC) AS id, analytic_account_id, epo_no, COALESCE(sum(qty),0) as quantity,
-                    product_name, location_name
-                    FROM (
-                    SELECT sr.analytic_account_id, aa.name as epo_no
-                     ,sr.source_loc_id,  sr.analytic_resv_loc_id, COALESCE(sum(srl.quantity),0) as qty
-                     , concat(p.name_template,' ',pav.name) as product_name, srl.product_id, l.name as location_name
-                        FROM stock_reservation sr
-                    LEFT JOIN stock_reservation_line srl on(sr.id=srl.stock_reservation_id)
-                    LEFT JOIN product_product p on(srl.product_id=p.id)
-                    LEFT JOIN stock_location l on(sr.analytic_resv_loc_id=l.id)
-                    LEFT JOIN account_analytic_account aa on(sr.analytic_account_id=aa.id)
-                    LEFT JOIN product_attribute_value_product_product_rel par on(p.id=par.prod_id)
-                    LEFT JOIN product_attribute_value pav on(par.att_id=pav.id)
-                    where sr.state = 'reserve' and sr.allocate_flag = 1 AND srl.product_id = %s
-                    Group by sr.analytic_account_id,aa.name,sr.source_loc_id, 
-                        sr.analytic_resv_loc_id, p.name_template, srl.product_id,l.name,pav.name
-                    
-                    UNION ALL
-                    
-                    SELECT sr.analytic_account_id, aa.name as epo_no
-                     ,sr.source_loc_id, sr.analytic_resv_loc_id, (-1)*COALESCE(sum(srl.quantity),0) as qty
-                     , concat(p.name_template,' ',pav.name) as product_name, srl.product_id, l.name as location_name
-                        FROM stock_reservation sr
-                    LEFT JOIN stock_reservation_line srl on(sr.id=srl.stock_reservation_id)
-                    LEFT JOIN product_product p on(srl.product_id=p.id)
-                    LEFT JOIN stock_location l on(sr.source_loc_id=l.id)
-                    LEFT JOIN account_analytic_account aa on(sr.analytic_account_id=aa.id)
-                    LEFT JOIN product_attribute_value_product_product_rel par on(p.id=par.prod_id)
-                    LEFT JOIN product_attribute_value pav on(par.att_id=pav.id)
-                    where sr.state = 'release' and sr.allocate_flag = 2 AND srl.product_id = %s
-                    Group by sr.analytic_account_id,aa.name,sr.source_loc_id,
-                        sr.analytic_resv_loc_id, p.name_template,srl.product_id,l.name,pav.name
-                    
-                    UNION ALL
-                    
-                    SELECT sr.analytic_account_id, aa.name as epo_no
-                     ,sr.source_loc_id,sr.analytic_resv_loc_id, COALESCE(sum(srl.quantity),0) as qty
-                     , concat(p.name_template,' ',pav.name) as product_name, srl.product_id, l.name as location_name
-                        FROM stock_reservation sr
-                    LEFT JOIN stock_reservation_line srl on(sr.id=srl.stock_reservation_id)
-                    LEFT JOIN product_product p on(srl.product_id=p.id)
-                    LEFT JOIN stock_location l on(sr.source_loc_id=l.id)
-                    LEFT JOIN account_analytic_account aa on(sr.analytic_account_id=aa.id)
-                    LEFT JOIN product_attribute_value_product_product_rel par on(p.id=par.prod_id)
-                    LEFT JOIN product_attribute_value pav on(par.att_id=pav.id)
-                    where sr.state = 'release' and sr.allocate_flag = 3 AND srl.product_id = %s
-                    Group by sr.analytic_account_id,aa.name,sr.source_loc_id,
-                        sr.analytic_resv_loc_id, p.name_template,srl.product_id,l.name,pav.name
-                    ) AS reserve_tble GROUP BY analytic_account_id, epo_no,
-                         product_name,product_id,location_name
-                         )
-        ''' %(product_id,product_id,product_id)
-        """
-        print '------sql--------',sql
         self.env.cr.execute(sql)
         
         return {

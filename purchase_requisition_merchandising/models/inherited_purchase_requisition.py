@@ -133,6 +133,19 @@ class InheritedPurchaseRequisitionLine(models.Model):
 
 	bom_line_id = fields.Many2one('bom.consumption.line', string="BOM Line")
 	
+	@api.onchange('requisition_id')
+	def onchange_requisition_id(self):
+		res = {}
+		if self.requisition_id.bom_id.id!=False:
+			obj_bom_line = self.env['bom.consumption.line']
+			bom_line = obj_bom_line.search(['|',['mc_yarn_id','=',self.requisition_id.bom_id.id],['mc_acc_id','=',self.requisition_id.bom_id.id]])
+			product=[]
+			for b_line in bom_line:
+				product.append(b_line.product_id.id)
+			res['domain'] = {'product_id': [('id', 'in', product)]}
+		else:
+			res['domain'] = {'product_id': False}
+		return res
 
 class InheritedBomConsumptionLine(models.Model):
 	_inherit = 'bom.consumption.line'

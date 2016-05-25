@@ -6,7 +6,7 @@
             <field name="name">product.reservation.status.report.tree</field>
             <field name="model">product.reservation.status.report</field>
             <field name="arch" type="xml">
-                <tree string="Product Reservation Status Report">
+                <tree string="Product Reservation Status Report" create="false" edit="false">
                 	<field name="id" invisible="1"/>
                     <field name="product_name"/>
                     <field name="epo_no" string="EPO NO"></field>

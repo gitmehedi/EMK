@@ -21,7 +21,7 @@ class StockGatePassOut(models.Model):
     chalan_no = fields.Char(string="Chalan No", required=True, readonly=True, states={'draft': [('readonly', False)]})
     security_id = fields.Many2one('hr.employee', string="Security Guard", required=True,
                                    readonly=True, states={'draft': [('readonly', False)]}, domain=[('security_guard', '=', True)])
-    state = fields.Selection([('draft', 'Draft'), ('confirm', 'Confirm'), ('cancel', 'Cancel')], default="draft", readonly=True, states={'draft':[('readonly', False)]})
+    state = fields.Selection([('draft', 'Draft'), ('confirm', 'Confirm')], default="draft", readonly=True, states={'draft':[('readonly', False)]})
     gate_pass_out_lines = fields.One2many('stock.gatepass.out.line', 'stock_gatepass_out_id', string='Products', readonly=True, states={'draft': [('readonly', False)]})
     notes = fields.Text("Notes")
     _rec_name = 'gete_pass_no'
@@ -40,7 +40,7 @@ class StockGatePassOut(models.Model):
         if self.state == "confirm":
             raise Warning(_('It can not be deleted'))
         else:
-            return super(StockGatePassIn, self).unlink()
+            return super(StockGatePassOut, self).unlink()
     
 class StockGatePassOutLine(models.Model):
     _name = "stock.gatepass.out.line"

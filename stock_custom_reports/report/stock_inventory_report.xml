@@ -6,7 +6,7 @@
             <field name="name">stock.inventory.report.tree</field>
             <field name="model">stock.inventory.report</field>
             <field name="arch" type="xml">
-                <tree string="Stock Inventory Report">
+                <tree string="Stock Inventory Report" create="false" edit="false">
                 	<field name="id"/>
                 	<field name="product_id" invisible="1"/>
                 	<field name="code"/>

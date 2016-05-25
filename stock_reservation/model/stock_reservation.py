@@ -33,7 +33,7 @@ class StockReservation(models.Model):
     date = fields.Date('Date', default=fields.Date.today, required=True, readonly=True, states={'draft':[('readonly', False)]})
     name = fields.Char("Reservation")
     warehouse_id = fields.Many2one('stock.warehouse', "Warehouse", required=True, readonly=True, states={'draft':[('readonly', False)]})
-    state = fields.Selection([('draft', "Draft"), ('generate', "Generate"), ('confirmed', "Confirmed"), ('reserve', "Reserve"), ('release', "Release"), ('done', "Done"), ('cancel', "Cancel")],
+    state = fields.Selection([('draft', "Draft"), ('generate', "Generate"), ('confirmed', "Confirmed"), ('reserve', "Reserve"), ('release', "Release"), ('cancel', "Cancel")],
                             default="draft", readonly=True, states={'draft':[('readonly', False)]})
     stock_reservation_line_ids = fields.One2many('stock.reservation.line', 'stock_reservation_id', string="Stock Reservation", readonly=True, states={'draft':[('readonly', False)]}, copy=True)
     
@@ -74,7 +74,7 @@ class StockReservation(models.Model):
                     self.env.cr.execute(sql)
                     result = self.env.cr.dictfetchone()
                     if line.quantity > result['qty']:
-                        raise Warning(_('Reserve Quantity can not be greater than stock quantity.'))
+                        raise Warning(_('Reserve Quantity: '+ str(line.quantity)+' can not be greater than stock quantity: '+str(result['qty'])+'.'))
             
             self.state = "confirmed"
     
@@ -85,6 +85,14 @@ class StockReservation(models.Model):
     @api.multi
     def action_reserve(self):
         self.state = "reserve"
+        
+    @api.multi
+    def unlink(self):
+        if self.state == "reserve" or self.state == "release":
+            raise Warning(_('It can not be deleted'))
+        else:
+            return super(StockReservation, self).unlink()
+        
     '''     
     @api.multi
     def action_reserve(self):
@@ -123,8 +131,6 @@ class StockReservation(models.Model):
     '''              
     @api.multi
     def write(self, vals):
-        print "+++++++++++>>>>>>>>>>>>>>", vals
-        print "+++++++++++>>>>>>>>>>>>>>self:", self.source_loc_id.id
 #         obj_reservation_quant = self.env['reservation.quant']
 
         if('state' in vals):

@@ -8,10 +8,10 @@
 			<field name="inherit_id"
 				ref="purchase_requisition.view_purchase_requisition_form" />
 			<field name="arch" type="xml">
-				<xpath expr="//field[@name='user_id']"
-					position="before">
+				<xpath expr="//field[@name='user_id']" position="before">
 					<field name="bom_id"
-						options='{"no_open": True,"no_create": 1, "no_create_edit": 1}' attrs="{'readonly': [('bom_flag1', '=', True)]}" />
+						options='{"no_open": True,"no_create": 1, "no_create_edit": 1}'
+						attrs="{'readonly': [('bom_flag1', '=', True)]}" />
 					<field name="bom_flag" invisible="1" />
 					<field name="bom_flag1" invisible="1" />
 				</xpath>
@@ -20,35 +20,42 @@
 					<button name="action_line_generate" type="object" string="Generate Line"
 						class="oe_highlight"
 						attrs="{'invisible': ['|',('bom_flag', '=', False), ('state','in',['in_progress','approved','open','done','cancel'])]}" />
-					<button name="action_wizard" type="object" string="BOM Change" attrs="{'invisible': ['|',('bom_flag1', '=', False), ('state','in',['in_progress','approved','open','done','cancel'])]} "/>
+					<button name="action_wizard" type="object" string="BOM Change"
+						attrs="{'invisible': ['|',('bom_flag1', '=', False), ('state','in',['in_progress','approved','open','done','cancel'])]} " />
 				</xpath>
 				<xpath expr="//form/header/button[@name='sent_suppliers']"
 					position="replace">
-					<button name="sent_suppliers" type="object" states="draft" string="Confirm Call" class="oe_highlight"/>
+					<button name="sent_suppliers" type="object" states="draft"
+						string="Confirm Call" class="oe_highlight" />
 				</xpath>
-<!-- 				<xpath expr="//form/notebook/page/field[@name='line_ids']" -->
-<!-- 					position="replace"> -->
-<!-- 					<field name="line_ids" attrs="{'readonly': [('state','not in',('draft'))]}" context="{'default_stock_production_lot': active_id}"> -->
-<!--                             <tree string="Products" editable="bottom"> -->
-<!--                                 <field name="product_id" on_change="onchange_product_id(product_id,product_uom_id,parent.account_analytic_id,account_analytic_id,parent.schedule_date,schedule_date)"/> -->
-<!--                                 <field name="product_qty"/> -->
-<!--                                 <field name="product_uom_id" groups="product.group_uom"/> -->
-<!--                                 <field name="schedule_date"/> -->
-<!--                                 <field name="account_analytic_id" groups="purchase.group_analytic_accounting"/> -->
-                                
-<!--                             </tree> -->
-<!--                             <form string="Products"> -->
-<!--                                 <group> -->
-<!--                                     <field name="product_id" /> -->
-<!--                                     <field name="product_qty"/> -->
-<!--                                     <field name="product_uom_id" /> -->
-<!--                                     <field name="schedule_date"/> -->
-<!--                                     <field name="account_analytic_id" groups="purchase.group_analytic_accounting"/> -->
-<!--                                     <field name="company_id" groups="base.group_multi_company" widget="selection"/> -->
-<!--                                 </group> -->
-<!--                             </form> -->
-<!--                         </field> -->
-<!-- 				</xpath> -->
+				
+				<xpath expr="//field[@name='product_id']" position="after">
+					<field name="requisition_id" invisible="1"/>
+				</xpath>
+				<!-- <xpath expr="//form/notebook/page/field[@name='line_ids']" -->
+				<!-- position="replace"> -->
+				<!-- <field name="line_ids" attrs="{'readonly': [('state','not in',('draft'))]}" 
+					context="{'default_stock_production_lot': active_id}"> -->
+				<!-- <tree string="Products" editable="bottom"> -->
+				<!-- <field name="product_id" on_change="onchange_product_id(product_id,product_uom_id,parent.account_analytic_id,account_analytic_id,parent.schedule_date,schedule_date)"/> -->
+				<!-- <field name="product_qty"/> -->
+				<!-- <field name="product_uom_id" groups="product.group_uom"/> -->
+				<!-- <field name="schedule_date"/> -->
+				<!-- <field name="account_analytic_id" groups="purchase.group_analytic_accounting"/> -->
+
+				<!-- </tree> -->
+				<!-- <form string="Products"> -->
+				<!-- <group> -->
+				<!-- <field name="product_id" /> -->
+				<!-- <field name="product_qty"/> -->
+				<!-- <field name="product_uom_id" /> -->
+				<!-- <field name="schedule_date"/> -->
+				<!-- <field name="account_analytic_id" groups="purchase.group_analytic_accounting"/> -->
+				<!-- <field name="company_id" groups="base.group_multi_company" widget="selection"/> -->
+				<!-- </group> -->
+				<!-- </form> -->
+				<!-- </field> -->
+				<!-- </xpath> -->
 			</field>
 		</record>
 	</data>
