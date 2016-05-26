@@ -100,13 +100,13 @@ class ExportInvoice(models.Model):
     @api.onchange('partner_id')
     def _onchange_partner_id(self):
         res = {}
-        self.lc_no_id = 0
-        self.invoice_submission_details_ids = 0
+        self.lc_id = 0
+
 
         if self.partner_id and self.invoice_against=='lc':
             lc_obj = self.env['master.lc'].search([('buyer_id', '=', self.partner_id.id)])
 
-            print "-------------------- lc_obj----------------", lc_obj
+            print self.partner_id.id,"-------------------- lc_obj----------------", lc_obj.ids
 
             res['domain'] = {
                 'lc_id': [('id', 'in', lc_obj.ids)],

@@ -41,14 +41,14 @@
 									options='{"no_open": True,"no_create": 1, "no_create_edit": 1}' />
 								<field name="partner_id" domain="[('customer', '=', 'True')]" string="Customer"
 									options='{"no_open": True,"no_create": 1, "no_create_edit": 1}' />
-								<field name="lc_id" attrs="{'invisible':[('invoice_against','=','lc')]}"
+								<field name="lc_id" attrs="{'invisible':[('invoice_against','=','tt')]}"
 									options='{"no_open": True,"no_create": 1, "no_create_edit": 1}'/>
-								<field name="tt_id" attrs="{'invisible':[('invoice_against','=','tt')]}"
+								<field name="tt_id" attrs="{'invisible':[('invoice_against','=','lc')]}"
 									options='{"no_open": True,"no_create": 1, "no_create_edit": 1}' />
 
 								<field name="journal_id" invisible="1"
 									options='{"no_open": True,"no_create": 1, "no_create_edit": 1}' />
-								<field name="account_id" invisible="1"
+								<field name="account_id"
 									options='{"no_open": True,"no_create": 1, "no_create_edit": 1}' />
 								<field name="export_invoice_no" />
 

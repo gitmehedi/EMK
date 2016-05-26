@@ -5,7 +5,7 @@ from datetime import date
 
 class ExportInvoiceSubmission(models.Model):
     """ 
-    Export Invoice Receive creates for buyer 
+    Export Invoice Submission creates for buyer
     """
     
     _name = 'export.invoice.submission'
@@ -66,6 +66,7 @@ class ExportInvoiceSubmission(models.Model):
 
         return super(ExportInvoiceSubmission, self).write(vals)
 
+
     """ Onchange functionality """
 
     @api.onchange('buyer_id')
@@ -77,27 +78,11 @@ class ExportInvoiceSubmission(models.Model):
         if self.buyer_id:
             lc_obj = self.env['master.lc'].search([('buyer_id','=',self.buyer_id.id)])
 
-            print "-------------------- lc_obj----------------", lc_obj
-
             res['domain'] = {
                 'lc_no_id': [('id', 'in', lc_obj.ids)],
             }
 
         return res
-
-    # @api.onchange('lc_no_id')
-    # def _onchange_lc_no_id(self):
-    #     res = {}
-    #     self.invoice_submission_details_ids = 0
-    #
-    #     ai_obj = self.env['account.invoice'].search([('id', '=', self.lc_no_id.id),('state', '=', 'draft')])
-    #     print "-------------------- ai_obj----------------",ai_obj
-    #
-    #     res['domain'] = {
-    #         'invoice_submission_details_ids': [('id', 'in', ai_obj.ids)],
-    #     }
-
-        # return res
 
 
 
