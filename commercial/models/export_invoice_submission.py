@@ -14,29 +14,37 @@ class ExportInvoiceSubmission(models.Model):
     name = fields.Char(string="Serial", size=30, readonly=True)
     eis_code = fields.Char(string='Code')
     
-    submission_date = fields.Date(string="Submission Date", required=True, default=date.today().strftime('%Y-%m-%d'))
-    acceptance_date = fields.Date(string="Acceptance Date", required=True)
-    bank_ref_no = fields.Char(string="Bank Ref No", size=30, required=True)
+    submission_date = fields.Date(string="Submission Date", required=True, default=date.today().strftime('%Y-%m-%d'),
+                                  readonly=True, states={'draft': [('readonly', False)]})
+    acceptance_date = fields.Date(string="Acceptance Date", required=True,
+                                  readonly=True, states={'draft': [('readonly', False)]})
+    bank_ref_no = fields.Char(string="Bank Ref No", size=30, required=True,
+                              readonly=True, states={'draft': [('readonly', False)]})
     submission_type = fields.Selection([('submission', 'Submission'), ('negotiation', 'Negotiation')],
-                                       string="Submission Type", required=True)
-    realization_date = fields.Date(string="Realization Date", readonly=True, store=True)
+                                       string="Submission Type", required=True, readonly=True, states={'draft': [('readonly', False)]})
+    realization_date = fields.Date(string="Realization Date",  store=True, readonly=True, states={'draft': [('readonly', False)]})
     
     
-    remarks = fields.Text(string='Remarks')
+    remarks = fields.Text(string='Remarks', readonly=True, states={'draft': [('readonly', False)]})
 
     """ Relational fields """
-    currency_id = fields.Many2one('res.currency', string="Currency", required=True, default=lambda self: self._set_default_currency('USD'))
-    buyer_id = fields.Many2one('res.partner', string="Buyer", domain=[('customer', '=', 'True')],
-                               required=True)
-    lc_no_id = fields.Many2one('master.lc', string="LC No",required=True)
-    bank_id = fields.Many2one('res.bank', string="Bank", required=True)
+    currency_id = fields.Many2one('res.currency', string="Currency", required=True, default=lambda self: self._set_default_currency('USD'),
+                                  readonly=True, states={'draft': [('readonly', False)]})
+    buyer_id = fields.Many2one('res.partner', string="Buyer", domain=[('customer', '=', 'True')],required=True,
+                               readonly=True, states={'draft': [('readonly', False)]})
+    lc_no_id = fields.Many2one('master.lc', string="LC No",required=True,
+                               readonly=True, states={'draft': [('readonly', False)]})
+    bank_id = fields.Many2one('res.bank', string="Bank", required=True,
+                              readonly=True, states={'draft': [('readonly', False)]})
     payment_term_id = fields.Many2one('account.payment.term', string="Payment Terms/Tenor",
                                       readonly=True, states={'draft': [('readonly', False)]})
-    lc_type = fields.Selection([('deffered', "Deffered"), ('at_sight', "At Sight")], string="LC Type")
+    lc_type = fields.Selection([('deffered', "Deffered"), ('at_sight', "At Sight")], string="LC Type",
+                               readonly=True, states={'draft': [('readonly', False)]})
     state = fields.Selection([('draft', "Draft"), ('submission', "Submission"),('accepted', "Accepted")], default='draft')
 
     """ One2many relational fields """
-    invoice_submission_details_ids = fields.One2many('export.invoice.submission.details', 'export_invoice_submission_id')
+    invoice_submission_details_ids = fields.One2many('export.invoice.submission.details', 'export_invoice_submission_id',
+                                                     readonly=True, states={'draft': [('readonly', False)]})
 
     """ All kinds of validation message """
     def _validate_data(self, vals):
@@ -95,10 +103,17 @@ class ExportInvoiceSubmission(models.Model):
     @api.multi
     def action_submission(self):
         self.state = 'submission'
+        for obj in self.invoice_submission_details_ids:
+            inv_obj = self.env['account.invoice'].search([('id', '=', obj.invoice_id.id)])
+            inv_obj.write({'state': 'submission'})
 
     @api.multi
     def action_accepted(self):
         self.state = 'accepted'
+        for obj in self.invoice_submission_details_ids:
+            inv_obj = self.env['account.invoice'].search([('id', '=', obj.invoice_id.id)])
+            inv_obj.write({'state': 'accepted'})
+
 
 
 

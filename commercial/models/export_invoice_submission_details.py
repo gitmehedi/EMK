@@ -8,7 +8,7 @@ class ExportInvoiceSubmissionDetails(models.Model):
     """
     _name = 'export.invoice.submission.details'
     
-    value = fields.Integer(string="Value", required=True)
+    value = fields.Integer(string="Value", required=True, readonly=True, store=True)
     
     """ Relationship fields """
     export_invoice_submission_id = fields.Many2one('export.invoice.submission', ondelete="cascade")
@@ -27,16 +27,27 @@ class ExportInvoiceSubmissionDetails(models.Model):
         
         return True
 
-    def nolangu(self):
-        return self.export_invoice_submission_id.lc_no_id
+    """ All function which process data and operation """
+
+    @api.model
+    def create(self, vals):
+        res = super(ExportInvoiceSubmissionDetails, self).create(vals)
+
+        return res
+
+    @api.multi
+    def write(self, vals):
+        res = super(ExportInvoiceSubmissionDetails, self).write(vals)
+        return res
 
     @api.onchange('invoice_id')
     def _onchange_invoice_id(self):
         res = {}
         # self.invoice_id = 0
+        self.value = self.invoice_id.invoice_value_bdt
 
         if self.export_invoice_submission_id.lc_no_id:
-            ai_obj = self.env['account.invoice'].search([('lc_id', '=', self.export_invoice_submission_id.lc_no_id.id)])
+            ai_obj = self.env['account.invoice'].search([('lc_id', '=', self.export_invoice_submission_id.lc_no_id.id),('state','=','draft')])
             res['domain'] = {
                 'invoice_id': [('id', 'in', ai_obj.ids)],
             }

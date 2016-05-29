@@ -14,46 +14,78 @@ class ExportInvoice(models.Model):
     ei_name = fields.Char(string="Serial", size=30, readonly=True)
     ei_code = fields.Char(string='Code')
 
-    invoice_against = fields.Selection([('lc', 'LC'), ('tt', 'TT')], string="Invoice Against", required="True")
-    export_invoice_no = fields.Char(string="Export Invoice No", size=30, required="True")
-    ei_date = fields.Date(string="Export Invoice Date", default=date.today().strftime('%Y-%m-%d'))
-    acceptace_date = fields.Date(string="Acceptance Date")
-    inco_term_place = fields.Char(string="Inco Term Place", size=30)
+    invoice_against = fields.Selection([('lc', 'LC'), ('tt', 'TT')], string="Invoice Against", required="True",
+                                       readonly=True, states={'draft': [('readonly', False)]}                                       )
+    export_invoice_no = fields.Char(string="Export Invoice No", size=30, required="True",
+                                    readonly=True, states={'draft': [('readonly', False)]})
+    ei_date = fields.Date(string="Export Invoice Date", default=date.today().strftime('%Y-%m-%d'),
+                          readonly=True, states={'draft': [('readonly', False)]})
+    acceptace_date = fields.Date(string="Acceptance Date",
+                                 readonly=True, states={'draft': [('readonly', False)]})
+    inco_term_place = fields.Char(string="Inco Term Place", size=30,
+                                  readonly=True, states={'draft': [('readonly', False)]})
 
-    destination = fields.Char(string="Destination", size=30)
-    mother_vessel = fields.Char(string="Mother Vessel", size=30)
-    feader_vessel = fields.Char(string="Feader Vessel", size=30)
-    shipping_mark = fields.Char(string="Shipping Mark", size=30)
-    no_of_container = fields.Integer(string="No of Container")
-    etd = fields.Char(string="ETD", size=30)
-    bill_of_living_no = fields.Char(string="BL No", size=30)
-    invoice_value = fields.Char(string="Invoice Value", size=30)
-    discount = fields.Char(string="Discount %", size=30)
-    discount_amount = fields.Char(string="Discount Amount", size=30)
-    net_invoice_value = fields.Char(string="Net Invoice Value", size=30)
+    destination = fields.Char(string="Destination", size=30,
+                              readonly=True, states={'draft': [('readonly', False)]})
+    mother_vessel = fields.Char(string="Mother Vessel", size=30,
+                                readonly=True, states={'draft': [('readonly', False)]})
+    feader_vessel = fields.Char(string="Feader Vessel", size=30,
+                                readonly=True, states={'draft': [('readonly', False)]})
+    shipping_mark = fields.Char(string="Shipping Mark", size=30,
+                                readonly=True, states={'draft': [('readonly', False)]})
+    no_of_container = fields.Integer(string="No of Container",
+                                     readonly=True, states={'draft': [('readonly', False)]})
+    etd = fields.Char(string="ETD", size=30,
+                      readonly=True, states={'draft': [('readonly', False)]})
+    bill_of_living_no = fields.Char(string="BL No", size=30,
+                                    readonly=True, states={'draft': [('readonly', False)]})
+    invoice_value = fields.Char(string="Invoice Value", size=30,
+                                readonly=True, states={'draft': [('readonly', False)]})
+    discount = fields.Char(string="Discount %", size=30,
+                           readonly=True, states={'draft': [('readonly', False)]})
+    discount_amount = fields.Char(string="Discount Amount", size=30,
+                                  readonly=True, states={'draft': [('readonly', False)]})
+    net_invoice_value = fields.Char(string="Net Invoice Value", size=30,
+                                    readonly=True, states={'draft': [('readonly', False)]})
 
-    conversion_rate = fields.Integer(string="Conversion Rate")
-    invoice_value_bdt = fields.Integer(string="Invoice Value (BDT)")
-    buying_house_com = fields.Integer(string="Buying House Com")
+    conversion_rate = fields.Integer(string="Conversion Rate",
+                                     readonly=True, states={'draft': [('readonly', False)]})
+    invoice_value_bdt = fields.Integer(string="Invoice Value (BDT)", required=False,
+                                       readonly=True, states={'draft': [('readonly', False),('required', True)]})
+    buying_house_com = fields.Integer(string="Buying House Com",
+                                      readonly=True, states={'draft': [('readonly', False)]})
 
 
-    remarks = fields.Text(string='Remarks')
+    remarks = fields.Text(string='Remarks',
+                          readonly=True, states={'draft': [('readonly', False)]})
 
     """ Relational fields """
-    lc_id = fields.Many2one('master.lc', string='Export LC/ TT No')
-    tt_id = fields.Many2one('tt.payment', string='Export LC/ TT No')
-    consignee = fields.Many2one('res.bank', string='Consignee')
-    notify_party = fields.Many2one('res.partner', string='Notify Party')
-    port_of_loading = fields.Many2one('port', string='Port of Loading')
-    port_of_discharge = fields.Many2one('port', string='Port of Discharge')
-    currency = fields.Many2one('res.currency', string="Currency")
-    payment_term_id = fields.Many2one('account.payment.term', string="Payment Terms/Tenor")
-    inco_term_id = fields.Many2one('stock.incoterms', ei_string="Inco Term")
-    shipment_mode = fields.Selection([("sea", "Sea"), ("air", "Air"), ("road", "By Road")], string='Ship Mode')
+    lc_id = fields.Many2one('master.lc', string='Export LC/ TT No',
+                            readonly=True, states={'draft': [('readonly', False)]})
+    tt_id = fields.Many2one('tt.payment', string='Export LC/ TT No',
+                            readonly=True, states={'draft': [('readonly', False)]})
+    consignee = fields.Many2one('res.bank', string='Consignee',
+                                readonly=True, states={'draft': [('readonly', False)]})
+    notify_party = fields.Many2one('res.partner', string='Notify Party',
+                                   readonly=True, states={'draft': [('readonly', False)]})
+    port_of_loading = fields.Many2one('port', string='Port of Loading',
+                                      readonly=True, states={'draft': [('readonly', False)]})
+    port_of_discharge = fields.Many2one('port', string='Port of Discharge',
+                                        readonly=True, states={'draft': [('readonly', False)]})
+    currency = fields.Many2one('res.currency', string="Currency",
+                               readonly=True, states={'draft': [('readonly', False)]})
+    payment_term_id = fields.Many2one('account.payment.term', string="Payment Terms/Tenor",
+                                      readonly=True, states={'draft': [('readonly', False)]})
+    inco_term_id = fields.Many2one('stock.incoterms', ei_string="Inco Term",
+                                   readonly=True, states={'draft': [('readonly', False)]})
+    shipment_mode = fields.Selection([("sea", "Sea"), ("air", "Air"), ("road", "By Road")], string='Ship Mode',
+                                     readonly=True, states={'draft': [('readonly', False)]})
 
     """ One2many relationships """
-    shipment_mode = fields.Selection([("sea", "Sea"), ("air", "Air"), ("road", "By Road")], string='Ship Mode')
-    state = fields.Selection(selection=[('draft', "Draft"), ('submission', "Submission"),('acceptance', "Acceptance"),('realization', "Realization")])
+    shipment_mode = fields.Selection([("sea", "Sea"), ("air", "Air"), ("road", "By Road")], string='Ship Mode',
+                                     readonly=True, states={'draft': [('readonly', False)]})
+    state = fields.Selection(selection=[('draft', "Draft"), ('submission', "Submission"),('accepted', "Accepted"),('realization', "Realization")],
+                             readonly=True, states={'draft': [('readonly', False)]})
 
     """ All kinds of validation message """
     @api.multi
@@ -102,11 +134,8 @@ class ExportInvoice(models.Model):
         res = {}
         self.lc_id = 0
 
-
         if self.partner_id and self.invoice_against=='lc':
             lc_obj = self.env['master.lc'].search([('buyer_id', '=', self.partner_id.id)])
-
-            print self.partner_id.id,"-------------------- lc_obj----------------", lc_obj.ids
 
             res['domain'] = {
                 'lc_id': [('id', 'in', lc_obj.ids)],
