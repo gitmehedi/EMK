@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+    	
+    	<record id="view_purchase_order_form_inherit_btn" model="ir.ui.view">
+            <field name="name">purchase.order.form.inherit</field>
+            <field name="model">purchase.order</field>
+            <field name="inherit_id" ref="purchase.purchase_order_form"/>
+            <field name="arch" type="xml">                
+                <xpath expr='//header/button[@name="button_approve"]' position="replace">
+                	<button name="first_approve" type="object" states="to approve" string="First Approval" class="oe_highlight" groups="purchase_triple_validation.group_purchase_approver1"/>
+                    <button name="second_approve" type="object" states="to_sec_approve" string="Second Approval"  class="oe_highlight" groups="purchase_triple_validation.group_purchase_approver2"/>
+                </xpath>
+                <xpath expr='//header/button[@name="button_cancel"]' position="replace">
+                	<button name="button_cancel" states="draft,to approve,validated,sent,purchase" string="Cancel" type="object"/>                    
+                </xpath>
+                <!-- <xpath expr='//header/field[@name="state"]' position="replace">
+                	<field name="state" widget="statusbar" statusbar_visible="draft,sent,validated,approved,done" statusbar_colors='{"except_picking":"red","except_invoice":"red","confirmed":"blue"}' readonly="1"/>
+                	<field name="state" widget="statusbar" statusbar_visible="draft,sent,purchase,done" readonly="1"/>                    
+                </xpath> -->                
+            </field>
+        </record>
+
+    </data>
+</openerp>

@@ -74,7 +74,9 @@ class IndentProductLines(models.Model):
         return result
     """
     
-    
+    _sql_constraints = [
+        ('_check_date_comparison_line', "CHECK ( (indent_id.indent_date <= required_date))", "The Indent date must be lower than required date.")
+    ]
     
     def _get_uom_id(self, cr, uid, *args):
         result = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'product', 'product_uom_unit')
