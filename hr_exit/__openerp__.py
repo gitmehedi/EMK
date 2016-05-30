@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 {
-    'name': 'HR Exit Mangement Process',
+    'name': 'HR Exit Management Process',
     'author':  'Genweb2 Limited',
     'website': 'www.genweb2.com',
     'category': 'Human Resource Management',
