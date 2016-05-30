@@ -122,6 +122,6 @@
                   id="menu_check_deposit_tree"
                   parent="account.menu_finance_bank_and_cash"
                   sequence="22"/>
-
+                  
     </data>
 </openerp>
