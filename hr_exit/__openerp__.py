@@ -4,17 +4,14 @@
     'name': 'HR Exit Mangement Process',
     'author':  'Genweb2 Limited',
     'website': 'www.genweb2.com',
-    'category': 'Human Resource',
+    'category': 'Human Resource Management',
     'data': [
 
              'security/ir_rule.xml'
     ],
     'depends': ['hr'],
-    'summary': 'HR Exit process management',
+    'summary': 'HR exit process management',
     'category': 'HR Exit Management',
-    'summary': 'HR Exit process management ',
-    'description': 'HR holiday extension '
+    'summary': 'HR exit process management ',
+    'description': 'HR exit process management'
 }
-
-
-
