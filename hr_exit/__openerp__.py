@@ -7,7 +7,8 @@
     'category': 'Human Resource Management',
     'data': [
 
-             'security/ir_rule.xml'
+             'security/ir_rule.xml',
+             'views/checklist_type_view.xml'
     ],
     'depends': ['hr'],
     'summary': 'HR exit process management',
