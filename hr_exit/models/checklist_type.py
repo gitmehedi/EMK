@@ -1,6 +1,4 @@
 from openerp import models, fields, api, exceptions
-from email import _name
-from Crypto.Util.number import size
 
 class ChecklistType(models.Model):
     _name='hr.exit.checklist.type'

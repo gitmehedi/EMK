@@ -6,9 +6,8 @@
     'website': 'www.genweb2.com',
     'category': 'Human Resource Management',
     'data': [
-
-             'security/ir_rule.xml',
-             'views/checklist_type_view.xml'
+             'views/checklist_type_view.xml',
+             'views/checklist_item_view.xml'
     ],
     'depends': ['hr'],
     'summary': 'HR exit process management',

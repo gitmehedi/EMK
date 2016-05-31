@@ -50,7 +50,6 @@
 						/>
 					<field name="description" string="Description" filter_domain="[('description','ilike','self')]"
 						/>
-					<field name="is_active" string="Active" filter_domain="[('is_active','=','self')]"/>
 				</search>
 			</field>
 		</record>
