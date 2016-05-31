@@ -13,5 +13,7 @@
     'summary': 'HR exit process management',
     'category': 'HR Exit Management',
     'summary': 'HR exit process management ',
-    'description': 'HR exit process management'
+    'description': 'HR exit process management',
+    'installable': True,
+    'application': True,
 }
