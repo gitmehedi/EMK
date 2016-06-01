@@ -1,0 +1,60 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<openerp>
+    <data>
+
+        <record id="exit_req_form_view" model="ir.ui.view">
+            <field name="name">hr.exit.req.form</field>
+            <field name="model">employee.exit.req</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Exit Request">
+                    <header>
+
+                    </header>
+                    <sheet>
+                        <group>
+                            <field name="descriptions"/>
+                            <field name="req_date"/>
+                            <field name="last_date"/>
+                            <field name="note"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+
+        <record id="checklist_item_tree_view" model="ir.ui.view">
+			<field name="name">hr.exit.req.tree</field>
+			<field name="model">employee.exit.req</field>
+			<field name="type">tree</field>
+			<field name="arch" type="xml">
+				<tree string="Exit Request">
+					<field name="descriptions" />
+					<field name="req_date" />
+					<field name="req_date" />
+				</tree>
+			</field>
+		</record>
+
+
+
+		<!-- Checklist Item Action Views -->
+		<record id="action_exit_req_view" model="ir.actions.act_window">
+			<field name="name">Exit Management</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">employee.exit.req</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+			<field name="view_id" ref="checklist_item_tree_view" />
+		</record>
+
+		<!-- Checklist Item Menu -->
+		<menuitem id="menu_exit_management" name="Exit Requests" parent="hr.menu_hr_root"
+			sequence="0"  />
+        <menuitem name="Exit Request" parent="menu_exit_management" id="menu_exit_req"
+                  action="action_exit_req_view"/>
+
+
+    </data>
+</openerp>
