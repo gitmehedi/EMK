@@ -7,7 +7,8 @@
     'category': 'Human Resource Management',
     'data': [
              'views/checklist_type_view.xml',
-             'views/checklist_item_view.xml'
+             'views/checklist_item_view.xml',
+             'views/configure_checklists_view.xml'
     ],
     'depends': ['hr'],
     'summary': 'HR exit process management',
