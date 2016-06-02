@@ -3,7 +3,7 @@ from openerp import models, fields, api, exceptions
 class ConfigureChecklists(models.Model):
     _name='hr.exit.configure.checklists'
     
-    #Database fields
+    #Model Fields
     code=fields.Char(string='Code', size=50, help='Please enter code.')
     name=fields.Char(string='Name', size=100, required=True, help='Please enter name.')
     responsible_type=fields.Selection(selection=[('department', 'Department'),('individual','Individual')])
@@ -11,6 +11,9 @@ class ConfigureChecklists(models.Model):
     responsible_username=fields.Char(string='Responsible User', size=100, help='Please enter responsible user name.')  
     notes=fields.Text(string='Notes', size=500, help='Please enter notes.')
     is_active=fields.Boolean(string='Active', default=True)
+    
+    #Relational Fields   
+    checklists_ids = fields.One2many('hr.exit.configure.checklists.line','checklists_id')
     
     @api.onchange('responsible_type')
     def on_change_responsible_type(self):

@@ -8,8 +8,8 @@
     'data': [
              'views/checklist_type_view.xml',
              'views/checklist_item_view.xml',
-             'views/configure_checklists_view.xml'
-             'views/employee_exit_req_view.xml',
+             'views/configure_checklists_view.xml',
+             #'views/employee_exit_req_view.xml',
              #'security/emp_exit_security.xml'
     ],
     'depends': ['hr'],
