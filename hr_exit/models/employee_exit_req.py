@@ -5,8 +5,7 @@ class EmployeeExitReq(models.Model):
     _name = 'employee.exit.req'
 
     descriptions = fields.Text(string='Descriptions')
-    note = fields.Char(size=200, string='Note',readonly=True,
-                             states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]})
+    note = fields.Char(size=200, string='Note',readonly=True)
     req_date = fields.Date(string='Request Date')
     last_date = fields.Date(string='Last Day of Work')
     state = fields.Selection(
@@ -18,15 +17,13 @@ class EmployeeExitReq(models.Model):
             \nThe status is \'Refused\', when exit request is refused by manager.\
             \nThe status is \'Approved\', when exit request is approved by manager.')
 
-    employee_id = fields.Many2one('hr.employee',select=True, invisible=False, readonly=True, states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]})
+    employee_id = fields.Many2one('hr.employee',select=True, invisible=False)
     user_id = fields.Float(compute='_compute_user_id')
     manager_id = fields.Many2one('hr.employee', invisible=False, readonly=True, copy=False,
                                       help='This area is automatically filled by the user who validate the exit process')
     #parent_id = fields.Many2one('employee.exit.req', string='Parent')
     department_id = fields.Float(string='Department', compute='_compute_department_id')
-    category_id = fields.Many2one('hr.employee.category', string = 'Category', help='Category of Employee',
-                                       readonly=True,
-                                       states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]})
+    category_id = fields.Many2one('hr.employee.category', string = 'Category', help='Category of Employee')
     manager_id2 = fields.Many2one('hr.employee', string= 'Second Approval', readonly=True, copy=False,
                                        help='This area is automaticly filled by the user who validate the exit with second level (If exit type need second validation)')
     manager_id3 = fields.Many2one('hr.employee', string= 'Third Approval', readonly=True, copy=False,
