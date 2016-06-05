@@ -29,6 +29,7 @@
                                 <field name="employee_id" string="Employee"/>
                                 <field name="manager_id" string="manager"/>
                                 <field name="category_id" string="Category"/>
+                                <field name="job_id" string="Job Descriptions"/>
                                 <field name="department_id" string="Department"/>
                             </group>
                             <field name="note" nolabel="1" colspan="4" placeholder="Add a reason..."/>

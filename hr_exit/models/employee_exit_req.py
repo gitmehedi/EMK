@@ -18,6 +18,7 @@ class EmployeeExitReq(models.Model):
             \nThe status is \'Approved\', when exit request is approved by manager.')
 
     employee_id = fields.Many2one('hr.employee',select=True, invisible=False)
+    job_id= fields.Many2one('hr.job', string= 'Job Title')
     user_id = fields.Float(compute='_compute_user_id')
     manager_id = fields.Many2one('hr.employee', invisible=False, copy=False,
                                       help='This area is automatically filled by the user who validate the exit process')
