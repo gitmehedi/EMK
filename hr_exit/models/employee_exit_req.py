@@ -19,10 +19,11 @@ class EmployeeExitReq(models.Model):
 
     employee_id = fields.Many2one('hr.employee',select=True, invisible=False)
     user_id = fields.Float(compute='_compute_user_id')
-    manager_id = fields.Many2one('hr.employee', invisible=False, readonly=True, copy=False,
+    manager_id = fields.Many2one('hr.employee', invisible=False, copy=False,
                                       help='This area is automatically filled by the user who validate the exit process')
-    #parent_id = fields.Many2one('employee.exit.req', string='Parent')
-    department_id = fields.Float(string='Department', compute='_compute_department_id')
+    parent_id = fields.Many2one('employee.exit.req', string='Parent')
+    department_id = fields.Many2one('hr.department',string='Department',related='employee_id.department_id')
+
     category_id = fields.Many2one('hr.employee.category', string = 'Category', help='Category of Employee')
     manager_id2 = fields.Many2one('hr.employee', string= 'Second Approval', readonly=True, copy=False,
                                        help='This area is automaticly filled by the user who validate the exit with second level (If exit type need second validation)')
