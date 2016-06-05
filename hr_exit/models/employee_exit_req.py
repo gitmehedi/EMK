@@ -5,7 +5,7 @@ class EmployeeExitReq(models.Model):
     _name = 'employee.exit.req'
 
     descriptions = fields.Text(string='Descriptions')
-    note = fields.Char(size=200, string='Note',readonly=True)
+    note = fields.Char(size=200, string='Note')
     req_date = fields.Date(string='Request Date')
     last_date = fields.Date(string='Last Day of Work')
     state = fields.Selection(
