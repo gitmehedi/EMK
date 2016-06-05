@@ -40,8 +40,8 @@ class StockReservationLine(models.Model):
     @api.onchange('product_id')
     def onchange_product_id(self):
         if self.product_id:
-            self.uom_category=self.product_id.uom_id.category_id.id
-            self.uom=self.product_id.uom_id.id
+#             self.uom_category=self.product_id.uom_id.category_id.id
+#             self.uom=self.product_id.uom_id.id
             self.analytic_account_id = self.stock_reservation_id.analytic_account_id
     
     

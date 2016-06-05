@@ -20,8 +20,6 @@ class ConfirmationWizardPr(models.TransientModel):
                'bom_flag1':False
                }
         obj_PR.write(vals)
-        print '...........16......', active_id
-        print 'context ',line_data 
         return {
             'type': 'ir.actions.act_window_close',
         }
