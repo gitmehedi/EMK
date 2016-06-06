@@ -10,6 +10,9 @@
              'views/checklist_item_view.xml',
              'views/configure_checklists_view.xml',
              'views/employee_exit_req_view.xml',
+             'wizard/employee_exit_search_popup.xml',
+             #'report/report_employee_exit.xml',
+             #'report/hr_exit_report.xml'
              #'security/emp_exit_security.xml'
     ],
     'depends': ['hr'],
