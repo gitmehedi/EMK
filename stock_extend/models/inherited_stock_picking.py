@@ -85,7 +85,7 @@ class InheritPurchaseOrder(models.Model):
 	  
 class InheritStockQuant(models.Model):
 	_inherit = "stock.quant"	
-		  
+	
 	
 	def _quants_get_order(self, cr, uid, quantity, move, ops=False, domain=[], orderby='in_date', context=None):
 		''' Implementation of removal strategies
@@ -113,6 +113,7 @@ class InheritStockQuant(models.Model):
 			if dd[0]=='reservation_id':
 				if dd[2] != False:
 					resv_qty = 0.0
+			
 		
 		availabile_qty = total_qty - resv_qty
 		while float_compare(quantity, 0, precision_rounding=product.uom_id.rounding) > 0:
@@ -154,3 +155,4 @@ class InheritStockQuant(models.Model):
 		    	
 		    offset += 10
 		return res
+	
