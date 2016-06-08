@@ -1,10 +1,13 @@
-from datetime import date, datetime
+from datetime import date, datetime, timedelta
 import time
 from openerp import api, fields, models
 from openerp.tools.float_utils import float_compare, float_round
 from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT, DEFAULT_SERVER_DATE_FORMAT
 from openerp import SUPERUSER_ID, api, models
 from openerp.exceptions import UserError
+from dateutil.relativedelta import relativedelta
+from openerp.tools import DEFAULT_SERVER_DATE_FORMAT
+from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
 
 class InheritedStockPicking(models.Model):
 	_inherit = 'stock.picking'
@@ -21,7 +24,7 @@ class InheritedStockPicking(models.Model):
 	qc_receive_flag = fields.Boolean(string='QC Receive', default=False)
 	qc_pass_flag = fields.Boolean(string='QC Pass', default=False)
 	
-	min_date = fields.Date('Scheduled Date',default=fields.Date.today(), required=True, readonly=True, states={'draft': [('readonly', False)]})
+	min_date = fields.Datetime('Scheduled Date',default=datetime.now() + timedelta(hours=1), required=True, readonly=True, states={'draft': [('readonly', False)]})
 	
 	_sql_constraints = [
         ('_check_date_comparison_pick', "CHECK (date <= min_date)", "The Creation date can not be greater than Scheduled Date.")
@@ -87,35 +90,6 @@ class InheritPurchaseOrder(models.Model):
 class InheritStockQuant(models.Model):
 	_inherit = "stock.quant"	
 	
-	def quants_reserve(self, cr, uid, quants, move, link=False, context=None):
-	    '''This function reserves quants for the given move (and optionally given link). If the total of quantity reserved is enough, the move's state
-	    is also set to 'assigned'
-	
-	    :param quants: list of tuple(quant browse record or None, qty to reserve). If None is given as first tuple element, the item will be ignored. Negative quants should not be received as argument
-	    :param move: browse record
-	    :param link: browse record (stock.move.operation.link)
-	    '''
-	    toreserve = []
-	    reserved_availability = move.reserved_availability
-	    #split quants if needed
-	    for quant, qty in quants:
-	        if qty <= 0.0 or (quant and quant.qty <= 0.0):
-	            raise UserError(_('You can not reserve a negative quantity or a negative quant.'))
-	        if not quant:
-	            continue
-	        self._quant_split(cr, uid, quant, qty, context=context)
-	        toreserve.append(quant.id)
-	        reserved_availability += quant.qty
-	    #reserve quants
-	    if toreserve:
-	        self.write(cr, SUPERUSER_ID, toreserve, {'reservation_id': move.id}, context=context)
-	    #check if move'state needs to be set as 'assigned'
-	    rounding = move.product_id.uom_id.rounding
-	    if float_compare(reserved_availability, move.product_qty, precision_rounding=rounding) == 0 and move.state in ('confirmed', 'waiting')  :
-	        self.pool.get('stock.move').write(cr, uid, [move.id], {'state': 'assigned'}, context=context)
-	    elif float_compare(reserved_availability, 0, precision_rounding=rounding) > 0 and not move.partially_available:
-	        self.pool.get('stock.move').write(cr, uid, [move.id], {'partially_available': True}, context=context)
-
 	
 	def _quants_get_order(self, cr, uid, quantity, move, ops=False, domain=[], orderby='in_date', context=None):
 		''' Implementation of removal strategies
@@ -168,9 +142,9 @@ class InheritStockQuant(models.Model):
 			            res += [(quant, quantity)]
 			            quantity = 0
 			            break
-			           
-				
-				
+		    	res.append((None, sub_quantity))
+		    	break			    
+						      
 				
 		    elif availabile_qty >= quantity:
 		    	for quant in self.browse(cr, uid, quants, context=context):
@@ -185,9 +159,9 @@ class InheritStockQuant(models.Model):
 			
 		    	
 		    offset += 10
-		    if sub_quantity > 0.0:
-		    	res.append((None, sub_quantity))
-		    	break
+# 		    if sub_quantity > 0.0:
+# 		    	res.append((None, sub_quantity))
+# 		    	break
 
 		return res
 	
