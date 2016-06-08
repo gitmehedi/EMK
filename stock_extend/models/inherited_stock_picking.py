@@ -142,9 +142,9 @@ class InheritStockQuant(models.Model):
 			            res += [(quant, quantity)]
 			            quantity = 0
 			            break
-		    	res.append((None, sub_quantity))
-		    	break			    
-						      
+			           
+				
+				
 				
 		    elif availabile_qty >= quantity:
 		    	for quant in self.browse(cr, uid, quants, context=context):
@@ -159,9 +159,9 @@ class InheritStockQuant(models.Model):
 			
 		    	
 		    offset += 10
-# 		    if sub_quantity > 0.0:
-# 		    	res.append((None, sub_quantity))
-# 		    	break
+		    if sub_quantity > 0.0:
+		    	res.append((None, sub_quantity))
+		    	break
 
 		return res
 	
