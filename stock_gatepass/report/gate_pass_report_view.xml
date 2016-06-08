@@ -88,7 +88,7 @@
 									<td>
 										<span t-esc="line['product_name']" />
 									</td>
-									<td>
+									<td class="text-right">
 										<span t-esc="line['product_qty']" />
 									</td>
 									<td>

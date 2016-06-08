@@ -28,14 +28,26 @@ class GatePassReportWizard(models.TransientModel):
 		if(self.gate_pass_type=='1'):
 			obj_gate_pass = self.env['stock.gatepass.in']
 			if(self.source_loc and self.desti_loc):
-				source_location_name = self.source_loc.name
-				desti_location_name = self.desti_loc.name
+				if self.source_loc.location_id:
+					source_location_name = self.source_loc.location_id.name+ "/"+ self.source_loc.name
+				else:
+					source_location_name = self.source_loc.name
+				if self.desti_loc.location_id:
+					desti_location_name = self.desti_loc.location_id.name+ "/"+ self.desti_loc.name
+				else:
+					desti_location_name = self.desti_loc.name
 				gate_pass_ids = obj_gate_pass.search([['date','>=',self.start_date],['date','<=',self.end_date],['store_location','=',self.source_loc.id],['source_location','=',self.desti_loc.id]])
 			elif(self.source_loc and not self.desti_loc):
-				source_location_name = self.source_loc.name
+				if self.source_loc.location_id:
+					source_location_name = self.source_loc.location_id.name+ "/"+ self.source_loc.name
+				else:
+					source_location_name = self.source_loc.name
 				gate_pass_ids = obj_gate_pass.search([['date','>=',self.start_date],['date','<=',self.end_date],['store_location','=',self.source_loc.id]])
 			elif(not self.source_loc and self.desti_loc):
-				desti_location_name = self.desti_loc.name
+				if self.desti_loc.location_id:
+					desti_location_name = self.desti_loc.location_id.name+ "/"+ self.desti_loc.name
+				else:
+					desti_location_name = self.desti_loc.name
 				gate_pass_ids = obj_gate_pass.search([['date','>=',self.start_date],['date','<=',self.end_date],['source_location','=',self.desti_loc.id]])
 			else:
 				gate_pass_ids = obj_gate_pass.search([('date','>=',self.start_date),('date','<=',self.end_date)])
@@ -43,14 +55,26 @@ class GatePassReportWizard(models.TransientModel):
 		elif(self.gate_pass_type=='2'):
 			obj_gate_pass = self.env['stock.gatepass.out']
 			if(self.source_loc and self.desti_loc):
-				source_location_name = self.source_loc.name
-				desti_location_name = self.desti_loc.name
+				if self.source_loc.location_id:
+					source_location_name = self.source_loc.location_id.name+ "/"+ self.source_loc.name
+				else:
+					source_location_name = self.source_loc.name
+				if self.desti_loc.location_id:
+					desti_location_name = self.desti_loc.location_id.name+ "/"+ self.desti_loc.name
+				else:
+					desti_location_name = self.desti_loc.name
 				gate_pass_ids = obj_gate_pass.search([['date','>=',self.start_date],['date','<=',self.end_date],['store_location','=',self.source_loc.id],['destination_location','=',self.desti_loc.id]])
 			elif(self.source_loc and not self.desti_loc):
-				source_location_name = self.source_loc.name
+				if self.source_loc.location_id:
+					source_location_name = self.source_loc.location_id.name+ "/"+ self.source_loc.name
+				else:
+					source_location_name = self.source_loc.name
 				gate_pass_ids = obj_gate_pass.search([['date','>=',self.start_date],['date','<=',self.end_date],['store_location','=',self.source_loc.id]])
 			elif(not self.source_loc and self.desti_loc):
-				desti_location_name = self.desti_loc.name
+				if self.desti_loc.location_id:
+					desti_location_name = self.desti_loc.location_id.name+ "/"+ self.desti_loc.name
+				else:
+					desti_location_name = self.desti_loc.name
 				gate_pass_ids = obj_gate_pass.search([['date','>=',self.start_date],['date','<=',self.end_date],['destination_location','=',self.desti_loc.id]])
 			else:
 				gate_pass_ids = obj_gate_pass.search([('date','>=',self.start_date),('date','<=',self.end_date)])
@@ -63,11 +87,20 @@ class GatePassReportWizard(models.TransientModel):
 		if(self.gate_pass_type=='1'):	
 			ids = self.env['stock.gatepass.in.line'].search([['stock_gatepass_in_id','in',gate_pass_id]])
 			for gate_pass_line in ids:
+				if gate_pass_line.stock_gatepass_in_id.store_location.location_id:
+					source_location_name = gate_pass_line.stock_gatepass_in_id.store_location.location_id.name+ "/"+ gate_pass_line.stock_gatepass_in_id.store_location.name
+				else:
+					source_location_name = gate_pass_line.stock_gatepass_in_id.store_location.name
+				if gate_pass_line.stock_gatepass_in_id.source_location.location_id:
+					desti_location_name = gate_pass_line.stock_gatepass_in_id.source_location.location_id.name+ "/"+ gate_pass_line.stock_gatepass_in_id.source_location.name
+				else:
+					desti_location_name = gate_pass_line.stock_gatepass_in_id.source_location.name
+				
 				dict ={'id':gate_pass_line.id,
 					'date':gate_pass_line.stock_gatepass_in_id.date,
 					'sl_no':gate_pass_line.stock_gatepass_in_id.gete_pass_no,
-					'store_loc':gate_pass_line.stock_gatepass_in_id.store_location.name,
-					'dest_loc':gate_pass_line.stock_gatepass_in_id.source_location.name,
+					'store_loc':source_location_name,
+					'dest_loc':desti_location_name,
 					'product_name':gate_pass_line.description,
 					'product_qty':gate_pass_line.product_qty,
 					'product_uom':gate_pass_line.product_qom.name}
@@ -75,11 +108,21 @@ class GatePassReportWizard(models.TransientModel):
 		elif(self.gate_pass_type=='2'):
 			ids = self.env['stock.gatepass.out.line'].search([['stock_gatepass_out_id','in',gate_pass_id]])
 			for gate_pass_line in ids:
+				if gate_pass_line.stock_gatepass_out_id.store_location.location_id:
+					source_location_name = gate_pass_line.stock_gatepass_out_id.store_location.location_id.name+ "/"+ gate_pass_line.stock_gatepass_out_id.store_location.name
+				else:
+					source_location_name = gate_pass_line.stock_gatepass_out_id.store_location.name
+				if gate_pass_line.stock_gatepass_out_id.destination_location.location_id:
+					desti_location_name = gate_pass_line.stock_gatepass_out_id.destination_location.location_id.name+ "/"+ gate_pass_line.stock_gatepass_out_id.destination_location.name
+				else:
+					desti_location_name = gate_pass_line.stock_gatepass_out_id.destination_location.name
+				
+				
 				dict ={'id':gate_pass_line.id,
 					'date':gate_pass_line.stock_gatepass_out_id.date,
 					'sl_no':gate_pass_line.stock_gatepass_out_id.gete_pass_no,
-					'store_loc':gate_pass_line.stock_gatepass_out_id.store_location.name,
-					'dest_loc':gate_pass_line.stock_gatepass_out_id.destination_location.name,
+					'store_loc':source_location_name,
+					'dest_loc':desti_location_name,
 					'product_name':gate_pass_line.description,
 					'product_qty':gate_pass_line.product_qty,
 					'product_uom':gate_pass_line.product_qom.name}

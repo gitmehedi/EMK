@@ -74,7 +74,7 @@
 											<td class="text-center">
 												<span t-field="line.description" />
 											</td>
-											<td class="text-center">
+											<td class="text-right">
 												<span t-field="line.product_qty" />
 											</td>
 											<td class="text-center">
