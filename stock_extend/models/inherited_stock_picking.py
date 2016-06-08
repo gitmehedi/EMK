@@ -1,10 +1,13 @@
-from datetime import date, datetime
+from datetime import date, datetime, timedelta
 import time
 from openerp import api, fields, models
 from openerp.tools.float_utils import float_compare, float_round
 from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT, DEFAULT_SERVER_DATE_FORMAT
 from openerp import SUPERUSER_ID, api, models
 from openerp.exceptions import UserError
+from dateutil.relativedelta import relativedelta
+from openerp.tools import DEFAULT_SERVER_DATE_FORMAT
+from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
 
 class InheritedStockPicking(models.Model):
 	_inherit = 'stock.picking'
@@ -21,6 +24,7 @@ class InheritedStockPicking(models.Model):
 	qc_receive_flag = fields.Boolean(string='QC Receive', default=False)
 	qc_pass_flag = fields.Boolean(string='QC Pass', default=False)
 	
+	min_date = fields.Datetime('Scheduled Date',default=datetime.now() + timedelta(hours=1), required=True, readonly=True, states={'draft': [('readonly', False)]})
 	
 	_sql_constraints = [
         ('_check_date_comparison_pick', "CHECK (date <= min_date)", "The Creation date can not be greater than Scheduled Date.")
@@ -85,7 +89,7 @@ class InheritPurchaseOrder(models.Model):
 	  
 class InheritStockQuant(models.Model):
 	_inherit = "stock.quant"	
-		  
+	
 	
 	def _quants_get_order(self, cr, uid, quantity, move, ops=False, domain=[], orderby='in_date', context=None):
 		''' Implementation of removal strategies
@@ -99,6 +103,7 @@ class InheritStockQuant(models.Model):
 		resv_qty = 0
 		total_qty = 0
 		availabile_qty = 0
+		sub_quantity = 0
 		resv_quant_obj = self.pool.get("reservation.quant")
 		resv_exist = resv_quant_obj.search(cr, uid, [('product_id', '=', move.product_id.id), ('location', '=', move.location_id.id)], context=context)
 		for resv in resv_exist:
@@ -113,6 +118,7 @@ class InheritStockQuant(models.Model):
 			if dd[0]=='reservation_id':
 				if dd[2] != False:
 					resv_qty = 0.0
+			
 		
 		availabile_qty = total_qty - resv_qty
 		while float_compare(quantity, 0, precision_rounding=product.uom_id.rounding) > 0:
@@ -136,11 +142,10 @@ class InheritStockQuant(models.Model):
 			            res += [(quant, quantity)]
 			            quantity = 0
 			            break
-			    
+			           
 				
-				res.append((None, sub_quantity))
-				break
-			            
+				
+				
 		    elif availabile_qty >= quantity:
 		    	for quant in self.browse(cr, uid, quants, context=context):
 			        rounding = product.uom_id.rounding
@@ -151,6 +156,12 @@ class InheritStockQuant(models.Model):
 			            res += [(quant, quantity)]
 			            quantity = 0
 			            break
+			
 		    	
 		    offset += 10
+		    if sub_quantity > 0.0:
+		    	res.append((None, sub_quantity))
+		    	break
+
 		return res
+	
