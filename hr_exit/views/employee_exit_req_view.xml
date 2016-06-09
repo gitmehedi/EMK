@@ -4,16 +4,19 @@
 
         <record id="exit_req_form_view" model="ir.ui.view">
             <field name="name">hr.exit.req.form</field>
-            <field name="model">employee.exit.req</field>
+            <field name="model">hr.emp.exit.req</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Exit Request">
+                    <!--<field name="can_reset" invisible="1"/>-->
                     <header>
-                        <button string="Confirm" name="confirm"/>
-                        <button string="Approve" name="validate"/>
-                        <button string="Validate" name="second_validate"/>
-                        <button string="Refuse" name="refuse"/>
-                        <button string="Reset to Draft" name="reset"/>
+                        <button string="Confirm" name="confirm" states="draft" type="workflow" class="oe_highlight"/>
+                        <button string="First Validate" name="first_validate" states="confirm" type="workflow" class="oe_highlight"/>
+                        <button string="Second Validate" name="second_validate" states="validate1" type="workflow" class="oe_highlight"/>
+                        <button string="Approve" name="validate" states="validate2"  type="workflow" class="oe_highlight"/>
+                        <button string="Refuse" name="refuse" states="confirm,validate,validate1,validate2" type="workflow" class="oe_highlight"/>
+                        <button string="Reset to Draft" name="reset" attrs="{'invisible': [('state', 'not in', ['confirm', 'refuse'])]}"
+                                type="workflow" class="oe_highlight"/>
                         <field name="state" widget="statusbar" statusbar_visible="draft,confirm,validate"
                                statusbar_colors='{"confirm":"blue","validate1":"blue","refuse":"red"}'/>
                     </header>
@@ -39,60 +42,69 @@
             </field>
         </record>
 
-        <record id="checklist_item_tree_view" model="ir.ui.view">
+        <record id="emp_req_tree_view" model="ir.ui.view">
             <field name="name">hr.exit.req.tree</field>
-            <field name="model">employee.exit.req</field>
+            <field name="model">hr.emp.exit.req</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Exit Request">
                     <field name="descriptions"/>
                     <field name="req_date"/>
-                    <field name="req_date"/>
+                    <field name="last_date"/>
                 </tree>
             </field>
         </record>
+
+        <menuitem id="menu_exit_management" name="Employee Exit" parent="hr.menu_hr_root"
+                  sequence="30"/>
 
         <!-- Checklist Item Action Views -->
         <record id="action_exit_req_view" model="ir.actions.act_window">
             <field name="name">Exit Management</field>
             <field name="type">ir.actions.act_window</field>
-            <field name="res_model">employee.exit.req</field>
+            <field name="res_model">hr.emp.exit.req</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
-            <field name="view_id" ref="checklist_item_tree_view"/>
+            <field name="view_id" ref="emp_req_tree_view"/>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Click to create a exit request.
+                </p>
+                <p>
+                    Once you have recorded your exit request, it will be sent
+                    to a manager for validation.
+                </p>
+            </field>
         </record>
 
-
-
-
-
         <!-- Checklist Item Menu -->
-        <menuitem id="menu_exit_management" name="Employee Exit" parent="hr.menu_hr_root"
-                  sequence="0"/>
-        <menuitem name="Exit Request" parent="menu_exit_management" id="menu_exit_req"
+
+        <menuitem name="Exit Requests" parent="menu_exit_management" id="menu_exit_req"
                   action="action_exit_req_view"/>
 
-       <!-- <menuitem parent="menu_exit_management" id="menu_open_ask_exit_new" action="open_ask_holidays"/>
-
-
+        <record model="ir.actions.act_window" id="request_approve_exit">
+            <field name="name">Requests to Approve</field>
+            <field name="res_model">hr.emp.exit.req</field>
+            <field name="view_type">form</field>
+            <field name="view_id" ref="exit_req_form_view"/>
+        </record>
 
         <record model="ir.actions.act_window.view" id="action_request_approve_exit_tree">
             <field name="sequence" eval="1"/>
             <field name="view_mode">tree</field>
-            <field name="view_id" ref="view_holiday"/>
+            <field name="view_id" ref="emp_req_tree_view"/>
             <field name="act_window_id" ref="request_approve_exit"/>
         </record>
 
         <record model="ir.actions.act_window.view" id="action_request_approve_exit_form">
             <field name="sequence" eval="2"/>
             <field name="view_mode">form</field>
-            <field name="view_id" ref="edit_holiday_new"/>
+            <field name="view_id" ref="exit_req_form_view"/>
             <field name="act_window_id" ref="request_approve_exit"/>
         </record>
 
-        <menuitem name="Exit Requests to Approve" parent="menu_open_ask_holidays" id="menu_request_approve_exit"
-                  action="request_approve_exit" />-->
-
+         <menuitem name="Exit Requests to Approve" parent="menu_exit_management" id="menu_request_approve_exit"
+                  action="request_approve_exit" />
 
 
     </data>
