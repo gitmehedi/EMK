@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+	<data>
+		<record id="master_lc_amendment_wizard_form_view" model="ir.ui.view">
+			<field name="name">master.lc.wizard.form</field>
+			<field name="model">master.lc.wizard</field>
+			<field name="arch" type="xml">
+				<form string="Master LC Amendment Wizard Form">
+					<group>
+						<h4>
+							Do you want to create Amendment
+							<br />
+							or
+							<br />
+							Copy Record?
+						</h4>
+					</group>
+					<footer>
+						<button name="amaendment_copy" type="object" string="Create Amendment"
+							context="{'create_version': True}" class="oe_highlight" />
+						<button name="amaendment_copy" type="object" string="Copy"
+							context="{'create_version': False}" class="oe_highlight" />
+						<button string="Cancel" special="cancel" class="oe_link" />
+					</footer>
+				</form>
+			</field>
+		</record>
+
+		<record id="master_lc_action_wizard_views" model="ir.actions.act_window">
+			<field name="name">Confirmation</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">master.lc.wizard</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">form</field>
+			<field name="target">new</field>
+		</record>
+	</data>
+</openerp>

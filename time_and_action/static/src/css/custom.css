@@ -1,0 +1,12 @@
+.multifield_combination {
+	padding: 0 !important;
+}
+
+.oe_form_field .oe_form_field_text .tree-remarks {
+	height: 30px !important;
+	width: 150px !important;
+}
+
+.qty-length {
+	width: 140px;
+}

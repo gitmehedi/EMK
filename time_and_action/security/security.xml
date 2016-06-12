@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="0">
+    	
+    	<record id="module_category_time_and_action" model="ir.module.category" >
+            <field name="name">Time and Action</field>
+            <field name="sequence">90</field>
+        </record>
+    	
+        <record id="time_and_action_group_user" model="res.groups">
+        	<field name="name">Time and Action User</field>
+        	<field name="category_id" ref="module_category_commercial"/>
+        </record>
+        
+        <record id="time_and_action_group_manager" model="res.groups">
+        	<field name="name">Time and Action Manager</field>
+        	<field name="category_id" ref="module_category_commercial"/>
+        </record>
+        
+    </data>
+</openerp>
