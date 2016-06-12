@@ -108,7 +108,12 @@ class IndentIndent(models.Model):
         self.source_department_id = stock_picking_type.default_location_src_id.id
         self.department_id = stock_picking_type.default_location_dest_id.id
         
-
+    @api.multi
+    def unlink(self):
+        if self.state != "draft":
+            raise Warning(_('It can not be deleted'))
+        else:
+            return super(IndentIndent, self).unlink()
     
     """    
     @api.multi

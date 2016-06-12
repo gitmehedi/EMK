@@ -19,4 +19,5 @@
 #
 ##############################################################################
 
-import purchase_order
+import inherited_purchase_order
+import inherited_res_company

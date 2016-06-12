@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+	<data>
+		<record id="inherited_stock_picking_view_form_inherit_btn_string"
+			model="ir.ui.view">
+			<field name="name">Stock Picking View Form</field>
+			<field name="model">stock.picking</field>
+			<field name="inherit_id" ref="stock.view_picking_form" />
+			<field name="arch" type="xml">
+				<xpath expr="/form/header/button[@name='action_confirm']" position="replace">
+					 <button name="action_confirm" states="draft" string="Confirm" type="object" class="oe_highlight" groups="base.group_user"/>
+				</xpath>
+				<xpath expr="/form/header/button[@name='action_assign']" position="replace">
+					 <button name="action_assign" states="confirmed,waiting" string="Check Availability" type="object" class="oe_highlight" groups="base.group_user"/>
+				</xpath>
+				<xpath expr="/form/header/button[@name='do_new_transfer']" position="replace">
+					 <button name="do_new_transfer" states="partially_available,assigned" string="Validate" groups="stock.group_stock_user" type="object" class="oe_highlight"/>
+				</xpath>
+				
+			</field>
+		</record>
+	</data>
+</openerp>

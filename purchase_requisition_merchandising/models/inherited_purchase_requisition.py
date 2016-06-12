@@ -9,26 +9,18 @@ class InheritedPurchaseRequisition(models.Model):
 	bom_flag = fields.Boolean(default=False)
 	bom_flag1 = fields.Boolean(default=False)
 	
+	
+	@api.multi
+	@api.onchange('line_ids')
+	def _onchange_type(self, context=None):
+		if self.bom_id and self.line_ids:
+			self.bom_flag1 = True
+	
 	@api.multi
 	@api.onchange('bom_id')
 	def change_bom(self):
-		p_r_pro_id = []
-		res = {}
 		if self.bom_id:
 			self.bom_flag = True
-# 			ids = self.stock_production_lot.product_id.categ_id.lot_fields_category.lot_additional_fields.mapped('id')
-# 			ids = self.bom_id.product_id.categ_id.lot_fields_category.lot_additional_fields.mapped('id')
-# 			obj_bom_line = self.env['bom.consumption.line']
-# 			bom_line = obj_bom_line.search(['|',['mc_yarn_id','=',self.bom_id.id],['mc_acc_id','=',self.bom_id.id]])
-# 			for b_line in bom_line:
-# 				p_r_pro_id.append(b_line.product_id.id)
-# 			
-# 			
-# 			print '-----p_r_pro_id----',p_r_pro_id
-# 	
-# 			res.update({'line_ids.product_id':[('id','in',p_r_pro_id)]})
-# 			print '-----res----',res
-#         	return {'domain':res}	
 
 	@api.multi
 	def action_wizard(self, context=None):
@@ -99,8 +91,6 @@ class InheritedPurchaseRequisition(models.Model):
 						'p_r_p_qty':line.p_r_p_qty-updated_qty
 					}
 				i=i+1
-				print '-----update qty----',line.p_r_p_qty-updated_qty
-				print '-----re Qty----',line.quantity
 				line.write(res)
 			self.state = "draft"
 	

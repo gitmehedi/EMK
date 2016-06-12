@@ -16,7 +16,7 @@
 						<button name="force_assign" states="confirmed,waiting,partially_available"
 							string="Force
 							Availability" type="object" groups="base.group_user" />
-						<button name="do_new_transfer" states="draft,partially_available,assigned"
+						<button name="do_new_transfer" states="partially_available,assigned"
 							string="Validate" groups="stock.group_stock_user" type="object"
 							class="oe_highlight" />
 						<button name="do_print_picking" string="Print"

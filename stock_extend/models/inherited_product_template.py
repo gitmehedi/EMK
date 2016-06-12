@@ -16,7 +16,6 @@ class InheritedProductTemplate(models.Model):
 			old_uom = self.uom_id
 			if old_uom != new_uom:
 				cal_factor = self._unit_conversion(old_uom, new_uom)
-				print "cal_factor", cal_factor
 
 			quant_obj = self.env['stock.quant']
 			product_obj = self.env['product.product']
@@ -50,7 +49,6 @@ class InheritedProductTemplate(models.Model):
 	def _unit_conversion(self, old_uom, new_uom):
 		uom_obj = self.env['product.uom']
 		reference_obj = uom_obj.search([('category_id', '=', new_uom.category_id.id), ('uom_type', '=', 'reference')])
-		print "reference_id", reference_obj
 		if(reference_obj != old_uom):
 			ref_factor = 1 / old_uom.factor
 			new_factor = ref_factor * new_uom.factor
@@ -63,7 +61,6 @@ class InheritedProductTemplate(models.Model):
 	
 	@api.multi    
 	def action_unit_change(self):
-		print '-------------wizard------',self
 		return {
 		        'name': ('Confirmation'),
 		        'view_type': 'form',

@@ -18,14 +18,11 @@ class ProductReturnWizard(models.TransientModel):
 	
 	@api.one
 	def action_submit(self, vals):
-		print "self", self.order_no
-		print "purchase_type", self.purchase_type
-		print "vals+++", vals['active_id']
+
 		active_id = vals['active_id']
 		
 # 		req_obj = self.env['stock.picking'].browse(self._context.get(active_id))
-		print "context id", vals
-		
+
 		po_pool = self.env['purchase.order']
 		picking_pool = self.env['stock.picking']
 		mov_obj = self.env['stock.move']
@@ -52,10 +49,8 @@ class ProductReturnWizard(models.TransientModel):
 	                    'date_expected': date.today(),
 	                    'picking_id' : active_id,
 	                    }
-					print "Json obj ", vals
 					mov_obj.create(vals)
 			stock_move_by_picking.unlink()
-			print "-----------", stock_move_by_picking
 			
 		else:
 			tr_ids = picking_pool.search([('name', '=', self.order_no)])
@@ -74,12 +69,8 @@ class ProductReturnWizard(models.TransientModel):
 	                    'date_expected': date.today(),
 	                    'picking_id' : active_id,
 	                    }
-					print "Json obj ", vals
 					mov_obj.create(vals)
 			stock_move_by_picking.unlink()
-			print "-----------", stock_move_by_picking
-
-		
 		return {
 		    'type': 'ir.actions.act_window_close',
 		}
