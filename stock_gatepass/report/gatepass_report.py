@@ -4,6 +4,7 @@
 import time
 from openerp import api, exceptions, fields, models
 from openerp.tools.translate import _
+from datetime import datetime
 
 class ReportGatePassQweb(models.AbstractModel):
     _name = 'report.stock_gatepass.report_gate_pass_qweb'

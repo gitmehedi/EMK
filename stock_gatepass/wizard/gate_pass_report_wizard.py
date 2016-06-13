@@ -1,5 +1,6 @@
 from openerp import api, exceptions, fields, models
 from datetime import date
+import datetime
 import time
 from openerp.exceptions import Warning
 from openerp.tools.translate import _
@@ -95,7 +96,7 @@ class GatePassReportWizard(models.TransientModel):
 					desti_location_name = gate_pass_line.stock_gatepass_in_id.source_location.location_id.name+ "/"+ gate_pass_line.stock_gatepass_in_id.source_location.name
 				else:
 					desti_location_name = gate_pass_line.stock_gatepass_in_id.source_location.name
-				
+				dis_date=datetime.datetime.strptime(gate_pass_line.stock_gatepass_in_id.date, '%Y-%m-%d %H:%M:%S').strftime('%m/%d/%Y')
 				dict ={'id':gate_pass_line.id,
 					'date':gate_pass_line.stock_gatepass_in_id.date,
 					'sl_no':gate_pass_line.stock_gatepass_in_id.gete_pass_no,
@@ -116,7 +117,7 @@ class GatePassReportWizard(models.TransientModel):
 					desti_location_name = gate_pass_line.stock_gatepass_out_id.destination_location.location_id.name+ "/"+ gate_pass_line.stock_gatepass_out_id.destination_location.name
 				else:
 					desti_location_name = gate_pass_line.stock_gatepass_out_id.destination_location.name
-				
+				dis_date=datetime.datetime.strptime(gate_pass_line.stock_gatepass_out_id.date, '%Y-%m-%d %H:%M:%S').strftime('%m/%d/%Y')
 				
 				dict ={'id':gate_pass_line.id,
 					'date':gate_pass_line.stock_gatepass_out_id.date,

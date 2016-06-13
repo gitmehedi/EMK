@@ -116,7 +116,7 @@ class StockReportWizard(models.TransientModel):
 			ids = obj_move.search([['picking_id','in',picking_id]])
 		
 		for move_line in ids:
-			dict ={'id':move_line.id,'product_name':move_line.product_id.name, 'product_qty':move_line.product_qty,'product_uom':move_line.product_uom.name, 'source_loc':move_line.location_id.name,'dest_loc':move_line.location_dest_id.name}
+			dict ={'id':move_line.id,'product_name':move_line.product_id.name, 'product_qty':move_line.product_uom_qty,'product_uom':move_line.product_uom.name, 'source_loc':move_line.location_id.name,'dest_loc':move_line.location_dest_id.name}
 			product_list.append(dict)
 		data['other'] ={'source_location':source_location_name,'desti_location':desti_location_name} 
 		data['ids'] = product_list 
