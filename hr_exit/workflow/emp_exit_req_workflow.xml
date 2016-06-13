@@ -21,12 +21,6 @@
             <field name="action">exit_confirm()</field>
             <field name="split_mode">OR</field>
         </record>
-        <record model="workflow.activity" id="act_validate"> <!-- accepted -->
-            <field name="wkf_id" ref="wkf_emp_exit"/>
-            <field name="name">validate</field>
-            <field name="kind">function</field>
-            <field name="action">exit_validate()</field>
-        </record>
 
         <record model="workflow.activity" id="act_validate1"> <!-- first_accepted -->
             <field name="wkf_id" ref="wkf_emp_exit"/>
@@ -38,10 +32,17 @@
         <record model="workflow.activity" id="act_validate2"> <!-- first_accepted -->
             <field name="wkf_id" ref="wkf_emp_exit"/>
             <field name="name">second_validate</field>
-            <!--<field name="kind">function</field>-->
-            <!--<field name="action">holidays_first_validate()</field>-->
-            <!--<field name="split_mode">OR</field>-->
+            <field name="kind">function</field>
+            <field name="action">holidays_second_validate()</field>
+            <field name="split_mode">OR</field>
         </record>
+        <record model="workflow.activity" id="act_validate"> <!-- accepted -->
+            <field name="wkf_id" ref="wkf_emp_exit"/>
+            <field name="name">validate</field>
+            <field name="kind">function</field>
+            <field name="action">exit_validate()</field>
+        </record>
+
 
         <record model="workflow.activity" id="act_refuse"> <!-- refused -->
             <field name="wkf_id" ref="wkf_emp_exit"/>
@@ -95,7 +96,7 @@
             <field name="condition">True</field>
             <!--<field name="group_id" ref="base.group_hr_user"/>-->
         </record>
-         <record model="workflow.transition"
+        <record model="workflow.transition"
                 id="exit_validate12validate2"> <!-- 2. submitted -> first_accepted (validate signal) if double_validation-->
             <field name="act_from" ref="act_validate1"/>
             <field name="act_to" ref="act_validate2"/>

@@ -1,14 +1,18 @@
 from openerp import models, fields, api, exceptions
+from openerp.osv import osv
 
 
 class EmployeeExitReq(models.Model):
     _name = 'hr.emp.exit.req'
 
-    _rec_name='employee_id'
-    descriptions = fields.Text(string='Descriptions')
-    note = fields.Char(size=200, string='Note')
-    req_date = fields.Date(string='Request Date')
-    last_date = fields.Date(string='Last Day of Work')
+    _rec_name = 'employee_id'
+    descriptions = fields.Text(string='Descriptions', required=True)
+    emp_notes = fields.Char(size=300, string='Employee Notes', )
+    department_notes = fields.Char(size=300, string='Department Manager Notes')
+    hr_notes = fields.Char(size=300, string='HR Manager Notes')
+    manager_notes = fields.Char(size=300, string='General Manager Notes')
+    req_date = fields.Date(string='Request Date', required=True)
+    last_date = fields.Date(string='Last Day of Work', required=True)
     state = fields.Selection(
         [('draft', 'To Submit'), ('cancel', 'Cancelled'), ('confirm', 'To Approve'), ('refuse', 'Refused'),
          ('validate1', 'Second Approval'), ('validate2', 'Third Approval'), ('validate', 'Approved')],
@@ -23,7 +27,7 @@ class EmployeeExitReq(models.Model):
     user_id = fields.Float(compute='_compute_user_id')
     manager_id = fields.Many2one('hr.employee', invisible=False, copy=False,
                                  help='This area is automatically filled by the user who validate the exit process')
-    parent_id = fields.Many2one('employee.exit.req', string='Parent')
+
     department_id = fields.Many2one('hr.department', string='Department', related='employee_id.department_id')
 
     category_id = fields.Many2one('hr.employee.category', string='Category', help='Category of Employee')
@@ -31,8 +35,10 @@ class EmployeeExitReq(models.Model):
                                   help='This area is automaticly filled by the user who validate the exit with second level (If exit type need second validation)')
     manager_id3 = fields.Many2one('hr.employee', string='Third Approval', readonly=True, copy=False,
                                   help='This area is automaticly filled by the user who validate the exit with third level (If exit type need third validation)')
+    parent_id = fields.Many2one('hr.emp.exit.req', string='Parent')
+    linked_request_ids = fields.One2many('hr.emp.exit.req', 'parent_id', 'Linked Requests', ),
 
-    #can_reset = fields.Boolean(compute='_get_can_reset')
+    # can_reset = fields.Boolean(compute='_get_can_reset')
 
 
     @api.multi
@@ -61,26 +67,21 @@ class EmployeeExitReq(models.Model):
 
     @api.multi
     def exit_reset(self):
-        self.write({
-            'state': 'draft',
-            'manager_id': False,
-            'manager_id2': False,
-        })
-        to_unlink = []
-        for record in self:
-            for record2 in record.linked_request_ids:
-                self.exit_reset([record2.id])
-                to_unlink.append(record2.id)
-        if to_unlink:
-            self.unlink(to_unlink)
+        self.write({'state': 'draft', 'manager_id': False, 'manager_id2': False})
+        # to_unlink = []
+        # for record in self.browse(self.ids):
+        #     # for record2 in record.linked_request_ids:
+        #     #     self.exit_reset()
+        #     to_unlink.append(record.id)
+        # if to_unlink:
+        #     self.unlink(to_unlink)
         return True
 
     @api.multi
     def exit_confirm(self):
-        # for record in self:
-        #     if record.employee_id and record.employee_id.parent_id and record.employee_id.parent_id.user_id:
-        #         self.message_subscribe_users(cr, uid, [record.id], user_ids=[record.employee_id.parent_id.user_id.id],
-        #                                      context=context)
+        for record in self:
+            if record.employee_id and record.employee_id.parent_id and record.employee_id.parent_id.user_id:
+                self.message_subscribe_users([record.id], user_ids=[record.employee_id.parent_id.user_id.id])
         return self.write({'state': 'confirm'})
 
     @api.multi
@@ -93,11 +94,11 @@ class EmployeeExitReq(models.Model):
         return True
 
     @api.multi
-    def exit_first_validate(self, cr, uid, ids, context=None):
+    def exit_first_validate(self):
         obj_emp = self.env['hr.employee']
-        ids2 = obj_emp.search([('user_id', '=', uid)])
+        ids2 = obj_emp.search([('user_id', '=', self.id)])
         manager = ids2 and ids2[0] or False
-        self.exit_first_validate_notificate(cr, uid, ids, context=context)
+        self.exit_first_validate_notificate()
         return self.write({'state': 'validate1', 'manager_id': manager})
 
     @api.multi
@@ -108,13 +109,13 @@ class EmployeeExitReq(models.Model):
     @api.multi
     def exit_refuse(self):
         obj_emp = self.env['hr.employee']
-        ids2 = obj_emp.search([('user_id', '=', uid)])
+        ids2 = obj_emp.search([('user_id', '=', self.id)])
         manager = ids2 and ids2[0] or False
-        for emp_exit in self.browse(cr, uid, ids, context=context):
+        for emp_exit in self:
             if emp_exit.state == 'validate1':
-                self.write(cr, uid, [emp_exit.id], {'state': 'refuse', 'manager_id': manager})
+                self.write({'state': 'refuse', 'manager_id': manager, 'exit_id': emp_exit.id})
             else:
-                self.write(cr, uid, [emp_exit.id], {'state': 'refuse', 'manager_id2': manager})
+                self.write({'state': 'refuse', 'manager_id2': manager, 'exit_id': emp_exit.id})
         self.exit_cancel()
         return True
 
@@ -125,16 +126,16 @@ class EmployeeExitReq(models.Model):
             if record.meeting_id:
                 record.meeting_id.unlink()
 
-            # If a category that created several holidays, cancel all related
+            # If a category that created several exits, cancel all related
             self.signal_workflow(map(attrgetter('id'), record.linked_request_ids or []), 'refuse')
 
-        self._remove_resource_exit()
+       # self._remove_resource_exit()
         return True
 
     @api.multi
     def _remove_resource_exit(self):
         '''This method will create entry in resource calendar leave object at the time of holidays cancel/removed'''
-        obj_res_exit = self.pool.get('resource.calendar.leaves')
+        obj_res_exit = self.env['resource.calendar.leaves']
         leave_ids = obj_res_exit.search([('holiday_id', 'in', ids)])
         return obj_res_exit.unlink(leave_ids)
 
@@ -146,3 +147,10 @@ class EmployeeExitReq(models.Model):
                 'You cannot set a exit request as \'%s\'. Contact a human resource manager.') % vals.get('state'))
         hr_exit_id = super(EmployeeExitReq, self).write(vals)
         return hr_exit_id
+
+    @api.multi
+    def unlink(self):
+        for rec in self:
+            if rec.state not in ['draft', 'cancel', 'confirm']:
+                raise osv.except_osv(_('Warning!'), _('You cannot delete! It is in %s state.') % (rec.state))
+        return super(EmployeeExitReq, self).unlink()
