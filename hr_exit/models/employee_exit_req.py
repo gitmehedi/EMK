@@ -6,8 +6,8 @@ class EmployeeExitReq(models.Model):
     _name = 'hr.emp.exit.req'
 
     _rec_name = 'employee_id'
-    descriptions = fields.Text(string='Descriptions', required=True)
-    emp_notes = fields.Char(size=300, string='Employee Notes', )
+    #descriptions = fields.Text(string='Descriptions', required=True)
+    emp_notes = fields.Text(string='Employee Notes', )
     department_notes = fields.Char(size=300, string='Department Manager Notes')
     hr_notes = fields.Char(size=300, string='HR Manager Notes')
     manager_notes = fields.Char(size=300, string='General Manager Notes')
@@ -22,9 +22,10 @@ class EmployeeExitReq(models.Model):
             \nThe status is \'Refused\', when exit request is refused by manager.\
             \nThe status is \'Approved\', when exit request is approved by manager.')
 
-    employee_id = fields.Many2one('hr.employee', select=True, invisible=False)
-    job_id = fields.Many2one('hr.job', string='Job Title')
-    user_id = fields.Float(compute='_compute_user_id')
+    employee_id = fields.Many2one('hr.employee', select=True, invisible=False,  default=lambda self: self._employee_gets())
+    #mobile_phone = fields.Many2one('hr.employee', string='Contact No', related='employee_id.mobile_phone')
+    job_id = fields.Many2one('hr.job', string='Job Title', related='employee_id.job_id')
+    user_id = fields.Many2one('res.users', related='employee_id.user_id', copy=False)
     manager_id = fields.Many2one('hr.employee', invisible=False, copy=False,
                                  help='This area is automatically filled by the user who validate the exit process')
 
@@ -41,38 +42,44 @@ class EmployeeExitReq(models.Model):
     # can_reset = fields.Boolean(compute='_get_can_reset')
 
 
+    # _defaults = {
+    #     'employee_id': _employee_gets,
+    #     'state': 'confirm',
+    #     'type': 'remove',
+    #     'user_id': lambda obj, cr, uid, context: uid,
+    #
+    # }
     @api.multi
-    def _get_can_reset(self):
+    def _employee_gets(self):
+        #emp_id = context.get('default_employee_id', False)
+        # if emp_id:
+        #     return emp_id
+        ids = self.env['hr.employee'].search([('user_id', '=', self.env.user.id)])
+        if ids:
+            return ids[0]
+        return False
 
-        # user can edit the exit request if it is draft/to approve stage
-        result = False
-
-        return result
 
     @api.multi
-    @api.depends('employee_id')
-    def _compute_user_id(self):
-        return 1
-
-    @api.multi
-    @api.depends('employee_id')
-    def _compute_department_id(self):
-        return 1
-
-    # class Inherit_hr_employee(models.Model):
-    #     _inherit = "hr.employee"
-
-
-
+    def exit_cancel(self):
+        self.write({'state': 'draft', 'manager_id': False, 'manager_id2': False})
+        # to_unlink = []
+        # for record in self.browse(self.env.user.id):
+        #     for record2 in record.linked_request_ids:
+        #         self.exit_reset()
+        #     to_unlink.append(record2.id)
+        # if to_unlink:
+        #     self.unlink(to_unlink)
+        return True
 
     @api.multi
     def exit_reset(self):
         self.write({'state': 'draft', 'manager_id': False, 'manager_id2': False})
         # to_unlink = []
-        # for record in self.browse(self.ids):
-        #     # for record2 in record.linked_request_ids:
-        #     #     self.exit_reset()
-        #     to_unlink.append(record.id)
+        # for record in self.browse(self.env.user.id):
+        #     for record2 in record.linked_request_ids:
+        #         self.exit_reset()
+        #     to_unlink.append(record2.id)
         # if to_unlink:
         #     self.unlink(to_unlink)
         return True
@@ -86,17 +93,19 @@ class EmployeeExitReq(models.Model):
 
     @api.multi
     def exit_validate(self):
+        print 'helooo'
         obj_emp = self.env['hr.employee']
-        ids2 = obj_emp.search([('user_id', '=', uid)])
-        manager = ids2 and ids2[0] or False
-        self.write({'state': 'validate'})
+        ids2 = obj_emp.search([('user_id', '=', self.env.user.id)])
+        #manager = ids2 and ids2[0] or False
+        return self.write({'state': 'validate'})
 
-        return True
+        #return True
+
 
     @api.multi
     def exit_first_validate(self):
         obj_emp = self.env['hr.employee']
-        ids2 = obj_emp.search([('user_id', '=', self.id)])
+        ids2 = obj_emp.search([('user_id', '=', self.env.user.id)])
         manager = ids2 and ids2[0] or False
         self.exit_first_validate_notificate()
         return self.write({'state': 'validate1', 'manager_id': manager})
@@ -109,7 +118,7 @@ class EmployeeExitReq(models.Model):
     @api.multi
     def exit_refuse(self):
         obj_emp = self.env['hr.employee']
-        ids2 = obj_emp.search([('user_id', '=', self.id)])
+        ids2 = obj_emp.search([('user_id', '=', self.env.user.id)])
         manager = ids2 and ids2[0] or False
         for emp_exit in self:
             if emp_exit.state == 'validate1':
@@ -121,15 +130,16 @@ class EmployeeExitReq(models.Model):
 
     @api.multi
     def exit_cancel(self):
-        for record in self:
-            # Delete the meeting
-            if record.meeting_id:
-                record.meeting_id.unlink()
 
-            # If a category that created several exits, cancel all related
-            self.signal_workflow(map(attrgetter('id'), record.linked_request_ids or []), 'refuse')
-
-       # self._remove_resource_exit()
+        # for record in self:
+        #     # Delete the meeting
+        #     if record.meeting_id:
+        #         record.meeting_id.unlink()
+        #
+        #     # If a category that created several exits, cancel all related
+        #     self.signal_workflow(map(attrgetter('id'), record.linked_request_ids or []), 'refuse')
+        #
+        #     # self._remove_resource_exit()
         return True
 
     @api.multi
@@ -138,6 +148,14 @@ class EmployeeExitReq(models.Model):
         obj_res_exit = self.env['resource.calendar.leaves']
         leave_ids = obj_res_exit.search([('holiday_id', 'in', ids)])
         return obj_res_exit.unlink(leave_ids)
+
+    @api.multi
+    def onchange_employee(self, employee_id):
+        result = {'value': {'department_id': False}}
+        if employee_id:
+            employee = self.env['hr.employee'].browse(employee_id)
+            result['value'] = {'department_id': employee.department_id.id}
+        return result
 
     @api.multi
     def write(self, vals):

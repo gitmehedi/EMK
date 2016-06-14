@@ -11,13 +11,15 @@
                     <!--<field name="can_reset" invisible="1"/>-->
                     <header>
                         <button string="Confirm" name="confirm" states="draft" type="workflow" class="oe_highlight"/>
-                        <button string="First Validate" name="first_validate" states="confirm" type="workflow"
+                        <button string="Approveee" name="validate111" states="confirm" groups="base.group_hr_manager" type="workflow" class="oe_highlight"/>
+                        <button string="First Validate" name="first_validate" states="validate" type="workflow"
+                                class="oe_highlight" groups="base.group_hr_manager"/>
+                        <button string="Second Validate" name="second_validate" states="validate1" groups="base.group_hr_manager" type="workflow"
                                 class="oe_highlight"/>
-                        <button string="Second Validate" name="second_validate" states="validate1" type="workflow"
-                                class="oe_highlight"/>
-                        <button string="Approve" name="validate" states="validate2" type="workflow"
-                                class="oe_highlight"/>
-                        <button string="Refuse" name="refuse" states="confirm,validate,validate1,validate2"
+
+                        <!--<button string="Cancel" name="cancel" groups="base.group_hr_user" states="confirm,validate,validate1,validate2"-->
+                                <!--type="workflow" class="oe_highlight"/>-->
+                        <button string="Refuse" name="refuse" groups="base.group_hr_manager" states="validate,validate1,validate2"
                                 type="workflow" class="oe_highlight"/>
                         <button string="Reset to Draft" name="reset"
                                 attrs="{'invisible': [('state', 'not in', ['confirm', 'refuse'])]}"
@@ -28,41 +30,41 @@
                     <sheet>
                         <group>
                             <group>
-                                <field name="descriptions" required="True"/>
+                                <!--<field name="descriptions" required="True"/>-->
                                 <field name="req_date" required="True"/>
                                 <field name="last_date" required="True"/>
                             </group>
                             <group>
 
-                                <field name="employee_id" string="Employee"/>
-                                <field name="manager_id" string="manager"/>
-                                <field name="category_id" string="Category"/>
-                                <field name="job_id" string="Job Descriptions"/>
-                                <field name="department_id" string="Department"/>
+                                <field name="employee_id" string="Employee" groups="base.group_hr_manager"  context="{'employee_id':employee_id}" on_change="onchange_employee(employee_id)" />
+                                <field name="manager_id" groups="base.group_hr_manager"  string="Department Manager"/>
+                                <field name="department_id" groups="base.group_hr_manager"  string="Department"/>
+                                <field name="job_id" groups="base.group_hr_manager"  string="Job Title"/>
+                                <!--<field name="user_id" groups="base.group_hr_manager"  string="User"/>-->
+                                <!--<field name="mobile_phone" groups="base.group_hr_manager"  string="Mobile"/>-->
+
                             </group>
 
                             <field name="emp_notes" colspan="4" placeholder="Add a reason..."/>
-
-
                         </group>
 
-                        <notebook>
+                        <notebook groups="base.group_hr_manager" >
                             <page string="Notes">
-                                <group>
+                                <group groups="base.group_hr_manager" attrs="{'invisible': [('state', 'in', ['draft'])]}">
                                     <group name="department_notes" string="Department Manager Notes">
                                         <field name="department_notes" colspan="4" nolabel="1" placeholder="Add a reason..."/>
                                     </group>
 
                                 </group>
-                                <group>
+                                <group groups="base.group_hr_manager" attrs="{'invisible': [('state', 'in', ['draft','confirm'])]}">
                                     <group name="hr_notes" string="HR Manager Notes">
                                         <field name="hr_notes" colspan="4" nolabel="1" placeholder="Add a reason..."/>
                                     </group>
 
                                 </group>
-                                <group>
+                                <group groups="base.group_hr_manager" attrs="{'invisible': [('state', 'in', ['draft','validate1', 'confirm'])]}">
                                     <group name="manager_notes" string="General Manager Notes">
-                                        <field name="manager_notes" colspan="4" nolabel="1" placeholder="Add a reason..."/>
+                                        <field name="manager_notes" colspan="4"  nolabel="1" placeholder="Add a reason..."/>
                                     </group>
 
                                 </group>
@@ -80,7 +82,7 @@
             <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Exit Request">
-                    <field name="descriptions"/>
+                    <!--<field name="descriptions"/>-->
                     <field name="req_date"/>
                     <field name="last_date"/>
                 </tree>
