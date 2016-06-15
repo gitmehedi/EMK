@@ -26,7 +26,7 @@ class EmployeeExitReq(models.Model):
     #mobile_phone = fields.Many2one('hr.employee', string='Contact No', related='employee_id.mobile_phone')
     job_id = fields.Many2one('hr.job', string='Job Title', related='employee_id.job_id')
     user_id = fields.Many2one('res.users', related='employee_id.user_id', copy=False)
-    manager_id = fields.Many2one('hr.employee', invisible=False, copy=False,
+    manager_id = fields.Many2one('hr.employee', related='employee_id.parent_id',
                                  help='This area is automatically filled by the user who validate the exit process')
 
     department_id = fields.Many2one('hr.department', string='Department', related='employee_id.department_id')

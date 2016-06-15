@@ -14,14 +14,14 @@
                         <button string="Approve" name="exit_validate" states="confirm" groups="base.group_hr_user" type="object" class="oe_highlight"/>
                         <button string="First Validate" name="exit_first_validate" states="validate1" type="object"
                                 class="oe_highlight" groups="base.group_hr_user"/>
-                        <button string="Second Validate" name="exit_second_validate" states="validate2" groups="base.group_hr_user" type="object"
+                        <button string="Second Validate" name="exit_second_validate" states="validate2" groups="base.group_hr_manager" type="object"
                                 class="oe_highlight"/>
 
                         <button string="Refuse" name="exit_refuse" states="validate1,validate2"
-                                type="object" groups="base.group_hr_manager" class="oe_highlight"/>
-                        <button string="Reset to Draft" name="exit_reset"
+                                type="object" groups="base.group_hr_user"/>
+                        <button string="Reset to Draft" name="exit_reset" groups="base.group_user"
                                 attrs="{'invisible': [('state', 'not in', ['confirm', 'refuse'])]}"
-                                type="object" class="oe_highlight"/>
+                                type="object"/>
                         <field name="state" widget="statusbar" statusbar_visible="draft,confirm,validate1,validate2,validate"
                                statusbar_colors='{"confirm":"blue","validate1":"blue","refuse":"red"}'/>
                     </header>
@@ -118,6 +118,7 @@
         <record model="ir.actions.act_window" id="request_approve_exit">
             <field name="name">Requests to Approve</field>
             <field name="res_model">hr.emp.exit.req</field>
+            <field name="domain">[('state', '!=', 'draft')]</field>
             <field name="view_type">form</field>
             <field name="view_id" ref="exit_req_form_view"/>
         </record>
@@ -137,7 +138,7 @@
         </record>
 
         <menuitem name="Exit Requests to Approve" parent="menu_exit_management" id="menu_request_approve_exit"
-                  groups="base.group_hr_manager" action="request_approve_exit"/>
+                  groups="base.group_hr_user" action="request_approve_exit"/>
 
 
     </data>
