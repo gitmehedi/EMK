@@ -10,29 +10,27 @@
                 <form string="Exit Request">
                     <!--<field name="can_reset" invisible="1"/>-->
                     <header>
-                        <button string="Confirm" name="confirm" states="draft" type="workflow" class="oe_highlight"/>
-                        <button string="Approveee" name="validate111" states="confirm" groups="base.group_hr_manager" type="workflow" class="oe_highlight"/>
-                        <button string="First Validate" name="first_validate" states="validate" type="workflow"
-                                class="oe_highlight" groups="base.group_hr_manager"/>
-                        <button string="Second Validate" name="second_validate" states="validate1" groups="base.group_hr_manager" type="workflow"
+                        <button string="Confirm" name="exit_confirm" states="draft" type="object" class="oe_highlight"/>
+                        <button string="Approve" name="exit_validate" states="confirm" groups="base.group_hr_user" type="object" class="oe_highlight"/>
+                        <button string="First Validate" name="exit_first_validate" states="validate1" type="object"
+                                class="oe_highlight" groups="base.group_hr_user"/>
+                        <button string="Second Validate" name="exit_second_validate" states="validate2" groups="base.group_hr_user" type="object"
                                 class="oe_highlight"/>
 
-                        <!--<button string="Cancel" name="cancel" groups="base.group_hr_user" states="confirm,validate,validate1,validate2"-->
-                                <!--type="workflow" class="oe_highlight"/>-->
-                        <button string="Refuse" name="refuse" groups="base.group_hr_manager" states="validate,validate1,validate2"
-                                type="workflow" class="oe_highlight"/>
-                        <button string="Reset to Draft" name="reset"
+                        <button string="Refuse" name="exit_refuse" states="validate1,validate2"
+                                type="object" groups="base.group_hr_manager" class="oe_highlight"/>
+                        <button string="Reset to Draft" name="exit_reset"
                                 attrs="{'invisible': [('state', 'not in', ['confirm', 'refuse'])]}"
-                                type="workflow" class="oe_highlight"/>
-                        <field name="state" widget="statusbar" statusbar_visible="draft,confirm,validate"
+                                type="object" class="oe_highlight"/>
+                        <field name="state" widget="statusbar" statusbar_visible="draft,confirm,validate1,validate2,validate"
                                statusbar_colors='{"confirm":"blue","validate1":"blue","refuse":"red"}'/>
                     </header>
                     <sheet>
                         <group>
                             <group>
                                 <!--<field name="descriptions" required="True"/>-->
-                                <field name="req_date" required="True"/>
-                                <field name="last_date" required="True"/>
+                                <field name="req_date" required="True" attrs="{'readonly': [('state', 'not in', ['draft'])]}"/>
+                                <field name="last_date" required="True" attrs="{'readonly': [('state', 'not in', ['draft'])]}"/>
                             </group>
                             <group>
 
@@ -45,26 +43,26 @@
 
                             </group>
 
-                            <field name="emp_notes" colspan="4" placeholder="Add a reason..."/>
+                            <field name="emp_notes" colspan="4" attrs="{'readonly': [('state', 'not in', ['draft'])]}" placeholder="Add a reason..."/>
                         </group>
 
                         <notebook groups="base.group_hr_manager" >
                             <page string="Notes">
                                 <group groups="base.group_hr_manager" attrs="{'invisible': [('state', 'in', ['draft'])]}">
                                     <group name="department_notes" string="Department Manager Notes">
-                                        <field name="department_notes" colspan="4" nolabel="1" placeholder="Add a reason..."/>
+                                        <field name="department_notes" colspan="4" attrs="{'readonly': [('state', 'not in', ['draft','confirm'])]}" nolabel="1" placeholder="Add a reason..."/>
                                     </group>
 
                                 </group>
                                 <group groups="base.group_hr_manager" attrs="{'invisible': [('state', 'in', ['draft','confirm'])]}">
                                     <group name="hr_notes" string="HR Manager Notes">
-                                        <field name="hr_notes" colspan="4" nolabel="1" placeholder="Add a reason..."/>
+                                        <field name="hr_notes" colspan="4" attrs="{'readonly': [('state', 'not in', ['draft','validate1'])]}" nolabel="1" placeholder="Add a reason..."/>
                                     </group>
 
                                 </group>
                                 <group groups="base.group_hr_manager" attrs="{'invisible': [('state', 'in', ['draft','validate1', 'confirm'])]}">
                                     <group name="manager_notes" string="General Manager Notes">
-                                        <field name="manager_notes" colspan="4"  nolabel="1" placeholder="Add a reason..."/>
+                                        <field name="manager_notes" colspan="4" attrs="{'readonly': [('state', 'not in', ['draft','validate2'])]}"  nolabel="1" placeholder="Add a reason..."/>
                                     </group>
 
                                 </group>
@@ -83,6 +81,7 @@
             <field name="arch" type="xml">
                 <tree string="Exit Request">
                     <!--<field name="descriptions"/>-->
+                    <field name="emp_notes"/>
                     <field name="req_date"/>
                     <field name="last_date"/>
                 </tree>
@@ -138,7 +137,7 @@
         </record>
 
         <menuitem name="Exit Requests to Approve" parent="menu_exit_management" id="menu_request_approve_exit"
-                  action="request_approve_exit"/>
+                  groups="base.group_hr_manager" action="request_approve_exit"/>
 
 
     </data>

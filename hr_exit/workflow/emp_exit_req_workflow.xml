@@ -24,7 +24,7 @@
 
         <record model="workflow.activity" id="act_exit_validate"> <!-- submitted -->
             <field name="wkf_id" ref="wkf_emp_exit"/>
-            <field name="name">validate111</field>
+            <field name="name">validate</field>
             <field name="kind">function</field>
             <field name="action">exit_validate()</field>
 
