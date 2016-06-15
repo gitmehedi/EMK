@@ -9,12 +9,12 @@
     	
         <record id="time_and_action_group_user" model="res.groups">
         	<field name="name">Time and Action User</field>
-        	<field name="category_id" ref="module_category_commercial"/>
+        	<field name="category_id" ref="module_category_time_and_action"/>
         </record>
         
         <record id="time_and_action_group_manager" model="res.groups">
         	<field name="name">Time and Action Manager</field>
-        	<field name="category_id" ref="module_category_commercial"/>
+        	<field name="category_id" ref="module_category_time_and_action"/>
         </record>
         
     </data>

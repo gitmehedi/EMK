@@ -15,7 +15,8 @@
              'security/security.xml',
              'security/ir.model.access.csv',
              'views/root_menu.xml',
-             # 'views/lc_amendment_new_views.xml',
+             'views/related_process_views.xml',
+             'views/task_creation_views.xml',
 
              ],
     'depends': ['account','stock'],

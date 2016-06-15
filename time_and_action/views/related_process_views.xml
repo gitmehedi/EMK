@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+	<data>
+		<!-- Related Process Tree or List view -->
+		<record model="ir.ui.view" id="related_process_tree_view" >
+			<field name="name">related.process.tree</field>
+			<field name="model">related.process</field>
+			<field name="arch" type="xml">
+				<tree string="Task Creation Tree">
+					<field name="name" />
+				</tree>
+			</field>
+		</record>
+
+		<!-- Related Process Form Views -->
+		<record model="ir.ui.view" id="related_process_form_view">
+			<field name="name">related.process.form</field>
+			<field name="model">related.process</field>
+			<field name="arch" type="xml">
+				<form string="Task Creation Form">
+					<sheet>
+						<group>
+							<group>
+								<field name="name" />
+							</group>
+							<group>
+
+							</group>
+						</group>
+
+						<separator string="Remarks" />
+						<field name="remarks" placeholder="Put an remarks..................." />
+					</sheet>
+				</form>
+			</field>
+		</record>
+
+		<!-- Related Process Search View -->
+		<record model="ir.ui.view" id="related_process_view_search" >
+			<field name="name">related.process.search</field>
+			<field name="model">related.process</field>
+			<field eval="10" name="priority" />
+			<field name="arch" type="xml">
+				<search string="Related Process">
+					<field name="name" />
+				</search>
+			</field>
+		</record>
+
+		<!-- Related Process Menu and Action -->
+		<record model="ir.actions.act_window" id="related_process_list_action" >
+			<field name="name">Related Process</field>
+			<field name="res_model">related.process</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+		</record>
+
+		<menuitem id="related_process_main_menu" name="Related Process"
+			parent="time_and_action_configuration_menu" sequence="125"
+			action="related_process_list_action" />
+	</data>
+</openerp>
