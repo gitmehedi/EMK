@@ -62,7 +62,7 @@
 									<t t-if="other['desti_location'] =='' and form['gate_pass_type']=='2'">
 										<th>Destination</th>
 									</t>
-									<th>Product Name</th>
+									<th>Product</th>
 									<th>Quantity</th>
 									<th>UOM</th>
 								</tr>
@@ -88,7 +88,7 @@
 									<td>
 										<span t-esc="line['product_name']" />
 									</td>
-									<td>
+									<td class="text-right">
 										<span t-esc="line['product_qty']" />
 									</td>
 									<td>

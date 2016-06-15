@@ -91,20 +91,32 @@ class StockReportWizard(models.TransientModel):
 			picking_id.append(pick_id.id)
 		
 		if(self.source_loc and self.desti_loc):
-			source_location_name = self.source_loc.location_id.name+ "/"+ self.source_loc.name
-			desti_location_name = self.desti_loc.location_id.name+ "/"+ self.desti_loc.name
+			if self.source_loc.location_id:
+					source_location_name = self.source_loc.location_id.name+ "/"+ self.source_loc.name
+			else:
+				source_location_name = self.source_loc.name
+			if self.desti_loc.location_id:
+				desti_location_name = self.desti_loc.location_id.name+ "/"+ self.desti_loc.name
+			else:
+				desti_location_name = self.desti_loc.name
 			ids = obj_move.search([['picking_id','in',picking_id],['location_id','=',self.source_loc.id],['location_dest_id','=',self.desti_loc.id]])
 		elif(self.source_loc and not self.desti_loc):
-			source_location_name = self.source_loc.location_id.name+ "/"+ self.source_loc.name
+			if self.source_loc.location_id:
+					source_location_name = self.source_loc.location_id.name+ "/"+ self.source_loc.name
+			else:
+				source_location_name = self.source_loc.name
 			ids = obj_move.search([['picking_id','in',picking_id],['location_id','=',self.source_loc.id]])
 		elif(not self.source_loc and self.desti_loc):
-			desti_location_name = self.desti_loc.location_id.name+ "/"+ self.desti_loc.name
+			if self.desti_loc.location_id:
+				desti_location_name = self.desti_loc.location_id.name+ "/"+ self.desti_loc.name
+			else:
+				desti_location_name = self.desti_loc.name
 			ids = obj_move.search([['picking_id','in',picking_id],['location_dest_id','=',self.desti_loc.id]])
 		else:
 			ids = obj_move.search([['picking_id','in',picking_id]])
 		
 		for move_line in ids:
-			dict ={'id':move_line.id,'product_name':move_line.product_id.name, 'product_qty':move_line.product_qty,'product_uom':move_line.product_uom.name, 'source_loc':move_line.location_id.name,'dest_loc':move_line.location_dest_id.name}
+			dict ={'id':move_line.id,'product_name':move_line.product_id.name, 'product_qty':move_line.product_uom_qty,'product_uom':move_line.product_uom.name, 'source_loc':move_line.location_id.name,'dest_loc':move_line.location_dest_id.name}
 			product_list.append(dict)
 		data['other'] ={'source_location':source_location_name,'desti_location':desti_location_name} 
 		data['ids'] = product_list 

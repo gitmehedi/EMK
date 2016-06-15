@@ -11,6 +11,11 @@ class InheritedPurchaseRequisition(models.Model):
                                   'Status', required=True, readonly=True, states={'draft': [('readonly', False)]},
                                   copy=False)
 	
+	_sql_constraints = [
+        ('_check_date_comparison_pick', "CHECK (create_date <= schedule_date)", "The Creation date can not be greater than Scheduled Date.")
+    ] 
+	
+	
 	@api.multi
 	def action_approved(self):
 		self.state = "approved"
