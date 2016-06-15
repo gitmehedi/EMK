@@ -53,8 +53,6 @@ class StockReservation(models.Model):
     
     @api.multi
     def action_confirmed(self,vals):
-        obj_stock_quant = self.env["stock.quant"]
-        res_line = vals.get('stock_reservation_line_ids', False)
         loc_id = self.source_loc_id
         if self.stock_reservation_line_ids:
             for val in self.stock_reservation_line_ids:

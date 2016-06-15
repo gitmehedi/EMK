@@ -35,15 +35,30 @@ class StockReservationLine(models.Model):
     stock_reservation_id = fields.Many2one('stock.reservation',"Stock Reservation")
     analytic_account_id = fields.Many2one(string='Analytic Account', 
                                           related='stock_reservation_id.analytic_account_id')
-    
+    max_resv_qty = fields.Float(digits=(20, 2), string='Max Reserve Qty', default=0.0)
     
     @api.onchange('product_id')
     def onchange_product_id(self):
-        if self.product_id:
-#             self.uom_category=self.product_id.uom_id.category_id.id
-#             self.uom=self.product_id.uom_id.id
+        if self.product_id and self.stock_reservation_id.source_loc_id:
             self.analytic_account_id = self.stock_reservation_id.analytic_account_id
-    
+            
+            sql = '''
+                 SELECT COALESCE(sum(qty),0) AS qty from (
+                            SELECT  COALESCE(sum(sq.qty),0) AS qty
+                                FROM stock_quant sq
+                            where sq.product_id = %s and sq.location_id = %s and
+                            owner_id is Null and 
+                            reservation_id is Null
+                            Group by sq.location_id,sq.product_id
+                            UNION
+                            SELECT COALESCE(sum(rq.reserve_quantity*(-1)),0) AS qty from reservation_quant rq
+                            where  rq.product_id = %s and rq.location = %s
+                                Group by rq.location, rq.product_id
+                            ) as res
+                ''' %(self.product_id.id, self.stock_reservation_id.source_loc_id.id, self.product_id.id, self.stock_reservation_id.source_loc_id.id)
+            self.env.cr.execute(sql)
+            result = self.env.cr.dictfetchone()
+            self.max_resv_qty = result['qty']
     
     
    
