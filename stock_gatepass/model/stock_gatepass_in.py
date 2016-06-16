@@ -23,7 +23,7 @@ class StockGatePassIn(models.Model):
     get_pass_out_no = fields.Many2one('stock.gatepass.out', string="Stock Gate pass Out", readonly=True, states={'draft': [('readonly', False)]})
     security_id = fields.Many2one('hr.employee', string="Security Guard", required=True,
                                    readonly=True, states={'draft': [('readonly', False)]}, domain=[('security_guard', '=', True)])
-    state = fields.Selection([('draft', 'Draft'), ('confirm', 'Confirm')], default="draft", readonly=True, states={'draft':[('readonly', False)]})
+    state = fields.Selection([('draft', 'Draft'), ('confirm', 'Confirm'),('cancel', 'Cancel')], default="draft", readonly=True, states={'draft':[('readonly', False)]})
     gate_pass_in_lines = fields.One2many('stock.gatepass.in.line', 'stock_gatepass_in_id', string='Products', readonly=True, states={'draft': [('readonly', False)]})
     notes = fields.Text("Notes")
     _rec_name = 'gete_pass_no'
@@ -36,6 +36,11 @@ class StockGatePassIn(models.Model):
         if new_seq:
             res['gete_pass_no'] = new_seq
         self.write(res)
+    
+    @api.one
+    def action_cancel(self):
+        self.state = 'cancel'
+        
     
     @api.multi
     def unlink(self):

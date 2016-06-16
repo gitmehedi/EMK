@@ -11,6 +11,8 @@
 					<header>
 						<button name="action_confirm" string="Confirm" states="draft" type="object"
 							class="oe_highlight" />
+						<button name="action_cancel" string="Cancel" states="confirm" type="object"
+							class="oe_highlight" groups="stock.group_stock_manager" />
 						<field name="state" widget="statusbar" />
 					</header>
 					<sheet>
