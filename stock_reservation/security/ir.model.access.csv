@@ -4,4 +4,3 @@ access_stock_reservation_manager,stock.reservation,model_stock_reservation,stock
 access_stock_reservation_line,stock.reservation.line,model_stock_reservation_line,stock.group_stock_user,1,1,1,1
 access_product_reservation_status_report,product.reservation.status.report,model_product_reservation_status_report,stock.group_stock_user,1,1,1,1
 access_epo_reservation_status_report,epo.reservation.status.report,model_epo_reservation_status_report,stock.group_stock_user,1,1,1,1
-

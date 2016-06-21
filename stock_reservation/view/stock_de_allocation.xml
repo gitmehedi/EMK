@@ -11,7 +11,7 @@
 							states="draft" />
 						<button name="action_re_generate_line" type="object" string="Regenerate Line" class=""
 							states="generate" />
-						<button name="action_confirmed" type="object" string="Confirmed" class="oe_highlight"
+						<button name="action_confirmed_deallocate" type="object" string="Confirmed" class="oe_highlight"
 							states="generate" />
 						<button name="action_release" type="object" string="Release" class="oe_highlight"
 							states="confirmed" groups="stock_reservation.inventory_group_user_allocation"

@@ -11,42 +11,22 @@ class InheritedStockReservation(models.Model):
     
                                ,readonly=True, states={'draft':[('readonly', False)],'generate':[('readonly',False)]}, copy=True)
 	
+	des_analytic_account_id = fields.Many2one('account.analytic.account', 'Destination Analytic Account', required=True, readonly=True, states={'draft':[('readonly', False)]})
+    
+	@api.multi
+	def action_confirmed_reallocate(self):
+		self.state = "confirmed"
             
 	@api.multi
 	def action_generate_line(self):
-		if self.analytic_account_id and self.warehouse_id:
-			obj_reservation = self.env['stock.reservation'].search([['analytic_account_id','=',self.analytic_account_id.id],['warehouse_id','=',self.warehouse_id.id]], limit=1)
-			
-			
+		if self.analytic_account_id and self.source_loc_id:
+		
 			query = '''
-			SELECT product_id, sum(quantity) AS quantity FROM(
-				SELECT srl.product_id, sum(srl.quantity) AS quantity  FROM stock_reservation sr
-					LEFT JOIN stock_reservation_line srl on sr.id = srl.stock_reservation_id
-					where sr.allocate_flag = 1 
-					AND sr.analytic_account_id = %s 
-					AND sr.warehouse_id = %s 
-					AND sr.state='reserve'
-					GROUP BY srl.product_id
-				UNION ALL
-				SELECT srl.product_id, sum(srl.quantity*-1) AS quantity  FROM stock_reservation sr
-					LEFT JOIN stock_reservation_line srl on sr.id = srl.stock_reservation_id
-					where sr.allocate_flag = 2 
-					AND sr.analytic_account_id = %s 
-					AND sr.warehouse_id = %s 
-					AND sr.state='release'
-					GROUP BY srl.product_id	
-				UNION ALL
-					SELECT srl.product_id, sum(srl.quantity) AS quantity  FROM stock_reservation sr
-						LEFT JOIN stock_reservation_line srl on sr.id = srl.stock_reservation_id
-						where sr.allocate_flag = 3 
-						AND sr.analytic_account_id = %s 
-						AND sr.warehouse_id = %s 
-						AND sr.state='release'
-						GROUP BY srl.product_id
-					)generate_line
-				GROUP BY product_id
-			''' % (self.analytic_account_id.id, self.warehouse_id.id,self.analytic_account_id.id, self.warehouse_id.id,self.analytic_account_id.id, self.warehouse_id.id)
-# 			self.ensure_one()
+					SELECT  product_id, reserve_quantity as quantity
+						  FROM reservation_quant
+						  where location = %s and
+						  analytic_account_id = %s
+			''' % (self.source_loc_id.id,self.analytic_account_id.id)
 			res_ext = self.env.cr.execute(query)
 			result = self.env.cr.dictfetchall()
 
@@ -74,39 +54,12 @@ class InheritedStockReservation(models.Model):
 	@api.multi
 	def action_re_generate_line(self):
 		if self.analytic_account_id and self.warehouse_id:
-			obj_reservation = self.env['stock.reservation'].search([['analytic_account_id','=',self.analytic_account_id.id],['warehouse_id','=',self.warehouse_id.id]], limit=1)
-			
-			
 			query = '''
-				SELECT product_id, sum(quantity) AS quantity FROM(
-					SELECT srl.product_id, sum(srl.quantity) AS quantity  FROM stock_reservation sr
-						LEFT JOIN stock_reservation_line srl on sr.id = srl.stock_reservation_id
-						where sr.allocate_flag = 1 
-						AND sr.analytic_account_id = %s 
-						AND sr.warehouse_id = %s 
-						AND sr.state='reserve'
-						GROUP BY srl.product_id
-					UNION ALL
-					SELECT srl.product_id, sum(srl.quantity*-1) AS quantity  FROM stock_reservation sr
-						LEFT JOIN stock_reservation_line srl on sr.id = srl.stock_reservation_id
-						where sr.allocate_flag = 2 
-						AND sr.analytic_account_id = %s 
-						AND sr.warehouse_id = %s 
-						AND sr.state='release'
-						GROUP BY srl.product_id
-						
-					UNION ALL
-					SELECT srl.product_id, sum(srl.quantity) AS quantity  FROM stock_reservation sr
-						LEFT JOIN stock_reservation_line srl on sr.id = srl.stock_reservation_id
-						where sr.allocate_flag = 3 
-						AND sr.analytic_account_id = %s 
-						AND sr.warehouse_id = %s 
-						AND sr.state='release'
-						GROUP BY srl.product_id
-					)generate_line
-				GROUP BY product_id
-			''' % (self.analytic_account_id.id, self.warehouse_id.id,self.analytic_account_id.id, self.warehouse_id.id,self.analytic_account_id.id, self.warehouse_id.id)
-# 			self.ensure_one()
+					SELECT  product_id, reserve_quantity as quantity
+						  FROM reservation_quant
+						  where location = %s and
+						  analytic_account_id = %s
+			''' % (self.source_loc_id.id,self.analytic_account_id.id)
 			res_ext = self.env.cr.execute(query)
 			result = self.env.cr.dictfetchall()
 			
@@ -173,7 +126,8 @@ class InheritedStockReservationLine(models.Model):
 	_inherit = 'stock.reservation.line'
 	
 	allocate_qty = fields.Float(digits=(20, 2),string='Reservation Qty', default=0.0)               
-	
+	des_analytic_account_id = fields.Many2one(string='Destination Analytic Account', 
+                                          related='stock_reservation_id.des_analytic_account_id')
 	
 	@api.one
 	@api.onchange('quantity')

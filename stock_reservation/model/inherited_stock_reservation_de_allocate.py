@@ -20,40 +20,22 @@ class InheritedStockReservation(models.Model):
 			if self.allocate_flag == 3:
 				self.source_loc_id = obj_reservation.source_loc_id.id
 	
+	
+	@api.multi
+	def action_confirmed_deallocate(self):
+		self.state = "confirmed"
+		
 	@api.multi
 	def action_generate_line(self):
-		if self.analytic_account_id and self.warehouse_id:
-			obj_reservation = self.env['stock.reservation'].search([['analytic_account_id','=',self.analytic_account_id.id],['warehouse_id','=',self.warehouse_id.id]], limit=1)
+		if self.analytic_account_id and self.source_loc_id:
+		
 			query = '''
-				SELECT product_id, sum(quantity) AS quantity FROM(
-					SELECT srl.product_id, sum(srl.quantity) AS quantity  FROM stock_reservation sr
-						LEFT JOIN stock_reservation_line srl on sr.id = srl.stock_reservation_id
-						where sr.allocate_flag = 1 
-						AND sr.analytic_account_id = %s 
-						AND sr.warehouse_id = %s 
-						AND sr.state='reserve'
-						GROUP BY srl.product_id
-					UNION ALL
-					SELECT srl.product_id, sum(srl.quantity*-1) AS quantity  FROM stock_reservation sr
-						LEFT JOIN stock_reservation_line srl on sr.id = srl.stock_reservation_id
-						where sr.allocate_flag = 2 
-						AND sr.analytic_account_id = %s 
-						AND sr.warehouse_id = %s 
-						AND sr.state='release'
-						GROUP BY srl.product_id	
-					UNION ALL
-					SELECT srl.product_id, sum(srl.quantity) AS quantity  FROM stock_reservation sr
-						LEFT JOIN stock_reservation_line srl on sr.id = srl.stock_reservation_id
-						where sr.allocate_flag = 3 
-						AND sr.analytic_account_id = %s 
-						AND sr.warehouse_id = %s 
-						AND sr.state='release'
-						GROUP BY srl.product_id
-					)generate_line
-				GROUP BY product_id
-			''' % (self.analytic_account_id.id, self.warehouse_id.id,self.analytic_account_id.id, self.warehouse_id.id,self.analytic_account_id.id, self.warehouse_id.id)
-# 			self.ensure_one()
-
+					SELECT  product_id, reserve_quantity as quantity
+						  FROM reservation_quant
+						  where location = %s and
+						  analytic_account_id = %s
+			''' % (self.source_loc_id.id,self.analytic_account_id.id)
+			
 			res_ext = self.env.cr.execute(query)
 			result = self.env.cr.dictfetchall()
 			res_vals = []
@@ -92,37 +74,15 @@ class InheritedStockReservation(models.Model):
 
 	@api.multi
 	def action_re_generate_line(self):
-		if self.analytic_account_id and self.warehouse_id:
-			obj_reservation = self.env['stock.reservation'].search([['analytic_account_id','=',self.analytic_account_id.id],['warehouse_id','=',self.warehouse_id.id]], limit=1)
+		if self.analytic_account_id and self.source_loc_id:
+			
 			query = '''
-				SELECT product_id, sum(quantity) AS quantity FROM(
-					SELECT srl.product_id, sum(srl.quantity) AS quantity  FROM stock_reservation sr
-						LEFT JOIN stock_reservation_line srl on sr.id = srl.stock_reservation_id
-						where sr.allocate_flag = 1 
-						AND sr.analytic_account_id = %s 
-						AND sr.warehouse_id = %s 
-						AND sr.state='reserve'
-						GROUP BY srl.product_id
-					UNION ALL
-					SELECT srl.product_id, sum(srl.quantity*-1) AS quantity  FROM stock_reservation sr
-						LEFT JOIN stock_reservation_line srl on sr.id = srl.stock_reservation_id
-						where sr.allocate_flag = 2 
-						AND sr.analytic_account_id = %s 
-						AND sr.warehouse_id = %s 
-						AND sr.state='release'
-						GROUP BY srl.product_id
-					UNION ALL
-					SELECT srl.product_id, sum(srl.quantity) AS quantity  FROM stock_reservation sr
-						LEFT JOIN stock_reservation_line srl on sr.id = srl.stock_reservation_id
-						where sr.allocate_flag = 3 
-						AND sr.analytic_account_id = %s 
-						AND sr.warehouse_id = %s 
-						AND sr.state='release'
-						GROUP BY srl.product_id	
-					)generate_line
-				GROUP BY product_id
-			''' % (self.analytic_account_id.id, self.warehouse_id.id,self.analytic_account_id.id, self.warehouse_id.id,self.analytic_account_id.id, self.warehouse_id.id)
-# 			self.ensure_one()
+					SELECT  product_id, reserve_quantity as quantity
+						  FROM reservation_quant
+						  where location = %s and
+						  analytic_account_id = %s
+			''' % (self.source_loc_id.id,self.analytic_account_id.id)
+			
 			res_ext = self.env.cr.execute(query)
 			result = self.env.cr.dictfetchall()
 			res_vals = []

@@ -11,7 +11,7 @@
 							class="oe_highlight" states="draft" />
 						<button name="action_re_generate_line" type="object" string="Regenerate Line"
 							class="" states="generate" />
-						<button name="action_confirmed" type="object" string="Confirmed"
+						<button name="action_confirmed_reallocate" type="object" string="Confirmed"
 							class="oe_highlight" states="generate" />
 						<button name="action_release" type="object" string="Release"
 							class="oe_highlight" states="confirmed"
@@ -26,7 +26,11 @@
 								<field name="date" invisible="1" />
 								<field name="analytic_account_id"
 									options='{"no_open": True,"no_create": 1, "no_create_edit":
-											1}' />
+											1}' string="Source Analytic Account"/>
+								<field name="des_analytic_account_id"
+									options='{"no_open": True,"no_create": 1, "no_create_edit":
+											1}'/>
+											
 								<field name="allocate_flag" invisible="1" />
 							</group>
 							<group name="main_grp">

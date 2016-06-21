@@ -24,6 +24,7 @@ import inherited_stock_picking
 import stock_reservation
 import stock_reservation_line
 import inherited_stock_reservation_de_allocate
+import inherited_stock_reservation_re_allocate
 import reservation_quant
 import inherited_product_template
 import inherited_product_product
