@@ -20,7 +20,7 @@ class ConfigureEmpChecklist(models.Model):
     department=fields.Many2one('hr.department', ondelete='set null', string='Department', help='Please enter responsible department name.')
 
     #emp_checklist_ids = fields.One2many('hr.exit.configure.checklists.line','check_list_emp_id')
-    check_list_line_ids = fields.One2many('hr.exit.configure.checklists.line','check_list_line_id')
+    check_list_line_ids = fields.One2many('hr.exit.configure.checklists.line','check_list_line_id', store=True)
 
 
     @api.multi

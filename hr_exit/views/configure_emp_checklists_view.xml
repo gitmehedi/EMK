@@ -75,7 +75,7 @@
         </record>
 
         <!-- Checklist Type Menu -->
-        <menuitem id="checklist_line_menu" name="Checklist Line" parent="hr.menu_hr_configuration"
+        <menuitem id="checklist_line_menu" name="Employee Checklists" parent="exit_checklist_menu"
                   sequence="9" action="action_checklist_Line_view"/>
 
     </data>
