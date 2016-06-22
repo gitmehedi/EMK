@@ -130,7 +130,8 @@ class StockReservation(models.Model):
     @api.multi
     def write(self, vals):
 #         obj_reservation_quant = self.env['reservation.quant']
-
+        move_vals = {}
+        move_vals_1 = {}
         if('state' in vals):
             if(vals['state'] == 'reserve' or vals['state'] == 'release'):
                 for res in self:
@@ -161,15 +162,15 @@ class StockReservation(models.Model):
                                 reserve_qty = reservation_quant_obj.reserve_quantity - line.quantity
                             if(self.allocate_flag == 3):
                                 reserve_qty = reservation_quant_obj.reserve_quantity - line.quantity
-                                move_vals = {
+                                move_vals_1 = {
                                 'product_id': line.product_id.id,
                                 'reserve_quantity': line.quantity,
                                 'uom':line.uom.id,
                                 'location': self.source_loc_id.id,
                                 'analytic_account_id':line.des_analytic_account_id.id
-                            }
+                                }
                                 
-                            move_id = reservation_quant_obj.create(move_vals)
+                                move_id = reservation_quant_obj.create(move_vals_1)
                             move_vals = {
                             'reserve_quantity': reserve_qty
                         }
