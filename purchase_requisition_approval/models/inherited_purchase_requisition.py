@@ -13,8 +13,9 @@ class InheritedPurchaseRequisition(models.Model):
 	
 	_sql_constraints = [
         ('_check_date_comparison_schedule', "CHECK (create_date <= schedule_date)", "The Creation date can not be greater than Scheduled Date."),
-        ('_check_date_comparison_order_date', "CHECK (schedule_date <= ordering_date)", "The Schedule Date can not be greater than Ordering Date."),
-        ('_check_date_comparison_close_date', "CHECK (schedule_date <= date_end)", "The Schedule Date can not be greater than Closing Date.")
+        ('_check_date_comparison_order_date', "CHECK (schedule_date < ordering_date)", "The Schedule Date can not be greater than Ordering Date."),
+        ('_check_date_comparison_close_date', "CHECK (schedule_date < date_end)", "The Schedule Date can not be greater than Closing Date."),
+        ('_check_date_comparison_close_date', "CHECK (ordering_date < date_end)", "The Closing Date can not be greater than Ordering Date.")
     ] 
 	
 	
