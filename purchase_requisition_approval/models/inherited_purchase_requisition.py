@@ -1,4 +1,4 @@
-from openerp import api, fields, models
+from openerp import api, exceptions, fields, models
 from openerp import _
 from openerp.exceptions import Warning
 
@@ -11,13 +11,20 @@ class InheritedPurchaseRequisition(models.Model):
                                   'Status', required=True, readonly=True, states={'draft': [('readonly', False)]},
                                   copy=False)
 	
-	_sql_constraints = [
-        ('_check_date_comparison_schedule', "CHECK (create_date <= schedule_date)", "The Creation date can not be greater than Scheduled Date."),
-        ('_check_date_comparison_order_date', "CHECK (schedule_date < ordering_date)", "The Schedule Date can not be greater than Ordering Date."),
-        ('_check_date_comparison_close_date', "CHECK (schedule_date < date_end)", "The Schedule Date can not be greater than Closing Date."),
-        ('_check_date_comparison_close_date', "CHECK (ordering_date < date_end)", "The Closing Date can not be greater than Ordering Date.")
-    ] 
-	
+
+	@api.one
+	@api.constrains('create_date', 'schedule_date','ordering_date','date_end')
+	def _check_date_validation(self):
+		if self.create_date > self.schedule_date:
+			raise exceptions.ValidationError("The create date must be anterior to the schedule date.")
+		if self.create_date > self.date_end:
+			raise exceptions.ValidationError("The create date must be anterior to the Closing date.")
+		if self.ordering_date > self.schedule_date:
+			raise exceptions.ValidationError("The ordering date must be anterior to the schedule date.")
+		if self.schedule_date > self.date_end:
+			raise exceptions.ValidationError("The schedule date must be anterior to the Closing date.")
+		if self.ordering_date > self.date_end:
+			raise exceptions.ValidationError("The ordering date must be anterior to the Closing date.")
 	
 	@api.multi
 	def action_approved(self):

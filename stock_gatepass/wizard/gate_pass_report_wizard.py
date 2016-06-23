@@ -17,7 +17,12 @@ class GatePassReportWizard(models.TransientModel):
         ('_check_date_comparison', "CHECK ( (start_date <= end_date))", "The Start date must be lower than End date.")
     ]
 	
-	
+	@api.one
+	@api.constrains('start_date', 'end_date')
+	def _check_date_validation(self):
+		if self.start_date > self.end_date:
+			raise exceptions.ValidationError("The start date must be anterior to the end date.")
+		
 	@api.multi	
 	def action_gate_pass_report(self,data):
 		gate_pass_id = []

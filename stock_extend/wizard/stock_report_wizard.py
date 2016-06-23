@@ -12,9 +12,14 @@ class StockReportWizard(models.TransientModel):
 	stock_type = fields.Selection([('1', "Issue"), ('2', "Return"), ('3', "Transfer")],default="0")
 	source_loc = fields.Many2one('stock.location', 'Source Location')
 	desti_loc = fields.Many2one('stock.location', 'Destination Location')
-	_sql_constraints = [
-        ('_check_date_comparison', "CHECK ( (start_date <= end_date))", "The Start date must be lower than End date.")
-    ]
+	
+	
+	@api.one
+	@api.constrains('start_date', 'end_date')
+	def _check_date_validation(self):
+		if self.start_date > self.end_date:
+			raise exceptions.ValidationError("The start date must be anterior to the end date.")
+		
 	
 	"""
 	def stock_issue_report(self, cr, uid, ids, context=None):

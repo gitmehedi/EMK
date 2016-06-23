@@ -1,6 +1,6 @@
 from datetime import date, datetime, timedelta
 import time
-from openerp import api, fields, models
+from openerp import api, exceptions, fields, models
 from openerp.tools.float_utils import float_compare, float_round
 from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT, DEFAULT_SERVER_DATE_FORMAT
 from openerp import SUPERUSER_ID, api, models
@@ -26,10 +26,14 @@ class InheritedStockPicking(models.Model):
 	
 	min_date = fields.Datetime('Scheduled Date',default=datetime.now() + timedelta(hours=1), required=True, readonly=True, states={'draft': [('readonly', False)]})
 	
-	_sql_constraints = [
-        ('_check_date_comparison_pick', "CHECK (date <= min_date)", "The Creation date can not be greater than Scheduled Date.")
-    ] 
+
 	
+	@api.one
+	@api.constrains('date', 'min_date')
+	def _check_date_validation(self):
+		if self.date > self.min_date:
+			raise exceptions.ValidationError("The create date must be anterior to the schedule date.")
+		
 		   
 class InheritedStockMove(models.Model):
     _inherit = 'stock.move'

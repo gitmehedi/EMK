@@ -25,19 +25,19 @@
 								<strong>To Date:</strong>
 								<p t-esc="form['end_date']" />
 							</div>
-							<t t-if="other['source_location'] !=''">
+							<t t-if="form['source_loc'] != False">
 								<div class="col-xs-2">
 									<strong>Store:</strong>
 									<p t-esc="other['source_location']" />
 								</div>
 							</t>
-							<t t-if="other['desti_location'] !='' and form['gate_pass_type']=='1'">
+							<t t-if="form['desti_loc'] != False and form['gate_pass_type']=='1'">
 								<div class="col-xs-3">
 									<strong>Source:</strong>
 									<p t-esc="other['desti_location']" />
 								</div>
 							</t>
-							<t t-if="other['desti_location'] !='' and form['gate_pass_type']=='2'">
+							<t t-if="form['desti_loc'] != False and form['gate_pass_type']=='2'">
 								<div class="col-xs-3">
 									<strong>Destination:</strong>
 									<p t-esc="other['desti_location']" />
@@ -53,13 +53,13 @@
 								<tr>
 									<th>Date</th>
 									<th>Sl. No</th>
-									<t t-if="other['source_location'] ==''">
+									<t t-if="form['source_loc'] == False">
 										<th>Store</th>
 									</t>
-									<t t-if="other['desti_location'] =='' and form['gate_pass_type']=='1'">
+									<t t-if="form['desti_loc'] == False and form['gate_pass_type']=='1'">
 										<th>Source</th>
 									</t>
-									<t t-if="other['desti_location'] =='' and form['gate_pass_type']=='2'">
+									<t t-if="form['desti_loc'] == False and form['gate_pass_type']=='2'">
 										<th>Destination</th>
 									</t>
 									<th>Product</th>
@@ -75,12 +75,12 @@
 									<td>
 										<span t-esc="line['sl_no']" />
 									</td>
-									<t t-if="other['source_location'] ==''">
+									<t t-if="form['source_loc'] == False">
 										<td>
 											<span t-esc="line['store_loc']" />
 										</td>
 									</t>
-									<t t-if="other['desti_location'] ==''">
+									<t t-if="form['desti_loc'] == False">
 										<td>
 											<span t-esc="line['dest_loc']" />
 										</td>
