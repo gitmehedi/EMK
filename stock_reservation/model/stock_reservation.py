@@ -172,9 +172,13 @@ class StockReservation(models.Model):
                                 }
                                 
                                 move_id = reservation_quant_obj.create(move_vals_1)
+                                print "__reserve_qty__",reserve_qty
+                                print "__move_vals_1__",move_vals_1
+                                print "__move_id__",move_id
                             move_vals = {
                             'reserve_quantity': reserve_qty
-                        }
+                            }
+                            print "__move_vals__",move_vals
                             
                             move_id = reservation_quant_obj.write(move_vals)  
         return super(StockReservation, self).write(vals)
