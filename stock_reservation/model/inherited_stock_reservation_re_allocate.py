@@ -21,7 +21,15 @@ class InheritedStockReservation(models.Model):
 	@api.multi
 	def action_confirmed_reallocate(self):
 		self.state = "confirmed"
-            
+    
+	@api.multi
+	def action_release_realloc(self):
+		for line in self:
+			if line.stock_reservation_line_ids:
+				line.state = 'release'
+			else:
+				raise Warning(_('There have no item. So you can not release.'))	
+		        
 	@api.multi
 	def action_generate_line(self):
 		if self.analytic_account_id and self.source_loc_id:

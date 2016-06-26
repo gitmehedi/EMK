@@ -13,7 +13,7 @@
 							class="" states="generate" />
 						<button name="action_confirmed_reallocate" type="object" string="Confirmed"
 							class="oe_highlight" states="generate" />
-						<button name="action_release" type="object" string="Release"
+						<button name="action_release_realloc" type="object" string="Release"
 							class="oe_highlight" states="confirmed"
 							groups="stock_reservation.inventory_group_user_allocation" />
 						<button name="action_cancel" type="object" string="Cancel"
