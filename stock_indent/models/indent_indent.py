@@ -105,10 +105,11 @@ class IndentIndent(models.Model):
 	    
 	@api.multi
 	def unlink(self):
-	    if self.state != "draft":
-	        raise Warning(_('It can not be deleted'))
-	    else:
-	        return super(IndentIndent, self).unlink()
+		for line in self:
+		    if line.state != "draft":
+		        raise Warning(_('It can not be deleted'))
+		    else:
+		        return super(IndentIndent, self).unlink()
     
 	"""    
 	 @api.multi

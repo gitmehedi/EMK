@@ -1,6 +1,7 @@
 from openerp import api, exceptions, fields, models
 from openerp import _
 from openerp.exceptions import Warning
+import datetime
 
 class InheritedPurchaseRequisition(models.Model):
 	_inherit = 'purchase.requisition'
@@ -15,15 +16,16 @@ class InheritedPurchaseRequisition(models.Model):
 	@api.one
 	@api.constrains('create_date', 'schedule_date','ordering_date','date_end')
 	def _check_date_validation(self):
-		if self.create_date > self.schedule_date:
+		cr_date = datetime.datetime.strptime(self.create_date, '%Y-%m-%d %H:%M:%S').strftime('%Y-%m-%d')
+		if self.schedule_date and cr_date > self.schedule_date:
 			raise exceptions.ValidationError("The create date must be anterior to the schedule date.")
-		if self.create_date > self.date_end:
+		if self.date_end and cr_date > self.date_end:
 			raise exceptions.ValidationError("The create date must be anterior to the Closing date.")
-		if self.ordering_date > self.schedule_date:
+		if self.ordering_date and self.schedule_date and self.ordering_date > self.schedule_date:
 			raise exceptions.ValidationError("The ordering date must be anterior to the schedule date.")
-		if self.schedule_date > self.date_end:
+		if self.schedule_date and self.date_end and  self.schedule_date > self.date_end:
 			raise exceptions.ValidationError("The schedule date must be anterior to the Closing date.")
-		if self.ordering_date > self.date_end:
+		if self.date_end and self.ordering_date and  self.ordering_date > self.date_end:
 			raise exceptions.ValidationError("The ordering date must be anterior to the Closing date.")
 	
 	@api.multi
@@ -38,6 +40,14 @@ class InheritedPurchaseRequisition(models.Model):
 	def open_bid(self):
 		self.state = "open"	
 	
+	@api.multi
+	def unlink(self):
+		for line in self:
+			if line.state != "draft":
+				raise Warning(_('It can not be deleted'))
+			else:
+				return super(InheritedPurchaseRequisition, self).unlink()
+		
 	@api.multi
 	def generate_po(self, context=None):
 	    """

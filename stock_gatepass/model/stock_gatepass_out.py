@@ -41,10 +41,11 @@ class StockGatePassOut(models.Model):
         
     @api.multi
     def unlink(self):
-        if self.state == "confirm":
-            raise Warning(_('It can not be deleted'))
-        else:
-            return super(StockGatePassOut, self).unlink()
+        for line in self:
+            if line.state != "draft":
+                raise Warning(_('It can not be deleted'))
+            else:
+                return super(StockGatePassOut, self).unlink()
     
 class StockGatePassOutLine(models.Model):
     _name = "stock.gatepass.out.line"

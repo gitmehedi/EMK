@@ -86,10 +86,11 @@ class StockReservation(models.Model):
         
     @api.multi
     def unlink(self):
-        if self.state == "reserve" or self.state == "release":
-            raise Warning(_('It can not be deleted'))
-        else:
-            return super(StockReservation, self).unlink()
+        for line in self:
+            if line.state == "reserve" or line.state == "release" or line.state == "confirmed":
+                raise Warning(_('It can not be deleted'))
+            else:
+                return super(StockReservation, self).unlink()
         
     '''     
     @api.multi

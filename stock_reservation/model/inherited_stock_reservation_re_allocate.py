@@ -13,6 +13,11 @@ class InheritedStockReservation(models.Model):
 	
 	des_analytic_account_id = fields.Many2one('account.analytic.account', 'Destination Analytic Account', required=True, readonly=True, states={'draft':[('readonly', False)]})
     
+	@api.one
+	@api.constrains('analytic_account_id', 'des_analytic_account_id')
+	def _check_analytic_validation(self):
+		if self.analytic_account_id and self.des_analytic_account_id and self.analytic_account_id == self.des_analytic_account_id:
+			raise Warning(_('source analytic account and destination analytic account can not be same'))
 	@api.multi
 	def action_confirmed_reallocate(self):
 		self.state = "confirmed"
@@ -83,9 +88,7 @@ class InheritedStockReservation(models.Model):
  				if(res_vals['allocate_qty'] > 0):
 					res_line_obj.write(res_vals)
 					self.write({'state':'generate'})
-	@api.multi
-	def action_release(self):
-		self.state = 'release'	
+
 	'''
 	@api.multi
 	def action_release(self):

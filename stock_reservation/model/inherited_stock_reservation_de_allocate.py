@@ -120,7 +120,10 @@ class InheritedStockReservation(models.Model):
 			
 	@api.multi
 	def action_release(self):
-		self.state = 'release'	
+		if self.stock_reservation_line_ids:
+			self.state = 'release'
+		else:
+			raise Warning(_('There have no item. So you can not release.'))	
 		
 	'''			
 	@api.multi
