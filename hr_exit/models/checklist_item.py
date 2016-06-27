@@ -12,6 +12,8 @@ class ChecklistItem(models.Model):
     checklist_type=fields.Many2one('hr.exit.checklist.type', ondelete='set null',
                                    string='Checklist Type', required=True, help='Please select checklist type.')
 
+    checklist_item_id = fields.Many2one('hr.exit.configure.checklists.line')
+
     # keeper=fields.Many2one('hr.employee', ondelete='set null', string='Item Keeper', required=True,
     #                        help='Please enter item keeper name.')
     #

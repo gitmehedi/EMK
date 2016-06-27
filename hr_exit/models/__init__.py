@@ -5,3 +5,4 @@ import configure_checklists
 import configure_checklists_line
 import employee_exit_req
 import hr_configure_emp_checklists
+import hr_checklist_employees

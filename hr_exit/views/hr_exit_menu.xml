@@ -1,0 +1,8 @@
+<openerp>
+    <data>
+        <!-- Checklist Item Menu -->
+        <menuitem id="exit_checklist_menu" name="Exit Checklist"
+                  parent="hr.menu_hr_configuration" sequence="0"/>
+
+    </data>
+</openerp>
