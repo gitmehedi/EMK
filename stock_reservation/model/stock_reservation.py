@@ -71,10 +71,14 @@ class StockReservation(models.Model):
                     ''' %(line.product_id.id,loc_id.id,line.product_id.id,loc_id.id)
                     self.env.cr.execute(sql)
                     result = self.env.cr.dictfetchone()
+                    if line.quantity <= 0:
+                        raise Warning(_('reserve quantity can not be zero.'))
                     if line.quantity > result['qty']:
                         raise Warning(_('Reserve Quantity: '+ str(line.quantity)+' can not be greater than stock quantity: '+str(result['qty'])+'.'))
             
             self.state = "confirmed"
+        else:
+            raise Warning(_('There have no product. So you can not release.'))
     
     @api.multi
     def action_cancel(self):
@@ -82,7 +86,11 @@ class StockReservation(models.Model):
      
     @api.multi
     def action_reserve(self):
-        self.state = "reserve"
+        if self.stock_reservation_line_ids:
+            self.state = "reserve"
+        else:
+            raise Warning(_('There have no product. So you can not release.'))
+        
         
     @api.multi
     def unlink(self):

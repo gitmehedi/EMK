@@ -1,7 +1,6 @@
 from openerp import api, exceptions, fields, models
 from openerp.addons.helper import validator
 import datetime
-from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
 from openerp import _
 from openerp.exceptions import except_orm, Warning, RedirectWarning
 
@@ -25,6 +24,13 @@ class StockGatePassOut(models.Model):
     gate_pass_out_lines = fields.One2many('stock.gatepass.out.line', 'stock_gatepass_out_id', string='Products', readonly=True, states={'draft': [('readonly', False)]})
     notes = fields.Text("Notes")
     _rec_name = 'gete_pass_no'
+    
+    @api.one
+    @api.constrains('destination_location', 'store_location')
+    def _check_location_duplicate(self):
+        if self.destination_location and self.store_location and self.destination_location == self.store_location:
+            raise exceptions.ValidationError("The store location and destination location can not be same.")
+
     
     @api.one
     def action_confirm(self):

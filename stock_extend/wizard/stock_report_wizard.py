@@ -82,6 +82,8 @@ class StockReportWizard(models.TransientModel):
 		product_list = []
 		source_location_name = ""
 		desti_location_name = ""
+		source_loc = ""
+		desti_loc = ""
 		obj_picking = self.env['stock.picking']
 		if(self.stock_type=='1'):
 			stock_flag = 'stock_issue'
@@ -121,7 +123,15 @@ class StockReportWizard(models.TransientModel):
 			ids = obj_move.search([['picking_id','in',picking_id]])
 		
 		for move_line in ids:
-			dict ={'id':move_line.id,'product_name':move_line.product_id.name, 'product_qty':move_line.product_uom_qty,'product_uom':move_line.product_uom.name, 'source_loc':move_line.location_id.name,'dest_loc':move_line.location_dest_id.name}
+			if move_line.location_id.location_id:
+				source_loc = move_line.location_id.location_id.name+"/"+move_line.location_id.name
+			else:
+				source_loc = move_line.location_id.name
+			if move_line.location_dest_id.location_id:
+				desti_loc = move_line.location_dest_id.location_id.name+"/"+move_line.location_dest_id.name
+			else:
+				desti_loc = move_line.location_dest_id.name
+			dict ={'id':move_line.id,'product_name':move_line.product_id.name, 'product_qty':move_line.product_uom_qty,'product_uom':move_line.product_uom.name, 'source_loc':source_loc,'dest_loc':desti_loc}
 			product_list.append(dict)
 		data['other'] ={'source_location':source_location_name,'desti_location':desti_location_name} 
 		data['ids'] = product_list 

@@ -24,7 +24,6 @@
 					<field name="product_id" />
 					<field name="location" />
 					<field name="analytic_account_id" />
-<!-- 					<filter string="Product" name="product_id" domain="[('product_id','=',1)]" /> -->
 					<group expand="0" string="Group By...">
 						<filter name="productgroup" string="Product" context="{'group_by': 'product_id'}" />
 						<filter name="analyticgroup" string="Analytic Account" context="{'group_by': 'analytic_account_id'}" />
@@ -38,7 +37,7 @@
 			<field name="name">Reservation Quantity</field>
 			<field name="res_model">reservation.quant</field>
 			<field name="view_type">form</field>
-			<field name="view_mode">tree,form</field>
+			<field name="view_mode">tree</field>
 		</record>
 		
 		<menuitem action="action_reservation_quant_tree" id="menu_action_reservation_quant_abc"

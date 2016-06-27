@@ -1,9 +1,8 @@
 from openerp import api, exceptions, fields, models
-from openerp.addons.helper import validator
 import datetime
-from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
 from openerp import _
 from openerp.exceptions import except_orm, Warning, RedirectWarning
+
 
 class StockGatePassIn(models.Model):
     _name = "stock.gatepass.in"
@@ -29,6 +28,13 @@ class StockGatePassIn(models.Model):
     _rec_name = 'gete_pass_no'
     
     @api.one
+    @api.constrains('store_location','source_location')
+    def _check_location_duplicate(self):
+        if self.source_location and self.store_location and self.source_location == self.store_location:
+            raise exceptions.ValidationError("The store location and from location can not be same.")
+
+    
+    @api.one
     def action_confirm(self):
         self.state = 'confirm'
         res = {}
@@ -50,7 +56,7 @@ class StockGatePassIn(models.Model):
             else:
                 return super(StockGatePassIn, self).unlink()
             
-
+from openerp.addons.helper import validator
 class GatePassType(models.Model):
     _name = 'gatepass.type'
     _description = 'Gate Pass Type'

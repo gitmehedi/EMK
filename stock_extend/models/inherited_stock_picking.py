@@ -23,7 +23,7 @@ class InheritedStockPicking(models.Model):
 	good_receive_flag = fields.Boolean(string='Good Receive', default=False)
 	qc_receive_flag = fields.Boolean(string='QC Receive', default=False)
 	qc_pass_flag = fields.Boolean(string='QC Pass', default=False)
-	
+	date = fields.Datetime('Scheduled Date',default=datetime.now(), required=True, readonly=True, states={'draft': [('readonly', False)]})
 	min_date = fields.Datetime('Scheduled Date',default=datetime.now() + timedelta(hours=1), required=True, readonly=True, states={'draft': [('readonly', False)]})
 	
 
