@@ -29,7 +29,7 @@
 											1}' string="Source Analytic Account"/>
 								<field name="des_analytic_account_id"
 									options='{"no_open": True,"no_create": 1, "no_create_edit":
-											1}'/>
+											1}' attrs="{'required': True}"/>
 											
 								<field name="allocate_flag" invisible="1" />
 							</group>

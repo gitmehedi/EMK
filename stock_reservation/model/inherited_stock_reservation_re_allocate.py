@@ -11,7 +11,7 @@ class InheritedStockReservation(models.Model):
     
                                ,readonly=True, states={'draft':[('readonly', False)],'generate':[('readonly',False)]}, copy=True)
 	
-	des_analytic_account_id = fields.Many2one('account.analytic.account', 'Destination Analytic Account', required=True, readonly=True, states={'draft':[('readonly', False)]})
+	des_analytic_account_id = fields.Many2one('account.analytic.account', 'Destination Analytic Account', readonly=True, states={'draft':[('readonly', False)]})
     
 	@api.one
 	@api.constrains('analytic_account_id', 'des_analytic_account_id')
