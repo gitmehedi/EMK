@@ -76,6 +76,7 @@ class StockReservationLine(models.Model):
 
         
     @api.model
+    @api.returns('self', lambda value:value.id)
     def create(self, vals):
         self._validate_data(vals)
         return super(StockReservationLine, self).create(vals)
