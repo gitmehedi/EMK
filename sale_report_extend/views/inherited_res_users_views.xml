@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+	<data>
+		<record id="inherited_res_users_view_form_inherit_sales_report" model="ir.ui.view">
+			<field name="name">Target Amount View Form</field>
+			<field name="model">res.users</field>
+			<field name="inherit_id" ref="base.view_users_form"/>
+			<field name="arch" type="xml">			
+				<xpath
+					expr="//form/sheet/div/group/field[@name='active']"
+					position="before">
+					<field name="target_amount" string="Sales Target" />
+				</xpath>
+			</field>
+		</record>
+
+		
+	</data>
+</openerp>

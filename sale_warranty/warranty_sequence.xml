@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="1">
+
+        <!-- Sequences for sale.warranty -->
+        <record id="seq_type_sale_warranty" model="ir.sequence.type">
+            <field name="name">Warranty No</field>
+            <field name="code">sale.warranty</field>
+        </record>
+
+        <record id="seq_sale_warr" model="ir.sequence">
+            <field name="name">Warranty No</field>
+            <field name="code">sale.warranty</field>
+            <field name="prefix">SW</field>
+            <field name="padding">3</field>
+            <field name="company_id" eval="False"/>
+        </record>
+        
+        <!-- Sequences for sale.warranty.claim -->
+        <record id="seq_type_warranty_claim" model="ir.sequence.type">
+            <field name="name">Claim No</field>
+            <field name="code">sale.warranty.claim</field>
+        </record>
+
+        <record id="seq_warr_claim" model="ir.sequence">
+            <field name="name">Claim No</field>
+            <field name="code">sale.warranty.claim</field>
+            <field name="prefix">SWC</field>
+            <field name="padding">3</field>
+            <field name="company_id" eval="False"/>
+        </record>
+
+    </data>
+</openerp>

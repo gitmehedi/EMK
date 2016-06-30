@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>    
+    	<!-- res partner View -->
+        <record id="res_partnera_form_inherit" model="ir.ui.view">
+            <field name="name">res partner.form.inherit</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_partner_form"/>
+            <field name="arch" type="xml">
+            	<xpath expr='//notebook/page/group/group/field[@name="customer"]' position="replace">                    
+                </xpath>
+                <xpath expr='//notebook/page/group/group/field[@name="supplier"]' position="replace">
+                    <field name="dealer" attrs="{'invisible': [('customer','=', False)]}"/>
+                    <field name="retail" attrs="{'invisible': [('customer','=', False)]}"/>
+                    <field name="corporate" attrs="{'invisible': [('customer','=', False)]}"/>
+                    <field name="institution" attrs="{'invisible': [('customer','=', False)]}"/>
+                </xpath>
+                <xpath expr='//notebook/page/group/group/field[@name="user_id"]' position="after">
+                    <field name="customer"/>
+                    <field name="supplier"/>
+                </xpath>
+                <xpath expr="//form/sheet/group/group/field[@name='website']" position="after">
+                        <field name="area_id" placeholder="Sale Area" 
+                        		options="{&quot;no_open&quot;: True}"/>
+                </xpath>
+            </field>
+        </record>
+        
+        <!-- res partner search View -->
+        <record id="res_partnera_search_inherit" model="ir.ui.view">
+            <field name="name">res partner.search.inherit</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_res_partner_filter"/>
+            <field name="arch" type="xml">
+                <xpath expr='//filter[@name="supplier"]' position="after">
+                    <filter string="Dealers" name="dealer" domain="[('dealer','=',1)]" help="Dealer Partners"/>
+                    <filter string="Corporate" name="corporate" domain="[('corporate','=',1)]" help="Corporate Partners"/>
+                    <filter string="Institution" name="institution" domain="[('institution','=',1)]" help="Institution Partners"/>
+                    <filter string="Retailers" name="retail" domain="[('retail','=',1)]" help="Retail Partners"/>
+                </xpath>
+                <xpath expr='//field[@name="category_id"]' position="after">
+                    <field name="area_id" string="Area" filter_domain="[('area_id','ilike', self)]"/>
+                </xpath>
+            </field>
+        </record>
+        
+        <!-- Dealers -->
+        
+        <record id="action_dealer_form" model="ir.actions.act_window">
+            <field name="name">Dealers</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">res.partner</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">kanban,tree,form</field>
+            <field name="context">{'search_default_dealer': 1,'default_customer': 1, 'default_corporate': 0,'default_institution': 0,'default_retail': 0,'default_dealer': 1}</field>
+            <field name="search_view_id" ref="res_partnera_search_inherit"/>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to add a contact in your address book.
+              </p><p>
+                OpenERP helps you easily track all activities related to
+                a customer; discussions, history of business opportunities,
+                documents, etc.
+              </p>
+            </field>
+        </record>
+        
+        <record id="action_dealer_form_view1" model="ir.actions.act_window.view">
+            <field eval="0" name="sequence"/>
+            <field name="view_mode">kanban</field>
+            <field name="view_id" ref="base.res_partner_kanban_view"/>
+            <field name="act_window_id" ref="action_dealer_form"/>
+        </record>
+        
+        <record id="action_dealer_form_view2" model="ir.actions.act_window.view">
+            <field eval="2" name="sequence"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="base.view_partner_form"/>
+            <field name="act_window_id" ref="action_dealer_form"/>
+        </record>
+        
+        <record id="action_dealer_tree_view1" model="ir.actions.act_window.view">
+            <field name="sequence" eval="1"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="base.view_partner_tree"/>
+            <field name="act_window_id" ref="action_dealer_form"/>
+        </record>
+        
+        <menuitem id="menu_customers" name="Customers" parent="base.menu_base_partner" sequence="4"/>
+        <menuitem id="base.menu_partner_form" parent="menu_customers" action="base.action_partner_form" sequence="1"/>
+        <menuitem id="menu_dealer_form" parent="menu_customers" action="action_dealer_form" sequence="10"/>
+        
+        <!-- Corporate -->
+        
+        <record id="action_corporate_form" model="ir.actions.act_window">
+            <field name="name">Corporate</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">res.partner</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">kanban,tree,form</field>
+            <field name="context">{'search_default_corporate': 1,'default_customer': 1, 'default_corporate': 1,'default_institution': 0,'default_retail': 0,'default_dealer': 0}</field>
+            <field name="search_view_id" ref="res_partnera_search_inherit"/>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to add a contact in your address book.
+              </p><p>
+                OpenERP helps you easily track all activities related to
+                a customer; discussions, history of business opportunities,
+                documents, etc.
+              </p>
+            </field>
+        </record>
+        
+        <record id="action_corporate_form_view1" model="ir.actions.act_window.view">
+            <field eval="0" name="sequence"/>
+            <field name="view_mode">kanban</field>
+            <field name="view_id" ref="base.res_partner_kanban_view"/>
+            <field name="act_window_id" ref="action_corporate_form"/>
+        </record>
+        
+        <record id="action_corporate_form_view2" model="ir.actions.act_window.view">
+            <field eval="2" name="sequence"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="base.view_partner_form"/>
+            <field name="act_window_id" ref="action_corporate_form"/>
+        </record>
+        
+        <record id="action_corporate_tree_view1" model="ir.actions.act_window.view">
+            <field name="sequence" eval="1"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="base.view_partner_tree"/>
+            <field name="act_window_id" ref="action_corporate_form"/>
+        </record>
+        
+        <menuitem id="menu_corporate_form" parent="menu_customers" action="action_corporate_form" sequence="12"/>
+        
+        <!-- Institution -->
+        
+        <record id="action_institution_form" model="ir.actions.act_window">
+            <field name="name">Institution</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">res.partner</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">kanban,tree,form</field>
+            <field name="context">{'search_default_institution': 1,'default_customer': 1, 'default_corporate': 0,'default_institution': 1,'default_retail': 0,'default_dealer': 0}</field>
+            <field name="search_view_id" ref="res_partnera_search_inherit"/>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to add a contact in your address book.
+              </p><p>
+                OpenERP helps you easily track all activities related to
+                a customer; discussions, history of business opportunities,
+                documents, etc.
+              </p>
+            </field>
+        </record>
+        
+        <record id="action_institution_form_view1" model="ir.actions.act_window.view">
+            <field eval="0" name="sequence"/>
+            <field name="view_mode">kanban</field>
+            <field name="view_id" ref="base.res_partner_kanban_view"/>
+            <field name="act_window_id" ref="action_institution_form"/>
+        </record>
+        
+        <record id="action_institution_form_view2" model="ir.actions.act_window.view">
+            <field eval="2" name="sequence"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="base.view_partner_form"/>
+            <field name="act_window_id" ref="action_institution_form"/>
+        </record>
+        
+        <record id="action_institution_tree_view1" model="ir.actions.act_window.view">
+            <field name="sequence" eval="1"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="base.view_partner_tree"/>
+            <field name="act_window_id" ref="action_institution_form"/>
+        </record>
+        
+        <menuitem id="menu_institution_form" parent="menu_customers" action="action_institution_form" sequence="13"/>
+        
+        <!-- Retailers -->
+        
+        <record id="action_retail_form" model="ir.actions.act_window">
+            <field name="name">Retailers</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">res.partner</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">kanban,tree,form</field>
+            <field name="context">{'search_default_retail': 1,'default_customer': 1, 'default_corporate': 0,'default_institution': 0,'default_retail': 1,'default_dealer': 0}</field>
+            <field name="search_view_id" ref="res_partnera_search_inherit"/>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to add a contact in your address book.
+              </p><p>
+                OpenERP helps you easily track all activities related to
+                a customer; discussions, history of business opportunities,
+                documents, etc.
+              </p>
+            </field>
+        </record>
+        
+        <record id="action_retail_form_view1" model="ir.actions.act_window.view">
+            <field eval="0" name="sequence"/>
+            <field name="view_mode">kanban</field>
+            <field name="view_id" ref="base.res_partner_kanban_view"/>
+            <field name="act_window_id" ref="action_retail_form"/>
+        </record>
+        
+        <record id="action_retail_form_view2" model="ir.actions.act_window.view">
+            <field eval="2" name="sequence"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="base.view_partner_form"/>
+            <field name="act_window_id" ref="action_retail_form"/>
+        </record>
+        
+        <record id="action_retail_tree_view1" model="ir.actions.act_window.view">
+            <field name="sequence" eval="1"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="base.view_partner_tree"/>
+            <field name="act_window_id" ref="action_retail_form"/>
+        </record>
+        
+        <menuitem id="menu_retail_form" parent="menu_customers" action="action_retail_form" sequence="11"/>
+        
+        
+    </data>
+</openerp>
