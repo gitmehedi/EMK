@@ -2,19 +2,18 @@ from openerp import models, fields, api, exceptions
 
 
 class ConfigureEmpChecklist(models.Model):
-    _name = "hr.configure.emp.checklists"
+    _name = "hr.emp.master.checklists"
+
 
     # employee_id = fields.Many2one('hr.employee', select=True, invisible=False,
     #                                   default=lambda self: self.employee_gets())
     emp_name = fields.Many2one('hr.employee', string='Employee Name', help='Please enter responsible user name.')
     department = fields.Many2one('hr.department', ondelete='set null', string='Department',
                                  help='Please enter responsible department name.')
-    # check_list_item_ids = fields.Many2many('hr.exit.checklist.item', string="Checklist Items")
-    checklist_line_ids = fields.One2many('hr.exit.configure.checklists.line', 'checklist_line_id')
     state = fields.Selection([('draft', 'To Submit'), ('validate', 'Approved')], readonly=True, copy=False,
                              default='draft')
+    checklist_status_ids = fields.One2many('hr.checklist.status', 'checklist_status_id')
 
-    # is_check = fields.Boolean(string='Check', default= False, compute='_compute_check')
 
 
     @api.multi

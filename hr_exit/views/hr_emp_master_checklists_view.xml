@@ -3,12 +3,12 @@
     <data>
         <record id="checklist_line_form_view" model="ir.ui.view">
             <field name="name">checklist_line_form_view</field>
-            <field name="model">hr.configure.emp.checklists</field>
+            <field name="model">hr.emp.master.checklists</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string=" Checklist View">
                     <header>
-                        <button name="%(action_hr_checklist_employees)d" type="action" string="Generate Checklist" class="oe_highlight"/>
+                        <button name="%(action_hr_checklist_popup)d" type="action" string="Generate Checklist" class="oe_highlight"/>
                         <button string="confirm" name="check_list_submit" states="draft" type="object"/>
                         <button string="Reset to Draft" name="check_list_reset"
                                 attrs="{'invisible': [('state', 'not in', ['confirm'])]}"
@@ -25,10 +25,11 @@
 
                         <separator string="Check Lists" colspan="4"/>
                         <newline/>
-                           <field name="checklist_line_ids">
+                           <field name="checklist_status_ids">
                         <tree string="" >
-                            <field name="receive_by"/>
-                            <field name="checklist_item_ids"/>
+                            <!--<field name="receive_by"/>-->
+                            <field name="checklist_type_id"/>
+                            <field name="checklist_item_id"/>
                             <field name="is_check"/>
                         </tree>
                     </field>
@@ -39,7 +40,7 @@
         </record>
         <record id="checklist_line_tree_view" model="ir.ui.view">
             <field name="name">checklist_line_tree_view</field>
-            <field name="model">hr.configure.emp.checklists</field>
+            <field name="model">hr.emp.master.checklists</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Checklist Tree View">
@@ -66,14 +67,14 @@
         <record id="action_checklist_Line_view" model="ir.actions.act_window">
             <field name="name">Employee Checklist</field>
             <field name="type">ir.actions.act_window</field>
-            <field name="res_model">hr.configure.emp.checklists</field>
+            <field name="res_model">hr.emp.master.checklists</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="view_id" ref="checklist_line_tree_view"/>
         </record>
 
         <!-- Checklist Type Menu -->
-        <menuitem id="checklist_line_menu" name="Employee Checklists" parent="exit_checklist_menu"
+        <menuitem id="checklist_line_menu" name="Employee Checklists" parent="menu_exit_management"
                   sequence="9" action="action_checklist_Line_view"/>
 
     </data>

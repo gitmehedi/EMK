@@ -88,9 +88,6 @@
             </field>
         </record>
 
-        <menuitem id="menu_exit_management" name="Employee Exit" parent="hr.menu_hr_root"
-                  sequence="30"/>
-
         <!-- Checklist Item Action Views -->
         <record id="action_exit_req_view" model="ir.actions.act_window">
             <field name="name">Exit Management</field>
