@@ -15,7 +15,7 @@
 						<group>
 							<field name="checklist_type" />
 							<field name="name" />
-							<field name="keeper" />
+							<!--<field name="keeper" />-->
 							<field name="description" />
 							<field name="is_active" />
 						</group>
@@ -33,7 +33,7 @@
 				<tree string="Checklist Item Tree">
 					<field name="checklist_type" />
 					<field name="name" />
-					<field name="keeper" />
+					<!--<field name="keeper" />-->
 					<field name="description" />
 					<field name="is_active" />
 				</tree>
@@ -46,15 +46,21 @@
 			<field name="model">hr.exit.checklist.item</field>
 			<field name="arch" type="xml">
 				<search string="Search">
-					<field name="checklist_type" string="Checklist Type"
-						filter_domain="[('checklist_type','ilike','self')]" />
+					<!--<field name="checklist_type" string="Checklist Type"-->
+						<!--filter_domain="[('checklist_type','ilike','self')]" />-->
 					<field name="name" string="Name" filter_domain="[('name','ilike','self')]" />
-					<field name="keeper" string="Item Keeper" filter_domain="[('keeper','ilike','self')]" />
-					<field name="description" string="Description"
-						filter_domain="[('description','ilike','self')]" />
+					<!--<field name="keeper" string="Item Keeper" filter_domain="[('keeper','ilike','self')]" />-->
+					<!--<field name="description" string="Description"-->
+						<!--filter_domain="[('description','ilike','self')]" />-->
+
+					 <group expand="0" string="Group By">
+                        <filter string="Type" icon="terp-personal" domain="[]" context="{'group_by':'checklist_type'}"/>
+                    </group>
+
 				</search>
 			</field>
 		</record>
+
 
 		<!-- Checklist Item Action Views -->
 		<record id="action_checklist_item_view" model="ir.actions.act_window">
@@ -64,11 +70,15 @@
 			<field name="view_type">form</field>
 			<field name="view_mode">tree,form</field>
 			<field name="view_id" ref="checklist_item_tree_view" />
+			<!--<field name="search_view_id" ref="checklist_item_search_views"/>-->
 		</record>
 
 		<!-- Checklist Item Menu -->
+		<!--<menuitem id="exit_checklist_menu" name="Exit Checklist"-->
+			<!--parent="hr.menu_hr_configuration" sequence="6"/>-->
+
 		<menuitem id="checklist_item_menu" name="Checklist Item"
-			parent="hr.menu_hr_configuration" sequence="7"
+			parent="exit_checklist_menu" sequence="7"
 			action="action_checklist_item_view" />
 	</data>
 </openerp>

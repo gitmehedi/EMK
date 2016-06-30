@@ -65,7 +65,7 @@
 		</record>
 		
 		<!-- Checklist Type Menu -->
-		<menuitem id="checklist_type_menu" name="Checklist Type" parent="hr.menu_hr_configuration"
+		<menuitem id="checklist_type_menu" name="Checklist Type" parent="exit_checklist_menu"
 			sequence="6" action="action_checklist_type_view" />
 	</data>
 </openerp>

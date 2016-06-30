@@ -85,7 +85,7 @@
 
 		<!-- Configure Checklists Menu -->
 		<menuitem id="configure_checklists_type_menu" name="Configure Checklists"
-			parent="hr.menu_hr_configuration" sequence="8"
+			parent="exit_checklist_menu" sequence="8"
 			action="action_configure_checklists_type_view" />
 	</data>
 </openerp>
