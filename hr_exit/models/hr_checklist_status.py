@@ -7,7 +7,7 @@ class HrChecklistStatus(models.Model):
     #item_name = fields.Char(size=200, string='Name')
     #item_type = fields.Char(size=100, string='Type')
 
-    checklist_item_id = fields.Many2one('hr.exit.checklist.item', string='Name')
+    checklist_status_item_id = fields.Many2one('hr.exit.checklist.item', string='Name')
     checklist_type_id = fields.Many2one('hr.exit.checklist.type', string='Type')
     item_description = fields.Char(size=200, string='Description')
     receive_by = fields.Char(size=100, string='Received By')

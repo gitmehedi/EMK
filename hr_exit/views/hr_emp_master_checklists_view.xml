@@ -29,7 +29,7 @@
                         <tree string="" >
                             <!--<field name="receive_by"/>-->
                             <field name="checklist_type_id"/>
-                            <field name="checklist_item_id"/>
+                            <field name="checklist_status_item_id"/>
                             <field name="is_check"/>
                         </tree>
                     </field>

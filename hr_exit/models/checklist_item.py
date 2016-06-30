@@ -11,6 +11,7 @@ class ChecklistItem(models.Model):
     # Relational Fields
     checklist_type=fields.Many2one('hr.exit.checklist.type', ondelete='set null',
                                    string='Checklist Type', required=True, help='Please select checklist type.')
+    #checklist_status_item_ids = fields.One2many('hr.checklist.status','checklist_status_item_id', string='Checklist Status')
 
     checklist_item_id = fields.Many2one('hr.exit.configure.checklists.line')
 
