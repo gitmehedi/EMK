@@ -102,8 +102,17 @@ class InheritedPurchaseRequisition(models.Model):
 	        self.signal_workflow('done')
  	      	self.state = "done"
 	    return True
-	
+
+class InheritedPurchaseRequisitionLine(models.Model):
+	_inherit = 'purchase.requisition.line'	
 	 
+	@api.one
+	@api.constrains('schedule_date')
+	def _check_date_validation_line(self):
+		cr_date = datetime.datetime.strptime(self.create_date, '%Y-%m-%d %H:%M:%S').strftime('%Y-%m-%d')
+		if self.schedule_date and cr_date > self.schedule_date:
+			raise exceptions.ValidationError("The create date must be anterior to the schedule date.")
+
 class InheritPurchaseOrder(models.Model):
     _inherit = "purchase.order"
 
