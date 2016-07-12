@@ -23,15 +23,14 @@ class InheritedStockPicking(models.Model):
 	good_receive_flag = fields.Boolean(string='Good Receive', default=False)
 	qc_receive_flag = fields.Boolean(string='QC Receive', default=False)
 	qc_pass_flag = fields.Boolean(string='QC Pass', default=False)
-	date = fields.Datetime('Creation Date',default=datetime.now(), required=True, readonly=True, states={'draft': [('readonly', False)]})
-	min_date = fields.Datetime('Scheduled Date',default=datetime.now() + timedelta(hours=1), required=True, readonly=True, states={'draft': [('readonly', False)]})
+# 	date = fields.Datetime('Creation Date',default=datetime.now(), required=True, readonly=True, states={'draft': [('readonly', False)]})
+# 	min_date = fields.Datetime('Scheduled Date',default=datetime.now() + timedelta(hours=1), required=True, readonly=True, states={'draft': [('readonly', False)]})
 	
 
 	
 	@api.one
-	@api.constrains('min_date')
+	@api.constrains('date','min_date')
 	def _check_date_validation_picking(self):
-		print '----self.date---',self.date,'---min---',self.min_date
 		if self.min_date and self.date > self.min_date:
 			raise exceptions.ValidationError("The create date must be anterior to the schedule date.")
 		
