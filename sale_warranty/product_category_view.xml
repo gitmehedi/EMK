@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+    	<record model="ir.ui.view" id="view_product_category_form">
+            <field name="name">product.category.form</field>
+            <field name="model">product.category</field>
+            <field name="inherit_id" ref="product.product_category_form_view" />
+            <field name="arch" type="xml">
+            	<xpath expr="//group[@name='parent']" position="inside"> 
+            		<group name="warranty" string="Sale Conditions" colspan="2"> 
+            			<label for="warranty_period"/>
+						<div>
+							<field name="warranty_period" class="oe_inline"/> months
+						</div>
+					</group> 
+				</xpath>
+            </field>
+        </record>
+    </data>
+</openerp>

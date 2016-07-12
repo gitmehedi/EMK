@@ -1,0 +1,70 @@
+<?xml version="1.0" ?>
+<openerp>
+    <data>
+
+    <record model="workflow" id="wkf_warranty">
+        <field name="name">sale.wkf.warranty</field>
+        <field name="osv">sale.warranty</field>
+        <field name="on_create">True</field>
+    </record>
+
+    <record model="workflow.activity" id="act_draft"> <!-- draft -->
+        <field name="wkf_id" ref="wkf_warranty" />
+        <field name="flow_start">True</field>
+        <field name="name">draft</field>
+    </record>
+
+    <record id="act_reject" model="workflow.activity"> <!-- reject -->
+        <field name="wkf_id" ref="wkf_warranty"/>
+        <field name="name">reject</field>
+        <field name="flow_stop" eval="True"/>
+        <field name="kind">function</field>
+        <field name="action">sale_refuse()</field>
+    </record>
+    <record id="act_confirmed" model="workflow.activity"> <!-- confirmed -->
+        <field name="wkf_id" ref="wkf_warranty"/>
+        <field name="name">confirm</field>
+        <field name="kind">function</field>
+        <field name="action">sale_confirm()</field>
+        <field name="flow_start" eval="False"/>   
+     </record>
+     <record id="act_approved" model="workflow.activity"> <!-- approved -->
+        <field name="wkf_id" ref="wkf_warranty"/>
+        <field name="name">approve</field>
+        <field name="kind">function</field>
+        <field name="action">sale_approved()</field>
+     </record>
+     <record id="act_done" model="workflow.activity">   <!-- done -->
+         <field name="wkf_id" ref="wkf_warranty"/>
+         <field name="name">done</field>
+        <field name="flow_stop" eval="True"/>
+        <field name="kind">function</field>
+        <field name="action">sale_done()</field>
+     </record>
+                <!-- workflow.transition -->
+     
+     <record id="trans_draft_confirmed" model="workflow.transition"> <!-- draft_confirmed -->
+         <field name="act_from" ref="act_draft"/>
+         <field name="act_to" ref="act_confirmed"/>
+         <field name="signal">confirm</field>
+     </record>
+     <record id="trans_confirmed_reject" model="workflow.transition"> <!-- confirmed_reject -->
+         <field name="act_from" ref="act_confirmed"/>
+         <field name="act_to" ref="act_reject"/>
+         <field name="signal">reject</field>
+     </record>
+     <record id="trans_confirmed_approved" model="workflow.transition"> <!-- confirmed_approved -->
+         <field name="act_from" ref="act_confirmed"/>
+         <field name="act_to" ref="act_approved"/>
+         <field name="signal">approve</field>
+     </record>
+     <record id="trans_approved_done" model="workflow.transition"> <!-- approved_done -->
+         <field name="act_from" ref="act_approved"/>
+         <field name="act_to" ref="act_done"/>
+         <field name="signal">done</field>
+     </record>   
+    
+   
+
+    </data>
+</openerp>

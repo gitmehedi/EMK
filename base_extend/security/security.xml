@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+<data noupdate="0">
+
+    <record id="group_product_salesprice_editor" model="res.groups">
+        <field name="name">Product Sales Price Editor</field>
+    </record>
+    
+    <record id="group_product_costprice_editor" model="res.groups">
+        <field name="name">Product Cost Price Editor</field>
+    </record>
+    
+    
+</data>
+</openerp>

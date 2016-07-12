@@ -1,0 +1,5 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_indent_warehouse_user,indent.warehouse.user,stock_indent.model_indent_indent,stock.group_stock_user,1,1,1,0
+access_indent_warehouse_manager,indent.warehouse.manager,stock_indent.model_indent_indent,stock.group_stock_manager,1,1,1,1
+access_indentline_warehouse_manager,indentline.warehouse.manager,stock_indent.model_indent_product_lines,stock.group_stock_manager,1,1,1,1
+access_indentline_warehouse_user,indentline.warehouse.user,stock_indent.model_indent_product_lines,stock.group_stock_user,1,1,1,1

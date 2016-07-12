@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+<data noupdate="0">
+
+    <record id="group_head_sale" model="res.groups">
+        <field name="name">Head of Sales</field>
+    </record>
+    
+    <record id="group_head_operation" model="res.groups">
+        <field name="name">Head of Sales Operation</field>
+    </record>
+    
+    <record id="group_customer_support" model="res.groups">
+        <field name="name">Customer Support Officer</field>
+    </record>
+    
+    <record id="group_sale_officer" model="res.groups">
+        <field name="name">Sales Support Officer</field>
+    </record>
+    
+    <record id="group_area_manager" model="res.groups">
+        <field name="name">Area Manager</field>
+    </record>
+    
+    <record id="group_territory_officer" model="res.groups">
+        <field name="name">Territory Sales Officer</field>
+    </record>
+    
+    <record model="ir.rule" id="partner_area_rule">
+        <field name="name">Area wise Partner</field>
+        <field name="model_id" search="[('model','=','res.partner')]" model="ir.model"/>
+        <field name="global" eval="True"/>
+        <field name="domain_force">['|',('area_id','=',False),('area_id','child_of',[user.area_id.id])]</field>
+    </record>
+    
+
+</data>
+</openerp>

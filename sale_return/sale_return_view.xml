@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+    
+    	<menuitem id="menu_base_return" parent="base.menu_base_partner" 
+    				name="Sales Return" sequence="25" groups="group_sales_return"/>
+    				
+    	<record id="view_picking_inherit_form_inherit" model="ir.ui.view">
+            <field name="name">stock.picking.form.inherit</field>
+            <field name="model">stock.picking</field>
+            <field name="inherit_id" ref="stock.view_picking_form"/>
+            <field name="arch" type="xml">
+            	<xpath expr='//page[@string="Additional Info"]/group[@string="General Informations"]/group/field[@name="picking_type_id"]' position="replace">
+                	<field name="sale_return" invisible="1"/>
+                </xpath>
+                <xpath expr='//sheet/group/group/field[@name="origin"]' position="after">
+                	<field name="picking_type_id"/>
+                </xpath>
+            </field>
+        </record>
+        
+        <record id="action_picking_return" model="ir.actions.act_window">
+            <field name="name">Sales Return</field>
+            <field name="res_model">stock.picking</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('sale_return','=','True')]</field>
+            <field name="context">{	'contact_display': 'partner_address', 
+            						'default_invoice_state': '2binvoiced',
+            						'default_sale_return': 'True',}</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to create a sales return. 
+              </p><p>
+                The Sales Return is the list of all orders you will
+                receive from your customer. An incoming shipment contains a
+                list of products to be received according to the original
+                sales order.
+              </p>
+            </field>
+        </record>
+        
+        <record id="action_picking_return_view1" model="ir.actions.act_window.view">
+            <field eval="1" name="sequence"/>
+            <field name="view_mode">tree</field>
+            <!--field name="view_id" ref="view_picking_in_tree"/-->
+            <field name="act_window_id" ref="action_picking_return"/>
+        </record>
+        
+        <record id="action_picking_return_view2" model="ir.actions.act_window.view">
+            <field eval="2" name="sequence"/>
+            <field name="view_mode">form</field>
+            <!--field name="view_id" ref="view_sales_return_form"/-->
+            <field name="act_window_id" ref="action_picking_return"/>
+        </record>
+        
+		<menuitem action="action_picking_return" id="menu_action_picking_return" 
+					parent="menu_base_return" sequence="1" groups="group_sales_return"/>        
+        
+        
+    </data>
+</openerp>
