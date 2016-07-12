@@ -17,6 +17,7 @@ class InheritedPurchaseRequisition(models.Model):
 	@api.constrains('create_date', 'schedule_date','ordering_date','date_end')
 	def _check_date_validation(self):
 		cr_date = datetime.datetime.strptime(self.create_date, '%Y-%m-%d %H:%M:%S').strftime('%Y-%m-%d')
+		print '----cr_date---',cr_date,'---schedule---',self.schedule_date
 		if self.schedule_date and cr_date > self.schedule_date:
 			raise exceptions.ValidationError("The create date must be anterior to the schedule date.")
 		if self.date_end and cr_date > self.date_end:

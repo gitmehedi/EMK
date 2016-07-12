@@ -30,8 +30,9 @@ class InheritedStockPicking(models.Model):
 	
 	@api.one
 	@api.constrains('date', 'min_date')
-	def _check_date_validation(self):
-		if self.date > self.min_date:
+	def _check_date_validation_picking(self):
+		print '----self.date---',self.date,'---min---',self.min_date
+		if self.min_date and self.date > self.min_date:
 			raise exceptions.ValidationError("The create date must be anterior to the schedule date.")
 		
 		   
