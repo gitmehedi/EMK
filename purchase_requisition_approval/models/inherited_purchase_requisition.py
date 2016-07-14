@@ -13,21 +13,21 @@ class InheritedPurchaseRequisition(models.Model):
                                   copy=False)
 	
 
-	@api.one
-	@api.constrains('create_date', 'schedule_date','ordering_date','date_end')
-	def _check_date_validation(self):
-		cr_date = datetime.datetime.strptime(self.create_date, '%Y-%m-%d %H:%M:%S').strftime('%Y-%m-%d')
-		if self.schedule_date and cr_date > self.schedule_date:
-			raise exceptions.ValidationError("The create date must be anterior to the schedule date.")
-		if self.date_end and cr_date > self.date_end:
-			raise exceptions.ValidationError("The create date must be anterior to the Closing date.")
-		if self.ordering_date and self.schedule_date and self.ordering_date > self.schedule_date:
-			raise exceptions.ValidationError("The ordering date must be anterior to the schedule date.")
-		if self.schedule_date and self.date_end and  self.schedule_date > self.date_end:
-			raise exceptions.ValidationError("The schedule date must be anterior to the Closing date.")
-		if self.date_end and self.ordering_date and  self.ordering_date > self.date_end:
-			raise exceptions.ValidationError("The ordering date must be anterior to the Closing date.")
-	
+# 	@api.one
+# 	@api.constrains('create_date', 'schedule_date','ordering_date','date_end')
+# 	def _check_date_validation(self):
+# 		cr_date = datetime.datetime.strptime(self.create_date, '%Y-%m-%d %H:%M:%S').strftime('%Y-%m-%d')
+# 		if self.schedule_date and cr_date > self.schedule_date:
+# 			raise exceptions.ValidationError("The create date must be anterior to the schedule date.")
+# 		if self.date_end and cr_date > self.date_end:
+# 			raise exceptions.ValidationError("The create date must be anterior to the Closing date.")
+# 		if self.ordering_date and self.schedule_date and self.ordering_date > self.schedule_date:
+# 			raise exceptions.ValidationError("The ordering date must be anterior to the schedule date.")
+# 		if self.schedule_date and self.date_end and  self.schedule_date > self.date_end:
+# 			raise exceptions.ValidationError("The schedule date must be anterior to the Closing date.")
+# 		if self.date_end and self.ordering_date and  self.ordering_date > self.date_end:
+# 			raise exceptions.ValidationError("The ordering date must be anterior to the Closing date.")
+
 	@api.multi
 	def action_approved(self):
 		self.state = "approved"
@@ -106,12 +106,12 @@ class InheritedPurchaseRequisition(models.Model):
 class InheritedPurchaseRequisitionLine(models.Model):
 	_inherit = 'purchase.requisition.line'	
 	 
-	@api.one
-	@api.constrains('schedule_date')
-	def _check_date_validation_line(self):
-		cr_date = datetime.datetime.strptime(self.create_date, '%Y-%m-%d %H:%M:%S').strftime('%Y-%m-%d')
-		if self.schedule_date and cr_date > self.schedule_date:
-			raise exceptions.ValidationError("The create date must be anterior to the schedule date.")
+# 	@api.one
+# 	@api.constrains('schedule_date')
+# 	def _check_date_validation_line(self):
+# 		cr_date = datetime.datetime.strptime(self.create_date, '%Y-%m-%d %H:%M:%S').strftime('%Y-%m-%d')
+# 		if self.schedule_date and cr_date > self.schedule_date:
+# 			raise exceptions.ValidationError("The create date must be anterior to the schedule date.")
 
 class InheritPurchaseOrder(models.Model):
     _inherit = "purchase.order"
