@@ -171,6 +171,7 @@ class StockReservation(models.Model):
                                 reserve_qty = reservation_quant_obj.reserve_quantity - line.quantity
                             if(self.allocate_flag == 3):
                                 reserve_qty = reservation_quant_obj.reserve_quantity - line.quantity
+                                
                                 move_vals_1 = {
                                 'product_id': line.product_id.id,
                                 'reserve_quantity': line.quantity,
@@ -178,8 +179,15 @@ class StockReservation(models.Model):
                                 'location': self.source_loc_id.id,
                                 'analytic_account_id':line.des_analytic_account_id.id
                                 }
-                                
-                                move_id = reservation_quant_obj.create(move_vals_1)
+                                reservation_quant_re_obj = self.env['reservation.quant'].search([['product_id', '=', line.product_id.id], ['location', '=', self.source_loc_id.id], ['analytic_account_id', '=', line.des_analytic_account_id.id]])
+                                if not reservation_quant_re_obj:
+                                    move_id = reservation_quant_re_obj.create(move_vals_1)
+                                else:
+                                    reserve_re_qty = reservation_quant_re_obj.reserve_quantity + line.quantity
+                                    move_vals1 = {
+                                        'reserve_quantity': reserve_re_qty
+                                        }
+                                    move_id = reservation_quant_re_obj.write(move_vals1)  
                             move_vals = {
                             'reserve_quantity': reserve_qty
                             }
