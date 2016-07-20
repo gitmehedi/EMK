@@ -28,12 +28,12 @@ class InheritedStockPicking(models.Model):
 	
 
 	
-# 	@api.one
-# 	@api.constrains('date','min_date')
-# 	def _check_date_validation_picking(self):
-# 		if self.min_date and self.date > self.min_date:
-# 			raise exceptions.ValidationError("The create date must be anterior to the schedule date.")
-# 		
+	@api.one
+	@api.constrains('date','min_date')
+	def _check_date_validation_picking(self):
+		if self.min_date and self.date > self.min_date:
+			raise exceptions.ValidationError("The create date must be anterior to the schedule date.")
+ 		
 		   
 class InheritedStockMove(models.Model):
     _inherit = 'stock.move'
