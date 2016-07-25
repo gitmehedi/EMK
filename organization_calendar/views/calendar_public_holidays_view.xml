@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+        <!-- Checklist Type Form Views -->
+        <record id="calendar_public_holiday_form_view" model="ir.ui.view">
+            <field name="name">calendar_public_holiday_form</field>
+            <field name="model">calendar.public.holiday</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Public Holiday">
+
+                    <sheet>
+                        <group>
+                            <field name="name"/>
+                            <field name="type"/>
+                            <field name="date"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- Checklist Type Tree Views -->
+        <record id="calendar_public_holiday_tree_view" model="ir.ui.view">
+            <field name="name">calendar_public_holiday_tree</field>
+            <field name="model">calendar.public.holiday</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Public Holiday Tree">
+                    <field name="name"/>
+                    <field name="type"/>
+                    <field name="date"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- Checklist Type Search Views -->
+        <record id="checklist_type_search_view" model="ir.ui.view">
+            <field name="name">calendar_public_holiday_search</field>
+            <field name="model">calendar.public.holiday</field>
+            <field name="arch" type="xml">
+                <search string="Search">
+                    <field name="name" string="Name" filter_domain="[('name','ilike','self')]" />
+                </search>
+            </field>
+        </record>
+
+        <!-- Checklist Type Action Views -->
+        <record id="action_calendar_type_view" model="ir.actions.act_window">
+            <field name="name">Calendar Public Type</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">calendar.public.holiday</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="calendar_public_holiday_tree_view"/>
+        </record>
+
+        <!-- Checklist Type Menu -->
+        <menuitem id="calendar_public_holiday_type_menu" name="Public Holiday" parent="calendar_holiday_config_menu"
+                  sequence="6" action="action_calendar_type_view"/>
+    </data>
+</openerp>
