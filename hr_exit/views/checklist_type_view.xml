@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+	<data>
+		<!-- Checklist Type Form Views -->
+		<record id="checklist_type_form_view" model="ir.ui.view">
+			<field name="name">checklist.type.form</field>
+			<field name="model">hr.exit.checklist.type</field>
+			<field name="type">form</field>
+			<field name="arch" type="xml">
+				<form string="Checklist Type Form">
+					<header>
+						<field name="id" invisible="1" />			
+					</header>
+					<sheet>
+						<group>
+							<field name="code" />
+							<field name="name" />
+							<field name="description" />
+							<field name="is_active" />
+						</group>
+					</sheet>
+				</form>
+			</field>
+		</record>
+		
+		<!-- Checklist Type Tree Views -->
+		<record id="checklist_type_tree_view" model="ir.ui.view">
+			<field name="name">checklist.type.tree</field>
+			<field name="model">hr.exit.checklist.type</field>
+			<field name="type">tree</field>
+			<field name="arch" type="xml">
+				<tree string="Checklist Type Tree">
+					<field name="code" />
+					<field name="name" />
+					<field name="description" />
+					<field name="is_active" />
+				</tree>
+			</field>
+		</record>
+		
+		<!-- Checklist Type Search Views -->
+		<record id="checklist_type_search_view" model="ir.ui.view">
+			<field name="name">checklist.type.search</field>
+			<field name="model">hr.exit.checklist.type</field>
+			<field name="arch" type="xml">
+				<search string="Search">
+					<field name="code" string="Code" filter_domain="[('code','ilike','self')]"
+						/>
+					<field name="name" string="Name" filter_domain="[('name','ilike','self')]"
+						/>
+					<field name="description" string="Description" filter_domain="[('description','ilike','self')]"
+						/>
+				</search>
+			</field>
+		</record>
+		
+		<!-- Checklist Type Action Views -->
+		<record id="action_checklist_type_view" model="ir.actions.act_window">
+			<field name="name">Checklist Type</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">hr.exit.checklist.type</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+			<field name="view_id" ref="checklist_type_tree_view" />
+		</record>
+		
+		<!-- Checklist Type Menu -->
+		<menuitem id="checklist_type_menu" name="Checklist Type" parent="exit_checklist_menu"
+			sequence="6" action="action_checklist_type_view" />
+	</data>
+</openerp>

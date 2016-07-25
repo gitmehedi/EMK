@@ -1,0 +1,168 @@
+<?xml version="1.0" ?>
+<openerp>
+    <data>
+        <record model="workflow" id="wkf_emp_exit">
+            <field name="name">hr.wkf.emp.exit.req</field>
+            <field name="osv">hr.emp.exit.req</field>
+            <field name="on_create">True</field>
+        </record>
+        <record model="workflow.activity" id="act_exit_draft"> <!-- draft -->
+            <field name="wkf_id" ref="wkf_emp_exit"/>
+            <field name="name">draft</field>
+            <field name="flow_start" eval="True"/>
+            <field name="kind">function</field>
+            <field name="action">exit_reset()</field>
+        </record>
+        <record model="workflow.activity" id="act_exit_confirm"> <!-- submitted -->
+            <field name="wkf_id" ref="wkf_emp_exit"/>
+            <field name="name">confirm</field>
+            <field name="flow_start" eval="False"/>
+            <field name="kind">function</field>
+            <field name="action">exit_confirm()</field>
+            <field name="split_mode">OR</field>
+        </record>
+
+        <record model="workflow.activity" id="act_exit_validate"> <!-- submitted -->
+            <field name="wkf_id" ref="wkf_emp_exit"/>
+            <field name="name">validate</field>
+            <field name="kind">function</field>
+            <field name="action">exit_validate()</field>
+
+        </record>
+
+        <record model="workflow.activity" id="act_exit_validate1"> <!-- first_accepted -->
+            <field name="wkf_id" ref="wkf_emp_exit"/>
+            <field name="name">first_validate</field>
+            <field name="kind">function</field>
+            <field name="action">exit_first_validate()</field>
+            <field name="split_mode">OR</field>
+        </record>
+        <record model="workflow.activity" id="act_exit_validate2"> <!-- first_accepted -->
+            <field name="wkf_id" ref="wkf_emp_exit"/>
+            <field name="name">second_validate</field>
+            <field name="kind">function</field>
+            <field name="action">holidays_second_validate()</field>
+            <field name="split_mode">OR</field>
+        </record>
+
+
+        <record model="workflow.activity" id="act_exit_refuse"> <!-- refused -->
+            <field name="wkf_id" ref="wkf_emp_exit"/>
+            <field name="name">refuse</field>
+            <field name="flow_stop" eval="False"/>
+            <field name="kind">function</field>
+            <field name="action">exit_refuse()</field>
+        </record>
+
+
+        <!-- transition  -->
+
+        <record model="workflow.transition" id="exit_draft2confirm"> <!-- 1. draft->submitted (confirm signal) -->
+            <field name="act_from" ref="act_exit_draft"/>
+            <field name="act_to" ref="act_exit_confirm"/>
+            <field name="signal">confirm</field>
+            <field name="condition">True</field>
+            <!--<field name="group_id" ref="base.group_user"/>-->
+        </record>
+
+        <record model="workflow.transition" id="exit_confirm2draft"> <!-- 2. submitted->draft (reset signal) -->
+            <field name="act_from" ref="act_exit_confirm"/>
+            <field name="act_to" ref="act_exit_draft"/>
+            <field name="signal">reset</field>
+            <field name="condition">True</field>
+            <!--<field name="group_id" ref="base.group_user"/>-->
+        </record>
+
+        <record model="workflow.transition" id="exit_confirm2validate"> <!-- 2. submitted->accepted (validate signal) if not double_validation-->
+            <field name="act_from" ref="act_exit_confirm"/>
+            <field name="act_to" ref="act_exit_validate"/>
+            <field name="signal">validate manager</field>
+            <field name="condition">True</field>
+            <!--<field name="group_id" ref="base.group_hr_user"/>-->
+        </record>
+
+        <record model="workflow.transition"
+                id="exit_confirm2validate1"> <!-- 2. submitted -> first_accepted (validate signal) if double_validation-->
+            <field name="act_from" ref="act_exit_confirm"/>
+            <field name="act_to" ref="act_exit_validate1"/>
+            <field name="signal">validate hr</field>
+            <field name="condition">True</field>
+            <!--<field name="group_id" ref="base.group_hr_user"/>-->
+        </record>
+        <record model="workflow.transition"
+                id="exit_confirm2validate2"> <!-- 2. submitted -> first_accepted (validate signal) if double_validation-->
+            <field name="act_from" ref="act_exit_confirm"/>
+            <field name="act_to" ref="act_exit_validate2"/>
+            <field name="signal">validate D.Mana.</field>
+            <field name="condition">True</field>
+            <!--<field name="group_id" ref="base.group_hr_user"/>-->
+        </record>
+        <record model="workflow.transition"
+                id="exit_validate12validate2"> <!-- 2. submitted -> first_accepted (validate signal) if double_validation-->
+            <field name="act_from" ref="act_exit_validate1"/>
+            <field name="act_to" ref="act_exit_validate2"/>
+            <field name="signal">validate hr</field>
+            <field name="condition">True</field>
+            <!--<field name="group_id" ref="base.group_hr_user"/>-->
+        </record>
+        <record model="workflow.transition"
+                id="exit_validate2validate"> <!-- 2. submitted -> first_accepted (validate signal) if double_validation-->
+            <field name="act_from" ref="act_exit_validate2"/>
+            <field name="act_to" ref="act_exit_validate"/>
+            <field name="signal">validate hr</field>
+            <field name="condition">True</field>
+            <!--<field name="group_id" ref="base.group_hr_user"/>-->
+        </record>
+
+        <record model="workflow.transition" id="exit_confirm2refuse1"> <!-- 2. submitted->refused (refuse signal) -->
+            <field name="act_from" ref="act_exit_confirm"/>
+            <field name="act_to" ref="act_exit_refuse"/>
+            <field name="signal">refuse</field>
+            <field name="condition">True</field>
+            <!--<field name="group_id" ref="base.group_hr_user"/>-->
+        </record>
+
+        <record model="workflow.transition" id="exit_validate2refuse3"> <!-- 3. accepted->refused (refuse signal) -->
+            <field name="act_from" ref="act_exit_validate2"/>
+            <field name="act_to" ref="act_exit_refuse"/>
+            <field name="signal">refuse</field>
+            <field name="condition">True</field>
+            <!--<field name="group_id" ref="base.group_hr_user"/>-->
+        </record>
+
+        <record model="workflow.transition" id="exit_validate2refuse"> <!-- 3. accepted->refused (refuse signal) -->
+            <field name="act_from" ref="act_exit_validate"/>
+            <field name="act_to" ref="act_exit_refuse"/>
+            <field name="signal">refuse</field>
+            <field name="condition">True</field>
+            <!--<field name="group_id" ref="base.group_hr_user"/>-->
+        </record>
+
+        <record model="workflow.transition"
+                id="exit_validate1_validate"> <!-- 4. first_accepted -> accepted (second_validate  signal) -->
+            <field name="act_from" ref="act_exit_validate1"/>
+            <field name="act_to" ref="act_exit_validate"/>
+            <field name="condition">True</field>
+            <field name="signal">second_validate</field>
+            <!--<field name="group_id" ref="base.group_hr_user"/>-->
+        </record>
+
+        <record model="workflow.transition"
+                id="exit_validate1_refuse"> <!-- 4. first_accepted->refused (refuse signal) -->
+            <field name="act_from" ref="act_exit_validate1"/>
+            <field name="act_to" ref="act_exit_refuse"/>
+            <field name="signal">refuse</field>
+            <field name="condition">True</field>
+            <!--<field name="group_id" ref="base.group_hr_user"/>-->
+        </record>
+
+        <record model="workflow.transition" id="exit_refuse2draft"> <!-- 5. refused->draft (reset signal) -->
+            <field name="act_from" ref="act_exit_refuse"/>
+            <field name="act_to" ref="act_exit_draft"/>
+            <field name="signal">reset</field>
+            <field name="condition">True</field>
+            <!--<field name="group_id" ref="base.group_hr_user"/>-->
+        </record>
+
+    </data>
+</openerp>
