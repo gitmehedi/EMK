@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+    
+		<template id="report.internal_layout_1">
+		    <!-- Multicompany -->
+		    <t t-if="o and 'company_id' in o">
+		        <t t-set="company" t-value="o.company_id"></t>
+		    </t>
+		    <t t-if="not o or not 'company_id' in o">
+		        <t t-set="company" t-value="res_company"></t>
+		    </t>
+		
+		    <div class="header">
+		        <div class="row">
+		            <div class="col-xs-8 col-xs-offset-2 text-center">
+		                <span t-esc="company.name"/><br/>
+		                <span t-esc="company.street"/><br/>
+		                <span t-esc="company.street2"/>,
+		                <span t-esc="company.city"/>-
+		                <span t-esc="company.zip"/><br/>
+		                Phone: <span t-esc="company.phone"/>
+		            </div>
+		            
+		        </div>
+		    </div>
+		    <t t-raw="0" />
+		</template>
+    	
+    	
+        <template id="report_money_receipt">
+            <t t-call="report.html_container">
+                <t t-foreach="docs" t-as="o">
+                    <t t-call="report.internal_layout_1">
+                        <div class="page">
+                           <p class="text-center"><strong>MONEY RECEIPT</strong></p>
+                           <table class="table">
+                           		<thead>
+                            		<tr>
+                                		<th>No: <span t-field="o.number"/></th>
+                                		<th class="text-right">Date: <span t-field="o.date"/></th>
+                            		</tr>
+                        		</thead>
+                     	   </table>
+                     	   
+                     	   <div class="row mt32 mb32" id="money">
+                        	<div class="col-xs-8">
+                           <table class="table-condensed">
+                           		<tr>
+                            		<td class="table-condensed border-black">Customer Code:</td>
+                            		<td><span t-field="o.partner_id.ref"/></td>
+                        		</tr>
+                        		<tr>
+                            		<td>Received with thanks from:</td>
+                            		<td><span t-field="o.partner_id.name"/></td>
+                        		</tr>
+                        		<tr>
+                            		<td>Address :</td>
+                            		<td><span t-field="o.partner_id.street"/></td>
+                        		</tr>
+                        		<tr>
+                            		<td>A sum of :</td>
+                            		<td><span t-field="o.amount"/></td>
+                        		</tr>
+                        		<tr>
+                            		<td>In word :</td>
+                            		<td><span t-field="o.amount_text"/></td>
+                        		</tr>
+                        		<tr>
+                            		<td>Bank Name :</td>
+                            		<td><span t-field="o.bank_id"/></td>
+                        		</tr>
+                        		<tr>
+                            		<td>Branch Name :</td>
+                            		<td><span t-field="o.branch_name"/></td>
+                        		</tr>
+                        		<tr>
+                            		<td>Cheque/DD/PO NO :</td>
+                            		<td><span t-field="o.cheque_no"/></td>
+                        		</tr>
+                        		<tr>
+                            		<td>Received Date :</td>
+                            		<td><span t-field="o.receipt_date"/></td>
+                        		</tr>
+                        		
+                           	</table>
+                           	</div>
+                           	<div class="col-xs-4">
+                           	<table class="table-condensed">
+                           		<tr>
+                            		<td>Mobile:</td>
+                            		<td><span t-field="o.partner_id.mobile"/></td>
+                        		</tr>
+                           	</table>
+                           	</div>
+                        </div>   	
+                           
+                          
+            			   <div class="row mt32 mb32">
+                        	<div class="col-xs-4">
+                           	<tr class="text-right">
+                            		<td>  </td>
+                        		</tr>
+                           	</div>
+                           	<div class="col-xs-4">
+                           	<table class="table-condensed">
+                           		<tr class="text-right">
+                            		<td>  </td>
+                        		</tr>
+                           	</table>
+                           	</div>
+                           	<div class="col-xs-4">
+                           	<table class="table-condensed">
+                           		<tr class="border-black">
+                            		<td>Authorized Signatories</td>
+                        		</tr>
+                           	</table>
+                           	</div>
+                        </div>  
+                                
+                        </div>
+                    </t>
+                 </t>
+             </t>
+        </template>
+    </data>
+</openerp>

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        
+        <report 
+            string="Money Receipt" 
+            id="action_report_account_voucher" 
+            model="account.voucher" 
+            report_type="qweb-pdf"
+            name="print_receipt.report_money_receipt" 
+            file="print_receipt.report_money_receipt" 
+        />
+        
+        <record id="paperformat_Landscape1" model="report.paperformat">
+		    <field name="name">Landscape Report1</field>
+		    <field name="orientation">Landscape</field>
+		    <field name="format">A4</field>
+		    <field name="header_line" eval="False"/>
+		</record>
+        
+    </data>
+</openerp>

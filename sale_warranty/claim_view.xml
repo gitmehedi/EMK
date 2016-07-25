@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+    
+    <!-- sale.warranty.claim Tree View  -->
+    
+    <record model="ir.ui.view" id="sale_claim_view">
+        <field name="name">Sale Warranty Claim</field>
+        <field name="model">sale.warranty.claim</field>
+        <field name="type">tree</field>
+        <field name="arch" type="xml">
+           <tree string=" Claim">
+              <field name="claim_date"/>
+              <field name="name"/>
+              <field name="dealer_id"/>
+              <field name="customer_name"/>
+              <field name="state"/>
+           </tree>
+        </field>
+    </record>
+    
+    <!-- sale.warranty.claim Form View -->
+     
+        <record id="sale_claim_form" model="ir.ui.view">
+            <field name="name">sale.warranty.claim.form</field>
+            <field name="model">sale.warranty.claim</field>
+            <field name="arch" type="xml">
+                <form string="Sale Warranty Claim" version="7.0">
+                <header>
+                    <button string="Confirm" name="confirm" states="draft" type="object" class="oe_highlight"/>
+                    <button string="Approve" name="approved" states="receive" type="object" class="oe_highlight"/>
+                    <button string="Reject" name="reject" states="draft,confirm,receive" type="object" class="oe_highlight"/>
+                    
+                    <button name="%(action_stock_move_claim)d" class="oe_highlight"
+                       string="Receive Product(s)" type="action"
+                       icon="terp-gtk-jump-to-ltr" context="{'scrap': True}"
+                       states="confirm" groups="base.group_user"/>
+                    
+                    <button string="Done" name="done" states="approve" type="object" class="oe_highlight"/>
+                    <field name="state" widget="statusbar" />
+                </header>
+                <sheet>
+                    <h1>
+                        <label string="Claim No. "  attrs="{'invisible': [('state','not in',('draft'))]}"/>
+                        <field name="name" class="oe_inline" readonly="1"/>
+                    </h1>
+                    <group>
+                        <group>
+                        	<field name="warranty_id" attrs="{'readonly': [('state','not in',('draft'))]}"/>
+                            <field name="dealer_id" domain="[('customer','=',True)]" attrs="{'readonly': [('state','not in',('draft'))]}"/>
+                            <field name="customer_name" placeholder="Customer Name" attrs="{'readonly': [('state','not in',('draft'))]}"/>
+                            <field name="claim_date"  attrs="{'readonly': [('state','not in',('draft'))]}"/>
+                            <field name="expire_date"/>
+                            <field name="applicable"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Replaced Products" >
+                            <field name="replace_ids" attrs="{'invisible':[('replace_ids','=',[])]}"/>
+                        </page>
+                    </notebook>
+                </sheet>
+                </form>
+            </field>
+        </record>
+        
+        
+        
+        <record id="action_claim_tree" model="ir.actions.act_window">
+            <field name="name">Sales Warranty Claim</field>
+            <field name="res_model">sale.warranty.claim</field>
+            <field name="view_type">form</field>
+            <field name="view_id" ref="sale_claim_view"/>
+            <field name="context">{}</field>
+        </record>
+        
+        <menuitem action="action_claim_tree" id="menu_action_claim_tree" parent="menu_base_warranty" 
+        			sequence="37" groups="group_sales_warranty_user,group_warranty_claim_user"/>
+        
+        
+    </data>
+</openerp>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        
+        <record id="group_invcreator" model="res.groups">
+              <field name="name">Invoice Creator</field>
+        </record>
+        
+        <record id="group_invcreatorlimit" model="res.groups">
+              <field name="name">Invoice Creator (Over Customer Credit Limit)</field>
+        </record>
+        
+        <record id="group_invvalid" model="res.groups">
+              <field name="name">Invoice Validation</field>
+        </record>
+        
+        <record id="group_invvalidlimit" model="res.groups">
+              <field name="name">Invoice Validation (Customer Credit Limit)</field>
+        </record>
+        
+    </data>
+</openerp>

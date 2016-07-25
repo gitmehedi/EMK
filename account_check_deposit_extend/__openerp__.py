@@ -42,7 +42,8 @@
         'views/account_check_posting_view.xml',
         'views/account_check_reject_view.xml',
         'views/account_deposit_view_extend.xml',
-        'utility/hide_menu_account_check_deposit.xml'
+        'utility/hide_menu_account_check_deposit.xml',
+        'workflow/account_check_deposit_workflow.xml'
     ],
     'installable': True,
     'application': True,

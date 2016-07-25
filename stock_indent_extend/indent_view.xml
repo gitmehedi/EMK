@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>    
+    <!-- indent.indent.form View -->
+        <record id="indent_form_inherit" model="ir.ui.view">
+            <field name="name">indent.indent.form.inherit</field>
+            <field name="model">indent.indent</field>
+            <field name="inherit_id" ref="stock_indent.view_stock_indent_indent_form"/>
+            <field name="arch" type="xml">
+            	 <field name="requirement" position="replace"/> 
+            	 <field name="type" position="replace"/> 
+                 <xpath expr='//field[@name="department_id"]' position="replace">
+                    <field name="source_department_id"  string="Form Department"/>
+                    <field name="department_id"  string="To Department "/>                    
+                </xpath>      
+            </field>
+        </record>
+        
+        <!-- indent.indent tree View-->
+        
+        <record id="indent_tree_inherit" model="ir.ui.view">
+            <field name="name">indent.indent.tree.inherit</field>
+            <field name="model">indent.indent</field>
+            <field name="inherit_id" ref="stock_indent.view_indent_indent_tree"/>
+            <field name="arch" type="xml">
+              	<xpath expr='//field[@name="department_id"]' position="replace">
+              		<field name="source_department_id" string="From Department"/>
+                    <field name="department_id"  string="To Department"/>
+                </xpath>
+            </field>
+        </record>
+        
+    </data>
+</openerp>

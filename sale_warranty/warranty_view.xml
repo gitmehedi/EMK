@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+    
+	    <!-- sale.warranty Tree View  -->
+	    
+	    <record model="ir.ui.view" id="sale_warranty_view">
+	        <field name="name">Sale Warranty</field>
+	        <field name="model">sale.warranty</field>
+	        <field name="type">tree</field>
+	        <field name="arch" type="xml">
+	           <tree string=" Warranty">
+	              <field name="name"/>
+	              <field name="dealer_id"/>
+	              <field name="customer_name"/>
+	              <field name="customer_mobile"/>
+	              <field name="sale_date"/>
+	              <field name="state"/>
+	           </tree>
+	        </field>
+	    </record>
+	    
+	    <!-- sale.warranty Form View -->
+     
+        <record id="sale_warranty_form" model="ir.ui.view">
+            <field name="name">Sale Warranty.form</field>
+            <field name="model">sale.warranty</field>
+            <field name="arch" type="xml">
+                <form string="Sale Warranty" version="7.0">
+                <header>
+                    <button string="Confirm" name="sale_confirm" states="draft" type="object" class="oe_highlight"/>
+                    <button string="Reject" name="sale_refuse" states="draft,confirm" type="object"/>
+                    <button string="Warranty Claim" name="create_claim" states="confirm" type="object" class="oe_highlight"/>
+                    <field name="state" widget="statusbar" />
+                </header>
+                <sheet>
+                    <h1>
+                        <label string="Warranty No. "  attrs="{'invisible': [('state','not in',('draft'))]}"/>
+                        <field name="name" class="oe_inline" readonly="1"/>
+                    </h1>
+                    <group>
+                        <group>
+                            <field name="serial_no"  attrs="{'readonly': [('state','not in',('draft'))]}"/>
+                            <field name="sale_date"  attrs="{'readonly': [('state','not in',('draft'))]}"/>
+                            <field name="dealer_id" domain="[('customer','=',True)]" attrs="{'readonly': [('state','not in',('draft'))]}"/>
+                            <field name="customer_name" placeholder="Customer Name" attrs="{'readonly': [('state','not in',('draft'))]}"/>
+                            <field name="customer_address" placeholder="Customer Address" attrs="{'readonly': [('state','not in',('draft'))]}"/>
+                            <field name="customer_mobile" placeholder="e.g. +01912548924" attrs="{'readonly': [('state','not in',('draft'))]}"/>
+                            <field name="customer_tel" placeholder="e.g. +027296854" attrs="{'readonly': [('state','not in',('draft'))]}"/>
+                        </group>
+                        <group>
+                        	<field name="product_id" attrs="{'readonly': [('state','not in',('draft'))]}" on_change="onchange_product(product_id)"/>
+                            <field name="product_type"/>
+                            <field name="batch_no" attrs="{'readonly': [('state','not in',('draft'))]}"/>
+                            <field name="application_type" attrs="{'readonly': [('state','not in',('draft'))]}"/>
+                            <field name="model" attrs="{'readonly': [('state','not in',('draft'))],'invisible':[('application_type','!=','mvehicle')],'required':[('application_type','=','mvehicle')]}"/>
+                            <field name="meter" attrs="{'readonly': [('state','not in',('draft'))],'invisible':[('application_type','!=','mvehicle')],'required':[('application_type','=','mvehicle')]}"/>
+                            <field name="fuel" attrs="{'readonly': [('state','not in',('draft'))],'invisible':[('application_type','!=','mvehicle')],'required':[('application_type','=','mvehicle')]}"/>
+                            <field name="registration" attrs="{'readonly': [('state','not in',('draft'))],'invisible':[('application_type','!=','mvehicle')],'required':[('application_type','=','mvehicle')]}"/>
+                            <field name="expire_date" attrs="{'invisible':[('state','=','draft')]}"/>
+                        </group>
+                    </group>
+                	<notebook>
+                        <page string="Warranty Claims" attrs="{'invisible':[('claim_ids','=',[])]}">
+                            <field name="claim_ids" attrs="{'invisible':[('claim_ids','=',[])]}"/>
+                        </page>
+                        <page string="Replaced Products" >
+                            <field name="replace_ids" attrs="{'invisible':[('replace_ids','=',[])]}"/>
+                        </page>
+                    </notebook>
+                </sheet>
+                
+                </form>
+            </field>
+        </record>
+        
+        <record id="view_sales_warranty_filter" model="ir.ui.view">
+            <field name="name">sale.warranty.select</field>
+            <field name="model">sale.warranty</field>
+            <field name="arch" type="xml">
+                <search string="Search Sales Warranty">
+                    <field name="name" string="Sales Warranty" filter_domain="['|',('name','ilike',self),('name','ilike',self)]"/>
+                    <field name="serial_no" string="Serial No" filter_domain="['|',('name','ilike',self),('serial_no','ilike',self)]"/>
+                    <field name="customer_name" string="Customer Name" filter_domain="['|',('name','ilike',self),('customer_name','ilike',self)]"/>
+                    <field name="customer_mobile" string="Customer Mobile" filter_domain="['|',('name','ilike',self),('customer_mobile','ilike',self)]"/>
+                    <filter icon="terp-gtk-media-pause" string="Draft" name="state_draft" domain="[('state','=','draft')]"/>
+                    <filter icon="terp-gtk-media-pause" string="Confirm" name="state_confirm" domain="[('state','=','confirm')]"/>
+                    <filter icon="terp-gtk-media-pause" string="Reject" name="state_reject" domain="[('state','=','reject')]"/>        
+                    <separator/>
+                    
+                    <group expand="0" string="Group By...">
+                        <filter name="dealergroup" string="Dealers" context="{'group_by':'dealer_id'}"/>
+                    </group>
+               </search>
+            </field>
+        </record>
+        
+        <record id="action_warranty_tree" model="ir.actions.act_window">
+            <field name="name">Sales Warranty</field>
+            <field name="res_model">sale.warranty</field>
+            <field name="view_type">form</field>
+            <field name="view_id" ref="sale_warranty_view"/>
+            <field name="search_view_id" ref="view_sales_warranty_filter"/>
+            <field name="context">{'customer': True}</field>
+        </record>
+        
+        <menuitem id="menu_base_warranty" parent="base.menu_base_partner" 
+        			name="Warranty" sequence="20" groups="group_sales_warranty_user,group_warranty_claim_user"/>
+        <menuitem action="action_warranty_tree" id="menu_action_warranty_tree" 
+        			parent="menu_base_warranty" sequence="35"/>
+        
+        
+    </data>
+</openerp>

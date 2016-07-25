@@ -1,0 +1,13 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_warranty_claim_user,sale.warranty.claim,model_sale_warranty_claim,group_warranty_claim_user,1,1,1,1
+access_sale_warranty_claim,sale.warranty.claim,model_sale_warranty_claim,cg_sales.group_head_operation,1,1,1,1
+access_sale_warranty_manager,sale.warranty.manager,model_sale_warranty,base.group_sale_manager,1,1,1,1
+access_sale_warranty_claim_manager,sale.warranty.claim.manager,model_sale_warranty_claim,base.group_sale_manager,1,1,1,1
+access_sales_warranty_swu,sale.warranty.swu,model_sale_warranty,group_sales_warranty_user,1,1,1,0
+access_stock_move_swu,stock.move.swu,stock.model_stock_move,group_sales_warranty_user,1,0,0,0
+access_stock_picking_swu,stock.picking.swu,stock.model_stock_picking,group_sales_warranty_user,1,0,0,0
+access_product_template_swu,product.template.swu,product.model_product_template,group_sales_warranty_user,1,1,0,0
+access_sale_warranty_claim_swu,sale.warranty.claim.swu,model_sale_warranty_claim,group_sales_warranty_user,1,1,1,0
+access_warranty_replace_product,warranty.replace.product,model_warranty_replace_product,cg_sales.group_head_operation,1,1,1,1
+access_warranty_replace_product_manager,warranty.replace.product.manager,model_warranty_replace_product,base.group_sale_manager,1,1,1,1
+access_warranty_replace_product_swu,warranty.replace.product.swu,model_warranty_replace_product,group_sales_warranty_user,1,1,1,0
