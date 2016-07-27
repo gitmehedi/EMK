@@ -7,13 +7,6 @@
 			<field name="arch" type="xml">
 				<form string="Account Journal Template">
 					<header>
-						<button name="action_confirm" type="object" string="Confirm"
-							class="oe_highlight" states="draft" />
-						<button name="action_approve" type="object" string="Approve"
-							class="oe_highlight" states="confirm" />
-						<button name="action_cancel" type="object" string="Cancel" 
-							states="confirm, approve" />
-						<field name="state" widget="statusbar"/>
 					</header>
 					<sheet>
 						<group>
@@ -35,7 +28,6 @@
 										<field name="credit"/>
 									</tree>
 								</field>
-
 							</page>
 						</notebook>
 					</sheet>
@@ -50,7 +42,6 @@
 				<tree string="Account Journal Template">
 					<field name="name" />
 					<field name="active" />
-					<field name="state" string="Status" />
 				</tree>
 			</field>
 		</record>

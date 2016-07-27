@@ -10,7 +10,6 @@ class AccJounalTemplateWizard(models.TransientModel):
 	
 	@api.one
 	def action_generate_joural_acc(self, vals):
- 
 		active_id = vals['active_id']
 		acc_move_obj = self.env['account.move']
 		
@@ -22,10 +21,10 @@ class AccJounalTemplateWizard(models.TransientModel):
 		if self.acc_journal_template_ids:
 			for line in self.acc_journal_template_ids:
 				acc_journal_line_obj = self.env['acc.journal.template.line']
-				acc_journal_line_ids = acc_journal_line_obj.search([('acc_journal_template_id', '=', line.id)])
+				acc_journal_template_ids = acc_journal_line_obj.search([('acc_journal_template_id', '=', line.id)])
 				
-				if acc_journal_line_ids:
-					for move_line in acc_journal_line_ids:
+				if acc_journal_template_ids:
+					for move_line in acc_journal_template_ids:
 				 		vals = {
 				 		    'account_id': move_line.account_id.id,
 				 		    'name':move_line.name,
@@ -34,7 +33,6 @@ class AccJounalTemplateWizard(models.TransientModel):
 				 		    'move_id':acc_move.id
 				 		    }
 				 		acc_move_line_obj.create(vals)
-				 		
 		return {
 		    'type': 'ir.actions.act_window_close',
 		}

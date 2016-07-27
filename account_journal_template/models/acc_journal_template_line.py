@@ -1,5 +1,4 @@
-from openerp import api, exceptions, fields, models
-from openerp.exceptions import UserError
+from openerp import api, fields, models
 
 class AccJournalTemplateLine(models.Model):
 	_name = "acc.journal.template.line"

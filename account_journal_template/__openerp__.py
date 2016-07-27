@@ -20,14 +20,14 @@
 ##############################################################################
 {   
     'name': 'Account Journal Template',
-    'author':  'Account Template',
+    'author':  'Genweb2 Ltd.',
     'website': 'www.genweb2.com',
-    'category': 'Account Template',
+    'category': 'Accounts & Finance',
     'data': [
              'views/acc_journal_template_view.xml',
-             'wizard/acc_journal_wizard_views.xml',
-             'views/inherited_account_move_views.xml',
-
+             'wizard/acc_journal_wizard_view.xml',
+             'views/inherited_account_move_view.xml',
+             'views/map_journal_acc_journal_template_view.xml'
              ],
     'depends': ['account'],
     'description': '''
