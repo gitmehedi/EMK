@@ -8,9 +8,10 @@ class ConfigureEmpChecklist(models.Model):
     # employee_id = fields.Many2one('hr.employee', select=True, invisible=False,
     #                                   default=lambda self: self.employee_gets())
     emp_name = fields.Many2one('hr.employee', string='Employee Name', help='Please enter responsible user name.')
+    _rec_name = 'emp_name'
     department = fields.Many2one('hr.department', ondelete='set null', string='Department',
                                  help='Please enter responsible department name.')
-    state = fields.Selection([('draft', 'Draft'), ('validate', 'Approved'), ('close', 'Close')], readonly=True, copy=False,
+    state = fields.Selection([('draft', 'Draft'), ('done', 'Done'), ('send', 'Send')], readonly=True, copy=False,
                              default='draft')
     checklist_status_ids = fields.One2many('hr.checklist.status', 'checklist_status_id')
 
@@ -21,12 +22,15 @@ class ConfigureEmpChecklist(models.Model):
         # for record in self:
         #     if record.employee_id and record.employee_id.parent_id and record.employee_id.parent_id.user_id:
         #         self.message_subscribe_users([record.id], user_ids=[record.employee_id.parent_id.user_id.id])
-        return self.write({'state': 'close'})
+        return self.write({'state': 'done'})
 
     @api.multi
     def check_list_reset(self):
         return self.write({'state': 'draft'})
 
+    @api.multi
+    def check_list_send(self):
+        return self.write({'state': 'send'})
 
     @api.multi
     def _compute_check(self):
