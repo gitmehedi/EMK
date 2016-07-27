@@ -16,8 +16,9 @@
 							<field name="checklist_type" />
 							<field name="name" />
 							<!--<field name="keeper" />-->
-							<field name="description" />
 							<field name="is_active" />
+							<field name="description" />
+
 						</group>
 					</sheet>
 				</form>

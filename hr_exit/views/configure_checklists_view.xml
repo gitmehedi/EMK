@@ -20,8 +20,9 @@
 								attrs="{'invisible':[('responsible_type', '!=', 'department')]}" />
 							<field name="responsible_username"
 								attrs="{'invisible':[('responsible_type', '!=', 'individual')]}" />
-							<field name="notes" />
 							<field name="is_active" />
+							<field name="notes" />
+
 						</group>
 						<notebook>
 							<page string="Check Lists">

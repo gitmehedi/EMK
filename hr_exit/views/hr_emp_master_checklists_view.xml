@@ -22,8 +22,8 @@
                     </header>
                     <sheet>
                         <group>
-                            <field name="emp_name" attrs="{'readonly': [('state', 'in', ['done','send'])]}"/>
-                            <field name="department" attrs="{'readonly': [('state', 'in', ['done','send'])]}"/>
+                            <field name="employee_id" attrs="{'readonly': [('state', 'in', ['done','send'])]}"/>
+                            <field name="department_id" attrs="{'readonly': [('state', 'in', ['done','send'])]}"/>
                             <!--<field name="status"/>-->
                         </group>
 
@@ -49,8 +49,8 @@
             <field name="arch" type="xml">
                 <tree string="Checklist Tree View">
                     <!--<field name="checklist_name"/>-->
-                    <field name="emp_name"/>
-                    <field name="department"/>
+                    <field name="employee_id"/>
+                    <field name="department_id"/>
                     <!--<field name="checklist_line_ids">-->
                         <!--<tree string="" editable="top">-->
                             <!--<field name="receive_by"/>-->

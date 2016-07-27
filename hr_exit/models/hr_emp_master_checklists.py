@@ -7,15 +7,24 @@ class ConfigureEmpChecklist(models.Model):
 
     # employee_id = fields.Many2one('hr.employee', select=True, invisible=False,
     #                                   default=lambda self: self.employee_gets())
-    emp_name = fields.Many2one('hr.employee', string='Employee Name', help='Please enter responsible user name.')
-    _rec_name = 'emp_name'
-    department = fields.Many2one('hr.department', ondelete='set null', string='Department',
-                                 help='Please enter responsible department name.')
+    employee_id = fields.Many2one('hr.employee', select=True, invisible=False,  default=lambda self: self._employee_gets())
+    # emp_name = fields.Many2one('hr.employee', string='Employee Name', help='Please enter responsible user name.')
+    _rec_name = 'employee_id'
+    # department = fields.Many2one('hr.department', ondelete='set null', string='Department', related='employee_id.department_id',
+    #                              help='Please enter responsible department name.')
+    department_id = fields.Many2one('hr.department', string='Department', related='employee_id.department_id')
     state = fields.Selection([('draft', 'Draft'), ('done', 'Done'), ('send', 'Send')], readonly=True, copy=False,
                              default='draft')
     checklist_status_ids = fields.One2many('hr.checklist.status', 'checklist_status_id')
 
 
+    @api.multi
+    def _employee_gets(self):
+
+        ids = self.env['hr.employee'].search([('user_id', '=', self.env.user.id)])
+        if ids:
+            return ids[0]
+        return False
 
     @api.multi
     def check_list_submit(self):
