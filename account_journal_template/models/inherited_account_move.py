@@ -14,11 +14,7 @@ class InheritedAccountMove(models.Model):
 					acc_journal_line_obj = self.env['acc.journal.template.line']
 					template_line_ids = acc_journal_line_obj.search([('acc_journal_template_id', '=', map.template_id.id)])
 					if template_line_ids:
-						print template_line_ids
 						for t_line in template_line_ids:
-							print "==========================="
-							print t_line
-							print '+++++',t_line.acc_journal_template_id.name
 					 		vals = {
 					 		    'account_id': t_line.account_id.id,
 					 		    'name':t_line.acc_journal_template_id.name,
