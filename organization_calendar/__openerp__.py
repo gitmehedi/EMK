@@ -7,9 +7,7 @@
     'category': 'Calendar',
     'data': [
         'views/organization_calendar_menu.xml',
-        'views/calendar_public_holidays_view.xml',
-        'views/calendar_weekly_holidays_view.xml',
-
+        'views/calendar_holidays_view.xml',
     ],
     'depends': ['calendar'],
     'summary': 'Customizable calendar for organizations',
