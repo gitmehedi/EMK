@@ -16,10 +16,9 @@
 							</group>
 						</group>
 						<notebook>
-							<page string="Template Item">
+							<page string="Journal Items">
 								<field name="line_ids">
 									<tree editable="bottom">
-										<field name="name"/>
 										<field name="account_id"
 											options='{"no_open": True,"no_create":
 											1, "no_create_edit":1}' />
