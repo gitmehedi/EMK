@@ -18,6 +18,7 @@ class InheritedAccountMove(models.Model):
 						for t_line in template_line_ids:
 							print "==========================="
 							print t_line
+							print '+++++',t_line.acc_journal_template_id.name
 					 		vals = {
 					 		    'account_id': t_line.account_id.id,
 					 		    'name':t_line.acc_journal_template_id.name,
@@ -25,7 +26,7 @@ class InheritedAccountMove(models.Model):
 					 		    'credit': t_line.credit,
 					 		    'move_id':self.id
 					 		    }
-					 		#acc_move_line_obj.create(vals)
+					 		acc_move_line_obj.create(vals)
 
 		
 	@api.multi    

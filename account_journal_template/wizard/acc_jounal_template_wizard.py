@@ -19,17 +19,17 @@ class AccJounalTemplateWizard(models.TransientModel):
 		acc_move_obj = acc_move_line_obj.search([['move_id','=',acc_move.id]]).unlink()
 		
 		if self.acc_journal_template_ids:
-			for line in self.acc_journal_template_ids:
+			for template in self.acc_journal_template_ids:
 				acc_journal_line_obj = self.env['acc.journal.template.line']
-				acc_journal_template_ids = acc_journal_line_obj.search([('acc_journal_template_id', '=', line.id)])
+				template_line_ids = acc_journal_line_obj.search([('acc_journal_template_id', '=', template.id)])
 				
-				if acc_journal_template_ids:
-					for move_line in acc_journal_template_ids:
+				if template_line_ids:
+					for t_line in template_line_ids:
 				 		vals = {
-				 		    'account_id': move_line.account_id.id,
-				 		    'name':move_line.name,
-				 		    'debit':move_line.debit,
-				 		    'credit': move_line.credit,
+				 		    'account_id': t_line.account_id.id,
+				 		    'name':t_line.acc_journal_template_id.name,
+				 		    'debit':t_line.debit,
+				 		    'credit': t_line.credit,
 				 		    'move_id':acc_move.id
 				 		    }
 				 		acc_move_line_obj.create(vals)
