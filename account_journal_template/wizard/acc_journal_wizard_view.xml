@@ -6,15 +6,11 @@
 			<field name="model">acc.journal.template.wizard</field>
 			<field name="priority" eval="16" />
 			<field name="arch" type="xml">
-				<form string="Account Journal Template" >
+				<form string="Account Journal Template">
 					<sheet>
-						<group>
-							<field name="acc_journal_template_ids" widget="many2many_checkboxes">
-								<tree>
-									<field name="name" />
-								</tree>
-							</field>
-						</group>
+						<div>
+							<field name="acc_journal_template_ids"/>
+						</div>
 					</sheet>
 					<footer>
 						<button name="action_generate_joural_acc" type="object"
@@ -26,7 +22,7 @@
 		</record>
 
 		<record id="action_acc_journal_template" model="ir.actions.act_window">
-			<field name="name">Account Journal Template</field>
+			<field name="name">Select Account Journal Template</field>
 			<field name="type">ir.actions.act_window</field>
 			<field name="res_model">acc.journal.template.wizard</field>
 			<field name="view_type">form</field>
