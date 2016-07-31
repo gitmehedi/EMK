@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+        <!-- Holiday Type Form Views -->
+        <record id="calendar_holiday_type_form_view" model="ir.ui.view">
+            <field name="name">calendar_holiday_type_form</field>
+            <field name="model">calendar.holiday.type</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Holiday">
+                    <header>
+						<button name="geneare_yearly_calendar" type="object" string="Generate"
+							class="oe_highlight" />
+					</header>
+
+                    <sheet>
+                        <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="year"/>
+                        </group>
+                        </group>
+
+                    <notebook colspan="4">
+							<page string="Public Holidays">
+								<field name="public_details_ids">
+									<tree string="List" editable="bottom">
+										<field name="name"
+											options='{"no_open": True,"no_create": 1, "no_create_edit": 1}' />
+										<field name="date" />
+										<field name="status"/>
+									</tree>
+								</field>
+							</page>
+                            <page string="Weekly Holidays">
+                                    <field name="weekly_details_ids">
+                                        <tree string="List" editable="bottom">
+                                            <field name="weekly_type" />
+                                        </tree>
+                                    </field>
+                            </page>
+                    </notebook>
+                     </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- Holiday Type Tree Views -->
+        <record id="calendar_holiday_type_tree_view" model="ir.ui.view">
+            <field name="name">calendar_holiday_type_tree</field>
+            <field name="model">calendar.holiday.type</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Holiday Tree">
+                    <field name="name"/>
+                    <field name="status"/>
+                </tree>
+            </field>
+        </record>
+
+
+        <!-- Holiday Type Search Views -->
+        <record id="calendar_holiday_type_search_view" model="ir.ui.view">
+            <field name="name">calendar_holiday_type_search</field>
+            <field name="model">calendar.holiday.type</field>
+            <field name="arch" type="xml">
+                <search string="Search">
+                    <field name="name" string="Name" filter_domain="[('name','ilike','self')]" />
+                </search>
+            </field>
+        </record>
+
+        <!-- Holiday  Action Views -->
+        <record id="calendar_holiday_type_action_view" model="ir.actions.act_window">
+            <field name="name">Calendar Holiday Type</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">calendar.holiday.type</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="calendar_holiday_type_tree_view"/>
+        </record>
+
+        <!-- Holiday Type Menu -->
+        <menuitem id="calendar_holiday_type_menu" name="Organization Calendar Type" parent="calendar_holiday_config_menu"
+                  sequence="6" action="calendar_holiday_type_action_view"/>
+    </data>
+</openerp>

@@ -5,6 +5,8 @@ class CalendarHoliday(models.Model):
 
 
     name = fields.Char(size=100, string="Title", required="True")
-    type = fields.Selection([('weekly', 'Weekly Holiday'),('public', 'Public Holiday')], required="True")
-    date = fields.Date(string="Date",default=fields.Date.today(), required=True)
+    type = fields.Selection([('weekly', 'Weekly Holiday'),('public', 'Public Holiday')])
+    date = fields.Datetime(string="Date")
+    color = fields.Char(string="Color")
     status = fields.Boolean(string='Status', default=True)
+
