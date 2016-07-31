@@ -62,6 +62,6 @@
 		</record>
 		
 		<menuitem action="action_acc_journal_template_tree" id="menu_acc_journal_template"
-			parent="account.account_account_menu" sequence="12"/>
+			parent="account.menu_finance_configuration" sequence="12" groups="account.group_account_invoice"/>
 	</data>
 </openerp>
