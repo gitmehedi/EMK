@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+	<data>
+		<record id="inherited_account_move_view_form_Journar_template"
+			model="ir.ui.view">
+			<field name="name">Journal Account</field>
+			<field name="model">account.move</field>
+			<field name="inherit_id" ref="account.view_move_form" />
+			<field name="arch" type="xml">
+				<xpath expr="/form/header/button[@name='post']" position="after">
+					<button name="action_generate_Item" type="object" states="draft" string="Generate Item" class="oe_highlight" groups="base.group_user"/>
+					<button name="%(action_acc_journal_template)d" type="action" states="draft" string="Select Template" class="oe_highlight" groups="base.group_user"/>
+<!-- 				<button name="action_wizard_open" type="object" states="draft" string="Template" class="oe_highlight" groups="base.group_user"/> -->
+				</xpath>
+				<xpath expr="//page/field/tree/field[@name='name']" position="replace">
+					<field name="name" string="Description" />
+				</xpath>
+			</field>
+		</record>
+		
+	</data>
+</openerp>
