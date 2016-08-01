@@ -7,7 +7,7 @@ class ConfigureEmpChecklist(models.Model):
     employee_id = fields.Many2one('hr.employee', select=True, invisible=False,  default=lambda self: self._employee_gets())
     _rec_name = 'employee_id'
     department_id = fields.Many2one('hr.department', string='Department', related='employee_id.department_id')
-    state = fields.Selection([('draft', 'Draft'), ('done', 'Done'), ('send', 'Send')], readonly=True, copy=False,
+    state = fields.Selection([('draft', 'Draft'), ('done', 'Done'), ('send', 'Send'), ('verify', 'Verified')], readonly=True, copy=False,
                              default='draft')
     checklist_status_ids = fields.One2many('hr.checklist.status', 'checklist_status_id')
 
@@ -34,6 +34,11 @@ class ConfigureEmpChecklist(models.Model):
     @api.multi
     def check_list_send(self):
         return self.write({'state': 'send'})
+
+    @api.multi
+    def check_list_verify(self):
+        return self.write({'state': 'verify'})
+
 
     @api.multi
     def _compute_check(self):
