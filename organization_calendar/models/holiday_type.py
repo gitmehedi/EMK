@@ -1,5 +1,5 @@
 from openerp import models, fields, api, exceptions
-from datetime
+import datetime,time
 
 class CalendarHolidayType(models.Model):
     _name='calendar.holiday.type'
@@ -28,15 +28,32 @@ class CalendarHolidayType(models.Model):
             self.env['calendar.holiday'].create(vals)
 
         for val in self.weekly_details_ids:
-
             vals['name']= "Weekly Holiday"
             vals['type']="weekly"
-            vals['date']=val.date
+
             vals['color']="Yellow"
             vals['status']=True
-            for i in range(365):
-                today = datetime.date(datetime.datetime.year.now()
-                day_of_year = (today - datetime.datetime(today.year, 1, 1)).days + i
-            self.env['calendar.holiday'].create(vals)
+
+            days = 365
+            curTime = time.mktime(datetime.datetime(2016, 1, 1).timetuple())
+
+            for i in range(days):
+                searchTime = (i * 86400 + curTime)
+                dayName = datetime.datetime.fromtimestamp(int(searchTime))
+                print val.weekly_type,"------------------------"
+                if dayName.strftime('%A') == val.weekly_type.title():
+                    vals['date'] = dayName
+                    print "----------------",vals
+                    self.env['calendar.holiday'].create(vals)
 
         return True
+
+    def getTimeStramp(year, day):
+        days = 365
+        curTime = time.mktime(datetime.datetime(year, 1, 1).timetuple())
+
+        for i in range(days):
+            searchTime = (i * 86400 + curTime)
+            dayName = datetime.datetime.fromtimestamp(int(searchTime))
+            if dayName.strftime('%A') in day:
+                print dayName
