@@ -10,17 +10,23 @@
                     <header>
 
                         <button name="%(action_hr_checklist_popup)d" states="draft" type="action" string="Generate Checklist" class="oe_highlight"/>
-                        <button string="Close" name="check_list_submit" states="draft" type="object"/>
+                        <button string="Done" name="check_list_submit" states="draft" type="object"/>
                         <button string="Reset to Draft" name="check_list_reset"
                                 attrs="{'invisible': [('state', 'in', ['draft'])]}"
                                 type="object"/>
-                        <field name="state" widget="statusbar" statusbar_visible="draft,close"
+                        <button string="Send" name="check_list_send"
+                                attrs="{'invisible': [('state', 'in', ['draft','send','verify'])]}"
+                                type="object" class="oe_highlight"/>
+                        <button string="Verify" name="check_list_verify"
+                                attrs="{'invisible': [('state', 'in', ['draft','done','verify'])]}"
+                                type="object" class="oe_highlight"/>
+                        <field name="state" widget="statusbar" statusbar_visible="draft,done,send,verify"
                                statusbar_colors='{"draft":"blue"}'/>
                     </header>
                     <sheet>
                         <group>
-                            <field name="emp_name" attrs="{'readonly': [('state', 'in', ['close'])]}"/>
-                            <field name="department" attrs="{'readonly': [('state', 'in', ['close'])]}"/>
+                            <field name="employee_id" attrs="{'readonly': [('state', 'in', ['done','send'])]}"/>
+                            <field name="department_id" attrs="{'readonly': [('state', 'in', ['done','send'])]}"/>
                             <!--<field name="status"/>-->
                         </group>
 
@@ -46,8 +52,8 @@
             <field name="arch" type="xml">
                 <tree string="Checklist Tree View">
                     <!--<field name="checklist_name"/>-->
-                    <field name="emp_name"/>
-                    <field name="department"/>
+                    <field name="employee_id"/>
+                    <field name="department_id"/>
                     <!--<field name="checklist_line_ids">-->
                         <!--<tree string="" editable="top">-->
                             <!--<field name="receive_by"/>-->
