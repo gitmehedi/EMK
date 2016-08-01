@@ -9,7 +9,7 @@
 				<form string="Account Journal Template">
 					<sheet>
 						<div>
-							<field name="acc_journal_template_ids"/>
+							<field name="acc_journal_template_ids" options='{"no_open": True,"no_create": 1, "no_create_edit": 1}'/>
 						</div>
 					</sheet>
 					<footer>
