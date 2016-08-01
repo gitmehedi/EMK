@@ -38,10 +38,10 @@ class CalendarHolidayType(models.Model):
             end_date = self.year_id.date_stop.split('-')
             days= datetime.datetime(int(end_date[0]),int(end_date[1]),int(end_date[2]))-datetime.datetime(int(start_date[0]),int(start_date[1]),int(start_date[2]))
 
-            noOfDays= days.days
+            noOfDays= days.days+1
             curTime = time.mktime(datetime.datetime(int(start_date[0]),int(start_date[1]),int(start_date[2])).timetuple())
 
-            for i in range(noOfDays):
+            for i in range(1,noOfDays):
                 searchTime = (i * 86400 + curTime)
                 dayName = datetime.datetime.fromtimestamp(int(searchTime))
                 if dayName.strftime('%A') == val.weekly_type.title():
