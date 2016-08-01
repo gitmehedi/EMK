@@ -16,10 +16,10 @@
                                 type="object"/>
                         <button string="Send" name="check_list_send"
                                 attrs="{'invisible': [('state', 'in', ['draft','send','verify'])]}"
-                                type="object"/>
+                                type="object" class="oe_highlight"/>
                         <button string="Verify" name="check_list_verify"
                                 attrs="{'invisible': [('state', 'in', ['draft','done','verify'])]}"
-                                type="object"/>
+                                type="object" class="oe_highlight"/>
                         <field name="state" widget="statusbar" statusbar_visible="draft,done,send,verify"
                                statusbar_colors='{"draft":"blue"}'/>
                     </header>
