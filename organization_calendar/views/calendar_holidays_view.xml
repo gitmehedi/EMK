@@ -44,7 +44,7 @@
             <field name="priority" eval="16"/>
             <field name="arch" type="xml">
                 <calendar string="Ideas" date_start="date" color="color" mode="month" all_day="date">
-                    <field name="color"/>
+                    <field name="name"/>
                 </calendar>
             </field>
         </record>
