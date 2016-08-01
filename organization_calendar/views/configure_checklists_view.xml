@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+	<data>
+		<!-- Configure Checklists Form Views -->
+		<record id="configure_checklists_form_view" model="ir.ui.view">
+			<field name="name">configure.checklists.type.form</field>
+			<field name="model">hr.exit.configure.checklists</field>
+			<field name="type">form</field>
+			<field name="arch" type="xml">
+				<form string="Configure Checklists Form">
+					<header>
+						<field name="id" invisible="1" />
+					</header>
+					<sheet>
+						<group>
+							<field name="code" />
+							<field name="name" />
+							<field name="responsible_type" />
+							<field name="responsible_userdepartment"
+								attrs="{'invisible':[('responsible_type', '!=', 'department')]}" />
+							<field name="responsible_username"
+								attrs="{'invisible':[('responsible_type', '!=', 'individual')]}" />
+							<field name="notes" />
+							<field name="is_active" />
+						</group>
+						<notebook>
+							<page string="Check Lists">
+								<field name="checklists_ids">
+									<tree editable="top">
+										<field name="check_list_type_id"
+											options='{"no_open": True,"no_create": 1, "no_create_edit": 1}' />
+									</tree>
+								</field>
+							</page>
+						</notebook>
+					</sheet>
+				</form>
+			</field>
+		</record>
+
+		<!-- Configure Checklists Tree Views -->
+		<record id="configure_checklists_tree_view" model="ir.ui.view">
+			<field name="name">configure.checklist.type.tree</field>
+			<field name="model">hr.exit.configure.checklists</field>
+			<field name="type">tree</field>
+			<field name="arch" type="xml">
+				<tree string="Configure Checklists Tree">
+					<field name="code" />
+					<field name="name" />
+					<!-- <field name="responsible_type" /> -->
+					<!-- <field name="responsible_userdepartment" /> -->
+					<!-- <field name="responsible_username" /> -->
+					<field name="notes" />
+					<field name="is_active" />
+				</tree>
+			</field>
+		</record>
+
+		<!-- Configure Checklists Search Views -->
+		<record id="configure_checklists_search_view" model="ir.ui.view">
+			<field name="name">configure.checklists.search</field>
+			<field name="model">hr.exit.configure.checklists</field>
+			<field name="arch" type="xml">
+				<search string="Search">
+					<field name="code" string="Code" filter_domain="[('code','ilike','self')]" />
+					<field name="name" string="Name" filter_domain="[('name','ilike','self')]" />
+					<!-- <field name="responsible_type" string="Name" filter_domain="[('name','ilike','self')]" -->
+					<!-- /> -->
+					<!-- <field name="responsible_userdepartment" string="Name" filter_domain="[('name','ilike','self')]" -->
+					<!-- /> -->
+					<!-- <field name="responsible_username" string="Name" filter_domain="[('name','ilike','self')]" -->
+					<!-- /> -->
+					<field name="notes" string="Notes" filter_domain="[('notes','ilike','self')]" />
+				</search>
+			</field>
+		</record>
+
+		<!-- Configure Checklists Action Views -->
+		<record id="action_configure_checklists_type_view" model="ir.actions.act_window">
+			<field name="name">Configure Checklists</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">hr.exit.configure.checklists</field>
+			<field name="view_mode">tree,form</field>
+		</record>
+
+		<!-- Configure Checklists Menu -->
+		<menuitem id="configure_checklists_type_menu" name="Configure Checklists"
+			parent="exit_checklist_menu" sequence="8"
+			action="action_configure_checklists_type_view" />
+	</data>
+</openerp>
