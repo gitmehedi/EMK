@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+	<data>
+		<record id="account_journal_template_wizard_view_form" model="ir.ui.view">
+			<field name="name">account journal template Wizard</field>
+			<field name="model">acc.journal.template.wizard</field>
+			<field name="priority" eval="16" />
+			<field name="arch" type="xml">
+				<form string="Account Journal Template" >
+					<sheet>
+						<group>
+							<field name="acc_journal_template_ids" widget="many2many_checkboxes">
+								<tree>
+									<field name="name" />
+								</tree>
+							</field>
+						</group>
+					</sheet>
+					<footer>
+						<button name="action_generate_joural_acc" type="object"
+							string="Generate" class="oe_highlight" />
+						<button string="Cancel" special="cancel" class="oe_link" />
+					</footer>
+				</form>
+			</field>
+		</record>
+
+		<record id="action_acc_journal_template" model="ir.actions.act_window">
+			<field name="name">Account Journal Template</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">acc.journal.template.wizard</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">form</field>
+			<field name="target">new</field>
+		</record>
+
+	</data>
+</openerp>
