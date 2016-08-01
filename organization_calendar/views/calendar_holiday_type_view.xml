@@ -81,7 +81,7 @@
         </record>
 
         <!-- Holiday Type Menu -->
-        <menuitem id="calendar_holiday_type_menu" name="Organization Calendar Type" parent="calendar_holiday_config_menu"
+        <menuitem id="calendar_holiday_type_menu" name="Organization Calendar" parent="calendar_holiday_config_menu"
                   sequence="6" action="calendar_holiday_type_action_view"/>
     </data>
 </openerp>
