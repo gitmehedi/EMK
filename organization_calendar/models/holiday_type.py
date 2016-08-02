@@ -56,25 +56,6 @@ class CalendarHolidayType(models.Model):
 
         return True
 
-    @api.multi
-    def clone_calendar(self,default=None):
-        default = dict(default or {})
-        # if default['create_version']:
-        #     # Set Value for the new record
-        #     default['version'] = self.version + 1
-        #     default['ref_style'] = self.id
-        #     default['name'] = self.name
-        # else:
-        #     default['style_id'] = ''
-        #     default['version'] = 1
 
-        res = super(CalendarHolidayType, self).copy(default)
-
-        # # Update the current record
-        # if default['create_version']:
-        #     self.write({'visible': False, 'style_id': res.id})
-        #     for st in self.style_ids:
-        #         st.write({'style_id': res.id})
-        return res
 
 
