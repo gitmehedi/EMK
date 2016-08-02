@@ -11,6 +11,8 @@
                     <header>
 						<button name="geneare_yearly_calendar" type="object" string="Generate"
 							class="oe_highlight" />
+                        <button name="%(clone_previous_calendar_wizard_views)d"
+							type="action" string="Clone" class="oe_highlight" />
 					</header>
 
                     <sheet>
