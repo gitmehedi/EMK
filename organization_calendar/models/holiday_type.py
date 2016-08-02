@@ -41,7 +41,7 @@ class CalendarHolidayType(models.Model):
             noOfDays= days.days+1
             curTime = time.mktime(datetime.datetime(int(start_date[0]),int(start_date[1]),int(start_date[2])).timetuple())
 
-            for i in range(1,noOfDays):
+            for i in range(noOfDays):
                 searchTime = (i * 86400 + curTime)
                 dayName = datetime.datetime.fromtimestamp(int(searchTime))
                 if dayName.strftime('%A') == val.weekly_type.title():
