@@ -7,7 +7,7 @@
     'category': 'Calendar',
     'data': [
         'security/security.xml',
-        # 'security/ir.model.access.csv',
+        'security/ir.model.access.csv',
         'wizard/clone_calendar_wizard_views.xml',
         'views/organization_calendar_menu.xml',
         'views/calendar_holidays_view.xml',
