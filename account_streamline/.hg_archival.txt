@@ -1,0 +1,6 @@
+repo: a95d690ae5b63aa678667edd147797f4c2311e12
+node: 7bd1aebdf95c0f514a5b205775829f511915275e
+branch: odoo8
+latesttag: TAG_8.0.2.1.1
+latesttagdistance: 12
+changessincelatesttag: 42
