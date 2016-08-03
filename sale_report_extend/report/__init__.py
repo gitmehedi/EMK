@@ -19,13 +19,13 @@
 #
 ##############################################################################
 
-import sale_report_extend
-import sale_report_productwise
-import sale_report_customer_wise
-import sale_report_salesperson_wise
-import sale_report_category_wise
-import sale_report_monthly
-import sale_report_target_achievement_wise
-import sale_report_commitment_delay_wise
+# import sale_report_extend
+# import sale_report_productwise
+# import sale_report_customer_wise
+# import sale_report_salesperson_wise
+# import sale_report_category_wise
+# import sale_report_monthly
+# import sale_report_target_achievement_wise
+# import sale_report_commitment_delay_wise
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
