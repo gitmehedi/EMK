@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        
+        <record id="view_journal_tree_global" model="ir.ui.view">
+            <field name="name">view.move.line.tree.inherits</field>
+            <field name="model">account.move.line</field>
+            <field name="priority" eval="1"/>
+            <field name="arch" type="xml">
+                <tree string="Journal Items" editable="bottom" create="false" version="7.0">
+                    <field readonly="1" name="state"/>
+                    <field readonly="1" name="partner_id"/>
+                    <field readonly="1" name="period_id"/>
+                    <field readonly="1" name="journal_id"/>
+                    <field readonly="1" name="internal_sequence_number"/>
+                    <field readonly="1" name="ref"/>
+                    <field readonly="1" name="date"/>
+                    <field readonly="1" name="date_maturity"/>
+                    <field readonly="1" name="date_created"/>
+                    <field readonly="1" name="invoice"/>
+                    <field readonly="1" name="account_id"/>
+                    <field readonly="1" name="name"/>
+                    <field readonly="1" name="narration"/>
+                    <field readonly="1" name="debit_curr" groups="base.group_multi_currency" sum="Total Debit T"/>
+                    <field readonly="1" name="credit_curr" groups="base.group_multi_currency" sum="Total Credit T"/>
+                    <field readonly="1" name="currency_id" groups="base.group_multi_currency"/>
+                    <field readonly="1" name="debit" sum="Total Debit"/>
+                    <field readonly="1" name="credit" sum="Total Credit"/>
+                    <field readonly="1" name="account_tax_id"/>
+                    <field name="analytic_dimensions" />
+                </tree>
+            </field>
+        </record>
+        <record id="view_account_journal_form_streamline" model="ir.ui.view">
+			<field name="name">view.account.journal.form.streamline</field>
+			<field name="model">account.journal</field>
+			<field name="inherit_id" ref="account.view_account_journal_form" />
+			<field eval="5" name="priority"/>
+			<field name="arch" type="xml">
+				<xpath expr="//field[@name='sequence_id']" position="after">
+					<field name="is_limited" />
+				</xpath>
+			</field>
+		</record>
+        <record id="action_move_line_accounting_items_complete_tree"
+                model="ir.actions.act_window">
+            <field name="name">Full View</field>
+            <field name="res_model">account.move.line</field>
+            <field name="view_id" ref="view_journal_tree_global"/>
+            <field name="context">{'item_complete_view':False}</field>
+            <field name="view_mode">tree</field>
+            <field name="search_view_id" ref="account.view_account_move_line_filter"/>
+        </record>
+
+        <record id="action_move_line_accounting_items_simple_tree"
+                model="ir.actions.act_window">
+            <field name="name">Simple View</field>
+            <field name="res_model">account.move.line</field>
+            <field name="view_id" ref="view_journal_tree_global"/>
+            <field name="context">{'item_simple_view':False}</field>
+            <field name="view_mode">tree</field>
+            <field name="search_view_id" ref="account.view_account_move_line_filter"/>
+        </record>
+
+        <record id="action_move_line_accounting_items_analytic_tree"
+                model="ir.actions.act_window">
+            <field name="name">Analytical View</field>
+            <field name="res_model">account.move.line</field>
+            <field name="view_id" ref="view_journal_tree_global"/>
+            <field name="context">{'item_analytic_view':False}</field>
+            <field name="view_mode">tree</field>
+            <field name="search_view_id" ref="account.view_account_move_line_filter"/>
+        </record>
+    </data>
+</openerp>

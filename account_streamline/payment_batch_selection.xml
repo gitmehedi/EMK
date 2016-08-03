@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <record id="account_payment_batch_selection_form_view" model="ir.ui.view">
+            <field name="name">account.payment_batch.selection Default View</field>
+            <field name="model">account.payment_batch.selection</field>
+            <field name="arch" type="xml">
+                <form string="Batch payments" version="7.0">
+                    <group>
+                        <field name="journal_id" />
+                        <field name="date_maturity" />
+                        <field name="mode" />
+                    </group>
+                    <footer>
+                        <button string="Validate" name="generate_batch"
+                            type="object" class="oe_highlight" />
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel" />
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="account_payment_batch_selection_action" model="ir.actions.act_window">
+            <field name="name">Payment Batch Selection</field>
+            <field name="res_model">account.payment_batch.selection</field>
+            <field name="view_mode">form</field>
+            <field name="view_type">form</field>
+            <field name="target">new</field>
+        </record>
+
+        <menuitem id="account_payment_batch_selection_menu"
+                  name="Payment Batch Selection"
+                  action="account_payment_batch_selection_action"
+                  parent="account_payment.menu_main_payment" />
+    </data>
+</openerp>

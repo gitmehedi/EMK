@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <!-- Define the Remittance Letter report. -->
+
+        <report id="account_streamline.remittance_letter" name="account_streamline.remittance_letter"
+            auto="False" model="account.voucher"
+            file="account_streamline/report/remittance_letter.mako" string="Remittance Letter"
+            webkit_header="account_streamline.voucher_report_header" attachment="'RemittanceLetter'"
+            report_type="webkit" attachment_use="True" usage="default" />
+
+    </data>
+</openerp>

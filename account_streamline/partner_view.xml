@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+         <!-- this changes the context for the called view to display pages only visible for partners -->
+        <record id="base.action_partner_supplier_form" model="ir.actions.act_window">
+            <field name="context">{'search_default_supplier': 1,'default_customer': 0,'default_supplier': 1,'supplier_view': False}</field>
+        </record>
+
+        <record id="view_partner_tree_analytic" model="ir.ui.view">
+            <field name="name">res.partner.tree.analytic</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_partner_tree"/>
+            <field eval="8" name="priority"/>
+            <field name="arch" type="xml">
+                <xpath expr="/tree/field[@name='parent_id']" position="after">
+                  <field name="analytic_dimensions" />
+                </xpath>
+            </field>
+        </record>
+
+        <record id="view_partner_form_account_streamline" model="ir.ui.view">
+            <field name="name">res.partner.form.account.streamline</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_partner_form"/>
+            <field name="arch" type="xml">
+                <data>
+                    <xpath expr="//notebook" position="inside">
+                        <page string="Analytic Static" attrs="{'invisible': [('is_company','=', False)]}">
+                            <group>
+                              <field name="analytic_dimensions" />
+                            </group>
+                        </page>
+                    </xpath>
+
+                    <!-- allow to define the title for an enterprise or a contact we delete the invisible conditions of attrs attribute -->
+                    <xpath expr="//field[@name='title']" position="replace">
+                        <field name="title"/>
+                    </xpath>
+
+                    <!-- adding the title in the contact form-->
+                    <xpath expr="//field[@name='child_ids']/form/sheet/group/field[@name='function']" position="before">
+                        <field name="title" domain ="[('domain', '=', 'contact')]"/>
+                   </xpath>
+
+                </data>
+            </field>
+        </record>
+
+        <!-- Inherit from the partner form customization done by the "account" addon. -->
+        <record id="view_partner_property_form_streamline" model="ir.ui.view">
+            <field name="name">res.partner.form.analytic</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="account.view_partner_property_form"/>
+            <field eval="5" name="priority"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='property_account_position']" position="before">
+                    <field name="siret"/>
+                    <field name="siren"/>
+                </xpath>
+
+                <xpath expr="//page[@name='accounting']" position="attributes">
+                    <attribute name="groups">account.group_account_user</attribute>
+                </xpath>
+
+                <!-- Tie accounting fields to client / supplier check-boxes. -->
+              <!--  <xpath expr="//field[@name='property_account_receivable']" position="attributes">
+                    <attribute name="attrs">{'invisible': [('customer', '=', False)]}</attribute>
+                </xpath>
+                <xpath expr="//field[@name='property_account_receivable']" position="after">
+                    <field name="customer_account_check" invisible="1"/>
+                </xpath>
+                <xpath expr="//field[@name='property_payment_term']" position="before">
+                    <field name="property_account_payable"/>
+                </xpath>
+                <xpath expr="//field[@name='property_payment_term']" position="attributes">
+                    <attribute name="attrs">{'invisible': [('customer', '=', False)]}</attribute>
+                </xpath>
+                <xpath expr="//field[@name='credit_limit']" position="attributes">
+                    <attribute name="attrs">{'invisible': [('customer', '=', False)]}</attribute>
+                </xpath>
+                <xpath expr="//field[@name='property_account_payable']" position="attributes">
+                    <attribute name="attrs">{'invisible': [('customer', '=', False)]}</attribute>
+                </xpath>
+                <xpath expr="//field[@name='property_account_payable']" position="after">
+                    <field name="supplier_account_check" invisible="True"/>
+                </xpath>
+                <xpath expr="//field[@name='property_supplier_payment_term']" position="attributes">
+                    <attribute name="attrs">{'invisible': [('supplier', '=', False)]}</attribute>
+                </xpath>-->
+
+                <!-- Move the bank table from the "accounting" tab into its own tab. -->
+                <xpath expr="//page[@name='accounting']//field[@name='bank_ids']"
+                    position="replace" />
+                <xpath expr="//page[@name='accounting']" position="after">
+                    <page string="Banks">
+                        <group>
+                            <field name="bank_ids"
+                                context="{
+                                    'default_partner_id': active_id,
+                                    'form_view_ref': 'base.view_partner_bank_form',
+                                }"
+                                nolabel="1" colspan="2">
+                                <tree string="Bank Details">
+                                    <field name="state" invisible="1" />
+                                    <field name="sequence" invisible="1" />
+                                    <field name="acc_number" />
+                                    <field name="bank_name" />
+                                    <field name="owner_name" />
+                                </tree>
+                            </field>
+                        </group>
+                    </page>
+                </xpath>
+
+                <!-- Remove (not just hide) the following fields to make sure
+                    they are not computed when being displayed. -->
+                <xpath expr="//field[@name='credit']" position="replace" />
+                <xpath expr="//field[@name='debit']" position="replace" />
+                <xpath expr="//field[@name='last_reconciliation_date']/.."
+                    position="replace" />
+
+            </field>
+        </record>
+
+        <record id="view_res_partner_filter_account_streamline" model="ir.ui.view">
+            <field name="name">res.partner.select.inherit.account.streamline</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_res_partner_filter"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='name']" position="before">
+                    <filter string="Unread"
+                            name="message_unread" help="Show messages to read"
+                            domain="['|', '|', ('customer_account_check', '=', True), ('supplier_account_check', '=', True),
+                            ('message_unread', '=', True)]"/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</openerp>

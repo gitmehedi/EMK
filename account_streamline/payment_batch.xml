@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <record id="account_payment_batch_move_line_view_tree" model="ir.ui.view">
+            <field name="name">account.payment_batch.move.line.view.tree</field>
+            <field name="model">account.payment_batch.move.line</field>
+            <field name="priority">30</field>
+            <field name="arch" type="xml">
+                <tree string="Move Lines" create="false" delete="true">
+                    <field name="move_id" readonly="1" />
+                    <field name="period_id" readonly="1" />
+                    <field name="account_id" readonly="1" />
+                    <field name="date" readonly="1" />
+                    <field name="date_maturity" readonly="1" />
+                    <field name="name" readonly="1" />
+                    <field name="debit" readonly="1" />
+                    <field name="credit" readonly="1" />
+                    <field name="attachment_fname" invisible="1" />
+                    <button name="download_attachments" type="object" attrs="{
+                            'invisible': [('attachment_fname', '=', '')]
+                        }" icon="STOCK_FLOPPY" string="Download Attachments" />
+                </tree>
+            </field>
+        </record>
+
+        <record id="account_payment_batch_line_view_form" model="ir.ui.view">
+            <field name="name">account.payment_batch.line.view.form</field>
+            <field name="model">account.payment_batch.line</field>
+            <field name="arch" type="xml">
+                <form string="Payment Batch Line" version="7.0">
+                    <header>
+                        <button name="save" type="object" string="Save" class="oe_highlight" />
+                    </header>
+                    <group>
+                        <field name="batch_id" invisible="1" />
+                        <field name="batch_state" invisible="1" />
+                        <field name="partner_id" readonly="1" />
+                        <field name="subtotal" readonly="1" />
+                        <field name="nb_lines" readonly="1" />
+                    </group>
+                    <group>
+                        <field name="bank_id" domain="[('partner_id', '=', partner_id)]"/>
+                        <field name="bank_iban" />
+                        <field name="bank_bic" />
+                        <field name="bank_create_date" string="Registered on" />
+                        <field name="bank_write_date" string="Last Updated on" />
+                    </group>
+                    <group string="Move Lines">
+                        <field name="line_ids" nolabel="1" attrs="{
+                            'readonly': [('batch_state', '=', 'paid')]
+                        }"/>
+                    </group>
+                    <footer>
+                        <button name="save" type="object" string="Save" class="oe_highlight" />
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel" />
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="account_payment_batch_line_view_tree" model="ir.ui.view">
+            <field name="name">account.payment_batch.line.view.tree</field>
+            <field name="model">account.payment_batch.line</field>
+            <field name="arch" type="xml">
+                <tree editable="bottom" string="Payment Batch Lines">
+                    <field name="partner_id" readonly="True" />
+                    <field name="subtotal" readonly="True" />
+                    <field name="nb_lines" readonly="True" string="Lines" />
+                    <field name="bank_id" domain="[('partner_id', '=', partner_id)]"/>
+                    <field name="bank_create_date" string="Registered on" />
+                    <field name="bank_write_date" string="Last Updated on" />
+                    <button string="Move Lines" type="object" icon="STOCK_ZOOM_IN"
+                            name="open_batch_line_form" />
+                </tree>
+            </field>
+        </record>
+        <record id="account_payment_batch_line_action" model="ir.actions.act_window">
+            <field name="name">Payment Batches</field>
+            <field name="res_model">account.payment_batch.line</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+
+        <record id="account_payment_batch_view_tree" model="ir.ui.view">
+            <field name="name">account.payment_batch Default Tree View</field>
+            <field name="model">account.payment_batch</field>
+            <field name="arch" type="xml">
+                <tree string="Payment Batches" create="false" version="7.0">
+                    <field name="name" />
+                    <field name="journal_id" />
+                    <field name="date_maturity" />
+                    <field name="state" />
+                    <field name="validate_user_id" />
+                    <field name="validate_date" />
+                </tree>
+            </field>
+        </record>
+
+        <record id="account_payment_batch_view_form" model="ir.ui.view">
+            <field name="name">account.payment_batch Default Form View</field>
+            <field name="model">account.payment_batch</field>
+            <field name="arch" type="xml">
+                <form string="Payment Batch" create="false" version="7.0">
+
+                    <header>
+                        <button name="pay" string="Pay" type="workflow" states="draft"/>
+                        <field name="state" widget="statusbar"
+                               statusbar_visible="draft,paid" />
+                    </header>
+
+                    <sheet>
+                        <h1>
+                            <field name="name" readonly="1" />
+                        </h1>
+                        <group>
+                            <field name="journal_id" />
+                            <field name="date_maturity" />
+                        </group>
+                        <group attrs="{'invisible': [('validate_user_id', '=', False)]}">
+                            <field name="validate_user_id" />
+                            <field name="validate_date" />
+                        </group>
+                        <field name="line_ids" />
+                        <field name="voucher_ids" states="paid" />
+                    </sheet>
+
+                    <div class="oe_chatter">
+                        <field name="message_ids" widget="mail_thread"
+                               modifiers="{}" />
+                    </div>
+
+                </form>
+            </field>
+        </record>
+
+        <record id="account_payment_batch_action" model="ir.actions.act_window">
+            <field name="name">Payment Batches</field>
+            <field name="res_model">account.payment_batch</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <menuitem id="account_payment_batch_menu"
+                  name="Payment Batches"
+                  action="account_payment_batch_action"
+                  parent="account_payment.menu_main_payment" />
+    </data>
+</openerp>

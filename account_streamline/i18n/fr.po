@@ -1,0 +1,1406 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* account_streamline
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 8.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2016-04-19 16:56+0000\n"
+"PO-Revision-Date: 2016-05-03 17:50+0100\n"
+"Last-Translator: Houzéfa Abbasbhay <houzefa.abba@xcg-consulting.fr>\n"
+"Language-Team: \n"
+"Language: fr\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: \n"
+"X-Generator: Poedit 1.5.4\n"
+
+#. module: account_streamline
+#: code:addons/account_streamline/payment_selection.py:244
+#, python-format
+msgid "({0} more conflicting accounts)"
+msgstr "({0} autres comptes en conflit)"
+
+#. module: account_streamline
+#: code:addons/account_streamline/payment_selection.py:248
+#, python-format
+msgid "({0} more partners with {1} accounts)"
+msgstr "(plus {0} partenaires avec {1} comptes)"
+
+#. module: account_streamline
+#: model:ir.actions.act_window,help:account_streamline.action_move_line_tree_reconciliation
+msgid ""
+"<p>\n"
+"                    No journal items found.\n"
+"                </p>\n"
+"            "
+msgstr ""
+"<p>\n"
+"                    Pas d'écritures comptables.\n"
+"                </p>\n"
+"            "
+
+#. module: account_streamline
+#: model:ir.model,name:account_streamline.model_account_account
+msgid "Account"
+msgstr "Compte"
+
+#. module: account_streamline
+#: model:ir.actions.act_window,name:account_streamline.action_move_line_tree_reconciliation
+#: model:ir.ui.menu,name:account_streamline.menu_action_account_move_line_reconcile
+msgid "Account Allocation"
+msgstr "Lettrage de Comptes"
+
+#. module: account_streamline
+#: view:account.move:account_streamline.view_move_form_streamline
+#: model:ir.model,name:account_streamline.model_account_move
+msgid "Account Entry"
+msgstr "Écriture comptable"
+
+#. module: account_streamline
+#: model:ir.ui.menu,name:account_streamline.menu_account_inquiries
+msgid "Account Inquiries"
+msgstr "Recherche par compte"
+
+#. module: account_streamline
+#: model:ir.model,name:account_streamline.model_account_move_line_reconcile
+msgid "Account move line reconcile"
+msgstr "Bloc de lettrage"
+
+#. module: account_streamline
+#: code:addons/account_streamline/payment_batch.py:14
+#: code:addons/account_streamline/payment_selection.py:30
+#, python-format
+msgid "Account type %s is not usable in payment vouchers."
+msgstr "Le type de compte %s n'est pas utilisable pour les bons de règlement."
+
+#. module: account_streamline
+#: model:ir.model,name:account_streamline.model_account_voucher
+msgid "Accounting Voucher"
+msgstr "Justificatif comptable"
+
+#. module: account_streamline
+#: model:mail.group,name:account_streamline.group_account_creators
+msgid "Accounts"
+msgstr "Comptes"
+
+#. module: account_streamline
+#: view:account.move:account_streamline.view_move_form_streamline
+msgid "Add an internal note..."
+msgstr "Ajouter une note interne"
+
+#. module: account_streamline
+#: code:addons/account_streamline/account_move_line.py:740
+#, python-format
+msgid "All entries must have the same account to be reconciled."
+msgstr "Toutes les écritures doivent avoir le même compte pour être lettrés."
+
+#. module: account_streamline
+#: code:addons/account_streamline/account_move_line.py:732
+#, python-format
+msgid ""
+"All entries must have the same second currency! Reconcile on company "
+"currency otherwise."
+msgstr "Toutes les entrées doivent être dans la même devise."
+
+#. module: account_streamline
+#: report:addons/account_streamline/report/payment_suggestion.mako:70
+#: report:addons/account_streamline/report/remittance_letter.mako:201
+msgid "Amount"
+msgstr "Montant"
+
+#. module: account_streamline
+#: view:account.move.line:account_streamline.account_move_line_analytic_form
+#: view:res.partner:account_streamline.view_partner_form_account_streamline
+msgid "Analytic Static"
+msgstr "Analytique statique"
+
+#. module: account_streamline
+#: model:ir.actions.act_window,name:account_streamline.action_move_line_accounting_items_analytic_tree
+#: model:ir.ui.menu,name:account_streamline.menu_action_move_line_accounting_items_analytic
+msgid "Analytical View"
+msgstr "Vue analytique"
+
+#. module: account_streamline
+#: model:ir.actions.act_window,name:account_streamline.action_move_line_tree_analytic
+#: model:ir.ui.menu,name:account_streamline.menu_action_account_move_line_analytic
+msgid "Analytical view"
+msgstr "Vue analytique"
+
+#. module: account_streamline
+#: view:account.move.line.goodtopay:account_streamline.view_account_move_line_goodtopay
+msgid "Are you sure?"
+msgstr "Êtes-vous sûr(e) ?"
+
+#. module: account_streamline
+#: view:res.partner:account_streamline.view_partner_property_form_streamline
+msgid "Bank Details"
+msgstr "Détails des banques"
+
+#. module: account_streamline
+#: field:account.payment_batch.line,bank_id:0
+msgid "Bank account"
+msgstr "Compte bancaire"
+
+#. module: account_streamline
+#: view:res.partner:account_streamline.view_partner_property_form_streamline
+msgid "Banks"
+msgstr "Banques"
+
+#. module: account_streamline
+#: field:account.payment_batch.line,batch_id:0
+msgid "Batch"
+msgstr "Lot"
+
+#. module: account_streamline
+#: field:account.payment_batch.move.line,batch_line_id:0
+msgid "Batch Line"
+msgstr "Ligne de lot"
+
+#. module: account_streamline
+#: view:account.payment_batch.selection:account_streamline.account_payment_batch_selection_form_view
+msgid "Batch payments"
+msgstr "Lot de paiements"
+
+#. module: account_streamline
+#: selection:account.payment_batch.selection,mode:0
+msgid "Both"
+msgstr "Les deux"
+
+#. module: account_streamline
+#: view:account.move.line.goodtopay:account_streamline.view_account_move_line_goodtopay
+#: view:account.move.line.reconcile:account_streamline.view_account_move_line_reconcile_full_streamline
+#: view:account.payment_batch.line:account_streamline.account_payment_batch_line_view_form
+#: view:account.payment_batch.selection:account_streamline.account_payment_batch_selection_form_view
+#: view:email.remittance:account_streamline.email_remittance_wizard
+msgid "Cancel"
+msgstr "Annuler"
+
+#. module: account_streamline
+#: view:account.move:account_streamline.view_move_form_streamline
+msgid "Cancel Entry"
+msgstr "Annuler écriture"
+
+#. module: account_streamline
+#: model:mail.message.subtype,description:account_streamline.mt_partner_customer
+#: field:res.partner,customer_account_check:0
+msgid "Check Customer Account"
+msgstr "Vérifier compte client"
+
+#. module: account_streamline
+#: model:mail.message.subtype,description:account_streamline.mt_partner_supplier
+#: field:res.partner,supplier_account_check:0
+msgid "Check Supplier Account"
+msgstr "Vérifier le compte fournisseur"
+
+#. module: account_streamline
+#: selection:account.payment_batch.selection,mode:0
+msgid "Client refunds"
+msgstr "Avoirs client"
+
+#. module: account_streamline
+#: model:ir.model,name:account_streamline.model_res_company
+msgid "Companies"
+msgstr "Sociétés"
+
+#. module: account_streamline
+#: field:account.move.line.reconcile,company_currency_id:0
+msgid "Company Currency"
+msgstr "Devise de la société"
+
+#. module: account_streamline
+#: selection:account.move.line.goodtopay,view_selection:0
+msgid "Complete view"
+msgstr "Vue complète"
+
+#. module: account_streamline
+#: field:account.move.line.goodtopay,create_uid:0
+#: field:account.payment_batch,create_uid:0
+#: field:account.payment_batch.line,create_uid:0
+#: field:account.payment_batch.move.line,create_uid:0
+#: field:account.payment_batch.selection,create_uid:0
+#: field:account_streamline.ledger_type,create_uid:0
+#: field:email.remittance,create_uid:0 field:payment.suggestion,create_uid:0
+msgid "Created by"
+msgstr "Créé par"
+
+#. module: account_streamline
+#: field:account.move.line.goodtopay,create_date:0
+#: field:account.payment_batch,create_date:0
+#: field:account.payment_batch.line,create_date:0
+#: field:account.payment_batch.move.line,create_date:0
+#: field:account.payment_batch.selection,create_date:0
+#: field:account_streamline.ledger_type,create_date:0
+#: field:email.remittance,create_date:0 field:payment.suggestion,create_date:0
+msgid "Created on"
+msgstr "Créé le"
+
+#. module: account_streamline
+#: code:addons/account_streamline/report/payment_suggestion.py:58
+#: code:addons/account_streamline/report/remittance_letter.py:25
+#, python-format
+msgid "Credit"
+msgstr "Crédit"
+
+#. module: account_streamline
+#: field:account.move.line,credit_curr:0
+msgid "Credit T"
+msgstr "Crédit T"
+
+#. module: account_streamline
+#: field:account.move.line.reconcile,credit_curr:0
+msgid "Credit amount"
+msgstr "Montant en crédit"
+
+#. module: account_streamline
+#: report:addons/account_streamline/report/payment_suggestion.mako:68
+#: report:addons/account_streamline/report/remittance_letter.mako:200
+msgid "Currency"
+msgstr "Devise"
+
+#. module: account_streamline
+#: model:mail.message.subtype,name:account_streamline.mt_partner_customer
+msgid "Customer"
+msgstr "Client"
+
+#. module: account_streamline
+#: code:addons/account_streamline/partner.py:174
+#, python-format
+msgid "Customer created, please check related account."
+msgstr "Client crée, veuillez vérifier le compte associé."
+
+#. module: account_streamline
+#: view:account.move.line:account_streamline.account_streamline_account_move_line_tree_view
+msgid "Date Due"
+msgstr "Date d'échéance"
+
+#. module: account_streamline
+#: help:account.payment_batch.selection,date_maturity:0
+msgid ""
+"Date based on which to filter accounting entries (we take entries with a due "
+"date <= the one entered here)."
+msgstr ""
+"La date selon laquelle les écritures comptables sont à filtrer (on garde les "
+"écritures avec une date d'échéance <= celle entrée ici)."
+
+#. module: account_streamline
+#: help:account.move,message_last_post:0
+#: help:account.move.line,message_last_post:0
+#: help:account.move.line.streamline.mail.thread,message_last_post:0
+#: help:account.payment_batch,message_last_post:0
+msgid "Date of the last message posted on the record."
+msgstr "Date du dernier message envoyé pour l'enregistrement."
+
+#. module: account_streamline
+#: model:email.template,body_html:account_streamline.remittance_letter_email_template
+msgid ""
+"Dear provider, Please take note of the details of the transaction with your "
+"account (attached)."
+msgstr ""
+"Cher fournisseur, Veuillez prendre note des détails de transaction sur votre "
+"compte (pièce jointe)."
+
+#. module: account_streamline
+#: code:addons/account_streamline/report/payment_suggestion.py:58
+#: code:addons/account_streamline/report/remittance_letter.py:25
+#, python-format
+msgid "Debit"
+msgstr "Débit"
+
+#. module: account_streamline
+#: field:account.move.line,debit_curr:0
+msgid "Debit T"
+msgstr "Débit T"
+
+#. module: account_streamline
+#: field:account.move.line.reconcile,debit_curr:0
+msgid "Debit amount"
+msgstr "Montant en débit"
+
+#. module: account_streamline
+#: report:addons/account_streamline/report/payment_suggestion.mako:69
+#: report:addons/account_streamline/report/remittance_letter.mako:199
+msgid "Debit/Credit"
+msgstr "Débit/Crédit"
+
+#. module: account_streamline
+#: report:addons/account_streamline/report/payment_suggestion.mako:66
+msgid "Description"
+msgstr "Description"
+
+#. module: account_streamline
+#: selection:account.move.line.goodtopay,view_selection:0
+msgid "Detailed view"
+msgstr "Vue détaillée"
+
+#. module: account_streamline
+#: code:addons/account_streamline/payment_selection.py:212
+#, python-format
+msgid "Different accounts are being referred for the same partner(s):"
+msgstr "Plus d'un compte pour un même partenaire :"
+
+#. module: account_streamline
+#: view:account.payment_batch.move.line:account_streamline.account_payment_batch_move_line_view_tree
+msgid "Download Attachments"
+msgstr "Télécharger les pièces jointes"
+
+#. module: account_streamline
+#: selection:account.payment_batch,state:0
+msgid "Draft"
+msgstr "Brouillon"
+
+#. module: account_streamline
+#: field:account.payment_batch.selection,date_maturity:0
+msgid "Due date"
+msgstr "Date d'échéance"
+
+#. module: account_streamline
+#: view:account.account:account_streamline.view_account_form_analytic_structure
+msgid "Dynamic Analytic"
+msgstr "Analytique dynamique"
+
+#. module: account_streamline
+#: view:email.remittance:account_streamline.email_remittance_wizard
+#: model:ir.actions.act_window,name:account_streamline.action_email_remittance
+msgid "Email Remittance Letters"
+msgstr "Courriel des avis de règlement"
+
+#. module: account_streamline
+#: model:ir.model,name:account_streamline.model_account_move_line_streamline_mail_thread
+msgid "Email Thread"
+msgstr "Discussion par courriel"
+
+#. module: account_streamline
+#: field:email.remittance,email_template:0
+msgid "Email template"
+msgstr "Modèle de courriel"
+
+#. module: account_streamline
+#: code:addons/account_streamline/account_move_line.py:722
+#, python-format
+msgid "Entry \"%s\" is not valid !"
+msgstr "L'entrée \"%s\" n'est pas valide !"
+
+#. module: account_streamline
+#: code:addons/account_streamline/account_move_line.py:795
+#, python-format
+msgid "Entry is already reconciled."
+msgstr "L’entrée est déjà lettrée."
+
+#. module: account_streamline
+#: code:addons/account_streamline/payment_selection.py:272
+#: code:addons/account_streamline/payment_selection.py:524
+#: code:addons/account_streamline/report/payment_suggestion.py:114
+#: code:addons/account_streamline/report/payment_suggestion.py:129
+#: code:addons/account_streamline/report/remittance_letter.py:111
+#: code:addons/account_streamline/wizard/account_reconcile.py:116
+#, python-format
+msgid "Error"
+msgstr "Erreur"
+
+#. module: account_streamline
+#: code:addons/account_streamline/account_move.py:89
+#: code:addons/account_streamline/account_move_line.py:628
+#: code:addons/account_streamline/account_move_line.py:635
+#: code:addons/account_streamline/account_move_line.py:644
+#: code:addons/account_streamline/account_move_line.py:669
+#: code:addons/account_streamline/account_move_line.py:721
+#: code:addons/account_streamline/account_move_line.py:731
+#: code:addons/account_streamline/account_move_line.py:739
+#: code:addons/account_streamline/account_move_line.py:794
+#: code:addons/account_streamline/account_move_line.py:799
+#: code:addons/account_streamline/payment_batch.py:138
+#: code:addons/account_streamline/payment_selection.py:292
+#: code:addons/account_streamline/payment_selection.py:299
+#: code:addons/account_streamline/payment_selection.py:305
+#: code:addons/account_streamline/payment_selection.py:309
+#: code:addons/account_streamline/payment_selection.py:336
+#, python-format
+msgid "Error!"
+msgstr "Erreur !"
+
+#. module: account_streamline
+#: code:addons/account_streamline/account_move_line.py:846
+#, python-format
+msgid "Exchange difference"
+msgstr "Écart de change"
+
+#. module: account_streamline
+#: field:account.payment_batch,date_maturity:0
+#: field:account.payment_batch.selection,date_maturity:0
+msgid "Execution Date"
+msgstr "Date d'exécution"
+
+#. module: account_streamline
+#: field:account.move,message_follower_ids:0
+#: field:account.move.line,message_follower_ids:0
+#: field:account.move.line.streamline.mail.thread,message_follower_ids:0
+#: field:account.payment_batch,message_follower_ids:0
+msgid "Followers"
+msgstr "Abonnés"
+
+#. module: account_streamline
+#: selection:account.account,t10_ctl:0 selection:account.account,t1_ctl:0
+#: selection:account.account,t2_ctl:0 selection:account.account,t3_ctl:0
+#: selection:account.account,t4_ctl:0 selection:account.account,t5_ctl:0
+#: selection:account.account,t6_ctl:0 selection:account.account,t7_ctl:0
+#: selection:account.account,t8_ctl:0 selection:account.account,t9_ctl:0
+msgid "Forbidden"
+msgstr "Interdit"
+
+#. module: account_streamline
+#: model:ir.actions.act_window,name:account_streamline.action_move_line_accounting_items_complete_tree
+#: model:ir.ui.menu,name:account_streamline.menu_action_move_line_accounting_items_complete
+msgid "Full View"
+msgstr "Vue complète"
+
+#. module: account_streamline
+#: model:ir.actions.act_window,name:account_streamline.action_move_line_tree_complete
+#: model:ir.ui.menu,name:account_streamline.menu_action_account_move_line_complete
+msgid "Full view"
+msgstr "Vue complète"
+
+#. module: account_streamline
+#: model:ir.actions.server,name:account_streamline.action_payment_suggestion
+msgid "Generate Payment Suggestion"
+msgstr "Générer suggestion de paiement"
+
+#. module: account_streamline
+#: field:account.move.line.goodtopay,generate_report:0
+msgid "Generate Report"
+msgstr "Générer un rapport"
+
+#. module: account_streamline
+#: field:account.account,a10_id:0 field:account.account,a1_id:0
+#: field:account.account,a2_id:0 field:account.account,a3_id:0
+#: field:account.account,a4_id:0 field:account.account,a5_id:0
+#: field:account.account,a6_id:0 field:account.account,a7_id:0
+#: field:account.account,a8_id:0 field:account.account,a9_id:0
+#: field:account.move.line,a10_id:0 field:account.move.line,a1_id:0
+#: field:account.move.line,a2_id:0 field:account.move.line,a3_id:0
+#: field:account.move.line,a4_id:0 field:account.move.line,a5_id:0
+#: field:account.move.line,a6_id:0 field:account.move.line,a7_id:0
+#: field:account.move.line,a8_id:0 field:account.move.line,a9_id:0
+#: field:res.partner,a10_id:0 field:res.partner,a1_id:0
+#: field:res.partner,a2_id:0 field:res.partner,a3_id:0
+#: field:res.partner,a4_id:0 field:res.partner,a5_id:0
+#: field:res.partner,a6_id:0 field:res.partner,a7_id:0
+#: field:res.partner,a8_id:0 field:res.partner,a9_id:0
+msgid "Generated Analytic Field"
+msgstr "Champ analytique autogénéré"
+
+#. module: account_streamline
+#: report:addons/account_streamline/report/payment_suggestion.mako:99
+msgid "Generated on %s"
+msgstr "Généré le %s"
+
+#. module: account_streamline
+#: help:account.move,message_summary:0
+#: help:account.move.line,message_summary:0
+#: help:account.move.line.streamline.mail.thread,message_summary:0
+#: help:account.payment_batch,message_summary:0
+msgid ""
+"Holds the Chatter summary (number of messages, ...). This summary is "
+"directly in html format in order to be inserted in kanban views."
+msgstr ""
+"Contient un résumé de la discussion (nombre de messages, ...). Ce résumé est "
+"directement au format html pour être inséré dans les vues kanban."
+
+#. module: account_streamline
+#: help:account.payment_batch.selection,mode:0
+msgid "How to filter accounting entries."
+msgstr "Définit comment les écritures comptables sont filtrées."
+
+#. module: account_streamline
+#: field:account.move.line.goodtopay,id:0
+#: field:account.move.line.streamline.mail.thread,id:0
+#: field:account.payment_batch,id:0 field:account.payment_batch.line,id:0
+#: field:account.payment_batch.move.line,id:0
+#: field:account.payment_batch.selection,id:0
+#: field:account_streamline.ledger_type,id:0 field:email.remittance,id:0
+#: field:payment.suggestion,id:0
+msgid "ID"
+msgstr "ID"
+
+#. module: account_streamline
+#: help:account.move,message_unread:0 help:account.move.line,message_unread:0
+#: help:account.move.line.streamline.mail.thread,message_unread:0
+#: help:account.payment_batch,message_unread:0
+msgid "If checked new messages require your attention."
+msgstr ""
+"Si cette case est cochée, les nouveaux messages requièrent votre attention."
+
+#. module: account_streamline
+#: constraint:account.move.line:0
+msgid ""
+"If you see this, the constraint redefined in account_streamline."
+"account_move_line._check_currency_company is not working!"
+msgstr ""
+"Si vous voyez ceci, la contrainte redéfinie dans account_streamline."
+"account_move_line.check_currency_company ne marche pas !"
+
+#. module: account_streamline
+#: report:addons/account_streamline/report/payment_suggestion.mako:67
+#: report:addons/account_streamline/report/remittance_letter.mako:198
+msgid "Invoice date"
+msgstr "Date de facturation"
+
+#. module: account_streamline
+#: field:account.move.line,is_not_payment_batchable:0
+#, fuzzy
+msgid "Is Not Payment Batchable"
+msgstr "Peut faire parti d'un lot"
+
+#. module: account_streamline
+#: field:account.move,message_is_follower:0
+#: field:account.move.line,message_is_follower:0
+#: field:account.move.line.streamline.mail.thread,message_is_follower:0
+#: field:account.payment_batch,message_is_follower:0
+msgid "Is a Follower"
+msgstr "Est un abonné"
+
+#. module: account_streamline
+#: field:account.move.line,is_in_voucher:0
+msgid "Is in voucher"
+msgstr ""
+
+#. module: account_streamline
+#: model:ir.model,name:account_streamline.model_account_journal
+msgid "Journal"
+msgstr "Journal"
+
+#. module: account_streamline
+#: model:ir.ui.menu,name:account_streamline.menu_journal_inquiries
+msgid "Journal Inquiries"
+msgstr "Recherche par journal"
+
+#. module: account_streamline
+#: view:account.move:account_streamline.view_move_form_streamline
+#: view:account.move.line:account_streamline.view_journal_tree_global
+#: view:account.move.line:account_streamline.view_move_line_tree_global
+#: view:account.move.line:account_streamline.view_move_line_tree_inherit_xcg
+#: view:account.move.line:account_streamline.view_move_line_tree_readonly
+#: model:ir.model,name:account_streamline.model_account_move_line
+msgid "Journal Items"
+msgstr "Écritures journaux"
+
+#. module: account_streamline
+#: model:ir.actions.act_window,name:account_streamline.action_move_line_tree_readonly
+msgid "Journal Items Listing"
+msgstr "Liste des écritures journaux"
+
+#. module: account_streamline
+#: view:account.move.line:account_streamline.view_move_line_search_global
+msgid "Journal Search"
+msgstr "Recherche journal"
+
+#. module: account_streamline
+#: report:addons/account_streamline/report/payment_suggestion.mako:42
+msgid "Journal: %s"
+msgstr "Journal : %s"
+
+#. module: account_streamline
+#: field:account.move,message_last_post:0
+#: field:account.move.line,message_last_post:0
+#: field:account.move.line.streamline.mail.thread,message_last_post:0
+#: field:account.payment_batch,message_last_post:0
+msgid "Last Message Date"
+msgstr "Date du dernier message"
+
+#. module: account_streamline
+#: field:account.move.line.goodtopay,write_uid:0
+#: field:account.payment_batch,write_uid:0
+#: field:account.payment_batch.line,write_uid:0
+#: field:account.payment_batch.move.line,write_uid:0
+#: field:account.payment_batch.selection,write_uid:0
+#: field:account_streamline.ledger_type,write_uid:0
+#: field:email.remittance,write_uid:0 field:payment.suggestion,write_uid:0
+msgid "Last Updated by"
+msgstr "Modifié par"
+
+#. module: account_streamline
+#: field:account.move.line.goodtopay,write_date:0
+#: field:account.payment_batch,write_date:0
+#: view:account.payment_batch.line:account_streamline.account_payment_batch_line_view_form
+#: view:account.payment_batch.line:account_streamline.account_payment_batch_line_view_tree
+#: field:account.payment_batch.line,write_date:0
+#: field:account.payment_batch.move.line,write_date:0
+#: field:account.payment_batch.selection,write_date:0
+#: field:account_streamline.ledger_type,write_date:0
+#: field:email.remittance,write_date:0 field:payment.suggestion,write_date:0
+msgid "Last Updated on"
+msgstr "Modifié le"
+
+#. module: account_streamline
+#: view:account.move.line:account_streamline.view_account_move_line_tree_reconcile
+msgid "Lettrage Ecritures Compatble"
+msgstr "Lettrage des écritures comptables"
+
+#. module: account_streamline
+#: field:account.account,is_limited:0 field:account.journal,is_limited:0
+msgid "Limited access"
+msgstr "Accès limité"
+
+#. module: account_streamline
+#: field:account.move.line.goodtopay,line_ids:0
+#: field:account.payment_batch,line_ids:0
+#: view:account.payment_batch.line:account_streamline.account_payment_batch_line_view_tree
+#: code:addons/account_streamline/payment_selection.py:81
+#, python-format
+msgid "Lines"
+msgstr "Lignes"
+
+#. module: account_streamline
+#: field:account.move,object_reference:0
+msgid "Linked Object"
+msgstr "Objet lié"
+
+#. module: account_streamline
+#: selection:account.account,t10_ctl:0 selection:account.account,t1_ctl:0
+#: selection:account.account,t2_ctl:0 selection:account.account,t3_ctl:0
+#: selection:account.account,t4_ctl:0 selection:account.account,t5_ctl:0
+#: selection:account.account,t6_ctl:0 selection:account.account,t7_ctl:0
+#: selection:account.account,t8_ctl:0 selection:account.account,t9_ctl:0
+msgid "Mandatory"
+msgstr "Obligatoire"
+
+#. module: account_streamline
+#: view:account.move.line.goodtopay:account_streamline.view_account_move_line_goodtopay
+#: model:ir.actions.act_window,name:account_streamline.action_mark_as_good_to_pay
+msgid "Mark as good to pay"
+msgstr "Marquer en Bon à payer"
+
+#. module: account_streamline
+#: model:ir.model,name:account_streamline.model_mail_message
+msgid "Message"
+msgstr "Message"
+
+#. module: account_streamline
+#: code:addons/account_streamline/res_company.py:20
+#: help:res.company,remittance_letter_bottom:0
+#, python-format
+msgid ""
+"Message to write at the bottom of Remittance Letter reports. HTML tags are "
+"allowed."
+msgstr ""
+"Message à écrire en bas des rapports d'avis de règlement. Les balises HTML "
+"sont autorisées."
+
+#. module: account_streamline
+#: code:addons/account_streamline/res_company.py:13
+#: help:res.company,remittance_letter_top:0
+#, python-format
+msgid ""
+"Message to write at the top of Remittance Letter reports. Available "
+"variables: \"$iban\" for the IBAN; \"$date\" for the payment date. HTML tags "
+"are allowed."
+msgstr ""
+"Message écrit en haut des rapports d'avis de règlement. Variables "
+"disponibles : \"$iban\" pour l'IBAN ; \"$date\" pour la date de paiement. "
+"Les balises HTML sont autorisées."
+
+#. module: account_streamline
+#: field:account.move,message_ids:0 field:account.move.line,message_ids:0
+#: field:account.move.line.streamline.mail.thread,message_ids:0
+#: field:account.payment_batch,message_ids:0
+#: view:res.company:account_streamline.view_res_company_streamline
+msgid "Messages"
+msgstr "Messages"
+
+#. module: account_streamline
+#: help:account.move,message_ids:0 help:account.move.line,message_ids:0
+#: help:account.move.line.streamline.mail.thread,message_ids:0
+#: help:account.payment_batch,message_ids:0
+msgid "Messages and communication history"
+msgstr "Messages et historique de communication"
+
+#. module: account_streamline
+#: field:account.payment_batch.selection,mode:0
+msgid "Mode"
+msgstr "Mode"
+
+#. module: account_streamline
+#: field:account.payment_batch.move.line,move_line_id:0
+msgid "Move Line"
+msgstr "Écritures comptable"
+
+#. module: account_streamline
+#: field:account.account,t10_ctl:0 field:account.account,t1_ctl:0
+#: field:account.account,t2_ctl:0 field:account.account,t3_ctl:0
+#: field:account.account,t4_ctl:0 field:account.account,t5_ctl:0
+#: field:account.account,t6_ctl:0 field:account.account,t7_ctl:0
+#: field:account.account,t8_ctl:0 field:account.account,t9_ctl:0
+msgid "Move Line Analytic Control"
+msgstr "Contrôle de l'analytique des écritures"
+
+#. module: account_streamline
+#: view:account.payment_batch.line:account_streamline.account_payment_batch_line_view_form
+#: view:account.payment_batch.line:account_streamline.account_payment_batch_line_view_tree
+#: field:account.payment_batch.line,line_ids:0
+#: view:account.payment_batch.move.line:account_streamline.account_payment_batch_move_line_view_tree
+msgid "Move Lines"
+msgstr "Écritures Comptables"
+
+#. module: account_streamline
+#: field:account_streamline.ledger_type,name:0
+msgid "Name"
+msgstr "Nom"
+
+#. module: account_streamline
+#: code:addons/account_streamline/account_voucher.py:143
+#, python-format
+msgid "No Account Base Code and Account Tax Code!"
+msgstr "Pas de compte code de base et compte de code général des impôts !"
+
+#. module: account_streamline
+#: code:addons/account_streamline/report/payment_suggestion.py:130
+#, python-format
+msgid "No draft voucher selected."
+msgstr "Pas bon de règlement à l'état brouillon sélectionné."
+
+#. module: account_streamline
+#: code:addons/account_streamline/report/remittance_letter.py:112
+#, python-format
+msgid "No posted voucher selected."
+msgstr "Pas de bon de règlement à l'état posté sélectionné."
+
+#. module: account_streamline
+#: field:account.payment_batch,name:0
+msgid "Number"
+msgstr "Numéro"
+
+#. module: account_streamline
+#: field:account.payment_batch.line,nb_lines:0
+msgid "Number of Move Lines"
+msgstr "Nombre d'écritures comptables"
+
+#. module: account_streamline
+#: field:account.move.line.goodtopay,nb_lines:0
+msgid "Number of lines"
+msgstr "Nombre de lignes"
+
+#. module: account_streamline
+#: selection:account.account,t10_ctl:0 selection:account.account,t1_ctl:0
+#: selection:account.account,t2_ctl:0 selection:account.account,t3_ctl:0
+#: selection:account.account,t4_ctl:0 selection:account.account,t5_ctl:0
+#: selection:account.account,t6_ctl:0 selection:account.account,t7_ctl:0
+#: selection:account.account,t8_ctl:0 selection:account.account,t9_ctl:0
+msgid "Optional"
+msgstr "Optionnel"
+
+#. module: account_streamline
+#: selection:account.payment_batch,state:0
+msgid "Paid"
+msgstr "Payé"
+
+#. module: account_streamline
+#: view:account.move.line.reconcile:account_streamline.view_account_move_line_reconcile_full_streamline
+msgid "Partial Reconcile"
+msgstr "Lettrage partiel"
+
+#. module: account_streamline
+#: field:account.payment_batch.line,partner_id:0
+#: model:ir.model,name:account_streamline.model_res_partner
+msgid "Partner"
+msgstr "Partenaire"
+
+#. module: account_streamline
+#: code:addons/account_streamline/payment_batch.py:16
+#: code:addons/account_streamline/payment_selection.py:32
+#, python-format
+msgid "Partner %s is not a customer."
+msgstr "Le partenaire %s n'est pas un client."
+
+#. module: account_streamline
+#: code:addons/account_streamline/payment_batch.py:15
+#: code:addons/account_streamline/payment_selection.py:31
+#, python-format
+msgid "Partner %s is not a supplier."
+msgstr "Le partenaire %s n'est pas un fournisseur."
+
+#. module: account_streamline
+#: report:addons/account_streamline/report/payment_suggestion.mako:45
+msgid "Partner count: %d"
+msgstr "Nombre de partenaires : %d"
+
+#. module: account_streamline
+#: field:account.voucher,partner_email:0
+#: code:addons/account_streamline/account_voucher.py:33
+#, python-format
+msgid "Partner email"
+msgstr "Adresse de messagerie du partenaire"
+
+#. module: account_streamline
+#: view:email.remittance:account_streamline.email_remittance_wizard
+#: field:email.remittance,partners:0
+msgid "Partners"
+msgstr "Partenaires"
+
+#. module: account_streamline
+#: code:addons/account_streamline/payment_selection.py:525
+#, python-format
+msgid "Partners undefined in the following accounting move entries: %s."
+msgstr "Partenaires indéfinis dans les pièces comptables suivantes : %s."
+
+#. module: account_streamline
+#: view:account.payment_batch:account_streamline.account_payment_batch_view_form
+msgid "Pay"
+msgstr "Payer"
+
+#. module: account_streamline
+#: field:account.move.line,payment_batch_id:0
+#: view:account.payment_batch:account_streamline.account_payment_batch_view_form
+#: field:account.voucher,payment_batch_id:0
+#: code:addons/account_streamline/payment_batch_selection.py:156
+#, python-format
+msgid "Payment Batch"
+msgstr "Lot de paiement"
+
+#. module: account_streamline
+#: view:account.payment_batch.line:account_streamline.account_payment_batch_line_view_form
+#: field:account.voucher,payment_batch_line_id:0
+msgid "Payment Batch Line"
+msgstr "Ligne de lot de paiement"
+
+#. module: account_streamline
+#: view:account.payment_batch.line:account_streamline.account_payment_batch_line_view_tree
+msgid "Payment Batch Lines"
+msgstr "Lignes de lots de paiement"
+
+#. module: account_streamline
+#: model:ir.actions.act_window,name:account_streamline.account_payment_batch_selection_action
+#: model:ir.ui.menu,name:account_streamline.account_payment_batch_selection_menu
+msgid "Payment Batch Selection"
+msgstr "Sélection de paiement par lot"
+
+#. module: account_streamline
+#: view:account.payment_batch:account_streamline.account_payment_batch_view_tree
+#: model:ir.actions.act_window,name:account_streamline.account_payment_batch_action
+#: model:ir.actions.act_window,name:account_streamline.account_payment_batch_line_action
+#: model:ir.ui.menu,name:account_streamline.account_payment_batch_menu
+msgid "Payment Batches"
+msgstr "Lots de paiement"
+
+#. module: account_streamline
+#: field:account.move.line.goodtopay,journal_id:0
+#: field:account.payment_batch,journal_id:0
+#: field:account.payment_batch.selection,journal_id:0
+msgid "Payment Method"
+msgstr "Méthode de paiement"
+
+#. module: account_streamline
+#: code:addons/account_streamline/report/payment_suggestion.py:66
+#: model:ir.actions.report.xml,name:account_streamline.payment_suggestion
+#, python-format
+msgid "Payment Suggestion"
+msgstr "Suggestion de paiement"
+
+#. module: account_streamline
+#: code:addons/account_streamline/report/payment_suggestion.py:115
+#, python-format
+msgid "Payment Suggestions must apply to one journal only."
+msgstr "Les suggestions de paiement doivent s'appliquer qu'à un seul journal."
+
+#. module: account_streamline
+#: model:ir.model,name:account_streamline.model_account_move_line_goodtopay
+msgid "Payment selection for good to pay"
+msgstr "Sélection de paiements bons à payer"
+
+#. module: account_streamline
+#: model:ir.actions.act_window,name:account_streamline.action_move_line_tree_payment
+#: model:ir.ui.menu,name:account_streamline.menu_action_account_move_line_payment
+msgid "Payments Selection"
+msgstr "Sélection de paiements"
+
+#. module: account_streamline
+#: code:addons/account_streamline/payment_batch.py:17
+#: code:addons/account_streamline/payment_selection.py:33
+#, python-format
+msgid "Please define default credit/debit accounts on the journal \"%s\"."
+msgstr ""
+"Veuillez définir les compte crédit/débit par défaut dans le journal « %s »."
+
+#. module: account_streamline
+#: view:account.move:account_streamline.view_move_form_streamline
+msgid "Post"
+msgstr "Poster"
+
+#. module: account_streamline
+#: view:account.move.line.reconcile:account_streamline.view_account_move_line_reconcile_full_streamline
+msgid "Reconcile"
+msgstr "Lettrage"
+
+#. module: account_streamline
+#: field:account.move.line,date_reconcile:0
+msgid "Reconcile Date"
+msgstr "Date de lettrage"
+
+#. module: account_streamline
+#: view:account.move.line.reconcile:account_streamline.view_account_move_line_reconcile_full_streamline
+msgid "Reconcile With Write-Off"
+msgstr "Lettrer avec un écart de règlement"
+
+#. module: account_streamline
+#: field:account.move.line.reconcile,force_by_base:0
+msgid "Reconcile by base currency"
+msgstr "Lettrer par devise de base"
+
+#. module: account_streamline
+#: view:account.move.line:account_streamline.view_account_move_line_filter_inherit
+msgid "Reconciled"
+msgstr "Lettré"
+
+#. module: account_streamline
+#: view:account.move.line:account_streamline.view_account_move_line_filter_inherit
+msgid "Reconciled Journal Items"
+msgstr "Lignes lettrées"
+
+#. module: account_streamline
+#: view:account.move.line.reconcile:account_streamline.view_account_move_line_reconcile_full_streamline
+msgid "Reconciliation"
+msgstr "Lettrage"
+
+#. module: account_streamline
+#: view:account.move.line.reconcile:account_streamline.view_account_move_line_reconcile_full_streamline
+msgid "Reconciliation Transactions"
+msgstr "Transaction de lettrage"
+
+#. module: account_streamline
+#: view:account.payment_batch.line:account_streamline.account_payment_batch_line_view_form
+#: view:account.payment_batch.line:account_streamline.account_payment_batch_line_view_tree
+msgid "Registered on"
+msgstr "Enregistré le"
+
+#. module: account_streamline
+#: code:addons/account_streamline/report/remittance_letter.py:51
+#: model:email.template,subject:account_streamline.remittance_letter_email_template
+#: model:ir.actions.report.xml,name:account_streamline.remittance_letter
+#, python-format
+msgid "Remittance Letter"
+msgstr "Avis de règlement"
+
+#. module: account_streamline
+#: code:addons/account_streamline/res_company.py:19
+#: view:res.company:account_streamline.view_res_company_streamline
+#: field:res.company,remittance_letter_bottom:0
+#, python-format
+msgid "Remittance Letter - bottom message"
+msgstr "Avis de règlement - message du bas"
+
+#. module: account_streamline
+#: code:addons/account_streamline/res_company.py:12
+#: view:res.company:account_streamline.view_res_company_streamline
+#: field:res.company,remittance_letter_top:0
+#, python-format
+msgid "Remittance Letter - top message"
+msgstr "Avis de règlement - Message du haut"
+
+#. module: account_streamline
+#: model:email.template,report_name:account_streamline.remittance_letter_email_template
+msgid "RemittanceLetter.pdf"
+msgstr "AvisDeRèglement.pdf"
+
+#. module: account_streamline
+#: field:res.partner,siren:0
+msgid "SIREN"
+msgstr "SIREN"
+
+#. module: account_streamline
+#: field:res.partner,siret:0
+msgid "SIRET"
+msgstr "SIRET"
+
+#. module: account_streamline
+#: view:account.payment_batch.line:account_streamline.account_payment_batch_line_view_form
+msgid "Save"
+msgstr "Enregistrer"
+
+#. module: account_streamline
+#: field:account.move.line.goodtopay,partner_id:0
+msgid "Selected Partner"
+msgstr "Partenaire sélectionné"
+
+#. module: account_streamline
+#: view:email.remittance:account_streamline.email_remittance_wizard
+msgid ""
+"Selected partners are listed below. Their email can be edited in the list; "
+"press Enter to validate."
+msgstr ""
+"Les partenaires sélectionnés sont listés ci-dessous. Leur courriel peut être "
+"modifié dans la liste ; appuyez sur Entrée pour valider."
+
+#. module: account_streamline
+#: view:email.remittance:account_streamline.email_remittance_wizard
+msgid "Send emails"
+msgstr "Envoyer les courriels"
+
+#. module: account_streamline
+#: view:res.partner:account_streamline.view_res_partner_filter_account_streamline
+msgid "Show messages to read"
+msgstr "Affiche les messages à lire"
+
+#. module: account_streamline
+#: report:addons/account_streamline/report/payment_suggestion.mako:103
+msgid "Signature:"
+msgstr "Signature :"
+
+#. module: account_streamline
+#: model:ir.actions.act_window,name:account_streamline.action_move_line_accounting_items_simple_tree
+#: model:ir.ui.menu,name:account_streamline.menu_action_move_line_accounting_items_simple
+msgid "Simple View"
+msgstr "Vue simple"
+
+#. module: account_streamline
+#: model:ir.actions.act_window,name:account_streamline.action_move_line_tree_simple
+#: model:ir.ui.menu,name:account_streamline.menu_action_account_move_line_simple
+msgid "Simple view"
+msgstr "Vue simple"
+
+#. module: account_streamline
+#: code:addons/account_streamline/account_move_line.py:800
+#, python-format
+msgid "Some entries are already reconciled."
+msgstr "Plusieurs entrées sont déjà lettrées."
+
+#. module: account_streamline
+#: field:account.payment_batch,state:0
+msgid "State"
+msgstr "État"
+
+#. module: account_streamline
+#: view:account.account:account_streamline.view_account_form_analytic_structure
+msgid "Static Analytic"
+msgstr "Analytique statique"
+
+#. module: account_streamline
+#: field:account.payment_batch.line,subtotal:0
+msgid "Subtotal"
+msgstr "Sous total"
+
+#. module: account_streamline
+#: field:account.move,message_summary:0
+#: field:account.move.line,message_summary:0
+#: field:account.move.line.streamline.mail.thread,message_summary:0
+#: field:account.payment_batch,message_summary:0
+msgid "Summary"
+msgstr "Résumé"
+
+#. module: account_streamline
+#: model:mail.message.subtype,name:account_streamline.mt_partner_supplier
+msgid "Supplier"
+msgstr "Fournisseur"
+
+#. module: account_streamline
+#: code:addons/account_streamline/partner.py:164
+#, python-format
+msgid "Supplier created, please check related account."
+msgstr "Fournisseur crée, veuillez vérifier le compte associé."
+
+#. module: account_streamline
+#: selection:account.payment_batch.selection,mode:0
+msgid "Supplier invoices"
+msgstr "Factures fournisseur"
+
+#. module: account_streamline
+#: code:addons/account_streamline/account_voucher.py:100
+#, python-format
+msgid "The invoice you are willing to pay is not valid anymore."
+msgstr "La facture que vous êtes prêt à payer n’est plus valide."
+
+#. module: account_streamline
+#: code:addons/account_streamline/payment_batch.py:19
+#: code:addons/account_streamline/payment_selection.py:35
+#, python-format
+msgid "The line %s is already reconciled."
+msgstr "Cette ligne %s est déjà lettrée."
+
+#. module: account_streamline
+#: help:account.move.line,credit_curr:0
+msgid "This is the credit amount in transaction currency"
+msgstr "Représente le montant en crédit dans une devise de transaction"
+
+#. module: account_streamline
+#: help:account.move.line,debit_curr:0
+msgid "This is the debit amount in transaction currency"
+msgstr "Représente le montant en débit dans la monnaie de transaction"
+
+#. module: account_streamline
+#: code:addons/account_streamline/account_move_line.py:711
+#, python-format
+msgid "To reconcile the entries company should be the same for all entries."
+msgstr ""
+"Pour être lettrés, les entrées de l'entreprise doivent être les mêmes que "
+"les autres entrées."
+
+#. module: account_streamline
+#: field:account.move.line.goodtopay,total_amount:0
+msgid "Total Amount"
+msgstr "Montant total"
+
+#. module: account_streamline
+#: view:account.move:account_streamline.view_move_form_streamline
+#: view:account.move.line:account_streamline.view_journal_tree_global
+#: view:account.move.line:account_streamline.view_move_line_tree_global
+#: view:account.move.line:account_streamline.view_move_line_tree_inherit_xcg
+msgid "Total Credit"
+msgstr "Crédit total"
+
+#. module: account_streamline
+#: view:account.move.line:account_streamline.view_journal_tree_global
+#: view:account.move.line:account_streamline.view_move_line_tree_global
+msgid "Total Credit T"
+msgstr "Crédit T total"
+
+#. module: account_streamline
+#: view:account.move:account_streamline.view_move_form_streamline
+#: view:account.move.line:account_streamline.view_journal_tree_global
+#: view:account.move.line:account_streamline.view_move_line_tree_global
+#: view:account.move.line:account_streamline.view_move_line_tree_inherit_xcg
+msgid "Total Debit"
+msgstr "Débit total"
+
+#. module: account_streamline
+#: view:account.move.line:account_streamline.view_journal_tree_global
+#: view:account.move.line:account_streamline.view_move_line_tree_global
+msgid "Total Debit T"
+msgstr "Débit T total"
+
+#. module: account_streamline
+#: report:addons/account_streamline/report/remittance_letter.mako:218
+msgid "Total TTC"
+msgstr "Total TTC"
+
+#. module: account_streamline
+#: report:addons/account_streamline/report/payment_suggestion.mako:90
+msgid "Total for %s:"
+msgstr "Total pour %s:"
+
+#. module: account_streamline
+#: report:addons/account_streamline/report/payment_suggestion.mako:46
+msgid "Total: %s"
+msgstr "Total : %s"
+
+#. module: account_streamline
+#: field:account.move.line.reconcile,trans_currency_id:0
+msgid "Transaction Currency"
+msgstr "Devise de transaction"
+
+#. module: account_streamline
+#: report:addons/account_streamline/report/payment_suggestion.mako:65
+#: report:addons/account_streamline/report/remittance_letter.mako:197
+msgid "Transaction reference"
+msgstr "Référence de transaction"
+
+#. module: account_streamline
+#: code:addons/account_streamline/account_move.py:84
+#, python-format
+msgid "Unable to post! The following analysis codes are mandatory:"
+msgstr ""
+"Impossible de poster ! Les codes analytiques suivants sont obligatoires :"
+
+#. module: account_streamline
+#: view:res.partner:account_streamline.view_res_partner_filter_account_streamline
+msgid "Unread"
+msgstr "Non-lu"
+
+#. module: account_streamline
+#: field:account.move,message_unread:0
+#: field:account.move.line,message_unread:0
+#: field:account.move.line.streamline.mail.thread,message_unread:0
+#: field:account.payment_batch,message_unread:0
+msgid "Unread Messages"
+msgstr "Messages non lus"
+
+#. module: account_streamline
+#: field:account.move.line,currency_rate:0
+msgid "Used rate"
+msgstr "Taux utilisé"
+
+#. module: account_streamline
+#: view:account.move.line.goodtopay:account_streamline.view_account_move_line_goodtopay
+#: view:account.payment_batch.selection:account_streamline.account_payment_batch_selection_form_view
+msgid "Validate"
+msgstr "Valider"
+
+#. module: account_streamline
+#: field:account.payment_batch,validate_date:0
+msgid "Validation Date"
+msgstr "Date de validation"
+
+#. module: account_streamline
+#: field:account.payment_batch,validate_user_id:0
+msgid "Validator"
+msgstr "Valideur"
+
+#. module: account_streamline
+#: field:account.move.line.goodtopay,view_selection:0
+msgid "View selector"
+msgstr "Voir sélecteur"
+
+#. module: account_streamline
+#: model:ir.model,name:account_streamline.model_account_voucher_line
+msgid "Voucher Lines"
+msgstr "Lignes de justificatif"
+
+#. module: account_streamline
+#: report:addons/account_streamline/report/payment_suggestion.mako:44
+msgid "Voucher count: %d"
+msgstr "Bons de règlement : %d"
+
+#. module: account_streamline
+#: field:account.payment_batch,voucher_ids:0
+#: code:addons/account_streamline/payment_suggestion.py:18
+#: field:email.remittance,vouchers:0 field:payment.suggestion,voucher_ids:0
+#, python-format
+msgid "Vouchers"
+msgstr "Bons de règlement"
+
+#. module: account_streamline
+#: code:addons/account_streamline/payment_selection.py:471
+#: code:addons/account_streamline/payment_selection.py:544
+#, python-format
+msgid "Warning"
+msgstr "Avertissement"
+
+#. module: account_streamline
+#: code:addons/account_streamline/account_move_line.py:710
+#: code:addons/account_streamline/account_move_line.py:841
+#: code:addons/account_streamline/account_move_line.py:906
+#, python-format
+msgid "Warning!"
+msgstr "Attention !"
+
+#. module: account_streamline
+#: view:email.remittance:account_streamline.email_remittance_wizard
+msgid "Warning! Emails will be sent when clicking on the red button."
+msgstr ""
+"Attention ! Les courriels seront envoyés en cliquant sur le bouton rouge."
+
+#. module: account_streamline
+#: help:account.account,is_limited:0 help:account.journal,is_limited:0
+msgid "When selected, only the financial manager can read and write"
+msgstr "Lorsqu'il est activé, seul le directeur financier peut lire et écrire"
+
+#. module: account_streamline
+#: view:account.move.line.reconcile:account_streamline.view_account_move_line_reconcile_full_streamline
+#: code:addons/account_streamline/account_move_line.py:924
+#, python-format
+msgid "Write-Off"
+msgstr "Écart de règlement"
+
+#. module: account_streamline
+#: field:account.move.line.reconcile,writeoff_curr:0
+msgid "Write-Off amount"
+msgstr "Écart de règlement"
+
+#. module: account_streamline
+#: code:addons/account_streamline/account_voucher.py:100
+#, python-format
+msgid "Wrong voucher line"
+msgstr "Mauvaise entrée de bon de règlement"
+
+#. module: account_streamline
+#: field:account.move.line,date_maturity_yday:0
+msgid "Year and Year Day"
+msgstr "Year and Year Day"
+
+#. module: account_streamline
+#: code:addons/account_streamline/account_move_line.py:36
+#, python-format
+msgid "You cannot add line(s) into an already posted entry"
+msgstr ""
+"Vous ne pouvez pas ajouter d'écritures à l'intérieur d'entrées déjà postées."
+
+#. module: account_streamline
+#: code:addons/account_streamline/account_move_line.py:39
+#, python-format
+msgid "You cannot move line(s) between journal types"
+msgstr "Vous ne pouvez pas déplacer d'écritures entre journaux"
+
+#. module: account_streamline
+#: code:addons/account_streamline/account_move_line.py:37
+#, python-format
+msgid "You cannot remove line(s) from an already posted entry"
+msgstr "Vous ne pouvez pas supprimer des entrées depuis une entrée déjà postée"
+
+#. module: account_streamline
+#: code:addons/account_streamline/account_voucher.py:143
+#, python-format
+msgid ""
+"You have to configure account base code and account tax code on the '%s' tax!"
+msgstr ""
+"Vous devez configurer les codes de base et fiscal du compte pour la taxe "
+"« %s » !"
+
+#. module: account_streamline
+#: code:addons/account_streamline/account_move_line.py:842
+#, python-format
+msgid "You have to configure an account for the exchange gain/loss."
+msgstr "Vous devez créer un compte de gain/perte de change."
+
+#. module: account_streamline
+#: code:addons/account_streamline/account_move_line.py:907
+#, python-format
+msgid "You have to provide an account for the write off entry."
+msgstr "Vous devez fournir un compte pour la suppression d’écritures."
+
+#. module: account_streamline
+#: code:addons/account_streamline/wizard/account_reconcile.py:117
+#, python-format
+msgid "Your entries are already reconciled"
+msgstr "Vos écritures sont déjà lettrées"
+
+#. module: account_streamline
+#: view:res.partner:account_streamline.view_partner_property_form_streamline
+msgid "account.group_account_user"
+msgstr "account.group_account_user"
+
+#. module: account_streamline
+#: code:addons/account_streamline/account_voucher.py:182
+#, python-format
+msgid "change"
+msgstr "change"
+
+#. module: account_streamline
+#: view:account.move.line.goodtopay:account_streamline.view_account_move_line_goodtopay
+#: view:account.move.line.reconcile:account_streamline.view_account_move_line_reconcile_full_streamline
+#: view:account.payment_batch.line:account_streamline.account_payment_batch_line_view_form
+#: view:account.payment_batch.selection:account_streamline.account_payment_batch_selection_form_view
+msgid "or"
+msgstr "ou"
+
+#. module: account_streamline
+#: field:account.move.line,move_state:0
+msgid "status"
+msgstr "état"
+
+#. module: account_streamline
+#: field:account.move.line.goodtopay,context_saved:0
+#: field:account.voucher,iban:0
+#: field:account.voucher,remittance_letter_bottom:0
+msgid "unknown"
+msgstr "inconnu"
+
+#. module: account_streamline
+#: view:res.partner:account_streamline.view_partner_property_form_streamline
+msgid "{'invisible': [('customer', '=', False)]}"
+msgstr "{'invisible': [('customer', '=', False)]}"
+
+#. module: account_streamline
+#: view:res.partner:account_streamline.view_partner_property_form_streamline
+msgid "{'invisible': [('supplier', '=', False)]}"
+msgstr "{'invisible': [('supplier', '=', False)]}"
+
+#~ msgid "Date Maturity"
+#~ msgstr "Date d'échéance"
+
+#~ msgid "Is Payment Batched"
+#~ msgstr "Fait parti d'un lot"
+
+#~ msgid "Partner Type"
+#~ msgstr "Type de partenaire"
+
+#~ msgid "SEPA Batch"
+#~ msgstr "SEPA Batch"
