@@ -38,6 +38,7 @@
             </field>
         </record>
 
+
         <record id="calender_holiday_calendar_view" model="ir.ui.view">
             <field name="name">view.name</field>
             <field name="model">calendar.holiday</field>
@@ -50,12 +51,18 @@
         </record>
 
         <!-- Calendar Holiday Search Views -->
+
         <record id="holiday_type_search_view" model="ir.ui.view">
             <field name="name">calendar_holiday_search</field>
             <field name="model">calendar.holiday</field>
             <field name="arch" type="xml">
                 <search string="Search">
+                    <field name="type" string="Type" filter_domain="[('type','ilike','self')]" />
                     <field name="name" string="Name" filter_domain="[('name','ilike','self')]" />
+                    <group expand="0" string="Group By">
+                        <filter string="Type" icon="terp-personal" domain="[]" context="{'group_by':'type'}"/>
+                        <filter string="Name" icon="terp-personal" domain="[]" context="{'group_by':'name'}"/>
+                    </group>
                 </search>
             </field>
         </record>
