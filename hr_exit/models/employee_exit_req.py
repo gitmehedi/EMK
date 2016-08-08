@@ -6,13 +6,13 @@ class EmployeeExitReq(models.Model):
     _name = 'hr.emp.exit.req'
 
     _rec_name = 'employee_id'
-    #descriptions = fields.Text(string='Descriptions', required=True)
-    emp_notes = fields.Text(string='Employee Notes',required=True )
+    # descriptions = fields.Text(string='Descriptions', required=True)
+    emp_notes = fields.Text(string='Employee Notes', required=True)
     department_notes = fields.Char(size=300, string='Department Manager Notes')
     hr_notes = fields.Char(size=300, string='HR Manager Notes')
     manager_notes = fields.Char(size=300, string='General Manager Notes')
-    req_date = fields.Date('Request Date',default=fields.Date.today(), required=True)
-    last_date = fields.Date('Last Day of Work',default=fields.Date.today(), required=True)
+    req_date = fields.Date('Request Date', default=fields.Date.today(), required=True)
+    last_date = fields.Date('Last Day of Work', default=fields.Date.today(), required=True)
     state = fields.Selection(
         [('draft', 'To Submit'), ('cancel', 'Cancelled'), ('confirm', 'To Approve'), ('refuse', 'Refused'),
          ('validate1', 'Second Approval'), ('validate2', 'Third Approval'), ('validate', 'Approved')],
@@ -22,8 +22,9 @@ class EmployeeExitReq(models.Model):
             \nThe status is \'Refused\', when exit request is refused by manager.\
             \nThe status is \'Approved\', when exit request is approved by manager.')
 
-    employee_id = fields.Many2one('hr.employee', select=True, invisible=False,  default=lambda self: self._employee_gets())
-    #mobile_phone = fields.Many2one('hr.employee', string='Contact No', related='employee_id.mobile_phone')
+    employee_id = fields.Many2one('hr.employee', select=True, invisible=False,
+                                  default=lambda self: self._employee_gets())
+    # mobile_phone = fields.Many2one('hr.employee', string='Contact No', related='employee_id.mobile_phone')
     job_id = fields.Many2one('hr.job', string='Job Title', related='employee_id.job_id')
     user_id = fields.Many2one('res.users', related='employee_id.user_id', copy=False)
     manager_id = fields.Many2one('hr.employee', related='employee_id.parent_id',
@@ -55,17 +56,25 @@ class EmployeeExitReq(models.Model):
     # 'last_date': lambda *a: (datetime.today() + relativedelta(days=6)).strftime('%Y-%m-%d'),
     # }
 
+    @api.onchange('req_date', 'last_date')  # if these fields are changed, call method
+    def check_change_date(self):
+        req_date = self.req_date
+        last_date = self.last_date
+
+        if last_date <= req_date:
+            req_date = self.req_date
+            raise osv.except_osv(('Error'), ('Date is not valid!'))
+
 
     @api.multi
     def _employee_gets(self):
-        #emp_id = context.get('default_employee_id', False)
+        # emp_id = context.get('default_employee_id', False)
         # if emp_id:
         #     return emp_id
         ids = self.env['hr.employee'].search([('user_id', '=', self.env.user.id)])
         if ids:
             return ids[0]
         return False
-
 
     @api.multi
     def exit_cancel(self):
@@ -102,18 +111,17 @@ class EmployeeExitReq(models.Model):
     def exit_validate(self):
         obj_emp = self.env['hr.employee']
         ids2 = obj_emp.search([('user_id', '=', self.env.user.id)])
-        #manager = ids2 and ids2[0] or False
+        # manager = ids2 and ids2[0] or False
         self.write({'state': 'validate1'})
 
         return True
-
 
     @api.multi
     def exit_first_validate(self):
         obj_emp = self.env['hr.employee']
         ids2 = obj_emp.search([('user_id', '=', self.env.user.id)])
         manager = ids2 and ids2[0] or False
-        #self.exit_first_validate_notificate()
+        # self.exit_first_validate_notificate()
         return self.write({'state': 'validate2', 'manager_id1': manager})
 
     @api.multi
@@ -121,7 +129,7 @@ class EmployeeExitReq(models.Model):
         obj_emp = self.env['hr.employee']
         ids2 = obj_emp.search([('user_id', '=', self.env.user.id)])
         manager = ids2 and ids2[0] or False
-        #self.exit_first_validate_notificate()
+        # self.exit_first_validate_notificate()
         return self.write({'state': 'validate'})
 
     @api.multi
@@ -139,7 +147,7 @@ class EmployeeExitReq(models.Model):
                 self.write({'state': 'refuse'})
             else:
                 self.write({'state': 'refuse'})
-        #self.exit_cancel()
+        # self.exit_cancel()
         return True
 
     @api.multi
@@ -175,7 +183,8 @@ class EmployeeExitReq(models.Model):
     def write(self, vals):
         employee_id = vals.get('employee_id', False)
 
-        if vals.get('state') and vals['state'] not in ['draft', 'confirm', 'validate','validate1','validate2', 'cancel'] and not self.env[
+        if vals.get('state') and vals['state'] not in ['draft', 'confirm', 'validate', 'validate1', 'validate2',
+                                                       'cancel'] and not self.env[
             'res.users'].has_group('base.group_hr_user'):
             raise osv.except_osv(_('Warning!'), _(
                 'You cannot set a exit request as \'%s\'. Contact a human resource manager.') % vals.get('state'))
