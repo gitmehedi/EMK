@@ -6,7 +6,8 @@
     'website': 'www.genweb2.com',
     'category': 'Calendar',
     'data': [
-        # 'report/absence_report_views.xml',
+        'report/absence_report_view.xml',
+        'report/absence_report_pdf.xml',
     ],
     'depends': ['account_period','calendar','hr_organization_calendar'],
     'summary': 'Customizable calendar for organizations',

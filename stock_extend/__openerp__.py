@@ -35,7 +35,7 @@
             'views/stock_return_view.xml',
             'views/stock_transfer_view.xml',
             'wizard/stock_report_wizard_view.xml',
-            'report/stock_issue_report.xml',
+            'report/absence_report_pdf.xml',
             'report/absence_report_view.xml',
             'views/inherited_stock_inventory_line_views.xml',
             'views/stock_receive_view.xml',
