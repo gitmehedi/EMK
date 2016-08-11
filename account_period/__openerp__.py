@@ -24,7 +24,7 @@
     'website': 'www.genweb2.com',
     'category': 'Accounting',
     'data': [
-        'security/ir.model.access.csv',
+        # 'security/ir.model.access.csv',
         'views/account_fiscal_year_views.xml',
         ],
     'depends': ['account',],

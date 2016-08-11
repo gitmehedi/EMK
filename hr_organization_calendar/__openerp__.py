@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 {
-    'name': 'Organization Calendar',
+    'name': 'HR Organization Calendar',
     'author': 'Genweb2 Limited',
     'website': 'www.genweb2.com',
     'category': 'Calendar',
