@@ -56,13 +56,12 @@ class EmployeeExitReq(models.Model):
     # 'last_date': lambda *a: (datetime.today() + relativedelta(days=6)).strftime('%Y-%m-%d'),
     # }
 
-    @api.onchange('req_date', 'last_date')  # if these fields are changed, call method
+    @api.onchange('last_date')  # if these fields are changed, call method
     def check_change_date(self):
         req_date = self.req_date
         last_date = self.last_date
 
-        if last_date <= req_date:
-            req_date = self.req_date
+        if last_date < req_date:
             raise osv.except_osv(('Error'), ('Date is not valid!'))
 
 
@@ -179,6 +178,15 @@ class EmployeeExitReq(models.Model):
             result['value'] = {'department_id': employee.department_id.id}
         return result
 
+    @api.model
+    def create(self, vals):
+        req_date = vals.get('req_date')
+        last_date = vals.get('last_date')
+        if last_date >= req_date:
+            return super(EmployeeExitReq, self).create(vals)
+        else:
+            raise osv.except_osv(('Error'), ('Insert right date!'))
+
     @api.multi
     def write(self, vals):
         employee_id = vals.get('employee_id', False)
@@ -188,8 +196,11 @@ class EmployeeExitReq(models.Model):
             'res.users'].has_group('base.group_hr_user'):
             raise osv.except_osv(_('Warning!'), _(
                 'You cannot set a exit request as \'%s\'. Contact a human resource manager.') % vals.get('state'))
-        hr_exit_id = super(EmployeeExitReq, self).write(vals)
-        return hr_exit_id
+        else:
+
+            hr_exit_id = super(EmployeeExitReq, self).write(vals)
+            return hr_exit_id
+
 
     @api.multi
     def unlink(self):

@@ -4,7 +4,7 @@ from openerp import models, fields, api, exceptions
 class ConfigureEmpChecklist(models.Model):
     _name = "hr.emp.master.checklists"
 
-    employee_id = fields.Many2one('hr.employee', select=True, invisible=False,  default=lambda self: self._employee_gets())
+    employee_id = fields.Many2one('hr.employee',string='Employee', select=True, invisible=False,  default=lambda self: self._employee_gets())
     _rec_name = 'employee_id'
     department_id = fields.Many2one('hr.department', string='Department', related='employee_id.department_id')
     state = fields.Selection([('draft', 'Draft'), ('done', 'Done'), ('send', 'Send'), ('verify', 'Verified')], readonly=True, copy=False,
