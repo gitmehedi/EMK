@@ -1,0 +1,4 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_sale_area_group_area_manager,sale.area.area.manager,model_sale_area,group_area_manager,1,0,0,0
+access_sale_area_group_territory_officer,sale.area.territory.officer,model_sale_area,group_territory_officer,1,0,0,0
+access_sale_order_territory_officer,sale.order.territory.officer,sale.model_sale_order,group_territory_officer,1,1,1,1
