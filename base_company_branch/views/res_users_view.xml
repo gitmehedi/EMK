@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>    
+    	<!-- res users View -->
+        <record id="branch_users_form_inherit" model="ir.ui.view">
+            <field name="name">res.users.form.inherit1</field>
+            <field name="model">res.users</field>
+            <field name="inherit_id" ref="base.view_users_form"/>
+            <field name="arch" type="xml">
+                <xpath expr='//form/sheet/div[@class="oe_title"]/group/field[@name="active"]' position="after">
+                	<field name="is_branch_user"/>
+                    <field name="branch_id" attrs="{'invisible': [('is_branch_user','=',False)]}" options='{"no_open": True, "no_create": True}'/>
+                    <field name="branch_ids" widget="many2many_tags" options='{"no_open": True, "no_create": True}'
+                    		attrs="{'invisible': [('is_branch_user','=',False)]}"/>
+                </xpath>
+            </field>
+        </record>
+        
+    </data>
+</openerp>
