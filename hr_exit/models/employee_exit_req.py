@@ -8,9 +8,9 @@ class EmployeeExitReq(models.Model):
     _rec_name = 'employee_id'
     # descriptions = fields.Text(string='Descriptions', required=True)
     emp_notes = fields.Text(string='Employee Notes', required=True)
-    department_notes = fields.Char(size=300, string='Department Manager Notes')
-    hr_notes = fields.Char(size=300, string='HR Manager Notes')
-    manager_notes = fields.Char(size=300, string='General Manager Notes')
+    department_notes = fields.Text(string='Department Manager Notes')
+    hr_notes = fields.Text(string='HR Manager Notes')
+    manager_notes = fields.Text(string='General Manager Notes')
     req_date = fields.Date('Request Date', default=fields.Date.today(), required=True)
     last_date = fields.Date('Last Day of Work', default=fields.Date.today(), required=True)
     state = fields.Selection(

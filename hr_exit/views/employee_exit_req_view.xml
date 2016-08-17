@@ -84,6 +84,7 @@
                     <field name="emp_notes"/>
                     <field name="req_date"/>
                     <field name="last_date"/>
+                    <field name="state"/>
                 </tree>
             </field>
         </record>
