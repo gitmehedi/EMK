@@ -7,5 +7,8 @@
         <menuitem id="calendar_holiday_config_menu" name="Configure Calendar" parent="organization_calendar_menu"
                   sequence="0"/>
 
+         <menuitem id="calendar_holiday_report_menu" name="Reports" parent="organization_calendar_menu"
+                  sequence="0"/>
+
     </data>
 </openerp>
