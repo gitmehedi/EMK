@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+    
+    <!-- IOU Slip Tree View  -->
+    
+    <record model="ir.ui.view" id="iou_slip_view">
+        <field name="name">IOU Slip</field>
+        <field name="model">iou.slip</field>
+        <field name="type">tree</field>
+        <field name="arch" type="xml">
+           <tree string=" IOU Slip ">
+           	  <field name="name"/>	
+              <field name="branch_id"/>
+              <field name="request_date"/>
+              <field name="amount"/>	
+           </tree>
+        </field>
+    </record>
+    
+    <!-- IOU Slip Form View -->
+    
+    <record id="iou_slip_form" model="ir.ui.view">
+            <field name="name">IOU Slip</field>
+            <field name="model">iou.slip</field>
+            <field name="arch" type="xml">
+                <form string=" IOU Slip ">
+                  <header>
+						<button name="action_disbursed" type="object" string="Disbursed" class="oe_highlight" states="approved"/>
+						<button name="action_approved" type="object" string="Approved" class="oe_highlight" states="draft"/>
+						<button string="IOU Adjustment" name="create_adjustment" states="disbursed" type="object" class="oe_highlight"/>
+						<field name="state" widget="statusbar"/>
+				  </header>	
+                  <sheet>
+                    <h1>
+                        <label string="IOU Slip No. "  attrs="{'invisible': [('state','not in',('draft'))]}"/>
+                        <field name="name" class="oe_inline" readonly="1"/>
+                    </h1>
+                  <group>
+                  	<group>
+	                	<field name="request_by" options='{"no_open": True, "no_create": True}' attrs="{'readonly': [('state','not in',('draft'))]}"/>
+	                	<field name="request_date" attrs="{'readonly': [('state','not in',('draft'))]}"/>
+	                	<field name="amount" attrs="{'readonly': [('state','not in',('draft'))]}"/>
+	                </group>
+	                <group>
+	                	<field name="branch_id" options='{"no_open": True, "no_create": True}' attrs="{'readonly': [('state','not in',('draft'))]}"/>
+	                </group>
+	                </group>
+	                <label string="Purpose"></label>
+	                <field name="purpose" attrs="{'readonly': [('state','not in',('draft'))]}"/>
+                  </sheet>
+                </form>
+            </field>
+        </record>
+        
+        <record model="ir.actions.act_window" id="act_iou_slip_view">
+            <field name="name">IOU Slips</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">iou.slip</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+        
+        <menuitem action="act_iou_slip_view" id="menu_iou_slip" 
+          parent="menu_finance_petty_cash" sequence="12"/>
+    
+    </data>
+</openerp>    
+        
