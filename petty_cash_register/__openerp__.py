@@ -26,7 +26,7 @@
     'description': """
     """,
     'author': 'Odoo',
-    'depends': ['base', 'account', 'base_company_branch', 'hr'],
+    'depends': ['account_payment', 'base_company_branch', 'hr'],
     'data': ["security/ir.model.access.csv",
              "menu.xml",
              "views/petty_cash_disbursement_view.xml", 
