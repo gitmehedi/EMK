@@ -32,7 +32,7 @@
              "views/petty_cash_disbursement_view.xml", 
              "views/iou_slip_view.xml",
              "views/iou_adjustment_view.xml",
-             'views/petty_cash_reimbursement_view.xml',
+             "views/petty_cash_reimbursement_view.xml",
              "sequence.xml",
              ],
     'installable': True,
