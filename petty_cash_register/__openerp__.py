@@ -32,6 +32,7 @@
              "views/petty_cash_disbursement_view.xml", 
              "views/iou_slip_view.xml",
              "views/iou_adjustment_view.xml",
+             "views/petty_cash_reimbursement_view.xml",
              "sequence.xml",
              "wizard/petty_cash_wizard_view.xml",
              "report/petty_cash_report.xml",

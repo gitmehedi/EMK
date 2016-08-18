@@ -1,6 +1,6 @@
 from openerp import models, fields
 from lxml.html import FieldsDict
-from gdata.contentforshopping.data import Year
+#from gdata.contentforshopping.data import Year
 
 class RedemptionRule (models.Model):
     """
