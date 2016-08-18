@@ -35,9 +35,9 @@
                         <group>
                             <group>
                                 <group>
-                                    <field name="branch_id"/>
-                                    <field name="received_date"/>
-                                    <field name="amount"/>
+                                    <field name="branch_id" attrs="{'readonly': [('state', 'not in', ['draft'])]}"/>
+                                    <field name="received_date" attrs="{'readonly': [('state', 'not in', ['draft'])]}"/>
+                                    <field name="amount" attrs="{'readonly': [('state', 'not in', ['draft'])]}"/>
                                 </group>
                                  <group>
                                 </group>

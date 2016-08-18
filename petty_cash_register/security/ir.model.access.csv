@@ -7,3 +7,8 @@ access_petty_cash_disbursement_group_account_payment,petty.cash.disbursement,mod
 access_petty_cash_disbursement_line_group_account_payment,petty.cash.disbursement.line,model_petty_cash_disbursement_line,account_payment.group_account_payment,1,1,1,1
 access_iou_slip_group_account_payment,iou.slip,model_iou_slip,account_payment.group_account_payment,1,1,1,1
 access_iou_adjustment_group_account_payment,iou.adjustment,model_iou_adjustment,account_payment.group_account_payment,1,1,1,1
+
+
+
+access_petty_cash_reimbursement_group_account_invoice,petty.cash.reimbursement,model_petty_cash_reimbursement,account.group_account_invoice,1,1,1,1
+access_petty_cash_petty_cash_balance_line_group_account_invoice,petty.cash.balance,model_petty_cash_balance,account.group_account_invoice,1,1,1,1
