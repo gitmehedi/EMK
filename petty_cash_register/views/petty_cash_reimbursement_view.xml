@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <!-- Petty Cash Disbursement Tree View  -->
+
+        <record model="ir.ui.view" id="petty_cash_reimbursement_tree">
+            <field name="name">petty cash reimbursement tree</field>
+            <field name="model">petty.cash.reimbursement</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string=" Petty Cash Reimbursement ">
+                    <field name="branch_id"/>
+                    <field name="received_by"/>
+                    <field name="amount"/>
+                    <field name="received_date"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- Petty Cash Disbursement Form View -->
+
+        <record id="petty_cash_reimbursement_form" model="ir.ui.view">
+            <field name="name">petty cash reimbursement form</field>
+            <field name="model">petty.cash.reimbursement</field>
+            <field name="arch" type="xml">
+                <form string=" Petty Cash Disbursement ">
+                    <header>
+                        <button name="action_submit" type="object" string="Submit" class="oe_highlight" states="draft"/>
+                        <field name="state" widget="statusbar"/>
+                    </header>
+                    <sheet>
+                        <group>
+                            <group>
+
+                                <field name="branch_id"/>
+                                <field name="received_by"/>
+                                <field name="amount"/>
+                                <field name="received_date"/>
+
+                            </group>
+                        </group>
+
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="act_petty_cash_reimbursement_view">
+            <field name="name">Cash Reimbursement</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">petty.cash.reimbursement</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <menuitem action="act_petty_cash_reimbursement_view" name="Cash Reimbursement"
+                  id="menu_petty_cash_reimbursement"
+                  parent="menu_finance_petty_cash" sequence="12"/>
+
+    </data>
+</openerp>
