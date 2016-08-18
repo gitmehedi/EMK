@@ -14,6 +14,7 @@
                     <field name="received_date" string="Received Date"/>
                     <field name="amount"/>
                     <field name="received_by"/>
+                    <field name="state"/>
                 </tree>
             </field>
         </record>
@@ -26,21 +27,22 @@
             <field name="arch" type="xml">
                 <form string=" Petty Cash Disbursement ">
                     <header>
-                        <button name="action_submit" type="object" string="Submit" class="oe_highlight" states="draft"/>
+                        <button name="action_submit" type="object" string="Receive" 
+                        class="oe_highlight" states="draft"/>
                         <field name="state" widget="statusbar"/>
                     </header>
                     <sheet>
                         <group>
                             <group>
-
-                                <field name="branch_id"/>
-                                <field name="received_by"/>
-                                <field name="amount"/>
-                                <field name="received_date"/>
-
+                                <group>
+                                    <field name="branch_id"/>
+                                    <field name="received_date"/>
+                                    <field name="amount"/>
+                                </group>
+                                 <group>
+                                </group>
                             </group>
                         </group>
-
                     </sheet>
                 </form>
             </field>
