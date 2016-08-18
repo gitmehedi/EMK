@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+    
+    <!-- Petty Cash Disbursement Tree View  -->
+    
+    <record model="ir.ui.view" id="petty_cash_disbursement_view">
+        <field name="name">Petty Cash Disbursement</field>
+        <field name="model">petty.cash.disbursement</field>
+        <field name="type">tree</field>
+        <field name="arch" type="xml">
+           <tree string=" Petty Cash Disbursement ">
+              <field name="branch_id"/>
+              <field name="date"/>
+              <field name="total_disbursement"/>
+           </tree>
+        </field>
+    </record>
+    
+    <!-- Petty Cash Disbursement Form View -->
+    
+    <record id="petty_cash_disbursement_form" model="ir.ui.view">
+            <field name="name">Petty Cash Disbursement</field>
+            <field name="model">petty.cash.disbursement</field>
+            <field name="arch" type="xml">
+                <form string=" Petty Cash Disbursement ">
+                  <header>
+						<button name="action_submit" type="object" string="Submit" class="oe_highlight" states="draft"/>
+						<button name="action_approve" type="object" string="Approve" class="oe_highlight" states="submit"/>
+						<field name="state" widget="statusbar"/>
+				  </header>	
+                  <sheet>
+                  <group>
+                  	<group>
+	                	<field name="branch_id" options='{"no_open": True, "no_create": True}' attrs="{'readonly': [('state','not in',('draft'))]}"/>
+	                    <field name="date" attrs="{'readonly': [('state','not in',('draft'))]}"/>
+	                </group>
+	                <group>
+	                </group>
+	            <!--    <group>
+	                	<field name="unclaim_of_yesterday" attrs="{'readonly': [('state','not in',('draft'))]}"/>
+	                	<field name="unclaim_of_today" attrs="{'readonly': [('state','not in',('draft'))]}"/>
+	                </group>-->
+	                </group>
+                    <notebook>
+                        <page string="Cash Disbursements">
+                          <field name="line_ids" nolabel="1" widget="one2many_list" attrs="{'readonly': [('state','not in',('draft'))]}">
+                            <tree string="Petty Cash Disbursement Line" editable="bottom">
+                            	<field name="name"/>
+                            	<field name="employee"/>
+                            	<field name="account_id" options='{"no_open": True, "no_create": True}'/>
+	                            <field name="paid_to"/>
+	                            <field name="description"/>
+	                            <field name="amount"/>
+	                        </tree>
+	                        </field>
+	                        <group class="oe_subtotal_footer oe_right" colspan="2" name="cash_total">
+                                <div class="oe_subtotal_footer_separator oe_inline">
+                                    <label for="total_disbursement"/>
+                                </div>
+                                <field name="total_disbursement" nolabel="1" class="oe_subtotal_footer_separator" widget="monetary"/>
+                            </group>
+                            <div class="oe_clear"/>
+                        </page>
+                      </notebook>
+                  </sheet>
+                </form>
+            </field>
+        </record>
+        
+        <record model="ir.actions.act_window" id="act_petty_cash_disbursement_view">
+            <field name="name">Cash Disbursements</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">petty.cash.disbursement</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+        
+        <menuitem action="act_petty_cash_disbursement_view" id="menu_petty_cash_disbursement" 
+          parent="menu_finance_petty_cash" sequence="11"/>
+    
+    </data>
+</openerp>    
+        
