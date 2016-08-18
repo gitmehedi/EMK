@@ -10,7 +10,7 @@ class petty_cash_reimbursement(models.Model):
     branch_id = fields.Many2one('res.branch', string='Branch Name', rquired=True)
     received_by = fields.Many2one('res.users', string='Received By', rquired=True)
     amount = fields.Float(digits=(20, 3), string="Amount", rquired=True)
-    received_date = fields.Date()
+    received_date = fields.Date('Receive Date')
     state = fields.Selection([('draft', 'Draft'), ('received', 'Received'), ],
                              'Status', select=True,
                              readonly=True,

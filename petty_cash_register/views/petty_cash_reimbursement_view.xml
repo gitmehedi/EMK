@@ -11,9 +11,9 @@
             <field name="arch" type="xml">
                 <tree string=" Petty Cash Reimbursement ">
                     <field name="branch_id"/>
-                    <field name="received_by"/>
+                    <field name="received_date" string="Received Date"/>
                     <field name="amount"/>
-                    <field name="received_date"/>
+                    <field name="received_by"/>
                 </tree>
             </field>
         </record>
@@ -56,7 +56,7 @@
 
         <menuitem action="act_petty_cash_reimbursement_view" name="Cash Reimbursement"
                   id="menu_petty_cash_reimbursement"
-                  parent="menu_finance_petty_cash" sequence="12"/>
+                  parent="menu_finance_petty_cash" sequence="11"/>
 
     </data>
 </openerp>
