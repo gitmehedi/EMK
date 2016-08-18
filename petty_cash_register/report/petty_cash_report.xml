@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+		<!-- Definition of the report (picking Move) -->
+		<report id="report_petty_cash" model="account.account" string="Petty Cash Report"
+			name="petty_cash_register.report_petty_cash_qweb" multi="True" file="petty_cash_register.report_petty_cash_qweb"
+			report_type="qweb-pdf" />
+	</data>
+</openerp>
