@@ -38,6 +38,7 @@
              "report/petty_cash_report.xml",
              "report/petty_cash_report_view.xml",
              ],
+             
     'installable': True,
     
 }
