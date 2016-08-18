@@ -1,4 +1,5 @@
 from openerp import models, fields, api, exceptions
+from openerp.osv import osv
 
 
 class ConfigureEmpChecklist(models.Model):
@@ -43,6 +44,14 @@ class ConfigureEmpChecklist(models.Model):
     @api.multi
     def _compute_check(self):
         return 1
+
+    @api.multi
+    def unlink(self):
+        for rec in self:
+            if rec.state not in ['draft', 'done', 'send']:
+                #raise UserError(_('You cannot delete a request which is in %s state.') % (rec.state,))
+                raise osv.except_osv(('Error'), ('You cannot delete a request which is in %s state') % (rec.state))
+        return super(ConfigureEmpChecklist, self).unlink()
 
 
 
