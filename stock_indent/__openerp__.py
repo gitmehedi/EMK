@@ -24,8 +24,8 @@
     'version': '0.2',
     'category': 'Warehouse Management',
     'sequence': 120,
-    'author':'Odoo Bangladesh',
-    'website':'http://www.binaryquest.com',
+    'author':'Odoo',
+    'website':'http://www.odoo.com',
     'complexity': "normal",
     'description' : """
 Indent Management
