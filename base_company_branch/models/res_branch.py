@@ -7,6 +7,7 @@ class res_branch(models.Model):
     _description = 'Branches'
     
     name = fields.Char(string='Name', required=True)
+    code = fields.Char(string='Code', required=True)
     active = fields.Boolean(default=True)
     company_id = fields.Many2one('res.company', 'Company', store=True, readonly=True, default=lambda self: self.env['res.company']._company_default_get('res.branch'))
     branch_manager = fields.Many2one("res.users", string='Branch Manager')

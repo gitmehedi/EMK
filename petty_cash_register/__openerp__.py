@@ -25,8 +25,8 @@
     'category': 'Account',
     'description': """
     """,
-    'author': 'Odoo',
-    'depends': ['account_payment', 'base_company_branch', 'hr'],
+    'author': 'Genweb2 Ltd.',
+    'depends': ['base', 'account', 'base_company_branch', 'hr'],
     'data': ["security/ir.model.access.csv",
              "menu.xml",
              "views/petty_cash_disbursement_view.xml", 
@@ -34,7 +34,11 @@
              "views/iou_adjustment_view.xml",
              "views/petty_cash_reimbursement_view.xml",
              "sequence.xml",
+             "wizard/petty_cash_wizard_view.xml",
+             "report/petty_cash_report.xml",
+             "report/petty_cash_report_view.xml",
              ],
+             
     'installable': True,
     
 }
