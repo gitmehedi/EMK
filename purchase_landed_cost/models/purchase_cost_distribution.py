@@ -266,7 +266,7 @@ class PurchaseCostDistribution(models.Model):
             if self.cost_update_type == 'direct':
                 line.move_id.quant_ids._price_update(line.standard_price_new)
                 self._product_price_update(
-                    line.move_id, line.standard_price_new, line.standard_price_old)
+                    line.move_id, line.standard_price_old, line.standard_price_new)
                 line.move_id.product_price_update_after_done()
         self.state = 'done'
 
