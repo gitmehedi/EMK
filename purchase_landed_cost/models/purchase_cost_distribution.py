@@ -277,6 +277,7 @@ class PurchaseCostDistribution(models.Model):
 
     @api.one
     def action_cancel(self):
+
         for line in self.cost_lines:
             if self.cost_update_type == 'direct':
                 if self.currency_id.compare_amounts(
