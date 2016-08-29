@@ -10,12 +10,13 @@
                     <group>
                         <field name="choose_date"/>
                         <field name="date"
-                               attrs="{'invisible': ['|',('choose_date', '=', False),('choose_category', '=', True)]}"/>
+                               attrs="{'invisible': ['|',('choose_date', '=', False)]}"/>
 
                         <field name="choose_category"/>
 
                         <field name="product_cat_id"
-                               attrs="{'invisible': ['|',('choose_category', '=', False),('choose_date', '=', True)]}"/>
+                               attrs="{'invisible': ['|',('choose_category', '=', False)]}"/>
+
                         <group></group>
 
                     </group>
@@ -24,11 +25,16 @@
 
                 <xpath expr="//form/footer" position="replace">
                     <footer>
-                        <button name="open_table" string="Retrieve the Inventory Value" type="object"
-                                attrs="{'invisible': [('choose_category', '=', True)]}" class="oe_highlight"/>
+                        <!--<button name="open_table" string="Retrieve the Inventory Value" type="object"-->
+                                <!--attrs="{'invisible': [('choose_category', '=', True)]}" class="oe_highlight"/>-->
 
-                        <button name="open_category_table" string="Retrieve the Category Value" type="object"
-                                attrs="{'invisible': [('choose_date', '=', True)]}" class="oe_highlight"/>
+                        <!--<button name="open_category_table" string="Retrieve the Category Value" type="object"-->
+                                <!--attrs="{'invisible': [('choose_date', '=', True)]}" class="oe_highlight"/>-->
+
+                        <button name="open_table" string="Retrieve the Inventory Value" type="object" class="oe_highlight"/>
+
+                        <button name="open_category_table" string="Retrieve the Category Value" type="object" class="oe_highlight"/>
+
 
                         <button string="Cancel" class="oe_link" special="cancel"/>
                     </footer>
