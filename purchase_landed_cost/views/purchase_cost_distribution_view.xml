@@ -25,9 +25,7 @@
 			</field>
 		</record>
 
-		<menuitem id="menu_purchase_cost_distribution"
-                  action="action_purchase_cost_distribution"
-                  parent="menu_purchase_cost_control"/>
+
 
 		<record id="view_purchase_cost_distribution_tree" model="ir.ui.view">
 			<field name="name">purchase.cost.distribution.tree</field>
@@ -301,6 +299,12 @@
                   name="Costs distributions"
                   parent="base.menu_purchase_root"
                   sequence="9" />
+
+		<menuitem id="menu_purchase_cost_distribution"
+                  action="action_purchase_cost_distribution"
+                  parent="menu_purchase_cost_control"/>
+
+
 
 	</data>
 </openerp>
