@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+        <record id="inherited_view_wizard_valuation_history" model="ir.ui.view">
+            <field name="name">Inherited Stock Valuation</field>
+            <field name="model">wizard.valuation.history</field>
+            <field name="inherit_id" ref="stock_account.view_wizard_valuation_history"/>
+            <field name="arch" type="xml">
+                <xpath expr="//form/group" position="replace">
+                    <group>
+                        <field name="choose_date"/>
+                        <field name="date"
+                               attrs="{'invisible': ['|',('choose_date', '=', False),('choose_category', '=', True)]}"/>
+
+                        <field name="choose_category"/>
+
+                        <field name="product_cat_id"
+                               attrs="{'invisible': ['|',('choose_category', '=', False),('choose_date', '=', True)]}"/>
+                        <group></group>
+
+                    </group>
+                    <group></group>
+                </xpath>
+
+                <xpath expr="//form/footer" position="replace">
+                    <footer>
+                        <button name="open_table" string="Retrieve the Inventory Value" type="object"
+                                attrs="{'invisible': [('choose_category', '=', True)]}" class="oe_highlight"/>
+
+                        <button name="open_category_table" string="Retrieve the Category Value" type="object"
+                                attrs="{'invisible': [('choose_date', '=', True)]}" class="oe_highlight"/>
+
+                        <button string="Cancel" class="oe_link" special="cancel"/>
+                    </footer>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="inherited_view_stock_history_report_tree" model="ir.ui.view">
+            <field name="name">Inherited Stock Value At Date</field>
+            <field name="model">stock.history</field>
+            <field name="inherit_id" ref="stock_account.view_stock_history_report_tree"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='move_id']" position="before">
+                    <field name="product_categ_id"/>
+
+                </xpath>
+            </field>
+        </record>
+
+
+    </data>
+</openerp>
