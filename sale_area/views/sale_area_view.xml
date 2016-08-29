@@ -14,32 +14,8 @@
                 </tree>
             </field>
         </record>
-	    
-	    <record id="action_sale_area" model="ir.actions.act_window">
-            <field name="name">Sales Area</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="res_model">sale.area</field>
-            <field name="domain">[('parent_id','=',False)]</field>
-            <field name="view_type">tree</field>
-            <field name="view_id" ref="sale_area_tree_view"/>
-        </record>
-	    
-	    <!--<record model="ir.ui.view" id="sale_area_view">
-	        <field name="name">Sales Area</field>
-	        <field name="model">sale.area</field>
-	        <field name="type">tree</field>
-	        <field name="arch" type="xml">
-	           <tree string=" Sale Area">
-	              <field name="complete_name"/>
-	              <field name="code"/>
-	              <field name="manager_id"/>
-	           </tree>
-	        </field>
-	    </record>
-    
-	     sale.area Form View -->
-	    
-	    <record id="sale_area_form" model="ir.ui.view">
+
+		<record id="sale_area_form" model="ir.ui.view">
 	            <field name="name">Sale Area.form</field>
 	            <field name="model">sale.area</field>
 	            <field name="arch" type="xml">
@@ -59,6 +35,34 @@
 	                </form>
 	            </field>
 	    </record>
+
+	    
+	    <record id="action_sale_area" model="ir.actions.act_window">
+            <field name="name">Sales Area</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">sale.area</field>
+            <field name="domain">[('parent_id','=',False)]</field>
+            <field name="view_type">tree</field>
+			<field name="view_mode">tree,form</field>
+            <field name="view_id" ref="sale_area_tree_view"/>
+        </record>
+	    
+	    <!--<record model="ir.ui.view" id="sale_area_view">
+	        <field name="name">Sales Area</field>
+	        <field name="model">sale.area</field>
+	        <field name="type">tree</field>
+	        <field name="arch" type="xml">
+	           <tree string=" Sale Area">
+	              <field name="complete_name"/>
+	              <field name="code"/>
+	              <field name="manager_id"/>
+	           </tree>
+	        </field>
+	    </record>
+    
+	     sale.area Form View -->
+	    
+
 	    
 	    <menuitem name="Sales Zone" id="menu_action_sale_zone" parent="base.menu_base_config" 
 	    		sequence="33" groups="base.group_sale_manager"/>

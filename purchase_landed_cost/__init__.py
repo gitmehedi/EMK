@@ -1,8 +1,9 @@
-# -*- encoding: utf-8 -*-
+# -*- coding: utf-8 -*-
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-TODAY OpenERP S.A. <http://www.openerp.com>
+#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
+#    Copyright (C) 2010-2012 OpenERP s.a. (<http://openerp.com>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -19,27 +20,5 @@
 #
 ##############################################################################
 
-{
-    'name': 'Petty Cash Register',
-    'version': '1.0',
-    'category': 'Account',
-    'description': """
-    """,
-    'author': 'Genweb2 Ltd.',
-    'depends': ['base', 'account', 'base_company_branch', 'hr'],
-    'data': ["security/ir.model.access.csv",
-             "menu.xml",
-             "views/petty_cash_disbursement_view.xml", 
-             "views/iou_slip_view.xml",
-             "views/iou_adjustment_view.xml",
-             "views/petty_cash_reimbursement_view.xml",
-             "sequence.xml",
-             "wizard/petty_cash_wizard_view.xml",
-             "report/petty_cash_report.xml",
-             "report/petty_cash_report_view.xml",
-             ],
-             
-    'installable': True,
-    
-}
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+from . import models
+from . import wizard

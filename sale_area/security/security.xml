@@ -17,5 +17,12 @@
         <field name="domain_force">['|',('area_id','=',False),('area_id','child_of',[user.area_id.id])]</field>
     </record>
 
+    <record model="ir.rule" id="sale_order_area_rule">
+        <field name="name">Area wise sale area</field>
+        <field name="model_id" search="[('model','=','sale.area')]" model="ir.model"/>
+        <field name="global" eval="True"/>
+        <field name="domain_force">[('id', 'child_of', user.area_id.id)]</field>
+    </record>
+
 </data>
 </openerp>
