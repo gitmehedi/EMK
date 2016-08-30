@@ -12,13 +12,13 @@ class InheritedWizardValuationHistory(models.Model):
     def open_category_table(self):
         data = self.read()
         catagory = data[0]['product_cat_id']
-        if catagory !=0:
+        if catagory != 0:
             cat_id = int(data[0]['product_cat_id'][0])
             cat_name = data[0]['product_cat_id'][1]
             date = data[0]['date']
 
             return {
-                'domain': [('product_categ_id', '=', cat_id),('date', '<=', date)],
+                'domain': [('product_categ_id', '=', cat_id), ('date', '<=', date)],
                 'name': cat_name,
                 'view_type': 'form',
                 'view_mode': 'tree,graph',
@@ -27,3 +27,7 @@ class InheritedWizardValuationHistory(models.Model):
             }
         else:
             raise osv.except_osv(('Warning'), ('enter the category'))
+
+
+class InheritedStockHistory(models.Model):
+    _inherit = 'stock.history'

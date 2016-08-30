@@ -10,12 +10,12 @@
                     <group>
                         <field name="choose_date"/>
                         <field name="date"
-                               attrs="{'invisible': ['|',('choose_date', '=', False)]}"/>
+                               attrs="{'invisible': [('choose_date', '=', False)]}"/>
 
                         <field name="choose_category"/>
 
                         <field name="product_cat_id"
-                               attrs="{'invisible': ['|',('choose_category', '=', False)]}"/>
+                               attrs="{'invisible': [('choose_category', '=', False)]}"/>
 
                         <group></group>
 
