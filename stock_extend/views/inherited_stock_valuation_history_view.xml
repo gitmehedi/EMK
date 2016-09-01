@@ -26,10 +26,11 @@
                 <xpath expr="//form/footer" position="replace">
                     <footer>
                         <button name="open_table" string="Retrieve the Inventory Value" type="object"
-                                attrs="{'invisible': [('choose_category', '=', True)]}" class="oe_highlight"/>
+                                attrs="{'invisible': ['|','&amp;',('choose_category', '=', True),('choose_date', '=', True),'&amp;',('choose_category', '=', True),('choose_date', '=', False)]}"
+                                class="oe_highlight"/>
 
                         <button name="open_category_table" string="Retrieve the Category Value" type="object"
-                                attrs="{'invisible': [('choose_date', '=', True)]}" class="oe_highlight"/>
+                                attrs="{'invisible': [('choose_category', '=', False),('choose_date', '=', True)]}" class="oe_highlight"/>
 
                         <!--<button name="open_table" string="Retrieve the Inventory Value" type="object" class="oe_highlight"/>-->
 
