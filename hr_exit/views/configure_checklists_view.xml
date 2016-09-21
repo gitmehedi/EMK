@@ -24,14 +24,24 @@
 							<field name="is_active" />
 						</group>
 						<notebook>
+							<!--<page string="Check Lists">-->
+								<!--<field name="checklists_ids">-->
+									<!--<tree editable="top">-->
+										<!--<field name="check_list_type_id"-->
+											<!--options='{"no_open": True,"no_create": 1, "no_create_edit": 1}' />-->
+									<!--</tree>-->
+								<!--</field>-->
+							<!--</page>-->
+
 							<page string="Check Lists">
-								<field name="checklists_ids">
+								<field name="checklists_line_ids">
 									<tree editable="top">
-										<field name="check_list_type_id"
+										<field name="checklist_item_id"
 											options='{"no_open": True,"no_create": 1, "no_create_edit": 1}' />
 									</tree>
 								</field>
 							</page>
+
 						</notebook>
 					</sheet>
 				</form>
