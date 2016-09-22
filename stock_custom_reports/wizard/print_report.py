@@ -138,7 +138,7 @@ class StockInventoryWizard(models.TransientModel):
                 
                 ) table_dk GROUP BY product_id,name ,code, cost_val
                 ''' % (date_start, date_start, location_outsource,location_outsource, date_start, date_start,location_outsource,location_outsource,date_start,date_start, location_outsource,location_outsource)
-        print '-----sql_dk---',sql_dk
+        #print '-----sql_dk---',sql_dk
         
         sql_in_tk = '''
             select product_id,name,code, sum(qty_in_tk) as qty_in_tk,sum(val_in_tk) as val_in_tk 
@@ -158,7 +158,7 @@ class StockInventoryWizard(models.TransientModel):
                     )t1
             GROUP BY product_id,name,code
         '''% (date_start, date_end, location_outsource,location_outsource)
-        print '-----sql_in_tk---',sql_in_tk
+        #print '-----sql_in_tk---',sql_in_tk
         sql_out_tk = '''
             select product_id,name,code, sum(qty_out_tk) as qty_out_tk,
                 sum(qty_out_tk)*val_out_tk AS val_out_tk
@@ -181,7 +181,7 @@ class StockInventoryWizard(models.TransientModel):
                 )t1
             GROUP BY product_id,name,code,val_out_tk
         '''% (date_end, date_start, date_end, location_outsource,location_outsource)
-        print '-----sql_out_tk---',sql_out_tk
+        #print '-----sql_out_tk---',sql_out_tk
 
         sql_ck = '''SELECT product_id,name, code, sum(product_qty_in - product_qty_out) as qty_ck, (cost_val*sum(product_qty_in - product_qty_out)) as val_ck
                 FROM  (SELECT sm.product_id,pt.name , pp.default_code as code,
@@ -253,7 +253,7 @@ class StockInventoryWizard(models.TransientModel):
                 pt.id
                 ) table_ck GROUP BY product_id,name ,code,cost_val
                     ''' % (date_end,date_end, location_outsource,location_outsource, date_end, date_end, location_outsource,location_outsource, date_end, date_end, location_outsource,location_outsource)
-        print '-----sql_ck---',sql_ck        
+        #print '-----sql_ck---',sql_ck        
         sql = '''
             CREATE OR REPLACE VIEW stock_inventory_report AS (
             SELECT ROW_NUMBER() OVER(ORDER BY table_ck.code DESC) AS id ,
