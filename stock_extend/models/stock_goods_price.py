@@ -1,7 +1,7 @@
 from openerp import api, exceptions, fields, models
 
 class StockGoodsPrice(models.Model):
-    _name = 'stock.goods.price'
+    _name = 'update.product.price'
     
     product_id = fields.Many2one('product.product', string="Product", required=True, readonly=True, states={'draft':[('readonly', False)]})
     quantity = fields.Float(digits=(20, 2), string='Quantity', required=True, default=0.0, readonly=True, states={'draft':[('readonly', False)]})
