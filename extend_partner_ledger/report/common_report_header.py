@@ -60,7 +60,13 @@ class common_report_header(object):
         if data.get('form', False) and data['form'].get('date_from', False):
             return data['form']['date_from']
         return ''
-
+    
+    def _get_account_streamline(self, data):
+        if data.get('form', False) and data['form'].get('location_streamline', False):
+            if data['form']['location_streamline']:
+                return data['form']['location_streamline']
+        return ''
+    
     def _get_target_move(self, data):
         if data.get('form', False) and data['form'].get('target_move', False):
             if data['form']['target_move'] == 'all':

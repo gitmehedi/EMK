@@ -60,6 +60,7 @@ class third_party_ledger(report_sxw.rml_parse, common_report_header):
         return super(third_party_ledger, self)._get_filter(data)
 
     def set_context(self, objects, data, ids, report_type=None):
+        print "+++++++++set_context 3rd party",data
         obj_move = self.pool.get('account.move.line')
         obj_partner = self.pool.get('res.partner')
         self.query = obj_move._query_get(self.cr, self.uid, obj='l', context=data['form'].get('used_context', {}))
@@ -120,6 +121,7 @@ class third_party_ledger(report_sxw.rml_parse, common_report_header):
         return super(third_party_ledger, self).set_context(objects, data, self.partner_ids, report_type)
 
     def lines(self, partner):
+        print "+++++++++partner  3rd party",partner
         move_state = ['draft','posted']
         if self.target_move == 'posted':
             move_state = ['posted']

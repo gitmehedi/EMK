@@ -1,0 +1,2 @@
+import inherited_account_report_common
+

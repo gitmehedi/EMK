@@ -1,0 +1,2 @@
+import inherited_account_journal
+import inherited_account_general_ledger
