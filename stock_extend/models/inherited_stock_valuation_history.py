@@ -10,7 +10,7 @@ class InheritedWizardValuationHistory(models.Model):
 
     # Searching the sub category
     @api.multi
-    def findSubCategory(self, category_ids):
+    def find_sub_category(self, category_ids):
         # category = self.product_cat_id
         categories = self.env['product.category'].browse(category_ids)
         result = []
@@ -25,7 +25,7 @@ class InheritedWizardValuationHistory(models.Model):
         catagory = data[0]['product_cat_id']
         category_ids = self.product_cat_id.child_id.ids
 
-        sub_categories = self.findSubCategory(category_ids)
+        sub_categories = self.find_sub_category(category_ids)
 
         if catagory != False and catagory[0] !=0 and sub_categories.__len__() == 0:
 
