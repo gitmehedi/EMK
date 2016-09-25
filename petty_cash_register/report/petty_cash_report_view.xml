@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+	<data>
+		<!-- Main template -->
+		<template id="report_petty_cash_qweb">
+			<t t-call="report.html_container">
+				<t t-call="report.external_layout">
+					<div class="page">
+						<h2 class="text-center">
+							Petty Cash Report
+						</h2>
+
+						<div class="row">
+							<div class="col-xs-2">
+								<strong>From Date:</strong>
+								
+							</div>
+							<div class="col-xs-2">
+								<strong>To Date:</strong>
+								
+							</div>
+
+							<div class="col-xs-3">
+								<strong>Printing Date:</strong>
+								<p t-esc="time.strftime('%Y-%m-%d %H:%M:%S')" />
+							</div>
+						</div>
+						<table class="table table-bordered">
+							<thead>
+								<tr>
+									<th>Product Name</th>
+									<th>Quantity</th>
+									<th>UOM</th>
+									
+								</tr>
+							</thead>
+							<tbody>
+								<tr t-foreach="docs" t-as="line">
+									<td>
+										<span t-esc="line" />
+									</td>
+									<td>
+										
+									</td>
+									<td>
+										
+									</td>
+									
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</t>
+			</t>
+		</template>
+
+
+	</data>
+</openerp>

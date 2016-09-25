@@ -8,5 +8,6 @@ class ConfigureChecklistsLine(models.Model):
     checklist_item_id = fields.Many2one('hr.exit.checklist.item', string='Checklist Item', required=True)
 
     # Relational fields
-    checklists_id = fields.Many2one('hr.exit.configure.checklists',)
+   # checklists_id = fields.Many2one('hr.exit.configure.checklists',)
+    checklists_line_id = fields.Many2one('hr.exit.configure.checklists')
 

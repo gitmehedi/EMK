@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+    	<record model="ir.ui.view" id="view_order_form_inherit">
+            <field name="name">sale.order.form.inherit</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.view_order_form" />
+            <field name="arch" type="xml">
+                <xpath expr="//form/sheet/group/group/field[@name='date_order']" position="after">
+                    <field name="area_id" options='{"no_open": True, "no_create": True}' />
+                </xpath>
+            </field>
+        </record>
+    </data>
+</openerp>

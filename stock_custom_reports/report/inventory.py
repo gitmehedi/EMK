@@ -12,6 +12,8 @@ class StockInventory(models.Model):
     product_id= fields.Integer('Product id')
     name= fields.Char('Product')
     code= fields.Char('Code')
+    category = fields.Char('Category')
+    uom = fields.Char('UoM')
     qty_dk= fields.Float('Opening Stock')
     qty_in_tk= fields.Float('Stock In')
     qty_out_tk= fields.Float('Stock Out')

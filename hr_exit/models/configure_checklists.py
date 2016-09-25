@@ -12,8 +12,9 @@ class ConfigureChecklists(models.Model):
     notes=fields.Text(string='Notes', size=500, help='Please enter notes.')
     is_active=fields.Boolean(string='Active', default=True)
     
-    #Relational Fields   
-    checklists_ids = fields.One2many('hr.exit.configure.checklists.line','checklists_id')
+    #Relational Fields
+    checklists_line_ids = fields.One2many('hr.exit.configure.checklists.line','checklists_line_id')
+    #checklists_ids = fields.One2many('hr.exit.configure.checklists.line','checklists_id')
     
     @api.onchange('responsible_type')
     def on_change_responsible_type(self):

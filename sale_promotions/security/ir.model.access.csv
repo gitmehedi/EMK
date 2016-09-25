@@ -1,9 +1,0 @@
-"id","name","model_id:id","group_id:id","perm_read","perm_write","perm_create","perm_unlink"
-"access_promos_rules","sale_promotions_promos_rules","model_promos_rules",group_promo_manager,1,1,1,0
-"access_promos_rules_conditions_exps","sale_promotions_promos_rules_conditions_exps","model_promos_rules_conditions_exps",group_promo_manager,1,1,1,1
-"access_promos_rules_actions","sale_promotions_promos_rules_actions","model_promos_rules_actions",group_promo_manager,1,1,1,1
-"access_promos_rules_user","sale_promotions_promos_rules_user","model_promos_rules",group_promo_user,1,0,0,0
-"access_promos_rules_conditions_exps_user","sale_promotions_promos_rules_conditions_exps_user","model_promos_rules_conditions_exps",group_promo_user,1,0,0,0
-"access_promos_rules_actions_user","sale_promotions_promos_rules_actions_user","model_promos_rules_actions",group_promo_user,1,0,0,0
-"access_promos_group_promo_user","promos_group_promo_user","model_promotion_groups",group_promo_user,1,0,0,0
-"access_promos_group_promo_manager","promos_group_promo_manager","model_promotion_groups",group_promo_manager,1,1,1,1

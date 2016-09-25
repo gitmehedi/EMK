@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>    
+    	<!-- res partner View -->
+        <record id="res_partnera_form_inherit" model="ir.ui.view">
+            <field name="name">res partner.form.inherit</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_partner_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//form/sheet/group/group/field[@name='website']" position="after">
+                        <field name="area_id" placeholder="Sale Area" 
+                        		options="{&quot;no_open&quot;: True}"/>
+                </xpath>
+            </field>
+        </record>
+        
+        <!-- res partner search View -->
+        <record id="res_partnera_search_inherit" model="ir.ui.view">
+            <field name="name">res partner.search.inherit</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_res_partner_filter"/>
+            <field name="arch" type="xml">
+                <xpath expr='//field[@name="category_id"]' position="after">
+                    <field name="area_id" string="Area" filter_domain="[('area_id','ilike', self)]"/>
+                </xpath>
+            </field>
+        </record>
+        
+    </data>
+</openerp>

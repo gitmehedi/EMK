@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+<data noupdate="0">
+    
+    <record id="branch_rule" model="ir.rule">
+        <field name="name">Branch Rule</field>
+        <field name="model_id" ref="model_res_branch"/>
+        <field eval="True" name="global"/>
+        <field name="domain_force">[('id','in', [b.id for b in user.branch_ids])]</field>
+    </record>
+    
+</data>
+</openerp>

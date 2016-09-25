@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="0">
+        
+        <menuitem id="menu_finance_petty_cash" name="Petty Cash" parent="account.menu_finance" sequence="4"
+            groups="account.group_account_user,account.group_account_manager"/>
+
+    </data>
+</openerp>
