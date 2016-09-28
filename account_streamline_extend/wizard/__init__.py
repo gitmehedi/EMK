@@ -1,2 +1,3 @@
 import inherited_account_report_common
+import inherited_account_chart
 

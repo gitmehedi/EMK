@@ -24,6 +24,9 @@
     'website': 'www.genweb2.com',
     'category': 'Accounting & Finance',
     'data': [
+#             'wizard/inherited_account_chart_view.xml',
+            'wizard/inherited_account_report_common_view.xml'
+             
              ],
     'depends': ['account_streamline'],
     'description': '''

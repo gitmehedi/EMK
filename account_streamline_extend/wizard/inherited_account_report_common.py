@@ -30,7 +30,10 @@ class inherited_account_report_common(osv.osv_memory):
     _inherit = "account.common.report"
     _description = "Account Common Report"
 
-
+    _columns = {
+        'location_streamline': fields.many2one('analytic.code', 'Location Wise')
+        }
+    
     def _build_contexts(self, cr, uid, ids, data, context=None):
         if context is None:
             context = {}

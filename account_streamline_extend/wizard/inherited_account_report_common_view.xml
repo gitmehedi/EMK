@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+		<record id="inherit_account_common_report_view" model="ir.ui.view">
+			<field name="name">Common Report inherit</field>
+			<field name="model">account.common.report</field>
+			<field name="inherit_id" ref="account.account_report_general_journal_view"/>
+			<field name="arch" type="xml">
+				<field name="arch" type="xml">
+					<xpath expr="//field[@name='target_move']" position="before">
+						<field name="location_streamline"/>
+					</xpath>
+				</field>
+			</field>
+		</record>
+		
+		
+	</data>
+</openerp>
