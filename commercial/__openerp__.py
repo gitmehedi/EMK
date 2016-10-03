@@ -56,9 +56,8 @@
              'views/bb_import_lc_views.xml',
              'views/lc_amendment_views.xml',
              'views/lc_amendment_new_views.xml',
-
-             ],
-    'depends': ['account','stock'],
+            ],
+    'depends': ['sale','account','stock'],
     'installable': True,
     'application': True,
 }

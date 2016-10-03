@@ -18,6 +18,8 @@ class ImportPayment(models.Model):
     acceptance_value = fields.Char(string="Acceptance Value", size=30)
     
     remarks = fields.Text(string='Remarks')
+
+
     
     # Relational fields
     import_payment_bank_id = fields.Many2one('res.bank', string="TT Payment Bank", required=True)

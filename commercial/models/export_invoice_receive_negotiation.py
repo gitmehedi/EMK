@@ -10,14 +10,13 @@ class ExportInvoiceReceiveNegotiation(models.Model):
     exchange_rate = fields.Integer(string="Exchange Rate", required=True, default = 75)
     
     # Relationship fields
-    export_invoice_receive_id = fields.Many2one('export.invoice.receive', delegate=True, ondelete="cascade")
+    export_invoice_receive_id = fields.Many2one('export.invoice.receive', ondelete="cascade")
     
     # Related with Accounting. Please fix it with accounting
-    distribution_account_id = fields.Many2one('export.invoice', string="Distribution Account", required=True,
-                               domain=[('state', '=', 'confirm')]) 
-    
-    
-    
+    distribution_account_id = fields.Many2one('account.invoice', string="Account No", required=True,
+                                              domain=[('state', '=', 'confirm')])
+
+
     
     # All function which process data and operation
     @api.multi

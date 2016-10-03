@@ -14,7 +14,7 @@ class ExportInvoiceRealizationHeadDetails(models.Model):
     export_invoice_deduction_id = fields.Many2one('export.invoice.realization', delegate=True, ondelete='cascade')
     export_invoice_charge_id = fields.Many2one('export.invoice.realization', delegate=True, ondelete='cascade')
     
-    account_id = fields.Many2one('export.invoice', string="Account", required=True,
+    account_id = fields.Many2one('account.invoice', string="Account No", required=True,
                                domain=[('state', '=', 'confirm')])
     
     

@@ -19,8 +19,8 @@ class ImportInvoice(models.Model):
     
     destination = fields.Char(string="Destination", size=30, required=True)
     eta = fields.Char(string="ETA", size=30, required=True)
-    import_invoice_value = fields.Char(string="Import Invoice Value", size=30, required=True)
-    invoice_value_bdt = fields.Char(string="Invoice Value (BDT)", size=30, required=True)
+    import_invoice_value = fields.Char(string="Import Invoice Value", size=30)
+    invoice_value_bdt = fields.Char(string="Invoice Value (BDT)", size=30)
     
     
     remarks = fields.Text(string='Remarks')
@@ -28,7 +28,7 @@ class ImportInvoice(models.Model):
     # Relational fields
     invoice_against = fields.Many2one('res.bank', string="Invoice Against", required=True) 
     import_invoice_id = fields.Many2one('res.bank', string='Import Invoice No', required=True)
-    consignee = fields.Many2one('res.bank', string='Consignee', required=True)
+    # consignee = fields.Many2one('res.bank', string='Consignee', required=True)
     port_of_loading = fields.Many2one('res.bank', string='Port of Loading', required=True)
     port_of_discharge = fields.Many2one('res.bank', string='Port of Discharge', required=True)
     currency = fields.Many2one('res.bank', string="Currency", required=True)
@@ -63,13 +63,13 @@ class ImportInvoice(models.Model):
 #         self._validate_data(vals)
         vals['name'] = self.env['ir.sequence'].get('sc_code')
             
-        return super(ExportInvoice, self).create(vals)
+        return super(ImportInvoice, self).create(vals)
     
     @api.multi
     def write(self, vals):
 #         self._validate_data(vals)
         
-        return super(ExportInvoice, self).write(vals)      
+        return super(ImportInvoice, self).write(vals)
     
     
     @api.multi

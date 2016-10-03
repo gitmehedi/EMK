@@ -43,7 +43,7 @@ class SalesContract(models.Model):
     """ One2many relationships """
     sales_contract_details_ids = fields.One2many('sales.contract.details', 'sales_contract_id')
 
-    so_ids = fields.Many2many('sale.order','sc_id',  string="Related PO", required=True,
+    so_ids = fields.Many2many('sale.order', string="Related PO",
                               readonly=True, states={'draft':[('readonly', False)]})
     
     

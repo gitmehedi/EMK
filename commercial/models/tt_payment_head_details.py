@@ -14,7 +14,7 @@ class TTPaymentHeadDetails(models.Model):
     tt_charge_head_id = fields.Many2one('tt.payment', ondelete="CASCADE")
     
     
-    account_id = fields.Many2one('export.invoice', string="Account", required=True,
+    account_id = fields.Many2one('account.invoice', string="Account No", required=True,
                                domain=[('state', '=', 'confirm')])
     
     

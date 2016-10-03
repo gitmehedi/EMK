@@ -35,7 +35,7 @@ class ExportInvoiceReceive(models.Model):
     def _validate_data(self, vals):
         msg, filterChar = {}, {}
         
-        filterChar['bank_ref_no'] = value.get('bank_ref_no', False)
+        filterChar['bank_ref_no'] = vals.get('bank_ref_no', False)
         
         msg.update(validator._validate_character(filterChar, True))
         validator.validation_msg(msg)

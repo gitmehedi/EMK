@@ -35,7 +35,7 @@ class BuyerWorkOrder(models.Model):
     partner_id = fields.Many2one('res.partner', string="Buyer", required=True,
                                domain=[('customer', '=', 'True')],
                                readonly=True, states={'draft':[('readonly', False)]})
-    season_id = fields.Many2one('res.season', string="Season", required=True,
+    season_id = fields.Many2one('res.season', string="Season",
                                 readonly=True, states={'draft':[('readonly', False)]})  
     year_id = fields.Many2one('account.fiscalyear', string="Year", required=True,
                               readonly=True, states={'draft':[('readonly', False)]})
@@ -47,7 +47,7 @@ class BuyerWorkOrder(models.Model):
     #                            domain=[('visible', '=', 'True'), ('state', '=', 'confirm')])
     currency_id = fields.Many2one('res.currency', string="Currency", required=True,
                                   readonly=True, states={'draft':[('readonly', False)]})
-    delivery_term_id = fields.Many2one('delivery.term', string="Delivery Term", required=True,
+    delivery_term_id = fields.Many2one('delivery.term', string="Delivery Term",
                                        readonly=True, states={'draft':[('readonly', False)]})
     department_id  = fields.Many2one('merchandising.dept', string="Department", required=True,
                                        readonly=True, states={'draft':[('readonly', False)]})

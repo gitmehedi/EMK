@@ -8,12 +8,12 @@ class ExportInvoiceSubmissionDetails(models.Model):
     """
     _name = 'export.invoice.submission.details'
     
-    value = fields.Integer(string="Value", required=True, readonly=True, store=True)
+    value = fields.Integer(string="Value", readonly=True)
     
     """ Relationship fields """
     export_invoice_submission_id = fields.Many2one('export.invoice.submission', ondelete="cascade")
     
-    invoice_id = fields.Many2one('account.invoice', string="Invoice List", required=True)
+    invoice_id = fields.Many2one('account.invoice', string="Account No", required=True)
 
     """ All function which process data and operation """
     @api.multi

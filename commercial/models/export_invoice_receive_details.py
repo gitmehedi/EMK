@@ -8,10 +8,10 @@ class ExportInvoiceReceiveDetails(models.Model):
     value = fields.Integer(string="Value", required=True)
     
     # Relationship fields
-    export_invoice_receive_id = fields.Many2one('export.invoice.receive', delegate=True, ondelete="cascade")
+    export_invoice_receive_id = fields.Many2one('export.invoice.receive', ondelete="cascade")
     
-    invoice_id = fields.Many2one('export.invoice', string="Invoice No", required=True,
-                               domain=[('state', '=', 'confirm')])
+    invoice_id = fields.Many2one('account.invoice', string="Invoice No", required=True,
+                                 domain=[('state', '=', 'confirm')])
     
     
     

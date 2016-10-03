@@ -34,8 +34,7 @@
 								<field name="margin" />
 								<field name="payment_term" />
 								<field name="tenor" />
-								<field name="inco_term"
-									options='{"no_open": True,"no_create": 1, "no_create_edit": 1}' />
+
 								<field name="inco_term_place" />
 							</group>
 						<group>							
@@ -81,7 +80,6 @@
 				<tree string="BB/Import LC Tree">
 					<field name="supplier_id" />
 					<field name="payment_term" />
-					<field name="inco_term" />
 					<field name="inco_term_place" />
 					<field name="state" />
 				</tree>

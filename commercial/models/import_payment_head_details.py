@@ -14,7 +14,7 @@ class ImportPaymentHeadDetails(models.Model):
     import_charge_head_id = fields.Many2one('import.payment', ondelete="CASCADE")
     
     
-    account_id = fields.Many2one('export.invoice', string="Account", required=True,
+    account_id = fields.Many2one('account.invoice', string="Account", required=True,
                                domain=[('state', '=', 'confirm')])
     
     

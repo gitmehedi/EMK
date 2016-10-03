@@ -50,13 +50,13 @@ class ProformaInvoice(models.Model):
         self._validate_data(vals)
         vals['name'] = self.env['ir.sequence'].get('pi_code')
             
-        return super(MasterLC, self).create(vals)
+        return super(ProformaInvoice, self).create(vals)
     
     @api.multi
     def write(self, vals):
         self._validate_data(vals)
         
-        return super(MasterLC, self).write(vals)      
+        return super(ProformaInvoice, self).write(vals)
     
     
     @api.multi

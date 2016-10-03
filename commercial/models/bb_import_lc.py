@@ -33,7 +33,7 @@ class BBImportLC(models.Model):
     lc_open_bank_id = fields.Many2one('res.bank', string="LC Opening Bank", required=True)
     lc_supplier_bank_id = fields.Many2one('res.bank', string="LC Supplier Bank", required=True)
     payment_term = fields.Selection([("10", "10 Days"), ("15", "15 Days"), ("30", "30 Days")], string='Payment Terms', required=True)
-    inco_term = fields.Many2one('commercial.term', string="Inco Term", required=True)
+    # inco_term = fields.Many2one('commercial.term', string="Inco Term", required=True)
     currency = fields.Many2one('res.bank', string="Currency", required=True)
     lc_type = fields.Many2one('res.bank', string="LC Type", required=True)
     
