@@ -13,8 +13,8 @@ class ConfigureChecklists(models.Model):
     is_active=fields.Boolean(string='Active', default=True)
     
     #Relational Fields   
-    checklists_ids = fields.One2many('hr.exit.configure.checklists.line','checklists_id')
-    
+    # checklists_ids = fields.One2many('hr.exit.configure.checklists.line','checklists_id')
+    checklists_line_ids = fields.One2many('hr.exit.configure.checklists.line','checklists_line_id')
     @api.onchange('responsible_type')
     def on_change_responsible_type(self):
         self.responsible_userdepartment=0
