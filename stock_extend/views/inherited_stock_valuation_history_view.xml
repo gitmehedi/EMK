@@ -30,7 +30,7 @@
                                 class="oe_highlight"/>
 
                         <button name="open_category_table" string="Retrieve the Category Value" type="object"
-                                attrs="{'invisible': [('choose_category', '=', False),('choose_date', '=', True)]}" class="oe_highlight"/>
+                                attrs="{'invisible': [('choose_category', '=', False)]}" class="oe_highlight"/>
 
                         <!--<button name="open_table" string="Retrieve the Inventory Value" type="object" class="oe_highlight"/>-->
 
