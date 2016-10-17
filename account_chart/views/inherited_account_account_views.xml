@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+		<record id="inherited_chart_of_account_form_views" model="ir.ui.view">
+			<field name="name">Inherited Charts of Account Form</field>
+			<field name="model">account.account</field>
+			<field name="inherit_id" ref="account.view_account_form"/>
+			<field name="arch" type="xml">
+				<xpath expr="//form/sheet/group/group/field[@name='name']" position="after">
+					<field name="parent_id"/>
+				</xpath>
+			</field>
+		</record>
+
+		<record id="inherited_chart_of_account_tree_view" model="ir.ui.view">
+            <field name="name">account.account.tree</field>
+            <field name="model">account.account</field>
+			<field name="field_parent">child_ids</field>
+            <field name="arch" type="xml">
+                <tree toolbar="True" string="Chart Account">
+                    <field name="name"/>
+                </tree>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="inherited_charts_of_account_action">
+			<field name="name">Charts of Account Views</field>
+			<field name="res_model">account.account</field>
+			<field name="view_type">tree</field>
+			<field name="view_mode">tree,form</field>
+			<field name="view_id" ref="inherited_chart_of_account_tree_view"/>
+            <field name="domain">[('parent_id','=',False)]</field>
+		</record>
+
+		<menuitem id="root_menu" name="Chart of Accounts Test" sequence="60" />
+
+		<menuitem id="chart_of_account_test_menu" name="Chart of Account"
+			parent="root_menu" sequence="200" />
+
+		<menuitem name="Inherited Chart of Accounts" id="inherited_charts_of_account_views_menu"
+			parent="chart_of_account_test_menu" sequence="420" action="inherited_charts_of_account_action" />
+
+
+	</data>
+</openerp>
