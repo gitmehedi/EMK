@@ -19,7 +19,7 @@
 #
 ##############################################################################
 {   
-    'name': 'Chart of Accounting Extention',
+    'name': 'Chart of Accounting Extention  ',
     'author':  'Genweb2 Limited',
     'website': 'www.genweb2.com',
     'category': 'Accounting',
