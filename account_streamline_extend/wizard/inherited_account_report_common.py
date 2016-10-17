@@ -24,10 +24,13 @@ from lxml import etree
 
 from openerp.osv import fields, osv
 from openerp.osv.orm import setup_modifiers
-from openerp.tools.translate import _
+#from openerp.tools.translate import _
 
 class inherited_account_report_common(osv.osv_memory):
-    _inherit = "account.common.report"
+    #_inherit = "account.common.report" #rafiq vai
+    #_inherit = "account.common.journal.report"
+    _inherit = "account.general.journal"
+
     _description = "Account Common Report"
 
     _columns = {
@@ -51,7 +54,7 @@ class inherited_account_report_common(osv.osv_memory):
                 raise osv.except_osv(_('Error!'),_('Select a starting and an ending period.'))
             result['period_from'] = data['form']['period_from']
             result['period_to'] = data['form']['period_to']
-        print "result",result
+        #print "result",result
         return result
 
     def check_report(self, cr, uid, ids, context=None):
