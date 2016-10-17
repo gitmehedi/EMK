@@ -29,7 +29,7 @@ import openerp.addons.decimal_precision as dp
 from openerp import tools
 from openerp.report import report_sxw
 import openerp
-from dns.rdatatype import NULL
+#from dns.rdatatype import NULL
 
 class inherited_account_move_line(osv.osv):
     _inherit = "account.move.line"
