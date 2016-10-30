@@ -16,7 +16,6 @@
     'depends': ['point_of_sale'],
     'description': 'Test Description',
     'category': 'Point Of Sale',
-    'author': 'genweb2.com',
     'summary': 'POS module extension',
     'description': """POS Loyalty for point calculation and redemption""",
     'depends': [

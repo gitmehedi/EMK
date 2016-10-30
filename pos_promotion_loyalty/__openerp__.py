@@ -16,7 +16,6 @@
 
     'description': 'POS promotion with loyalty integration',
     'category': 'Point Of Sale',
-    'author': 'genweb2.com',
     'depends': [
         "point_of_sale"
     ],
