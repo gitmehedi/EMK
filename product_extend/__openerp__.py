@@ -6,7 +6,10 @@
     'website': 'www.genweb2.com',
     'category': 'Human Resource',
     'data': ['default_data/product_extend_data.xml', ],
-    'depends': ['base', 'stock', 'product'],
+    'depends': ['base',
+                'stock',
+                'product'
+                ],
     'summary': 'Test Summary for Extended Product',
     'category': 'Product',
     'summary': 'Product Extend',

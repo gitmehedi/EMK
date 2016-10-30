@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 {
-    'name': "Product Extend",
+    'name': "Product Variant Matrix",
     'author': 'Genweb2 Limited',
     'website': "http://www.genweb2.com",
     'summary': """
-        Product Extend module allow you to create product with matrix input 
+        Product Variant Matrix module allow you to create product with matrix input
         """,
 
     'description': """
@@ -23,9 +23,9 @@
              'views/inherited_stock_inventory.xml'
              
               ],
-    'depends': ['base','product','point_of_sale',
-                'web_widget_x2many_2d_opening_matrix'
-                ,'web_widget_x2many_2d_checkbox'
+    'depends': ['base',
+                'product',
+                'web_widget_x2many_2d_checkbox'
                 ],
     'installable': True,
     'application': True,
