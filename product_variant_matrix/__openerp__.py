@@ -11,15 +11,12 @@
     'data': [
              'views/root_menu.xml',
              'default_data/product_extend_data.xml',
-             'views/inherited_product_category_views.xml',
+             'views/inherited_product_category_view.xml',
              'views/inherited_product_template.xml',
-             'views/inherited_stock_inventory.xml'
-             
               ],
-    'depends': ['base',
-                'product',
-                'point_of_sale',
-                'web_widget_x2many_2d_opening_matrix',
+    'depends': ['product',
+                'account',
+                #'web_widget_x2many_2d_opening_matrix',
                 'web_widget_x2many_2d_checkbox'
                 ],
     'installable': True,

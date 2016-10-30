@@ -8,10 +8,10 @@ class InheritedProductCategory(models.Model):
     
     @api.model
     def _getColorAttributeId(self):
-        return [('attribute_id', '=', self.env.ref('product_extend_back.product_attribute_color').id)]
+        return [('attribute_id', '=', self.env.ref('product_variant_matrix.product_attribute_color').id)]
     @api.model
     def _getSizeAttributeId(self):
-        return [('attribute_id', '=', self.env.ref('product_extend_back.product_attribute_size').id)]
+        return [('attribute_id', '=', self.env.ref('product_variant_matrix.product_attribute_size').id)]
     
     color_ids = fields.Many2many('product.attribute.value', 
                                  relation='product_category_attribure_color_rel',
@@ -34,9 +34,9 @@ class InheritedProductCategory(models.Model):
         return res
     
     def init(self, cr):
-        f = openerp.modules.get_module_resource('product_extend_back', 'sqlscript/CORRECT_PRODUCT_MATRIX.sql')
+        f = openerp.modules.get_module_resource('product_variant_matrix', 'sqlscript/CORRECT_PRODUCT_MATRIX.sql')
         if not f:
-            m = "File not found: 'CORRECT_PRODUCT_MATRIX.sql' (provided by module 'product_extend_back')."
+            m = "File not found: 'CORRECT_PRODUCT_MATRIX.sql' (provided by module 'product_variant_matrix')."
             raise IOError(m)
         base_sql_file = openerp.tools.misc.file_open(f)
         try:

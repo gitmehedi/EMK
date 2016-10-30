@@ -21,6 +21,7 @@ class InheritedProductAttributeLineExtend(models.Model):
     
 class InheritedProductTemplate(models.Model):
     _inherit = 'product.template'
+    
     attribute_line_extend_ids = fields.One2many('product.attribute.line.extend', 'product_tmp_id', string='')
     
     def update_product_variant(self, product_tmp_id):
