@@ -34,7 +34,7 @@
 {'name': 'Stock Reservation',
  'summary': 'Stock reservations on products',
  'version': '8.0.0.2.0',
- 'author': "Genweb2 Ltd.",
+ 'author': 'Genweb2 Limited',
  'category': 'Warehouse',
  'license': 'AGPL-3',
  'complexity': 'normal',

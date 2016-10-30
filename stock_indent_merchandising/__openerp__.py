@@ -20,7 +20,7 @@
 ##############################################################################
 {   
     'name': 'Stock Indent Merchandising',
-    'author':  'Stock Indent Merchandising',
+    'author': 'Genweb2 Limited',
     'website': 'www.genweb2.com',
     'category': 'Warehouse Management',
     'data': [

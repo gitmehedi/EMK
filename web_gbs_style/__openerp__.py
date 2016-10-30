@@ -1,7 +1,7 @@
 {
     "name": "GBS Style",
     "version": "8.0.1.0.0",
-    "author": "Genweb2",
+    'author': 'Genweb2 Limited',
     "category": "Style",
     "depends": [
     ],

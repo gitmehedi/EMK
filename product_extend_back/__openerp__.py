@@ -1,25 +1,18 @@
 # -*- coding: utf-8 -*-
 {
     'name': "Product Extend",
-
+    'author': 'Genweb2 Limited',
+    'website': "http://www.genweb2.com",
     'summary': """
         Product Extend module allow you to create product with matrix input 
         """,
 
     'description': """
-Quick and Easy
-===========================
+        Quick and Easy
+        ===========================
+        This module allows to manager product variant.
 
-This module allows to manager product variant.
-
-    """,
-
-    'author': "Genweb2 Ltd.",
-    'website': "http://www.genweb2.com",
-
-    # Categories can be used to filter modules in modules listing
-    # Check https://github.com/odoo/odoo/blob/master/openerp/addons/base/module/module_data.xml
-    # for the full list
+        """,
     'category': 'Product',
     'version': '0.1',
     'data': [

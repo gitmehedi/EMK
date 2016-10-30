@@ -21,6 +21,7 @@
 
 {
     'name' : 'Purchases Triple Validation',
+    'author': 'Genweb2 Limited',
     'version' : '0.1',
     'category': 'Purchase Management',
     'depends' : ['purchase_double_validation'],

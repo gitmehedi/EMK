@@ -53,7 +53,11 @@ class inventory_distribution_to_shop(models.Model):
                                        fields=[('product_id'),('qty')],
                                        groupby=[('product_id')]
                                        )
-             
+
+            print vals
+            print "--------------- Start ------------------"
+            print stock_quant_obj
+            print "--------------- End ------------------"
             for product in stock_quant_obj:
                 product_id=product['product_id'][0]
                 on_hand_qty=product['qty']

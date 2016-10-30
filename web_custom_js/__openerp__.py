@@ -1,6 +1,7 @@
 
 {
     "name": "Genweb2 Custom Java script",
+    'author': 'Genweb2 Limited',
     "depends": [
         'web',
     ],

@@ -20,7 +20,7 @@
 ##############################################################################
 {   
     'name': 'Stock Extend',
-    'author':  'Stock Extend New',
+    'author': 'Genweb2 Limited',
     'website': 'www.genweb2.com',
     'category': 'Warehouse',
     'data': [

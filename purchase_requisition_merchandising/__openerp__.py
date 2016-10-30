@@ -20,7 +20,7 @@
 ##############################################################################
 {   
     'name': 'Purchase Requisition Merchandising',
-    'author':  'Genweb2 Ltd.',
+    'author': 'Genweb2 Limited',
     'website': 'www.genweb2.com',
     'category': 'Purchase Requisition Merchandising',
     'data': [
