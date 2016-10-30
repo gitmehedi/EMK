@@ -7,12 +7,12 @@
     'category': 'Pebbles Installation',
     'data': [
     ],
-    'depends': ['sale'
+    'depends': ['sale',
                 'purchase',
                 'stock',
                 'point_of_sale',
                 'pos_loyalty',
-                'pos_promotion_loyalt',
+                'pos_promotion_loyalty',
                 'product_extend_back',
                 'stock_distribution_matrix',
                 'product_category_extend',
@@ -25,8 +25,8 @@
                 'web_widget_x2many_2d_opening_matrix',
                 'purchase_order_pebbles'],
     'category': 'Installation Module',
-    'summary': 'HR exit process management ',
-    'description': 'Install Pebbles module',
+    'summary': 'Install Pebbles Module',
+    'description': 'Install Pebbles Module',
     'installable': True,
     'application': True,
 }
