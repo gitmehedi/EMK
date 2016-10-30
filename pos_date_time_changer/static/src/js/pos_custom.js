@@ -432,7 +432,7 @@ function openerp_pos_cashier(instance, module) { //module is instance.point_of_s
                 fields: ['display_name', 'list_price', 'price', 'pos_categ_id', 'taxes_id', 'ean13', 'default_code',
                     'to_weight', 'uom_id', 'uos_id', 'uos_coeff', 'mes_type', 'description_sale', 'description',
                     'product_tmpl_id'],
-                domain: [['sale_ok', '=', true], ['available_in_pos', '=', true]],
+                domain: [['sale_ok', '=', true], ['product_variant_check', '=', true]],
                 context: function (self) {
                     return {pricelist: self.pricelist.id, display_default_code: false};
                 },

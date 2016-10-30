@@ -21,12 +21,16 @@ class InheritedProductAttributeLineExtend(models.Model):
     
 class InheritedProductTemplate(models.Model):
     _inherit = 'product.template'
-    
+
+    product_variant_check = fields.Boolean('Show Variant Matrix', default=True)
     attribute_line_extend_ids = fields.One2many('product.attribute.line.extend', 'product_tmp_id', string='')
     
     def update_product_variant(self, product_tmp_id):
-        #Get Product Attribute Line Extend
+
+
+
         attribute_line_extend_ids=self.env['product.attribute.line.extend'].search([('product_tmp_id', '=', product_tmp_id)],order='id asc')
+
         #Get Product Variant List
         product_varient=self.env['product.product'].search(['|','&',('product_tmpl_id', '=', product_tmp_id),('active', '=', True),('active', '=', False)],order='id asc')
         """
