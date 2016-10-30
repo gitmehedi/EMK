@@ -13,7 +13,7 @@
                 'point_of_sale',
                 'pos_loyalty',
                 'pos_promotion_loyalty',
-                'product_extend_back',
+                'product_variant_matrix',
                 'stock_distribution_matrix',
                 'product_category_extend',
                 'web_widget_distribution_matrix',
