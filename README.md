@@ -1,2 +1,2 @@
 # gbs
-Genweb2 ERP based business solution
+AKTL SRS and related documents
