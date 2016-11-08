@@ -31,7 +31,8 @@
 								<field name="receive_visible" attrs="{'invisible':1 }" />
 								
 								<field name="po_no" attrs="{'readonly':[('readonly_check','!=',False)]}" class="oe_inline"
-									options='{"no_open": True,"no_create": 1, "no_create_edit": 1}' />
+									options='{"no_open": True,"no_create": 1, "no_create_edit": 1}' domain="[('state','=',
+									'approved')]"/>
 								
 								<field name="line_id" class="oe_inline" string="Product" options='{"no_open": True,"no_create":
 									1, "no_create_edit": 1}' widget="selection" domain="[('order_id','=', po_no),('state','=',
@@ -69,6 +70,7 @@
 			<field name="arch" type="xml">
 				<tree string="Goods Receive Matrix" colors="blue:state=='draft';red:state in ('waiting','adjustment')">
 					<field name="po_no"/>
+					<field name="quantity" />
 					<field name="state" />
 				</tree>
 			</field>

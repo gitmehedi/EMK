@@ -11,7 +11,7 @@ class GoodsReceiveMatrix(models.Model):
     """ Required and Optional Fields """
     readonly_check = fields.Boolean(default=False)
     receive_visible = fields.Boolean(default=False)
-    quantity = fields.Float(size=17, digits=(15, 2), string='Purchase Quantity', readonly=True)
+    quantity = fields.Float(size=17, digits=(15, 2), string='Order Quantity', readonly=True)
     price_unit = fields.Float(size=17, digits=(15, 2), string='Unit Price')
 
     """ Relational Fields """
