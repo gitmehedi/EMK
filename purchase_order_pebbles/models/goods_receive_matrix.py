@@ -12,6 +12,7 @@ class GoodsReceiveMatrix(models.Model):
     readonly_check = fields.Boolean(default=False)
     receive_visible = fields.Boolean(default=False)
     quantity = fields.Float(size=17, digits=(15, 2), string='Order Quantity', readonly=True)
+    receive_qty= fields.Float(size=17, digits=(15, 2), string='Received Quantity', readonly=True)
     price_unit = fields.Float(size=17, digits=(15, 2), string='Unit Price')
 
     """ Relational Fields """
@@ -38,6 +39,7 @@ class GoodsReceiveMatrix(models.Model):
         purchase_order_line = self.env['purchase.order.line'].search([('id', '=', vals['line_id'])])
         vals['uom'] = purchase_order_line.product_uom.id
         vals['quantity'] = purchase_order_line.product_qty
+        vals['receive_qty'] = purchase_order_line.receive_qty
         vals['price_unit'] = purchase_order_line.price_unit
         return super(GoodsReceiveMatrix, self).create(vals)
 
@@ -45,8 +47,13 @@ class GoodsReceiveMatrix(models.Model):
     @api.multi
     def write(self, vals):
         # TODO: process before updating resource
+        purchase_order_line = self.line_id
+        vals['quantity'] = purchase_order_line.product_qty
+        vals['receive_qty'] = purchase_order_line.receive_qty
+        vals['price_unit'] = purchase_order_line.price_unit
         res = super(GoodsReceiveMatrix, self).write(vals)
         self.action_submit(vals)
+
         return res
 
 
@@ -221,6 +228,8 @@ class GoodsReceiveMatrix(models.Model):
                         }
                     po_line_pool_info.write(purchase_order_line)
 
+            self.receive_qty = purchase_order_line['receive_qty']
+
             """ Update purchase_order state info when all line received """
             po_line_obj_by_po = po_line_pool.search([('order_id', '=', self.po_no.id)])    
             po_state = False
@@ -269,7 +278,8 @@ class GoodsReceiveMatrix(models.Model):
         print "self", self.line_id.product_uom.id
         self.uom = self.line_id.product_uom.id
         self.quantity = self.line_id.product_qty
-    
+        self.receive_qty = self.line_id.receive_qty
+
     @api.onchange('po_no')
     def _delivery_warehouse(self):
         self.warehouse_id = self.po_no.picking_type_id.warehouse_id.id

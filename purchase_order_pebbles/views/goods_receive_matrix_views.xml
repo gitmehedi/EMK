@@ -44,6 +44,7 @@
 									/>
 								
 								<field name="quantity"/>
+								<field name="receive_qty"/>
 								<field name="uom"  groups="product.group_uom" string="Product Unit" />
 							</group>
 						</group>
