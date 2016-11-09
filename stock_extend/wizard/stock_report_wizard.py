@@ -9,7 +9,7 @@ class StockReportWizard(models.TransientModel):
 
 	start_date = fields.Date('Start Date', default=fields.Date.today())
 	end_date = fields.Date('End Date', default=fields.Date.today())
-	stock_type = fields.Selection([('1', "Issue"), ('2', "Return"), ('3', "Transfer")],default="0")
+	stock_type = fields.Selection([('1', "Issue"), ('2', "Return"), ('3', "Transfer")], default="0")
 	source_loc = fields.Many2one('stock.location', 'Source Location')
 	desti_loc = fields.Many2one('stock.location', 'Destination Location')
 	_sql_constraints = [
