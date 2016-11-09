@@ -4,8 +4,8 @@ class ProductCustomVariant(models.Model):
     _name = 'product.custom.variant'
     name=fields.Char('Name')
      
-#     size_variant_ids=fields.One2many(comodel_name='product.product', inverse_name='size_variant_id')
-#     other_variant_ids=fields.One2many(comodel_name='product.product', inverse_name='other_variant_id')
+    size_variant_ids=fields.One2many(comodel_name='product.product', inverse_name='size_variant_id')
+    other_variant_ids=fields.One2many(comodel_name='product.product', inverse_name='other_variant_id')
     
 
 class Product_Variant_Extend(models.Model):

@@ -15,7 +15,9 @@ from openerp.tools.float_utils import float_compare
 class InheritedPurchaseOrder(models.Model):
 	_inherit = 'purchase.order'
 	
-	
+
+
+
 	def action_picking_create(self, cr, uid, ids, context=None):
 		
 		print "#################self#########################", self
@@ -28,5 +30,9 @@ class InheritedPurchaseOrder(models.Model):
 		:return: ID of created invoice.
 		:rtype: int
 		"""
+
+	def action_purchase_done(self, cr, uid, ids, context=None):
+
+		self.write(cr, uid, ids, {'state': 'done'}, context=context)
 		
 
