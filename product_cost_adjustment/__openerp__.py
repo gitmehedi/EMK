@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 {
-    'name': "Stock Distribution Matrix",
+    'name': "Product Cost Adjustment",
     'author': 'Genweb2 Limited',
     'website': "http://www.genweb2.com",
     'category': 'Stock',
@@ -20,9 +20,7 @@ This module allows to manager Stock Distribution Matrix.
 
 
     'data': [
-            'security/ir.model.access.csv',
-            'views/inventory_distribution_to_shop.xml',
-            'views/inherited_stock_inventory.xml',
+            'views/product_cost_adjustment_views.xml',
              ],
     'depends': ['stock', 'web_widget_distribution_matrix'],
     'installable': True,

@@ -23,20 +23,23 @@
                         </div>
 						<group colspan="4">
                             <group>
-                                <field name="inventory_location_id" />
+                                <field name="inventory_date" />
                             </group>
 
                             <group>
-                                <field name="inventory_date" />
-                                <field name="force_valuation_period" />
-
                                 <field name="product_tmp_id" />
                                 <field name="state" invisible="1" />
                             </group>
                         </group>
                         <notebook colspan="4">
                             <page string="Inventory Details">
-
+								<field name="cost_adjustment_ids">
+									<tree string="" editable="top">
+										<field name="product_id" domain="[('product_tmpl_id','=',parent.product_tmp_id)]"/>
+										<field name="old_cost_price"/>
+										<field name="new_cost_price"/>
+									</tree>
+								</field>
                             </page>
                         </notebook>
 					</sheet>
@@ -82,8 +85,7 @@
 
         <menuitem name="Product Adjustment Matrix" id="menu_product_cost_adjustment_maxtix"
 		    	parent="stock.menu_stock_inventory_control" action="product_cost_adjustment_action" />
-		<!--<menuitem id="product_size_menu" name="Product Sizes" parent="products_sub_menu"-->
-			<!--sequence="310" action="product_size_action" />-->
+
 	</data>
 </openerp>
 
