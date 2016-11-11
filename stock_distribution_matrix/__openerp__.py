@@ -22,8 +22,9 @@ This module allows to manager Stock Distribution Matrix.
     'data': [
             'security/ir.model.access.csv',
             'views/inventory_distribution_to_shop.xml',
-            'views/inherited_stock_inventory.xml'
-              ],
+            'views/inherited_stock_inventory.xml',
+            'views/product_cost_adjustment_views.xml',
+             ],
     'depends': ['stock', 'web_widget_distribution_matrix'],
     'installable': True,
     'application': True,

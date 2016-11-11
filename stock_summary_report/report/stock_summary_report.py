@@ -16,8 +16,8 @@ class DailyCreditSettlementReport(models.AbstractModel):
         
         categories = []
         categories = self._generate_categories(category, categories)
-        print "======================="
-        print categories
+        # print "======================="
+        # print categories
         
         sql_query = """ select ROW_NUMBER() Over (Order by p.id) As serial, p.id, 
                         p.name_template as product_name, c.name as prod_category, u.name as uom, 
@@ -66,13 +66,20 @@ class DailyCreditSettlementReport(models.AbstractModel):
                         group by p.id) q4 on p.id = q4.id
                         where c.id in %s
                         order by p.id"""
+
                           
         params = (warehouse_id, from_date,
                   warehouse_id, from_date,
                   warehouse_id, from_date, to_date, 
                   warehouse_id, from_date, to_date,
                   tuple(categories))
-        
+        print "----------------------------------------------------------------"
+
+        print sql_query
+        print params
+
+        print "----------------------------------------------------------------"
+
         self.env.cr.execute(sql_query, params)
         res = self.env.cr.dictfetchall()
         
@@ -86,8 +93,10 @@ class DailyCreditSettlementReport(models.AbstractModel):
         report_obj = self.env['report']
         report = report_obj._get_report_from_name('stock_summary_report.report_stock_summary_qweb')
         
-        lines = self._generate_lines(docs.warehouse_id.id, docs.category_id, 
+        lines = self._generate_lines(docs.warehouse_id.id, docs.category_id,docs.product_id,
                                      docs.start_date, docs.end_date)
+
+        print  lines
         
         docargs = {
             'doc_ids'               : self._ids,

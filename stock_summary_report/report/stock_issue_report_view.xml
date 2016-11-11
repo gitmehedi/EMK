@@ -115,58 +115,58 @@
 								<t t-set="issue_grand_Total" t-value="0"/>
 								<t t-set="incoming_grand_Total" t-value="0"/>
 								<t t-set="opening_grand_Total" t-value="0"/>
-								<tr t-foreach="lines" t-as="line">
+								<tr t-foreach="lines">
 									
                             		<td class="text-right">
-										<span t-att-style="style" t-esc="line['serial']" />
+										<span t-att-style="style" t-esc="lines['serial']" />
 									</td>
                             		<td>
-										<span t-att-style="style" t-esc="line['product_name']" />
+										<span t-att-style="style" t-esc="lines['product_name']" />
 									</td>
                             		<td>
-										<span t-att-style="style" t-esc="line['prod_category']" />
+										<span t-att-style="style" t-esc="lines['prod_category']" />
 									</td>
 									<td>
-										<span t-att-style="style" t-esc="line['uom']" />
+										<span t-att-style="style" t-esc="lines['uom']" />
 									</td>
                             		<td class="text-right">
-										<span t-att-style="style" t-esc="line['op_qty']" />
+										<span t-att-style="style" t-esc="lines['op_qty']" />
 									</td>
                             		<td class="text-right">
-										<span t-att-style="style" t-esc="line['cost_price']" />
+										<span t-att-style="style" t-esc="lines['cost_price']" />
 									</td>
-									<t t-set="op_val" t-value="line['op_qty'] * line['cost_price']"/>
+									<t t-set="op_val" t-value="lines['op_qty'] * lines['cost_price']"/>
 									<td class="text-right">
 										<span t-att-style="style" t-esc="op_val" />
 									</td>									
 									<td class="text-right">
-										<span t-att-style="style" t-esc="line['receive_qty']" />
+										<span t-att-style="style" t-esc="lines['receive_qty']" />
 									</td>
 									<td class="text-right">
-										<span t-att-style="style" t-esc="line['cost_price']" />
+										<span t-att-style="style" t-esc="lines['cost_price']" />
 									</td>
-									<t t-set="receive_val" t-value="line['receive_qty'] * line['cost_price']"/>
+									<t t-set="receive_val" t-value="lines['receive_qty'] * lines['cost_price']"/>
 									<td class="text-right">
 										<span t-att-style="style" t-esc="receive_val" />
 									</td>
 									<td class="text-right">
-										<span t-att-style="style" t-esc="line['issue_qty']" />
+										<span t-att-style="style" t-esc="lines['issue_qty']" />
 									</td>
 									<td class="text-right">
-										<span t-att-style="style" t-esc="line['cost_price']" />
+										<span t-att-style="style" t-esc="lines['cost_price']" />
 									</td>
-									<t t-set="issue_val" t-value="line['issue_qty'] * line['cost_price']"/>
+									<t t-set="issue_val" t-value="lines['issue_qty'] * lines['cost_price']"/>
 									<td class="text-right">
 										<span t-att-style="style" t-esc="issue_val" />
 									</td>
-									<t t-set="cl_qty" t-value="line['op_qty'] + line['receive_qty'] - line['issue_qty']"/>
+									<t t-set="cl_qty" t-value="lines['op_qty'] + lines['receive_qty'] - lines['issue_qty']"/>
 									<td class="text-right">
 										<span t-att-style="style" t-esc="cl_qty" />
 									</td>
 									<td class="text-right">
-										<span t-att-style="style" t-esc="line['cost_price']" />
+										<span t-att-style="style" t-esc="lines['cost_price']" />
 									</td>
-									<t t-set="cl_val" t-value="cl_qty * line['cost_price']"/>
+									<t t-set="cl_val" t-value="cl_qty * lines['cost_price']"/>
 									<td class="text-right">
 										<span t-att-style="style" t-esc="cl_val" />
 									</td>

@@ -25,6 +25,7 @@
                 'web_widget_x2many_2d_opening_matrix',
                 'purchase_order_pebbles',
                 'product_variant_matrix',
+                'stock_summary_report',
                 ],
     'category': 'Installation Module',
     'summary': 'Install Pebbles Module',
