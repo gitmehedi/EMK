@@ -1,10 +1,13 @@
 # -*- coding: utf-8 -*-
 
 {
-    'name': 'HR Exit Management Process',
+    'name': 'HR Exit Management',
+    'description': 'HR Exit Management',
+    'summary': 'HR Exit Management',
     'author': 'Genweb2 Limited',
     'website': 'www.genweb2.com',
-    'category': 'Human Resource Management',
+    'category': 'Human Resources',
+    'depends': ['hr'],
     'data': [
         'views/hr_exit_menu.xml',
         'views/checklist_type_view.xml',
@@ -19,11 +22,6 @@
         # 'report/hr_exit_report.xml'
         # 'security/emp_exit_security.xml'
     ],
-    'depends': ['hr'],
-    'summary': 'HR exit process management',
-    'category': 'HR Exit Management',
-    'summary': 'HR exit process management ',
-    'description': 'HR exit process management',
     'installable': True,
     'application': True,
 }
