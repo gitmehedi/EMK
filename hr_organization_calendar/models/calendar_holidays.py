@@ -5,8 +5,17 @@ class CalendarHoliday(models.Model):
 
 
     name = fields.Char(size=100, string="Title", required="True")
-    type = fields.Selection([('weekly', 'Weekly Holiday'),('public', 'Public Holiday')])
     date = fields.Datetime(string="Date")
     color = fields.Char(string="Color")
     status = fields.Boolean(string='Status', default=True)
-
+    
+    """many2one fields """ 
+    
+    year_id = fields.Many2one('account.fiscalyear', string="Calender Year")
+    
+    """ Selection fields """
+     
+    type = fields.Selection([
+        ('weekly', 'Weekly Holiday'),
+        ('public', 'Public Holiday')
+        ])

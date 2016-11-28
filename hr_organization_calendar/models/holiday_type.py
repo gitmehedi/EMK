@@ -12,17 +12,24 @@ class CalendarHolidayType(models.Model):
     name = fields.Char(size=100, string="Title", required="True")
     status = fields.Boolean(string='Status', default=True)
 
-    # Many2one fields
+    """ many2one fields """ 
     year_id = fields.Many2one('account.fiscalyear', string="Calender Year")
 
-    # one2many fields
+    """ one2many fields """
     public_details_ids = fields.One2many('calendar.holiday.type.details', 'public_type_id')
     weekly_details_ids = fields.One2many('calendar.holiday.type.details', 'weekly_type_id')
 
+    """ Custom activity """
+    
     @api.multi
     def geneare_yearly_calendar(self):
         vals = {}
-
+        chd_obj = self.env["calendar.holiday"]
+        data = chd_obj.search([('year_id','=',self.year_id.id)])
+        
+        if data:
+            data.unlink()
+        
         for val in self.public_details_ids:
             vals['name'] = val.name
             vals['type'] = "public"
@@ -30,13 +37,14 @@ class CalendarHolidayType(models.Model):
             vals['color'] = "RED"
             vals['status'] = True
 
-            self.env['calendar.holiday'].create(vals)
+            chd_obj.create(vals)
 
         for val in self.weekly_details_ids:
             vals['name'] = "Weekly Holiday"
             vals['type'] = "weekly"
             vals['color'] = "Yellow"
             vals['status'] = True
+            vals['year_id'] = self.year_id.id
 
             if not self.year_id.date_start:
                 raise exceptions.ValidationError("Please provide start date of fiscal year")
@@ -56,9 +64,10 @@ class CalendarHolidayType(models.Model):
                 dayName = datetime.datetime.fromtimestamp(int(searchTime))
                 if dayName.strftime('%A') == val.weekly_type.title():
                     vals['date'] = dayName
-                    self.env['calendar.holiday'].create(vals)
+                    chd_obj.create(vals)
 
         return True
+ 
 
 
 
