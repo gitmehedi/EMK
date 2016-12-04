@@ -31,7 +31,8 @@
 								<field name="receive_visible" attrs="{'invisible':1 }" />
 								
 								<field name="po_no" attrs="{'readonly':[('readonly_check','!=',False)]}" class="oe_inline"
-									options='{"no_open": True,"no_create": 1, "no_create_edit": 1}' />
+									options='{"no_open": True,"no_create": 1, "no_create_edit": 1}' domain="[('state','=',
+									'approved')]"/>
 								
 								<field name="line_id" class="oe_inline" string="Product" options='{"no_open": True,"no_create":
 									1, "no_create_edit": 1}' widget="selection" domain="[('order_id','=', po_no),('state','=',
@@ -43,14 +44,18 @@
 									/>
 								
 								<field name="quantity"/>
+								<field name="receive_qty"/>
 								<field name="uom"  groups="product.group_uom" string="Product Unit" />
 							</group>
 						</group>
 						
-						<group name="product_variant_matrix" string="Goods Receive Matrix" attrs="{'invisible':[('readonly_check','=',False)]}">
+						<group name="product_variant_matrix" string="Goods Receive Matrix"
+							   attrs="{'invisible':[('readonly_check','=',False)]}">
 							<div>
-								<field name="matrix_line_ids" widget="goods_receive_matrix" field_x_axis="size_variant_id"
-									field_y_axis="other_variant_id" field_value="product_qty" attrs="{'readonly':
+                                <!--<field name="matrix_line_ids" widget="goods_receive_matrix" field_x_axis="size_variant_id"-->
+                                <!--ield_y_axis="other_variant_id" field_value="product_qty" />-->
+								<field name="matrix_line_ids"  widget="goods_receive_matrix" field_x_axis="size_variant_id"
+									field_y_axis="color_variant_id" field_value="product_qty" attrs="{'readonly':
 									['|','|',('state','=','approved'),('state','=','received'),('state','=','cancelled')
 									],'invisible':[('readonly_check','=',False)]}"/>
 							</div>
@@ -66,6 +71,7 @@
 			<field name="arch" type="xml">
 				<tree string="Goods Receive Matrix" colors="blue:state=='draft';red:state in ('waiting','adjustment')">
 					<field name="po_no"/>
+					<field name="quantity" />
 					<field name="state" />
 				</tree>
 			</field>

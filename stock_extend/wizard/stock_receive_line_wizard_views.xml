@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+	<data>
+		<record id="stock_receive_wizard_view_form" model="ir.ui.view">
+			<field name="name">Stock Receive Wizard</field>
+			<field name="model">stock.receive.wizard</field>
+			<field name="priority" eval="16"/>
+			<field name="arch" type="xml">
+				<form string="Stock Receive ">
+					<sheet>
+						<group>
+							<group >
+								<field name="receive_against" string="Purchase Order" />
+								<field name="po_no"/>
+							</group>
+						</group>
+					</sheet>
+					<footer>
+						<button name="action_submit" type="object" string="Submit" class="oe_highlight"/>
+						<button string="Cancel" special="cancel" class="oe_link"/>
+					</footer>
+				</form>
+			</field>
+		</record>
+		
+		<record id="stock_receive_wizard_action" model="ir.actions.act_window">
+			<field name="name">Stock Receive </field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="src_model">stock.receive</field>
+			<field name="res_model">stock.receive.wizard</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">form</field>
+			<field name="view_id" ref="stock_receive_wizard_view_form" />
+			<field name="target">new</field>
+		</record>
+		
+		
+	</data>
+</openerp>

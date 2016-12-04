@@ -1,9 +1,0 @@
-id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-access_goods_receive_matrix_manager,access_goods_receive_matrix_manager,model_goods_receive_matrix,stock.group_stock_manager,1,1,1,1
-access_goods_receive_matrix_line_manager ,access_goods_receive_matrix_line_manager ,model_goods_receive_matrix_line,stock.group_stock_manager,1,1,1,1
-,,,,,,,
-access_goods_receive_matrix_user,access_goods_receive_matrix_user,model_goods_receive_matrix,stock.group_stock_user,1,1,1,0
-access_goods_receive_matrix_line_user,access_goods_receive_matrix_line_user,model_goods_receive_matrix_line,stock.group_stock_user,1,1,1,0
-,,,,,,,
-access_goods_receive_matrix_wh_admin,access_goods_receive_matrix_wh_admin,model_goods_receive_matrix,purchase_order_pebbles.warehouse_group_user_admin,1,1,1,1
-access_goods_receive_matrix_line_wh_admin,access_goods_receive_matrix_line_wh_admin,model_goods_receive_matrix_line,purchase_order_pebbles.warehouse_group_user_admin,1,1,1,1

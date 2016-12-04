@@ -13,6 +13,10 @@
 				<xpath expr="//button[@name='view_invoice']" position="replace">
 					<button name="view_invoice" string="Receive Invoice" type="object" invisible="1" class="oe_highlight"/>
 				</xpath>
+				<xpath expr="//button[@name='view_invoice']" position="after">
+					<button name="action_purchase_done" string="Done" type="object"  states="approved"
+							 class="oe_highlight"/>
+				</xpath>
 				<xpath expr="//button[@string='Send PO by Email']" position="replace">
 					<button name="wkf_send_rfq" states="approved" string="Send PO by Email" type="object"
 						invisible="1" context="{'send_rfq':False}"/>

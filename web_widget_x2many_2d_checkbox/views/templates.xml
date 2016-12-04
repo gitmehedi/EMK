@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+        <template id="assets_backend" name="web_widget_x2many_2d_checkbox assets" inherit_id="web.assets_backend">
+            <xpath expr="." position="inside">
+            	<script type="text/javascript" src="/web_widget_x2many_2d_checkbox/static/src/js/web_widget_x2many_2d_checkbox.js"></script>
+                <link rel="stylesheet" href="/web_widget_x2many_2d_checkbox/static/src/css/web_widget_x2many_2d_checkbox.css"/>
+            </xpath>
+        </template>
+    </data>
+</openerp>

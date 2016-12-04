@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+	<data>
+		<record id="inherited_stock_picking_type_view_form_inherit_stock_flag"
+			model="ir.ui.view">
+			<field name="name">Stock Picking Type View Form</field>
+			<field name="model">stock.picking.type</field>
+			<field name="inherit_id" ref="stock.view_picking_type_form" />
+			<field name="arch" type="xml">
+				<xpath expr="/form/sheet/group/group/field[@name='code']" position="replace"/>
+				<xpath expr="//field[@name='warehouse_id']" position="after">
+					<field name="code" on_change="onchange_picking_code(code)" />
+				</xpath>
+				<xpath expr="//field[@name='return_picking_type_id']"
+					position="after">
+					<field name="stock_issue_flag" string="Stock Issue" />
+					<field name="stock_return_flag" string="Stock Return" />
+					<field name="stock_transfer_flag" string="Stock Transfer" />
+				</xpath>
+				
+			</field>
+		</record>
+	</data>
+</openerp>

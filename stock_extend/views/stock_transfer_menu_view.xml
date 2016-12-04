@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+	<data>
+		<!-- Stock Transfer Menu -->
+		<menuitem name="Stock Transfer" parent="stock.menu_stock_root"
+			id="sub_group_menu_indent_stock_transfer" sequence="2"
+			groups="stock.group_stock_user" />
+		<menuitem name="Stock Report" parent="base.menu_reporting"
+			id="sub_group_menu_indent_stock_report" sequence="2"
+			groups="stock.group_stock_user" />
+	</data>
+</openerp>
