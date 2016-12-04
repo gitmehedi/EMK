@@ -1,0 +1,11 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+
+access_calendar_holiday_type_manager,calendar.holiday.type.manager,model_calendar_holiday_type,organization_calendar_group_hr_manager,1,1,1,1
+access_calendar_holiday_type_user,calendar.holiday.type.user,model_calendar_holiday_type,organization_calendar_group_user,1,0,0,0
+
+access_calendar_holiday_type_details_manager,calendar.holiday.type.details.manager,model_calendar_holiday_type_details,organization_calendar_group_hr_manager,1,1,1,1
+access_calendar_holiday_type_details_user,calendar.holiday.type.details.user,model_calendar_holiday_type_details,organization_calendar_group_user,1,0,0,0
+
+access_calendar_holiday_manager,calendar.holiday.manager,model_calendar_holiday,organization_calendar_group_hr_manager,1,1,1,1
+access_calendar_holiday_user,calendar.holiday.user,model_calendar_holiday,organization_calendar_group_user,1,0,0,0
+
