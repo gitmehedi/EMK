@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
-# ©  2015 iDT LABS (http://www.@idtlabs.sl)
-# License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
+# ©  2016 Md Mehedi Hasan <md.mehedi.info@gmail.com>.
 
 from datetime import datetime, time
 from openerp import models, api
+import calendar
 
 
 class HrEmployee(models.Model):
@@ -22,16 +22,20 @@ class HrEmployee(models.Model):
         @param schedule: optional, whether to consider the contract's resource
                          calendar. default=True
         '''
+        week_day_obj = self.env['hr.holidays.public']
+        weekly_obj = week_day_obj.search([('year','=',date_dt.year)])
+        weeks_name = tuple([(w.weekly_type).title() for w in weekly_obj.weekly_details_ids])
+        
         self.ensure_one()
-        if public_holiday and self.env['hr.holidays.public'].is_public_holiday(
-                date_dt, employee_id=self.id):
+        
+        if public_holiday and week_day_obj.is_public_holiday(date_dt, employee_id=self.id):
             return False
         elif schedule and self.contract_id and self.contract_id.working_hours:
-            hours = self.contract_id.working_hours.get_working_hours_of_date(
-                datetime.combine(date_dt, time.min))[0]
+            hours = self.contract_id.working_hours.get_working_hours_of_date(datetime.combine(date_dt, time.min))[0]
+        
             if not hours:
                 return False
-        elif schedule and (not self.contract_id or (
-                self.contract_id and not self.contract_id.working_hours)):
-            return date_dt.weekday() not in (5, 6)
+        elif schedule and (not self.contract_id or (self.contract_id and not self.contract_id.working_hours)):
+            return calendar.day_name[date_dt.weekday()] not in weeks_name
+
         return True

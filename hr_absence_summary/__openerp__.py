@@ -10,7 +10,7 @@
         # 'report/absence_report_pdf.xml',
         'report/employee_absence_view.xml',
     ],
-    'depends': ['account_period','calendar','hr_organization_calendar'],
+    'depends': ['account_period','calendar','hr_public_holidays'],
     'summary': 'Customizable calendar for organizations',
     'description':
         """Organization Summary

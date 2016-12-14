@@ -1,32 +1,31 @@
 from openerp import api, exceptions, fields, models
-from bzrlib.timestamp import format_patch_date
 
-class CloneCalendarWizard(models.TransientModel):
-    _name = "clone.calendar.wizard"
+class HrCalendarCloneWizard(models.TransientModel):
+    _name = "hr.calendar.clone.wizard"
     
-    holiday_year_id = fields.Many2one('calendar.holiday.type', string="Holiday Year")
+    holiday_year_id = fields.Many2one('hr.holidays.public', string="Holiday Year")
 
 
     @api.multi
     def clone_calendar(self,context):
         ch_data = {}
-        ch_data['name']= self.holiday_year_id.name
+        ch_data['name']= 'Please set a Calendar Title and Calendar Year'
         ch_data['status']= self.holiday_year_id.status
-        ch_insert = self.env['calendar.holiday.type'].create(ch_data)
+        ch_insert = self.env['hr.holidays.public'].create(ch_data)
 
-        chtd_obj = self.env['calendar.holiday.type.details']
+        chtd_obj = self.env['hr.holidays.public.line']
         pub_data= chtd_obj.search([('public_type_id','=',self.holiday_year_id.id)])
         week_data= chtd_obj.search([('weekly_type_id','=',self.holiday_year_id.id)])
         
-        if ch_create:
-            self.insert_holiday(pub_data,context,ch_create)
-            self.insert_holiday(week_data,context,ch_create)
+        if ch_insert:
+            self.insert_holiday(pub_data,context,ch_insert)
+            self.insert_holiday(week_data,context,ch_insert)
 
         return {
             'view_type': 'form',
             'view_mode': 'form',
-            'src_model': 'calendar.holiday.type',
-            'res_model': 'calendar.holiday.type',
+            'src_model': 'hr.holidays.public',
+            'res_model': 'hr.holidays.public',
             'view_id': False,
             'type': 'ir.actions.act_window',
             'res_id': ch_insert.id
@@ -48,6 +47,6 @@ class CloneCalendarWizard(models.TransientModel):
                 default['weekly_type_id'] = ch_create.id
                 default['weekly_type'] = val.weekly_type
 
-            self.env['calendar.holiday.type.details'].create(default)
+            self.env['hr.holidays.public.line'].create(default)
             
             

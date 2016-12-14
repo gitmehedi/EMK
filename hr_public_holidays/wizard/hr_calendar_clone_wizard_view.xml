@@ -1,15 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <openerp>
 	<data>
-		<record id="clone_calendar_wizard_view_form" model="ir.ui.view">
-			<field name="name">clone.calendar.wizard</field>
-			<field name="model">clone.calendar.wizard</field>
+		<record id="hr_calendar_clone_wizard_form_view" model="ir.ui.view">
+			<field name="name">Hr Calendar Clone Wizard</field>
+			<field name="model">hr.calendar.clone.wizard</field>
 			<field name="arch" type="xml">
-				<form string="Clone Calendar Wizard Form">
+				<form string="Hr Calendar Clone Wizard Form">
 					<sheet>
 						<group>
 							<group>
-								<field name="holiday_year_id" options='{"no_open": True,"no_create": 1, "no_create_edit": 1}' />
+								<field name="holiday_year_id"
+									options='{"no_open": True,"no_create": 1, "no_create_edit": 1}' />
 							</group>
 						</group>
 					</sheet>
@@ -22,10 +23,10 @@
 			</field>
 		</record>
 
-		<record id="clone_previous_calendar_wizard_views" model="ir.actions.act_window">
-			<field name="name">clone.calendar.wizard</field>
+		<record id="hr_calendar_clone_wizard_action_view" model="ir.actions.act_window">
+			<field name="name">Hr Calendar Clone Wizard </field>
 			<field name="type">ir.actions.act_window</field>
-			<field name="res_model">clone.calendar.wizard</field>
+			<field name="res_model">hr.calendar.clone.wizard</field>
 			<field name="view_type">form</field>
 			<field name="view_mode">form</field>
 			<field name="target">new</field>

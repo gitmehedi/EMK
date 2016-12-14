@@ -3,21 +3,21 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 
 {
-    'name': 'HR Public Holidays',
-    'version': '9.0.1.0.0',
-    'license': 'AGPL-3',
+    'name': 'HR Holidays',
+    'version': '1.0',
     'category': 'Human Resources',
-    'author': "Michael Telahun Makonnen <mmakonnen@gmail.com>, "
-              "Odoo Community Association (OCA)",
-    'summary': "Manage Public Holidays",
-    'website': 'http://miketelahun.wordpress.com',
+    'author': 'Genweb2 Limited',
+    'website': 'www.genweb2.com',
+    'summary': "Manage All kinds of Holidays",
     'depends': [
         'hr',
         'hr_holidays',
     ],
     'data': [
         'security/ir.model.access.csv',
+        'wizard/hr_calendar_clone_wizard_view.xml',
         'views/hr_public_holidays_view.xml',
+        'views/hr_holidays_calendar_view.xml',
     ],
     'installable': True,
 }

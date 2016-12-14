@@ -9,12 +9,12 @@ class HrHolidaysStatus(models.Model):
     _inherit = 'hr.holidays.status'
 
     exclude_rest_days = fields.Boolean(
-        'Exclude Rest Days',
-        help="If enabled, the employee's day off is skipped in leave days "
-             "calculation.",
+        'Exclude Weekly Holidays Days',
+        help="If enabled, the employee's weekly holidays is skipped in leave days "
+             "calculation.", default=True
     )
     exclude_public_holidays = fields.Boolean(
         'Exclude Public Holidays',
         help="If enabled, public holidays are skipped in leave days "
-        "calculation.",
+        "calculation.", default=True
     )

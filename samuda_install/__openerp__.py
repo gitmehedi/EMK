@@ -9,10 +9,10 @@
     'data': [
     ],
     'depends': [
-        'hr_organization_calendar',
-        'hr_absence_summary',
-        'hr_holidays_compute_days',
         'hr_public_holidays',
+        'hr_holidays_compute_days',
+        'hr_absence_summary',
+        'hr_earned_leave',
         ],
     'category': 'Installation Module',
     'summary': 'Install Samuda ERP',

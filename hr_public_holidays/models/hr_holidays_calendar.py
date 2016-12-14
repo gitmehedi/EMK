@@ -5,7 +5,7 @@ class CalendarHoliday(models.Model):
 
 
     name = fields.Char(size=100, string="Title", required="True")
-    date = fields.Datetime(string="Date")
+    date = fields.Date(string="Date")
     color = fields.Char(string="Color")
     status = fields.Boolean(string='Status', default=True)
     

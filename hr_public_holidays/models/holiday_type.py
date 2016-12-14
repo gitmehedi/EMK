@@ -1,9 +1,15 @@
+# -*- coding: utf-8 -*-
+# ©  2016 Md Mehedi Hasan <md.mehedi.info@gmail.com>
+
+
 import datetime
+import time
+
 from openerp import api
 from openerp import exceptions
 from openerp import fields
 from openerp import models
-import time
+
 
 class CalendarHolidayType(models.Model):
     _name = 'calendar.holiday.type'
@@ -16,8 +22,8 @@ class CalendarHolidayType(models.Model):
     year_id = fields.Many2one('account.fiscalyear', string="Calender Year")
 
     """ one2many fields """
-    public_details_ids = fields.One2many('calendar.holiday.type.details', 'public_type_id')
-    weekly_details_ids = fields.One2many('calendar.holiday.type.details', 'weekly_type_id')
+    public_details_ids = fields.One2many('hr.holidays.public.line', 'public_type_id')
+    weekly_details_ids = fields.One2many('hr.holidays.public.line', 'weekly_type_id')
 
     """ Custom activity """
     

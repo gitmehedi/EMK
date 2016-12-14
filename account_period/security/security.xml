@@ -1,21 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
-    <data noupdate="0">
-    	
-    	<record id="module_category_acc_postdated_cheque" model="ir.module.category" >
-            <field name="name">Post Dated Cheque</field>
-            <field name="sequence">91</field>
-        </record>
-    	
-        <record id="acc_postdated_cheque_group_user" model="res.groups">
-        	<field name="name">Post Dated Cheque User</field>
-        	<field name="category_id" ref="module_category_acc_postdated_cheque"/>
-        </record>
-        
-        <record id="acc_postdated_cheque_group_manager" model="res.groups">
-        	<field name="name">Post Dated Cheque Manager</field>
-        	<field name="category_id" ref="module_category_acc_postdated_cheque"/>
-        </record>
-        
-    </data>
+	<data noupdate="0">
+
+		<record id="module_category_acc_postdated_cheque" model="ir.module.category">
+			<field name="name">Post Dated Cheque</field>
+			<field name="sequence">91</field>
+		</record>
+
+		<record id="acc_postdated_cheque_group_user" model="res.groups">
+			<field name="name">Post Dated Cheque User</field>
+			<field name="category_id" ref="module_category_acc_postdated_cheque" />
+		</record>
+
+		<record id="acc_postdated_cheque_group_manager" model="res.groups">
+			<field name="name">Post Dated Cheque Manager</field>
+			<field name="category_id" ref="module_category_acc_postdated_cheque" />
+		</record>
+
+	</data>
 </openerp>
