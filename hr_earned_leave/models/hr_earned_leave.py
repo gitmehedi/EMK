@@ -7,6 +7,6 @@ class HrEarnedLeave(models.Model):
         ('yearly', 'Yearly'),
         ('monthly', 'Monthly'),
         ('quarterly', 'Quarterly')
-        ])
+        ], string = 'Earned Leave Period')
     
        
