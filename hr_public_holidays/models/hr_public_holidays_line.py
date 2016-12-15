@@ -32,7 +32,7 @@ class HrPublicHolidaysLine(models.Model):
         ('monday', 'Monday'),
         ('tuesday', 'Tuesday'),
         ('wednesday', 'Wednesday'),
-        ('thursday', 'Thurday'),
+        ('thursday', 'Thursday'),
         ])
 
 #     @api.one
