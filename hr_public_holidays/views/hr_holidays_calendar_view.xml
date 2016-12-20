@@ -81,7 +81,7 @@
 		</record>
 
 		<!-- Calendar Holiday Menu -->
-		<menuitem parent="hr_holidays.menu_hr_holidays_my_leaves" id="calendar_holiday_menu"
-			name="Holiday Calendar" sequence="10" action="action_calendar_holiday_view" />
+		<menuitem parent="hr_holidays.menu_hr_holidays_configuration" id="calendar_holiday_menu"
+			name="Holiday Calendar" sequence="15" action="action_calendar_holiday_view" />
 	</data>
 </openerp>
