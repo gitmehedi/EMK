@@ -1,8 +1,8 @@
 {
-    'name': 'Samuda HR Earned Leave',
+    'name': 'HR Earned Leave',
     'author': 'Genweb2 Limited',
     'website': 'www.genweb2.com',
-    'category': 'Samuda HR Earned Leave',
+    'category': 'HR Earned Leave',
     'version':'1.0',
     'data': [
         'views/hr_earned_leave_view.xml',

@@ -7,7 +7,9 @@
             <field name="name">Earned Leaves</field>
             <field name="limit" eval="True"/>
             <field name="color_name">red</field>
+            <field name="earned_leave_flag">True</field>
         </record>
+        
 
     </data>
 </openerp>
