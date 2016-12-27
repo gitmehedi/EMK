@@ -7,3 +7,5 @@ aeroolib/build/lib.linux-i686-2.7/aeroolib/*
 aeroolib/build/*
 *.egg
 /aeroolib/
+/hr_earned_leave/
+/.gitignore
