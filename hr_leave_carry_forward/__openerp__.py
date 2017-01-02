@@ -5,7 +5,7 @@
     'category': 'HR Earned Leave Carry Forward',
     'version':'1.0',
     'data': [
-        'views/carry_forward_view.xml',        
+        'views/hr_leave_carry_forward_view.xml',        
     ],
     'depends': [
         'hr',

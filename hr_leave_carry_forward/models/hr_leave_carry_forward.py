@@ -1,6 +1,6 @@
 from openerp import models, fields
 
-class LeaveCarryForward(models.Model):
+class HrLeaveCarryForward(models.Model):
     _name = 'hr.leave.carry.forward'
     _description = 'HR Leave Carry Forward'
     
