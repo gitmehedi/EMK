@@ -26,6 +26,8 @@
                 'purchase_order_pebbles',
                 'product_variant_matrix',
                 'stock_summary_report',
+                'product_brand',
+                'product_unique',
                 ],
     'category': 'Installation Module',
     'summary': 'Install Pebbles Module',
