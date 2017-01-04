@@ -29,16 +29,17 @@
 						<group>
 							<group>
 								<field name="name" />
-								<field name="year_id" />
+								<field name="year_id" required="1" 
+									options='{"no_open": True,"no_create": 1, "no_create_edit": 1}' />
 							</group>
 						</group>
 						<notebook colspan="4">
 							<page string="Public Holidays">
 								<field name="public_details_ids">
 									<tree string="List" editable="bottom">
-										<field name="name"
+										<field name="name" required="1"
 											options='{"no_open": True,"no_create": 1, "no_create_edit": 1}' />
-										<field name="date" />
+										<field name="date" required="1" />
 										<field name="status" />
 									</tree>
 								</field>
@@ -46,7 +47,7 @@
 							<page string="Weekly Holidays">
 								<field name="weekly_details_ids">
 									<tree string="List" editable="bottom">
-										<field name="weekly_type" />
+										<field name="weekly_type" required="1"/>
 									</tree>
 								</field>
 							</page>
@@ -61,6 +62,12 @@
 			<field name="res_model">hr.holidays.public</field>
 			<field name="view_mode">tree,form</field>
 		</record>
+		
+		<record id="open_calendar_year_view" model="ir.actions.act_window">
+			<field name="name">Calendar Year</field>
+			<field name="res_model">account.fiscalyear</field>
+			<field name="view_mode">tree,form</field>
+		</record>
 
 		
 		<menuitem action="open_public_holidays_view" id="menu_public_holidays_view"
@@ -69,9 +76,9 @@
 		
 		<menuitem id="menu_hr_holidays_type" name="Leave Types" parent="hr_holidays.menu_hr_holidays_configuration"
             sequence="5" action="hr_holidays.open_view_holiday_status"/>	
-		<!-- 
-		<menuitem id="menu_hr_holidays_type" name="Holiday Type" parent="hr_holidays.menu_hr_holidays_configuration"
-            sequence="100" groups="base.group_configuration,base.group_hr_manager" action="open_view_holiday_status"/> -->
+		
+		<menuitem id="menu_open_calendar_year" name="Calendar Year" parent="hr_holidays.menu_hr_holidays_configuration"
+            sequence="100" action="open_calendar_year_view"/>
 
 	</data>
 </openerp>

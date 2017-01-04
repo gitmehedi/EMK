@@ -13,15 +13,14 @@ class HrPublicHolidaysLine(models.Model):
     name = fields.Char('Name')
     date = fields.Date('Date')
     status = fields.Boolean(string='Status', default=True)
-    
-#     year_id = fields.Many2one('hr.holidays.public','Calendar Year')
+
     variable = fields.Boolean('Date may change')
     state_ids = fields.Many2many('res.country.state','hr_holiday_public_state_rel','line_id','state_id','Related States')
     
     """many2one fields """ 
 
-    public_type_id = fields.Many2one('hr.holidays.public')
-    weekly_type_id = fields.Many2one('hr.holidays.public')
+    public_type_id = fields.Many2one('hr.holidays.public', string="Public Type")
+    weekly_type_id = fields.Many2one('hr.holidays.public', string="Weekly Type" )
     
     """ Selection fields """
     
