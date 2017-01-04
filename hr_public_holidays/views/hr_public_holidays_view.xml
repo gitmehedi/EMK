@@ -78,6 +78,17 @@
 		
 		<menuitem action="open_calendar_year_view" id="menu_open_calendar_year" name="Calendar Year" 
 			parent="hr_holidays.menu_hr_holidays_configuration" sequence="100" />
+			
+		<!-- <menuitem id="payroll_configure" parent="hr.menu_hr_configuration" name="Payroll" 
+				groups="base.group_hr_manager,base.group_hr_user" sequence="45"/> -->
+				
+		<!-- <menuitem id="hr_payroll.menu_hr_root_payroll" parent="hr.menu_hr_root" name="Payroll" 
+		groups="base.group_hr_manager,base.group_user" sequence="30"/> -->
+		  <menuitem id="hr_payroll.menu_hr_root_payroll" parent="hr.menu_hr_root" name="Payroll" sequence="30"/>
+	
+		<menuitem action="hr_payroll.action_view_hr_payslip_form" id="hr_payroll.menu_department_tree" 
+		parent="hr_payroll.menu_hr_root_payroll" groups="base.group_user"/>        
+
 
 	</data>
 </openerp>
