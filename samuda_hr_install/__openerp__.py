@@ -8,6 +8,9 @@
     'version':'1.0',
     'data': [],
     'depends': [
+        'hr',
+        'hr_holidays',
+        'hr_payroll',
         'hr_public_holidays',
         'hr_holidays_compute_days',
         'hr_absence_summary',
