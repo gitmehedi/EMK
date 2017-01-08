@@ -1,4 +1,5 @@
 from openerp import models, fields
+from openerp import api
 
 class HrEarnedLeave(models.Model):    
     _name = 'hr.leave.encashment'
@@ -9,4 +10,6 @@ class HrEarnedLeave(models.Model):
     #leave_type = fields.Selection([('earned_leave', 'Earned Leave')], string = 'Leave Type', required='True')
     leave_type = fields.Many2one('hr.holidays.status', string="Leave Type", required='True')
     
-       
+    
+    
+  

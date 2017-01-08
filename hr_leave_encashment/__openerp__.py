@@ -5,6 +5,7 @@
     'category': 'HR Leave Encashment',
     'version':'1.0',
     'data': [
+        'wizards/hr_earned_leave_encashment_wizard_views.xml',
         'views/hr_earned_leave_view.xml',
         #'views/inherited_hr_holidays_status_data.xml',
     ],

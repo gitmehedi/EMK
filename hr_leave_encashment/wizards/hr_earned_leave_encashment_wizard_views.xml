@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<openerp>
+	<data>
+		<record id="hr_earned_leave_encashment_wizard_view" model="ir.ui.view">
+			<field name="name">HR Calendar Clone Wizard</field>
+			<field name="model">hr.earned.leave.encashment.wizard</field>
+			<field name="arch" type="xml">
+				<form string="HR Leave Enchashment Wizard">
+					<sheet>
+						<group>
+							<group>
+								<field name="employee_id">
+									<tree string="List" editable="bottom">
+										<field name="name"/>
+										<field name="work_phone"/>
+									</tree>	
+								</field>
+							</group>
+						</group>
+					</sheet>
+					<footer>
+						<button  string="Generate"
+							class="oe_highlight" />
+						<button string="Cancel" special="cancel" class="oe_link" />
+					</footer>
+				</form>
+			</field>
+		</record>
+
+	
+		<record id="hr_earned_leave_encashment_wizard_action_2view" model="ir.actions.act_window">
+				<field name="name">HR Earned Leave Encashment Wizard Action</field>
+				<field name="type">ir.actions.act_window</field>
+				<field name="res_model">hr.earned.leave.encashment.wizard</field>
+				<field name="view_type">form</field>
+				<field name="view_mode">form</field>
+		</record>
+	</data>
+</openerp>
