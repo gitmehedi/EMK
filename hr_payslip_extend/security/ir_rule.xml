@@ -1,0 +1,59 @@
+<?xml version="1.0"?>
+<openerp>
+	<data>
+		 <record id="property_rule_hr_payslip_list" model="ir.rule">
+        <field name="name">HR Payslip Lists</field>
+        <field name="model_id" ref="hr_payroll.model_hr_payslip"/>
+        <field name="domain_force">[('employee_id.user_id','=',user.id)]</field>
+        <field name="perm_read" eval="True" />
+		<field name="perm_create" eval="False" />
+		<field name="perm_write" eval="False" />
+		<field name="perm_unlink" eval="False" />
+		<field name="groups" eval="[(4,ref('base.group_user'))]"/>
+    </record>
+    
+    <record id="property_rule_hr_payslip_line_list" model="ir.rule">
+        <field name="name">HR Payslip Line Lists</field>
+        <field name="model_id" ref="hr_payroll.model_hr_payslip_line"/>
+        <field name="domain_force">[(1,'=',1)]</field>
+        <field name="perm_read" eval="True" />
+		<field name="perm_create" eval="False" />
+		<field name="perm_write" eval="False" />
+		<field name="perm_unlink" eval="False" />
+		<field name="groups" eval="[(4,ref('base.group_user'))]"/>
+    </record>
+    
+    <record id="property_rule_hr_payslip_input_list" model="ir.rule">
+        <field name="name">HR Payslip Input Lists</field>
+        <field name="model_id" ref="hr_payroll.model_hr_payslip_input"/>
+        <field name="domain_force">[(1,'=',1)]</field>
+        <field name="perm_read" eval="True" />
+		<field name="perm_create" eval="False" />
+		<field name="perm_write" eval="False" />
+		<field name="perm_unlink" eval="False" />
+		<field name="groups" eval="[(4,ref('base.group_user'))]"/>
+    </record>
+    
+    <record id="property_rule_hr_payslip_worked_order_list" model="ir.rule">
+        <field name="name">HR Payslip Worked Order Lists</field>
+        <field name="model_id" ref="hr_payroll.model_hr_payslip_worked_days"/>
+        <field name="domain_force">[(1,'=',1)]</field>
+        <field name="perm_read" eval="True" />
+		<field name="perm_create" eval="False" />
+		<field name="perm_write" eval="False" />
+		<field name="perm_unlink" eval="False" />
+		<field name="groups" eval="[(4,ref('base.group_user'))]"/>
+    </record>account.journal
+    
+    <record id="property_rule_hr_payslip_worked_order_list" model="ir.rule">
+        <field name="name">HR Payslip Worked Order Lists</field>
+        <field name="model_id" ref="account.model_account_journal"/>
+        <field name="domain_force">[(1,'=',1)]</field>
+        <field name="perm_read" eval="True" />
+		<field name="perm_create" eval="False" />
+		<field name="perm_write" eval="False" />
+		<field name="perm_unlink" eval="False" />
+		<field name="groups" eval="[(4,ref('base.group_user'))]"/>
+    </record>
+	</data>
+</openerp>

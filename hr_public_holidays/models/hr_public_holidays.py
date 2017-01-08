@@ -14,7 +14,7 @@ class HrPublicHolidays(models.Model):
     _rec_name = 'name'
     _order = "id"
 
-    display_name = fields.Char("Name",compute="_compute_display_name",readonly=True, store=True)
+    display_name = fields.Char("Name",compute="_compute_display_name", readonly=True, store=True)
     year = fields.Integer("Calendar Year", default=date.today().year)
     country_id = fields.Many2one('res.country','Country')
     
@@ -25,8 +25,8 @@ class HrPublicHolidays(models.Model):
     year_id = fields.Many2one('account.fiscalyear', string="Calender Year")
 
     """ one2many fields """
-    public_details_ids = fields.One2many('hr.holidays.public.line', 'public_type_id')
-    weekly_details_ids = fields.One2many('hr.holidays.public.line', 'weekly_type_id')
+    public_details_ids = fields.One2many('hr.holidays.public.line', 'public_type_id', string="Public Details")
+    weekly_details_ids = fields.One2many('hr.holidays.public.line', 'weekly_type_id', string="Weekly Details")
     
     
     """ Custom activity """
@@ -97,12 +97,12 @@ class HrPublicHolidays(models.Model):
         return True
 
     @api.one
-    @api.depends('year', 'country_id')
+    @api.depends('year', 'name')
     def _compute_display_name(self):
-        if self.country_id:
-            self.display_name = '%s (%s)' % (self.year, self.country_id.name)
+        if self.year:
+            self.display_name = '%s (%s)' % (self.name, self.year)
         else:
-            self.display_name = self.year
+            self.display_name = self.name
 
     @api.multi
     def name_get(self):

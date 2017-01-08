@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<openerp>
+	<data>
+		<menuitem id="hr_payroll.menu_hr_root_payroll" name="Payroll" 
+		    parent="hr.menu_hr_root" sequence="30"/>
+	
+		<menuitem action="hr_payroll.action_view_hr_payslip_form" id="hr_payroll.menu_department_tree" 
+			parent="hr_payroll.menu_hr_root_payroll" groups="base.group_hr_user,base.group_user"/>        
+
+		<!-- <menuitem id="payroll_configure" parent="hr.menu_hr_configuration" name="Payroll" 
+				groups="base.group_hr_manager,base.group_hr_user" sequence="45"/> -->
+				
+		<!-- <menuitem id="hr_payroll.menu_hr_root_payroll" parent="hr.menu_hr_root" name="Payroll" 
+		groups="base.group_hr_manager,base.group_user" sequence="30"/> -->
+		
+
+	</data>
+</openerp>

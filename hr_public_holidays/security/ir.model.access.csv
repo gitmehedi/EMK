@@ -1,4 +1,5 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+
 access_hr_holidays_public_user,access_hr_holidays_public,model_hr_holidays_public,base.group_user,1,0,0,0
 access_hr_holidays_public_manager,access_hr_holidays_public,model_hr_holidays_public,base.group_hr_manager,1,1,1,1
 
@@ -10,3 +11,4 @@ access_calendar_holiday_manager,access_calendar_holiday,model_calendar_holiday,b
 
 access_calendar_holiday_type_user,access_calendar_holiday_type,model_calendar_holiday_type,base.group_user,1,0,0,0
 access_calendar_holiday_type_manager,access_calendar_holiday_type,model_calendar_holiday_type,base.group_hr_manager,1,1,1,1
+

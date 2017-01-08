@@ -12,6 +12,8 @@
     'depends': [
         'hr',
         'hr_holidays',
+        'hr_payroll',
+        
     ],
     'data': [
         'security/ir.model.access.csv',
