@@ -29,7 +29,13 @@
             'views/inherited_purchase_order_line_views.xml',
             'views/goods_receive_matrix_views.xml'
              ],
-    'depends': ['base', 'product', 'point_of_sale','stock', 'purchase', 'web_widget_goods_recevie_matrix','product_extend'],
+    'depends': ['base', 
+		'product', 
+		'point_of_sale',
+		'stock', 
+		'purchase', 
+		'web_widget_goods_recevie_matrix',
+		#'product_extend'],
     'description': '''
 ''',
     'installable': True,

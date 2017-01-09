@@ -13,7 +13,8 @@
     'summary': 'Test Summary for Extended Product',
     'category': 'Product',
     'summary': 'Product Extend',
-    'description': 'Product Extend '
+    'description': 'Product Extend ',
+    'installable': False,
 }
 
 

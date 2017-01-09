@@ -12,7 +12,7 @@
                 'purchase',
                 'stock',
                 'point_of_sale',
-                'product_extend',
+                #'product_extend',
                 'stock_extend',
                 'pos_promotion',
                 'pos_loyalty',
