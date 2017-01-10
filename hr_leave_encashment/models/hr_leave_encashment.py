@@ -1,7 +1,7 @@
 from openerp import models, fields
 from openerp import api
 
-class HrEarnedLeave(models.Model):    
+class HrLeaveLeave(models.Model):    
     _name = 'hr.leave.encashment'
     _description = 'HR Leave Encashment'    
 
@@ -9,6 +9,11 @@ class HrEarnedLeave(models.Model):
     encashment_year = fields.Char(size=10, string='Leave Year', required='True')    
     #leave_type = fields.Selection([('earned_leave', 'Earned Leave')], string = 'Leave Type', required='True')
     leave_type = fields.Many2one('hr.holidays.status', string="Leave Type", required='True')
+    
+    
+    """ Relational Fields """
+    
+    line_ids = fields.One2many('hr.leave.encashment.line','parent_id', string="Line Ids")
     
     
     

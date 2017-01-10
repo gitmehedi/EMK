@@ -1,2 +1,2 @@
-import hr_earned_leave
-import hr_save_encashment_line
+import hr_leave_encashment
+import hr_leave_encashment_line

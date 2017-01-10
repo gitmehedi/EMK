@@ -30,6 +30,19 @@
 							<field name="encashment_year" />
 							<field name="leave_type" />
 						</group>
+						<notebook colspan="4">
+							<page string="Encashment">
+								<field name="line_ids">
+									<tree string="List" editable="bottom">
+										<field  name="employee_id"  readonly='1'/>
+										<field  name="pending_leave" />
+										<field  name="leave_days_to_be_encashed" />
+										<field  name="want_to_encash" />
+									</tree>
+								</field>
+							</page>
+							
+						</notebook>
 					</sheet>
 				</form>
 			</field>

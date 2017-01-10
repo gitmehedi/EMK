@@ -6,8 +6,7 @@
     'version':'1.0',
     'data': [
         'wizards/hr_earned_leave_encashment_wizard_views.xml',
-        'views/hr_earned_leave_view.xml',
-        'views/hr_save_encashment_line_view.xml',        
+        'views/hr_earned_leave_view.xml'   
     ],
     'depends': [
         'hr',
