@@ -7,16 +7,16 @@
     'data': [
         'wizards/hr_earned_leave_encashment_wizard_views.xml',
         'views/hr_earned_leave_view.xml',
-        #'views/inherited_hr_holidays_status_data.xml',
+        'views/hr_save_encashment_line_view.xml',        
     ],
     'depends': [
         'hr',
         'hr_holidays',
         ],
-    'summary': 'Calculates Employees Earned Leave',
+    'summary': 'Earned leave encashment process is calculated ',
     'description': 
-    """This module calculates the earned leave of the employee 
-        based on the condition of yearly/monthly/Quarterly'""",        
+    """This module gives opportunity to decide user either he wants to encash his/her earned 
+            leave ot not'""",        
     'installable': True,
     'application': True,
 }
