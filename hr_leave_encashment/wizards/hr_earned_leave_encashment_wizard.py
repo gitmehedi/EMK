@@ -12,10 +12,10 @@ class HrEarnedLeaveEncashmentWizard(models.TransientModel):
         line_obj = self.env['hr.leave.encashment.line']
         holiday_ins = self.env['hr.holidays']
         
+        
+        
         for val in self.employee_ids:
-            
-            leave_days = holiday_ins.search([('employee_id','=',self.employee_ids.id)])
-            
+            leave_days = holiday_ins.search([('employee_id','=',val.id)])
             pending_leave = sum([ v.number_of_days for v in leave_days]) 
             
             vals['employee_id'] = val.id
