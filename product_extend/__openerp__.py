@@ -5,7 +5,7 @@
     'author':  'Genweb2 Limited',
     'website': 'www.genweb2.com',
     'category': 'Human Resource',
-    'data': ['default_data/product_extend_data.xml', ],
+    'data': [],
     'depends': ['base',
                 'stock',
                 'product'
@@ -14,7 +14,7 @@
     'category': 'Product',
     'summary': 'Product Extend',
     'description': 'Product Extend ',
-    'installable': False,
+    'installable': True ,
 }
 
 
