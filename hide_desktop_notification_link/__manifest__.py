@@ -1,5 +1,5 @@
 {   
-    'name': 'Remove Desktop Notification Link',
+    'name': 'Hide Desktop Notification Link',
     'author':  'Genweb2 Limited',
     'website': 'www.genweb2.com',
     'category': 'Tools',
@@ -8,7 +8,7 @@
         'static/src/xml/remote_desktop.xml',
     ],
     'depends': ['mail'],
-    'description': '''Remove Desktop Notification Link''',
+    'description': '''Hide Desktop Notification Link''',
     'installable': True,
     'version': '0.1',
 }
