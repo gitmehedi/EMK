@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+	<template>
+		
+		    <t t-extend="mail.client_action">
+		        <t t-jquery=".o_mail_chat_content" t-operation="before">
+		            <t t-set="widget.notification_bar" t-value="false"/>
+		        </t>
+		    </t>
+		
+	</template>

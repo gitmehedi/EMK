@@ -1,14 +1,16 @@
 {   
-    'name': 'Remove Desktop Notification',
+    'name': 'Remove Desktop Notification Link',
     'author':  'Genweb2 Limited',
     'website': 'www.genweb2.com',
-    'category': 'Remove Desktop',
-    'data': [
-        # 'security/ir.model.access.csv',
-        'remote_desktop.xml',
-        ],
-    'depends': [],
-    'description': '''''',
+    'category': 'Tools',
+    'data': [],
+    'qweb': [
+        'static/src/xml/remote_desktop.xml',
+    ],
+    'depends': ['mail'],
+    'description': '''Remove Desktop Notification Link''',
     'installable': True,
     'version': '0.1',
 }
+
+
