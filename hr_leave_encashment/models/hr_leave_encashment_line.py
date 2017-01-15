@@ -7,7 +7,7 @@ class HrLeaveEncashmentLine(models.Model):
 
     
     pending_leave = fields.Integer(string="Pending leave count")
-    leave_days_to_be_encashed = fields.Integer(size=100, string='Leave days to be encashed')
+    leave_days_to_be_encashed = fields.Integer(size=100, string='Leave days to be encashed', readonly=True)
     want_to_encash = fields.Boolean(string='Do you want to encash the leave days? ', default=True)
 #     
     """ Relational Fields """

@@ -7,7 +7,7 @@ class HrLeaveCarryForwardtLine(models.Model):
 
     
     pending_leave = fields.Integer(string="Pending leave count")
-    leave_days_to_be_caryy_forwarded = fields.Integer(size=100, string='Leave days to be caryy forwarded')
+    leave_days_to_be_caryy_forwarded = fields.Integer(size=100, string='Leave days to be carry forwarded', readonly=True)
     want_to_carry_forward = fields.Boolean(string='Do you want to carry forward the leave days? ', default=True)
 #     
     """ Relational Fields """
