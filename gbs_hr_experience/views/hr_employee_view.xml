@@ -2,7 +2,7 @@
 <odoo>
   <data>
     <!-- Add a menu to Human Resources to keep the curriculum. -->
-    <menuitem id="menu_hr_experience" parent="hr.menu_hr_root" name="Experiences" sequence="0"/>
+    <menuitem id="menu_hr_experience" parent="hr.menu_hr_root" name="Experiences" sequence="99"/>
     
     <!-- inheritEmployee -->
     <record model="ir.ui.view" id="view_employee_form_inherit">
