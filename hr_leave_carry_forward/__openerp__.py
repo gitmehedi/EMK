@@ -6,7 +6,7 @@
     'version':'1.0',
     'data': [
         'wizards/hr_leave_carry_forward_wizard_views.xml',
-        'views/hr_leave_carry_forward_view.xml'   
+        'views/hr_leave_carry_forward_view.xml',
     ],
     'depends': [
         'hr',
