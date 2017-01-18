@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+
+		<record id="view_absence_employee_pivot" model="ir.ui.view">
+			<field name="name">employee.absence.report.pivot</field>
+			<field name="model">employee.absence.report</field>
+			<field name="arch" type="xml">
+				<pivot string="Sales Analysis" disable_linking="True">
+					<field name="type" />
+					<field name="email" />
+					<field name="start_date" />
+					<field name="end_date" />
+					<field name="employee_id" />
+				</pivot>
+			</field>
+		</record>
+
+		<record id="view_absence_employee_graph" model="ir.ui.view">
+			<field name="name">employee.absence.report.graph</field>
+			<field name="model">employee.absence.report</field>
+			<field name="arch" type="xml">
+				<graph string="Sales Analysis">
+					<field name="type" type="col" />
+					<field name="email" />
+					<field name="start_date" />
+					<field name="end_date" />
+					<field name="employee_id" />
+				</graph>
+			</field>
+		</record>
+
+		<!-- Custom reports (aka filters) -->
+
+		<!--<record id="filter_sale_report_salespersons" model="ir.filters"> -->
+		<!--<field name="name">By Salespersons</field> -->
+		<!--<field name="model_id">sale.report</field> -->
+		<!--<field name="user_id" eval="False"/> -->
+		<!--<field name="context">{'group_by': ['date:month', 'user_id']}</field> -->
+		<!--</record> -->
+		<!--<record id="filter_sale_report_salesteam" model="ir.filters"> -->
+		<!--<field name="name">By Salesteam</field> -->
+		<!--<field name="model_id">sale.report</field> -->
+		<!--<field name="user_id" eval="False"/> -->
+		<!--<field name="context">{'group_by': ['date:month', 'team_id']}</field> -->
+		<!--</record> -->
+		<!--<record id="filter_isale_report_product" model="ir.filters"> -->
+		<!--<field name="name">By Product</field> -->
+		<!--<field name="model_id">sale.report</field> -->
+		<!--<field name="user_id" eval="False"/> -->
+		<!--<field name="context">{'group_by': ['date:month', 'product_id']}</field> -->
+		<!--</record> -->
+
+		<record id="view_absence_employee_search" model="ir.ui.view">
+			<field name="name">employee.absence.report.search</field>
+			<field name="model">employee.absence.report</field>
+			<field name="arch" type="xml">
+				<search string="Sales Analysis">
+					<field name="start_date" />
+					<field name="end_date" />
+					<!--<filter string="This Year" name="year" invisible="1" domain="[('date','&lt;=', 
+						time.strftime('%%Y-12-31')),('date','&gt;=',time.strftime('%%Y-01-01'))]"/> -->
+					<!--<filter name="Quotations" string="Quotations" domain="[('state','in', 
+						('draft', 'sent'))]"/> -->
+					<!--<filter name="Sales" string="Sales" domain="[('state','not in',('draft', 
+						'cancel', 'sent'))]"/> -->
+					<separator />
+					<field name="type" type="col" />
+					<field name="email" />
+					<field name="employee_id" />
+
+					<!--<group expand="0" string="Extended Filters"> -->
+					<!--<field name="categ_id" filter_domain="[('categ_id', 'child_of', 
+						self)]"/> -->
+					<!--<field name="company_id" groups="base.group_multi_company"/> -->
+					<!--</group> -->
+					<!--<group expand="1" string="Group By"> -->
+					<!--<filter string="Salesperson" name="User" context="{'group_by':'user_id'}"/> -->
+					<!--<filter string="Sales Team" context="{'group_by':'team_id'}"/> -->
+					<!--<filter string="Partner's Country" name="country_id" context="{'group_by':'country_id'}"/> -->
+					<!--<filter string="Customer" name="Customer" context="{'group_by':'partner_id'}"/> -->
+					<!--<filter string="Product Category" name="Category" context="{'group_by':'categ_id'}"/> -->
+					<!--<filter name="status" string="Status" context="{'group_by':'state'}"/> -->
+					<!--<filter string="Company" groups="base.group_multi_company" context="{'group_by':'company_id'}"/> -->
+					<!--<separator/> -->
+					<!--<filter string="Order Month" context="{'group_by':'date:month'}" 
+						help="Ordered date of the sales order"/> -->
+					<!--</group> -->
+				</search>
+			</field>
+		</record>
+
+		<record id="action_absence_employee_report_lists" model="ir.actions.act_window">
+			<field name="name">Employee Absence Report</field>
+			<field name="res_model">employee.absence.report</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">pivot,graph</field>
+			<field name="view_id"></field>  <!-- force empty -->
+			<field name="search_view_id" ref="view_absence_employee_search" />
+			<!--<field name="context">{'search_default_Sales':1, 'group_by_no_leaf':1,'group_by':[]}</field> -->
+			<field name="help">This report performs analysis on your quotations
+				and sales orders. Analysis check your sales revenues and sort it by
+				different group criteria (salesman, partner, product, etc.) Use this
+				report to perform analysis on sales not having invoiced yet. If you
+				want to analyse your turnover, you should use the Invoice Analysis
+				report in the Accounting application.</field>
+		</record>
+
+		<!-- Configure Chalendar menu -->
+		<!-- <menuitem id="organization_calendar_menu" name="Organization Report" 
+			sequence="0"/> <menuitem name="Absence Report" action="action_absence_employee_report_lists" 
+			id="menu_report_absence_report_all" parent="organization_calendar_menu" sequence="10"/> -->
+
+	</data>
+</openerp>
