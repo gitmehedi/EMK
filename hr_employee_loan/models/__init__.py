@@ -1,1 +1,3 @@
 import hr_employee_loan_proof
+import hr_employee_loan_type
+import hr_employee_loan_policy
