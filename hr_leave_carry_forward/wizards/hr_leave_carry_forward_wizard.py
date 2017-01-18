@@ -10,6 +10,7 @@ class HrLeaveCarryForwardWizard(models.TransientModel):
     @api.multi
     def process_employee_line(self,context):
         vals = {}
+        vals1 = {}
         line_obj = self.env['hr.leave.carry.forward.line']
         holiday_ins = self.env['hr.holidays']        
         
@@ -23,6 +24,7 @@ class HrLeaveCarryForwardWizard(models.TransientModel):
                 pending_leave = sum([ v.number_of_days for v in leave_days]) 
                 
                 ''' Maximum and minimum earned leave days to be carry forwarded '''
+                """ Need to refactor """
                 if pending_leave is not None:
                     if pending_leave > 10:
                         leave_days_to_be_carry_forwarded = 10
@@ -39,7 +41,28 @@ class HrLeaveCarryForwardWizard(models.TransientModel):
                 vals['want_to_carry_forward'] = True
                 vals['parent_id'] = context['active_id']
                 
-                line_obj.create(vals)
+                line_obj.create(vals)                
+               
+                line_ids  = line_obj.search([('employee_id', '=', val.id)])                  
+                holiday_status_obj = self.env['hr.holidays.status'].search([('name','=','Earned Leaves')])        
+                
+                earned_leave_holiday_status_id = None                
+                
+                for hso in holiday_status_obj:
+                     earned_leave_holiday_status_id = hso.id
+                
+                """ Need to refactor """
+                
+                if line_ids and earned_leave_holiday_status_id:
+                    for l_id in line_ids:
+                        vals1['employee_id'] = l_id.employee_id.id
+                        vals1['holiday_status_id'] = earned_leave_holiday_status_id #leave type
+                        vals1['name'] = 'Earned Leave' #Description
+                        vals1['number_of_days'] = l_id.leave_days_to_be_caryy_forwarded
+                        vals1['state'] = 'validate' #status                
+                        vals1['type'] = 'add' #type             
+                        
+                        holiday_ins.create(vals1)                
             
         return {
             'view_type': 'form',
