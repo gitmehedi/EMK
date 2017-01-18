@@ -65,13 +65,13 @@ class hr_leave_fiscalyear(models.Model):
             if len(leave_year_code) > 1:
                 raise Warning('[Leave Year Code] There can not be two leave year code with same company.')
             
-        if self.date_start:
-            filters = ['|',['date_start', '<=', self.date_start],
-                       ['date_stop', '>=', self.date_start]]
-            lists = self.search(filters)
-            print "--------------date_start----------------", filters
-            if len(lists):
-                raise Warning('[START DATE] Start date should not overlapped')
+#         if self.date_start:
+#             filters = [['date_start', '<=', self.date_start],
+#                        ['date_stop', '>=', self.date_start]]
+#             lists = self.search(filters)
+#             print "--------------date_start----------------", filters
+#             if len(lists):
+#                 raise Warning('[START DATE] Start date should not overlapped')
 #         
 #         if self.date_stop:
 #             filters = [['date_start', '<=', self.date_stop],
