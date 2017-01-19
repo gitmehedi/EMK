@@ -10,8 +10,15 @@ from odoo.exceptions import ValidationError,Warning
 class HrHolidays(models.Model):
     _inherit = 'hr.holidays'
 
-    
-    leave_year_id = fields.Many2one('hr.leave.fiscal.year', string="Leave Year", required=True)
+    def _default_leave_year(self):
+        curr_date = datetime.date.today().strftime('%Y-%m-%d')
+        self.env.cr.execute("SELECT * FROM hr_leave_fiscal_year  WHERE '{}' between date_start and date_stop".format(curr_date))
+        years = self.env.cr.dictfetchone()
+        if years:
+            return years['id']
+        
+    leave_year_id = fields.Many2one('hr.leave.fiscal.year', string="Leave Year", 
+                                    default= _default_leave_year )
     
     
     
@@ -20,19 +27,14 @@ class HrHolidaysStatus(models.Model):
     
     @api.multi
     def get_days(self, employee_id):
-        # need to use `dict` constructor to create a dict per id
-        now = datetime.datetime.now()
-        print now.year, now.month, now.day, now.hour, now.minute, now.secon
-#         year_id = self.env['hr.leave.fiscal_year'].search([('date_start')])
-        
+        year_id = self.get_year()
         result = dict((id, dict(max_leaves=0, leaves_taken=0, remaining_leaves=0, virtual_remaining_leaves=0)) for id in self.ids)
-
 
         holidays = self.env['hr.holidays'].search([
             ('employee_id', '=', employee_id),
             ('state', 'in', ['confirm', 'validate1', 'validate']),
-            ('holiday_status_id', 'in', self.ids)
-            ('leave_year_id','=',)
+            ('holiday_status_id', 'in', self.ids),
+            ('leave_year_id', '=', year_id),
         ])
 
         for holiday in holidays:
@@ -51,5 +53,13 @@ class HrHolidaysStatus(models.Model):
                     status_dict['leaves_taken'] += holiday.number_of_days_temp
                     status_dict['remaining_leaves'] -= holiday.number_of_days_temp
         return result
+    
+    def get_year(self):
+        curr_date = datetime.date.today().strftime('%Y-%m-%d')
+        self.env.cr.execute(
+            "SELECT * FROM hr_leave_fiscal_year  WHERE '{}' between date_start and date_stop".format(curr_date))
+        years = self.env.cr.dictfetchone()
+        return years['id'] or 0
+
 
     
