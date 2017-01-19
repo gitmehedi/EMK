@@ -12,30 +12,34 @@ class HrEarnedLeaveEncashmentWizard(models.TransientModel):
         line_obj = self.env['hr.leave.encashment.line']
         holiday_ins = self.env['hr.holidays']
         
+        selected_ids_for_line  = line_obj.search([('parent_id', '=', context['active_id'])])
+        inserted_employee_ids = set([val.employee_id.id for val in selected_ids_for_line])
+        duplicate_employee_ids_filter = list(set(self.employee_ids.ids)-(inserted_employee_ids))
+
+        
         for val in self.employee_ids:
-            
-            leave_days = holiday_ins.search([('employee_id','=',val.id)])
-            
-            pending_leave = sum([ v.number_of_days for v in leave_days]) 
-            
-            ''' Maximum and minimum earned leave days to be encashed '''
-            if pending_leave is not None:
-                if pending_leave > 10:
-                    leave_days_to_be_encashed = 10
-                elif pending_leave == 5: 
-                    leave_days_to_be_encashed = 5
-                elif pending_leave > 5:
-                    leave_days_to_be_encashed = pending_leave
-                elif pending_leave < 5:
-                    leave_days_to_be_encashed = 0        
-            
-            vals['employee_id'] = val.id
-            vals['pending_leave'] = pending_leave
-            vals['leave_days_to_be_encashed'] = leave_days_to_be_encashed
-            vals['want_to_encash'] = True
-            vals['parent_id'] = context['active_id']
-            
-            line_obj.create(vals)
+            if val.id in duplicate_employee_ids_filter:
+                leave_days = holiday_ins.search([('employee_id','=',val.id)])            
+                pending_leave = sum([ v.number_of_days for v in leave_days]) 
+                
+                ''' Maximum and minimum earned leave days to be encashed '''
+                if pending_leave is not None:
+                    if pending_leave > 10:
+                        leave_days_to_be_encashed = 10
+                    elif pending_leave == 5: 
+                        leave_days_to_be_encashed = 5
+                    elif pending_leave > 5:
+                        leave_days_to_be_encashed = pending_leave
+                    elif pending_leave < 5:
+                        leave_days_to_be_encashed = 0        
+                
+                vals['employee_id'] = val.id
+                vals['pending_leave'] = pending_leave
+                vals['leave_days_to_be_encashed'] = leave_days_to_be_encashed
+                vals['want_to_encash'] = True
+                vals['parent_id'] = context['active_id']
+                
+                line_obj.create(vals)
         
         return {
             'view_type': 'form',

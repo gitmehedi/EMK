@@ -51,16 +51,15 @@ class HrLeaveCarryForwardWizard(models.TransientModel):
                 for hso in holiday_status_obj:
                      earned_leave_holiday_status_id = hso.id
                 
-                """ Need to refactor """
-                
+                """ Need to refactor """                
                 if line_ids and earned_leave_holiday_status_id:
                     for l_id in line_ids:
                         vals1['employee_id'] = l_id.employee_id.id
                         vals1['holiday_status_id'] = earned_leave_holiday_status_id #leave type
                         vals1['name'] = 'Earned Leave' #Description
-                        vals1['number_of_days'] = l_id.leave_days_to_be_caryy_forwarded
+                        vals1['number_of_days_temp'] = l_id.leave_days_to_be_caryy_forwarded
                         vals1['state'] = 'validate' #status                
-                        vals1['type'] = 'add' #type             
+                        vals1['type'] = 'add' #type
                         
                         holiday_ins.create(vals1)                
             

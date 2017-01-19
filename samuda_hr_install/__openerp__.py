@@ -15,7 +15,6 @@
         'hr_holidays_compute_days',
         'hr_absence_summary',
         'hr_earned_leave',
-        'hr_payslip_extend',
         ],
     'category': 'Installation Module',
     'summary': 'Install HR Module of Samuda ERP',
