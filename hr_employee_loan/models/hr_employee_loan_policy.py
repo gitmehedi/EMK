@@ -7,4 +7,5 @@ class HrEmployeeLoanPolicy(models.Model):
     code = fields.Char(size=100, string='Code', required='True')
     policy_type = fields.Char(size=100, string='Policy Type', required='True')
     value = fields.Float(size=100, string='value', required='True')
+    company = fields.Char(size=100, string='Company', required='True')
              
