@@ -7,7 +7,8 @@
 			<field name="model">hr.manual.attendance</field>
 			<field name="arch" type="xml">
 				<tree string="HR Manual Attendance">
-					<field name="name" />
+					<field name= "name" />
+					<field name= "employee_id" />					
 					<field name="sign_type" />
 					<field name="reason" />
 					<field name="is_it_official" />
@@ -28,8 +29,9 @@
 				<form string="HR Manual Attendance">
 					<sheet>
 						<group>
-							<field name="name" />
-							<field name="sign_type" value = "Full day"/>
+							<field name= "name" />
+							<field name="employee_id" />
+							<field name="sign_type"/>
 							<field name="check_out_time_full_day" attrs="{'invisible':[('sign_type','!=','full_day')]}" />				
 							<field name="check_in_time_full_day" attrs="{'invisible':[('sign_type','!=','full_day')]}" />							
 							<field name="check_in_time_sign_in" attrs="{'invisible':[('sign_type','!=','sign_in')]}" />

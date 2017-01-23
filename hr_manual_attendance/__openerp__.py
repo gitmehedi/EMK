@@ -9,6 +9,13 @@
  #      'views/inherited_hr_holidays_status_data.xml',
     ],
     
+    'depends': [
+        'hr',
+        'hr_holidays',
+        'base_setup',
+        ],
+    
+    
     'description': 
     """This module enables employee to request manual attendance""",        
     'installable': True,
