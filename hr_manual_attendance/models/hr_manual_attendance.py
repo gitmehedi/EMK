@@ -14,10 +14,10 @@ class HrManualAttendance(models.Model):
     is_it_official = fields.Boolean(string='Is it official', default=False)
     state = fields.Char(string='State', size = 30)        
     department_name = fields.Char(string='Department Name', size = 30)    
-    check_in_time_full_day = fields.Date(string = 'Check In time')
-    check_out_time_full_day = fields.Date(string = 'Check out time fULL')    
-    check_in_time_sign_in = fields.Date(string = 'Check In time')
-    check_in_time_sign_out = fields.Date(string = 'Check Out time')
+    check_in_time_full_day = fields.Date(string = 'Check In time for full day')
+    check_out_time_full_day = fields.Date(string = 'Check out time for full day')    
+    check_in_time_sign_in = fields.Date(string = 'Check In time for Sign In')
+    check_in_time_sign_out = fields.Date(string = 'Check Out time for Sign Out')
     sign_type = fields.Selection([
         ('full_day', 'Full Day'),
         ('sign_in', 'Sign In'),
