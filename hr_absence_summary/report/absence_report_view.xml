@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+	<data>
+		<!--<record id="paperformat_frenchcheck" model="report.paperformat"> -->
+		<!--<field name="name">French Bank Check</field> -->
+		<!--<field name="default" eval="True"/> -->
+		<!--<field name="format">custom</field> -->
+		<!--<field name="page_height">80</field> -->
+		<!--<field name="page_width">175</field> -->
+		<!--<field name="orientation">Portrait</field> -->
+		<!--<field name="margin_top">3</field> -->
+		<!--<field name="margin_bottom">3</field> -->
+		<!--<field name="margin_left">3</field> -->
+		<!--<field name="margin_right">3</field> -->
+		<!--<field name="header_line" eval="True"/> -->
+		<!--<field name="header_spacing">3</field> -->
+		<!--<field name="dpi">80</field> -->
+		<!--</record> -->
+		<!-- Main template -->
+		<template id="report_absence_view_qweb">
+
+
+			<t t-call="report.html_container">
+				<t t-name="report.external_layout_header">
+					<div class="header">
+						<div class="row">
+							<div class="col-xs-4 col-xs-offset-8">
+								<h1>Mehedi Hasan Test Report</h1>
+								<img src='/document/static/img/company_logo.png' />
+							</div>
+						</div>
+					</div>
+				</t>
+				<t t-name="report.external_layout">
+					<div class="page">
+						<div class="row">
+							<div class="col-xs-12"
+								style="background-color:#568eff;border: 1px solid #568eff;color:#ffffff;">
+								<h3>INVOICE</h3>
+							</div>
+						</div>
+
+						<div class="row">
+							<table class="table table-bordered">
+								<thead>
+									<tr>
+										<th
+											style="background-color:#BEB5B2;border: 1px solid black;color:#ffffff;">Name</th>
+										<th
+											style="background-color:#BEB5B2;border: 1px solid black;color:#ffffff;">Type</th>
+										<th
+											style="background-color:#BEB5B2;border: 1px solid black;color:#ffffff;">Date</th>
+									</tr>
+								</thead>
+								<tbody>
+									<t t-foreach="docs" t-as="o">
+										<tr>
+											<td class="col-xs-8">
+												<span t-field="o.name"></span>
+											</td>
+											<td class="col-xs-2">
+												<span t-field="o.status"></span>
+											</td>
+											<td class="col-xs-2">
+												<span t-field="o.date"></span>
+											</td>
+										</tr>
+									</t>
+								</tbody>
+							</table>
+						</div>
+
+					</div>
+				</t>
+				<t t-name="report.external_layout_footer">
+					<div class="footer">
+						<div class="row">
+							<div class="col-xs-8">
+								<strong>General Information</strong>
+							</div>
+							<div class="col-xs-4" style="text-align:right">
+								Page
+								<span class="page" />
+								of
+								<span class="topage" />
+							</div>
+						</div>
+					</div>
+				</t>
+			</t>
+		</template>
+	</data>
+</openerp>

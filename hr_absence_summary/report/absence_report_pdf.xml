@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+		<!-- Definition of the report (picking Move) -->
+		<!--<report id="report_absence_qweb" -->
+		<!--model="calendar.holiday" -->
+		<!--string="Calendar Holiday" -->
+		<!--name="hr_absence_summary.report_absence_view_qweb" -->
+		<!--multi="True" -->
+		<!--file="hr_absence_summary.report_absence_view_qweb" -->
+		<!--report_type="qweb-pdf" -->
+		<!--menu="True" /> -->
+		<report id="report_calendar_holiday_qweb" model="calendar.holiday"
+			string="Holiday Lists" report_type="qweb-pdf"
+			name="hr_organization_summary.report_absence_view_qweb" file="hr_organization_summary.report_absence_view_qweb"
+			attachment_use="True" multi="True" />
+
+
+
+	</data>
+</openerp>

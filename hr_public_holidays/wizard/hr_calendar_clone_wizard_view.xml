@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+	<data>
+		<record id="hr_calendar_clone_wizard_form_view" model="ir.ui.view">
+			<field name="name">Hr Calendar Clone Wizard</field>
+			<field name="model">hr.calendar.clone.wizard</field>
+			<field name="arch" type="xml">
+				<form string="Hr Calendar Clone Wizard Form">
+					<sheet>
+						<group>
+							<group>
+								<field name="holiday_year_id"
+									options='{"no_open": True,"no_create": 1, "no_create_edit": 1}' />
+							</group>
+						</group>
+					</sheet>
+					<footer>
+						<button name="clone_calendar" type="object" string="Generate"
+							class="oe_highlight" />
+						<button string="Cancel" special="cancel" class="oe_link" />
+					</footer>
+				</form>
+			</field>
+		</record>
+
+		<record id="hr_calendar_clone_wizard_action_view" model="ir.actions.act_window">
+			<field name="name">Hr Calendar Clone Wizard </field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">hr.calendar.clone.wizard</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">form</field>
+			<field name="target">new</field>
+		</record>
+
+	</data>
+</openerp>

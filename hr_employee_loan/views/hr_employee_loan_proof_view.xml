@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <record id="hr_employee_loan_proof_tree" model="ir.ui.view">
+			<field name="name">hr.employee.loan.proof.tree</field>
+			<field name="model">hr.employee.loan.proof</field>
+			<field name="arch" type="xml">
+				<tree string="Employee Loan Proof">
+					<field name="name" />
+					<field name="mand" />
+				</tree>
+			</field>
+		</record>
+		
+		<record id="hr_employee_loan_proof_form" model="ir.ui.view">
+			<field name="name">hr.employee.loan.proof.form</field>
+			<field name="model">hr.employee.loan.proof</field>
+			<field name="arch" type="xml">
+				<tree string="Employee Loan Proof">
+					<field name="name" />
+					<field name="mand" />
+				</tree>
+			</field>
+		</record>
+		
+        <record model="ir.actions.act_window" id="hr_loan_proof_action">
+            <field name="name">Loan Proofs</field>
+            <field name="res_model">hr.employee.loan.proof</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <!-- top level menu: no parent -->
+        <menuitem id="main_loan_menu" name="Loan"/>
+                 
+        <!-- Configuration level --> 
+        <menuitem id="courses_menu_5" name="Configuration" parent="main_loan_menu" sequence="8"/>
+        
+        <menuitem id="courses_menu_6" name="Loan Proofs" parent="courses_menu_5" sequence="9"
+                  action="hr_loan_proof_action"/>
+        
+    </data>
+</odoo>

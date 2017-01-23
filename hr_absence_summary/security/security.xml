@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data noupdate="0">
+
+		<record id="module_organization_calendar" model="ir.module.category">
+			<field name="name">Organization Calendar</field>
+			<field name="sequence">90</field>
+		</record>
+
+		<record id="organization_calendar_group_user" model="res.groups">
+			<field name="name">User</field>
+			<field name="category_id" ref="module_organization_calendar" />
+		</record>
+
+		<record id="organization_calendar_group_hr_manager" model="res.groups">
+			<field name="name">HR Manager</field>
+			<field name="category_id" ref="module_organization_calendar" />
+		</record>
+
+	</data>
+</openerp>
