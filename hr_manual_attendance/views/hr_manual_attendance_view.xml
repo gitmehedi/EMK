@@ -28,28 +28,28 @@
 			<field name="type">form</field>
 			<field name="arch" type="xml">
 				<form string="HR Manual Attendance">				
-						<sheet>
-					<group>
+					<sheet>
 						<group>
-							<field name= "name" />
-							<field name="employee_id" />
-							<field name="department_id" />
+							<group>
+								<field name= "name" />
+								<field name="employee_id" />
+								<field name="department_id" />
+							</group>
+							<group>
+								<field name="sign_type"/>
+								<field name="check_out_time_full_day" attrs="{'invisible':[('sign_type','!=','full_day')]}" />				
+								<field name="check_in_time_full_day" attrs="{'invisible':[('sign_type','!=','full_day')]}" />							
+								<field name="check_in_time_sign_in" attrs="{'invisible':[('sign_type','!=','sign_in')]}" />
+								<field name="check_in_time_sign_out" attrs="{'invisible':[('sign_type','!=','sign_out')]}" />
+								<field name="is_it_official" />							
+							</group>
+	                        <field name="reason" nolabel="1" colspan="4" placeholder="Add a reason..."/>	
 						</group>
-						<group>
-							<field name="sign_type"/>
-							<field name="check_out_time_full_day" attrs="{'invisible':[('sign_type','!=','full_day')]}" />				
-							<field name="check_in_time_full_day" attrs="{'invisible':[('sign_type','!=','full_day')]}" />							
-							<field name="check_in_time_sign_in" attrs="{'invisible':[('sign_type','!=','sign_in')]}" />
-							<field name="check_in_time_sign_out" attrs="{'invisible':[('sign_type','!=','sign_out')]}" />
-							<field name="is_it_official" />							
-						</group>
-                        <field name="reason" nolabel="1" colspan="4" placeholder="Add a reason..."/>	
-					</group>
-                        </sheet>					
+	                </sheet>					
 					<div class="oe_chatter">
-                    	<field name="message_follower_ids" widget="mail_followers"/>
-                    	<field name="message_ids" widget="mail_thread"/>
-                </div>
+	                    	<field name="message_follower_ids" widget="mail_followers"/>
+	                    	<field name="message_ids" widget="mail_thread"/>
+	                </div>
 				</form>
 			</field>
 		</record>
