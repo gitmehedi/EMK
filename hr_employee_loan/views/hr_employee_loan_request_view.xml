@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <record id="hr_employee_loan_requests_tree" model="ir.ui.view">
+			<field name="name">hr.employee.loan.requests.tree</field>
+			<field name="model">hr.employee.loan.request</field>
+			<field name="arch" type="xml">
+				<tree string="Employee Loan Requests">
+					<field name="name" />
+					<field name="code" />
+					<field name="loan_type" />
+					<field name="policy_type" />
+					<field name="employee_name" />
+					
+				</tree>
+			</field>
+		</record>
+		
+		<record id="hr_employee_loan_requests_form" model="ir.ui.view">
+			<field name="name">hr.employee.loan.requests.form</field>
+			<field name="model">hr.employee.loan.request</field>
+			<field name="arch" type="xml">
+				<tree string="Employee Loan Requests">
+					<field name="name" />
+					<field name="code" />
+					<field name="loan_type" />
+					<field name="policy_type" />
+					<field name="employee_name" />
+					
+				</tree>
+			</field>
+		</record>
+		
+        <record model="ir.actions.act_window" id="hr_loan_requests_action">
+            <field name="name">Loan Requests</field>
+            <field name="res_model">hr.employee.loan.request</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <!-- top level menu: no parent -->
+        <menuitem id="main_loan_menu" name="Loan"/>
+
+        <menuitem id="loans_menu" name="Loans" sequence="2"
+                  parent="main_loan_menu"/>
+       
+        <menuitem id="courses_menu" name="Loan Requests" parent="loans_menu" sequence="3"
+                  action="hr_loan_requests_action"/>
+    </data>
+</odoo>
