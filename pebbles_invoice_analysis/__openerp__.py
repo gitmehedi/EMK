@@ -15,7 +15,7 @@
         # 'security/account_security.xml',
         # 'security/ir.model.access.csv',
         'report/pebbles_account_invoice_report_view.xml',
-        'wizard/pebbles_account_invoice_refund_view.xml',
+        'wizard/pebbles_account_invoice_wizard_view.xml',
         # 'report/account_report_view.xml',
         # 'report/account_analytic_entries_report_view.xml',
         # 'wizard/account_move_bank_reconcile_view.xml',

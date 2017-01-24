@@ -206,7 +206,7 @@ class account_invoice_report(osv.osv):
 
             if len(where)>2:
                 where = "WHERE "+ where
-
+        print "----------------- ", where
         # where = """
         #     WHERE ail.product_id=1 or  ai.partner_id= 1 or pt.categ_id=1
         # """
