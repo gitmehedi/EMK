@@ -13,6 +13,10 @@ class Product_Variant_Extend(models.Model):
     
     size_variant_id=fields.Many2one(comodel_name='product.custom.variant')
     other_variant_id=fields.Many2one(comodel_name='product.custom.variant')
+
+    # @api.multi
+    # def name_get(self):
+    #     return "%s - %s" % (self.name, self.default_code)
     
     
 class InheritedProductTemplate(models.Model):

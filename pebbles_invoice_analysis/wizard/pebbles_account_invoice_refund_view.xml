@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <record id="view_account_invoice_create" model="ir.ui.view">
+            <field name="name">pebbles.account.invoice.wizard.form</field>
+            <field name="model">pebbles.account.invoice.wizard</field>
+            <field name="arch" type="xml">
+                <form string="Credit Note">
+                    <group>
+                         <group>
+                             <field name="product_id"/>
+                             <field name="partner_id"/>
+                             <field name="category_id"/>
+                         </group>
+
+                    </group>
+                    <footer>
+                        <button string='Create Invoice Report' name="invoice_create" type="object" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel"/>
+                    </footer>
+               </form>
+            </field>
+        </record>
+
+        <record id="pebbles_action_account_invoice_report_wizard" model="ir.actions.act_window">
+            <field name="name">Pebbles Invoices Analysis</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">pebbles.account.invoice.wizard</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+
+    <menuitem action="pebbles_action_account_invoice_report_wizard" id="pebbles_menu_action_account_invoice_report_all" parent="account.menu_finance_reporting" sequence="0"/>
+
+    </data>
+</openerp>
