@@ -10,6 +10,7 @@
     ],
     
     'depends': [
+        'hr_attendance',
         'hr',
         'hr_holidays',
         'base_setup',
