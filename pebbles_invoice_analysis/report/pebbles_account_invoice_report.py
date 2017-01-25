@@ -63,7 +63,6 @@ class account_invoice_report(osv.osv):
     _columns = {
         'date': fields.date('Date', readonly=True),
         'product_id': fields.many2one('product.product', 'Product', readonly=True),
-        'product_name': fields.char('Product Name', size=128, readonly=True),
         'product_qty':fields.float('Product Quantity', readonly=True),
         'uom_name': fields.char('Reference Unit of Measure', size=128, readonly=True),
         'payment_term': fields.many2one('account.payment.term', 'Payment Term', readonly=True),
@@ -73,7 +72,7 @@ class account_invoice_report(osv.osv):
         'categ_id': fields.many2one('product.category','Category of Product', readonly=True),
         'journal_id': fields.many2one('account.journal', 'Journal', readonly=True),
         'partner_id': fields.many2one('res.partner', 'Partner', readonly=True),
-        # 'partner_name': fields.char('Partner Name', size=128, readonly=True),
+        'partner_name': fields.char('Partner Name', size=128, readonly=True),
         'commercial_partner_id': fields.many2one('res.partner', 'Partner Company', help="Commercial Entity"),
         'company_id': fields.many2one('res.company', 'Company', readonly=True),
         'user_id': fields.many2one('res.users', 'Salesperson', readonly=True),
@@ -127,7 +126,7 @@ class account_invoice_report(osv.osv):
 
     def _select(self):
         select_str = """
-            SELECT sub.id, sub.date, sub.product_id, (sub.name_template||'-'||sub.default_code) as product_name, sub.partner_id, sub.country_id,
+            SELECT sub.id, sub.date, sub.product_id, (sub.name||sub.ref) as partner_name, sub.partner_id, sub.country_id,
                 sub.payment_term, sub.period_id, sub.uom_name, sub.currency_id, sub.journal_id,
                 sub.fiscal_position, sub.user_id, sub.company_id, sub.nbr, sub.type, sub.state,
                 sub.categ_id, sub.date_due, sub.account_id, sub.account_line_id, sub.partner_bank_id,
@@ -140,7 +139,7 @@ class account_invoice_report(osv.osv):
         select_str = """
                 SELECT min(ail.id) AS id,
                     ai.date_invoice AS date,
-                    ail.product_id, pr.default_code, pr.name_template,ai.partner_id, ai.payment_term, ai.period_id,
+                    ail.product_id, partner.name, COALESCE(NULLIF('-'||partner.ref,''), '') AS ref, ai.partner_id, ai.payment_term, ai.period_id,
                     u2.name AS uom_name,
                     ai.currency_id, ai.journal_id, ai.fiscal_position, ai.user_id, ai.company_id,
                     count(ail.*) AS nbr,
@@ -215,11 +214,11 @@ class account_invoice_report(osv.osv):
 
     def _group_by(self):
         group_by_str = """
-                GROUP BY ail.product_id, pr.default_code, pr.name_template, ai.date_invoice, ai.id,
+                GROUP BY ail.product_id, ai.date_invoice, ai.id,
                     ai.partner_id, ai.payment_term, ai.period_id, u2.name, u2.id, ai.currency_id, ai.journal_id,
                     ai.fiscal_position, ai.user_id, ai.company_id, ai.type, ai.state, pt.categ_id,
                     ai.date_due, ai.account_id, ail.account_id, ai.partner_bank_id, ai.residual,
-                    ai.amount_total, ai.commercial_partner_id, partner.country_id
+                    ai.amount_total, ai.commercial_partner_id, partner.country_id, partner.name, partner.ref
         """
         return group_by_str
 

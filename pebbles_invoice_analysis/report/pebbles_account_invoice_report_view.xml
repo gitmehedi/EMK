@@ -106,7 +106,7 @@
         <!--<field name="context">{'search_default_current':1, 'search_default_customer':1, 'group_by':[], 'group_by_no_leaf':1, 'search_default_year': 1}</field>-->
     </record>
 
-    <menuitem action="pebbles_action_account_invoice_report_all" id="menu_action_account_invoice_report_all" parent="account.menu_finance_reporting" sequence="0"/>
+    <!--<menuitem action="pebbles_action_account_invoice_report_all" id="menu_action_account_invoice_report_all" parent="account.menu_finance_reporting" sequence="0"/>-->
 
 
 
