@@ -10,6 +10,7 @@ class HrManualAttendance(models.Model):
     _inherit = ['mail.thread']
 
     #Fields of Model    
+    name = fields.Char()
     reason = fields.Text(string='Reason')
     is_it_official = fields.Boolean(string='Is it official', default=False)
     check_in_time_full_day = fields.Date(string = 'Check In time for full day')
