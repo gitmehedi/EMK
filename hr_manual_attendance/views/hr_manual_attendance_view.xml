@@ -67,14 +67,15 @@
 				</form>
 			</field>
 		</record>
+		
 		<record id="hr_manual_attendance" model="ir.actions.act_window">
 			<field name="name">HR Manual Attendance</field>
 			<field name="res_model">hr.manual.attendance</field>
 			<field name="view_mode">tree,form</field>
 		</record>
-
-		<menuitem id="menu_hr_manual_attendance" name="HR Manual Attendance"
-			parent="hr_holidays.menu_hr_holidays_configuration" sequence="7"
-			action="hr_manual_attendance" />
+		
+		<!-- Menu Item -->
+		<menuitem id="menu_hr_manual_attendance" name="HR Manual Attendance" parent="hr_attendance.menu_hr_attendance_manage_attendances" sequence="7" action="hr_manual_attendance" />
+		
 	</data>
 </openerp>

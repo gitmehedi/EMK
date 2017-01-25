@@ -111,7 +111,7 @@ class HrManualAttendance(models.Model):
             if not holiday.can_reset:
                 raise UserError(_('Only Manager or the concerned employee can reset to draft.'))
             if holiday.state not in ['confirm', 'refuse']:
-                raise UserError(_('Leave request state must be "Refused" or "To Approve" in order to reset to Draft.'))
+                raise UserError(_('Manual attendance request state must be "Refused" or "To Approve" in order to reset to Draft.'))
             holiday.write({
                 'state': 'draft',
                 'manager_id': False                
