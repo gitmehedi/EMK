@@ -5,9 +5,10 @@
     'category': 'HR Attendance',
     'version':'1.0',
     'data': [
-       'views/hr_manual_attendance_view.xml',
-       #'views/inherited_hr_holidays_status_data.xml',
-       'security/hr_manual_attendance_security.xml',
+        'security/ir.model.access.csv',
+        'views/hr_manual_attendance_view.xml',
+        #'views/inherited_hr_holidays_status_data.xml',
+        'security/hr_manual_attendance_security.xml',
        
     ],
     

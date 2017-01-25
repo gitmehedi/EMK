@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <openerp>
 	<data>
+		
+		<menuitem id="hr_attendance.menu_hr_attendance_root" name="Attendances" sequence="90" groups="hr.group_hr_attendance,base.group_user" web_icon="hr_attendance,static/description/icon.png"/>
+		
+		<menuitem id="hr_attendance.menu_hr_attendance_manage_attendances" name="Manage Attendances" parent="hr_attendance.menu_hr_attendance_root" sequence="20" groups="hr_attendance.group_hr_attendance_user,base.group_user"/>
+		
 		<!-- Tree View -->
 		<record id="hr_manual_attendance_tree" model="ir.ui.view">
 			<field name="name">hr_manual_attendance_tree</field>
@@ -62,13 +67,14 @@
 		</record>
 		
 		<record id="hr_manual_attendance" model="ir.actions.act_window">
-			<field name="name">HR Manual Attendance</field>
+			<field name="name">Manual Attendances</field>
 			<field name="res_model">hr.manual.attendance</field>
 			<field name="view_mode">tree,form</field>
 		</record>
 		
 		<!-- Menu Item -->
-		<menuitem id="menu_hr_manual_attendance" name="HR Manual Attendance" parent="hr_attendance.menu_hr_attendance_manage_attendances" sequence="7" action="hr_manual_attendance" />
+		<menuitem id="menu_hr_manual_attendance" name="Manual Attendances" parent="hr_attendance.menu_hr_attendance_manage_attendances" 
+					groups="hr.group_hr_attendance,base.group_user" sequence="7" action="hr_manual_attendance" />
 		
 	</data>
 </openerp>
