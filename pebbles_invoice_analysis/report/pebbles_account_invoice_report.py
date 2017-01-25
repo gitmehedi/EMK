@@ -191,24 +191,44 @@ class account_invoice_report(osv.osv):
         """
         return from_str
 
-    def _where(self, context):
+    def _where(self, vals):
 
         where = ""
-        if context:
-            if context['product_id']:
-                where = where + "ail.product_id= " + context['product_id']
-            if context['partner_id']:
-                where = where + "ail.categ_id= " + context['category_id']
+        where_require = True
+        and_require = False
+        
+        if vals:
+            if vals['product_id']:
+                if where_require:
+                    where = "where "
+                    where_require = False
+                if and_require:
+                    where = where + " and "
+                and_require = True
+                    
+                where = where + "ail.product_id= " + vals['product_id']
+                
+            if vals['category_id']:
+                if where_require:
+                    where = "where "
+                    where_require = False
+                if and_require:
+                    where = where + " and "
+                and_require = True
+                
+                where = where + "pt.categ_id= " + vals['category_id']
 
-            if context['category_id']:
-                where = str + "ai.partner_id= " + context['partner_id']
+            if vals['partner_id']:
+                if where_require:
+                    where = "where "
+                    where_require = False
+                if and_require:
+                    where = where + " and "
+                and_require = True
+                
+                where = where + "ai.partner_id= " + vals['partner_id']
 
-            if len(where)>2:
-                where = "WHERE "+ where
         print "----------------- ", where
-        # where = """
-        #     WHERE ail.product_id=1 or  ai.partner_id= 1 or pt.categ_id=1
-        # """
 
         return where
 
@@ -222,8 +242,12 @@ class account_invoice_report(osv.osv):
         """
         return group_by_str
 
-    def init(self, cr, context=None):
-        print "--------------------", context
+    
+    #def init(self, cr, context=None):
+    def generate_invoice_analysis_data(self, cr, conditions = None):
+        
+        print "=========================================="
+        print conditions
         # self._table = account_invoice_report
         tools.drop_view_if_exists(cr, self._table)
         cr.execute("""CREATE or REPLACE VIEW %s as (
@@ -246,7 +270,8 @@ class account_invoice_report(osv.osv):
                  (cr.date_end IS NULL OR cr.date_end > COALESCE(sub.date, NOW())))
         )""" % (
                     self._table,
-                    self._select(), self._sub_select(), self._from(), self._where(context), self._group_by()))
+                    self._select(), self._sub_select(), self._from(), 
+                    self._where(conditions), self._group_by()))
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

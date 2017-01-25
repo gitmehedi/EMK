@@ -8,13 +8,14 @@
             <field name="arch" type="xml">
                 <form string="Credit Note">
                     <group>
-                         <group>
-                             <field name="product_id"
+                    	<group>
+                        	<field name="category_id"
+                            		options='{"no_open": True,"no_create": 1, "no_create_edit": 1}'/> 
+                            <field name="product_id"
                                     options='{"no_open": True,"no_create": 1, "no_create_edit": 1}'/>
-                             <field name="partner_id"
+                            <field name="partner_id"
                                     options='{"no_open": True,"no_create": 1, "no_create_edit": 1}'/>
-                             <field name="category_id"
-                                    options='{"no_open": True,"no_create": 1, "no_create_edit": 1}'/>
+                             
                          </group>
 
                     </group>
@@ -28,7 +29,7 @@
         </record>
 
         <record id="pebbles_action_account_invoice_report_wizard" model="ir.actions.act_window">
-            <field name="name">Pebbles Invoices Analysis</field>
+            <field name="name">Custom Invoices Analysis</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">pebbles.account.invoice.wizard</field>
             <field name="view_type">form</field>

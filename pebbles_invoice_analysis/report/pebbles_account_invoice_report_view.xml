@@ -6,8 +6,9 @@
          <field name="model">pebbles.account.invoice.report</field>
          <field name="arch" type="xml">
              <graph string="Invoices Analysis" type="pivot">
-                 <field name="period_id" type="row"/>
+                 <field name="partner_id" type="row"/>
                  <field name="categ_id" type="col"/>
+                 <field name="product_id" type="col"/>
                  <field name="price_total" type="measure"/>
              </graph>
          </field>
@@ -99,7 +100,7 @@
 
 
      <record id="pebbles_action_account_invoice_report_all" model="ir.actions.act_window">
-        <field name="name">Pebbles Invoices Analysis</field>
+        <field name="name">Custom Invoices Analysis</field>
         <field name="res_model">pebbles.account.invoice.report</field>
         <field name="view_type">form</field>
         <field name="view_mode">graph</field>

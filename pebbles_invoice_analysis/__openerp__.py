@@ -6,12 +6,7 @@
     'author': 'Genweb2 Limited',
     'website': 'www.genweb2.com',
     'category' : 'Accounting & Finance',
-    'description' : """
-    Pebbles Invoice Analysis
-    ====================================
-    """,
-    'depends': ['base_setup', 'product', 'analytic',
-                'board', 'edi', 'report', 'account'],
+    'depends': ['account'],
     'data': [
         # 'security/account_security.xml',
         # 'security/ir.model.access.csv',
