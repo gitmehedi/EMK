@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
 <data>
-    <record id="view_account_invoice_report_graph" model="ir.ui.view">
+    <record id="pebbles_view_account_invoice_report_graph" model="ir.ui.view">
          <field name="name">pebbles.account.invoice.report.graph</field>
          <field name="model">pebbles.account.invoice.report</field>
          <field name="arch" type="xml">
              <graph string="Invoices Analysis" type="pivot">
-                 <field name="categ_id" type="row"/>
-                 <field name="period_id" type="col"/>
+                 <field name="period_id" type="row"/>
+                 <field name="categ_id" type="col"/>
                  <field name="price_total" type="measure"/>
              </graph>
          </field>
