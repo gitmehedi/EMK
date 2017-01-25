@@ -7,16 +7,12 @@
 			<field name="model">hr.manual.attendance</field>
 			<field name="arch" type="xml">
 				<tree string="HR Manual Attendance">
-					<!-- <field name= "name" /> -->
 					<field name= "employee_id" />					
 					<field name="department_id" />
-					<field name="sign_type" />
-					<field name="reason" />
 					<field name="check_in_time_full_day" />
 					<field name="check_out_time_full_day" />
 					<field name="check_in_time_sign_in" />
 					<field name="check_in_time_sign_out" />
-					<field name="is_it_official" />
 					<field name="state" />
 				</tree>
 			</field>
@@ -43,7 +39,6 @@
 					<sheet>
 						<group>
 							<group>
-								<field name= "name" />
 								<field name="employee_id" />
 								<field name="department_id" />
 							</group>
