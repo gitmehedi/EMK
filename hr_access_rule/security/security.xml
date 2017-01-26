@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data noupdate="0">
+
+		<record id="module_category_hr" model="ir.module.category">
+			<field name="name">HR Category</field>
+			<field name="sequence">91</field>
+		</record>
+
+		<record id="hr_access_group_user" model="res.groups">
+			<field name="name">HR User</field>
+			<field name="category_id" ref="module_category_hr" />
+		</record>
+
+		<record id="hr_access_group_manager" model="res.groups">
+			<field name="name">HR Group</field>
+			<field name="category_id" ref="module_category_hr" />
+		</record>
+
+	</data>
+</openerp>
