@@ -1,1 +1,2 @@
 import hr_manual_attendance
+import hr_attendance_inherit
