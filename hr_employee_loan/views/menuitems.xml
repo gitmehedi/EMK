@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        
+		<menuitem id="main_loan_menu" name="Loan"/>
+		
+		<menuitem id="configuration_menu" name="Configuration" 
+			parent="main_loan_menu" sequence="8"/>
+       
+		<menuitem id="loans_menu" name="Loans" 
+			parent="main_loan_menu" sequence="2" />
+       
+    </data>
+</odoo>
