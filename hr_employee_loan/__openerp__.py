@@ -5,8 +5,11 @@
     'category': 'HR Employee Loan',
     'version':'1.0',
     'data': [
- #       'views/hr_earned_leave_view.xml',
- #      'views/inherited_hr_holidays_status_data.xml',
+        'views/menuitems.xml',
+        'views/hr_employee_loan_policy_view.xml',
+        'views/hr_employee_loan_proof_view.xml',
+        'views/hr_employee_loan_request_view.xml',
+        'views/hr_employee_loan_type_view.xml',
     ],
     
     'summary': 'Calculates Employees Loan',

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+    <record id="hr_employee_loan_proof_form" model="ir.ui.view" >
+			<field name="name">hr.employee.loan.proof.form</field>
+			<field name="model">hr.employee.loan.proof</field>
+			<field name="type">form</field>
+			<field name="priority" eval="16"/>
+			<field name="arch" type="xml">
+				<form string="Employee Loan Types">
+					<group>
+						<group>
+							<field name="name" />
+							<field name="mand" />
+						</group>	
+					</group>
+				</form>
+			</field>
+		</record>
+		<record id="hr_employee_loan_proof_tree_view" model="ir.ui.view">
+			<field name="name">hr.employee.loan.proof.tree</field>
+			<field name="model">hr.employee.loan.proof</field>
+			<field name="type">tree</field>
+			<field name="arch" type="xml">
+				<form string="Employee Loan Proof">
+					<field name="name" />
+					<field name="mand" />
+				</form>
+			</field>
+		</record>
+        <record  id="hr_loan_proof_action" model="ir.actions.act_window">
+            <field name="name">Loan Proofs</field>
+            <field name="res_model">hr.employee.loan.proof</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        
+        <menuitem id="courses_menu_6" name="Loan Proofs" parent="configuration_menu" sequence="9"
+                  action="hr_loan_proof_action"/>
+        
+    </data>
+</odoo>
