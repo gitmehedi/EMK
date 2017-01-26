@@ -16,10 +16,10 @@
 			<field name="name">hr.employee.loan.proof.form</field>
 			<field name="model">hr.employee.loan.proof</field>
 			<field name="arch" type="xml">
-				<tree string="Employee Loan Proof">
+				<form string="Employee Loan Proof">
 					<field name="name" />
 					<field name="mand" />
-				</tree>
+				</form>
 			</field>
 		</record>
 		
