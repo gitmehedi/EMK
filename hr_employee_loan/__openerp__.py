@@ -5,6 +5,7 @@
     'category': 'HR Employee Loan',
     'version':'1.0',
     'data': [
+        'views/menuitems.xml',
         'views/hr_employee_loan_policy_view.xml',
         'views/hr_employee_loan_proof_view.xml',
         'views/hr_employee_loan_request_view.xml',

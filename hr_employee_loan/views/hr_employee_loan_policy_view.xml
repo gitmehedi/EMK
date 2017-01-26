@@ -1,23 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
     <data>
-        <record id="hr_employee_loan_policy_tree" model="ir.ui.view">
-			<field name="name">hr.employee.loan.policy.tree</field>
-			<field name="model">hr.employee.loan.policy</field>
-			<field name="arch" type="xml">
-				<tree string="Employee Loan policy">
-					<field name="name" />
-					<field name="code" />
-					<field name="policy_type" />
-					<field name="value" />
-					<field name="company" />
-				</tree>
-			</field>
-		</record>
-		
-		<record id="hr_employee_loan_policy_form" model="ir.ui.view">
+        <record id="hr_employee_loan_policy_form" model="ir.ui.view">
 			<field name="name">hr.employee.loan.policy.form</field>
 			<field name="model">hr.employee.loan.policy</field>
+			<field name="type">form</field>
+			<field name="arch" type="xml">
+				<form string="Employee Loan policy">
+					<group>
+						<group>
+							<field name="name" />
+							<field name="code" />
+							<field name="policy_type" />
+							<field name="value" />
+							<field name="company" />
+						</group>
+					</group>
+				</form>
+			</field>
+		</record>
+		<record id="hr_employee_loan_policy_tree" model="ir.ui.view">
+			<field name="name">hr.employee.loan.policy.tree</field>
+			<field name="model">hr.employee.loan.policy</field>
+			<field name="type">tree</field>
 			<field name="arch" type="xml">
 				<tree string="Employee Loan policy">
 					<field name="name" />
@@ -32,18 +37,10 @@
         <record model="ir.actions.act_window" id="hr_loan_policy_action">
             <field name="name">Loan Policies</field>
             <field name="res_model">hr.employee.loan.policy</field>
-            <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
         </record>
 
-        <!-- top level menu: no parent -->
-        <menuitem id="main_loan_menu" name="Loan"/>
-      
-       
-        <!-- Configuration level --> 
-        <menuitem id="courses_menu_5" name="Configuration" parent="main_loan_menu" sequence="8"/>
-        
-        <menuitem id="courses_menu_8" name="Loan Policies" parent="courses_menu_5" sequence="11"
+        <menuitem id="courses_menu_8" name="Loan Policies" parent="configuration_menu" sequence="11"
                   action="hr_loan_policy_action"/>   
     </data>
 </odoo>
