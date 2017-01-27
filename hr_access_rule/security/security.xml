@@ -3,17 +3,17 @@
 	<data noupdate="0">
 
 		<record id="module_category_hr" model="ir.module.category">
-			<field name="name">HR Category</field>
+			<field name="name">HR Access Group</field>
 			<field name="sequence">91</field>
 		</record>
 
 		<record id="hr_access_group_user" model="res.groups">
-			<field name="name">HR User</field>
+			<field name="name">General User</field>
 			<field name="category_id" ref="module_category_hr" />
 		</record>
 
 		<record id="hr_access_group_manager" model="res.groups">
-			<field name="name">HR Group</field>
+			<field name="name">Payroll User</field>
 			<field name="category_id" ref="module_category_hr" />
 		</record>
 
