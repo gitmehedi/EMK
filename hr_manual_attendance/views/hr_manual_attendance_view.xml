@@ -47,8 +47,8 @@
 							</group>
 							<group>
 								<field name="sign_type"/>
-								<field name="check_out_time_full_day" attrs="{'invisible':[('sign_type','!=','full_day')]}" />				
 								<field name="check_in_time_full_day" attrs="{'invisible':[('sign_type','!=','full_day')]}" />							
+								<field name="check_out_time_full_day" attrs="{'invisible':[('sign_type','!=','full_day')]}" />				
 								<field name="check_in_time_sign_in" attrs="{'invisible':[('sign_type','!=','sign_in')]}" />
 								<field name="check_in_time_sign_out" attrs="{'invisible':[('sign_type','!=','sign_out')]}" />
 								<field name="is_it_official" />							
