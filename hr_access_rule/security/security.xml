@@ -1,20 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
 	<data noupdate="0">
-
-		<record id="module_category_hr" model="ir.module.category">
-			<field name="name">HR Access Group</field>
-			<field name="sequence">91</field>
-		</record>
-
 		<record id="hr_access_group_user" model="res.groups">
 			<field name="name">General User</field>
-			<field name="category_id" ref="module_category_hr" />
+			<field name="category_id" ref="base.module_category_human_resources" />
 		</record>
 
 		<record id="hr_access_group_manager" model="res.groups">
 			<field name="name">Payroll User</field>
-			<field name="category_id" ref="module_category_hr" />
+			<field name="category_id" ref="base.module_category_hr_payroll" />
 		</record>
 
 	</data>
