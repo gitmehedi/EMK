@@ -1,17 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
 	<data>
-<<<<<<< HEAD
 		<record id="hr_employee_loan_type_form" model="ir.ui.view" >
 			<field name="name">hr.loan.type.form</field>
 			<field name="model">hr.employee.loan.types</field>
 			<field name="type">form</field>
 			<field name="priority" eval="16"/>
-=======
-		<record id="hr_employee_loan_type_tree" model="ir.ui.view">
-			<field name="name">hr.employee.loan.type.tree</field>
-			<field name="model">hr.employee.loan.type</field>
->>>>>>> 0b29b926fbfdea749d42f67789d765da7139d005
 			<field name="arch" type="xml">
 				<form string="Employee Loan Types">
 					<group>
@@ -26,12 +20,12 @@
 						</group>	
 					</group>
 					<notebook position="inside">
-							<page string="Loan Proof">
+						<page string="Loan Proof">
 								
-							</page>
-							<page string="Configaration">
+						</page>
+						<page string="Configaration">
 								
-							</page>
+						</page>
 					</notebook>		
 				</form>
 			</field>
@@ -41,8 +35,7 @@
 			<field name="model">hr.employee.loan.types</field>
 			<field name="type">tree</field>
 			<field name="arch" type="xml">
-
-				<form string="Employee Loan Types">
+			<form string="Employee Loan Types">
 					<field name="name" />
 					<field name="is_interest_payable" />
 					<field name="interest_mode" />
@@ -53,8 +46,6 @@
 				</form>
 			</field>
 		</record>
-<<<<<<< HEAD
-		
 		<record model="ir.actions.act_window" id="hr_loan_types_action">
 			<field name="name">Loan Types</field>
 			<field name="res_model">hr.employee.loan.types</field>
@@ -63,26 +54,5 @@
 
 		<menuitem id="courses_menu_7" name="Loan Types" parent="configuration_menu"
 			sequence="10" action="hr_loan_types_action" />
-
-=======
-
-		<record model="ir.actions.act_window" id="hr_loan_types_action">
-			<field name="name">Loan Types</field>
-			<field name="res_model">hr.employee.loan.type</field>
-			<field name="view_type">form</field>
-			<field name="view_mode">tree,form</field>
-		</record>
-
-		<!-- top level menu: no parent -->
-		<menuitem id="main_loan_menu" name="Loan" />
-
-		<!-- Configuration level -->
-		<menuitem id="courses_menu_5" name="Configuration" parent="main_loan_menu"
-			sequence="8" />
-
-		<menuitem id="courses_menu_7" name="Loan Types" parent="courses_menu_5"
-			sequence="10" action="hr_loan_types_action" />
-
->>>>>>> 0b29b926fbfdea749d42f67789d765da7139d005
-	</data>
+	 </data>
 </odoo>

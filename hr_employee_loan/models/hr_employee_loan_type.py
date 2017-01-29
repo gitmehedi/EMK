@@ -1,7 +1,7 @@
 from openerp import models, fields
 
 class HrEmployeeLoanType(models.Model):
-    _name = 'hr.employee.loan.type'
+    _name = 'hr.employee.loan.types'
 
     name = fields.Char(size=100, string='Name', required='True')
     is_interest_payable = fields.Boolean(string='Is Interest Payable', default=True)
