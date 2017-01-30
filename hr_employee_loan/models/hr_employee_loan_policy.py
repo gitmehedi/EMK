@@ -15,10 +15,7 @@ class HrEmployeeLoanPolicy(models.Model):
         ('incremental', 'Max Loan Amount'),
         ], string = 'Policy Type',required='True')
     value_ids = fields.Float(size=100, string='Value', required='True')
-    company_ids = fields.Selection([
-        ('flat', 'YourCompany'),
-        ('incremental', 'YourCompany'),
-        ], string = 'Company',required='True')
+    company_id = fields.Many2one('res.company', string='Company', default=lambda self: self.env.user.company_id)
     basis_ids = fields.Selection([
         ('flat', 'YourCompany'),
         ('incremental', 'YourCompany'),
