@@ -4,8 +4,23 @@ class HrEmployeeLoanPolicy(models.Model):
     _name = 'hr.employee.loan.policy'    
 
     name = fields.Char(size=100, string='Name', required='True')
-    code = fields.Char(size=100, string='Code', required='True')
-    policy_type = fields.Char(size=100, string='Policy Type', required='True')
-    value = fields.Float(size=100, string='value', required='True')
-    company = fields.Char(size=100, string='Company', required='True')
+    code_ids = fields.Char(size=100, string='Code', required='True')
+    
+    """ All relations fields """
+    employee_ids = fields.Many2many('hr.employee', string = 'Loan Proofs') 
+    employee_tag_ids = fields.Many2many('hr.employee.category', string = 'Employee catagories')
+    
+    policy_type_ids = fields.Selection([
+        ('flat', 'Min Loan Amount'),
+        ('incremental', 'Max Loan Amount'),
+        ], string = 'Policy Type',required='True')
+    value_ids = fields.Float(size=100, string='Value', required='True')
+    company_ids = fields.Selection([
+        ('flat', 'YourCompany'),
+        ('incremental', 'YourCompany'),
+        ], string = 'Company',required='True')
+    basis_ids = fields.Selection([
+        ('flat', 'YourCompany'),
+        ('incremental', 'YourCompany'),
+        ], string = 'Basis',required='True')
              

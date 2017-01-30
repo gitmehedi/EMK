@@ -6,6 +6,15 @@ class HrEmployeeLoanType(models.Model):
     name = fields.Char(size=100, string='Name', required='True')
     code_ids = fields.Char(size=100, string='Name', required='True')
     is_interest_payable = fields.Boolean(string='Is Interest Payable', required='True')
+
+
+    """ All relations fields """
+    company_id = fields.Many2one('res.company', string='Company', default=lambda self: self.env.user.company_id)
+    loan_proofs_ids = fields.Many2many('hr.employee.loan.proof', string = 'Loan Proofs') 
+    employee_tag_ids = fields.Many2many('hr.employee.category', string = 'Employee catagories')
+
+    """ All selection fields """
+    
     interest_mode = fields.Selection([
         ('flat', 'Flat'),
         ('incremental', 'Incremenatal'),
@@ -23,7 +32,3 @@ class HrEmployeeLoanType(models.Model):
         ('payrolldeduction', 'Deirect Cash/Cheque'),
         ('manual', 'Manual'),
         ], string = 'Disburse Method',required='True')
-    company_ids = fields.Char(size=100, string='Company', required='True')
-    #company = fields.One2many('res.company', string = 'Company', readonly = True)
-    loan_proofs_ids = fields.Many2many('hr.employee.loan.proof', string = 'Loan Proofs') 
-    employee_tag_ids = fields.Many2many('hr.employee.', string = 'Employee catagories')

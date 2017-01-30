@@ -2,5 +2,4 @@ import hr_employee_loan_proof
 import hr_employee_loan_type
 import hr_employee_loan_policy
 import hr_employee_loan_request
-import hr_employee_loan_installment
-import hr_employee_loan_installment_payment
+import hr_employee_loan_request_approve

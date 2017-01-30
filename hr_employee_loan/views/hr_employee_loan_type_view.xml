@@ -21,7 +21,7 @@
 						<group>
 							<field name="repayment_method" />
 							<field name="disburse_method" />
-							<field name="company_ids" />
+							<field name="company_id" readonly="1"/>
 						</group>
 					</group>	
 					<notebook position="inside">
@@ -48,7 +48,7 @@
 					<field name="rate" />
 					<field name="repayment_method" />
 					<field name="disburse_method" />
-					<field name="company_ids" />
+					<field name="company_id" />
 				</tree>
 			</field>
 		</record>

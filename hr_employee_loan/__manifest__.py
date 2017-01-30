@@ -4,6 +4,7 @@
     'website': 'www.genweb2.com',
     'category': 'HR Employee Loan',
     'version':'1.0',
+    'depends': ['hr'],
     'data': [
         'views/menuitems.xml',
         'views/hr_employee_loan_policy_view.xml',
