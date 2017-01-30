@@ -8,12 +8,16 @@
 			<field name="priority" eval="16"/>
 			<field name="arch" type="xml">
 				<form string="Employee Loan Types">
-					<group>
+					<sheet>
 						<group>
-							<field name="name" />
-							<field name="mand" />
-						</group>	
-					</group>
+							<group>
+								<field name="name" />
+							</group>
+							<group>
+								<field name="mand" />
+							</group>	
+						</group>
+					</sheet>
 				</form>
 			</field>
 		</record>

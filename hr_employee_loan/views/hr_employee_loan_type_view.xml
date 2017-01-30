@@ -31,7 +31,7 @@
 						<page string="Employee Categories">
 							<field name="employee_tag_ids" />		
 						</page>
-						<page string="Loan Policys">
+						<page string="Loan Policies">
 							<field name="loan_policy_ids" />		
 						</page>
 					</notebook>	

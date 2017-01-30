@@ -12,23 +12,19 @@ class HrEmployeeLoanType(models.Model):
     company_id = fields.Many2one('res.company', string='Company', default=lambda self: self.env.user.company_id)
     loan_proofs_ids = fields.Many2many('hr.employee.loan.proof', string = 'Loan Proofs') 
     employee_tag_ids = fields.Many2many('hr.employee.category', string = 'Employee catagories')
-    loan_policy_ids = fields.Many2many('hr.employee.loan.policy', string = 'Loan Policys')
+    loan_policy_ids = fields.Many2many('hr.employee.loan.policy', string = 'Loan Policies')
     """ All selection fields """
     
     interest_mode = fields.Selection([
         ('flat', 'Flat'),
-        ('incremental', 'Incremenatal'),
         ], string = 'Interest Mode',required='True')
     rate = fields.Float(size=100, string='Rate', required='True')
     interest_account = fields.Selection([
-        ('flat', 'Flat'),
-        ('incremental', 'Incremenatal'),
+        ('flat', '101200 Account Receivable'),
         ], string = 'Interest Account',required='True')
     repayment_method = fields.Selection([
-        ('payrolldeduction', 'Deirect From Payroll'),
-        ('manual', 'Manual'),
+        ('payrolldeduction', 'Deduction From Payroll'),
         ], string = 'Repayment Method',required='True')
     disburse_method = fields.Selection([
         ('payrolldeduction', 'Deirect Cash/Cheque'),
-        ('manual', 'Manual'),
         ], string = 'Disburse Method',required='True')
