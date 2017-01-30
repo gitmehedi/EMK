@@ -7,7 +7,7 @@
     'data': [
         'security/ir.model.access.csv',
         'views/hr_manual_attendance_view.xml',
-        #'views/inherited_hr_holidays_status_data.xml',
+        'views/manual_attendance_min_days_restriction_view.xml',
         'security/hr_manual_attendance_security.xml',
        
     ],
@@ -15,8 +15,8 @@
     'depends': [
         'hr_attendance',
         'hr',
-        'hr_holidays',        
-        ],    
+        'hr_holidays',
+    ],    
     
     'description': 
     """This module enables employee to request manual attendance""",        
