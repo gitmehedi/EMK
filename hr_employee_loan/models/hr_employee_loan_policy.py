@@ -11,13 +11,12 @@ class HrEmployeeLoanPolicy(models.Model):
     employee_tag_ids = fields.Many2many('hr.employee.category', string = 'Employee catagories')
     
     policy_type_ids = fields.Selection([
-        ('flat', 'Min Loan Amount'),
-        ('incremental', 'Max Loan Amount'),
+        ('flat', 'Max Loan Amount'),
+        ('incremental', 'Gap Between Two Loans'),
+        ('period', 'Qualifying Period'),
         ], string = 'Policy Type',required='True')
     value_ids = fields.Float(size=100, string='Value', required='True')
     company_id = fields.Many2one('res.company', string='Company', default=lambda self: self.env.user.company_id)
     basis_ids = fields.Selection([
-        ('flat', 'YourCompany'),
-        ('incremental', 'YourCompany'),
-        ], string = 'Basis',required='True')
+        ('flat', 'Fix Amount')], string = 'Basis',required='True')
              

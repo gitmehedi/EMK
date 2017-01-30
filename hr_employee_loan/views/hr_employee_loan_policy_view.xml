@@ -17,7 +17,7 @@
 							<field name="value_ids" />
 						</group>
 						<group>
-							<field name="company_id" readonly="1"/>	
+							<field name="company_id" readonly="1" groups="base.group_multi_company"/>	
 						</group>
 					</group>
 					<notebook position="inside">
@@ -42,7 +42,7 @@
 					<field name="code_ids" />
 					<field name="policy_type_ids" />
 					<field name="value_ids" />
-					<field name="company_id" />
+					<field name="company_id" groups="base.group_multi_company" />
 				</tree>
 			</field>
 		</record>
