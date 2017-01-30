@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+    <record id="hr_employee_loan_proof_form" model="ir.ui.view" >
+			<field name="name">hr.employee.loan.installment.form</field>
+			<field name="model">hr.employee.loan.installment</field>
+			<field name="type">form</field>
+			<field name="priority" eval="16"/>
+			<field name="arch" type="xml">
+				<form string="Employee Loan Installment">
+					<group>
+						<group>
+							<field name="name" />
+							<field name="code" />
+							<field name="date" />
+						</group>	
+					</group>
+				</form>
+			</field>
+		</record>
+		<record id="hr_employee_loan_proof_tree_view" model="ir.ui.view">
+			<field name="name">hr.employee.loan.installment.tree</field>
+			<field name="model">hr.employee.loan.installment</field>
+			<field name="type">tree</field>
+			<field name="arch" type="xml">
+				<tree string="Employee Loan Installment">
+					<field name="name" />
+					<field name="code" />
+					<field name="date" />
+				</tree>
+			</field>
+		</record>
+        <record  id="hr_loan_installment_action" model="ir.actions.act_window">
+            <field name="name">Loan Installment</field>
+            <field name="res_model">hr.employee.loan.installment</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        
+        <menuitem id="loan_installment_menu" name="Loan Installment" parent="loans_menu" sequence="4"
+                  action="hr_loan_installment_action"/>
+        
+    </data>
+</odoo>
