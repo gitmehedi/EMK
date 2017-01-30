@@ -133,13 +133,13 @@ class HrManualAttendance(models.Model):
                 raise UserError(_('Only Manager can apply the approval on manual attendance requests.'))
             
             manual_attendance.write({ 'state': 'validate', 'manager_id':manager.id})
-           
+            
+        
+            ## Update HR Attendance Table
         attendance_obj = self.env['hr.attendance']
         manual_attendace_ob = self.env['hr.manual.attendance'].search([('employee_id', '=', manual_attendance.employee_id.id)]) 
             
         vals1 = {}
-        
-        datetime.strptime(attendance.check_out, DEFAULT_SERVER_DATETIME_FORMAT);
         
         for mab in manual_attendace_ob:
               
@@ -158,6 +158,20 @@ class HrManualAttendance(models.Model):
             vals1['manual_attendance_request'] = True
                 
             attendance_obj.create(vals1)
+         
+        attendance_obj2 = self.env['hr.attendance'].search([('employee_id', '=', manual_attendance.employee_id.id)])    
+        
+        valr = {}
+        
+        for att in attendance_obj2:
+            for a in self:
+                if att.check_in and a.check_in_time_full_day:
+                    valr['check_in'] = a.check_in_time_full_day
+            
+                if att.check_in and a.check_in_time_sign_in:
+                    valr['check_in'] = a.check_in_time_sign_in    
+                
+            attendance_obj2.write(valr)
        
         return True
     
