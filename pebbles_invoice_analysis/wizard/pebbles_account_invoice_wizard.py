@@ -14,9 +14,18 @@ class PebblesAccountInvoiceWizard(models.TransientModel):
     partner_id = fields.Many2one('res.partner', 'Partner', 
                                  domain="[('customer', '=', True)]")
 
+    start_date = fields.Date('Start Date', readonly=True)
+    end_date = fields.Date('End Date', readonly=True)
+
+
     @api.multi
     def invoice_create(self):
-        
+
+        context = {
+            'category_id': str(self.category_id.id),
+            'product_id': str(self.product_id.id),
+            'partner_id': str(self.partner_id.id)
+        }
         vals = {}
         
         if self.category_id:
@@ -31,9 +40,11 @@ class PebblesAccountInvoiceWizard(models.TransientModel):
             vals['partner_id'] = str(self.partner_id.id)
         else:
             vals['partner_id'] = False
+
+        print  context, "------------", vals
         
         invoice_pool = self.env['pebbles.account.invoice.report']
-        invoice_pool.generate_invoice_analysis_data(vals)
+        invoice_pool.generate_invoice_analysis_data(context)
         
         view_id = self.env.ref('pebbles_invoice_analysis.pebbles_view_account_invoice_report_graph').id
 
@@ -49,7 +60,6 @@ class PebblesAccountInvoiceWizard(models.TransientModel):
             'views': [(view_id, 'graph')],
             'type': 'ir.actions.act_window',
             'target': 'current',
-            
         }
 
 
