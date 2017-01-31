@@ -53,7 +53,7 @@
             <field name="view_mode">tree,form</field>
         </record>
 
-        <menuitem id="courses_menu_8" name="Loan Policies" parent="configuration_menu" sequence="11"
+        <menuitem id="loan_policy_menu" name="Loan Policies" parent="configuration_menu" sequence="11"
                   action="hr_loan_policy_action"/>   
     </data>
 </odoo>

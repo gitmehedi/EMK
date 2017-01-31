@@ -61,7 +61,7 @@
 			<field name="view_mode">tree,form</field>
 		</record>
 
-		<menuitem id="courses_menu_7" name="Loan Types" parent="configuration_menu"
+		<menuitem id="loan_type_menu" name="Loan Types" parent="configuration_menu"
 			sequence="10" action="hr_loan_types_action" />
 	 </data>
 </odoo>

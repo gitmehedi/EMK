@@ -40,7 +40,7 @@
         </record>
 
         
-        <menuitem id="courses_menu_6" name="Loan Proofs" parent="configuration_menu" sequence="9"
+        <menuitem id="loan_proof_menu" name="Loan Proofs" parent="configuration_menu" sequence="9"
                   action="hr_loan_proof_action"/>
         
     </data>

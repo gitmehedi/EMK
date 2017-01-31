@@ -1,46 +1,67 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
     <data>
-        <record id="hr_employee_loan_requests_tree" model="ir.ui.view">
-			<field name="name">hr.employee.loan.requests.tree</field>
+        <record id="hr_employee_loan_request_form" model="ir.ui.view">
+			<field name="name">hr.employee.loan.request.form</field>
 			<field name="model">hr.employee.loan.request</field>
+			<field name="type">form</field>
+			<field name="priority" eval="16"/>
+			<field name="arch" type="xml">
+				<form string="Employee Loan Requests">
+					<sheet>
+					Name<h2><field name="name" /></h2>
+					Code<h2><field name="code_ids" /></h2>
+					<group>
+						<group>
+							<field name="applied_date_ids" />
+							<field name="loan_type_ids" />
+						</group>
+						<group>
+							<field name="approved_date_ids" />
+							<field name="disbursement_date_ids" />
+							<field name="department_ids" />
+							<field name="company_id" readonly="1" groups="base.group_multi_company"/>
+							<field name="user_id" />	
+						</group>
+					</group>
+					<notebook position="inside">
+						<page string="Proofs">
+							<field name="employee_loan_proofs_ids" />	
+						</page>
+						<page string="Policies">
+							<field name="employee_loan_policies_ids" />		
+						</page>
+					</notebook>
+					</sheet>
+				</form>
+			</field>
+		</record>
+		<record id="hr_employee_loan_request_tree" model="ir.ui.view">
+			<field name="name">hr.employee.loan.request.tree</field>
+			<field name="model">hr.employee.loan.request</field>
+			<field name="type">tree</field>
 			<field name="arch" type="xml">
 				<tree string="Employee Loan Requests">
 					<field name="name" />
-					<field name="code" />
-					<field name="loan_type" />
-					<field name="policy_type" />
-					<field name="employee_name" />
-					
+					<field name="code_ids" />
+					<field name="applied_date_ids" />
+					<field name="loan_type_ids" />
+					<field name="approved_date_ids" />
+					<field name="disbursement_date_ids" />
+					<field name="department_ids" />
+					<field name="company_id" readonly="1" groups="base.group_multi_company"/>
+					<field name="user_id" />
 				</tree>
 			</field>
 		</record>
 		
-		<record id="hr_employee_loan_requests_form" model="ir.ui.view">
-			<field name="name">hr.employee.loan.requests.form</field>
-			<field name="model">hr.employee.loan.request</field>
-			<field name="arch" type="xml">
-				<tree string="Employee Loan Requests">
-					<field name="name" />
-					<field name="code" />
-					<field name="loan_type" />
-					<field name="policy_type" />
-					<field name="employee_name" />
-					
-				</tree>
-			</field>
-		</record>
-		
-        <record model="ir.actions.act_window" id="hr_loan_requests_action">
+        <record model="ir.actions.act_window" id="hr_employee_loan_request_action">
             <field name="name">Loan Requests</field>
             <field name="res_model">hr.employee.loan.request</field>
-            <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
         </record>
 
-        <!-- top level menu: no parent -->
-
-        <menuitem id="courses_menu" name="Loan Requests" parent="loans_menu" sequence="3"
-                  action="hr_loan_requests_action"/>
+        <menuitem id="loan_request_menu" name="Loan Requests" parent="loans_menu" sequence="3"
+                  action="hr_employee_loan_request_action"/>   
     </data>
 </odoo>
