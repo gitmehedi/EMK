@@ -8,6 +8,10 @@
 			<field name="priority" eval="16"/>
 			<field name="arch" type="xml">
 				<form string="Employee Loan Requests">
+					<header>
+						<button name="bottom" type="action" string="Approve"  class="oe_highlight"/> 
+						<button name="bottom" type="action" string="Reject" />
+					</header>
 					<sheet>
 					Name<h2><field name="name" /></h2>
 					Code<h2><field name="code_ids" /></h2>
