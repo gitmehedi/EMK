@@ -9,13 +9,8 @@
 			<field name="arch" type="xml">
 				<form string="Employee Loan Requests">
 					<header>
-						<button name="submit" type="object" string="Submit"
-							 class="oe_highlight" />	
-							
-						<button name="action_done"
-							string="Submission" class="oe_highlight" states="Draft" type="action"
-							domain="[('state','=','received')]" />
-
+						<button string="Submit" name="action_confirm" states="draft" type="object" class="oe_highlight"/>
+						
 						<button name="action_done" type="object" string="Accepted"
 							states="Applied" class="oe_highlight" />
 						
@@ -25,19 +20,22 @@
 						<field name="state" widget="statusbar" />
 					</header>
 					<sheet>
-					Employee Name
-					<h2><field name="employee_id" /></h2>
-					Number
-					<h2><field name="name" /></h2>
+						<div class="oe_title">
+                            <label for="employee_id" class="oe_edit_only"/>
+                            <h1>
+                                <field name="employee_id" placeholder="Employee's Name"/>
+                            </h1>
+                        </div>
 					<group>
 						<group>
-							<field name="applied_date_ids" />
+							<field eval="time.strftime('%Y-%m-26')" name="applied_date_ids"/>
 							<field name="loan_type_ids" />
 						</group>
 						<group>
-							<field name="approved_date_ids" />
-							<field name="disbursement_date_ids" />
-							<field name="department_ids" />
+							
+       						<field eval="time.strftime('%Y-%m-28')" name="approved_date_ids"/>
+       						<field name="disbursement_date_ids" />
+       						<field name="department_ids" />
 							<field name="company_id" readonly="1" groups="base.group_multi_company"/>
 							<field name="user_id" />	
 						</group>
@@ -59,8 +57,8 @@
 								<field name="employee_loan_policies_ids" />		
 							</page>
 							<page string="Notes">
-								<field name="notes" />	
-						</page>
+								<field name="notes" />			
+							</page>
 					</notebook>
 					</sheet>
 				</form>
@@ -74,13 +72,9 @@
 				<tree string="Employee Loan Requests">
 					<field name="name" />
 					<field name="employee_id" />
-					<field name="applied_date_ids" />
 					<field name="loan_type_ids" />
-					<field name="approved_date_ids" />
-					<field name="disbursement_date_ids" />
-					<field name="department_ids" />
 					<field name="company_id" readonly="1" groups="base.group_multi_company"/>
-					<field name="user_id" />
+					<field name="state" />
 				</tree>
 			</field>
 		</record>
