@@ -9,12 +9,26 @@
 			<field name="arch" type="xml">
 				<form string="Employee Loan Requests">
 					<header>
-						<button name="bottom" type="action" string="Approve"  class="oe_highlight"/> 
-						<button name="bottom" type="action" string="Reject" />
+						<button name="submit" type="object" string="Submit"
+							 class="oe_highlight" />	
+							
+						<button name="action_done"
+							string="Submission" class="oe_highlight" states="Draft" type="action"
+							domain="[('state','=','received')]" />
+
+						<button name="action_done" type="object" string="Accepted"
+							states="Applied" class="oe_highlight" />
+						
+						<button name="action_done" type="object" string="Accepted"
+							states="Approved" class="oe_highlight" />	
+							
+						<field name="state" widget="statusbar" />
 					</header>
 					<sheet>
-					Name<h2><field name="name" /></h2>
-					Code<h2><field name="code_ids" /></h2>
+					Employee Name
+					<h2><field name="employee_id" /></h2>
+					Number
+					<h2><field name="name" /></h2>
 					<group>
 						<group>
 							<field name="applied_date_ids" />
@@ -29,11 +43,23 @@
 						</group>
 					</group>
 					<notebook position="inside">
-						<page string="Proofs">
-							<field name="employee_loan_proofs_ids" />	
-						</page>
-						<page string="Policies">
-							<field name="employee_loan_policies_ids" />		
+							<page string="General">
+								<group col="4">
+                                    <field name="principal_amount_ids"/>
+                                    <field name="is_interest_payble_ids"/>
+                                    <field name="interst_mode_ids"/>
+                                    <field name="duration_ids"/>
+                                    <field name="rate_ids" />
+                                </group>	
+							</page>
+							<page string="Proofs">
+								<field name="employee_loan_proofs_ids" />	
+							</page>
+							<page string="Policies">
+								<field name="employee_loan_policies_ids" />		
+							</page>
+							<page string="Notes">
+								<field name="notes" />	
 						</page>
 					</notebook>
 					</sheet>
@@ -47,7 +73,7 @@
 			<field name="arch" type="xml">
 				<tree string="Employee Loan Requests">
 					<field name="name" />
-					<field name="code_ids" />
+					<field name="employee_id" />
 					<field name="applied_date_ids" />
 					<field name="loan_type_ids" />
 					<field name="approved_date_ids" />
