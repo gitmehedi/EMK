@@ -1,12 +1,6 @@
 # -*- coding: utf-8 -*-
-# Part of Odoo. See LICENSE file for full copyright and licensing details.
-
-# import logging
 
 from odoo import fields, models, api
-# from openerp.tools.translate import _
-
-# _logger = logging.getLogger(__name__)
 
 
 class hr_employee(models.Model):
@@ -33,14 +27,9 @@ class hr_employee(models.Model):
     
     @api.one
     def _get_attached_docs(self):
-        res = {}
         attachment = self.env['ir.attachment']
-        
         for id in self.ids:
             employee_attachments = attachment.search([('res_model', '=', 'hr.employee'), ('res_id', '=', id)])
-            print "Employee Attachments---: ", employee_attachments, "-------------", self
-
             self.doc_count = len([v.id for v in employee_attachments])
-            print "Employee Attachments---: ", employee_attachments, "-------------", self.doc_count
 
     doc_count = fields.Integer(compute=_get_attached_docs, string="Number of documents attached")
