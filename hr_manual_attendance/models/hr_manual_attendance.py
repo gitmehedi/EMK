@@ -1,7 +1,6 @@
 from openerp import api
 from openerp import fields
 from openerp import models
-from duplicity.tempdir import default
 from odoo.exceptions import UserError
 
 from datetime import datetime
