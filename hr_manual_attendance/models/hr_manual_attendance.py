@@ -1,7 +1,6 @@
 from openerp import api
 from openerp import fields
 from openerp import models
-from duplicity.tempdir import default
 from odoo.exceptions import UserError
 
 from datetime import datetime
@@ -19,10 +18,10 @@ class HrManualAttendance(models.Model):
     name = fields.Char()
     reason = fields.Text(string='Reason')
     is_it_official = fields.Boolean(string='Is it official', default=False)
-    check_in_time_full_day = fields.Date(string = 'Check In time full day')
-    check_out_time_full_day = fields.Date(string = 'Check out time full day')    
-    check_in_time_sign_in = fields.Date(string = 'Check In time Sign In')
-    check_in_time_sign_out = fields.Date(string = 'Check Out time Sign Out')    
+    check_in_time_full_day = fields.Datetime(string = 'Check In time full day')
+    check_out_time_full_day = fields.Datetime(string = 'Check out time full day')    
+    check_in_time_sign_in = fields.Datetime(string = 'Check In time Sign In')
+    check_in_time_sign_out = fields.Datetime(string = 'Check Out time Sign Out')    
     sign_type = fields.Selection([
         ('full_day', 'Full Day'),
         ('sign_in', 'Sign In'),
