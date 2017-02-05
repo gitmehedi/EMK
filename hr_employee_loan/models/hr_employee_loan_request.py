@@ -3,17 +3,16 @@ from openerp import models, fields
 from openerp import api
 
 class HrEmployeeLoanRequest(models.Model):
-    _name = 'hr.employee.loan.request' 
+    _name = 'hr.employee.loan.request'
+    _order = 'name desc'
 
-    name = fields.Char(size=100, string='Number', default="/")
+    name = fields.Char(size=100, string='Loan Id', default="New")
     emp_code = fields.Char(size=100)
     duration_ids = fields.Char(size=100, string='Duration(Months)')
     principal_amount_ids = fields.Float(string='Principal Amount')
     notes = fields.Text(string='Notes', size=500, help='Please enter notes.')
     rate_ids = fields.Float(size=100, string='Rate')
     is_interest_payble_ids = fields.Boolean(string='Is Interest Payable', required='True')
-    
-    
     
     """ All relations fields """
     def _default_employee(self):
@@ -25,17 +24,14 @@ class HrEmployeeLoanRequest(models.Model):
     employee_loan_policies_ids = fields.Many2many('hr.employee.loan.policy', string = 'Policies')
     company_id = fields.Many2one('res.company', string='Company', default=lambda self: self.env.user.company_id)
     user_id = fields.Many2one('res.users', string='User')
-    
-    
+    loan_type_id = fields.Many2one('hr.employee.loan.types', string='Loan Type', required=True)
+
     """ All Selection fields """
-    loan_type_ids = fields.Selection([
-        ('home_loan', 'Home Loan'),
-        ], string = 'Loan Type',required='True')
     
-    applied_date_ids = fields.Datetime('Applied Date', readonly=True, index=True, copy=False, required='True',
+    applied_date_ids = fields.Datetime('Applied Date', readonly=True, index=True, copy=False,
         states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]})
     
-    approved_date_ids = fields.Datetime('Approved Date', readonly=True, copy=False, required='True',
+    approved_date_ids = fields.Datetime('Approved Date', readonly=True, copy=False,
         states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]})
     
   
@@ -57,21 +53,16 @@ class HrEmployeeLoanRequest(models.Model):
     def action_draft(self):
         self.state = 'draft'
         
-       
-
     @api.multi
     def action_confirm(self, vals):
-        self.state = 'applied'
-        self.name = self.env['ir.sequence'].get('emp_code')
-        vals['name'] = self.env['ir.sequence'].get('emp_code')            
-        return super(HrEmployeeLoanRequest,self).write(vals)
-
+        for loan in self:
+            loan.state = 'applied'
+            loan.name = self.env['ir.sequence'].get('emp_code')
+            
     @api.multi
     def action_done(self):
         self.state = 'approved'
 
-    
-   
     '''For Employee Sequence
     @api.model
     def create(self, vals):

@@ -29,7 +29,7 @@
                         </div>
 					<group>
 						<group>							
-							<field name="loan_type_ids" />
+							<field name="loan_type_id" />
 						</group>
 						<group>
 							<field eval="time.strftime('%Y-%m-26')" name="applied_date_ids"/>
@@ -48,9 +48,9 @@
                                    		<field name="duration_ids"/>
 									</group>
 									<group>
-										<field name="is_interest_payble_ids"/>
-										<field name="interst_mode_ids"/>                                   
-	                                    <field name="rate_ids" />
+										<field name="is_interest_payble_ids" />
+										<field name="interst_mode_ids" attrs="{'invisible': [('is_interest_payble_ids', '=', False)]}" />                                   
+	                                    <field name="rate_ids" attrs="{'invisible': [('is_interest_payble_ids', '=', False)]}" />
                                     </group>
                                 </group>	
 							</page>
@@ -76,7 +76,7 @@
 				<tree string="Employee Loan Requests">
 					<field name="name" />
 					<field name="employee_id" />
-					<field name="loan_type_ids" />
+					<field name="loan_type_id" />
 					<field name="company_id" readonly="1" groups="base.group_multi_company"/>
 					<field name="state" />
 				</tree>
@@ -87,7 +87,7 @@
 		<record id="seq_loan_request" model="ir.sequence">
             <field name="name">Loan Sequence</field>
             <field name="code">emp_code</field>
-            <field name="prefix">EMPC-</field>
+            <field name="prefix">EMPC/</field>
             <field name="padding">10</field>
         </record>
 		
