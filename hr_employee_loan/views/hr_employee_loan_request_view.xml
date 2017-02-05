@@ -9,10 +9,16 @@
 			<field name="arch" type="xml">
 				<form string="Employee Loan Requests">
 					<header>
-						<button string="Apply" name="create" states="draft" type="object" class="oe_highlight"/>
-						<button string="Approve" name="compute_sheet" states="applied" type="object" class="oe_highlight"/>
-                     	<button string="Refuse" name="action_refuse" states="applied,approved" type="object" />
-						<field name="state" widget="statusbar" />
+						 <button name="action_draft" type="object"
+                                string="Reject"
+                                states="applied,approved"/>
+                        <button name="action_confirm" type="object"
+                                string="Apply" states="draft"
+                                class="oe_highlight"/>
+                        <button name="action_done" type="object"
+                                string="Approve" states="applied"
+                                class="oe_highlight"/>
+                        <field name="state" widget="statusbar"/>
 					</header>
 					<sheet>
 						<div class="oe_title">
