@@ -458,11 +458,8 @@ class HrAttendanceImportWizard(models.TransientModel):
         self._err_log = ''
         move = self.env['hr.attendance.import'].browse(
             self._context['active_id'])
-        accounts = self.env['account.account'].search([
-            ('type', 'not in', ['view', 'consolidation', 'closed']),
-            ('company_id', '=', move.company_id.id)
-            ])
-        self._accounts_dict = {a.code: a.id for a in accounts}
+        #accounts = self.env['account.account'].search([('type', 'not in', ['view', 'consolidation', 'closed'])])
+        #self._accounts_dict = {a.code: a.id for a in accounts}
         self._sum_debit = self._sum_credit = 0.0
         self._get_orm_fields()
         lines, header = self._remove_leading_lines(self.lines)

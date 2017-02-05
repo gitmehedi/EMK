@@ -17,7 +17,7 @@ class AttendanceImport(models.Model):
         raise UserError(_('Not Implemented yet!'))
     
         
-    """ @api.multi
+    @api.multi
     def import_lines(self):
         self.ensure_one()
         module = __name__.split('addons.')[1].split('.')[0]
@@ -32,4 +32,4 @@ class AttendanceImport(models.Model):
             'target': 'new',
             'type': 'ir.actions.act_window',
         }
-    """    
+       

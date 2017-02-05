@@ -55,6 +55,19 @@
 								<field name="file_name" />
 							</group>								
 						</group>
+						<notebook position="inside">
+							<page string="Raw Data">
+								<group col="4">
+                                   <!--  <field name="file_name"/> -->
+                                </group>	
+							</page>
+							<page string="Malformed Data">
+								<!-- <field name="file_name"/> -->	
+							</page>
+							<page string="Ready to Import">
+								<!-- <field name="file_name"/> -->		
+							</page>
+					</notebook>
 	                </sheet>	                
 				</form>
 			</field>
