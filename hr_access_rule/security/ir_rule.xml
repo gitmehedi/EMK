@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<openerp>
+	<data>
+        <record id="property_general_user_rule_hr_payslip_list" model="ir.rule">
+            <field name="name">HR Payslip Lists</field>
+            <field name="model_id" ref="hr_payroll.model_hr_payslip"/>
+            <field name="domain_force">[('employee_id.user_id','=',user.id)]</field>
+            <field name="perm_read" eval="True" />
+            <field name="perm_create" eval="False" />
+            <field name="perm_write" eval="False" />
+            <field name="perm_unlink" eval="False" />
+            <!--<field name="groups" eval="[(4,ref('hr_access_group_user'))]"/>-->
+        </record>
+
+	</data>
+</openerp>

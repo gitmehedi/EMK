@@ -15,6 +15,7 @@
     'data': [
         "security/security.xml",
         "security/ir.model.access.csv",
+        "security/ir_rule.xml",
         "security/menu.xml",
     ],
     'installable': True,

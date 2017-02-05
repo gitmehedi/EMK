@@ -9,8 +9,7 @@
             action="hr_payroll.action_hr_salary_rule_category"
             parent="hr_payroll.menu_hr_payroll_configuration"
             sequence="11"
-            groups="base.group_no_one,hr_access_group_manager,hr_access_group_user"
-        />
+            groups="base.group_no_one,hr_access_group_manager,hr_access_group_manager,hr_access_group_user"/>
 
           <menuitem
             id="hr_payroll.menu_hr_salary_rule_category_tree_view"
@@ -21,7 +20,7 @@
 
         <menuitem action="hr_payroll.action_view_hr_payslip_form" id="hr_payroll.menu_department_tree"
                   parent="hr_payroll.menu_hr_payroll_root"
-                  groups="hr_payroll.group_hr_payroll_user,hr_access_group_manager"/>
+                  groups="hr_payroll.group_hr_payroll_user,hr_access_group_manager,hr_access_group_user"/>
 
     </data>
 </openerp>
