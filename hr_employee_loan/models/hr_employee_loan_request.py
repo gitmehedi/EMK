@@ -5,12 +5,12 @@ from openerp import api
 class HrEmployeeLoanRequest(models.Model):
     _name = 'hr.employee.loan.request' 
 
-    name = fields.Char(size=100, string='Number')
+    name = fields.Char(size=100, string='Number', default="/")
     emp_code = fields.Char(size=100)
     duration_ids = fields.Char(size=100, string='Duration(Months)')
     principal_amount_ids = fields.Float(string='Principal Amount')
     notes = fields.Text(string='Notes', size=500, help='Please enter notes.')
-    rate_ids = fields.Float(size=100, string='Rate', required='True')
+    rate_ids = fields.Float(size=100, string='Rate')
     is_interest_payble_ids = fields.Boolean(string='Is Interest Payable', required='True')
     
     
@@ -42,19 +42,40 @@ class HrEmployeeLoanRequest(models.Model):
     disbursement_date_ids = fields.Datetime('Disbursement Date', readonly=True, copy=False,
         states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]})
          
-    state = fields.Selection([('draft', "Draft"), ('applied', "Applied"), ('approved', "Approved")],
-                            default="draft", readonly=True, track_visibility='onchange')
-    
     interst_mode_ids = fields.Selection([
         ('flat', 'Flat'),
         ], string = 'Interest Mode')
     
+
+    state = fields.Selection([
+        ('draft', "Draft"),
+        ('applied', "Applied"),
+        ('approved', "Approved"),
+    ], default='draft')
+
+    @api.multi
+    def action_draft(self):
+        self.state = 'draft'
+        
+       
+
+    @api.multi
+    def action_confirm(self, vals):
+        self.state = 'applied'
+        self.name = self.env['ir.sequence'].get('emp_code')
+        vals['name'] = self.env['ir.sequence'].get('emp_code')            
+        return super(HrEmployeeLoanRequest,self).write(vals)
+
+    @api.multi
+    def action_done(self):
+        self.state = 'approved'
+
     
-    
-    '''For Employee Sequence'''
+   
+    '''For Employee Sequence
     @api.model
     def create(self, vals):
+    
         vals['name'] = self.env['ir.sequence'].get('emp_code')
             
-        return super(HrEmployeeLoanRequest,self).create(vals)
-            
+        return super(HrEmployeeLoanRequest,self).create(vals)'''
