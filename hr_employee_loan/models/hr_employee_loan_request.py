@@ -10,7 +10,7 @@ class HrEmployeeLoanRequest(models.Model):
     duration_ids = fields.Char(size=100, string='Duration(Months)')
     principal_amount_ids = fields.Float(string='Principal Amount')
     notes = fields.Text(string='Notes', size=500, help='Please enter notes.')
-    rate_ids = fields.Float(size=100, string='Rate', required='True')
+    rate_ids = fields.Float(size=100, string='Rate')
     is_interest_payble_ids = fields.Boolean(string='Is Interest Payable', required='True')
     
     

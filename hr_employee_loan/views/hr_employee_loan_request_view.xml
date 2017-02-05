@@ -28,12 +28,11 @@
                             </h1>
                         </div>
 					<group>
-						<group>
-							<field eval="time.strftime('%Y-%m-26')" name="applied_date_ids"/>
+						<group>							
 							<field name="loan_type_ids" />
 						</group>
 						<group>
-							
+							<field eval="time.strftime('%Y-%m-26')" name="applied_date_ids"/>
        						<field eval="time.strftime('%Y-%m-28')" name="approved_date_ids"/>
        						<field eval="time.strftime('%Y-%m-26')" name="disbursement_date_ids" />
        						<field name="department_id" invisible="1"/>
@@ -43,12 +42,16 @@
 					</group>
 					<notebook position="inside">
 							<page string="General">
-								<group col="4">
-                                    <field name="principal_amount_ids"/>
-                                    <field name="is_interest_payble_ids"/>
-                                    <field name="interst_mode_ids"/>
-                                    <field name="duration_ids"/>
-                                    <field name="rate_ids" />
+								<group >
+									<group>
+										<field name="principal_amount_ids"/>
+                                   		<field name="duration_ids"/>
+									</group>
+									<group>
+										<field name="is_interest_payble_ids"/>
+										<field name="interst_mode_ids"/>                                   
+	                                    <field name="rate_ids" />
+                                    </group>
                                 </group>	
 							</page>
 							<page string="Proofs">
