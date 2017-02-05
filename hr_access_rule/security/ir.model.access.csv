@@ -13,4 +13,9 @@ access_hr_contract,hr.contract,hr_payroll.model_hr_contract,hr_access_group_mana
 access_hr_contract_type,hr.contract.type,hr_contract.model_hr_contract_type,hr_access_group_manager,1,1,1,1
 access_hr_rule_input,hr.rule.input,hr_payroll.model_hr_rule_input,hr_access_group_manager,1,1,1,1
 access_hr_payslip_run,hr.payslip.run,hr_payroll.model_hr_payslip_run,hr_access_group_manager,1,1,1,1
+access_hr_payslip_input_manager,hr.payslip.input,hr_payroll.model_hr_payslip_input,hr_access_group_manager,1,1,1,1
+access_hr_payslip_line_manager,hr.payslip.line,hr_payroll.model_hr_payslip_line,hr_access_group_manager,1,1,1,1
+access_hr_payroll_structure_manager,hr.payroll.structure,hr_payroll.model_hr_payroll_structure,hr_access_group_manager,1,1,1,1
+access_hr_salary_rule_manager,hr.salary.rule,hr_payroll.model_hr_salary_rule,hr_access_group_manager,1,1,1,1
+access_hr_salary_rule_category_manager,hr.salary.rule.category,hr_payroll.model_hr_salary_rule_category,hr_access_group_manager,1,1,1,1
 
