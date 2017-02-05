@@ -10,6 +10,5 @@
 			<field name="name">Payroll User</field>
 			<field name="category_id" ref="base.module_category_hr_payroll" />
 		</record>
-
 	</data>
 </openerp>
