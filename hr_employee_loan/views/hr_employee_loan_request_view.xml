@@ -9,14 +9,9 @@
 			<field name="arch" type="xml">
 				<form string="Employee Loan Requests">
 					<header>
-						<button string="Submit" name="action_confirm" states="draft" type="object" class="oe_highlight"/>
-						
-						<button name="action_done" type="object" string="Accepted"
-							states="Applied" class="oe_highlight" />
-						
-						<button name="action_done" type="object" string="Accepted"
-							states="Approved" class="oe_highlight" />	
-							
+						<button string="Apply" name="create" states="draft" type="object" class="oe_highlight"/>
+						<button string="Approve" name="compute_sheet" states="applied" type="object" class="oe_highlight"/>
+                     	<button string="Refuse" name="action_refuse" states="applied,approved" type="object" />
 						<field name="state" widget="statusbar" />
 					</header>
 					<sheet>
@@ -34,10 +29,10 @@
 						<group>
 							
        						<field eval="time.strftime('%Y-%m-28')" name="approved_date_ids"/>
-       						<field name="disbursement_date_ids" />
-       						<field name="department_ids" />
+       						<field eval="time.strftime('%Y-%m-26')" name="disbursement_date_ids" />
+       						<field name="department_id" invisible="1"/>
 							<field name="company_id" readonly="1" groups="base.group_multi_company"/>
-							<field name="user_id" />	
+							<field name="user_id" invisible="1"/>	
 						</group>
 					</group>
 					<notebook position="inside">
@@ -78,6 +73,14 @@
 				</tree>
 			</field>
 		</record>
+		
+		<!-- Sequence Records -->
+		<record id="seq_loan_request" model="ir.sequence">
+            <field name="name">Loan Sequence</field>
+            <field name="code">emp_code</field>
+            <field name="prefix">EMPC-</field>
+            <field name="padding">10</field>
+        </record>
 		
         <record model="ir.actions.act_window" id="hr_employee_loan_request_action">
             <field name="name">Loan Requests</field>
