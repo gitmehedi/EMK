@@ -1,46 +1,60 @@
+from datetime import datetime
 from openerp import models, fields
 from openerp import api
 
 class HrEmployeeLoanRequest(models.Model):
     _name = 'hr.employee.loan.request' 
-    _inherit = ['mail.thread']   
 
-    employee_id = fields.Many2one('hr.employee', string = 'Employee Name') 
-    name = fields.Char(size=100, string='Number', required='True')
-    duration_ids = fields.Char(size=100, string='Duration(Months)', required='True')
+    name = fields.Char(size=100, string='Number')
+    emp_code = fields.Char(size=100)
+    duration_ids = fields.Char(size=100, string='Duration(Months)')
     principal_amount_ids = fields.Float(string='Principal Amount')
     notes = fields.Text(string='Notes', size=500, help='Please enter notes.')
+    rate_ids = fields.Float(size=100, string='Rate', required='True')
     is_interest_payble_ids = fields.Boolean(string='Is Interest Payable', required='True')
+    
+    
+    
     """ All relations fields """
-    employee_loan_proofs_ids = fields.Many2many('hr.employee.loan.proof', string = 'Proofs') 
+    def _default_employee(self):
+        return self.env['hr.employee'].search([('user_id', '=', self.env.uid)], limit=1)
+
+    employee_id = fields.Many2one('hr.employee', string="Employee", default=_default_employee, required=True, ondelete='cascade', index=True)
+    department_id = fields.Many2one('hr.department', string="Department", related="employee_id.department_id")
+    employee_loan_proofs_ids = fields.Many2many('hr.employee.loan.proof', string = 'Proofs' ) 
     employee_loan_policies_ids = fields.Many2many('hr.employee.loan.policy', string = 'Policies')
+    company_id = fields.Many2one('res.company', string='Company', default=lambda self: self.env.user.company_id)
+    user_id = fields.Many2one('res.users', string='User')
     
     
     """ All Selection fields """
     loan_type_ids = fields.Selection([
         ('home_loan', 'Home Loan'),
         ], string = 'Loan Type',required='True')
-    applied_date_ids = fields.Datetime('Applied Date', readonly=True, index=True, copy=False,
-        states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]})
-    approved_date_ids = fields.Datetime('Approved Date', readonly=True, copy=False,
-        states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]})
-  
-    disbursement_date_ids = fields.Char(size=100, string='Disbursement Date', required='True')
-    department_ids = fields.Selection([
-        ('management', 'Management')], string = 'Department',required='True')
-    company_id = fields.Many2one('res.company', string='Company', default=lambda self: self.env.user.company_id)
-    user_id = fields.Selection([
-        ('admin', 'Administrator'),('employee', 'Employee')], string = 'User',required='True')
     
+    applied_date_ids = fields.Datetime('Applied Date', readonly=True, index=True, copy=False, required='True',
+        states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]})
+    
+    approved_date_ids = fields.Datetime('Approved Date', readonly=True, copy=False, required='True',
+        states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]})
+    
+  
+    disbursement_date_ids = fields.Datetime('Disbursement Date', readonly=True, copy=False,
+        states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]})
+         
     state = fields.Selection([('draft', "Draft"), ('applied', "Applied"), ('approved', "Approved")],
                             default="draft", readonly=True, track_visibility='onchange')
+    
     interst_mode_ids = fields.Selection([
         ('flat', 'Flat'),
-        ], string = 'Interest Mode',required='True')
-    rate_ids = fields.Float(size=100, string='Rate', required='True')
+        ], string = 'Interest Mode')
     
-    @api.multi
-    def action_confirm(self):
-        if self.filtered(lambda loan_request: loan_request.state != 'draft'):
-            raise UserError(_('loan request must be in Draft state ("To Submit") in order to applied it.'))
-        return self.write({'state': 'applied'})
+    
+    
+    '''For Employee Sequence'''
+    @api.model
+    def create(self, vals):
+        vals['name'] = self.env['ir.sequence'].get('emp_code')
+            
+        return super(HrEmployeeLoanRequest,self).create(vals)
+            
