@@ -2,22 +2,25 @@
 <openerp>
     <data >
       <menuitem id="hr_payroll.menu_hr_payroll_configuration" name="Configuration" parent="hr_payroll.menu_hr_payroll_root"
-            sequence="100" groups="hr_payroll.group_hr_payroll_manager,hr_access_group_manager"/>
+            sequence="100" groups="hr_payroll.group_hr_payroll_manager,hr_access_group_manager,hr_access_group_user"/>
 
          <menuitem
             id="hr_payroll.menu_hr_salary_rule_category"
             action="hr_payroll.action_hr_salary_rule_category"
             parent="hr_payroll.menu_hr_payroll_configuration"
             sequence="11"
-            groups="base.group_no_one,hr_access_group_manager"
-        />
+            groups="base.group_no_one,hr_access_group_manager,hr_access_group_manager,hr_access_group_user"/>
 
           <menuitem
             id="hr_payroll.menu_hr_salary_rule_category_tree_view"
             action="hr_payroll.action_hr_salary_rule_category_tree_view"
             parent="hr_payroll.menu_hr_payroll_configuration"
             sequence="12"
-            groups="base.group_no_one,hr_access_group_manager" />
+            groups="base.group_no_one,hr_access_group_manager,hr_access_group_user" />
+
+        <menuitem action="hr_payroll.action_view_hr_payslip_form" id="hr_payroll.menu_department_tree"
+                  parent="hr_payroll.menu_hr_payroll_root"
+                  groups="hr_payroll.group_hr_payroll_user,hr_access_group_manager,hr_access_group_user"/>
 
     </data>
 </openerp>

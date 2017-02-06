@@ -11,13 +11,12 @@
 
     'author': "Genweb2 Limited",
     'website': "http://www.genweb2.com",
-    "depends": ["hr"],
+    "depends": ["hr_payroll"],
     'data': [
         "security/security.xml",
         "security/ir.model.access.csv",
+        "security/ir_rule.xml",
         "security/menu.xml",
-        # "security/hr_employee.xml",
-#         "security/ir.model.access.csv",
     ],
     'installable': True,
     'application': True,
