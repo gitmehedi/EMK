@@ -55,37 +55,33 @@ class HrEmployeeLoanRequest(models.Model):
 
     @api.model
     def create(self, vals):
-        # employee_loan_policies_ids
         loan_type_obj = self.env['hr.employee.loan.types']
-        loan_ids = loan_type_obj.search([('id','=',vals['loan_type_id'])])
-        policy_ids = loan_type_obj.search([('id','=',vals['loan_policy_ids'])])
+        type_ids = loan_type_obj.search([('id', '=', vals['loan_type_id'])])
 
-        loan_list = [i for i in loan_ids]
-        policy_list = [i for i in policy_ids]
+        if vals['employee_loan_proofs_ids']:
+            vals['employee_loan_proofs_ids'][0][2] = list(set(vals['employee_loan_proofs_ids'][0][2])-set(type_ids.loan_proofs_ids.ids))
+        if vals['employee_loan_policies_ids']:
+            vals['employee_loan_policies_ids'][0][2] = list(set(vals['employee_loan_policies_ids'][0][2])-set(type_ids.loan_policy_ids.ids))
 
-        vals['employee_loan_proofs_ids'][0][2] = list(set(vals['employee_loan_proofs_ids'][0][2])-set(loan_list))
-        vals['employee_loan_policies_ids'][0][2] = list(set(vals['employee_loan_policies_ids'][0][2])-set(policy_list))
-
-        loan_ids.loan_proofs_ids = vals['employee_loan_proofs_ids']
-        policy_ids.loan_proofs_ids = vals['employee_loan_policies_ids']
+        type_ids.loan_proofs_ids = vals['employee_loan_proofs_ids']
+        type_ids.loan_policy_ids = vals['employee_loan_policies_ids']
 
         return super(HrEmployeeLoanRequest, self).create(vals)
 
     @api.multi
     def write(self, vals):
         loan_type_obj = self.env['hr.employee.loan.types']
-        loan_ids = loan_type_obj.search([('id', '=', vals['loan_type_id'])])
-        policy_ids = loan_type_obj.search([('id', '=', vals['loan_policy_ids'])])
+        type_ids = loan_type_obj.search([('id', '=', vals['loan_type_id'])])
 
-        loan_list = [i for i in loan_ids]
-        policy_list = [i for i in policy_ids]
+        if vals['employee_loan_proofs_ids']:
+            vals['employee_loan_proofs_ids'][0][2] = list(
+                set(vals['employee_loan_proofs_ids'][0][2]) - set(type_ids.loan_proofs_ids.ids))
+        if vals['employee_loan_policies_ids']:
+            vals['employee_loan_policies_ids'][0][2] = list(
+                set(vals['employee_loan_policies_ids'][0][2]) - set(type_ids.loan_policy_ids.ids))
 
-        vals['employee_loan_proofs_ids'][0][2] = list(set(vals['employee_loan_proofs_ids'][0][2]) - set(loan_list))
-        vals['employee_loan_policies_ids'][0][2] = list(
-            set(vals['employee_loan_policies_ids'][0][2]) - set(policy_list))
-
-        loan_ids.loan_proofs_ids = vals['employee_loan_proofs_ids']
-        policy_ids.loan_proofs_ids = vals['employee_loan_policies_ids']
+        type_ids.loan_proofs_ids = vals['employee_loan_proofs_ids']
+        type_ids.loan_policy_ids = vals['employee_loan_policies_ids']
 
         return super(HrEmployeeLoanRequest, self).write(vals)
 
