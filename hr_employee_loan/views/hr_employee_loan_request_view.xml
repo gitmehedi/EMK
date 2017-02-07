@@ -62,9 +62,11 @@
 									</tree>
 								</field>
 							</page>
-							<!--<page string="Policies">-->
-								<!--<field name="employee_loan_policies_ids" />		-->
-							<!--</page>-->
+							<page string="Policies">
+                                <field name="employee_loan_policies_ids">
+                                    <fieel name="name"/>
+                                </field>>
+							</page>
 							<page string="Notes">
 								<field name="notes" />			
 							</page>

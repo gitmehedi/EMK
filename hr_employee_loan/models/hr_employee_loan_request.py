@@ -5,7 +5,7 @@ class HrEmployeeLoanRequest(models.Model):
     _name = 'hr.employee.loan.request'
     _order = 'name desc'
 
-    name = fields.Char(size=100, string='Loan Id', default="New")
+    name = fields.Char(size=100, string='Loan Name', default="New")
     # emp_code = fields.Char(size=100)
     duration_ids = fields.Char(size=100, string='Duration(Months)')
     principal_amount_ids = fields.Float(string='Principal Amount')
