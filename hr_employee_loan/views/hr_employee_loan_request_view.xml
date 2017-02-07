@@ -55,11 +55,16 @@
                                 </group>	
 							</page>
 							<page string="Proofs">
-								<field name="employee_loan_proofs_ids" />	
+								<field name="employee_loan_proofs_ids" widget="many2many">
+									<tree editable="top">
+										<field name="name"/>
+										<field name="mand"/>
+									</tree>
+								</field>
 							</page>
-							<page string="Policies">
-								<field name="employee_loan_policies_ids" />		
-							</page>
+							<!--<page string="Policies">-->
+								<!--<field name="employee_loan_policies_ids" />		-->
+							<!--</page>-->
 							<page string="Notes">
 								<field name="notes" />			
 							</page>
@@ -84,12 +89,12 @@
 		</record>
 		
 		<!-- Sequence Records -->
-		<record id="seq_loan_request" model="ir.sequence">
-            <field name="name">Loan Sequence</field>
-            <field name="code">emp_code</field>
-            <field name="prefix">EMPC/</field>
-            <field name="padding">10</field>
-        </record>
+		<!--<record id="seq_loan_request" model="ir.sequence">-->
+            <!--<field name="name">Loan Sequence</field>-->
+            <!--<field name="code">emp_code</field>-->
+            <!--<field name="prefix">EMPC/</field>-->
+            <!--<field name="padding">10</field>-->
+        <!--</record>-->
 		
         <record model="ir.actions.act_window" id="hr_employee_loan_request_action">
             <field name="name">Loan Requests</field>

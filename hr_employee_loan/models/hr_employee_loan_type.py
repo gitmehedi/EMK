@@ -10,9 +10,16 @@ class HrEmployeeLoanType(models.Model):
 
     """ All relations fields """
     company_id = fields.Many2one('res.company', string='Company', default=lambda self: self.env.user.company_id)
-    loan_proofs_ids = fields.Many2many('hr.employee.loan.proof', string = 'Loan Proofs') 
-    loan_policy_ids = fields.Many2many('hr.employee.loan.policy', string = 'Loan Policies')
-    employee_tag_ids = fields.Many2many('hr.employee.category', string = 'Employee catagories')
+    # loan_proofs_ids = fields.Many2many('hr.employee.loan.proof', string='Loan Proofs')
+    loan_proofs_ids = fields.Many2many(comodel_name='hr.employee.loan.proof',
+                                       relation='hr_employee_loan_types_proofs_rel',
+                                       column1='types_id',
+                                       column2='proofs_id',
+                                       string='Loan Proofs')
+
+    loan_policy_ids = fields.Many2many('hr.employee.loan.policy', string='Loan Policies')
+    employee_tag_ids = fields.Many2many('hr.employee.category', string='Employee catagories')
+
     """ All selection fields """
     
     interest_mode = fields.Selection([
