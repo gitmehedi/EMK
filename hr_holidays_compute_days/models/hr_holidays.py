@@ -58,8 +58,9 @@ class HrHolidays(models.Model):
 
     @api.multi
     def onchange_date_from(self, date_to, date_from):
-        res = super(HrHolidays, self).onchange_date_from(date_to, date_from)
+
         employee_id = self.employee_id.id or self.env.context.get('employee_id',False)
+        res = super(HrHolidays, self).onchange_date_from(date_to, date_from)
         days_check = True
         
         if not self._check_date_helper(employee_id, date_from):
@@ -68,13 +69,13 @@ class HrHolidays(models.Model):
             res['value']['number_of_days_temp'] = diff_day
             raise Warning(_("You cannot schedule the start date on "
                                     "a public holiday or employee's weekly holidays day"))
-#             try:
-#                 raise Warning(_("You cannot schedule the start date on "
-#                                     "a public holiday or employee's weekly holidays day"))
-#             finally:
-#                 diff_day = self._compute_number_of_days(employee_id,date_to,date_from)
-#                 res['value']['number_of_days_temp'] = diff_day
-#                 return res
+            try:
+                raise Warning(_("You cannot schedule the start date on "
+                                    "a public holiday or employee's weekly holidays day"))
+            finally:
+                diff_day = self._compute_number_of_days(employee_id,date_to,date_from)
+                res['value']['number_of_days_temp'] = diff_day
+                return res
             
         if (date_to and date_from) and (date_from <= date_to) and days_check:
             diff_day = self._compute_number_of_days(employee_id,date_to,date_from)
@@ -100,7 +101,7 @@ class HrHolidays(models.Model):
     def _compute_number_of_days(self, employee_id, date_to, date_from):
         if not date_from or not date_to:
             return 0
-        days = self._get_number_of_days(date_from, date_to)
+        days = self._get_number_of_days(date_from, date_to, employee_id)
         if days or date_to == date_from:
             days = round(math.floor(days)) + 1
         status_id = self.holiday_status_id.id or self.env.context.get('holiday_status_id',False)
