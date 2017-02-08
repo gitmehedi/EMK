@@ -14,7 +14,9 @@
     'category': 'Product',
     'summary': 'Product Extend',
     'description': 'Product Extend ',
-    'installable': True ,
+    'installable': True,
+    'application': True,
+    'auto_install': False,
 }
 
 

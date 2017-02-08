@@ -35,7 +35,6 @@
 		'stock', 
 		'purchase', 
 		'web_widget_goods_recevie_matrix',
-		'product_extend'
         ],
     'description': '''
 ''',

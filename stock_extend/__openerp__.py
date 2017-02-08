@@ -41,8 +41,8 @@
             'views/inherited_stock_valuation_history_view.xml'
              ],
     'depends': ['stock','purchase'],
-    'description': '''
-''',
+    'description': '''''',
     'installable': True,
+    'application': True,
     'version': '0.1',
 }

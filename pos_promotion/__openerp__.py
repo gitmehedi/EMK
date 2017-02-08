@@ -17,6 +17,6 @@
     'depends': ['point_of_sale'],
     'description': """POS promotion for applying prmotion on product""",
     'installable': True,
-    'application': False,
+    'application': True,
     'auto_install': False,
 }
