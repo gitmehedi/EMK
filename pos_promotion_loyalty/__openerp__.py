@@ -21,7 +21,7 @@
     ],
 
     'qweb': [
-        'static/src/xml/pos_enhanced_template.xml',
+        # 'static/src/xml/pos_enhanced_template.xml',
     ],
     'css': [
         'static/src/css/loyalty_promotion_custom.css',

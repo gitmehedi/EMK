@@ -92,8 +92,7 @@
 			<field name="view_mode">form</field>
 		</record>
 		
-		<menuitem name="Redemptions" id="redemptions" action="redemption_menu_action" parent
-			= "loyalty_config"/>
+		<menuitem name="Redemptions" id="redemptions" action="redemption_menu_action" parent="loyalty_config"/>
 		
 	</data>
 </openerp>

@@ -18,9 +18,7 @@
     'category': 'Point Of Sale',
     'summary': 'POS module extension',
     'description': """POS Loyalty for point calculation and redemption""",
-    'depends': [
-                "point_of_sale"
-                ],
+    'depends': ["point_of_sale"],
   
     'qweb': [
         'static/src/xml/pos_enhanced_template.xml',
@@ -29,7 +27,7 @@
            'static/src/js/pos_loyalty_custom.css',   
            ],
     'js': [ 
-           'static/src/js/pos_loyalty_custom.js',   
+           'static/src/js/pos_loyalty_custom.js',
            ],
     'installable': True,
     'application': True,
