@@ -18,7 +18,7 @@
             <field name="inherit_id" ref="hr.view_employee_form"/>
             <field name="arch" type="xml">
                 <data>
-                    <xpath expr="//page" position="after">
+                    <xpath expr="//page[3]" position="after">
                     	<page string="Shifting">
                         <group>
                             <group string="Current Shift">
