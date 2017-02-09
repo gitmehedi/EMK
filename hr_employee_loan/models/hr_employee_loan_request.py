@@ -6,12 +6,12 @@ class HrEmployeeLoanRequest(models.Model):
     _order = 'name desc'
 
     name = fields.Char(size=100, string='Loan Name', default="New")
-    # emp_code = fields.Char(size=100)
-    duration_ids = fields.Char(size=100, string='Duration(Months)')
-    principal_amount_ids = fields.Float(string='Principal Amount')
+    emp_code = fields.Char(string='Code')
+    duration_id = fields.Char(size=100, string='Duration(Months)')
+    principal_amount_id = fields.Float(string='Principal Amount')
     notes = fields.Text(string='Notes', size=500, help='Please enter notes.')
-    rate_ids = fields.Float(size=100, string='Rate')
-    is_interest_payble_ids = fields.Boolean(string='Is Interest Payable', required='True')
+    Req_rate = fields.Float(size=100, string='Rate')
+    is_interest_payble_id = fields.Boolean(string='Is Interest Payable', required='True')
     
     """ All relations fields """
     def _default_employee(self):
@@ -28,17 +28,17 @@ class HrEmployeeLoanRequest(models.Model):
 
     """ All Selection fields """
     
-    applied_date_ids = fields.Datetime('Applied Date', readonly=True, index=True, copy=False,
+    applied_date_id = fields.Datetime('Applied Date', readonly=True, index=True, copy=False,
         states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]})
     
-    approved_date_ids = fields.Datetime('Approved Date', readonly=True, copy=False,
+    approved_date_id = fields.Datetime('Approved Date', readonly=True, copy=False,
         states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]})
     
   
-    disbursement_date_ids = fields.Datetime('Disbursement Date', readonly=True, copy=False,
+    disbursement_date_id = fields.Datetime('Disbursement Date', readonly=True, copy=False,
         states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]})
          
-    interst_mode_ids = fields.Selection([
+    interst_mode_id = fields.Selection([
         ('flat', 'Flat'),
         ], string = 'Interest Mode')
     
@@ -52,53 +52,29 @@ class HrEmployeeLoanRequest(models.Model):
 
     """ Major functionality """
 
-
-    @api.model
+    '''@api.model
     def create(self, vals):
-        loan_type_obj = self.env['hr.employee.loan.types']
-        type_ids = loan_type_obj.search([('id', '=', vals['loan_type_id'])])
+        vals['name'] = self.env['ir.sequence'].get('emp_code')
+        
+        return super(HrEmployeeLoanRequest, self).create(vals)'''
 
-        if vals['employee_loan_proofs_ids']:
-            vals['employee_loan_proofs_ids'][0][2] = list(set(vals['employee_loan_proofs_ids'][0][2])-set(type_ids.loan_proofs_ids.ids))
-        if vals['employee_loan_policies_ids']:
-            vals['employee_loan_policies_ids'][0][2] = list(set(vals['employee_loan_policies_ids'][0][2])-set(type_ids.loan_policy_ids.ids))
+#     @api.multi
+#     def write(self, vals):
+#         vals['name'] = self.env['ir.sequence'].get('emp_code')
+#         
+#         return super(HrEmployeeLoanRequest, self).write(vals)
 
-        type_ids.loan_proofs_ids = vals['employee_loan_proofs_ids']
-        type_ids.loan_policy_ids = vals['employee_loan_policies_ids']
-
-        return super(HrEmployeeLoanRequest, self).create(vals)
-
-    @api.multi
-    def write(self, vals):
-        loan_type_obj = self.env['hr.employee.loan.types']
-        type_ids = loan_type_obj.search([('id', '=', vals['loan_type_id'])])
-
-        if vals['employee_loan_proofs_ids']:
-            vals['employee_loan_proofs_ids'][0][2] = list(
-                set(vals['employee_loan_proofs_ids'][0][2]) - set(type_ids.loan_proofs_ids.ids))
-        if vals['employee_loan_policies_ids']:
-            vals['employee_loan_policies_ids'][0][2] = list(
-                set(vals['employee_loan_policies_ids'][0][2]) - set(type_ids.loan_policy_ids.ids))
-
-        type_ids.loan_proofs_ids = vals['employee_loan_proofs_ids']
-        type_ids.loan_policy_ids = vals['employee_loan_policies_ids']
-
-        return super(HrEmployeeLoanRequest, self).write(vals)
-
-
+    
+    """All function which process data and operation"""
+    
     @api.onchange('loan_type_id')
-    def _onchange_loan_type_id(self):
-        res, ids = {}, []
-        # self.loan_type_id = 0
-        # self.export_po_id = 0
-
-        if self.loan_type_id:
-            res['domain'] = {
-                'employee_loan_proofs_ids': [('id', 'in', self.loan_type_id.loan_proofs_ids.ids)],
-            }
-
-        return res
-
+    def onchange_loan_type_id(self):
+        if self.loan_type_id and self.loan_type_id.loan_proofs_ids:
+            self.employee_loan_proofs_ids = self.loan_type_id.loan_proofs_ids
+            
+        if self.loan_type_id and self.loan_type_id.loan_policy_ids:
+            self.employee_loan_policies_ids = self.loan_type_id.loan_policy_ids  
+        
     @api.multi
     def action_draft(self):
         self.state = 'draft'

@@ -14,7 +14,7 @@
 								<field name="name" />
 							</group>
 							<group>
-								<field name="mand" />
+								<field name="mandatory" />
 							</group>	
 						</group>
 					</sheet>
@@ -28,7 +28,7 @@
 			<field name="arch" type="xml">
 				<form string="Employee Loan Proof">
 					<field name="name" />
-					<field name="mand" />
+					<field name="mandatory" />
 				</form>
 			</field>
 		</record>
