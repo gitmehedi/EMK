@@ -44,22 +44,20 @@
 							<page string="General">
 								<group >
 									<group>
-										<field name="principal_amount_id"/>
-                                   		<field name="duration_id"/>
+										<field name="principal_amount"/>
+                                   		<field name="duration"/>
 									</group>
 									<group>
-										<field name="is_interest_payble_id" />
-										<field name="interst_mode_id" attrs="{'invisible': [('is_interest_payble_id', '=', False)]}" />                                   
-	                                    <field name="Req_rate" attrs="{'invisible': [('is_interest_payble_id', '=', False)]}" />
+										<field name="is_interest_payble" />
+										<field name="interst_mode_id" attrs="{'invisible': [('is_interest_payble', '=', False)]}" />                                   
+	                                    <field name="Req_rate" attrs="{'invisible': [('is_interest_payble', '=', False)]}" />
                                     </group>
                                 </group>	
 							</page>
 							<page string="Proofs">
-								<field name="employee_loan_proofs_ids" widget="many2many">
-									<tree editable="top">
+								<field name="employee_loan_proofs_ids">	
 										<field name="name"/>
 										<field name="mandatory"/>
-									</tree>
 								</field>
 							</page>
 							<page string="Policies">

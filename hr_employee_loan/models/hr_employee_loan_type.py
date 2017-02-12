@@ -4,13 +4,13 @@ class HrEmployeeLoanType(models.Model):
     _name = 'hr.employee.loan.types'
 
     name = fields.Char(size=100, string='Name', required='True')
-    code_id = fields.Char(size=100, string='Name', required='True')
+    code = fields.Char(size=100, string='Name', required='True')
     is_interest_payable = fields.Boolean(string='Is Interest Payable', required='True')
 
 
     """ All relations fields """
     company_id = fields.Many2one('res.company', string='Company', default=lambda self: self.env.user.company_id)
-    # loan_proofs_ids = fields.Many2many('hr.employee.loan.proof', string='Loan Proofs')
+    #loan_proofs_ids = fields.Many2many('hr.employee.loan.proof', string='Loan Proofs')
     loan_proofs_ids = fields.Many2many(comodel_name='hr.employee.loan.proof',
                                        relation='hr_employee_loan_types_proofs_rel',
                                        column1='types_id',

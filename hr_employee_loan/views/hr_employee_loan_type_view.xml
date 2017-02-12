@@ -10,7 +10,7 @@
 				<form string="Employee Loan Types">
 				<sheet>
 					Name<h2><field name="name" /></h2>
-					Code<h2><field name="code_id" /></h2>
+					Code<h2><field name="code" /></h2>
 					<group string="General">
 						<group>
 							<field name="is_interest_payable" />

@@ -7,11 +7,11 @@ class HrEmployeeLoanRequest(models.Model):
 
     name = fields.Char(size=100, string='Loan Name', default="New")
     emp_code = fields.Char(string='Code')
-    duration_id = fields.Char(size=100, string='Duration(Months)')
-    principal_amount_id = fields.Float(string='Principal Amount')
+    duration = fields.Char(size=100, string='Duration(Months)')
+    principal_amount = fields.Float(string='Principal Amount')
     notes = fields.Text(string='Notes', size=500, help='Please enter notes.')
     Req_rate = fields.Float(size=100, string='Rate')
-    is_interest_payble_id = fields.Boolean(string='Is Interest Payable', required='True')
+    is_interest_payble = fields.Boolean(string='Is Interest Payable', required='True')
     
     """ All relations fields """
     def _default_employee(self):

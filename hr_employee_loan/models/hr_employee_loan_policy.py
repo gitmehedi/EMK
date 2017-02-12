@@ -4,8 +4,8 @@ class HrEmployeeLoanPolicy(models.Model):
     _name = 'hr.employee.loan.policy'    
 
     name = fields.Char(size=100, string='Name', required='True')
-    code_id = fields.Char(size=100, string='Code', required='True')
-    value_id = fields.Float(size=100, string='Value', required='True')
+    code = fields.Char(size=100, string='Code', required='True')
+    value = fields.Float(size=100, string='Value', required='True')
     
     """ All relations fields """
     employee_ids = fields.Many2many('hr.employee', string='Loan Proofs')
