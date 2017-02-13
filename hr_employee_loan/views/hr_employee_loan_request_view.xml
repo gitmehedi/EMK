@@ -32,9 +32,10 @@
 							<field name="loan_type_id" />
 						</group>
 						<group>
-							<field eval="time.strftime('%Y-%m-26')" name="applied_date_id"/>
-       						<field eval="time.strftime('%Y-%m-28')" name="approved_date_id"/>
-       						<field eval="time.strftime('%Y-%m-26')" name="disbursement_date_id" />
+							 
+							<field name="applied_date"/>
+       						<field name="approved_date"/>
+       						<field name="disbursement_date" />
        						<field name="department_id" invisible="1"/>
 							<field name="company_id" readonly="1" groups="base.group_multi_company"/>
 							<field name="user_id" invisible="1"/>	
