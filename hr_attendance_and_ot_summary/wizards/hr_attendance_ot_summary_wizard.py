@@ -20,24 +20,13 @@ class HrAttendanceOTSummaryWizard(models.TransientModel):
         for val in self.employee_ids:
             if val.id in duplicate_employee_ids_filter:
                 leave_days = holiday_ins.search([('employee_id','=',val.id)])            
-                pending_leave = sum([ v.number_of_days for v in leave_days]) 
                 
-                ''' Maximum and minimum earned leave days to be encashed '''
-                if pending_leave is not None:
-                    if pending_leave > 10:
-                        leave_days_to_be_encashed = 10
-                    elif pending_leave == 5: 
-                        leave_days_to_be_encashed = 5
-                    elif pending_leave > 5:
-                        leave_days_to_be_encashed = pending_leave
-                    elif pending_leave < 5:
-                        leave_days_to_be_encashed = 0        
-                
+                #Hardcoded values for now
                 vals['employee_id'] = val.id
-                vals['attendance_1'] = pending_leave
-                vals['attendance_summary'] = leave_days_to_be_encashed
-                vals['over_time_1'] = True
-                vals['over_time_summary'] = True
+                vals['attendance_1'] = 1
+                vals['attendance_summary'] = 1
+                vals['over_time_1'] = 1
+                vals['over_time_summary'] = 1
                 vals['parent_id'] = context['active_id']
                 
                 line_obj.create(vals)

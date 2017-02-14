@@ -9,6 +9,7 @@ class HrAttendanceOTSummaryLine(models.Model):
     attendance_summary = fields.Integer(string="attendance summary")
     over_time_1 = fields.Integer(string="over time 1")
     over_time_summary = fields.Integer(string="over time summary")
+    department_id = fields.Many2one('hr.department', related='employee_id.department_id', string='Department', store=True)
     
     """ Relational Fields """
     

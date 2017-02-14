@@ -34,6 +34,7 @@
 								<field name="line_ids">
 									<tree string="List" editable="bottom">
 										<field name="employee_id" readonly='1'/>
+										<field name="department_id" />
 										<field name="attendance_1" />
 										<field name="attendance_summary" />
 										<field name="over_time_1" />
