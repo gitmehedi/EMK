@@ -3,7 +3,7 @@ from openerp import models, fields, api
 class HrAttendanceOTSummaryWizard(models.TransientModel):
     _name = 'hr.attendance.ot.summary.wizard'
     
-    employee_ids = fields.Many2many('hr.employee', 'hr_employee_group_rel', 'payslip_id', 
+    employee_ids = fields.Many2many('hr.employee', 'hr_employee_group_rel_1', 'payslip_id', 
                                     'employee_id', 'Employees')
     
     @api.multi
