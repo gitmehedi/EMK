@@ -5,15 +5,15 @@
     'category': 'HR Attendance',
     'version':'1.0',
     'data': [       
-       'views/hr_attendance_import_view.xml',
-       'wizards/hr_attendance_import_wizard_view.xml',
+       'views/hr_earned_leave_view.xml',
+       'wizards/hr_earned_leave_encashment_wizard_views.xml',
     ],
     
     'depends': [
         'hr_attendance', 
         'hr', 
         'hr_holidays', 
-        'account',
+       
     ],    
     
     'description': """This module enables HR Manager to import attendance data""",        

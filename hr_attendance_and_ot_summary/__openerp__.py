@@ -5,13 +5,12 @@
     'category': 'HR Attendance',
     'version':'1.0',
     'data': [
-       
+       'views/hr_attendance_ot_summary_view.xml', 
+       'wizards/hr_attendance_ot_summary_wizard_views.xml', 
     ],
     
     'depends': [
-        'hr_attendance',
-        'hr',
-        'hr_holidays',
+        'hr_holidays', 
     ],    
     
     'description': 
