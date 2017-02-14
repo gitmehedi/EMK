@@ -32,9 +32,10 @@
 							<field name="loan_type_id" />
 						</group>
 						<group>
-							<field eval="time.strftime('%Y-%m-26')" name="applied_date_ids"/>
-       						<field eval="time.strftime('%Y-%m-28')" name="approved_date_ids"/>
-       						<field eval="time.strftime('%Y-%m-26')" name="disbursement_date_ids" />
+							 
+							<field name="applied_date"/>
+       						<field name="approved_date"/>
+       						<field name="disbursement_date" />
        						<field name="department_id" invisible="1"/>
 							<field name="company_id" readonly="1" groups="base.group_multi_company"/>
 							<field name="user_id" invisible="1"/>	
@@ -44,27 +45,25 @@
 							<page string="General">
 								<group >
 									<group>
-										<field name="principal_amount_ids"/>
-                                   		<field name="duration_ids"/>
+										<field name="principal_amount"/>
+                                   		<field name="duration"/>
 									</group>
 									<group>
-										<field name="is_interest_payble_ids" />
-										<field name="interst_mode_ids" attrs="{'invisible': [('is_interest_payble_ids', '=', False)]}" />                                   
-	                                    <field name="rate_ids" attrs="{'invisible': [('is_interest_payble_ids', '=', False)]}" />
+										<field name="is_interest_payble" />
+										<field name="interst_mode_id" attrs="{'invisible': [('is_interest_payble', '=', False)]}" />                                   
+	                                    <field name="Req_rate" attrs="{'invisible': [('is_interest_payble', '=', False)]}" />
                                     </group>
                                 </group>	
 							</page>
 							<page string="Proofs">
-								<field name="employee_loan_proofs_ids" widget="many2many">
-									<tree editable="top">
+								<field name="employee_loan_proofs_ids">	
 										<field name="name"/>
-										<field name="mand"/>
-									</tree>
+										<field name="mandatory"/>
 								</field>
 							</page>
 							<page string="Policies">
                                 <field name="employee_loan_policies_ids">
-                                    <fieel name="name"/>
+                                    <field name="name"/>
                                 </field>
 							</page>
 							<page string="Notes">
@@ -91,12 +90,13 @@
 		</record>
 		
 		<!-- Sequence Records -->
-		<!--<record id="seq_loan_request" model="ir.sequence">-->
-            <!--<field name="name">Loan Sequence</field>-->
-            <!--<field name="code">emp_code</field>-->
-            <!--<field name="prefix">EMPC/</field>-->
-            <!--<field name="padding">10</field>-->
-        <!--</record>-->
+		<record id="seq_loan_request" model="ir.sequence">
+            <field name="name">Loan Sequence</field>
+            <field name="code">emp_code</field>
+            <field name="prefix">EMPC/</field>
+            <field name="padding">10</field>
+        </record>
+        
 		
         <record model="ir.actions.act_window" id="hr_employee_loan_request_action">
             <field name="name">Loan Requests</field>

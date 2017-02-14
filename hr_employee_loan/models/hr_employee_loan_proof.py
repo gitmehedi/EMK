@@ -5,6 +5,6 @@ class HrEmployeeLoanProof(models.Model):
     _description = 'hr employee loan proof'   
 
     name = fields.Char(size=100, string='Name', required='True')
-    mand = fields.Boolean(string='Mandatory', default=False)
+    mandatory = fields.Boolean(string='Mandatory', default=True)
     
              

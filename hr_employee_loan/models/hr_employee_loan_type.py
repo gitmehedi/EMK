@@ -4,13 +4,13 @@ class HrEmployeeLoanType(models.Model):
     _name = 'hr.employee.loan.types'
 
     name = fields.Char(size=100, string='Name', required='True')
-    code_ids = fields.Char(size=100, string='Name', required='True')
+    code = fields.Char(size=100, string='Name', required='True')
     is_interest_payable = fields.Boolean(string='Is Interest Payable', required='True')
 
 
     """ All relations fields """
     company_id = fields.Many2one('res.company', string='Company', default=lambda self: self.env.user.company_id)
-    # loan_proofs_ids = fields.Many2many('hr.employee.loan.proof', string='Loan Proofs')
+    #loan_proofs_ids = fields.Many2many('hr.employee.loan.proof', string='Loan Proofs')
     loan_proofs_ids = fields.Many2many(comodel_name='hr.employee.loan.proof',
                                        relation='hr_employee_loan_types_proofs_rel',
                                        column1='types_id',
@@ -22,16 +22,16 @@ class HrEmployeeLoanType(models.Model):
 
     """ All selection fields """
     
-    interest_mode = fields.Selection([
+    interest_mode_id = fields.Selection([
         ('flat', 'Flat'),
-        ], string = 'Interest Mode',required='True')
-    rate = fields.Float(size=100, string='Rate', required='True')
-    interest_account = fields.Selection([
+        ], string = 'Interest Mode')
+    rate = fields.Float(size=100, string='Rate',)
+    interest_account_id = fields.Selection([
         ('flat', '101200 Account Receivable'),
         ], string = 'Interest Account',required='True')
-    repayment_method = fields.Selection([
+    repayment_method_id = fields.Selection([
         ('payrolldeduction', 'Deduction From Payroll'),
         ], string = 'Repayment Method',required='True')
-    disburse_method = fields.Selection([
+    disburse_method_id = fields.Selection([
         ('payrolldeduction', 'Deirect Cash/Cheque'),
         ], string = 'Disburse Method',required='True')
