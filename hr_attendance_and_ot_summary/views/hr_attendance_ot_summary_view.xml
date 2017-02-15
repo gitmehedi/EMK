@@ -21,8 +21,8 @@
 			<field name="arch" type="xml">
 				<form string="Attendance and Over Time Summary">
 					<header>
-						<button name="hr_attendance_and_ot_summary.hr_attendance_ot_summary_wizard_action_view"
-									type="action" string="Generate" /> 
+						<button name="%(hr_attendance_and_ot_summary.hr_attendance_ot_summary_wizard_action_view)d"
+								type="action" string="Generate" /> 
 					</header>
 					<sheet>
 						<group>
@@ -55,6 +55,8 @@
 
 		<menuitem id="menu_hr_attendance_ot_summary" name="Attendance Summary" parent="hr_attendance.menu_hr_attendance_manage_attendances"
 					action="hr_attendance_ot_summary_action" />
+					
+					
 					
 	</data>
 </openerp>
