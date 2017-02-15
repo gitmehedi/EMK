@@ -33,5 +33,6 @@ class HrShifting(models.Model):
         for emp in self:
             self._cr.execute(query, tuple([emp.id]))
             res = self._cr.fetchall()
-            emp.current_shift_id = res[0][0]
+            if res:
+                emp.current_shift_id = res[0][0]
         
