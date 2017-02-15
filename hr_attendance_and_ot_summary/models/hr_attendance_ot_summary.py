@@ -34,6 +34,11 @@ class HrAttendanceOTSummary(models.Model):
     line_ids = fields.One2many('hr.attendance.ot.summary.line','parent_id', string="Line Ids")
     
     @api.multi
+    def get_summary_data(self):
+        print '------------------------------'
+        print 'it works!!'
+    
+    @api.multi
     def action_draft(self):
         self.state = 'draft'
         
