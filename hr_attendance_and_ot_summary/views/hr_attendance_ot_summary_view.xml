@@ -7,8 +7,9 @@
 			<field name="model">hr.attendance.ot.summary</field>
 			<field name="arch" type="xml">
 				<tree string="Attendance and Over Time Summary">
-					<field name="name" />
-					<field name="period" />
+					<field name="name"/>
+					<field name="period"/>
+					<field name="state"/>
 				</tree>
 			</field>
 		</record>
@@ -21,8 +22,12 @@
 			<field name="arch" type="xml">
 				<form string="Attendance and Over Time Summary">
 					<header>
-						<button name="hr_attendance_and_ot_summary.hr_attendance_ot_summary_wizard_action_view"
-									type="action" string="Generate" /> 
+						<button name="hr_attendance_and_ot_summary.hr_attendance_ot_summary_wizard_action_view" type="action" string="Generate" />
+						<button name="get_summary_data" type="object" string="Get Summary" /> 
+  						<button name="action_draft" type="object" string="Reject" states="confirmed,approved"/>
+                        <button name="action_confirm" type="object" string="Confirm" states="draft" class="oe_highlight"/>
+                        <button name="action_done" type="object" string="Approve" states="confirmed" class="oe_highlight"/>
+                        <field name="state" widget="statusbar"/>			
 					</header>
 					<sheet>
 						<group>
@@ -44,6 +49,12 @@
 							</page>
 						</notebook>
 					</sheet>
+					
+					<div class="oe_chatter">
+						<field name="message_follower_ids" widget="mail_followers"/>
+	                    <field name="message_ids" widget="mail_thread"/>
+	                </div>
+					
 				</form>
 			</field>
 		</record>
