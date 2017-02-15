@@ -19,4 +19,5 @@
 #
 #
 
-from . import hr
+import hr
+import hr_employee_sequence
