@@ -1,7 +1,8 @@
 # -*- coding:utf-8 -*-
 #
 #
-#    Copyright (C) 2013 Michael Telahun Makonnen <mmakonnen@gmail.com>
+#    Copyright (C) 2013 Michael Telahun Makonnen <mmakonnen@gmail.com>.
+#    All Rights Reserved.
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as published
@@ -19,19 +20,27 @@
 #
 
 {
-    'name': 'Department Sequence',
+    'name': 'Employee Sequence',
     'version': '1.0',
     'category': 'Generic Modules/Human Resources',
-    'summary': """Add sequence on department""",
-    'author': "Michael Telahun Makonnen <mmakonnen@gmail.com>,"
-              "Odoo Community Association (OCA)",
-    'website': 'http://www.openerp.com',
+    'description': """
+Keep Track of Length of Employment
+==================================
+    """,
+    'author': "Michael Telahun Makonnen <mmakonnen@gmail.com>,Odoo Community Association (OCA)",
+    'website': 'http://miketelahun.wordpress.com',
     'license': 'AGPL-3',
     'depends': [
         'hr',
+        'gbs_hr_security',
     ],
+    "external_dependencies": {
+        'python': ['dateutil'],
+    },
     'data': [
-        'views/hr_department_view.xml',
+        
+    ],
+    'test': [
     ],
     'installable': True,
 }
