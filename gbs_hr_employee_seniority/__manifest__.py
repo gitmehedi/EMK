@@ -33,6 +33,8 @@ Keep Track of Length of Employment
     'depends': [
         'hr',
         'gbs_hr_security',
+        'gbs_hr_employee_sequence',
+        
     ],
     "external_dependencies": {
         'python': ['dateutil'],

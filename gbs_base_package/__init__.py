@@ -2,3 +2,4 @@
 
 # from . import controllers
 # from . import models
+import hr_employee_sequence
