@@ -20,7 +20,10 @@
 
     # any module necessary for this one to work correctly
     'depends': ['hr',
-                'hr_holidays'],
+                'hr_holidays',
+                'gbs_hr_experience',
+                'gbs_hr_department_sequence',
+                'gbs_hr_employee_documents'],
 
     # always loaded
     'data': [
