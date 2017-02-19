@@ -105,6 +105,6 @@
         </record>
 
         <menuitem id="loan_request_menu" name="Loan Requests" parent="loans_menu" sequence="3"
-                  action="hr_employee_loan_request_action"/>   
+                  action="hr_employee_loan_request_action" groups="base.group_user"/>   
     </data>
 </odoo>

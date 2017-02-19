@@ -4,4 +4,4 @@ from openerp import api
 class HrEmployeeSequenceInherit(models.Model):
     _inherit = ['hr.employee']
         
-    employee_sequence = fields.Char(size=20, string='Emloyee Sequence')
+    employee_sequence = fields.Char(size=20, string='Employee Sequence')
