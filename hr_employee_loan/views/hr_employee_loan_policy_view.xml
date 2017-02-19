@@ -54,6 +54,6 @@
         </record>
 
         <menuitem id="loan_policy_menu" name="Loan Policies" parent="configuration_menu" sequence="10"
-                  action="hr_loan_policy_action"/>   
+                  action="hr_loan_policy_action" groups="base.group_user" />   
     </data>
 </odoo>
