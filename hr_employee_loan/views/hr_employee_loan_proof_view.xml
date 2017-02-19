@@ -41,7 +41,7 @@
 
         
         <menuitem id="loan_proof_menu" name="Loan Proofs" parent="configuration_menu" sequence="15"
-                  action="hr_loan_proof_action"/>
+                  action="hr_loan_proof_action" groups="base.group_user" />
         
     </data>
 </odoo>

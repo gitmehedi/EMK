@@ -62,6 +62,6 @@
 		</record>
 
 		<menuitem id="loan_type_menu" name="Loan Types" parent="configuration_menu"
-			sequence="5" action="hr_loan_types_action" />
+			sequence="5" action="hr_loan_types_action" groups="base.group_user" />
 	 </data>
 </odoo>
