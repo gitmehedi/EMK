@@ -3,7 +3,7 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 
 {
-    "name": "GBS HR Leave Fiscal Year",
+    "name": "GBS HR Calendar",
     "version": "1.0.0",
     "author": "Genweb2 Limited",
     "website": "http://www.genweb2.com",
@@ -11,9 +11,9 @@
     "category": "Human Resources",
     "depends": ["hr","hr_holidays"],
     "data": [
-#         "security/ir.model.access.csv",
-#         "security/hr_security.xml",
+        "security/ir.model.access.csv",
         "views/hr_leave_fiscal_year_views.xml",
     ],
-    'installable': True
+    'installable': True,
+    'application': True
 }
