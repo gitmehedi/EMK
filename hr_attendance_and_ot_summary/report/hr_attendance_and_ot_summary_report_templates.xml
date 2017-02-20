@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="report_saleorder">
+     <t t-call="report.html_container">
+        <t t-foreach="docs" t-as="o">
+            <t t-call="report.external_layout">
+                <div class="page">
+                    <h2>Attendance Summary</h2>
+                    <p><span t-field="o.name"/></p>
+                    <p><span t-field="o.period"/></p>
+                    <p><span t-field="o.state"/></p>                    
+                    <!--  <p><span t-field="o.line_ids"/></p> -->
+                    
+                </div>
+            </t>
+        </t>
+    </t>
+</template>
+</odoo>

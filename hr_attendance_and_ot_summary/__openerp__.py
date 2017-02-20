@@ -7,12 +7,14 @@
     'data': [
        'views/hr_attendance_ot_summary_view.xml', 
        'wizards/hr_attendance_ot_summary_wizard_views.xml', 
+       'report/hr_attendance_and_ot_summary_report.xml',
+       'report/hr_attendance_and_ot_summary_report_templates.xml',
     ],
     
     'depends': [
         'hr_attendance', 
         'hr', 
-        'hr_holidays', 
+        'hr_holidays',
     ],    
     
     'description': 

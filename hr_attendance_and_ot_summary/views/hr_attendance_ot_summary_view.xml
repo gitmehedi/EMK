@@ -26,8 +26,7 @@
 						<button name="get_summary_data" type="object" string="Get Summary" /> 
   						<button name="action_draft" type="object" string="Reject" states="confirmed,approved"/>
                         <button name="action_confirm" type="object" string="Confirm" states="draft" class="oe_highlight"/>
-                        <button name="action_done" type="object" string="Approve" states="confirmed" class="oe_highlight"/>
-                        <field name="state" widget="statusbar"/>			
+                        <button name="action_done" type="object" string="Approve" states="confirmed" class="oe_highlight"/>                                 <field name="state" widget="statusbar"/>			
 					</header>
 					<sheet>
 						<group>
