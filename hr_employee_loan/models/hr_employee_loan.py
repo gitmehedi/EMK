@@ -4,7 +4,7 @@ from openerp import api
 
 
 class HrEmployeeLoanRequest(models.Model):
-    _name = 'hr.employee.loan.request'
+    _name = 'hr.employee.loan'
     _order = 'name desc'
 
     name = fields.Char(size=100, string='Loan Name', default="New")
@@ -36,13 +36,13 @@ class HrEmployeeLoanRequest(models.Model):
                                   required=True, ondelete='cascade', index=True,
                                   states={'draft': [('invisible', False)], 'applied': [('readonly', True)], 'approved':[('readonly', True)]})
     department_id = fields.Many2one('hr.department', string="Department", related="employee_id.department_id")
-    employee_loan_proofs_ids = fields.Many2many('hr.employee.loan.proof', string='Proofs',
+    employee_loan_proof_ids = fields.Many2many('hr.employee.loan.proof', string='Proofs',
                                 states={'draft': [('invisible', False)], 'applied': [('readonly', True)], 'approved':[('readonly', True)]})
-    employee_loan_policies_ids = fields.Many2many('hr.employee.loan.policy', string='Policies',
+    employee_loan_policy_ids = fields.Many2many('hr.employee.loan.policy', string='Policies',
                                     states={'draft': [('invisible', False)], 'applied': [('readonly', True)], 'approved':[('readonly', True)]})
     company_id = fields.Many2one('res.company', string='Company', default=lambda self: self.env.user.company_id)
     user_id = fields.Many2one('res.users', string='User')
-    loan_type_id = fields.Many2one('hr.employee.loan.types', string='Loan Type', required=True,
+    loan_type_id = fields.Many2one('hr.employee.loan.type', string='Loan Type', required=True,
                                    states={'draft': [('invisible', False)], 'applied': [('readonly', True)], 'approved':[('readonly', True)]})
 
     """ All Selection fields """
@@ -62,11 +62,11 @@ class HrEmployeeLoanRequest(models.Model):
     
     @api.onchange('loan_type_id')
     def onchange_loan_type_id(self):
-        if self.loan_type_id and self.loan_type_id.loan_proofs_ids:
-            self.employee_loan_proofs_ids = self.loan_type_id.loan_proofs_ids
+        if self.loan_type_id and self.loan_type_id.loan_proof_ids:
+            self.employee_loan_proof_ids = self.loan_type_id.loan_proof_ids
             
         if self.loan_type_id and self.loan_type_id.loan_policy_ids:
-            self.employee_loan_policies_ids = self.loan_type_id.loan_policy_ids  
+            self.employee_loan_policy_ids = self.loan_type_id.loan_policy_ids  
         
     @api.multi
     def action_draft(self):

@@ -3,7 +3,7 @@
 	<data>
 		<record id="hr_employee_loan_type_form" model="ir.ui.view" >
 			<field name="name">hr.loan.type.form</field>
-			<field name="model">hr.employee.loan.types</field>
+			<field name="model">hr.employee.loan.type</field>
 			<field name="type">form</field>
 			<field name="priority" eval="16"/>
 			<field name="arch" type="xml">
@@ -26,7 +26,7 @@
 					</group>	
 					<notebook position="inside">
 						<page string="Loan Proofs">
-							<field name="loan_proofs_ids" />	
+							<field name="loan_proof_ids" />	
 						</page>
 						<page string="Employee Categories">
 							<field name="employee_tag_ids" />		
@@ -41,7 +41,7 @@
 		</record>
 		<record model="ir.ui.view" id="hr_employee_loan_type_tree_view">
 			<field name="name">hr.loan.type.tree</field>
-			<field name="model">hr.employee.loan.types</field>
+			<field name="model">hr.employee.loan.type</field>
 			<field name="type">tree</field>
 			<field name="arch" type="xml">
 			<tree string="Employee Loan Types">
@@ -55,13 +55,13 @@
 				</tree>
 			</field>
 		</record>
-		<record model="ir.actions.act_window" id="hr_loan_types_action">
+		<record model="ir.actions.act_window" id="hr_loan_type_action">
 			<field name="name">Loan Types</field>
-			<field name="res_model">hr.employee.loan.types</field>
+			<field name="res_model">hr.employee.loan.type</field>
 			<field name="view_mode">tree,form</field>
 		</record>
 
 		<menuitem id="loan_type_menu" name="Loan Types" parent="configuration_menu"
-			sequence="5" action="hr_loan_types_action" groups="base.group_user" />
+			sequence="5" action="hr_loan_type_action" groups="base.group_user" />
 	 </data>
 </odoo>

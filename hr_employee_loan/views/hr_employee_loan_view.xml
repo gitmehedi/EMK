@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
     <data>
-        <record id="hr_employee_loan_request_form" model="ir.ui.view">
-			<field name="name">hr.employee.loan.request.form</field>
-			<field name="model">hr.employee.loan.request</field>
+        <record id="hr_employee_loan_form" model="ir.ui.view">
+			<field name="name">hr.employee.loan.form</field>
+			<field name="model">hr.employee.loan</field>
 			<field name="type">form</field>
 			<field name="priority" eval="16"/>
 			<field name="arch" type="xml">
@@ -56,13 +56,13 @@
                                 </group>	
 							</page>
 							<page string="Proofs">
-								<field name="employee_loan_proofs_ids">	
+								<field name="employee_loan_proof_ids">	
 										<field name="name"/>
 										<field name="mandatory"/>
 								</field>
 							</page>
 							<page string="Policies">
-                                <field name="employee_loan_policies_ids">
+                                <field name="employee_loan_policy_ids">
                                     <field name="name"/>
                                 </field>
 							</page>
@@ -75,8 +75,8 @@
 			</field>
 		</record>
 		<record id="hr_employee_loan_request_tree" model="ir.ui.view">
-			<field name="name">hr.employee.loan.request.tree</field>
-			<field name="model">hr.employee.loan.request</field>
+			<field name="name">hr.employee.loan.tree</field>
+			<field name="model">hr.employee.loan</field>
 			<field name="type">tree</field>
 			<field name="arch" type="xml">
 				<tree string="Employee Loan Requests">
@@ -98,13 +98,13 @@
         </record>
         
 		
-        <record model="ir.actions.act_window" id="hr_employee_loan_request_action">
+        <record model="ir.actions.act_window" id="hr_employee_loan_action">
             <field name="name">Loan Requests</field>
-            <field name="res_model">hr.employee.loan.request</field>
+            <field name="res_model">hr.employee.loan</field>
             <field name="view_mode">tree,form</field>
         </record>
 
         <menuitem id="loan_request_menu" name="Loan Requests" parent="loans_menu" sequence="3"
-                  action="hr_employee_loan_request_action" groups="base.group_user"/>   
+                  action="hr_employee_loan_action" groups="base.group_user"/>   
     </data>
 </odoo>
