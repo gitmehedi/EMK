@@ -4,7 +4,7 @@ from openerp import api, fields, models
 class InheritedPointOfSale(models.Model):
     _inherit = 'pos.category'
 
-    code = fields.Char(string='Code', size=20)
+    code = fields.Char(string="Category Code", size=20)
 
 
 class InheritedPurchaseOrderLine(models.Model):
@@ -36,7 +36,7 @@ class InheritedPurchaseOrderLine(models.Model):
             'partner_id': ui_order['partner_id'] or False,
             # 			'total_order_amount':ui_order['amount_total'],
             'total_order_amount': ui_order['total_order_amount'],
-            'cal_discount_amount': ui_order['cal_discount_amount'],
+            # 'cal_discount_amount': ui_order['cal_discount_amount'],
             #'discount_type': ui_order['discount_type'],
             #'percent_discount': ui_order['percent_discount'],
         }

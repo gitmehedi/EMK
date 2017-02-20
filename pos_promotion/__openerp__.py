@@ -14,6 +14,9 @@
     'qweb': [
         'static/src/xml/pos_promotion_template.xml'
     ],
+    'js': [
+        'static/src/js/pos_promotion_custom.js',
+    ],
     'depends': ['point_of_sale'],
     'description': """POS promotion for applying prmotion on product""",
     'installable': True,

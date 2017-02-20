@@ -7,109 +7,53 @@
 			<field name="model">loyalty.rule</field>
 			<field name="arch" type="xml">
 				<form string="Loyalty Rules Form">
-					<header>
-					</header>
 					<sheet>
 						<group>
-							<group col = "4">
+							<group>
+								<field name="name" string="Loyalty Rule"/>
 								<field name="is_active"/>
+							</group>
+							<group>
 								<field name="start_date"/>
-								<field name="name" string = "Loyalty Rule"/>
 								<field name="end_date"/>
 							</group>
 						</group>
 						<notebook>
 							<page string="Points Calculation">
-								<group>
-									<field name="loyalty_basis" string = "On The Basis" class="oe_inline"/>
-									
+								<group string="Loyalty Basic">
+										<field name="loyalty_basis" string = "On The Basis" class="oe_inline"/>
 								</group>
-								<group>
-									<div class="col-md-12">
-										<div class="col-md-12 bold_font_face" attrs="{'invisible':[('loyalty_basis', '=',
-											'product category')]}">
-											<b>Point Details</b>
-										</div>
-										<div class="col-md-12">
-											<div class="col-md-3  col-md-3-manipulate">
-												<label for="min_purchase" string="Min Purchase" class="oe_inline" attrs="{'invisible':[('loyalty_basis',
-													'=', 'product category')]}"/>
-											</div>
-											<div class="col-md-2">
-												<field name="min_purchase" String = "Minimum Purchase" attrs="{'invisible':[('loyalty_basis',
-													'=', 'product category')]}"/>
-												
-											</div>
-										</div>
-										<div class="col-md-12">
-											<div>
-												<div class="col-md-3  col-md-3-manipulate">
-													<label for="point_unit" string="Customer will be awarded" class="oe_inline" attrs="{'invisible':[('loyalty_basis',
-														'=', 'product category')]}"/>
-												</div>
-												<div class="col-md-2">
-													<field name="point_unit" string="Customer will be awarded" attrs="{'invisible':[('loyalty_basis',
-														'=', 'product category')]}" class="oe_inline"/>
-												</div>
-											</div>
-											<div>
-												<div class="col-md-4 col-md-4-manipulate">
-													<label for="purchase_unit_per_point" string="points for a purchase of every" class="oe_inline"
-														attrs="{'invisible':[('loyalty_basis', '=', 'product category')]}"/>
-												</div>
-												<div class="col-md-2 ">
-													<field name="purchase_unit_per_point" string = "points for a purchase of every" attrs="{'invisible':[('loyalty_basis',
-														'=', 'product category')]}" class="oe_inline"/>
-													
-												</div>
-											</div>
-											
-										</div>
-									</div>
+								<group string="Point Details" attrs="{'invisible':[('loyalty_basis', '=','product category')]}">
+										<field name="min_purchase"/>
+										<field name="point_unit"/>
+										<field name="purchase_unit_per_point"/>
 								</group>
 							</page>
 							<page string = "Redemption Calculation">
-								<group>
-									<field name="redemption_ids">
-										<form>
-											<div class="">
-												<group col = "4">
-													<field name="is_active" string='Active'/>
-												</group>
-												<group col = "4">
-													<field name="redemption_rule_name" string = "Redemptiomn Rule" width = "100%"/>
-												</group>
-												<group>
-													<div class="col-md-10">
-														<div>
-															<div class="col-md-2">
-																<label  for="point_start_margin" string="Points between" class="oe_inline"/>
-															</div>
-															<div class="col-md-2">
-																<field name="point_start_margin" string="Points between"/>
-															</div>
-															<div class="col-md-1">
-																<label  for="point_end_margin" string="and" class="oe_inline"/>
-															</div>
-															<div class="col-md-2">
-																<field name="point_end_margin" string = "and"/>
-															</div>
-															<div class="col-md-2">
-																<label  for="reward_point_unit" string=":1reward point" class="oe_inline"/>
-															</div>
-															<div class="col-md-1">
-																<field name="reward_point_unit" string = ":1reward point ="/>
-															</div>
-														</div>
-													</div>
-												</group>
-											</div>
-										</form>
-										<tree>
-											<field name="redemption_rule_name"/>
-										</tree>
-									</field>
-								</group>
+
+								<field name="redemption_ids">
+									<form string="Redemption Rules">
+										<group>
+											<group>
+												<field name="redemption_rule_name" string ="Redemptiomn Rule"/>
+												<field name="is_active" string='Active'/>
+											</group>
+											<group>
+												<field name="point_start_margin" string="Points between"/>
+												<field name="point_end_margin" string = "and"/>
+												<field name="reward_point_unit" string = ":1 Reward point ="/>
+											</group>
+										</group>
+
+									</form>
+									<tree>
+										<field name="redemption_rule_name" string ="Redemptiomn Rule"/>
+										<field name="is_active" string='Active'/>
+										<field name="point_start_margin" string="Points between"/>
+										<field name="point_end_margin" string = "and"/>
+										<field name="reward_point_unit" string = "Reward point"/>
+									</tree>
+								</field>
 							</page>
 						</notebook>
 					</sheet>
@@ -124,14 +68,15 @@
 			<field name="priority" eval="16"/>
 			<field name="arch" type="xml">
 				<tree string="Loyalty Rules Tree">
-					<field name="is_active" string = "Active"/>
-					<field name="name" string = "Loyalty Product"/>
+					<field name="name" string="Loyalty Product"/>
+					<field name="start_date" string="Start Date"/>
+					<field name="end_date" string="End Date"/>
+					<field name="is_active" string = "Status"/>
 					<field name="loyalty_basis" string = "Loyalty Basis"/>
 				</tree>
 			</field>
 		</record>
-		
-		
+
 		<record id="rules_menu_action_123" model="ir.actions.act_window">
 			<field name="name">Loyalty Rule</field>
 			<field name="res_model">loyalty.rule</field>

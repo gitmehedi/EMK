@@ -98,22 +98,22 @@
 	</t>
 
 
-	<t t-extend='PosTicket'>
-		<t t-jquery=".pos-sale-ticket" t-operation='append'>
-			<br />
-			<div t-attf-class="earned-point #{order.getPoint() > 0 ? 'display-block' : 'display-none'}">
-			<table>
-				<tr>
-					<td>Total Avail. Points :</td>
-					<td class="pos-right-align">
-						<t t-esc="widget.format_currency(order.getPoint())"/>
-					</td>
-				</tr>
-			</table>
-			</div>
-		</t>
+	<!--<t t-extend='PosTicket'>-->
+		<!--<t t-jquery=".pos-sale-ticket" t-operation='append'>-->
+			<!--<br />-->
+			<!--<div t-attf-class="earned-point #{order.getPoint() > 0 ? 'display-block' : 'display-none'}">-->
+			<!--<table>-->
+				<!--<tr>-->
+					<!--<td>Total Avail. Points :</td>-->
+					<!--<td class="pos-right-align">-->
+						<!--<t t-esc="widget.format_currency(order.getPoint())"/>-->
+					<!--</td>-->
+				<!--</tr>-->
+			<!--</table>-->
+			<!--</div>-->
+		<!--</t>-->
 
-	</t>
+	<!--</t>-->
 
 	<t t-extend='PaymentScreenWidget'>
 		<t t-jquery=".payment-screen .pos-payment-container .payment-info .infoline.bigger"

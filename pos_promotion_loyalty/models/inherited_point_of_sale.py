@@ -27,17 +27,16 @@ class InheritedPurchaseOrderLine(models.Model):
     #
     #     return super(InheritedPurchaseOrderLine, self).create(cr, uid, values, context=context)
 
-    def _order_fields(self, cr, uid, ui_order, context=None):
-        return {
-            'name': ui_order['name'],
-            'user_id': ui_order['user_id'] or False,
-            'session_id': ui_order['pos_session_id'],
-            'lines': ui_order['lines'],
-            'pos_reference': ui_order['name'],
-            'partner_id': ui_order['partner_id'] or False,
-            # 			'total_order_amount':ui_order['amount_total'],
-            'total_order_amount': ui_order['total_order_amount'],
-            'cal_discount_amount': ui_order['cal_discount_amount'],
-            #'discount_type': ui_order['discount_type'],
-            #'percent_discount': ui_order['percent_discount'],
-        }
+
+    # @api.one
+    # def _order_fields(self):
+    #     return {
+    #         'name': self.name,
+    #         'user_id': self.user_id.id,
+    #         'session_id': self.session_id.id,
+    #         'lines': self.lines,
+    #         'pos_reference': self.pos_reference,
+    #         'partner_id': self.partner_id.id,
+    #         'total_order_amount': self.total_order_amount,
+    #         'cal_discount_amount': self.cal_discount_amount,
+    #     }

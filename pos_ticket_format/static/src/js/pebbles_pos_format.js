@@ -454,10 +454,6 @@ function openerp_pos_promotion(instance, module) { // module is
         get_display_price: function () {
             return this.get_base_price();
         },
-        get_unit_rate: function(){
-            return parseInt(this.get_unit_price());
-        },
-
 
         get_base_price: function () {
             var rounding = this.pos.currency.rounding;
@@ -484,11 +480,12 @@ function openerp_pos_promotion(instance, module) { // module is
         get_quantity_str_with_unit: function(){
             var unit = this.get_unit();
             if(unit && !unit.is_unit){
-                return parseInt(this.quantityStr) + ' ' + unit.name;
+                return this.quantityStr + ' ' + unit.name;
 
             }else{
-                return parseInt(this.quantityStr);
+                return this.quantityStr;
             }
+            console.log("-- Unit Price---:"+this.quantityStr+"------ Unit Name-----:"+ unit)
         },
         get_vat_amount: function(){
             var vat =4/100;

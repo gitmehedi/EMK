@@ -7,7 +7,7 @@
 			<field name="inherit_id" ref="point_of_sale.product_pos_category_form_view"/>
 			<field name="arch" type="xml">
 				<xpath expr="//field[@name='sequence']" position="after">
-					<field name="code" string="Category Code"/>
+					<field name="code"/>
 				</xpath>
 			</field>
 		</record>
