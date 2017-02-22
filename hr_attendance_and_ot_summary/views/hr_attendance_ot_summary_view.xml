@@ -65,7 +65,7 @@
 		</record>
 
 		<menuitem id="menu_hr_attendance_ot_summary" name="Attendance Summary" parent="hr_attendance.menu_hr_attendance_manage_attendances"
-					action="hr_attendance_ot_summary_action" />
+					groups="hr.group_hr_user" action="hr_attendance_ot_summary_action" />
 					
 	</data>
 </openerp>
