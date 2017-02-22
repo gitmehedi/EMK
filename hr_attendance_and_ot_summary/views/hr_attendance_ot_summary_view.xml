@@ -33,15 +33,15 @@
 							<field name="name" />
 							<field name="period" />
 						</group>
-						<notebook colspan="4">
+						<notebook colspan="4"> 
 							<page string="Attendance and OT Summary">
 								<field name="line_ids">
 									<tree string="List" editable="bottom">
 										<field name="employee_id" readonly='1'/>
 										<field name="department_id" />
-										<field name="attendance_1" />
+										<field name="attendance_history" />
 										<field name="attendance_summary" />
-										<field name="over_time_1" />
+										<field name="over_time_history" />
 										<field name="over_time_summary" />
 									</tree>
 								</field>
