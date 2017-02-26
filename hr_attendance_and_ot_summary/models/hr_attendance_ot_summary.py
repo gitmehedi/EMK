@@ -25,6 +25,7 @@ class HrAttendanceOTSummary(models.Model):
     
     state = fields.Selection([
         ('draft', "Draft"),
+        ('generated', "Generated"),
         ('confirmed', "Confirmed"),
         ('approved', "Approved"),
     ], default='draft')
@@ -32,6 +33,10 @@ class HrAttendanceOTSummary(models.Model):
     """ Relational Fields """
     
     line_ids = fields.One2many('hr.attendance.ot.summary.line','parent_id', string="Line Ids")
+    
+    @api.multi
+    def action_generated(self):
+        self.state = 'generated'        
     
     @api.multi
     def get_summary_data(self):
