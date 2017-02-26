@@ -165,22 +165,22 @@
                             <t t-esc="widget.format_currency(order.getTotalTaxExcluded())"/>
                         </td>
                     </tr>
+                     <tr>
+                        <td>Discount:</td>
+                         <td></td>
+                        <td class="pos-right-align">
+                            <t t-esc="widget.format_currency(order.getDiscountTotal())"/>
+                        </td>
+                    </tr>
                     <t t-foreach="order.getTaxDetails()" t-as="taxdetail">
                         <tr>
-                            <td><t t-esc="taxdetail.name" /></td>
+                            <td>VAT</td>
                             <td></td>
                             <td class="pos-right-align">
                                 <t t-esc="widget.format_currency(taxdetail.amount)" />
                             </td>
                         </tr>
                     </t>
-                    <tr>
-                        <td>Discount:</td>
-                        <td></td>
-                        <td class="pos-right-align">
-                            <t t-esc="widget.format_currency(order.getDiscountTotal())"/>
-                        </td>
-                    </tr>
                     <tr>
                         <td><strong>Net Amount:</strong></td>
                         <td></td>

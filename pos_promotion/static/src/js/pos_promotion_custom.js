@@ -457,8 +457,11 @@ function openerp_pos_promotion(instance, module) { // module is
         get_unit_rate: function(){
             return parseInt(this.get_unit_price());
         },
-
-
+        get_total_vat: function () {
+            var vat=4/100;
+            return 200;
+            // return (this.getTotalTaxExcluded()*vat).toFixed(2);
+        },
         get_base_price: function () {
             var rounding = this.pos.currency.rounding;
             var promosRulesActions = this.pos.promos_rules_actions;
@@ -492,9 +495,8 @@ function openerp_pos_promotion(instance, module) { // module is
         },
         get_vat_amount: function(){
             var vat =4/100;
-            return (this.get_unit_price()*this.get_quantity())*vat;
+            return ((this.get_unit_price()*this.get_quantity())*vat).toFixed(2);
         },
-
         get_all_prices: function () {
             //var base = round_pr(this.get_quantity() * this.get_unit_price() * (1.0 - (this.get_discount() / 100.0)), this.pos.currency.rounding);
 
@@ -528,7 +530,6 @@ function openerp_pos_promotion(instance, module) { // module is
                 taxdetail[tax.id] = tax.amount;
             });
             totalNoTax = round_pr(totalNoTax, this.pos.currency.rounding);
-            console.log("----------------Total No Tax: --------------------------"+totalNoTax);
             return {
                 "priceWithTax": totalTax,
                 "priceWithoutTax": totalNoTax,
@@ -553,10 +554,6 @@ function openerp_pos_promotion(instance, module) { // module is
             }
 
             this.trigger('change', this);
-        },
-
-        get_discount: function () {
-            return this.discount;
         },
         can_be_merged_with: function (orderline) {
 
@@ -748,12 +745,10 @@ function openerp_pos_promotion(instance, module) { // module is
 
         },
         getTotalTaxIncluded: function () {
-            return this.getCustomSubtotal();
-            //return this.getTotalTaxExcluded() + this.getTax();
+            return this.getTotalTaxExcluded() + this.getTax()+ this.discount;
         },
         getChange: function () {
-
-            return this.getPaidTotal() - this.getTotalWithTax();
+            return this.getPaidTotal() - this.getTotalTaxIncluded();
         },
         getTotalWithTax: function () {
             var currentOrder = this.pos.get('selectedOrder');
@@ -780,7 +775,10 @@ function openerp_pos_promotion(instance, module) { // module is
         getDueTotal: function () {
             return this.getTotalWithTax() - this.getPaidTotal();
         },
+        get_tax_details: function(){
+            return this.getTaxDetails();
 
+        },
         export_as_JSON: function () {
             var orderLines, paymentLines;
             orderLines = [];
@@ -1415,7 +1413,6 @@ function openerp_pos_promotion(instance, module) { // module is
 
         update_summary: function () {
             var order = this.pos.get('selectedOrder');
-            console.log("Inside Update Summary");
             var promosRulesActions = order.get('pos').promos_rules_actions;
             if (promosRulesActions !== undefined && promosRulesActions.length > 0) {
                 //var total = order ? order.getCustomTotalTaxIncluded() : 0;
@@ -1425,21 +1422,13 @@ function openerp_pos_promotion(instance, module) { // module is
                 var total = 0;
                 var totalDiscount = 0;
 
-
-
-
-                console.log('For loop inside'+ promosRulesActions);
-
                 for (var n = 0, len = promosRulesActions.length; len > n; n++) {
 
                     var method = promosRulesActions[n].action_type;
                     var arguments = promosRulesActions[n].arguments;
 
-                    console.log('For loop inside'+ method);
 
                     if (method == 'prod_disc_perc' || method == 'prod_disc_fix' || method == 'cat_disc_perc' || method == 'cat_disc_fix' || method == 'prod_sub_disc_perc' || method == 'prod_sub_disc_fix') {
-                        console.log('For loop inside'+ method);
-
                         this.el.querySelector('.summary .total .sub-total .subtotal').textContent  = 100;
                         this.el.querySelector('.summary .total .sum-total .total_value').textContent = 100;
                         this.el.querySelector('.summary .total .subentry .value').textContent = 100;
