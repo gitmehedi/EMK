@@ -1,60 +1,66 @@
-<?xml version="1.0" encoding="utf-8" ?>
-<openerp>
-	<data>
-		<record id="leave_encashment_tree" model="ir.ui.view">
-			<field name="name">hr.leave.encashment.tree</field>
-			<field name="model">hr.leave.encashment</field>
-			<field name="arch" type="xml">
-				<tree string="Leave Carry Forward">
-					<field name="name" />
-					<field name="encashment_year" />
-					<field name="leave_type" />
-				</tree>
-			</field>
-		</record>
-		
-	
-		<record id="leave_encashment_form" model="ir.ui.view">
-			<field name="name">hr.leave.encashment.form</field>
-			<field name="model">hr.leave.encashment</field>
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <record id="hr_mobile_bill_form" model="ir.ui.view">
+			<field name="name">hr.mobile.bill.form</field>
+			<field name="model">hr.mobile.bill</field>
 			<field name="type">form</field>
 			<field name="arch" type="xml">
-				<form string="Leave Encashment">
+				<form string="Employee Mobile bills">
 					<header>
-						<button name="%(hr_earned_leave_encashment_wizard_action_view)d"
-								type="action" string="Generate" /> 
+						 <button name="action_draft" type="object"
+                                string="Reject"
+                                states="applied,approved"/>
+                         <button name="action_confirm" type="object"
+                                string="Apply" states="draft"
+                                class="oe_highlight"/>
+                         <button name="action_done" type="object"
+                                string="Approve" states="applied"
+                                class="oe_highlight"/>
+                         <field name="state" widget="statusbar"/>
 					</header>
-					<sheet>
-						<group>
-							<field name="name" />
-							<field name="encashment_year" />
-							<field name="leave_type" />
-						</group>
-						<notebook colspan="4">
-							<page string="Encashment">
-								<field name="line_ids">
-									<tree string="List" editable="bottom">
-										<field  name="employee_id"  readonly='1'/>
-										<field  name="pending_leave" />
-										<field  name="leave_days_to_be_encashed" />
-										<field  name="want_to_encash" />
-									</tree>
-								</field>
-							</page>
-						</notebook>
+					<sheet>						
+						<label for="name" string="Employee Mobile bills"/>
+	                 		<group >
+	                 			<group>
+	                            	<field name="name" />
+	                            </group>
+		                        <notebook colspan="4">
+									<page string="Bills">
+										<field name="line_ids">
+											<tree string="List" editable="bottom">
+												<field  name="emp_mobile_phone" />											
+												<field name="employee_id"/>
+												<field  name="bill_amount" />
+												
+											</tree>
+										</field>
+									</page>
+								</notebook>
+	                        </group>
 					</sheet>
 				</form>
 			</field>
 		</record>
-	
-		<record id="hr_holidays_leave_encashment" model="ir.actions.act_window">
-			<field name="name">Leave Encashment</field>
-			<field name="res_model">hr.leave.encashment</field>
-			<field name="view_mode">tree,form</field>
+		<record id="hr_mobile_bill_tree" model="ir.ui.view">
+			<field name="name">hr.mobile.bill.tree</field>
+			<field name="model">hr.mobile.bill</field>
+			<field name="type">tree</field>
+			<field name="arch" type="xml">
+				<tree string="Employee Mobile bills">
+					<field name="name" />
+					<field name="state" />
+				</tree>
+			</field>
 		</record>
 
-		<menuitem id="menu_hr_leave_encashment" name="Leave Encashment"
-			parent="hr_holidays.menu_hr_holidays_configuration" sequence="7"
-			action="hr_holidays_leave_encashment" />
-	</data>
-</openerp>
+        <record model="ir.actions.act_window" id="hr_mobile_bill_action">
+            <field name="name">Mobile Bills</field>
+            <field name="res_model">hr.mobile.bill</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <menuitem id="hr_mobile_bill_menu" name="Mobile Bills"
+                  action="hr_mobile_bill_action" groups="base.group_user"/>
+    </data>
+</odoo>
