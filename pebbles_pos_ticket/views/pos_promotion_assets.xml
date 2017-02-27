@@ -5,11 +5,8 @@
     <data>
     	<!-- Inherited_Id :::: point_of_sale/view/template.xml -->
         <template id="pos_loyality_template" name="loyality point" inherit_id="point_of_sale.index">
-        	<xpath expr="//link[@id='pos-stylesheet']" position="after">
-                 <link rel="stylesheet" href="/pos_promotion/static/src/css/pos_promotion_custom.css"/>
-            </xpath>
-            <xpath expr="//script[@id='loading-script']" position="before">
-               <script type="text/javascript" src="/pos_promotion/static/src/js/pos_promotion_custom.js"></script>
+        	<xpath expr="//script[@id='loading-script']" position="before">
+               <script type="text/javascript" src="/pebbles_pos_ticket/static/src/js/pos_promotion_custom.js"></script>
     	    </xpath>
         </template>
     </data>
