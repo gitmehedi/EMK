@@ -3,7 +3,8 @@ from openerp import fields
 from openerp import models
 from odoo.exceptions import UserError
 
-from datetime import datetime
+#from datetime import datetime
+import datetime
 
 from odoo.tools import DEFAULT_SERVER_DATE_FORMAT
 from openerp.exceptions import ValidationError,Warning
@@ -18,10 +19,10 @@ class HrManualAttendance(models.Model):
     name = fields.Char()
     reason = fields.Text(string='Reason')
     is_it_official = fields.Boolean(string='Is it official', default=False)
-    check_in_time_full_day = fields.Datetime(string = 'Check In time full day')
-    check_out_time_full_day = fields.Datetime(string = 'Check out time full day')    
-    check_in_time_sign_in = fields.Datetime(string = 'Check In time Sign In')
-    check_in_time_sign_out = fields.Datetime(string = 'Check Out time Sign Out')    
+    check_in_time_full_day = fields.Date(string = 'Check In time full day')
+    check_out_time_full_day = fields.Date(string = 'Check out time full day')    
+    check_in_time_sign_in = fields.Date(string = 'Check In time Sign In')
+    check_in_time_sign_out = fields.Date(string = 'Check Out time Sign Out')    
     sign_type = fields.Selection([
         ('full_day', 'Full Day'),
         ('sign_in', 'Sign In'),
@@ -55,16 +56,21 @@ class HrManualAttendance(models.Model):
         
     """
     
-    """
+   
     @api.constrains('check_in_time_full_day', 'check_out_time_full_day', 'check_in_time_sign_in', 'check_in_time_sign_out')
-    def _validity_check_in_check_out_manual_attendances11(self):
-                
-        check_in_time_full_day = self.check_in_time_full_day        
-        check_out_time_full_day = self.check_out_time_full_day - datetime.now().date()
+    def _validity_check_in_check_out_manual_attendances(self):
+       
+        curr_date = datetime.date.today().strftime('%Y-%m-%d')
         
-        check_in_time_sign_in = self.check_in_time_sign_in - datetime.now().date()
-        check_in_time_sign_out = self.check_in_time_sign_out - datetime.now().date()
+        if self.check_in_time_full_day > curr_date or self.check_in_time_sign_in > curr_date or self.check_in_time_sign_in > curr_date: 
+            raise ValidationError(('"Check In" time cannot be future date'))       
+        if self.check_out_time_full_day > curr_date:
+            raise ValidationError(('"Check Out" time cannot be future date'))
         
+        if self.check_in_time_full_day > self.check_out_time_full_day:
+             raise ValidationError(('"Check In" cannot be greater than Check Out date'))
+        
+        """
         min_days_obj = self.env['hr.manual.attendance.min.days']
         
         min_day_restriction_config = min_days_obj.min_days_restriction
@@ -75,21 +81,8 @@ class HrManualAttendance(models.Model):
             raise ValidationError(_('Minimum days of requesting manual attendance is over'))
         if check_in_time_sign_out > min_day_restriction_config: 
             raise ValidationError(_('Minimum days of requesting manual attendance is over'))
-                
-        for attendance in self:
-            if datetime.strptime(attendance.check_in_time_full_day, DEFAULT_SERVER_DATE_FORMAT).date() > datetime.now().date():
-                raise ValidationError(_('"Check In" time cannot be future date'))
-            
-            if datetime.strptime(attendance.check_out_time_full_day, DEFAULT_SERVER_DATE_FORMAT).date() > datetime.now().date():
-                raise ValidationError(_('"Check out" time cannot be future date'))
-          
-            if datetime.strptime(attendance.check_in_time_sign_in, DEFAULT_SERVER_DATE_FORMAT).date() > datetime.now().date():
-                raise ValidationError(_('"Check In" time cannot be future date'))
-            
-            if datetime.strptime(attendance.check_in_time_sign_out, DEFAULT_SERVER_DATE_FORMAT).date() > datetime.now().date():
-                raise ValidationError(_('"Check In" time cannot be future date'))
         """
-        
+              
     @api.multi
     def _compute_can_reset(self):
         """ User can reset a leave request if it is its own leave request
