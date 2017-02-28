@@ -135,7 +135,7 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
             loaded: function(self,users){ self.user = users[0]; },
         },{
             model:  'res.company',
-            fields: [ 'currency_id', 'street','street2','city','zip','vat','email', 'website', 'company_registry', 'vat', 'name', 'phone', 'partner_id' , 'country_id', 'tax_calculation_rounding_method'],
+            fields: [ 'currency_id', 'street','street2','city','zip', 'email', 'website', 'company_registry', 'vat', 'name', 'phone', 'partner_id' , 'country_id', 'tax_calculation_rounding_method'],
             ids:    function(self){ return [self.user.company_id[0]] },
             loaded: function(self,companies){ self.company = companies[0]; },
         },{
@@ -727,7 +727,7 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                     }
                 }else{
                     this.quantity    = quant;
-                    this.quantityStr = '' + this.quantity.toFixed(1);
+                    this.quantityStr = '' + this.quantity;
                 }
             }
             this.trigger('change',this);
@@ -822,7 +822,7 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
             this.trigger('change',this);
         },
         get_unit_price: function(){
-            return (round_di(this.price || 0, this.pos.dp['Product Price'])).toFixed(1);
+            return round_di(this.price || 0, this.pos.dp['Product Price'])
         },
         get_base_price:    function(){
             var rounding = this.pos.currency.rounding;
@@ -838,7 +838,7 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
             return this.get_all_prices().priceWithTax;
         },
         get_tax: function(){
-            return (this.get_all_prices().tax).toFixed(1);
+            return this.get_all_prices().tax;
         },
         get_applicable_taxes: function(){
             // Shenaningans because we need
