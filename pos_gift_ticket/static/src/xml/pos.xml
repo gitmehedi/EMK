@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-extend="PosTicket">
+        <t t-jquery=".pos-center-align t:first" t-operation="replace">
+            <t t-esc="order.get('creationDate').toString(Date.CultureInfo.formatPatterns.shortDate + ' ' +
+                Date.CultureInfo.formatPatterns.longTime)"/>
+        </t>
+    </t>
+
+    <t t-name="PosGiftTicket">
+        <div class="pos-sale-ticket">
+
+            <div class="pos-center-align">
+                    <strong><t t-esc="widget.pos.company.name"/></strong><br />
+                    <strong>MARISHIPA OUTFITTERS</strong><br />
+                    <t t-esc="widget.pos.company.street || ''"/> <t t-esc="widget.pos.company.street2 || ''"/><br />
+                    <t t-esc="widget.pos.company.city || ''"/>-<t t-esc="widget.pos.company.zip || ''"/> , <t t-esc="widget.pos.company.phone|| ''"/><br />
+                    VAT Reg. No. <t t-esc="widget.pos.company.vat"/><br />
+                    Musak-11(ka)
+                    <br />
+                    <br />
+                    Shop: <t t-esc="widget.pos.config.name"/><br />
+                </div>
+                <br/>
+                <div>
+                    <div>
+                        Invoice# <t t-esc="order.get('name')"/> <br/>
+                        Customer: <t t-esc="order.get('partner_id') || 'Unknown'"/> <br/>
+                        Cashier: <t t-esc="widget.pos.cashier ? widget.pos.cashier.name : widget.pos.user.name"/><br/>
+                        Date: <t t-esc="new Date().toString(Date.CultureInfo.formatPatterns.shortDate)"/>
+                        <t t-esc="new Date().toString(Date.CultureInfo.formatPatterns.longTime)"/><br/>
+                    </div>
+
+                </div>
+                <div style="clear: both;"></div>
+
+                <br />
+                <t t-if="widget.pos.config.receipt_header">
+                    <div style='text-align:center'>
+                        <t t-esc="widget.pos.config.receipt_header" />
+                    </div>
+                    <br />
+                </t>
+            <div class="pos-center-align" style="font-size:1.2em;font-weight:bold;">GIFT TICKET</div>
+            <br />
+            <table>
+                <colgroup>
+                    <col width='75%' />
+                    <col width='25%' />
+                </colgroup>
+                <tr>
+                    <th>Product</th>
+                    <th class="pos-right-align">Qty</th>
+                </tr>
+                <tr t-foreach="orderlines" t-as="orderline">
+                    <td>
+                        <t t-esc="orderline.get_product().display_name"/>
+                    </td>
+                    <td class="pos-right-align">
+                        <t t-esc="orderline.get_quantity_str_with_unit()"/>
+                    </td>
+                </tr>
+            </table>
+            <t t-if="widget.pos.config.receipt_footer">
+                <br />
+                <div style='text-align:center'>
+                    <t t-esc="widget.pos.config.receipt_footer" />
+                </div>
+            </t>
+        </div>
+    </t>
+
+</templates>
