@@ -26,7 +26,7 @@
                 <div>
                     <div>
                         Invoice# <t t-esc="order.get('name')"/> <br/>
-                        Customer: <t t-esc="order.get('partner_id') || 'Unknown'"/> <br/>
+                        Customer: <t t-esc="order.get_client_name() || 'Unknown'"/> <br/>
                         Cashier: <t t-esc="widget.pos.cashier ? widget.pos.cashier.name : widget.pos.user.name"/><br/>
                         Date: <t t-esc="new Date().toString(Date.CultureInfo.formatPatterns.shortDate)"/>
                         <t t-esc="new Date().toString(Date.CultureInfo.formatPatterns.longTime)"/><br/>
