@@ -1,5 +1,6 @@
 from openerp import models, fields, api
 
+
 class HrEarnedLeaveEncashmentWizard(models.TransientModel):
     _name = 'hr.earned.leave.encashment.wizard'
     
@@ -9,6 +10,7 @@ class HrEarnedLeaveEncashmentWizard(models.TransientModel):
     @api.multi
     def process_employee_line(self,context):
         vals = {}
+        vals1 = {}
         line_obj = self.env['hr.leave.encashment.line']
         holiday_ins = self.env['hr.holidays']
         
@@ -40,6 +42,7 @@ class HrEarnedLeaveEncashmentWizard(models.TransientModel):
                 vals['parent_id'] = context['active_id']
                 
                 line_obj.create(vals)
+                  
         
         return {
             'view_type': 'form',
