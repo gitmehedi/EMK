@@ -7,7 +7,7 @@ class hr_leave_fiscalyear(models.Model):
     _description = "HR Leave Fiscal Year"
     _order = "date_start, id"
     
-    name = fields.Char('Name', required=True)
+    name = fields.Char('Leave Year', required=True)
     code = fields.Char('Code', size=6, required=True)
     date_start = fields.Date('Start Date', required=True)
     date_stop = fields.Date('End Date', required=True)

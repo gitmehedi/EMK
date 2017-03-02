@@ -22,12 +22,12 @@
 			<field name="arch" type="xml">
 				<form string="Attendance and Over Time Summary">
 					<header>
-						<button name="hr_attendance_and_ot_summary.hr_attendance_ot_summary_wizard_action_view" 
+						<button name="hr_attendance_and_ot_summary.hr_attendance_ot_summary_wizard_action_view"
 							type="action" string="Generate" states="draft"/>
 						<button name="hr_attendance_and_ot_summary.hr_attendance_ot_summary_wizard_action_view"
 							 type="action" string="Re Generate" states="generated"/>
 						
-						<button name="get_summary_data" type="object" string="Get Summary" /> 
+						<button name="get_summary_data" type="object" string="Get Summary" />
   						<button name="action_draft" type="object" string="Reject" states="confirmed,approved"/>
   						<button name="action_generated" type="object" string="Generated" states="draft" class="oe_highlight"/>
                         <button name="action_confirm" type="object" string="Confirm" states="generated" class="oe_highlight"/>
@@ -71,6 +71,8 @@
 
 		<menuitem id="menu_hr_attendance_ot_summary" name="Attendance Summary" parent="hr_attendance.menu_hr_attendance_manage_attendances"
 					groups="hr.group_hr_user" action="hr_attendance_ot_summary_action" />
+					
+					
 					
 	</data>
 </openerp>

@@ -34,8 +34,8 @@
 			<field name="arch" type="xml">
 				<tree colors="blue:state == 'draft';gray:state == 'done' "
 					string="Fiscalyear">
-					<field name="code" />
 					<field name="name" />
+					<field name="code" />					
 					<field name="date_start" />
 					<field name="date_stop" />
 					<field name="state" />

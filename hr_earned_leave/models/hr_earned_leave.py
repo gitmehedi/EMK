@@ -19,5 +19,4 @@ class HrEarnedLeave(models.Model):
         'Dou you want to encash your earned leave ',
         help="If enabled, public holidays are skipped in leave days "
         "calculation.", default=True) 
-    # help="If enabled, public holidays are skipped in leave days "
     

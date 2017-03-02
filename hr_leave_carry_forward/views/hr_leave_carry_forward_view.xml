@@ -54,7 +54,10 @@
 		</record>
 
 		<menuitem id="menu_hr_leave_carry_forward" name="Leave Carry Forward"
-			parent="hr_holidays.menu_hr_holidays_configuration" sequence="6"
+			parent="hr_holidays.menu_hr_holidays_root" sequence="6"
+			action="hr_holidays_leave_carry_forward" />
+		<menuitem id="hr_leave_carry_forward" name="Leave Carry Forward"
+			parent="menu_hr_leave_carry_forward"
 			action="hr_holidays_leave_carry_forward" />
 	</data>
 </openerp>

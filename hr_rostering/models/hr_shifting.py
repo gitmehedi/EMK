@@ -20,7 +20,7 @@ class HrShifting(models.Model):
     #Fields of Model
     current_shift_id = fields.Many2one('resource.calendar', compute='_compute_current_shift', string='Current Shift')    
     #current_shift_id = fields.Many2one("resource.calendar", string="Employee shift")
-    shift_ids = fields.One2many('hr.shifting.history', 'employee_id', string='Employee Shift History', copy=False)    
+    shift_ids = fields.One2many('hr.shifting.history', 'employee_id', string='Employee Shift History', copy=True)    
     
     
     @api.multi
@@ -33,5 +33,6 @@ class HrShifting(models.Model):
         for emp in self:
             self._cr.execute(query, tuple([emp.id]))
             res = self._cr.fetchall()
-            emp.current_shift_id = res[0][0]
+            if res:
+                emp.current_shift_id = res[0][0]
         
