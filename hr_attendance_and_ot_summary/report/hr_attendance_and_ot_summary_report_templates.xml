@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="report_saleorder">
+     <t t-call="report.html_container">
+        <t t-foreach="docs" t-as="o">
+            <t t-call="report.external_layout">
+                <div class="page">
+                    <h2>Attendance Summary</h2>
+                    <p><b>Name:</b> <span t-field="o.name"/></p>
+                    <p><b>Period:</b> <span t-field="o.period"/></p>
+                    <p><b>Approval State: </b><span t-field="o.state"/></p>                    
+                    
+                    <table class="table table-condensed">
+	                	<thead>
+	                        <tr>
+	                            <th>Employee</th>
+	                            <th>Department</th>
+	                            <th>Attendance History</th>
+	                            <th>Attendance Summary</th>
+	                            <th>Overtime History</th>
+	                            <th>Overtime Summary</th>
+	                        </tr>
+	                   </thead>
+	                   <tbody>
+	                   		<t t-foreach="o.line_ids" t-as="l">
+	                   			<tr>
+                                    <td><span t-field="l.employee_id"/></td>
+                                    <td><span t-field="l.department_id"/></td>
+                                    <td><span t-field="l.attendance_history"/></td>
+                                    <td><span t-field="l.attendance_summary"/></td>
+                                    <td><span t-field="l.over_time_history"/></td>
+                                    <td><span t-field="l.over_time_summary"/></td>
+                                </tr>
+	                   		</t>
+	                   </tbody>
+	                   
+	                   <!-- Adding page no -->
+	                   <span class="topage" /> 
+	                   
+	                </table>
+	                                
+                </div>
+            </t>
+        </t>
+    </t>
+</template>
+</odoo>

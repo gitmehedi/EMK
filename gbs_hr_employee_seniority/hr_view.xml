@@ -29,6 +29,9 @@
                             <field name="initial_employment_date"/>
                             <field name="length_of_service"/>
                         </group>
+                        <group >
+                            <field name="employee_sequence"/>
+                        </group>
                     </xpath>
                 </data>
             </field>

@@ -22,6 +22,7 @@
     'depends': ['base',
                 'web_export_view',
                 'disable_odoo_online',
+                'base_technical_features',
                 'web_hide_db_poweredby_link',
                 'hide_desktop_notification_link'],
 

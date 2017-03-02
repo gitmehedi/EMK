@@ -6,10 +6,12 @@
     'version':'1.0',
     'depends': ['hr'],
     'data': [
+        'security/ir.model.access.csv',
+        'security/security.xml',
         'views/menuitems.xml',
         'views/hr_employee_loan_policy_view.xml',
         'views/hr_employee_loan_proof_view.xml',
-        'views/hr_employee_loan_request_view.xml',
+        'views/hr_employee_loan_view.xml',
         'views/hr_employee_loan_type_view.xml',
     ],
     
