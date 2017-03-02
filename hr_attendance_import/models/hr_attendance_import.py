@@ -16,15 +16,6 @@ class AttendanceImport(models.Model):
     lines = fields.One2many('hr.attendance.import.line', 'import_id')
         
     @api.multi
-    def process_imported_data(self):
-        """ Process valid imported data tohr.attendance model"""
-       # attendance_obj = self.env['hr.attendance']
-        #attendance_line_obj = self.env['hr.attendance.import.line']
-
- 
-    
-        
-    @api.multi
     def import_lines(self):
         self.ensure_one()
         module = __name__.split('addons.')[1].split('.')[0]

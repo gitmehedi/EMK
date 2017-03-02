@@ -504,9 +504,7 @@ class HrAttendanceImportWizard(models.TransientModel):
             attendance_line_obj = self.env['hr.attendance.import.line']
             attendance_error_obj =  self.env['hr.attendance.import.error']
             
-            print '------------------------------------------------------------' , emp_pool.id
             if emp_pool.id is not False:
-                print 'Got Data '
                 vals['check_in'] = line['check_in'] 
                 vals['check_out'] =  line['check_out']
                 vals['import_id'] = 1 #line['id']
@@ -515,7 +513,6 @@ class HrAttendanceImportWizard(models.TransientModel):
                 attendance_line_obj.create(vals)
                 
             else:
-                print '----------- NO DATA'
                 vals['check_in'] = line['check_in'] 
                 vals['check_out'] =  line['check_out']
                 vals['import_id'] = 1 #line['id']
@@ -523,6 +520,20 @@ class HrAttendanceImportWizard(models.TransientModel):
 
                 attendance_error_obj.create(vals)
             
+            ## enter valid data to hr_attendance
+            """
+            attendance_obj = self.env['hr.attendance']
+            att_line_obj_search = attendance_line_obj.search([('id','=',emp_pool.id)])
+        
+            vals1 = {}
+            print '-----------------------------' , att_line_obj_search.employee_id.ids
+
+            vals1['employee_id'] = 1
+            vals1['check_in'] = att_line_obj_search.check_in
+            vals1['check_out'] = att_line_obj_search.check_out
+        
+            attendance_obj.create(vals1)
+            """
             
             """
             End of processing imported data -- Rabbi
