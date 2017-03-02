@@ -3,7 +3,7 @@
     'author': 'Genweb2 Limited',
     'website': 'www.genweb2.com',
     'category': 'HR Earned Leave',
-    'version':'1.0',
+    'version':'1.0.0',
     'data': [
         'views/hr_earned_leave_view.xml',
         'views/inherited_hr_holidays_status_data.xml',
