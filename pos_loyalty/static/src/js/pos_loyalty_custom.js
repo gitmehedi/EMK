@@ -1028,7 +1028,8 @@ var orderline_id = 1;
     module.Order = module.Order.extend({
         getPoint: function () {
             var client = this.get('client');
-            return client ? client.point_loyalty : "";
+            alert(client);
+            return client ? 100 : 500;
         },
 
         get_client_address: function () {
@@ -1050,11 +1051,11 @@ var orderline_id = 1;
 
             return amount;
         },
-
-        // ////
         get_client_name: function () {
             var client = this.get('client');
-            $('.loyl_entry').text("Total Point:" + client.point_loyalty);
+            if (client){
+                $('.loyl_entry').text("Total Point:" + client.point_loyalty);
+            }
             return client ? client.name : "";
         },
         getRedemPoint: function () {
