@@ -1,8 +1,6 @@
-from openerp import api
-from openerp import fields
-from openerp import models
-from odoo.exceptions import UserError
+from openerp import api,fields,models
 
+from odoo.exceptions import UserError
 
 class AttendanceImport(models.Model):
     #_inherit= 'account.move'
@@ -12,9 +10,18 @@ class AttendanceImport(models.Model):
     import_creation_date_time = fields.Datetime(string='Imported Date')
     file_name= fields.Char(string='File')
     
+    ## newly added fields
+    import_temp = fields.One2many('hr.attendance.import.temp', 'import_id')
+    import_error_lines = fields.One2many('hr.attendance.import.error', 'import_id')
+    lines = fields.One2many('hr.attendance.import.line', 'import_id')
+        
     @api.multi
     def process_imported_data(self):
-        raise UserError(_('Not Implemented yet!'))
+        """ Process valid imported data tohr.attendance model"""
+       # attendance_obj = self.env['hr.attendance']
+        #attendance_line_obj = self.env['hr.attendance.import.line']
+
+ 
     
         
     @api.multi

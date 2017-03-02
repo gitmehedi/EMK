@@ -44,7 +44,7 @@
 				 	<header>
 	                    <button name="hr_attendance_import.hr_earned_leave_encashment_wizard_action_view"
 									type="action" string="Import Attendance" /> 
-                    	<button name="process_imported_data" string="Process" class="oe_highlight"/>                                  	
+                    	<button name="process_imported_data" type="object" string="Process" class="oe_highlight"/>                                  	
                 	</header>				
                 	
 					<sheet>
@@ -57,15 +57,31 @@
 						</group>
 						<notebook position="inside">
 							<page string="Raw Data">
-								<group col="4">
-                                   <!--  <field name="file_name"/> -->
-                                </group>	
+								<field name="import_temp">
+									<tree string="List" editable="bottom">
+										<field name="employee_code"/>
+										<field name="check_in"/>
+										<field name="check_out"/>				
+									</tree>
+								</field>	
 							</page>
 							<page string="Malformed Data">
-								<!-- <field name="file_name"/> -->	
+								<field name="import_error_lines">
+									<tree string="List" editable="bottom">
+										<field name="employee_code"/>
+										<field name="check_in"/>
+										<field name="check_out"/>				
+									</tree>
+								</field>
 							</page>
 							<page string="Ready to Import">
-								<!-- <field name="file_name"/> -->		
+								<field name="lines">
+									<tree string="List" editable="bottom">
+										<field name="employee_id"/>
+										<field name="check_in"/>
+										<field name="check_out"/>				
+									</tree>
+								</field>	
 							</page>
 					</notebook>
 	                </sheet>	                

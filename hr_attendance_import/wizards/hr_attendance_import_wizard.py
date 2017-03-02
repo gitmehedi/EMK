@@ -17,22 +17,24 @@ _logger = logging.getLogger(__name__)
 
 
 class HrAttendanceImportWizard(models.TransientModel):
-    _name = 'aml.import'
+    _name = 'hr.attendance.import.wizard'
     _description = 'Import account move lines'
 
-    aml_data = fields.Binary(string='File', required=True)
+    #hr.attendance.import.wizard
+
+    aml_data = fields.Binary(string='File')
     aml_fname = fields.Char(string='Filename')
     lines = fields.Binary(
-        compute='_compute_lines', string='Input Lines', required=True)
+        compute='_compute_lines', string='Input Lines')
     dialect = fields.Binary(
-        compute='_compute_dialect', string='Dialect', required=True)
+        compute='_compute_dialect', string='Dialect')
     csv_separator = fields.Selection(
         [(',', ', (comma)'), (';', '; (semicolon)')],
-        string='CSV Separator', required=True)
+        string='CSV Separator')
     decimal_separator = fields.Selection(
         [('.', '. (dot)'), (',', ', (comma)')],
         string='Decimal Separator',
-        default='.', required=True)
+        default='.')
     codepage = fields.Char(
         string='Code Page',
         default=lambda self: self._default_codepage(),
@@ -471,8 +473,64 @@ class HrAttendanceImportWizard(models.TransientModel):
             dialect=self.dialect)
 
         move_lines = []
+        
+        
+        
         for line in reader:
+            ## print all the imported values
+            #print '-------------------', line['id']
+            
+            """ ---------------------------------------------------------
+             Do the processing of imported data: 
+             let's assume that CSV files data header is fixed as follows: 
+                 employee_id, check_in, check_out. -- Rabbi
+                -------------------------------------------------------
+            """
+            
+            temp_vals = {}
+            
+            temp_vals['employee_code'] = line['employee_id']
+            temp_vals['check_in'] =  line['check_in']
+            temp_vals['check_out'] = line['check_out']
+            temp_vals['import_id'] = 1 #line['id']
+            
+            temp_pool = self.env['hr.attendance.import.temp']
+            temp_pool.create(temp_vals)
+            
+            """ search employee model with employee ID """
+            vals = {}
+             
+            emp_pool = self.env['hr.employee'].search([('id','=',line['employee_id'])])
+            attendance_line_obj = self.env['hr.attendance.import.line']
+            attendance_error_obj =  self.env['hr.attendance.import.error']
+            
+            print '------------------------------------------------------------' , emp_pool.id
+            if emp_pool.id is not False:
+                print 'Got Data '
+                vals['check_in'] = line['check_in'] 
+                vals['check_out'] =  line['check_out']
+                vals['import_id'] = 1 #line['id']
+                vals['employee_id'] = emp_pool.id
 
+                attendance_line_obj.create(vals)
+                
+            else:
+                print '----------- NO DATA'
+                vals['check_in'] = line['check_in'] 
+                vals['check_out'] =  line['check_out']
+                vals['import_id'] = 1 #line['id']
+                vals['employee_code'] = line['employee_id']
+
+                attendance_error_obj.create(vals)
+            
+            
+            """
+            End of processing imported data -- Rabbi
+            """
+            
+            
+            
+            """
             aml_vals = {}
 
             # step 1: handle codepage
@@ -534,7 +592,7 @@ class HrAttendanceImportWizard(models.TransientModel):
                 'hr.attendance.import %s import time = %.3f seconds',
                 move.name, import_time)
             return {'type': 'ir.actions.act_window_close'}
-
+    """
 
 def str2float(amount, decimal_separator):
     if not amount:

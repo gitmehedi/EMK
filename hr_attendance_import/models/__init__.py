@@ -1,1 +1,4 @@
 import hr_attendance_import
+import hr_attendance_import_temp
+import hr_attendance_import_error
+import hr_attendance_import_line
