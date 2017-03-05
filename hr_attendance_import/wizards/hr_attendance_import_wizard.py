@@ -443,20 +443,16 @@ class HrAttendanceImportWizard(models.TransientModel):
             attendance_line_obj = self.env['hr.attendance.import.line']
             attendance_error_obj =  self.env['hr.attendance.import.error']
             
-            if emp_pool.id is not False:
-                vals['check_in'] = line['check_in'] 
-                vals['check_out'] =  line['check_out']
-                vals['import_id'] = 1 #line['id']
+            vals['check_in'] = line['check_in'] 
+            vals['check_out'] =  line['check_out']
+            vals['import_id'] = 1 #line['id']
+            
+            if emp_pool.id is not False:                
                 vals['employee_id'] = emp_pool.id
-
                 attendance_line_obj.create(vals)
                 
             else:
-                vals['check_in'] = line['check_in'] 
-                vals['check_out'] =  line['check_out']
-                vals['import_id'] = 1 #line['id']
                 vals['employee_code'] = line['employee_id']
-
                 attendance_error_obj.create(vals)
             
             ## enter valid data to hr.attendance

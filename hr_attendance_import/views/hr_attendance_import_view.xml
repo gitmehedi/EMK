@@ -53,7 +53,7 @@
 									</tree>
 								</field>
 							</page>
-							<page string="Ready to Import">
+							<page string="Imported from CSV">
 								<field name="lines">
 									<tree string="List" editable="bottom">
 										<field name="employee_id"/>
