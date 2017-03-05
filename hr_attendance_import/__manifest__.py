@@ -5,6 +5,8 @@
     'category': 'HR Attendance',
     'version':'1.0',
     'data': [       
+       'security/security.xml',
+       'security/ir.model.access.csv',
        'views/hr_attendance_import_view.xml',
        'wizards/hr_attendance_import_wizard_view.xml',
     ],

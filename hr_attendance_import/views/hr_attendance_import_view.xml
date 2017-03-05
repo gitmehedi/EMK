@@ -35,7 +35,7 @@
 							</group>								
 						</group>
 						<notebook position="inside">
-							<page string="Raw Data">
+							<page string="Raw Input">
 								<field name="import_temp">
 									<tree string="List" editable="bottom">
 										<field name="employee_code"/>
@@ -44,7 +44,7 @@
 									</tree>
 								</field>	
 							</page>
-							<page string="Malformed Data">
+							<page string="Error Data">
 								<field name="import_error_lines">
 									<tree string="List" editable="bottom">
 										<field name="employee_code"/>
@@ -78,7 +78,7 @@
 	
     <!-- Menu Item -->
 	<menuitem id="menu_hr_attendance_import" name="Attendance Import" parent="hr_attendance.menu_hr_attendance_manage_attendances"
-					action="hr_attendance_import_ac" />
+				groups="hr.group_hr_user" action="hr_attendance_import_ac" />
     
   </data>
 </openerp>

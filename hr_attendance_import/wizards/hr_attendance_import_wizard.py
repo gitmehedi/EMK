@@ -122,16 +122,7 @@ class HrAttendanceImportWizard(models.TransientModel):
             'analytic account': {'method': self._handle_analytic_account},
         }
         return res
-
-    def _get_orm_fields(self):
-        aml_mod = self.env['account.move.line']
-        orm_fields = aml_mod.fields_get()
-        blacklist = models.MAGIC_COLUMNS + [aml_mod.CONCURRENCY_CHECK_FIELD]
-        self._orm_fields = {
-            f: orm_fields[f] for f in orm_fields
-            if f not in blacklist
-            and not orm_fields[f].get('depends')}
-
+  
     def _process_header(self, header_fields):
 
         self._field_methods = self._input_fields()
@@ -163,55 +154,7 @@ class HrAttendanceImportWizard(models.TransientModel):
 
             if hf in self._field_methods:
                 continue
-
-            if hf not in self._orm_fields \
-                    and hf not in [self._orm_fields[f]['string'].lower()
-                                   for f in self._orm_fields]:
-                _logger.error(
-                    _("%s, undefined field '%s' found "
-                      "while importing move lines"),
-                    self._name, hf)
-                self._skip_fields.append(hf)
-                continue
-
-            field_def = self._orm_fields.get(hf)
-            if not field_def:
-                for f in self._orm_fields:
-                    if self._orm_fields[f]['string'].lower() == hf:
-                        orm_field = f
-                        field_def = self._orm_fields.get(f)
-                        break
-            else:
-                orm_field = hf
-            field_type = field_def['type']
-
-            if field_type in ['char', 'text']:
-                self._field_methods[hf] = {
-                    'method': self._handle_orm_char,
-                    'orm_field': orm_field,
-                    }
-            elif field_type == 'integer':
-                self._field_methods[hf] = {
-                    'method': self._handle_orm_integer,
-                    'orm_field': orm_field,
-                    }
-            elif field_type == 'float':
-                self._field_methods[hf] = {
-                    'method': self._handle_orm_float,
-                    'orm_field': orm_field,
-                    }
-            elif field_type == 'many2one':
-                self._field_methods[hf] = {
-                    'method': self._handle_orm_many2one,
-                    'orm_field': orm_field,
-                    }
-            else:
-                _logger.error(
-                    _("%s, the import of ORM fields of type '%s' "
-                      "is not supported"),
-                    self._name, hf, field_type)
-                self._skip_fields.append(hf)
-
+          
         return header_fields
 
     def _log_line_error(self, line, msg):
@@ -461,7 +404,7 @@ class HrAttendanceImportWizard(models.TransientModel):
         move = self.env['hr.attendance.import'].browse(
             self._context['active_id'])
         self._sum_debit = self._sum_credit = 0.0
-        self._get_orm_fields()
+        #self._get_orm_fields()
         lines, header = self._remove_leading_lines(self.lines)
         header_fields = csv.reader(
             StringIO.StringIO(header), dialect=self.dialect).next()
