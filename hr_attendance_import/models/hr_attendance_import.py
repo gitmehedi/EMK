@@ -3,11 +3,10 @@ from openerp import api,fields,models
 from odoo.exceptions import UserError
 
 class AttendanceImport(models.Model):
-    #_inherit= 'account.move'
     _name = 'hr.attendance.import'
     
-    name = fields.Char(string='Name')
-    import_creation_date_time = fields.Datetime(string='Imported Date')
+    name = fields.Char(string='Name', required=True)
+    import_creation_date_time = fields.Datetime(string='Imported Date',required=True)
     file_name= fields.Char(string='File')
     
     ## newly added fields

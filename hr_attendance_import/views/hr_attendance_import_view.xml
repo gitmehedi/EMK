@@ -77,7 +77,7 @@
 	
 	
     <!-- Menu Item -->
-	<menuitem id="menu_hr_attendance_import" name="Import Attendance" parent="hr_attendance.menu_hr_attendance_manage_attendances"
+	<menuitem id="menu_hr_attendance_import" name="Attendance Import" parent="hr_attendance.menu_hr_attendance_manage_attendances"
 					action="hr_attendance_import_ac" />
     
   </data>

@@ -15,12 +15,12 @@ from openerp.exceptions import Warning
 import logging
 _logger = logging.getLogger(__name__)
 
+from odoo.exceptions import UserError
+
 
 class HrAttendanceImportWizard(models.TransientModel):
     _name = 'hr.attendance.import.wizard'
     _description = 'Import account move lines'
-
-    #hr.attendance.import.wizard
 
     aml_data = fields.Binary(string='File')
     aml_fname = fields.Char(string='Filename')
@@ -460,8 +460,6 @@ class HrAttendanceImportWizard(models.TransientModel):
         self._err_log = ''
         move = self.env['hr.attendance.import'].browse(
             self._context['active_id'])
-        #accounts = self.env['account.account'].search([('type', 'not in', ['view', 'consolidation', 'closed'])])
-        #self._accounts_dict = {a.code: a.id for a in accounts}
         self._sum_debit = self._sum_credit = 0.0
         self._get_orm_fields()
         lines, header = self._remove_leading_lines(self.lines)
@@ -477,13 +475,11 @@ class HrAttendanceImportWizard(models.TransientModel):
         
         
         for line in reader:
-            ## print all the imported values
-            #print '-------------------', line['id']
             
             """ ---------------------------------------------------------
              Do the processing of imported data: 
-             let's assume that CSV files data header is fixed as follows: 
-                 employee_id, check_in, check_out. -- Rabbi
+             CSV files data format is fixed as follows: 
+                 employee_id, check_in, check_out.
                 -------------------------------------------------------
             """
             
@@ -520,90 +516,21 @@ class HrAttendanceImportWizard(models.TransientModel):
 
                 attendance_error_obj.create(vals)
             
-            ## enter valid data to hr_attendance
-            """
+            ## enter valid data to hr.attendance
+
             attendance_obj = self.env['hr.attendance']
-            att_line_obj_search = attendance_line_obj.search([('id','=',emp_pool.id)])
+            att_line_obj_search = attendance_line_obj.search([('employee_id','=',emp_pool.id)])
         
-            vals1 = {}
-            print '-----------------------------' , att_line_obj_search.employee_id.ids
-
-            vals1['employee_id'] = 1
-            vals1['check_in'] = att_line_obj_search.check_in
-            vals1['check_out'] = att_line_obj_search.check_out
+            vals_attendance = {}
+            
+            for alos in att_line_obj_search:
+                if alos is not None:
+                    vals_attendance['employee_id'] = alos.employee_id.id
+                    vals_attendance['check_in'] = alos.check_in
+                    vals_attendance['check_out'] = alos.check_out
+                
+                    attendance_obj.create(vals_attendance)
         
-            attendance_obj.create(vals1)
-            """
-            
-            """
-            End of processing imported data -- Rabbi
-            """
-            
-            
-            
-            """
-            aml_vals = {}
-
-            # step 1: handle codepage
-            for i, hf in enumerate(self._header_fields):
-                try:
-                    line[hf] = line[hf].decode(self.codepage).strip()
-                except:
-                    tb = ''.join(format_exception(*exc_info()))
-                    raise Warning(
-                        _("Wrong Code Page"),
-                        _("Error while processing line '%s' :\n%s")
-                        % (line, tb))
-
-            # step 2: process input fields
-            for i, hf in enumerate(self._header_fields):
-                if i == 0 and line[hf] and line[hf][0] == '#':
-                    # lines starting with # are considered as comment lines
-                    break
-                if hf in self._skip_fields:
-                    continue
-                if line[hf] == '':
-                    continue
-
-                if self._field_methods[hf].get('orm_field'):
-                    self._field_methods[hf]['method'](
-                        hf, line, move, aml_vals,
-                        orm_field=self._field_methods[hf]['orm_field'])
-                else:
-                    self._field_methods[hf]['method'](
-                        hf, line, move, aml_vals)
-
-            if aml_vals:
-                self._process_line_vals(line, move, aml_vals)
-                move_lines.append(aml_vals)
-
-        vals = [(0, 0, l) for l in move_lines]
-        vals = self._process_vals(move, vals)
-
-        if self._err_log:
-            self.note = self._err_log
-            module = __name__.split('addons.')[1].split('.')[0]
-            result_view = self.env.ref(
-                '%s.aml_import_view_form_result' % module)
-            return {
-                'name': _("Import File result"),
-                'res_id': self.id,
-                'view_type': 'form',
-                'view_mode': 'form',
-                'res_model': 'aml.import',
-                'view_id': result_view.id,
-                'target': 'new',
-                'type': 'ir.actions.act_window',
-            }
-        else:
-            ctx = dict(self._context, novalidate=True)
-            move.with_context(ctx).write({'line_id': vals})
-            import_time = time.time() - time_start
-            _logger.warn(
-                'hr.attendance.import %s import time = %.3f seconds',
-                move.name, import_time)
-            return {'type': 'ir.actions.act_window_close'}
-    """
 
 def str2float(amount, decimal_separator):
     if not amount:
