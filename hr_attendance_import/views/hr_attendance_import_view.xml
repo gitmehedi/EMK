@@ -9,7 +9,6 @@
 				<tree string="Import Attendance">
 					<field name= "name" />					
 					<field name="import_creation_date_time" />
-					<field name="file_name" />
 				</tree>
 			</field>
 		</record>
@@ -31,7 +30,6 @@
 							<group>
 								<field name="name" />					
 								<field name="import_creation_date_time" />
-								<field name="file_name" />
 							</group>								
 						</group>
 						<notebook position="inside">
