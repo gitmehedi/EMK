@@ -4,9 +4,9 @@
 <openerp>
     <data>
     	<!-- Inherited_Id :::: point_of_sale/view/template.xml -->
-        <template id="pos_loyality_template" name="loyality point" inherit_id="point_of_sale.index">
+        <template id="pos_ticket" name="pos ticket" inherit_id="point_of_sale.index">
         	<xpath expr="//script[@id='loading-script']" position="before">
-               <script type="text/javascript" src="/pebbles_pos_ticket/static/src/js/pos_promotion_custom.js"></script>
+               <script type="text/javascript" src="/pebbles_pos_ticket/static/src/js/pos_ticket.js"></script>
     	    </xpath>
         </template>
     </data>
