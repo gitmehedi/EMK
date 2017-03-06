@@ -30,7 +30,7 @@
 						<group>
 							<group>
 								<field name="name" />					
-								<field name="import_creation_date_time" />
+								<field name="import_creation_date_time" readonly="1"/>
 							</group>								
 						</group>
 						<notebook position="inside">

@@ -1,12 +1,13 @@
 from openerp import api,fields,models
-
 from openerp.exceptions import ValidationError,Warning
+from datetime import date
+
 
 class AttendanceImport(models.Model):
     _name = 'hr.attendance.import'
     
     name = fields.Char(string='Name', required=True)
-    import_creation_date_time = fields.Datetime(string='Imported Date',required=True)
+    import_creation_date_time = fields.Datetime(string='Imported Date',default=date.today(),required=True)
     
     """ Relational fields"""
     import_temp = fields.One2many('hr.attendance.import.temp', 'import_id')
