@@ -37,5 +37,8 @@ class AttendanceImport(models.Model):
                         vals_attendance['check_out'] = alos.check_out
                 
                         attendance_obj.create(vals_attendance)
-    
+        
+        """ Clearing line obj"""                
+        attendance_line_obj.unlink()           
+                        
     

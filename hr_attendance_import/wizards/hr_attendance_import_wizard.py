@@ -414,7 +414,7 @@ class HrAttendanceImportWizard(models.TransientModel):
             dialect=self.dialect)
 
         move_lines = []
-        print 'move -----------', move.id
+        
         
         
         for line in reader:
