@@ -1,6 +1,6 @@
 from openerp import api,fields,models
 
-from odoo.exceptions import UserError
+from openerp.exceptions import ValidationError,Warning
 
 class AttendanceImport(models.Model):
     _name = 'hr.attendance.import'
@@ -12,7 +12,6 @@ class AttendanceImport(models.Model):
     import_temp = fields.One2many('hr.attendance.import.temp', 'import_id')
     import_error_lines = fields.One2many('hr.attendance.import.error', 'import_id')
     lines = fields.One2many('hr.attendance.import.line', 'import_id')
-    
     
     @api.multi
     def validated(self):
@@ -31,7 +30,10 @@ class AttendanceImport(models.Model):
                 vals_attendance = {}
             
                 for alos in att_line_obj_search:
-                    if alos is not None:
+                    if alos is not None:                        
+                        if alos.check_out < alos.check_in:
+                            raise ValidationError(('Check Out time can not be previous date of Check In time'))
+                        
                         vals_attendance['employee_id'] = alos.employee_id.id
                         vals_attendance['check_in'] = alos.check_in
                         vals_attendance['check_out'] = alos.check_out

@@ -15,12 +15,11 @@ from openerp.exceptions import Warning
 import logging
 _logger = logging.getLogger(__name__)
 
-from odoo.exceptions import UserError
+from openerp.exceptions import ValidationError,Warning
 
 
 class HrAttendanceImportWizard(models.TransientModel):
     _name = 'hr.attendance.import.wizard'
-    _description = 'Import account move lines'
 
     aml_data = fields.Binary(string='File')
     aml_fname = fields.Char(string='Filename')
@@ -426,8 +425,11 @@ class HrAttendanceImportWizard(models.TransientModel):
                 -------------------------------------------------------
             """
             
-            temp_vals = {}
+            """ Check in time can not be greater than check out time"""            
+            if line['check_out'] < line['check_in']:
+                 raise ValidationError(('Check Out time can not be previous date of Check In time')) 
             
+            temp_vals = {}            
             temp_vals['employee_code'] = line['employee_id']
             temp_vals['check_in'] =  line['check_in']
             temp_vals['check_out'] = line['check_out']
@@ -438,19 +440,17 @@ class HrAttendanceImportWizard(models.TransientModel):
             
             """ search employee model with employee ID """
             vals = {}
-             
+            vals['check_in'] = line['check_in'] 
+            vals['check_out'] = line['check_out']
+            vals['import_id'] = move.id
+            
             emp_pool = self.env['hr.employee'].search([('id','=',line['employee_id'])])
             attendance_line_obj = self.env['hr.attendance.import.line']
             attendance_error_obj =  self.env['hr.attendance.import.error']
             
-            vals['check_in'] = line['check_in'] 
-            vals['check_out'] =  line['check_out']
-            vals['import_id'] = move.id
-            
             if emp_pool.id is not False:                
                 vals['employee_id'] = emp_pool.id
-                attendance_line_obj.create(vals)
-                
+                attendance_line_obj.create(vals)                
             else:
                 vals['employee_code'] = line['employee_id']
                 attendance_error_obj.create(vals)
