@@ -414,7 +414,7 @@ class HrAttendanceImportWizard(models.TransientModel):
             dialect=self.dialect)
 
         move_lines = []
-        
+        print 'move -----------', move.id
         
         
         for line in reader:
@@ -431,7 +431,7 @@ class HrAttendanceImportWizard(models.TransientModel):
             temp_vals['employee_code'] = line['employee_id']
             temp_vals['check_in'] =  line['check_in']
             temp_vals['check_out'] = line['check_out']
-            temp_vals['import_id'] = 1 #line['id']
+            temp_vals['import_id'] = move.id
             
             temp_pool = self.env['hr.attendance.import.temp']
             temp_pool.create(temp_vals)
@@ -445,7 +445,7 @@ class HrAttendanceImportWizard(models.TransientModel):
             
             vals['check_in'] = line['check_in'] 
             vals['check_out'] =  line['check_out']
-            vals['import_id'] = 1 #line['id']
+            vals['import_id'] = move.id
             
             if emp_pool.id is not False:                
                 vals['employee_id'] = emp_pool.id
@@ -454,21 +454,6 @@ class HrAttendanceImportWizard(models.TransientModel):
             else:
                 vals['employee_code'] = line['employee_id']
                 attendance_error_obj.create(vals)
-            
-            ## enter valid data to hr.attendance
-
-            attendance_obj = self.env['hr.attendance']
-            att_line_obj_search = attendance_line_obj.search([('employee_id','=',emp_pool.id)])
-        
-            vals_attendance = {}
-            
-            for alos in att_line_obj_search:
-                if alos is not None:
-                    vals_attendance['employee_id'] = alos.employee_id.id
-                    vals_attendance['check_in'] = alos.check_in
-                    vals_attendance['check_out'] = alos.check_out
-                
-                    attendance_obj.create(vals_attendance)
         
 
 def str2float(amount, decimal_separator):

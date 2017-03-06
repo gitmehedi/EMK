@@ -22,7 +22,8 @@
 				<form string="Import Attendance">
 				 	<header>
 	                    <button name="hr_attendance_import.hr_earned_leave_encashment_wizard_action_view"
-									type="action" string="Import Attendance" /> 
+									type="action" string="Browse" /> 
+					 	<button name="validated" type="object" string="Import" />
                 	</header>				
                 	
 					<sheet>
@@ -51,7 +52,7 @@
 									</tree>
 								</field>
 							</page>
-							<page string="Imported from CSV">
+							<page string="Ready to Import">
 								<field name="lines">
 									<tree string="List" editable="bottom">
 										<field name="employee_id"/>
