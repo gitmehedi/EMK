@@ -16,9 +16,9 @@ class AttendanceImport(models.Model):
     ], default='draft')
     
     """ Relational fields"""
-    import_temp = fields.One2many('hr.attendance.import.temp', 'import_id')
-    import_error_lines = fields.One2many('hr.attendance.import.error', 'import_id')
-    lines = fields.One2many('hr.attendance.import.line', 'import_id')
+    import_temp = fields.One2many('hr.attendance.import.temp', 'import_id',states={'imported': [('readonly', True)]})
+    import_error_lines = fields.One2many('hr.attendance.import.error', 'import_id',states={'imported': [('readonly', True)]})
+    lines = fields.One2many('hr.attendance.import.line', 'import_id',states={'imported': [('readonly', True)]})
     
     @api.multi
     def validated(self):
