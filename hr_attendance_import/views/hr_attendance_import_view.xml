@@ -22,8 +22,10 @@
 				<form string="Import Attendance">
 				 	<header>
 	                    <button name="hr_attendance_import.hr_earned_leave_encashment_wizard_action_view"
-									type="action" string="Browse" /> 
-					 	<button name="validated" type="object" string="Import" />
+							states="draft,confirmed" type="action" string="Browse" /> 
+					 	<button name="validated" type="object" string="Import" states="draft,confirmed"/>
+					 	<field name="state" widget="statusbar" statusbar_visible="draft,confirmed,imported"/>                    	
+					 	
                 	</header>				
                 	
 					<sheet>

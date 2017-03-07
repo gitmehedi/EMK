@@ -9,6 +9,12 @@ class AttendanceImport(models.Model):
     name = fields.Char(string='Name', required=True)
     import_creation_date_time = fields.Datetime(string='Imported Date',default=date.today(),required=True)
     
+    state = fields.Selection([
+        ('draft', "Draft"),
+        ('confirmed', "Confirmed"),
+        ('imported', "Imported")
+    ], default='draft')
+    
     """ Relational fields"""
     import_temp = fields.One2many('hr.attendance.import.temp', 'import_id')
     import_error_lines = fields.One2many('hr.attendance.import.error', 'import_id')
@@ -21,6 +27,8 @@ class AttendanceImport(models.Model):
         
         """ Fetch all from line obj"""
         attendance_line_obj = self.env['hr.attendance.import.line'].search([])
+        
+        is_success = False
         
         for i in attendance_line_obj:
             if i is not None:
@@ -40,8 +48,14 @@ class AttendanceImport(models.Model):
                         vals_attendance['check_out'] = alos.check_out
                 
                         attendance_obj.create(vals_attendance)
-        
-        """ Clearing line obj"""                
-        attendance_line_obj.unlink()           
+                        is_success = True          
+            
+            if is_success is True:                
+                self.state = 'imported'     
+                 
+    
+    @api.multi    
+    def action_confirm(self):
+        self.state = 'confirmed' 
                         
     

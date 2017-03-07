@@ -29,7 +29,7 @@ class HrAttendanceImportWizard(models.TransientModel):
         compute='_compute_dialect', string='Dialect')
     csv_separator = fields.Selection(
         [(',', ', (comma)'), (';', '; (semicolon)')],
-        string='CSV Separator')
+        string='CSV Separator', required=True)
     decimal_separator = fields.Selection(
         [('.', '. (dot)'), (',', ', (comma)')],
         string='Decimal Separator',
@@ -400,8 +400,7 @@ class HrAttendanceImportWizard(models.TransientModel):
 
         time_start = time.time()
         self._err_log = ''
-        move = self.env['hr.attendance.import'].browse(
-            self._context['active_id'])
+        move = self.env['hr.attendance.import'].browse(self._context['active_id'])
         self._sum_debit = self._sum_credit = 0.0
         #self._get_orm_fields()
         lines, header = self._remove_leading_lines(self.lines)
@@ -411,51 +410,46 @@ class HrAttendanceImportWizard(models.TransientModel):
         reader = csv.DictReader(
             StringIO.StringIO(lines), fieldnames=self._header_fields,
             dialect=self.dialect)
-
-        move_lines = []
         
-        
+        is_success = False
         
         for line in reader:
-            
-            """ ---------------------------------------------------------
-             Do the processing of imported data: 
-             CSV files data format is fixed as follows: 
-                 employee_id, check_in, check_out.
-                -------------------------------------------------------
-            """
-            
             """ Check in time can not be greater than check out time"""            
             if line['check_out'] < line['check_in']:
                  raise ValidationError(('Check Out time can not be previous date of Check In time')) 
-            
+             
             temp_vals = {}            
             temp_vals['employee_code'] = line['employee_id']
             temp_vals['check_in'] =  line['check_in']
             temp_vals['check_out'] = line['check_out']
             temp_vals['import_id'] = move.id
-            
+             
             temp_pool = self.env['hr.attendance.import.temp']
             temp_pool.create(temp_vals)
-            
+             
             """ search employee model with employee ID """
             vals = {}
             vals['check_in'] = line['check_in'] 
             vals['check_out'] = line['check_out']
             vals['import_id'] = move.id
-            
+             
             emp_pool = self.env['hr.employee'].search([('id','=',line['employee_id'])])
             attendance_line_obj = self.env['hr.attendance.import.line']
             attendance_error_obj =  self.env['hr.attendance.import.error']
-            
+             
             if emp_pool.id is not False:                
                 vals['employee_id'] = emp_pool.id
                 attendance_line_obj.create(vals)                
             else:
                 vals['employee_code'] = line['employee_id']
                 attendance_error_obj.create(vals)
-        
+            
+            is_success = True
+            
+        if is_success is True:
+            move.action_confirm() 
 
+            
 def str2float(amount, decimal_separator):
     if not amount:
         return 0.0
