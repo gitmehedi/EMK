@@ -189,6 +189,14 @@
                         </td>
                     </tr>
                 </table>
+                <table>
+                    <tr>
+                        <td>Total Point:</td>
+                        <td class="pos-right-align">
+                            <t t-esc="widget.format_currency(Order.getPoint())"/>
+                        </td>
+                    </tr>
+                </table>
                 <t t-if="widget.pos.config.receipt_footer">
                     <br />
                     <div style='text-align:center'>

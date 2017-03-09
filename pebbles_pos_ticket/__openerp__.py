@@ -12,7 +12,7 @@
     'qweb': [
         'static/src/xml/pos_promotion_template.xml'
     ],
-    'depends': ['point_of_sale'],
+    'depends': ['point_of_sale', 'pos_loyalty'],
     'description': """POS promotion for applying prmotion on product""",
     'installable': True,
     'application': True,
