@@ -11,6 +11,7 @@
     'depends': [
         'hr',
         'hr_holidays',
+        'hr_earned_leave',
         ],
     'summary': 'Earned leave encashment process is calculated ',
     'description': 

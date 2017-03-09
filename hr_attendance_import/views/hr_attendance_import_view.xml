@@ -71,14 +71,14 @@
     
     
     <record id="hr_attendance_import_ac" model="ir.actions.act_window">
-			<field name="name">Attendance Import</field>
+			<field name="name">Import Attendance</field>
 			<field name="res_model">hr.attendance.import</field>
 			<field name="view_mode">tree,form</field>
 	</record>
 	
 	
     <!-- Menu Item -->
-	<menuitem id="menu_hr_attendance_import" name="Attendance Import" parent="hr_attendance.menu_hr_attendance_manage_attendances"
+	<menuitem id="menu_hr_attendance_import" name="Import Attendance" parent="hr_attendance.menu_hr_attendance_manage_attendances"
 				groups="hr.group_hr_user" action="hr_attendance_import_ac" />
     
   </data>

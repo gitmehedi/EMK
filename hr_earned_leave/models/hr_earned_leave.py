@@ -12,11 +12,10 @@ class HrEarnedLeave(models.Model):
         ], string = 'Earned Leave Period')
     
     leave_carry_forward = fields.Boolean(
-        'Dou you want to carry forward your leave ',
-        help="If enabled, public holidays are skipped in leave days "
+        'Carry Forward this leave',
+        help="If enabled, employee will be able to carry fwd leaves "
         "calculation.", default=True) 
     earned_leave_encashment = fields.Boolean(
-        'Dou you want to encash your earned leave ',
-        help="If enabled, public holidays are skipped in leave days "
-        "calculation.", default=True) 
+        'Encash this leave ',
+        help="If enabled, employee will be able to encash their leave", default=True) 
     
