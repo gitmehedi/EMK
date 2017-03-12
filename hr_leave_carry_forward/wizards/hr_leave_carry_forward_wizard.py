@@ -46,10 +46,7 @@ class HrLeaveCarryForwardWizard(models.TransientModel):
                 line_ids  = line_obj.search([('employee_id', '=', val.id)])                  
                 holiday_status_obj = self.env['hr.holidays.status'].search([('leave_carry_forward',
                                                                              '=',True)])
-               
                 for hso in holiday_status_obj:
-                    print '--------------- ID ',hso.id        
-                
                     for l_id in line_ids:
                         vals1['holiday_status_id'] = hso.id  #leave type
                         vals1['employee_id'] = l_id.employee_id.id
