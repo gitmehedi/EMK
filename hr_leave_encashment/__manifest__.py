@@ -6,12 +6,13 @@
     'version':'1.0',
     'data': [
         'wizards/hr_earned_leave_encashment_wizard_views.xml',
-        'views/hr_earned_leave_view.xml'   
+        'views/hr_earned_leave_view.xml',
+        'views/inherited_hr_earned_leave_view_.xml',    
     ],
     'depends': [
         'hr',
         'hr_holidays',
-        'hr_earned_leave',
+        #'hr_earned_leave',
         ],
     'summary': 'Earned leave encashment process is calculated ',
     'description': 

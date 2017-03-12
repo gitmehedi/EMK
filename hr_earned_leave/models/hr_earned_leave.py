@@ -10,12 +10,3 @@ class HrEarnedLeave(models.Model):
         ('monthly', 'Monthly'),
         ('quarterly', 'Quarterly')
         ], string = 'Earned Leave Period')
-    
-    leave_carry_forward = fields.Boolean(
-        'Carry Forward this leave',
-        help="If enabled, employee will be able to carry fwd leaves "
-        "calculation.", default=True) 
-    earned_leave_encashment = fields.Boolean(
-        'Encash this leave ',
-        help="If enabled, employee will be able to encash their leave", default=True) 
-    
