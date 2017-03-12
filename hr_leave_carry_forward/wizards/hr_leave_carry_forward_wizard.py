@@ -29,7 +29,7 @@ class HrLeaveCarryForwardWizard(models.TransientModel):
                     if pending_leave > 10:
                         leave_days_to_be_carry_forwarded = 10
                     elif pending_leave == 5: 
-                        leave_days_to_be_carry_forwarded = 5
+                        leave_2days_to_be_carry_forwarded = 5
                     elif pending_leave > 5:
                         leave_days_to_be_carry_forwarded = pending_leave
                     elif pending_leave < 5:
@@ -47,16 +47,17 @@ class HrLeaveCarryForwardWizard(models.TransientModel):
                 holiday_status_obj = self.env['hr.holidays.status'].search([('earned_leave_flag','=',True)])        
                 
                 
-                if holiday_status_obj.earned_leave_encashment:
+                if holiday_status_obj.leave_carry_forward:
                     """ Need to refactor """
                     for l_id in line_ids:
-                        vals1['employee_id'] = l_id.employee_id.id
                         vals1['holiday_status_id'] = holiday_status_obj.id #leave type
-                        vals1['name'] = holiday_status_obj.name #Description
+                        vals1['employee_id'] = l_id.employee_id.id
+                        vals1['holiday_type'] = 'employee'
                         vals1['number_of_days_temp'] = l_id.leave_days_to_be_caryy_forwarded
                         vals1['state'] = 'validate' #status                
                         vals1['type'] = 'add' #type
-                        
+                        vals1['name'] = holiday_status_obj.name #Description
+                       
                         holiday_ins.create(vals1)                
             
                 else:

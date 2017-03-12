@@ -7,7 +7,7 @@ class HrLeaveLeave(models.Model):
 
     name = fields.Char(size=100, string='Title', required='True')
     carry_forward_year = fields.Char(size=10, string='Leave Year', required='True')
-    leave_type = fields.Many2one('hr.holidays.status', string="Leave Type", required='True')
+    leave_type = fields.Many2one('hr.holidays.status', string="Leave Type", required='True', ondelete='cascade')
     
     
     """ Relational Fields """

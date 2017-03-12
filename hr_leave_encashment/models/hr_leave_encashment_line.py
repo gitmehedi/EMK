@@ -12,6 +12,6 @@ class HrLeaveEncashmentLine(models.Model):
 #     
     """ Relational Fields """
     
-    parent_id = fields.Many2one('hr.leave.encashment')
-    employee_id = fields.Many2one('hr.employee', string="Employee ID")
+    parent_id = fields.Many2one('hr.leave.encashment', ondelete='cascade')
+    employee_id = fields.Many2one('hr.employee', string="Employee ID", ondelete='cascade')
     
