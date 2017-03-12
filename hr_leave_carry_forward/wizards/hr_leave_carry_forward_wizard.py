@@ -1,5 +1,5 @@
 from openerp import models, fields, api
-# from pygments.lexer import _inherit
+from openerp.exceptions import ValidationError,Warning
 
 class HrLeaveCarryForwardWizard(models.TransientModel):
     _name = 'hr.leave.carry.forward.wizard'
@@ -44,24 +44,23 @@ class HrLeaveCarryForwardWizard(models.TransientModel):
                 line_obj.create(vals)                
                
                 line_ids  = line_obj.search([('employee_id', '=', val.id)])                  
-                holiday_status_obj = self.env['hr.holidays.status'].search([('name','=','Earned Leaves')])        
+                holiday_status_obj = self.env['hr.holidays.status'].search([('earned_leave_flag','=',True)])        
                 
-                earned_leave_holiday_status_id = None                
                 
-                for hso in holiday_status_obj:
-                     earned_leave_holiday_status_id = hso.id
-                
-                """ Need to refactor """                
-                if line_ids and earned_leave_holiday_status_id:
+                if holiday_status_obj.earned_leave_encashment:
+                    """ Need to refactor """
                     for l_id in line_ids:
                         vals1['employee_id'] = l_id.employee_id.id
-                        vals1['holiday_status_id'] = earned_leave_holiday_status_id #leave type
-                        vals1['name'] = 'Earned Leave' #Description
+                        vals1['holiday_status_id'] = holiday_status_obj.id #leave type
+                        vals1['name'] = holiday_status_obj.name #Description
                         vals1['number_of_days_temp'] = l_id.leave_days_to_be_caryy_forwarded
                         vals1['state'] = 'validate' #status                
                         vals1['type'] = 'add' #type
                         
                         holiday_ins.create(vals1)                
+            
+                else:
+                    raise Warning(('Leave Carry Forward acceptance checkbox is not checked'))         
             
         return {
             'view_type': 'form',

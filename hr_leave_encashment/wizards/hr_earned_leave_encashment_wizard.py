@@ -20,35 +20,34 @@ class HrEarnedLeaveEncashmentWizard(models.TransientModel):
         
         holiday_status_obj = self.env['hr.holidays.status'].search([('earned_leave_flag','=',True)])        
 
-        for enc in holiday_status_obj:            
-            if holiday_status_obj.earned_leave_encashment:
+        if holiday_status_obj.earned_leave_encashment:
         
-                for val in self.employee_ids:
-                    if val.id in duplicate_employee_ids_filter:
-                        leave_days = holiday_ins.search([('employee_id','=',val.id)])            
-                        pending_leave = sum([ v.number_of_days for v in leave_days]) 
+            for val in self.employee_ids:
+                if val.id in duplicate_employee_ids_filter:
+                    leave_days = holiday_ins.search([('employee_id','=',val.id)])            
+                    pending_leave = sum([ v.number_of_days for v in leave_days]) 
                         
-                        ''' Maximum and minimum earned leave days to be encashed '''
-                        if pending_leave is not None:
-                            if pending_leave > 10:
-                                leave_days_to_be_encashed = 10
-                            elif pending_leave == 5: 
-                                leave_days_to_be_encashed = 5
-                            elif pending_leave > 5:
-                                leave_days_to_be_encashed = pending_leave
-                            elif pending_leave < 5:
+                    ''' Maximum and minimum earned leave days to be encashed '''
+                    if pending_leave is not None:
+                        if pending_leave > 10:
+                            leave_days_to_be_encashed = 10
+                        elif pending_leave == 5: 
+                            leave_days_to_be_encashed = 5
+                        elif pending_leave > 5:
+                            leave_days_to_be_encashed = pending_leave
+                        elif pending_leave < 5:
                                 leave_days_to_be_encashed = 0        
                         
-                        vals['employee_id'] = val.id
-                        vals['pending_leave'] = pending_leave
-                        vals['leave_days_to_be_encashed'] = leave_days_to_be_encashed
-                        vals['want_to_encash'] = True
-                        vals['parent_id'] = context['active_id']
-                        
-                        line_obj.create(vals)
-            else: 
-                ## raise a warning that check box is not checked
-                raise Warning(('Leave Encashment acceptance checkbox is not checked')) 
+                    vals['employee_id'] = val.id
+                    vals['pending_leave'] = pending_leave
+                    vals['leave_days_to_be_encashed'] = leave_days_to_be_encashed
+                    vals['want_to_encash'] = True
+                    vals['parent_id'] = context['active_id']
+                      
+                    line_obj.create(vals)
+        else: 
+           ## raise a warning that check box is not checked
+           raise Warning(('Leave Encashment acceptance checkbox is not checked')) 
   
         
         return {
