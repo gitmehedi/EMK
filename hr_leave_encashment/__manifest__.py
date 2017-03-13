@@ -5,6 +5,8 @@
     'category': 'HR Leave Encashment',
     'version':'1.0',
     'data': [
+        'security/security.xml',
+        'security/ir.model.access.csv',
         'wizards/hr_earned_leave_encashment_wizard_views.xml',
         'views/hr_earned_leave_view.xml',
         'views/inherited_hr_earned_leave_view_.xml',    
@@ -12,7 +14,6 @@
     'depends': [
         'hr',
         'hr_holidays',
-        #'hr_earned_leave',
         ],
     'summary': 'Earned leave encashment process is calculated ',
     'description': 

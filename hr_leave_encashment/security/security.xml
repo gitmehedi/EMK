@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+	
+	<record id="rule_attendance_import_encash" model="ir.rule">
+			<field name="name">Officer Contracts</field>
+			<field name="model_id" ref="model_hr_leave_encashment" />
+			<field name="domain_force">[(1,'=',1)]</field>
+			<field name="perm_read" eval="True" />
+			<field name="perm_create" eval="True" />
+			<field name="perm_write" eval="True" />
+			<field name="perm_unlink" eval="False" />
+			<field name="groups" eval="[(4,ref('hr.group_hr_user'))]" />
+	</record>
+
+</odoo>

@@ -48,8 +48,6 @@ class HrLeaveCarryForwardWizard(models.TransientModel):
                                                                              '=',True)])
                
                 for hso in holiday_status_obj:
-                    print '--------------- ID ',hso.id        
-                
                     for l_id in line_ids:
                         vals1['holiday_status_id'] = hso.id  #leave type
                         vals1['employee_id'] = l_id.employee_id.id
