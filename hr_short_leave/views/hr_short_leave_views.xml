@@ -18,7 +18,6 @@
 	                    <group>
 	                        <group>
 	                            <field name="name"/>
-	                            
 	                            <label for="number_of_days_temp" string="Duration"/>
 	                            <div>	                                
 	                                <div>
@@ -53,7 +52,9 @@
                     <field name="holiday_type"/>                   
                     <field name="department_id" invisible="1"/>                    
                     <field name="name"/>
-                    <field name="number_of_days_temp"/> 
+                    <field name="number_of_days_temp"/>
+                    <field name="state"/> 
+                    
                    
                 </tree>
             </field>

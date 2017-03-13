@@ -7,12 +7,15 @@ class HrShortLeave(models.Model):
     _description = "Short Leave"
     _order = 'name desc'
     
-    name = fields.Char('Description',required=True)
+#     name = fields.Char('Description',required=True,states={'approved':[('readonly', True)]})``
+    name = fields.Char(string='Description', required=True,
+                states={'approved': [('readonly', True)], 'refuse': [('readonly', True)]})
     payslip_status = fields.Boolean('Reported in last payslips',
-        help='Green this button when the leave has been taken into account in the payslip.')
-    report_note = fields.Text('HR Comments')
-    notes = fields.Text('Reasons', readonly=True)
-    number_of_days_temp = fields.Float('Allocation Days', copy=False)
+        help='Green this button when the leave has been taken into account in the payslip.',
+        states={'approved': [('readonly', True)], 'refuse': [('readonly', True)]})
+    report_note = fields.Text('HR Comments', states={'approved': [('readonly', True)], 'refuse': [('readonly', True)]})
+    notes = fields.Text('Reasons', readonly=True, states={'approved': [('readonly', True)], 'refuse': [('readonly', True)]})
+    number_of_days_temp = fields.Float('Allocation Days', copy=False, states={'approved': [('readonly', True)], 'refuse': [('readonly', True)]})
     state = fields.Selection([
         ('draft', "Draft"),
         ('applied', "To Approved"),
@@ -28,11 +31,11 @@ class HrShortLeave(models.Model):
     def _default_employee(self):
         return self.env['hr.employee'].search([('user_id', '=', self.env.uid)], limit=1)
 
-    employee_id = fields.Many2one('hr.employee', string="Employee", default=_default_employee,
-                                  required=True, ondelete='cascade', index=True)
+    employee_id = fields.Many2one('hr.employee', string="Employee", default=_default_employee,required=True, ondelete='cascade', index=True,
+       states={'approved': [('readonly', True)], 'refuse': [('readonly', True)]})
                                  
-    department_id = fields.Many2one('hr.department', string="Department", related="employee_id.department_id" , store=True)  
-    
+    department_id = fields.Many2one('hr.department', string="Department", related="employee_id.department_id" , store=True,
+        states={'approved': [('readonly', True)], 'refuse': [('readonly', True)]})
     
     @api.multi
     def action_draft(self):
