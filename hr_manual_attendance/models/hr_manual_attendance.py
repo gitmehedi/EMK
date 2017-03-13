@@ -57,6 +57,7 @@ class HrManualAttendance(models.Model):
         
     """
     
+    """
     @api.constrains('check_in_time_full_day', 'check_out_time_full_day', 'check_in_time_sign_in', 'check_in_time_sign_out')
     def _validity_check_in_check_out_manual_attendances(self):
        
@@ -71,9 +72,9 @@ class HrManualAttendance(models.Model):
              raise ValidationError(('"Check In" cannot be greater than Check Out date'))
         
     
-        """
-        Minimum days restriction apply
-        """
+       
+      #  Minimum days restriction apply
+       
                 
         min_days_obj = self.env['hr.manual.attendance.min.days'].search([('min_days_restriction', '=', 3)])
         
@@ -119,7 +120,7 @@ class HrManualAttendance(models.Model):
 
         
     
-    
+    """
                   
     @api.multi
     def _compute_can_reset(self):
