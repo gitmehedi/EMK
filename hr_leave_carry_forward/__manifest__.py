@@ -5,13 +5,17 @@
     'category': 'HR Leave Carry Forward',
     'version':'1.0',
     'data': [
+        'security/security.xml',
+        'security/ir.model.access.csv',
         'wizards/hr_leave_carry_forward_wizard_views.xml',
         'views/hr_leave_carry_forward_view.xml',
+        'views/inherited_hr_earned_leave_encashment_view.xml',
+        
     ],
     'depends': [
         'hr',
         'hr_holidays',
-        'hr_earned_leave',
+      #  'hr_earned_leave',
         ],
     'summary': 'Leave carry forward process is calculated ',
     'description': 

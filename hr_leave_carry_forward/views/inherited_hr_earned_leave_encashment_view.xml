@@ -9,8 +9,7 @@
             <field name="arch" type="xml">
                 <data>
                     <xpath expr="//form/group/group/field[@name='limit']" position="after">
-                        <field name="earned_leave_flag" invisible="1" />
-                        <field name="earned_leave_type" attrs="{'invisible':[('earned_leave_flag','=',False)]}" />
+                        <field name="leave_carry_forward" />
                     </xpath> 
                 </data>
             </field>

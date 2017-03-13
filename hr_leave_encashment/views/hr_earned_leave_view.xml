@@ -55,9 +55,9 @@
 
 		<menuitem id="menu_hr_leave_encashment" name="Leave Encashment"
 			parent="hr_holidays.menu_hr_holidays_root" sequence="7"
-			action="hr_holidays_leave_encashment" />
+			action="hr_holidays_leave_encashment" groups="hr.group_hr_user"/>
 		<menuitem id="hr_leave_encashment" name="Leave Encashment"
 			parent="menu_hr_leave_encashment"
-			action="hr_holidays_leave_encashment" />
+			action="hr_holidays_leave_encashment" groups="hr.group_hr_user"/>
 	</data>
 </openerp>
