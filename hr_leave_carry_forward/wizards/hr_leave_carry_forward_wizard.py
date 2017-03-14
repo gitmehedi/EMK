@@ -4,9 +4,8 @@ from openerp.exceptions import ValidationError,Warning
 class HrLeaveCarryForwardWizard(models.TransientModel):
     _name = 'hr.leave.carry.forward.wizard'
     
-    employee_ids = fields.Many2many('hr.employee', 'hr_employee_group_rel_carry_forward', 'payslip_id', 
-                                    'employee_id', 'Employees')
-     
+    employee_ids = fields.Many2many('hr.employee', string='Employees')
+    
     @api.multi
     def process_employee_line(self,context):
         vals = {}
@@ -29,7 +28,7 @@ class HrLeaveCarryForwardWizard(models.TransientModel):
                     if pending_leave > 10:
                         leave_days_to_be_carry_forwarded = 10
                     elif pending_leave == 5: 
-                        leave_2days_to_be_carry_forwarded = 5
+                        leave_days_to_be_carry_forwarded = 5
                     elif pending_leave > 5:
                         leave_days_to_be_carry_forwarded = pending_leave
                     elif pending_leave < 5:

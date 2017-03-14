@@ -4,8 +4,7 @@ from openerp.exceptions import ValidationError,Warning
 class HrEarnedLeaveEncashmentWizard(models.TransientModel):
     _name = 'hr.earned.leave.encashment.wizard'
     
-    employee_ids = fields.Many2many('hr.employee', 'hr_employee_group_rel_leave_encashment', 'payslip_id', 
-                                    'employee_id', 'Employees')
+    employee_ids = fields.Many2many('hr.employee', string='Employees')
     
     @api.multi
     def process_employee_line(self,context):
