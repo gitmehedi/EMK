@@ -13,7 +13,7 @@ class RedemptionRule (models.Model):
     reward_point_unit = fields.Float(string="Reward Point Unit")
     point_start_margin = fields.Float()
     point_end_margin = fields.Float()
-    is_active = fields.Boolean(string="Active")
+    is_active = fields.Boolean(string="Active", default=True)
     
     # Relational FieldsDict
     loyalty_id = fields.Many2one('loyalty.rule', ondelete="cascade")

@@ -6,18 +6,13 @@
     'website': 'www.genweb2.com',
     'category': 'Point Of Sale',
     'data': [
-        # 'views/promotion_rule_view.xml',
-        # 'views/pos_promotion_assets.xml',
-        # 'views/inherited_point_of_sale_view.xml'
+        'views/pos_promotion_assets.xml',
     ],
     'summary': 'POS promotion for applying prmotion on product',
     'qweb': [
         'static/src/xml/pos_promotion_template.xml'
     ],
-    'js': [
-        'static/src/js/pos_promotion_custom.js',
-    ],
-    'depends': ['point_of_sale'],
+    'depends': ['point_of_sale', 'pos_loyalty'],
     'description': """POS promotion for applying prmotion on product""",
     'installable': True,
     'application': True,

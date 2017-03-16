@@ -1,8 +1,0 @@
-  <report 
-  			id="custom_report_without_prices"
-            model="promotion.rule"
-            string="Invoice without prices"
-            report_type="qweb-pdf"
-            name="pos_promotion.report_test"
-            attachment_use="False"
-            file="pos_promotion.report_test" />
