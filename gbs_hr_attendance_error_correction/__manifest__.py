@@ -4,6 +4,9 @@
     'website': 'www.genweb2.com',
     'category': 'HR Attendance',
     'version':'1.0',
+    'data': [
+        'views/hr_attendance_error_correct_view.xml',
+    ],
     'depends': [
         'hr',
         'hr_attendance'

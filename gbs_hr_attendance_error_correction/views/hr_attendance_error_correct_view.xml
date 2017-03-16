@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<openerp>
+    <data>
+        <!-- Form View -->
+		<record id="attendance_error_correct_form" model="ir.ui.view">
+			<field name="name">hr.attendance.error.correct.form</field>
+			<field name="model">hr.attendance.error.correct</field>
+			<field name="type">form</field>
+			<field name="arch" type="xml">
+				<form string="Attendances Error Correct">
+					<sheet>
+						<!-- <div class="oe_title">
+							<label for="type" class="oe_edit_only"/>
+							<h3>
+								<field name="type" placeholder="Please Select" groups="hr.group_hr_user"/>
+                            </h3>
+							<label for="department_name" class="oe_edit_only"/>
+							<h3>
+								<field name="department_name" placeholder="Please Select" groups="hr.group_hr_user"/>
+                            </h3>
+						</div> -->
+						<group>
+    						<label for="type"/>
+							<div>
+        						<field name="department_name" placeholder="Please Select"/>
+        						<field name="employee_name" placeholder="Please Select"/>
+        						<div>
+            						<field name="department_name" class="oe_inline" placeholder="Please Select"/>
+									<field name="employee_name" class="oe_inline" placeholder="Please Select"/>
+        						</div>
+        						<field name="department_name" placeholder="Please Select"/>
+        						<field name="employee_name" placeholder="Please Select"/>
+    						</div>
+						</group>
+					</sheet>
+				</form>
+			</field>
+		</record>
+        <!-- Menu Action -->
+        <record id="attendance_error_correct_action" model="ir.actions.act_window">
+			<field name="name">Attendance Error Correct</field>
+			<field name="res_model">hr.attendance.error.correct</field>
+			<field name="view_mode">form</field>
+		</record>
+
+        <!--Menu Item-->
+		<menuitem id="menu_attendance_error_correct" name="Correct Attendances " parent="hr_attendance.menu_hr_attendance_manage_attendances"
+                  action="attendance_error_correct_action" />
+    </data>
+</openerp>
