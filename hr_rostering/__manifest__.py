@@ -18,5 +18,5 @@
     'description': 
     "This module enables employee rostering",        
     'installable': True,
-    'application': False,
+    'application': True,
 }
