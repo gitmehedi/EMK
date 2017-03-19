@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <template id="pos_notes" name="pos_notes index" inherit_id="point_of_sale.index">
+            <xpath expr="//script[@id='loading-script']" position="before">
+                <script type="text/javascript" src="/pos_notes/static/src/js/pos_notes.js"></script>
+            </xpath>
+            <xpath expr="//link[@id='pos-stylesheet']" position="after">
+                <link rel="stylesheet" href="/pos_notes/static/src/css/pos_notes.css" id="pos-notes-stylesheet"/>
+            </xpath>
+        </template>
+         <!--<template id="pos_loyality_template" name="loyality point" inherit_id="point_of_sale.index">-->
+        	<!--<xpath expr="//link[@id='pos-stylesheet']" position="after">-->
+                 <!--<link rel="stylesheet" href="/pos_loyalty/static/src/css/pos_loyalty_custom.css"/>-->
+            <!--</xpath>-->
+            <!--<xpath expr="//script[@id='loading-script']" position="before">-->
+               <!--<script type="text/javascript" src="/pos_loyalty/static/src/js/pos_loyalty_custom.js"></script>-->
+    	    <!--</xpath>-->
+        <!--</template>-->
+    </data>
+</openerp>
