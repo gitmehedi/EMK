@@ -297,7 +297,7 @@
         <t t-jquery=".payment-screen .pos-payment-container .payment-info .infoline.bigger"
            t-operation='after'>
             <div class="infoline bigger">
-                <span class='left-block'>Loyalty Value:</span>
+                <!--<span class='left-block'>Loyalty Value:</span>-->
                 <span class="right-block payment-loyalty-total">
                 </span>
             </div>
