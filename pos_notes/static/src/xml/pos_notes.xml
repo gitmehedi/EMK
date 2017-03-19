@@ -7,9 +7,9 @@
 			   <div>
 				   <span class="label">Notes:</span>
 				</div>   
-                <input class="pos-order-note"/>
+                <input class="pos-order-note form-control"/>
             </div>
-           
+
         </t>
     </t>
 	
