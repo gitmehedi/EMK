@@ -9,29 +9,40 @@
 			<field name="arch" type="xml">
 				<form string="Attendances Error Correct">
 					<sheet>
-						<!-- <div class="oe_title">
-							<label for="type" class="oe_edit_only"/>
-							<h3>
-								<field name="type" placeholder="Please Select" groups="hr.group_hr_user"/>
-                            </h3>
-							<label for="department_name" class="oe_edit_only"/>
-							<h3>
-								<field name="department_name" placeholder="Please Select" groups="hr.group_hr_user"/>
-                            </h3>
-						</div> -->
-						<group>
-    						<label for="type"/>
+						<group col="2">
+							<!--<field name="boyfriend_name" attrs="{'invisible':[('married', '!=', 'selection_key')]}" />-->
+							<label for="type" />
 							<div>
-        						<field name="department_name" placeholder="Please Select"/>
-        						<field name="employee_name" placeholder="Please Select"/>
-        						<div>
-            						<field name="department_name" class="oe_inline" placeholder="Please Select"/>
-									<field name="employee_name" class="oe_inline" placeholder="Please Select"/>
-        						</div>
-        						<field name="department_name" placeholder="Please Select"/>
-        						<field name="employee_name" placeholder="Please Select"/>
-    						</div>
+								<field name="type" class="oe_inline" placeholder="Please Select" />
+							</div>
+							<label for="department_name" attrs="{'invisible': [('type', '!=', 'department_type')]}" />
+							<div>
+								<field name="department_name" class="oe_inline" placeholder="Please Select"
+									   options="{'no_quick_create': True, 'no_create_edit': True, 'no_open': True}"
+									   attrs="{'invisible': [('type', '!=', 'department_type')]}" />
+							</div>
+							<label for="employee_name" attrs="{'invisible': [('type', '!=', 'employee_type')]}" />
+							<div>
+								<field name="employee_name" class="oe_inline" placeholder="Please Select"
+									   options="{'no_create_edit': True, 'no_open': True}"
+									   attrs="{'invisible': [('type', '!=', 'employee_type')]}" />
+							</div>
+							<label for="from_date" />
+							<div>
+								<field name="from_date" class="oe_inline" />
+							</div>
+							<label for="to_date" />
+							<div>
+								<field name="to_date" class="oe_inline" />
+							</div>
 						</group>
+						<notebook position="inside">
+                            <page string="Attendances Correction">
+                                <tree string="Attendances Correction" editable="bottom">
+									<field name="attendance_line_ids" />
+								</tree>
+                            </page>
+                        </notebook>
 					</sheet>
 				</form>
 			</field>
