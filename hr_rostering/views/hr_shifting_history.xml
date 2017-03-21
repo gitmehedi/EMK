@@ -8,6 +8,7 @@
 				<tree string="Shifting History">
 					<field name= "shift_id" />					
 					<field name="effective_from" />
+					<field name="effective_end"/>
 				</tree>
 			</field>
 		</record>
@@ -25,10 +26,12 @@
 	                            	<field name="current_shift_id" />
 	                            </group>
 	                            <field name="shift_ids">
-	                            <tree editable="top">
-	                             	<field name="shift_id"/>
-		                            <field name="effective_from"/>
-	                            </tree>	
+									<tree editable="top">
+										<field name="shift_id"/>
+										<field name="employee_id" invisible="1"/>
+										<field name="effective_from"/>
+										<field name="effective_end"/>
+									</tree>
 	                            </field>
 	                        </group>
 	                        </page>
