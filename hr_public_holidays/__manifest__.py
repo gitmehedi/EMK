@@ -14,7 +14,7 @@
         'hr',
         'hr_holidays',
         'hr_payroll',
-        'gbs_hr_leave_fiscal_year',
+        'gbs_hr_calendar',
         
     ],
     'data': [
@@ -25,4 +25,5 @@
         'views/hr_holidays_calendar_view.xml',
     ],
     'installable': True,
+    'application': True,
 }
