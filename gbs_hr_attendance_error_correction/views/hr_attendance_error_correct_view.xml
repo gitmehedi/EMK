@@ -8,7 +8,12 @@
 			<field name="type">form</field>
 			<field name="arch" type="xml">
 				<form string="Attendances Error Correct">
+					<header>
+						<button name="generate_filtered_data" type="object" string="Generate" class="oe_highlight" />
+					</header>
 					<sheet>
+						<div class="oe_title">
+						</div>
 						<group col="2">
 							<!--<field name="boyfriend_name" attrs="{'invisible':[('married', '!=', 'selection_key')]}" />-->
 							<label for="type" />
@@ -38,9 +43,13 @@
 						</group>
 						<notebook position="inside">
                             <page string="Attendances Correction">
-                                <tree string="Attendances Correction" editable="bottom">
-									<field name="attendance_line_ids" />
-								</tree>
+								<field name="attendance_line_ids">
+									<tree string="Attendances Correction">
+										<field name="employee_id"/>
+										<field name="check_in"/>
+										<field name="check_out"/>
+									</tree>
+								</field>
                             </page>
                         </notebook>
 					</sheet>
@@ -51,11 +60,11 @@
         <record id="attendance_error_correct_action" model="ir.actions.act_window">
 			<field name="name">Attendance Error Correct</field>
 			<field name="res_model">hr.attendance.error.correct</field>
-			<field name="view_mode">form</field>
+			<field name="view_mode">form,tree</field>
 		</record>
 
         <!--Menu Item-->
-		<menuitem id="menu_attendance_error_correct" name="Correct Attendances " parent="hr_attendance.menu_hr_attendance_manage_attendances"
+		<menuitem id="menu_attendance_error_correct" name="Correct Attendances" parent="hr_attendance.menu_hr_attendance_manage_attendances"
                   action="attendance_error_correct_action" />
     </data>
 </openerp>
