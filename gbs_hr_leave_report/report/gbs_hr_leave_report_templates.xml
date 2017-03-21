@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="report_hr_leave">
+     <t t-call="report.html_container">
+        <t t-foreach="docs" t-as="o">
+            <t t-call="report.external_layout">
+                <div class="page">
+                    <h2 style="text-align: center;">Leave Application Form</h2><br/>
+                    <div style="float:right"><p><b>Date of Issue:</b> <span t-field="o.create_date"/></p></div>                    
+                    <p><b>Name:</b> <span t-field="o.name"/></p>
+                    <p><b>Employee:</b> <span t-field="o.employee_id"/></p>                     
+	                <t t-foreach="o.employee_id" t-as="l">
+	                 	<tr>
+	                 		<th><b>Phone (If any): </b></th><td><span t-field="l.work_phone"/></td><br/>
+                            <th><b>Designation: </b></th><td><span t-field="l.job_id"/></td><br/>
+                            <th><b>ID: </b></th><td><span t-field="l.id"/></td><br/>                         
+                        </tr>
+	                 </t><br/>
+                    <p><b>Department:</b> <span t-field="o.department_id"/></p>
+                    <p><b>Leave Type:</b> <span t-field="o.holiday_status_id"/></p>
+                    <p><b>Leave Taken From:</b> <span t-field="o.date_from"/></p>
+                    <p><b>Leave Taken To:</b> <span t-field="o.date_to"/></p>
+                    <p><b>Total Number of Day(s):</b> <span t-field="o.number_of_days"/></p>
+                    <p><b>Reason:</b> <span t-field="o.notes"/></p>
+                    <p><b>Manager:</b> <span t-field="o.manager_id"/></p>
+                    <p><b>Dept. Head:</b> <span t-field="o.manager_id2"/></p>
+                    
+                    <p><u>Note:</u></p>
+                    <p>a. Please attach Medical Certificate in case of sick leave</p>
+                    
+                    <div style="float:right">
+	                    <p>---------------------------------------</p>
+                    	<p>Applicant Signature with date</p>
+                    </div>
+                    <span class="topage" />
+                </div>
+            </t>
+        </t>
+    </t>
+</template>
+</odoo>

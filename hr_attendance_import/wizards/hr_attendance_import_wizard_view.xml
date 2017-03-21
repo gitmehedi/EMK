@@ -3,8 +3,8 @@
   <data>
 
     <record id="aml_import_view_form" model="ir.ui.view">
-      <field name="name">aml.import.form</field>
-      <field name="model">aml.import</field>
+      <field name="name">hr.attendance.import.wizard.form</field>
+      <field name="model">hr.attendance.import.wizard</field>
       <field name="priority">1</field>
       <field name="arch" type="xml">
         <form string="Import File">
@@ -27,8 +27,8 @@
     </record>
 
     <record id="aml_import_view_form_result" model="ir.ui.view">
-      <field name="name">aml.import.form.result</field>
-      <field name="model">aml.import</field>
+      <field name="name">hr.attendance.import.wizard.result</field>
+      <field name="model">hr.attendance.import.wizard</field>
       <field name="priority">2</field>
       <field name="arch" type="xml">
         <form string="Import File">
@@ -45,7 +45,7 @@
 	<record id="hr_earned_leave_encashment_wizard_action_view" model="ir.actions.act_window">
 			<field name="name">Attendance Import</field>
 			<field name="type">ir.actions.act_window</field>
-			<field name="res_model">aml.import</field>
+			<field name="res_model">hr.attendance.import.wizard</field>
 			<field name="view_type">form</field>
 			<field name="view_mode">form</field>
 			<field name="target">new</field>

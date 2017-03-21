@@ -1,26 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
   <data>
-
-   <!--  <record id="view_move_form" model="ir.ui.view">
-      <field name="name">account.move.form.import</field>
-      <field name="model">account.move</field>
-      <field name="inherit_id" ref="account.view_move_form"/>
-      <field name="arch" type="xml">
-        <xpath expr="//h1" position="after">
-          <div class=" oe_right oe_button_box">
-            <p/>
-            <button class="oe_inline oe_stat_button oe_right"
-                    name="import_lines" type="object" string="Import Lines"
-                    help="Import Entry Lines from csv File"
-                    attrs="{'invisible':[('state', '!=', 'draft')]}"
-                    groups="account.group_account_manager"
-                    icon="fa-plus" widget="statinfo"/>
-          </div>
-        </xpath>
-      </field>
-    </record> -->
-    
     <!-- Tree View -->
 	<record id="hr_import_attendance_tree" model="ir.ui.view">
 			<field name="name">hr_import_attendance_tree</field>
@@ -29,7 +9,6 @@
 				<tree string="Import Attendance">
 					<field name= "name" />					
 					<field name="import_creation_date_time" />
-					<field name="file_name" />
 				</tree>
 			</field>
 		</record>
@@ -42,30 +21,47 @@
 			<field name="arch" type="xml">
 				<form string="Import Attendance">
 				 	<header>
-	                    <button name="%(hr_earned_leave_encashment_wizard_action_view)d"
-									type="action" string="Import Attendance" /> 
-                    	<button name="process_imported_data" string="Process" class="oe_highlight"/>                                  	
+	                    <button name="hr_attendance_import.hr_earned_leave_encashment_wizard_action_view"
+							states="draft,confirmed" type="action" string="Browse" /> 
+					 	<button name="validated" type="object" string="Import" states="draft,confirmed"/>
+					 	<field name="state" widget="statusbar" statusbar_visible="draft,confirmed,imported"/>                    	
+					 	
                 	</header>				
                 	
 					<sheet>
 						<group>
 							<group>
 								<field name="name" />					
-								<field name="import_creation_date_time" />
-								<field name="file_name" />
+								<field name="import_creation_date_time" readonly="1"/>
 							</group>								
 						</group>
 						<notebook position="inside">
-							<page string="Raw Data">
-								<group col="4">
-                                   <!--  <field name="file_name"/> -->
-                                </group>	
+							<page string="Raw Input">
+								<field name="import_temp">
+									<tree string="List" editable="bottom">
+										<field name="employee_code"/>
+										<field name="check_in"/>
+										<field name="check_out"/>				
+									</tree>
+								</field>	
 							</page>
-							<page string="Malformed Data">
-								<!-- <field name="file_name"/> -->	
+							<page string="Error Data">
+								<field name="import_error_lines">
+									<tree string="List" editable="bottom">
+										<field name="employee_code"/>
+										<field name="check_in"/>
+										<field name="check_out"/>				
+									</tree>
+								</field>
 							</page>
 							<page string="Ready to Import">
-								<!-- <field name="file_name"/> -->		
+								<field name="lines">
+									<tree string="List" editable="bottom">
+										<field name="employee_id"/>
+										<field name="check_in"/>
+										<field name="check_out"/>				
+									</tree>
+								</field>	
 							</page>
 					</notebook>
 	                </sheet>	                
@@ -75,7 +71,7 @@
     
     
     <record id="hr_attendance_import_ac" model="ir.actions.act_window">
-			<field name="name">Attendance Import</field>
+			<field name="name">Import Attendance</field>
 			<field name="res_model">hr.attendance.import</field>
 			<field name="view_mode">tree,form</field>
 	</record>
@@ -83,7 +79,7 @@
 	
     <!-- Menu Item -->
 	<menuitem id="menu_hr_attendance_import" name="Import Attendance" parent="hr_attendance.menu_hr_attendance_manage_attendances"
-					action="hr_attendance_import_ac" />
+				groups="hr.group_hr_user" action="hr_attendance_import_ac" />
     
   </data>
 </openerp>

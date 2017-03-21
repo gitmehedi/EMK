@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<openerp>
+    <data noupdate="1">
+
+        <!-- Earned leave -->
+        <record model="hr.holidays.status" id="holiday_status_el112">
+            <field name="name">Earned Leaves</field>
+            <field name="limit" eval="False"/>
+            <field name="color_name">blue</field>
+            <field name="earned_leave_flag">True</field>
+        </record>
+        
+
+    </data>
+</openerp>

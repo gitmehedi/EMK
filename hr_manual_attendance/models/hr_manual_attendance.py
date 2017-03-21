@@ -3,7 +3,9 @@ from openerp import fields
 from openerp import models
 from odoo.exceptions import UserError
 
-from datetime import datetime
+#from datetime import datetime
+from datetime import date
+import datetime
 
 from odoo.tools import DEFAULT_SERVER_DATE_FORMAT
 from openerp.exceptions import ValidationError,Warning
@@ -18,10 +20,10 @@ class HrManualAttendance(models.Model):
     name = fields.Char()
     reason = fields.Text(string='Reason')
     is_it_official = fields.Boolean(string='Is it official', default=False)
-    check_in_time_full_day = fields.Datetime(string = 'Check In time full day')
-    check_out_time_full_day = fields.Datetime(string = 'Check out time full day')    
-    check_in_time_sign_in = fields.Datetime(string = 'Check In time Sign In')
-    check_in_time_sign_out = fields.Datetime(string = 'Check Out time Sign Out')    
+    check_in_time_full_day = fields.Date(string = 'Check In time full day')
+    check_out_time_full_day = fields.Date(string = 'Check out time full day')    
+    check_in_time_sign_in = fields.Date(string = 'Check In time Sign In')
+    check_in_time_sign_out = fields.Date(string = 'Check Out time Sign Out')    
     sign_type = fields.Selection([
         ('full_day', 'Full Day'),
         ('sign_in', 'Sign In'),
@@ -57,39 +59,69 @@ class HrManualAttendance(models.Model):
     
     """
     @api.constrains('check_in_time_full_day', 'check_out_time_full_day', 'check_in_time_sign_in', 'check_in_time_sign_out')
-    def _validity_check_in_check_out_manual_attendances11(self):
+    def _validity_check_in_check_out_manual_attendances(self):
+       
+        curr_date = datetime.date.today().strftime('%Y-%m-%d')
+        
+        if self.check_in_time_full_day > curr_date or self.check_in_time_sign_in > curr_date or self.check_in_time_sign_in > curr_date: 
+            raise ValidationError(('"Check In" time cannot be future date'))       
+        if self.check_out_time_full_day > curr_date:
+            raise ValidationError(('"Check Out" time cannot be future date'))
+        
+        if self.check_in_time_full_day > self.check_out_time_full_day:
+             raise ValidationError(('"Check In" cannot be greater than Check Out date'))
+        
+    
+       
+      #  Minimum days restriction apply
+       
                 
-        check_in_time_full_day = self.check_in_time_full_day        
-        check_out_time_full_day = self.check_out_time_full_day - datetime.now().date()
+        min_days_obj = self.env['hr.manual.attendance.min.days'].search([('min_days_restriction', '=', 3)])
         
-        check_in_time_sign_in = self.check_in_time_sign_in - datetime.now().date()
-        check_in_time_sign_out = self.check_in_time_sign_out - datetime.now().date()
+        ### Check in time full day min days restriction
+        ck_sign_in_full = datetime.datetime.strptime(self.check_in_time_full_day, '%Y-%m-%d')
+        current_date = datetime.datetime.strptime(curr_date, '%Y-%m-%d')        
+        start_date_check_in_full_day = date(ck_sign_in_full.year, ck_sign_in_full.month, ck_sign_in_full.day)
+        end_date_check_in_full_day = date(current_date.year, current_date.month, current_date.day)
+        delta = end_date_check_in_full_day - start_date_check_in_full_day
         
-        min_days_obj = self.env['hr.manual.attendance.min.days']
+        if delta.days > min_days_obj.id: 
+            raise ValidationError(('You can not enter signin date of {} days ago'.format(delta)))
         
-        min_day_restriction_config = min_days_obj.min_days_restriction
+        ### Check in time full day min days restriction
+        ck_sign_out_full = datetime.datetime.strptime(self.check_out_time_full_day, '%Y-%m-%d')
+        current_date1 = datetime.datetime.strptime(curr_date, '%Y-%m-%d')        
+        start_date_check_in_full_day1 = date(ck_sign_out_full.year, ck_sign_out_full.month, ck_sign_out_full.day)
+        end_date_check_in_full_day1 = date(current_date1.year, current_date1.month, current_date1.day)
+        delta1 = end_date_check_in_full_day1 - start_date_check_in_full_day1
         
-        if check_out_time_full_day > min_day_restriction_config: 
-            raise ValidationError(_('Minimum days of requesting manual attendance is over'))
-        if check_in_time_sign_in > min_day_restriction_config: 
-            raise ValidationError(_('Minimum days of requesting manual attendance is over'))
-        if check_in_time_sign_out > min_day_restriction_config: 
-            raise ValidationError(_('Minimum days of requesting manual attendance is over'))
-                
-        for attendance in self:
-            if datetime.strptime(attendance.check_in_time_full_day, DEFAULT_SERVER_DATE_FORMAT).date() > datetime.now().date():
-                raise ValidationError(_('"Check In" time cannot be future date'))
-            
-            if datetime.strptime(attendance.check_out_time_full_day, DEFAULT_SERVER_DATE_FORMAT).date() > datetime.now().date():
-                raise ValidationError(_('"Check out" time cannot be future date'))
-          
-            if datetime.strptime(attendance.check_in_time_sign_in, DEFAULT_SERVER_DATE_FORMAT).date() > datetime.now().date():
-                raise ValidationError(_('"Check In" time cannot be future date'))
-            
-            if datetime.strptime(attendance.check_in_time_sign_out, DEFAULT_SERVER_DATE_FORMAT).date() > datetime.now().date():
-                raise ValidationError(_('"Check In" time cannot be future date'))
-        """
+        if delta1.days > min_days_obj.id: 
+            raise ValidationError(('You can not enter signout date of {} days ago'.format(delta1)))
+
+        ### Check in time full day min days restriction
+        ck_sign_in = datetime.datetime.strptime(self.check_in_time_sign_in, '%Y-%m-%d')
+        current_date2 = datetime.datetime.strptime(curr_date, '%Y-%m-%d')        
+        start_date_check_in_full_day2 = date(ck_sign_in.year, ck_sign_in.month, ck_sign_in.day)
+        end_date_check_in_full_day2 = date(current_date2.year, current_date2.month, current_date2.day)
+        delta2 = end_date_check_in_full_day2 - start_date_check_in_full_day2
         
+        if delta2.days > min_days_obj.id:
+            raise ValidationError(('You can not enter signin date of {} days ago'.format(delta2)))
+
+        ### Check in time full day min days restriction
+        ck_sign_in1 = datetime.datetime.strptime(self.check_in_time_sign_out, '%Y-%m-%d')
+        current_date3 = datetime.datetime.strptime(curr_date, '%Y-%m-%d')        
+        start_date_check_in_full_day3 = date(ck_sign_in1.year, ck_sign_in1.month, ck_sign_in1.day)
+        end_date_check_in_full_day3 = date(current_date3.year, current_date3.month, current_date3.day)
+        delta3 = end_date_check_in_full_day3 - start_date_check_in_full_day3
+        
+        if delta3.days > min_days_obj.id:
+            raise ValidationError(('You can not enter signout date of {} days ago'.format(delta3)))
+
+        
+    
+    """
+                  
     @api.multi
     def _compute_can_reset(self):
         """ User can reset a leave request if it is its own leave request

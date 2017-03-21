@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <report 
+            id="report_sale_order_rabbi"
+            string="Attendance Summary"
+            model="hr.attendance.ot.summary" 
+            report_type="qweb-pdf"
+            file="hr_attendance_and_ot_summary.report_saleorder" 
+            name="hr_attendance_and_ot_summary.report_saleorder" 
+        />
+    </data>
+</odoo>

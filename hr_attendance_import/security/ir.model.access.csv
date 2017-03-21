@@ -1,0 +1,6 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_hr_attendance_import,access_hr_attendance_import,model_hr_attendance_import,hr.group_hr_user,1,1,1,0
+access_hr_attendance_import_temp,access_hr_attendance_import_temp,model_hr_attendance_import_temp,hr.group_hr_user,1,1,1,0
+access_hr_attendance_import_line,access_hr_attendance_import_line,model_hr_attendance_import_line,hr.group_hr_user,1,1,1,0
+access_hr_attendance_import_error,access_hr_attendance_import_error,model_hr_attendance_import_error,hr.group_hr_user,1,1,1,0
+

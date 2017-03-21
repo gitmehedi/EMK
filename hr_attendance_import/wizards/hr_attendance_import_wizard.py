@@ -15,24 +15,25 @@ from openerp.exceptions import Warning
 import logging
 _logger = logging.getLogger(__name__)
 
+from openerp.exceptions import ValidationError,Warning
+
 
 class HrAttendanceImportWizard(models.TransientModel):
-    _name = 'aml.import'
-    _description = 'Import account move lines'
+    _name = 'hr.attendance.import.wizard'
 
-    aml_data = fields.Binary(string='File', required=True)
+    aml_data = fields.Binary(string='File')
     aml_fname = fields.Char(string='Filename')
     lines = fields.Binary(
-        compute='_compute_lines', string='Input Lines', required=True)
+        compute='_compute_lines', string='Input Lines')
     dialect = fields.Binary(
-        compute='_compute_dialect', string='Dialect', required=True)
+        compute='_compute_dialect', string='Dialect')
     csv_separator = fields.Selection(
         [(',', ', (comma)'), (';', '; (semicolon)')],
         string='CSV Separator', required=True)
     decimal_separator = fields.Selection(
         [('.', '. (dot)'), (',', ', (comma)')],
         string='Decimal Separator',
-        default='.', required=True)
+        default='.')
     codepage = fields.Char(
         string='Code Page',
         default=lambda self: self._default_codepage(),
@@ -120,16 +121,7 @@ class HrAttendanceImportWizard(models.TransientModel):
             'analytic account': {'method': self._handle_analytic_account},
         }
         return res
-
-    def _get_orm_fields(self):
-        aml_mod = self.env['account.move.line']
-        orm_fields = aml_mod.fields_get()
-        blacklist = models.MAGIC_COLUMNS + [aml_mod.CONCURRENCY_CHECK_FIELD]
-        self._orm_fields = {
-            f: orm_fields[f] for f in orm_fields
-            if f not in blacklist
-            and not orm_fields[f].get('depends')}
-
+  
     def _process_header(self, header_fields):
 
         self._field_methods = self._input_fields()
@@ -161,55 +153,7 @@ class HrAttendanceImportWizard(models.TransientModel):
 
             if hf in self._field_methods:
                 continue
-
-            if hf not in self._orm_fields \
-                    and hf not in [self._orm_fields[f]['string'].lower()
-                                   for f in self._orm_fields]:
-                _logger.error(
-                    _("%s, undefined field '%s' found "
-                      "while importing move lines"),
-                    self._name, hf)
-                self._skip_fields.append(hf)
-                continue
-
-            field_def = self._orm_fields.get(hf)
-            if not field_def:
-                for f in self._orm_fields:
-                    if self._orm_fields[f]['string'].lower() == hf:
-                        orm_field = f
-                        field_def = self._orm_fields.get(f)
-                        break
-            else:
-                orm_field = hf
-            field_type = field_def['type']
-
-            if field_type in ['char', 'text']:
-                self._field_methods[hf] = {
-                    'method': self._handle_orm_char,
-                    'orm_field': orm_field,
-                    }
-            elif field_type == 'integer':
-                self._field_methods[hf] = {
-                    'method': self._handle_orm_integer,
-                    'orm_field': orm_field,
-                    }
-            elif field_type == 'float':
-                self._field_methods[hf] = {
-                    'method': self._handle_orm_float,
-                    'orm_field': orm_field,
-                    }
-            elif field_type == 'many2one':
-                self._field_methods[hf] = {
-                    'method': self._handle_orm_many2one,
-                    'orm_field': orm_field,
-                    }
-            else:
-                _logger.error(
-                    _("%s, the import of ORM fields of type '%s' "
-                      "is not supported"),
-                    self._name, hf, field_type)
-                self._skip_fields.append(hf)
-
+          
         return header_fields
 
     def _log_line_error(self, line, msg):
@@ -456,12 +400,9 @@ class HrAttendanceImportWizard(models.TransientModel):
 
         time_start = time.time()
         self._err_log = ''
-        move = self.env['hr.attendance.import'].browse(
-            self._context['active_id'])
-        #accounts = self.env['account.account'].search([('type', 'not in', ['view', 'consolidation', 'closed'])])
-        #self._accounts_dict = {a.code: a.id for a in accounts}
+        move = self.env['hr.attendance.import'].browse(self._context['active_id'])
         self._sum_debit = self._sum_credit = 0.0
-        self._get_orm_fields()
+        #self._get_orm_fields()
         lines, header = self._remove_leading_lines(self.lines)
         header_fields = csv.reader(
             StringIO.StringIO(header), dialect=self.dialect).next()
@@ -469,73 +410,46 @@ class HrAttendanceImportWizard(models.TransientModel):
         reader = csv.DictReader(
             StringIO.StringIO(lines), fieldnames=self._header_fields,
             dialect=self.dialect)
-
-        move_lines = []
+        
+        is_success = False
+        
         for line in reader:
+            """ Check in time can not be greater than check out time"""            
+            if line['check_out'] < line['check_in']:
+                 raise ValidationError(('Check Out time can not be previous date of Check In time')) 
+             
+            temp_vals = {}            
+            temp_vals['employee_code'] = line['employee_id']
+            temp_vals['check_in'] =  line['check_in']
+            temp_vals['check_out'] = line['check_out']
+            temp_vals['import_id'] = move.id
+             
+            temp_pool = self.env['hr.attendance.import.temp']
+            temp_pool.create(temp_vals)
+             
+            """ search employee model with employee ID """
+            vals = {}
+            vals['check_in'] = line['check_in'] 
+            vals['check_out'] = line['check_out']
+            vals['import_id'] = move.id
+             
+            emp_pool = self.env['hr.employee'].search([('id','=',line['employee_id'])])
+            attendance_line_obj = self.env['hr.attendance.import.line']
+            attendance_error_obj =  self.env['hr.attendance.import.error']
+             
+            if emp_pool.id is not False:                
+                vals['employee_id'] = emp_pool.id
+                attendance_line_obj.create(vals)                
+            else:
+                vals['employee_code'] = line['employee_id']
+                attendance_error_obj.create(vals)
+            
+            is_success = True
+            
+        if is_success is True:
+            move.action_confirm() 
 
-            aml_vals = {}
-
-            # step 1: handle codepage
-            for i, hf in enumerate(self._header_fields):
-                try:
-                    line[hf] = line[hf].decode(self.codepage).strip()
-                except:
-                    tb = ''.join(format_exception(*exc_info()))
-                    raise Warning(
-                        _("Wrong Code Page"),
-                        _("Error while processing line '%s' :\n%s")
-                        % (line, tb))
-
-            # step 2: process input fields
-            for i, hf in enumerate(self._header_fields):
-                if i == 0 and line[hf] and line[hf][0] == '#':
-                    # lines starting with # are considered as comment lines
-                    break
-                if hf in self._skip_fields:
-                    continue
-                if line[hf] == '':
-                    continue
-
-                if self._field_methods[hf].get('orm_field'):
-                    self._field_methods[hf]['method'](
-                        hf, line, move, aml_vals,
-                        orm_field=self._field_methods[hf]['orm_field'])
-                else:
-                    self._field_methods[hf]['method'](
-                        hf, line, move, aml_vals)
-
-            if aml_vals:
-                self._process_line_vals(line, move, aml_vals)
-                move_lines.append(aml_vals)
-
-        vals = [(0, 0, l) for l in move_lines]
-        vals = self._process_vals(move, vals)
-
-        if self._err_log:
-            self.note = self._err_log
-            module = __name__.split('addons.')[1].split('.')[0]
-            result_view = self.env.ref(
-                '%s.aml_import_view_form_result' % module)
-            return {
-                'name': _("Import File result"),
-                'res_id': self.id,
-                'view_type': 'form',
-                'view_mode': 'form',
-                'res_model': 'aml.import',
-                'view_id': result_view.id,
-                'target': 'new',
-                'type': 'ir.actions.act_window',
-            }
-        else:
-            ctx = dict(self._context, novalidate=True)
-            move.with_context(ctx).write({'line_id': vals})
-            import_time = time.time() - time_start
-            _logger.warn(
-                'hr.attendance.import %s import time = %.3f seconds',
-                move.name, import_time)
-            return {'type': 'ir.actions.act_window_close'}
-
-
+            
 def str2float(amount, decimal_separator):
     if not amount:
         return 0.0

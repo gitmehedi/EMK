@@ -1,41 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-	
-    <record id="hr_shift_history" model="ir.ui.view">
-		<field name="name">hr_shifting_history</field>
-		<field name="model">hr.shifting.history</field>
-		<field name="arch" type="xml">
-			<tree string="Shifting History">
-				<field name= "shift_id" />					
-				<field name="effective_from" />
-			</tree>
-		</field>
-	</record>
-    
-     <record id="rostaring_shift_history" model="ir.ui.view">
-            <field name="name">rostering.employee.shift.history</field>
-            <field name="model">hr.employee</field>
-            <field name="inherit_id" ref="hr.view_employee_form"/>
-            <field name="arch" type="xml">
-                <data>
-                    <xpath expr="//page[3]" position="after">
-                    	<page string="Shifting">
-                        <group>
-                            <group string="Current Shift">
-                            	<field name="current_shift_id" />
-                            </group>
-                            <field name="shift_ids">
-                            <tree editable="top">
-                             	<field name="shift_id"/>
-	                            <field name="effective_from"/>
-                            </tree>	
-                            </field>
-                        </group>
-                        </page>
-                    </xpath>
-                    
-                </data>
-            </field>
-        </record> 
-					
+	<data>
+	    <record id="hr_shift_history" model="ir.ui.view">
+			<field name="name">hr_shifting_history</field>
+			<field name="model">hr.shifting.history</field>
+			<field name="arch" type="xml">
+				<tree string="Shifting History">
+					<field name= "shift_id" />					
+					<field name="effective_from" />
+					<field name="effective_end"/>
+				</tree>
+			</field>
+		</record>
+	    
+	     <record id="rostaring_shift_history" model="ir.ui.view">
+	            <field name="name">rostering.employee.shift.history</field>
+	            <field name="model">hr.employee</field>
+	            <field name="inherit_id" ref="hr.view_employee_form"/>
+	            <field name="arch" type="xml">
+	                <data>
+	                    <xpath expr="//page[3]" position="after">
+	                    	<page string="Shifting">
+	                        <group>
+	                            <group string="Current Shift">
+	                            	<field name="current_shift_id" />
+	                            </group>
+	                            <field name="shift_ids">
+									<tree editable="top">
+										<field name="shift_id"/>
+										<field name="employee_id" invisible="1"/>
+										<field name="effective_from"/>
+										<field name="effective_end"/>
+									</tree>
+	                            </field>
+	                        </group>
+	                        </page>
+	                    </xpath>
+	                    
+	                </data>
+	            </field>
+	        </record> 
+	</data>			
 </odoo>

@@ -22,27 +22,31 @@
 			<field name="arch" type="xml">
 				<form string="Attendance and Over Time Summary">
 					<header>
-						<button name="hr_attendance_and_ot_summary.hr_attendance_ot_summary_wizard_action_view" type="action" string="Generate" />
-						<button name="get_summary_data" type="object" string="Get Summary" /> 
+						<button name="hr_attendance_and_ot_summary.hr_attendance_ot_summary_wizard_action_view"
+							type="action" string="Generate" states="draft"/>
+						<button name="hr_attendance_and_ot_summary.hr_attendance_ot_summary_wizard_action_view"
+							 type="action" string="Re Generate" states="generated"/>
+						
+						<button name="get_summary_data" type="object" string="Get Summary" />
   						<button name="action_draft" type="object" string="Reject" states="confirmed,approved"/>
-                        <button name="action_confirm" type="object" string="Confirm" states="draft" class="oe_highlight"/>
-                        <button name="action_done" type="object" string="Approve" states="confirmed" class="oe_highlight"/>
-                        <field name="state" widget="statusbar"/>			
+  						<button name="action_generated" type="object" string="Generated" states="draft" class="oe_highlight"/>
+                        <button name="action_confirm" type="object" string="Confirm" states="generated" class="oe_highlight"/>
+                        <button name="action_done" type="object" string="Approve" states="confirmed" class="oe_highlight"/>                                 <field name="state" widget="statusbar"/>			
 					</header>
 					<sheet>
 						<group>
 							<field name="name" />
 							<field name="period" />
 						</group>
-						<notebook colspan="4">
+						<notebook colspan="4"> 
 							<page string="Attendance and OT Summary">
 								<field name="line_ids">
 									<tree string="List" editable="bottom">
 										<field name="employee_id" readonly='1'/>
 										<field name="department_id" />
-										<field name="attendance_1" />
+										<field name="attendance_history" />
 										<field name="attendance_summary" />
-										<field name="over_time_1" />
+										<field name="over_time_history" />
 										<field name="over_time_summary" />
 									</tree>
 								</field>
@@ -66,7 +70,9 @@
 		</record>
 
 		<menuitem id="menu_hr_attendance_ot_summary" name="Attendance Summary" parent="hr_attendance.menu_hr_attendance_manage_attendances"
-					action="hr_attendance_ot_summary_action" />
+					groups="hr.group_hr_user" action="hr_attendance_ot_summary_action" />
+					
+					
 					
 	</data>
 </openerp>

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <report 
+            id="report_sale_order_rabbi1"
+            string="Leave Report"
+            model="hr.holidays" 
+            report_type="qweb-pdf"
+            file="gbs_hr_leave_report.report_hr_leave" 
+            name="gbs_hr_leave_report.report_hr_leave" 
+        />
+    </data>
+</odoo>

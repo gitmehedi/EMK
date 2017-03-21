@@ -1,2 +1,5 @@
 import hr_attendance_ot_summary
 import hr_attendance_ot_summary_line
+import absent_attendance_day
+import absent_day
+import absent_summary

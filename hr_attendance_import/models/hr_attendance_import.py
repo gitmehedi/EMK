@@ -1,35 +1,61 @@
-from openerp import api
-from openerp import fields
-from openerp import models
-from odoo.exceptions import UserError
+from openerp import api,fields,models
+from openerp.exceptions import ValidationError,Warning
+from datetime import date
 
 
 class AttendanceImport(models.Model):
-    #_inherit= 'account.move'
     _name = 'hr.attendance.import'
     
-    name = fields.Char(string='Name')
-    import_creation_date_time = fields.Datetime(string='Imported Date')
-    file_name= fields.Char(string='File')
+    name = fields.Char(string='Name', required=True)
+    import_creation_date_time = fields.Datetime(string='Imported Date',default=date.today(),required=True)
+    
+    state = fields.Selection([
+        ('draft', "Draft"),
+        ('confirmed', "Confirmed"),
+        ('imported', "Imported")
+    ], default='draft')
+    
+    """ Relational fields"""
+    import_temp = fields.One2many('hr.attendance.import.temp', 'import_id',states={'imported': [('readonly', True)]})
+    import_error_lines = fields.One2many('hr.attendance.import.error', 'import_id',states={'imported': [('readonly', True)]})
+    lines = fields.One2many('hr.attendance.import.line', 'import_id',states={'imported': [('readonly', True)]})
     
     @api.multi
-    def process_imported_data(self):
-        raise UserError(_('Not Implemented yet!'))
+    def validated(self):
+
+        attendance_obj = self.env['hr.attendance']
+        
+        """ Fetch all from line obj"""
+        attendance_line_obj = self.env['hr.attendance.import.line'].search([])
+        
+        is_success = False
+        
+        for i in attendance_line_obj:
+            if i is not None:
+                emp_pool = self.env['hr.employee'].search([('id','=',i.employee_id.id)])
+        
+                att_line_obj_search = attendance_line_obj.search([('employee_id','=',emp_pool.id)])
+        
+                vals_attendance = {}
+            
+                for alos in att_line_obj_search:
+                    if alos is not None:                        
+                        if alos.check_out < alos.check_in:
+                            raise ValidationError(('Check Out time can not be previous date of Check In time'))
+                        
+                        vals_attendance['employee_id'] = alos.employee_id.id
+                        vals_attendance['check_in'] = alos.check_in
+                        vals_attendance['check_out'] = alos.check_out
+                
+                        attendance_obj.create(vals_attendance)
+                        is_success = True          
+            
+            if is_success is True:                
+                self.state = 'imported'     
+                 
     
-        
-    @api.multi
-    def import_lines(self):
-        self.ensure_one()
-        module = __name__.split('addons.')[1].split('.')[0]
-        view = self.env.ref('%s.aml_import_view_form' % module)
-        
-        return {
-            'name': _('Import File'),
-            'view_type': 'form',
-            'view_mode': 'form',
-            'res_model': 'aml.import',
-            'view_id': False, #view.id,
-            'target': 'new',
-            'type': 'ir.actions.act_window',
-        }
-       
+    @api.multi    
+    def action_confirm(self):
+        self.state = 'confirmed' 
+                        
+    

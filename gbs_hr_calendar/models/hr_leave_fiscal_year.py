@@ -87,7 +87,6 @@ class hr_leave_fiscalyear(osv.osv):
     }
     _order = "date_start, id"
 
-
     def _check_duration(self, cr, uid, ids, context=None):
         obj_fy = self.browse(cr, uid, ids[0], context=context)
         if obj_fy.date_stop < obj_fy.date_start:
