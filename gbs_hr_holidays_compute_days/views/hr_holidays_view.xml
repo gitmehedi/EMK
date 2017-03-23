@@ -9,14 +9,12 @@
 				<field name="date_from" position="attributes">
 					<attribute name="context">{'employee_id': employee_id,
 						'holiday_status_id': holiday_status_id}</attribute>
-					<attribute name="on_change">onchange_date_from(date_to, date_from,
-						context)</attribute>
+					<attribute name="on_change">onchange_date_from()</attribute>
 				</field>
 				<field name="date_to" position="attributes">
 					<attribute name="context">{'employee_id': employee_id,
 						'holiday_status_id': holiday_status_id}</attribute>
-					<attribute name="on_change">onchange_date_to(date_to, date_from,
-						context)</attribute>
+					<attribute name="on_change">onchange_date_to()</attribute>
 				</field>
 				<field name="employee_id" position="attributes">
 					<attribute name="context">{'date_from': date_from, 'date_to':

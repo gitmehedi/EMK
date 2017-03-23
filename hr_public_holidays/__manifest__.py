@@ -25,4 +25,5 @@
         'views/hr_holidays_calendar_view.xml',
     ],
     'installable': True,
+    'application': True,
 }
