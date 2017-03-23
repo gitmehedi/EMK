@@ -30,7 +30,7 @@ import time
 import openerp
 from openerp import SUPERUSER_ID, api
 from openerp import tools
-from openerp.osv import fields, osv, expression
+
 from openerp.tools.translate import _
 from openerp.tools.float_utils import float_round as round
 from openerp.tools.safe_eval import safe_eval as eval
@@ -66,29 +66,31 @@ def _code_get(self, cr, uid, context=None):
     return [(r['code'], r['name']) for r in res]
 
 
-class hr_leave_fiscalyear(osv.osv):
+class hr_leave_fiscalyear(models.Model):
     _name = "hr.leave.fiscal.year"
     _description = "Fiscal Year"
-    _columns = {
-        'name': fields.char('Fiscal Year', required=True),
-        'code': fields.char('Code', size=6, required=True),
-        'company_id': fields.many2one('res.company', 'Company', required=True),
-        'date_start': fields.date('Start Date', required=True),
-        'date_stop': fields.date('End Date', required=True),
-        'period_ids': fields.one2many('account.period', 'fiscalyear_id', 'Periods'),
-        'state': fields.selection([('draft','Open'), ('done','Closed')], 'Status', readonly=True, copy=False),
-        'end_journal_period_id': fields.many2one(
-             'account.journal.period', 'End of Year Entries Journal',
-             readonly=True, copy=False),
-    }
+
+    name = fields.Char('Fiscal Year', required=True)
+    code = fields.Char('Code', size=6, required=True)
+    company_id = fields.Many2one('res.company', 'Company', required=True, default=lambda self: self.env.user)
+    date_start = fields.Date('Start Date', required=True)
+    date_stop = fields.Date('End Date', required=True)
+    period_ids = fields.One2many('account.period', 'fiscalyear_id', 'Periods')
+    state =  fields.Selection([
+        ('draft','Open'),
+        ('done','Closed')], 'Status', default='draft', readonly=True, copy=False)
+    end_journal_period_id = fields.Many2one(
+         'account.journal.period', 'End of Year Entries Journal',
+         readonly=True, copy=False)
+
     _defaults = {
         'state': 'draft',
         'company_id': lambda self,cr,uid,c: self.pool.get('res.users').browse(cr, uid, uid, c).company_id.id,
     }
     _order = "date_start, id"
 
-    def _check_duration(self, cr, uid, ids, context=None):
-        obj_fy = self.browse(cr, uid, ids[0], context=context)
+    def _check_duration(self,):
+        obj_fy = self.browse([])
         if obj_fy.date_stop < obj_fy.date_start:
             return False
         return True
@@ -97,14 +99,16 @@ class hr_leave_fiscalyear(osv.osv):
         (_check_duration, 'Error!\nThe start date of a fiscal year must precede its end date.', ['date_start','date_stop'])
     ]
 
-    def create_period3(self, cr, uid, ids, context=None):
-        return self.create_period(cr, uid, ids, context, 3)
+    @api.multi
+    def create_period3(self, context=None):
+        return self.create_period(context, 3)
 
-    def create_period(self, cr, uid, ids, context=None, interval=1):
-        period_obj = self.pool.get('account.period')
-        for fy in self.browse(cr, uid, ids, context=context):
+    @api.multi
+    def create_period(self, context=None, interval=1):
+        period_obj = self.env['account.period']
+        for fy in self.browse([]):
             ds = datetime.strptime(fy.date_start, '%Y-%m-%d')
-            period_obj.create(cr, uid, {
+            period_obj.create({
                     'name':  "%s %s" % (_('Opening Period'), ds.strftime('%Y')),
                     'code': ds.strftime('00/%Y'),
                     'date_start': ds,
@@ -118,7 +122,7 @@ class hr_leave_fiscalyear(osv.osv):
                 if de.strftime('%Y-%m-%d') > fy.date_stop:
                     de = datetime.strptime(fy.date_stop, '%Y-%m-%d')
 
-                period_obj.create(cr, uid, {
+                period_obj.create({
                     'name': ds.strftime('%m/%Y'),
                     'code': ds.strftime('%m/%Y'),
                     'date_start': ds.strftime('%Y-%m-%d'),
@@ -163,36 +167,33 @@ class hr_leave_fiscalyear(osv.osv):
         return self.name_get(cr, user, ids, context=context)
 
 
-class account_period(osv.osv):
+class account_period(models.Model):
     _name = "account.period"
     _description = "Account period"
-    _columns = {
-        'name': fields.char('Period Name', required=True),
-        'code': fields.char('Code', size=12),
-        'special': fields.boolean('Opening/Closing Period',help="These periods can overlap."),
-        'date_start': fields.date('Start of Period', required=True, states={'done':[('readonly',True)]}),
-        'date_stop': fields.date('End of Period', required=True, states={'done':[('readonly',True)]}),
-        'fiscalyear_id': fields.many2one('hr_leave_fiscalyear', 'Fiscal Year', required=True, states={'done':[('readonly',True)]}, select=True),
-        'state': fields.selection([('draft','Open'), ('done','Closed')], 'Status', readonly=True, copy=False,
-                                  help='When monthly periods are created. The status is \'Draft\'. At the end of monthly period it is in \'Done\' status.'),
-        'company_id': fields.related('fiscalyear_id', 'company_id', type='many2one', relation='res.company', string='Company', store=True, readonly=True)
-    }
-    _defaults = {
-        'state': 'draft',
-    }
+
+    name = fields.Char('Period Name', required=True)
+    code = fields.Char('Code', size=12)
+    special = fields.Boolean('Opening/Closing Period',help="These periods can overlap.")
+    date_start = fields.Date('Start of Period', required=True, states={'done':[('readonly',True)]})
+    date_stop = fields.Date('End of Period', required=True, states={'done':[('readonly',True)]})
+    fiscalyear_id = fields.Many2one('hr_leave_fiscalyear', 'Fiscal Year', required=True, states={'done':[('readonly',True)]}, select=True)
+    state = fields.Selection([('draft','Open'), ('done','Closed')], 'Status', readonly=True, copy=False, default='draft')
+    # company_id = fields.related('fiscalyear_id', 'company_id', type='many2one', relation='res.company', string='Company', store=True, readonly=True)
+
+
     _order = "date_start, special desc"
     _sql_constraints = [
         ('name_company_uniq', 'unique(name, company_id)', 'The name of the period must be unique per company!'),
     ]
 
-    def _check_duration(self,cr,uid,ids,context=None):
-        obj_period = self.browse(cr, uid, ids[0], context=context)
+    def _check_duration(self, context=None):
+        obj_period = self.browse([])
         if obj_period.date_stop < obj_period.date_start:
             return False
         return True
 
-    def _check_year_limit(self,cr,uid,ids,context=None):
-        for obj_period in self.browse(cr, uid, ids, context=context):
+    def _check_year_limit(self, context=None):
+        for obj_period in self.browse([]):
             if obj_period.special:
                 continue
 
