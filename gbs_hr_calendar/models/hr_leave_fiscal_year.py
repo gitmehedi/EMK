@@ -79,16 +79,18 @@ class hr_leave_fiscalyear(models.Model):
     state =  fields.Selection([
         ('draft','Open'),
         ('done','Closed')], 'Status', default='draft', readonly=True, copy=False)
-    end_journal_period_id = fields.Many2one(
-         'account.journal.period', 'End of Year Entries Journal',
-         readonly=True, copy=False)
 
     _defaults = {
         'state': 'draft',
         'company_id': lambda self,cr,uid,c: self.pool.get('res.users').browse(cr, uid, uid, c).company_id.id,
     }
     _order = "date_start, id"
-
+    
+    _sql_constraints = [
+        ('name_uniq', 'unique(name)', 'This Fiscal year is already in use'),
+        ('code_uniq', 'unique(code)', 'This Code is already in use'),
+    ]
+         
     def _check_duration(self,):
         obj_fy = self.browse([])
         if obj_fy.date_stop < obj_fy.date_start:
