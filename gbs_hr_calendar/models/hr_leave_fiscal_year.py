@@ -102,14 +102,18 @@ class hr_leave_fiscalyear(models.Model):
     ]
 
     @api.multi
-    def create_period3(self, context=None):
-        return self.create_period(context, 3)
+    def create_period3(self):
+        return self.create_period(3)
+    
+    def create_period1(self):
+        return self.create_period(1)
 
     @api.multi
-    def create_period(self, context=None, interval=1):
-        period_obj = self.env['account.period']
-        for fy in self.browse([]):
+    def create_period(self, interval):        
+        period_obj = self.env['account.period']        
+        for fy in self:
             ds = datetime.strptime(fy.date_start, '%Y-%m-%d')
+            
             period_obj.create({
                     'name':  "%s %s" % (_('Opening Period'), ds.strftime('%Y')),
                     'code': ds.strftime('00/%Y'),
@@ -118,12 +122,13 @@ class hr_leave_fiscalyear(models.Model):
                     'special': True,
                     'fiscalyear_id': fy.id,
                 })
+            
             while ds.strftime('%Y-%m-%d') < fy.date_stop:
-                de = ds + relativedelta(months=interval, days=-1)
+                de = ds + relativedelta(months=+int(interval), days=-1) 
 
                 if de.strftime('%Y-%m-%d') > fy.date_stop:
                     de = datetime.strptime(fy.date_stop, '%Y-%m-%d')
-
+                    
                 period_obj.create({
                     'name': ds.strftime('%m/%Y'),
                     'code': ds.strftime('%m/%Y'),
@@ -131,8 +136,8 @@ class hr_leave_fiscalyear(models.Model):
                     'date_stop': de.strftime('%Y-%m-%d'),
                     'fiscalyear_id': fy.id,
                 })
-                ds = ds + relativedelta(months=interval)
-        return True
+                
+                ds = ds + relativedelta(months=+int(interval))
 
     def find(self, cr, uid, dt=None, exception=True, context=None):
         res = self.finds(cr, uid, dt, exception, context=context)
