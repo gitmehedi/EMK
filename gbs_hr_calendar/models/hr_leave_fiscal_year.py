@@ -195,7 +195,7 @@ class account_period(models.Model):
 #     ]"""
     
     _sql_constraints = [
-        ('name_uniq', 'unique(name)', 'This Period Name is already in use'),
+        ('name_uniq', 'unique(name,date_start,date_stop)', 'This Period Name is already in use'),
         #('code_uniq', 'unique(code)', 'This Code is already in use'),
     ]
     
