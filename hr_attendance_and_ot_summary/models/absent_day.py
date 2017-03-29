@@ -4,31 +4,14 @@ from openerp import models, fields
 
 class AbsentDay(models.Model):
 
-    _name = 'hr.absent.day'
+    _name = 'hr.attendance.absent.day'
 
-    date = fields.Date(string='Duty Date')
-
-    scheduleTimeStart = fields.Datetime(string='Duty Time Start')
-    scheduleTimeEnd = fields.Datetime(string='Duty Time End')
-    otTimeStart = fields.Datetime(string='OT Time Start')
-    otTimeEnd = fields.Datetime(string='OT Time End')
-
-    scheduleWorkingHours = fields.Float(string='Duty Hours')
-
-    workingHours = fields.Float(string='Working Hours')
+    date = fields.Date(string='Absent Date')
 
     """" Relational Fields """
-    attendance_day_list = fields.One2many('hr.absent.attendance.day', 'absent_day_id', string='Employee Attendance', copy=True)
-    absent_summary_id = fields.Many2one("hr.absent.summary", string="Absent Summary", required=False)
+    att_summary_line_id = fields.Many2one("hr.attendance.summary.line", string="Weekend", required=True)
 
-class TempAbsentDay(object):
+class AbsentDay(object):
 
-    def __init__(self, date=None, scheduleTimeStart=None, scheduleTimeEnd=None,otTimeStart=None,otTimeEnd=None,scheduleWorkingHours=None,workingHours=None,attendance_day_list=None):
+    def __init__(self, date=None):
         self.date = date
-        self.scheduleTimeStart = scheduleTimeStart
-        self.scheduleTimeEnd = scheduleTimeEnd
-        self.otTimeStart = otTimeStart
-        self.otTimeEnd = otTimeEnd
-        self.scheduleWorkingHours = scheduleWorkingHours
-        self.workingHours = workingHours
-        self.attendance_day_list = attendance_day_list
