@@ -163,15 +163,15 @@ class hr_leave_fiscalyear(models.Model):
                 return []
         return ids
 
-    def name_search(self, cr, user, name, args=None, operator='ilike', context=None, limit=80):
-        if args is None:
-            args = []
-        if operator in expression.NEGATIVE_TERM_OPERATORS:
-            domain = [('code', operator, name), ('name', operator, name)]
-        else:
-            domain = ['|', ('code', operator, name), ('name', operator, name)]
-        ids = self.search(cr, user, expression.AND([domain, args]), limit=limit, context=context)
-        return self.name_get(cr, user, ids, context=context)
+#     def name_search(self, cr, user, name, args=None, operator='ilike', context=None, limit=80):
+#         if args is None:
+#             args = []
+#         if operator in expression.NEGATIVE_TERM_OPERATORS:
+#             domain = [('code', operator, name), ('name', operator, name)]
+#         else:
+#             domain = ['|', ('code', operator, name), ('name', operator, name)]
+#         ids = self.search(cr, user, expression.AND([domain, args]), limit=limit, context=context)
+#         return self.name_get(cr, user, ids, context=context)
 
 
 class account_period(models.Model):
@@ -183,16 +183,22 @@ class account_period(models.Model):
     special = fields.Boolean('Opening/Closing Period',help="These periods can overlap.")
     date_start = fields.Date('Start of Period', required=True, states={'done':[('readonly',True)]})
     date_stop = fields.Date('End of Period', required=True, states={'done':[('readonly',True)]})
-    fiscalyear_id = fields.Many2one('hr_leave_fiscalyear', 'Fiscal Year', required=True, states={'done':[('readonly',True)]}, select=True)
+    fiscalyear_id = fields.Many2one('hr.leave.fiscal.year', 'Fiscal Year', required=True, states={'done':[('readonly',True)]})
     state = fields.Selection([('draft','Open'), ('done','Closed')], 'Status', readonly=True, copy=False, default='draft')
-    # company_id = fields.related('fiscalyear_id', 'company_id', type='many2one', relation='res.company', string='Company', store=True, readonly=True)
+    company_id = fields.Many2one(related='fiscalyear_id.company_id', string='Company', store=True, readonly=True)
 
 
-    _order = "date_start, special desc"
+    #_order = "date_start, special desc"
+    
+#     """_sql_constraints = [
+#         ('name_company_uniq', 'unique(name, company_id)', 'The name of the period must be unique per company!'),
+#     ]"""
+    
     _sql_constraints = [
-        ('name_company_uniq', 'unique(name, company_id)', 'The name of the period must be unique per company!'),
+        ('name_uniq', 'unique(name)', 'This Period Name is already in use'),
+        #('code_uniq', 'unique(code)', 'This Code is already in use'),
     ]
-
+    
     def _check_duration(self, context=None):
         obj_period = self.browse([])
         if obj_period.date_stop < obj_period.date_start:
@@ -261,22 +267,23 @@ class account_period(models.Model):
         self.invalidate_cache(cr, uid, context=context)
         return True
 
-    def name_search(self, cr, user, name, args=None, operator='ilike', context=None, limit=100):
-        if args is None:
-            args = []
-        if operator in expression.NEGATIVE_TERM_OPERATORS:
-            domain = [('code', operator, name), ('name', operator, name)]
-        else:
-            domain = ['|', ('code', operator, name), ('name', operator, name)]
-        ids = self.search(cr, user, expression.AND([domain, args]), limit=limit, context=context)
-        return self.name_get(cr, user, ids, context=context)
-
-    def write(self, cr, uid, ids, vals, context=None):
-        if 'company_id' in vals:
-            move_lines = self.pool.get('account.move.line').search(cr, uid, [('period_id', 'in', ids)])
-            if move_lines:
-                raise osv.except_osv(_('Warning!'), _('This journal already contains items for this period, therefore you cannot modify its company field.'))
-        return super(account_period, self).write(cr, uid, ids, vals, context=context)
+#     @api.model
+#     def name_search(self, name, args=None, operator='ilike', limit=100):
+#         if args is None:
+#             args = []
+#         if operator in expression.NEGATIVE_TERM_OPERATORS:
+#             domain = [('code', operator, name), ('name', operator, name)]
+#         else:
+#             domain = ['|', ('code', operator, name), ('name', operator, name)]
+#         ids = self.search(cr, user, expression.AND([domain, args]), limit=limit, context=context)
+#         return self.name_get(cr, user, ids, context=context)
+# 
+#     def write(self, cr, uid, ids, vals, context=None):
+#         if 'company_id' in vals:
+#             move_lines = self.pool.get('account.move.line').search(cr, uid, [('period_id', 'in', ids)])
+#             if move_lines:
+#                 raise osv.except_osv(_('Warning!'), _('This journal already contains items for this period, therefore you cannot modify its company field.'))
+#         return super(account_period, self).write(cr, uid, ids, vals, context=context)
 
     def build_ctx_periods(self, cr, uid, period_from_id, period_to_id):
         if period_from_id == period_to_id:
