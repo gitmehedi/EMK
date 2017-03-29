@@ -18,7 +18,14 @@ class HrHolidays(models.Model):
             return years['id']
         
     leave_year_id = fields.Many2one('hr.leave.fiscal.year', string="Leave Year")
-    
+
+    @api.depends('date_from')
+    def set_leave_year(self):
+        leave_year_pool = self.env['hr.leave.fiscal.year']
+        leave_years = leave_year_pool.search([('date_start', '<=', self.date_from),
+                                              ('date_stop', '>=', self.date_from)])
+        print leave_years
+        self.leave_year_id = leave_years[0].id
     
     
 class HrHolidaysStatus(models.Model):
