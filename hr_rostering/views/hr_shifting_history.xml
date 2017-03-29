@@ -27,7 +27,7 @@
 	                            </group>
 	                            <field name="shift_ids">
 									<tree editable="top">
-										<field name="shift_id"/>
+										<field name="shift_id" />
 										<field name="employee_id" invisible="1"/>
 										<field name="effective_from"/>
 										<field name="effective_end"/>

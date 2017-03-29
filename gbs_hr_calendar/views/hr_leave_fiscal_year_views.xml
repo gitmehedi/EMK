@@ -8,8 +8,8 @@
             <field name="arch" type="xml">
                 <form string="Fiscal year">
                     <header>
-                        <button name="create_period" states="draft"
-                                string="Create Monthly Periods" type="object" class="oe_highlight"/>
+                        <button name="create_period1" states="draft" type="object"
+                                string="Create Monthly Periods" class="oe_highlight"/>
                         <button name="create_period3" states="draft"
                                 string="Create 3 Months Periods" type="object" class="oe_highlight"/>
                         <field name="state" widget="statusbar" nolabel="1"/>
@@ -19,7 +19,6 @@
                             <field name="name"/>
                             <field name="code"/>
                             <!--<field name="company_id" groups="base.group_multi_company"/>-->
-                            <field name="end_journal_period_id"/>
                         </group>
                         <group>
                             <field name="date_start"/>

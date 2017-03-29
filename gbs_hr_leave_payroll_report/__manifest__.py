@@ -11,7 +11,7 @@
        'hr_holidays', 
     ],    
     
-    'description': """This module enables HR Manager to generate leave related reports in PDF format""",        
+    'description': """This module enables HR Manager to generate leave and payroll related reports in PDF format""",        
   
     'installable': True,
     'application': True,

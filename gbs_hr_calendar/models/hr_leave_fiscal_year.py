@@ -79,16 +79,18 @@ class hr_leave_fiscalyear(models.Model):
     state =  fields.Selection([
         ('draft','Open'),
         ('done','Closed')], 'Status', default='draft', readonly=True, copy=False)
-    end_journal_period_id = fields.Many2one(
-         'account.journal.period', 'End of Year Entries Journal',
-         readonly=True, copy=False)
 
     _defaults = {
         'state': 'draft',
         'company_id': lambda self,cr,uid,c: self.pool.get('res.users').browse(cr, uid, uid, c).company_id.id,
     }
     _order = "date_start, id"
-
+    
+    _sql_constraints = [
+        ('name_uniq', 'unique(name)', 'This Fiscal year is already in use'),
+        ('code_uniq', 'unique(code)', 'This Code is already in use'),
+    ]
+         
     def _check_duration(self,):
         obj_fy = self.browse([])
         if obj_fy.date_stop < obj_fy.date_start:
@@ -100,14 +102,18 @@ class hr_leave_fiscalyear(models.Model):
     ]
 
     @api.multi
-    def create_period3(self, context=None):
-        return self.create_period(context, 3)
+    def create_period3(self):
+        return self.create_period(3)
+    
+    def create_period1(self):
+        return self.create_period(1)
 
     @api.multi
-    def create_period(self, context=None, interval=1):
-        period_obj = self.env['account.period']
-        for fy in self.browse([]):
+    def create_period(self, interval):        
+        period_obj = self.env['account.period']        
+        for fy in self:
             ds = datetime.strptime(fy.date_start, '%Y-%m-%d')
+            
             period_obj.create({
                     'name':  "%s %s" % (_('Opening Period'), ds.strftime('%Y')),
                     'code': ds.strftime('00/%Y'),
@@ -116,12 +122,13 @@ class hr_leave_fiscalyear(models.Model):
                     'special': True,
                     'fiscalyear_id': fy.id,
                 })
+            
             while ds.strftime('%Y-%m-%d') < fy.date_stop:
-                de = ds + relativedelta(months=interval, days=-1)
+                de = ds + relativedelta(months=+int(interval), days=-1) 
 
                 if de.strftime('%Y-%m-%d') > fy.date_stop:
                     de = datetime.strptime(fy.date_stop, '%Y-%m-%d')
-
+                    
                 period_obj.create({
                     'name': ds.strftime('%m/%Y'),
                     'code': ds.strftime('%m/%Y'),
@@ -129,8 +136,8 @@ class hr_leave_fiscalyear(models.Model):
                     'date_stop': de.strftime('%Y-%m-%d'),
                     'fiscalyear_id': fy.id,
                 })
-                ds = ds + relativedelta(months=interval)
-        return True
+                
+                ds = ds + relativedelta(months=+int(interval))
 
     def find(self, cr, uid, dt=None, exception=True, context=None):
         res = self.finds(cr, uid, dt, exception, context=context)
