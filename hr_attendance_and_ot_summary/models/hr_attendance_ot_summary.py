@@ -4,31 +4,32 @@ import datetime
 from email import _name
 from datetime import timedelta
 
-from absent_attendance_day import TempAbsentAttendanceDay
-from absent_day import TempAbsentDay
-from absent_summary import TempAbsentSummary
+from late_time import TempLateTime
+from late_day import TempLateDay
+from attendance_summary_line import TempAttendanceSummaryLine
 
-class HrAttendanceOTSummary(models.Model):    
-    _name = 'hr.attendance.ot.summary'
+class AttendanceSummary(models.Model):
+    _name = 'hr.attendance.summary'
     _inherit = ['mail.thread']
     _description = 'Attendance and over time summary'    
 
-    name = fields.Char(size=100, string='Title', required='True')       
-    
-    period = fields.Selection([
-        ('january', "January"),
-        ('february', "February"),
-        ('march', "March"),
-        ('april', "April"),
-        ('may', "May"),
-        ('june', "June"),
-        ('july', "July"),
-        ('august', "August"),
-        ('september', "September"),
-        ('october', "October"),
-        ('november', "November"),
-        ('december', "December"),
-    ], required='True')
+    name = fields.Char(size=100, string='Title', required='True')
+    period = fields.Many2one("hr.holidays.status", string="Period", required=True)
+
+    # period = fields.Selection([
+    #     ('january', "January"),
+    #     ('february', "February"),
+    #     ('march', "March"),
+    #     ('april', "April"),
+    #     ('may', "May"),
+    #     ('june', "June"),
+    #     ('july', "July"),
+    #     ('august', "August"),
+    #     ('september', "September"),
+    #     ('october', "October"),
+    #     ('november', "November"),
+    #     ('december', "December"),
+    # ], required='True')
     
     state = fields.Selection([
         ('draft', "Draft"),
@@ -36,10 +37,12 @@ class HrAttendanceOTSummary(models.Model):
         ('confirmed', "Confirmed"),
         ('approved', "Approved"),
     ], default='draft')
-    
+
+
     """ Relational Fields """
-    
-    line_ids = fields.One2many('hr.attendance.ot.summary.line','parent_id', string="Line Ids")
+    att_summary_lines = fields.One2many('hr.attendance.summary.line', 'att_summary_id', string='Summary Lines')
+
+    #line_ids = fields.One2many('hr.attendance.ot.summary.line','parent_id', string="Line Ids")
     
     @api.multi
     def action_generated(self):
@@ -139,12 +142,12 @@ class HrAttendanceOTSummary(models.Model):
         absentSummary.absent_days = absentSummary.absent_days + 1
         absentSummary.ot_hours = absentSummary.ot_hours + otHours
         absentSummary.employee_id = employeeId
-        absentSummary.absent_day_list.append(TempAbsentDay(date, currentDaydutyTime.startDutyTime,
-                                                           currentDaydutyTime.endDutyTime,
-                                                           currentDaydutyTime.startDutyTime,
-                                                           currentDaydutyTime.endDutyTime,
-                                                           currentDaydutyTime.dutyMinutes / 60,
-                                                           workingHours, attendanceDayList))
+        absentSummary.absent_day_list.append(TempLateDay(date, currentDaydutyTime.startDutyTime,
+                                                         currentDaydutyTime.endDutyTime,
+                                                         currentDaydutyTime.startDutyTime,
+                                                         currentDaydutyTime.endDutyTime,
+                                                         currentDaydutyTime.dutyMinutes / 60,
+                                                         workingHours, attendanceDayList))
         return absentSummary
 
     def saveAbsentSummary(self, absentSummary):
@@ -196,7 +199,7 @@ class HrAttendanceOTSummary(models.Model):
         endDate = datetime.datetime(2017, 02, 28, 0, 0)
         absentGraceMinutes = 10
         employeeId = 2
-        absentSummary = TempAbsentSummary()
+        absentSummary = TempAttendanceSummaryLine()
 
         day = datetime.timedelta(days=1)
 
@@ -248,7 +251,7 @@ class HrAttendanceOTSummary(models.Model):
                             attendance[0]) < currentDaydutyTime.endDutyTime and \
                                             currentDaydutyTime.startDutyTime < self.getDateTimeFromStr(
                                         attendance[1]) < nextDayDutyTime.startDutyTime:
-                        attendanceDayList.append(TempAbsentAttendanceDay(attendance[0], attendance[1], attendance[2]))
+                        attendanceDayList.append(TempLateTime(attendance[0], attendance[1], attendance[2]))
                         temp_attendance_data.remove(attendance)
                     # If attendance data is greater then 48 hours from current date (startDate) then call break.
                     # Means rest of the attendance date are not illegible for current date. Break condition apply for better optimization
