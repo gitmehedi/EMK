@@ -3,18 +3,18 @@
 from openerp import models, fields
 
 
-class AbsentAttendanceDay(models.Model):
-    _name = 'hr.absent.attendance.day'
+class LateTime(models.Model):
+    _name = 'hr.attendance.late.time'
 
     check_in = fields.Datetime(string='Check In Time')
     check_out = fields.Datetime(string='Check Out Time')
     duration = fields.Float(string='Hours')
 
     """ Relational Fields """
-    absent_day_id = fields.Many2one("hr.absent.day", string="Absent Day", required=False)
+    late_day_id = fields.Many2one("hr.attendance.late.day", string="Late Day", required=True)
 
 
-class TempAbsentAttendanceDay(object):
+class TempLateTime(object):
 
     def __init__(self, check_in=None, check_out=None, duration=None):
         self.check_in = check_in

@@ -6,8 +6,8 @@
             string="Leave Report"
             model="hr.holidays" 
             report_type="qweb-pdf"
-            file="gbs_hr_leave_report.report_hr_leave" 
-            name="gbs_hr_leave_report.report_hr_leave" 
+            file="gbs_hr_leave_payroll_report.report_hr_leave" 
+            name="gbs_hr_leave_payroll_report.report_hr_leave" 
         />
     </data>
 </odoo>
