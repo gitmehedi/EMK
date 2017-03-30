@@ -61,7 +61,7 @@ class HrHolidays(models.Model):
         for holiday in self:
 
         employee_id = holiday.employee_id.id or self.env.context.get('employee_id',False)
-        self._onchange_date_from()
+        holiday._onchange_date_from()
         days_check = True
         
         if not holiday._check_date_helper(employee_id, holiday.date_from):
