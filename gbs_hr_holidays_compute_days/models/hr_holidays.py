@@ -59,28 +59,27 @@ class HrHolidays(models.Model):
     @api.onchange('date_from')
     def onchange_date_from(self):
         for holiday in self:
+            employee_id = holiday.employee_id.id or self.env.context.get('employee_id',False)
+            holiday._onchange_date_from()
+            days_check = True
 
-        employee_id = holiday.employee_id.id or self.env.context.get('employee_id',False)
-        holiday._onchange_date_from()
-        days_check = True
-        
-        if not holiday._check_date_helper(employee_id, holiday.date_from):
-            days_check = False
-            diff_day = holiday._compute_number_of_days(employee_id)
-            holiday.number_of_days_temp = diff_day
-            raise Warning(_("You cannot schedule the start date on "
-                                    "a public holiday or employee's weekly holidays day"))
-            try:
+            if not holiday._check_date_helper(employee_id, holiday.date_from):
+                days_check = False
+                diff_day = holiday._compute_number_of_days(employee_id)
+                holiday.number_of_days_temp = diff_day
                 raise Warning(_("You cannot schedule the start date on "
-                                    "a public holiday or employee's weekly holidays day"))
-            finally:
-                diff_day = holiday._compute_number_of_days(employee_id,date_to,date_from)
-                res['value']['number_of_days_temp'] = diff_day
-                return res
-            
-        if (holiday.date_to and holiday.date_from) and (holiday.date_from <= holiday.date_to) and days_check:
-            diff_day = holiday._compute_number_of_days(employee_id,holiday.date_to,holiday.date_from)
-            holiday.number_of_days_temp = diff_day
+                                        "a public holiday or employee's weekly holidays day"))
+                try:
+                    raise Warning(_("You cannot schedule the start date on "
+                                        "a public holiday or employee's weekly holidays day"))
+                finally:
+                    diff_day = holiday._compute_number_of_days(employee_id,date_to,date_from)
+                    res['value']['number_of_days_temp'] = diff_day
+                    return res
+
+            if (holiday.date_to and holiday.date_from) and (holiday.date_from <= holiday.date_to) and days_check:
+                diff_day = holiday._compute_number_of_days(employee_id,holiday.date_to,holiday.date_from)
+                holiday.number_of_days_temp = diff_day
 
     # @api.onchange('date_to')
     # def onchange_date_to(self):
