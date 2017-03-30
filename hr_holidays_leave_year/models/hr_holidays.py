@@ -10,24 +10,25 @@ from odoo.exceptions import ValidationError,Warning
 class HrHolidays(models.Model):
     _inherit = 'hr.holidays'
 
-    def _default_leave_year(self):
-        curr_date = datetime.date.today().strftime('%Y-%m-%d')
-        self.env.cr.execute("SELECT * FROM hr_leave_fiscal_year  WHERE '{}' between date_start and date_stop".format(curr_date))
-        years = self.env.cr.dictfetchone()
-        if years:
-            return years['id']
+    # def _default_leave_year(self):
+    #     curr_date = datetime.date.today().strftime('%Y-%m-%d')
+    #     self.env.cr.execute("SELECT * FROM hr_leave_fiscal_year  WHERE '{}' between date_start and date_stop".format(curr_date))
+    #     years = self.env.cr.dictfetchone()
+    #     if years:
+    #         return years['id']
         
     leave_year_id = fields.Many2one('hr.leave.fiscal.year', string="Leave Year")
 
+
     @api.depends('date_from')
     def set_leave_year(self):
-        leave_year_pool = self.env['hr.leave.fiscal.year']
-        leave_years = leave_year_pool.search([('date_start', '<=', self.date_from),
-                                              ('date_stop', '>=', self.date_from)])
-        print leave_years
-        self.leave_year_id = leave_years[0].id
-    
-    
+        if self.date_from:
+            leave_year_pool = self.env['hr.leave.fiscal.year']
+            leave_years = leave_year_pool.search([('date_start', '<=', self.date_from),
+                                                 ('date_stop', '>=', self.date_from)])
+            self.leave_year_id = leave_years[0].id
+
+
 class HrHolidaysStatus(models.Model):
     _inherit = 'hr.holidays.status'
     
