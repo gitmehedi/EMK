@@ -13,6 +13,6 @@ class HrLeaveCarryForwardtLine(models.Model):
 #     
     """ Relational Fields """
     
-    parent_id = fields.Many2one('hr.leave.carry.forward', ondelete='cascade')
-    employee_id = fields.Many2one('hr.employee', string="Employee ID", ondelete='cascade')
+    parent_id = fields.Many2one('hr.leave.carry.forward')
+    employee_id = fields.Many2one('hr.employee', string="Employee ID")
     
