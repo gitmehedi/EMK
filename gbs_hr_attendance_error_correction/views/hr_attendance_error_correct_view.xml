@@ -7,7 +7,7 @@
 			<field name="model">hr.attendance.error.correct</field>
 			<field name="type">form</field>
 			<field name="arch" type="xml">
-				<form string="Attendances Error Correct">
+				<form string="Correct Attendances">
 					<header>
 						<button name="generate_filtered_data" type="object" string="Generate" class="oe_highlight" />
 					</header>
@@ -42,9 +42,9 @@
 							</div>
 						</group>
 						<notebook position="inside">
-                            <page string="Attendances Correction">
+                            <page string="Error Data">
 								<field name="attendance_line_ids">
-									<tree string="Attendances Correction">
+									<tree string="Correct Attendances">
 										<field name="employee_id"/>
 										<field name="check_in"/>
 										<field name="check_out"/>
