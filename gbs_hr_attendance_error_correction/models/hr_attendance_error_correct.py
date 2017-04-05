@@ -1,6 +1,6 @@
 from openerp import api, fields, models
 
-class AttendanceErrorCorrect(models.Model):
+class AttendanceErrorCorrect(models.TransientModel):
     _name = 'hr.attendance.error.correct'
 
     _description = 'HR attendance error correct'
@@ -14,11 +14,12 @@ class AttendanceErrorCorrect(models.Model):
     employee_name = fields.Many2one("hr.employee", string="Employee", required=False)
     from_date = fields.Date(string='From Date', required=True)
     to_date = fields.Date(string='To Date', required=True)
-    attendance_line_ids = fields.One2many('hr.attendance', 'employee_id', domain=[('has_error', '=', True)])
 
+    #attendance_line_ids = fields.One2many('hr.attendance', 'employee_id', domain=[('has_error', '=', True)])
+
+    @api.multi
     @api.constrains('department_name', 'employee_name', 'from_date', 'to_date')
     def generate_filtered_data(self):
-
         if self.type == 'department_type':
             employees = self.env['hr.employee'].search([('department_id', '=', self.department_name.id)])
 
@@ -33,6 +34,16 @@ class AttendanceErrorCorrect(models.Model):
                                                             ('create_date', '>=', self.from_date), ('create_date', '<=', self.to_date)])
             for att in attendances:
                 print "=====Employeewise Attendances", att.id
+
+        return {
+            'view_type': 'form',
+            'view_mode': 'tree,form',
+            'type': 'ir.actions.act_window',
+            'src_model': 'hr.attendance',
+            'res_model': 'hr.attendance',
+            'view_id': False,
+            'res_id': att.id
+        }
 
         '''return {
             'name': 'Error Data',
