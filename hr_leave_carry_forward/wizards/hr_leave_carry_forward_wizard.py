@@ -42,21 +42,24 @@ class HrLeaveCarryForwardWizard(models.TransientModel):
                 
                 line_obj.create(vals)                
                
-                line_ids  = line_obj.search([('employee_id', '=', val.id)])                  
-                holiday_status_obj = self.env['hr.holidays.status'].search([('leave_carry_forward',
-                                                                             '=',True)])
-               
+                line_ids  = line_obj.search([('employee_id', '=', val.id)])
+
+                #carry_forward_obj = self.env['hr.leave.carry.forward'].search(['leave_type','=',name.id])
+
+
+                holiday_status_obj = self.env['hr.holidays.status'].search([('leave_carry_forward','=',True)])
+
                 for hso in holiday_status_obj:
                     for l_id in line_ids:
                         vals1['holiday_status_id'] = hso.id  #leave type
                         vals1['employee_id'] = l_id.employee_id.id
                         vals1['holiday_type'] = 'employee'
                         vals1['number_of_days_temp'] = l_id.leave_days_to_be_caryy_forwarded
-                        vals1['state'] = 'validate' #status                
+                        vals1['state'] = 'validate' #status
                         vals1['type'] = 'add' #type
                         vals1['name'] = hso.name #Description
-                           
-                        holiday_ins.create(vals1)                
+
+                        holiday_ins.create(vals1)
             
         return {
             'view_type': 'form',
