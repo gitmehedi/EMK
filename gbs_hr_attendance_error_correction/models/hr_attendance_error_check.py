@@ -1,4 +1,5 @@
-from openerp import api, fields, models
+from openerp import models, fields
+from openerp import api
 
 class AttendanceCheckError(models.Model):
     _inherit = 'hr.attendance'
