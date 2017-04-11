@@ -27,35 +27,20 @@
 							<table class="table table-bordered">
 								<thead>
 									<tr>
-										<th
-											style="background-color:#BEB5B2;border: 1px solid black;color:#ffffff;">Employee</th>
-										<th
-											style="background-color:#BEB5B2;border: 1px solid black;color:#ffffff;">CA</th>
-										<th
-											style="background-color:#BEB5B2;border: 1px solid black;color:#ffffff;">NET</th>
-										<th
-											style="background-color:#BEB5B2;border: 1px solid black;color:#ffffff;">GROSS</th>
-										<th
-											style="background-color:#BEB5B2;border: 1px solid black;color:#ffffff;">MA</th>
-										<th
-											style="background-color:#BEB5B2;border: 1px solid black;color:#ffffff;">CAGG</th>
-										<th
-											style="background-color:#BEB5B2;border: 1px solid black;color:#ffffff;">HRA</th>
-										<th
-											style="background-color:#BEB5B2;border: 1px solid black;color:#ffffff;">BASIC</th>
-										<th
-											style="background-color:#BEB5B2;border: 1px solid black;color:#ffffff;">PF</th>	
+										<th style="background-color:#BEB5B2;border:1px solid black;color:#ffffff;">Employee	</th>
+										<th	style="background-color:#BEB5B2;border:1px solid black;color:#ffffff;">Designation</th>
+										<th	style="background-color:#BEB5B2;border:1px solid black;color:#ffffff;">DOJ</th>
 									</tr>
 								</thead>
 								<tbody>
-									<t t-foreach="docs" t-as="o">
+								<!-- 	<t t-foreach="docs" t-as="o">
 										<tr>
 											<td class="col-xs-8">
-												<span t-field="o.employee_id"></span>
+												<span t-esc=""></span>												
 											</td>
-											
+																							
 										</tr>
-									</t>
+									</t> -->
 									
 								</tbody>
 							</table>

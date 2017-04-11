@@ -10,7 +10,8 @@
        'report/payroll_report_view.xml',
     ],    
     'depends': [
-       'hr_holidays', 
+       'hr_holidays',
+       'hr_payroll', 
     ],    
     
     'description': """This module enables HR Manager to generate leave and payroll related reports in PDF format""",        
