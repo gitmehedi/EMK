@@ -1,2 +1,1 @@
 import inherit_hr_holidays
-import inherit_payslip_batches

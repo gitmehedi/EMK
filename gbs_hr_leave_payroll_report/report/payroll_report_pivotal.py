@@ -1,8 +1,6 @@
 from openerp import api, exceptions, fields, models
 import operator
 
-    
-    
 class PayrollReportPivotal(models.AbstractModel):
     _name = 'report.gbs_hr_leave_payroll_report.report_absence_view_qweb'
     
@@ -16,16 +14,13 @@ class PayrollReportPivotal(models.AbstractModel):
             for line in slip.line_ids:
                 rule = {}
                 rule['name'] = line.name
-                rule['code'] = line.code
                 rule['seq'] = line.sequence
+                rule['code'] = line.code
+               
                 if rule not in rule_list:
                     rule_list.append(rule)
-        
-        #rule_list = sorted(rule_list, key=lambda rule: rule[0])        
-        #print rule_list
-        
-        #a = rule_list.sort(key=operator.itemgetter(1))
-        #print '------------------', a
+                    
+        sorted(rule.iteritems(), key=operator.itemgetter(1))
             
         payslips = []
         
@@ -45,8 +40,6 @@ class PayrollReportPivotal(models.AbstractModel):
                         payslip[line.code] = line.amount
                         
             payslips.append(payslip)
-            
-        #print "=======================", payslip        
         
         docargs = {
             'doc_ids': self.ids,
