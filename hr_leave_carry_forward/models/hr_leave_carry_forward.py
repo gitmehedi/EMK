@@ -2,8 +2,8 @@ from openerp import models, fields
 from openerp import api
 
 
-class HrEarnedLeave(models.Model):    
-    _inherit = 'hr.holidays.status'    
+class HrEarnedLeave(models.Model):
+    _inherit = 'hr.holidays.status'
 
     leave_carry_forward = fields.Boolean(
         'Carry Forward this leave',
@@ -17,9 +17,8 @@ class HrLeaveLeave(models.Model):
 
     name = fields.Char(size=100, string='Title', required='True')
     #carry_forward_year = fields.Many2one('hr.leave.fiscal.year', string="Leave Type", required='True')
-    # leave_type = fields.Many2one('hr.holidays.status', string="Leave Type", required='True',
-    #                              ondelete='cascade')
-    leave_type = fields.Many2one("hr.holidays.status", string="Leave Type", required=True)
+    leave_type = fields.Many2one('hr.holidays.status', string="Leave Type", required='True',ondelete='cascade',domain=[('leave_carry_forward','=',True)])
+
     """ Relational Fields """
     
     line_ids = fields.One2many('hr.leave.carry.forward.line','parent_id', string="Line Ids")

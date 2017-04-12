@@ -18,8 +18,8 @@ class LateDay(models.Model):
     working_hours = fields.Float(string='Working Hours')
 
     """" Relational Fields """
-    attendance_day_list = fields.One2many('hr.attendance.late.time', 'late_day_id', string='Employee Attendance', copy=True)
-    att_summary_line_id = fields.Many2one("hr.attendance.summary.line", string="Absent Summary", required=True)
+    attendance_day_list = fields.One2many('hr.attendance.late.time', 'late_day_id', string='Employee Attendance')
+    att_summary_line_id = fields.Many2one("hr.attendance.summary.line", string="Absent Summary", required=True, ondelete='cascade')
 
 class TempLateDay(object):
 
@@ -32,4 +32,7 @@ class TempLateDay(object):
         self.ot_time_end = ot_time_end
         self.schedule_working_hours = schedule_working_hours
         self.working_hours = working_hours
-        self.attendance_day_list = attendance_day_list
+        if attendance_day_list is None:
+            self.attendance_day_list = []
+        else:
+            self.attendance_day_list = attendance_day_list

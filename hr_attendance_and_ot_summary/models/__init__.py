@@ -1,7 +1,7 @@
-import hr_attendance_ot_summary
-import hr_attendance_ot_summary_line
+import attendance_summary
 import attendance_summary_line
 import absent_day
 import late_day
 import late_time
 import weekend_day
+import attendance_processor

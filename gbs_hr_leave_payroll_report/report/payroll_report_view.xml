@@ -27,33 +27,35 @@
 							<table class="table table-bordered">
 								<thead>
 									<tr>
-										<th
-											style="background-color:#BEB5B2;border: 1px solid black;color:#ffffff;">Employee</th>
-										<th
-											style="background-color:#BEB5B2;border: 1px solid black;color:#ffffff;">CA</th>
-										<th
-											style="background-color:#BEB5B2;border: 1px solid black;color:#ffffff;">NET</th>
-										<th
-											style="background-color:#BEB5B2;border: 1px solid black;color:#ffffff;">GROSS</th>
-										<th
-											style="background-color:#BEB5B2;border: 1px solid black;color:#ffffff;">MA</th>
-										<th
-											style="background-color:#BEB5B2;border: 1px solid black;color:#ffffff;">CAGG</th>
-										<th
-											style="background-color:#BEB5B2;border: 1px solid black;color:#ffffff;">HRA</th>
-										<th
-											style="background-color:#BEB5B2;border: 1px solid black;color:#ffffff;">BASIC</th>
-										<th
-											style="background-color:#BEB5B2;border: 1px solid black;color:#ffffff;">PF</th>	
+										<th>Employee</th>
+										<th>Designation</th>
+										<th>DOJ</th>
+										<t t-foreach="rules" t-as="r">
+											<th>
+												<span t-esc="r['name']"></span>
+											</th>
+										</t>
 									</tr>
 								</thead>
 								<tbody>
-									<t t-foreach="docs" t-as="o">
+								<t t-foreach="docs" t-as="o">
 										<tr>
 											<td class="col-xs-8">
-												<span t-field="o.employee_id"></span>
+												<span t-esc="o['emp_name']"></span>											
+											</td>
+											<td class="col-xs-8">
+												<span t-esc="o['designation']"></span>											
+											</td>
+											<td class="col-xs-8">
+												<span t-esc="o['doj']"></span>											
 											</td>
 											
+											<t t-foreach="rules" t-as="r">
+												<td class="col-xs-8">
+													<span t-esc="o[r['code']]"></span>										
+												</td>
+											</t>
+																							
 										</tr>
 									</t>
 									

@@ -10,9 +10,9 @@ class HrLeaveCarryForwardtLine(models.Model):
                                                       readonly=True)
     want_to_carry_forward = fields.Boolean(string='Do you want to carry forward the leave days? ', 
                                            default=True)
-#     
+#
     """ Relational Fields """
     
     parent_id = fields.Many2one('hr.leave.carry.forward')
-    employee_id = fields.Many2one('hr.employee', string="Employee ID")
+    employee_id = fields.Many2one('hr.employee', string="Employee ID",ondelete='cascade')
     
