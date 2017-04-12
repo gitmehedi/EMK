@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<openerp>
+    <data>
+        <!-- Tree View -->
+		<record id="hr_attendance_error_tree" model="ir.ui.view">
+			<field name="name">hr.attendance.error.tree</field>
+			<field name="model">hr.attendance</field>
+			<field name="arch" type="xml">
+				<tree string="Error Attendances" editable="bottom">
+					<field name="employee_id" readonly="True"></field>
+					<field name="check_in"></field>
+					<field name="check_out"></field>
+				</tree>
+			</field>
+		</record>
+    </data>
+</openerp>
