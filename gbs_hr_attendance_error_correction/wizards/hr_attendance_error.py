@@ -18,4 +18,17 @@ class AttendanceErrorCorrection(models.TransientModel):
 
     @api.multi
     def search_data(self):
-        print "==============Hello================="
+        if(self.type == 'department_type'):
+            print "==========Departmentwise==========", self.department_id.id
+        elif(self.type == 'employee_type'):
+            print "==========Employeewise==========", self.employee_id.id
+
+        return {
+            'name': 'Error Data',
+            'view_type': 'form',
+            'view_mode': 'tree,form',
+            'type': 'ir.actions.act_window',
+            'res_model': 'hr.attendance',
+            'domain': "[('employee_id', '=', '12')]"
+            #'domain': "[('employee_id', '=', '" + self.employee_id.id + "')]"
+        }
