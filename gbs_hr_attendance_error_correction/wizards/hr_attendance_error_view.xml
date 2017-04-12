@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<openerp>
+    <data>
+        <!-- Tree View -->
+		<record id="hr_attendance_tree" model="ir.ui.view">
+			<field name="name">hr.attendance.tree</field>
+			<field name="model">hr.attendance</field>
+			<field name="arch" type="xml">
+				<tree string="Attendances">
+					<field name="employee_id"></field>
+					<field name="check_in"></field>
+					<field name="check_out"></field>
+				</tree>
+			</field>
+		</record>
+
+		<!-- Form View -->
+		<record id="attendance_error_correct_form" model="ir.ui.view">
+			<field name="name">hr.attendance.error.correction.form</field>
+			<field name="model">hr.attendance.error.correction</field>
+			<field name="type">form</field>
+			<field name="arch" type="xml">
+				<form string="Correct Attendances" create="false" edit="false" delete="false">
+					<header>
+						<button name="search_data" type="object" string="Generate" class="oe_highlight" />
+					</header>
+					<sheet>
+						<div class="oe_title">
+						</div>
+						<group col="2">
+							<label for="type" />
+							<div>
+								<field name="type" class="oe_inline" placeholder="Please Select" />
+							</div>
+							<label for="department_id" attrs="{'invisible': [('type', '!=', 'department_type')]}" />
+							<div>
+								<field name="department_id" class="oe_inline" placeholder="Please Select"
+									   options="{'no_quick_create': True, 'no_create_edit': True, 'no_open': True}"
+									   attrs="{'invisible': [('type', '!=', 'department_type')]}" />
+							</div>
+							<label for="employee_id" attrs="{'invisible': [('type', '!=', 'employee_type')]}" />
+							<div>
+								<field name="employee_id" class="oe_inline" placeholder="Please Select"
+									   options="{'no_create_edit': True, 'no_open': True}"
+									   attrs="{'invisible': [('type', '!=', 'employee_type')]}" />
+							</div>
+							<label for="from_date" />
+							<div>
+								<field name="from_date" class="oe_inline" />
+							</div>
+							<label for="to_date" />
+							<div>
+								<field name="to_date" class="oe_inline" />
+							</div>
+						</group>
+					</sheet>
+				</form>
+			</field>
+		</record>
+
+		<!-- Menu Action -->
+        <record id="attendance_error_correct_action" model="ir.actions.act_window">
+			<field name="name">Attendance Error Correction</field>
+			<field name="res_model">hr.attendance.error.correction</field>
+			<field name="view_mode">form, tree</field>
+		</record>
+
+        <!--Menu Item-->
+		<menuitem id="attendance_error_correct_menu" name="Correct Attendances"
+				  parent="hr_attendance.menu_hr_attendance_manage_attendances"
+                  action="attendance_error_correct_action" />
+    </data>
+</openerp>

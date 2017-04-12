@@ -15,6 +15,7 @@
     'depends': [
         'hr',
         'hr_holidays',
+        'hr_holidays_leave_year',
       #  'hr_earned_leave',
         ],
     'summary': 'Leave carry forward process is calculated ',

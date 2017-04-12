@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <report 
+            id="report_sale_order_rabbi14"
+            string="Payslip Summary"
+            model="hr.payslip.run" 
+            report_type="qweb-pdf"
+            file="gbs_hr_leave_payroll_report.report_absence_view_qweb" 
+            name="gbs_hr_leave_payroll_report.report_absence_view_qweb" 
+        />
+    </data>
+</odoo>
