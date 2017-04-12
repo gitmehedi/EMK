@@ -9,6 +9,6 @@ class EmployeePayroll(models.Model):
         for record in self:
             name = record.name
             if record.job_id:
-                name = "%s [%s]" % (record.job_id.name_get()[0][1],name)
+                name = "%s [%s]" % (name,record.job_id.name_get()[0][1])
             result.append((record.id, name))
         return result
