@@ -2,11 +2,11 @@
 <openerp>
     <data>
         <!-- Tree View -->
-		<record id="attendance_error_correct_tree" model="ir.ui.view">
-			<field name="name">hr.attendance.error.correction.tree</field>
+		<record id="hr_attendance_tree" model="ir.ui.view">
+			<field name="name">hr.attendance.tree</field>
 			<field name="model">hr.attendance</field>
 			<field name="arch" type="xml">
-				<tree string="Correct Attendances">
+				<tree string="Attendances">
 					<field name="employee_id"></field>
 					<field name="check_in"></field>
 					<field name="check_out"></field>
@@ -20,7 +20,7 @@
 			<field name="model">hr.attendance.error.correction</field>
 			<field name="type">form</field>
 			<field name="arch" type="xml">
-				<form string="Correct Attendances">
+				<form string="Correct Attendances" create="false" edit="false" delete="false">
 					<header>
 						<button name="search_data" type="object" string="Generate" class="oe_highlight" />
 					</header>
@@ -62,7 +62,7 @@
         <record id="attendance_error_correct_action" model="ir.actions.act_window">
 			<field name="name">Attendance Error Correction</field>
 			<field name="res_model">hr.attendance.error.correction</field>
-			<field name="view_mode">tree</field>
+			<field name="view_mode">form, tree</field>
 		</record>
 
         <!--Menu Item-->
