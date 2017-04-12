@@ -27,20 +27,57 @@
 							<table class="table table-bordered">
 								<thead>
 									<tr>
-										<th style="background-color:#BEB5B2;border:1px solid black;color:#ffffff;">Employee	</th>
-										<th	style="background-color:#BEB5B2;border:1px solid black;color:#ffffff;">Designation</th>
-										<th	style="background-color:#BEB5B2;border:1px solid black;color:#ffffff;">DOJ</th>
+										<th>Employee</th>
+										<th>Designation</th>
+										<th>DOJ</th>
+										<th>BASIC</th>
+										<th>HRA</th>
+										<th>CA</th>
+										<th>GROSS</th>
+										<th>PF</th>
+										<th>PT</th>
+										<th>NET</th>
+										
+										
 									</tr>
 								</thead>
 								<tbody>
-								<!-- 	<t t-foreach="docs" t-as="o">
+								<t t-foreach="docs" t-as="o">
 										<tr>
 											<td class="col-xs-8">
-												<span t-esc=""></span>												
+												<span t-esc="o['emp_name']"></span>											
 											</td>
+											<td class="col-xs-8">
+												<span t-esc="o['designation']"></span>											
+											</td>
+											<td class="col-xs-8">
+												<span t-esc="o['doj']"></span>											
+											</td>
+											
+											<td class="col-xs-8">
+												<span t-esc="o['BASIC']"></span>											
+											</td>
+											<td class="col-xs-8">
+												<span t-esc="o['HRA']"></span>											
+											</td>
+											<td class="col-xs-8">
+												<span t-esc="o['CA']"></span>											
+											</td>
+											<td class="col-xs-8">
+												<span t-esc="o['GROSS']"></span>											
+											</td>
+											<td class="col-xs-8">
+												<span t-esc="o['PF']"></span>											
+											</td>
+											<td class="col-xs-8">
+												<span t-esc="o['PT']"></span>											
+											</td>
+											<td class="col-xs-8">
+												<span t-esc="o['NET']"></span>											
+											</td>	
 																							
 										</tr>
-									</t> -->
+									</t>
 									
 								</tbody>
 							</table>

@@ -12,6 +12,7 @@
     'depends': [
        'hr_holidays',
        'hr_payroll', 
+       'gbs_hr_employee_seniority',
     ],    
     
     'description': """This module enables HR Manager to generate leave and payroll related reports in PDF format""",        

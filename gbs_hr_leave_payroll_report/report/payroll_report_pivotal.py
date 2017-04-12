@@ -36,8 +36,7 @@ class PayrollReportPivotal(models.AbstractModel):
                         
             payslips.append(payslip)
             
-        print "=======================", payslip
-        
+        print "=======================", payslip        
         
         docargs = {
             'doc_ids': self.ids,
