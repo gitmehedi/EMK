@@ -14,23 +14,7 @@ class AttendanceSummary(models.Model):
     _description = 'Attendance and over time summary'    
 
     name = fields.Char(size=100, string='Title', required='True')
-    period = fields.Many2one("hr.holidays.status", string="Period", required=True)
-
-    # period = fields.Selection([
-    #     ('january', "January"),
-    #     ('february', "February"),
-    #     ('march', "March"),
-    #     ('april', "April"),
-    #     ('may', "May"),
-    #     ('june', "June"),
-    #     ('july', "July"),
-    #     ('august', "August"),
-    #     ('september', "September"),
-    #     ('october', "October"),
-    #     ('november', "November"),
-    #     ('december', "December"),
-    # ], required='True')
-    
+    period = fields.Many2one("account.period", "Period", required=True)
     state = fields.Selection([
         ('draft', "Draft"),
         ('generated', "Generated"),
@@ -41,14 +25,14 @@ class AttendanceSummary(models.Model):
 
     """ Relational Fields """
     att_summary_lines = fields.One2many('hr.attendance.summary.line', 'att_summary_id', string='Summary Lines')
-
-    #line_ids = fields.One2many('hr.attendance.ot.summary.line','parent_id', string="Line Ids")
     
     @api.multi
     def action_generated(self):
         self.state = 'generated'        
     
 # Start Bappy Code
+
+
     def get_shiftLines(self, shiftId):
 
         cal_att_query = """SELECT dayofweek, hour_from, hour_to,

@@ -1,0 +1,416 @@
+from openerp import models, fields
+from openerp import api
+import datetime
+from email import _name
+from datetime import timedelta
+
+from late_time import TempLateTime
+from late_day import TempLateDay
+from attendance_summary_line import TempAttendanceSummaryLine
+from absent_day import TempAbsentDay
+from weekend_day import TempWeekendDay
+
+class AttendanceProcessor(models.Model):
+    _name = 'hr.attendance.summary.temp'
+
+    absentGraceMinutes = 10
+
+    period_query = """SELECT ap.date_start, ap.date_stop
+                       FROM hr_attendance_summary ac
+                       JOIN account_period ap ON ap.id = ac.period
+                       WHERE ac.id = %s LIMIT 1"""
+
+    employee_shift_history_query = """SELECT effective_from, shift_id
+                                FROM hr_shifting_history
+                                WHERE employee_id = %s AND effective_from BETWEEN %s AND %s
+                                ORDER BY effective_from ASC"""
+
+    attendance_query = """SELECT check_in, check_out, worked_hours
+                            FROM hr_attendance
+                          WHERE check_out > %s AND check_in < %s AND employee_id = %s
+                          ORDER BY check_in ASC"""
+
+    def get_summary_data(self, employeeId, summaryId):
+
+        ############### Delete Current Records ##########################################
+        self.env["hr.attendance.summary.line"].search([('employee_id', '=', employeeId), ('att_summary_id', '=', summaryId)]).unlink()
+
+        dutyTimeMap = {}
+        shiftList = []
+        startDate = datetime.datetime.now() #Current date
+        endDate = datetime.datetime.now() #Current date
+
+
+        # Get Date from Account Period
+        self._cr.execute(self.period_query, (summaryId,))
+        accountPeriod = self._cr.fetchall()
+        if accountPeriod:
+            startDate = self.getDateFromStr(accountPeriod[0][0])
+            endDate = self.getDateFromStr(accountPeriod[0][1])
+
+        day = datetime.timedelta(days=1)
+
+        preStartDate = startDate - day
+        postEndDate = endDate + day
+
+        # Getting Shift Id for an employee
+        self._cr.execute(self.employee_shift_history_query, (employeeId, preStartDate, postEndDate))
+        calendarList = self._cr.fetchall()
+        if not calendarList:
+            return
+
+        shiftList = self.getShiftList(calendarList, postEndDate)
+        dutyTimeMap = self.buildDutyTime(preStartDate, postEndDate, shiftList)
+        self.printDutyTime(preStartDate, postEndDate, dutyTimeMap)
+
+        # Getting Attendance for an employee
+        attendance_data = self.GetAttendanceData(dutyTimeMap, employeeId, postEndDate, preStartDate)
+
+        attSummaryLine = TempAttendanceSummaryLine()
+
+        while startDate <= endDate:
+            # Check this date is week end or not. If it is empty, then means this day is weekend
+            currentDaydutyTime = dutyTimeMap.get(self.getStrFromDate(startDate))
+            if currentDaydutyTime:
+                attendanceDayList = []
+                previousDayDutyTime = self.getPreviousDutyTime(startDate - day, dutyTimeMap)
+                nextDayDutyTime = self.getNextDutyTime(startDate + day, dutyTimeMap)
+                temp_attendance_data = list(attendance_data)
+                for i, attendance in enumerate(attendance_data):
+                    if previousDayDutyTime.endActualDutyTime < self.getDateTimeFromStr(
+                            attendance[0]) < currentDaydutyTime.endActualDutyTime and \
+                                            currentDaydutyTime.startDutyTime < self.getDateTimeFromStr(
+                                        attendance[1]) < nextDayDutyTime.startDutyTime:
+                        attendanceDayList.append(TempLateTime(attendance[0], attendance[1], attendance[2]))
+                        temp_attendance_data.remove(attendance)
+                    # If attendance data is greater then 48 hours from current date (startDate) then call break.
+                    # Means rest of the attendance date are not illegible for current date. Break condition apply for better optimization
+                    elif (self.getDateTimeFromStr(attendance[0]) - startDate).total_seconds() / 60 / 60 > 48:
+                        break
+                attendance_data = temp_attendance_data
+                if attendanceDayList:
+                    totalPresentTime = 0
+                    # Collect date wise in out data
+                    for i, attendanceDay in enumerate(attendanceDayList):
+                        totalPresentTime = self.getDayWorkingMinutes(attendanceDay, currentDaydutyTime, totalPresentTime)
+
+                    print(">>>>", startDate, ">>Working Hour<<", totalPresentTime / 60, "List:", len(attendanceDayList))
+                    scheduleTime = currentDaydutyTime.dutyMinutes + currentDaydutyTime.otDutyMinutes
+                    absentTime = scheduleTime - totalPresentTime
+
+                    if absentTime >= scheduleTime/2:
+                        # @Todo- Check Short Leave. If not approve short leave then absent
+                        attSummaryLine = self.buildAbsentDetails(attSummaryLine, startDate, currentDaydutyTime)
+                    elif absentTime > 0:
+                        attSummaryLine = self.buildLateDetails(attSummaryLine, currentDaydutyTime, startDate, absentTime, totalPresentTime, attendanceDayList)
+                    else:
+                        attSummaryLine = self.buildAttendanceDetails(attSummaryLine, currentDaydutyTime)
+
+                else:
+                    # @Todo- Need to consider personal leave and holidays, Otherwise consider as a absent
+                    print(">>>>", startDate, ">>Not Present<<")
+            else:
+                attSummaryLine = self.buildWeekEnd(attSummaryLine, startDate)
+
+            startDate = startDate + day
+
+        self.saveAttSummary(employeeId, summaryId, attSummaryLine)
+
+
+
+    def process(self, employeeIds, summaryId):
+        for empId in employeeIds:
+            self.get_summary_data(empId, summaryId)
+
+
+    ############################# Utility Methods ####################################################################
+
+    def getShiftList(self, calendarList, postEndDate):
+        shiftList = []
+        day = datetime.timedelta(days=1)
+
+        for i, calendar in enumerate(calendarList):
+            if (len(calendarList) == i + 1):
+                shiftList.append(Shift(self.getDateFromStr(calendarList[i][0]), postEndDate,
+                                       calendarList[i][1], self.getShiftLines(calendarList[i][1])))
+            else:
+                shiftList.append(Shift(self.getDateFromStr(calendarList[i][0]), self.getDateFromStr(calendarList[i + 1][0]) - day,
+                                       calendarList[i][1], self.getShiftLines(calendarList[i][1])))
+
+        return shiftList
+
+
+    def getShiftLines(self, shiftId):
+
+        cal_att_query = """SELECT dayofweek, hour_from, hour_to,
+                            "isIncludedOt", ot_hour_from, ot_hour_to
+                            FROM
+                                resource_calendar_attendance
+                            WHERE
+                                calendar_id = %s
+                            ORDER BY dayofweek ASC"""
+
+        self._cr.execute(cal_att_query, (shiftId,))
+        shiftLines = self._cr.fetchall()
+
+        shiftLinesMap = {}
+
+        for i, shiftLine in enumerate(shiftLines):
+            shiftLinesMap[int(shiftLine[0])] = ShiftLine(int(shiftLine[0]), shiftLine[1], shiftLine[2], shiftLine[3],
+                                                         shiftLine[4], shiftLine[5])
+        return shiftLinesMap
+
+    def buildDutyTime(self, preStartDate, postEndDate, shiftList):
+        dutyTimeMap = {}
+        day = datetime.timedelta(days=1)
+        while preStartDate <= postEndDate:
+            for i, shift in enumerate(shiftList):
+                if shift.effectiveDtStr <= preStartDate <= shift.effectiveDtEnd:
+                    shiftObj = shift.shiftLines.get(preStartDate.weekday())
+                    if shiftObj:
+
+                        # To build normal duty time
+                        startTime = shiftObj.startTime
+                        endTime = shiftObj.endTime
+                        startDutyTime = preStartDate + timedelta(hours=startTime)
+                        if startTime >= endTime:
+                            endDutyTime = preStartDate + timedelta(hours=endTime + 24)
+                        else:
+                            endDutyTime = preStartDate + timedelta(hours=endTime)
+
+                        # To build OT duty time
+                        otStartDutyTime = 0
+                        otEndDutyTime = 0
+                        otStartTime = shiftObj.otStartTime
+                        otEndTime = shiftObj.otEndTime
+                        if shiftObj.isot is True:
+                            if startTime >= otStartTime:
+                                otStartDutyTime = preStartDate + timedelta(hours=otStartTime + 24)
+                            else:
+                                otStartDutyTime = preStartDate + timedelta(hours=otStartTime)
+
+                            if startTime >= otEndTime:
+                                otEndDutyTime = preStartDate + timedelta(hours=otEndTime + 24)
+                            else:
+                                otEndDutyTime = preStartDate + timedelta(hours=otEndTime)
+
+                        dutyTimeMap[preStartDate.strftime('%Y.%m.%d')] = DutyTime(startDutyTime, endDutyTime, shiftObj.isot, otStartDutyTime, otEndDutyTime)
+                        break
+            preStartDate = preStartDate + day
+        return dutyTimeMap
+
+    def printDutyTime(self, preStartDate, postEndDate, dutyTimeMap):
+        day = datetime.timedelta(days=1)
+        print ">>>>>>>>>>>>>>>>>> For Test Data >>>>>>>>>>>>>>>>>"
+        while preStartDate <= postEndDate:
+            dt = dutyTimeMap.get(preStartDate.strftime('%Y.%m.%d'))
+            if dt:
+                print (
+                preStartDate.strftime('%Y.%m.%d'), "Start:", dt.startDutyTime.strftime('%Y.%m.%d-%H:%M:%S'), "End:",
+                dt.endDutyTime.strftime('%Y.%m.%d-%H:%M:%S'), "Diff:", dt.dutyMinutes / 60)
+            preStartDate = preStartDate + day
+        print ">>>>>>>>>>>>>>>>>> End For Test Data >>>>>>>>>>>>>>>>>"
+
+    # Get previous duty time. If previous duty time is null that means this day was weekend.
+    # Then set a default time at previous day
+    def getPreviousDutyTime(self, date, dutyTimeMap):
+        previousDayDutyTime = dutyTimeMap.get(self.getStrFromDate(date))
+        if previousDayDutyTime:
+            return previousDayDutyTime
+        else:
+            previousDayDutyTime = DutyTime(date + timedelta(hours=22), date + timedelta(hours=23), False, 0, 0)
+            return previousDayDutyTime
+
+    # Get next duty time. If previous duty time is null that means this day was weekend.
+    # Then set a default time at previous day
+    def getNextDutyTime(self, date, dutyTimeMap):
+        nextDutyTime = dutyTimeMap.get(self.getStrFromDate(date))
+        if nextDutyTime:
+            return nextDutyTime
+        else:
+            nextDutyTime = DutyTime(date + timedelta(hours=23.9), date + timedelta(hours=23.95), False, 0, 0)
+            return nextDutyTime
+
+    def buildAttendanceDetails(self, attSummaryLine, currentDayDutyTime):
+
+        #attSummaryLine.present_days = attSummaryLine.present_days + 1
+        #attSummaryLine.late_hrs = attSummaryLine.late_hrs + attSummaryLine.absentTime/60
+        attSummaryLine.schedule_ot_hrs = attSummaryLine.schedule_ot_hrs + currentDayDutyTime.otDutyMinutes/60
+        return attSummaryLine
+
+    def buildLateDetails(self, attSummaryLine, currentDayDutyTime, startDate, absentTime, totalPresentTime, attendanceDayList):
+
+        attSummaryLine = self.buildAttendanceDetails(attSummaryLine, currentDayDutyTime)
+
+        attSummaryLine.late_hrs = attSummaryLine.late_hrs + absentTime / 60
+        attSummaryLine.late_days.append(TempLateDay(startDate, currentDayDutyTime.startDutyTime,
+                                                          currentDayDutyTime.endDutyTime,
+                                                          currentDayDutyTime.otStartDutyTime,
+                                                          currentDayDutyTime.otEndDutyTime,
+                                                          (currentDayDutyTime.dutyMinutes + currentDayDutyTime.otDutyMinutes)/ 60,
+                                                         totalPresentTime/60, attendanceDayList))
+        return attSummaryLine
+
+    def buildAbsentDetails(self, attSummaryLine, startDate, currentDayDutyTime):
+        attSummaryLine = self.buildAttendanceDetails(attSummaryLine, currentDayDutyTime)
+        attSummaryLine.absent_days.append(TempAbsentDay(startDate))
+        return attSummaryLine
+
+    def buildWeekEnd(self, attSummaryLine, startDate):
+        attSummaryLine.weekend_days.append(TempWeekendDay(startDate))
+        return attSummaryLine
+
+    def GetAttendanceData(self, dutyTimeMap, employeeId, postEndDate, preStartDate):
+        dutyTime_s = dutyTimeMap.get(self.getStrFromDate(preStartDate))
+        if dutyTime_s:
+            att_time_start = dutyTime_s.endDutyTime
+        else:
+            att_time_start = preStartDate + timedelta(hours=23)
+        att_time_end = dutyTimeMap.get(self.getStrFromDate(postEndDate)).startDutyTime
+        self._cr.execute(self.attendance_query, (att_time_start, att_time_end, employeeId))
+        attendance_data = self._cr.fetchall()
+        return attendance_data
+
+
+    def getDayWorkingMinutes(self, attendanceDay, currentDaydutyTime, totalMinute):
+        ch_in = self.getDateTimeFromStr(attendanceDay.check_in)
+        ch_out = self.getDateTimeFromStr(attendanceDay.check_out)
+        if ch_in < currentDaydutyTime.startDutyTime:
+            ch_in = currentDaydutyTime.startDutyTime
+        if ch_out > currentDaydutyTime.endActualDutyTime:
+            ch_out = currentDaydutyTime.endActualDutyTime
+        totalMinute = totalMinute + (ch_out - ch_in).total_seconds() / 60
+        return totalMinute
+
+    def saveAttSummary(self, employeeId, summaryId, attSummaryLine):
+
+        summary_line_pool = self.env['hr.attendance.summary.line']
+        weekend_pool = self.env['hr.attendance.weekend.day']
+        absent_pool = self.env['hr.attendance.absent.day']
+        late_day_pool = self.env['hr.attendance.late.day']
+        late_time_pool = self.env['hr.attendance.late.time']
+
+        ############## Save Summary Lines ######################
+        salaryDays = 31
+        presentDays = salaryDays - (attSummaryLine.leave_days + len(attSummaryLine.late_days) + len(attSummaryLine.weekend_days))
+
+        vals = {'employee_id':      employeeId,
+                'att_summary_id':   summaryId,
+                'salary_days':      salaryDays,
+                'present_days':     presentDays,
+                'leave_days':       attSummaryLine.leave_days,
+                'late_hrs':         attSummaryLine.late_hrs,
+                'schedule_ot_hrs':  attSummaryLine.schedule_ot_hrs,
+                'cal_ot_hrs':       attSummaryLine.schedule_ot_hrs - attSummaryLine.late_hrs,
+
+                }
+        res = summary_line_pool.create(vals)
+        att_summary_line_id = res.id
+
+        ############## Save Weekend Days ######################
+        for i, weekend in enumerate(attSummaryLine.weekend_days):
+            weekendVals = {'date': weekend.date, 'att_summary_line_id': att_summary_line_id}
+            res = weekend_pool.create(weekendVals)
+
+        ############## Save Absent Days ######################
+        for i, absent in enumerate(attSummaryLine.absent_days):
+            absentVals = {'date': absent.date, 'att_summary_line_id': att_summary_line_id}
+            res = absent_pool.create(absentVals)
+
+        ############## Save Late Days ######################
+        for i, lateDay in enumerate(attSummaryLine.late_days):
+
+            lateDayVals = {'date': lateDay.date, 'schedule_time_start': lateDay.schedule_time_start,
+                     'schedule_time_end': lateDay.schedule_time_end,
+                     'ot_time_start': lateDay.ot_time_start, 'ot_time_end': lateDay.ot_time_end,
+                     'schedule_working_hours': lateDay.schedule_working_hours,
+                     'working_hours': lateDay.working_hours, 'att_summary_line_id': att_summary_line_id
+                     }
+            res = late_day_pool.create(lateDayVals)
+            late_day_id = res.id
+
+            ############## Save Late Times ######################
+            for i, time in enumerate(lateDay.attendance_day_list):
+                timeVals = {'check_in': time.check_in, 'check_out': time.check_out,
+                         'duration': time.duration, 'late_day_id': late_day_id
+                         }
+                res = late_time_pool.create(timeVals)
+
+
+        #################################################################################
+        # att_summary_pool = self.env['hr.absent.summary']
+        # att_day_pool = self.env['hr.absent.day']
+        # att_pool = self.env['hr.absent.attendance.day']
+        #
+        # vals = {'absent_days': attSummaryLine.absent_days,
+        #         'ot_hours': attSummaryLine.ot_hours,
+        #         'employee_id': attSummaryLine.employee_id
+        #         }
+        # res = att_summary_pool.create(vals)
+        # absent_summary_id = res.id
+        #
+        # for i, absentDay in enumerate(attSummaryLine.absent_day_list):
+        #
+        #     vals1 = {'date': absentDay.date, 'scheduleTimeStart': absentDay.scheduleTimeStart,
+        #              'scheduleTimeEnd': absentDay.scheduleTimeEnd,
+        #              'otTimeStart': absentDay.otTimeStart, 'otTimeEnd': absentDay.otTimeEnd,
+        #              'scheduleWorkingHours': absentDay.scheduleWorkingHours,
+        #              'workingHours': absentDay.workingHours, 'absent_summary_id': absent_summary_id
+        #              }
+        #     res = att_day_pool.create(vals1)
+        #     absent_day_id = res.id
+        #
+        #     for i, attendance in enumerate(absentDay.attendance_day_list):
+        #         vals2 = {'check_in': attendance.check_in, 'check_out': attendance.check_out,
+        #                  'duration': attendance.duration, 'absent_day_id': absent_day_id
+        #                  }
+        #         res = att_pool.create(vals2)
+
+
+    def getStrFromDate(self, date):
+        return date.strftime('%Y.%m.%d')
+
+    def getDateTimeFromStr(self, dateStr):
+        return datetime.datetime.strptime(dateStr, "%Y-%m-%d %H:%M:%S")
+
+    def getDateFromStr(self, dateStr):
+        if dateStr:
+            return datetime.datetime.strptime(dateStr, "%Y-%m-%d")
+        else:
+            return datetime.datetime.now()
+
+    ############################# Utility Methods ####################################################################
+
+class Shift(object):
+    def __init__(self, effectiveDtStr=None, effectiveDtEnd=None, shiftId=None, shiftLines=None):
+        self.effectiveDtStr = effectiveDtStr
+        self.effectiveDtEnd = effectiveDtEnd
+        self.shiftId = shiftId
+        self.shiftLines = shiftLines
+
+
+class ShiftLine(object):
+    def __init__(self, weekDay=None, startTime=None, endTime=None, isot=None, otStartTime=None, otEndTime=None):
+        self.weekDay = int(weekDay)
+        self.startTime = startTime
+        self.endTime = endTime
+        self.isot = isot
+        self.otStartTime = otStartTime
+        self.otEndTime = otEndTime
+
+
+class DutyTime(object):
+    def __init__(self, startDutyTime=None, endDutyTime=None, isot=None, otStartDutyTime=None, otEndDutyTime=None):
+        self.startDutyTime = startDutyTime
+        self.endDutyTime = endDutyTime
+        self.endActualDutyTime = endDutyTime
+        self.isot = isot
+        self.otStartDutyTime = otStartDutyTime
+        self.otEndDutyTime = otEndDutyTime
+        if isot is True:
+            self.dutyMinutes = (endDutyTime - startDutyTime).total_seconds() / 60
+            self.otDutyMinutes = (otEndDutyTime - otStartDutyTime).total_seconds() / 60
+            self.endActualDutyTime = otEndDutyTime
+        else:
+            self.dutyMinutes = (endDutyTime - startDutyTime).total_seconds() / 60
+            self.otDutyMinutes = 0

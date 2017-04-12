@@ -11,7 +11,7 @@ class LateTime(models.Model):
     duration = fields.Float(string='Hours')
 
     """ Relational Fields """
-    late_day_id = fields.Many2one("hr.attendance.late.day", string="Late Day", required=True)
+    late_day_id = fields.Many2one("hr.attendance.late.day", string="Late Day", required=True, ondelete='cascade')
 
 
 class TempLateTime(object):
