@@ -1,13 +1,28 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <openerp>
     <data>
+		<!-- Tree View -->
+		<!--<record id="attendance_error_correct_tree" model="ir.ui.view">
+			<field name="name">hr.attendance.error.correct.tree</field>
+			<field name="model">hr.attendance.error.correct</field>
+			<field name="arch" type="xml">
+				<tree string="Correct Attendances" create="false" edit="false" delete="false">
+					<field name="type" />
+					<field name="department_name" />
+					<field name="employee_name" />
+					<field name="from_date" />
+					<field name="to_date" />
+				</tree>
+			</field>
+		</record>-->
+
         <!-- Form View -->
 		<record id="attendance_error_correct_form" model="ir.ui.view">
 			<field name="name">hr.attendance.error.correct.form</field>
 			<field name="model">hr.attendance.error.correct</field>
 			<field name="type">form</field>
 			<field name="arch" type="xml">
-				<form string="Correct Attendances" edit="false" create="false" delete="false">
+				<form string="Correct Attendances" create="false" edit="false" delete="false">
 					<header>
 						<button name="generate_filtered_data" type="object" string="Generate" class="oe_highlight" />
 					</header>
@@ -63,7 +78,8 @@
 		</record>
 
         <!--Menu Item-->
-		<menuitem id="menu_attendance_error_correct" name="Correct Attendances" parent="hr_attendance.menu_hr_attendance_manage_attendances"
+		<menuitem id="menu_attendance_error_correct" name="Correct Attendances"
+				  parent="hr_attendance.menu_hr_attendance_manage_attendances"
                   action="attendance_error_correct_action" />
     </data>
 </openerp>
