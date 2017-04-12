@@ -30,15 +30,11 @@
 										<th>Employee</th>
 										<th>Designation</th>
 										<th>DOJ</th>
-										<th>BASIC</th>
-										<th>HRA</th>
-										<th>CA</th>
-										<th>GROSS</th>
-										<th>PF</th>
-										<th>PT</th>
-										<th>NET</th>
-										
-										
+										<t t-foreach="rules" t-as="r">
+											<th>
+												<span t-esc="r['name']"></span>
+											</th>
+										</t>
 									</tr>
 								</thead>
 								<tbody>
@@ -54,27 +50,11 @@
 												<span t-esc="o['doj']"></span>											
 											</td>
 											
-											<td class="col-xs-8">
-												<span t-esc="o['BASIC']"></span>											
-											</td>
-											<td class="col-xs-8">
-												<span t-esc="o['HRA']"></span>											
-											</td>
-											<td class="col-xs-8">
-												<span t-esc="o['CA']"></span>											
-											</td>
-											<td class="col-xs-8">
-												<span t-esc="o['GROSS']"></span>											
-											</td>
-											<td class="col-xs-8">
-												<span t-esc="o['PF']"></span>											
-											</td>
-											<td class="col-xs-8">
-												<span t-esc="o['PT']"></span>											
-											</td>
-											<td class="col-xs-8">
-												<span t-esc="o['NET']"></span>											
-											</td>	
+											<t t-foreach="rules" t-as="r">
+												<td class="col-xs-8">
+													<span t-esc="o[r['code']]"></span>										
+												</td>
+											</t>
 																							
 										</tr>
 									</t>
