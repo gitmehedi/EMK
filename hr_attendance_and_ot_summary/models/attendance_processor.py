@@ -233,8 +233,6 @@ class AttendanceProcessor(models.Model):
 
     def buildAttendanceDetails(self, attSummaryLine, currentDayDutyTime):
 
-        #attSummaryLine.present_days = attSummaryLine.present_days + 1
-        #attSummaryLine.late_hrs = attSummaryLine.late_hrs + attSummaryLine.absentTime/60
         attSummaryLine.schedule_ot_hrs = attSummaryLine.schedule_ot_hrs + currentDayDutyTime.otDutyMinutes/60
         return attSummaryLine
 
@@ -336,35 +334,6 @@ class AttendanceProcessor(models.Model):
                          }
                 res = late_time_pool.create(timeVals)
 
-
-        #################################################################################
-        # att_summary_pool = self.env['hr.absent.summary']
-        # att_day_pool = self.env['hr.absent.day']
-        # att_pool = self.env['hr.absent.attendance.day']
-        #
-        # vals = {'absent_days': attSummaryLine.absent_days,
-        #         'ot_hours': attSummaryLine.ot_hours,
-        #         'employee_id': attSummaryLine.employee_id
-        #         }
-        # res = att_summary_pool.create(vals)
-        # absent_summary_id = res.id
-        #
-        # for i, absentDay in enumerate(attSummaryLine.absent_day_list):
-        #
-        #     vals1 = {'date': absentDay.date, 'scheduleTimeStart': absentDay.scheduleTimeStart,
-        #              'scheduleTimeEnd': absentDay.scheduleTimeEnd,
-        #              'otTimeStart': absentDay.otTimeStart, 'otTimeEnd': absentDay.otTimeEnd,
-        #              'scheduleWorkingHours': absentDay.scheduleWorkingHours,
-        #              'workingHours': absentDay.workingHours, 'absent_summary_id': absent_summary_id
-        #              }
-        #     res = att_day_pool.create(vals1)
-        #     absent_day_id = res.id
-        #
-        #     for i, attendance in enumerate(absentDay.attendance_day_list):
-        #         vals2 = {'check_in': attendance.check_in, 'check_out': attendance.check_out,
-        #                  'duration': attendance.duration, 'absent_day_id': absent_day_id
-        #                  }
-        #         res = att_pool.create(vals2)
 
 
     def getStrFromDate(self, date):
