@@ -1,26 +1,13 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <openerp>
     <data>
-        <!-- Tree View -->
-		<record id="hr_attendance_tree" model="ir.ui.view">
-			<field name="name">hr.attendance.tree</field>
-			<field name="model">hr.attendance</field>
-			<field name="arch" type="xml">
-				<tree string="Attendances">
-					<field name="employee_id"></field>
-					<field name="check_in"></field>
-					<field name="check_out"></field>
-				</tree>
-			</field>
-		</record>
-
 		<!-- Form View -->
 		<record id="attendance_error_correct_form" model="ir.ui.view">
 			<field name="name">hr.attendance.error.correction.form</field>
 			<field name="model">hr.attendance.error.correction</field>
 			<field name="type">form</field>
 			<field name="arch" type="xml">
-				<form string="Correct Attendances" create="false" edit="false" delete="false">
+				<form string="Correct Attendances">
 					<header>
 						<button name="search_data" type="object" string="Generate" class="oe_highlight" />
 					</header>
@@ -53,16 +40,24 @@
 								<field name="to_date" class="oe_inline" />
 							</div>
 						</group>
+						<footer>
+							<footer>
+								<button string="Cancel" class="btn btn-sm btn-default o_form_button_cancel" special="cancel"/>
+                			</footer>
+						</footer>
 					</sheet>
 				</form>
 			</field>
 		</record>
 
 		<!-- Menu Action -->
-        <record id="attendance_error_correct_action" model="ir.actions.act_window">
+		<record id="attendance_error_correct_action" model="ir.actions.act_window">
 			<field name="name">Attendance Error Correction</field>
+			<field name="type">ir.actions.act_window</field>
 			<field name="res_model">hr.attendance.error.correction</field>
-			<field name="view_mode">form, tree</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">form</field>
+			<field name="target">new</field>
 		</record>
 
         <!--Menu Item-->
