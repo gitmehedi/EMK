@@ -107,8 +107,12 @@ class AttendanceProcessor(models.Model):
                         attSummaryLine = self.buildAttendanceDetails(attSummaryLine, currentDaydutyTime)
 
                 else:
-                    # @Todo- Need to consider personal leave and holidays, Otherwise consider as a absent
-                    print(">>>>", startDate, ">>Not Present<<")
+                    if self.checkOnPersonalLeave(employeeId, startDate) is True:
+                        attSummaryLine = self.buildAttendanceDetails(attSummaryLine, currentDaydutyTime)
+                    elif self.checkOnHolidays(startDate) is True:
+                        attSummaryLine = self.buildAttendanceDetails(attSummaryLine, currentDaydutyTime)
+                    else:
+                        attSummaryLine = self.buildAbsentDetails(attSummaryLine, startDate, currentDaydutyTime)
             else:
                 attSummaryLine = self.buildWeekEnd(attSummaryLine, startDate)
 
@@ -230,6 +234,32 @@ class AttendanceProcessor(models.Model):
         else:
             nextDutyTime = DutyTime(date + timedelta(hours=23.9), date + timedelta(hours=23.95), False, 0, 0)
             return nextDutyTime
+
+    def checkOnPersonalLeave(self, employeeId, startDate):
+
+        query_str = """SELECT COUNT(id) FROM hr_holidays
+                           WHERE employee_id = %s AND type='remove' AND state = 'validate' AND
+                           %s BETWEEN date_from::DATE AND date_to::DATE"""
+
+        self._cr.execute(query_str, (employeeId, startDate.date()))
+        count = self._cr.fetchall()
+        if count[0][0] > 0:
+            return True
+        else:
+            return False
+
+    def checkOnHolidays(self, startDate):
+
+        query_str = """SELECT * FROM hr_holidays_public_line
+                       WHERE date = %s AND status = false"""
+
+        self._cr.execute(query_str, (startDate.date(),))
+        count = self._cr.fetchall()
+        if count[0][0] > 0:
+            return True
+        else:
+            return False
+
 
     def buildAttendanceDetails(self, attSummaryLine, currentDayDutyTime):
 
