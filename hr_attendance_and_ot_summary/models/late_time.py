@@ -2,7 +2,6 @@
 
 from openerp import models, fields
 
-
 class LateTime(models.Model):
     _name = 'hr.attendance.late.time'
 
@@ -12,6 +11,7 @@ class LateTime(models.Model):
 
     """ Relational Fields """
     late_day_id = fields.Many2one("hr.attendance.late.day", string="Late Day", required=True, ondelete='cascade')
+
 
 
 class TempLateTime(object):
