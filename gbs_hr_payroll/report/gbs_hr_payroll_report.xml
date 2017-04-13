@@ -2,12 +2,12 @@
 <odoo>
     <data>
         <report 
-            id="report_sale_order_rabbi14"
+            id="report_individual_paslips"
             string="Payslip Summary"
             model="hr.payslip.run" 
             report_type="qweb-pdf"
-            file="gbs_hr_leave_payroll_report.report_absence_view_qweb" 
-            name="gbs_hr_leave_payroll_report.report_absence_view_qweb" 
+            file="gbs_hr_payroll.report_individual_payslip" 
+            name="gbs_hr_payroll.report_individual_payslip" 
         />
     </data>
 </odoo>
