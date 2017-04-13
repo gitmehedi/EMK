@@ -2,7 +2,7 @@ from openerp import api, exceptions, fields, models
 import operator
 
 class PayrollReportPivotal(models.AbstractModel):
-    _name = 'report.gbs_hr_leave_payroll_report.report_absence_view_qweb'
+    _name = 'report.gbs_hr_payroll.report_individual_payslip'
     
     @api.model
     def render_html(self, docids, data=None):
@@ -47,4 +47,4 @@ class PayrollReportPivotal(models.AbstractModel):
             'docs': payslips,
             'rules': rule_list,
         }
-        return self.env['report'].render('gbs_hr_leave_payroll_report.report_absence_view_qweb', docargs)
+        return self.env['report'].render('gbs_hr_payroll.report_individual_payslip', docargs)

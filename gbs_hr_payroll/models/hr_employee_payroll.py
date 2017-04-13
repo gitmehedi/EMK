@@ -3,6 +3,7 @@ from odoo import api, fields, models,_
 class EmployeePayroll(models.Model):
 
     _inherit = "hr.employee"
+    
     @api.multi
     def name_get(self):
         result = []
