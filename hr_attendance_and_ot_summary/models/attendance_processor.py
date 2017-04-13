@@ -68,24 +68,26 @@ class AttendanceProcessor(models.Model):
 
         attSummaryLine = TempAttendanceSummaryLine()
 
-        while startDate <= endDate:
+        currDate = startDate
+        while currDate <= endDate:
             # Check this date is week end or not. If it is empty, then means this day is weekend
-            currentDaydutyTime = dutyTimeMap.get(self.getStrFromDate(startDate))
+            currentDaydutyTime = dutyTimeMap.get(self.getStrFromDate(currDate))
             if currentDaydutyTime:
                 attendanceDayList = []
-                previousDayDutyTime = self.getPreviousDutyTime(startDate - day, dutyTimeMap)
-                nextDayDutyTime = self.getNextDutyTime(startDate + day, dutyTimeMap)
+                previousDayDutyTime = self.getPreviousDutyTime(currDate - day, dutyTimeMap)
+                nextDayDutyTime = self.getNextDutyTime(currDate + day, dutyTimeMap)
                 temp_attendance_data = list(attendance_data)
                 for i, attendance in enumerate(attendance_data):
                     if previousDayDutyTime.endActualDutyTime < self.getDateTimeFromStr(
                             attendance[0]) < currentDaydutyTime.endActualDutyTime and \
                                             currentDaydutyTime.startDutyTime < self.getDateTimeFromStr(
                                         attendance[1]) < nextDayDutyTime.startDutyTime:
-                        attendanceDayList.append(TempLateTime(attendance[0], attendance[1], attendance[2]))
+                        duration = (self.getDateTimeFromStr(attendance[1]) - self.getDateTimeFromStr(attendance[0])).total_seconds() / 60 / 60
+                        attendanceDayList.append(TempLateTime(attendance[0], attendance[1], duration))
                         temp_attendance_data.remove(attendance)
                     # If attendance data is greater then 48 hours from current date (startDate) then call break.
                     # Means rest of the attendance date are not illegible for current date. Break condition apply for better optimization
-                    elif (self.getDateTimeFromStr(attendance[0]) - startDate).total_seconds() / 60 / 60 > 48:
+                    elif (self.getDateTimeFromStr(attendance[0]) - currDate).total_seconds() / 60 / 60 > 48:
                         break
                 attendance_data = temp_attendance_data
                 if attendanceDayList:
@@ -94,31 +96,32 @@ class AttendanceProcessor(models.Model):
                     for i, attendanceDay in enumerate(attendanceDayList):
                         totalPresentTime = self.getDayWorkingMinutes(attendanceDay, currentDaydutyTime, totalPresentTime)
 
-                    print(">>>>", startDate, ">>Working Hour<<", totalPresentTime / 60, "List:", len(attendanceDayList))
+                    print(">>>>", currDate, ">>Working Hour<<", totalPresentTime / 60, "List:", len(attendanceDayList))
                     scheduleTime = currentDaydutyTime.dutyMinutes + currentDaydutyTime.otDutyMinutes
                     absentTime = scheduleTime - totalPresentTime
 
                     if absentTime >= scheduleTime/2:
                         # @Todo- Check Short Leave. If not approve short leave then absent
-                        attSummaryLine = self.buildAbsentDetails(attSummaryLine, startDate, currentDaydutyTime)
+                        attSummaryLine = self.buildAbsentDetails(attSummaryLine, currDate, currentDaydutyTime)
                     elif absentTime > 0:
-                        attSummaryLine = self.buildLateDetails(attSummaryLine, currentDaydutyTime, startDate, absentTime, totalPresentTime, attendanceDayList)
+                        attSummaryLine = self.buildLateDetails(attSummaryLine, currentDaydutyTime, currDate, absentTime, totalPresentTime, attendanceDayList)
                     else:
                         attSummaryLine = self.buildAttendanceDetails(attSummaryLine, currentDaydutyTime)
 
                 else:
-                    if self.checkOnPersonalLeave(employeeId, startDate) is True:
+                    if self.checkOnPersonalLeave(employeeId, currDate) is True:
                         attSummaryLine = self.buildAttendanceDetails(attSummaryLine, currentDaydutyTime)
-                    elif self.checkOnHolidays(startDate) is True:
+                    elif self.checkOnHolidays(currDate) is True:
                         attSummaryLine = self.buildAttendanceDetails(attSummaryLine, currentDaydutyTime)
                     else:
-                        attSummaryLine = self.buildAbsentDetails(attSummaryLine, startDate, currentDaydutyTime)
+                        attSummaryLine = self.buildAbsentDetails(attSummaryLine, currDate, currentDaydutyTime)
             else:
-                attSummaryLine = self.buildWeekEnd(attSummaryLine, startDate)
+                attSummaryLine = self.buildWeekEnd(attSummaryLine, currDate)
 
-            startDate = startDate + day
+            currDate = currDate + day
 
-        self.saveAttSummary(employeeId, summaryId, attSummaryLine)
+        noOfDays = (endDate - startDate).days + 1
+        self.saveAttSummary(employeeId, summaryId, noOfDays, attSummaryLine)
 
 
 
@@ -250,8 +253,8 @@ class AttendanceProcessor(models.Model):
 
     def checkOnHolidays(self, startDate):
 
-        query_str = """SELECT * FROM hr_holidays_public_line
-                       WHERE date = %s AND status = false"""
+        query_str = """SELECT COUNT(id) FROM hr_holidays_public_line
+                       WHERE date = %s AND status = true"""
 
         self._cr.execute(query_str, (startDate.date(),))
         count = self._cr.fetchall()
@@ -310,7 +313,7 @@ class AttendanceProcessor(models.Model):
         totalMinute = totalMinute + (ch_out - ch_in).total_seconds() / 60
         return totalMinute
 
-    def saveAttSummary(self, employeeId, summaryId, attSummaryLine):
+    def saveAttSummary(self, employeeId, summaryId, noOfDays, attSummaryLine):
 
         summary_line_pool = self.env['hr.attendance.summary.line']
         weekend_pool = self.env['hr.attendance.weekend.day']
@@ -319,12 +322,11 @@ class AttendanceProcessor(models.Model):
         late_time_pool = self.env['hr.attendance.late.time']
 
         ############## Save Summary Lines ######################
-        salaryDays = 31
-        presentDays = salaryDays - (attSummaryLine.leave_days + len(attSummaryLine.late_days) + len(attSummaryLine.weekend_days))
+        presentDays = noOfDays - (attSummaryLine.leave_days + len(attSummaryLine.late_days) + len(attSummaryLine.weekend_days))
 
         vals = {'employee_id':      employeeId,
                 'att_summary_id':   summaryId,
-                'salary_days':      salaryDays,
+                'salary_days':      noOfDays,
                 'present_days':     presentDays,
                 'leave_days':       attSummaryLine.leave_days,
                 'late_hrs':         attSummaryLine.late_hrs,
