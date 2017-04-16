@@ -86,4 +86,10 @@ class HrEmployeeLoanRequest(models.Model):
             self.state = 'approved'
             loan.approved_date = datetime.datetime.now()
             loan.disbursement_date = datetime.datetime.now()
-           
+
+    @api.multi
+    def hr_loan_compute(self):
+        for compute in self:
+            compute.name =self.env['hr_employe_line']
+            compute.duration = compute.name[0]/compute.duration
+

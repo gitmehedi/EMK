@@ -83,9 +83,9 @@
 						<field name="line_ids">
 							<tree string="List" editable="bottom">
 								<field  name="employee_id"  readonly='1'/>
-								<field  name="interest_amount" />
 								<field  name="emp_loan" />
 								<field  name="schedule_date" />
+								<field  name="interest_amount" />
 								<field  name="installment" />
 							</tree>
 						</field>
