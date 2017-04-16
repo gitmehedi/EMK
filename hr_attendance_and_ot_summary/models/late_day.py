@@ -1,6 +1,6 @@
 # sprite class
 
-from openerp import models, fields
+from openerp import api, models, fields
 
 class LateDay(models.Model):
 
