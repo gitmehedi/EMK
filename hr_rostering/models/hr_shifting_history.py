@@ -2,6 +2,7 @@ from openerp import fields,api
 from openerp import models
 import datetime
 
+
 class HrShiftingHistory(models.Model):
     _name = 'hr.shifting.history'
     _order = "id DESC"
@@ -10,6 +11,7 @@ class HrShiftingHistory(models.Model):
     """ Required and Optional fields """
     effective_from = fields.Date(string='Effective Date', required=True)
     effective_end = fields.Date(string='Effective End Date', required=True)
+
 
     """ Relational Fields """
     employee_id = fields.Many2one("hr.employee", string='Employee Name', required=True)
