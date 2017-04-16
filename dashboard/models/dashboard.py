@@ -35,13 +35,14 @@ class Dashboard(models.Model):
                          # {'y': 0, 'x': u'29 Jan', 'name': u'29 January 2017'},
                          # {'y': 0, 'x': u'30 Jan', 'name': u'30 January 2017'},
                          # {'y': 0, 'x': u'31 Jan', 'name': u'31 January 2017'},
-                         {'y': 0, 'x': '1 Feb', 'name': '1 February 2017'}],
-                        'area': True}]
+                         {'y': 0, 'x': '1 Feb', 'name': '1 February 2017'}
+                        ]}]
 
 
 
     name = fields.Char(string="Name")
     no = fields.Integer(string="Number")
+    color = fields.Char(string="Color")
 
-    product_qty = fields.Integer(string="Product Quantity", default=lambda self: self._get_json_data())
+    # product_qty = fields.Integer(string="Product Quantity", default=lambda self: self._get_json_data())
 
