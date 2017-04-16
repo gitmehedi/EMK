@@ -13,6 +13,7 @@
     'data': [
         'report/gbs_hr_payroll_report.xml',
         'report/payroll_report_view.xml',
+        'views/hr_contract_view.xml'
     ],
 
     'summary': 'Shows job titles and payslip reports',
