@@ -79,16 +79,18 @@ class hr_leave_fiscalyear(models.Model):
     state =  fields.Selection([
         ('draft','Open'),
         ('done','Closed')], 'Status', default='draft', readonly=True, copy=False)
-    end_journal_period_id = fields.Many2one(
-         'account.journal.period', 'End of Year Entries Journal',
-         readonly=True, copy=False)
 
     _defaults = {
         'state': 'draft',
         'company_id': lambda self,cr,uid,c: self.pool.get('res.users').browse(cr, uid, uid, c).company_id.id,
     }
     _order = "date_start, id"
-
+    
+    _sql_constraints = [
+        ('name_uniq', 'unique(name)', 'This Fiscal year is already in use'),
+        ('code_uniq', 'unique(code)', 'This Code is already in use'),
+    ]
+         
     def _check_duration(self,):
         obj_fy = self.browse([])
         if obj_fy.date_stop < obj_fy.date_start:
@@ -100,14 +102,18 @@ class hr_leave_fiscalyear(models.Model):
     ]
 
     @api.multi
-    def create_period3(self, context=None):
-        return self.create_period(context, 3)
+    def create_period3(self):
+        return self.create_period(3)
+    
+    def create_period1(self):
+        return self.create_period(1)
 
     @api.multi
-    def create_period(self, context=None, interval=1):
-        period_obj = self.env['account.period']
-        for fy in self.browse([]):
+    def create_period(self, interval):        
+        period_obj = self.env['account.period']        
+        for fy in self:
             ds = datetime.strptime(fy.date_start, '%Y-%m-%d')
+            
             period_obj.create({
                     'name':  "%s %s" % (_('Opening Period'), ds.strftime('%Y')),
                     'code': ds.strftime('00/%Y'),
@@ -116,12 +122,13 @@ class hr_leave_fiscalyear(models.Model):
                     'special': True,
                     'fiscalyear_id': fy.id,
                 })
+            
             while ds.strftime('%Y-%m-%d') < fy.date_stop:
-                de = ds + relativedelta(months=interval, days=-1)
+                de = ds + relativedelta(months=+int(interval), days=-1) 
 
                 if de.strftime('%Y-%m-%d') > fy.date_stop:
                     de = datetime.strptime(fy.date_stop, '%Y-%m-%d')
-
+                    
                 period_obj.create({
                     'name': ds.strftime('%m/%Y'),
                     'code': ds.strftime('%m/%Y'),
@@ -129,8 +136,8 @@ class hr_leave_fiscalyear(models.Model):
                     'date_stop': de.strftime('%Y-%m-%d'),
                     'fiscalyear_id': fy.id,
                 })
-                ds = ds + relativedelta(months=interval)
-        return True
+                
+                ds = ds + relativedelta(months=+int(interval))
 
     def find(self, cr, uid, dt=None, exception=True, context=None):
         res = self.finds(cr, uid, dt, exception, context=context)
@@ -156,15 +163,15 @@ class hr_leave_fiscalyear(models.Model):
                 return []
         return ids
 
-    def name_search(self, cr, user, name, args=None, operator='ilike', context=None, limit=80):
-        if args is None:
-            args = []
-        if operator in expression.NEGATIVE_TERM_OPERATORS:
-            domain = [('code', operator, name), ('name', operator, name)]
-        else:
-            domain = ['|', ('code', operator, name), ('name', operator, name)]
-        ids = self.search(cr, user, expression.AND([domain, args]), limit=limit, context=context)
-        return self.name_get(cr, user, ids, context=context)
+#     def name_search(self, cr, user, name, args=None, operator='ilike', context=None, limit=80):
+#         if args is None:
+#             args = []
+#         if operator in expression.NEGATIVE_TERM_OPERATORS:
+#             domain = [('code', operator, name), ('name', operator, name)]
+#         else:
+#             domain = ['|', ('code', operator, name), ('name', operator, name)]
+#         ids = self.search(cr, user, expression.AND([domain, args]), limit=limit, context=context)
+#         return self.name_get(cr, user, ids, context=context)
 
 
 class account_period(models.Model):
@@ -176,16 +183,22 @@ class account_period(models.Model):
     special = fields.Boolean('Opening/Closing Period',help="These periods can overlap.")
     date_start = fields.Date('Start of Period', required=True, states={'done':[('readonly',True)]})
     date_stop = fields.Date('End of Period', required=True, states={'done':[('readonly',True)]})
-    fiscalyear_id = fields.Many2one('hr_leave_fiscalyear', 'Fiscal Year', required=True, states={'done':[('readonly',True)]}, select=True)
+    fiscalyear_id = fields.Many2one('hr.leave.fiscal.year', 'Fiscal Year', required=True, states={'done':[('readonly',True)]})
     state = fields.Selection([('draft','Open'), ('done','Closed')], 'Status', readonly=True, copy=False, default='draft')
-    # company_id = fields.related('fiscalyear_id', 'company_id', type='many2one', relation='res.company', string='Company', store=True, readonly=True)
+    company_id = fields.Many2one(related='fiscalyear_id.company_id', string='Company', store=True, readonly=True)
 
 
-    _order = "date_start, special desc"
+    #_order = "date_start, special desc"
+    
+#     """_sql_constraints = [
+#         ('name_company_uniq', 'unique(name, company_id)', 'The name of the period must be unique per company!'),
+#     ]"""
+    
     _sql_constraints = [
-        ('name_company_uniq', 'unique(name, company_id)', 'The name of the period must be unique per company!'),
+        ('name_uniq', 'unique(name,date_start,date_stop)', 'This Period Name is already in use'),
+        #('code_uniq', 'unique(code)', 'This Code is already in use'),
     ]
-
+    
     def _check_duration(self, context=None):
         obj_period = self.browse([])
         if obj_period.date_stop < obj_period.date_start:
@@ -254,22 +267,23 @@ class account_period(models.Model):
         self.invalidate_cache(cr, uid, context=context)
         return True
 
-    def name_search(self, cr, user, name, args=None, operator='ilike', context=None, limit=100):
-        if args is None:
-            args = []
-        if operator in expression.NEGATIVE_TERM_OPERATORS:
-            domain = [('code', operator, name), ('name', operator, name)]
-        else:
-            domain = ['|', ('code', operator, name), ('name', operator, name)]
-        ids = self.search(cr, user, expression.AND([domain, args]), limit=limit, context=context)
-        return self.name_get(cr, user, ids, context=context)
-
-    def write(self, cr, uid, ids, vals, context=None):
-        if 'company_id' in vals:
-            move_lines = self.pool.get('account.move.line').search(cr, uid, [('period_id', 'in', ids)])
-            if move_lines:
-                raise osv.except_osv(_('Warning!'), _('This journal already contains items for this period, therefore you cannot modify its company field.'))
-        return super(account_period, self).write(cr, uid, ids, vals, context=context)
+#     @api.model
+#     def name_search(self, name, args=None, operator='ilike', limit=100):
+#         if args is None:
+#             args = []
+#         if operator in expression.NEGATIVE_TERM_OPERATORS:
+#             domain = [('code', operator, name), ('name', operator, name)]
+#         else:
+#             domain = ['|', ('code', operator, name), ('name', operator, name)]
+#         ids = self.search(cr, user, expression.AND([domain, args]), limit=limit, context=context)
+#         return self.name_get(cr, user, ids, context=context)
+# 
+#     def write(self, cr, uid, ids, vals, context=None):
+#         if 'company_id' in vals:
+#             move_lines = self.pool.get('account.move.line').search(cr, uid, [('period_id', 'in', ids)])
+#             if move_lines:
+#                 raise osv.except_osv(_('Warning!'), _('This journal already contains items for this period, therefore you cannot modify its company field.'))
+#         return super(account_period, self).write(cr, uid, ids, vals, context=context)
 
     def build_ctx_periods(self, cr, uid, period_from_id, period_to_id):
         if period_from_id == period_to_id:

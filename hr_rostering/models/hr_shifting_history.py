@@ -10,7 +10,8 @@ class HrShiftingHistory(models.Model):
 
     """ Required and Optional fields """
     effective_from = fields.Date(string='Effective Date', required=True)
-    effective_end = fields.Date(string='Effective End Date')
+    effective_end = fields.Date(string='Effective End Date', required=True)
+
 
     """ Relational Fields """
     employee_id = fields.Many2one("hr.employee", string='Employee Name', required=True)

@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<openerp>
+	<data>
+		<!-- Tree View -->
+		<record id="attendance_ot_summary_tree" model="ir.ui.view">
+			<field name="name">hr.attendance.summary.tree</field>
+			<field name="model">hr.attendance.summary</field>
+			<field name="arch" type="xml">
+				<tree string="Attendance and Over Time Summary">
+					<field name="name"/>
+					<field name="period"/>
+					<field name="state"/>
+				</tree>
+			</field>
+		</record>
+		
+		<!-- Form View -->
+		<record id="attendance_ot_summary_form" model="ir.ui.view">
+			<field name="name">hr.attendance.summary.form</field>
+			<field name="model">hr.attendance.summary</field>
+			<field name="type">form</field>
+			<field name="arch" type="xml">
+				<form string="Attendance and Over Time Summary">
+					<header>
+						<button name="hr_attendance_and_ot_summary.attendance_summary_wizard_action_view"
+							type="action" string="Select Employee" states="draft"/>
+						<button name="hr_attendance_and_ot_summary.attendance_summary_wizard_action_view"
+							 type="action" string="Re Generate" states="generated"/>
+						<button name="get_summary_data" type="object" string="Get Summary" />
+
+  						<button name="action_draft" type="object" string="Reject" states="confirmed,approved"/>
+  						<button name="action_generated" type="object" string="Generated" states="draft" class="oe_highlight"/>
+                        <button name="action_confirm" type="object" string="Confirm" states="generated" class="oe_highlight"/>
+                        <button name="action_done" type="object" string="Approve" states="confirmed" class="oe_highlight"/>
+						<field name="state" widget="statusbar"/>
+					</header>
+					<sheet>
+						<group>
+							<field name="name" />
+							<field name="period"/>
+						</group>
+						<field name="att_summary_lines">
+							<tree string="List" editable="top">
+								<field name="employee_id" readonly='1'/>
+								<field name="department_id" readonly='1'/>
+								<field name="salary_days" readonly='1'/>
+								<field name="present_days" readonly='1'/>
+								<field name="late_days_overwrite" />
+								<field name="leave_days" readonly='1'/>
+								<field name="late_hrs" readonly='1'/>
+								<field name="schedule_ot_hrs" readonly='1'/>
+								<field name="cal_ot_hrs" readonly='1'/>
+								<field name="absent_days_count" readonly='1'/>
+								<field name="late_days_count" readonly='1'/>
+								<field name="weekend_days_count" readonly='1'/>
+								<button name="action_regenerate" string="Action" type="object" icon="fa-cogs" />
+							</tree>
+						</field>
+
+					</sheet>
+					
+					<div class="oe_chatter">
+						<field name="message_follower_ids" widget="mail_followers"/>
+	                    <field name="message_ids" widget="mail_thread"/>
+	                </div>
+					
+				</form>
+			</field>
+		</record>
+
+
+
+
+
+		<record id="hr_attendance_ot_summary_action" model="ir.actions.act_window">
+			<field name="name">Attendance Summary</field>
+			<field name="res_model">hr.attendance.summary</field>
+			<field name="view_mode">tree,form</field>
+		</record>
+
+		<menuitem id="menu_hr_attendance_ot_summary" name="Attendance Summary" parent="hr_attendance.menu_hr_attendance_manage_attendances"
+					action="hr_attendance_ot_summary_action" />
+					
+
+
+		<!-- Detail View -->
+		<record id="view_attendance_summary_line_details_form" model="ir.ui.view">
+            <field name="name">hr.attendance.summary.line.form</field>
+            <field name="model">hr.attendance.summary.line</field>
+            <field name="arch" type="xml">
+                <form string="Absent">
+                    <sheet>
+                        <notebook>
+                            <page string="Absent Days">
+								<group>
+									<field name="absent_days">
+										<tree editable="top">
+											<field name="date" />
+										</tree>
+									</field>
+								</group>
+	                        </page>
+                            <page string="Late Days">
+								<group>
+									<field name="late_days">
+										<tree editable="top">
+											<field name="date" />
+											<field name="schedule_time_start" t-field-options='{"format": "dd-mm-yy hh:mm"}'/>
+											<field name="schedule_time_end" />
+											<field name="ot_time_start" />
+											<field name="ot_time_end" />
+											<field name="schedule_working_hours" />
+											<field name="working_hours" />
+										</tree>
+									</field>
+								</group>
+	                        </page>
+                            <page string="Weekend">
+								<group>
+									<field name="weekend_days">
+										<tree editable="top">
+											<field name="date" />
+										</tree>
+									</field>
+								</group>
+	                        </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+		<record id="view_attendance_late_time_form" model="ir.ui.view">
+            <field name="name">hr.attendance.late.day.form</field>
+            <field name="model">hr.attendance.late.day</field>
+            <field name="arch" type="xml">
+                <form string="Time">
+                    <sheet string="Day Time">
+						<group>
+							<field name="attendance_day_list">
+								<tree editable="top">
+									<field name="check_in" />
+									<field name="check_out" />
+									<field name="duration" />
+								</tree>
+							</field>
+						</group>
+					</sheet>
+                </form>
+            </field>
+        </record>
+
+
+					
+	</data>
+</openerp>

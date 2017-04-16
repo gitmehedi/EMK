@@ -2,11 +2,11 @@
 <openerp>
 	<data>
 		
-		<record id="hr_attendance_ot_summary_view" model="ir.ui.view">
-			<field name="name">HR Attendance and OT Summary</field>
-			<field name="model">hr.attendance.ot.summary.wizard</field>
+		<record id="hr_attendance_summary_view" model="ir.ui.view">
+			<field name="name">HR Attendance Summary</field>
+			<field name="model">attendance.summary.wizard.a</field>
 			<field name="arch" type="xml">
-				<form string="HR Attendance and OT Summary">
+				<form string="HR Attendance Summary">
                     <header>
                         <button icon="fa-cogs" string="Process" name="process_employee_line" type="object" class="oe_highlight"/>
                     </header>
@@ -27,10 +27,10 @@
 			</field>
 		</record>
 		
-		<record id="hr_attendance_ot_summary_wizard_action_view" model="ir.actions.act_window">
-			<field name="name">HR Attendance and OT Summary</field>
+		<record id="attendance_summary_wizard_action_view" model="ir.actions.act_window">
+			<field name="name">HR Attendance Summary</field>
 			<field name="type">ir.actions.act_window</field>
-			<field name="res_model">hr.attendance.ot.summary.wizard</field>
+			<field name="res_model">attendance.summary.wizard.a</field>
 			<field name="view_type">form</field>
 			<field name="view_mode">form</field>
 			<field name="target">new</field>

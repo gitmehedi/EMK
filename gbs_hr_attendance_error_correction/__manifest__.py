@@ -5,7 +5,8 @@
     'category': 'HR Attendance',
     'version':'1.0',
     'data': [
-        'views/hr_attendance_error_correct_view.xml',
+        'wizards/hr_attendance_error_wizard_view.xml',
+        'views/hr_attendance_error_view.xml'
     ],
     'depends': [
         'hr',
@@ -15,5 +16,5 @@
     'description':
     """This module provides the way to correct the error of attendance data.""",
     'installable': True,
-    'application': False,
+    'application': True,
 }
