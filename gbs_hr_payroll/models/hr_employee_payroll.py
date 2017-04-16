@@ -13,3 +13,4 @@ class EmployeePayroll(models.Model):
                 name = "%s [%s]" % (name,record.job_id.name_get()[0][1])
             result.append((record.id, name))
         return result
+

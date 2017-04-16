@@ -7,7 +7,8 @@
     'depends': [
         'hr',
         'hr_payroll', 
-        'gbs_hr_employee_seniority',     
+        'gbs_hr_employee_seniority',
+        'gbs_hr_department_sequence',     
                 
     ],
     'data': [
