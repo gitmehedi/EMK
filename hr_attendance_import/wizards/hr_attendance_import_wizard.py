@@ -415,8 +415,8 @@ class HrAttendanceImportWizard(models.TransientModel):
         
         for line in reader:
             """ Check in time can not be greater than check out time"""            
-            if line['check_out'] < line['check_in']:
-                 raise ValidationError(('Check Out time can not be previous date of Check In time')) 
+            #if line['check_out'] < line['check_in']:
+             #    raise ValidationError(('Check Out time can not be previous date of Check In time')) 
              
             temp_vals = {}            
             temp_vals['employee_code'] = line['employee_id']
