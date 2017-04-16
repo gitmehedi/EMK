@@ -103,9 +103,10 @@ class AttendanceProcessor(models.Model):
                     if absentTime >= scheduleTime/2:
                         # @Todo- Check Short Leave. If not approve short leave then absent
                         attSummaryLine = self.buildAbsentDetails(attSummaryLine, currDate, currentDaydutyTime)
-                    elif absentTime > 0:
+                    elif absentTime > 20: # Default gress 20 minutes gress time
                         attSummaryLine = self.buildLateDetails(attSummaryLine, currentDaydutyTime, currDate, absentTime, totalPresentTime, attendanceDayList)
                     else:
+                        attSummaryLine.present_days = attSummaryLine.present_days + 1
                         attSummaryLine = self.buildAttendanceDetails(attSummaryLine, currentDaydutyTime)
 
                 else:
@@ -265,8 +266,8 @@ class AttendanceProcessor(models.Model):
 
 
     def buildAttendanceDetails(self, attSummaryLine, currentDayDutyTime):
-
-        attSummaryLine.schedule_ot_hrs = attSummaryLine.schedule_ot_hrs + currentDayDutyTime.otDutyMinutes/60
+        if currentDayDutyTime.isot is True:
+            attSummaryLine.schedule_ot_hrs = attSummaryLine.schedule_ot_hrs + currentDayDutyTime.otDutyMinutes / 60
         return attSummaryLine
 
     def buildLateDetails(self, attSummaryLine, currentDayDutyTime, startDate, absentTime, totalPresentTime, attendanceDayList):
@@ -322,16 +323,20 @@ class AttendanceProcessor(models.Model):
         late_time_pool = self.env['hr.attendance.late.time']
 
         ############## Save Summary Lines ######################
-        presentDays = noOfDays - (attSummaryLine.leave_days + len(attSummaryLine.late_days) + len(attSummaryLine.weekend_days))
+        salaryDays = attSummaryLine.present_days + attSummaryLine.leave_days + len(attSummaryLine.late_days) + len(attSummaryLine.weekend_days)
+        calOtHours = 0
+        if attSummaryLine.schedule_ot_hrs > attSummaryLine.late_hrs:
+            calOtHours = attSummaryLine.schedule_ot_hrs - attSummaryLine.late_hrs
+
 
         vals = {'employee_id':      employeeId,
                 'att_summary_id':   summaryId,
-                'salary_days':      noOfDays,
-                'present_days':     presentDays,
+                'salary_days':      salaryDays,
+                'present_days':     attSummaryLine.present_days,
                 'leave_days':       attSummaryLine.leave_days,
                 'late_hrs':         attSummaryLine.late_hrs,
                 'schedule_ot_hrs':  attSummaryLine.schedule_ot_hrs,
-                'cal_ot_hrs':       attSummaryLine.schedule_ot_hrs - attSummaryLine.late_hrs,
+                'cal_ot_hrs':       calOtHours ,
 
                 }
         res = summary_line_pool.create(vals)

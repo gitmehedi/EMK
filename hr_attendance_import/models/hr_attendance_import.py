@@ -37,19 +37,13 @@ class AttendanceImport(models.Model):
                 att_line_obj_search = attendance_line_obj.search([('employee_id','=',emp_pool.id)])
         
                 vals_attendance = {}
-            
-                for alos in att_line_obj_search:
-                    if alos is not None:                        
-                        if alos.check_out < alos.check_in:
-                            raise ValidationError(('Check Out time can not be previous date of Check In time'))
-                        
-                        vals_attendance['employee_id'] = alos.employee_id.id
-                        vals_attendance['check_in'] = alos.check_in
-                        vals_attendance['check_out'] = alos.check_out
-                
-                        attendance_obj.create(vals_attendance)
-                        is_success = True          
-            
+                vals_attendance['employee_id'] = i.employee_id.id
+                vals_attendance['check_in'] = i.check_in
+                vals_attendance['check_out'] = i.check_out
+
+                attendance_obj.create(vals_attendance)
+                is_success = True
+
             if is_success is True:                
                 self.state = 'imported'     
                  

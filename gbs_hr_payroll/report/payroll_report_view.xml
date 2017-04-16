@@ -17,13 +17,6 @@
 				<t t-name="report.external_layout">
 					<div class="page">
 						<div class="row">
-							<div class="col-xs-12"
-								style="background-color:#568eff;border: 1px solid #568eff;color:#ffffff;">
-								<h3>PAYSLIP</h3>
-							</div>
-						</div>
-
-						<div class="row">
 							<table class="table table-bordered">
 								<thead>
 									<tr>
@@ -40,30 +33,32 @@
 								<tbody>
 
 								<t t-foreach="docs" t-as="k">
-									<t t-if="docs[k]">
-									<td class="col-xs-8" colspan="int(docs[k])"><span t-esc="k"></span> </td>
+									<t t-if="k['val']">
+										<td class="col-xs-8" style="background-color:#568eff;border: 1px solid #568eff;color:#ffffff;" colspan="int(docs[k])">
+											<span t-esc="k['name']"></span> 
+										</td>
 
-									<t t-foreach="docs[k]" t-as="o">
-											<tr>
-												<td class="col-xs-8">
-													<span t-esc="o['emp_name']"></span>
-												</td>
-												<td class="col-xs-8">
-													<span t-esc="o['designation']"></span>
-												</td>
-												<td class="col-xs-8">
-													<span t-esc="o['doj']"></span>
-												</td>
-
-												<t t-foreach="rules" t-as="r">
+										<t t-foreach="k['val']" t-as="o">
+												<tr>
 													<td class="col-xs-8">
-														<span t-esc="o[r['code']]"></span>
+														<span t-esc="o['emp_name']"></span>
 													</td>
-												</t>
-
-											</tr>
+													<td class="col-xs-8">
+														<span t-esc="o['designation']"></span>
+													</td>
+													<td class="col-xs-8">
+														<span t-esc="o['doj']"></span>
+													</td>
+	
+													<t t-foreach="rules" t-as="r">
+														<td class="col-xs-8">
+															<span t-esc="o[r['code']]"></span>
+														</td>
+													</t>
+	
+												</tr>
+											</t>
 										</t>
-									</t>
 									</t>
 
 								</tbody>
