@@ -9,14 +9,20 @@
 			<field name="arch" type="xml">
 				<form string="Employee Loan Requests">
 					<header>
-						 <button name="action_draft" type="object"
+						<button name="action_done" type="object"
+                                string="Approve"
+                                states="applied" class="oe_highlight"/>
+						<button name="action_confirm" type="object"
                                 string="Reject"
-                                states="applied,approved"/>
-                        <button name="action_confirm" type="object"
+                                states="applied" />
+                        <button name="action_draft" type="object"
                                 string="Apply" states="draft"
                                 class="oe_highlight"/>
                         <button name="action_done" type="object"
-                                string="Approve" states="applied"
+                                string="Compute" states="approved"
+                                class="oe_highlight"/>
+						<button name="action_done" type="object"
+                                string="Disburse Loan" states="approved"
                                 class="oe_highlight"/>
                         <field name="state" widget="statusbar"/>
 					</header>
@@ -32,7 +38,6 @@
 							<field name="loan_type_id" />
 						</group>
 						<group>
-							 
 							<field name="applied_date"/>
        						<field name="approved_date"/>
        						<field name="disbursement_date" />
@@ -53,7 +58,8 @@
 										<field name="interst_mode_id" attrs="{'invisible': [('is_interest_payble', '=', False)]}" />                                   
 	                                    <field name="Req_rate" attrs="{'invisible': [('is_interest_payble', '=', False)]}" />
                                     </group>
-                                </group>	
+                                </group>
+
 							</page>
 							<page string="Proofs">
 								<field name="employee_loan_proof_ids">	
@@ -66,10 +72,24 @@
                                     <field name="name"/>
                                 </field>
 							</page>
+
 							<page string="Notes">
 								<field name="notes" />			
 							</page>
+
+
 					</notebook>
+
+						<field name="line_ids">
+							<tree string="List" editable="bottom">
+								<field  name="employee_id"  readonly='1'/>
+								<field  name="emp_loan" />
+								<field  name="schedule_date" />
+								<field  name="interest_amount" />
+								<field  name="installment" />
+							</tree>
+						</field>
+
 					</sheet>
 				</form>
 			</field>
@@ -104,7 +124,12 @@
             <field name="view_mode">tree,form</field>
         </record>
 
+
         <menuitem id="loan_request_menu" name="Loan Requests" parent="loans_menu" sequence="3"
-                  action="hr_employee_loan_action" groups="base.group_user"/>   
+                  action="hr_employee_loan_action" groups="base.group_user"/>
+		<menuitem id="loan_request_approve_menu" name="Loan Requests to Approve" parent="loans_menu" sequence="4"
+                  action="hr_employee_loan_action" groups="base.group_user"/>
+
+
     </data>
 </odoo>

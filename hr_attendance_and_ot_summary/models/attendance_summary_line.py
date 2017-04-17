@@ -67,7 +67,8 @@ class AttendanceSummaryLine(models.Model):
             'res_model': 'hr.attendance.summary',
             'view_id': False,
             'type': 'ir.actions.act_window',
-            'res_id': summaryId
+            'res_id': summaryId,
+            'target': 'current'
         }
 
 

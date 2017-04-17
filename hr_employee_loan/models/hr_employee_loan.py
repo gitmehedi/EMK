@@ -23,8 +23,9 @@ class HrEmployeeLoanRequest(models.Model):
     
     approved_date = fields.Datetime('Approved Date', readonly=True, copy=False,
         states={'draft': [('invisible', True)], 'applied': [('invisible', True)], 'approved':[('readonly', True)]})
-    
-  
+
+    line_ids = fields.One2many(comodel_name='hr.employee.loan.line', inverse_name='parent_id', string="Line Ids")
+
     disbursement_date = fields.Datetime('Disbursement Date', readonly=True, copy=False,
         states={'draft': [('invisible', True)], 'applied': [('invisible', True)], 'approved':[('readonly', True)]})
     
@@ -69,11 +70,11 @@ class HrEmployeeLoanRequest(models.Model):
             self.employee_loan_policy_ids = self.loan_type_id.loan_policy_ids  
         
     @api.multi
-    def action_draft(self):
+    def action_confirm(self):
         self.state = 'draft'
         
     @api.multi
-    def action_confirm(self):
+    def action_draft(self):
         for loan in self:
             loan.state = 'applied'
             loan.applied_date = datetime.datetime.now()
@@ -85,4 +86,10 @@ class HrEmployeeLoanRequest(models.Model):
             self.state = 'approved'
             loan.approved_date = datetime.datetime.now()
             loan.disbursement_date = datetime.datetime.now()
-           
+
+    @api.multi
+    def hr_loan_compute(self):
+        for compute in self:
+            compute.name =self.env['hr_employe_line']
+            compute.duration = compute.name[0]/compute.duration
+

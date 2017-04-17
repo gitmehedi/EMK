@@ -18,6 +18,12 @@ class AttendanceSummary(models.Model):
 
     """ Relational Fields """
     att_summary_lines = fields.One2many('hr.attendance.summary.line', 'att_summary_id', string='Summary Lines')
+
+    # @api.model
+    # def fields_view_get(self, view_id=None, view_type='form', toolbar=False, submenu=False):
+    #     res = super(AttendanceSummary, self).fields_view_get(view_id, view_type, toolbar, submenu)
+    #
+    #     return res
     
     @api.multi
     def action_generated(self):
