@@ -54,12 +54,12 @@
                                    		<field name="duration"/>
 									</group>
 									<group>
+										<field name="repayment_date"/>
 										<field name="is_interest_payble" />
 										<field name="interst_mode_id" attrs="{'invisible': [('is_interest_payble', '=', False)]}" />                                   
 	                                    <field name="req_rate" attrs="{'invisible': [('is_interest_payble', '=', False)]}" />
                                     </group>
                                 </group>
-
 							</page>
 							<page string="Proofs">
 								<field name="employee_loan_proof_ids">	
@@ -72,25 +72,20 @@
                                     <field name="name"/>
                                 </field>
 							</page>
-
 							<page string="Notes">
 								<field name="notes" />			
 							</page>
-						
 					</notebook>
-
 						<field name="line_ids">
 							<tree string="List" editable="bottom">
 								<field  name="employee_id"  readonly='1'/>
-								<field  name="emp_loan" />
-								<field  name="num_installment"/>
+								<field  name="emp_loan" invisible="1"/>
 								<field  name="schedule_date" />
+								<field  name="num_installment"/>
 								<field  name="interest_amount" />
 								<field  name="installment" />
-
 							</tree>
 						</field>
-
 					</sheet>
 				</form>
 			</field>
