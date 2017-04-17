@@ -70,7 +70,7 @@ class InheritedHrPayslip(models.Model):
                 loan_line_ids += loan_line_ids.new({
                     'name': 'Current Loan',
                     'code': "Loan",
-                    'amount': loan_data.interest_amount,
+                    'amount': loan_data.installment,
                     'contract_id': self.contract_id.id,
                 })
 
