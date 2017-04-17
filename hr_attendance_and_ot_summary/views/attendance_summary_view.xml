@@ -47,9 +47,9 @@
 								<field name="present_days" readonly='1'/>
 								<field name="late_days_overwrite" />
 								<field name="leave_days" readonly='1'/>
-								<field name="late_hrs" readonly='1'/>
-								<field name="schedule_ot_hrs" readonly='1'/>
-								<field name="cal_ot_hrs" readonly='1'/>
+								<field name="late_hrs" readonly='1' widget="float_time"/>
+								<field name="schedule_ot_hrs" readonly='1' widget="float_time"/>
+								<field name="cal_ot_hrs" readonly='1' widget="float_time"/>
 								<field name="absent_days_count" readonly='1'/>
 								<field name="late_days_count" readonly='1'/>
 								<field name="weekend_days_count" readonly='1'/>
@@ -92,37 +92,31 @@
                     <sheet>
                         <notebook>
                             <page string="Absent Days">
-								<group>
-									<field name="absent_days">
-										<tree editable="top">
-											<field name="date" />
-										</tree>
-									</field>
-								</group>
+								<field name="absent_days">
+									<tree editable="top">
+										<field name="date" />
+									</tree>
+								</field>
 	                        </page>
                             <page string="Late Days">
-								<group>
-									<field name="late_days">
-										<tree editable="top">
-											<field name="date" />
-											<field name="schedule_time_start"/>
-											<field name="schedule_time_end" />
-											<field name="ot_time_start" />
-											<field name="ot_time_end" />
-											<field name="schedule_working_hours" />
-											<field name="working_hours" />
-										</tree>
-									</field>
-								</group>
+								<field name="late_days">
+									<tree editable="top">
+										<field name="date" />
+										<field name="schedule_time_start"/>
+										<field name="schedule_time_end" />
+										<field name="ot_time_start" />
+										<field name="ot_time_end" />
+										<field name="schedule_working_hours" widget="float_time"/>
+										<field name="working_hours" widget="float_time"/>
+									</tree>
+								</field>
 	                        </page>
                             <page string="Weekend">
-								<group>
-									<field name="weekend_days">
-										<tree editable="top">
-											<field name="date" />
-										</tree>
-									</field>
-								</group>
+								<field name="weekend_days">
+									<tree editable="top">
+										<field name="date" />
+									</tree>
+								</field>
 	                        </page>
                         </notebook>
                     </sheet>
@@ -136,15 +130,13 @@
             <field name="arch" type="xml">
                 <form string="Time">
                     <sheet string="Day Time">
-						<group>
-							<field name="attendance_day_list">
-								<tree editable="top">
-									<field name="check_in" />
-									<field name="check_out" />
-									<field name="duration" />
-								</tree>
-							</field>
-						</group>
+						<field name="attendance_day_list">
+							<tree editable="top">
+								<field name="check_in"/>
+								<field name="check_out"/>
+								<field name="duration" widget="float_time"/>
+							</tree>
+						</field>
 					</sheet>
                 </form>
             </field>
