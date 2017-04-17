@@ -5,9 +5,9 @@ class HrLeaveCarryForwardtLine(models.Model):
     _description = 'HR loan line'
 
     emp_loan = fields.Many2one('hr.employee.loan')
-    interest_amount = fields.Integer(string="Interest_Amount")
+    #interest_amount = fields.Integer(string="Interest_Amount")
     schedule_date = fields.Date(string="Schedule Date")
-    installment = fields.Float(size=100, string='Loan Installment',
+    installment = fields.Float(size=100, string='Installment Amount',
                                  readonly=True)
 
     num_installment = fields.Integer(string ="Number Of Installment")

@@ -78,12 +78,12 @@
 					</notebook>
 						<field name="line_ids">
 							<tree string="List" editable="bottom">
-								<field  name="employee_id"  readonly='1'/>
+								<field  name="employee_id"  readonly='1' invisible="1"/>
 								<field  name="emp_loan" invisible="1"/>
-								<field  name="schedule_date" />
 								<field  name="num_installment"/>
-								<field  name="interest_amount" />
+								<field  name="schedule_date" />
 								<field  name="installment" />
+								<field name="state" />
 							</tree>
 						</field>
 					</sheet>
