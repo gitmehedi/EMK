@@ -10,31 +10,27 @@ import datetime
 from odoo.tools import DEFAULT_SERVER_DATE_FORMAT
 from openerp.exceptions import ValidationError,Warning
 
-
-
 class HrManualAttendance(models.Model):
     _name = 'hr.manual.attendance'
     _inherit = ['mail.thread']
-
+    _rec_name = 'employee_id'
+    
     #Fields of Model    
-    name = fields.Char()
     reason = fields.Text(string='Reason')
     is_it_official = fields.Boolean(string='Is it official', default=False)
-    check_in_time_full_day = fields.Date(string = 'Check In time full day')
-    check_out_time_full_day = fields.Date(string = 'Check out time full day')    
-    check_in_time_sign_in = fields.Date(string = 'Check In time Sign In')
-    check_in_time_sign_out = fields.Date(string = 'Check Out time Sign Out')    
+    check_in = fields.Datetime(string = 'Check In')
+    check_out = fields.Datetime(string = 'Check out')    
     sign_type = fields.Selection([
-        ('full_day', 'Full Day'),
+        ('full_day', 'Both'),
         ('sign_in', 'Sign In'),
         ('sign_out', 'Sign Out')
-        ], string = 'Sign Type')    
+        ], string = 'Sign Type', required=True, default="full_day")
     employee_id = fields.Many2one('hr.employee', string="Employee", required = True)
     department_id = fields.Many2one('hr.department', related='employee_id.department_id', string='Department', store=True)   
     state = fields.Selection([
-        ('draft', 'To Submit'),
+        ('draft', 'Draft'),
         ('cancel', 'Cancelled'),
-        ('confirm', 'To Approve'),
+        ('confirm', 'Confirmed'),
         ('refuse', 'Refused'),
         ('validate', 'Approved')
         ], string='Status', readonly=True, track_visibility='onchange', copy=False, default='draft',
@@ -117,8 +113,6 @@ class HrManualAttendance(models.Model):
         
         if delta3.days > min_days_obj.id:
             raise ValidationError(('You can not enter signout date of {} days ago'.format(delta3)))
-
-        
     
     """
                   
@@ -166,28 +160,23 @@ class HrManualAttendance(models.Model):
             manual_attendance.write({ 'state': 'validate', 'manager_id':manager.id})
             
         
-            ## Update HR Attendance Table
+         ## Update HR Attendance Table
         attendance_obj = self.env['hr.attendance']
         manual_attendace_ob = self.env['hr.manual.attendance'].search([('employee_id', '=', manual_attendance.employee_id.id)]) 
             
-        vals1 = {}
-        
-        for mab in manual_attendace_ob:
-              
+        vals1 = {}        
+        for mab in manual_attendace_ob:              
             vals1['employee_id'] = mab.employee_id.id
-            
-            if mab.check_in_time_full_day: 
-                vals1['check_in'] = mab.check_in_time_full_day
-            elif mab.check_in_time_sign_in: 
-                vals1['check_in'] = mab.check_in_time_sign_in
-                
-            if mab.check_out_time_full_day:
-                vals1['check_out'] = mab.check_out_time_full_day
-            elif mab.check_in_time_sign_out:    
-                vals1['check_out'] = mab.check_in_time_sign_out
+                        
+            if mab.check_in: 
+                vals1['check_in'] = mab.check_in
+                            
+            if mab.check_out:
+                vals1['check_out'] = mab.check_out
+            elif mab.check_in:    
+                vals1['check_out'] = mab.check_in
 
-            vals1['manual_attendance_request'] = True
-                
+            vals1['manual_attendance_request'] = True                
             attendance_obj.create(vals1)
          
         attendance_obj2 = self.env['hr.attendance'].search([('employee_id', '=', manual_attendance.employee_id.id)])    
@@ -196,16 +185,15 @@ class HrManualAttendance(models.Model):
         
         for att in attendance_obj2:
             for a in self:
-                if att.check_in and a.check_in_time_full_day:
-                    valr['check_in'] = a.check_in_time_full_day
+                if att.check_in and a.check_in:
+                    valr['check_in'] = a.check_in
             
-                if att.check_in and a.check_in_time_sign_in:
-                    valr['check_in'] = a.check_in_time_sign_in    
+                if att.check_out and a.check_out:
+                    valr['check_out'] = a.check_out    
                 
             attendance_obj2.write(valr)
        
         return True
-    
     
     @api.multi
     def action_refuse(self):
@@ -234,5 +222,4 @@ class HrManualAttendance(models.Model):
                 'manager_id': False                
             })
             
-        return True
-    
+        return True    

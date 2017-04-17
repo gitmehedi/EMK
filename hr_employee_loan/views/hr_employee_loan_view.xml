@@ -18,12 +18,12 @@
                         <button name="action_draft" type="object"
                                 string="Apply" states="draft"
                                 class="oe_highlight"/>
-                        <button name="action_done" type="object"
-                                string="Compute" states="approved"
-                                class="oe_highlight"/>
+                        <button name="generate_schedules" states="approved"
+                               string="Compute" type="object"
+                               class="oe_highlight"/>
 						<button name="action_done" type="object"
-                                string="Disburse Loan" states="approved"
-                                class="oe_highlight"/>
+                               string="Disburse Loan" states="approved"
+                    	       class="oe_highlight"/>
                         <field name="state" widget="statusbar"/>
 					</header>
 					<sheet>
@@ -43,7 +43,7 @@
        						<field name="disbursement_date" />
        						<field name="department_id" invisible="1"/>
 							<field name="company_id" readonly="1" groups="base.group_multi_company"/>
-							<field name="user_id" invisible="1"/>	
+							<field name="user_id" invisible="1"/>
 						</group>
 					</group>
 					<notebook position="inside">
@@ -56,7 +56,7 @@
 									<group>
 										<field name="is_interest_payble" />
 										<field name="interst_mode_id" attrs="{'invisible': [('is_interest_payble', '=', False)]}" />                                   
-	                                    <field name="Req_rate" attrs="{'invisible': [('is_interest_payble', '=', False)]}" />
+	                                    <field name="req_rate" attrs="{'invisible': [('is_interest_payble', '=', False)]}" />
                                     </group>
                                 </group>
 
@@ -76,17 +76,18 @@
 							<page string="Notes">
 								<field name="notes" />			
 							</page>
-
-
+						
 					</notebook>
 
 						<field name="line_ids">
 							<tree string="List" editable="bottom">
 								<field  name="employee_id"  readonly='1'/>
 								<field  name="emp_loan" />
+								<field  name="num_installment"/>
 								<field  name="schedule_date" />
 								<field  name="interest_amount" />
 								<field  name="installment" />
+
 							</tree>
 						</field>
 

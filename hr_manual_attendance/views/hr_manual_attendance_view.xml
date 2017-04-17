@@ -14,10 +14,8 @@
 				<tree string="HR Manual Attendance">
 					<field name= "employee_id" />					
 					<field name="department_id" />
-					<field name="check_in_time_full_day" />
-					<field name="check_out_time_full_day" />
-					<field name="check_in_time_sign_in" />
-					<field name="check_in_time_sign_out" />
+					<field name="check_in" />
+					<field name="check_out" />
 					<field name="state" />
 				</tree>
 			</field>
@@ -33,27 +31,25 @@
 				 	<header>
 	                    <button string="Confirm" name="action_confirm" states="draft" type="object" class="oe_highlight"/>
                     	<button string="Approve" name="action_approve" states="confirm" type="object" class="oe_highlight"/>
-                     	<button string="Refuse" name="action_refuse" states="confirm,validate" type="object" />
-                    	<button string="Reset to Draft" name="action_draft" type="object"/> 
+                     	<button string="Refuse" name="action_refuse" states="confirm" type="object" />
+                    	<button string="Reset to Draft" name="action_draft" type="object" states="confirm"/> 
                     	<field name="state" widget="statusbar" statusbar_visible="draft,confirm,validate"/>                    	
                 	</header>				
                 	
 					<sheet>
 						<group>
 							<group>
-								<field name= "name" />
-								<field name="employee_id" />
-								<field name="department_id" />
+								<field name="employee_id"   attrs="{'readonly':['|', ('state','=','validate'),('state','=','confirm')]}"/>
+								<field name="department_id" attrs="{'readonly':['|', ('state','=','validate'),('state','=','confirm')]}"/>
 							</group>
 							<group>
-								<field name="sign_type"/>
-								<field name="check_in_time_full_day" attrs="{'invisible':[('sign_type','!=','full_day')]}" />							
-								<field name="check_out_time_full_day" attrs="{'invisible':[('sign_type','!=','full_day')]}" />				
-								<field name="check_in_time_sign_in" attrs="{'invisible':[('sign_type','!=','sign_in')]}" />
-								<field name="check_in_time_sign_out" attrs="{'invisible':[('sign_type','!=','sign_out')]}" />
-								<field name="is_it_official" />							
+								<field name="sign_type" attrs="{'readonly':['|', ('state','=','validate'),('state','=','confirm')]}"/>
+								<field name="check_in"  attrs="{'readonly':['|', ('state','=','validate'),('state','=','confirm')]}"/>							
+								<field name="check_out" attrs="{'readonly':['|', ('state','=','validate'),('state','=','confirm')]}"/>
+								
+								<field name="is_it_official" attrs="{'readonly':['|', ('state','=','validate'),('state','=','confirm')]}"/>							
 							</group>
-	                        <field name="reason" nolabel="1" colspan="4" placeholder="Add a reason..."/>	
+	                        <field name="reason" nolabel="1" colspan="4" placeholder="Add a reason..." attrs="{'readonly':['|', ('state','=','validate'),('state','=','confirm')]}"/>	
 						</group>
 	                </sheet>
 	                
@@ -74,7 +70,6 @@
 		
 		<!-- Menu Item -->
 		<menuitem id="menu_hr_manual_attendance" name="Manual Attendances" parent="hr_attendance.menu_hr_attendance_manage_attendances" 
-					groups="hr.group_hr_attendance,base.group_user" sequence="7" action="hr_manual_attendance" />
-		
+					groups="hr.group_hr_attendance,base.group_user" sequence="7" action="hr_manual_attendance" />		
 	</data>
 </openerp>

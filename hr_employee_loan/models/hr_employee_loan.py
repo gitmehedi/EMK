@@ -9,13 +9,13 @@ class HrEmployeeLoanRequest(models.Model):
 
     name = fields.Char(size=100, string='Loan Name', default="New")
     emp_code = fields.Char(string='Code')
-    duration = fields.Char(size=100, string='Duration(Months)',required=True,
+    duration = fields.Integer(size=100, string='Duration(Months)',required=True,
                 states={'draft': [('invisible', False)], 'applied': [('readonly', True)], 'approved':[('readonly', True)]})
     principal_amount = fields.Float(string='Principal Amount',required=True,
                         states={'draft': [('invisible', False)], 'applied': [('readonly', True)], 'approved':[('readonly', True)]})
     notes = fields.Text(string='Notes', size=500, help='Please enter notes.',
                         states={'draft': [('invisible', False)], 'applied': [('readonly', True)], 'approved':[('readonly', True)]})
-    Req_rate = fields.Float(size=100, string='Rate',required=True)
+    req_rate = fields.Float(size=100, string='Rate',required=True)
     is_interest_payble = fields.Boolean(string='Is Interest Payable', required='True',
                         states={'draft': [('invisible', False)], 'applied': [('readonly', True)], 'approved':[('readonly', True)]})
     applied_date = fields.Datetime('Applied Date', readonly=True, copy=False,
@@ -24,7 +24,7 @@ class HrEmployeeLoanRequest(models.Model):
     approved_date = fields.Datetime('Approved Date', readonly=True, copy=False,
         states={'draft': [('invisible', True)], 'applied': [('invisible', True)], 'approved':[('readonly', True)]})
 
-    line_ids = fields.One2many(comodel_name='hr.employee.loan.line', inverse_name='parent_id', string="Line Ids")
+    line_ids = fields.One2many('hr.employee.loan.line', 'parent_id', string="Line Ids")
 
     disbursement_date = fields.Datetime('Disbursement Date', readonly=True, copy=False,
         states={'draft': [('invisible', True)], 'applied': [('invisible', True)], 'approved':[('readonly', True)]})
@@ -72,24 +72,39 @@ class HrEmployeeLoanRequest(models.Model):
     @api.multi
     def action_confirm(self):
         self.state = 'draft'
-        
+
     @api.multi
     def action_draft(self):
         for loan in self:
             loan.state = 'applied'
             loan.applied_date = datetime.datetime.now()
             loan.name = self.env['ir.sequence'].get('emp_code')
-            
+
     @api.multi
     def action_done(self):
         for loan in self:
-            self.state = 'approved'
+            loan.state = 'approved'
             loan.approved_date = datetime.datetime.now()
             loan.disbursement_date = datetime.datetime.now()
 
     @api.multi
-    def hr_loan_compute(self):
-        for compute in self:
-            compute.name =self.env['hr_employe_line']
-            compute.duration = compute.name[0]/compute.duration
+    def generate_schedules(self):
+        line_pool = self.env['hr.employee.loan.line']
+        for loan in self:
+            print loan.id
+            installment_amount = loan.principal_amount / int(loan.duration)
+            for i in range(1, loan.duration+1):
+                print i, installment_amount
+                vals = {}
+                vals['employee_id'] = loan.employee_id.id
+                vals['schedule_date'] = '2017-04-04'
+                vals['installment'] = installment_amount
+                vals['num_installment'] = i
+                vals['parent_id'] = loan.id
+
+                line_pool.create(vals)
+
+
+
+
 
