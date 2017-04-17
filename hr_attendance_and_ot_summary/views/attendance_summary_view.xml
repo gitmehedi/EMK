@@ -26,7 +26,7 @@
 							type="action" string="Select Employee" states="draft"/>
 						<button name="hr_attendance_and_ot_summary.attendance_summary_wizard_action_view"
 							 type="action" string="Re Generate" states="generated"/>
-						<button name="get_summary_data" type="object" string="Get Summary" />
+						<!--<button name="get_summary_data" type="object" string="Get Summary" />-->
 
   						<button name="action_draft" type="object" string="Reject" states="confirmed,approved"/>
   						<button name="action_generated" type="object" string="Generated" states="draft" class="oe_highlight"/>
@@ -45,14 +45,15 @@
 								<field name="department_id" readonly='1'/>
 								<field name="salary_days" readonly='1'/>
 								<field name="present_days" readonly='1'/>
-								<field name="late_days_overwrite" />
+								<field name="absent_days_count" readonly='1'/>
+								<field name="late_days_count" readonly='1'/>
 								<field name="leave_days" readonly='1'/>
+								<field name="weekend_days_count" readonly='1'/>
+								<field name="holidays_days" readonly='1'/>
+								<field name="late_days_overwrite" />
 								<field name="late_hrs" readonly='1' widget="float_time"/>
 								<field name="schedule_ot_hrs" readonly='1' widget="float_time"/>
 								<field name="cal_ot_hrs" readonly='1' widget="float_time"/>
-								<field name="absent_days_count" readonly='1'/>
-								<field name="late_days_count" readonly='1'/>
-								<field name="weekend_days_count" readonly='1'/>
 								<button name="action_regenerate" string="Action" type="object" icon="fa-cogs" />
 							</tree>
 						</field>

@@ -9,9 +9,15 @@ class HrLeaveCarryForwardtLine(models.Model):
     schedule_date = fields.Date(string="Schedule Date")
     installment = fields.Float(size=100, string='Loan Installment',
                                  readonly=True)
+
     num_installment = fields.Integer(string ="Number Of Installment")
 
     """ Relational Fields """
 
     parent_id = fields.Many2one('hr.employee.loan')
     employee_id = fields.Many2one('hr.employee', string="Employee")
+    state = fields.Selection([
+        ('pending', "Pending"),
+        ('done', "Done")
+    ], default='pending')
+
