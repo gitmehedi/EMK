@@ -8,7 +8,7 @@ class HrLeaveCarryForwardtLine(models.Model):
     _description = 'HR loan line'
 
     emp_loan = fields.Many2one('hr.employee.loan')
-    interest_amount = fields.Integer(string="Interest_Amount")
+    interest_amount = fields.Integer(string="Interest Amount")
     schedule_date = fields.Datetime(string="Schedule Date")
     installment = fields.Integer(size=100, string='Loan Installment',
                                  readonly=True)
@@ -22,3 +22,8 @@ class HrLeaveCarryForwardtLine(models.Model):
                                   required=True, ondelete='cascade', index=True,
                                   states={'draft': [('invisible', False)], 'applied': [('readonly', True)],
                                           'approved': [('readonly', True)]})
+
+    state = fields.Selection([
+        ('pending', "Pending"),
+        ('done', "Done")
+    ], default='pending')
