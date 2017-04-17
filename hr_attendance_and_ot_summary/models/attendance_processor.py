@@ -113,6 +113,7 @@ class AttendanceProcessor(models.Model):
                     if self.checkOnPersonalLeave(employeeId, currDate) is True:
                         attSummaryLine = self.buildAttendanceDetails(attSummaryLine, currentDaydutyTime)
                     elif self.checkOnHolidays(currDate) is True:
+                        attSummaryLine.holidays_days = attSummaryLine.holidays_days + 1
                         attSummaryLine = self.buildAttendanceDetails(attSummaryLine, currentDaydutyTime)
                     else:
                         attSummaryLine = self.buildAbsentDetails(attSummaryLine, currDate, currentDaydutyTime)
@@ -301,6 +302,14 @@ class AttendanceProcessor(models.Model):
         att_time_end = dutyTimeMap.get(self.getStrFromDate(postEndDate)).startDutyTime
         self._cr.execute(self.attendance_query, (att_time_start, att_time_end, employeeId))
         attendance_data = self._cr.fetchall()
+
+
+
+        #######################################################################################################
+
+        #attendance_data5 = self.env["hr.attendance"].search([('employee_id', '=', employeeId)], order='check_in ASC')
+
+
         return attendance_data
 
 
@@ -333,6 +342,7 @@ class AttendanceProcessor(models.Model):
                 'att_summary_id':   summaryId,
                 'salary_days':      salaryDays,
                 'present_days':     attSummaryLine.present_days,
+                'holidays_days':    attSummaryLine.holidays_days,
                 'leave_days':       attSummaryLine.leave_days,
                 'late_hrs':         attSummaryLine.late_hrs,
                 'schedule_ot_hrs':  attSummaryLine.schedule_ot_hrs,
