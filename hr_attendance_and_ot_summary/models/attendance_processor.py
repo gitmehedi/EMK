@@ -352,7 +352,7 @@ class AttendanceProcessor(models.Model):
         late_time_pool = self.env['hr.attendance.late.time']
 
         ############## Save Summary Lines ######################
-        salaryDays = attSummaryLine.present_days + attSummaryLine.leave_days + len(attSummaryLine.late_days) + len(attSummaryLine.weekend_days)
+        salaryDays = noOfDays - len(attSummaryLine.absent_days)
         calOtHours = 0
         if attSummaryLine.schedule_ot_hrs > attSummaryLine.late_hrs:
             calOtHours = attSummaryLine.schedule_ot_hrs - attSummaryLine.late_hrs

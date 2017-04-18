@@ -5,7 +5,7 @@ from openerp import api, models, fields
 class AttendanceSummaryLine(models.Model):
     _name = 'hr.attendance.summary.line'
 
-    salary_days = fields.Integer(string='Salary Days', required=True)    #
+    salary_days = fields.Integer(string='Salary Days', required=True)
     present_days = fields.Integer(string='Present Days', required=True)
     late_days_overwrite = fields.Integer(string='Late Days Overwrite')
     leave_days = fields.Integer(string='Leave Days')
