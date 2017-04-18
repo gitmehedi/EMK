@@ -101,19 +101,39 @@ class AttendanceProcessor(models.Model):
                     absentTime = scheduleTime - totalPresentTime
 
                     if absentTime >= scheduleTime/2:
-                        # @Todo- Check Short Leave. If not approve short leave then absent
-                        attSummaryLine = self.buildAbsentDetails(attSummaryLine, currDate, currentDaydutyTime)
+                        # Before set as absent, check this day is holiday or personal leave
+                        if self.checkOnHolidays(currDate) is True:
+                            attSummaryLine.holidays_days = attSummaryLine.holidays_days + 1
+                            attSummaryLine = self.buildAttendanceDetails(attSummaryLine, currentDaydutyTime)
+                        elif self.checkOnPersonalLeave(employeeId, currDate) is True:
+                            attSummaryLine.leave_days = attSummaryLine.leave_days + 1
+                            attSummaryLine = self.buildAttendanceDetails(attSummaryLine, currentDaydutyTime)
+                        else:
+                            # @Todo- Check Short Leave. If not approve short leave then absent
+                            attSummaryLine = self.buildAbsentDetails(attSummaryLine, currDate, currentDaydutyTime)
+
                     elif absentTime > 20: # Default gress 20 minutes gress time
-                        attSummaryLine = self.buildLateDetails(attSummaryLine, currentDaydutyTime, currDate, absentTime, totalPresentTime, attendanceDayList)
+
+                        # Before set as late, check this day is holiday or personal leave
+                        if self.checkOnHolidays(currDate) is True:
+                            attSummaryLine.holidays_days = attSummaryLine.holidays_days + 1
+                            attSummaryLine = self.buildAttendanceDetails(attSummaryLine, currentDaydutyTime)
+                        elif self.checkOnPersonalLeave(employeeId, currDate) is True:
+                            attSummaryLine.leave_days = attSummaryLine.leave_days + 1
+                            attSummaryLine = self.buildAttendanceDetails(attSummaryLine, currentDaydutyTime)
+                        else:
+                            attSummaryLine = self.buildLateDetails(attSummaryLine, currentDaydutyTime, currDate, absentTime, totalPresentTime, attendanceDayList)
+
                     else:
                         attSummaryLine.present_days = attSummaryLine.present_days + 1
                         attSummaryLine = self.buildAttendanceDetails(attSummaryLine, currentDaydutyTime)
 
                 else:
-                    if self.checkOnPersonalLeave(employeeId, currDate) is True:
-                        attSummaryLine = self.buildAttendanceDetails(attSummaryLine, currentDaydutyTime)
-                    elif self.checkOnHolidays(currDate) is True:
+                    if self.checkOnHolidays(currDate) is True:
                         attSummaryLine.holidays_days = attSummaryLine.holidays_days + 1
+                        attSummaryLine = self.buildAttendanceDetails(attSummaryLine, currentDaydutyTime)
+                    elif self.checkOnPersonalLeave(employeeId, currDate) is True:
+                        attSummaryLine.leave_days = attSummaryLine.leave_days + 1
                         attSummaryLine = self.buildAttendanceDetails(attSummaryLine, currentDaydutyTime)
                     else:
                         attSummaryLine = self.buildAbsentDetails(attSummaryLine, currDate, currentDaydutyTime)
