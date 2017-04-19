@@ -6,7 +6,7 @@
     'version':'1.0',
     'depends': ['hr'],
     'data': [
-        'views/hr_employee_loan_line_view.xml',
+        'views/hr_mobile_bill_view.xml',
     ],
     
     'summary': 'Calculates Employees Mobile Bills',
