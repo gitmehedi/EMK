@@ -10,6 +10,7 @@ class InheritedHrPayslip(models.Model):
 
     @api.onchange('employee_id', 'date_from', 'date_to')
     def onchange_employee(self):
+
         if self.employee_id:
             self.contract_id = 0
             self.struct_id = 0
@@ -30,29 +31,26 @@ class InheritedHrPayslip(models.Model):
                     if self.employee_id == emp.employee_id:
 
                         if emp.leave_days:
-                            if self.worked_days_line_ids:
-                                worked_days_lines += worked_days_lines.new({
-                                    'code': 'Leave',
-                                    'contract_id': self.contract_id.id,
-                                    'number_of_days': emp.leave_days,
-                                    'name': 'Leave Days',
-                                })
+                            worked_days_lines += worked_days_lines.new({
+                                'code': 'Leave',
+                                'contract_id': self.contract_id.id,
+                                'number_of_days': emp.leave_days,
+                                'name': 'Leave Days',
+                            })
                         if emp.cal_ot_hrs:
-                            if self.worked_days_line_ids:
-                                worked_days_lines += worked_days_lines.new({
-                                    'code': 'OT',
-                                    'contract_id': self.contract_id.id,
-                                    'number_of_hours': emp.cal_ot_hrs,
-                                    'name': 'OT Hours',
-                                })
+                            worked_days_lines += worked_days_lines.new({
+                                'code': 'OT',
+                                'contract_id': self.contract_id.id,
+                                'number_of_hours': emp.cal_ot_hrs,
+                                'name': 'OT Hours',
+                            })
                         if emp.late_hrs:
-                            if self.worked_days_line_ids:
-                                worked_days_lines += worked_days_lines.new({
-                                    'code': 'Late',
-                                    'contract_id': self.contract_id.id,
-                                    'number_of_hours': emp.late_hrs,
-                                    'name': 'Late Hours',
-                                })
+                            worked_days_lines += worked_days_lines.new({
+                                'code': 'Late',
+                                'contract_id': self.contract_id.id,
+                                'number_of_hours': emp.late_hrs,
+                                'name': 'Late Hours',
+                            })
                         self.worked_days_line_ids = worked_days_lines
 
 
@@ -75,4 +73,20 @@ class InheritedHrPayslip(models.Model):
                 })
 
                 self.input_line_ids = loan_line_ids
+
+
+class HrPayslipEmployees(models.TransientModel):
+    _inherit = 'hr.payslip.employees'
+
+    @api.multi
+    def compute_sheet(self):
+        res = super(HrPayslipEmployees, self).compute_sheet()
+
+        active_id = self.env.context.get('active_id')
+        payslip_run = self.env['hr.payslip.run'].browse(active_id)
+
+        for payslip in payslip_run.slip_ids:
+            payslip.onchange_employee()
+
+        return res
 
