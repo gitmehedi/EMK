@@ -60,7 +60,9 @@
             <field name="view_mode">tree,form</field>
         </record>
 
-        <menuitem id="hr_mobile_bill_menu" name="Mobile Bills" parent="hr.menu_hr_root"
+        <menuitem id="hr_mobile_bill_menu" name="Employee Mobile Bills" parent="hr.menu_hr_root"
+                  action="hr_mobile_bill_action" groups="base.group_user"/>
+		<menuitem id="hr_mobile_bills_menu" name="Mobile Bills" parent="hr_mobile_bill_menu"
                   action="hr_mobile_bill_action" groups="base.group_user"/>
     </data>
 </odoo>

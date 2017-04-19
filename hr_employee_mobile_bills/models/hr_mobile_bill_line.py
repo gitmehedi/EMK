@@ -1,7 +1,7 @@
 from openerp import models, fields
 from openerp import api
 
-class HrLeaveEncashmentLine(models.Model):    
+class HrEmpMobileBillLine(models.Model):
     _name = 'hr.mobile.bill.line'
     _description = 'HR mobile bill line'    
 

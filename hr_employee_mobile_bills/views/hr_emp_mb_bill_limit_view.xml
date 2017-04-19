@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <record id="hr_mobile_bill_limit_form" model="ir.ui.view">
+			<field name="name">hr.mobile.bill.limit.form</field>
+			<field name="model">hr.mobile.bill.limit</field>
+			<field name="type">form</field>
+			<field name="arch" type="xml">
+				<form string="Employee Mobile Bill Limits">
+					<sheet>
+						<group>
+							<group>
+								<field name="name"/>
+								<field name="effective_date"/>
+							</group>
+						</group>
+						<field name="line_ids">
+							<tree editable="top">
+								<field name="employee_id"/>
+								<field name="effective_date"/>
+								<field name="limit"/>
+							</tree>
+						</field>
+					</sheet>
+				</form>
+			</field>
+		</record>
+		<record id="hr_mobile_bill_limit_tree" model="ir.ui.view">
+			<field name="name">hr.mobile.bill.limit.tree</field>
+			<field name="model">hr.mobile.bill.limit</field>
+			<field name="type">tree</field>
+			<field name="arch" type="xml">
+				<tree string="Employee Mobile bills">
+					<field name="name" />
+					<field name="effective_date" />
+				</tree>
+			</field>
+		</record>
+
+        <record model="ir.actions.act_window" id="hr_mobile_bill_limit_action">
+            <field name="name">Mobile Bill Limits</field>
+            <field name="res_model">hr.mobile.bill.limit</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <menuitem id="hr_mobile_bill_limits_menu" name="Mobile Bill Limits" parent="hr_mobile_bill_menu"
+                  action="hr_mobile_bill_limit_action" groups="base.group_user"/>
+    </data>
+</odoo>
