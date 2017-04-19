@@ -4,6 +4,7 @@ class HrContract(models.Model):
 
     _inherit = 'hr.employee'
 
+    mob_bill_unlimited = fields.Boolean('Unlimited')
     current_bill_limit = fields.Float(compute='_compute_current_limit', string='Current Limit', digits=(12, 2),
                                       help='The rate of the currency to the currency of rate 1.')
 
@@ -23,4 +24,4 @@ class HrContract(models.Model):
         self._cr.execute(query, (date, tuple(self.ids)))
         limits = dict(self._cr.fetchall())
         for emp in self:
-            emp.current_bill_limit = limits.get(emp.id) or 1.0
+            emp.current_bill_limit = limits.get(emp.id) or 0.0
