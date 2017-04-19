@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<openerp>
+	<data>
+		
+		<menuitem id="hr_attendance.menu_hr_attendance_root" 
+				  name="Attendances" 
+				  sequence="90" 
+				  groups="hr.group_hr_attendance,base.group_user" 
+				  web_icon="hr_attendance,static/description/icon.png"/>
+		
+		<menuitem id="hr_attendance.menu_hr_attendance_manage_attendances" 
+			      name="Manage Attendances" 
+			      parent="hr_attendance.menu_hr_attendance_root" 
+			      sequence="20" 
+			      groups="hr_attendance.group_hr_attendance_user,base.group_user"/>
+		
+		<!-- Tree View -->
+		<record id="hr_manual_attendance_tree" model="ir.ui.view">
+			<field name="name">hr_shift_alter_tree</field>
+			<field name="model">hr.shift.alter</field>
+			<field name="arch" type="xml">
+				<tree string="Attendance Alteration">
+					<field name= "employee_id" />					
+					<field name="alter_date" />
+					<field name="alter_time_start" />
+					<field name="alter_time_end" />
+					<field name="ot_time_start" />
+					<field name="ot_time_end" />
+					<field name="ot_included" />
+				</tree>
+			</field>
+		</record>
+		
+		<!-- Form View -->
+		<record id="hr_manual_attendance_form" model="ir.ui.view">
+			<field name="name">hr_shift_alter_form</field>
+			<field name="model">hr.shift.alter</field>
+			<field name="type">form</field>
+			<field name="arch" type="xml">
+				<form string="Attendance Alteration">
+				 	<header>
+	                    <!-- <button string="Confirm" name="action_confirm" states="draft" type="object" class="oe_highlight"/>
+                    	<button string="Approve" name="action_approve" states="confirm" type="object" class="oe_highlight"/>
+                     	<button string="Refuse" name="action_refuse" states="confirm" type="object" />
+                    	<button string="Reset to Draft" name="action_draft" type="object" states="confirm"/> 
+                    	<field name="state" widget="statusbar" statusbar_visible="draft,confirm,validate"/>  -->                   	
+                	</header>				
+                	
+					<sheet>
+						<group>
+							<group>
+								<field name="employee_id"/>
+								<!-- <field name="department_id"/> -->
+								<field name="alter_date"/>
+								<field name="alter_time_start"/>							
+								<field name="alter_time_end"/>
+							</group>
+							<group>
+								<field name="ot_time_start" />
+								<field name="ot_time_end" />
+								<field name="ot_included" />							
+							</group>
+						</group>
+	                </sheet>
+				</form>
+			</field>
+		</record>
+		
+		<record id="hr_shift_alter_action" model="ir.actions.act_window">
+			<field name="name">Attendance Alteration</field>
+			<field name="res_model">hr.shift.alter</field>
+			<field name="view_mode">tree,form</field>
+		</record>
+		
+		<!-- Menu Item -->
+		<menuitem id="menu_hr_shift_alter" 
+				  name="Alter Attendances" 
+				  parent="hr_attendance.menu_hr_attendance_manage_attendances" 
+				  groups="hr_attendance.group_hr_attendance_user,base.group_user" 
+				  sequence="7" action="hr_shift_alter_action" />		
+	</data>
+</openerp>
