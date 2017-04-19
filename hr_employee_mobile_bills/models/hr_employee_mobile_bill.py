@@ -1,10 +1,10 @@
 from odoo import api, fields, models, _
 
-class HrEmployeeMobileBill(models.Model):
+class HrContract(models.Model):
 
     _inherit = 'hr.employee'
 
-    current_bill_limit = fields.Float(compute='_compute_current_limit', string='Current Limit', digits=(12, ),
+    current_bill_limit = fields.Float(compute='_compute_current_limit', string='Current Limit', digits=(12, 2),
                                       help='The rate of the currency to the currency of rate 1.')
 
     """ All relations fields """
