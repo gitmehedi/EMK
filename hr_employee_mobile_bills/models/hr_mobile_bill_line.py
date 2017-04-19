@@ -26,11 +26,15 @@ class HrEmpMobileBillLine(models.Model):
     
     """All function which process data and operation"""
     @api.depends('emp_mobile_phone')
-    @api.onchange('emp_mobile_phone')
+    @api.onchange('emp_mobile_phone', bill_amount)
     def onchange_emp_mobile_phone(self):
         for recode in self:
             if recode.emp_mobile_phone:
-                emp_pool = self.env['hr.employee'].search([('mobile_phone','=ilike',recode.emp_mobile_phone)], limit=1)
-                if emp_pool:
-                    recode.employee_id = emp_pool.id
+                emp = self.env['hr.employee'].search([('mobile_phone','=ilike',recode.emp_mobile_phone)], limit=1)
+                if emp:
+                    recode.employee_id = emp.id
+                    if emp.current_bill_limit < recode.bill_amount:
+                        recode.amount = recode.bill_amount - emp.current_bill_limit
+                    else:
+                        recode.amount = 0
                 
