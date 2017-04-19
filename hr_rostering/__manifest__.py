@@ -6,7 +6,8 @@
     'version':'1.0',
     'data': [
         'views/hr_shifting.xml',
-        'views/hr_shifting_history.xml'
+        'views/hr_shifting_history.xml',
+        'views/hr_shift_alter_view.xml',
     ],
     
     'depends': [
