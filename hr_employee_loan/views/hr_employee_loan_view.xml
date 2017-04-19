@@ -21,10 +21,10 @@
                         <button name="generate_schedules" states="approved"
                                string="Compute" type="object"
                                class="oe_highlight"/>
-						<button name="action_done" type="object"
+						<button name="action_disbursed" type="object"
                                string="Disburse Loan" states="approved"
                     	       class="oe_highlight"/>
-                        <field name="state" widget="statusbar"/>
+                        <field name="state" widget="statusbar" statusbar_visible="draft,a,validate"/>
 					</header>
 					<sheet>
 						<div class="oe_title">
@@ -54,12 +54,12 @@
                                    		<field name="duration"/>
 									</group>
 									<group>
+										<field name="repayment_date"/>
 										<field name="is_interest_payble" />
 										<field name="interst_mode_id" attrs="{'invisible': [('is_interest_payble', '=', False)]}" />                                   
 	                                    <field name="req_rate" attrs="{'invisible': [('is_interest_payble', '=', False)]}" />
                                     </group>
                                 </group>
-
 							</page>
 							<page string="Proofs">
 								<field name="employee_loan_proof_ids">	
@@ -72,25 +72,20 @@
                                     <field name="name"/>
                                 </field>
 							</page>
-
 							<page string="Notes">
 								<field name="notes" />			
 							</page>
-						
 					</notebook>
-
 						<field name="line_ids">
 							<tree string="List" editable="bottom">
-								<field  name="employee_id"  readonly='1'/>
-								<field  name="emp_loan" />
+								<field  name="employee_id"  readonly='1' invisible="1"/>
+								<field  name="emp_loan" invisible="1"/>
 								<field  name="num_installment"/>
 								<field  name="schedule_date" />
-								<field  name="interest_amount" />
 								<field  name="installment" />
-
+								<field name="state" />
 							</tree>
 						</field>
-
 					</sheet>
 				</form>
 			</field>
@@ -130,6 +125,9 @@
                   action="hr_employee_loan_action" groups="base.group_user"/>
 		<menuitem id="loan_request_approve_menu" name="Loan Requests to Approve" parent="loans_menu" sequence="4"
                   action="hr_employee_loan_action" groups="base.group_user"/>
+		<menuitem id="loan_disburse_menu" name="Loan to disburse" parent="accounting_menu" sequence="7"
+                  action="hr_employee_loan_action" groups="base.group_user"/>
+
 
 
     </data>

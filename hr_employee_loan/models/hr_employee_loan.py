@@ -1,5 +1,6 @@
 from openerp import models, fields
 import datetime
+from dateutil.relativedelta import relativedelta
 from openerp import api
 
 
@@ -10,57 +11,63 @@ class HrEmployeeLoanRequest(models.Model):
     name = fields.Char(size=100, string='Loan Name', default="New")
     emp_code = fields.Char(string='Code')
     duration = fields.Integer(size=100, string='Duration(Months)',required=True,
-                states={'draft': [('invisible', False)], 'applied': [('readonly', True)], 'approved':[('readonly', True)]})
+                states={'draft': [('invisible', False)], 'applied': [('readonly', True)], 'approved':[('readonly', True)],'disbursed':[('readonly', True)]})
     principal_amount = fields.Float(string='Principal Amount',required=True,
-                        states={'draft': [('invisible', False)], 'applied': [('readonly', True)], 'approved':[('readonly', True)]})
+                        states={'draft': [('invisible', False)], 'applied': [('readonly', True)], 'approved':[('readonly', True)],'disbursed':[('readonly', True)]})
     notes = fields.Text(string='Notes', size=500, help='Please enter notes.',
-                        states={'draft': [('invisible', False)], 'applied': [('readonly', True)], 'approved':[('readonly', True)]})
-    req_rate = fields.Float(size=100, string='Rate',required=True)
+                        states={'draft': [('invisible', False)], 'applied': [('readonly', True)], 'approved':[('readonly', True)],'disbursed':[('readonly', True)]})
+    req_rate = fields.Float(size=100, string='Rate',required=True,
+                            states={'draft': [('invisible', False)], 'applied': [('readonly', True)], 'approved': [('readonly', True)],'disbursed':[('readonly', True)]})
     is_interest_payble = fields.Boolean(string='Is Interest Payable', required='True',
-                        states={'draft': [('invisible', False)], 'applied': [('readonly', True)], 'approved':[('readonly', True)]})
+                        states={'draft': [('invisible', False)], 'applied': [('readonly', True)], 'approved':[('readonly', True)],'disbursed':[('readonly', True)]})
     applied_date = fields.Datetime('Applied Date', readonly=True, copy=False,
-        states={'draft': [('invisible', True)], 'applied': [('readonly', True)], 'approved':[('invisible', True)]})
+        states={'draft': [('invisible', True)], 'applied': [('readonly', True)], 'approved':[('invisible', True)],'disbursed':[('readonly', True)]})
     
     approved_date = fields.Datetime('Approved Date', readonly=True, copy=False,
-        states={'draft': [('invisible', True)], 'applied': [('invisible', True)], 'approved':[('readonly', True)]})
+        states={'draft': [('invisible', True)], 'applied': [('invisible', True)], 'approved':[('readonly', True)],'disbursed':[('readonly', True)]})
+
+    repayment_date = fields.Date('Repayment Date',required=True,states={'draft': [('invisible', False)], 'applied': [('readonly', True)], 'approved':[('readonly', True)],'disbursed':[('readonly', True)]})
 
     line_ids = fields.One2many('hr.employee.loan.line', 'parent_id', string="Line Ids")
 
     disbursement_date = fields.Datetime('Disbursement Date', readonly=True, copy=False,
-        states={'draft': [('invisible', True)], 'applied': [('invisible', True)], 'approved':[('readonly', True)]})
+        states={'draft': [('invisible', True)], 'applied': [('invisible', True)], 'approved':[('readonly', True)],'disbursed':[('readonly', True)]})
     
     """ All relations fields """
     def _default_employee(self):
         return self.env['hr.employee'].search([('user_id', '=', self.env.uid)], limit=1)
 
+
     employee_id = fields.Many2one('hr.employee', string="Employee", default=_default_employee,
                                   required=True, ondelete='cascade', index=True,
-                                  states={'draft': [('invisible', False)], 'applied': [('readonly', True)], 'approved':[('readonly', True)]})
+                                  states={'draft': [('invisible', False)], 'applied': [('readonly', True)], 'approved':[('readonly', True)],'disbursed':[('readonly', True)]})
     department_id = fields.Many2one('hr.department', string="Department", related="employee_id.department_id")
     employee_loan_proof_ids = fields.Many2many('hr.employee.loan.proof', string='Proofs',
-                                states={'draft': [('invisible', False)], 'applied': [('readonly', True)], 'approved':[('readonly', True)]})
+                                states={'draft': [('invisible', False)], 'applied': [('readonly', True)], 'approved':[('readonly', True)],'disbursed':[('readonly', True)]})
     employee_loan_policy_ids = fields.Many2many('hr.employee.loan.policy', string='Policies',
-                                    states={'draft': [('invisible', False)], 'applied': [('readonly', True)], 'approved':[('readonly', True)]})
+                                    states={'draft': [('invisible', False)], 'applied': [('readonly', True)], 'approved':[('readonly', True)],'disbursed':[('readonly', True)]})
     company_id = fields.Many2one('res.company', string='Company', default=lambda self: self.env.user.company_id)
     user_id = fields.Many2one('res.users', string='User')
     loan_type_id = fields.Many2one('hr.employee.loan.type', string='Loan Type', required=True,
-                                   states={'draft': [('invisible', False)], 'applied': [('readonly', True)], 'approved':[('readonly', True)]})
+                                   states={'draft': [('invisible', False)], 'applied': [('readonly', True)], 'approved':[('readonly', True)],'disbursed':[('readonly', True)]})
 
     """ All Selection fields """
          
     interst_mode_id = fields.Selection([
         ('flat', 'Flat'),
-        ], string = 'Interest Mode',)
+        ], string = 'Interest Mode',
+        states={'draft': [('invisible', False)], 'applied': [('readonly', True)], 'approved': [('readonly', True)],'disbursed':[('readonly', True)]})
+
     
 
     state = fields.Selection([
         ('draft', "Draft"),
         ('applied', "Applied"),
         ('approved', "Approved"),
+        ('disbursed', "Disbursed"),
     ], default='draft')
     
     """All function which process data and operation"""
-    
     @api.onchange('loan_type_id')
     def onchange_loan_type_id(self):
         if self.loan_type_id and self.loan_type_id.loan_proof_ids:
@@ -72,6 +79,10 @@ class HrEmployeeLoanRequest(models.Model):
     @api.multi
     def action_confirm(self):
         self.state = 'draft'
+
+    @api.multi
+    def action_disbursed(self):
+        self.state = 'disbursed'
 
     @api.multi
     def action_draft(self):
@@ -91,18 +102,19 @@ class HrEmployeeLoanRequest(models.Model):
     def generate_schedules(self):
         line_pool = self.env['hr.employee.loan.line']
         for loan in self:
-            print loan.id
-            installment_amount = loan.principal_amount / int(loan.duration)
-            for i in range(1, loan.duration+1):
-                print i, installment_amount
-                vals = {}
-                vals['employee_id'] = loan.employee_id.id
-                vals['schedule_date'] = '2017-04-04'
-                vals['installment'] = installment_amount
-                vals['num_installment'] = i
-                vals['parent_id'] = loan.id
+            if loan.duration > 0 and loan.repayment_date:
+                repayment_date = datetime.datetime.strptime(loan.repayment_date, '%Y-%m-%d')
+                installment_amount = loan.principal_amount / int(loan.duration)
+                for i in range(1, loan.duration+1):
+                    vals = {}
+                    vals['employee_id'] = loan.employee_id.id
+                    vals['schedule_date'] = repayment_date
+                    vals['installment'] = installment_amount
+                    vals['num_installment'] = i
+                    vals['parent_id'] = loan.id
+                    repayment_date = repayment_date + relativedelta(months=1)
 
-                line_pool.create(vals)
+                    line_pool.create(vals)
 
 
 
