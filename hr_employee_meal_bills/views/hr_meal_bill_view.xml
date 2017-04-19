@@ -58,7 +58,7 @@
             <field name="view_mode">tree,form</field>
         </record>
 
-        <menuitem id="hr_meal_bill_menu" name="Meal Bills"
+        <menuitem id="hr_meal_bill_menu" name="Meal Bills" parent="hr.menu_hr_root"
                   action="hr_meal_bill_action" groups="base.group_user"/>
     </data>
 </odoo>
