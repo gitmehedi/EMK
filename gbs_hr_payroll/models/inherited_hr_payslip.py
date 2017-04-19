@@ -58,7 +58,7 @@ class InheritedHrPayslip(models.Model):
             Inset loan data
             """
 
-            loan_data = self.env['hr.employee.loan.line'].search([('employee_id', '>=', self.employee_id.id),
+            loan_data = self.env['hr.employee.loan.line'].search([('employee_id', '=', self.employee_id.id),
                                                                   ('schedule_date', '>=', self.date_from),
                                                                   ('schedule_date', '<=', self.date_to),
                                                                   ('state', '=', 'pending')], limit=1)
