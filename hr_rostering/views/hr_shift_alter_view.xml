@@ -6,13 +6,23 @@
 				  name="Attendances" 
 				  sequence="90" 
 				  groups="hr.group_hr_attendance,base.group_user" 
-				  web_icon="hr_attendance,static/description/icon.png"/>
+				  web_icon="hr_attendance,static/description/icon.png"
+				  />
 		
 		<menuitem id="hr_attendance.menu_hr_attendance_manage_attendances" 
 			      name="Manage Attendances" 
 			      parent="hr_attendance.menu_hr_attendance_root" 
 			      sequence="20" 
-			      groups="hr_attendance.group_hr_attendance_user,base.group_user"/>
+			      groups="hr_attendance.group_hr_attendance_user,base.group_user"
+			      />
+			      
+		<!-- Menu Item -->
+		<menuitem id="menu_hr_shift_alter" 
+				  name="Alter Attendances" 
+				  parent="hr_attendance.menu_hr_attendance_manage_attendances" 
+				  groups="hr_attendance.group_hr_attendance_user,base.group_user" 
+				  sequence="7" action="hr_shift_alter_action" 
+				  />		
 		
 		<!-- Tree View -->
 		<record id="hr_manual_attendance_tree" model="ir.ui.view">
@@ -20,13 +30,15 @@
 			<field name="model">hr.shift.alter</field>
 			<field name="arch" type="xml">
 				<tree string="Attendance Alteration">
-					<field name= "employee_id" />					
+					<field name="employee_id" />					
 					<field name="alter_date" />
 					<field name="alter_time_start" />
 					<field name="alter_time_end" />
 					<field name="ot_time_start" />
 					<field name="ot_time_end" />
 					<field name="ot_included" />
+					<field name="state" />
+					
 				</tree>
 			</field>
 		</record>
@@ -39,26 +51,26 @@
 			<field name="arch" type="xml">
 				<form string="Attendance Alteration">
 				 	<header>
-	                    <!-- <button string="Confirm" name="action_confirm" states="draft" type="object" class="oe_highlight"/>
-                    	<button string="Approve" name="action_approve" states="confirm" type="object" class="oe_highlight"/>
-                     	<button string="Refuse" name="action_refuse" states="confirm" type="object" />
-                    	<button string="Reset to Draft" name="action_draft" type="object" states="confirm"/> 
-                    	<field name="state" widget="statusbar" statusbar_visible="draft,confirm,validate"/>  -->                   	
-                	</header>				
-                	
+	                    <button string="Confirm" name="action_confirm" states="draft" type="object" class="oe_highlight"/>
+                    	<button string="Approve" name="action_approve" states="confirmed" type="object" class="oe_highlight"/>
+                     	<button string="Refuse" name="action_refuse" states="confirmed" type="object" />
+                    	<button string="Reset to Draft" name="action_draft" type="object" states="confirmed"/> 
+                    	
+                    	<field name="state" widget="statusbar" statusbar_visible="draft,confirmed,approved"/>                    	
+                	</header>	
 					<sheet>
 						<group>
 							<group>
-								<field name="employee_id"/>
-								<!-- <field name="department_id"/> -->
-								<field name="alter_date"/>
-								<field name="alter_time_start"/>							
-								<field name="alter_time_end"/>
+								<field name="employee_id" attrs="{'readonly':['|',('state','=','approved'),('state','=','confirmed')]}"/>
+								<field name="department_id" invisible="1"/> 
+								<field name="alter_date" attrs="{'readonly':['|', ('state','=','approved'),('state','=','confirmed')]}"/>
+								<field name="alter_time_start" attrs="{'readonly':['|', ('state','=','approved'),('state','=','confirmed')]}"/>							
+								<field name="alter_time_end" attrs="{'readonly':['|', ('state','=','approved'),('state','=','confirmed')]}"/>
 							</group>
 							<group>
-								<field name="ot_time_start" />
-								<field name="ot_time_end" />
-								<field name="ot_included" />							
+								<field name="ot_time_start" attrs="{'readonly':['|', ('state','=','approved'),('state','=','confirmed')]}"/>
+								<field name="ot_time_end" attrs="{'readonly':['|', ('state','=','approved'),('state','=','confirmed')]}"/>
+								<field name="ot_included" attrs="{'readonly':['|', ('state','=','approved'),('state','=','confirmed')]}"/>							
 							</group>
 						</group>
 	                </sheet>
@@ -67,16 +79,11 @@
 		</record>
 		
 		<record id="hr_shift_alter_action" model="ir.actions.act_window">
-			<field name="name">Attendance Alteration</field>
+			<field name="name">Alter Attendance</field>
 			<field name="res_model">hr.shift.alter</field>
 			<field name="view_mode">tree,form</field>
 		</record>
 		
-		<!-- Menu Item -->
-		<menuitem id="menu_hr_shift_alter" 
-				  name="Alter Attendances" 
-				  parent="hr_attendance.menu_hr_attendance_manage_attendances" 
-				  groups="hr_attendance.group_hr_attendance_user,base.group_user" 
-				  sequence="7" action="hr_shift_alter_action" />		
+		
 	</data>
 </openerp>
