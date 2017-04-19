@@ -26,7 +26,7 @@ class HrEmpMobileBillLine(models.Model):
     
     """All function which process data and operation"""
     @api.depends('emp_mobile_phone')
-    @api.onchange('emp_mobile_phone', bill_amount)
+    @api.onchange('emp_mobile_phone', 'bill_amount')
     def onchange_emp_mobile_phone(self):
         for recode in self:
             if recode.emp_mobile_phone:
