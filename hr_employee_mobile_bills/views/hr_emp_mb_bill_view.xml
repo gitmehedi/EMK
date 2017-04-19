@@ -12,6 +12,7 @@
                     <xpath expr="//page[@name='hr_settings']" position="after">
                         <page string="Mobile Bill Limits">
                             <group>
+                                <field name="mob_bill_unlimited" />
                                 <field name="current_bill_limit" />
                             </group>
                             <field name="mobile_bill_line_ids">

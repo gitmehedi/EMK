@@ -4,6 +4,7 @@ class HrContract(models.Model):
 
     _inherit = 'hr.employee'
 
+    mob_bill_unlimited = fields.Boolean('Unlimited')
     current_bill_limit = fields.Float(compute='_compute_current_limit', string='Current Limit', digits=(12, 2),
                                       help='The rate of the currency to the currency of rate 1.')
 

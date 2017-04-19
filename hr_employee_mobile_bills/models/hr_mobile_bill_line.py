@@ -7,7 +7,7 @@ class HrEmpMobileBillLine(models.Model):
 
 
     bill_amount = fields.Float(string="Bill Amount", required=True)
-    amount =fields.Float(string="Amount", required=True)
+    amount =fields.Float(string="Exceed Amount", required=True)
     emp_mobile_phone = fields.Char('Mobile Number', required=True)
     
   
@@ -30,10 +30,13 @@ class HrEmpMobileBillLine(models.Model):
     def onchange_emp_mobile_phone(self):
         for recode in self:
             if recode.emp_mobile_phone:
-                emp = self.env['hr.employee'].search([('mobile_phone','=ilike',recode.emp_mobile_phone)], limit=1)
+                mobile = '%' + recode.emp_mobile_phone
+                emp = self.env['hr.employee'].search([('mobile_phone','=ilike',mobile)], limit=1)
                 if emp:
                     recode.employee_id = emp.id
-                    if emp.current_bill_limit < recode.bill_amount:
+                    if emp.mob_bill_unlimited:
+                        recode.amount = 0
+                    elif emp.current_bill_limit < recode.bill_amount:
                         recode.amount = recode.bill_amount - emp.current_bill_limit
                     else:
                         recode.amount = 0

@@ -19,8 +19,7 @@
                                 class="oe_highlight"/>
                          <field name="state" widget="statusbar"/>
 					</header>
-					<sheet>						
-						<label for="name" string="Employee Mobile bills"/>
+					<sheet>
 	                 		<group >
 	                 			<group>
 	                            	<field name="name" />
