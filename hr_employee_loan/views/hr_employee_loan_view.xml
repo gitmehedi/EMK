@@ -121,14 +121,12 @@
         </record>
 
 
-        <menuitem id="loan_request_menu" name="Loan Requests" parent="loans_menu" sequence="3"
+        <menuitem id="loan_request_menu" name="Loan Requests" parent="main_loan_menu" sequence="10"
                   action="hr_employee_loan_action" groups="base.group_user"/>
-		<menuitem id="loan_request_approve_menu" name="Loan Requests to Approve" parent="loans_menu" sequence="4"
+		<menuitem id="loan_request_approve_menu" name="Loans to Approve" parent="main_loan_menu" sequence="20"
                   action="hr_employee_loan_action" groups="base.group_user"/>
-		<menuitem id="loan_disburse_menu" name="Loan to disburse" parent="accounting_menu" sequence="7"
+		<menuitem id="loan_disburse_menu" name="Loans to Disburse" parent="main_loan_menu" sequence="30"
                   action="hr_employee_loan_action" groups="base.group_user"/>
-
-
 
     </data>
 </odoo>

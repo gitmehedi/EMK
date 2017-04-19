@@ -31,7 +31,8 @@
 											<tree string="List" editable="bottom">
 												<field  name="emp_mobile_phone" />											
 												<field name="employee_id"/>
-												<field  name="bill_amount" />												
+												<field  name="bill_amount" />
+												<field  name="amount" />
 											</tree>
 										</field>
 									</page>
@@ -59,7 +60,7 @@
             <field name="view_mode">tree,form</field>
         </record>
 
-        <menuitem id="hr_mobile_bill_menu" name="Mobile Bills"
+        <menuitem id="hr_mobile_bill_menu" name="Mobile Bills" parent="hr.menu_hr_root"
                   action="hr_mobile_bill_action" groups="base.group_user"/>
     </data>
 </odoo>
