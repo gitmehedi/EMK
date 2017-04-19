@@ -17,6 +17,9 @@ _logger = logging.getLogger(__name__)
 
 from openerp.exceptions import ValidationError,Warning
 
+from datetime import timedelta
+import datetime
+
 
 class HrAttendanceImportWizard(models.TransientModel):
     _name = 'hr.attendance.import.wizard'
@@ -417,10 +420,10 @@ class HrAttendanceImportWizard(models.TransientModel):
             """ Check in time can not be greater than check out time"""            
             #if line['check_out'] < line['check_in']:
              #    raise ValidationError(('Check Out time can not be previous date of Check In time')) 
-             
-            temp_vals = {}            
+
+            temp_vals = {}
             temp_vals['employee_code'] = line['employee_id']
-            temp_vals['check_in'] =  line['check_in']
+            temp_vals['check_in'] = line['check_in']
             temp_vals['check_out'] = line['check_out']
             temp_vals['import_id'] = move.id
              
@@ -429,26 +432,41 @@ class HrAttendanceImportWizard(models.TransientModel):
              
             """ search employee model with employee ID """
             vals = {}
-            vals['check_in'] = line['check_in'] 
-            vals['check_out'] = line['check_out']
+            vals['check_in'] = self.getDateTimeFromStr(line['check_in']) + timedelta(hours=-6)
+            vals['check_out'] = self.getDateTimeFromStr(line['check_out']) + timedelta(hours=-6)
             vals['import_id'] = move.id
-             
+
             emp_pool = self.env['hr.employee'].search([('id','=',line['employee_id'])])
             attendance_line_obj = self.env['hr.attendance.import.line']
-            attendance_error_obj =  self.env['hr.attendance.import.error']
+            attendance_error_obj = self.env['hr.attendance.import.error']
              
             if emp_pool.id is not False:                
                 vals['employee_id'] = emp_pool.id
                 attendance_line_obj.create(vals)                
             else:
-                vals['employee_code'] = line['employee_id']
-                attendance_error_obj.create(vals)
+
+                error_vals = {}
+                error_vals['check_in'] = line['check_in']
+                error_vals['check_out'] = line['check_out']
+                error_vals['import_id'] = move.id
+
+                error_vals['employee_code'] = line['employee_id']
+                attendance_error_obj.create(error_vals)
             
             is_success = True
             
         if is_success is True:
-            move.action_confirm() 
+            move.action_confirm()
 
+    # def localTzname(self):
+    #     if time.daylight:
+    #         offsetHour = time.altzone / 3600
+    #     else:
+    #         offsetHour = time.timezone / 3600
+    #     return offsetHour
+
+    def getDateTimeFromStr(self, dateStr):
+        return datetime.datetime.strptime(dateStr, "%m/%d/%Y %H:%M")
             
 def str2float(amount, decimal_separator):
     if not amount:

@@ -25,7 +25,7 @@ class AttendanceProcessor(models.Model):
                                 WHERE employee_id = %s AND effective_from BETWEEN %s AND %s
                                 ORDER BY effective_from ASC"""
 
-    attendance_query = """SELECT check_in, check_out, worked_hours
+    attendance_query = """SELECT (check_in + interval '6h') AS check_in, (check_out + interval '6h') AS check_out, worked_hours
                             FROM hr_attendance
                           WHERE check_out > %s AND check_in < %s AND employee_id = %s
                           ORDER BY check_in ASC"""
@@ -385,19 +385,24 @@ class AttendanceProcessor(models.Model):
         ############## Save Late Days ######################
         for i, lateDay in enumerate(attSummaryLine.late_days):
 
-            lateDayVals = {'date': lateDay.date, 'schedule_time_start': lateDay.schedule_time_start,
-                     'schedule_time_end': lateDay.schedule_time_end,
-                     'ot_time_start': lateDay.ot_time_start, 'ot_time_end': lateDay.ot_time_end,
-                     'schedule_working_hours': lateDay.schedule_working_hours,
-                     'working_hours': lateDay.working_hours, 'att_summary_line_id': att_summary_line_id
+            lateDayVals = {'date': lateDay.date,
+                           'schedule_time_start': self.convertDateTime(lateDay.schedule_time_start),
+                           'schedule_time_end': self.convertDateTime(lateDay.schedule_time_end),
+                           'ot_time_start': self.convertDateTime(lateDay.ot_time_start),
+                           'ot_time_end': self.convertDateTime(lateDay.ot_time_end),
+                           'schedule_working_hours': lateDay.schedule_working_hours,
+                           'working_hours': lateDay.working_hours,
+                           'att_summary_line_id': att_summary_line_id
                      }
             res = late_day_pool.create(lateDayVals)
             late_day_id = res.id
 
             ############## Save Late Times ######################
             for i, time in enumerate(lateDay.attendance_day_list):
-                timeVals = {'check_in': time.check_in, 'check_out': time.check_out,
-                         'duration': time.duration, 'late_day_id': late_day_id
+                timeVals = {'check_in': self.convertStrDateTime(time.check_in),
+                            'check_out': self.convertStrDateTime(time.check_out),
+                            'duration': time.duration,
+                            'late_day_id': late_day_id
                          }
                 res = late_time_pool.create(timeVals)
 
@@ -408,6 +413,12 @@ class AttendanceProcessor(models.Model):
 
     def getDateTimeFromStr(self, dateStr):
         return datetime.datetime.strptime(dateStr, "%Y-%m-%d %H:%M:%S")
+
+    def convertDateTime(self, dateStr):
+        return dateStr + timedelta(hours=-6)
+
+    def convertStrDateTime(self, dateStr):
+        return self.getDateTimeFromStr(dateStr) + timedelta(hours=-6)
 
     def getDateFromStr(self, dateStr):
         if dateStr:
