@@ -6,7 +6,7 @@
 			<field name="model">hr.mobile.bill</field>
 			<field name="type">form</field>
 			<field name="arch" type="xml">
-				<form string="Employee Mobile bills">
+				<form>
 					<header>
 						 <button name="action_draft" type="object"
                                 string="Reject"
@@ -60,7 +60,7 @@
         </record>
 
         <menuitem id="hr_mobile_bill_menu" name="Employee Mobile Bills" parent="hr.menu_hr_root"
-                  action="hr_mobile_bill_action" groups="base.group_user"/>
+                  action="hr_mobile_bill_action" groups="base.group_user" sequence="92"/>
 		<menuitem id="hr_mobile_bills_menu" name="Mobile Bills" parent="hr_mobile_bill_menu"
                   action="hr_mobile_bill_action" groups="base.group_user"/>
     </data>

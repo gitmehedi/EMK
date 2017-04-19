@@ -24,4 +24,4 @@ class HrContract(models.Model):
         self._cr.execute(query, (date, tuple(self.ids)))
         limits = dict(self._cr.fetchall())
         for emp in self:
-            emp.current_bill_limit = limits.get(emp.id) or 1.0
+            emp.current_bill_limit = limits.get(emp.id) or 0.0

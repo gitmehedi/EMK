@@ -1,5 +1,5 @@
 {
-    'name': 'HR Employee Mobile Bills',
+    'name': 'Employee Mobile Bills',
     'author': 'Genweb2 Limited',
     'website': 'www.genweb2.com',
     'category': 'Employee Mobile Bills',

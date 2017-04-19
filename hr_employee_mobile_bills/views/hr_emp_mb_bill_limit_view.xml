@@ -16,8 +16,8 @@
 						</group>
 						<field name="line_ids">
 							<tree editable="top">
-								<field name="employee_id"/>
-								<field name="effective_date"/>
+								<field name="employee_id" />
+								<field name="effective_date" invisible="1"/>
 								<field name="limit"/>
 							</tree>
 						</field>
