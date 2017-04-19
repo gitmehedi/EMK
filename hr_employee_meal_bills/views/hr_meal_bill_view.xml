@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <record id="hr_meal_bill_form" model="ir.ui.view">
+			<field name="name">hr.meal.bill.form</field>
+			<field name="model">hr.meal.bill</field>
+			<field name="type">form</field>
+			<field name="arch" type="xml">
+				<form string="Employee Meal Details">
+					<header>
+                         <button name="action_confirm" type="object"
+                                string="Apply" states="draft"
+                                class="oe_highlight"/>
+                         <button name="action_done" type="object"
+                                string="Approve" states="applied"
+                                class="oe_highlight"/>
+                         <button name="action_draft" type="object"
+                                string="Reject"
+                                states="applied,approved"/>
+                         <field name="state" widget="statusbar"/>
+					</header>
+					<sheet>						
+	                 		<group >
+	                 			<group>
+	                            	<field name="name" />
+	                            	
+	                            </group>
+		                        <notebook colspan="4">
+									<page string="Bills">
+										<field name="line_ids">
+											<tree string="List" editable="bottom">
+												<field name="employee_id"/>
+												<field  name="bill_amount" />												
+											</tree>
+										</field>
+									</page>
+								</notebook>
+	                        </group>
+					</sheet>
+				</form>
+			</field>
+		</record>
+		<record id="hr_meal_bill_tree" model="ir.ui.view">
+			<field name="name">hr.meal.bill.tree</field>
+			<field name="model">hr.meal.bill</field>
+			<field name="type">tree</field>
+			<field name="arch" type="xml">
+				<tree string="Employee Meal Information">
+					<field name="name" />
+					<field name="state" />
+				</tree>
+			</field>
+		</record>
+
+        <record model="ir.actions.act_window" id="hr_meal_bill_action">
+            <field name="name">Meal Bills</field>
+            <field name="res_model">hr.meal.bill</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <menuitem id="hr_meal_bill_menu" name="Meal Bills"
+                  action="hr_meal_bill_action" groups="base.group_user"/>
+    </data>
+</odoo>
