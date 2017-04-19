@@ -9,6 +9,10 @@
     "website": "http://www.genweb2.com",
     "license": "AGPL-3",
     "category": "Human Resources",
+    'summary': 'Verify department uniqueness',
+    'description':
+        "This module check hr department to prevent duplicate insertion",
+
     "depends": ["hr"],
     "data": [
     ],
