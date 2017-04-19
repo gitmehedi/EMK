@@ -31,7 +31,18 @@
 											<tree string="List" editable="bottom">
 												<field  name="emp_mobile_phone" />											
 												<field name="employee_id"/>
-												<field  name="bill_amount" />												
+												<field  name="bill_amount" />
+												<field  name="amount" />
+											</tree>
+										</field>
+									</page>
+									<page string="Bills">
+										<field name="line_ids">
+											<tree string="List" editable="bottom">
+												<field  name="emp_mobile_phone" />
+												<field name="employee_id"/>
+												<field  name="bill_amount" />
+												<field  name="amount" />
 											</tree>
 										</field>
 									</page>

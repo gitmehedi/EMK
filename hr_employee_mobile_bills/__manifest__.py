@@ -7,6 +7,7 @@
     'depends': ['hr'],
     'data': [
         'views/hr_mobile_bill_view.xml',
+        'views/hr_emp_mb_bill_view.xml',
     ],
     
     'summary': 'Calculates Employees Mobile Bills',
