@@ -10,7 +10,9 @@
         'gbs_hr_employee_seniority',
         'gbs_hr_department_sequence',
         'hr_attendance_and_ot_summary',
-                
+        'gbs_hr_calendar',
+        'hr_employee_loan',
+
     ],
     'data': [
         'report/gbs_hr_payroll_report.xml',

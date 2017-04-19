@@ -1,12 +1,13 @@
 from openerp import models, fields
 from openerp import api
 
-class HrLeaveEncashmentLine(models.Model):    
+class HrEmpMobileBillLine(models.Model):
     _name = 'hr.mobile.bill.line'
     _description = 'HR mobile bill line'    
 
-    
-    bill_amount = fields.Float(string="Amount", required=True)
+
+    bill_amount = fields.Float(string="Bill Amount", required=True)
+    amount =fields.Float(string="Amount", required=True)
     emp_mobile_phone = fields.Char('Mobile Number', required=True)
     
   
@@ -29,7 +30,7 @@ class HrLeaveEncashmentLine(models.Model):
     def onchange_emp_mobile_phone(self):
         for recode in self:
             if recode.emp_mobile_phone:
-                emp_pool = self.env['hr.employee'].search([('mobile_phone','=',recode.emp_mobile_phone)], limit=1)
+                emp_pool = self.env['hr.employee'].search([('mobile_phone','=ilike',recode.emp_mobile_phone)], limit=1)
                 if emp_pool:
                     recode.employee_id = emp_pool.id
                 

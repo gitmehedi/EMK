@@ -3,7 +3,7 @@ import datetime
 from openerp import api
 
 
-class HrEmployeeMobileBill(models.Model):
+class HrMobileBill(models.Model):
     _name = 'hr.mobile.bill'
     _order = 'name desc'
 
