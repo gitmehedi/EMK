@@ -3,14 +3,14 @@
 from openerp import models, fields
 
 class LateTime(models.Model):
-    _name = 'hr.attendance.late.time'
+    _name = 'hr.attendance.absent.time'
 
     check_in = fields.Datetime(string='Check In')
     check_out = fields.Datetime(string='Check Out')
     duration = fields.Float(string='Hours')
 
     """ Relational Fields """
-    late_day_id = fields.Many2one("hr.attendance.late.day", string="Late Days", required=True, ondelete='cascade')
+    absent_day_id = fields.Many2one("hr.attendance.absent.day", string="Absent Day", required=True, ondelete='cascade')
 
 
 

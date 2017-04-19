@@ -96,6 +96,12 @@
 								<field name="absent_days">
 									<tree editable="top">
 										<field name="date" />
+										<field name="schedule_time_start"/>
+										<field name="schedule_time_end" />
+										<field name="ot_time_start" />
+										<field name="ot_time_end" />
+										<field name="schedule_working_hours" widget="float_time"/>
+										<field name="working_hours" widget="float_time"/>
 									</tree>
 								</field>
 	                        </page>
@@ -121,6 +127,24 @@
 	                        </page>
                         </notebook>
                     </sheet>
+                </form>
+            </field>
+        </record>
+
+		<record id="view_attendance_absent_time_form" model="ir.ui.view">
+            <field name="name">hr.attendance.absent.day.form</field>
+            <field name="model">hr.attendance.absent.day</field>
+            <field name="arch" type="xml">
+                <form string="Time">
+                    <sheet string="Day Time">
+						<field name="attendance_day_list">
+							<tree editable="top">
+								<field name="check_in"/>
+								<field name="check_out"/>
+								<field name="duration" widget="float_time"/>
+							</tree>
+						</field>
+					</sheet>
                 </form>
             </field>
         </record>
