@@ -55,24 +55,50 @@ class InheritedHrPayslip(models.Model):
 
 
             """
-            Inset loan data
+            Incorporate other payroll data
             """
-
+            other_line_ids = self.input_line_ids
             loan_data = self.env['hr.employee.loan.line'].search([('employee_id', '=', self.employee_id.id),
                                                                   ('schedule_date', '>=', self.date_from),
                                                                   ('schedule_date', '<=', self.date_to),
                                                                   ('state', '=', 'pending')], limit=1)
+            mobile_data = self.env['hr.mobile.bill.line'].search([('employee_id', '=', self.employee_id.id)], limit=1)
+            meal_data = self.env['hr.meal.bill.line'].search([('employee_id', '=', self.employee_id.id)], limit=1)
 
+            """
+            Loan Data
+            """
             if loan_data and self.contract_id.id:
-                loan_line_ids = self.input_line_ids
-                loan_line_ids += loan_line_ids.new({
+                other_line_ids += other_line_ids.new({
                     'name': 'Current Loan',
                     'code': "Loan",
                     'amount': loan_data.installment,
                     'contract_id': self.contract_id.id,
                 })
 
-                self.input_line_ids = loan_line_ids
+            """
+            Mobile Bills
+            """
+            if mobile_data and self.contract_id.id:
+               other_line_ids += other_line_ids.new({
+                    'name': 'Mobile Bill',
+                    'code': "mobile",
+                    'amount': mobile_data.amount,
+                    'contract_id': self.contract_id.id,
+            })
+            """
+            Meal Bills
+            """
+            if meal_data and self.contract_id.id:
+                other_line_ids += other_line_ids.new({
+                    'name': 'Meal Bill',
+                    'code': "meal",
+                    'amount': meal_data.bill_amount,
+                    'contract_id': self.contract_id.id,
+                })
+
+
+            self.input_line_ids = other_line_ids
 
 
 class HrPayslipEmployees(models.TransientModel):
