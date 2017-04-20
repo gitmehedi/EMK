@@ -2,7 +2,7 @@
 <odoo>
     <data>
         
-		<menuitem id="main_loan_menu" name="Employee Loans" groups="base.group_user" parent="hr.menu_hr_root" sequence="92"/>
+		<menuitem id="main_loan_menu" name="Employee Loans" groups="base.group_user" parent="hr.menu_hr_root" sequence="91"/>
 		
 		<menuitem id="configuration_menu" name="Employee Loan" sequence="8"
 				  parent="hr.menu_human_resources_configuration" groups="hr.group_hr_user"/>

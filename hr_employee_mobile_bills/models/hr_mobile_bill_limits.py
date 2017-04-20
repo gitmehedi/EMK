@@ -1,12 +1,34 @@
-from openerp import models, fields, _
+from openerp import models, fields,api, _
 
 class HrMobileBillLimits(models.Model):
     _name = 'hr.mobile.bill.limit'
 
-    name = fields.Char('Name', required=True)
-    effective_date = fields.Date('Effective Date', required=True)
+    name = fields.Char('Name', required=True,states={'draft': [('invisible', False)],
+            'applied': [('readonly', True)], 'approved':[('readonly', True)]})
+    effective_date = fields.Date('Effective Date', required=True,states={'draft': [('invisible', False)],
+            'applied': [('readonly', True)], 'approved':[('readonly', True)]})
 
     """ Relational Fields """
 
-    line_ids = fields.One2many('hr.employee.mobile.bill.line','parent_id',"Line Ids")
+    line_ids = fields.One2many('hr.employee.mobile.bill.line','parent_id',"Line Ids",states={'draft': [('invisible', False)],
+            'applied': [('readonly', True)], 'approved':[('readonly', True)]})
 
+    """ All Selection fields """
+
+    state = fields.Selection([
+        ('draft', "Draft"),
+        ('applied', "Applied"),
+        ('approved', "Approved"),
+    ], default='draft')
+
+    @api.multi
+    def action_draft(self):
+        self.state = 'draft'
+
+    @api.multi
+    def action_confirm(self):
+        self.state = 'applied'
+
+    @api.multi
+    def action_done(self):
+        self.state = 'approved'

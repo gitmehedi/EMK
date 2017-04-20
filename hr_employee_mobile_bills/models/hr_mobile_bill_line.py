@@ -40,4 +40,4 @@ class HrEmpMobileBillLine(models.Model):
                         recode.amount = recode.bill_amount - emp.current_bill_limit
                     else:
                         recode.amount = 0
-                
+
