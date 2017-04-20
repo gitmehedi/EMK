@@ -16,20 +16,12 @@
 			      groups="hr_attendance.group_hr_attendance_user,base.group_user"
 			      />
 			      
-		<!-- Menu Item -->
-		<menuitem id="menu_hr_shift_alter" 
-				  name="Alter Attendances" 
-				  parent="hr_attendance.menu_hr_attendance_manage_attendances" 
-				  groups="hr_attendance.group_hr_attendance_user,base.group_user" 
-				  sequence="7" action="hr_shift_alter_action" 
-				  />		
-		
 		<!-- Tree View -->
-		<record id="hr_manual_attendance_tree" model="ir.ui.view">
+		<record id="hr_shift_alter_tree" model="ir.ui.view">
 			<field name="name">hr_shift_alter_tree</field>
 			<field name="model">hr.shift.alter</field>
 			<field name="arch" type="xml">
-				<tree string="Attendance Alteration">
+				<tree string="Alter Rostering">
 					<field name="employee_id" />					
 					<field name="alter_date" />
 					<field name="alter_time_start" />
@@ -44,15 +36,20 @@
 		</record>
 		
 		<!-- Form View -->
-		<record id="hr_manual_attendance_form" model="ir.ui.view">
+		<record id="hr_shift_alter_form" model="ir.ui.view">
 			<field name="name">hr_shift_alter_form</field>
 			<field name="model">hr.shift.alter</field>
 			<field name="type">form</field>
 			<field name="arch" type="xml">
-				<form string="Attendance Alteration">
+				<form string="Alter Rostering">
 				 	<header>
-	                    <button string="Confirm" name="action_confirm" states="draft" type="object" class="oe_highlight"/>
-                    	<button string="Approve" name="action_approve" states="confirmed" type="object" class="oe_highlight"/>
+	                    <button string="Confirm" 
+	                    		name="action_confirm" 
+	                    		states="draft" 
+	                    		type="object" 
+	                    		class="oe_highlight"
+	                    		/>
+                    	<button string="Approve" groups="hr.group_hr_user" name="action_approve" states="confirmed" type="object" class="oe_highlight"/>
                      	<button string="Refuse" name="action_refuse" states="confirmed" type="object" />
                     	<button string="Reset to Draft" name="action_draft" type="object" states="confirmed"/> 
                     	
@@ -79,11 +76,17 @@
 		</record>
 		
 		<record id="hr_shift_alter_action" model="ir.actions.act_window">
-			<field name="name">Alter Attendance</field>
+			<field name="name">Alter Rosteting</field>
 			<field name="res_model">hr.shift.alter</field>
 			<field name="view_mode">tree,form</field>
 		</record>
 		
-		
+		<!-- Menu Item -->
+		<menuitem id="menu_hr_shift_alter" 
+				  name="Alter Rosteting" 
+				  parent="hr_attendance.menu_hr_attendance_manage_attendances" 
+				  groups="hr_attendance.group_hr_attendance_user,base.group_user" 
+				  sequence="7" action="hr_shift_alter_action" 
+				  />	
 	</data>
 </openerp>

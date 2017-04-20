@@ -8,10 +8,10 @@ class LateDay(models.Model):
 
     date = fields.Date(string='Duty Date')
 
-    schedule_time_start = fields.Datetime(string='Duty Time Start')
-    schedule_time_end = fields.Datetime(string='Duty Time End')
-    ot_time_start = fields.Datetime(string='OT Time Start')
-    ot_time_end = fields.Datetime(string='OT Time End')
+    schedule_time_start = fields.Datetime(string='Duty Start')
+    schedule_time_end = fields.Datetime(string='Duty End')
+    ot_time_start = fields.Datetime(string='OT Start')
+    ot_time_end = fields.Datetime(string='OT End')
 
     schedule_working_hours = fields.Float(string='Duty Hours')
 

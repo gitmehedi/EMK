@@ -70,6 +70,8 @@ class AttendanceProcessor(models.Model):
 
         currDate = startDate
         while currDate <= endDate:
+            totalPresentTime = 0
+            absentTime = 0
             # Check this date is week end or not. If it is empty, then means this day is weekend
             currentDaydutyTime = dutyTimeMap.get(self.getStrFromDate(currDate))
             if currentDaydutyTime:
@@ -91,7 +93,6 @@ class AttendanceProcessor(models.Model):
                         break
                 attendance_data = temp_attendance_data
                 if attendanceDayList:
-                    totalPresentTime = 0
                     # Collect date wise in out data
                     for i, attendanceDay in enumerate(attendanceDayList):
                         totalPresentTime = self.getDayWorkingMinutes(attendanceDay, currentDaydutyTime, totalPresentTime)
@@ -110,7 +111,7 @@ class AttendanceProcessor(models.Model):
                             attSummaryLine = self.buildAttendanceDetails(attSummaryLine, currentDaydutyTime)
                         else:
                             # @Todo- Check Short Leave. If not approve short leave then absent
-                            attSummaryLine = self.buildAbsentDetails(attSummaryLine, currDate, currentDaydutyTime)
+                            attSummaryLine = self.buildAbsentDetails(attSummaryLine, currentDaydutyTime, currDate, absentTime, totalPresentTime, attendanceDayList)
 
                     elif absentTime > 20: # Default gress 20 minutes gress time
 
@@ -136,7 +137,7 @@ class AttendanceProcessor(models.Model):
                         attSummaryLine.leave_days = attSummaryLine.leave_days + 1
                         attSummaryLine = self.buildAttendanceDetails(attSummaryLine, currentDaydutyTime)
                     else:
-                        attSummaryLine = self.buildAbsentDetails(attSummaryLine, currDate, currentDaydutyTime)
+                        attSummaryLine = self.buildAbsentDetails(attSummaryLine, currentDaydutyTime, currDate, absentTime, totalPresentTime, attendanceDayList)
             else:
                 attSummaryLine = self.buildWeekEnd(attSummaryLine, currDate)
 
@@ -304,9 +305,17 @@ class AttendanceProcessor(models.Model):
                                                          totalPresentTime/60, attendanceDayList))
         return attSummaryLine
 
-    def buildAbsentDetails(self, attSummaryLine, startDate, currentDayDutyTime):
+    def buildAbsentDetails(self, attSummaryLine, currentDayDutyTime, startDate, absentTime, totalPresentTime, attendanceDayList):
+
         attSummaryLine = self.buildAttendanceDetails(attSummaryLine, currentDayDutyTime)
-        attSummaryLine.absent_days.append(TempAbsentDay(startDate))
+
+        attSummaryLine.absent_days.append(TempAbsentDay(startDate, currentDayDutyTime.startDutyTime,
+                                                    currentDayDutyTime.endDutyTime,
+                                                    currentDayDutyTime.otStartDutyTime,
+                                                    currentDayDutyTime.otEndDutyTime,
+                                                    (
+                                                    currentDayDutyTime.dutyMinutes + currentDayDutyTime.otDutyMinutes) / 60,
+                                                    totalPresentTime / 60, attendanceDayList))
         return attSummaryLine
 
     def buildWeekEnd(self, attSummaryLine, startDate):
@@ -348,6 +357,7 @@ class AttendanceProcessor(models.Model):
         summary_line_pool = self.env['hr.attendance.summary.line']
         weekend_pool = self.env['hr.attendance.weekend.day']
         absent_pool = self.env['hr.attendance.absent.day']
+        absent_time_pool = self.env['hr.attendance.absent.time']
         late_day_pool = self.env['hr.attendance.late.day']
         late_time_pool = self.env['hr.attendance.late.time']
 
@@ -379,8 +389,29 @@ class AttendanceProcessor(models.Model):
 
         ############## Save Absent Days ######################
         for i, absent in enumerate(attSummaryLine.absent_days):
-            absentVals = {'date': absent.date, 'att_summary_line_id': att_summary_line_id}
+            absentVals = {'date': absent.date,
+                           'schedule_time_start': self.convertDateTime(absent.schedule_time_start),
+                           'schedule_time_end': self.convertDateTime(absent.schedule_time_end),
+                           'ot_time_start': self.convertDateTime(absent.ot_time_start),
+                           'ot_time_end': self.convertDateTime(absent.ot_time_end),
+                           'schedule_working_hours': absent.schedule_working_hours,
+                           'working_hours': absent.working_hours,
+                           'att_summary_line_id': att_summary_line_id
+                           }
             res = absent_pool.create(absentVals)
+            absent_day_id = res.id
+
+            ############## Save Late Times ######################
+            for i, time in enumerate(absent.attendance_day_list):
+                absentTimeVals = {'check_in': self.convertStrDateTime(time.check_in),
+                            'check_out': self.convertStrDateTime(time.check_out),
+                            'duration': time.duration,
+                            'absent_day_id': absent_day_id
+                            }
+                res = absent_time_pool.create(absentTimeVals)
+
+
+
 
         ############## Save Late Days ######################
         for i, lateDay in enumerate(attSummaryLine.late_days):
@@ -415,10 +446,12 @@ class AttendanceProcessor(models.Model):
         return datetime.datetime.strptime(dateStr, "%Y-%m-%d %H:%M:%S")
 
     def convertDateTime(self, dateStr):
-        return dateStr + timedelta(hours=-6)
+        if dateStr:
+            return dateStr + timedelta(hours=-6)
 
     def convertStrDateTime(self, dateStr):
-        return self.getDateTimeFromStr(dateStr) + timedelta(hours=-6)
+        if dateStr:
+            return self.getDateTimeFromStr(dateStr) + timedelta(hours=-6)
 
     def getDateFromStr(self, dateStr):
         if dateStr:
