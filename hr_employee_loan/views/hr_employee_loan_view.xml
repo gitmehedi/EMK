@@ -24,7 +24,7 @@
 						<button name="action_disbursed" type="object"
                                string="Disburse Loan" states="approved"
                     	       class="oe_highlight"/>
-                        <field name="state" widget="statusbar" statusbar_visible="draft,a,validate"/>
+                        <field name="state" widget="statusbar" statusbar_visible="draft,applied,approved"/>
 					</header>
 					<sheet>
 						<div class="oe_title">
