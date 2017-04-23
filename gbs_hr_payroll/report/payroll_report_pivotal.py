@@ -52,17 +52,17 @@ class PayrollReportPivotal(models.AbstractModel):
                     dpt_payslips_list.append(dpt_payslips)
                     
         
-        for slip1 in docs.slip_ids:
-            if not slip1.employee_id.department_id.id: 
+        for other_slip in docs.slip_ids:
+            if not other_slip.employee_id.department_id.id: 
                 payslip = {}
-                payslip['emp_name'] = slip1.employee_id.name
+                payslip['emp_name'] = other_slip.employee_id.name
     
-                payslip['designation'] = slip1.employee_id.job_id.name
-                payslip['doj'] = slip1.employee_id.initial_employment_date
+                payslip['designation'] = other_slip.employee_id.job_id.name
+                payslip['doj'] = other_slip.employee_id.initial_employment_date
     
                 for rule in rule_list:
                         payslip[rule['code']] = 0
-                        for line in slip1.line_ids:
+                        for line in other_slip.line_ids:
                             if line.code == rule['code']:
                                 payslip[rule['code']] = line.total
                                 break; 
