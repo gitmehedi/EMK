@@ -34,25 +34,25 @@
 
 								<t t-foreach="docs" t-as="k">
 									<t t-if="k['val']">
-										<td class="col-xs-8" style="background-color:#568eff;border: 1px solid #568eff;color:#ffffff;" colspan="int(docs[k])">
+										<td class="text-right" style="background-color:#568eff;border: 1px solid #568eff;color:#ffffff;" colspan="int(docs[k])">
 											<span t-esc="k['name']"></span> 
 										</td>
 
 										<t t-foreach="k['val']" t-as="o">
 												<tr>
-													<td class="col-xs-8">
+													<td class="text-right">
 														<span t-esc="o['emp_name']"></span>
 													</td>
-													<td class="col-xs-8">
+													<td class="text-right">
 														<span t-esc="o['designation']"></span>
 													</td>
-													<td class="col-xs-8">
+													<td class="text-right">
 														<span t-esc="o['doj']"></span>
 													</td>
 	
 													<t t-foreach="rules" t-as="r">
-														<td class="col-xs-8">
-															<span t-esc="o[r['code']]"></span>
+														<td class="text-right">
+															<span t-esc="'%.2f'% o[r['code']]"></span>
 														</td>
 													</t>
 	
