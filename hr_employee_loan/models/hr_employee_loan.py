@@ -28,7 +28,7 @@ class HrEmployeeLoanRequest(models.Model):
 
     repayment_date = fields.Date('Repayment Date',required=True,states={'draft': [('invisible', False)], 'applied': [('readonly', True)], 'approved':[('readonly', True)],'disbursed':[('readonly', True)]})
 
-    line_ids = fields.One2many('hr.employee.loan.line', 'parent_id', string="Line Ids")
+    line_ids = fields.One2many('hr.employee.loan.line', 'parent_id', string="Line Ids",states={'draft': [('invisible', False)], 'applied': [('readonly', True)], 'approved':[('readonly', True)],'disbursed':[('readonly', True)]})
 
     disbursement_date = fields.Datetime('Disbursement Date', readonly=True, copy=False,
         states={'draft': [('invisible', True)], 'applied': [('invisible', True)], 'approved':[('readonly', True)],'disbursed':[('readonly', True)]})

@@ -24,13 +24,12 @@
 				<tree string="Alter Rostering">
 					<field name="employee_id" />					
 					<field name="alter_date" />
-					<field name="alter_time_start" />
-					<field name="alter_time_end" />
-					<field name="ot_time_start" />
-					<field name="ot_time_end" />
-					<field name="ot_included" />
+					<field name="duty_start" />
+					<field name="duty_end" />
+					<field name="ot_start" />
+					<field name="ot_end" />
+					<field name="isIncludedOt" />
 					<field name="state" />
-					
 				</tree>
 			</field>
 		</record>
@@ -43,17 +42,11 @@
 			<field name="arch" type="xml">
 				<form string="Alter Rostering">
 				 	<header>
-	                    <button string="Confirm" 
-	                    		name="action_confirm" 
-	                    		states="draft" 
-	                    		type="object" 
-	                    		class="oe_highlight"
-	                    		/>
+	                    <button string="Confirm" name="action_confirm" states="draft" type="object" class="oe_highlight"/>
                     	<button string="Approve" groups="hr.group_hr_user" name="action_approve" states="confirmed" type="object" class="oe_highlight"/>
                      	<button string="Refuse" name="action_refuse" states="confirmed" type="object" />
                     	<button string="Reset to Draft" name="action_draft" type="object" states="confirmed"/> 
-                    	
-                    	<field name="state" widget="statusbar" statusbar_visible="draft,confirmed,approved"/>                    	
+                    	<field name="state" widget="statusbar" statusbar_visible="draft,confirmed,approved"/>
                 	</header>	
 					<sheet>
 						<group>
@@ -61,13 +54,13 @@
 								<field name="employee_id" attrs="{'readonly':['|',('state','=','approved'),('state','=','confirmed')]}"/>
 								<field name="department_id" invisible="1"/> 
 								<field name="alter_date" attrs="{'readonly':['|', ('state','=','approved'),('state','=','confirmed')]}"/>
-								<field name="alter_time_start" attrs="{'readonly':['|', ('state','=','approved'),('state','=','confirmed')]}"/>							
-								<field name="alter_time_end" attrs="{'readonly':['|', ('state','=','approved'),('state','=','confirmed')]}"/>
+								<field name="duty_start" attrs="{'readonly':['|', ('state','=','approved'),('state','=','confirmed')]}"/>
+								<field name="duty_end" attrs="{'readonly':['|', ('state','=','approved'),('state','=','confirmed')]}"/>
 							</group>
 							<group>
-								<field name="ot_time_start" attrs="{'readonly':['|', ('state','=','approved'),('state','=','confirmed')]}"/>
-								<field name="ot_time_end" attrs="{'readonly':['|', ('state','=','approved'),('state','=','confirmed')]}"/>
-								<field name="ot_included" attrs="{'readonly':['|', ('state','=','approved'),('state','=','confirmed')]}"/>							
+								<field name="isIncludedOt" attrs="{'readonly':['|', ('state','=','approved'),('state','=','confirmed')]}"/>
+								<field name="ot_start" attrs="{'readonly':['|', ('state','=','approved'),('state','=','confirmed')]}"/>
+								<field name="ot_end" attrs="{'readonly':['|', ('state','=','approved'),('state','=','confirmed')]}"/>
 							</group>
 						</group>
 	                </sheet>

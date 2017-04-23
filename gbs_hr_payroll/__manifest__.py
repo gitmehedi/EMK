@@ -12,6 +12,8 @@
         'hr_attendance_and_ot_summary',
         'gbs_hr_calendar',
         'hr_employee_loan',
+        'hr_employee_mobile_bills',
+        'hr_employee_meal_bills',
 
     ],
     'data': [

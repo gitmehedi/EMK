@@ -12,7 +12,8 @@ class HrMobileBill(models.Model):
     
 
     """ All relations fields """
-    line_ids = fields.One2many(comodel_name='hr.mobile.bill.line',inverse_name='parent_id', string="Line Ids")
+    line_ids = fields.One2many(comodel_name='hr.mobile.bill.line',inverse_name='parent_id', string="Line Ids",states={'draft': [('invisible', False)],
+            'applied': [('readonly', True)], 'approved':[('readonly', True)]})
     
     
     """ All Selection fields """
@@ -23,9 +24,7 @@ class HrMobileBill(models.Model):
         ('approved', "Approved"),
     ], default='draft')
     
-    
-    
-    
+
     
     """All function which process data and operation"""
     

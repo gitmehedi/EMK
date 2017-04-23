@@ -9,12 +9,15 @@ class HRShiftAlter(models.Model):
     
     employee_id = fields.Many2one('hr.employee', string="Employee", required = True)
     department_id = fields.Many2one('hr.department', related='employee_id.department_id', string='Department', store=True)
-    alter_date = fields.Date(string = 'Alter Date')
-    alter_time_start = fields.Datetime(string = 'Alter Time Start')
-    alter_time_end = fields.Datetime(string = 'Alter Time End')
-    ot_time_start = fields.Datetime(string = 'Over Time Start')
-    ot_time_end = fields.Datetime(string = 'Over Time End')
-    ot_included = fields.Boolean(string='Is OT included')
+
+    alter_date = fields.Date(string='Alter Date')
+    duty_start = fields.Datetime(string='Duty Start')
+    duty_end = fields.Datetime(string='Duty End')
+    isIncludedOt = fields.Boolean(string='Is OT')
+    ot_start = fields.Datetime(string='OT Start')
+    ot_end = fields.Datetime(string='OT End')
+
+
     manager_id = fields.Many2one('hr.employee', string='Final Approval', readonly=True, copy=False)
 
     state = fields.Selection([

@@ -13,7 +13,7 @@
                         <page string="Mobile Bill Limits">
                             <group>
                                 <field name="mob_bill_unlimited" />
-                                <field name="current_bill_limit" />
+                                <field name="current_bill_limit" attrs="{'invisible': [('mob_bill_unlimited', '=', True)]}" />
                             </group>
                             <field name="mobile_bill_line_ids">
                                 <tree string="List" editable="bottom">

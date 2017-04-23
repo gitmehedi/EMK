@@ -29,7 +29,7 @@
 									<page string="Bills">
 										<field name="line_ids">
 											<tree string="List" editable="bottom">
-												<field name="employee_id"/>
+												<field name="employee_id" options='{"no_open": True}'/>
 												<field  name="bill_amount" />												
 											</tree>
 										</field>
@@ -58,7 +58,7 @@
             <field name="view_mode">tree,form</field>
         </record>
 
-        <menuitem id="hr_meal_bill_menu" name="Meal Bills" parent="hr.menu_hr_root" sequence="200"
+        <menuitem id="hr_meal_bill_menu" name="Meal Bills" parent="hr.menu_hr_root" sequence="95"
                   action="hr_meal_bill_action" groups="base.group_user"/>
     </data>
 </odoo>

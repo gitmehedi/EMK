@@ -8,15 +8,16 @@
 			<field name="arch" type="xml">
 				<form>
 					<header>
-						 <button name="action_draft" type="object"
-                                string="Reject"
-                                states="applied,approved"/>
+
                          <button name="action_confirm" type="object"
                                 string="Apply" states="draft"
                                 class="oe_highlight"/>
                          <button name="action_done" type="object"
                                 string="Approve" states="applied"
                                 class="oe_highlight"/>
+						<button name="action_draft" type="object"
+                                string="Reject"
+                                states="applied,approved"/>
                          <field name="state" widget="statusbar"/>
 					</header>
 					<sheet>
