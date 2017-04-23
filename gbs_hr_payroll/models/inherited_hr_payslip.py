@@ -32,7 +32,7 @@ class InheritedHrPayslip(models.Model):
 
                         if emp.leave_days:
                             worked_days_lines += worked_days_lines.new({
-                                'code': 'Leave',
+                                'code': 'LEAVE',
                                 'contract_id': self.contract_id.id,
                                 'number_of_days': emp.leave_days,
                                 'name': 'Leave Days',
@@ -46,7 +46,7 @@ class InheritedHrPayslip(models.Model):
                             })
                         if emp.late_hrs:
                             worked_days_lines += worked_days_lines.new({
-                                'code': 'Late',
+                                'code': 'LATE',
                                 'contract_id': self.contract_id.id,
                                 'number_of_hours': emp.late_hrs,
                                 'name': 'Late Hours',
@@ -71,7 +71,7 @@ class InheritedHrPayslip(models.Model):
             if loan_data and self.contract_id.id:
                 other_line_ids += other_line_ids.new({
                     'name': 'Current Loan',
-                    'code': "Loan",
+                    'code': "LOAN",
                     'amount': loan_data.installment,
                     'contract_id': self.contract_id.id,
                 })
@@ -82,7 +82,7 @@ class InheritedHrPayslip(models.Model):
             if mobile_data and self.contract_id.id:
                other_line_ids += other_line_ids.new({
                     'name': 'Mobile Bill',
-                    'code': "mobile",
+                    'code': "MOBILE",
                     'amount': mobile_data.amount,
                     'contract_id': self.contract_id.id,
             })
@@ -92,7 +92,7 @@ class InheritedHrPayslip(models.Model):
             if meal_data and self.contract_id.id:
                 other_line_ids += other_line_ids.new({
                     'name': 'Meal Bill',
-                    'code': "meal",
+                    'code': "MEAL",
                     'amount': meal_data.bill_amount,
                     'contract_id': self.contract_id.id,
                 })
