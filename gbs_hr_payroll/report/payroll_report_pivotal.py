@@ -40,34 +40,37 @@ class PayrollReportPivotal(models.AbstractModel):
         
                     payslip['designation'] = slip.employee_id.job_id.name
                     payslip['doj'] = slip.employee_id.initial_employment_date
-        
-                    for line in slip.line_ids:
-                        for rule in rule_list:
+
+                    for rule in rule_list:
+                        payslip[rule['code']] = 0
+                        for line in slip.line_ids:
                             if line.code == rule['code']:
-                                payslip[line.code] = line.amount
+                                payslip[rule['code']] = line.total
+                                break;                        
                 
                     dpt_payslips['val'].append(payslip)
                     dpt_payslips_list.append(dpt_payslips)
+                    
         
-        #print '=====================================', docs.slip_ids
-        
-
-        if not docs.slip_ids.employee_id.department_id.id:
-            payslip = {}
-            payslip['emp_name'] = slip.employee_id.name
-
-            payslip['designation'] = slip.employee_id.job_id.name
-            payslip['doj'] = slip.employee_id.initial_employment_date
-
-            for line in slip.line_ids:
+        for slip1 in docs.slip_ids:
+            if not slip1.employee_id.department_id.id: 
+                payslip = {}
+                payslip['emp_name'] = slip1.employee_id.name
+    
+                payslip['designation'] = slip1.employee_id.job_id.name
+                payslip['doj'] = slip1.employee_id.initial_employment_date
+    
                 for rule in rule_list:
-                    if line.code == rule['code']:
-                        payslip[line.code] = line.amount
-
-            dpt_payslips['name'] = "Other"
-            dpt_payslips['val'].append(payslip)                  
-            dpt_payslips_list.append(dpt_payslips)
-
+                        payslip[rule['code']] = 0
+                        for line in slip1.line_ids:
+                            if line.code == rule['code']:
+                                payslip[rule['code']] = line.total
+                                break; 
+                
+                dpt_payslips['name'] = "Other"
+                dpt_payslips['val'].append(payslip)        
+                dpt_payslips_list.append(dpt_payslips)
+                    
         sorted(dpt_payslips.iteritems(), key=operator.itemgetter(1))
         
         docargs = {

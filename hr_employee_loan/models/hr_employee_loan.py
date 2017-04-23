@@ -21,7 +21,7 @@ class HrEmployeeLoanRequest(models.Model):
     is_interest_payble = fields.Boolean(string='Is Interest Payable', required='True',
                         states={'draft': [('invisible', False)], 'applied': [('readonly', True)], 'approved':[('readonly', True)],'disbursed':[('readonly', True)]})
     applied_date = fields.Datetime('Applied Date', readonly=True, copy=False,
-        states={'draft': [('invisible', True)], 'applied': [('readonly', True)], 'approved':[('invisible', True)],'disbursed':[('readonly', True)]})
+        states={'draft': [('invisible', True)], 'applied': [('readonly', True)], 'approved':[('readonly', True)],'disbursed':[('readonly', True)]})
     
     approved_date = fields.Datetime('Approved Date', readonly=True, copy=False,
         states={'draft': [('invisible', True)], 'applied': [('invisible', True)], 'approved':[('readonly', True)],'disbursed':[('readonly', True)]})
