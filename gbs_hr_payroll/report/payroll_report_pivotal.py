@@ -20,7 +20,8 @@ class PayrollReportPivotal(models.AbstractModel):
                 if rule not in rule_list:
                     rule_list.append(rule)
                     
-        sorted(rule.iteritems(), key=operator.itemgetter(1))
+        #sorted(rule.iteritems(), key=operator.itemgetter(1))
+        rule_list = sorted(rule_list, key=lambda k: k['seq'])
             
         dept = self.env['hr.department'].search([])
         
@@ -33,9 +34,10 @@ class PayrollReportPivotal(models.AbstractModel):
             dpt_payslips['val'] = []
             
             for slip in docs.slip_ids:
+                payslip = {}
                 if d.id == slip.employee_id.department_id.id:
                     
-                    payslip = {}
+                    
                     payslip['emp_name'] = slip.employee_id.name
         
                     payslip['designation'] = slip.employee_id.job_id.name
@@ -47,31 +49,36 @@ class PayrollReportPivotal(models.AbstractModel):
                             if line.code == rule['code']:
                                 payslip[rule['code']] = line.total
                                 break;                        
-                
-                    dpt_payslips['val'].append(payslip)
-                    dpt_payslips_list.append(dpt_payslips)
-                    
         
-        for slip1 in docs.slip_ids:
-            if not slip1.employee_id.department_id.id: 
+                    dpt_payslips['val'].append(payslip)
+        
+            dpt_payslips_list.append(dpt_payslips)
+        
+        for other_slip in docs.slip_ids:
+            if not other_slip.employee_id.department_id.id:
+                dpt_payslips = {} 
+                dpt_payslips['val'] = []
+
                 payslip = {}
-                payslip['emp_name'] = slip1.employee_id.name
+                payslip['emp_name'] = other_slip.employee_id.name
     
-                payslip['designation'] = slip1.employee_id.job_id.name
-                payslip['doj'] = slip1.employee_id.initial_employment_date
+                payslip['designation'] = other_slip.employee_id.job_id.name
+                payslip['doj'] = other_slip.employee_id.initial_employment_date
     
                 for rule in rule_list:
-                        payslip[rule['code']] = 0
-                        for line in slip1.line_ids:
-                            if line.code == rule['code']:
-                                payslip[rule['code']] = line.total
-                                break; 
+                    payslip[rule['code']] = 0
+                    for line in other_slip.line_ids:
+                        if line.code == rule['code']:
+                            payslip[rule['code']] = line.total
+                            break; 
                 
                 dpt_payslips['name'] = "Other"
-                dpt_payslips['val'].append(payslip)        
-                dpt_payslips_list.append(dpt_payslips)
+                dpt_payslips['val'].append(payslip)   
+                     
+        dpt_payslips_list.append(dpt_payslips)
                     
-        sorted(dpt_payslips.iteritems(), key=operator.itemgetter(1))
+        #sorted(dpt_payslips.iteritems(), key=operator.itemgetter(1))
+        #dpt_payslips_list = sorted(dpt_payslips_list, key=lambda k: k['seq'])
         
         docargs = {
             'doc_ids': self.ids,
