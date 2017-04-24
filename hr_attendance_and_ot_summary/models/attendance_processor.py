@@ -30,6 +30,13 @@ class AttendanceProcessor(models.Model):
                           WHERE check_out > %s AND check_in < %s AND employee_id = %s
                           ORDER BY check_in ASC"""
 
+    alter_attendance_query = """SELECT (check_in + interval '6h') AS check_in, (check_out + interval '6h') AS check_out, worked_hours
+                                FROM hr_attendance
+                              WHERE (check_in BETWEEN %s AND %s) AND (check_out BETWEEN %s AND %s) AND employee_id = %s
+                              ORDER BY check_in ASC"""
+
+
+
     def get_summary_data(self, employeeId, summaryId):
 
         ############### Delete Current Records ##########################################
@@ -62,6 +69,7 @@ class AttendanceProcessor(models.Model):
         shiftList = self.getShiftList(calendarList, postEndDate)
         dutyTimeMap = self.buildDutyTime(preStartDate, postEndDate, shiftList)
         self.printDutyTime(preStartDate, postEndDate, dutyTimeMap)
+        alterTimeMap = self.buildAlterDutyTime(startDate, endDate, employeeId)
 
         # Getting Attendance for an employee
         attendance_data = self.GetAttendanceData(dutyTimeMap, employeeId, postEndDate, preStartDate)
@@ -70,97 +78,53 @@ class AttendanceProcessor(models.Model):
 
         currDate = startDate
         while currDate <= endDate:
-            totalPresentTime = 0
-            absentTime = 0
-            # Check this date is week end or not. If it is empty, then means this day is weekend
-            currentDaydutyTime = dutyTimeMap.get(self.getStrFromDate(currDate))
-            if currentDaydutyTime:
 
-                # attendanceDayList = []
-                # previousDayDutyTime = self.getPreviousDutyTime(currDate - day, dutyTimeMap)
-                # nextDayDutyTime = self.getNextDutyTime(currDate + day, dutyTimeMap)
-                #
-                #
-                # temp_attendance_data = list(attendance_data)
-                # for i, attendance in enumerate(attendance_data):
-                #     if previousDayDutyTime.endActualDutyTime < self.getDateTimeFromStr(
-                #             attendance[0]) < currentDaydutyTime.endActualDutyTime and \
-                #                             currentDaydutyTime.startDutyTime < self.getDateTimeFromStr(
-                #                         attendance[1]) < nextDayDutyTime.startDutyTime:
-                #         duration = (self.getDateTimeFromStr(attendance[1]) - self.getDateTimeFromStr(attendance[0])).total_seconds() / 60 / 60
-                #         attendanceDayList.append(TempLateTime(attendance[0], attendance[1], duration))
-                #         temp_attendance_data.remove(attendance)
-                #     # If attendance data is greater then 48 hours from current date (startDate) then call break.
-                #     # Means rest of the attendance date are not illegible for current date. Break condition apply for better optimization
-                #     elif (self.getDateTimeFromStr(attendance[0]) - currDate).total_seconds() / 60 / 60 > 48:
-                #         break
-                #
-                # attendance_data = temp_attendance_data
+            if alterTimeMap.get(self.getStrFromDate(currDate)): # Check this date is alter date
+                alterDayDutyTime = alterTimeMap.get(self.getStrFromDate(currDate))
+                attendanceDayList = self.getAttendanceListByAlterDay(alterDayDutyTime, day, dutyTimeMap, employeeId)
+                attSummaryLine = self.makeDecision(attSummaryLine, attendanceDayList, currDate, alterDayDutyTime, employeeId)
 
+            elif dutyTimeMap.get(self.getStrFromDate(currDate)): # Check this date is week end or not. If it is empty, then means this day is weekend
+                currentDaydutyTime = dutyTimeMap.get(self.getStrFromDate(currDate))
                 attendanceDayList = self.getAttendanceListByDay(attendance_data, currDate, currentDaydutyTime, day, dutyTimeMap)
+                attSummaryLine = self.makeDecision(attSummaryLine, attendanceDayList, currDate, currentDaydutyTime, employeeId)
+                ############################### Existing Source ###############################
+                # if attendanceDayList:
+                #     # Collect date wise in out data
+                #     for i, attendanceDay in enumerate(attendanceDayList):
+                #         totalPresentTime = self.getDayWorkingMinutes(attendanceDay, currentDaydutyTime, totalPresentTime)
+                #
+                #     #print(">>>>", currDate, ">>Working Hour<<", totalPresentTime / 60, "List:", len(attendanceDayList))
+                #     scheduleTime = currentDaydutyTime.dutyMinutes + currentDaydutyTime.otDutyMinutes
+                #     absentTime = scheduleTime - totalPresentTime
+                #
+                #     if absentTime >= scheduleTime/2 or absentTime > 20: # Check Absent OR Late
+                #
+                #         # Check this day is holiday or personal leave
+                #         if self.checkOnHolidays(currDate) is True:
+                #             attSummaryLine.holidays_days = attSummaryLine.holidays_days + 1
+                #         elif self.checkOnPersonalLeave(employeeId, currDate) is True:
+                #             attSummaryLine.leave_days = attSummaryLine.leave_days + 1
+                #
+                #         if absentTime >= scheduleTime / 2: # Check Absent
+                #             # @Todo- Check Short Leave. If not approve short leave then absent
+                #             attSummaryLine = self.buildAbsentDetails(attSummaryLine, currentDaydutyTime, currDate, absentTime, totalPresentTime, attendanceDayList)
+                #         elif absentTime > 20:  # Check Late
+                #             attSummaryLine = self.buildLateDetails(attSummaryLine, currentDaydutyTime, currDate,
+                #                                                    absentTime, totalPresentTime, attendanceDayList)
+                #     else:
+                #         attSummaryLine.present_days = attSummaryLine.present_days + 1
+                #         attSummaryLine = self.buildAttendanceDetails(attSummaryLine, currentDaydutyTime)
+                #
+                # else:
+                #     if self.checkOnHolidays(currDate) is True:
+                #         attSummaryLine.holidays_days = attSummaryLine.holidays_days + 1
+                #     elif self.checkOnPersonalLeave(employeeId, currDate) is True:
+                #         attSummaryLine.leave_days = attSummaryLine.leave_days + 1
+                #     else:
+                #         attSummaryLine = self.buildAbsentDetails(attSummaryLine, currentDaydutyTime, currDate, absentTime, totalPresentTime, attendanceDayList)
 
-                if attendanceDayList:
-                    # Collect date wise in out data
-                    for i, attendanceDay in enumerate(attendanceDayList):
-                        totalPresentTime = self.getDayWorkingMinutes(attendanceDay, currentDaydutyTime, totalPresentTime)
-
-                    #print(">>>>", currDate, ">>Working Hour<<", totalPresentTime / 60, "List:", len(attendanceDayList))
-                    scheduleTime = currentDaydutyTime.dutyMinutes + currentDaydutyTime.otDutyMinutes
-                    absentTime = scheduleTime - totalPresentTime
-
-                    if absentTime >= scheduleTime/2 or absentTime > 20: # Check Absent OR Late
-
-                        # Check this day is holiday or personal leave
-                        if self.checkOnHolidays(currDate) is True:
-                            attSummaryLine.holidays_days = attSummaryLine.holidays_days + 1
-                        elif self.checkOnPersonalLeave(employeeId, currDate) is True:
-                            attSummaryLine.leave_days = attSummaryLine.leave_days + 1
-
-                        if absentTime >= scheduleTime / 2: # Check Absent
-                            # @Todo- Check Short Leave. If not approve short leave then absent
-                            attSummaryLine = self.buildAbsentDetails(attSummaryLine, currentDaydutyTime, currDate, absentTime, totalPresentTime, attendanceDayList)
-                        elif absentTime > 20:  # Check Late
-                            attSummaryLine = self.buildLateDetails(attSummaryLine, currentDaydutyTime, currDate,
-                                                                   absentTime, totalPresentTime, attendanceDayList)
-                    else:
-                        attSummaryLine.present_days = attSummaryLine.present_days + 1
-                        attSummaryLine = self.buildAttendanceDetails(attSummaryLine, currentDaydutyTime)
-
-                    # if absentTime >= scheduleTime/2:
-                    #     # Before set as absent, check this day is holiday or personal leave
-                    #     if self.checkOnHolidays(currDate) is True:
-                    #         attSummaryLine.holidays_days = attSummaryLine.holidays_days + 1
-                    #         attSummaryLine = self.buildAttendanceDetails(attSummaryLine, currentDaydutyTime)
-                    #     elif self.checkOnPersonalLeave(employeeId, currDate) is True:
-                    #         attSummaryLine.leave_days = attSummaryLine.leave_days + 1
-                    #         attSummaryLine = self.buildAttendanceDetails(attSummaryLine, currentDaydutyTime)
-                    #     else:
-                    #         # @Todo- Check Short Leave. If not approve short leave then absent
-                    #         attSummaryLine = self.buildAbsentDetails(attSummaryLine, currentDaydutyTime, currDate, absentTime, totalPresentTime, attendanceDayList)
-                    #
-                    # elif absentTime > 20: # Default gress 20 minutes gress time
-                    #
-                    #     # Before set as late, check this day is holiday or personal leave
-                    #     if self.checkOnHolidays(currDate) is True:
-                    #         attSummaryLine.holidays_days = attSummaryLine.holidays_days + 1
-                    #         attSummaryLine = self.buildAttendanceDetails(attSummaryLine, currentDaydutyTime)
-                    #     elif self.checkOnPersonalLeave(employeeId, currDate) is True:
-                    #         attSummaryLine.leave_days = attSummaryLine.leave_days + 1
-                    #         attSummaryLine = self.buildAttendanceDetails(attSummaryLine, currentDaydutyTime)
-                    #     else:
-                    #         attSummaryLine = self.buildLateDetails(attSummaryLine, currentDaydutyTime, currDate, absentTime, totalPresentTime, attendanceDayList)
-                    #
-                    # else:
-                    #     attSummaryLine.present_days = attSummaryLine.present_days + 1
-                    #     attSummaryLine = self.buildAttendanceDetails(attSummaryLine, currentDaydutyTime)
-
-                else:
-                    if self.checkOnHolidays(currDate) is True:
-                        attSummaryLine.holidays_days = attSummaryLine.holidays_days + 1
-                    elif self.checkOnPersonalLeave(employeeId, currDate) is True:
-                        attSummaryLine.leave_days = attSummaryLine.leave_days + 1
-                    else:
-                        attSummaryLine = self.buildAbsentDetails(attSummaryLine, currentDaydutyTime, currDate, absentTime, totalPresentTime, attendanceDayList)
+                ############################### End Existing Source ###############################
             else:
                 attSummaryLine = self.buildWeekEnd(attSummaryLine, currDate)
 
@@ -169,7 +133,48 @@ class AttendanceProcessor(models.Model):
         noOfDays = (endDate - startDate).days + 1
         self.saveAttSummary(employeeId, summaryId, noOfDays, attSummaryLine)
 
+    def makeDecision(self, attSummaryLine, attendanceDayList, currDate, currentDaydutyTime, employeeId):
 
+        totalPresentTime = 0
+        absentTime = 0
+
+        if attendanceDayList:
+            # Collect date wise in out data
+            for i, attendanceDay in enumerate(attendanceDayList):
+                totalPresentTime = self.getDayWorkingMinutes(attendanceDay, currentDaydutyTime, totalPresentTime)
+
+            # print(">>>>", currDate, ">>Working Hour<<", totalPresentTime / 60, "List:", len(attendanceDayList))
+            scheduleTime = currentDaydutyTime.dutyMinutes + currentDaydutyTime.otDutyMinutes
+            absentTime = scheduleTime - totalPresentTime
+
+            if absentTime >= scheduleTime / 2 or absentTime > 15:  # Check Absent OR Late
+
+                # Check this day is holiday or personal leave
+                if self.checkOnHolidays(currDate) is True:
+                    attSummaryLine.holidays_days = attSummaryLine.holidays_days + 1
+                elif self.checkOnPersonalLeave(employeeId, currDate) is True:
+                    attSummaryLine.leave_days = attSummaryLine.leave_days + 1
+
+                if absentTime >= scheduleTime / 2:  # Check Absent
+                    # @Todo- Check Short Leave. If not approve short leave then absent
+                    attSummaryLine = self.buildAbsentDetails(attSummaryLine, currentDaydutyTime, currDate, absentTime,
+                                                             totalPresentTime, attendanceDayList)
+                elif absentTime > 20:  # Check Late
+                    attSummaryLine = self.buildLateDetails(attSummaryLine, currentDaydutyTime, currDate,
+                                                           absentTime, totalPresentTime, attendanceDayList)
+            else:
+                attSummaryLine.present_days = attSummaryLine.present_days + 1
+                attSummaryLine = self.buildAttendanceDetails(attSummaryLine, currentDaydutyTime)
+
+        else:
+            if self.checkOnHolidays(currDate) is True:
+                attSummaryLine.holidays_days = attSummaryLine.holidays_days + 1
+            elif self.checkOnPersonalLeave(employeeId, currDate) is True:
+                attSummaryLine.leave_days = attSummaryLine.leave_days + 1
+            else:
+                attSummaryLine = self.buildAbsentDetails(attSummaryLine, currentDaydutyTime, currDate, absentTime,
+                                                         totalPresentTime, attendanceDayList)
+        return attSummaryLine
 
     def process(self, employeeIds, summaryId):
         for empId in employeeIds:
@@ -177,6 +182,25 @@ class AttendanceProcessor(models.Model):
 
 
     ############################# Utility Methods ####################################################################
+
+    def getAttendanceListByAlterDay(self, alterDayDutyTime, day, dutyTimeMap, employeeId):
+        attendanceDayList = []
+        previousDayDutyTime = self.getPreviousDutyTime(alterDayDutyTime.startDutyTime - day, dutyTimeMap)
+        nextDayDutyTime = self.getNextDutyTime(alterDayDutyTime.startDutyTime + day, dutyTimeMap)
+
+        self._cr.execute(self.alter_attendance_query, (self.convertDateTime(previousDayDutyTime.endActualDutyTime),
+                                                       self.convertDateTime(alterDayDutyTime.endActualDutyTime),
+                                                       self.convertDateTime(alterDayDutyTime.startDutyTime),
+                                                       self.convertDateTime(nextDayDutyTime.startDutyTime),
+                                                       employeeId))
+        attendance_line = self._cr.fetchall()
+
+        for i, attendance in enumerate(attendance_line):
+                duration = (self.getDateTimeFromStr(attendance[1]) - self.getDateTimeFromStr(attendance[0])).total_seconds() / 60 / 60
+                attendanceDayList.append(TempLateTime(attendance[0], attendance[1], duration))
+        return attendanceDayList
+
+
 
     def getAttendanceListByDay(self, attendance_data, currDate, currentDaydutyTime, day, dutyTimeMap):
 
@@ -274,6 +298,29 @@ class AttendanceProcessor(models.Model):
                         break
             preStartDate = preStartDate + day
         return dutyTimeMap
+
+    def buildAlterDutyTime(self,startDate, endDate, employeeId):
+        att_query = """SELECT alter_date, (duty_start+ interval '6h') AS duty_start,
+                        (duty_end+ interval '6h') AS duty_end,
+                        is_included_ot, (ot_start+ interval '6h') AS ot_start, (ot_end+ interval '6h') AS ot_end
+                        FROM hr_shift_alter
+                        WHERE employee_id = %s AND state = 'approved' AND
+                        alter_date BETWEEN %s AND %s
+                        ORDER BY alter_date ASC"""
+        self._cr.execute(att_query, (employeeId,startDate,endDate))
+        alterLines = self._cr.fetchall()
+        alterTimeMap = {}
+        for i, alter in enumerate(alterLines):
+            alterTimeMap[self.getStrFromDate(self.getDateFromStr(alter[0]))] = DutyTime(self.getDateTimeFromStr(alter[1]),
+                                                                            self.getDateTimeFromStr(alter[2]),
+                                                                            alter[3], self.getDateTimeFromStr(alter[4]),
+                                                                            self.getDateTimeFromStr(alter[5]))
+
+        return alterTimeMap
+
+
+
+
 
     def printDutyTime(self, preStartDate, postEndDate, dutyTimeMap):
         day = datetime.timedelta(days=1)
@@ -487,7 +534,10 @@ class AttendanceProcessor(models.Model):
         return date.strftime('%Y.%m.%d')
 
     def getDateTimeFromStr(self, dateStr):
-        return datetime.datetime.strptime(dateStr, "%Y-%m-%d %H:%M:%S")
+        if dateStr:
+            return datetime.datetime.strptime(dateStr, "%Y-%m-%d %H:%M:%S")
+        else:
+            return None
 
     def convertDateTime(self, dateStr):
         if dateStr:

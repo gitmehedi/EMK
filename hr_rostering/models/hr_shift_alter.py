@@ -13,7 +13,7 @@ class HRShiftAlter(models.Model):
     alter_date = fields.Date(string='Alter Date')
     duty_start = fields.Datetime(string='Duty Start')
     duty_end = fields.Datetime(string='Duty End')
-    isIncludedOt = fields.Boolean(string='Is OT')
+    is_included_ot = fields.Boolean(string='Is OT')
     ot_start = fields.Datetime(string='OT Start')
     ot_end = fields.Datetime(string='OT End')
 

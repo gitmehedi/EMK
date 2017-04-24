@@ -26,9 +26,9 @@
 					<field name="alter_date" />
 					<field name="duty_start" />
 					<field name="duty_end" />
+					<field name="is_included_ot" />
 					<field name="ot_start" />
 					<field name="ot_end" />
-					<field name="isIncludedOt" />
 					<field name="state" />
 				</tree>
 			</field>
@@ -58,7 +58,7 @@
 								<field name="duty_end" attrs="{'readonly':['|', ('state','=','approved'),('state','=','confirmed')]}"/>
 							</group>
 							<group>
-								<field name="isIncludedOt" attrs="{'readonly':['|', ('state','=','approved'),('state','=','confirmed')]}"/>
+								<field name="is_included_ot" attrs="{'readonly':['|', ('state','=','approved'),('state','=','confirmed')]}"/>
 								<field name="ot_start" attrs="{'readonly':['|', ('state','=','approved'),('state','=','confirmed')]}"/>
 								<field name="ot_end" attrs="{'readonly':['|', ('state','=','approved'),('state','=','confirmed')]}"/>
 							</group>
