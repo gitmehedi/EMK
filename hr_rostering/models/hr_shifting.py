@@ -10,6 +10,7 @@ class HrShifting(models.Model):
     ot_hour_from = fields.Float(string='OT from')
     ot_hour_to = fields.Float(string='OT to')
     isIncludedOt = fields.Boolean(string='Is it included OT', default=False)
+    grace_time = fields.Float(string='Grace Time', default='1.5')
     calendar_id = fields.Many2one("resource.calendar", string="Resource's Calendar", required=False)
 
 class HrEmployeeShifting(models.Model):

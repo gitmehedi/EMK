@@ -16,7 +16,7 @@ class HRShiftAlter(models.Model):
     is_included_ot = fields.Boolean(string='Is OT')
     ot_start = fields.Datetime(string='OT Start')
     ot_end = fields.Datetime(string='OT End')
-
+    grace_time = fields.Float(string='Grace Time', default='1.5')
 
     manager_id = fields.Many2one('hr.employee', string='Final Approval', readonly=True, copy=False)
 

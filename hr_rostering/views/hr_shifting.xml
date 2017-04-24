@@ -25,7 +25,10 @@
 		        </field>
 		        <field name="date_to" position="replace">
 		           <field name="ot_hour_to" widget="float_time"/>
-		        </field>     
+		        </field>
+				<field name="ot_hour_to" position="after">
+	                <field name="grace_time" widget="float_time"/>
+	            </field>
 	        </field>
 	    </record>
 	        

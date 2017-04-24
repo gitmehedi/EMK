@@ -29,6 +29,7 @@
 					<field name="is_included_ot" />
 					<field name="ot_start" />
 					<field name="ot_end" />
+					<field name="grace_time" />
 					<field name="state" />
 				</tree>
 			</field>
@@ -61,6 +62,7 @@
 								<field name="is_included_ot" attrs="{'readonly':['|', ('state','=','approved'),('state','=','confirmed')]}"/>
 								<field name="ot_start" attrs="{'readonly':['|', ('state','=','approved'),('state','=','confirmed')]}"/>
 								<field name="ot_end" attrs="{'readonly':['|', ('state','=','approved'),('state','=','confirmed')]}"/>
+								<field name="grace_time" attrs="{'readonly':['|', ('state','=','approved'),('state','=','confirmed')]}"/>
 							</group>
 						</group>
 	                </sheet>
