@@ -20,7 +20,8 @@ class PayrollReportPivotal(models.AbstractModel):
                 if rule not in rule_list:
                     rule_list.append(rule)
                     
-        sorted(rule.iteritems(), key=operator.itemgetter(1))
+        #sorted(rule.iteritems(), key=operator.itemgetter(1))
+        rule_list = sorted(rule_list, key=lambda k: k['seq'])
             
         dept = self.env['hr.department'].search([])
         
@@ -76,7 +77,8 @@ class PayrollReportPivotal(models.AbstractModel):
                      
         dpt_payslips_list.append(dpt_payslips)
                     
-        sorted(dpt_payslips.iteritems(), key=operator.itemgetter(1))
+        #sorted(dpt_payslips.iteritems(), key=operator.itemgetter(1))
+        #dpt_payslips_list = sorted(dpt_payslips_list, key=lambda k: k['seq'])
         
         docargs = {
             'doc_ids': self.ids,
