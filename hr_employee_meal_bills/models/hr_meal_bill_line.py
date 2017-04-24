@@ -1,20 +1,17 @@
 from openerp import api, fields, models, exceptions
 from openerp.exceptions import UserError, ValidationError
 
+
 class HrLeaveEncashmentLine(models.Model):    
     _name = 'hr.meal.bill.line'
     _description = 'HR meal bill line'    
     
     bill_amount = fields.Char(string="Amount", required=True)
     
-
     """ Relational Fields """
-    
-    parent_id = fields.Many2one(comodel_name='hr.meal.bill')
-    employee_id = fields.Many2one('hr.employee', string="Employee")
-    #employee_id = fields.Many2one( "hr.meal.bill","employee",required=True)
-    
-    
+    parent_id = fields.Many2one(comodel_name='hr.meal.bill',  ondelete="cascade")
+    employee_id = fields.Many2one('hr.employee', string="Employee",  ondelete="cascade")
+
     _sql_constraints = [
         ('unique_employee_id', 'unique(employee_id)', 'warning!!: You can not use the same employee name'),
     ]
@@ -31,14 +28,3 @@ class HrLeaveEncashmentLine(models.Model):
             if line.state != 'draft':
                 raise UserError(_('You can not delete this.'))
         return super(HrLeaveEncashmentLine, self).unlink()
-    
-    
-
-    
-    """
-    employee_id = fields.Char(string="employee", required=True)
-    
-    """
-    
-    
-    
