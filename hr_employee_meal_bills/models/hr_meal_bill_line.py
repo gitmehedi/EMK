@@ -10,8 +10,8 @@ class HrLeaveEncashmentLine(models.Model):
 
     """ Relational Fields """
     
-    parent_id = fields.Many2one(comodel_name='hr.meal.bill')
-    employee_id = fields.Many2one('hr.employee', string="Employee")
+    parent_id = fields.Many2one(comodel_name='hr.meal.bill',ondelete='cascade')
+    employee_id = fields.Many2one('hr.employee', string="Employee",ondelete='cascade')
     #employee_id = fields.Many2one( "hr.meal.bill","employee",required=True)
     
     

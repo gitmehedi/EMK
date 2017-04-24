@@ -9,7 +9,7 @@ class HrEmployeeLoanRequest(models.Model):
     _order = 'name desc'
 
     name = fields.Char(size=100, string='Loan Name', default="New")
-    emp_code = fields.Char(string='Code')
+    emp_code_id = fields.Char(string='Code')
     duration = fields.Integer(size=100, string='Duration(Months)',required=True,
                 states={'draft': [('invisible', False)], 'applied': [('readonly', True)], 'approved':[('readonly', True)],'disbursed':[('readonly', True)]})
     principal_amount = fields.Float(string='Principal Amount',required=True,
@@ -41,14 +41,14 @@ class HrEmployeeLoanRequest(models.Model):
     employee_id = fields.Many2one('hr.employee', string="Employee", default=_default_employee,
                                   required=True, ondelete='cascade', index=True,
                                   states={'draft': [('invisible', False)], 'applied': [('readonly', True)], 'approved':[('readonly', True)],'disbursed':[('readonly', True)]})
-    department_id = fields.Many2one('hr.department', string="Department", related="employee_id.department_id")
+    department_id = fields.Many2one('hr.department', string="Department",ondelete='cascade', related="employee_id.department_id")
     employee_loan_proof_ids = fields.Many2many('hr.employee.loan.proof', string='Proofs',
                                 states={'draft': [('invisible', False)], 'applied': [('readonly', True)], 'approved':[('readonly', True)],'disbursed':[('readonly', True)]})
     employee_loan_policy_ids = fields.Many2many('hr.employee.loan.policy', string='Policies',
                                     states={'draft': [('invisible', False)], 'applied': [('readonly', True)], 'approved':[('readonly', True)],'disbursed':[('readonly', True)]})
-    company_id = fields.Many2one('res.company', string='Company', default=lambda self: self.env.user.company_id)
+    company_id = fields.Many2one('res.company', string='Company',ondelete='cascade', default=lambda self: self.env.user.company_id)
     user_id = fields.Many2one('res.users', string='User')
-    loan_type_id = fields.Many2one('hr.employee.loan.type', string='Loan Type', required=True,
+    loan_type_id = fields.Many2one('hr.employee.loan.type', string='Loan Type', required=True,ondelete='cascade',
                                    states={'draft': [('invisible', False)], 'applied': [('readonly', True)], 'approved':[('readonly', True)],'disbursed':[('readonly', True)]})
 
     """ All Selection fields """
@@ -89,7 +89,7 @@ class HrEmployeeLoanRequest(models.Model):
         for loan in self:
             loan.state = 'applied'
             loan.applied_date = datetime.datetime.now()
-            loan.name = self.env['ir.sequence'].get('emp_code')
+            loan.name = self.env['ir.sequence'].get('emp_code_id')
 
     @api.multi
     def action_done(self):

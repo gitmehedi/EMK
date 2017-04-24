@@ -108,7 +108,7 @@
 		<!-- Sequence Records -->
 		<record id="seq_loan_request" model="ir.sequence">
             <field name="name">Loan Sequence</field>
-            <field name="code">emp_code</field>
+            <field name="code">emp_code_id</field>
             <field name="prefix">EMPC/</field>
             <field name="padding">10</field>
         </record>
