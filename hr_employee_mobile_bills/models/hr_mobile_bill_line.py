@@ -13,8 +13,8 @@ class HrEmpMobileBillLine(models.Model):
   
     """ Relational Fields """
     
-    parent_id = fields.Many2one(comodel_name='hr.mobile.bill')
-    employee_id = fields.Many2one('hr.employee', string="Employee", store=True,
+    parent_id = fields.Many2one(comodel_name='hr.mobile.bill',ondelete='cascade')
+    employee_id = fields.Many2one('hr.employee', string="Employee", store=True,ondelete='cascade',
                                   compute='onchange_emp_mobile_phone')
     
     

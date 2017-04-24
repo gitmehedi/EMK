@@ -8,8 +8,8 @@ class HrEmployeeMobileBillLimit(models.Model):
     limit = fields.Float(string="Mobile Bill Limit", required=True, default=0)
     effective_date = fields.Date('Effective Date', required=True)
     """ Relational Fields """
-    employee_id = fields.Many2one('hr.employee', string="Employee", required=True,store=True)
-    parent_id = fields.Many2one('hr.mobile.bill.limit')
+    employee_id = fields.Many2one('hr.employee', string="Employee",ondelete='cascade', required=True,store=True)
+    parent_id = fields.Many2one('hr.mobile.bill.limit',ondelete='cascade')
 
 
     """All function which process data and operation"""

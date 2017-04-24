@@ -17,7 +17,7 @@ class HrEmployeeLoanPolicy(models.Model):
         ('period', 'Qualifying Period'),
         ], string = 'Policy Type',required='True')
     
-    company_id = fields.Many2one('res.company', string='Company', default=lambda self: self.env.user.company_id)
+    company_id = fields.Many2one('res.company', string='Company',ondelete='cascade', default=lambda self: self.env.user.company_id)
     basis_id = fields.Selection([
         ('flat', 'Fix Amount')], string = 'Basis',required='True')
              
