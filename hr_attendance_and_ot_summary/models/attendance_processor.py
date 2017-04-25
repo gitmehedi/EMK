@@ -412,8 +412,8 @@ class AttendanceProcessor(models.Model):
 
     def isLateByInTime(self, attendanceDay, currentDayDutyTime):
         ch_in = self.getDateTimeFromStr(attendanceDay.check_in)
-        if ch_in < currentDayDutyTime.startDutyTime:
-            lateMinutes = (currentDayDutyTime.startDutyTime - ch_in).total_seconds() / 60
+        if ch_in > currentDayDutyTime.startDutyTime:
+            lateMinutes = (ch_in - currentDayDutyTime.startDutyTime).total_seconds() / 60
             if lateMinutes > self.in_time_grace_minutes:
                 return True
         return False
