@@ -19,7 +19,7 @@
 			<field name="model">hr.leave.encashment</field>
 			<field name="type">form</field>
 			<field name="arch" type="xml">
-				<form string="Leave Encashment">
+				<form string="Leave Encashment" delete="false" copy='0'>
 					<header>
 						<button name="%(hr_earned_leave_encashment_wizard_action_view)d"
 								type="action" string="Generate" /> 
