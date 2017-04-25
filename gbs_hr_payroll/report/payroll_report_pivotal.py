@@ -26,8 +26,7 @@ class PayrollReportPivotal(models.AbstractModel):
         dept = self.env['hr.department'].search([])
         
         dpt_payslips_list = []
-        for d in dept:
-            
+        for d in dept:            
             dpt_payslips = {}
             dpt_payslips['name'] = d.name
             dpt_payslips['seq'] = d.sequence
@@ -35,11 +34,8 @@ class PayrollReportPivotal(models.AbstractModel):
             
             for slip in docs.slip_ids:
                 payslip = {}
-                if d.id == slip.employee_id.department_id.id:
-                    
-                    
-                    payslip['emp_name'] = slip.employee_id.name
-        
+                if d.id == slip.employee_id.department_id.id:                    
+                    payslip['emp_name'] = slip.employee_id.name        
                     payslip['designation'] = slip.employee_id.job_id.name
                     payslip['doj'] = slip.employee_id.initial_employment_date
 
@@ -60,8 +56,7 @@ class PayrollReportPivotal(models.AbstractModel):
                 dpt_payslips['val'] = []
 
                 payslip = {}
-                payslip['emp_name'] = other_slip.employee_id.name
-    
+                payslip['emp_name'] = other_slip.employee_id.name    
                 payslip['designation'] = other_slip.employee_id.job_id.name
                 payslip['doj'] = other_slip.employee_id.initial_employment_date
     
@@ -77,7 +72,6 @@ class PayrollReportPivotal(models.AbstractModel):
                      
         dpt_payslips_list.append(dpt_payslips)
                     
-        #sorted(dpt_payslips.iteritems(), key=operator.itemgetter(1))
         #dpt_payslips_list = sorted(dpt_payslips_list, key=lambda k: k['seq'])
         
         docargs = {
