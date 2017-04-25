@@ -28,3 +28,15 @@ class HrLeaveLeave(models.Model):
         return self.env['hr.leave.fiscal.year'].search([], limit=1)
 
     carry_forward_year = fields.Many2one('hr.leave.fiscal.year', string="Leave Year", default=_default_leave, required='True')
+
+    _sql_constraints = [
+        ('leave_type_unique', 'unique(leave_type)','[Unique Error] Leave Type must be unique!'),
+    ]
+
+    @api.constrains('name')
+    def _check_unique_constraint(self):
+        if self.name:
+            filters = [['name', '=ilike', self.name]]
+            name = self.search(filters)
+            if len(name) > 1:
+                raise Warning('[Unique Error] Name must be unique!')
