@@ -9,7 +9,7 @@
         'security/ir.model.access.csv',
         'wizards/hr_leave_carry_forward_wizard_views.xml',
         'views/hr_leave_carry_forward_view.xml',
-        'views/inherited_hr_earned_leave_encashment_view.xml',
+        'views/inherited_hr_carry_forward_view.xml',
         
     ],
     'depends': [
