@@ -1,7 +1,7 @@
 from openerp import models, fields
 
 
-class HrLeaveCarryForwardtLine(models.Model):
+class HrEmployeeLoantLine(models.Model):
     _name = 'hr.employee.loan.line'
     _description = 'HR loan line'
 
