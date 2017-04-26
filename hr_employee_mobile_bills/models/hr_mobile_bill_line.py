@@ -9,7 +9,7 @@ class HrEmpMobileBillLine(models.Model):
     bill_amount = fields.Float(string="Bill Amount", required=True)
     amount = fields.Float(string="Exceed Amount", required=True)
     emp_mobile_phone = fields.Char('Mobile Number', required=True)
-  
+
     """ Relational Fields """
     parent_id = fields.Many2one(comodel_name='hr.mobile.bill',  ondelete="cascade")
     employee_id = fields.Many2one('hr.employee', string="Employee", store=True,
