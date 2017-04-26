@@ -5,6 +5,7 @@ class HrLeaveCarryForwardtLine(models.Model):
     _name = 'hr.employee.loan.line'
     _description = 'HR loan line'
 
+    emp_loan = fields.Char(string='Code')
     schedule_date = fields.Date(string="Schedule Date")
     installment = fields.Float(size=100, string='Installment Amount', readonly=True)
     num_installment = fields.Integer(string="Number Of Installment")
