@@ -135,9 +135,6 @@ class HrManualAttendance(models.Model):
     
     @api.multi
     def action_approve(self):
-        if not self.env.user.has_group('hr_holidays.group_hr_holidays_user'):
-            raise UserError(_('Only Manager can approve Manual Attendance Request.'))
-
         manager = self.env['hr.employee'].search([('user_id', '=', self.env.uid)], limit=1)
         for manual_attendance in self:
             if manual_attendance.state != 'confirm':
@@ -147,9 +144,6 @@ class HrManualAttendance(models.Model):
     
     @api.multi
     def action_validate(self):
-        if not self.env.user.has_group('hr_holidays.group_hr_holidays_user'):
-            raise UserError(_('Only Manager can approve leave requests.'))
-
         manager = self.env['hr.employee'].search([('user_id', '=', self.env.uid)], limit=1)
         for manual_attendance in self:
             if manual_attendance.state not in ['confirm', 'validate1']:
@@ -197,9 +191,6 @@ class HrManualAttendance(models.Model):
     
     @api.multi
     def action_refuse(self):
-        if not self.env.user.has_group('hr_holidays.group_hr_holidays_user'):
-            raise UserError(_('Only Manager can refuse Manual Attendance requests.'))
-
         manager = self.env['hr.employee'].search([('user_id', '=', self.env.uid)], limit=1)
         for manual_attendance in self:
             if self.state not in ['confirm','validate']:
@@ -209,15 +200,10 @@ class HrManualAttendance(models.Model):
                         
         return True
     
-    
     @api.multi
     def action_draft(self):
         for holiday in self:
-            if not holiday.can_reset:
-                raise UserError(('Only Manager or the concerned employee can reset to draft.'))
-            if holiday.state not in ['confirm', 'refuse']:
-                raise UserError(('Manual attendance request state must be "Refused" or "To Approve" in order to reset to Draft.'))
-            holiday.write({
+            self.write({
                 'state': 'draft',
                 'manager_id': False                
             })
