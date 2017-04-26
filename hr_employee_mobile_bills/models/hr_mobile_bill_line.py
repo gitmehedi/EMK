@@ -11,10 +11,13 @@ class HrEmpMobileBillLine(models.Model):
     emp_mobile_phone = fields.Char('Mobile Number', required=True)
 
     """ Relational Fields """
-    parent_id = fields.Many2one(comodel_name='hr.mobile.bill',  ondelete="cascade")
-    employee_id = fields.Many2one('hr.employee', string="Employee", store=True,
-                                  compute='onchange_emp_mobile_phone', ondelete="cascade")
 
+    
+    parent_id = fields.Many2one(comodel_name='hr.mobile.bill',ondelete='cascade')
+    employee_id = fields.Many2one('hr.employee', string="Employee", store=True,ondelete='cascade',
+                                  compute='onchange_emp_mobile_phone')
+    
+    
     _sql_constraints = [
         ('unique_mobile_number', 'unique(parent_id, emp_mobile_phone)',
          'Mobile Number must be unique per bill!'),

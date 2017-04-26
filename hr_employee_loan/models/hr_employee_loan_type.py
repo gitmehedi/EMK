@@ -8,7 +8,8 @@ class HrEmployeeLoanType(models.Model):
     is_interest_payable = fields.Boolean(string='Is Interest Payable', required='True')
 
     """ All relations fields """
-    company_id = fields.Many2one('res.company', string='Company', default=lambda self: self.env.user.company_id)
+
+    company_id = fields.Many2one('res.company', string='Company', ondelete='cascade',default=lambda self: self.env.user.company_id)
     loan_proof_ids = fields.Many2many(comodel_name='hr.employee.loan.proof',
                                        relation='hr_employee_loan_types_proofs_rel',
                                        column1='types_id',

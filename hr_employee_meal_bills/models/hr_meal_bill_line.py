@@ -9,8 +9,11 @@ class HrLeaveEncashmentLine(models.Model):
     bill_amount = fields.Char(string="Amount", required=True)
     
     """ Relational Fields """
-    parent_id = fields.Many2one(comodel_name='hr.meal.bill',  ondelete="cascade")
-    employee_id = fields.Many2one('hr.employee', string="Employee",  ondelete="cascade")
+
+    
+    parent_id = fields.Many2one(comodel_name='hr.meal.bill',ondelete='cascade')
+    employee_id = fields.Many2one('hr.employee', string="Employee",ondelete='cascade')
+    #employee_id = fields.Many2one( "hr.meal.bill","employee",required=True)
 
     _sql_constraints = [
         ('unique_employee_id', 'unique(employee_id)', 'warning!!: You can not use the same employee name'),

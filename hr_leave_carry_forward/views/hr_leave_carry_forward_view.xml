@@ -19,10 +19,10 @@
 			<field name="model">hr.leave.carry.forward</field>
 			<field name="type">form</field>
 			<field name="arch" type="xml">
-				<form string="Leave Carry Forward">
+				<form string="Leave Carry Forward" delete="false" copy='0'>
 					<header>
 						<button name="%(hr_leave_carry_forward_wizard_action_view)d"
-								type="action" string="Generate" /> 
+								type="action" string="Generate" />
 					</header>
 					<sheet>
 						<group>

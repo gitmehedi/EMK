@@ -10,9 +10,8 @@ class HrLeaveCarryForwardtLine(models.Model):
     num_installment = fields.Integer(string="Number Of Installment")
 
     """ Relational Fields """
-    emp_loan = fields.Many2one('hr.employee.loan')
-    parent_id = fields.Many2one('hr.employee.loan', ondelete="cascade")
-    employee_id = fields.Many2one('hr.employee', string="Employee")
+    parent_id = fields.Many2one('hr.employee.loan',ondelete='cascade')
+    employee_id = fields.Many2one('hr.employee', string="Employee",ondelete='cascade')
     state = fields.Selection([
         ('pending', "Pending"),
         ('done', "Done")

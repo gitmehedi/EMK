@@ -11,18 +11,18 @@
 					<header>
 						<button name="action_done" type="object"
                                 string="Approve"
-                                states="applied" class="oe_highlight"/>
+                                states="applied" groups="hr.group_hr_user" class="oe_highlight"/>
 						<button name="action_confirm" type="object"
-                                string="Reject"
+                                string="Reject" groups="hr.group_hr_user"
                                 states="applied" />
                         <button name="action_draft" type="object"
                                 string="Apply" states="draft"
                                 class="oe_highlight"/>
                         <button name="generate_schedules" states="approved"
-                               string="Compute" type="object"
+                               string="Compute" type="object" groups="hr.group_hr_manager"
                                class="oe_highlight"/>
 						<button name="action_disbursed" type="object"
-                               string="Disburse Loan" states="approved"
+                               string="Disburse Loan" states="approved" groups="hr.group_hr_manager"
                     	       class="oe_highlight"/>
                         <field name="state" widget="statusbar" statusbar_visible="draft,applied,approved"/>
 					</header>
@@ -108,7 +108,7 @@
 		<!-- Sequence Records -->
 		<record id="seq_loan_request" model="ir.sequence">
             <field name="name">Loan Sequence</field>
-            <field name="code">emp_code</field>
+            <field name="code">emp_code_id</field>
             <field name="prefix">EMPC/</field>
             <field name="padding">10</field>
         </record>

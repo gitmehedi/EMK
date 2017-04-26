@@ -1,5 +1,6 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-access_hr_employee_loan,access_hr_employee_loan,model_hr_employee_loan,base.group_user,1,1,1,0
+access_hr_employee_loan,access_hr_employee_loan,model_hr_employee_loan,base.group_user,hr.group_hr_user,1,1,1,0
 access_hr_employee_loan_type,access_hr_employee_loan_type,model_hr_employee_loan_type,base.group_user,1,1,1,0
 access_hr_employee_loan_proof,access_hr_employee_loan_proof,model_hr_employee_loan_proof,base.group_user,1,1,1,0
 access_hr_employee_loan_policy,access_hr_employee_loan_policy,model_hr_employee_loan_policy,base.group_user,1,1,1,0
+access_hr_employee_loan_line,access_hr_employee_loan_line,model_hr_employee_loan_line,base.group_user,1,1,1,0
