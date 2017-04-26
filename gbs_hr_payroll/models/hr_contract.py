@@ -10,3 +10,4 @@ class HrContract(models.Model):
 
     transport_allowance = fields.Float(string='Trasport Allowance', digits=dp.get_precision('Payroll'),
                                     help='Amount for Transport Allowance')
+    contractual = fields.Boolean(string="Contractual")

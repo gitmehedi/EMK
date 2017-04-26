@@ -9,7 +9,8 @@
             <field name="arch" type="xml">
                 <data>
                     <xpath expr="//field[@name='job_id']" position="after">
-                         <field name="transport_allowance" />
+                         <field name="contractual" />
+
                     </xpath>
                 </data>
             </field>
@@ -22,11 +23,24 @@
             <field name="arch" type="xml">
                 <data>
                     <xpath expr="//field[@name='type_id']" position="after">
-                        <field name="transport_allowance" />
+                        <field name="contractual" />
                     </xpath>
                 </data>
             </field>
         </record>
 
+        <record id="hr_contract_view_form_new" model="ir.ui.view">
+            <field name="name">hr.contract.form.with.allowance</field>
+            <field name="model">hr.contract</field>
+            <field name="inherit_id" ref="l10n_in_hr_payroll.hr_contract_form_in_inherit"/>
+            <field name="arch" type="xml">
+                <data>
+                    <xpath expr="//field[@name='supplementary_allowance']" position="after">
+
+                        <field name="transport_allowance" />
+                    </xpath>
+                </data>
+            </field>
+        </record>
     </data>
 </openerp>
