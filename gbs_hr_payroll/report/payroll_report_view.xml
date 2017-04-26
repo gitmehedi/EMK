@@ -2,71 +2,74 @@
 <openerp>
 	<data>
 		<template id="report_individual_payslip">
-
-			<t t-call="report.html_container">
-				<t t-name="report.external_layout_header">
-					<div class="header">
-						<div class="row">
-							<div class="col-xs-4 col-xs-offset-8">
-								<h5>Individual Payslip Summary Report</h5>
-								<img src='/document/static/img/company_logo.png' />
+			<t t-foreach="docs" t-as="o">
+            	<t t-call="report.external_layout">
+					<t t-call="report.html_container">
+						<t t-name="report.external_layout_header">
+							<div class="header">
+								<div class="row">
+									<div class="col-xs-4 col-xs-offset-8">
+										<h5>Individual Payslip Summary Report</h5>
+										<img src='/document/static/img/company_logo.png' />
+									</div>
+								</div>
 							</div>
-						</div>
-					</div>
-				</t>
-				<t t-name="report.external_layout">
-					<div class="page">
-						<div class="row">
-							<table class="table table-bordered">
-								<thead>
-									<tr>
-										<th>Employee</th>
-										<th>Designation</th>
-										<th>DOJ</th>
-										<t t-foreach="rules" t-as="r">
-											<th>
-												<span t-esc="r['name']"></span>
-											</th>
-										</t>
-									</tr>
-								</thead>
-								<tbody>
+						</t>
+						<t t-name="report.external_layout" >
+							<div class="page">
+								<div class="row">
+									<table class="table table-bordered">
+										<thead>
+											<tr>
+												<th>Employee</th>
+												<th>Designation</th>
+												<th>DOJ</th>
+												<t t-foreach="rules" t-as="r">
+													<th>
+														<span t-esc="r['name']"></span>
+													</th>
+												</t>
+											</tr>
+										</thead>
+										<tbody>
 
-								<t t-foreach="docs" t-as="k">
-									<t t-if="k['val']">
-										<td class="text-right" style="background-color:#568eff;border: 1px solid #568eff;color:#ffffff;" colspan="int(docs[k])">
-											<span t-esc="k['name']"></span> 
-										</td>
+										<t t-foreach="docs" t-as="k">
+											<t t-if="k['val']">
+												<td class="text-right" style="background-color:#568eff;border: 1px solid #568eff;color:#ffffff;" colspan="int(docs[k])">
+													<span t-esc="k['name']"></span>
+												</td>
 
-										<t t-foreach="k['val']" t-as="o">
-												<tr>
-													<td class="text-right">
-														<span t-esc="o['emp_name']"></span>
-													</td>
-													<td class="text-right">
-														<span t-esc="o['designation']"></span>
-													</td>
-													<td class="text-right">
-														<span t-esc="o['doj']"></span>
-													</td>
-	
-													<t t-foreach="rules" t-as="r">
-														<td class="text-right">
-															<span t-esc="'%.2f'% o[r['code']]"></span>
-														</td>
+												<t t-foreach="k['val']" t-as="o">
+														<tr>
+															<td class="text-right">
+																<span t-esc="o['emp_name']"></span>
+															</td>
+															<td class="text-right">
+																<span t-esc="o['designation']"></span>
+															</td>
+															<td class="text-right">
+																<span t-esc="o['doj']"></span>
+															</td>
+
+															<t t-foreach="rules" t-as="r">
+																<td class="text-right">
+																	<span t-esc="'%.2f'% o[r['code']]"></span>
+																</td>
+															</t>
+
+														</tr>
 													</t>
-	
-												</tr>
+												</t>
 											</t>
-										</t>
-									</t>
 
-								</tbody>
-							</table>
-						</div>
+										</tbody>
+									</table>
+								</div>
 
-					</div>
-				</t>				
+							</div>
+						</t>
+					</t>
+				</t>
 			</t>
 		</template>
 	</data>
