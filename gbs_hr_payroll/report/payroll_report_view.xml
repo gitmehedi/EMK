@@ -2,7 +2,6 @@
 <openerp>
 	<data>
 		<template id="report_individual_payslip">
-			<t t-foreach="docs" t-as="o">
             	<t t-call="report.external_layout">
 					<t t-call="report.html_container">
 						<t t-name="report.external_layout_header">
@@ -70,7 +69,7 @@
 						</t>
 					</t>
 				</t>
-			</t>
+
 		</template>
 	</data>
 </openerp>
