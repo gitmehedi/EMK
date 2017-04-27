@@ -20,6 +20,7 @@
 									<table class="table table-bordered">
 										<thead>
 											<tr>
+												<th>SN</th>
 												<th>Employee</th>
 												<th>Designation</th>
 												<th>DOJ</th>
@@ -40,6 +41,9 @@
 
 												<t t-foreach="k['val']" t-as="o">
 														<tr>
+															<td class="text-right">
+																<span t-esc="o['sn']"></span>
+															</td>
 															<td class="text-right">
 																<span t-esc="o['emp_name']"></span>
 															</td>

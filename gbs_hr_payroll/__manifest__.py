@@ -15,6 +15,7 @@
         'hr_employee_loan',
         'hr_employee_mobile_bills',
         'hr_employee_meal_bills',
+        'gbs_hr_employee_sequence',
 
     ],
     'data': [
