@@ -1,5 +1,5 @@
 from openerp import api, exceptions, fields, models
-import operator
+import operator, math
 
 class PayrollReportPivotal(models.AbstractModel):
     _name = 'report.gbs_hr_payroll.report_individual_payslip'
@@ -44,7 +44,7 @@ class PayrollReportPivotal(models.AbstractModel):
                         payslip[rule['code']] = 0
                         for line in slip.line_ids:
                             if line.code == rule['code']:
-                                payslip[rule['code']] = line.total
+                                payslip[rule['code']] = math.ceil(line.total)
                                 break;                        
 
                     dpt_payslips['val'].append(payslip)
@@ -75,7 +75,7 @@ class PayrollReportPivotal(models.AbstractModel):
                     payslip[rule['code']] = 0
                     for line in other_slip.line_ids:
                         if line.code == rule['code']:
-                            payslip[rule['code']] = line.total
+                            payslip[rule['code']] = math.ceil(line.total)
                             break; 
                 
                 dpt_payslips['name'] = "Other"
