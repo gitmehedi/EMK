@@ -2,79 +2,106 @@
 <openerp>
 	<data>
 		<template id="report_individual_payslip">
-            	<t t-call="report.external_layout">
-					<t t-call="report.html_container">
-						<t t-name="report.external_layout_header">
-							<div class="header">
-								<div class="row">
-									<div class="col-xs-4 col-xs-offset-8">
-										<h5>Individual Payslip Summary Report</h5>
-										<img src='/document/static/img/company_logo.png' />
-									</div>
+			<t t-call="report.external_layout">
+				<t t-call="report.html_container">
+					<t t-name="external_layout_header">
+						<div class="header">
+							<div class="row">
+								<div class="col-xs-4 col-xs-offset-8">
+									<h5>Individual Payslip Summary Report</h5>
 								</div>
 							</div>
-						</t>
-						<t t-name="report.external_layout" >
-							<div class="page">
-								<div class="row">
-									<table class="table table-bordered">
-										<thead>
-											<tr>
-												<th>SN</th>
-												<th>Employee</th>
-												<th>Designation</th>
-												<th>DOJ</th>
-												<t t-foreach="rules" t-as="r">
-													<th>
-														<span t-esc="r['name']"></span>
-													</th>
-												</t>
-											</tr>
-										</thead>
-										<tbody>
+						</div>
+					</t>
+					<t t-name="report.external_layout">
+						<div class="page">
+							<div class="row">
+								<table class="table table-bordered">
+									<thead>
+										<tr
+											style="background-color:#B4FDF0; 
+												border-bottom: 1px solid #030303;">
+											<th>SN</th>
+											<th>Employee</th>
+											<th>Designation</th>
+											<th>DOJ</th>
+											<t t-foreach="rules" t-as="r">
+												<th>
+													<span t-esc="r['name']"></span>
+												</th>
+											</t>
+										</tr>
+									</thead>
+									<tbody>
 
 										<t t-foreach="docs" t-as="k">
 											<t t-if="k['val']">
-												<td style="background-color:#DDDBDB; text-align:center;
-												border-bottom: 1px solid #030303; color:#000000;" t-att-colspan="docs_len">
-													<span t-esc="k['name']"></span>
+												<td
+													style="background-color:#DDDBDB; text-align:center;
+												border-bottom: 1px solid #030303; color:#000000;"
+													t-att-colspan="docs_len">
+													<strong t-esc="k['name']"></strong>
 												</td>
 
 												<t t-foreach="k['val']" t-as="o">
-														<tr>
-															<td class="text-right">
-																<span t-esc="o['sn']"></span>
-															</td>
-															<td class="text-right">
-																<span t-esc="o['emp_name']"></span>
-															</td>
-															<td class="text-right">
-																<span t-esc="o['designation']"></span>
-															</td>
-															<td class="text-right">
-																<span t-esc="o['doj']"></span>
-															</td>
+													<tr>
+														<td>
+															<span t-esc="o['sn']"></span>
+														</td>
+														<td>
+															<span t-esc="o['emp_name']"></span>
+														</td>
+														<td>
+															<span t-esc="o['designation']"></span>
+														</td>
+														<td>
+															<span t-esc="o['doj']"></span>
+														</td>
 
-															<t t-foreach="rules" t-as="r">
-																<td class="text-right">
-																	<span t-esc="'%.2f'% o[r['code']]"></span>
-																</td>
-															</t>
+														<t t-foreach="rules" t-as="r">
+															<td class="text-right">
+																<span t-esc="'%.2f'% o[r['code']]"></span>
+															</td>
+														</t>
 
-														</tr>
-													</t>
+													</tr>
 												</t>
 											</t>
+										</t>
 
-										</tbody>
-									</table>
-								</div>
-
+									</tbody>
+								</table>
 							</div>
-						</t>
+
+						</div>
 					</t>
 				</t>
+			</t>
 
 		</template>
+		<!-- <template id="external_layout_header_samuda">
+			<div class="header">
+				<div class="row">
+					<div class="col-xs-3">
+						<img t-if="company.logo" t-att-src="'data:image/png;base64,%s' % company.logo"
+							style="max-height: 45px;" />
+					</div>
+					<div class="col-xs-9 text-right" style="margin-top:20px;"
+						t-field="company.rml_header1" />
+				</div>
+				<div class="row zero_min_height">
+					<div class="col-xs-12">
+						<div style="border-bottom: 1px solid black;"></div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-xs-6" name="company_address">
+						<span t-field="company.partner_id"
+							t-field-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": true}'
+							style="border-bottom: 1px solid black; display:inline-block;" />
+					</div>
+				</div>
+			</div>
+		</template> -->
 	</data>
 </openerp>
