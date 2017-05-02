@@ -35,8 +35,8 @@
 
 										<t t-foreach="docs" t-as="k">
 											<t t-if="k['val']">
-												<td style="background-color:#b2beb5; text-align:center;
-												border: 1px solid #568eff;color:#000000;" t-att-colspan="docs_len">
+												<td style="background-color:#DDDBDB; text-align:center;
+												border-bottom: 1px solid #030303; color:#000000;" t-att-colspan="docs_len">
 													<span t-esc="k['name']"></span>
 												</td>
 

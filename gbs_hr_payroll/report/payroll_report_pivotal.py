@@ -83,8 +83,7 @@ class PayrollReportPivotal(models.AbstractModel):
                 dpt_payslips['val'].append(payslip)   
                    
         dpt_payslips_list.append(dpt_payslips)
-        print len(dpt_payslips_list) 
-                    
+        
         docargs = {
             'doc_ids': self.ids,
             'doc_model': 'hr.payslip.run',
