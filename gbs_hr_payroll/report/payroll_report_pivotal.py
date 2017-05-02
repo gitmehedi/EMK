@@ -69,7 +69,8 @@ class PayrollReportPivotal(models.AbstractModel):
                 payslip['sn'] = sn
                 payslip['emp_name'] = other_slip.employee_id.name    
                 payslip['designation'] = other_slip.employee_id.job_id.name
-                payslip['doj'] = other_slip.employee_id.initial_employment_date                
+                payslip['doj'] = other_slip.employee_id.initial_employment_date
+                                
 
                 for rule in rule_list:
                     payslip[rule['code']] = 0
@@ -82,12 +83,13 @@ class PayrollReportPivotal(models.AbstractModel):
                 dpt_payslips['val'].append(payslip)   
                    
         dpt_payslips_list.append(dpt_payslips)
-        print dpt_payslips_list 
+        print len(dpt_payslips_list) 
                     
         docargs = {
             'doc_ids': self.ids,
             'doc_model': 'hr.payslip.run',
             'docs': dpt_payslips_list,
+            'docs_len': len(rule_list)+4,
             'rules': rule_list,
         }
         
