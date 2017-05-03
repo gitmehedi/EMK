@@ -74,7 +74,6 @@ class PayrollReportPivotal(models.AbstractModel):
                 for rule in rule_list:
                     for line in other_slip.line_ids:
                         if line.code == 'NET':
-                            print line.code
                             payslip["NET"] = math.ceil(line.total)
                             break; 
                 
