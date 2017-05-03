@@ -1,5 +1,5 @@
 from openerp import api, exceptions, fields, models
-import operator
+import operator, math
 
 class PayrollReportPivotal(models.AbstractModel):
     _name = 'report.gbs_hr_payroll.report_individual_payslip'
@@ -44,7 +44,7 @@ class PayrollReportPivotal(models.AbstractModel):
                         payslip[rule['code']] = 0
                         for line in slip.line_ids:
                             if line.code == rule['code']:
-                                payslip[rule['code']] = line.total
+                                payslip[rule['code']] = math.ceil(line.total)
                                 break;                        
 
                     dpt_payslips['val'].append(payslip)
@@ -69,25 +69,26 @@ class PayrollReportPivotal(models.AbstractModel):
                 payslip['sn'] = sn
                 payslip['emp_name'] = other_slip.employee_id.name    
                 payslip['designation'] = other_slip.employee_id.job_id.name
-                payslip['doj'] = other_slip.employee_id.initial_employment_date                
+                payslip['doj'] = other_slip.employee_id.initial_employment_date
+                                
 
                 for rule in rule_list:
                     payslip[rule['code']] = 0
                     for line in other_slip.line_ids:
                         if line.code == rule['code']:
-                            payslip[rule['code']] = line.total
+                            payslip[rule['code']] = math.ceil(line.total)
                             break; 
                 
                 dpt_payslips['name'] = "Other"
                 dpt_payslips['val'].append(payslip)   
                    
         dpt_payslips_list.append(dpt_payslips)
-        print dpt_payslips_list 
-                    
+        
         docargs = {
             'doc_ids': self.ids,
             'doc_model': 'hr.payslip.run',
             'docs': dpt_payslips_list,
+            'docs_len': len(rule_list)+4,
             'rules': rule_list,
         }
         
