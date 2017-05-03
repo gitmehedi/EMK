@@ -22,7 +22,8 @@
         'report/report_paperformat.xml',
         'report/gbs_hr_payroll_report.xml',
         'report/payroll_report_view.xml',
-        'views/hr_contract_view.xml'
+        'report/payroll_report_bank_ac_view.xml',
+        'views/hr_contract_view.xml',
     ],
 
     'summary': 'Shows job titles and payslip reports',
