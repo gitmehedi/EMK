@@ -41,13 +41,13 @@ class PayrollReportPivotal(models.AbstractModel):
                     payslip['emp_seq'] = slip.employee_id.employee_sequence
                     
                     for rule in rule_list:
-                        payslip[rule['code']] = 0
                         for line in slip.line_ids:       
-                            if line.code == rule['code']:
-                                payslip[rule['code']] = math.ceil(line.total)                                
+                            if line.code == "NET":
+                                payslip["NET"] = math.ceil(line.total)
                                 break;
 
-                    dpt_payslips['val'].append(payslip)                    
+                    dpt_payslips['val'].append(payslip)
+                    print  payslip
                     
             emp_sort_list  = dpt_payslips['val']
             emp_sort_list = sorted(emp_sort_list, key=lambda k: k['emp_seq'])
@@ -72,10 +72,10 @@ class PayrollReportPivotal(models.AbstractModel):
                 payslip['acc_no'] = slip.employee_id.bank_account_id.acc_number                    
 
                 for rule in rule_list:
-                    payslip[rule['code']] = 0
                     for line in other_slip.line_ids:
-                        if line.code == rule['code']:
-                            payslip[rule['code']] = math.ceil(line.total)
+                        if line.code == 'NET':
+                            print line.code
+                            payslip["NET"] = math.ceil(line.total)
                             break; 
                 
                 dpt_payslips['name'] = "Other"

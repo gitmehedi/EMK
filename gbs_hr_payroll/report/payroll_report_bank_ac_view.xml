@@ -25,11 +25,8 @@
 											<th>Employee</th>
 											<th>Designation</th>
 											<th>Bank A/C</th>
-											<t t-foreach="rules" t-as="r">
-												<th>
-													<span t-esc="r['name']"></span>
-												</th>
-											</t>
+											<th>Net</th>
+
 										</tr>
 									</thead>
 									<tbody>
@@ -58,11 +55,9 @@
 															<span t-esc="o['acc_no']"></span>
 														</td>
 
-														<t t-foreach="rules" t-as="r">
-															<td class="text-right">
-																<span t-esc="'%.2f'% o[r['code']]"></span>
+														<td class="text-right">
+																<span t-esc="'%.2f'% o['NET']"></span>
 															</td>
-														</t>
 
 													</tr>
 												</t>
