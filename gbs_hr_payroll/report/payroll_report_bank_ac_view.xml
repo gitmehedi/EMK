@@ -42,18 +42,10 @@
 
 												<t t-foreach="k['val']" t-as="o">
 													<tr>
-														<td>
-															<span t-esc="o['sn']"></span>
-														</td>
-														<td>
-															<span t-esc="o['emp_name']"></span>
-														</td>
-														<td>
-															<span t-esc="o['designation']"></span>
-														</td>
-														<td>
-															<span t-esc="o['acc_no']"></span>
-														</td>
+														<td><span t-esc="o['sn']"></span></td>
+														<td><span t-esc="o['emp_name']"></span></td>
+														<td><span t-esc="o['designation']"></span></td>
+														<td><span t-esc="o['acc_no']"></span></td>
 
 														<td class="text-right">
 																<span t-esc="'%.2f'% o['NET']"></span>

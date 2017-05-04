@@ -37,7 +37,7 @@ class PayrollReportPivotal(models.AbstractModel):
                 if d.id == slip.employee_id.department_id.id:
                     payslip['emp_name'] = slip.employee_id.name        
                     payslip['designation'] = slip.employee_id.job_id.name
-                    payslip['acc_no'] = slip.employee_id.bank_account_id.acc_number                    
+                    payslip['acc_no'] = slip.employee_id.bank_account_id.acc_number 
                     payslip['emp_seq'] = slip.employee_id.employee_sequence
                     
                     for rule in rule_list:
@@ -47,7 +47,6 @@ class PayrollReportPivotal(models.AbstractModel):
                                 break;
 
                     dpt_payslips['val'].append(payslip)
-                    print  payslip
                     
             emp_sort_list  = dpt_payslips['val']
             emp_sort_list = sorted(emp_sort_list, key=lambda k: k['emp_seq'])
