@@ -30,6 +30,7 @@
 													<span t-esc="r['name']"></span>
 												</th>
 											</t>
+											
 										</tr>
 									</thead>
 									<tbody>
@@ -68,14 +69,19 @@
 												</t>
 											</t>
 										</t>
-
-									</tbody>
-								</table>
-								
-								<h5 style="float:right;"><b> Total: <span t-esc="'%.2f'% total_sum"></span></b></h5>
 										
+										<td style="background-color:#DDDBDB; text-align:center;
+												border-bottom: 1px solid #030303; color:#000000;"
+												t-att-colspan="docs_len">
+												
+												<h5 style="float:right;">
+													<b> Total: <span t-esc="'%.2f'% total_sum"></span></b>
+												</h5>					
+												
+										</td>
+									</tbody>
+								</table>										
 							</div>
-
 						</div>
 					</t>
 				</t>
