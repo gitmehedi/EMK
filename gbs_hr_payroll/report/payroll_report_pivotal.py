@@ -25,7 +25,9 @@ class PayrollReportPivotal(models.AbstractModel):
         dept = self.env['hr.department'].search([])
         
         dpt_payslips_list = []
+        total_sum = []        
         sn = 1
+        
         for d in dept:            
             dpt_payslips = {}
             dpt_payslips['name'] = d.name
@@ -44,11 +46,16 @@ class PayrollReportPivotal(models.AbstractModel):
                         payslip[rule['code']] = 0
                         for line in slip.line_ids:
                             if line.code == rule['code']:
-                                payslip[rule['code']] = math.ceil(line.total)
+                                total_amount = math.ceil(line.total)
+                                payslip[rule['code']] = total_amount
+                                                                
+                                if line.code == "NET":
+                                    total_sum.append(math.ceil(total_amount))
+                                                                         
                                 break;                        
 
                     dpt_payslips['val'].append(payslip)
-            
+                    
             emp_sort_list  = dpt_payslips['val']
             emp_sort_list = sorted(emp_sort_list, key=lambda k: k['emp_seq'])
             
@@ -58,7 +65,6 @@ class PayrollReportPivotal(models.AbstractModel):
             
             dpt_payslips['val'] = emp_sort_list
             dpt_payslips_list.append(dpt_payslips)
-
         
         for other_slip in docs.slip_ids:
             if not other_slip.employee_id.department_id.id:
@@ -77,11 +83,16 @@ class PayrollReportPivotal(models.AbstractModel):
                     for line in other_slip.line_ids:
                         if line.code == rule['code']:
                             payslip[rule['code']] = math.ceil(line.total)
+                            
+                            if line.code == "NET":
+                                total_sum.append(math.ceil(line.total))
+                                                                    
                             break; 
                 
                 dpt_payslips['name'] = "Other"
                 dpt_payslips['val'].append(payslip)   
-                   
+
+        all_total = sum(total_sum)
         dpt_payslips_list.append(dpt_payslips)
         
         docargs = {
@@ -90,6 +101,7 @@ class PayrollReportPivotal(models.AbstractModel):
             'docs': dpt_payslips_list,
             'docs_len': len(rule_list)+4,
             'rules': rule_list,
+            'total_sum': all_total
         }
         
         return self.env['report'].render('gbs_hr_payroll.report_individual_payslip', docargs)

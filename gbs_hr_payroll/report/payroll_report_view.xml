@@ -71,6 +71,9 @@
 
 									</tbody>
 								</table>
+								
+								<h5 style="float:right;"><b> Total: <span t-esc="'%.2f'% total_sum"></span></b></h5>
+										
 							</div>
 
 						</div>
