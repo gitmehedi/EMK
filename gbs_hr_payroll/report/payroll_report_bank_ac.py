@@ -41,9 +41,10 @@ class PayrollReportPivotal(models.AbstractModel):
                     payslip['emp_seq'] = slip.employee_id.employee_sequence
                     
                     for rule in rule_list:
+                        payslip['NET'] = 0
                         for line in slip.line_ids:       
                             if line.code == "NET":
-                                payslip["NET"] = math.ceil(line.total)
+                                payslip['NET'] = math.ceil(line.total)
                                 break;
 
                     dpt_payslips['val'].append(payslip)
@@ -71,9 +72,10 @@ class PayrollReportPivotal(models.AbstractModel):
                 payslip['acc_no'] = slip.employee_id.bank_account_id.acc_number                    
 
                 for rule in rule_list:
+                    payslip['NET'] = 0
                     for line in other_slip.line_ids:
                         if line.code == 'NET':
-                            payslip["NET"] = math.ceil(line.total)
+                            payslip['NET'] = math.ceil(line.total)
                             break; 
                 
                 dpt_payslips['name'] = "Other"
