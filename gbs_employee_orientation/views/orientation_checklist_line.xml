@@ -62,11 +62,11 @@
                 </p>
              </field>
         </record>
-        <menuitem id="menu_employee_orientation_root" name="Orientation"/>
+        <menuitem id="menu_employee_orientation_root" parent="hr_recruitment.menu_hr_recruitment_root" name="Orientation"/>
         <menuitem id="menu_employee_orientation" parent="menu_employee_orientation_root" name="Orientations"/>
         <menuitem id="menu_employee_training" parent="menu_employee_orientation_root" name="Employee Training Program" sequence="10"/>
         <!-- Configuration Menu -->
-        <menuitem id="menu_employee_orientation_config" name="Configuration" parent="menu_employee_orientation_root" sequence="15" />
+        <menuitem id="menu_employee_orientation_config" name="Orientation Configuration" parent="menu_employee_orientation_root" sequence="15" />
         <menuitem action="action_checklist_line" id="menu_employee_orientation_config_line" name="Orientation Checklist Line" parent="menu_employee_orientation_config" sequence="20"/>
     </data>
 </openerp>
