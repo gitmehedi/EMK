@@ -1,4 +1,4 @@
-from openerp import models, fields
+from openerp import models, fields,api
 
 class HrEmployeeLoanProof(models.Model):
     _name = 'hr.employee.loan.proof' 
@@ -6,5 +6,11 @@ class HrEmployeeLoanProof(models.Model):
 
     name = fields.Char(size=100, string='Name', required='True')
     mandatory = fields.Boolean(string='Mandatory', default=True)
-    
-             
+
+    @api.constrains('name')
+    def _check_unique_constraint(self):
+        if self.name:
+            filters = [['name', '=ilike', self.name]]
+            name = self.search(filters)
+            if len(name) > 1:
+                raise Warning('[Unique Error] Name must be unique!')
