@@ -59,6 +59,16 @@
 										<field name="interst_mode_id" attrs="{'invisible': [('is_interest_payble', '=', False)]}" />                                   
 	                                    <field name="req_rate" attrs="{'invisible': [('is_interest_payble', '=', False)]}" />
                                     </group>
+									<field name="line_ids">
+										<tree string="List" editable="bottom">
+											<field  name="employee_id" invisible="1"/>
+											<field  name="emp_loan" invisible="1"/>
+											<field  name="num_installment"/>
+											<field  name="schedule_date" />
+											<field  name="installment" />
+											<field name="state" />
+										</tree>
+									</field>
                                 </group>
 							</page>
 							<page string="Proofs">
@@ -76,16 +86,7 @@
 								<field name="notes" />			
 							</page>
 					</notebook>
-						<field name="line_ids">
-							<tree string="List" editable="bottom">
-								<field  name="employee_id" invisible="1"/>
-								<field  name="emp_loan" invisible="1"/>
-								<field  name="num_installment"/>
-								<field  name="schedule_date" />
-								<field  name="installment" />
-								<field name="state" />
-							</tree>
-						</field>
+
 					</sheet>
 				</form>
 			</field>
