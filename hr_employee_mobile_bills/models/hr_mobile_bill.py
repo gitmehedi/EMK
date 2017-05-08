@@ -41,4 +41,10 @@ class HrMobileBill(models.Model):
     def action_done(self):
         self.state = 'approved'
 
-
+    @api.constrains('name')
+    def _check_unique_constraint(self):
+        if self.name:
+            filters = [['name', '=ilike', self.name]]
+            name = self.search(filters)
+            if len(name) > 1:
+                raise Warning('[Unique Error] Name must be unique!')
