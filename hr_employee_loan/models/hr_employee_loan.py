@@ -28,7 +28,7 @@ class HrEmployeeLoanRequest(models.Model):
 
     repayment_date = fields.Date('Repayment Date',required=True,states={'draft': [('invisible', False)], 'applied': [('readonly', True)], 'approved':[('readonly', True)],'disbursed':[('readonly', True)]})
 
-    line_ids = fields.One2many('hr.employee.loan.line', 'parent_id', string="Line Ids",states={'draft': [('invisible', False)], 'applied': [('readonly', True)], 'approved':[('readonly', True)],'disbursed':[('readonly', True)]})
+    line_ids = fields.One2many('hr.employee.loan.line', 'parent_id', string="Employee Loan Installment Details",states={'draft': [('invisible', False)], 'applied': [('readonly', True)], 'approved':[('readonly', True)],'disbursed':[('readonly', True)]})
 
     disbursement_date = fields.Datetime('Disbursement Date', readonly=True, copy=False,
         states={'draft': [('invisible', True)], 'applied': [('invisible', True)], 'approved':[('readonly', True)],'disbursed':[('readonly', True)]})
@@ -116,7 +116,10 @@ class HrEmployeeLoanRequest(models.Model):
 
                     line_pool.create(vals)
 
-
-
-
-
+    @api.constrains('name')
+    def _check_unique_constraint(self):
+        if self.name:
+            filters = [['name', '=ilike', self.name]]
+            name = self.search(filters)
+            if len(name) > 1:
+                raise Warning('[Unique Error] Name must be unique!')

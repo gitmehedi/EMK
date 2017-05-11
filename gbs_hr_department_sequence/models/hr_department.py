@@ -72,3 +72,11 @@ class HrDepartment(models.Model):
                 return departments.name_get()
         return super(HrDepartment, self)\
             .name_search(name=name, args=args, operator=operator, limit=limit)
+
+    @api.constrains('name')
+    def _check_unique_constraint(self):
+        if self.name:
+            filters = [['name', '=ilike', self.name]]
+            name = self.search(filters)
+            if len(name) > 1:
+                raise Warning('[Unique Error] Name must be unique!')

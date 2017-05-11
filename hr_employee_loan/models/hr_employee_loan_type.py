@@ -1,4 +1,4 @@
-from openerp import models, fields
+from openerp import models, fields,api
 
 class HrEmployeeLoanType(models.Model):
     _name = 'hr.employee.loan.type'
@@ -34,3 +34,11 @@ class HrEmployeeLoanType(models.Model):
     disburse_method_id = fields.Selection([
         ('payrolldeduction', 'Deirect Cash/Cheque'),
         ], string = 'Disburse Method',required='True')
+
+    @api.constrains('name')
+    def _check_unique_constraint(self):
+        if self.name:
+            filters = [['name', '=ilike', self.name]]
+            name = self.search(filters)
+            if len(name) > 1:
+                raise Warning('[Unique Error] Name must be unique!')
