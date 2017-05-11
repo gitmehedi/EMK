@@ -53,8 +53,8 @@ class PayrollReportBankAc(models.AbstractModel):
                 ps['sn'] = sn
                 sn += 1
             
-            dpt_payslips['val'] = emp_sort_list
-            dpt_payslips_list.append(dpt_payslips)
+        dpt_payslips['val'] = emp_sort_list
+        dpt_payslips_list.append(dpt_payslips)
 
         docargs = {
             'doc_ids': self.ids,
