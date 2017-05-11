@@ -29,6 +29,7 @@ class PayrollReportBankAc(models.AbstractModel):
         sn = 1
         dpt_payslips = {}
         dpt_payslips['val'] = []
+        emp_sort_list = None
 
         for slip in slip_pool.browse(slip_ids.ids):
             payslip = {}

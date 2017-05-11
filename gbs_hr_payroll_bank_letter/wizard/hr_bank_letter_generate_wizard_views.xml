@@ -8,7 +8,7 @@
 			<form string="Banks">
                     <header>
                         <button name ="process_print" string="Print" type="object" class="oe_highlight"  />
-                        <button string="Cancel" type="cancel" />
+                        <button special="cancel" string="Cancel" />
                     </header>
                     
                     <sheet>                    
