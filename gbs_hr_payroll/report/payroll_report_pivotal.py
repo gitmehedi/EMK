@@ -12,13 +12,14 @@ class PayrollReportPivotal(models.AbstractModel):
         rule_list = []
         for slip in docs.slip_ids:
             for line in slip.line_ids:
-                rule = {}
-                rule['name'] = line.name
-                rule['seq'] = line.sequence
-                rule['code'] = line.code
+                if line.appears_on_payslip is True:
+                    rule = {}
+                    rule['name'] = line.name
+                    rule['seq'] = line.sequence
+                    rule['code'] = line.code
 
-                if rule not in rule_list:
-                    rule_list.append(rule)
+                    if rule not in rule_list:
+                        rule_list.append(rule)
                     
         rule_list = sorted(rule_list, key=lambda k: k['seq'])
             
