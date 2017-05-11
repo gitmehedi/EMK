@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<openerp>
+	<data>
+		<record id="hr_bank_selection_wizard_view" model="ir.ui.view">
+			<field name="name">HR Bank Selection Wizard View</field>
+			<field name="model">hr.bank.selection.wizard</field>
+			<field name="arch" type="xml">
+			<form string="Banks">
+                    <header>
+                        <button name ="process_print" string="Print" type="object" class="oe_highlight"  />
+                        <button string="Cancel" type="cancel" />
+                    </header>
+                    
+                    <sheet>                    
+					<group>
+                    	<field name="bank_names"/>
+                    </group>
+                    </sheet>
+                    
+               </form>
+			</field>
+		</record>		
+		
+		<record id="action_hr_bank_selection_wizard" model="ir.actions.act_window">
+			<field name="name">Generate Bank Letter</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">hr.bank.selection.wizard</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">form</field>
+			<field name="target">new</field>
+		</record>
+		
+	</data>
+</openerp>
