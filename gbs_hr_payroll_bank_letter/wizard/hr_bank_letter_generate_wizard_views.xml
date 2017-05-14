@@ -5,18 +5,16 @@
 			<field name="name">HR Bank Selection Wizard View</field>
 			<field name="model">hr.bank.selection.wizard</field>
 			<field name="arch" type="xml">
-			<form string="Banks">
-                    <header>
-                        <button name ="process_print" string="Print" type="object" class="oe_highlight"  />
-                        <button special="cancel" string="Cancel" />
-                    </header>
-                    
-                    <sheet>                    
+			<form >
+				<sheet>
 					<group>
-                    	<field name="bank_names"/>
+						<field name="bank_names"/>
                     </group>
-                    </sheet>
-                    
+				</sheet>
+				<footer>
+					<button name ="process_print" string="Print" type="object" class="oe_highlight"  />
+                    <button special="cancel" string="Cancel" />
+				</footer>
                </form>
 			</field>
 		</record>		
