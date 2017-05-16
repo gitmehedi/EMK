@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<openerp>
+	<data>
+		<!-- Tree View -->
+		<record id="attendance_device_config_tree" model="ir.ui.view">
+			<field name="name">hr.attendance.device.config.tree</field>
+			<field name="model">hr.attendance.device.config</field>
+			<field name="arch" type="xml">
+				<tree string="Device Configuration">
+					<field name="name"/>
+					<field name="connection_type"/>
+					<field name="device_type"/>
+					<field name="device_id"/>
+					<field name="is_active"/>
+					<button name="action_check_connection" string="Connection" type="object" icon="fa-cogs" />
+				</tree>
+			</field>
+		</record>
+
+		
+		<!-- Form View -->
+		<record id="attendance_device_config_form" model="ir.ui.view">
+			<field name="name">hr.attendance.device.config.form</field>
+			<field name="model">hr.attendance.device.config</field>
+			<field name="type">form</field>
+			<field name="arch" type="xml">
+				<form string="Device Configuration">
+					<sheet>
+						<group>
+							<group>
+								<field name="name" />
+								<field name="connection_type" placeholder="Please Select"/>
+								<field name="is_active"/>
+							</group>
+							<group>
+								<field name="device_type" placeholder="Please Select"/>
+								<field name="device_id"/>
+							</group>
+							<field name="url"/>
+							<div class="oe_button_box" name="button_box">
+								<button name="toggle_connect" type="object" class="oe_stat_button" icon="fa-signal">
+									<field name="is_active" widget="boolean_button" options="{&quot;terminology&quot;: &quot;connect&quot;}"/>
+								</button>
+                        	</div>
+
+						</group>
+
+					</sheet>
+
+				</form>
+			</field>
+		</record>
+
+		<record id="hr_attendance_device_config_action" model="ir.actions.act_window">
+			<field name="name">Attendance Device Configuration</field>
+			<field name="res_model">hr.attendance.device.config</field>
+			<field name="view_mode">tree,form</field>
+		</record>
+
+		<menuitem id="menu_hr_attendance_device_config" name="Device Configuration" parent="hr_attendance.menu_hr_attendance_settings"
+					action="hr_attendance_device_config_action" />
+
+
+	</data>
+</openerp>

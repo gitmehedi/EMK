@@ -1,4 +1,5 @@
 from openerp import api, fields, models
+import amount_to_text_bdt
 import operator, math
 
 class PayrollReportBankAc(models.AbstractModel):
@@ -6,6 +7,11 @@ class PayrollReportBankAc(models.AbstractModel):
     
     @api.model
     def render_html(self, docids, data=None):
+
+       # print '------------- 999999999: ',amount_to_text_bdt.amountToWords(999999999)
+        #40230534 2407814.00
+        #999999999
+
         payslip_run_pool = self.env['hr.payslip.run']
 
         slip_pool = self.env['hr.payslip']
@@ -47,7 +53,7 @@ class PayrollReportBankAc(models.AbstractModel):
                     if line.code == 'NET':
                         total_amt = line.total
                         payslip['NET'] = math.ceil(total_amt)
-                        total_sum.append(total_amt)
+                        total_sum.append(math.ceil(total_amt))
 
                         break;
 
@@ -70,7 +76,7 @@ class PayrollReportBankAc(models.AbstractModel):
             'docs': dpt_payslips_list,
             'bank_name': data['bank_name'],
             'bank_street1':data['bank_street1'],
-            'bank_street1': data['bank_street2'],
+            'bank_street2': data['bank_street2'],
             'bank_city': data['bank_city'],
             'bank_zip': data['bank_zip'],
             'bank_country': data['bank_country'],
@@ -78,9 +84,11 @@ class PayrollReportBankAc(models.AbstractModel):
             'cur_year': data['cur_year'],
             'cur_month': data['cur_month'],
             'cur_day': data['cur_day'],
-            'total_net': all_total,
+            'total_net': int(all_total),
             'docs_len': len(rule_list) + 4,
-            'company': self.env['res.company']._company_default_get('gbs_hr_payroll_bank_letter').name
+            'company': self.env['res.company']._company_default_get('gbs_hr_payroll_bank_letter').name,
+            'amount_to_text_bdt': amount_to_text_bdt.amountToWords(int(all_total)),
+
         }
         
         return self.env['report'].render('gbs_hr_payroll_bank_letter.report_individual_payslip1', docargs)

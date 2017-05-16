@@ -7,7 +7,7 @@
 			<field name="type">form</field>
 			<field name="priority" eval="16"/>
 			<field name="arch" type="xml">
-				<form string="Employee Loan Requests">
+				<form string="Employee Loan Requests" delete="false" copy='0'>
 					<header>
 						<button name="action_done" type="object"
                                 string="Approve"

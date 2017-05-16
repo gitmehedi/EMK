@@ -8,8 +8,8 @@ class HrEmployeeLoanPolicy(models.Model):
     value = fields.Float(size=100, string='Value', required='True')
     
     """ All relations fields """
-    employee_ids = fields.Many2many('hr.employee', string='Loan Proofs')
-    employee_tag_ids = fields.Many2many('hr.employee.category', string='Employee catagories')
+    employee_ids = fields.Many2many('hr.employee', string='''Employee's''')
+    employee_tag_ids = fields.Many2many('hr.employee.category', string='Employee Catagories')
     
     policy_type_id = fields.Selection([
         ('flat', 'Max Loan Amount'),
