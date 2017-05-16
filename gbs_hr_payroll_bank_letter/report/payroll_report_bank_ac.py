@@ -7,11 +7,7 @@ class PayrollReportBankAc(models.AbstractModel):
     
     @api.model
     def render_html(self, docids, data=None):
-
-       # print '------------- 999999999: ',amount_to_text_bdt.amountToWords(999999999)
-        #40230534 2407814.00
-        #999999999
-
+        
         payslip_run_pool = self.env['hr.payslip.run']
 
         slip_pool = self.env['hr.payslip']
@@ -88,6 +84,7 @@ class PayrollReportBankAc(models.AbstractModel):
             'docs_len': len(rule_list) + 4,
             'company': self.env['res.company']._company_default_get('gbs_hr_payroll_bank_letter').name,
             'amount_to_text_bdt': amount_to_text_bdt.amountToWords(int(all_total)),
+            'mother_bank_ac': data['mother_bank_ac'],
 
         }
         

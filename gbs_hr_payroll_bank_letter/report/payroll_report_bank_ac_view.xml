@@ -11,7 +11,7 @@
 							<p> <span t-esc="bank_name"/></p>
 							<p><span t-esc="bank_street1"/></p>
 							<p><span t-esc="bank_street2"/></p>
-							<p><span t-esc="bank_city"/> , <span t-esc="bank_zip"/></p>
+							<p><span t-esc="bank_city"/> <span t-esc="bank_zip"/></p>
 							<p><span t-esc="bank_country"/></p>
 							<br/>
 
@@ -19,7 +19,7 @@
 							<br/>
 							<p>Dear Sir,</p>
 							<p>You are requested to disburse BDT <span t-esc="total_net"/> (Taka <span t-esc="amount_to_text_bdt"/>) to the following employee's bank account by debating our
-								<b>Account number 107.2.12.2</b> under advice to us.
+								<b>Account number <span t-esc="mother_bank_ac"/></b> under advice to us.
 							</p>
 
 							<div class="row">
