@@ -9,21 +9,10 @@
             file="gbs_hr_payroll.report_individual_payslip"
             name="gbs_hr_payroll.report_individual_payslip"
         />
-        
-        <!--<report -->
-            <!--id="report_individual_paslips1"-->
-            <!--string="Payslip Bank A/C"-->
-            <!--model="hr.payslip.run" -->
-            <!--report_type="qweb-pdf"-->
-            <!--file="gbs_hr_payroll.report_individual_payslip1"-->
-            <!--name="gbs_hr_payroll.report_individual_payslip1"-->
-        <!--/>        -->
-        
         <record id="report_individual_paslips" model="ir.actions.report.xml">
             <field name="paperformat_id" ref="gbs_hr_payroll.paperformat_hrsummary"/>
         </record>
-        
-         <!--<record id="report_individual_paslips1" model="ir.actions.report.xml">-->
+        <!--<record id="report_individual_paslips" model="ir.actions.report.xml">-->
             <!--<field name="paperformat_id" ref="gbs_hr_payroll.paperformat_hrsummary"/>-->
         <!--</record>-->
         

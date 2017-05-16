@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+       <report
+            id="report_individual_paslips1"
+            string="Bank Letter Payslip"
+            model="hr.payslip.run"
+            report_type="qweb-pdf"
+            file="gbs_hr_payroll_bank_letter.report_individual_payslip1"
+            name="gbs_hr_payroll_bank_letter.report_individual_payslip1"
+            menu="False"
+        />
+    </data>
+</odoo>
