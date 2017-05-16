@@ -1,2 +1,1 @@
-import attendance_summary
 import device_configuration
