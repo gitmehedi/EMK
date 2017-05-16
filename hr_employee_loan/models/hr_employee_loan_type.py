@@ -17,7 +17,7 @@ class HrEmployeeLoanType(models.Model):
                                        string='Loan Proofs')
 
     loan_policy_ids = fields.Many2many('hr.employee.loan.policy', string='Loan Policies')
-    employee_tag_ids = fields.Many2many('hr.employee.category', string='Employee catagories')
+    employee_tag_ids = fields.Many2many('hr.employee.category', string='Employee Catagories')
 
     """ All selection fields """
     

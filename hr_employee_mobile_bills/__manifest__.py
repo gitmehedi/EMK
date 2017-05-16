@@ -6,6 +6,7 @@
     'version':'1.0',
     'depends': ['hr'],
     'data': [
+        'security/ir.model.access.csv',
         'views/hr_mobile_bill_view.xml',
         'views/hr_emp_mb_bill_view.xml',
         'views/hr_emp_mb_bill_limit_view.xml',
