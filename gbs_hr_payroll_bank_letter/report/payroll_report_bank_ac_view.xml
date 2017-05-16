@@ -18,7 +18,7 @@
 							<p><b><u>Subject: Disbursement of <span t-esc="payslip_report_name"/> to the following employees Bank Account.</u></b></p>
 							<br/>
 							<p>Dear Sir,</p>
-							<p>You are requested to disburse BDT <span t-esc="total_net"/> (Taka One Hundred) to the following employee's bank account by debating our
+							<p>You are requested to disburse BDT <span t-esc="total_net"/> (Taka <span t-esc="amount_to_text_bdt"/>) to the following employee's bank account by debating our
 								<b>Account number 107.2.12.2</b> under advice to us.
 							</p>
 
@@ -61,15 +61,14 @@
 									</tbody>
 								</table>
 
-								<p>(Taka One Houndred)</p>
+								<p>(Taka <span t-esc="amount_to_text_bdt"/>)</p>
 								<p>Your cooperation in this regard would be highly appreciated.</p>
 
 								<br/><br/>
 
 								<p>For <span t-esc="company"/></p>
-								<br/><br/>
+								<br/><br/><br/>
 								<p><b>Chairperson / Managing Director</b></p>
-
 							</div>
 						</div>
 					</t>
