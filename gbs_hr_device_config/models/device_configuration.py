@@ -20,6 +20,7 @@ class DeviceConfiguration(models.Model):
     ], string='Device Type', required=True)
     device_id = fields.Integer(string='Device ID', required=True)
 
+
     @api.multi
-    def action_check_connection(self):
-        print ("Hi")
+    def toggle_connect(self):
+        self.is_active = not self.is_active
