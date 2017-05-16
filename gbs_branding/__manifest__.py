@@ -28,7 +28,7 @@
     'complexity': "easy",
     "author": "Genweb2 Limited",
     "website": "http://www.genweb2.com",
-    'depends': ['hr', 'web'],
+    'depends': ['web'],
     'data': [
         'views/openeducat_template.xml',
         #'views/homepage_template.xml',
@@ -44,5 +44,5 @@
     ],
     'installable': True,
     'auto_install': False,
-    'application': True,
+    'application': False,
 }
