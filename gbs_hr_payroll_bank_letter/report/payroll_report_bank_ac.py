@@ -13,8 +13,6 @@ class PayrollReportBankAc(models.AbstractModel):
         slip_ids = slip_pool.search([('payslip_run_id','=',data['active_id']),
                                      ('employee_id.bank_account_id.bank_id','=',data['bank_id'])])
 
-        company_id = fields.Many2one('res.company', string='Company', ondelete='cascade',
-                                     default=lambda self: self.env.user.company_id)
 
         rule_list = []
         for slip in slip_pool.browse(slip_ids.ids):
