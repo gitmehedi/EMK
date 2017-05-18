@@ -8,11 +8,11 @@ class HrEmployeeLoantLine(models.Model):
     emp_loan = fields.Char(string='Code')
     schedule_date = fields.Date(string="Schedule Date")
     installment = fields.Float(size=100, string='Installment Amount', readonly=True)
-    num_installment = fields.Integer(string="Number Of Installment")
+    num_installment = fields.Integer(string="Installment No")
 
     """ Relational Fields """
-    parent_id = fields.Many2one('hr.employee.loan',ondelete='cascade')
-    employee_id = fields.Many2one('hr.employee', string="Employee",ondelete='cascade')
+    parent_id = fields.Many2one('hr.employee.loan', ondelete='cascade')
+    employee_id = fields.Many2one('hr.employee', string="Employee", ondelete='cascade')
     state = fields.Selection([
         ('pending', "Pending"),
         ('done', "Done")
