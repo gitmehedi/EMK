@@ -18,12 +18,9 @@
                         <button name="action_draft" type="object"
                                 string="Apply" states="draft"
                                 class="oe_highlight"/>
-                        <t t-if="len(line_ids.ids[])==0">
-                            <button name="generate_schedules" states="approved"
+                        <button name="generate_schedules" states="approved"
                                     string="Compute" type="object" groups="hr.group_hr_manager"
                                     class="oe_highlight" />
-                        </t>
-
                         <button name="action_disbursed" type="object"
                                 string="Disburse Loan" states="approved" groups="hr.group_hr_manager"
                                 class="oe_highlight"/>
