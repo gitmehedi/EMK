@@ -12,7 +12,6 @@
 							<p><span t-esc="bank_street1"/></p>
 							<p><span t-esc="bank_street2"/></p>
 							<p><span t-esc="bank_city"/> <span t-esc="bank_zip"/></p>
-							<p><span t-esc="bank_country"/></p>
 							<br/>
 
 							<p><b><u>Subject: Disbursement of <span t-esc="payslip_report_name"/> to the following employees Bank Account.</u></b></p>
