@@ -72,6 +72,7 @@ class CalendarHolidayType(models.Model):
                     vals['date'] = dayName
                     chd_obj.create(vals)
 
+        raise exceptions.ValidationError("Calendar Generate Successfully")
         return True
  
 

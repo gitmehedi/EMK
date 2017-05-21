@@ -31,7 +31,7 @@ class HrEmployeeLoanRequest(models.Model):
     disbursement_date = fields.Datetime('Disbursement Date', readonly=True, copy=False,
         states={'draft': [('invisible', True)], 'applied': [('invisible', True)], 'approved':[('readonly', True)],'disbursed':[('readonly', True)]})
 
-    remaining_loan_amount = fields.Float(string="Remaining Loan", digits=(15, 2), compute="_compute_loan_amount", store=True)
+    remaining_loan_amount = fields.Float(string="Remaining Loan", digits=(15, 2), compute="_compute_loan_amount_with_payslip")
     
     """ All relations fields """
     def _default_employee(self):
@@ -123,13 +123,13 @@ class HrEmployeeLoanRequest(models.Model):
             if len(name) > 1:
                 raise Warning('[Unique Error] Name must be unique!')
 
-    @api.depends('line_ids')
+    @api.depends('line_ids','principal_amount')
     def _compute_loan_amount_with_payslip(self):
         for loan in self:
             self.remaining_loan_amount = sum([l.installment for l in loan.line_ids if l.state=='pending'])
 
-    @api.constrains('duration','principal_amount')
-    def _check_qty(self):
-        if self.duration < 0 or self.principal_amount < 0:
-            raise Warning('principal_amount or duration cannot be negative !')
+    # @api.constrains('duration','principal_amount')
+    # def _check_qty(self):
+    #     if self.duration < 0 or self.principal_amount < 0:
+    #         raise Warning('principal_amount or duration cannot be negative !')
 
