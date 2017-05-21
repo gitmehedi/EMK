@@ -36,5 +36,16 @@ class InheritedHrMobilePayslip(models.Model):
                 })
             self.input_line_ids = other_line_ids
 
+    @api.multi
+    def action_payslip_done_with_loan(self):
+        self.action_payslip_done()
+        loan_data = self.env['hr.employee.loan.line'].search([('employee_id', '=', self.employee_id.id),
+                                                              ('schedule_date', '>=', self.date_from),
+                                                              ('schedule_date', '<=', self.date_to),
+                                                              ('state', '=', 'pending')], limit=1)
+        if loan_data:
+            loan_data.write({'state': 'done'})
+            loan_data.parent_id.write({'remaining_loan_amount': loan_data.parent_id.remaining_loan_amount - loan_data.installment})
+            return True
 
 

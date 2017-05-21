@@ -31,7 +31,7 @@ class HrEmployeeLoanRequest(models.Model):
     disbursement_date = fields.Datetime('Disbursement Date', readonly=True, copy=False,
         states={'draft': [('invisible', True)], 'applied': [('invisible', True)], 'approved':[('readonly', True)],'disbursed':[('readonly', True)]})
 
-    remaining_loan_amount = fields.Char(string="Remaining Loan", compute="_compute_loan_amount", store=True)
+    remaining_loan_amount = fields.Float(string="Remaining Loan", digits=(15, 2), compute="_compute_loan_amount", store=True)
     
     """ All relations fields """
     def _default_employee(self):
@@ -101,7 +101,7 @@ class HrEmployeeLoanRequest(models.Model):
     @api.multi
     def generate_schedules(self):
         for loan in self:
-            if loan.duration > 0 and loan.repayment_date:
+            if loan.duration > 0 and loan.repayment_date and len(loan.line_ids)==0:
                 repayment_date = datetime.datetime.strptime(loan.repayment_date, '%Y-%m-%d')
                 installment_amount = loan.principal_amount / int(loan.duration)
                 loan.line_ids.unlink()
@@ -122,5 +122,15 @@ class HrEmployeeLoanRequest(models.Model):
             name = self.search(filters)
             if len(name) > 1:
                 raise Warning('[Unique Error] Name must be unique!')
+
+    @api.depends('line_ids')
+    def _compute_loan_amount_with_payslip(self):
+        for loan in self:
+            self.remaining_loan_amount = sum([l.installment for l in loan.line_ids if l.state=='pending'])
+
+
+
+
+
 
 
