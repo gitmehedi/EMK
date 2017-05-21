@@ -128,9 +128,8 @@ class HrEmployeeLoanRequest(models.Model):
         for loan in self:
             self.remaining_loan_amount = sum([l.installment for l in loan.line_ids if l.state=='pending'])
 
-
-
-
-
-
+    @api.constrains('duration','principal_amount')
+    def _check_qty(self):
+        if self.duration < 0 or self.principal_amount < 0:
+            raise Warning('principal_amount or duration cannot be negative !')
 
