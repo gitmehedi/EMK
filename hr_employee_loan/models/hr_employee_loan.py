@@ -124,14 +124,8 @@ class HrEmployeeLoanRequest(models.Model):
             if len(name) > 1:
                 raise Warning('[Unique Error] Name must be unique!')
 
+    @api.constrains('duration','principal_amount')
+    def _check_qty(self):
+        if self.duration < 0 or self.principal_amount < 0:
+            raise Warning('principal_amount or duration cannot be negative !')
 
-    def _check_qty(self, cr, uid, ids, context=None):
-        for order in self.browse(cr, uid, ids, context=context):
-            if order.duration < 0 or order.principal_amount :
-                return False
-
-        return True
-
-    _constraints = [
-        (_check_qty, ' principal_amount or duration cannot be negative !', ['duration']),
-    ]
