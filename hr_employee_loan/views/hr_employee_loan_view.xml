@@ -19,8 +19,8 @@
                                 string="Apply" states="draft"
                                 class="oe_highlight"/>
                         <button name="generate_schedules" states="approved"
-                                    string="Compute" type="object" groups="hr.group_hr_manager"
-                                    class="oe_highlight" />
+                                string="Compute" type="object" groups="hr.group_hr_manager"
+                                class="oe_highlight"/>
                         <button name="action_disbursed" type="object"
                                 string="Disburse Loan" states="approved" groups="hr.group_hr_manager"
                                 class="oe_highlight"/>
@@ -94,6 +94,7 @@
                 </form>
             </field>
         </record>
+
         <record id="hr_employee_loan_request_tree" model="ir.ui.view">
             <field name="name">hr.employee.loan.tree</field>
             <field name="model">hr.employee.loan</field>
@@ -109,6 +110,20 @@
             </field>
         </record>
 
+
+        <record id="hr_employee_loan_request_search" model="ir.ui.view">
+            <field name="name">hr.employee.loan.view</field>
+            <field name="model">hr.employee.loan</field>
+            <field eval="10" name="priority"/>
+            <field name="arch" type="xml">
+                <search string="Employee Project Search">
+                    <field name="name"/>
+                    <field name="employee_id"/>
+                    <field name="loan_type_id"/>
+                </search>
+            </field>
+        </record>
+
         <!-- Sequence Records -->
         <record id="seq_loan_request" model="ir.sequence">
             <field name="name">Loan Sequence</field>
@@ -118,19 +133,34 @@
         </record>
 
 
-        <record model="ir.actions.act_window" id="hr_employee_loan_action">
+        <record model="ir.actions.act_window" id="hr_employee_loan_applied_action">
             <field name="name">Loan Requests</field>
             <field name="res_model">hr.employee.loan</field>
+            <field name="domain">[('state','in',('draft','applied'))]</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+           <record model="ir.actions.act_window" id="hr_employee_loan_approved_action">
+            <field name="name">Loan Requests</field>
+            <field name="res_model">hr.employee.loan</field>
+            <field name="domain">[('state','in',('approved',))]</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+           <record model="ir.actions.act_window" id="hr_employee_loan_disbursed_action">
+            <field name="name">Loan Requests</field>
+            <field name="res_model">hr.employee.loan</field>
+            <field name="domain">[('state','in',('disbursed',))]</field>
             <field name="view_mode">tree,form</field>
         </record>
 
 
         <menuitem id="loan_request_menu" name="Loan Requests" parent="main_loan_menu" sequence="10"
-                  action="hr_employee_loan_action" groups="base.group_user"/>
+                  action="hr_employee_loan_applied_action" groups="base.group_user"/>
         <menuitem id="loan_request_approve_menu" name="Loans to Approve" parent="main_loan_menu" sequence="20"
-                  action="hr_employee_loan_action" groups="base.group_user"/>
+                  action="hr_employee_loan_approved_action" groups="base.group_user"/>
         <menuitem id="loan_disburse_menu" name="Loans to Disburse" parent="main_loan_menu" sequence="30"
-                  action="hr_employee_loan_action" groups="base.group_user"/>
+                  action="hr_employee_loan_disbursed_action" groups="base.group_user"/>
 
     </data>
 </odoo>

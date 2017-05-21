@@ -25,16 +25,16 @@ class InheritedHrMobilePayslip(models.Model):
                                                                   ('state', '=', 'pending')], limit=1)
 
             """
-            Meal Bills
+            Loan Amount
             """
-            if loan_data and self.contract_id.id:
+            if loan_data and self.contract_id.id and self.parent_id.state=='disbursed':
                 other_line_ids += other_line_ids.new({
                     'name': 'Current Loan',
                     'code': "LOAN",
                     'amount': loan_data.installment,
                     'contract_id': self.contract_id.id,
                 })
-            self.input_line_ids = other_line_ids
+                self.input_line_ids = other_line_ids
 
     @api.multi
     def action_payslip_done_with_loan(self):
@@ -43,7 +43,8 @@ class InheritedHrMobilePayslip(models.Model):
                                                               ('schedule_date', '>=', self.date_from),
                                                               ('schedule_date', '<=', self.date_to),
                                                               ('state', '=', 'pending')], limit=1)
-        if loan_data:
+
+        if loan_data and self.contract_id.id and self.parent_id.state=='disbursed':
             loan_data.write({'state': 'done'})
             loan_data.parent_id.write({'remaining_loan_amount': loan_data.parent_id.remaining_loan_amount - loan_data.installment})
             return True
