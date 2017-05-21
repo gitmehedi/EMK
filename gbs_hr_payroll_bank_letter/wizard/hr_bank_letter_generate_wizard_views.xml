@@ -8,7 +8,7 @@
 			<form>
 				<sheet>
 					<group>
-						<field name="bank_names"/>
+						<field name="bank_names" options="{'no_create': True, 'no_create_edit':True}"/>
                     </group>
 				</sheet>
 				<footer>
