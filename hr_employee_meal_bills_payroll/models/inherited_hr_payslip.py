@@ -24,14 +24,14 @@ class InheritedHrMobilePayslip(models.Model):
             """
             Meal Bills
             """
-            if meal_data and self.contract_id.id:
+            if meal_data and self.contract_id.id and meal_data.parent_id.state=="approved":
                 other_line_ids += other_line_ids.new({
-                    'name': 'Meal Bill',
-                    'code': "MEAL",
+                    'name': 'Mess Bill',
+                    'code': "MESS",
                     'amount': meal_data.bill_amount,
                     'contract_id': self.contract_id.id,
                 })
-            self.input_line_ids = other_line_ids
+                self.input_line_ids = other_line_ids
 
 
 

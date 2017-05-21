@@ -44,7 +44,7 @@ class InheritedHrMobilePayslip(models.Model):
                                                               ('schedule_date', '<=', self.date_to),
                                                               ('state', '=', 'pending')], limit=1)
 
-        if loan_data and self.contract_id.id and self.parent_id.state=='disbursed':
+        if loan_data and self.contract_id.id and loan_data.parent_id.state=='disbursed':
             loan_data.write({'state': 'done'})
             loan_data.parent_id.write({'remaining_loan_amount': loan_data.parent_id.remaining_loan_amount - loan_data.installment})
             return True

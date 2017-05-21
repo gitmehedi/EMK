@@ -24,7 +24,7 @@ class InheritedHrMobilePayslip(models.Model):
             """
             Mobile Bills
             """
-            if mobile_data and self.contract_id.id:
+            if mobile_data and self.contract_id.id and mobile_data.parent_id.state=='approved':
                other_line_ids += other_line_ids.new({
                     'name': 'Mobile Bill',
                     'code': "MOBILE",
