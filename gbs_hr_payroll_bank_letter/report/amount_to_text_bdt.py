@@ -3,7 +3,7 @@ def handel_upto_99(number):
               9: "Nine", 10: "Ten", 11: "Eleven", 12: "Twelve", 13: "Thirteen", 14: "Fourteen", 15: "Fifteen",
               16: "Sixteen", 17: "Seventeen", 18: "Eighteen", 19: "Nineteen", 20: "Twenty", 30: "Thirty",
               40: "Forty", 50: "Fifty", 60: "Sixty", 70: "Seventy", 80: "Eighty", 90: "Ninety", 100: "Hundred",
-              100000: "Lakh", 10000000: "Crore", 1000000000: "billion"}
+              100000: "Lac", 10000000: "Crore", 1000000000: "billion"}
 
     if number in predef.keys():
         return predef[number]
@@ -16,7 +16,7 @@ def return_bigdigit(number, devideby):
               9: "Nine", 10: "Ten", 11: "Eleven", 12: "Twelve", 13: "Thirteen", 14: "Fourteen", 15: "Fifteen",
               16: "Sixteen", 17: "Seventeen", 18: "Eighteen", 19: "Nineteen", 20: "Twenty", 30: "Thirty", 40: "Forty",
               50: "Fifty", 60: "Sixty", 70: "Seventy", 80: "Eighty", 90: "Ninety", 100: "Hundred", 1000: "Thousand",
-              100000: "Lakh", 10000000: "Crore", 1000000000: "Billion"}
+              100000: "Lac", 10000000: "Crore", 1000000000: "Billion"}
 
     if devideby in predef.keys():
         return predef[number / devideby] + " " + predef[devideby]
@@ -26,7 +26,7 @@ def return_bigdigit(number, devideby):
 
 
 def amountToWords(number):
-    dev = {100: "Hundred", 1000: "Thousand", 100000: "Lakh", 10000000: "Crore", 1000000000: "Billion"}
+    dev = {100: "Hundred", 1000: "Thousand", 100000: "Lac", 10000000: "Crore", 1000000000: "Billion"}
 
     if number is 0:
         return "Zero"
@@ -59,10 +59,3 @@ def amountToWords(number):
             result = result + ' ' + handel_upto_99(number)
     
     return result
-
-
-
-
-
-
-
