@@ -13,10 +13,10 @@ class HrShifting(models.Model):
     grace_time = fields.Float(string='Grace Time', default='1.5')
     calendar_id = fields.Many2one("resource.calendar", string="Resource's Calendar", required=False)
 
-    @api.constrains('ot_hour_from','hour_from','hour_to')
-    def _check_validation(self):
-        if (self.hour_from >= self.hour_to) or (self.ot_hour_from >= self.ot_hour_to) or (self.hour_to >= self.ot_hour_from) :
-            raise Warning(_("OT to can not less then OT from or \n OT from can not less then Work to or \n Work to can not less then Work from"))
+    # @api.constrains('ot_hour_from','hour_from','hour_to')
+    # def _check_validation(self):
+    #     if (self.hour_from >= self.hour_to) or (self.ot_hour_from >= self.ot_hour_to) or (self.hour_to >= self.ot_hour_from) :
+    #         raise Warning(_("OT to can not less then OT from or \n OT from can not less then Work to or \n Work to can not less then Work from"))
 
 
 class HrEmployeeShifting(models.Model):
