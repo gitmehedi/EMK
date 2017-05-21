@@ -8,7 +8,7 @@ class HrEmployeeLoanRequest(models.Model):
     _name = 'hr.employee.loan'
     _order = 'name desc'
 
-    name = fields.Char(size=100, string='Loan Name', default="New")
+    name = fields.Char(size=100, string='Loan Name', default="/")
     emp_code_id = fields.Char(string='Code')
     duration = fields.Integer(size=100, string='Duration(Months)',required=True,
                 states={'draft': [('invisible', False)], 'applied': [('readonly', True)], 'approved':[('readonly', True)],'disbursed':[('readonly', True)]})
@@ -20,6 +20,9 @@ class HrEmployeeLoanRequest(models.Model):
                             states={'draft': [('invisible', False)], 'applied': [('readonly', True)], 'approved': [('readonly', True)],'disbursed':[('readonly', True)]})
     is_interest_payble = fields.Boolean(string='Is Interest Payable', required='True',
                         states={'draft': [('invisible', False)], 'applied': [('readonly', True)], 'approved':[('readonly', True)],'disbursed':[('readonly', True)]})
+    remaining_loan_amount = fields.Float(string="Remaining Loan", digits=(15, 2), compute="_compute_loan_amount", store=True)
+
+    """ All datetime fields """
     applied_date = fields.Datetime('Applied Date', readonly=True, copy=False,
         states={'draft': [('invisible', True)], 'applied': [('readonly', True)], 'approved':[('readonly', True)],'disbursed':[('readonly', True)]})
     
@@ -32,7 +35,7 @@ class HrEmployeeLoanRequest(models.Model):
         states={'draft': [('invisible', True)], 'applied': [('invisible', True)], 'approved':[('readonly', True)],'disbursed':[('readonly', True)]})
 
     remaining_loan_amount = fields.Float(string="Remaining Loan", digits=(15, 2), compute="_compute_loan_amount_with_payslip")
-    
+
     """ All relations fields """
     def _default_employee(self):
         return self.env['hr.employee'].search([('user_id', '=', self.env.uid)], limit=1)
@@ -66,7 +69,7 @@ class HrEmployeeLoanRequest(models.Model):
         ('approved', "Approved"),
         ('disbursed', "Disbursed"),
     ], default='draft')
-    
+
     """All function which process data and operation"""
     @api.onchange('loan_type_id')
     def onchange_loan_type_id(self):
@@ -115,21 +118,21 @@ class HrEmployeeLoanRequest(models.Model):
                     repayment_date = repayment_date + relativedelta(months=1)
                     loan.line_ids.create(vals)
 
-    @api.constrains('name')
-    def _check_unique_constraint(self):
-        if self.name:
-            filters = [['name', '=ilike', self.name]]
-            name = self.search(filters)
-            if len(name) > 1:
-                raise Warning('[Unique Error] Name must be unique!')
+    # @api.constrains('name')
+    # def _check_unique_constraint(self):
+    #     if self.name:
+    #         filters = [['name', '=ilike', self.name]]
+    #         name = self.search(filters)
+    #         if len(name) > 1:
+    #             raise Warning('[Unique Error] Name must be unique!')
 
     @api.depends('line_ids','principal_amount')
     def _compute_loan_amount_with_payslip(self):
         for loan in self:
             self.remaining_loan_amount = sum([l.installment for l in loan.line_ids if l.state=='pending'])
 
-    # @api.constrains('duration','principal_amount')
-    # def _check_qty(self):
-    #     if self.duration < 0 or self.principal_amount < 0:
-    #         raise Warning('principal_amount or duration cannot be negative !')
+    @api.constrains('duration','principal_amount')
+    def _check_qty(self):
+        if self.duration < 0 or self.principal_amount < 0:
+            raise Warning('principal_amount or duration cannot be negative !')
 
