@@ -7,6 +7,7 @@ class HrEmployeeLoanProof(models.Model):
     name = fields.Char(size=100, string='Name', required='True')
     mandatory = fields.Boolean(string='Mandatory', default=True)
 
+    """All function which process data and operation"""
     @api.constrains('name')
     def _check_unique_constraint(self):
         if self.name:

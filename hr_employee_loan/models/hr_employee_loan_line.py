@@ -13,6 +13,8 @@ class HrEmployeeLoantLine(models.Model):
     """ Relational Fields """
     parent_id = fields.Many2one('hr.employee.loan', ondelete='cascade')
     employee_id = fields.Many2one('hr.employee', string="Employee", ondelete='cascade')
+
+    """ All Selection fields """
     state = fields.Selection([
         ('pending', "Pending"),
         ('done', "Done")

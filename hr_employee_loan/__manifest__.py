@@ -8,6 +8,7 @@
     'data': [
         'security/ir.model.access.csv',
         'security/security.xml',
+        'security/ir_rule.xml',
         'views/menuitems.xml',
         'views/hr_employee_loan_policy_view.xml',
         'views/hr_employee_loan_proof_view.xml',
