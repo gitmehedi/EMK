@@ -6,5 +6,18 @@ access_hr_employee_loan_proof,access_hr_employee_loan_proof,model_hr_employee_lo
 access_hr_employee_loan_policy,access_hr_employee_loan_policy,model_hr_employee_loan_policy,base.group_user,1,1,1,0
 access_hr_employee_loan_line,access_hr_employee_loan_line,model_hr_employee_loan_line,base.group_user,1,1,1,0
 
+access_hr_manager,access_hr_employee,hr.model_hr_employee,hr.group_hr_user,1,1,1,1
+access_hr_manager_loan,access_hr_employee_loan,model_hr_employee_loan,hr.group_hr_user,1,1,1,1
+access_hr_manager_loan_type,access_hr_employee_loan_type,model_hr_employee_loan_type,hr.group_hr_user,1,1,1,1
+access_hr_manager_loan_proof,access_hr_employee_loan_proof,model_hr_employee_loan_proof,hr.group_hr_user,1,1,1,1
+access_hr_manager_loan_policy,access_hr_employee_loan_policy,model_hr_employee_loan_policy,hr.group_hr_user,1,1,1,1
+access_hr_manager_loan_line,access_hr_employee_loan_line,model_hr_employee_loan_line,hr.group_hr_user,1,1,1,1
+
+access_hr,access_hr_employee,hr.model_hr_employee,hr.group_hr_manager,1,1,1,1
+access_hr_loan,access_hr_employee_loan,model_hr_employee_loan,hr.group_hr_manager,1,1,1,1
+access_hr_loan_type,access_hr_employee_loan_type,model_hr_employee_loan_type,hr.group_hr_manager,1,1,1,1
+access_hr_loan_proof,access_hr_employee_loan_proof,model_hr_employee_loan_proof,hr.group_hr_manager,1,1,1,1
+access_hr_loan_policy,access_hr_employee_loan_policy,model_hr_employee_loan_policy,hr.group_hr_manager,1,1,1,1
+access_hr_loan_line,access_hr_employee_loan_line,model_hr_employee_loan_line,hr.group_hr_manager,1,1,1,1
 
 

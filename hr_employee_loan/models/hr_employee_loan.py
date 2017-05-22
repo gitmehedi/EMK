@@ -40,7 +40,7 @@ class HrEmployeeLoanRequest(models.Model):
     def _default_employee(self):
         return self.env['hr.employee'].search([('user_id', '=', self.env.uid)], limit=1)
 
-    line_ids = fields.One2many('hr.employee.loan.line', 'parent_id', string="Employee Loan Installment Details",
+    line_ids = fields.One2many('hr.employee.loan.line', 'parent_id', string="Employee Loan Installment Schedule",
                                states={'draft': [('invisible', False)], 'applied': [('readonly', True)],
                                        'approved': [('readonly', True)], 'disbursed': [('readonly', True)]})
 
