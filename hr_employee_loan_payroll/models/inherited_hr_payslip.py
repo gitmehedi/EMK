@@ -27,7 +27,7 @@ class InheritedHrMobilePayslip(models.Model):
             """
             Loan Amount
             """
-            if loan_data and self.contract_id.id and self.parent_id.state=='disbursed':
+            if loan_data and self.contract_id.id and loan_data.parent_id.state=='disbursed':
                 other_line_ids += other_line_ids.new({
                     'name': 'Current Loan',
                     'code': "LOAN",
