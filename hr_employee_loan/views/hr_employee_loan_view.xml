@@ -11,9 +11,9 @@
                     <header>
                         <button name="action_done" type="object"
                                 string="Approve"
-                                states="applied" groups="hr_employee_loan.Loan_group_manager" class="oe_highlight"/>
+                                states="applied" groups="hr_employee_loan.group_manager_loan" class="oe_highlight"/>
                         <button name="action_confirm" type="object"
-                                string="Reject" groups="hr_employee_loan.Loan_group_manager"
+                                string="Reject" groups="hr_employee_loan.group_manager_loan"
                                 states="applied"/>
                         <button name="action_draft" type="object"
                                 string="Apply" states="draft"
