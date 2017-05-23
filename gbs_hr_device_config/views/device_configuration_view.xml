@@ -1,64 +1,100 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <openerp>
 	<data>
+
 		<!-- Tree View -->
-		<record id="attendance_device_config_tree" model="ir.ui.view">
-			<field name="name">hr.attendance.device.config.tree</field>
-			<field name="model">hr.attendance.device.config</field>
+		<record id="attendance_device_detail_tree" model="ir.ui.view">
+			<field name="name">hr.attendance.device.detail.tree</field>
+			<field name="model">hr.attendance.device.detail</field>
 			<field name="arch" type="xml">
-				<tree string="Device Configuration">
+				<tree string="Devices">
 					<field name="name"/>
 					<field name="connection_type"/>
-					<field name="device_type"/>
-					<field name="device_id"/>
-					<field name="is_active"/>
-					<button name="action_check_connection" string="Connection" type="object" icon="fa-cogs" />
+					<field name="server"/>
+					<field name="database"/>
+					<field name="last_update"/>
 				</tree>
 			</field>
 		</record>
 
-		
+
+		<record id="view_attendance_device_line_tree" model="ir.ui.view">
+            <field name="name">hr.attendance.device.line.tree</field>
+            <field name="model">hr.attendance.device.line</field>
+            <field name="arch" type="xml">
+                <tree string="Devices" editable="top">
+                    <field name="name"/>
+                    <field name="sensor_id"/>
+                    <field name="in_code"/>
+                    <field name="out_code"/>
+                </tree>
+            </field>
+        </record>
+
 		<!-- Form View -->
-		<record id="attendance_device_config_form" model="ir.ui.view">
-			<field name="name">hr.attendance.device.config.form</field>
-			<field name="model">hr.attendance.device.config</field>
+		<record id="attendance_device_detail_form" model="ir.ui.view">
+			<field name="name">hr.attendance.device.detail.form</field>
+			<field name="model">hr.attendance.device.detail</field>
 			<field name="type">form</field>
 			<field name="arch" type="xml">
-				<form string="Device Configuration">
+				<form string="Device Details">
 					<sheet>
+						<div class="oe_button_box" name="button_box">
+							<button name="action_pull_data" type="object" string="Pull" class="oe_highlight"/>
+							<button name="action_check_connection" type="object" string="Test Connection" class="oe_highlight"/>
+							<button name="toggle_connect" type="object" class="oe_stat_button" icon="fa-signal">
+								<field name="is_active" widget="boolean_button" options="{&quot;terminology&quot;: &quot;connect&quot;}"/>
+							</button>
+						</div>
 						<group>
 							<group>
 								<field name="name" />
 								<field name="connection_type" placeholder="Please Select"/>
+								<field name="last_update"/>
 								<field name="is_active"/>
 							</group>
 							<group>
-								<field name="device_type" placeholder="Please Select"/>
-								<field name="device_id"/>
+								<field name="server"/>
+								<field name="database"/>
+								<field name="username"/>
+								<field name="password"/>
 							</group>
-							<field name="url"/>
-							<div class="oe_button_box" name="button_box">
-								<button name="toggle_connect" type="object" class="oe_stat_button" icon="fa-signal">
-									<field name="is_active" widget="boolean_button" options="{&quot;terminology&quot;: &quot;connect&quot;}"/>
-								</button>
-                        	</div>
+
+							<!--<field name="url"/>-->
+							<field name="device_lines"/>
 
 						</group>
-
 					</sheet>
 
 				</form>
 			</field>
 		</record>
 
-		<record id="hr_attendance_device_config_action" model="ir.actions.act_window">
+		<record id="view_attendance_device_line_form" model="ir.ui.view">
+            <field name="name">hr.attendance.device.line.form</field>
+            <field name="model">hr.attendance.device.line</field>
+            <field name="arch" type="xml">
+                <form string="Devices">
+                    <group>
+                        <field name="name"/>
+                        <field name="sensor_id"/>
+                        <field name="in_code"/>
+                        <field name="out_code"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+
+
+		<record id="hr_attendance_device_detail_action" model="ir.actions.act_window">
 			<field name="name">Attendance Device Configuration</field>
-			<field name="res_model">hr.attendance.device.config</field>
+			<field name="res_model">hr.attendance.device.detail</field>
 			<field name="view_mode">tree,form</field>
 		</record>
 
-		<menuitem id="menu_hr_attendance_device_config" name="Device Configuration" parent="hr_attendance.menu_hr_attendance_settings"
-					action="hr_attendance_device_config_action" />
+		<menuitem id="menu_hr_attendance_detail_config" name="Device Configuration" parent="hr_attendance.menu_hr_attendance_settings"
+					action="hr_attendance_device_detail_action" />
 
 
 	</data>

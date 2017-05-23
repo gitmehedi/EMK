@@ -6,10 +6,10 @@
     'version':'1.0',
     'data': [
        'views/device_configuration_view.xml',
+        'views/hr_emp_map_to_device.xml',
     ],
     'depends': [
         'hr_attendance_and_ot_summary',
-
     ],
     'description': 
     """This module will connect to attendance devices""",
