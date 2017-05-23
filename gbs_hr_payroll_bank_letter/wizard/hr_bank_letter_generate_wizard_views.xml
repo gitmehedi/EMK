@@ -5,10 +5,10 @@
 			<field name="name">HR Bank Selection Wizard View</field>
 			<field name="model">hr.bank.selection.wizard</field>
 			<field name="arch" type="xml">
-			<form >
+			<form>
 				<sheet>
 					<group>
-						<field name="bank_names"/>
+						<field name="bank_names" options="{'no_create': True, 'no_create_edit':True}"/>
                     </group>
 				</sheet>
 				<footer>
@@ -20,7 +20,7 @@
 		</record>		
 		
 		<record id="action_hr_bank_selection_wizard" model="ir.actions.act_window">
-			<field name="name">Generate Bank Letter</field>
+			<field name="name">Select A Bank Account</field>
 			<field name="type">ir.actions.act_window</field>
 			<field name="res_model">hr.bank.selection.wizard</field>
 			<field name="view_type">form</field>

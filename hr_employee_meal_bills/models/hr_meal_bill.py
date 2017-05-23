@@ -9,14 +9,11 @@ class HrEmployeeMealBill(models.Model):
     name = fields.Char(size=100, string="Description", required=True, readonly=True,
                        states={'draft': [('readonly', False)]})
 
-    
     """ All relations fields """
     line_ids = fields.One2many('hr.meal.bill.line', 'parent_id', string="Meal Details",readonly=True,
                                states={'draft': [('readonly', False)]})
     
-   
     """ All Selection fields """
-
     state = fields.Selection([
         ('draft', "Draft"),
         ('applied', "Applied"),
@@ -33,18 +30,10 @@ class HrEmployeeMealBill(models.Model):
     def action_confirm(self):
         self.state = 'applied'
 
-    
-    
     @api.multi
     def action_done(self):
         self.state = 'approved'
-        
-        """
-            for line in self.line_ids:
-            line.state = 'applied'
-            
-            """
-            
+
     @api.multi
     def unlink(self):
         for bill in self:

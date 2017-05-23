@@ -3,15 +3,13 @@ import datetime
 
 class HrBankSelectionWizard(models.TransientModel):
     _name = 'hr.bank.selection.wizard'
-  
-    bank_names = fields.Many2one('res.partner.bank', string="Banks", 
-                                 required=True, domain=[('partner_id', '=', 1)])
 
-  
+    bank_names = fields.Many2one('res.partner.bank', string="Select A Bank Account", required=True,
+                                 domain=[('partner_id', '!=', False)])
 
     @api.multi
     def process_print(self):
-        
+
         payslip_run_pool = self.env['hr.payslip.run']
         docs = payslip_run_pool.browse([self._context['active_id']])
         now = datetime.datetime.now()

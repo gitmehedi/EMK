@@ -81,45 +81,45 @@ class HrHolidays(models.Model):
                 diff_day = holiday._compute_number_of_days(employee_id,holiday.date_to,holiday.date_from)
                 holiday.number_of_days_temp = diff_day
 
-    # @api.onchange('date_to')
-    # def onchange_date_to(self):
-    #
-    #     res = super(HrHolidays, self)._onchange_date_to()
-    #     employee_id = self.employee_id.id or self.env.context.get('employee_id', False)
-    #
-    #     if not self._check_date_helper(employee_id, self.date_to):
-    #         res['value']['number_of_days_temp'] = None
-    #         raise ValidationError(_("You cannot schedule the end date on "
-    #                                 "a public holiday or employee's weekly holidays day"))
-    #
-    #     if (self.date_to and self.date_from) and (self.date_from <= self.date_to):
-    #         diff_day = self._compute_number_of_days()
-    #         res['value']['number_of_days_temp'] = diff_day
-    #     return res
-    #
-    # @api.multi
-    # @api.depends('number_of_days_temp', 'type')
-    # def _compute_number_of_days(self):
-    #     if not self.date_from or not self.date_to:
-    #         return 0
-    #     days = self._get_number_of_days(self.employee_id, self.date_from, self.date_to)
-    #     if days or self.date_to == self.date_from:
-    #         days = round(math.floor(days)) + 1
-    #     status_id = self.holiday_status_id.id or self.env.context.get('holiday_status_id', False)
-    #
-    #     if self.employee_id and self.date_from and self.date_to and status_id:
-    #         employee = self.env['hr.employee'].browse(self.employee_id)
-    #         status = self.env['hr.holidays.status'].browse(status_id)
-    #         date_from = fields.Date.from_string(self.date_from)
-    #         date_to = fields.Date.from_string(self.date_to)
-    #         date_dt = date_from
-    #         while date_dt <= date_to:
-    #             # if public holiday or rest day let us skip
-    #             if not employee.work_scheduled_on_day(
-    #                     date_dt,
-    #                     status.exclude_public_holidays,
-    #                     status.exclude_rest_days
-    #             ):
-    #                 days -= 1
-    #             date_dt += relativedelta(days=1)
-    #     return days
+    @api.onchange('date_to')
+    def onchange_date_to(self):
+
+        res = super(HrHolidays, self)._onchange_date_to()
+        employee_id = self.employee_id.id or self.env.context.get('employee_id', False)
+
+        if not self._check_date_helper(employee_id, self.date_to):
+            res['value']['number_of_days_temp'] = None
+            raise ValidationError(_("You cannot schedule the end date on "
+                                    "a public holiday or employee's weekly holidays day"))
+
+        if (self.date_to and self.date_from) and (self.date_from <= self.date_to):
+            diff_day = self._compute_number_of_days()
+            res['value']['number_of_days_temp'] = diff_day
+        return res
+
+    @api.multi
+    @api.depends('number_of_days_temp', 'type')
+    def _compute_number_of_days(self):
+        if not self.date_from or not self.date_to:
+            return 0
+        days = self._get_number_of_days(self.employee_id, self.date_from, self.date_to)
+        if days or self.date_to == self.date_from:
+            days = round(math.floor(days)) + 1
+        status_id = self.holiday_status_id.id or self.env.context.get('holiday_status_id', False)
+
+        if self.employee_id and self.date_from and self.date_to and status_id:
+            employee = self.env['hr.employee'].browse(self.employee_id)
+            status = self.env['hr.holidays.status'].browse(status_id)
+            date_from = fields.Date.from_string(self.date_from)
+            date_to = fields.Date.from_string(self.date_to)
+            date_dt = date_from
+            while date_dt <= date_to:
+                # if public holiday or rest day let us skip
+                if not employee.work_scheduled_on_day(
+                        date_dt,
+                        status.exclude_public_holidays,
+                        status.exclude_rest_days
+                ):
+                    days -= 1
+                date_dt += relativedelta(days=1)
+        return days
