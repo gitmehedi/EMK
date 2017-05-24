@@ -27,7 +27,7 @@ class AttendanceProcessor(models.Model):
 
     attendance_query = """SELECT (check_in + interval '6h') AS check_in, (check_out + interval '6h') AS check_out, worked_hours
                             FROM hr_attendance
-                          WHERE check_out > %s AND check_in < %s AND employee_id = %s
+                          WHERE check_out > %s AND check_in < %s AND employee_id = %s AND has_error = False
                           ORDER BY check_in ASC"""
 
     alter_attendance_query = """SELECT (check_in + interval '6h') AS check_in, (check_out + interval '6h') AS check_out, worked_hours
