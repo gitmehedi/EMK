@@ -1,0 +1,14 @@
+#Link: https://docs.microsoft.com/en-us/azure/sql-database/sql-database-connect-query-python
+############################################
+#Commants:
+#Linux (Ubuntu)
+#Open your terminal and navigate to a directory where you plan on creating your python script. Enter the following commands to install the #Microsoft ODBC Driver for Linux and pyodbc. pyodbc uses the Microsoft ODBC Driver on Linux to connect to SQL Databases.
+##############################################################################
+sudo su
+curl https://packages.microsoft.com/keys/microsoft.asc | apt-key add -
+curl https://packages.microsoft.com/config/ubuntu/16.04/prod.list > /etc/apt/sources.list.d/mssql.list
+exit
+sudo apt-get update
+sudo apt-get install msodbcsql mssql-tools unixodbc-dev
+sudo pip install pyodbc==3.1.1
+
