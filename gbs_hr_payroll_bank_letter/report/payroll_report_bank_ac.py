@@ -61,6 +61,8 @@ class PayrollReportBankAc(models.AbstractModel):
         dpt_payslips_list.append(dpt_payslips)
         all_total = sum(total_sum)
 
+        amt_to_word = self.env['res.currency'].amount_to_word(int(all_total))
+
         docargs = {
             'doc_ids': self.ids,
             'doc_model': 'hr.payslip.run',
@@ -78,10 +80,8 @@ class PayrollReportBankAc(models.AbstractModel):
             'total_net': int(all_total),
             'docs_len': len(rule_list) + 4,
             'company': self.env['res.company']._company_default_get('gbs_hr_payroll_bank_letter').name,
-            'amount_to_text_bdt': amount_to_text_bdt.amountToWords(int(all_total)),
+            'amount_to_text_bdt': amt_to_word,
             'mother_bank_ac': data['mother_bank_ac'],
-
         }
         
         return self.env['report'].render('gbs_hr_payroll_bank_letter.report_individual_payslip1', docargs)
-    
