@@ -8,6 +8,8 @@
     'data': [
         'security/ir.model.access.csv',
         'views/hr_meal_bill_view.xml',
+        'report/gbs_hr_meal_report.xml',
+        'report/gbs_hr_meal_report_templates.xml',
     ],
     
     'summary': 'Calculates Employees Meal Information',

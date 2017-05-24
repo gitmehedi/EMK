@@ -6,6 +6,7 @@
     'version': '1.0',
     'depends': [
         'gbs_hr_payroll',
+        'amount_to_word_bd',
     ],
     'data': [
         'report/gbs_hr_payroll_report.xml',

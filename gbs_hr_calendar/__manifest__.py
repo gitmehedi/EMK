@@ -4,6 +4,7 @@
 
 {
     "name": "GBS HR Calendar",
+    "summary": """""",
     "version": "1.0.0",
     "author": "Genweb2 Limited",
     "website": "http://www.genweb2.com",
