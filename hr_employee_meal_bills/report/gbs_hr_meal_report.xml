@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <report
+                id="custom_report_meal_bill"
+                model="hr.meal.bill"
+                string="Employee Meal Bills"
+                report_type="qweb-pdf"
+                name="hr_employee_meal_bills.report_meal_bill"
+                file="hr_employee_meal_bills.report_meal_bill"
+        />
+    </data>
+</odoo>
