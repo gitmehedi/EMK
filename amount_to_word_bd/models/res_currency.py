@@ -35,33 +35,45 @@ class Currency(models.Model):
 
         dev = {100: "Hundred", 1000: "Thousand", 100000: "Lac", 10000000: "Crore", 1000000000: "Billion"}
 
-        if number is 0:
+        # Split amount for decimal value
+        list = str(number).split('.')
+        start_word = int(list[0])
+        end_word = int(list[1])
+
+        # Amount to word for integer portion
+        if start_word is 0:
             return "Zero"
-        if number < 100:
-            result = handel_upto_99(number)
+        if start_word < 100:
+            result = handel_upto_99(start_word)
         else:
             result = ""
-            while number >= 100:
+            while start_word >= 100:
                 devideby = 1
-                length = len(str(number))
+                length = len(str(start_word))
                 for i in range(length - 1):
                     devideby *= 10
 
-                if number % devideby == 0:
+                if start_word % devideby == 0:
                     if devideby in dev:
-                        return handel_upto_99(number / devideby) + " " + dev[devideby]
+                        return handel_upto_99(start_word / devideby) + " " + dev[devideby]
                     else:
-                        return handel_upto_99(number / (devideby / 10)) + " " + dev[devideby / 10]
+                        return handel_upto_99(start_word / (devideby / 10)) + " " + dev[devideby / 10]
 
-                res = return_bigdigit(number, devideby)
+                res = return_bigdigit(start_word, devideby)
                 result = result + ' ' + res
 
                 if devideby not in dev:
-                    number = number - ((devideby / 10) * (number / (devideby / 10)))
+                    start_word = start_word - ((devideby / 10) * (start_word / (devideby / 10)))
 
-                number = number - devideby * (number / devideby)
+                start_word = start_word - devideby * (start_word / devideby)
 
-            if number < 100:
-                result = result + ' ' + handel_upto_99(number)
+            if start_word < 100:
+                result = result + ' ' + handel_upto_99(start_word)
 
-        return result
+        # Amount to word for decimal portion
+        if end_word is 0:
+            result_paisa = "Zero"
+        if end_word < 100:
+            result_paisa = handel_upto_99(end_word)
+
+        return result + ' and '+result_paisa+' Paisa'

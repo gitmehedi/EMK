@@ -13,7 +13,6 @@ class PayrollReportBankAc(models.AbstractModel):
         slip_ids = slip_pool.search([('payslip_run_id','=',data['active_id']),
                                      ('employee_id.bank_account_id.bank_id','=',data['bank_id'])])
 
-
         rule_list = []
         for slip in slip_pool.browse(slip_ids.ids):
             for line in slip.line_ids:
@@ -61,7 +60,10 @@ class PayrollReportBankAc(models.AbstractModel):
         dpt_payslips_list.append(dpt_payslips)
         all_total = sum(total_sum)
 
-        amt_to_word = self.env['res.currency'].amount_to_word(int(all_total))
+        # Test Value
+        # all_total = 1.11
+
+        amt_to_word = self.env['res.currency'].amount_to_word(float(all_total))
 
         docargs = {
             'doc_ids': self.ids,
@@ -77,7 +79,7 @@ class PayrollReportBankAc(models.AbstractModel):
             'cur_year': data['cur_year'],
             'cur_month': data['cur_month'],
             'cur_day': data['cur_day'],
-            'total_net': int(all_total),
+            'total_net': float(all_total),
             'docs_len': len(rule_list) + 4,
             'company': self.env['res.company']._company_default_get('gbs_hr_payroll_bank_letter').name,
             'amount_to_text_bdt': amt_to_word,
