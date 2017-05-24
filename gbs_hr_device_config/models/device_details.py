@@ -1,6 +1,5 @@
 from openerp import models, fields
 from openerp import api
-import json
 import pyodbc
 import datetime
 from datetime import timedelta
@@ -9,19 +8,6 @@ _logger = logging.getLogger(__name__)
 
 from odoo.exceptions import Warning
 
-dummy_data = """[
-	{"employee_acc": 7,
-  "sensor_id": 100,
-  "verify_code": 1,
-  "date_time": "2017-01-24 17:30:00"
-	},
-	{"employee_acc": 7,
-  "sensor_id": 100,
-  "verify_code": 101,
-  "date_time": "2017-01-25 17:30:00"
-	}
-]
-"""
 
 driver = '{ODBC Driver 13 for SQL Server}'
 IN_CODE = 'IN'
@@ -53,7 +39,6 @@ class DeviceDetail(models.Model):
         ('url', "URL"),
         ('port', "Port")
     ], string='Connection Type', required=True)
-    # url = fields.Char(size=100, string='URL')
 
     server = fields.Char(size=100, string='Server Address')
     database = fields.Char(size=100, string='Database Name')
@@ -121,17 +106,20 @@ class DeviceDetail(models.Model):
             if maxId[0] is None:
                 return
 
-            self.processData(maxId[0], attDevice, cursor)
+            self.processData(maxId[0], attDevice, conn, cursor)
 
         except Exception as e:
-            print ("Exception : ", e)
+            msg = "Exception on gbs_hr_device_config-> device_details.py -> action_pull_data() at " + \
+                  str(datetime.datetime.now()) + "  \n Error Message : " + str(e[0])
+            _logger.error(msg)
+            print ("Exception : ", msg)
         finally:
             if cursor is not None:
                 cursor.close()
             if conn is not None:
                 conn.close()
 
-    def processData(self, maxId, attDevice, cursor):
+    def processData(self, maxId, attDevice, conn, cursor):
 
         deviceInOutCode = {}  # Where key is code and value is "IN" OR OUT
         for line in attDevice.device_lines:
@@ -160,20 +148,26 @@ class DeviceDetail(models.Model):
 
         cursor.execute(get_att_data_sql, maxId)
         att_rows = cursor.fetchall()
-        _logger.debug("Attendance Date pull from "+ attDevice.server + " : at " + str(datetime.datetime.now()) + " : " + str(att_rows))
+        _logger.debug("Attendance Date pull from " + attDevice.server + " : at " + str(datetime.datetime.now()) + " : " + str(att_rows))
+
         try:
 
             for row in att_rows:
                 if self.isValidData(row, deviceInOutCode, employeeIdMap) == False:
-                    self.saveAsError(row, employeeIdMap)
+                    self.saveAsError(row, employeeIdMap, deviceInOutCode)
                 else:
                     self.storeData(row, deviceInOutCode, employeeIdMap)
-            #@Update on SQL Server
+
+            # Store all attendance data to application database.
+            # Now Update on SQL Server Database(External)
+            cursor.execute("UPDATE CHECKINOUT SET IsRead = 1 WHERE id <=? AND IsRead = 0", maxId)
+            conn.commit()
         except Exception as e:
             self.env.cr.rollback()
-            #self.env.cr.commit()
-            print ("Exception : ", e)
-            self.saveAsError(row, employeeIdMap)
+            msg = "Exception on gbs_hr_device_config-> device_details.py -> processData() at " + \
+                  str(datetime.datetime.now()) + ": \n Attendance Data: " + str(row) + "  \n Error Message : " + str(e[0])
+            _logger.error(msg)
+            print (msg)
 
 
 
@@ -211,6 +205,7 @@ class DeviceDetail(models.Model):
                               'is_system_generated': True}
         else:
             create_vals = {'employee_id': employeeId,
+                              'check_in': None,
                               'check_out': self.convertDateTime(row[2]),
                               'create_date': datetime.datetime.now(),
                               'write_date': datetime.datetime.now(),
@@ -222,10 +217,22 @@ class DeviceDetail(models.Model):
 
 
 
-    def saveAsError(self, row, employeeIdMap):
-        hr_att_error_pool = self.env['hr.attendance.import.error']
-        print ("Error")
+    def saveAsError(self, row, employeeIdMap, deviceInOutCode):
 
+        attendance_error_obj = self.env['hr.attendance.import.error']
+
+        error_vals = {}
+        if (deviceInOutCode.get(str(row[1])) == IN_CODE):
+            error_vals['check_in'] = self.convertDateTime(row[2])
+        else:
+            error_vals['check_out'] = self.convertDateTime(row[2])
+
+        if employeeIdMap.get(row[0]) is not None:
+            error_vals['employee_code'] = employeeIdMap.get(row[0])
+        else:
+            error_vals['employee_code'] = row[0]
+
+        attendance_error_obj.create(error_vals)
 
     def isValidData(self, row, deviceInOutCode, employeeIdMap):
         if row[0] is None: # Check device_employee_acc is not null
