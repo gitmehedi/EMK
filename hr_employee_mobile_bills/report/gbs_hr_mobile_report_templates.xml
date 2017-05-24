@@ -2,14 +2,14 @@
 <!--Custom report.-->
 <odoo>
     <data>
-        <template id="report_meal_bill">
+        <template id="report_mobile_bill">
             <t t-call="report.html_container">
                 <t t-foreach="docs" t-as="o">
                     <t t-call="report.external_layout">
                         <div class="page">
                             <div class="row">
                                 <div class="col-xs-12" style="text-align:center;">
-                                    <h2 ><strong >Employee Meal Bills Report</strong></h2>
+                                    <h2 ><strong >Employee Mobile Bills Report</strong></h2>
                                     <p><span t-field="o.name"/></p>
                                 </div>
                             </div>
@@ -18,20 +18,23 @@
                                 <thead>
                                     <tr style="background-color:#C0C0C0;">
                                         <th>Employee</th>
-                                        <th>Amount</th>
+                                        <th>Mobile Number</th>
+                                        <th>Bill Amount</th>
+                                        <th>Exceed Amount</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <t t-foreach="o.line_ids" t-as="l">
                                         <tr>
                                             <td><span t-esc="l.employee_id.name"/></td>
+                                            <td><span t-esc="l.emp_mobile_phone"/></td>
                                             <td><span t-esc="l.bill_amount"/></td>
+                                            <td><span t-esc="l.amount"/></td>
                                         </tr>
                 	                 </t>
 
                                 </tbody>
                             </table>
-
                         </div>
                     </t>
                 </t>

@@ -1,3 +1,4 @@
 import device_details
 import device_line
 import hr_inherit_object
+import attendance_summary
