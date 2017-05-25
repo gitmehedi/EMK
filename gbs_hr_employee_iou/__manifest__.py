@@ -9,8 +9,8 @@
     ],
 
     'data': [
-        'views/hr_employee_iou_view.xml',
         'wizard/hr_employee_iou_wizard_views.xml',
+        'views/hr_employee_iou_view.xml',
     ],
 
     'summary': 'HR Employee IOU',

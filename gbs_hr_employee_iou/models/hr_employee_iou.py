@@ -13,7 +13,18 @@ class HrEmployeeIou(models.Model):
     ], string='Status', default='draft',)
 
     amount = fields.Float(string="Amount", required=True)
-    due = fields.Float(string="Due", required=True)
+    calculate_amount = fields.Float(string="Amount", default=0)
+    due = fields.Float(string="Due", compute='_compute_amount_value')
+
+    # Relational fields
+    line_ids = fields.One2many('hr.employee.iou.line','repay_id', string="Line Ids")
+
+    @api.depends('amount')
+    def _compute_amount_value(self):
+        for record in self:
+            sum_val = sum([s.repay_amount for s in record.line_ids])
+            record.due = record.amount - sum_val
+
 
     @api.multi
     def action_confirm(self):

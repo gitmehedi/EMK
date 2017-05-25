@@ -23,7 +23,7 @@
 				<form string="Employee IOU">
 					<header>
                         <button string="Confirm" name="action_confirm" states="draft" type="object" class="oe_highlight"/>
-						<button string="Repay" name="%(action_employee_iou_wizard)d" states="draft" type="action" class="oe_highlight"/>
+						<button string="Repay" name="%(action_employee_iou_wizard)d" states="confirm" type="action" class="oe_highlight"/>
 
 						<field name="state" widget="statusbar" statusbar_visible="draft,confirm,validate"/>
 					</header>
@@ -31,8 +31,21 @@
 						<group>
 							<field name="employee_id" attrs="{'readonly':[('state','=','confirm')]}"/>
                             <field name="amount" attrs="{'readonly':[('state','=','confirm')]}"/>
-                            <field name="due" attrs="{'readonly':[('state','=','confirm')]}"/>
+                            <field name="due"/>
 						</group>
+
+						<!--Employee IOU line values-->
+						<notebook colspan="4">
+							<page string="Employee IOU Line">
+								<field name="line_ids">
+									<tree string="List" editable="bottom">
+										<field  name="employee_id" readonly='1'/>
+										<field  name="repay_amount" readonly='1'/>
+									</tree>
+								</field>
+							</page>
+						</notebook>
+
 					</sheet>
 				</form>
 			</field>
