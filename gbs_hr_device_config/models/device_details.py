@@ -6,7 +6,7 @@ from datetime import timedelta
 import logging
 _logger = logging.getLogger(__name__)
 
-from odoo.exceptions import Warning
+from odoo.exceptions import Warning, ValidationError
 
 
 driver = '{ODBC Driver 13 for SQL Server}'
@@ -74,11 +74,8 @@ class DeviceDetail(models.Model):
                                 ';PWD=' + self.password)
             cursor = conn.cursor()
             isConnect = True
-            print ("Successfully connect to the server.")
-
         except Exception as e:
             isConnect = False
-            print ("Unable to connect the server. Please check the configuration.")
         finally:
             if cursor is not None:
                 cursor.close()
@@ -87,8 +84,7 @@ class DeviceDetail(models.Model):
             if isConnect == True:
                 raise Warning("Successfully connect to the "+self.server+ " server.")
             else:
-                raise Warning("Unable to connect the "+self.server+ " server. Please check the configuration.")
-
+                raise ValidationError("Unable to connect the "+self.server+ " server. Please check the configuration.")
 
     @api.multi
     def action_pull_data(self):
