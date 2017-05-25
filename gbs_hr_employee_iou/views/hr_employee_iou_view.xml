@@ -23,7 +23,7 @@
 				<form string="Employee IOU">
 					<header>
                         <button string="Confirm" name="action_confirm" states="draft" type="object" class="oe_highlight"/>
-						<button string="Repay" name="%(action_employee_iou_wizard)d" states="confirm" type="action" class="oe_highlight"/>
+						<button string="Repay" attrs="{'invisible':[('due','=', 0.00)]}" states="confirm" name="%(action_employee_iou_wizard)d" type="action" class="oe_highlight"/>
 
 						<field name="state" widget="statusbar" statusbar_visible="draft,confirm,validate"/>
 					</header>

@@ -18,7 +18,7 @@ class HrEmployeeIouWizard(models.TransientModel):
 
         if self.repay is not None and amount is not None:
             if(self.repay > amount):
-                raise UserError(('Repayment can not be greater than actual amount which is '+ amount))
+                raise UserError(('Repayment can not be greater than actual amount'))
 
         if self.repay:
             self.env['hr.employee.iou.line'].create({
