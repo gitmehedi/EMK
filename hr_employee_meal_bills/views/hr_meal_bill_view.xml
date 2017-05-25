@@ -16,7 +16,7 @@
                                 class="oe_highlight"/>
                         <button name="action_draft" type="object"
                                 string="Reject"
-                                states="applied,approved"/>
+                                states="applied"/>
                         <field name="state" widget="statusbar"/>
                     </header>
                     <sheet>
