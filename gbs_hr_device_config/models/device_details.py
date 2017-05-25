@@ -63,6 +63,8 @@ class DeviceDetail(models.Model):
 
     @api.multi
     def action_check_connection(self):
+
+        isConnect = False
         conn = None
         cursor = None
         try:
@@ -71,16 +73,21 @@ class DeviceDetail(models.Model):
                                 self.database + ';UID=' + self.username +
                                 ';PWD=' + self.password)
             cursor = conn.cursor()
+            isConnect = True
             print ("Successfully connect to the server.")
-            raise Warning("Successfully connect to the server.")
+
         except Exception as e:
+            isConnect = False
             print ("Unable to connect the server. Please check the configuration.")
-            raise Warning("Unable to connect the server. Please check the configuration.")
         finally:
             if cursor is not None:
                 cursor.close()
             if conn is not None:
                 conn.close()
+            if isConnect == True:
+                raise Warning("Successfully connect to the "+self.server+ " server.")
+            else:
+                raise Warning("Unable to connect the "+self.server+ " server. Please check the configuration.")
 
 
     @api.multi
