@@ -58,10 +58,14 @@
 							</table>
 							<p>(Taka <span t-esc="amount_to_text_bdt"/>)</p>
 							<p>Your cooperation in this regard would be highly appreciated.</p>
+							<br/>
 							<br/><br/>
-							<p>For <span t-esc="company"/></p>
-							<br/><br/><br/>
-							<p><b>Chairperson / Managing Director</b></p>
+							<div>
+								<p>For <span t-esc="company"/></p>
+								<br/><br/>
+								<p><b>Chairperson / Managing Director</b></p>
+							</div>
+
 						</div>
 					</div>
 				</t>
