@@ -6,7 +6,7 @@
 			<field name="model">hr.mobile.bill</field>
 			<field name="type">form</field>
 			<field name="arch" type="xml">
-				<form>
+				<form string="Employee Mobile Bills" delete="false">
 					<header>
 
                          <button name="action_confirm" type="object"

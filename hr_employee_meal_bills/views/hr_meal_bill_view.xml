@@ -6,7 +6,7 @@
             <field name="model">hr.meal.bill</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Employee Meal Details">
+                <form string="Employee Meal Details" delete="false">
                     <header>
                         <button name="action_confirm" type="object"
                                 string="Apply" states="draft"
@@ -28,7 +28,7 @@
                                 <page string="Bills">
                                     <field name="line_ids">
                                         <tree string="List" editable="bottom">
-                                            <field name="employee_id" options='{"no_open": True}'/>
+                                            <field name="employee_id" options="{'no_quick_create':True,'no_create_edit':True}"/>
                                             <field name="bill_amount"/>
                                         </tree>
                                     </field>
