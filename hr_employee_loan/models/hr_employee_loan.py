@@ -136,3 +136,33 @@ class HrEmployeeLoanRequest(models.Model):
         if self.duration < 0 or self.principal_amount < 0:
             raise Warning('principal_amount or duration cannot be negative !')
 
+    @api.constrains('principal_amount')
+    def _check_amount(self):
+        emp = self.env['hr.contract'].search([('employee_id','=', self.employee_id.id),('wage','<', self.principal_amount)])
+        if emp:
+            raise Warning('principal_amount cannot be greater then wage !')
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
