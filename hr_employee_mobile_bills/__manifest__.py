@@ -10,6 +10,8 @@
         'views/hr_mobile_bill_view.xml',
         'views/hr_emp_mb_bill_view.xml',
         'views/hr_emp_mb_bill_limit_view.xml',
+        'report/gbs_hr_mobile_report.xml',
+        'report/gbs_hr_mobile_report_templates.xml',
     ],
     
     'summary': 'Calculates Employees Mobile Bills',
