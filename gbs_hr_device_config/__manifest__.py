@@ -11,6 +11,7 @@
     'depends': [
         'hr',
         'hr_attendance',
+        'hr_attendance_import',
     ],
     'description': 
     """This module will connect to attendance devices""",
