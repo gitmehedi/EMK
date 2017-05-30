@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<openerp>
+    <data>
+
+        <!-- Inherited Form view-->
+        <record id="hr_emp_view_form" model="ir.ui.view">
+            <field name="name">hr.employee.view.form</field>
+            <field name="model">hr.employee</field>
+            <field name="inherit_id" ref="hr.view_employee_form"/>
+            <field name="arch" type="xml">
+                <data>
+                    <xpath expr="//group[@name='active_group']" position="after">
+                        <group >
+                            <field name="operating_unit_id"/>
+                        </group>
+                    </xpath>
+                </data>
+            </field>
+        </record>
+
+        <!-- Inherited Tree view-->
+        <record id="hr_emp_view_tree1" model="ir.ui.view">
+            <field name="name">hr.employee.view.tree</field>
+            <field name="model">hr.employee</field>
+            <field name="inherit_id" ref="hr.view_employee_tree"/>
+            <field name="arch" type="xml">
+                <data>
+                    <xpath expr="//field[@name='work_phone']" position="before">
+                        <field name="operating_unit_id"/>
+                    </xpath>
+                </data>
+            </field>
+        </record>
+
+    </data>
+</openerp>
