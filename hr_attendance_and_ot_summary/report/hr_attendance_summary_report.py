@@ -1,7 +1,7 @@
 from openerp import api, exceptions, fields, models
 
 class HrAttendanceSummaryReport(models.AbstractModel):
-    _name = 'report.hr_attendance_and_ot_summary.report_individual_payslip'
+    _name = 'report.hr_attendance_and_ot_summary.report_att_summary'
     
     @api.model
     def render_html(self, docids, data=None):
@@ -60,5 +60,5 @@ class HrAttendanceSummaryReport(models.AbstractModel):
             'state':docs.state,
         }
 
-        return self.env['report'].render('hr_attendance_and_ot_summary.report_individual_payslip', docargs)
+        return self.env['report'].render('hr_attendance_and_ot_summary.report_att_summary', docargs)
     

@@ -6,13 +6,9 @@
             string="Attendance Summary"
             model="hr.attendance.summary"
             report_type="qweb-pdf"
-            file="hr_attendance_and_ot_summary.report_individual_payslip"
-            name="hr_attendance_and_ot_summary.report_individual_payslip"
+            file="hr_attendance_and_ot_summary.report_att_summary"
+            name="hr_attendance_and_ot_summary.report_att_summary"
         />
 
-        <!--<record id="report_individual_paslips" model="ir.actions.report.xml">-->
-            <!--<field name="paperformat_id" ref="hr_attendance_and_ot_summary.paperformat_hrsummary"/>-->
-        <!--</record>-->
-        
     </data>
 </odoo>
