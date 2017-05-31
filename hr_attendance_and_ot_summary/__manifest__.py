@@ -8,8 +8,8 @@
         'security/ir.model.access.csv',
         'views/attendance_summary_view.xml',
         'wizards/attendance_summary_wizard_views.xml',
-        # 'report/hr_attendance_and_ot_summary_report.xml',
-        # 'report/hr_attendance_and_ot_summary_report_templates.xml',
+        'report/hr_attendance_summary_report_template.xml',
+        'report/hr_attendance_summary_report_view.xml',
     ],
     
     'depends': [
@@ -17,6 +17,8 @@
         'hr',
         'hr_holidays',
         'gbs_hr_calendar',
+        'gbs_hr_employee_sequence',
+        'gbs_hr_department_sequence',
     ],    
     
     'description': 
