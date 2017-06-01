@@ -1,5 +1,7 @@
-from openerp import models, fields
+from openerp import models, fields,_
 from openerp import api
+from openerp.exceptions import UserError, ValidationError
+
 
 
 class HrEmpMobileBillLine(models.Model):
@@ -40,3 +42,8 @@ class HrEmpMobileBillLine(models.Model):
                     else:
                         recode.amount = 0
 
+    # Show a msg for minus value
+    @api.onchange('bill_amount','amount')
+    def _onchange_bill(self):
+        if self.bill_amount < 0 or self.amount < 0:
+            raise UserError(_('Amount or Exceed Amount naver take negative value!'))
