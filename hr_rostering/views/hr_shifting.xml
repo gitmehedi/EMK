@@ -40,7 +40,7 @@
 
    <menuitem id="menu_hr_shifting" name="Shifting"
 		parent="hr_payroll.menu_hr_payroll_configuration" sequence="70"
-			action="hr_shift_conf" />
+			action="hr_shift_conf" groups="hr.group_hr_user"/>
 			
 			
    

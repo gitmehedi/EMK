@@ -1,4 +1,4 @@
-from openerp import api, exceptions, fields, models
+from openerp import api, fields, models
 
 class HrAttendanceSummaryReport(models.AbstractModel):
     _name = 'report.hr_attendance_and_ot_summary.report_att_summary'
@@ -18,14 +18,11 @@ class HrAttendanceSummaryReport(models.AbstractModel):
             dpt_att_summary['name'] = d.name
             dpt_att_summary['seq'] = d.sequence
             dpt_att_summary['val'] = []
-
             
             for att_sum in docs.att_summary_lines:
                 if d.id == att_sum.employee_id.department_id.id:
                     att_summary['emp_name'] = att_sum.employee_id.name
                     att_summary['designation'] = att_sum.employee_id.job_id.name
-                    att_summary['doj'] = att_sum.employee_id.initial_employment_date
-                    att_summary['dept'] = att_sum.employee_id.department_id.name
                     att_summary['emp_seq'] = att_sum.employee_id.employee_sequence
                     att_summary['salary_days'] = att_sum.salary_days
                     att_summary['present_days'] = att_sum.present_days
@@ -34,7 +31,7 @@ class HrAttendanceSummaryReport(models.AbstractModel):
                     att_summary['leave_days'] = att_sum.leave_days
                     att_summary['weekend_days_count'] = att_sum.weekend_days_count
                     att_summary['holidays_days'] = att_sum.holidays_days
-                    att_summary['late_days_count'] = att_sum.late_days_count
+                    att_summary['late_days_overwrite'] = att_sum.late_days_overwrite
                     att_summary['late_hrs'] = att_sum.late_hrs
                     att_summary['schedule_ot_hrs'] = att_sum.schedule_ot_hrs
                     att_summary['cal_ot_hrs'] = att_sum.cal_ot_hrs
@@ -51,13 +48,17 @@ class HrAttendanceSummaryReport(models.AbstractModel):
             dpt_att_summary['val'] = emp_sort_list
             dpt_att_summary_list.append(dpt_att_summary)
 
+        pool_period = self.env['account.period'].search([('name','=',docs.period.name)])
+
         docargs = {
             'doc_ids': self.ids,
-            'doc_model': 'hr.att_summary.run',
+            'doc_model': 'hr.attendance.summary',
             'docs': dpt_att_summary_list,
             'doc_name': docs.name,
-            'period': docs.period.name,
-            'state':docs.state,
+            'period_to': pool_period.date_start,
+            'period_from': pool_period.date_stop,
+            'docs_len': 20,
+            'state': docs.state,
         }
 
         return self.env['report'].render('hr_attendance_and_ot_summary.report_att_summary', docargs)
