@@ -1,4 +1,5 @@
 from openerp import models, fields,api, _
+from openerp.exceptions import UserError, ValidationError
 
 class HrMobileBillLimits(models.Model):
     _name = 'hr.mobile.bill.limit'
@@ -49,3 +50,11 @@ class HrMobileBillLimits(models.Model):
             name = self.search(filters)
             if len(name) > 1:
                 raise Warning('[Unique Error] Name must be unique!')
+
+    @api.multi
+    def unlink(self):
+        for bill in self:
+            if bill.state != 'draft':
+                raise UserError(_('You can not delete this.'))
+            bill.line_ids.unlink()
+        return super(HrMobileBillLimits, self).unlink()
