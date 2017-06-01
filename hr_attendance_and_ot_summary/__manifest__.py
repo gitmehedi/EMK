@@ -5,11 +5,13 @@
     'category': 'HR Attendance',
     'version':'1.0',
     'data': [
+        'report/report_paperformat.xml',
         'security/ir.model.access.csv',
         'views/attendance_summary_view.xml',
         'wizards/attendance_summary_wizard_views.xml',
         'report/hr_attendance_summary_report_template.xml',
         'report/hr_attendance_summary_report_view.xml',
+
     ],
     
     'depends': [

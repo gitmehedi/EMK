@@ -17,7 +17,7 @@
 						<div class="page">
 
 							<h4><b>Title: </b><span t-esc="doc_name"></span><br/></h4>
-							<h4><b>Period: </b><span t-esc="period"></span></h4>
+							<h4><b>Period From : </b><span t-esc="period_from"></span>, <b>To :</b> <span t-esc="period_to"></span></h4>
 							<h4><b>State: </b><span t-esc="state"></span></h4>
 
 							<div class="row">
@@ -29,16 +29,14 @@
 											<th>SN</th>
 											<th>Employee</th>
 											<th>Designation</th>
-											<th>DOJ</th>
-											<th>Department</th>
 											<th>Salary Days</th>
 											<th>Present Days</th>
 											<th>Absent Days</th>
 											<th>Late Days</th>
+											<th>Late Days Overwrite</th>
 											<th>Leave Days</th>
 											<th>Weekend</th>
 											<th>Holidays</th>
-											<th>Late Days Overwrite</th>
 											<th>Late Hours</th>
 											<th>Schedule OT Hours</th>
 											<th>OT Hours Calculation</th>
@@ -49,9 +47,11 @@
 										<t t-foreach="docs" t-as="k">
 											<t t-if="k['val']">
 												<td
-													style="background-color:#DDDBDB; text-align:center;
-												border-bottom: 1px solid #030303; color:#000000;"
-													t-att-colspan="docs_len">
+													style="background-color:#DDDBDB;
+														   text-align:center;
+														   border-bottom: 1px solid #030303;
+														   color:#000000;"
+														t-att-colspan="docs_len">
 													<strong t-esc="k['name']"></strong>
 												</td>
 
@@ -67,12 +67,6 @@
 															<span t-esc="o['designation']"></span>
 														</td>
 														<td>
-															<span t-esc="o['doj']"></span>
-														</td>
-														<td>
-															<span t-esc="o['dept']"></span>
-														</td>
-														<td>
 															<span t-esc="o['salary_days']"></span>
 														</td>
 														<td>
@@ -85,6 +79,9 @@
 															<span t-esc="o['late_days_count']"></span>
 														</td>
 														<td>
+															<span t-esc="o['late_days_overwrite']"></span>
+														</td>
+														<td>
 															<span t-esc="o['leave_days']"></span>
 														</td>
 														<td>
@@ -93,9 +90,7 @@
 														<td>
 															<span t-esc="o['holidays_days']"></span>
 														</td>
-														<td>
-															<span t-esc="o['late_days_count']"></span>
-														</td>
+
 														<td>
 															<span t-esc="'%.2f'% o['late_hrs']"></span>
 														</td>
