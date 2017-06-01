@@ -1,7 +1,8 @@
-from openerp import models, fields
+from openerp import models, fields,_
 import datetime
 from dateutil.relativedelta import relativedelta
 from openerp import api
+from openerp.exceptions import UserError, ValidationError
 
 
 class HrEmployeeLoanRequest(models.Model):
@@ -131,10 +132,10 @@ class HrEmployeeLoanRequest(models.Model):
         for loan in self:
             self.remaining_loan_amount = sum([l.installment for l in loan.line_ids if l.state=='pending'])
 
-    @api.constrains('duration','principal_amount')
+    @api.constrains('duration','principal_amount','req_rate')
     def _check_qty(self):
-        if self.duration < 0 or self.principal_amount < 0:
-            raise Warning('principal_amount or duration cannot be negative !')
+        if self.duration < 0 or self.principal_amount < 0 or self.req_rate < 0:
+            raise Warning('principal_amount or duration or rate cannot be negative !')
 
     @api.constrains('principal_amount')
     def _check_amount(self):
@@ -142,6 +143,13 @@ class HrEmployeeLoanRequest(models.Model):
         if emp:
             raise Warning('principal_amount cannot be greater then wage !')
 
+    @api.multi
+    def unlink(self):
+        for loan in self:
+            if loan.state != 'darft':
+                raise UserError(_('You can not delete this.'))
+            loan.line_ids.unlink()
+        return super(HrEmployeeLoanRequest,self).unlink()
 
 
 
