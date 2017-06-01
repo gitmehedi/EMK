@@ -26,9 +26,9 @@ class HrLeaveLeave(models.Model):
     line_ids = fields.One2many('hr.leave.encashment.line','parent_id', string="Line Ids")
     
     
-    _sql_constraints=[
-        ('leave_type_unique','unique(leave_type)','[Unique Errror] Leave Type must be unique!'),
-    ]
+    # _sql_constraints=[
+    #     ('leave_type_unique','unique(leave_type)','[Unique Errror] Leave Type must be unique!'),
+    # ]
 
 
     @api.constrains('name')
