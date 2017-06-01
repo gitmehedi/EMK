@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <report
+        	id="report_individual_paslips"
+            string="Attendance Summary"
+            model="hr.attendance.summary"
+            report_type="qweb-pdf"
+            file="hr_attendance_and_ot_summary.report_att_summary"
+            name="hr_attendance_and_ot_summary.report_att_summary"
+        />
+
+    </data>
+</odoo>
