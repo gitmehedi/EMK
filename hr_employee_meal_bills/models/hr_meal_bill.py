@@ -41,5 +41,7 @@ class HrEmployeeMealBill(models.Model):
                 raise UserError(_('You can not delete this.'))
             bill.line_ids.unlink()
         return super(HrEmployeeMealBill, self).unlink()
+
+
         
 
