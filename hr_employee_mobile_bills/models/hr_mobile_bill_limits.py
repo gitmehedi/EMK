@@ -8,6 +8,8 @@ class HrMobileBillLimits(models.Model):
             'applied': [('readonly', True)], 'approved':[('readonly', True)]})
     effective_bill_date = fields.Date('Effective Date', required=True,states={'draft': [('invisible', False)],
             'applied': [('readonly', True)], 'approved':[('readonly', True)]})
+    company_id = fields.Many2one('res.company', string='Company', index=True,
+                                 default=lambda self: self.env.user.company_id)
 
     """ Relational Fields """
 
