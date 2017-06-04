@@ -184,8 +184,12 @@ class DeviceDetail(models.Model):
             self.createData(row, employeeId, IN_CODE, hr_att_pool)
         elif(deviceInOutCode.get(str(row[1])) == OUT_CODE):
 
-            preAttData = hr_att_pool.search([('employee_id', '=', employeeId)], limit=1,
-                                                              order='check_in desc')
+            preAttData = hr_att_pool.search([('employee_id', '=', employeeId),
+                                             ('check_in', '!=',False)], limit=1, order='check_in desc')
+
+            # preAttData = hr_att_pool.search([('employee_id', '=', employeeId)], limit=1,
+            #                                                   order='check_in desc')
+
             if preAttData and preAttData.check_out is False:
                 chk_in = self.getDateTimeFromStr(preAttData.check_in)
                 durationInHour = (self.convertDateTime(row[2]) - chk_in).total_seconds() / 60 / 60
