@@ -1,0 +1,6 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+
+access_stock_transfer_request_manager,stock.transfer.request.manager,model_stock_transfer_request,group_stock_transfer_approval_manager,1,1,1,1
+access_stock_transfer_request_line_manager,stock.transfer.request.line.manager,model_stock_transfer_request_line,group_stock_transfer_approval_manager,1,1,1,1
+
+
