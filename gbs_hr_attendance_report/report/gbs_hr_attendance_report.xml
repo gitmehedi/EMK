@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+       <report
+            id="report_individual_paslips1"
+            string="Check In/Out Report"
+            model="hr.attendance"
+            report_type="qweb-pdf"
+            file="gbs_hr_attendance_report.report_individual_payslip1"
+            name="gbs_hr_attendance_report.report_individual_payslip1"
+            menu="False"
+        />
+    </data>
+</odoo>

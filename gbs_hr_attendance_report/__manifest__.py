@@ -8,6 +8,9 @@
         'hr_attendance',
     ],
     'data': [
+        'report/gbs_hr_attendance_report.xml',
+        'wizard/hr_attendance_report_wizard_views.xml',
+        'views/hr_attendance_view.xml',
 
     ],
 
