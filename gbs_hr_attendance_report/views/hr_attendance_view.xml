@@ -9,9 +9,7 @@
             <field name="arch" type="xml">
                     <xpath expr="/form/*" position="before">
                         <header>
-                            <button
-                                    string="Check In/Out Report"
-                                    type="action"
+                            <button string="Check In/Out Report" type="action"
                                     name="%(action_hr_attendance_report_wizard)d"
                          		/>
                         </header>

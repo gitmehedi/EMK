@@ -1,1 +1,1 @@
-import hr_attendance_wizard
+import hr_attendance_report_wizard

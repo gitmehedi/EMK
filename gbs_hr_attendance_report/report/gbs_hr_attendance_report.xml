@@ -10,5 +10,6 @@
             name="gbs_hr_attendance_report.report_individual_payslip1"
             menu="False"
         />
+
     </data>
 </odoo>
