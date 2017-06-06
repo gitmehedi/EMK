@@ -1,36 +1,48 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <openerp>
     <data>
-        <record id="stock_transfer_receive_form_view" model="ir.ui.view">
-            <field name="name">Stock Transfer Receive Form View</field>
+        <record id="stock_transfer_request_form_view" model="ir.ui.view">
+            <field name="name">Stock Transfer Request Form View</field>
             <field name="model">stock.transfer.request</field>
             <field name="arch" type="xml">
-                <form string="Stock Transfer Receive Form">
+                <form string="Stock Transfer Request Form">
                     <header>
-                        <button name="action_receive" type="object" states="transfer"
-                                string="Receive" class="oe_highlight"/>
-                        <button name="action_reject" type="object" states="transfer"
+                        <button name="action_draft" type="object" states="submit"
+                                string="Draft" class=""/>
+                        <button name="action_submit" type="object" states="draft"
+                                string="Submit" class="oe_highlight"/>
+                        <button name="action_approve" type="object" states="submit"
+                                string="Approve" class="oe_highlight" />
+                        <button name="action_transfer" type="object" states="approve"
+                                string="Transfer" class="oe_highlight"/>
+                        <button name="action_reject" type="object" states="reject"
                                 string="Reject" class="oe_highlight"/>
 
                         <field name="state" widget="statusbar"/>
                     </header>
                     <sheet>
+                        <div class="oe_title">
+                            <label for="barcode" class="oe_edit_only" string="Add Product Using Barcode"/>
+                            <h1>
+                                <field name="barcode"/>
+                            </h1>
+                        </div>
                         <group>
                             <group>
-                                <field name="to_shop_id" readonly="1"
+                                <field name="to_shop_id"
                                        options="{'no_quick_create': True, 'no_create_edit': True, 'no_open': True}"/>
                             </group>
                             <group>
-                                <field name="requested_id" readonly="1"
+                                <field name="requested_id"
                                        options="{'no_quick_create': True, 'no_create_edit': True, 'no_open': True}"/>
                             </group>
                         </group>
                         <field name="product_line_ids">
                             <tree string="Products" editable="top">
-                                <field name="product_id" readonly="1"
+                                <field name="product_id"
                                        options="{'no_quick_create': True, 'no_create_edit': True, 'no_open': True}"/>
-                                <field name="quantity" readonly="1"/>
-                                <field name="receive_quantity" required="1"/>
+                                <field name="store_qty"/>
+                                <field name="quantity"/>
                             </tree>
                         </field>
                     </sheet>
@@ -39,11 +51,11 @@
         </record>
 
 
-        <record id="stock_transfer_receive_tree_view" model="ir.ui.view">
-            <field name="name">Stock Transfer receive Tree View</field>
+        <record id="stock_transfer_request_tree_view" model="ir.ui.view">
+            <field name="name">Stock Transfer Request Tree View</field>
             <field name="model">stock.transfer.request</field>
             <field name="arch" type="xml">
-                <tree string="Stock Transfer receive Tree" decoration-info="state=='draft'"
+                <tree string="Stock Transfer Request Tree" decoration-info="state=='draft'"
                       decoration-success="state=='approve'" decoration-danger="state=='confirm'"
                       decoration-muted="state in ('reject')">
                     <field name="to_shop_id"/>
@@ -53,20 +65,20 @@
             </field>
         </record>
 
-        <record id="stock_transfer_receive_search_view" model="ir.ui.view">
-            <field name="name">Stock Transfer Receive Search View</field>
+        <record id="stock_transfer_request_search_view" model="ir.ui.view">
+            <field name="name">Stock Transfer Request Search View</field>
             <field name="model">stock.transfer.request</field>
             <field eval="10" name="priority"/>
             <field name="arch" type="xml">
-                <search string="Stock Transfer Receive Search">
+                <search string="Stock Transfer Request Search">
                     <field name="to_shop_id"/>
                     <field name="requested_id"/>
                 </search>
             </field>
         </record>
 
-        <record id="stock_transfer_receive_action" model="ir.actions.act_window">
-            <field name="name">Stock Transfer Receive</field>
+        <record id="stock_transfer_request_action" model="ir.actions.act_window">
+            <field name="name">Stock Transfer Request</field>
             <field name="res_model">stock.transfer.request</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
@@ -75,18 +87,18 @@
         <record id="timesheet_resource_action_tree" model="ir.actions.act_window.view">
             <field eval="1" name="sequence"/>
             <field name="view_mode">tree</field>
-            <field name="view_id" ref="stock_transfer_receive_tree_view"/>
-            <field name="act_window_id" ref="stock_transfer_receive_action"/>
+            <field name="view_id" ref="stock_transfer_request_tree_view"/>
+            <field name="act_window_id" ref="stock_transfer_request_action"/>
         </record>
 
         <record id="timesheet_resource_action_form" model="ir.actions.act_window.view">
             <field eval="2" name="sequence"/>
             <field name="view_mode">form</field>
-            <field name="view_id" ref="stock_transfer_receive_form_view"/>
-            <field name="act_window_id" ref="stock_transfer_receive_action"/>
+            <field name="view_id" ref="stock_transfer_request_form_view"/>
+            <field name="act_window_id" ref="stock_transfer_request_action"/>
         </record>
 
-        <menuitem id="stock_transfer_receive_menu" name="Stock Transfer Receive"
-                  sequence="582" action="stock_transfer_receive_action" parent="menu_stock_transfer_root"/>
+        <menuitem id="stock_transfer_request_menu" name="Stock Transfer Request"
+                  sequence="580" action="stock_transfer_request_action" parent="menu_stock_transfer_root"/>
     </data>
 </openerp>

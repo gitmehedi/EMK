@@ -7,11 +7,12 @@
     'category': 'Pebbles Module',
     'depends': ['base', 'stock', 'purchase', 'product'],
     'data': [
-        'security/security.xml',
-        'security/ir.model.access.csv',
+        # 'security/security.xml',
+        # 'security/ir.model.access.csv',
         'views/menu.xml',
-        'views/stock_transfer_receive_views.xml',
         'views/stock_transfer_request_views.xml',
+        'views/stock_transfer_receive_views.xml',
+
     ],
     'summary': 'Test Summary for Stock Transfer Request',
     'category': 'Product',
