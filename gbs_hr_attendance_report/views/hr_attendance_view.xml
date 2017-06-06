@@ -6,17 +6,6 @@
             <field name="name">hr.attendance.form</field>
             <field name="model">hr.attendance</field>
             <field name="inherit_id" ref="hr_attendance.hr_attendance_view_form"/>
-            <field name="arch" type="xml">
-                    <xpath expr="/form/*" position="before">
-                        <header>
-                            <button string="Check In/Out Report" type="action"
-                                    name="%(action_hr_attendance_report_wizard)d"
-                         		/>
-                        </header>
-                    </xpath>
-
-
-            </field>
         </record>
 
 	</data>

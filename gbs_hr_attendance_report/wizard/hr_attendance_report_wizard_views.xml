@@ -8,7 +8,16 @@
 			<form>
 				<sheet>
 					<group>
-						<field name="check_in_out" options="{'no_create': True, 'no_create_edit':True}"/>
+						<field name="check_in_out" options="{'no_create': True, 'no_create_edit':True}" />
+						<field name="from_date"/>
+						<field name="to_date"/>
+						<field name="type" placeholder="Please Select" />
+						<field name="department_id" class="oe_inline" placeholder="Please Select"
+									   options="{'no_quick_create': True, 'no_create_edit': True, 'no_open': True}"
+									   attrs="{'invisible': [('type', '!=', 'department_type')]}" />
+						<field name="employee_id" class="oe_inline" placeholder="Please Select"
+									   options="{'no_create_edit': True, 'no_open': True}"
+									   attrs="{'invisible': [('type', '!=', 'employee_type')]}" />
                     </group>
 				</sheet>
 				<footer>
@@ -27,6 +36,10 @@
 			<field name="view_mode">form</field>
 			<field name="target">new</field>
 		</record>
+
+		<menuitem id="attendance_error_correct_menu" name="Attendance Report"
+				  parent="hr_attendance.menu_hr_attendance_manage_attendances"
+                  action="action_hr_attendance_report_wizard" />
 		
 	</data>
 </openerp>
