@@ -4,19 +4,19 @@ from openerp import api, models, fields, exceptions
 from openerp.tools.translate import _
 
 
-class StockTransferRequest(models.Model):
+class StockRequisitionTransfer(models.Model):
     """
     Send product to other shop
     """
-    _name = 'stock.transfer.request'
+    _name = 'stock.requisition.transfer'
     _rec_name = "to_shop_id"
 
     barcode = fields.Char(string='Product Barcode', size=20)
 
     """ Relational Fields """
-    product_line_ids = fields.One2many('stock.transfer.request.line', 'stock_transfer_id')
+    product_line_ids = fields.One2many('stock.requisition.transfer.line', 'stock_requisition_id')
     to_shop_id = fields.Many2one('stock.location', string="To Shop", required=True, ondelete="cascade")
-    requested_id = fields.Many2one('stock.location', string="Requested By", required=True, ondelete="cascade")
+    requested_id = fields.Many2one('stock.location', string="Requested Location", required=True, ondelete="cascade")
     is_transfer = fields.Boolean(string="Is Transfer", default=False)
     is_receive = fields.Boolean(string="Is Receive", default=False)
 
@@ -73,6 +73,7 @@ class StockTransferRequest(models.Model):
     @api.one
     def action_approve(self):
         self.state = 'approve'
+        self.is_transfer = True
 
     @api.one
     def action_transfer(self):
@@ -90,7 +91,6 @@ class StockTransferRequest(models.Model):
         }
         picking = self.env['stock.picking'].create(pic_val)
         picking.action_done()
-
         for val in self.product_line_ids:
             if val:
                 move = {}
@@ -110,7 +110,7 @@ class StockTransferRequest(models.Model):
                 move_done.action_done()
 
         self.state = 'transfer'
-        self.is_transfer = True
+
 
     @api.one
     def action_receive(self):
@@ -154,11 +154,11 @@ class StockTransferRequest(models.Model):
     def action_reject(self):
         self.state = 'reject'
 
-    @api.multi
-    def unlink(self):
-        for rec in self:
-            if rec.state in ['draft', 'submit']:
-                raise exceptions.ValidationError(
-                    "You cannot delete a record with state approve, transfer or receive state.")
-            rec.unlink()
-        return super(StockTransferRequest, self).unlink()
+    # @api.multi
+    # def unlink(self):
+    #     for rec in self:
+    #         if rec.state in ['draft', 'submit']:
+    #             raise exceptions.ValidationError(
+    #                 "You cannot delete a record with state approve, transfer or receive state.")
+    #         rec.unlink()
+    #     return super(StockRequisitionTransfer, self).unlink()

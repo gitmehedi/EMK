@@ -41,7 +41,8 @@ class InheritedStockInventory(models.Model):
                 #compute the inventory lines and create them
                 vals = self._get_inventory_matrix_lines(cr, uid, inventory, context=context)
                 for product_line in vals:
-                    inventory_line_obj.create(cr, uid, product_line, context=context)
+                    if product_line['size_attribute_id'] and product_line['color_attribute_id']:
+                        inventory_line_obj.create(cr, uid, product_line, context=context)
         return self.write(cr, uid, ids, {'state': 'confirm', 'date': time.strftime(DEFAULT_SERVER_DATETIME_FORMAT)})
 
     def _get_inventory_matrix_lines(self, cr, uid, inventory, context=None):
