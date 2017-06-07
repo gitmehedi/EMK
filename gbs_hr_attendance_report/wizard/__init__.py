@@ -1,1 +1,2 @@
 import hr_attendance_report_wizard
+import hr_attendance_duration_wizard

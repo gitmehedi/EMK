@@ -3,11 +3,21 @@
     <data>
        <report
             id="report_individual_paslips1"
-            string="Check In/Out Report"
+            string="Check In Out"
             model="hr.attendance"
             report_type="qweb-pdf"
             file="gbs_hr_attendance_report.report_individual_payslip1"
             name="gbs_hr_attendance_report.report_individual_payslip1"
+            menu="False"
+        />
+
+        <report
+            id="report_individual_paslips2"
+            string="Attendance Report"
+            model="hr.attendance"
+            report_type="qweb-pdf"
+            file="gbs_hr_attendance_report.report_hr_att_dur"
+            name="gbs_hr_attendance_report.report_hr_att_dur"
             menu="False"
         />
 
