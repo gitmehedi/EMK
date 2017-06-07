@@ -73,8 +73,8 @@ class hr_leave_fiscalyear(models.Model):
     name = fields.Char('Fiscal Year', required=True)
     code = fields.Char('Code', size=6, required=True)
     company_id = fields.Many2one('res.company', 'Company', required=True, default=lambda self: self.env.user)
-    date_start = fields.Datetime('Start Date', required=True)
-    date_stop = fields.Datetime('End Date', required=True)
+    date_start = fields.Date('Start Date', required=True)
+    date_stop = fields.Date('End Date', required=True)
     period_ids = fields.One2many('account.period', 'fiscalyear_id', 'Periods')
     state =  fields.Selection([
         ('draft','Open'),
