@@ -17,7 +17,7 @@
                                 class="oe_highlight"/>
 						<button name="action_draft" type="object"
                                 string="Reject"
-                                states="applied,approved"/>
+                                states="applied"/>
                          <field name="state" widget="statusbar"/>
 					</header>
 					<sheet>
@@ -25,11 +25,13 @@
 							<group>
 								<field name="name"/>
 								<field name="effective_bill_date"/>
+								<field name="company_id" groups="base.group_multi_company" options="{'no_quick_create':True,'no_create_edit':True,'no_open': True}"/>
+
 							</group>
 						</group>
 						<field name="line_ids">
 							<tree editable="top">
-								<field name="employee_id" options='{"no_open": True}'/>
+								<field name="employee_id" options="{'no_quick_create':True,'no_create_edit':True}"/>
 								<field name="effective_date"/>
 								<field name="limit"/>
 							</tree>

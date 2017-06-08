@@ -9,7 +9,9 @@
         'views/hr_emp_map_to_device.xml',
     ],
     'depends': [
-        'hr_attendance_and_ot_summary',
+        'hr',
+        'hr_attendance',
+        'hr_attendance_import',
     ],
     'description': 
     """This module will connect to attendance devices""",

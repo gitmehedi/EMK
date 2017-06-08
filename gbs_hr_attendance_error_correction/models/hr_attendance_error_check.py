@@ -6,7 +6,10 @@ class AttendanceCheckError(models.Model):
 
     _description = 'HR attendance error check'
 
+    _order = "id"
+
     has_error = fields.Boolean(default=False, string='has_error', compute='onchange_attendance_data', store=True)
+    check_in = fields.Datetime(string="Check In", required=False)
 
     @api.depends('check_in', 'check_out')
     def onchange_attendance_data(self):

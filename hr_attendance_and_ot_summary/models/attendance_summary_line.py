@@ -16,12 +16,12 @@ class AttendanceSummaryLine(models.Model):
 
     """" Relational Fields """
     att_summary_id = fields.Many2one("hr.attendance.summary", string="Summary", required=True, ondelete='cascade')
-    employee_id = fields.Many2one("hr.employee", string='Employee Name', required=True)
+    employee_id = fields.Many2one("hr.employee", string='Employee', required=True)
     department_id = fields.Many2one('hr.department', related='employee_id.department_id', string='Department',
                                     store=True)
 
     absent_days = fields.One2many('hr.attendance.absent.day', 'att_summary_line_id', string='Absent Days')
-    absent_days_count = fields.Integer(string="Absence Days", compute="_set_absent_days_count")
+    absent_days_count = fields.Integer(string="Absent Days", compute="_set_absent_days_count")
 
     late_days = fields.One2many('hr.attendance.late.day', 'att_summary_line_id', string='Late Days')
     late_days_count = fields.Integer(string="Late Days", compute="_set_late_days_count")

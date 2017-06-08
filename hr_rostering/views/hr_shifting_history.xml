@@ -20,7 +20,7 @@
 	            <field name="arch" type="xml">
 	                <data>
 	                    <xpath expr="//page[3]" position="after">
-	                    	<page string="Shifting">
+	                    	<page string="Shifting" groups="hr.group_hr_user">
 	                        <group>
 	                            <group string="Current Shift">
 	                            	<field name="current_shift_id" />

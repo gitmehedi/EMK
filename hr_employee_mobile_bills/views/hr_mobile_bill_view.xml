@@ -6,7 +6,7 @@
 			<field name="model">hr.mobile.bill</field>
 			<field name="type">form</field>
 			<field name="arch" type="xml">
-				<form>
+				<form string="Employee Mobile Bills" delete="false">
 					<header>
 
                          <button name="action_confirm" type="object"
@@ -17,13 +17,15 @@
                                 class="oe_highlight"/>
 						<button name="action_draft" type="object"
                                 string="Reject"
-                                states="applied,approved"/>
+                                states="applied"/>
                          <field name="state" widget="statusbar"/>
 					</header>
 					<sheet>
 	                 		<group >
 	                 			<group>
 	                            	<field name="name" />
+									<field name="company_id" groups="base.group_multi_company" options="{'no_quick_create':True,'no_create_edit':True,'no_open': True}"/>
+
 	                            </group>
 		                        <notebook colspan="4">
 									<page string="Bills">

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<openerp>
+	<data>
+		<record id="hr_bank_selection_wizard_view" model="ir.ui.view">
+			<field name="name">hr.attendance.duration.wizard.View</field>
+			<field name="model">hr.attendance.duration.wizard</field>
+			<field name="arch" type="xml">
+			<form>
+				<sheet>
+					<group>
+						<field name="periods" options="{'no_create': True, 'no_create_edit':True}" />
+                    </group>
+				</sheet>
+				<footer>
+					<button name ="process_report" string="Print" type="object" class="oe_highlight"  />
+                    <button special="cancel" string="Cancel" />
+				</footer>
+               </form>
+			</field>
+		</record>		
+		
+		<record id="action_hr_attendance_duration_report_wizard" model="ir.actions.act_window">
+			<field name="name">Select Period</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">hr.attendance.duration.wizard</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">form</field>
+			<field name="target">new</field>
+		</record>
+
+		<menuitem id="attendance_duration_menu" name="Attendance Duration"
+				  parent="hr_attendance.menu_hr_attendance_manage_attendances"
+                  action="action_hr_attendance_duration_report_wizard" />
+		
+	</data>
+</openerp>

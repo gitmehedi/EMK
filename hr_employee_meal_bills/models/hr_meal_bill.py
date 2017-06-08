@@ -8,6 +8,8 @@ class HrEmployeeMealBill(models.Model):
 
     name = fields.Char(size=100, string="Description", required=True, readonly=True,
                        states={'draft': [('readonly', False)]})
+    company_id = fields.Many2one('res.company', string='Company', index=True,
+                                 default=lambda self: self.env.user.company_id)
 
     """ All relations fields """
     line_ids = fields.One2many('hr.meal.bill.line', 'parent_id', string="Meal Details",readonly=True,
@@ -41,5 +43,7 @@ class HrEmployeeMealBill(models.Model):
                 raise UserError(_('You can not delete this.'))
             bill.line_ids.unlink()
         return super(HrEmployeeMealBill, self).unlink()
+
+
         
 

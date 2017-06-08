@@ -71,14 +71,14 @@
 		</record>
 		
 		<record id="hr_shift_alter_action" model="ir.actions.act_window">
-			<field name="name">Alter Rosteting</field>
+			<field name="name">Alter Rostering</field>
 			<field name="res_model">hr.shift.alter</field>
 			<field name="view_mode">tree,form</field>
 		</record>
 		
 		<!-- Menu Item -->
 		<menuitem id="menu_hr_shift_alter" 
-				  name="Alter Rosteting" 
+				  name="Alter Rostering"
 				  parent="hr_attendance.menu_hr_attendance_manage_attendances" 
 				  groups="hr_attendance.group_hr_attendance_user,base.group_user" 
 				  sequence="7" action="hr_shift_alter_action" 

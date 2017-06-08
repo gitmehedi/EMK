@@ -1,4 +1,5 @@
 from openerp import models, fields,api, _
+from openerp.exceptions import UserError, ValidationError
 
 class HrMobileBillLimits(models.Model):
     _name = 'hr.mobile.bill.limit'
@@ -7,6 +8,8 @@ class HrMobileBillLimits(models.Model):
             'applied': [('readonly', True)], 'approved':[('readonly', True)]})
     effective_bill_date = fields.Date('Effective Date', required=True,states={'draft': [('invisible', False)],
             'applied': [('readonly', True)], 'approved':[('readonly', True)]})
+    company_id = fields.Many2one('res.company', string='Company', index=True,
+                                 default=lambda self: self.env.user.company_id)
 
     """ Relational Fields """
 
@@ -49,3 +52,11 @@ class HrMobileBillLimits(models.Model):
             name = self.search(filters)
             if len(name) > 1:
                 raise Warning('[Unique Error] Name must be unique!')
+
+    @api.multi
+    def unlink(self):
+        for bill in self:
+            if bill.state != 'draft':
+                raise UserError(_('You can not delete this.'))
+            bill.line_ids.unlink()
+        return super(HrMobileBillLimits, self).unlink()

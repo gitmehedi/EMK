@@ -29,9 +29,9 @@ class HrLeaveLeave(models.Model):
 
     carry_forward_year = fields.Many2one('hr.leave.fiscal.year', string="Leave Year", default=_default_leave, required='True')
 
-    _sql_constraints = [
-        ('leave_type_unique', 'unique(leave_type)','[Unique Error] Leave Type must be unique!'),
-    ]
+    # _sql_constraints = [
+    #     ('leave_type_unique', 'unique(leave_type)','[Unique Error] Leave Type must be unique!'),
+    # ]
 
     @api.constrains('name')
     def _check_unique_constraint(self):

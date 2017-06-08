@@ -5,11 +5,11 @@
     'category': 'Human Resources',
     'version':'1.0',
     'data': [
+        'security/ir.model.access.csv',
         'views/hr_shifting.xml',
         'views/hr_shifting_history.xml',
         'views/hr_shift_alter_view.xml',
     ],
-    
     'depends': [
         'hr',
         'hr_payroll',

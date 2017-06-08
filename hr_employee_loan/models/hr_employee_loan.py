@@ -1,7 +1,8 @@
-from openerp import models, fields
+from openerp import models, fields,_
 import datetime
 from dateutil.relativedelta import relativedelta
 from openerp import api
+from openerp.exceptions import UserError, ValidationError
 
 
 class HrEmployeeLoanRequest(models.Model):
@@ -118,21 +119,57 @@ class HrEmployeeLoanRequest(models.Model):
                     repayment_date = repayment_date + relativedelta(months=1)
                     loan.line_ids.create(vals)
 
-    # @api.constrains('name')
-    # def _check_unique_constraint(self):
-    #     if self.name:
-    #         filters = [['name', '=ilike', self.name]]
-    #         name = self.search(filters)
-    #         if len(name) > 1:
-    #             raise Warning('[Unique Error] Name must be unique!')
+
 
     @api.depends('line_ids','principal_amount')
     def _compute_loan_amount_with_payslip(self):
         for loan in self:
             self.remaining_loan_amount = sum([l.installment for l in loan.line_ids if l.state=='pending'])
 
-    @api.constrains('duration','principal_amount')
+
+    # Show a msg for minus value
+    @api.constrains('duration','principal_amount','req_rate')
     def _check_qty(self):
-        if self.duration < 0 or self.principal_amount < 0:
-            raise Warning('principal_amount or duration cannot be negative !')
+        if self.duration < 0 or self.principal_amount < 0 or self.req_rate < 0:
+            raise Warning('Principal Amount or Duration or Rate never take negative value!')
+
+
+    # Show a msg for if principal_amount greater then wage
+    @api.constrains('principal_amount')
+    def _check_amount(self):
+        emp = self.env['hr.contract'].search([('employee_id','=', self.employee_id.id),('wage','<', self.principal_amount)])
+        if emp:
+            raise Warning('Principal Amount cannot be greater then wage !')
+
+    # Show a msg for applied & approved state should not be delete
+    @api.multi
+    def unlink(self):
+        for loan in self:
+            if loan.state != 'darft':
+                raise UserError(_('You can not delete this.'))
+            loan.line_ids.unlink()
+        return super(HrEmployeeLoanRequest,self).unlink()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
