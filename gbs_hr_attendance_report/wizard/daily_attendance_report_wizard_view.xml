@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<openerp>
+    <data>
+		<!-- Form View -->
+		<record id="hr_daily_attendance_form" model="ir.ui.view">
+			<field name="name">hr.daily.attendance.form</field>
+			<field name="model">hr.daily.attendance</field>
+			<field name="type">form</field>
+			<field name="arch" type="xml">
+				<form string="Daily Attendance">
+					<sheet>
+						<group>
+							<label for="report_type" />
+							<div>
+								<field name="report_type" class="oe_inline" placeholder="Please Select" />
+							</div>
+							<label for="department_id" attrs="{'invisible': [('report_type', '!=', 'department_type')]}" />
+							<div>
+								<field name="department_id" class="oe_inline" placeholder="Please Select"
+									   options="{'no_quick_create': True, 'no_create_edit': True, 'no_open': True}"
+                                       attrs="{'invisible': [('report_type', '!=', 'department_type')]}" />
+							</div>
+							<label for="employee_id" attrs="{'invisible': [('report_type', '!=', 'employee_type')]}" />
+							<div>
+								<field name="employee_id" class="oe_inline" placeholder="Please Select"
+									   options="{'no_create_edit': True, 'no_open': True}"
+									   attrs="{'invisible': [('report_type', '!=', 'employee_type')]}" />
+							</div>
+							<label for="date" />
+							<div>
+								<field name="date" class="oe_inline" />
+							</div>
+						</group>
+						<footer>
+							<footer>
+                                <button name="check_report" type="object" string="Print" class="oe_highlight" default_focus="1" />
+								<button string="Cancel" class="btn btn-sm btn-default o_form_button_cancel" special="cancel"/>
+                			</footer>
+						</footer>
+					</sheet>
+				</form>
+			</field>
+		</record>
+
+		<!-- Menu Action -->
+		<record id="daily_attendance_action" model="ir.actions.act_window">
+			<field name="name">Daily Attendance</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">hr.daily.attendance</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">form</field>
+			<field name="target">new</field>
+		</record>
+
+        <!--Menu Item-->
+		<menuitem id="daily_attendance_menu" name="Daily Attendance" action="daily_attendance_action" />
+    </data>
+</openerp>
