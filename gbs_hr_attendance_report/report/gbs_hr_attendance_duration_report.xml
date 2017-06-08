@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+	<data>
+		<template id="report_hr_att_dur">
+			<t t-call="report.external_layout">
+				<t t-call="report.html_container">
+					<t t-name="report.external_layout">
+						<div class="page">
+							<div class="row">
+								<table class="table table-bordered">
+									<thead>
+										<tr>
+                                            <th>Employee</th>
+											<th>Check In</th>
+											<th>Check Out</th>
+                                            <th>Duration</th>
+										</tr>
+									</thead>
+
+                                    <tbody>
+										<span t-esc="period"></span>
+                                           <t t-foreach="docs" t-as="o">
+                                               <tr>
+                                                   <td>
+                                                       <span t-esc="o.employee_id.name"></span>
+                                                   </td>
+                                                   <td>
+														<span t-esc="o.check_in"></span>
+                                                   </td>
+                                                   <td>
+                                                       <span t-esc="o.check_out"></span>
+                                                   </td>
+												   <td>
+                                                       <span t-esc="o.worked_hours"></span>
+                                                   </td>
+
+                                               </tr>
+                                           </t>
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</t>
+				</t>
+			</t>
+
+		</template>
+	</data>
+</openerp>
