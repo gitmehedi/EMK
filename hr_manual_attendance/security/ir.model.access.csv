@@ -1,3 +1,2 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
 access_manual_attendance_employee,manual.attendance.employee,model_hr_manual_attendance,base.group_user,1,1,1,0
-access_manual_attendance_employee_2,manual.attendance.employee_2,hr.model_hr_employee,base.group_user,1,1,1,0
