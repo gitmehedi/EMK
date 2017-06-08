@@ -4,8 +4,9 @@ class HrAttendanceImportError(models.Model):
     _name = 'hr.attendance.import.error'
     
     employee_code = fields.Char(string='Employee Code')
-    check_in = fields.Char(string='Check In')
-    check_out = fields.Char(string='Check Out')
+    check_in = fields.Char(string='Check In', required=False)
+    check_out = fields.Char(string='Check Out', required=False)
+    attempt_to_success = fields.Integer(string='Try', default=0)
     import_id = fields.Many2one('hr.attendance.import', 'id', ondelete='cascade')
     
     

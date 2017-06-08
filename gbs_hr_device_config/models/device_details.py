@@ -13,6 +13,8 @@ driver = '{ODBC Driver 13 for SQL Server}'
 IN_CODE = 'IN'
 OUT_CODE = 'OUT'
 
+MAX_ATTEMPT_TO_SUCCESS = 5
+
 get_BADGENUMBER = """SELECT DISTINCT (usr.BADGENUMBER)
                      FROM CHECKINOUT att
                      JOIN USERINFO usr ON usr.USERID = att.USERID
@@ -62,6 +64,69 @@ class DeviceDetail(models.Model):
         self.is_active = not self.is_active
 
     @api.multi
+    def action_pull_error_data(self):
+
+        hr_employee_pool = self.env['hr.employee']
+
+        hr_att_error_pool = self.env['hr.attendance.import.error']
+        errorDataList = hr_att_error_pool.search([('attempt_to_success', '<=', MAX_ATTEMPT_TO_SUCCESS),
+                                              ('import_id', '=', 'Null')], limit=3000, order='id asc')
+        for row in errorDataList:
+            if row.employee_code:
+                emp = hr_employee_pool.search([('device_employee_acc', '=', row.employee_code)], limit=1)
+                if emp:
+                    self.processErrorData(row, emp.id)
+                    row.unlink()
+                else:
+                    row.write({'attempt_to_success': row.attempt_to_success + 1})
+
+            else:
+                row.write({'attempt_to_success': row.attempt_to_success + 1})
+
+    def processErrorData(self, row, employeeId):
+
+        hr_att_pool = self.env['hr.attendance']
+
+        if row.check_in:
+            self.createDataFromError(row, employeeId, hr_att_pool)
+        elif row.check_out:
+
+            preAttData = hr_att_pool.search([('employee_id', '=', employeeId),
+                                             ('check_in', '!=',False)], limit=1, order='check_in desc')
+
+            if preAttData and preAttData.check_out is False:
+                chk_in = self.getDateTimeFromStr(preAttData.check_in)
+                durationInHour = (self.convertDateTime(row.check_out) - chk_in).total_seconds() / 60 / 60
+                if durationInHour <=15 and durationInHour >= 0:
+                    preAttData.write({'check_out': self.convertDateTime(row.check_out), 'worked_hours':durationInHour, 'write_date':datetime.datetime.now(),  'has_error': False})
+                else:
+                    self.createDataFromError(row, employeeId, hr_att_pool)
+            else:
+                self.createDataFromError(row, employeeId, hr_att_pool)
+
+    def createDataFromError(self, row, employeeId, hr_att_pool):
+
+        if row.check_in:
+            create_vals = {'employee_id': employeeId,
+                              'check_in': self.convertDateTime(row.check_in),
+                              'create_date': datetime.datetime.now(),
+                              'write_date': datetime.datetime.now(),
+                              'has_error': True,
+                              'manual_attendance_request': False,
+                              'is_system_generated': True}
+        else:
+            create_vals = {'employee_id': employeeId,
+                              'check_in': None,
+                              'check_out': self.convertDateTime(row.check_out),
+                              'create_date': datetime.datetime.now(),
+                              'write_date': datetime.datetime.now(),
+                              'has_error': True,
+                              'manual_attendance_request': False,
+                              'is_system_generated': True}
+        res = hr_att_pool.create(create_vals)
+
+    ############################################################################################################
+    @api.multi
     def action_check_connection(self):
 
         isConnect = False
@@ -103,6 +168,7 @@ class DeviceDetail(models.Model):
                                   ';PWD=' + attDevice.password)
             cursor = conn.cursor()
 
+            currentDate = datetime.datetime.now()
             cursor.execute("""SELECT max(Id) FROM CHECKINOUT WHERE IsRead = 0""")
             maxId = cursor.fetchone()
 
@@ -111,6 +177,7 @@ class DeviceDetail(models.Model):
 
             self.processData(maxId[0], attDevice, conn, cursor)
 
+            self.last_update = currentDate
         except Exception as e:
             msg = "Exception on gbs_hr_device_config-> device_details.py -> action_pull_data() at " + \
                   str(datetime.datetime.now()) + "  \n Error Message : " + str(e[0])
