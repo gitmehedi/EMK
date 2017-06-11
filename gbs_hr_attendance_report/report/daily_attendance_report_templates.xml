@@ -6,49 +6,51 @@
                 <t t-foreach="docs" t-as="o">
                     <t t-call="report.external_layout">
                         <div class="page">
-                            <div>
-                                <!--<span style="font-size: 18px;">Employee</span> : <span style="font-size: 16px;" t-esc="docs.employee_id.name"/>-->
-                            </div>
-                            <div class="row mt32 mb32">
-                                <div class="col-xs-4">
-                                    <p>
-                                        <!--<t t-if="docs.date"><strong>Date:</strong> <span t-esc="docs.date"/><br/></t>-->
-                                    </p>
-                                </div>
-                            </div>
+                            <!--<div>-->
+                                <!--&lt;!&ndash;<span style="font-size: 18px;">Employee</span> : <span style="font-size: 16px;" t-esc="docs.employee_id.name"/>&ndash;&gt;-->
+                            <!--</div>-->
+                            <!--<div class="row mt32 mb32">-->
+                                <!--<div class="col-xs-4">-->
+                                    <!--<p>-->
+                                        <!--&lt;!&ndash;<t t-if="docs.date"><strong>Date:</strong> <span t-esc="docs.date"/><br/></t>&ndash;&gt;-->
+                                    <!--</p>-->
+                                <!--</div>-->
+                            <!--</div>-->
+                            <div class="row">
+                                <table class="table table-bordered">
+									<thead>
+										<tr>
+                                            <th>Employee</th>
+											<th>Check In</th>
+											<th>Check Out</th>
+                                            <th>Duration</th>
+										</tr>
+									</thead>
+                                    <tbody>
+										<span t-esc="period"></span>
+                                           <t t-foreach="docs" t-as="o">
+                                               <tr>
+                                                   <td>
+                                                       <span t-esc="o.employee_id.name"></span>
+                                                   </td>
+                                                   <td>
+														<span t-esc="o.check_in"></span>
+                                                   </td>
+                                                   <td>
+                                                       <span t-esc="o.check_out"></span>
+                                                   </td>
 
-                            <table class="table table-condensed">
-                                <thead>
-                                    <tr>
-                                        <th>Employee</th>
-                                        <th class="text-right">Date</th>
-                                        <th class="text-right">Check In</th>
-                                        <th class="text-right">Check Out</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <t t-foreach="orders" t-as="a">
-                                        <tr>
-                                            <td>
-                                                <span t-esc="a.employee_id.name" />
-                                            </td>
-                                            <td class="text-right" style="white-space: text-nowrap;">
-                                                <span t-esc="a.date" />
-                                            </td>
-                                            <td class="text-right" style="white-space: text-nowrap;">
-                                                <span t-esc="a.check_in" />
-                                            </td>
-                                            <td class="text-right" style="white-space: text-nowrap;">
-                                                <span t-esc="a.check_out" />
-                                            </td>
-                                        </tr>
-                                    </t>
-                                </tbody>
-                            </table>
-                        </div>
-                    </t>
-                </t>
-            </t>
-        </template>
-    </data>
+
+                                               </tr>
+                                           </t>
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</t>
+				</t>
+			</t>
+
+		</template>
+	</data>
 </odoo>

@@ -1,10 +1,6 @@
-import time
-from odoo import api, models
-from dateutil.parser import parse
-from odoo.exceptions import UserError
+from openerp import api, fields, models
 
-
-class ReportSalesperson(models.AbstractModel):
+class DailyAttendance(models.AbstractModel):
     _name = 'report.gbs_hr_attendance_report.report_daily_attendance'
 
     @api.model
@@ -14,3 +10,4 @@ class ReportSalesperson(models.AbstractModel):
             'docs': hr_att_pool,
         }
         return self.env['report'].render('gbs_hr_attendance_report.report_daily_attendance', docargs)
+

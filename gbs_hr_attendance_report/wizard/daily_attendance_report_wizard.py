@@ -15,25 +15,25 @@ class DailyAttendance(models.TransientModel):
         ('employee_type', 'Employee wise')
     ], string='Report Type', required=True)
 
-    # @api.multi
-    # def check_report(self):
-    #     data = {}
-    #     data['form'] = self.read(['department_id', 'employee_id', 'date'])[0]
-    #     return self._print_report(data)
-    #
-    # def _print_report(self, data):
-    #     data['form'].update(self.read(['department_id', 'employee_id', 'date'])[0])
-    #     return self.env['report'].get_action(self, 'gbs_hr_attendance_report.report_daily_attendance', data=data)
-
     @api.multi
     def check_report(self):
         data = {}
+        data['form'] = self.read(['department_id', 'employee_id', 'date'])[0]
+        return self._print_report(data)
 
-        data['report_type'] = self.report_type
-        data['department_id'] = self.department_id.id
-        data['employee_id'] = self.employee_id.id
-        data['date'] = self.date
-
-
+    def _print_report(self, data):
+        data['form'].update(self.read(['department_id', 'employee_id', 'date'])[0])
         return self.env['report'].get_action(self, 'gbs_hr_attendance_report.report_daily_attendance', data=data)
+
+    # @api.multi
+    # def check_report(self):
+    #     data = {}
+    #
+    #     data['report_type'] = self.report_type
+    #     data['department_id'] = self.department_id.id
+    #     data['employee_id'] = self.employee_id.id
+    #     data['date'] = self.date
+    #
+    #
+    #     return self.env['report'].get_action(self, 'gbs_hr_attendance_report.report_daily_attendance', data=data)
 
