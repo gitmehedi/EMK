@@ -3,7 +3,7 @@
     <data>
         <report
             id="custom_report_daily_attendance"
-            model="report.gbs_hr_attendance_report.report_daily_attendance"
+            model="hr.attendance"
             string="Daily Attendance Report"
             report_type="qweb-pdf"
             name="gbs_hr_attendance_report.report_daily_attendance"
