@@ -1,14 +1,6 @@
 from openerp import api
-from openerp import fields
-from openerp import models
-from odoo.exceptions import UserError
-
-#from datetime import datetime
-from datetime import date
-import datetime
-
-from odoo.tools import DEFAULT_SERVER_DATE_FORMAT
-from openerp.exceptions import ValidationError,Warning
+from openerp import models, fields,_
+from openerp.exceptions import UserError, ValidationError
 
 class HrManualAttendance(models.Model):
     _name = 'hr.manual.attendance'
@@ -208,4 +200,12 @@ class HrManualAttendance(models.Model):
                 'manager_id': False                
             })
             
-        return True    
+        return True
+
+    # Show a msg for applied & approved state should not be delete
+    @api.multi
+    def unlink(self):
+        for m in self:
+            if m.state != 'draft':
+                raise UserError(_('You can not delete this.'))
+        return super(HrManualAttendance, self).unlink()
