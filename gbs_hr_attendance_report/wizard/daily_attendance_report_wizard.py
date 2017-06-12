@@ -19,5 +19,5 @@ class DailyAttendance(models.TransientModel):
         data['date'] = self.date
         data['employee_id'] = self.employee_id.id
 
-        return self.env['report'].get_action(self, 'gbs_hr_attendance_report.report_hr_att_dur', data=data)
+        return self.env['report'].get_action(self, 'gbs_hr_attendance_report.report_hr_daily_att', data=data)
 
