@@ -145,7 +145,7 @@ class HrEmployeeLoanRequest(models.Model):
     @api.multi
     def unlink(self):
         for loan in self:
-            if loan.state != 'darft':
+            if loan.state != 'draft':
                 raise UserError(_('You can not delete this.'))
             loan.line_ids.unlink()
         return super(HrEmployeeLoanRequest,self).unlink()

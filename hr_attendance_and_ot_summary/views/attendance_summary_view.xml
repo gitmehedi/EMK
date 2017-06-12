@@ -20,7 +20,7 @@
 			<field name="model">hr.attendance.summary</field>
 			<field name="type">form</field>
 			<field name="arch" type="xml">
-				<form string="Attendance and Over Time Summary">
+				<form string="Attendance and Over Time Summary" delete="false" create="0">
 					<header>
 						<button name="hr_attendance_and_ot_summary.attendance_summary_wizard_action_view"
 							type="action" string="Select Employee" states="draft"/>
@@ -80,7 +80,7 @@
 		</record>
 
 		<menuitem id="menu_hr_attendance_ot_summary" name="Attendance Summary" parent="hr_attendance.menu_hr_attendance_manage_attendances"
-					action="hr_attendance_ot_summary_action" />
+					groups="hr.group_hr_manager" action="hr_attendance_ot_summary_action" />
 					
 
 
