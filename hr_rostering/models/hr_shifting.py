@@ -1,6 +1,5 @@
-from openerp import fields
-from openerp import api,models,_
-from openerp.exceptions import ValidationError,Warning
+from openerp import api, fields, models, _
+from openerp.exceptions import UserError, ValidationError
 
 
 class HrShifting(models.Model):
@@ -25,6 +24,14 @@ class HrResourceCal(models.Model):
 
     _inherit = ['resource.calendar']
 
+    name = fields.Char(required=True,states={'applied': [('readonly', True)],'approved': [('readonly', True)]})
+    manager = fields.Many2one('res.users', string='Workgroup Manager', default=lambda self: self.env.uid,
+                            states = {'applied': [('readonly', True)], 'approved': [('readonly', True)]})
+    company_id = fields.Many2one('res.company', string='Company',states = {'applied': [('readonly', True)], 'approved': [('readonly', True)]},
+                                 default=lambda self: self.env['res.company']._company_default_get())
+    attendance_ids = fields.One2many('resource.calendar.attendance', 'calendar_id', string='Working Time',copy=True,
+                                     states={'applied': [('readonly', True)], 'approved': [('readonly', True)]})
+
     state = fields.Selection([
         ('draft', "Draft"),
         ('applied', "Applied"),
@@ -42,6 +49,14 @@ class HrResourceCal(models.Model):
     @api.multi
     def action_done(self):
         self.state = 'approved'
+
+    @api.multi
+    def unlink(self):
+        for bill in self:
+            if bill.state != 'draft':
+                raise UserError(_('You can not delete this.'))
+            bill.leave_ids.unlink()
+        return super(HrResourceCal, self).unlink()
 
 
 
