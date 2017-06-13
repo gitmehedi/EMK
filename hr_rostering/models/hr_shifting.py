@@ -19,6 +19,32 @@ class HrShifting(models.Model):
     #         raise Warning(_("OT to can not less then OT from or \n OT from can not less then Work to or \n Work to can not less then Work from"))
 
 
+
+
+class HrResourceCal(models.Model):
+
+    _inherit = ['resource.calendar']
+
+    state = fields.Selection([
+        ('draft', "Draft"),
+        ('applied', "Applied"),
+        ('approved', "Approved"),
+    ], default='draft')
+
+    @api.multi
+    def action_draft(self):
+        self.state = 'draft'
+
+    @api.multi
+    def action_confirm(self):
+        self.state = 'applied'
+
+    @api.multi
+    def action_done(self):
+        self.state = 'approved'
+
+
+
 class HrEmployeeShifting(models.Model):
     _inherit = ['hr.employee']
     
