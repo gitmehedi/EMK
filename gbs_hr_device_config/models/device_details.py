@@ -226,7 +226,7 @@ class DeviceDetail(models.Model):
                 if self.isValidData(row, deviceInOutCode, employeeIdMap) == False:
                     self.saveAsError(row, employeeIdMap, deviceInOutCode)
                 else:
-                    self.storeData(row, deviceInOutCode, employeeIdMap)
+                    self.storeData(row, deviceInOutCode, employeeIdMap, attDevice.id)
 
             # Store all attendance data to application database.
             # Now Update on SQL Server Database(External)
@@ -241,14 +241,14 @@ class DeviceDetail(models.Model):
 
 
 
-    def storeData(self, row, deviceInOutCode, employeeIdMap):
+    def storeData(self, row, deviceInOutCode, employeeIdMap, deviceId):
 
         hr_att_pool = self.env['hr.attendance']
 
         employeeId = employeeIdMap.get(row[0])
 
         if(deviceInOutCode.get(str(row[1])) == IN_CODE):
-            self.createData(row, employeeId, IN_CODE, hr_att_pool)
+            self.createData(row, employeeId, IN_CODE, hr_att_pool, deviceId)
         elif(deviceInOutCode.get(str(row[1])) == OUT_CODE):
 
             preAttData = hr_att_pool.search([('employee_id', '=', employeeId),
@@ -261,13 +261,18 @@ class DeviceDetail(models.Model):
                 chk_in = self.getDateTimeFromStr(preAttData.check_in)
                 durationInHour = (self.convertDateTime(row[2]) - chk_in).total_seconds() / 60 / 60
                 if durationInHour <=15 and durationInHour >= 0:
-                    preAttData.write({'check_out': self.convertDateTime(row[2]), 'worked_hours':durationInHour, 'write_date':datetime.datetime.now(),  'has_error': False})
+                    preAttData.write({'check_out': self.convertDateTime(row[2]),
+                                      'worked_hours':durationInHour,
+                                      'write_date':datetime.datetime.now(),
+                                      'has_error': False,
+                                      'attendance_server_id': deviceId
+                                      })
                 else:
-                    self.createData(row, employeeId, OUT_CODE, hr_att_pool)
+                    self.createData(row, employeeId, OUT_CODE, hr_att_pool, deviceId)
             else:
-                self.createData(row, employeeId, OUT_CODE, hr_att_pool)
+                self.createData(row, employeeId, OUT_CODE, hr_att_pool, deviceId)
 
-    def createData(self, row, employeeId, inOrOut, hr_att_pool):
+    def createData(self, row, employeeId, inOrOut, hr_att_pool, deviceId):
 
         if inOrOut == IN_CODE:
             create_vals = {'employee_id': employeeId,
@@ -276,7 +281,8 @@ class DeviceDetail(models.Model):
                               'write_date': datetime.datetime.now(),
                               'has_error': True,
                               'manual_attendance_request': False,
-                              'is_system_generated': True}
+                              'is_system_generated': True,
+                              'attendance_server_id': deviceId}
         else:
             create_vals = {'employee_id': employeeId,
                               'check_in': None,
@@ -285,7 +291,8 @@ class DeviceDetail(models.Model):
                               'write_date': datetime.datetime.now(),
                               'has_error': True,
                               'manual_attendance_request': False,
-                              'is_system_generated': True}
+                              'is_system_generated': True,
+                              'attendance_server_id': deviceId}
         res = hr_att_pool.create(create_vals)
 
 
