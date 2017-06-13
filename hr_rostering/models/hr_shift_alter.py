@@ -1,6 +1,6 @@
-from openerp import api,fields,models
-from datetime import date
-import datetime
+from openerp import models, fields,_
+from openerp import api
+from openerp.exceptions import UserError, ValidationError
 
 
 class HRShiftAlter(models.Model):
@@ -44,8 +44,15 @@ class HRShiftAlter(models.Model):
     @api.multi
     def action_draft(self):
         self.state = 'draft'
-              
-    
+
+        # Show a msg for applied & approved state should not be delete
+
+    @api.multi
+    def unlink(self):
+        for a in self:
+            if a.state != 'draft':
+                raise UserError(_('You can not delete this.'))
+        return super(HRShiftAlter, self).unlink()
 
 
     

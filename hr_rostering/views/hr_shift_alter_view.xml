@@ -41,7 +41,7 @@
 			<field name="model">hr.shift.alter</field>
 			<field name="type">form</field>
 			<field name="arch" type="xml">
-				<form string="Alter Rostering">
+				<form string="Alter Rostering" delete ="0" create = "0">
 				 	<header>
 	                    <button string="Confirm" name="action_confirm" states="draft" type="object" class="oe_highlight"/>
                     	<button string="Approve" groups="hr.group_hr_user" name="action_approve" states="confirmed" type="object" class="oe_highlight"/>

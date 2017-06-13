@@ -27,7 +27,7 @@
 			<field name="model">hr.manual.attendance</field>
 			<field name="type">form</field>
 			<field name="arch" type="xml">
-				<form string="HR Manual Attendance">
+				<form string="HR Manual Attendance" delete ="0" create = "0">
 				 	<header>
 	                    <button string="Confirm" name="action_confirm" states="draft" type="object" class="oe_highlight"/>
                     	<button string="Approve" name="action_approve" states="confirm" type="object" class="oe_highlight"/>
