@@ -7,7 +7,11 @@ class HrManualAttendance(models.Model):
     _inherit = ['mail.thread']
     _rec_name = 'employee_id'
     
-    #Fields of Model    
+
+    def _default_employee(self):
+        return self.env['hr.employee'].search([('user_id', '=', self.env.uid)], limit=1)
+
+    employee_id = fields.Many2one('hr.employee', string="Employee", required=True, default=_default_employee)
     reason = fields.Text(string='Reason')
     is_it_official = fields.Boolean(string='Is it official', default=False)
     check_in = fields.Datetime(string = 'Check In')
@@ -17,7 +21,7 @@ class HrManualAttendance(models.Model):
         ('sign_in', 'Sign In'),
         ('sign_out', 'Sign Out')
         ], string = 'Sign Type', required=True, default="full_day")
-    employee_id = fields.Many2one('hr.employee', string="Employee", required = True)
+
     department_id = fields.Many2one('hr.department', related='employee_id.department_id', string='Department', store=True)   
     state = fields.Selection([
         ('draft', 'Draft'),

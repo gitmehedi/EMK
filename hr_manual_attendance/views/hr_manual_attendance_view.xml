@@ -29,10 +29,10 @@
 			<field name="arch" type="xml">
 				<form string="HR Manual Attendance" delete ="0" create = "0">
 				 	<header>
-	                    <button string="Confirm" name="action_confirm" states="draft" type="object" class="oe_highlight"/>
-                    	<button string="Approve" name="action_approve" states="confirm" type="object" class="oe_highlight"/>
-                     	<button string="Refuse" name="action_refuse" states="confirm" type="object" />
-                    	<button string="Reset to Draft" name="action_draft" type="object" states="confirm"/> 
+	                    <button string="Confirm" name="action_confirm" states="draft" type="object" class="oe_highlight" />
+                    	<button string="Approve" name="action_approve" states="confirm" type="object" class="oe_highlight" groups="hr.group_hr_manager"/>
+                     	<button string="Refuse" name="action_refuse" states="confirm" type="object" groups="hr.group_hr_manager"/>
+                    	<button string="Reset to Draft" name="action_draft" type="object" states="confirm" groups="hr.group_hr_manager"/>
                     	<field name="state" widget="statusbar" statusbar_visible="draft,confirm,validate"/>                    	
                 	</header>				
                 	
