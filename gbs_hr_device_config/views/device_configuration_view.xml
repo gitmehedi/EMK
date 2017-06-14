@@ -42,7 +42,7 @@
 						<div class="oe_button_box" name="button_box">
 							<button name="action_pull_data" type="object" string="Pull" class="oe_highlight"/>
 							<button name="action_check_connection" type="object" string="Test Connection" class="oe_highlight"/>
-							<!--<button name="action_pull_error_data" type="object" string="Pull Error" class="oe_highlight"/>-->
+							<button name="action_pull_error_data" type="object" string="Pull Error Data" class="oe_highlight"/>
 
 						</div>
 						<group>

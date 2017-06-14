@@ -4,8 +4,6 @@ from openerp import api
 class AttendanceCheckError(models.Model):
     _inherit = 'hr.attendance'
 
-    _description = 'HR attendance error check'
-
     _order = "id"
 
     has_error = fields.Boolean(default=False, string='has_error', compute='onchange_attendance_data', store=True)

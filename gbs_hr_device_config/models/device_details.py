@@ -70,7 +70,7 @@ class DeviceDetail(models.Model):
 
         hr_att_error_pool = self.env['hr.attendance.import.error']
         errorDataList = hr_att_error_pool.search([('attempt_to_success', '<=', MAX_ATTEMPT_TO_SUCCESS),
-                                              ('import_id', '=', 'Null')], limit=3000, order='id asc')
+                                              ('import_id', '=', None)], order='id asc')
         for row in errorDataList:
             if row.employee_code:
                 emp = hr_employee_pool.search([('device_employee_acc', '=', row.employee_code)], limit=1)
@@ -96,9 +96,13 @@ class DeviceDetail(models.Model):
 
             if preAttData and preAttData.check_out is False:
                 chk_in = self.getDateTimeFromStr(preAttData.check_in)
-                durationInHour = (self.convertDateTime(row.check_out) - chk_in).total_seconds() / 60 / 60
+                durationInHour = (self.getDateTimeFromStr(row.check_out) - chk_in).total_seconds() / 60 / 60
                 if durationInHour <=15 and durationInHour >= 0:
-                    preAttData.write({'check_out': self.convertDateTime(row.check_out), 'worked_hours':durationInHour, 'write_date':datetime.datetime.now(),  'has_error': False})
+                    preAttData.write({'check_out': self.getDateTimeFromStr(row.check_out),
+                                      'worked_hours': durationInHour,
+                                      'write_date': datetime.datetime.now(),
+                                      'has_error': False,
+                                      'attendance_server_id': row.attendance_server_id})
                 else:
                     self.createDataFromError(row, employeeId, hr_att_pool)
             else:
@@ -108,21 +112,23 @@ class DeviceDetail(models.Model):
 
         if row.check_in:
             create_vals = {'employee_id': employeeId,
-                              'check_in': self.convertDateTime(row.check_in),
+                              'check_in': self.getDateTimeFromStr(row.check_in),
                               'create_date': datetime.datetime.now(),
                               'write_date': datetime.datetime.now(),
                               'has_error': True,
                               'manual_attendance_request': False,
-                              'is_system_generated': True}
+                              'is_system_generated': True,
+                              'attendance_server_id': row.attendance_server_id}
         else:
             create_vals = {'employee_id': employeeId,
                               'check_in': None,
-                              'check_out': self.convertDateTime(row.check_out),
+                              'check_out': self.getDateTimeFromStr(row.check_out),
                               'create_date': datetime.datetime.now(),
                               'write_date': datetime.datetime.now(),
                               'has_error': True,
                               'manual_attendance_request': False,
-                              'is_system_generated': True}
+                              'is_system_generated': True,
+                              'attendance_server_id': row.attendance_server_id}
         res = hr_att_pool.create(create_vals)
 
     ############################################################################################################
@@ -224,7 +230,7 @@ class DeviceDetail(models.Model):
 
             for row in att_rows:
                 if self.isValidData(row, deviceInOutCode, employeeIdMap) == False:
-                    self.saveAsError(row, employeeIdMap, deviceInOutCode)
+                    self.saveAsError(row, employeeIdMap, deviceInOutCode, attDevice.id)
                 else:
                     self.storeData(row, deviceInOutCode, employeeIdMap, attDevice.id)
 
@@ -298,7 +304,7 @@ class DeviceDetail(models.Model):
 
 
 
-    def saveAsError(self, row, employeeIdMap, deviceInOutCode):
+    def saveAsError(self, row, employeeIdMap, deviceInOutCode, serverId):
 
         attendance_error_obj = self.env['hr.attendance.import.error']
 
@@ -312,6 +318,8 @@ class DeviceDetail(models.Model):
             error_vals['employee_code'] = employeeIdMap.get(row[0])
         else:
             error_vals['employee_code'] = row[0]
+
+        error_vals['attendance_server_id'] = serverId
 
         attendance_error_obj.create(error_vals)
 
