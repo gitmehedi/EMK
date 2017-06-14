@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+	<data>
+		<template id="report_individual_payslip2">
+			<t t-call="report.external_layout">
+				<t t-call="report.html_container">
+					<t t-name="report.external_layout">
+						<div class="page">
+							<div class="row">
+								<table class="table table-bordered">
+									<thead>
+										<th>Employee</th>
+										<th>Department</th>
+										<th>Designation</th>
+										<!--<th><span t-esc="dates_in_range"></span></th>-->
+										<t t-foreach="dates_in_range" t-as="r">
+											<th>
+												<span t-esc="r['day']"></span> / <span t-esc="r['month']"></span>
+
+											</th>
+										</t>
+
+									</thead>
+
+									  <tbody>
+
+									</tbody>
+
+
+								</table>
+							</div>
+						</div>
+					</t>
+				</t>
+			</t>
+
+		</template>
+	</data>
+</openerp>

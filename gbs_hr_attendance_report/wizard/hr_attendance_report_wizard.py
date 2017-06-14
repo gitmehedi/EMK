@@ -6,12 +6,12 @@ class HrBankSelectionWizard(models.TransientModel):
     check_in_out = fields.Selection([
         ('check_in', 'Check In'),
         ('check_out', 'Check Out'),
-        ], string = 'Check Type', required=True, default="check_in")
+        ], string = 'Check Type', default="check_in")
 
     type = fields.Selection([
         ('department_type', 'Department wise'),
         ('employee_type', 'Employee wise')
-    ], string='Type', required=True)
+    ], string='Type')
 
     department_id = fields.Many2one("hr.department", string="Department", required=False)
     employee_id = fields.Many2one("hr.employee", string="Employee")
@@ -30,5 +30,5 @@ class HrBankSelectionWizard(models.TransientModel):
         data['from_date'] = self.from_date
         data['to_date'] = self.to_date
 
-        return self.env['report'].get_action(self, 'gbs_hr_attendance_report.report_individual_payslip', data=data)
+        return self.env['report'].get_action(self, 'gbs_hr_attendance_report.report_individual_payslip2', data=data)
 

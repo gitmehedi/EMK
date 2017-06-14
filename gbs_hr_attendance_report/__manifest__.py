@@ -9,12 +9,13 @@
     ],
     'data': [
         'report/gbs_hr_attendance_report.xml',
+        'wizard/hr_attendance_duration_wizard_views.xml',
         'report/gbs_hr_attendance_duration_report.xml',
         'report/daily_attendance_report.xml',
         'report/daily_attendance_report_templates.xml',
         'wizard/hr_attendance_report_wizard_views.xml',
         'wizard/daily_attendance_report_wizard_view.xml',
-        'wizard/hr_attendance_duration_wizard_views.xml',
+        'report/gbs_hr_attendance_report_template.xml',
     ],
 
     'summary': 'Generates check in and check out related report of employee(s)',

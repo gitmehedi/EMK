@@ -6,8 +6,8 @@
             string="Check In Out"
             model="hr.attendance"
             report_type="qweb-pdf"
-            file="gbs_hr_attendance_report.report_individual_payslip1"
-            name="gbs_hr_attendance_report.report_individual_payslip1"
+            file="gbs_hr_attendance_report.report_individual_payslip2"
+            name="gbs_hr_attendance_report.report_individual_payslip2"
             menu="False"
         />
 
