@@ -10,6 +10,7 @@ class HrAttendance(models.Model):
 
 
     is_system_generated = fields.Boolean(string='Is System Generated', default=False)
+    attendance_server_id = fields.Integer(string='Server ID', required=False)
     check_in = fields.Datetime(string="Check In", required=False)
 
     @api.depends('check_in', 'check_out')

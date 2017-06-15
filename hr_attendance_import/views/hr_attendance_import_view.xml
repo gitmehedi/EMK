@@ -19,7 +19,7 @@
 			<field name="model">hr.attendance.import</field>
 			<field name="type">form</field>
 			<field name="arch" type="xml">
-				<form string="Import Attendance">
+				<form string="Import Attendance" delete ="0" create = "0">
 				 	<header>
 	                    <button name="hr_attendance_import.hr_earned_leave_encashment_wizard_action_view"
 							states="draft,confirmed" type="action" string="Browse" /> 

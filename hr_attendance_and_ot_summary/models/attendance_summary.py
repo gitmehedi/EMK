@@ -1,5 +1,6 @@
-from openerp import models, fields
+from openerp import models, fields,_
 from openerp import api
+from openerp.exceptions import UserError, ValidationError
 
 class AttendanceSummary(models.Model):
     _name = 'hr.attendance.summary'
@@ -43,3 +44,11 @@ class AttendanceSummary(models.Model):
     def action_done(self):
         for attendance in self:
             self.state = 'approved'
+    # Show a msg for applied & approved state should not be delete
+    @api.multi
+    def unlink(self):
+        for summary in self:
+            if summary.state != 'draft':
+                raise UserError(_('You can not delete this.'))
+            summary.att_summary_lines.unlink()
+        return super(AttendanceSummary,self).unlink()

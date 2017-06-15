@@ -1,13 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>
+
         <report
-            id="custom_report_daily_attendance"
-            model="report.gbs_hr_attendance_report.report_daily_attendance"
-            string="Daily Attendance Report"
+            id="report_daily_att2"
+            string="Dailty Attendance Report"
+            model="hr.attendance"
             report_type="qweb-pdf"
-            name="gbs_hr_attendance_report.report_daily_attendance"
-            file="gbs_hr_attendance_report.report_daily_attendance"
+            file="gbs_hr_attendance_report.report_hr_daily_att"
+            name="gbs_hr_attendance_report.report_hr_daily_att"
+            menu="False"
         />
+
     </data>
 </odoo>

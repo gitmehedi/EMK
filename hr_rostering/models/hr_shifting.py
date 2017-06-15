@@ -1,6 +1,5 @@
-from openerp import fields
-from openerp import api,models,_
-from openerp.exceptions import ValidationError,Warning
+from openerp import api, fields, models, _
+from openerp.exceptions import UserError, ValidationError
 
 
 class HrShifting(models.Model):
@@ -17,6 +16,48 @@ class HrShifting(models.Model):
     # def _check_validation(self):
     #     if (self.hour_from >= self.hour_to) or (self.ot_hour_from >= self.ot_hour_to) or (self.hour_to >= self.ot_hour_from) :
     #         raise Warning(_("OT to can not less then OT from or \n OT from can not less then Work to or \n Work to can not less then Work from"))
+
+
+
+
+class HrResourceCal(models.Model):
+
+    _inherit = ['resource.calendar']
+
+    name = fields.Char(required=True,states={'applied': [('readonly', True)],'approved': [('readonly', True)]})
+    manager = fields.Many2one('res.users', string='Workgroup Manager', default=lambda self: self.env.uid,
+                            states = {'applied': [('readonly', True)], 'approved': [('readonly', True)]})
+    company_id = fields.Many2one('res.company', string='Company',states = {'applied': [('readonly', True)], 'approved': [('readonly', True)]},
+                                 default=lambda self: self.env['res.company']._company_default_get())
+    attendance_ids = fields.One2many('resource.calendar.attendance', 'calendar_id', string='Working Time',copy=True,
+                                     states={'applied': [('readonly', True)], 'approved': [('readonly', True)]})
+
+    state = fields.Selection([
+        ('draft', "Draft"),
+        ('applied', "Applied"),
+        ('approved', "Approved"),
+    ], default='draft')
+
+    @api.multi
+    def action_draft(self):
+        self.state = 'draft'
+
+    @api.multi
+    def action_confirm(self):
+        self.state = 'applied'
+
+    @api.multi
+    def action_done(self):
+        self.state = 'approved'
+
+    @api.multi
+    def unlink(self):
+        for bill in self:
+            if bill.state != 'draft':
+                raise UserError(_('You can not delete this.'))
+            bill.leave_ids.unlink()
+        return super(HrResourceCal, self).unlink()
+
 
 
 class HrEmployeeShifting(models.Model):

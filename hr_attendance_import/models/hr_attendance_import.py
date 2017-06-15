@@ -1,6 +1,7 @@
-from openerp import api,fields,models
-from openerp.exceptions import ValidationError,Warning
 from datetime import date
+from openerp import models, fields,_
+from openerp import api
+from openerp.exceptions import UserError, ValidationError
 
 
 class AttendanceImport(models.Model):
@@ -50,6 +51,13 @@ class AttendanceImport(models.Model):
     
     @api.multi    
     def action_confirm(self):
-        self.state = 'confirmed' 
-                        
-    
+        self.state = 'confirmed'
+
+    # Show a msg for applied & approved state should not be delete
+    @api.multi
+    def unlink(self):
+        for imp in self:
+            if imp.state != 'draft':
+                raise UserError(_('You can not delete this.'))
+            imp.lines.unlink()
+        return super(AttendanceImport, self).unlink()

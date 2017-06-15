@@ -4,7 +4,7 @@
 		
 		<menuitem id="hr_attendance.menu_hr_attendance_root" name="Attendances" sequence="90" groups="hr.group_hr_attendance,base.group_user" web_icon="hr_attendance,static/description/icon.png"/>
 		
-		<menuitem id="hr_attendance.menu_hr_attendance_manage_attendances" name="Manage Attendances" parent="hr_attendance.menu_hr_attendance_root" sequence="20" groups="hr_attendance.group_hr_attendance_user,base.group_user"/>
+		<menuitem id="hr_attendance.menu_hr_attendance_manage_attendances" name="Manage Attendances" parent="hr_attendance.menu_hr_attendance_root" sequence="20" groups="hr.group_hr_manager"/>
 		
 		<!-- Tree View -->
 		<record id="hr_manual_attendance_tree" model="ir.ui.view">
@@ -27,12 +27,12 @@
 			<field name="model">hr.manual.attendance</field>
 			<field name="type">form</field>
 			<field name="arch" type="xml">
-				<form string="HR Manual Attendance">
+				<form string="HR Manual Attendance" delete ="0" create = "0">
 				 	<header>
-	                    <button string="Confirm" name="action_confirm" states="draft" type="object" class="oe_highlight"/>
-                    	<button string="Approve" name="action_approve" states="confirm" type="object" class="oe_highlight"/>
-                     	<button string="Refuse" name="action_refuse" states="confirm" type="object" />
-                    	<button string="Reset to Draft" name="action_draft" type="object" states="confirm"/> 
+	                    <button string="Confirm" name="action_confirm" states="draft" type="object" class="oe_highlight" />
+                    	<button string="Approve" name="action_approve" states="confirm" type="object" class="oe_highlight" groups="hr.group_hr_user"/>
+                     	<button string="Refuse" name="action_refuse" states="confirm" type="object" groups="hr.group_hr_user"/>
+                    	<button string="Reset to Draft" name="action_draft" type="object" states="confirm" groups="hr.group_hr_user"/>
                     	<field name="state" widget="statusbar" statusbar_visible="draft,confirm,validate"/>                    	
                 	</header>				
                 	
@@ -40,7 +40,7 @@
 						<group>
 							<group>
 								<field name="employee_id"   attrs="{'readonly':['|', ('state','=','validate'),('state','=','confirm')]}"/>
-								<field name="department_id" attrs="{'readonly':['|', ('state','=','validate'),('state','=','confirm')]}"/>
+								<field name="department_id" attrs="{'readonly':['|', ('state','=','validate'),('state','=','confirm'),('state','=','draft')]}" readonly="1" />
 							</group>
 							<group>
 								<field name="sign_type" attrs="{'readonly':['|', ('state','=','validate'),('state','=','confirm')]}"/>
@@ -67,9 +67,29 @@
 			<field name="res_model">hr.manual.attendance</field>
 			<field name="view_mode">tree,form</field>
 		</record>
-		
+
+		<record id="hr_my_attendance" model="ir.actions.act_window">
+			<field name="name">My Attendances</field>
+			<field name="res_model">hr.manual.attendance</field>
+			<field name="domain">[('employee_id.user_id', '=', uid)]</field>
+			<field name="view_mode">tree,form</field>
+		</record>
+
+		<record id="hr_pandding_attendance" model="ir.actions.act_window">
+			<field name="name">Pandding Attendances</field>
+			<field name="res_model">hr.manual.attendance</field>
+			<field name="domain">[('state','in',['confirm'])]</field>
+			<field name="view_mode">tree,form</field>
+		</record>
+
 		<!-- Menu Item -->
-		<menuitem id="menu_hr_manual_attendance" name="Manual Attendances" parent="hr_attendance.menu_hr_attendance_manage_attendances" 
-					groups="hr.group_hr_attendance,base.group_user" sequence="7" action="hr_manual_attendance" />		
+		<menuitem id="menu_hr_manual_attendance" name="Manual Attendances" parent="hr_attendance.menu_hr_attendance_root"
+					 sequence="15"/>
+		<menuitem id="menu_my_attendance" name="My Attendances" parent="menu_hr_manual_attendance"
+					 sequence="5" action="hr_my_attendance" />
+		<menuitem id="menu_pending_attendance" name="Pending Attendances" parent="menu_hr_manual_attendance"
+					 sequence="10" action="hr_pandding_attendance" />
+		<menuitem id="menu_manual_attendance" name="Manual Attendances" parent="menu_hr_manual_attendance"
+					 sequence="15" action="hr_manual_attendance" />
 	</data>
 </openerp>

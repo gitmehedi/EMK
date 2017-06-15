@@ -10,32 +10,16 @@
 				<form string="Daily Attendance">
 					<sheet>
 						<group>
-							<label for="report_type" />
-							<div>
-								<field name="report_type" class="oe_inline" placeholder="Please Select" />
-							</div>
-							<label for="department_id" attrs="{'invisible': [('report_type', '!=', 'department_type')]}" />
-							<div>
-								<field name="department_id" class="oe_inline" placeholder="Please Select"
-									   options="{'no_quick_create': True, 'no_create_edit': True, 'no_open': True}"
-                                       attrs="{'invisible': [('report_type', '!=', 'department_type')]}" />
-							</div>
-							<label for="employee_id" attrs="{'invisible': [('report_type', '!=', 'employee_type')]}" />
-							<div>
-								<field name="employee_id" class="oe_inline" placeholder="Please Select"
-									   options="{'no_create_edit': True, 'no_open': True}"
-									   attrs="{'invisible': [('report_type', '!=', 'employee_type')]}" />
-							</div>
-							<label for="date" />
-							<div>
-								<field name="date" class="oe_inline" />
-							</div>
-						</group>
+							<field name="report_type" placeholder="Please Select" />
+							<field name="department_id" options="{'no_open': True}"
+								   attrs="{'invisible': [('report_type', '!=', 'department_type')]}" />
+							<field name="employee_id" options="{'no_open': True}"
+								   attrs="{'invisible': [('report_type', '!=', 'employee_type')]}" />
+							<field name="date" options="{'no_create': True, 'no_create_edit':True}" />
+                    	</group>
 						<footer>
-							<footer>
-                                <button name="check_report" type="object" string="Print" class="oe_highlight" default_focus="1" />
-								<button string="Cancel" class="btn btn-sm btn-default o_form_button_cancel" special="cancel"/>
-                			</footer>
+							<button name ="process_report" string="Print" type="object" class="oe_highlight"  />
+                    		<button special="cancel" string="Cancel" />
 						</footer>
 					</sheet>
 				</form>
@@ -53,6 +37,8 @@
 		</record>
 
         <!--Menu Item-->
-		<menuitem id="daily_attendance_menu" name="Daily Attendance" action="daily_attendance_action" />
+		<menuitem id="daily_attendance_menu" name="Daily Attendance"
+				  parent="hr_attendance.menu_hr_attendance_manage_attendances"
+				  action="daily_attendance_action" />
     </data>
 </openerp>
