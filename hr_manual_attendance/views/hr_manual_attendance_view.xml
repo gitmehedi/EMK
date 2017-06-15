@@ -40,7 +40,7 @@
 						<group>
 							<group>
 								<field name="employee_id"   attrs="{'readonly':['|', ('state','=','validate'),('state','=','confirm')]}"/>
-								<field name="department_id" attrs="{'readonly':['|', ('state','=','validate'),('state','=','confirm')]}"/>
+								<field name="department_id" attrs="{'readonly':['|', ('state','=','validate'),('state','=','confirm'),('state','=','draft')]}"/>
 							</group>
 							<group>
 								<field name="sign_type" attrs="{'readonly':['|', ('state','=','validate'),('state','=','confirm')]}"/>
@@ -70,6 +70,6 @@
 		
 		<!-- Menu Item -->
 		<menuitem id="menu_hr_manual_attendance" name="Manual Attendances" parent="hr_attendance.menu_hr_attendance_manage_attendances" 
-					groups="hr.group_hr_attendance,base.group_user" sequence="7" action="hr_manual_attendance" />		
+					 sequence="7" action="hr_manual_attendance" />
 	</data>
 </openerp>
