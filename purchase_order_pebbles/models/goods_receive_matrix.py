@@ -93,7 +93,8 @@ class GoodsReceiveMatrix(models.Model):
                  """ compute the matrix lines and create them """
                  vals = self._get_receive_matrix_lines(matrix)
                  for product_line in vals:
-                     matrix_line_obj.create(product_line)
+                     # if product_line['product_id']:
+                    matrix_line_obj.create(product_line)
          return self.write({})
 
     @api.multi
@@ -110,6 +111,7 @@ class GoodsReceiveMatrix(models.Model):
              product_line['size_variant_id']= objproduct.size_value_id.id
              product_line['color_variant_id']= objproduct.color_value_id.id
              product_line['product_uom_id'] = product.uom_id.id
+             product_line['status'] = objproduct.is_active
 
              vals.append(product_line)
 

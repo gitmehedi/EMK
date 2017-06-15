@@ -40,6 +40,7 @@ class StockRequisitionTransfer(models.Model):
                                                             ('location_id', '=', self.requested_id.id)])
 
                 sumval = sum([val.qty for val in quant])
+                print product.id ,"----", sumval
 
                 if product.id in list:
                     for k in product_line_ids:

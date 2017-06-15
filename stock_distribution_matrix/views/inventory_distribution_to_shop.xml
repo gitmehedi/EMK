@@ -1,143 +1,154 @@
 <openerp>
-	<data>
-		<record id="stock_distribution_to_shop_notofication_view" model="ir.ui.view">
-			<field name="name">stock.distribution.to.shop.notification.form</field>
-			<field name="model">stock.distribution.to.shop.notification</field>
-			<field name="arch" type="xml">
-				<form string="Set Distribution Notification">
-					<group>
-						<field name="notification_date" />
-					</group>
+    <data>
+        <record id="stock_distribution_to_shop_notofication_view" model="ir.ui.view">
+            <field name="name">stock.distribution.to.shop.notification.form</field>
+            <field name="model">stock.distribution.to.shop.notification</field>
+            <field name="arch" type="xml">
+                <form string="Set Distribution Notification">
+                    <group>
+                        <field name="notification_date"/>
+                    </group>
 
-					<footer>
-						<button string="Confirm" name="action_set_notification"
-							type="object" default_focus="1" class="oe_highlight" />
-						or
-						<button string="Cancel" class="oe_link" special="cancel" />
-					</footer>
-				</form>
-			</field>
-		</record>
+                    <footer>
+                        <button string="Confirm" name="action_set_notification"
+                                type="object" default_focus="1" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
 
-		<act_window id="action_stock_distribution_notification"
-			multi="True" key2="client_action_multi" name="Next Notification"
-			res_model="stock.distribution.to.shop.notification" src_model="stock.distribution.to.shop"
-			view_mode="form" target="new" view_type="form" />
+        <act_window id="action_stock_distribution_notification"
+                    multi="True" key2="client_action_multi" name="Next Notification"
+                    res_model="stock.distribution.to.shop.notification" src_model="stock.distribution.to.shop"
+                    view_mode="form" target="new" view_type="form"/>
 
-		<record model="ir.ui.view" id="stock_distribution_to_shop_tree_view">
-			<field name="name">stock.distribution.to.shop.tree</field>
-			<field name="model">stock.distribution.to.shop</field>
-			<field name="type">tree</field>
-			<field name="arch" type="xml">
-				<tree string="Distribution_tree" colors="blue:state == 'draft'">
-					<field name="name" />
-					<field name="receive_date" />
-					<field name="product_tmp_id" string='Product' />
-					<field name="state" />
-				</tree>
-			</field>
-		</record>
+        <record model="ir.ui.view" id="stock_distribution_to_shop_tree_view">
+            <field name="name">stock.distribution.to.shop.tree</field>
+            <field name="model">stock.distribution.to.shop</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Distribution_tree" colors="blue:state == 'draft'">
+                    <field name="name"/>
+                    <field name="receive_date"/>
+                    <field name="product_tmp_id" string='Product'/>
+                    <field name="state"/>
+                </tree>
+            </field>
+        </record>
 
-		<record model="ir.ui.view" id="stock_distribution_to_shop_form_view">
-			<field name="name">stock.distribution.to.shop.form</field>
-			<field name="model">stock.distribution.to.shop</field>
-			<field name="type">form</field>
-			<field name="arch" type="xml">
-				<form string="Distribution_form" duplicate="false" copy="false">
-					<header>
-						<field name="id" invisible="1" />
-						<!-- <field name="edit" attrs="{'invisible:[('state','=','transfer')]'}"/> -->
-						<button name="action_generate_distribution_matrix" type="object"
-							states="draft" string="Generate " class="oe_highlight"
-							attrs="{'invisible': ['|',('id', '=', False),('state', 'not in', 'draft')]}" />
-						<button name="action_confirm" states="generate" string="Confirm"
-							type="object" class="oe_highlight" />
-						<button name="action_transfer" type="object" states="confirm"
-							string="Transfer " class="oe_highlight" />
+        <record model="ir.ui.view" id="stock_distribution_to_shop_form_view">
+            <field name="name">stock.distribution.to.shop.form</field>
+            <field name="model">stock.distribution.to.shop</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Distribution_form" duplicate="false" copy="false">
+                    <header>
+                        <field name="id" invisible="1"/>
+                        <!-- <field name="edit" attrs="{'invisible:[('state','=','transfer')]'}"/> -->
+                        <button name="action_generate_distribution_matrix" type="object"
+                                states="draft" string="Generate " class="oe_highlight"
+                                attrs="{'invisible': ['|',('id', '=', False),('state', 'not in', 'draft')]}"/>
+                        <button name="action_confirm" states="generate" string="Confirm"
+                                type="object" class="oe_highlight"/>
+                        <button name="action_transfer" type="object" states="confirm"
+                                string="Transfer " class="oe_highlight"/>
 
-						<field name="state" widget="statusbar" />
-					</header>
-					<sheet>
-						<group>
-							<field name="name" />
-							<field name="product_tmp_id"
-								options="{'no_open': 1,'no_create': 1, 'no_create_edit': 1}"
-								attrs="{'readonly': [('id', '!=', False)]}" />
-							<field name="warehoue_id"
-								options="{'no_open': 1,'no_create': 1, 'no_create_edit': 1}"
-								attrs="{'readonly': [('id', '!=', False)]}" />
-						</group>
-						<notebook>
-							<page string="Distribution Matrix" attrs="{'invisible':[('state','=','draft')]}">
-								<field name="stock_distribution_lines_ids" widget="x2many_2d_distribution_matrix"
-									field_x_axis="pos_shop_id" field_y_axis="product_id"
-									field_value="distribute_qty"
-									attrs="{'readonly':['|',('state','=','confirm'),('state','=','transfer')]}" />
-							</page>
-						</notebook>
-					</sheet>
-				</form>
-			</field>
-		</record>
+                        <field name="state" widget="statusbar"/>
+                    </header>
+                    <sheet>
+                        <div class="oe_title">
+                            <h1>
+                                <label string="Distribution Reference: "  />
+                                <field name="name" class="oe_inline" readonly="1"/>
+                            </h1>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="product_tmp_id"
+                                       options="{'no_open': 1,'no_create': 1, 'no_create_edit': 1}"
+                                       attrs="{'readonly': [('id', '!=', False)]}"/>
+                            </group>
+                            <group>
+                                <field name="warehoue_id"
+                                       options="{'no_open': 1,'no_create': 1, 'no_create_edit': 1}"
+                                       attrs="{'readonly': [('id', '!=', False)]}"/>
+                            </group>
+                        </group>
+                        <notebook attrs="{'invisible':[('state','=','draft')]}">
+                            <page string="Distribution Matrix" >
+                                <field name="stock_distribution_lines_ids" widget="x2many_2d_distribution_matrix"
+                                       field_x_axis="pos_shop_id" field_y_axis="product_id"
+                                       field_value="distribute_qty"
+                                       attrs="{'readonly':['|',('state','=','confirm'),('state','=','transfer')]}"/>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
 
-		<record id="stock_distribution_search_view" model="ir.ui.view">
-			<field name="name">stock.distribution.to.shop.search</field>
-			<field name="model">stock.distribution.to.shop</field>
-			<field name="arch" type="xml">
-				<search string="Search">
-					<field name="name" string="Ref#" filter_domain="[('name','ilike',self)]" />
-					<separator />
-					<field name="receive_date" string="Receive Date"
-						filter_domain="[('receive_date','ilike',self)]" />
-					<separator />
-					<field name="state" filter_domain="[('state','ilike',self)]" />
-					<separator />
-					
-					<filter string="Distribute Soon" name ="distribute_soon"
-						domain="[('notification_date','&lt;=',context_today().strftime('%Y-%m-%d') )]" />
+        <record id="stock_distribution_search_view" model="ir.ui.view">
+            <field name="name">stock.distribution.to.shop.search</field>
+            <field name="model">stock.distribution.to.shop</field>
+            <field name="arch" type="xml">
+                <search string="Search">
+                    <field name="name" string="Ref#" filter_domain="[('name','ilike',self)]"/>
+                    <separator/>
+                    <field name="receive_date" string="Receive Date"
+                           filter_domain="[('receive_date','ilike',self)]"/>
+                    <separator/>
+                    <field name="state" filter_domain="[('state','ilike',self)]"/>
+                    <separator/>
 
-					<filter string="Waiting" domain="[('state','=','draft')]"
-						icon="terp-camera_test" />
-					<filter string="Generate" domain="[('state','=','generate')]"
-						icon="terp-camera_test" />
-					<filter string="Confirm" domain="[('state','=','confirm')]"
-						icon="terp-camera_test" />
-					<filter string="Closed" domain="[('state','=','transfer')]"
-						icon="terp-dialog-close" />
+                    <filter string="Distribute Soon" name="distribute_soon"
+                            domain="[('notification_date','&lt;=',context_today().strftime('%Y-%m-%d') )]"/>
 
-					<group expand="0" string="Group By">
-						<filter string="Status" context="{'group_by': 'state'}"
-							icon="terp-stock_effects-object-colorize" />
-					</group>
+                    <filter string="Waiting" domain="[('state','=','draft')]"
+                            icon="terp-camera_test"/>
+                    <filter string="Generate" domain="[('state','=','generate')]"
+                            icon="terp-camera_test"/>
+                    <filter string="Confirm" domain="[('state','=','confirm')]"
+                            icon="terp-camera_test"/>
+                    <filter string="Closed" domain="[('state','=','transfer')]"
+                            icon="terp-dialog-close"/>
 
-				</search>
-			</field>
-		</record>
+                    <group expand="0" string="Group By">
+                        <filter string="Status" context="{'group_by': 'state'}"
+                                icon="terp-stock_effects-object-colorize"/>
+                    </group>
 
-		<record id="seq_type_distribution_transfer" model="ir.sequence.type">
-			<field name="name">Stock Distribution</field>
-			<field name="code">stock_distribution</field>
-		</record>
-		<record id="seq_distribution_transfer" model="ir.sequence">
-			<field name="name">Stock Distribution</field>
-			<field name="code">stock_distribution</field>
-			<field name="prefix">SD-</field>
-			<field name="padding">10</field>
-		</record>
+                </search>
+            </field>
+        </record>
 
-		<record model="ir.actions.act_window" id="action_stock_distribution_to_shop_tree_view">
-			<field name="name">Stock Distribution</field>
-			<field name="type">ir.actions.act_window</field>
-			<field name="res_model">stock.distribution.to.shop</field>
-			<field name="view_type">form</field>
-			<field name="view_mode">tree,form</field>
-			<field name='context'>{'search_default_state':'draft','search_default_distribute_soon':1}</field>
-			<field name="view_id" ref="stock_distribution_to_shop_tree_view" />
-		</record>
+        <record id="seq_type_distribution_transfer" model="ir.sequence.type">
+            <field name="name">Stock Distribution</field>
+            <field name="code">stock_distribution</field>
+        </record>
+        <record id="seq_distribution_transfer" model="ir.sequence">
+            <field name="name">Stock Distribution</field>
+            <field name="code">stock_distribution</field>
+            <field name="prefix">SD-</field>
+            <field name="padding">10</field>
+        </record>
 
-		<menuitem name="Stock Distribution" id="menu_stock_distribution_maxtix"
-			parent="stock.menu_stock_warehouse_mgmt" action="action_stock_distribution_to_shop_tree_view" sequence="253" groups='stock.group_stock_manager' />
-	    <menuitem id="stock.menu_stock_warehouse_mgmt" name="Operations" parent="stock.menu_stock_root" sequence="1" groups='stock.group_stock_manager'/>
+        <record model="ir.actions.act_window" id="action_stock_distribution_to_shop_tree_view">
+            <field name="name">Stock Distribution</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">stock.distribution.to.shop</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name='context'>{'search_default_state':'draft','search_default_distribute_soon':1}</field>
+            <field name="view_id" ref="stock_distribution_to_shop_tree_view"/>
+        </record>
 
-	</data>
+        <menuitem name="Stock Distribution" id="menu_stock_distribution_maxtix"
+                  parent="stock.menu_stock_warehouse_mgmt" action="action_stock_distribution_to_shop_tree_view"
+                  sequence="253" groups='stock.group_stock_manager'/>
+        <menuitem id="stock.menu_stock_warehouse_mgmt" name="Operations" parent="stock.menu_stock_root" sequence="1"
+                  groups='stock.group_stock_manager'/>
+
+    </data>
 </openerp>

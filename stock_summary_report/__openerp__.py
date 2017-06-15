@@ -28,7 +28,7 @@
     'description': """
     """,
     'author': 'OCA, Bangladesh',
-    'depends': ['stock_extend', 'stock'],
+    'depends': ['stock'],
     'data': [
              'wizard/stock_report_wizard_view.xml',
              'report/stock_issue_report.xml',

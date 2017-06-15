@@ -37,10 +37,10 @@
 			<field name="target">new</field>
 		</record>
 
-		<menuitem id="menu_action_wizard_stock_summary_report_history"
-			action="action_wizard_stock_summary_report_history" 
-			parent="stock_extend.sub_group_menu_indent_stock_report"
-			sequence="4" />
+		<!--<menuitem id="menu_action_wizard_stock_summary_report_history"-->
+			<!--action="action_wizard_stock_summary_report_history" -->
+			<!--parent="stock_extend.sub_group_menu_indent_stock_report"-->
+			<!--sequence="4" />-->
         
 	</data>
 </openerp>

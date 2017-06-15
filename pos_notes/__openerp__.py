@@ -27,17 +27,16 @@
     'summary': '',
     'description': """
         - 
-        
-    """,
+     """,
     'author': 'Tahir Aduragba',
-   
     'depends': ['point_of_sale'],
-    
+    'data': [
+        'views/templates.xml'
+    ],
+    'qweb': [
+        'static/src/xml/pos_notes.xml'
+    ],
     'installable': True,
-    
-    'data': ['templates.xml'],
-    
-    'qweb': ['static/src/xml/pos_notes.xml'],
- 
+    'application': True,
     'auto_install': False,
 }

@@ -65,7 +65,15 @@ openerp.pos_notes = function(instance){
 				note: this.get_note(),
             };
         },
+		checkDiscount: function () {
+            if(this.getDiscountTotal){
+                return true;
+            }else{
+                return false;
+            }
+        },
 		get_note: function(){
+            alert(this.get('note'));
 			return this.get('note');
 		},
 		set_note: function(note){
