@@ -12,12 +12,12 @@
 						<field name="from_date"/>
 						<field name="to_date"/>
 						<field name="type" placeholder="Please Select" />
-						<!--<field name="department_id" placeholder="Please Select"-->
-									   <!--options="{'no_quick_create': True, 'no_create_edit': True, 'no_open': True}"-->
-									   <!--attrs="{'invisible': [('type', '!=', 'department_type')]}" />-->
-						<!--<field name="employee_id" placeholder="Please Select"-->
-									   <!--options="{'no_create_edit': True, 'no_open': True}"-->
-									   <!--attrs="{'invisible': [('type', '!=', 'employee_type')]}" />-->
+						<field name="department_id" placeholder="Please Select"
+									   options="{'no_quick_create': True, 'no_create_edit': True, 'no_open': True}"
+									   attrs="{'invisible': [('type', '!=', 'department_type')]}" />
+						<field name="employee_id" placeholder="Please Select"
+									   options="{'no_create_edit': True, 'no_open': True}"
+									   attrs="{'invisible': [('type', '!=', 'employee_type')]}" />
                     </group>
 				</sheet>
 				<footer>

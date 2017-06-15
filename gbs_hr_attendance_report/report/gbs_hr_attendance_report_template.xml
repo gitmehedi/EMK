@@ -12,10 +12,9 @@
 										<th>Employee</th>
 										<th>Department</th>
 										<th>Designation</th>
-										<!--<th><span t-esc="dates_in_range"></span></th>-->
-										<t t-foreach="dates_in_range" t-as="r">
+										<t t-foreach="all_val_list[0]" t-as="r">
 											<th>
-												<span t-esc="r['day']"></span> / <span t-esc="r['month']"></span>
+												<span t-esc="r"></span>
 
 											</th>
 										</t>
@@ -23,6 +22,26 @@
 									</thead>
 
 									  <tbody>
+										  <t t-foreach="all_val_list" t-as="val">
+											  <th>
+												<span t-esc="val['emp_name']"></span>
+											  </th>
+
+											  <th>
+												<span t-esc="val['designation']"></span>
+											  </th>
+
+											  <th>
+												<span t-esc="val['dept']"></span>
+											  </th>
+
+											 <t t-foreach="all_val_list[0]" t-as="r">
+											<th>
+												<span t-esc="r_value"></span>
+											</th>
+										</t>
+										</t>
+
 
 									</tbody>
 
