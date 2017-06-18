@@ -79,8 +79,7 @@
 		<!-- Menu Item -->
 		<menuitem id="menu_hr_shift_alter" 
 				  name="Alter Rostering"
-				  parent="hr_attendance.menu_hr_attendance_manage_attendances" 
-				  groups="hr_attendance.group_hr_attendance_user,base.group_user" 
+				  parent="hr_attendance.menu_hr_attendance_manage_attendances"
 				  sequence="7" action="hr_shift_alter_action" 
 				  />	
 	</data>
