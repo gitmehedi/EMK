@@ -8,6 +8,7 @@
         'hr_attendance', 'hr', 'gbs_hr_calendar',
     ],
     'data': [
+        'report/report_paperformat.xml',
         'report/gbs_hr_attendance_report.xml',
         'wizard/hr_attendance_duration_wizard_views.xml',
         'report/gbs_hr_attendance_duration_report.xml',

@@ -94,9 +94,11 @@ class GbsHrAttendanceDurationCalc(models.AbstractModel):
             #     res['check_in_data'] = check_in_data
 
             all_val_list.append(res)
+            print all_val_list
 
         docargs = {
             'all_val_list': all_val_list,
+            'dynamic_col_list': dynamic_col_list,
             #'dyc_list': dyc_list,
         }
 

@@ -21,5 +21,9 @@
             menu="False"
         />
 
+         <record id="report_individual_paslips1" model="ir.actions.report.xml">
+            <field name="paperformat_id" ref="gbs_hr_attendance_report.paperformat_hrsummary"/>
+        </record>
+
     </data>
 </odoo>
