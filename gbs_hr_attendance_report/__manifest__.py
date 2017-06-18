@@ -5,9 +5,13 @@
     'category': 'attendance',
     'version': '1.0',
     'depends': [
-        'hr_attendance', 'hr', 'gbs_hr_calendar',
+        'hr_attendance',
+        'hr',
+        'gbs_hr_calendar',
+        'gbs_hr_employee_sequence'
     ],
     'data': [
+        'report/report_paperformat.xml',
         'report/gbs_hr_attendance_report.xml',
         'wizard/hr_attendance_duration_wizard_views.xml',
         'report/gbs_hr_attendance_duration_report.xml',

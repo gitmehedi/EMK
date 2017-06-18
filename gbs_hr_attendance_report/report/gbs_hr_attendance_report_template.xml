@@ -2,50 +2,48 @@
 <openerp>
 	<data>
 		<template id="report_individual_payslip2">
-			<t t-call="report.external_layout">
+			<t t-call="report.internal_layout">
 				<t t-call="report.html_container">
 					<t t-name="report.external_layout">
 						<div class="page">
 							<div class="row">
+								<h3>Attendance Report for  <span t-esc="check_type_friendly_str "></span> </h3>
 								<table class="table table-bordered">
 									<thead>
-										<th>Employee</th>
+										<th>Name</th>
 										<th>Department</th>
 										<th>Designation</th>
-										<t t-foreach="all_val_list[0]" t-as="r">
-											<th>
-												<span t-esc="r"></span>
 
+										<t t-foreach="dynamic_col_list" t-as="c">
+											<th>
+												<span t-esc="c"></span>
 											</th>
 										</t>
 
 									</thead>
 
 									  <tbody>
-										  <t t-foreach="all_val_list" t-as="val">
-											  <th>
-												<span t-esc="val['emp_name']"></span>
-											  </th>
+										  <t t-foreach="all_val_list" t-as="emp">
+											  <tr>
+												  <td>
+													  <span t-esc="emp['emp_name']"></span>
+												  </td>
+												  <td>
+													  <span t-esc="emp['dept']"></span>
+												  </td>
+												  <td>
+												  	  <span t-esc="emp['designation']"></span>
+												  </td>
 
-											  <th>
-												<span t-esc="val['designation']"></span>
-											  </th>
+												  <t t-foreach="dynamic_col_list" t-as="c">
+													  <td class="text-right">
+														  <span t-esc="emp[c]"></span>
+													  </td>
+												  </t>
 
-											  <th>
-												<span t-esc="val['dept']"></span>
-											  </th>
-
-											 <t t-foreach="all_val_list[0]" t-as="r">
-											<th>
-												<span t-esc="r_value"></span>
-											</th>
-										</t>
-										</t>
-
-
+											  </tr>
+											</t>
 									</tbody>
-
-
 								</table>
 							</div>
 						</div>

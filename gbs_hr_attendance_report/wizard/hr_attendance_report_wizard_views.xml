@@ -29,7 +29,7 @@
 		</record>
 
 		<record id="action_hr_attendance_report_wizard" model="ir.actions.act_window">
-			<field name="name">Select Sign Type</field>
+			<field name="name">Attendance Report Generation</field>
 			<field name="type">ir.actions.act_window</field>
 			<field name="res_model">hr.attendance.report.wizard</field>
 			<field name="view_type">form</field>
@@ -37,9 +37,19 @@
 			<field name="target">new</field>
 		</record>
 
-		<menuitem id="attendance_report_menu" name="Attendance Report"
-				  parent="hr_attendance.menu_hr_attendance_manage_attendances"
-                  action="action_hr_attendance_report_wizard" />
+		<menuitem id="attendance_report_menu"
+				  name="Attendance Report"
+				  parent="hr_attendance.menu_hr_attendance_report"
+                  action="action_hr_attendance_report_wizard"
+		/>
+
+		<menuitem id="menu_hr_attendance_report_custom"
+				  name="Attendance Analysis"
+				  parent="hr_attendance.menu_hr_attendance_report"
+				  sequence="30"
+				  groups="hr_attendance.group_hr_attendance_user"
+				  action="hr_attendance.hr_attendance_action_graph"
+		/>
 
 	</data>
 </openerp>

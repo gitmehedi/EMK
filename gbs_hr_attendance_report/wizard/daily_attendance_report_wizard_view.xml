@@ -37,8 +37,8 @@
 		</record>
 
         <!--Menu Item-->
-		<menuitem id="daily_attendance_menu" name="Daily Attendance"
-				  parent="hr_attendance.menu_hr_attendance_manage_attendances"
-				  action="daily_attendance_action" />
+		<!--<menuitem id="daily_attendance_menu" name="Daily Attendance"-->
+				  <!--parent="hr_attendance.menu_hr_attendance_manage_attendances"-->
+				  <!--action="daily_attendance_action" />-->
     </data>
 </openerp>
