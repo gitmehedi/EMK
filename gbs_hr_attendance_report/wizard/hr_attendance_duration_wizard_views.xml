@@ -28,9 +28,9 @@
 			<field name="target">new</field>
 		</record>
 
-		<menuitem id="attendance_duration_menu" name="Attendance Duration"
-				  parent="hr_attendance.menu_hr_attendance_manage_attendances"
-                  action="action_hr_attendance_duration_report_wizard" />
+		<!--<menuitem id="attendance_duration_menu" name="Attendance Duration"-->
+				  <!--parent="hr_attendance.menu_hr_attendance_manage_attendances"-->
+                  <!--action="action_hr_attendance_duration_report_wizard" />-->
 		
 	</data>
 </openerp>

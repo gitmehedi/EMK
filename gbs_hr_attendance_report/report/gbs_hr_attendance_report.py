@@ -2,9 +2,8 @@ from openerp import api, fields, models
 from datetime import date, datetime
 from datetime import timedelta
 
-class GbsHrAttendanceDurationCalc(models.AbstractModel):
+class GbsHeAttendanceReport(models.AbstractModel):
     _name = 'report.gbs_hr_attendance_report.report_individual_payslip2'
-
 
     ###
     # Process Check In data
@@ -51,8 +50,6 @@ class GbsHrAttendanceDurationCalc(models.AbstractModel):
             from_date += timedelta(days=1)
 
         return dynamic_col
-
-
 
     @api.model
     def render_html(self, docids, data=None):
@@ -103,7 +100,6 @@ class GbsHrAttendanceDurationCalc(models.AbstractModel):
             all_val_list.append(res)
             emp_sort_list = all_val_list
             emp_sort_list = sorted(emp_sort_list, key=lambda k: k['emp_seq'])
-
 
         docargs = {
             'all_val_list': emp_sort_list,
