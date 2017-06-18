@@ -75,12 +75,21 @@
 			<field name="res_model">hr.shift.alter</field>
 			<field name="view_mode">tree,form</field>
 		</record>
+
+		<record id="hr_my_shift_alter" model="ir.actions.act_window">
+			<field name="name">My Shift Alter</field>
+			<field name="res_model">hr.shift.alter</field>
+			<field name="domain">[('employee_id.user_id', '=', uid)]</field>
+			<field name="view_mode">tree,form</field>
+		</record>
+
 		
 		<!-- Menu Item -->
-		<menuitem id="menu_hr_shift_alter" 
-				  name="Alter Rostering"
-				  parent="hr_attendance.menu_hr_attendance_manage_attendances"
-				  sequence="7" action="hr_shift_alter_action" 
-				  />	
+		<menuitem id="menu_hr_alter" name="Alter Rostering" parent="hr_attendance.menu_hr_attendance_root"
+					 sequence="16"/>
+		<menuitem id="menu_hr_my_alter" name="My Alter Rostering" parent="menu_hr_alter"
+					 sequence="5" action="hr_my_shift_alter" />
+		<menuitem id="menu_hr_sh_alter" name="Alter Rostering" parent="menu_hr_alter"
+					 sequence="10" action="hr_shift_alter_action" groups="hr.group_hr_user"/>
 	</data>
 </openerp>
