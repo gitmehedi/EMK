@@ -18,16 +18,20 @@ class GbsHrAttendanceDurationCalc(models.AbstractModel):
             else:
                 return ''
 
-    def process_checkin_data_deptwise(self, min_check_in, max_checkin, department_id):
+    def process_checkin_data_deptwise(self, min_check_in, department_id):
         if(department_id is not None):
             query = """SELECT min(check_in) FROM hr_attendance
-                                                     WHERE department_id=%s
+                                                     WHERE employee_id=%s
                                                      AND check_in > %s
-                                                     GROUP BY department_id"""
+                                                     GROUP BY employee_id"""
 
             self._cr.execute(query, tuple([department_id, min_check_in]))
 
-        return self._cr.fetchall()
+            result = self._cr.fetchall()
+            if len(result) > 0:
+                return result[0]
+            else:
+                return ''
 
     def dynamic_col_list(self, dyc, from_date, to_date):
 
@@ -81,8 +85,13 @@ class GbsHrAttendanceDurationCalc(models.AbstractModel):
             res['dept'] = e.department_id.name
 
             for dyc in dynamic_col_list:
-                result = str(self.process_checkin_data_empwise(dyc, e.id))
-                res[dyc] = result[13:18]
+                if(check_in_out == 'check_in'):
+                    if(type == 'employee_type'):
+                        result = str(self.process_checkin_data_empwise(dyc, e.id))
+                        res[dyc] = result[13:18]
+                    elif (type == 'department_type'):
+                        result = str(self.process_checkin_data_deptwise(dyc, e.id))
+                        res[dyc] = result[13:18]
 
 
             # if (check_in_out == 'check_in'):
