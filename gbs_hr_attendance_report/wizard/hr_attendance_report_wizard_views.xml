@@ -41,5 +41,8 @@
 				  parent="hr_attendance.menu_hr_attendance_manage_attendances"
                   action="action_hr_attendance_report_wizard" />
 
+
+		    <!--<menuitem id="menu_hr_attendance_report" name="Reports" parent="menu_hr_attendance_root" sequence="30" groups="hr_attendance.group_hr_attendance_user" action="hr_attendance_action_graph"/>-->
+
 	</data>
 </openerp>

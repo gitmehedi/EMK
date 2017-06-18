@@ -5,7 +5,10 @@
     'category': 'attendance',
     'version': '1.0',
     'depends': [
-        'hr_attendance', 'hr', 'gbs_hr_calendar',
+        'hr_attendance',
+        'hr',
+        'gbs_hr_calendar',
+        'gbs_hr_employee_sequence'
     ],
     'data': [
         'report/report_paperformat.xml',

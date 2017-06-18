@@ -7,7 +7,7 @@
 					<t t-name="report.external_layout">
 						<div class="page">
 							<div class="row">
-								<h3>Attendance Report</h3>
+								<h3>Attendance Report for  <span t-esc="check_type_friendly_str "></span> </h3>
 								<table class="table table-bordered">
 									<thead>
 										<th>Name</th>
