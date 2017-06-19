@@ -29,11 +29,11 @@
                         </div>
                         <group>
                             <group>
-                                <field name="to_shop_id"
+                                <field name="to_shop_id" string="To Shop"
                                        options="{'no_quick_create': True, 'no_create_edit': True, 'no_open': True}"/>
                             </group>
                             <group>
-                                <field name="requested_id"
+                                <field name="requested_id" string="My Shop"
                                        options="{'no_quick_create': True, 'no_create_edit': True, 'no_open': True}"/>
                             </group>
                         </group>

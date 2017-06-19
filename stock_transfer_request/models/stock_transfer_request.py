@@ -15,8 +15,10 @@ class StockTransferRequest(models.Model):
 
     """ Relational Fields """
     product_line_ids = fields.One2many('stock.transfer.request.line', 'stock_transfer_id')
-    to_shop_id = fields.Many2one('stock.location', string="To Shop", required=True, ondelete="cascade")
-    requested_id = fields.Many2one('stock.location', string="Requested By", required=True, ondelete="cascade")
+    to_shop_id = fields.Many2one('stock.location', string="To Shop", required=True, ondelete="cascade",
+                                 domain="[('usage','=','internal')]")
+    requested_id = fields.Many2one('stock.location', string="Requested By", required=True, ondelete="cascade",
+                                   domain="[('usage','=','internal')]")
     is_transfer = fields.Boolean(string="Is Transfer", default=False)
     is_receive = fields.Boolean(string="Is Receive", default=False)
 
