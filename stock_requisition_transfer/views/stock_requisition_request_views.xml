@@ -11,8 +11,6 @@
                                 string="Draft" class=""/>
                         <button name="action_submit" type="object" states="draft"
                                 string="Submit" class="oe_highlight"/>
-                        <button name="action_approve" type="object" states="submit"
-                                string="Approve" class="oe_highlight" />
                         <button name="action_receive" type="object" states="transfer"
                                 string="Receive" class="oe_highlight"/>
                         <button name="action_reject" type="object" states="transfer"
@@ -79,6 +77,7 @@
         <record id="stock_requisition_action" model="ir.actions.act_window">
             <field name="name">Stock Requisition</field>
             <field name="res_model">stock.requisition.transfer</field>
+            <field name="domain">[('state','in',('draft','transfer','receive','reject'))]</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
         </record>
@@ -97,7 +96,7 @@
             <field name="act_window_id" ref="stock_requisition_action"/>
         </record>
 
-        <menuitem id="stock_requisition_menu" name="Stock Requisition"
-                  sequence="580" action="stock_requisition_action" parent="menu_stock_transfer_root"/>
+        <menuitem id="stock_requisition_menu" name="Requisition"
+                  sequence="5" action="stock_requisition_action" parent="menu_stock_transfer_root"/>
     </data>
 </openerp>
