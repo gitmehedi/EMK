@@ -11,6 +11,7 @@
         'gbs_hr_employee_sequence'
     ],
     'data': [
+        # 'security/ir.model.access.csv',
         'report/report_paperformat.xml',
         'report/gbs_hr_attendance_report.xml',
         'wizard/hr_attendance_duration_wizard_views.xml',
