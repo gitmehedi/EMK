@@ -2,15 +2,14 @@
 <templates id="template" xml:space="preserve">
 	<t t-extend="PaymentScreenWidget" >
         <t t-jquery=".pos-payment-container" t-operation="append">
-           <!--<div class="pos-order-note-div">-->
-           <div class="pos-order-note-div" t-if="order.checkDiscount()">
+           <div class="pos-order-note-div">
 			   <br />
 			   <div>
 				   <span class="label">Notes:</span>
-				</div>
-                <input class="pos-order-note form-control" />
-                <!--<input class="pos-order-note form-control" t-attf-class="required #{order.getDiscountTotal() > 0 ? '1' : '0'}"/>-->
+				</div>   
+                <input class="pos-order-note"/>
             </div>
+           
         </t>
     </t>
 	

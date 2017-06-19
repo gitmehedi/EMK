@@ -19,25 +19,18 @@
 #
 ##############################################################################
 
-{
-    'name': 'Order Notes in Point of Sale Interface',
-    'version': '1.0.0',
-    'category': 'Point Of Sale',
-    'sequence': 6,
-    'summary': '',
-    'description': """
-        - 
-        
-    """,
-    'author': 'Tahir Aduragba',
-   
-    'depends': ['point_of_sale'],
+from openerp import models
+
+class point_of_sale(models.Model):
+    _inherit = ('pos.order')
     
-    'installable': True,
-    
-    'data': ['templates.xml'],
-    
-    'qweb': ['static/src/xml/pos_notes.xml'],
- 
-    'auto_install': False,
-}
+    def _order_fields(self, cr, uid, ui_order, context=None):
+        return {
+            'name':         ui_order['name'],
+            'user_id':      ui_order['user_id'] or False,
+            'session_id':   ui_order['pos_session_id'],
+            'lines':        ui_order['lines'],
+            'pos_reference':ui_order['name'],
+            'partner_id':   ui_order['partner_id'] or False,
+            'note': ui_order['note'],
+        }
