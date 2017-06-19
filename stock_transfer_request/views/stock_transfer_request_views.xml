@@ -88,7 +88,7 @@
             <field name="act_window_id" ref="stock_transfer_receive_action"/>
         </record>
 
-        <menuitem id="stock_transfer_receive_menu" name="Stock Transfer Receive"
-                  sequence="582" action="stock_transfer_receive_action" parent="menu_stock_transfer_root"/>
+        <menuitem id="stock_transfer_receive_menu" name="Transfer Receive"
+                  sequence="5" action="stock_transfer_receive_action" parent="menu_stock_transfer_root"/>
     </data>
 </openerp>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-        <menuitem name="Stock Requisition" id="menu_stock_transfer_root"
+        <menuitem name="Stock Transfer Management" id="menu_stock_transfer_root"
                   parent="stock.menu_stock_root" sequence="3"/>
     </data>
 </openerp>

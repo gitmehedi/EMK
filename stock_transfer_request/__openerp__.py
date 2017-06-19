@@ -12,6 +12,7 @@
         'views/menu.xml',
         'views/stock_transfer_request_views.xml',
         'views/stock_transfer_receive_views.xml',
+        'views/stock_transfer_approval_views.xml',
 
     ],
     'summary': 'Test Summary for Stock Transfer Request',
