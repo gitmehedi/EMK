@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+        <record id="pos_summary_report_wizard_view" model="ir.ui.view">
+            <field name="name">Pos Summary Report Wizard</field>
+            <field name="model">pos.summary.report.wizard</field>
+            <field name="arch" type="xml">
+                <form>
+                    <group>
+                        <group>
+                            <field name="start_date"/>
+                            <field name="end_date"/>
+                        </group>
+                        <group>
+                            <field name="point_of_sale_id"
+                                   options="{'no_quick_create': True, 'no_create_edit': True, 'no_open': True}"/>
+                        </group>
+                    </group>
+                    <footer>
+                        <button name="pos_order_report" string="Submit" type="object" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_pos_summary_report_wizard" model="ir.actions.act_window">
+            <field name="name">Pos Summary Report Wizard</field>
+            <field name="res_model">pos.summary.report.wizard</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="pos_summary_report_wizard_view"/>
+            <field name="target">new</field>
+        </record>
+
+        <menuitem name="Reports" id="pos_custom_report" parent="point_of_sale.menu_point_root" sequence="100"/>
+
+        <menuitem name="Order Summery" id="pos_order_summery_report" action="action_pos_summary_report_wizard"
+                  parent="pos_custom_report"/>
+
+    </data>
+</openerp>

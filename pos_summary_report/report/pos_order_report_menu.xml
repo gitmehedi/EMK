@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <!-- Definition of the report (picking Move) -->
+        <report id="report_pos_order_summary"
+                model="pos.order"
+                string="POS Order Summary Report"
+                name="report_pos_order_summary.report_pos_summary_qweb"
+                multi="True"
+                file="report_pos_order_summary.report_pos_summary_qweb"
+                report_type="qweb-pdf"/>
+
+        <record id="paperformat_Landscape" model="report.paperformat">
+            <field name="name">Landscape Report</field>
+            <field name="orientation">Landscape</field>
+            <field name="format">A4</field>
+            <field name="header_line" eval="False"/>
+        </record>
+
+        <record id="report_stock_summary" model="ir.actions.report.xml">
+            <field name="paperformat_id" ref="paperformat_Landscape"/>
+        </record>
+    </data>
+</openerp>
