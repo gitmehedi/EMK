@@ -15,8 +15,10 @@ class StockRequisitionTransfer(models.Model):
 
     """ Relational Fields """
     product_line_ids = fields.One2many('stock.requisition.transfer.line', 'stock_requisition_id')
-    to_shop_id = fields.Many2one('stock.location', string="To Shop", required=True, ondelete="cascade")
-    requested_id = fields.Many2one('stock.location', string="Requested Location", required=True, ondelete="cascade")
+    to_shop_id = fields.Many2one('stock.location', string="To Shop", required=True, ondelete="cascade",
+                                 domain="[('usage','=','internal')]")
+    requested_id = fields.Many2one('stock.location', string="Current Shop", required=True, ondelete="cascade",
+                                   domain="[('usage','=','internal')]")
     is_transfer = fields.Boolean(string="Is Transfer", default=False)
     is_receive = fields.Boolean(string="Is Receive", default=False)
 
@@ -40,7 +42,7 @@ class StockRequisitionTransfer(models.Model):
                                                             ('location_id', '=', self.requested_id.id)])
 
                 sumval = sum([val.qty for val in quant])
-                print product.id ,"----", sumval
+                print product.id, "----", sumval
 
                 if product.id in list:
                     for k in product_line_ids:
@@ -112,7 +114,6 @@ class StockRequisitionTransfer(models.Model):
 
         self.state = 'transfer'
 
-
     @api.one
     def action_receive(self):
         move_obj = self.env['stock.move']
@@ -155,11 +156,11 @@ class StockRequisitionTransfer(models.Model):
     def action_reject(self):
         self.state = 'reject'
 
-    # @api.multi
-    # def unlink(self):
-    #     for rec in self:
-    #         if rec.state in ['draft', 'submit']:
-    #             raise exceptions.ValidationError(
-    #                 "You cannot delete a record with state approve, transfer or receive state.")
-    #         rec.unlink()
-    #     return super(StockRequisitionTransfer, self).unlink()
+        # @api.multi
+        # def unlink(self):
+        #     for rec in self:
+        #         if rec.state in ['draft', 'submit']:
+        #             raise exceptions.ValidationError(
+        #                 "You cannot delete a record with state approve, transfer or receive state.")
+        #         rec.unlink()
+        #     return super(StockRequisitionTransfer, self).unlink()

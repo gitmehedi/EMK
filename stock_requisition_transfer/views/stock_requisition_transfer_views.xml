@@ -17,11 +17,11 @@
                     <sheet>
                         <group>
                             <group>
-                                <field name="to_shop_id" readonly="1"
+                                <field name="to_shop_id" readonly="1" string="My Shop"
                                        options="{'no_quick_create': True, 'no_create_edit': True, 'no_open': True}"/>
                             </group>
                             <group>
-                                <field name="requested_id" readonly="1"
+                                <field name="requested_id" readonly="1" string="From Shop"
                                        options="{'no_quick_create': True, 'no_create_edit': True, 'no_open': True}"/>
                             </group>
                         </group>
