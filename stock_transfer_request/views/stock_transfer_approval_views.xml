@@ -100,6 +100,7 @@
         </record>
 
         <menuitem id="stock_approval_request_menu" name="Transfer Approval"
-                  sequence="10" action="stock_transfer_approval_request_action" parent="menu_stock_transfer_root"/>
+                  sequence="10" action="stock_transfer_approval_request_action" parent="menu_stock_transfer_root"
+                  groups="group_stock_transfer_approval_manager"/>
     </data>
 </openerp>

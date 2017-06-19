@@ -5,7 +5,7 @@
     'author': 'Genweb2 Limited',
     'website': 'www.genweb2.com',
     'category': 'Pebbles Module',
-    'depends': ['base', 'stock', 'purchase', 'product'],
+    'depends': ['base', 'stock', 'purchase', 'product','stock_transfer_request'],
     'data': [
         'security/security.xml',
         # 'security/ir.model.access.csv',
