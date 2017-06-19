@@ -7,5 +7,5 @@ access_hr_shifting_officer,access_hr_shifting_officer,model_resource_calendar,hr
 access_hr_shifting_manager,access_hr_shifting_manager,model_resource_calendar,hr.group_hr_manager,1,1,1,1
 access_hr_shift_alter_manager,access_hr_shift_alter_manager,model_hr_shift_alter,hr.group_hr_manager,1,1,1,1
 access_hr_shift_alter_officer,access_hr_shift_alter_officer,model_hr_shift_alter,hr.group_hr_user,1,1,1,1
-access_hr_shift_alter_user,access_hr_shift_alter_user,model_hr_shift_alter,base.group_user,1,0,1,0
+access_hr_shift_alter_user,access_hr_shift_alter_user,model_hr_shift_alter,base.group_user,1,1,1,0
 
