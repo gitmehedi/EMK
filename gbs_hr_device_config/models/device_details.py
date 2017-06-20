@@ -1,12 +1,12 @@
 from openerp import models, fields
 from openerp import api
-import pyodbc
+# import pyodbc
 import datetime
 from datetime import timedelta
 import logging
 _logger = logging.getLogger(__name__)
 
-from odoo.exceptions import Warning, ValidationError
+# from odoo.exceptions import Warning, ValidationError
 
 
 driver = '{ODBC Driver 13 for SQL Server}'
