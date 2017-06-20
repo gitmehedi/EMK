@@ -31,6 +31,10 @@
     'author': 'Tahir Aduragba',
     'depends': ['point_of_sale', 'operating_unit'],
     'installable': True,
-    'data': ['templates.xml'],
+    'data': [
+        'security/ir.rule.xml',
+        'views/inherited_pos_config_view.xml',
+    ],
     'auto_install': False,
+    'application': True,
 }
