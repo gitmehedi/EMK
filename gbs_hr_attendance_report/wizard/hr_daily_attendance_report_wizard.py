@@ -4,7 +4,7 @@ from odoo import api,fields
 class daily_attendance_report(orm.TransientModel):
     _name='daily.attendance.report.wizard'
 
-    required_date = fields.Date('Required Date',required='True')
+    required_date = fields.Date('Required Date',required='True',default=fields.Date.today())
 
     operating_unit_id = fields.Many2one('operating.unit','Select Operating Unit',
                                         required='True',

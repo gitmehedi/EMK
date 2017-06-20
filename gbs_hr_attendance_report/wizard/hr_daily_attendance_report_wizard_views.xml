@@ -18,7 +18,7 @@
                     <sheet>
                         <group>
                             <field name="required_date"/>
-                            <field name="operating_unit_id" options='{"no_open": True,"no_create": 1, "no_create_edit":1}'/>
+                            <field name="operating_unit_id" options='{"no_open": True,"no_create": 1, "no_create_edit":1}' groups="operating_unit.group_multi_operating_unit"/>
                             <field name="department_id" options='{"no_open": True,"no_create": 1, "no_create_edit":1}'/>
                         </group>
                         <footer>
@@ -31,7 +31,7 @@
         </record>
 
         <record id="action_daily_attendance_report_wizard" model="ir.actions.act_window">
-            <field name="name">Daily Attendance Summary Reports</field>
+            <field name="name">Daily Attendance Summary</field>
             <field name="res_model">daily.attendance.report.wizard</field>
             <field name="view_type">form</field>
             <field name="view_mode">form</field>
@@ -43,6 +43,7 @@
 				  name="Daily Attendance Summary Report"
                   action="action_daily_attendance_report_wizard"
                   parent="hr_attendance.menu_hr_attendance_report"
+                  groups="hr_attendance.group_hr_attendance_user"
 		/>
 
     </data>
