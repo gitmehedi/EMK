@@ -2,6 +2,8 @@ import datetime
 
 from openerp import api, models, fields, exceptions
 from openerp.tools.translate import _
+import time
+
 
 
 class StockRequisitionTransfer(models.Model):
@@ -11,7 +13,7 @@ class StockRequisitionTransfer(models.Model):
     _name = 'stock.requisition.transfer'
     _rec_name = "to_shop_id"
 
-    barcode = fields.Char(string='Product Barcode', size=20)
+    barcode = fields.Char(string='Product Barcode', size=15)
 
     """ Relational Fields """
     product_line_ids = fields.One2many('stock.requisition.transfer.line', 'stock_requisition_id')
@@ -42,7 +44,6 @@ class StockRequisitionTransfer(models.Model):
                                                             ('location_id', '=', self.requested_id.id)])
 
                 sumval = sum([val.qty for val in quant])
-                print product.id, "----", sumval
 
                 if product.id in list:
                     for k in product_line_ids:
@@ -63,7 +64,9 @@ class StockRequisitionTransfer(models.Model):
                         'store_qty': sumval
                     })
                     self.product_line_ids = product_line_ids
-            self.barcode = None
+            # time.sleep(5)
+            self.barcode = False
+
 
     @api.one
     def action_draft(self):

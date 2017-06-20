@@ -85,6 +85,6 @@
 
         <menuitem id="stock_requisition_approval_menu" name="Requisition Approval"
                   sequence="10" action="stock_requisition_approval_action" parent="menu_stock_transfer_root"
-                groups="stock_transfer_request.group_stock_transfer_approval_manager"/>
+                />
     </data>
 </openerp>
