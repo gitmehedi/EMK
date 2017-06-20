@@ -60,15 +60,16 @@ class GetDailyAttendanceReport(models.AbstractModel):
         result2 = self._cr.fetchall()
 
         query = """select e.name_related as emp_name, 
-                    d.name as emp_dept, j.name as emp_desi from hr_employee e
+                    d.name as emp_dept, j.name as emp_desi,min(check_in) from hr_employee e
                     join hr_department d on d.id = e.department_id
                     join hr_job j on j.id = e.job_id
+                    join hr_attendance t on t.employee_id = e.id
                     where e.id in (select employee_id from (
                     select employee_id, min(check_in) as check_in from hr_attendance
                     where employee_id in %s
                     and check_in between %s
                     and  %s 
-                    group by employee_id) as t where check_in > %s)"""
+                    group by employee_id) as t where check_in > %s) group by e.name_related,d.name,j.name"""
         self._cr.execute(query, tuple([tuple(res_emp_ids), start_datetime, end_datetime,str_in_time_dt]))
         result3 = self._cr.fetchall()
 
