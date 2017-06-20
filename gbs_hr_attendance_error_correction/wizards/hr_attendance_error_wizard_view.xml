@@ -62,7 +62,7 @@
 
         <!--Menu Item-->
 		<menuitem id="attendance_error_correct_menu" name="Correct Attendances"
-				  parent="hr_attendance.menu_hr_attendance_manage_attendances"
+				  parent="hr_attendance.menu_hr_attendance_manage_attendances" groups="hr.group_hr_user"
                   action="attendance_error_correct_action" />
     </data>
 </openerp>

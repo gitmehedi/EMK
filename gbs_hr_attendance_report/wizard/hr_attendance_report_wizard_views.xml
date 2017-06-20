@@ -39,6 +39,7 @@
 
 		<menuitem id="attendance_report_menu"
 				  name="Attendance Report"
+				  groups="hr_attendance.group_hr_attendance_user"
 				  parent="hr_attendance.menu_hr_attendance_report"
                   action="action_hr_attendance_report_wizard"
 		/>
