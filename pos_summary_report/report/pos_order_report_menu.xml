@@ -5,9 +5,9 @@
         <report id="report_pos_order_summary"
                 model="pos.order"
                 string="POS Order Summary Report"
-                name="report_pos_order_summary.report_pos_summary_qweb"
+                name="pos_summary_report.report_pos_summary_qweb"
+                file="pos_summary_report.report_pos_summary_qweb"
                 multi="True"
-                file="report_pos_order_summary.report_pos_summary_qweb"
                 report_type="qweb-pdf"/>
 
         <record id="paperformat_Landscape" model="report.paperformat">
