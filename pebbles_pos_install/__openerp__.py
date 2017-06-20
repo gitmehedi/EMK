@@ -12,6 +12,8 @@
                 'pos_gift_ticket',
                 'pos_notes',
                 'product_barcode_qweb',
+                'operating_unit',
+                'pos_operating_unit',
                 ],
     'category': 'Installation Module',
     'summary': 'Install Pebbles Module',
