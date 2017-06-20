@@ -7,7 +7,7 @@
     'category': 'Pebbles Module',
     'depends': ['base', 'stock', 'purchase', 'product'],
     'data': [
-        'security/security.xml',
+        # 'security/security.xml',
         # 'security/ir.model.access.csv',
         'views/menu.xml',
         'views/stock_transfer_request_views.xml',
