@@ -79,6 +79,8 @@ class GbsHeAttendanceReport(models.AbstractModel):
             emp = self.env['hr.employee'].search([('department_id', '=', department_id)])
 
         dynamic_col_list = self.dynamic_col_list(dates_in_range_list, start_date, end_date)
+        emp_sort_list = ''
+        check_type_friendly_str = check_in_out
 
         for e in emp:
             res = {}
@@ -98,11 +100,13 @@ class GbsHeAttendanceReport(models.AbstractModel):
                         result_datetime = datetime.strptime(remove_spcl_chrs, "%Y-%m-%d %H:%M:%S")
                         result_datetime += timedelta(hours=6)
                         res[dyc] = str(result_datetime)[11:16]
+
                     check_type_friendly_str = 'Check In'
 
                 elif(check_in_out == 'check_out'):
                     result = str(self.process_checkout_data_emp_dept_wise(dyc, e.id))
                     res[dyc] = result[13:18]
+
                     check_type_friendly_str = 'Check Out'
 
             all_val_list.append(res)
