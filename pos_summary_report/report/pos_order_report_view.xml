@@ -4,13 +4,26 @@
         <!-- Main template -->
         <template id="report_pos_summary_qweb">
             <t t-call="report.html_container">
-                <t t-call="report.external_layout">
+                <t t-call="report.internal_layout">
                     <div class="page">
 
                         <div class="row mb32">
-                            <div class="col-xs-10">
-                                <h2 class="text-center">Operator Wise Sales(<span t-esc="pos_config"/>)
-                                </h2>
+                            <div class="col-xs-10 text-center">
+                                <h3>
+                                    <span t-esc="address['name']"></span>
+                                </h3>
+                                <p>
+                                    <span t-raw="address['contact1']"></span>,
+                                </p>
+                                <p>
+                                    <span t-raw="address['contact2']"></span>,
+                                    Tel-
+                                    <span t-esc="address['phone']"></span>
+                                </p>
+                                <p>
+                                    <strong>Operator Wise Sales(<span t-esc="pos_config"/>)
+                                    </strong>
+                                </p>
                                 <span t-esc="start_date"/>
                                 to
                                 <span t-esc="end_date"/>
@@ -51,129 +64,33 @@
                                             <t t-esc="line['pos_reference']"/>
                                         </td>
                                         <td>
-                                            <t t-esc="line['pos_reference']"/>
+                                            <t t-esc="line['sales_value']"/>
                                         </td>
                                         <td>
-                                            <t t-esc="line['pos_reference']"/>
+                                            <t t-esc="line['amount_tax']"/>
                                         </td>
                                         <td>
-                                            <t t-esc="line['pos_reference']"/>
+                                            <t t-esc="line['discount']"/>
                                         </td>
                                         <td>
-                                            <t t-esc="line['pos_reference']"/>
+                                            <t t-esc="line['net_sales']"/>
                                         </td>
                                         <td>
-                                            <t t-esc="line['pos_reference']"/>
+                                            <t t-esc="line['cash']"/>
                                         </td>
                                         <td>
-                                            <t t-esc="line['pos_reference']"/>
+                                            <t t-esc="line['credit_card']"/>
                                         </td>
                                         <td>
-                                            <t t-esc="line['pos_reference']"/>
+                                            <t t-esc="line['total']"/>
                                         </td>
                                     </tr>
                                 </t>
-                                <!--<t t-set="closing_grand_Total" t-value="0"/>-->
-                                <!--<t t-set="issue_grand_Total" t-value="0"/>-->
-                                <!--<t t-set="incoming_grand_Total" t-value="0"/>-->
-                                <!--<t t-set="opening_grand_Total" t-value="0"/>-->
-                                <!--<tr t-foreach="lines">-->
-
-                                <!--<td class="text-right">-->
-                                <!--<span t-att-style="style" t-esc="lines['serial']"/>-->
-                                <!--</td>-->
-                                <!--<td>-->
-                                <!--<span t-att-style="style" t-esc="lines['product_name']"/>-->
-                                <!--</td>-->
-                                <!--<td>-->
-                                <!--<span t-att-style="style" t-esc="lines['prod_category']"/>-->
-                                <!--</td>-->
-                                <!--<td>-->
-                                <!--<span t-att-style="style" t-esc="lines['uom']"/>-->
-                                <!--</td>-->
-                                <!--<td class="text-right">-->
-                                <!--<span t-att-style="style" t-esc="lines['op_qty']"/>-->
-                                <!--</td>-->
-                                <!--<td class="text-right">-->
-                                <!--<span t-att-style="style" t-esc="lines['cost_price']"/>-->
-                                <!--</td>-->
-                                <!--<t t-set="op_val" t-value="lines['op_qty'] * lines['cost_price']"/>-->
-                                <!--<td class="text-right">-->
-                                <!--<span t-att-style="style" t-esc="op_val"/>-->
-                                <!--</td>-->
-                                <!--<td class="text-right">-->
-                                <!--<span t-att-style="style" t-esc="lines['receive_qty']"/>-->
-                                <!--</td>-->
-                                <!--<td class="text-right">-->
-                                <!--<span t-att-style="style" t-esc="lines['cost_price']"/>-->
-                                <!--</td>-->
-                                <!--<t t-set="receive_val" t-value="lines['receive_qty'] * lines['cost_price']"/>-->
-                                <!--<td class="text-right">-->
-                                <!--<span t-att-style="style" t-esc="receive_val"/>-->
-                                <!--</td>-->
-                                <!--<td class="text-right">-->
-                                <!--<span t-att-style="style" t-esc="lines['issue_qty']"/>-->
-                                <!--</td>-->
-                                <!--<td class="text-right">-->
-                                <!--<span t-att-style="style" t-esc="lines['cost_price']"/>-->
-                                <!--</td>-->
-                                <!--<t t-set="issue_val" t-value="lines['issue_qty'] * lines['cost_price']"/>-->
-                                <!--<td class="text-right">-->
-                                <!--<span t-att-style="style" t-esc="issue_val"/>-->
-                                <!--</td>-->
-                                <!--<t t-set="cl_qty"-->
-                                <!--t-value="lines['op_qty'] + lines['receive_qty'] - lines['issue_qty']"/>-->
-                                <!--<td class="text-right">-->
-                                <!--<span t-att-style="style" t-esc="cl_qty"/>-->
-                                <!--</td>-->
-                                <!--<td class="text-right">-->
-                                <!--<span t-att-style="style" t-esc="lines['cost_price']"/>-->
-                                <!--</td>-->
-                                <!--<t t-set="cl_val" t-value="cl_qty * lines['cost_price']"/>-->
-                                <!--<td class="text-right">-->
-                                <!--<span t-att-style="style" t-esc="cl_val"/>-->
-                                <!--</td>-->
-                                <!--<t t-set="closing_grand_Total" t-value="closing_grand_Total + cl_val"/>-->
-                                <!--<t t-set="issue_grand_Total" t-value="issue_grand_Total + issue_val"/>-->
-                                <!--<t t-set="incoming_grand_Total" t-value="incoming_grand_Total + receive_val"/>-->
-                                <!--<t t-set="opening_grand_Total" t-value="opening_grand_Total + op_val"/>-->
-                                <!--</tr>-->
-                                <!--<tr>-->
-                                <!--<td>-->
-                                <!--<strong>Total:</strong>-->
-                                <!--</td>-->
-                                <!--<td class="text-right"></td>-->
-                                <!--<td class="text-right"></td>-->
-                                <!--<td class="text-right"></td>-->
-                                <!--<td class="text-right"></td>-->
-                                <!--<td class="text-right"></td>-->
-                                <!--<td class="text-right">-->
-                                <!--<span t-esc="opening_grand_Total"/>-->
-                                <!--</td>-->
-                                <!--<td class="text-right"></td>-->
-                                <!--<td class="text-right"></td>-->
-                                <!--<td class="text-right">-->
-                                <!--<span t-esc="incoming_grand_Total"/>-->
-                                <!--</td>-->
-                                <!--<td class="text-right"></td>-->
-                                <!--<td class="text-right"></td>-->
-                                <!--<td class="text-right">-->
-                                <!--<span t-esc="issue_grand_Total"/>-->
-                                <!--</td>-->
-                                <!--<td class="text-right"></td>-->
-                                <!--<td class="text-right"></td>-->
-                                <!--<td class="text-right">-->
-                                <!--<span t-esc="closing_grand_Total"/>-->
-                                <!--</td>-->
-                                <!--</tr>-->
                             </tbody>
                         </table>
-
                     </div>
                 </t>
             </t>
         </template>
-
-
     </data>
 </openerp>
