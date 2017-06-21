@@ -20,7 +20,7 @@ class GetDailyAttendanceReport(models.AbstractModel):
 
         required_date = data['required_date']
         str_end_dt = data['required_date'] + ' 23:59:59'
-        str_in_time_dt = data['required_date'] + ' 03:15:00'
+        str_in_time_dt = data['required_date'] + ' 03:30:00'
 
         start_datetime = datetime.strptime(required_date,"%Y-%m-%d")
         end_datetime = datetime.strptime(str_end_dt,"%Y-%m-%d %H:%M:%S")
@@ -58,17 +58,19 @@ class GetDailyAttendanceReport(models.AbstractModel):
         result_absent_list = self._cr.fetchall()
 
         query = """select e.name_related as emp_name, 
-                    d.name as emp_dept, j.name as emp_desi,min(check_in) from hr_employee e
+                    d.name as emp_dept, j.name as emp_desi,to_char((min(t.check_in)+interval '6hr')::timestamp with time zone, 'HH24:MI:SS'::text) AS check_in 
+                    from hr_employee e
                     left join hr_department d on d.id = e.department_id
                     left join hr_job j on j.id = e.job_id
-                    left join hr_attendance t on t.employee_id = e.id
+                    join hr_attendance t on t.employee_id = e.id
                     where e.id in (select employee_id from (
                     select employee_id, min(check_in) as check_in from hr_attendance
                     where employee_id in %s
                     and check_in between %s
                     and  %s 
-                    group by employee_id) as t where check_in > %s) group by e.name_related,d.name,j.name"""
-        self._cr.execute(query, tuple([tuple(res_emp_ids), start_datetime, end_datetime,str_in_time_dt]))
+                    group by employee_id) as t where check_in > %s)and check_in between %s
+                    and  %s  group by e.name_related,d.name,j.name"""
+        self._cr.execute(query, tuple([tuple(res_emp_ids), start_datetime, end_datetime,str_in_time_dt, start_datetime, end_datetime]))
         result_late_list = self._cr.fetchall()
 
         data_total_present_employee = len(result_total_present)
@@ -79,7 +81,6 @@ class GetDailyAttendanceReport(models.AbstractModel):
         data_late_list =result_late_list
 
         docargs = {
-
             'required_date': data['required_date'],
             'total_present_employee':data_total_present_employee,
             'total_absent_employee':data_total_absent_employee,
