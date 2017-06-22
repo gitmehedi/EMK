@@ -3,8 +3,9 @@
 <openerp>
     <data>
         <template id="report_daily_att_doc">
-            <t t-call="report.html_container">
-                <!--<t t-foreach="docs" t-as="o">-->
+            <t t-name="report.external_layout">
+                <t t-call="report.html_container">
+                    <!--<t t-foreach="docs" t-as="o">-->
                     <t t-name="report.external_layout">
                         <div class="page">
                             <div class="row">
@@ -32,65 +33,67 @@
                             <br></br>
                             <t t-if="total_absent_employee">
                                 <div>
-                                <div class="row">
-                                    <div class="col-xs-12" style="text-align:center;">
-                                        <h4><strong>Absent Employee List</strong></h4>
+                                    <div class="row">
+                                        <div class="col-xs-12" style="text-align:center;">
+                                            <h4><strong>Absent Employee List</strong></h4>
+                                        </div>
                                     </div>
-                                </div>
-                                <table class="table table-bordered">
-                                    <thead>
-                                        <tr>
-                                            <th>Name</th>
-                                            <th>Department</th>
-                                            <th>Designation</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <t t-foreach="absent_list" t-as="l">
+                                    <table class="table table-bordered">
+                                        <thead>
                                             <tr>
-                                                <td><span t-esc="l[0]"/></td>
-                                                <td><span t-esc="l[1]"/></td>
-                                                <td><span t-esc="l[2]"/></td>
+                                                <th>Name</th>
+                                                <th>Department</th>
+                                                <th>Designation</th>
                                             </tr>
-                                        </t>
-                                    </tbody>
-                                </table>
-                            </div>
+                                        </thead>
+                                        <tbody>
+                                            <t t-foreach="absent_list" t-as="l">
+                                                <tr>
+                                                    <td><span t-esc="l[0]"/></td>
+                                                    <td><span t-esc="l[1]"/></td>
+                                                    <td><span t-esc="l[2]"/></td>
+                                                </tr>
+                                            </t>
+                                        </tbody>
+                                    </table>
+                                </div>
                             </t>
                             <t t-if="total_late_employee">
                                 <div>
-                                <div class="row">
-                                    <div class="col-xs-12" style="text-align:center;">
-                                        <h4><strong >Late Employee List</strong></h4>
+                                    <div class="row">
+                                        <div class="col-xs-12" style="text-align:center;">
+                                            <h4><strong >Late Employee List</strong></h4>
+                                        </div>
                                     </div>
-                                </div>
-                                <table class="table table-bordered">
-                                    <thead>
-                                        <tr>
-                                            <th>Name</th>
-                                            <th>Department</th>
-                                            <th>Designation</th>
-                                            <th>Check In Time</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <t t-foreach="late_list" t-as="l">
+                                    <table class="table table-bordered">
+                                        <thead>
                                             <tr>
-                                                <td><span t-esc="l[0]"/></td>
-                                                <td><span t-esc="l[1]"/></td>
-                                                <td><span t-esc="l[2]"/></td>
-                                                <td><span t-esc="l[3]"/></td>
+                                                <th>Name</th>
+                                                <th>Department</th>
+                                                <th>Designation</th>
+                                                <th>Check In Time</th>
                                             </tr>
-                                        </t>
-                                    </tbody>
-                                </table>
-                            </div>
+                                        </thead>
+                                        <tbody>
+                                            <t t-foreach="late_list" t-as="l">
+                                                <tr>
+                                                    <td><span t-esc="l[0]"/></td>
+                                                    <td><span t-esc="l[1]"/></td>
+                                                    <td><span t-esc="l[2]"/></td>
+                                                    <td><span t-esc="l[3]"/></td>
+                                                </tr>
+                                            </t>
+                                        </tbody>
+                                    </table>
+                                </div>
                             </t>
 
                         </div>
-                        </t>
+                    </t>
                     <!--</t>-->
                 </t>
+            </t>
+
         </template>
     </data>
 </openerp>
