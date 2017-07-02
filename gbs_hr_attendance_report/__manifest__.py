@@ -9,7 +9,7 @@
         'hr',
         'gbs_hr_calendar',
         'gbs_hr_employee_sequence',
-        'operating_unit'
+        'hr_employee_operating_unit'
     ],
     'data': [
         # 'security/ir.model.access.csv',
