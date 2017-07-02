@@ -13,7 +13,7 @@ from weekend_day import TempWeekendDay
 class AttendanceProcessor(models.Model):
     _name = 'hr.attendance.summary.temp'
 
-    in_time_grace_minutes = 15 #Minutes
+    in_time_grace_minutes = 30 #Minutes
 
     period_query = """SELECT ap.date_start, ap.date_stop
                        FROM hr_attendance_summary ac
