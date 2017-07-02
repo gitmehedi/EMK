@@ -2,6 +2,10 @@ id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
 access_hr_shifting_history_user,hr_shifting_history_user,model_hr_shifting_history,base.group_user,1,0,0,0
 access_hr_shifting_history_officer,hr_shifting_history.officer,model_hr_shifting_history,hr.group_hr_user,1,1,1,1
 access_hr_job_user,hr_job_user,hr.model_hr_job,base.group_user,1,0,0,0
-access_hr_shifting_user,access_hr_shifting_user,model_resource_calendar,hr.group_hr_manager,1,1,1,1
+access_hr_shifting_user,access_hr_shifting_user,model_resource_calendar,base.group_user,1,0,0,0
 access_hr_shifting_officer,access_hr_shifting_officer,model_resource_calendar,hr.group_hr_user,1,0,0,0
-access_hr_shifting_manager,access_hr_shifting_manager,model_resource_calendar,base.group_user,1,0,0,0
+access_hr_shifting_manager,access_hr_shifting_manager,model_resource_calendar,hr.group_hr_manager,1,1,1,1
+access_hr_shift_alter_manager,access_hr_shift_alter_manager,model_hr_shift_alter,hr.group_hr_manager,1,1,1,1
+access_hr_shift_alter_officer,access_hr_shift_alter_officer,model_hr_shift_alter,hr.group_hr_user,1,1,1,1
+access_hr_shift_alter_user,access_hr_shift_alter_user,model_hr_shift_alter,base.group_user,1,1,1,0
+

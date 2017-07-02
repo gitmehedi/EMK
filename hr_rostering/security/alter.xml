@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    
+
     <record id="rule_manual_attendance_employee" model="ir.rule">
-        <field name="name">Employee Manual Attendance</field>
-        <field name="model_id" ref="model_hr_manual_attendance"/>
+        <field name="name">HR SHIFT ALTER</field>
+        <field name="model_id" ref="model_hr_shift_alter"/>
         <field name="domain_force">[('employee_id.user_id','=',user.id)]</field>
         <field name="perm_read" eval="True" />
         <field name="perm_create" eval="False" />
@@ -12,8 +12,8 @@
         <field name="groups" eval="[(4,ref('base.group_user'))]"/>
     </record>
      <record id="rule_manual_attendance_employee" model="ir.rule">
-        <field name="name">Employee Manual Attendance</field>
-        <field name="model_id" ref="model_hr_manual_attendance"/>
+        <field name="name">HR SHIFT ALTER</field>
+        <field name="model_id" ref="model_hr_shift_alter"/>
         <field name="domain_force">[(1, '=', 1)]</field>
         <field name="perm_read" eval="True" />
         <field name="perm_create" eval="True" />

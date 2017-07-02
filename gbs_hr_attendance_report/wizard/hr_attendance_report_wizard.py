@@ -1,28 +1,27 @@
 from openerp import models, fields, api
 
-class HrBankSelectionWizard(models.TransientModel):
+class HrAttendanceReportWizard(models.TransientModel):
     _name = 'hr.attendance.report.wizard'
 
     check_in_out = fields.Selection([
         ('check_in', 'Check In'),
         ('check_out', 'Check Out'),
-        ], string = 'Check Type', required=True, default="check_in")
+        ], string = 'Check Type', default="check_in", required=True)
 
     type = fields.Selection([
         ('department_type', 'Department wise'),
         ('employee_type', 'Employee wise')
     ], string='Type', required=True)
 
-    department_id = fields.Many2one("hr.department", string="Department", required=False)
+    department_id = fields.Many2one("hr.department", string="Department")
     employee_id = fields.Many2one("hr.employee", string="Employee")
-    from_date = fields.Date(string='From Date')
-    to_date = fields.Date(string='To Date')
+    from_date = fields.Date(string='From Date', required=True)
+    to_date = fields.Date(string='To Date', required=True)
 
     @api.multi
     def process_report(self):
 
         data = {}
-
         data['check_in_out'] = self.check_in_out
         data['type'] = self.type
         data['department_id'] = self.department_id.id
@@ -30,5 +29,4 @@ class HrBankSelectionWizard(models.TransientModel):
         data['from_date'] = self.from_date
         data['to_date'] = self.to_date
 
-        return self.env['report'].get_action(self, 'gbs_hr_attendance_report.report_individual_payslip', data=data)
-
+        return self.env['report'].get_action(self, 'gbs_hr_attendance_report.report_individual_payslip2', data=data)

@@ -14,13 +14,13 @@ class HrAttendanceSummaryReport(models.AbstractModel):
         
         for d in dept:
             dpt_att_summary = {}
-            att_summary = {}
             dpt_att_summary['name'] = d.name
             dpt_att_summary['seq'] = d.sequence
             dpt_att_summary['val'] = []
             
             for att_sum in docs.att_summary_lines:
                 if d.id == att_sum.employee_id.department_id.id:
+                    att_summary = {}
                     att_summary['emp_name'] = att_sum.employee_id.name
                     att_summary['designation'] = att_sum.employee_id.job_id.name
                     att_summary['emp_seq'] = att_sum.employee_id.employee_sequence

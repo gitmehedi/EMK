@@ -17,12 +17,16 @@ class HrManualAttendance(models.Model):
     check_in = fields.Datetime(string = 'Check In')
     check_out = fields.Datetime(string = 'Check out')    
     sign_type = fields.Selection([
-        ('full_day', 'Both'),
-        ('sign_in', 'Sign In'),
-        ('sign_out', 'Sign Out')
-        ], string = 'Sign Type', required=True, default="full_day")
+        ('both', 'Both'),
+        ('sign_in', 'Sign In')
+        ], string = 'Sign Type', required=True, default="both")
 
-    department_id = fields.Many2one('hr.department', related='employee_id.department_id', string='Department', store=True)   
+    department_id = fields.Many2one('hr.department', related='employee_id.department_id',
+                                    string='Department', store=True)
+    manager_id = fields.Many2one('hr.employee', string='Employee Manager',
+                                 related='employee_id.parent_id')
+    approver_id = fields.Many2one('res.user', string='Approvar', readonly=True, copy=False,
+                                  help='This field is automatically filled by the user who validate the manual attendance request')
     state = fields.Selection([
         ('draft', 'Draft'),
         ('cancel', 'Cancelled'),
@@ -34,8 +38,7 @@ class HrManualAttendance(models.Model):
             "\nThe status is 'To Approve', when manual attendance request is confirmed by user." +
             "\nThe status is 'Refused', when manual attendance request is refused by manager." +
             "\nThe status is 'Approved', when manual attendance request is approved by manager.")    
-    manager_id = fields.Many2one('hr.employee', string='Final Approval', readonly=True, copy=False,
-        help='This area is automatically filled by the user who validate the manual attendance request')    
+
     can_reset = fields.Boolean('Can reset', compute='_compute_can_reset')
 
     
@@ -66,50 +69,50 @@ class HrManualAttendance(models.Model):
     
        
       #  Minimum days restriction apply
-       
-                
+
+
         min_days_obj = self.env['hr.manual.attendance.min.days'].search([('min_days_restriction', '=', 3)])
-        
+
         ### Check in time full day min days restriction
         ck_sign_in_full = datetime.datetime.strptime(self.check_in_time_full_day, '%Y-%m-%d')
-        current_date = datetime.datetime.strptime(curr_date, '%Y-%m-%d')        
+        current_date = datetime.datetime.strptime(curr_date, '%Y-%m-%d')
         start_date_check_in_full_day = date(ck_sign_in_full.year, ck_sign_in_full.month, ck_sign_in_full.day)
         end_date_check_in_full_day = date(current_date.year, current_date.month, current_date.day)
         delta = end_date_check_in_full_day - start_date_check_in_full_day
-        
-        if delta.days > min_days_obj.id: 
+
+        if delta.days > min_days_obj.id:
             raise ValidationError(('You can not enter signin date of {} days ago'.format(delta)))
-        
+
         ### Check in time full day min days restriction
         ck_sign_out_full = datetime.datetime.strptime(self.check_out_time_full_day, '%Y-%m-%d')
-        current_date1 = datetime.datetime.strptime(curr_date, '%Y-%m-%d')        
+        current_date1 = datetime.datetime.strptime(curr_date, '%Y-%m-%d')
         start_date_check_in_full_day1 = date(ck_sign_out_full.year, ck_sign_out_full.month, ck_sign_out_full.day)
         end_date_check_in_full_day1 = date(current_date1.year, current_date1.month, current_date1.day)
         delta1 = end_date_check_in_full_day1 - start_date_check_in_full_day1
-        
-        if delta1.days > min_days_obj.id: 
+
+        if delta1.days > min_days_obj.id:
             raise ValidationError(('You can not enter signout date of {} days ago'.format(delta1)))
 
         ### Check in time full day min days restriction
         ck_sign_in = datetime.datetime.strptime(self.check_in_time_sign_in, '%Y-%m-%d')
-        current_date2 = datetime.datetime.strptime(curr_date, '%Y-%m-%d')        
+        current_date2 = datetime.datetime.strptime(curr_date, '%Y-%m-%d')
         start_date_check_in_full_day2 = date(ck_sign_in.year, ck_sign_in.month, ck_sign_in.day)
         end_date_check_in_full_day2 = date(current_date2.year, current_date2.month, current_date2.day)
         delta2 = end_date_check_in_full_day2 - start_date_check_in_full_day2
-        
+
         if delta2.days > min_days_obj.id:
             raise ValidationError(('You can not enter signin date of {} days ago'.format(delta2)))
 
         ### Check in time full day min days restriction
         ck_sign_in1 = datetime.datetime.strptime(self.check_in_time_sign_out, '%Y-%m-%d')
-        current_date3 = datetime.datetime.strptime(curr_date, '%Y-%m-%d')        
+        current_date3 = datetime.datetime.strptime(curr_date, '%Y-%m-%d')
         start_date_check_in_full_day3 = date(ck_sign_in1.year, ck_sign_in1.month, ck_sign_in1.day)
         end_date_check_in_full_day3 = date(current_date3.year, current_date3.month, current_date3.day)
         delta3 = end_date_check_in_full_day3 - start_date_check_in_full_day3
-        
+
         if delta3.days > min_days_obj.id:
             raise ValidationError(('You can not enter signout date of {} days ago'.format(delta3)))
-    
+
     """
                   
     @api.multi
@@ -140,50 +143,48 @@ class HrManualAttendance(models.Model):
     
     @api.multi
     def action_validate(self):
-        manager = self.env['hr.employee'].search([('user_id', '=', self.env.uid)], limit=1)
+
+        ### Here Only Both Type is Implemented as other type not implemented properly;
+        ### I blocked that part : Matiar Rahman
+
+        attendance_obj = self.env['hr.attendance']
         for manual_attendance in self:
             if manual_attendance.state not in ['confirm', 'validate1']:
                 raise UserError(_('Manual Attendance request must be confirmed in order to approve it.'))
             if manual_attendance.state == 'validate' and not manual_attendance.env.user.has_group('hr_holidays.group_hr_holidays_manager'):
                 raise UserError(_('Only Manager can apply the approval on manual attendance requests.'))
-            
-            manual_attendance.write({ 'state': 'validate', 'manager_id':manager.id})
-            
-        
-         ## Update HR Attendance Table
-        attendance_obj = self.env['hr.attendance']
-        manual_attendace_ob = self.env['hr.manual.attendance'].search([('employee_id', '=', manual_attendance.employee_id.id)]) 
-            
-        vals1 = {}        
-        for mab in manual_attendace_ob:              
-            vals1['employee_id'] = mab.employee_id.id
-                        
-            if mab.check_in: 
-                vals1['check_in'] = mab.check_in
-                            
-            if mab.check_out:
-                vals1['check_out'] = mab.check_out
-            elif mab.check_in:    
-                vals1['check_out'] = mab.check_in
 
-            vals1['manual_attendance_request'] = True                
+            vals1 = {}
+            vals1['employee_id'] = manual_attendance.employee_id.id
+            vals1['manual_attendance_request'] = True
+
+            if manual_attendance.sign_type == 'both':
+                vals1['check_in'] = manual_attendance.check_in
+                vals1['check_out'] = manual_attendance.check_out
+            elif manual_attendance.sign_type == 'sign_in':
+                vals1['check_in'] = manual_attendance.check_in
+            elif manual_attendance.sign_type == 'sign_out':
+                vals1['check_out'] = manual_attendance.check_out
+
             attendance_obj.create(vals1)
+            manual_attendance.write({'state': 'validate',
+                                     'approver_id': self.env.uid})
          
-        attendance_obj2 = self.env['hr.attendance'].search([('employee_id', '=', manual_attendance.employee_id.id)])    
-        
-        valr = {}
-        
-        for att in attendance_obj2:
-            for a in self:
-                if att.check_in and a.check_in:
-                    valr['check_in'] = a.check_in
-            
-                if att.check_out and a.check_out:
-                    valr['check_out'] = a.check_out    
-                
-            attendance_obj2.write(valr)
+        # attendance_obj2 = self.env['hr.attendance'].search([('employee_id', '=', manual_attendance.employee_id.id)])
+        #
+        # valr = {}
+        #
+        # for att in attendance_obj2:
+        #     for a in self:
+        #         if att.check_in and a.check_in:
+        #             valr['check_in'] = a.check_in
+        #
+        #         if att.check_out and a.check_out:
+        #             valr['check_out'] = a.check_out
+        #
+        #     attendance_obj2.write(valr)
        
-        return True
+        # return True
     
     @api.multi
     def action_refuse(self):

@@ -3,23 +3,27 @@
     <data>
        <report
             id="report_individual_paslips1"
-            string="Check In Out"
+            string="Attendance Report"
             model="hr.attendance"
             report_type="qweb-pdf"
-            file="gbs_hr_attendance_report.report_individual_payslip1"
-            name="gbs_hr_attendance_report.report_individual_payslip1"
+            file="gbs_hr_attendance_report.report_individual_payslip2"
+            name="gbs_hr_attendance_report.report_individual_payslip2"
             menu="False"
         />
 
         <report
             id="report_individual_paslips2"
-            string="Attendance Report"
+            string="Attendance Report work hour"
             model="hr.attendance"
             report_type="qweb-pdf"
             file="gbs_hr_attendance_report.report_hr_att_dur"
             name="gbs_hr_attendance_report.report_hr_att_dur"
             menu="False"
         />
+
+         <record id="report_individual_paslips1" model="ir.actions.report.xml">
+            <field name="paperformat_id" ref="gbs_hr_attendance_report.paperformat_hrsummary"/>
+        </record>
 
     </data>
 </odoo>
