@@ -105,7 +105,14 @@ class GbsHeAttendanceReport(models.AbstractModel):
 
                 elif(check_in_out == 'check_out'):
                     result = str(self.process_checkout_data_emp_dept_wise(dyc, e.id))
-                    res[dyc] = result[13:18]
+
+                    if (result == ''):
+                        res[dyc] = result
+                    else:
+                        remove_spcl_chrs = result[2:21]
+                        result_datetime = datetime.strptime(remove_spcl_chrs, "%Y-%m-%d %H:%M:%S")
+                        result_datetime += timedelta(hours=6)
+                        res[dyc] = str(result_datetime)[11:16]
 
                     check_type_friendly_str = 'Check Out'
 
