@@ -20,7 +20,8 @@ class GetDailyAttendanceReport(models.AbstractModel):
 
         required_date = data['required_date']
         str_end_dt = data['required_date'] + ' 23:59:59'
-
+        # from time schedule start
+        # from time schedule end
         str_in_time_dt = data['required_date'] + ' 03:15:00'
 
         start_datetime = datetime.strptime(required_date,"%Y-%m-%d")
