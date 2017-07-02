@@ -8,7 +8,8 @@
         'hr_attendance',
         'hr',
         'gbs_hr_calendar',
-        'gbs_hr_employee_sequence'
+        'gbs_hr_employee_sequence',
+        'operating_unit'
     ],
     'data': [
         # 'security/ir.model.access.csv',
