@@ -27,9 +27,9 @@ class GbsHeAttendanceReport(models.AbstractModel):
     ##
     def process_checkout_data_emp_dept_wise(self, str_date, employee_id):
         if (employee_id is not None):
-            query = """SELECT max(check_in) FROM hr_attendance
+            query = """SELECT max(check_out) FROM hr_attendance
                                             WHERE employee_id=%s
-                                            AND check_in > %s
+                                            AND check_out > %s
                                             GROUP BY employee_id"""
             self._cr.execute(query, tuple([employee_id, str_date]))
             result = self._cr.fetchall()
