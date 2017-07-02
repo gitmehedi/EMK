@@ -10,6 +10,10 @@
                 file="gbs_hr_attendance_report.report_daily_att_doc"
         />
 
+        <record id="custom_report_of_daily_attendance" model="ir.actions.report.xml">
+            <field name="paperformat_id" ref="gbs_hr_attendance_report.paperformat_daily_att_summary"/>
+        </record>
+
         <record id="daily_attendance_report_form" model="ir.ui.view">
             <field name="name">daily.attendance.report.wizard.form</field>
             <field name="model">daily.attendance.report.wizard</field>

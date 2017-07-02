@@ -21,7 +21,7 @@ class GetDailyAttendanceReport(models.AbstractModel):
         required_date = data['required_date']
         str_end_dt = data['required_date'] + ' 23:59:59'
 
-        str_in_time_dt = data['required_date'] + ' 03:30:00'
+        str_in_time_dt = data['required_date'] + ' 03:15:00'
 
         start_datetime = datetime.strptime(required_date,"%Y-%m-%d")
         end_datetime = datetime.strptime(str_end_dt,"%Y-%m-%d %H:%M:%S")
@@ -39,7 +39,6 @@ class GetDailyAttendanceReport(models.AbstractModel):
                         group by employee_id"""
             self._cr.execute(query, tuple([tuple(res_emp_ids), start_datetime, end_datetime]))
             result_total_present = self._cr.fetchall()
-
 
             query = """select * from (select employee_id, min(check_in) as check_in from hr_attendance
                         where employee_id in %s
@@ -79,7 +78,6 @@ class GetDailyAttendanceReport(models.AbstractModel):
                         and  %s  group by e.name_related,d.name,j.name"""
             self._cr.execute(query, tuple([tuple(res_emp_ids), start_datetime, end_datetime,str_in_time_dt, start_datetime, end_datetime]))
             result_late_list = self._cr.fetchall()
-
 
         data_total_present_employee = len(result_total_present)
         data_total_absent_employee = len(res_emp_ids) - len(result_total_present)
