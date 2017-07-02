@@ -120,13 +120,17 @@ class AttendanceProcessor(models.Model):
                 elif self.checkOnPersonalLeave(employeeId, currDate) is True:
                     attSummaryLine.leave_days = attSummaryLine.leave_days + 1
 
-                if absentTime >= scheduleTime / 2:  # Check Absent
-                    # @Todo- Check Short Leave. If not approve short leave then absent
-                    attSummaryLine = self.buildAbsentDetails(attSummaryLine, currentDaydutyTime, currDate, absentTime,
-                                                             totalPresentTime, attendanceDayList)
+                # @Todo- According to Matiar Vi, currently we are consider when, "absentTime >= scheduleTime / 2" then mark as late not absent
+                # if absentTime >= scheduleTime / 2:  # Check Absent
+                #     # @Todo- Check Short Leave. If not approve short leave then absent
+                #     attSummaryLine = self.buildAbsentDetails(attSummaryLine, currentDaydutyTime, currDate, absentTime,
+                #                                              totalPresentTime, attendanceDayList)
+
+
                 elif isLate == True or absentTime > currentDaydutyTime.graceTime:  # Check Late
                     attSummaryLine = self.buildLateDetails(attSummaryLine, currentDaydutyTime, currDate,
                                                            absentTime, totalPresentTime, attendanceDayList)
+                    attSummaryLine.present_days = attSummaryLine.present_days + 1
             else:
                 attSummaryLine.present_days = attSummaryLine.present_days + 1
                 attSummaryLine = self.buildAttendanceDetails(attSummaryLine, currentDaydutyTime)
