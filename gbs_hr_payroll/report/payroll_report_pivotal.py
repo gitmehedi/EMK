@@ -95,14 +95,16 @@ class PayrollReportPivotal(models.AbstractModel):
 
         all_total = sum(total_sum)
         dpt_payslips_list.append(dpt_payslips)
-        
+        amt_to_word = self.env['res.currency'].amount_to_word(float(all_total))
+
         docargs = {
             'doc_ids': self.ids,
             'doc_model': 'hr.payslip.run',
             'docs': dpt_payslips_list,
             'docs_len': len(rule_list)+4,
             'rules': rule_list,
-            'total_sum': all_total
+            'total_sum': all_total,
+            'amt_to_word': amt_to_word,
         }
         
         return self.env['report'].render('gbs_hr_payroll.report_individual_payslip', docargs)
