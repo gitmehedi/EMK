@@ -6,6 +6,7 @@
     'website': 'www.genweb2.com',
     'category': 'Garments & Apparels',
     'data': [
+            'security/ir.model.access.csv',
             'views/loyalty_rules_view.xml',
             'views/pos_loyality_assets.xml',
             'views/assets.xml',

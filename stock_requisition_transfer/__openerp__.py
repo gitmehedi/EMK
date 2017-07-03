@@ -5,7 +5,7 @@
     'author': 'Genweb2 Limited',
     'website': 'www.genweb2.com',
     'category': 'Pebbles Module',
-    'depends': ['base', 'stock', 'purchase', 'product','stock_transfer_request'],
+    'depends': ['base', 'stock', 'purchase', 'product', 'stock_transfer_request'],
     'data': [
         'security/security.xml',
         # 'security/ir.model.access.csv',
@@ -13,6 +13,9 @@
         'views/stock_requisition_transfer_views.xml',
         'views/stock_requisition_approval_views.xml',
         'views/stock_requisition_request_views.xml',
+    ],
+    "qweb": [
+        'static/src/xml/template.xml',
     ],
     'summary': 'Test Summary for Stock Transfer Request',
     'category': 'Product',

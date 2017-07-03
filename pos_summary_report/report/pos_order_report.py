@@ -35,24 +35,31 @@ class DailyCreditSettlementReport(models.AbstractModel):
         report_obj = self.env['report']
         report = report_obj._get_report_from_name('stock_summary_report.report_stock_summary_qweb')
         cash_counter = self.env['pos.config'].search([('id', '=', data['point_of_sale_id'])])
-        pos_order = self.env['pos.order'].search([('location_id', '=', cash_counter.stock_location_id.id)], order="date_order asc")
+        pos_order = self.env['pos.order'].search([('location_id', '=', cash_counter.stock_location_id.id)],
+                                                 order="date_order asc")
 
         for record in pos_order:
             rec = {}
-            sales_value = sum([r.price_subtotal for r in record.lines])
+            sales_value = sum([r.qty * r.price_unit for r in record.lines])
             discount = sum([r.qty * r.price_unit - r.price_subtotal for r in record.lines])
-            net_sales = sum([r.price_subtotal_incl for r in record.lines])
             rec['date_order'] = self.format_date(record.date_order)
             rec['pos_reference'] = record.pos_reference
             rec['sales_value'] = self.decimal(sales_value)
-            rec['amount_tax'] = self.decimal(net_sales - sales_value)
+            rec['amount_tax'] = self.decimal(record.amount_tax)
             rec['discount'] = 0 if discount == 0 else '- {0}'.format(self.decimal(discount))
-            rec['net_sales'] = self.decimal(net_sales)
-            rec['cash'] = self.decimal(record.amount_total)
-            rec['credit_card'] = self.decimal(record.amount_total)
-            rec['total'] = self.decimal(record.amount_total)
+            rec['net_sales'] = self.decimal(record.amount_total)
+            cash, card = 0, 0
+            for statement in record.statement_ids:
+                if statement.journal_id.type == 'cash':
+                    cash = cash + statement.amount
+                if statement.journal_id.type == 'bank':
+                    card = card + statement.amount
+
+            rec['cash'] = self.decimal(cash)
+            rec['credit_card'] = self.decimal(card)
+            rec['total'] = self.decimal(cash + card)
             lines.append(rec)
-        # self.env['pos.config'].search([])[0].operating_unit_id.partner_id.contact_address
+
         address = {
             'name': self.env.user.company_id.name,
             'contact1': self.env.user.default_operating_unit_id.partner_id.street,
@@ -68,6 +75,7 @@ class DailyCreditSettlementReport(models.AbstractModel):
             'category_id': data['point_of_sale_id'],
             'lines': lines,
             'address': address,
+            'pos_config': pos_order.display_name
         }
         return report_obj.render('pos_summary_report.report_pos_summary_qweb', docargs)
 

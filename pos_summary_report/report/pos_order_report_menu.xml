@@ -17,8 +17,8 @@
             <field name="header_line" eval="False"/>
         </record>
 
-        <record id="report_stock_summary" model="ir.actions.report.xml">
-            <field name="paperformat_id" ref="paperformat_Landscape"/>
-        </record>
+        <!--<record id="report_stock_summary" model="ir.actions.report.xml">-->
+            <!--<field name="paperformat_id" ref="paperformat_Landscape"/>-->
+        <!--</record>-->
     </data>
 </openerp>

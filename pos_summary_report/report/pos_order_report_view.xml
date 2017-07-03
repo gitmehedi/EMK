@@ -44,7 +44,7 @@
                                 <tr>
                                     <th colspan="6" class="text-center"></th>
                                     <th class="text-center">Cash</th>
-                                    <th class="text-center">Credit Card</th>
+                                    <th class="text-center">Card</th>
                                     <th class="text-center">Total</th>
                                 </tr>
                             </thead>
@@ -63,25 +63,25 @@
                                         <td>
                                             <t t-esc="line['pos_reference']"/>
                                         </td>
-                                        <td>
+                                        <td style="text-align: right;">
                                             <t t-esc="line['sales_value']"/>
                                         </td>
-                                        <td>
+                                        <td style="text-align: right;">
                                             <t t-esc="line['amount_tax']"/>
                                         </td>
-                                        <td>
+                                        <td style="text-align: right;">
                                             <t t-esc="line['discount']"/>
                                         </td>
-                                        <td>
+                                        <td style="text-align: right;">
                                             <t t-esc="line['net_sales']"/>
                                         </td>
-                                        <td>
+                                        <td style="text-align: right;">
                                             <t t-esc="line['cash']"/>
                                         </td>
-                                        <td>
+                                        <td style="text-align: right;">
                                             <t t-esc="line['credit_card']"/>
                                         </td>
-                                        <td>
+                                        <td style="text-align: right;">
                                             <t t-esc="line['total']"/>
                                         </td>
                                     </tr>

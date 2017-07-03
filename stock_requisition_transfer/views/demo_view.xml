@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+        <record id="demo_form_view" model="ir.ui.view">
+            <field name="name">Demo</field>
+            <field name="model">demo</field>
+            <field name="arch" type="xml">
+                <form string="Stock Requisition Transfer Form">
+                    <sheet>
+                        <div class="oe_title">
+                            <label for="barcode" class="oe_edit_only" string="Add Product Using Barcode"/>
+                            <h1>
+                                <field name="barcode"/>
+                            </h1>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="counter"/>
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="demo_tree_view" model="ir.ui.view">
+            <field name="name">Stock Requisition Approval Tree View</field>
+            <field name="model">demo</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="barcode"/>
+                    <field name="counter"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="demo_search_view" model="ir.ui.view">
+            <field name="name">Demo</field>
+            <field name="model">demo</field>
+            <field eval="10" name="priority"/>
+            <field name="arch" type="xml">
+                <search string="Stock Requisition Transfer Search">
+                    <field name="barcode"/>
+                    <field name="counter"/>
+                </search>
+            </field>
+        </record>
+
+        <record id="demo_action" model="ir.actions.act_window">
+            <field name="name">Demo</field>
+            <field name="res_model">demo</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <record id="demo_action_tree" model="ir.actions.act_window.view">
+            <field eval="1" name="sequence"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="demo_tree_view"/>
+            <field name="act_window_id" ref="demo_action"/>
+        </record>
+
+        <record id="stock_requisition_approval_action_form" model="ir.actions.act_window.view">
+            <field eval="2" name="sequence"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="demo_form_view"/>
+            <field name="act_window_id" ref="demo_action"/>
+        </record>
+
+        <menuitem id="demo_menu" name="Demo"
+                  sequence="10" action="demo_action" parent="menu_stock_transfer_root"
+        />
+    </data>
+</openerp>

@@ -10,12 +10,11 @@ class PosSummaryReportWizard(models.TransientModel):
 
     start_date = fields.Date('Start Date', default=fields.Date.today(), required=True)
     end_date = fields.Date('End Date', default=fields.Date.today())
-    point_of_sale_id = fields.Many2one('pos.config', string='Point Of Sale',
+    point_of_sale_id = fields.Many2one('pos.config', string='Point of Sale',
                                        default=_default_operating_unit, required=True)
 
     @api.multi
     def pos_order_report(self):
-
         data = {}
         data['start_date'] = self.start_date
         data['end_date'] = self.end_date

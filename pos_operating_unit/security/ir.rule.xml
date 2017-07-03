@@ -8,6 +8,7 @@
             <field name="global" eval="True"/>
             <field name="perm_create" eval="False"/>
             <field name="perm_unlink" eval="False"/>
+            <field name="groups" eval="[(4, ref('point_of_sale.group_pos_user'))]"/>
         </record>
 
         <record id="inherited_pos_order_operating_unit" model="ir.rule">
@@ -17,6 +18,7 @@
             <field name="global" eval="True"/>
             <field name="perm_create" eval="False"/>
             <field name="perm_unlink" eval="False"/>
+            <field name="groups" eval="[(4, ref('point_of_sale.group_pos_user'))]"/>
         </record>
     </data>
 </openerp>

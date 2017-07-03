@@ -25,6 +25,8 @@
                 'stock_requisition_transfer',
                 'stock_transfer_request',
                 'stock_summary_report',
+                'operating_unit',
+                'pos_operating_unit',
                 ],
     'category': 'Installation Module',
     'summary': 'Install Pebbles Module',
