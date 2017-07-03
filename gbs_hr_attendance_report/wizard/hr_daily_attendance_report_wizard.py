@@ -1,10 +1,15 @@
 from odoo.osv import osv, orm
 from odoo import api,fields
+from datetime import date
 
 class daily_attendance_report(orm.TransientModel):
     _name='daily.attendance.report.wizard'
 
-    required_date = fields.Date('Required Date',required='True',default=fields.Date.today())
+    @api.multi
+    def _get_current_date(self):
+        return date.today()
+
+    required_date = fields.Date('Required Date',required='True',default=_get_current_date)
 
     operating_unit_id = fields.Many2one('operating.unit','Select Operating Unit',
                                         required='True',
