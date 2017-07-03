@@ -9,7 +9,7 @@
     "depends": [
         'hr',
         'hr_attendance',
-        'operating_unit'
+        'hr_employee_operating_unit'
     ],
     "data": [
         "views/hr_attendance_grace_time_views.xml",
