@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <record id="hr_attendance_grace_time_form" model="ir.ui.view">
+            <field name="name">hr.attendance.grace.time.form</field>
+            <field name="model">hr.attendance.grace.time</field>
+            <field name="arch" type="xml">
+                <form string="Login Grace Time">
+                    <sheet>
+                        <group>
+                            <field name="grace_time" widget="float_time"/>
+                            <field name="effective_from_date"/>
+                            <field name="effective_to_date" invisible="1"/>
+                            <field name="company_id" />
+                            <field name="operating_unit_id" />
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="hr_attendance_grace_time_tree" model="ir.ui.view">
+            <field name="name">hr.attendance.grace.time.tree</field>
+            <field name="model">hr.attendance.grace.time</field>
+            <field name="arch" type="xml">
+                <tree string="Login Grace Time">
+                    <field name="grace_time" widget="float_time"/>
+                    <field name="effective_from_date"/>
+                    <field name="effective_to_date"/>
+                    <field name="company_id"/>
+                    <field name="operating_unit_id"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="action_hr_attendance_grace_time" model="ir.actions.act_window">
+            <field name="name">Login Grace Time</field>
+            <field name="res_model">hr.attendance.grace.time</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <menuitem id="attendance_grace_time_menu"
+				  name="Login Grace Time"
+                  action="action_hr_attendance_grace_time"
+                  parent="hr_attendance.menu_hr_attendance_settings"
+                  groups="hr_attendance.group_hr_attendance_user"
+		/>
+
+    </data>
+</openerp>
