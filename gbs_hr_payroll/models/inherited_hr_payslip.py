@@ -35,8 +35,7 @@ class HrPayslip(models.Model):
     _inherit = 'hr.payslip'
 
     @api.multi
-    def action_backup(self):
-        if any(expense.state != 'draft' for expense in self):
-            raise UserError(_("You cannot report twice the same line!"))
+    def action_compute_payslip(self):
+        for payslip in self:
+            payslip.compute_sheet()
 
-    print ("-------------------------")
