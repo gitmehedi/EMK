@@ -36,6 +36,8 @@ class HrPayslip(models.Model):
 
     @api.multi
     def action_compute_payslip(self):
-        for payslip in self:
+        context = dict(self._context or {})
+        active_ids = context.get('active_ids', []) or []
+        for payslip in self.browse(active_ids):
             payslip.compute_sheet()
 
