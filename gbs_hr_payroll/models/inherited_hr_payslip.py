@@ -1,4 +1,5 @@
 from odoo import api, fields, models, tools, _
+from odoo.exceptions import UserError
 
 
 class HrPayslipEmployees(models.TransientModel):
@@ -29,4 +30,14 @@ class HrPayslipRun(models.Model):
             payslip.action_payslip_done_with_loan()
 
         return res
+
+class HrPayslip(models.Model):
+    _inherit = 'hr.payslip'
+
+    @api.multi
+    def action_compute_payslip(self):
+        context = dict(self._context or {})
+        active_ids = context.get('active_ids', []) or []
+        for payslip in self.browse(active_ids):
+            payslip.compute_sheet()
 
