@@ -1,4 +1,5 @@
 from odoo import api, fields, models, tools, _
+from odoo.exceptions import UserError
 
 
 class HrPayslipEmployees(models.TransientModel):
@@ -30,3 +31,12 @@ class HrPayslipRun(models.Model):
 
         return res
 
+class HrPayslip(models.Model):
+    _inherit = 'hr.payslip'
+
+    @api.multi
+    def action_backup(self):
+        if any(expense.state != 'draft' for expense in self):
+            raise UserError(_("You cannot report twice the same line!"))
+
+    print ("-------------------------")
