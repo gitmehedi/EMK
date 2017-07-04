@@ -135,11 +135,11 @@ class HrEmployeeLoanRequest(models.Model):
 
 
     # Show a msg for if principal_amount greater then wage
-    @api.constrains('principal_amount')
-    def _check_amount(self):
-        emp = self.env['hr.contract'].search([('employee_id','=', self.employee_id.id),('wage','<', self.principal_amount)])
-        if emp:
-            raise Warning('Principal Amount cannot be greater then wage !')
+    #@api.constrains('principal_amount')
+    #def _check_amount(self):
+    #    emp = self.env['hr.contract'].search([('employee_id','=', self.employee_id.id),('wage','<', self.principal_amount)])
+    #    if emp:
+    #        raise Warning('Principal Amount cannot be greater then wage !')
 
     # Show a msg for applied & approved state should not be delete
     @api.multi
