@@ -79,9 +79,14 @@
 												</h5>					
 												
 										</td>
+
 									</tbody>
+
 								</table>										
 							</div>
+
+							<b>In Words: </b><span t-esc="amt_to_word"></span>
+
 						</div>
 					</t>
 				</t>

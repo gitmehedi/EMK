@@ -27,16 +27,16 @@ class AttendanceImport(models.Model):
         attendance_obj = self.env['hr.attendance']
         
         """ Fetch all from line obj"""
-        attendance_line_obj = self.env['hr.attendance.import.line'].search([])
+        attendance_line_obj = self.env['hr.attendance.import.line'].search([('import_id','=',self.id)])
         
         is_success = False
-        
+
         for i in attendance_line_obj:
             if i is not None:
                 emp_pool = self.env['hr.employee'].search([('id','=',i.employee_id.id)])
-        
+
                 att_line_obj_search = attendance_line_obj.search([('employee_id','=',emp_pool.id)])
-        
+
                 vals_attendance = {}
                 vals_attendance['employee_id'] = i.employee_id.id
                 vals_attendance['check_in'] = i.check_in
@@ -45,8 +45,8 @@ class AttendanceImport(models.Model):
                 attendance_obj.create(vals_attendance)
                 is_success = True
 
-            if is_success is True:                
-                self.state = 'imported'     
+            if is_success is True:
+                self.state = 'imported'
                  
     
     @api.multi    
