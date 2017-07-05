@@ -2,7 +2,7 @@
 <openerp>
     <data>
         <record id="pos_summary_report_wizard_view" model="ir.ui.view">
-            <field name="name">Pos Summary Report Wizard</field>
+            <field name="name">POS Summary Report</field>
             <field name="model">pos.summary.report.wizard</field>
             <field name="arch" type="xml">
                 <form>
@@ -12,6 +12,8 @@
                             <field name="end_date"/>
                         </group>
                         <group>
+                            <field name="location_id"
+                                   options="{'no_quick_create': True, 'no_create_edit': True, 'no_open': True}"/>
                             <field name="point_of_sale_id"
                                    options="{'no_quick_create': True, 'no_create_edit': True, 'no_open': True}"/>
                         </group>
@@ -35,9 +37,7 @@
         </record>
 
         <menuitem name="Reports" id="pos_custom_report" parent="point_of_sale.menu_point_root" sequence="100"/>
-
         <menuitem name="Order Summery" id="pos_order_summery_report" action="action_pos_summary_report_wizard"
                   parent="pos_custom_report"/>
-
     </data>
 </openerp>
