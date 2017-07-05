@@ -4,4 +4,13 @@ class HrEmployee(models.Model):
 
     _inherit = 'hr.employee'
 
-    tax = fields.Char(string='Blood Group')
+    blood= fields.Selection([
+        ('a-', 'A-'),
+        ('a+', 'A+'),
+        ('b-', 'B-'),
+        ('b+', 'B+'),
+        ('o-', 'O-'),
+        ('o+', 'O+'),
+        ('ab-', 'AB-'),
+        ('ab+','AB+')],
+        string='Blood Group')
