@@ -20,7 +20,7 @@
         'views/hr_contract_view.xml',
         'views/inherited_hr_payslip_run_views.xml',
         'views/hr_payslip.xml',
-        #'views/hr_tin_view.xml',
+        "views/hr_emp_tin_view.xml",
     ],
     'summary': 'Shows job titles and payslip reports',
     'description':
