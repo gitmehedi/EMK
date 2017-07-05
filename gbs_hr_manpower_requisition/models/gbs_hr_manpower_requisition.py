@@ -3,7 +3,7 @@ from datetime import date
 
 class GbsHrManpowerRequisition(models.Model):
     _name='hr.manpower.requisition'
-    _rec_name = ''
+    #_rec_name = ''
 
     date_ = fields.Date(string='Date', required=True)
     issue_date = fields.Datetime(string='Date of Issue', default=date.today(),required=True)
