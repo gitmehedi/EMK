@@ -75,7 +75,7 @@
 												t-att-colspan="docs_len">
 												
 												<h5 style="float:right;">
-													<b> Total: <span t-esc="'%.2f'% total_sum"></span></b>
+													<b> Total: <span t-esc="total_sum"></span></b>
 												</h5>					
 												
 										</td>

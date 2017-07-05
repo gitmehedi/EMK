@@ -1,5 +1,6 @@
 from openerp import api, exceptions, fields, models
 import operator, math
+import locale
 
 class PayrollReportPivotal(models.AbstractModel):
     _name = 'report.gbs_hr_payroll.report_individual_payslip'
@@ -97,13 +98,16 @@ class PayrollReportPivotal(models.AbstractModel):
         dpt_payslips_list.append(dpt_payslips)
         amt_to_word = self.env['res.currency'].amount_to_word(float(all_total))
 
+        locale.setlocale(locale.LC_ALL, '')
+        thousand_separated_total_sum = locale.currency(all_total, grouping=True)
+
         docargs = {
             'doc_ids': self.ids,
             'doc_model': 'hr.payslip.run',
             'docs': dpt_payslips_list,
             'docs_len': len(rule_list)+4,
             'rules': rule_list,
-            'total_sum': all_total,
+            'total_sum': thousand_separated_total_sum,
             'amt_to_word': amt_to_word,
         }
         
