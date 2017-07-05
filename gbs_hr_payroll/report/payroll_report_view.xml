@@ -24,7 +24,7 @@
 											<th>SN</th>
 											<th>Employee</th>
 											<th>Designation</th>
-											<th>DOJ</th>
+											<th style="min-width:90px">DOJ</th>
 											<t t-foreach="rules" t-as="r">
 												<th>
 													<span t-esc="r['name']"></span>
