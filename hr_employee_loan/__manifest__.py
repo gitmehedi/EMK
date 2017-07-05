@@ -14,6 +14,8 @@
         'views/hr_employee_loan_proof_view.xml',
         'views/hr_employee_loan_view.xml',
         'views/hr_employee_loan_type_view.xml',
+        'wizards/hr_reschedule_loan.xml',
+
     ],
     
     'summary': 'Calculates Employees Loan',

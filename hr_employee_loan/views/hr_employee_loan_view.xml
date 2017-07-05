@@ -24,6 +24,8 @@
                         <button name="action_disbursed" type="object"
                                 string="Disburse Loan" states="approved" groups="hr.group_hr_manager"
                                 class="oe_highlight"/>
+                        <button name="action_disbursed" type="object" states="disbursed"
+                                string="Reschedule" groups="hr.group_hr_manager" class="oe_highlight" />
                         <field name="state" widget="statusbar" statusbar_visible="draft,applied,approved"/>
                     </header>
                     <sheet>
