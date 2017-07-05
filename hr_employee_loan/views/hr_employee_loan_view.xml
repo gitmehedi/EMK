@@ -52,7 +52,7 @@
                                     <group>
                                         <field name="principal_amount"/>
                                         <field name="remaining_loan_amount"/>
-                                        <field name="duration"/>
+                                        <field name="installment_amount"/>
                                     </group>
                                     <group>
                                         <field name="repayment_date"/>

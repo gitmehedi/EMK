@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <!-- Compute Payslips from "More" menu -->
+    <record id="action_server_compute" model="ir.actions.server">
+        <field name="name">Compute Payslips</field>
+        <field name="model_id" ref="model_hr_payslip"/>
+        <field name="code">
+            object.action_compute_payslip()
+        </field>
+    </record>
+
+    <record model="ir.values" id="action_backup">
+        <field name="name">Compute Payslips</field>
+        <field name="action_id" ref="action_server_compute" />
+        <field
+            name="value"
+            eval="'ir.actions.server,%d' % ref('action_server_compute')" />
+        <field name="key">action</field>
+        <field name="model_id" ref="model_hr_payslip" />
+        <field name="model">hr.payslip</field>
+        <field name="key2">client_action_multi</field>
+    </record>
+    </data>
+</odoo>

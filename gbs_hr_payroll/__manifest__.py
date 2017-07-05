@@ -19,6 +19,7 @@
         'report/payroll_report_view.xml',
         'views/hr_contract_view.xml',
         'views/inherited_hr_payslip_run_views.xml',
+        'views/hr_payslip.xml',
     ],
     'summary': 'Shows job titles and payslip reports',
     'description':

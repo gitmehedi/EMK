@@ -11,7 +11,7 @@ class HrEmployeeLoanRequest(models.Model):
 
     name = fields.Char(size=100, string='Loan Name', default="/")
     emp_code_id = fields.Char(string='Code')
-    duration = fields.Integer(size=100, string='Duration(Months)',required=True,
+    installment_amount = fields.Integer(size=100, string='Installment Amount',required=True,
                 states={'draft': [('invisible', False)], 'applied': [('readonly', True)], 'approved':[('readonly', True)],'disbursed':[('readonly', True)]})
     principal_amount = fields.Float(string='Principal Amount',required=True,
                         states={'draft': [('invisible', False)], 'applied': [('readonly', True)], 'approved':[('readonly', True)],'disbursed':[('readonly', True)]})
@@ -53,7 +53,7 @@ class HrEmployeeLoanRequest(models.Model):
                                 states={'draft': [('invisible', False)], 'applied': [('readonly', True)], 'approved':[('readonly', True)],'disbursed':[('readonly', True)]})
     employee_loan_policy_ids = fields.Many2many('hr.employee.loan.policy', string='Policies',
                                     states={'draft': [('invisible', False)], 'applied': [('readonly', True)], 'approved':[('readonly', True)],'disbursed':[('readonly', True)]})
-    company_id = fields.Many2one('res.company', string='Company',ondelete='cascade', default=lambda self: self.env.user.company_id)
+    company_id = fields.Many2one('res.company', string='Company',ondelete='cascade', default=lambda self: self.env.user.company_id, readonly='True')
     user_id = fields.Many2one('res.users', string='User')
     loan_type_id = fields.Many2one('hr.employee.loan.type', string='Loan Type', required=True,ondelete='cascade',
                                    states={'draft': [('invisible', False)], 'applied': [('readonly', True)], 'approved':[('readonly', True)],'disbursed':[('readonly', True)]})
@@ -105,20 +105,26 @@ class HrEmployeeLoanRequest(models.Model):
     @api.multi
     def generate_schedules(self):
         for loan in self:
-            if loan.duration > 0 and loan.repayment_date and len(loan.line_ids)==0:
+            if loan.installment_amount > 0 and loan.repayment_date and len(loan.line_ids)==0:
                 repayment_date = datetime.datetime.strptime(loan.repayment_date, '%Y-%m-%d')
-                installment_amount = loan.principal_amount / int(loan.duration)
+                #installment = loan.principal_amount / int(loan.installment_amount)
                 loan.line_ids.unlink()
-                for i in range(1, loan.duration+1):
+                p_amount = loan.principal_amount
+                i = 1
+                while p_amount > 0:
                     vals = {}
                     vals['employee_id'] = loan.employee_id.id
                     vals['schedule_date'] = repayment_date
-                    vals['installment'] = installment_amount
+                    if p_amount > loan.installment_amount:
+                        vals['installment'] = loan.installment_amount
+                    else:
+                        vals['installment'] = p_amount
                     vals['num_installment'] = i
                     vals['parent_id'] = loan.id
                     repayment_date = repayment_date + relativedelta(months=1)
                     loan.line_ids.create(vals)
-
+                    i += 1
+                    p_amount -= loan.installment_amount
 
 
     @api.depends('line_ids','principal_amount')
@@ -128,10 +134,10 @@ class HrEmployeeLoanRequest(models.Model):
 
 
     # Show a msg for minus value
-    @api.constrains('duration','principal_amount','req_rate')
+    @api.constrains('installment_amount','principal_amount','req_rate')
     def _check_qty(self):
-        if self.duration < 0 or self.principal_amount < 0 or self.req_rate < 0:
-            raise Warning('Principal Amount or Duration or Rate never take negative value!')
+        if self.installment_amount < 0 or self.principal_amount < 0 or self.req_rate < 0:
+            raise Warning('Principal Amount or installment_amount or Rate never take negative value!')
 
 
     # Show a msg for if principal_amount greater then wage
