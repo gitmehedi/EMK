@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<openerp>
+	<data>
+		<!-- Tree View-->
+		<record id="hr_manpower_req_tree" model="ir.ui.view">
+			<field name="name">hr.manpower.requisition.tree</field>
+			<field name="model">hr.manpower.requisition</field>
+			<field name="arch" type="xml">
+				<tree string="Manpower Requisition">
+                    <field name="date_" />
+					<field name="issue_date" />
+					<field name="job_title" />
+					<field name="section_and_dept" />
+					<field name="duration" /> <!-- Need to show hide this field based on  section_and_dept -->
+					<field name="replaced_person_name" />
+					<field name="justify_for_new_position" />
+					<field name="qualification" />
+					<field name="age" />
+					<field name="training_or_practical_skills" />
+					<field name="principle_duties" />
+					<field name="comment_by_co_md" />
+				</tree>
+			</field>
+		</record>
+
+		<!-- Form View-->
+		<record id="hr_manpower_req_form" model="ir.ui.view">
+			<field name="name">hr.manpower.requisition.form</field>
+			<field name="model">hr.manpower.requisition</field>
+			<field name="type">form</field>
+			<field name="arch" type="xml">
+				<form string="Manpower Requisition">
+					<header>
+                        <!--<button string="Confirm" name="action_confirm" states="draft" type="object" class="oe_highlight"/>-->
+						<!--<button string="Confirm" name="action_confirm" states="draft" type="object" class="oe_highlight" />-->
+                    	<!--<button string="Approve" name="action_approve" states="confirm" type="object" class="oe_highlight" groups="hr.group_hr_user"/>-->
+                     	<!--<button string="Refuse" name="action_refuse" states="confirm" type="object" groups="hr.group_hr_user"/>-->
+                    	<!--<button string="Reset to Draft" name="action_draft" type="object" states="confirm" groups="hr.group_hr_user"/>-->
+						<field name="state" widget="statusbar" statusbar_visible="draft,confirmed,head_of_plant,hr_manager,ceo_cxo,cancel,declined"/>
+					</header>
+					<sheet>
+						<group>
+							<field name="date_" />
+							<field name="issue_date" />
+							<field name="job_title" />
+							<field name="section_and_dept" />
+							<field name="duration" /> <!-- Need to show hide this field based on  section_and_dept -->
+							<field name="replaced_person_name" />
+							<field name="justify_for_new_position" />
+							<field name="qualification" />
+							<field name="age" />
+							<field name="training_or_practical_skills" />
+							<field name="principle_duties" />
+							<field name="comment_by_co_md" />
+						</group>
+					</sheet>
+				</form>
+			</field>
+		</record>
+
+		<record id="action_hr_manpower_requisition" model="ir.actions.act_window">
+			<field name="name">HR Manpower Requisition</field>
+			<field name="res_model">hr.manpower.requisition</field>
+			<field name="view_mode">tree,form</field>
+		</record>
+
+		    <menuitem
+					name="Manpower Requisition"
+					parent="hr_recruitment.menu_hr_recruitment_root"
+					id="menu_hr_manpower_requisition"
+					action="action_hr_manpower_requisition"
+			/>
+
+	</data>
+</openerp>
