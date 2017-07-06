@@ -55,11 +55,58 @@ class InheritedProductTemplate(models.Model):
                     product.write({'active': attribute_line_extend.is_active})
                     attribute_line_extend.write({'product_id':product.id}) 
                     
-    @api.model                
+
+
+    @api.model
     def create(self, vals):
         ''' Store the initial standard price in order to be able to retrieve the cost of a product template for a given date'''
         product_template_id = super(InheritedProductTemplate, self).create(vals)
+
+        for att in product_template_id.attribute_line_ids:
+            if att.attribute_id.name == 'Color':
+                color_ids = att.value_ids
+            if att.attribute_id.name == 'Size':
+                size_ids = att.value_ids
+            print att
+
+        if (len(color_ids) > 0 and len(size_ids) > 0):
+            #product_template_id.attribute_line_ids = []
+            product_template_id.attribute_line_extend_ids = []
+
+            # Add Color#
+            # product_attribute_line_obj = self.attribute_line_ids.new()
+            # product_attribute_line_obj.attribute_id = color_ids[0].attribute_id.id
+            # for color in color_ids:
+            #     product_attribute_value_obj = product_attribute_line_obj.value_ids.new()
+            #     product_attribute_value_obj = color
+            #     product_attribute_line_obj.value_ids = product_attribute_line_obj.value_ids | product_attribute_value_obj
+            #
+            # self.attribute_line_ids = self.attribute_line_ids | product_attribute_line_obj
+
+            # Add Size#
+            # product_attribute_line_obj = self.attribute_line_ids.new()
+            # product_attribute_line_obj.attribute_id = size_ids[0].attribute_id.id
+            # for size in size_ids:
+            #     product_attribute_value_obj = product_attribute_line_obj.value_ids.new()
+            #     product_attribute_value_obj = size
+            #     product_attribute_line_obj.value_ids = product_attribute_line_obj.value_ids | product_attribute_value_obj
+            #
+            # self.attribute_line_ids = self.attribute_line_ids | product_attribute_line_obj
+
+            # Matrix Row Populate
+            for color in color_ids:
+                for size in size_ids:
+                    attribute_line_extend_obj = self.attribute_line_extend_ids.new()
+                    attribute_line_extend_obj.color_attribute_id = color.attribute_id
+                    attribute_line_extend_obj.color_value_id = color
+
+                    attribute_line_extend_obj.size_attribute_id = size.attribute_id
+                    attribute_line_extend_obj.size_value_id = size
+                    attribute_line_extend_obj.is_active = True
+                    product_template_id.attribute_line_extend_ids = product_template_id.attribute_line_extend_ids | attribute_line_extend_obj
+
         self.update_product_variant(product_template_id.id)
+
         return product_template_id
     
     @api.multi
