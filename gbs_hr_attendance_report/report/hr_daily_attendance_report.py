@@ -9,6 +9,7 @@ class GetDailyAttendanceReport(models.AbstractModel):
     def render_html(self, docids, data=None):
         emp_pool=self.env['hr.employee']
 
+
         if data['department_id']:
             emp_dept_ids = emp_pool.search([('operating_unit_id', '=', data['operating_unit_id']),
                                        ('department_id', '=', data['department_id'])

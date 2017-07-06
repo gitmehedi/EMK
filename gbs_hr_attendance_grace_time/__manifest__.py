@@ -13,6 +13,7 @@
     ],
     "data": [
         "views/hr_attendance_grace_time_views.xml",
+        "security/ir_rule.xml",
     ],
     'installable': True,
     'application': True
