@@ -9,20 +9,22 @@
 				<tree string="Manpower Requisition">
                    <field name="employee_id"/>
 					<field name="department_id"/>
-					<field name="replaced_or_new"  widget="radio"/>
-					<field name="replace_of_whom_emp_id" attrs="{'invisible': [('replaced_or_new', '!=','replaced')]}"/>
-					<field name="replace_of_whom_designation" attrs="{'invisible': [('replaced_or_new', '!=','replaced')]}"/>
-					<field name="reson_or_justification" attrs="{'invisible': [('replaced_or_new', '!=','new')]}"/>
+					<field name="replaced_or_new" />
+					<field name="replace_of_whom_emp_id" />
+					<field name="replace_of_whom_designation" />
+					<field name="reson_or_justification" />
 					<field name="no_of_joined"/>
 					<field name="issue_date"/>
 					<field name="emp_head_count" />
 					<field name="expected_date" />
 					<field name="no_of_employee" />
-					<field name="qualification" colspan="4"/>
-					<field name="age" colspan="4"/>
-					<field name="training_or_practical_skills"  colspan="4" />
-					<field name="principle_duties"  colspan="4"/>
-					<field name="comment_by_co_md"  colspan="4" />
+					<field name="qualification" />
+					<field name="age" />
+					<field name="training_or_practical_skills"/>
+					<field name="principle_duties"/>
+					<field name="comment_by_co_md"/>
+					<field name="state"/>
+
 				</tree>
 			</field>
 		</record>
@@ -36,9 +38,9 @@
 				<form string="Manpower Requisition">
 					<header>
                         <button string="Confirm" name="action_confirm" states="draft" type="object" class="oe_highlight"/>
-                    	<button string="Approve" name="action_approve" states="confirm" type="object" class="oe_highlight" groups="hr.group_hr_user"/>
-                     	<button string="Refuse" name="action_refuse" states="confirm" type="object" groups="hr.group_hr_user"/>
-                    	<button string="Reset to Draft" name="action_draft" type="object" states="confirm" groups="hr.group_hr_user"/>
+                    	<button string="Approve" name="action_approve" states="confirmed" type="object" class="oe_highlight" />
+                     	<button string="Decline" name="action_decline" states="confirmed" type="object"/>
+                    	<button string="Reset to Draft" name="action_draft" type="object" states="confirmed"/>
 
 
 						<field name="state" widget="statusbar" statusbar_visible="draft,confirmed,verify,justify,approved,declined"/>
