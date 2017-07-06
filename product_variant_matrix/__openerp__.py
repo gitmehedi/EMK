@@ -9,14 +9,16 @@
 
     'description': """ This module allows to manager product variant. """,
     'data': [
-             'views/root_menu.xml',
-             'default_data/product_extend_data.xml',
-             'views/inherited_product_category_view.xml',
-             'views/inherited_product_template.xml',
-              ],
+        'security/ir.model.access.csv',
+        'views/root_menu.xml',
+        'default_data/product_extend_data.xml',
+        'views/inherited_product_category_view.xml',
+        'views/inherited_product_template.xml',
+    ],
     'depends': ['product',
                 'account',
-                #'web_widget_x2many_2d_opening_matrix',
+                'stock',
+                'point_of_sale',
                 'web_widget_x2many_2d_checkbox'
                 ],
     'installable': True,
