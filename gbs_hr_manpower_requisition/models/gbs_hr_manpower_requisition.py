@@ -3,33 +3,39 @@ from datetime import date
 
 class GbsHrManpowerRequisition(models.Model):
     _name='hr.manpower.requisition'
-    #_rec_name = ''
+    _inherit = ['mail.thread']
+    _rec_name = 'employee_id'
 
-    date_ = fields.Date(string='Date', required=True)
-    issue_date = fields.Datetime(string='Date of Issue', default=date.today(),required=True)
-    job_title = fields.Char(string = 'Job Title', required=True)
-    section_and_dept = fields.Selection([
-        ('full_time', 'Full Time'),
-        ('temporary', 'Temporary'),
-        ], string = 'Section & Dept.')
-    duration = fields.Integer(string='Duration (Months)')
-    replaced_person_name = fields.Char(string = 'For replacement Position, Name of replaced person', required=True)
-    justify_for_new_position = fields.Text(string = 'For new Position, Justify the necessity', required=True)
+    def _current_employee(self):
+        return self.env['hr.employee'].search([('user_id', '=', self.env.uid)], limit=1)
+
+    employee_id = fields.Many2one('hr.employee', string="Employee", default=_current_employee, readonly=True)
+    department_id = fields.Many2one('hr.department', related='employee_id.department_id',string='Department', store=True, readonly=True)
+    issue_date = fields.Datetime(string='Date of Request', default=date.today(), readonly=True)
+    emp_head_count = fields.Integer(string='Head Count', readonly=True) # emp count of the dept of form creating user, write a compute finc
+    expected_date = fields.Date(string='Expected Date', required=True)
+    replaced_or_new = fields.Selection([('replaced','Replace'), ('new','New')], string='Replace or New') # radio
+    replace_of_whom_emp_id = fields.Many2one('hr.employee', string="Replace of Whom") # only current users employee
+    replace_of_whom_designation = fields.Many2one('hr.job', string="Designation", related='replace_of_whom_emp_id.job_id', readonly=True)
+    no_of_employee = fields.Integer(string = 'No. of Employee', required=True)
+    reson_or_justification = fields.Text(string = 'Reason / Justification')
+    no_of_joined = fields.Integer(string = 'No. of Joined')
+
+    ###### Below fields are okay
     qualification = fields.Text(string = 'Qualification', required=True)
     age = fields.Text(string = 'Age', required=True)
     training_or_practical_skills = fields.Text(string='Training / Practical experience / Skill', required=True)
     principle_duties = fields.Text(string = 'Principle Duties', required=True)
-    #@Todo : requisition_raised_by/reviewd_by/forward_by
-    comment_by_co_md = fields.Text(string='Approval / Comments by COO / MD', required=True)
+    comment_by_co_md = fields.Text(string='Comments', required=True)
     state = fields.Selection([
         ('draft', 'Draft'),
         ('confirmed', 'Confirmed'),
-        ('head_of_plant', 'Head of Plant'), ## show / hide head of plant based on operating unit condition
-        ('hr_manager', 'HR Manager'),
-        ('ceo_cxo', 'CEO/CXO'),
-        ('cancel', 'Cancelled'),
+        ('verify', 'Verify'), ## show / hide head of plant based on operating unit condition
+        ('justify', 'Justify'),
+        ('approved', 'Approved'),
         ('declined', 'Declined'),
-    ], string='Status', default='draft',)
+    ], string='Status', default='draft',
+        help=" Verify is for Head of Plant, Justify is for HR Manager, Approve is for CXO")
 
     #employee_id = fields.Many2one('hr.employee', string="Employee", required=True)
     #department_id = fields.Many2one('hr.department', related='employee_id.department_id', string='Department')
