@@ -13,7 +13,7 @@ import logging
 
 from openerp import api, fields, models
 from openerp.osv import osv
-import validators
+
 import re
 
 

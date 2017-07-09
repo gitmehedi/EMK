@@ -61,7 +61,8 @@ class InheritedProductTemplate(models.Model):
     def create(self, vals):
         ''' Store the initial standard price in order to be able to retrieve the cost of a product template for a given date'''
         product_template_id = super(InheritedProductTemplate, self).create(vals)
-
+	color_ids = []
+	size_ids = []
         for att in product_template_id.attribute_line_ids:
             if att.attribute_id.name == 'Color':
                 color_ids = att.value_ids
