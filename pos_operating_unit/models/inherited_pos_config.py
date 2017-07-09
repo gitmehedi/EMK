@@ -43,4 +43,26 @@ class InheritedPosOrder(models.Model):
     )
 
 
+class InheritedPosSession(models.Model):
+    _inherit = 'pos.session'
+
+
+    """ Relational Fields"""
+
+    @api.model
+    def _default_operating_unit(self):
+        # user = self.env['res.user']._get_default_team_id()
+        # if user.operating_unit_id:
+        #     return user.operating_unit_id
+        # else:
+        return self.env.user.default_operating_unit_id
+        # return
+
+    operating_unit_id = fields.Many2one(
+        comodel_name='operating.unit',
+        string='Operating Unit',
+        default=_default_operating_unit
+    )
+
+
 
