@@ -38,7 +38,6 @@
 					<header>
                         <button string="Confirm" name="action_confirm" states="draft" type="object" class="oe_highlight"/>
                     	<button string="Approve" name="action_approve" states="confirmed" type="object" class="oe_highlight"/>
-						<button string="Justify" name="action_justify" states="confirmed" type="object" class="oe_highlight"/>
 						<button string="Justify" name="action_verify" states="confirmed" type="object" class="oe_highlight" />
                      	<button string="Decline" name="action_decline" states="confirmed" type="object" class="oe_highlight"/>
                     	<button string="Reset to Draft" name="action_draft" states="confirmed" type="object" class="oe_highlight"/>
