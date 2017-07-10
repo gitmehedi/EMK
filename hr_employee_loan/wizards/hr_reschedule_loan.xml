@@ -4,19 +4,20 @@
 		<record id="hr_loan_reschedule_wizard_view" model="ir.ui.view">
 			<field name="name">HR Loan Reschedule Wizard</field>
 			<field name="model">hr.loan.reschedule.wizard</field>
+			<field name="type">form</field>
 			<field name="arch" type="xml">
-				<form string="Reschedule Loan">
-                    <header>
-                        <button icon="fa-cogs" string="Generate Reschedule" name=" " type="object" class="oe_highlight"  />
-                    </header>
-                    <group>
-                        <label colspan="4" nolabel="1" string="This form will process for employee loan rescheduling." />
-                    </group>
-                    <group colspan="4" >
-                        <field name="remaining_loan_amount"/>
-                        <field name="new_installment_amount"/>
-                        <field name="new_repayment_date"/>
-                    </group>
+				 <form string="Button form" edit="false" create="false" delete="false">
+					 <group>
+						 <label colspan="4" nolabel="1" string="This form will process for employee loan rescheduling." />
+					 </group>
+					 <group colspan="4" >
+						 <field name="remaining_amount"/>
+						 <field name="new_installment_amount"/>
+						 <field name="new_repayment_date"/>
+					 </group>
+					 <footer>
+						 <button icon="fa-cogs" string="Generate Reschedule" name="hr_employee_loan.generate_schedules" type="object" class="oe_highlight"  />
+					 </footer>
                </form>
 			</field>
 		</record>
