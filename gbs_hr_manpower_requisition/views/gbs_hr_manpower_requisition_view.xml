@@ -23,7 +23,7 @@
 					<field name="principle_duties"/>
 					<field name="comment_by_co_md"/>
 					<field name="state"/>
-
+					<field name="factory_or_head_office"/>
 				</tree>
 			</field>
 		</record>
@@ -36,19 +36,39 @@
 			<field name="arch" type="xml">
 				<form string="Manpower Requisition">
 					<header>
-                        <button string="Confirm" name="action_confirm" states="draft" type="object" class="oe_highlight"/>
-                    	<button string="Approve" name="action_approve" states="confirmed" type="object" class="oe_highlight"/>
-						<button string="Justify" name="action_verify" states="confirmed" type="object" class="oe_highlight" />
-                     	<button string="Decline" name="action_decline" states="confirmed" type="object" class="oe_highlight"/>
-                    	<button string="Reset to Draft" name="action_draft" states="confirmed" type="object" class="oe_highlight"/>
-						<!--groups="hr.group_hr_user"-->
+                        <button string="Confirm" name="action_confirm"
+								states="draft" type="object" class="oe_highlight"
+								groups="gbs_hr_manpower_requisition.group_head_of_department"/>
+
+						<!--<button string="Reset to Draft" name="action_draft" states="confirmed"-->
+								<!--groups="gbs_hr_manpower_requisition.group_head_of_department"-->
+								<!--type="object" class="oe_highlight" />-->
+
+                    	<button string="Approve" name="action_approve"
+								states="confirmed" type="object" class="oe_highlight"
+								groups="gbs_hr_manpower_requisition.group_cxo"/>
+
+						<button string="Justify" name="action_justify"
+								states="justify" type="object" class="oe_highlight"
+								groups="gbs_hr_manpower_requisition.group_head_of_plant"/>
+
+						<button string="Verify" name="action_verify"
+								states="confirmed" type="object"
+								class="oe_highlight" groups="hr.group_hr_manager"/>
+
+                     	<button string="Decline" name="action_decline" states="confirmed"
+								type="object" class="oe_highlight"
+								groups="gbs_hr_manpower_requisition.group_cxo,gbs_hr_manpower_requisition.group_head_of_plant"/>
+
 						<field name="state" widget="statusbar" statusbar_visible="draft,confirmed,verify,justify,approved"/>
+
 					</header>
 					<sheet>
 						<group>
 							<group>
 								<field name="employee_id"/>
 								<field name="department_id"/>
+								<field name="factory_or_head_office"/>
 								<field name="emp_head_count" />
 								<field name="replaced_or_new"  widget="radio"/>
 								<field name="replace_of_whom_emp_id" attrs="{'invisible': [('replaced_or_new', '!=','replaced')]}"/>
@@ -85,12 +105,12 @@
 			<field name="view_mode">tree,form</field>
 		</record>
 
-		<menuitem
-				name="Manpower Requisition"
-				parent="hr_recruitment.menu_hr_recruitment_root"
-				id="menu_hr_manpower_requisition"
-				action="action_hr_manpower_requisition"
-		/>
+		<menuitem name="Recruitment" id="hr_recruitment.menu_hr_recruitment_root" web_icon="hr_recruitment,static/description/icon.png"
+				  groups="hr.group_hr_manager" sequence="80"/>
+
+		<menuitem name="Manpower Requisition" parent="hr_recruitment.menu_hr_recruitment_root" id="menu_hr_manpower_requisition"
+				  groups="hr.group_hr_manager,gbs_hr_manpower_requisition.group_head_of_department,gbs_hr_manpower_requisition.group_head_of_plant,gbs_hr_manpower_requisition.group_cxo"
+				  action="action_hr_manpower_requisition"/>
 
 	</data>
 </openerp>

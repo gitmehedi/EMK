@@ -28,12 +28,14 @@ class HREmployeeRequisition(models.Model):
     state = fields.Selection([
         ('draft', 'Draft'),
         ('confirmed', 'Confirmed'),
-        ('verify', 'Verify'), ## @Todo show / hide head of plant based on operating unit condition
+        ('verify', 'Verify'),
         ('justify', 'Justify'),
         ('approved', 'Approved'),
         ('declined', 'Declined'),
     ], string='Status', default='draft',
         help=" Verify is for Head of Plant, Justify is for HR Manager, Approve is for CXO")
+
+    factory_or_head_office = fields.Boolean(string='Head Office?')
 
     @api.multi
     def action_confirm(self):
@@ -54,4 +56,8 @@ class HREmployeeRequisition(models.Model):
     @api.multi
     def action_justify(self):
         self.state = 'justify'
+
+    @api.multi
+    def action_verify(self):
+        self.state = 'verify'
 
