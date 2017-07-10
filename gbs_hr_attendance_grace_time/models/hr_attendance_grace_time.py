@@ -12,6 +12,7 @@ class HrAttendanceGraceTime(models.Model):
     def _get_current_date(self):
         return date.today()
 
+
     grace_time = fields.Float(string='Grace Time',required='True',default = 00.50)
     effective_from_date=fields.Date(string='From Effective Day' ,required='True',default = _get_current_date)
     effective_to_date = fields.Date(string='To Effective Day')
@@ -20,6 +21,9 @@ class HrAttendanceGraceTime(models.Model):
     operating_unit_id = fields.Many2one('operating.unit', string='Select Operating Unit',
                                         required='True',
                                         )
+    check_current_date = fields.Boolean(compute='_compute_date', string='Date Check')
+
+
 
     @api.onchange('company_id')
     def onchange_company_id(self):
@@ -51,9 +55,8 @@ class HrAttendanceGraceTime(models.Model):
         get_previous_row_effective_from_date = self._cr.fetchone()
         print get_previous_row_effective_from_date[0]
         # get_previous_row_effective_from_date = get_previous_row_value[0]
-        if get_previous_row_effective_from_date[0] > self.effective_from_date:
+        if get_previous_row_effective_from_date[0] >= self.effective_from_date:
             raise ValidationError(_("Present effective date can not less then previous effective date!!"))
-
 
     @api.multi
     def write(self, vals):

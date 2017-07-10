@@ -29,7 +29,7 @@ class PayrollReportPivotal(models.AbstractModel):
         dpt_payslips_list = []
         total_sum = []        
         sn = 1
-        
+
         for d in dept:            
             dpt_payslips = {}
             dpt_payslips['name'] = d.name

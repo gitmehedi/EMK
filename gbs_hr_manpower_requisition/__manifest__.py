@@ -5,6 +5,7 @@
     'category': 'employee',
     'version': '1.0',
     'depends': [
+        'hr',
         'hr_recruitment',
     ],
 
