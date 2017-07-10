@@ -14,7 +14,27 @@
                         <field name="partner_id"/>
                         <field name="company_id" groups="base.group_multi_company"/>
                     </group>
-                </form>
+                    <group>
+                        <group>
+                            <label for="street" string="Address"/>
+                            <div>
+                                <field name="street" placeholder="Street..." />
+                                <field name="street2" />
+                                <div class="address_format">
+                                    <field name="city" placeholder="City" style="width: 40%"/>
+                                    <field name="zip" placeholder="ZIP" style="width: 20%"/>
+                                </div>
+                            </div>
+
+                        </group>
+                        <group>
+                            <field name="contact_no"/>
+                            <field name="fax"/>
+                            <field name="vat"/>
+                            <field name="email" widget="email"/>
+                        </group>
+                    </group>
+                  </form>
             </field>
         </record>
 

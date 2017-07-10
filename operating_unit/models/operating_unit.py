@@ -19,6 +19,15 @@ class OperatingUnit(models.Model):
         self.env['res.company']._company_default_get('account.account'))
     partner_id = fields.Many2one('res.partner', 'Partner', required=True)
 
+    street = fields.Char(string='Street')
+    street2 = fields.Char(string='Street2')
+    city = fields.Char(string='City')
+    zip = fields.Char(string='Zip')
+    vat = fields.Char(string='VAT Reg No')
+    email = fields.Char(string='Email')
+    fax = fields.Char(string='Fax')
+    contact_no = fields.Char(string='Contact No')
+
     _sql_constraints = [
         ('code_company_uniq', 'unique (code,company_id)',
          'The code of the operating unit must '

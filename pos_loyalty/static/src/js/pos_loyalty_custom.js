@@ -83,6 +83,7 @@ function openerp_pos_loyalty(instance, module) { // module is
             this.units_by_id = {};
             this.pricelist = null;
             this.order_sequence = 1;
+            this.opunits = [];
             // loyalty rules
             this.loyalty_rules = [];
             this.redemption_rules = [];
@@ -277,6 +278,7 @@ function openerp_pos_loyalty(instance, module) { // module is
                     }
                 },
             },
+
             {
                 model: 'account.tax',
                 fields: ['name', 'amount', 'price_include',
@@ -451,6 +453,20 @@ function openerp_pos_loyalty(instance, module) { // module is
                 },
             },
             {
+                model: 'operating.unit',
+                fields: [],
+                domain: function(self){ return [['id','=', self.config.operating_unit_id[0]]]; },
+                loaded: function (self, opunit) {
+                    self.opunits = opunit[0];
+                    self.oppartner = []
+                    for (var i = 0; i < opunit[0].length; i++) {
+                        if (opunit[i].id === self.company.country_id[0]) {
+                            self.company.country = self.opunits.partner_id;
+                        }
+                    }
+                },
+            },
+            {
                 model: 'account.journal',
                 fields: [],
                 domain: function (self, tmp) {
@@ -486,6 +502,7 @@ function openerp_pos_loyalty(instance, module) { // module is
                     self.redemption_rules = redemption_rule;
                 },
             },
+
             {
                 label: 'fonts',
                 loaded: function (self) {

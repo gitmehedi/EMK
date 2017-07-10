@@ -108,16 +108,16 @@
                     <br/>
                     <strong>MARISHIPA OUTFITTERS</strong>
                     <br/>
-                    <t t-esc="widget.pos.company.street || ''"/>
-                    <t t-esc="widget.pos.company.street2 || ''"/>
+                    <t t-esc="widget.pos.opunits.street || ''"/>
+                    <t t-esc="widget.pos.opunits.street2 || ''"/>
                     <br/>
-                    <t t-esc="widget.pos.company.city || ''"/>-
-                    <t t-esc="widget.pos.company.zip || ''"/>
+                    <t t-esc="widget.pos.opunits.city || ''"/>
+                    <t t-esc="widget.pos.opunits.zip || ''"/>
                     ,
-                    <t t-esc="widget.pos.company.phone|| ''"/>
+                    <t t-esc="widget.pos.opunits.contact_no|| ''"/>
                     <br/>
                     VAT Reg. No.
-                    <t t-esc="widget.pos.company.vat"/>
+                    <t t-esc="widget.pos.opunits.vat"/>
                     <br/>
                     Musak-11(ka)
                     <br/>
