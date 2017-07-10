@@ -21,7 +21,7 @@ class HrEmployeeLoanRequest(models.Model):
                             states={'draft': [('invisible', False)], 'applied': [('readonly', True)], 'approved': [('readonly', True)],'disbursed':[('readonly', True)]})
     is_interest_payble = fields.Boolean(string='Is Interest Payable', required='True',
                         states={'draft': [('invisible', False)], 'applied': [('readonly', True)], 'approved':[('readonly', True)],'disbursed':[('readonly', True)]})
-    remaining_loan_amount = fields.Float(string="Remaining Loan", digits=(15, 2), compute="_compute_loan_amount", store=True)
+    #remaining_loan_amount = fields.Float(string="Remaining Loan", digits=(15, 2), compute="_compute_loan_amount", store=True)
 
     """ All datetime fields """
     applied_date = fields.Datetime('Applied Date', readonly=True, copy=False,
