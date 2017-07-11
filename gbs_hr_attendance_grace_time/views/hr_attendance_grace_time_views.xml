@@ -28,8 +28,8 @@
                     <field name="grace_time" widget="float_time"/>
                     <field name="effective_from_date"/>
                     <field name="effective_to_date"/>
-                    <field name="company_id"/>
-                    <field name="operating_unit_id"/>
+                    <field name="company_id" options='{"no_open": True,"no_create": 1, "no_create_edit":1}'/>
+                    <field name="operating_unit_id" options='{"no_open": True,"no_create": 1, "no_create_edit":1}'/>
                 </tree>
             </field>
         </record>
@@ -46,7 +46,7 @@
                   action="action_hr_attendance_grace_time"
                   parent="hr_attendance.menu_hr_attendance_settings"
                   groups="hr_attendance.group_hr_attendance_user"
-		/>
+/>
 
     </data>
 </openerp>

@@ -24,6 +24,8 @@
                         <button name="action_disbursed" type="object"
                                 string="Disburse Loan" states="approved" groups="hr.group_hr_manager"
                                 class="oe_highlight"/>
+                        <button name="%(hr_loan_wizard_action_view)d" type="action" string="Reschedule"
+                                 context="{'remaining_amount': remaining_loan_amount}" states="disbursed" groups="hr.group_hr_manager" class="oe_highlight"/>
                         <field name="state" widget="statusbar" statusbar_visible="draft,applied,approved"/>
                     </header>
                     <sheet>
@@ -52,7 +54,7 @@
                                     <group>
                                         <field name="principal_amount"/>
                                         <field name="remaining_loan_amount"/>
-                                        <field name="duration"/>
+                                        <field name="installment_amount"/>
                                     </group>
                                     <group>
                                         <field name="repayment_date"/>
