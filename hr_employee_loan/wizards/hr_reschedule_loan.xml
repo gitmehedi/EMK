@@ -16,7 +16,7 @@
 						 <field name="new_repayment_date"/>
 					 </group>
 					 <footer>
-						 <button icon="fa-cogs" string="Generate Reschedule" name="hr_employee_loan.generate_schedules" type="object" class="oe_highlight"  />
+						 <button icon="fa-cogs" string="Generate Reschedule" name="" type="object" class="oe_highlight"  />
 					 </footer>
                </form>
 			</field>

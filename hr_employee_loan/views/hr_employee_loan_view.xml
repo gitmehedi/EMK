@@ -25,7 +25,7 @@
                                 string="Disburse Loan" states="approved" groups="hr.group_hr_manager"
                                 class="oe_highlight"/>
                         <button name="%(hr_loan_wizard_action_view)d" type="action" string="Reschedule"
-                                states="disbursed" groups="hr.group_hr_manager" class="oe_highlight"/>
+                                 context="{'remaining_amount': remaining_loan_amount}" states="disbursed" groups="hr.group_hr_manager" class="oe_highlight"/>
                         <field name="state" widget="statusbar" statusbar_visible="draft,applied,approved"/>
                     </header>
                     <sheet>
