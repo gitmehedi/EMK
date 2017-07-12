@@ -74,7 +74,7 @@ class HRHolidays(models.Model):
             self.number_of_days_temp = self._get_number_of_days(date_from, date_to, self.employee_id.id)
         else:
             self.number_of_days_temp = 0
-           # raise ValidationError(('Start Date should be less than the End Date'))
+            raise ValidationError(('Start Date should be less than the End Date'))
 
     @api.onchange('date_to')
     def _onchange_date_to(self):
@@ -87,4 +87,4 @@ class HRHolidays(models.Model):
             self.number_of_days_temp = self._get_number_of_days(date_from, date_to, self.employee_id.id)
         else:
             self.number_of_days_temp = 0
-           #     raise ValidationError(('End Date should be greater than the Start Date'))
+            raise ValidationError(('End Date should be greater than the Start Date'))

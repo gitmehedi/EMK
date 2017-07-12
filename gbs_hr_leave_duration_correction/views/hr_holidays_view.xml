@@ -8,31 +8,16 @@
             <field name="model">hr.holidays</field>
             <field name="inherit_id" ref="hr_holidays.edit_holiday_new"/>
             <field name="arch" type="xml">
-                <data>
+                <xpath expr="//field[@name='department_id']" position="replace">
+                   <field name="department_id"  groups="hr_holidays.group_hr_holidays_user" attrs="{'invisible':[('holiday_type','=','category')]}"/>
+                </xpath>
 
-                    <!--<xpath expr="//field[@name='employee_id']" position="after">-->
-						<!--<field name="department_id" attrs="{'readonly':True}"/>-->
-                    <!--</xpath>-->
+                <xpath expr="//field[@name='employee_id']" position="replace">
+                   <field name="employee_id" options="{'no_quick_create': True, 'no_create_edit': True, 'no_open': True}" attrs="{'required':[('holiday_type','=','employee')],'invisible':[('holiday_type','=','category')]}" groups="hr_holidays.group_hr_holidays_user"/>
+                </xpath>
 
-					<!--<field name="employee_id" domain="[('department_id', '=', department_id)]"/>-->
-					<!--<field name="department_id" />-->
-                </data>
+
             </field>
         </record>
-
-        <!-- Inherited Tree view-->
-        <!--<record id="hr_holidays_leave_req_view_tree" model="ir.ui.view">-->
-            <!--<field name="name">hr.holidays.view.tree</field>-->
-            <!--<field name="model">hr.holidays</field>-->
-            <!--<field name="inherit_id" ref="hr_holidays.view_holiday_allocation_tree"/>-->
-            <!--<field name="arch" type="xml">-->
-                <!--<data>-->
-					<!--<field name="requested_by" />-->
-					<!--<field name="employee_id"/>-->
-					<!--<field name="department_id"/>-->
-                <!--</data>-->
-            <!--</field>-->
-        <!--</record>-->
-
     </data>
 </openerp>
