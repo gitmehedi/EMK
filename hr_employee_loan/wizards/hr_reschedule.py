@@ -1,4 +1,7 @@
 from openerp import models, fields, api
+import datetime
+from dateutil.relativedelta import relativedelta
+
 
 
 class HrLoanRescheduleWizard(models.TransientModel):
@@ -14,4 +17,32 @@ class HrLoanRescheduleWizard(models.TransientModel):
 
     @api.multi
     def genarate_reschudle(self):
-        print "-----------"
+
+        ### Remove the Unpaid Schedule
+        loan_pool = self.env['hr.employee.loan']
+        loan_line_pool = self.env['hr.employee.loan.line']
+        loan = loan_pool.browse([self._context['active_id']])
+        loan_lines = loan_line_pool.search([('state','!=','done'),
+                                            ('parent_id','=',loan.id)])
+        loan_lines.unlink()
+
+        ### Generate New Schedule
+        loan_amt = loan.remaining_loan_amount
+        repayment_date = datetime.datetime.strptime(self.new_repayment_date, '%Y-%m-%d')
+        installament_amt = self.new_installment_amount
+        i = 1
+        while loan_amt > 0:
+            print i
+            vals = {}
+            vals['employee_id'] = loan.employee_id.id
+            vals['schedule_date'] = repayment_date
+            if loan_amt > installament_amt:
+                vals['installment'] = installament_amt
+            else:
+                vals['installment'] = loan_amt
+            vals['num_installment'] = i
+            vals['parent_id'] = loan.id
+            repayment_date = repayment_date + relativedelta(months=1)
+            loan.line_ids.create(vals)
+            i += 1
+            loan_amt -= installament_amt
