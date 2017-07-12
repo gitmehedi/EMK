@@ -9,6 +9,12 @@ HOURS_PER_DAY = 8
 class HRHolidays(models.Model):
     _inherit = 'hr.holidays'
 
+    def _current_employee(self):
+        return self.env['hr.employee'].search([('user_id', '=', self.env.uid)], limit=1)
+
+    def _default_employee(self):
+        return self.env.context.get('default_employee_id') or self.env['hr.employee'].search([('user_id', '=', self.env.uid)], limit=1)
+
     date_from = fields.Date('Start Date', readonly=True, index=True, copy=False,
         states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]})
     date_to = fields.Date('End Date', readonly=True, copy=False,
@@ -18,6 +24,14 @@ class HRHolidays(models.Model):
                                        states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]})
     number_of_days = fields.Float('Number of Days', compute='_compute_number_of_days', store=True)
 
+    ## Newly Introduced Fields
+    requested_by = fields.Many2one('hr.employee', string="Requisition By", default=_current_employee, readonly=True)
+
+    employee_id = fields.Many2one('hr.employee', string='Employee', index=True, readonly=True,
+                                  states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]},
+                                  default=_default_employee, domain="[('department_id', '=', department_id)]")
+    department_id = fields.Many2one('hr.department', related='employee_id.department_id',
+                                    string='Department', readonly=True, store=True)
 
     """
        As we removed Datetime data type so we have added 1d with date difference -- rabbi
