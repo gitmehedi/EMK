@@ -9,6 +9,7 @@
         'hr_holidays',
     ],
     'data': [
+        'views/hr_holidays_view.xml',
     ],
     'installable': True,
     'application': True,

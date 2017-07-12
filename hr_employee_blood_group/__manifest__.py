@@ -1,5 +1,5 @@
 {
-    "name": "HR Employee Blood Group",
+    "name": "Employee Blood Group",
     "author": "Genweb2 Ltd.",
     "website": "http://www.genweb2.com",
     "category": "Human Resources",
@@ -9,5 +9,5 @@
     ],
 
     'installable': True,
-    'application': True,
+    'application': False,
 }
