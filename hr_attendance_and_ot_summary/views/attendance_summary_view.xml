@@ -40,7 +40,8 @@
 							<field name="period"/>
 						</group>
 						<field name="att_summary_lines">
-							<tree string="List" editable="top">
+							<tree string="List" editable="top" colors="red:is_entered_rostering == 0">
+								<field name="is_entered_rostering" invisible="1"/>
 								<field name="employee_id" readonly='1'/>
 								<field name="department_id" readonly='1'/>
 								<field name="salary_days" readonly='1'/>
@@ -50,7 +51,7 @@
 								<field name="leave_days" readonly='1'/>
 								<field name="weekend_days_count" readonly='1'/>
 								<field name="holidays_days" readonly='1'/>
-								<field name="late_days_overwrite" groups="hr.group_hr_manager"/>
+								<field name="deduction_days" groups="hr.group_hr_manager"/>
 								<field name="late_hrs" readonly='1' widget="float_time"/>
 								<field name="schedule_ot_hrs" readonly='1' widget="float_time"/>
 								<field name="cal_ot_hrs" readonly='1' widget="float_time"/>

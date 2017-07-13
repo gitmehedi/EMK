@@ -42,10 +42,10 @@ class InheritedHrAttendancePayslip(models.Model):
                             })
                         if emp.late_hrs:
                             worked_days_lines += worked_days_lines.new({
-                                'code': 'LATE',
+                                'code': 'ABS',
                                 'contract_id': self.contract_id.id,
-                                'number_of_hours': emp.late_hrs,
-                                'name': 'Late Hours',
+                                'number_of_days': emp.deduction_days,
+                                'name': 'Deduction Day(s)',
                             })
                         self.worked_days_line_ids = worked_days_lines
 
