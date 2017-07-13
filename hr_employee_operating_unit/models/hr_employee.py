@@ -1,4 +1,4 @@
-from openerp import fields, models
+from openerp import api, fields, models
 
 class HrEmployee(models.Model):
 
@@ -19,3 +19,11 @@ class HrDepartment(models.Model):
                                         self.env['res.users'].
                                         operating_unit_default_get(self._uid),
                                         )
+
+    @api.multi
+    def name_get(self):
+        res = []
+        for rec in self:
+            name = '%s - %s' % (rec.name, rec.operating_unit_id.name)
+            res.append((rec.id, name))
+        return res
