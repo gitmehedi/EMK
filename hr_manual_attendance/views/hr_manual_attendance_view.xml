@@ -45,10 +45,10 @@
 							<group>
 								<field name="sign_type" attrs="{'readonly':['|', ('state','=','validate'),('state','=','confirm')]}"/>
 								<field name="check_in"  attrs="{'readonly':['|', ('state','=','validate'),('state','=','confirm')] ,
-																'invisible': [('sign_type', '=','sign_out')]}"/>
+																'invisible': [('sign_type', '=','sign_out')],'required': [('sign_type', '!=', 'sign_out')]}"/>}"/>
 								<field name="check_out" attrs="{'readonly':['|', ('state','=','validate'),('state','=','confirm')] ,
 																'invisible': [('sign_type', '=','sign_in')],
-																'required': [('sign_type', '=', 'both')]}"/>
+																'required': [('sign_type', '!=', 'sign_in')]}"/>
 
 								<field name="is_it_official" attrs="{'readonly':['|', ('state','=','validate'),('state','=','confirm')]}"/>							
 							</group>

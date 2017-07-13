@@ -14,11 +14,12 @@ class HrManualAttendance(models.Model):
     employee_id = fields.Many2one('hr.employee', string="Employee", required=True, default=_default_employee)
     reason = fields.Text(string='Reason')
     is_it_official = fields.Boolean(string='Is it official', default=False)
-    check_in = fields.Datetime(string = 'Check In', required =True)
-    check_out = fields.Datetime(string = 'Check out')    
+    check_in = fields.Datetime(string = 'Check In')
+    check_out = fields.Datetime(string = 'Check out')
     sign_type = fields.Selection([
         ('both', 'Both'),
-        ('sign_in', 'Sign In')
+        ('sign_in', 'Sign In'),
+        ('sign_out', 'Sign Out')
         ], string = 'Sign Type', required=True, default="both")
 
     department_id = fields.Many2one('hr.department', related='employee_id.department_id',
