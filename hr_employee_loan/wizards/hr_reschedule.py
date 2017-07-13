@@ -7,11 +7,6 @@ from dateutil.relativedelta import relativedelta
 class HrLoanRescheduleWizard(models.TransientModel):
     _name = 'hr.loan.reschedule.wizard'
 
-<<<<<<< HEAD
-    remaining_amount = fields.Float(string="Remaining Loan")
-    new_installment_amount = fields.Integer(size=100, string=' New Installment Amount', required=True)
-    new_repayment_date = fields.Date('New Repayment Date',required=True)
-=======
     @api.multi
     def _get_remaining_amount(self):
         return self._context['remaining_amount']
@@ -51,4 +46,3 @@ class HrLoanRescheduleWizard(models.TransientModel):
             loan.line_ids.create(vals)
             i += 1
             loan_amt -= installament_amt
->>>>>>> 84ae09e577198f0d19c42742f1e450ec4163bd43
