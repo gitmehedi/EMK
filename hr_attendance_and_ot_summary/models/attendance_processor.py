@@ -63,8 +63,8 @@ class AttendanceProcessor(models.Model):
         # Getting Shift Id for an employee
         self._cr.execute(self.employee_shift_history_query, (employeeId, preStartDate, postEndDate))
         calendarList = self._cr.fetchall()
-        if not calendarList:
-            return
+        # if not calendarList:
+        #     return
 
         shiftList = self.getShiftList(calendarList, postEndDate)
         dutyTimeMap = self.buildDutyTime(preStartDate, postEndDate, shiftList)
@@ -76,23 +76,25 @@ class AttendanceProcessor(models.Model):
 
         attSummaryLine = TempAttendanceSummaryLine()
 
-        currDate = startDate
-        while currDate <= endDate:
+        if len(dutyTimeMap) != 0: # Check Rostering data are centered or not
+            currDate = startDate
+            while currDate <= endDate:
 
-            if alterTimeMap.get(self.getStrFromDate(currDate)): # Check this date is alter date
-                alterDayDutyTime = alterTimeMap.get(self.getStrFromDate(currDate))
-                attendanceDayList = self.getAttendanceListByAlterDay(alterDayDutyTime, day, dutyTimeMap, employeeId)
-                attSummaryLine = self.makeDecision(attSummaryLine, attendanceDayList, currDate, alterDayDutyTime, employeeId)
+                if alterTimeMap.get(self.getStrFromDate(currDate)): # Check this date is alter date
+                    alterDayDutyTime = alterTimeMap.get(self.getStrFromDate(currDate))
+                    attendanceDayList = self.getAttendanceListByAlterDay(alterDayDutyTime, day, dutyTimeMap, employeeId)
+                    attSummaryLine = self.makeDecision(attSummaryLine, attendanceDayList, currDate, alterDayDutyTime, employeeId)
 
-            elif dutyTimeMap.get(self.getStrFromDate(currDate)): # Check this date is week end or not. If it is empty, then means this day is weekend
-                currentDaydutyTime = dutyTimeMap.get(self.getStrFromDate(currDate))
-                attendanceDayList = self.getAttendanceListByDay(attendance_data, currDate, currentDaydutyTime, day, dutyTimeMap)
-                attSummaryLine = self.makeDecision(attSummaryLine, attendanceDayList, currDate, currentDaydutyTime, employeeId)
-            else:
-                attSummaryLine = self.buildWeekEnd(attSummaryLine, currDate)
+                elif dutyTimeMap.get(self.getStrFromDate(currDate)): # Check this date is week end or not. If it is empty, then means this day is weekend
+                    currentDaydutyTime = dutyTimeMap.get(self.getStrFromDate(currDate))
+                    attendanceDayList = self.getAttendanceListByDay(attendance_data, currDate, currentDaydutyTime, day, dutyTimeMap)
+                    attSummaryLine = self.makeDecision(attSummaryLine, attendanceDayList, currDate, currentDaydutyTime, employeeId)
+                else:
+                    attSummaryLine = self.buildWeekEnd(attSummaryLine, currDate)
 
-            currDate = currDate + day
-
+                currDate = currDate + day
+        else:
+            attSummaryLine.is_entered_rostering = 0
         noOfDays = (endDate - startDate).days + 1
         self.saveAttSummary(employeeId, summaryId, noOfDays, attSummaryLine)
 
@@ -231,6 +233,10 @@ class AttendanceProcessor(models.Model):
 
     def buildDutyTime(self, preStartDate, postEndDate, shiftList):
         dutyTimeMap = {}
+
+        if not shiftList:
+            return dutyTimeMap
+
         day = datetime.timedelta(days=1)
         while preStartDate <= postEndDate:
             for i, shift in enumerate(shiftList):
@@ -390,16 +396,15 @@ class AttendanceProcessor(models.Model):
             att_time_start = dutyTime_s.endDutyTime
         else:
             att_time_start = preStartDate + timedelta(hours=23)
-        att_time_end = dutyTimeMap.get(self.getStrFromDate(postEndDate)).startDutyTime
+
+        dutyTime_e = dutyTimeMap.get(self.getStrFromDate(postEndDate))
+        if dutyTime_e:
+            att_time_end = dutyTime_e.startDutyTime
+        else:
+            att_time_end = postEndDate + timedelta(hours=1)
+        # att_time_end = dutyTimeMap.get(self.getStrFromDate(postEndDate)).startDutyTime
         self._cr.execute(self.attendance_query, (att_time_start, att_time_end, employeeId))
         attendance_data = self._cr.fetchall()
-
-
-
-        #######################################################################################################
-
-        #attendance_data5 = self.env["hr.attendance"].search([('employee_id', '=', employeeId)], order='check_in ASC')
-
 
         return attendance_data
 
@@ -446,7 +451,8 @@ class AttendanceProcessor(models.Model):
                 'leave_days':       attSummaryLine.leave_days,
                 'late_hrs':         attSummaryLine.late_hrs,
                 'schedule_ot_hrs':  attSummaryLine.schedule_ot_hrs,
-                'cal_ot_hrs':       calOtHours ,
+                'cal_ot_hrs':       calOtHours,
+                'is_entered_rostering': attSummaryLine.is_entered_rostering
 
                 }
         res = summary_line_pool.create(vals)
