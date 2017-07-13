@@ -28,6 +28,7 @@ class AttendanceSummaryLine(models.Model):
 
     weekend_days = fields.One2many('hr.attendance.weekend.day', 'att_summary_line_id', string='Weekend Days')
     weekend_days_count = fields.Integer(string="Weekend Days", compute="_set_weekend_days_count")
+    is_entered_rostering = fields.Integer(default=1, required=True)
 
     @api.depends('absent_days')
     def _set_absent_days_count(self):
@@ -76,7 +77,7 @@ class AttendanceSummaryLine(models.Model):
 class TempAttendanceSummaryLine(object):
 
     def __init__(self, salary_days=0, present_days=0, late_days_overwrite=0, leave_days=0, late_hrs=0,
-                 schedule_ot_hrs=0, cal_ot_hrs=0, employee_id=0, absent_days=None, late_days=None, weekend_days=None, holidays_days=0):
+                 schedule_ot_hrs=0, cal_ot_hrs=0, employee_id=0, absent_days=None, late_days=None, weekend_days=None, holidays_days=0, is_entered_rostering=1):
 
         self.salary_days = salary_days
         self.present_days = present_days
@@ -87,6 +88,7 @@ class TempAttendanceSummaryLine(object):
         self.schedule_ot_hrs = schedule_ot_hrs
         self.cal_ot_hrs = cal_ot_hrs
         self.employee_id = employee_id
+        self.is_entered_rostering = is_entered_rostering
         if absent_days is None:
             self.absent_days = []
         else:
