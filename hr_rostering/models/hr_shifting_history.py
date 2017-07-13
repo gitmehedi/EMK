@@ -17,6 +17,15 @@ class HrShiftingHistory(models.Model):
     employee_id = fields.Many2one("hr.employee", string='Employee Name', required=True)
     shift_id = fields.Many2one("resource.calendar", string="Shift Name", required=True)
 
+    """Shift Batch Relational Fields """
+    shift_batch_id =fields.Many2one('hr.shift.employee.batch', string='Shift Batch')
+
+    # @api.multi
+    # def onchange_employee_id(self,shift_id, date_from, date_to, employee_id=False, contract_id=False):
+    #     return
+
+
+
     # @api.onchange('effective_from')
     # def _onchange_effective_from(self):
     #     # print "---------------------- Lists--------------------", self.employee_id.id

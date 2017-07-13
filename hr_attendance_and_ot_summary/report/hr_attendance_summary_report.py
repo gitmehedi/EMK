@@ -31,7 +31,7 @@ class HrAttendanceSummaryReport(models.AbstractModel):
                     att_summary['leave_days'] = att_sum.leave_days
                     att_summary['weekend_days_count'] = att_sum.weekend_days_count
                     att_summary['holidays_days'] = att_sum.holidays_days
-                    att_summary['late_days_overwrite'] = att_sum.late_days_overwrite
+                    att_summary['deduction_days'] = att_sum.deduction_days
                     att_summary['late_hrs'] = att_sum.late_hrs
                     att_summary['schedule_ot_hrs'] = att_sum.schedule_ot_hrs
                     att_summary['cal_ot_hrs'] = att_sum.cal_ot_hrs

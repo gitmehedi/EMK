@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_hr_shift_employees" model="ir.ui.view">
+            <field name="name">hr.batch.employees</field>
+            <field name="model">hr.batch.employees</field>
+            <field name="arch" type="xml">
+                <form string="Employees">
+                    <header>
+                        <button icon="fa-cogs" string="Generate" name="generate_record" type="object" class="oe_highlight"  />
+                    </header>
+                    <group colspan="4" >
+                        <separator string="Employees" colspan="4"/>
+                        <newline/>
+                        <field name="employee_ids" nolabel="1"/>
+                    </group>
+               </form>
+            </field>
+        </record>
+
+        <record id="action_hr_batch_employees" model="ir.actions.act_window">
+            <field name="name">Generate Batch</field>
+            <field name="res_model">hr.batch.employees</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="view_hr_shift_employees"/>
+            <field name="target">new</field>
+        </record>
+
+    </data>
+
+</odoo>

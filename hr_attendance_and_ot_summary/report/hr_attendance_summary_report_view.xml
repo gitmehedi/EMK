@@ -79,7 +79,7 @@
 															<span t-esc="o['late_days_count']"></span>
 														</td>
 														<td>
-															<span t-esc="o['late_days_overwrite']"></span>
+															<span t-esc="o['deduction_days']"></span>
 														</td>
 														<td>
 															<span t-esc="o['leave_days']"></span>
