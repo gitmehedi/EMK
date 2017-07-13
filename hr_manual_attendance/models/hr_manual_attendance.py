@@ -186,7 +186,13 @@ class HrManualAttendance(models.Model):
         #     attendance_obj2.write(valr)
        
         # return True
-    
+
+    @api.onchange('sign_type')
+    def orientation_details(self):
+        self.check_in = False
+        self.check_out = False
+
+
     @api.multi
     def action_refuse(self):
         manager = self.env['hr.employee'].search([('user_id', '=', self.env.uid)], limit=1)
