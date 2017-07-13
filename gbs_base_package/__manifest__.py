@@ -29,5 +29,6 @@
 
     # always loaded
     'data': [
+        'security/security.xml',
     ],
 }
