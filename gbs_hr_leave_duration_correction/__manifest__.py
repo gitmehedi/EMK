@@ -1,5 +1,5 @@
 {
-    'name': 'HR Leave Days Duraiton Correction',
+    'name': 'HR Leave Days Duration Correction',
     'version': '1.0',
     'category': 'leave',
     'author': 'Genweb2 Limited',
@@ -9,6 +9,8 @@
         'hr_holidays',
     ],
     'data': [
+        #'security/ir.model.access.csv',
+        'security/hr_holidays_security.xml',
         'views/hr_holidays_view.xml',
     ],
     'installable': True,
