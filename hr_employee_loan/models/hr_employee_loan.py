@@ -35,7 +35,9 @@ class HrEmployeeLoanRequest(models.Model):
     disbursement_date = fields.Datetime('Disbursement Date', readonly=True, copy=False,
         states={'draft': [('invisible', True)], 'applied': [('invisible', True)], 'approved':[('readonly', True)],'disbursed':[('readonly', True)]})
 
-    remaining_loan_amount = fields.Float(string="Remaining Loan", digits=(15, 2), compute="_compute_loan_amount_with_payslip")
+    remaining_loan_amount = fields.Float(string="Remaining Loan", digits=(15, 2), readonly=True,
+                                         states={'draft': [('invisible', True)], 'applied': [('invisible', True)],
+                                                 'approved': [('invisible', True)], 'disbursed': [('invisible', False)]})
 
     """ All relations fields """
     def _default_employee(self):
@@ -87,6 +89,7 @@ class HrEmployeeLoanRequest(models.Model):
     @api.multi
     def action_disbursed(self):
         self.state = 'disbursed'
+        self.remaining_loan_amount = self.principal_amount
 
     @api.multi
     def action_draft(self):
@@ -139,11 +142,11 @@ class HrEmployeeLoanRequest(models.Model):
             raise Warning('Principal Amount or installment_amount or Rate never take negative value!')
 
     # Show a msg for if principal_amount greater then wage
-    @api.constrains('principal_amount')
-    def _check_amount(self):
-        emp = self.env['hr.contract'].search([('employee_id','=', self.employee_id.id),('wage','<', self.principal_amount)])
-        if emp:
-            raise Warning('Principal Amount cannot be greater then wage !')
+    #@api.constrains('principal_amount')
+    #def _check_amount(self):
+    #    emp = self.env['hr.contract'].search([('employee_id','=', self.employee_id.id),('wage','<', self.principal_amount)])
+    #    if emp:
+    #        raise Warning('Principal Amount cannot be greater then wage !')
 
     # Show a msg for applied & approved state should not be delete
     @api.multi
