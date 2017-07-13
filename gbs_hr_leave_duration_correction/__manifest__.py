@@ -9,7 +9,6 @@
         'hr_holidays',
     ],
     'data': [
-        #'security/ir.model.access.csv',
         'security/hr_holidays_security.xml',
         'views/hr_holidays_view.xml',
     ],
