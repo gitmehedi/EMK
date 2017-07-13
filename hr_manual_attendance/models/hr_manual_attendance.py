@@ -1,12 +1,18 @@
 from openerp import api
 from openerp import models, fields,_
+import datetime
 from openerp.exceptions import UserError, ValidationError
 
 class HrManualAttendance(models.Model):
     _name = 'hr.manual.attendance'
     _inherit = ['mail.thread']
     _rec_name = 'employee_id'
-    
+
+    get_hr_att_id_check_in_row_query = """SELECT id FROM hr_attendance
+                                      WHERE employee_id = %s AND
+                                      check_in < %s AND
+                                      check_out IS NULL
+                                      ORDER BY check_in DESC LIMIT 1"""
 
     def _default_employee(self):
         return self.env['hr.employee'].search([('user_id', '=', self.env.uid)], limit=1)
@@ -162,12 +168,27 @@ class HrManualAttendance(models.Model):
             if manual_attendance.sign_type == 'both':
                 vals1['check_in'] = manual_attendance.check_in
                 vals1['check_out'] = manual_attendance.check_out
+                attendance_obj.create(vals1)
             elif manual_attendance.sign_type == 'sign_in':
                 vals1['check_in'] = manual_attendance.check_in
+                attendance_obj.create(vals1)
             elif manual_attendance.sign_type == 'sign_out':
                 vals1['check_out'] = manual_attendance.check_out
 
-            attendance_obj.create(vals1)
+                hr_att_pool = self.env['hr.attendance']
+                preAttData = hr_att_pool.search([('employee_id', '=', manual_attendance.employee_id.id),
+                                                 ('check_in', '<', manual_attendance.check_out),
+                                                 ('check_out', '=', False)], limit=1, order='check_in desc')
+
+                if preAttData:
+                    timeDiffInHrs = (self.getDateTimeFromStr(manual_attendance.check_out) - self.getDateTimeFromStr(preAttData.check_in)).total_seconds() / 60 / 60
+                    if timeDiffInHrs <= 15:
+                        preAttData.write({'check_out': manual_attendance.check_out})
+                    else:
+                        attendance_obj.create(vals1)
+                else:
+                    attendance_obj.create(vals1)
+
             manual_attendance.write({'state': 'validate',
                                      'approver_id': self.env.uid})
          
@@ -221,3 +242,10 @@ class HrManualAttendance(models.Model):
             if m.state != 'draft':
                 raise UserError(_('You can not delete this.'))
         return super(HrManualAttendance, self).unlink()
+
+
+    def getDateTimeFromStr(self, dateStr):
+        if dateStr:
+            return datetime.datetime.strptime(dateStr, "%Y-%m-%d %H:%M:%S")
+        else:
+            return None
