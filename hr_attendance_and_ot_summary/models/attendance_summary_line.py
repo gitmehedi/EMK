@@ -7,7 +7,7 @@ class AttendanceSummaryLine(models.Model):
 
     salary_days = fields.Integer(string='Salary Days', required=True)
     present_days = fields.Integer(string='Present Days', required=True)
-    late_days_overwrite = fields.Integer(string='Late Days Overwrite')
+    deduction_days = fields.Integer(string='Deduction Day(s)')
     leave_days = fields.Integer(string='Leave Days')
     holidays_days = fields.Integer(string='Holidays Days')
     late_hrs = fields.Float(string='Late Hours')
@@ -76,12 +76,12 @@ class AttendanceSummaryLine(models.Model):
 
 class TempAttendanceSummaryLine(object):
 
-    def __init__(self, salary_days=0, present_days=0, late_days_overwrite=0, leave_days=0, late_hrs=0,
+    def __init__(self, salary_days=0, present_days=0, deduction_days=0, leave_days=0, late_hrs=0,
                  schedule_ot_hrs=0, cal_ot_hrs=0, employee_id=0, absent_days=None, late_days=None, weekend_days=None, holidays_days=0, is_entered_rostering=1):
 
         self.salary_days = salary_days
         self.present_days = present_days
-        self.late_days_overwrite = late_days_overwrite
+        self.deduction_days = deduction_days
         self.leave_days = leave_days
         self.holidays_days = holidays_days
         self.late_hrs = late_hrs

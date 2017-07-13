@@ -51,7 +51,7 @@
 								<field name="leave_days" readonly='1'/>
 								<field name="weekend_days_count" readonly='1'/>
 								<field name="holidays_days" readonly='1'/>
-								<field name="late_days_overwrite" groups="hr.group_hr_manager"/>
+								<field name="deduction_days" groups="hr.group_hr_manager"/>
 								<field name="late_hrs" readonly='1' widget="float_time"/>
 								<field name="schedule_ot_hrs" readonly='1' widget="float_time"/>
 								<field name="cal_ot_hrs" readonly='1' widget="float_time"/>
