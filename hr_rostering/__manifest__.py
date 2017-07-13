@@ -7,9 +7,11 @@
     'data': [
         'security/ir.model.access.csv',
         'security/alter.xml',
+        'wizard/hr_shift_employee_batch_wizard_views.xml',
         'views/hr_shifting.xml',
         'views/hr_shifting_history.xml',
         'views/hr_shift_alter_view.xml',
+        'views/hr_shift_employee_batch_views.xml',
     ],
     'depends': [
         'hr',

@@ -1,1 +1,1 @@
-import gbs_hr_manpower_requisition
+import hr_employee_requisition

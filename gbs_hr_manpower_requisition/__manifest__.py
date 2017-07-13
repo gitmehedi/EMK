@@ -5,10 +5,13 @@
     'category': 'employee',
     'version': '1.0',
     'depends': [
+        'hr',
         'hr_recruitment',
     ],
 
     'data': [
+        'security/ir.model.access.csv',
+        'security/security.xml',
         'views/gbs_hr_manpower_requisition_view.xml',
     ],
 
