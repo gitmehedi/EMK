@@ -12,7 +12,6 @@ class HrAttendanceGraceTime(models.Model):
     def _get_current_date(self):
         return date.today()
 
-
     grace_time = fields.Float(string='Grace Time',required='True',default = 00.50)
     effective_from_date=fields.Date(string='From Effective Day' ,required='True',default = _get_current_date)
     effective_to_date = fields.Date(string='To Effective Day')
@@ -38,38 +37,39 @@ class HrAttendanceGraceTime(models.Model):
             current_from_date = datetime.strptime(from_date, "%Y-%m-%d")
             update_to_date = current_from_date - timedelta(days=1)
 
-            query = """select MAX(id) from hr_attendance_grace_time"""
-            self._cr.execute(query, tuple())
+            query = """select MAX(id) from hr_attendance_grace_time where company_id=%s and operating_unit_id=%s"""
+            self._cr.execute(query, tuple([vals['company_id'],vals['operating_unit_id']]))
             get_previous_row_id = self._cr.fetchone()
 
             if get_previous_row_id:
                 query = """ UPDATE hr_attendance_grace_time SET effective_to_date = %s WHERE id = %s"""
                 self._cr.execute(query, tuple([update_to_date, get_previous_row_id]))
 
-        return super(HrAttendanceGraceTime, self).create(vals)
+            return super(HrAttendanceGraceTime, self).create(vals)
 
     @api.constrains('effective_from_date')
     def _check_validation(self):
-        query = """select MAX(effective_from_date) from hr_attendance_grace_time"""
-        self._cr.execute(query, tuple())
+        query = """select MAX(effective_from_date) from hr_attendance_grace_time where company_id=%s and operating_unit_id=%s"""
+        self._cr.execute(query, tuple([self.company_id.id,self.operating_unit_id.id]))
         get_previous_row_effective_from_date = self._cr.fetchone()
         print get_previous_row_effective_from_date[0]
         # get_previous_row_effective_from_date = get_previous_row_value[0]
-        if get_previous_row_effective_from_date[0] >= self.effective_from_date:
+        if get_previous_row_effective_from_date[0] > self.effective_from_date:
             raise ValidationError(_("Present effective date can not less then previous effective date!!"))
 
     @api.multi
     def write(self, vals):
-        from_date= vals['effective_from_date']
-        query = """select id from hr_attendance_grace_time order by id desc limit 2"""
-        self._cr.execute(query, tuple())
+        from_date= self.effective_from_date
+        query = """select id from hr_attendance_grace_time where company_id=%s and operating_unit_id=%s order by id desc limit 2"""
+        self._cr.execute(query, tuple([self.company_id.id,self.operating_unit_id.id]))
         get_previous_row_value = self._cr.fetchall()
 
-        current_from_date = datetime.strptime(from_date, "%Y-%m-%d")
-        update_to_date = current_from_date - timedelta(days=1)
-        if get_previous_row_value:
-            get_previous_row_id = get_previous_row_value[1][0]
-            if get_previous_row_id:
-                query = """ UPDATE hr_attendance_grace_time SET effective_to_date = %s WHERE id = %s"""
-                self._cr.execute(query, tuple([update_to_date, get_previous_row_id]))
+        if len(get_previous_row_value)>1:
+            current_from_date = datetime.strptime(from_date, "%Y-%m-%d")
+            update_to_date = current_from_date - timedelta(days=1)
+            if get_previous_row_value:
+                get_previous_row_id = get_previous_row_value[1][0]
+                if get_previous_row_id:
+                    query = """ UPDATE hr_attendance_grace_time SET effective_to_date = %s WHERE id = %s"""
+                    self._cr.execute(query, tuple([update_to_date, get_previous_row_id]))
         return super(HrAttendanceGraceTime, self).write(vals)
