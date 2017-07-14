@@ -32,7 +32,7 @@
             <field name="arch" type="xml">
 
                 <xpath expr="//button[@name='action_approve']" position="replace">
-                    <button string="Approve" name="action_approve" states="confirm" type="object" groups="hr_holidays.group_hr_holidays_user,gbs_base_package.group_dept_manager" class="oe_highlight"/>
+                    <button string="Approve" name="action_approve" states="confirm" type="object" groups="gbs_base_package.group_dept_manager" class="oe_highlight"/>
                 </xpath>
 
                 <xpath expr="//field[@name='department_id']" position="replace">
