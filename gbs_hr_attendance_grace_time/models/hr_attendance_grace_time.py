@@ -20,9 +20,14 @@ class HrAttendanceGraceTime(models.Model):
     operating_unit_id = fields.Many2one('operating.unit', string='Select Operating Unit',
                                         required='True',
                                         )
-    check_current_date = fields.Boolean(compute='_compute_date', string='Date Check')
+    check_current_date = fields.Boolean(compute='_compute_date',string='Date Check',readonly=True)
 
 
+    @api.multi
+    @api.depends('effective_from_date')
+    def _compute_date(self):
+        if self.effective_from_date==date.today():
+            self.check_current_date=1
 
     @api.onchange('company_id')
     def onchange_company_id(self):
@@ -52,7 +57,6 @@ class HrAttendanceGraceTime(models.Model):
         query = """select MAX(effective_from_date) from hr_attendance_grace_time where company_id=%s and operating_unit_id=%s"""
         self._cr.execute(query, tuple([self.company_id.id,self.operating_unit_id.id]))
         get_previous_row_effective_from_date = self._cr.fetchone()
-        print get_previous_row_effective_from_date[0]
         # get_previous_row_effective_from_date = get_previous_row_value[0]
         if get_previous_row_effective_from_date[0] > self.effective_from_date:
             raise ValidationError(_("Present effective date can not less then previous effective date!!"))

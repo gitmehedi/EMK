@@ -23,6 +23,9 @@
                         	</tree>
                         </field>
                     </group>
+					<footer>
+						<button special="cancel" string="Cancel" />
+                    </footer>
                </form>
 			</field>
 		</record>
