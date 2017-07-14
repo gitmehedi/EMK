@@ -1040,6 +1040,12 @@ function openerp_pos_loyalty(instance, module) { // module is
                 return true;
             }
         },
+        get_price_with_tax: function () {
+            return Math.ceil(this.get_all_prices().priceWithTax);
+        },
+        get_tax: function () {
+            return Math.ceil(this.get_all_prices().tax);
+        },
 
     });
 

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <template id="assets_backend" name="pos_loyalty css assets" inherit_id="point_of_sale.index">
+            <xpath expr="." position="inside">
+                <script type="text/javascript" src="/pos_discount_total/static/src/js/pos.js"></script>
+            </xpath>
+            <xpath expr="." position="inside">
+                <link rel="stylesheet" href="/pos_discount_total/static/src/css/pos.css"/>
+            </xpath>
+        </template>
+    </data>
+</openerp>
+
