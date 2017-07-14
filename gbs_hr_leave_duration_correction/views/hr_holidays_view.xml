@@ -44,7 +44,7 @@
                 </xpath>
 
                 <xpath expr="//field[@name='number_of_days_temp']" position="replace">
-                   <field name="number_of_days_temp"/>
+                   <field name="number_of_days_temp" readonly="1"/>
                 </xpath>
 
                 <xpath expr="//field[@name='employee_id']" position="replace" >
