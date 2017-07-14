@@ -39,7 +39,7 @@
 							<field name="name" />
 							<field name="period"/>
 						</group>
-						<field name="att_summary_lines">
+						<field name="att_summary_lines" readonly="1">
 							<tree string="List" editable="top" colors="red:is_entered_rostering == 0">
 								<field name="is_entered_rostering" invisible="1"/>
 								<field name="employee_id" readonly='1'/>
