@@ -7,7 +7,7 @@
 			<field name="arch" type="xml">
 				<form string="Shifting Batch">
 					<header>
-						<button name="%(action_hr_batch_employees)d" type="action" string="Generate" class="oe_highlight"/>
+						<button name="%(action_hr_batch_employees)d" type="action" string="Assign Employee" class="oe_highlight"/>
 					</header>
                     <sheet>
 						<label for="name"/>
@@ -15,14 +15,14 @@
                         	<field name="name"/>
                     	</h1>
 						<group col="4">
+							<field name="shift_id" readonly="1"/>
 							<label for="effective_from" string="Period"/>
 							<div>
-							   <field name="effective_from" class="oe_inline"/> - <field name="effective_end" class="oe_inline"/>
+							   <field name="effective_from" class="oe_inline" readonly="1"/> - <field name="effective_end" class="oe_inline" readonly="1"/>
 							</div>
-							<field name="shift_id" options='{"no_open": True,"no_create": 1, "no_create_edit":1}'/>
 	                    </group>
 						<separator string="Employees"/>
-						<field name="shift_emp_ids"/>
+						<field name="shift_emp_ids" readonly="1"/>
                     </sheet>
 				</form>
 			</field>
@@ -48,10 +48,14 @@
 			<field name="view_mode">tree,form</field>
 		</record>
 
-        <menuitem id="main_menu_hr_shifting" name="Shifting" parent="hr_attendance.menu_hr_attendance_root"
-					 sequence="80"/>
+        <menuitem id="main_menu_hr_shifting" name="Rostering"
+				  parent="hr_attendance.menu_hr_attendance_root"
+				  sequence="29" groups="hr.group_hr_user"/>
 
-		<menuitem id="menu_hr_shift_employee_batch" name="Employee Shifting Batch" parent="main_menu_hr_shifting"
-					 sequence="1" action="action_hr_shift_batch" groups="hr.group_hr_user"/>
+		<menuitem id="menu_hr_shift_employee_batch"
+				  name="Employee Shifting Batch"
+				  parent="main_menu_hr_shifting"
+				  sequence="2" action="action_hr_shift_batch"
+				  groups="hr.group_hr_user"/>
     </data>
 </odoo>
