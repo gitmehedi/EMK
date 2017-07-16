@@ -99,7 +99,7 @@
 
     <t t-extend='PosTicket'>
         <t t-jquery=".pos-sale-ticket" t-operation='replace'>
-            <div class="pos-sale-ticket">
+            <div class="pos-sale-ticket" style="font-weight: 500; font-family: 'Times New Roman', Times, serif;">
 
                 <div class="pos-center-align">
                     <strong>
@@ -195,10 +195,16 @@
                 <br/>
                 <table>
                     <tr>
-                        <td>Total:</td>
-                        <td></td>
+                        <td><strong>Total:</strong></td>
+                        <td>
+                            <strong>
+                                <t t-esc="order.get_total_qty()"/>
+                            </strong>
+                        </td>
                         <td class="pos-right-align">
-                            <t t-esc="widget.format_currency(order.getTotalTaxExcluded())"/>
+                             <strong>
+                                <t t-esc="widget.format_currency(order.getTotalTaxExcluded())"/>
+                             </strong>
                         </td>
                     </tr>
                     <tr>
@@ -239,6 +245,7 @@
                             </td>
                             <td class="pos-right-align">
                                 <t t-esc="widget.format_currency(order.getCurrentPoint())"/>
+
                             </td>
                         </tr>
                     </table>

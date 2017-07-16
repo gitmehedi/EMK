@@ -455,7 +455,9 @@ function openerp_pos_loyalty(instance, module) { // module is
             {
                 model: 'operating.unit',
                 fields: [],
-                domain: function(self){ return [['id','=', self.config.operating_unit_id[0]]]; },
+                domain: function (self) {
+                    return [['id', '=', self.config.operating_unit_id[0]]];
+                },
                 loaded: function (self, opunit) {
                     self.opunits = opunit[0];
                     self.oppartner = []
@@ -589,16 +591,16 @@ function openerp_pos_loyalty(instance, module) { // module is
                         + (model.label || model.model || ''),
                         progress);
                     var fields = typeof model.fields === 'function' ? model
-                            .fields(self, tmp)
+                        .fields(self, tmp)
                         : model.fields;
                     var domain = typeof model.domain === 'function' ? model
-                            .domain(self, tmp)
+                        .domain(self, tmp)
                         : model.domain;
                     var context = typeof model.context === 'function' ? model
-                            .context(self, tmp)
+                        .context(self, tmp)
                         : model.context;
                     var ids = typeof model.ids === 'function' ? model
-                            .ids(self, tmp) : model.ids;
+                        .ids(self, tmp) : model.ids;
                     progress += progress_step;
 
                     if (model.model) {
@@ -1046,7 +1048,7 @@ function openerp_pos_loyalty(instance, module) { // module is
         get_tax: function () {
             return Math.ceil(this.get_all_prices().tax);
         },
-        get_unit_price: function(){
+        get_unit_price: function () {
             var digits = this.pos.dp['Product Price'];
             // round and truncate to mimic _sybmbol_set behavior
             return Math.ceil(round_di(this.price || 0, digits).toFixed(digits));
@@ -1207,9 +1209,7 @@ function openerp_pos_loyalty(instance, module) { // module is
                 } else {
                     return 0;
                 }
-            }
-            ,
-
+            },
             addPaymentline: function (cashregister) {
                 var paymentLines = this.get('paymentLines');
                 var newPaymentline = new module.Paymentline({}, {
@@ -1253,11 +1253,17 @@ function openerp_pos_loyalty(instance, module) { // module is
                 }
                 paymentLines.add(newPaymentline);
                 this.selectPaymentline(newPaymentline);
+            },
+            get_total_qty: function () {
+                var qty = 0;
+                var quantityObj = this.attributes.orderLines.models;
+                for (var i = 0; i <= quantityObj.length - 1; i++) {
+                    qty = qty + quantityObj[i].quantity;
+                }
+                return qty;
             }
-            ,
         }
-    )
-    ;
+    );
 
     module.Paymentline = module.Paymentline.extend({
         initialize: function (attributes, options) {
