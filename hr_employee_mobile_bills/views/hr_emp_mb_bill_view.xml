@@ -10,7 +10,7 @@
             <field name="arch" type="xml">
                 <data>
                     <xpath expr="//page[@name='hr_settings']" position="after">
-                        <page string="Mobile Bill Limits">
+                        <page string="Mobile Bill Limits" groups="hr.group_hr_user">
                             <group>
                                 <field name="mob_bill_unlimited" />
                                 <field name="current_bill_limit" attrs="{'invisible': [('mob_bill_unlimited', '=', True)]}" />
