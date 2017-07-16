@@ -45,6 +45,7 @@
 				  name="Login Grace Time"
                   action="action_hr_attendance_grace_time"
                   parent="hr_attendance.menu_hr_attendance_settings"
+                  groups="hr.group_hr_user"
         />
 <!--groups="hr_attendance.group_hr_attendance_user"-->
     </data>
