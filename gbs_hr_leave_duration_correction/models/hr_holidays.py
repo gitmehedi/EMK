@@ -34,15 +34,16 @@ class HRHolidays(models.Model):
 
     @api.model
     def create(self, values):
-        date_from = values.get('date_from')
-        date_to = values.get('date_to')
-        d1 = datetime.strptime(date_from, "%Y-%m-%d")
-        d2 = datetime.strptime(date_to, "%Y-%m-%d")
+        if (values.get('date_from') is not False or values.get('date_to') is not False):
+            date_from = values.get('date_from')
+            date_to = values.get('date_to')
+            d1 = datetime.strptime(str(date_from), "%Y-%m-%d")
+            d2 = datetime.strptime(str(date_to), "%Y-%m-%d")
+            duration = (d2 - d1).days + 1
+            values['number_of_days_temp'] = duration
 
-        duration = (d2 - d1).days + 1
-        values['number_of_days_temp'] = duration
+        return super(HRHolidays, self).create(values)
 
-        return  super(HRHolidays, self).create(values)
 
     """
        As we removed Datetime data type so we have added 1d with date difference
