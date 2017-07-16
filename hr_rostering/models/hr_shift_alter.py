@@ -56,7 +56,3 @@ class HRShiftAlter(models.Model):
             if a.state != 'draft':
                 raise UserError(_('You can not delete this.'))
         return super(HRShiftAlter, self).unlink()
-
-
-    
-    

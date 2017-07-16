@@ -77,7 +77,6 @@ class HrAttendanceDashboard(models.Model):
             'type': 'ir.actions.act_window'
         }
 
-
     @api.multi
     def dashboard_absent_employee_action_id(self):
         view = self.env.ref('hr.view_employee_tree')

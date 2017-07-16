@@ -25,7 +25,7 @@ class HrShiftingHistory(models.Model):
         if self.effective_end > self.effective_from:
             pass
         else:
-            raise ValidationError(_("Effective To date can not less then Effective From date!!"))
+            raise ValidationError(_("Effective End date can not less then Effective From date!!"))
 
     @api.constrains('effective_from')
     def _check_effective_from_validation(self):
@@ -38,13 +38,12 @@ class HrShiftingHistory(models.Model):
                 date_previous_effective_to = datetime.strptime(str_previous_effective_to, "%Y-%m-%d")
                 ranged_last_date = date_previous_effective_to + timedelta(days=1)
                 emp_name=self.employee_id.name
-                print emp_name
                 if self.effective_from <= str_previous_effective_to:
-                    raise ValidationError(_("Current Effective date can not less then previous Effective date!! Already %s has a shift") % emp_name)
+                    raise ValidationError(_("Current Effective date can not less then previous Effective date!! Already %s has a shift. His effective end date %s") % (emp_name,str_previous_effective_to))
                 elif datetime.strptime(self.effective_from, "%Y-%m-%d") == ranged_last_date:
                     pass
                 else:
-                    raise ValidationError(_("Current Effective date should not be too far from previous effective date!!"))
+                    raise ValidationError(_("Current Effective date should not be too far from previous effective date!! %s effective end date %s .")%(emp_name,str_previous_effective_to))
 
     # @api.onchange('effective_from')
     # def _onchange_effective_from(self):
