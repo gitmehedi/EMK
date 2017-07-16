@@ -54,10 +54,7 @@
                 <xpath expr="//field[@name='payslip_status']" position="replace" >
                     <field name="payslip_status" groups="hr_holidays.group_hr_holidays_manager,gbs_base_package.group_dept_manager" attrs="{'invisible':[('type','=','add')]}" widget="toggle_button"/>
                 </xpath>
-
-
             </field>
-
         </record>
     </data>
 </openerp>

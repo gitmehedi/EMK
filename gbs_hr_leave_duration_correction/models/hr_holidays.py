@@ -1,5 +1,6 @@
 from openerp import fields, models, api
 from datetime import date
+from datetime import datetime
 import math
 from datetime import timedelta
 from openerp.exceptions import UserError, AccessError, ValidationError
@@ -20,17 +21,28 @@ class HRHolidays(models.Model):
     date_to = fields.Date('End Date', readonly=True, copy=False,
         states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]})
 
-    number_of_days_temp = fields.Float('Allocation', readonly=True, copy=False)
+    number_of_days_temp = fields.Float('Allocation', readonly=True, copy=False,
+                        states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]})
+
     number_of_days = fields.Float('Number of Days', compute='_compute_number_of_days', store=True)
 
     ## Newly Introduced Fields
     requested_by = fields.Many2one('hr.employee', string="Requisition By", default=_current_employee, readonly=True)
+    employee_id = fields.Many2one('hr.employee', string='Employee', index=True, readonly=True, states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]},
+                            default=_default_employee, domain="[('department_id', '=', department_id)]")
+    department_id = fields.Many2one('hr.department', related='employee_id.department_id', string='Department', readonly=True, store=True)
 
-    employee_id = fields.Many2one('hr.employee', string='Employee', index=True, readonly=True,
-                                  states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]},
-                                  default=_default_employee, domain="[('department_id', '=', department_id)]")
-    department_id = fields.Many2one('hr.department', related='employee_id.department_id',
-                                    string='Department', readonly=True, store=True)
+    @api.model
+    def create(self, values):
+        date_from = values.get('date_from')
+        date_to = values.get('date_to')
+        d1 = datetime.strptime(date_from, "%Y-%m-%d")
+        d2 = datetime.strptime(date_to, "%Y-%m-%d")
+
+        duration = (d2 - d1).days + 1
+        values['number_of_days_temp'] = duration
+
+        return  super(HRHolidays, self).create(values)
 
     """
        As we removed Datetime data type so we have added 1d with date difference
