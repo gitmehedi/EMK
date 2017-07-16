@@ -34,7 +34,7 @@ class HRHolidays(models.Model):
 
     @api.model
     def create(self, values):
-        if (values.get('date_from') is not False or values.get('date_to') is not False):
+        if (values.get('date_from') is not False and values.get('date_to') is not False):
             date_from = values.get('date_from')
             date_to = values.get('date_to')
             d1 = datetime.strptime(str(date_from), "%Y-%m-%d")
@@ -44,6 +44,26 @@ class HRHolidays(models.Model):
 
         return super(HRHolidays, self).create(values)
 
+    @api.multi
+    def write(self, values):
+        for holiday in self:
+            if (holiday.type == 'remove'):
+                start_date = holiday.date_from
+                end_date = holiday.date_to
+
+                if (values.get('date_from', False) != False):
+                    start_date = values.get('date_from')
+
+                if (values.get('date_to', False) != False):
+                    end_date = values.get('date_to')
+
+                d1 = datetime.strptime(str(start_date), "%Y-%m-%d")
+                d2 = datetime.strptime(str(end_date), "%Y-%m-%d")
+
+                duration = (d2 - d1).days + 1
+                values['number_of_days_temp'] = duration
+
+        return super(HRHolidays, self).write(values)
 
     """
        As we removed Datetime data type so we have added 1d with date difference

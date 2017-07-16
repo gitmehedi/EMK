@@ -79,7 +79,7 @@
 		</record>
 
 		<record id="hr_pandding_attendance" model="ir.actions.act_window">
-			<field name="name">Pandding Attendances</field>
+			<field name="name">Pending Attendances</field>
 			<field name="res_model">hr.manual.attendance</field>
 			<field name="domain">[('state','in',['confirm'])]</field>
 			<field name="view_mode">tree,form</field>
@@ -90,8 +90,8 @@
 					 sequence="15"/>
 		<menuitem id="menu_my_attendance" name="My Attendances" parent="menu_hr_manual_attendance"
 					 sequence="5" action="hr_my_attendance" />
-		<menuitem id="menu_pending_attendance" name="Pending Attendances" parent="menu_hr_manual_attendance"
-					 sequence="10" action="hr_pandding_attendance" groups="hr.group_hr_user"/>
+		<menuitem id="menu_pending_attendance" name="Pending Approvals" parent="menu_hr_manual_attendance"
+					 sequence="10" action="hr_pandding_attendance" groups="gbs_base_package.group_dept_manager"/>
 		<menuitem id="menu_manual_attendance" name="Manual Attendances" parent="menu_hr_manual_attendance"
 					 sequence="15" action="hr_manual_attendance" groups="hr.group_hr_user" />
 	</data>
