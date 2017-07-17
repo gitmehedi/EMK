@@ -22,10 +22,9 @@ class HrShiftingHistory(models.Model):
 
     @api.constrains('effective_end')
     def _check_effective_end_validation(self):
-        if self.effective_end > self.effective_from:
-            pass
-        else:
+        if self.effective_end < self.effective_from:
             raise ValidationError(_("Effective End date can not less then Effective From date!!"))
+
 
     @api.constrains('effective_from')
     def _check_effective_from_validation(self):

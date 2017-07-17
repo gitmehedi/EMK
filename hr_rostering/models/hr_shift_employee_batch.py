@@ -12,6 +12,10 @@ class HrShiftEmployeeBatch(models.Model):
 
     shift_emp_ids = fields.One2many('hr.shifting.history', 'shift_batch_id')
 
+    _sql_constraints = [
+        ('name_uniq', 'unique(name)', 'This Name is already in use'),
+    ]
+
 
 
 
