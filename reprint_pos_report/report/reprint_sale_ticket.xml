@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <!--<report-->
+                <!--id="action_report_pos_sale_ticket"-->
+                <!--string="Receipt New"-->
+                <!--model="pos.order"-->
+                <!--report_type="qweb-pdf"-->
+                <!--name="reprint_pos_report.reprint_sale_ticket"-->
+                <!--file="reprint_pos_report.reprint_sale_ticket"-->
+        <!--/>-->
+
+        <record id="action_report_pos_sale_ticket" model="ir.actions.report.xml">
+            <field name="paperformat_id" ref="point_of_sale.paperformat_posreceipt"/>
+        </record>
+    </data>
+</openerp>

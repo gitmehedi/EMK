@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <template id="reprint_sale_ticket">
+            <t t-call="report.html_container">
+                <t t-foreach="docs" t-as="o">
+                    <div class="page">
+                        <div class="pos-sale-ticket"
+                             style="font-weight: 500; font-family: 'Times New Roman', Times, serif;">
+
+                            <div class="pos-center-align" style="text-align: center;">
+                                <strong>
+                                    <t t-esc="main_header['company_name']"/>
+                                </strong>
+                                <br/>
+                                <strong>MARISHIPA OUTFITTERS</strong>
+
+                                <br/>
+                                <t t-esc="main_header['street']"/>
+                                <t t-esc="main_header['street2']"/>
+                                <br/>
+                                <t t-esc="main_header['city']"/>
+                                <t t-esc="main_header['zip']"/>
+                                ,
+                                <t t-esc="main_header['contact_no']"/>
+                                <br/>
+                                VAT Reg. No.
+                                <t t-esc="main_header['vat']"/>
+                                <br/>
+                                Musak-11(ka)
+                                <br/>
+                                <br/>
+                                Shop:
+                                <t t-esc="main_header['shop_name']"/>
+                                <br/>
+                            </div>
+                            <br/>
+                            <div>
+                                <div>
+                                    Invoice#
+                                    <t t-esc="sub_header['order_id']"/>
+                                    <br/>
+                                    Customer:
+                                    <t t-esc="sub_header['customer_name']"/>
+                                    <br/>
+                                    Cashier:
+                                    <t t-esc="sub_header['cashier']"/>
+                                    <br/>
+                                    Date:
+                                    <t t-esc="sub_header['date_order']"/>
+                                    <br/>
+                                </div>
+
+                            </div>
+                            <div style="clear: both;"></div>
+
+                            <br/>
+                            <t t-if="sub_header['receipt_header']">
+                                <div style='text-align:center'>
+                                    <t t-esc="sub_header['receipt_header']"/>
+                                </div>
+                                <br/>
+                            </t>
+                            <table>
+                                <colgroup>
+                                    <col width='30%'/>
+                                    <col width='10%'/>
+                                    <col width='20%'/>
+                                    <col width='15%'/>
+                                    <col width='25%'/>
+                                </colgroup>
+                                <tr>
+                                    <th>Product</th>
+                                    <th class="pos-right-align">Qty</th>
+                                    <th class="pos-right-align">Rate</th>
+                                    <th class="pos-right-align">VAT</th>
+                                    <th class="pos-right-align">Amount</th>
+                                </tr>
+                                <tr t-foreach="orderlines" t-as="orderline">
+                                    <td>
+                                        <t t-esc="orderline['product_name']"/>
+                                        <t t-if="orderline['discount'] > 0">
+                                            <div style="font-size: 12px; font-style:italic; color: #808080;">
+                                                With a<t t-esc="orderline['discount']"/>% discount
+                                            </div>
+                                        </t>
+                                    </td>
+                                    <td style="text-align: right;">
+                                        <t t-esc="orderline['quantity']"/>
+                                    </td>
+                                    <td style="text-align: right;">
+                                        <t t-esc="orderline['rate']"/>
+                                    </td>
+                                    <td style="text-align: right;">
+                                        <t t-esc="orderline['vat']"/>
+                                    </td>
+                                    <td style="text-align: right;">
+                                        <t t-esc="orderline['total_amount']"/>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="padding-bottom:40px;"></td>
+                                </tr>
+
+                                <tr>
+                                    <td>
+                                        <strong>Total:</strong>
+                                    </td>
+                                    <td colspan="3">
+                                        <strong>
+                                            <t t-esc="total_value['quantity']"/>
+                                        </strong>
+                                    </td>
+                                    <td style="text-align: right;">
+                                        <strong>
+                                            <t t-esc="total_value['total']"/>
+                                        </strong>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="4">Discount:</td>
+                                    <td style="text-align: right;">
+                                        <t t-esc="total_value['discount']"/>
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <td colspan="4">VAT</td>
+                                    <td style="text-align: right;">
+                                        <t t-esc="total_value['vat']"/>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="4">
+                                        <strong>Net Amount:</strong>
+                                    </td>
+                                    <td style="text-align: right;">
+                                        <strong>
+                                            <t t-esc="total_value['net_amount']"/>
+                                        </strong>
+                                    </td>
+                                </tr>
+                            </table>
+                            <br/>
+
+                            <!--<div t-attf-class="earned-point #{order.getPoint() > 0 ? 'display-block' : 'display-none'}">-->
+                            <!--<table>-->
+                            <!--<tr>-->
+                            <!--<td>-->
+                            <!--<strong>Earn Points:</strong>-->
+                            <!--</td>-->
+                            <!--<td class="pos-right-align">-->
+                            <!--<t t-esc="widget.format_currency(order.getCurrentPoint())"/>-->
+
+                            <!--</td>-->
+                            <!--</tr>-->
+                            <!--</table>-->
+                            <!--<table>-->
+                            <!--<tr>-->
+                            <!--<td>-->
+                            <!--<strong>Total Points:</strong>-->
+                            <!--</td>-->
+                            <!--<td class="pos-right-align">-->
+                            <!--<t t-esc="widget.format_currency(order.getPoint())"/>-->
+                            <!--</td>-->
+                            <!--</tr>-->
+                            <!--</table>-->
+                            <!--</div>-->
+                            <br/>
+
+                            <!--&lt;!&ndash;<table>&ndash;&gt;-->
+                            <!--&lt;!&ndash;<tr t-foreach="paymentlines" t-as="line">&ndash;&gt;-->
+                            <!--&lt;!&ndash;<td>&ndash;&gt;-->
+                            <!--&lt;!&ndash;<t t-esc="line.name"/>&ndash;&gt;-->
+                            <!--&lt;!&ndash;</td>&ndash;&gt;-->
+                            <!--&lt;!&ndash;<td class="pos-right-align">&ndash;&gt;-->
+                            <!--&lt;!&ndash;<t t-esc="widget.format_currency(line.get_amount())"/>&ndash;&gt;-->
+                            <!--&lt;!&ndash;</td>&ndash;&gt;-->
+                            <!--&lt;!&ndash;</tr>&ndash;&gt;-->
+                            <!--&lt;!&ndash;</table>&ndash;&gt;-->
+                            <!--<br/>-->
+                            <!--&lt;!&ndash;<table>&ndash;&gt;-->
+                            <!--&lt;!&ndash;<tr>&ndash;&gt;-->
+                            <!--&lt;!&ndash;<td>Change:</td>&ndash;&gt;-->
+                            <!--&lt;!&ndash;<td class="pos-right-align">&ndash;&gt;-->
+                            <!--&lt;!&ndash;<t t-esc="widget.format_currency(order.getChange())"/>&ndash;&gt;-->
+                            <!--&lt;!&ndash;</td>&ndash;&gt;-->
+                            <!--&lt;!&ndash;</tr>&ndash;&gt;-->
+                            <!--&lt;!&ndash;</table>&ndash;&gt;-->
+
+
+                            <t t-if="sub_header['receipt_footer']">
+                                <br/>
+                                <div style='text-align:center'>
+                                    <t t-esc="sub_header['receipt_footer']"/>
+                                </div>
+                            </t>
+                        </div>
+
+                    </div>
+                </t>
+            </t>
+        </template>
+    </data>
+</openerp>
