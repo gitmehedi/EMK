@@ -20,14 +20,6 @@ class HrAttendanceGraceTime(models.Model):
     operating_unit_id = fields.Many2one('operating.unit', string='Select Operating Unit',
                                         required='True',
                                         )
-    check_current_date = fields.Boolean(compute='_compute_date',string='Date Check',readonly=True)
-
-
-    @api.multi
-    @api.depends('effective_from_date')
-    def _compute_date(self):
-        if self.effective_from_date==date.today():
-            self.check_current_date=1
 
     @api.onchange('company_id')
     def onchange_company_id(self):
@@ -77,3 +69,12 @@ class HrAttendanceGraceTime(models.Model):
                     query = """ UPDATE hr_attendance_grace_time SET effective_to_date = %s WHERE id = %s"""
                     self._cr.execute(query, tuple([update_to_date, get_previous_row_id]))
         return super(HrAttendanceGraceTime, self).write(vals)
+
+    @api.multi
+    def unlink(self):
+        for a in self:
+            print date.today()
+            print a.effective_from_date
+            if str(a.effective_from_date) < str(date.today()):
+                raise UserError(_('You can not delete this.'))
+        return super(HrAttendanceGraceTime, self).unlink()

@@ -39,7 +39,7 @@ class HRShiftAlter(models.Model):
         return self.env['hr.employee'].search([('user_id', '=', self.env.uid)], limit=1)
 
     # domain = "[('department_id', '=', department_id)]"
-    employee_id = fields.Many2one('hr.employee', string="Employee", required=True, default=_default_employee)
+    employee_id = fields.Many2one('hr.employee', string="Employee", required=True,default=_default_employee)
     department_id = fields.Many2one('hr.department', related='employee_id.department_id', string='Department', store=True)
 
     alter_date = fields.Date(string='Alter Date')
