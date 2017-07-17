@@ -16,6 +16,7 @@
         'hr_attendance',
         'hr',
         'hr_holidays',
+        'gbs_base_package'
     ],    
     
     'description': 
