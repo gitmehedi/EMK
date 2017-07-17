@@ -81,7 +81,7 @@
                                         <t t-esc="orderline['product_name']"/>
                                         <t t-if="orderline['discount'] > 0">
                                             <div style="font-size: 12px; font-style:italic; color: #808080;">
-                                                With a<t t-esc="orderline['discount']"/>% discount
+                                                With a <t t-esc="orderline['discount']"/>% discount
                                             </div>
                                         </t>
                                     </td>

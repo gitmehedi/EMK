@@ -174,7 +174,7 @@
                             <t t-esc="orderline.get_product().display_name"/>
                             <t t-if="orderline.get_discount() > 0">
                                 <div class="pos-disc-font">
-                                    With a<t t-esc="orderline.get_discount()"/>% discount
+                                    With a <t t-esc="orderline.get_discount()"/>% discount
                                 </div>
                             </t>
                         </td>
