@@ -1042,17 +1042,17 @@ function openerp_pos_loyalty(instance, module) { // module is
                 return true;
             }
         },
-        get_price_with_tax: function () {
-            return Math.ceil(this.get_all_prices().priceWithTax);
-        },
-        get_tax: function () {
-            return Math.ceil(this.get_all_prices().tax);
-        },
-        get_unit_price: function () {
-            var digits = this.pos.dp['Product Price'];
-            // round and truncate to mimic _sybmbol_set behavior
-            return Math.ceil(round_di(this.price || 0, digits).toFixed(digits));
-        },
+        // get_price_with_tax: function () {
+        //     return Math.ceil(this.get_all_prices().priceWithTax);
+        // },
+        // get_tax: function () {
+        //     return Math.ceil(this.get_all_prices().tax);
+        // },
+        // get_unit_price: function () {
+        //     var digits = this.pos.dp['Product Price'];
+        //     // round and truncate to mimic _sybmbol_set behavior
+        //     return Math.ceil(round_di(this.price || 0, digits).toFixed(digits));
+        // },
 
     });
 
