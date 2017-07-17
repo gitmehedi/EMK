@@ -29,7 +29,7 @@ class HRHolidays(models.Model):
     ## Newly Introduced Fields
     requested_by = fields.Many2one('hr.employee', string="Requisition By", default=_current_employee, readonly=True)
     employee_id = fields.Many2one('hr.employee', string='Employee', index=True, readonly=True, states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]},
-                            default=_default_employee, domain="[('department_id', '=', department_id)]")
+                            default=_default_employee)
     department_id = fields.Many2one('hr.department', related='employee_id.department_id', string='Department', readonly=True, store=True)
 
     @api.model

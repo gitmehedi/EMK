@@ -4,7 +4,6 @@
 		<!--<record id="rule_login_grace_time" model="ir.rule">-->
 			<!--<field name="name">Login Grace</field>-->
 			<!--<field name="model_id" ref="model_hr_attendance_grace_time" />-->
-			<!--<field name="domain_force">[('check_current_date','=',1)]</field>-->
 			<!--<field name="perm_read" eval="False" />-->
 			<!--<field name="perm_create" eval="False" />-->
 			<!--<field name="perm_write" eval="True" />-->
