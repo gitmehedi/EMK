@@ -6,12 +6,13 @@
         <field name="model_id" ref="model_hr_manual_attendance"/>
         <field name="domain_force">[('employee_id.user_id','=',user.id)]</field>
         <field name="perm_read" eval="True" />
-        <field name="perm_create" eval="False" />
-        <field name="perm_write" eval="False" />
-        <field name="perm_unlink" eval="False" />
+        <field name="perm_create" eval="True" />
+        <field name="perm_write" eval="True" />
+        <field name="perm_unlink" eval="True" />
         <field name="groups" eval="[(4,ref('base.group_user'))]"/>
     </record>
-     <record id="rule_manual_attendance_employee" model="ir.rule">
+
+     <record id="rule_manual_attendance_officer" model="ir.rule">
         <field name="name">Employee Manual Attendance</field>
         <field name="model_id" ref="model_hr_manual_attendance"/>
         <field name="domain_force">[(1, '=', 1)]</field>
@@ -19,7 +20,29 @@
         <field name="perm_create" eval="True" />
         <field name="perm_write" eval="True"/>
         <field name="perm_unlink" eval="True"/>
-        <field name="groups" eval="[(4,ref('hr.group_hr_user'))]"/>
+        <field name="groups" eval="[(4,ref('hr_attendance.group_hr_attendance_user'))]"/>
     </record>
-</odoo>
 
+     <record id="manual_attendance_security_rule" model="ir.rule">
+        <field name="name">Attendance Permission for Department Manager</field>
+        <field name="model_id" ref="model_hr_manual_attendance"/>
+        <field name="domain_force">[('department_id.manager_id.user_id','=',user.id)]</field>
+        <field name="perm_read" eval="True" />
+        <field name="perm_create" eval="True"/>
+        <field name="perm_write" eval="True"/>
+        <field name="perm_unlink" eval="True"/>
+        <field name="groups" eval="[(4,ref('gbs_base_package.group_dept_manager'))]"/>
+    </record>
+
+    <record id="attendance_rule_dept_manager" model="ir.rule">
+        <field name="name">Attendance Permission for Department Manager</field>
+        <field name="model_id" ref="model_hr_attendance"/>
+        <field name="domain_force">[('department_id.manager_id.user_id','=',user.id)]</field>
+        <field name="perm_read" eval="True" />
+        <field name="perm_create" eval="True"/>
+        <field name="perm_write" eval="False"/>
+        <field name="perm_unlink" eval="False"/>
+        <field name="groups" eval="[(4,ref('gbs_base_package.group_dept_manager'))]"/>
+    </record>
+
+</odoo>
