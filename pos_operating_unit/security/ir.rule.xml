@@ -4,7 +4,7 @@
         <record id="inherited_pos_config_operating_unit" model="ir.rule">
             <field name="name">Inherited Pos Config Operating Unit</field>
             <field name="model_id" ref="model_pos_config"/>
-            <field name="domain_force">[('operating_unit_id','=',user.default_operating_unit_id.id)]</field>
+            <field name="domain_force">[('operating_unit_id','in',[o.id for o in user.operating_unit_ids])]</field>
             <field name="global" eval="True"/>
             <field name="perm_create" eval="False"/>
             <field name="perm_unlink" eval="False"/>
@@ -14,7 +14,7 @@
         <record id="inherited_pos_order_operating_unit" model="ir.rule">
             <field name="name">Inherited Pos Order Operating Unit</field>
             <field name="model_id" ref="model_pos_order"/>
-            <field name="domain_force">[('operating_unit_id','=',user.default_operating_unit_id.id)]</field>
+            <field name="domain_force">[('operating_unit_id','in',[o.id for o in user.operating_unit_ids])]</field>
             <field name="global" eval="True"/>
             <field name="perm_create" eval="False"/>
             <field name="perm_unlink" eval="False"/>
@@ -22,9 +22,9 @@
         </record>
 
         <record id="inherited_pos_session_operating_unit" model="ir.rule">
-            <field name="name">Inherited Pos Order Operating Unit</field>
+            <field name="name">Inherited Pos Session Operating Unit</field>
             <field name="model_id" ref="model_pos_session"/>
-            <field name="domain_force">[('operating_unit_id','=',user.default_operating_unit_id.id)]</field>
+            <field name="domain_force">[('operating_unit_id','in',[o.id for o in user.operating_unit_ids])]</field>
             <field name="global" eval="True"/>
             <field name="perm_create" eval="False"/>
             <field name="perm_unlink" eval="False"/>
