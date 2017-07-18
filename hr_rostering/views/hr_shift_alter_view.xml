@@ -57,7 +57,6 @@
 								<field name="alter_date" attrs="{'readonly':['|', ('state','=','approved'),('state','=','confirmed')]}"/>
 								<field name="duty_start" attrs="{'readonly':['|', ('state','=','approved'),('state','=','confirmed')]}"/>
 								<field name="duty_end" attrs="{'readonly':['|', ('state','=','approved'),('state','=','confirmed')]}"/>
-
 								<field name="user_access_hr_manager" invisible="1" />
 								<field name="user_access_dept_manager" invisible="1"/>
 								<field name="user_access" invisible="1"/>
