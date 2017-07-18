@@ -73,8 +73,10 @@ class HrAttendanceGraceTime(models.Model):
     @api.multi
     def unlink(self):
         for a in self:
-            print date.today()
-            print a.effective_from_date
             if str(a.effective_from_date) < str(date.today()):
-                raise UserError(_('You can not delete this.'))
-        return super(HrAttendanceGraceTime, self).unlink()
+                user = self.env['res.users'].browse(self.env.uid)
+                if user.has_group('base.group_system'):
+                    pass
+                else:
+                    raise UserError(_('You can not delete previous dated record.'))
+                return super(HrAttendanceGraceTime, self).unlink()
