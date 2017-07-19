@@ -6,7 +6,7 @@ class HrShiftEmployeeBatch(models.Model):
     _name='hr.shift.employee.batch'
 
     name = fields.Char(string='Batch Name',required=True)
-    effective_from = fields.Date(string='Effective Date')
+    effective_from = fields.Date(string='Effective Date',default=date.today())
     effective_end = fields.Date(string='Effective End Date')
     shift_id = fields.Many2one("resource.calendar", string="Shift Name")
 
@@ -15,7 +15,3 @@ class HrShiftEmployeeBatch(models.Model):
     _sql_constraints = [
         ('name_uniq', 'unique(name)', 'This Name is already in use'),
     ]
-
-
-
-

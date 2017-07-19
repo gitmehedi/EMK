@@ -7,7 +7,7 @@
 			<field name="arch" type="xml">
 				<form string="Shifting Batch">
 					<header>
-						<button name="%(action_hr_batch_employees)d" type="action" string="Assign Employee" class="oe_highlight"/>
+						<button name="%(action_hr_batch_employees)d" type="action" string="Assign Employee" class="oe_highlight" context="{'effective_end': effective_end,'effective_from': effective_from,'shift_id': shift_id}"/>
 					</header>
                     <sheet>
 						<label for="name"/>
@@ -22,7 +22,14 @@
 							</div>
 	                    </group>
 						<separator string="Employees"/>
-						<field name="shift_emp_ids" readonly="1"/>
+						<field name="shift_emp_ids">
+						 	<tree create='false' editable='bottom'>
+            					<field name='employee_id' readonly='1'/>
+								<field name='shift_id' readonly='1'/>
+								<field name='effective_from' readonly='1'/>
+								<field name='effective_end' readonly='1'/>
+							</tree>
+						</field>
                     </sheet>
 				</form>
 			</field>

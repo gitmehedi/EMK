@@ -17,9 +17,6 @@ class HrShifting(models.Model):
     #     if (self.hour_from >= self.hour_to) or (self.ot_hour_from >= self.ot_hour_to) or (self.hour_to >= self.ot_hour_from) :
     #         raise Warning(_("OT to can not less then OT from or \n OT from can not less then Work to or \n Work to can not less then Work from"))
 
-
-
-
 class HrResourceCal(models.Model):
 
     _inherit = ['resource.calendar']
