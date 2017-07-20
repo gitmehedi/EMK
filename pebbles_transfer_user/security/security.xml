@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="0">
+        <record id="group_requisition_transfer_approval_manager" model="res.groups">
+            <field name="name">Transfer-Requisition Approval Manager</field>
+            <field name="category_id" ref="base.module_category_warehouse_management"/>
+        </record>
+        <record id="group_requisition_transfer_user" model="res.groups">
+            <field name="name">Transfer User</field>
+            <field name="category_id" ref="base.module_category_warehouse_management"/>
+        </record>
+    </data>
+</openerp>

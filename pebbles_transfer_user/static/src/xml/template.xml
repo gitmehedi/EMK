@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<template xml:space="preserve">
+    <t t-extend="web.menu_secondary">
+        <t t-jquery="div.oe_footer" t-operation="replace"/>
+    </t>
+</template>
