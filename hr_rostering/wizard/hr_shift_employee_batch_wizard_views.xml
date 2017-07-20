@@ -37,6 +37,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="view_id" ref="view_hr_shift_employees"/>
+            <field name="context">{'default_effective_end': context.get('effective_end', False),'default_shift_id': context.get('shift_id', False),'default_effective_from': context.get('effective_from', False)}</field>
             <field name="target">new</field>
         </record>
 

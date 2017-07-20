@@ -52,7 +52,8 @@
 					<sheet>
 						<group>
 							<group>
-								<field name="employee_id" attrs="{'readonly':['|','|',('state','=','approved'),('state','=','confirmed'),('user_access_hr_manager','=',False),('user_access_dept_manager','=',False)]}"/>
+								<field name="employee_id" attrs="{'readonly':['|','|',('state','=','approved'),('state','=','confirmed'),('user_access_hr_manager','=',False),('user_access_dept_manager','=',False)]}"
+									   options='{"no_open": True,"no_create": 1, "no_create_edit":1}'/>
 								<field name="department_id" invisible="1"/>
 								<field name="alter_date" attrs="{'readonly':['|', ('state','=','approved'),('state','=','confirmed')]}"/>
 								<field name="duty_start" attrs="{'readonly':['|', ('state','=','approved'),('state','=','confirmed')]}"/>

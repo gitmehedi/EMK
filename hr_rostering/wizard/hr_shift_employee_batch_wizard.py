@@ -6,7 +6,7 @@ class HrShiftBatchEmployees(models.TransientModel):
     _name = 'hr.batch.employees'
     _description = 'Create Batch for all selected employees'
 
-    effective_from = fields.Date(string='Effective Start Date', required=True,default=date.today())
+    effective_from = fields.Date(string='Effective Start Date', required=True)
     effective_end = fields.Date(string='Effective End Date', required=True)
     employee_ids = fields.Many2many('hr.employee', 'hr_shift_employee_group_rel',
                                     'shift_id', 'employee_id', string='Employees')
