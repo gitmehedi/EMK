@@ -11,14 +11,18 @@ class StockTransferRequest(models.Model):
     _name = 'stock.transfer.request'
     _rec_name = "to_shop_id"
 
-    barcode = fields.Char(string='Product Barcode', size=20)
+    barcode = fields.Char(string='Product Barcode', size=20,
+                          readonly=True, states={'draft':[('readonly', False)]})
 
     """ Relational Fields """
-    product_line_ids = fields.One2many('stock.transfer.request.line', 'stock_transfer_id')
+    product_line_ids = fields.One2many('stock.transfer.request.line', 'stock_transfer_id',
+                                       readonly=True, states={'draft': [('readonly', False)], 'transfer':[('readonly', False)] })
     to_shop_id = fields.Many2one('stock.location', string="To Shop", required=True, ondelete="cascade",
-                                 domain="[('usage','=','internal')]")
+                                 domain="[('usage','=','internal')]",
+                                 readonly=True, states={'draft': [('readonly', False)]})
     requested_id = fields.Many2one('stock.location', string="Requested By", required=True, ondelete="cascade",
-                                   domain="[('usage','=','internal')]")
+                                   domain="[('usage','=','internal')]",
+                                   readonly=True, states={'draft': [('readonly', False)]})
     is_transfer = fields.Boolean(string="Is Transfer", default=False)
     is_receive = fields.Boolean(string="Is Receive", default=False)
 

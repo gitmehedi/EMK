@@ -88,6 +88,8 @@
         </record>
 
         <menuitem id="stock_requisition_transfer_menu" name="Requisition Transfer"
-                  sequence="15" action="stock_requisition_transfer_action" parent="menu_stock_transfer_root"/>
+                  sequence="15" action="stock_requisition_transfer_action" parent="menu_stock_transfer_root"
+                  groups="pebbles_transfer_user.group_requisition_transfer_user"
+        />
     </data>
 </openerp>

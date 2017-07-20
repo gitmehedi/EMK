@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-        <menuitem name="Stock Requisition Management" id="menu_stock_transfer_root"
-                  parent="stock.menu_stock_root" sequence="3"/>
+        <menuitem name="Requisition Management" id="menu_stock_transfer_root"
+                  parent="stock.menu_stock_root" sequence="3"
+                  groups="pebbles_transfer_user.group_requisition_transfer_approval_manager,pebbles_transfer_user.group_requisition_transfer_user"/>
     </data>
 </openerp>
 

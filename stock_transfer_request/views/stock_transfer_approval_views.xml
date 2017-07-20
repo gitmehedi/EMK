@@ -9,24 +9,14 @@
                     <header>
                         <button name="action_draft" type="object" states="submit"
                                 string="Draft" class=""/>
-                        <button name="action_submit" type="object" states="draft"
-                                string="Submit" class="oe_highlight"/>
                         <button name="action_approve" type="object" states="submit"
                                 string="Approve" class="oe_highlight" />
-                        <button name="action_transfer" type="object" states="approve"
-                                string="Transfer" class="oe_highlight"/>
                         <button name="action_reject" type="object" states="reject"
                                 string="Reject" class="oe_highlight"/>
 
                         <field name="state" widget="statusbar"/>
                     </header>
                     <sheet>
-                        <div class="oe_title">
-                            <label for="barcode" class="oe_edit_only" string="Add Product Using Barcode"/>
-                            <h1>
-                                <field name="barcode"/>
-                            </h1>
-                        </div>
                         <group>
                             <group>
                                 <field name="to_shop_id" string="To Shop"
@@ -85,14 +75,14 @@
             <field name="view_mode">tree,form</field>
         </record>
 
-        <record id="timesheet_resource_action_tree" model="ir.actions.act_window.view">
+        <record id="stock_transfer_approval_request_action_tree_view" model="ir.actions.act_window.view">
             <field eval="1" name="sequence"/>
             <field name="view_mode">tree</field>
             <field name="view_id" ref="stock_approval_request_tree_view"/>
             <field name="act_window_id" ref="stock_transfer_approval_request_action"/>
         </record>
 
-        <record id="timesheet_resource_action_form" model="ir.actions.act_window.view">
+        <record id="stock_transfer_approval_request_action_form_view" model="ir.actions.act_window.view">
             <field eval="2" name="sequence"/>
             <field name="view_mode">form</field>
             <field name="view_id" ref="stock_approval_request_form_view"/>
@@ -101,6 +91,7 @@
 
         <menuitem id="stock_approval_request_menu" name="Transfer Approval"
                   sequence="10" action="stock_transfer_approval_request_action" parent="menu_stock_transfer_root"
+                   groups="pebbles_transfer_user.group_requisition_transfer_approval_manager"
                   />
     </data>
 </openerp>

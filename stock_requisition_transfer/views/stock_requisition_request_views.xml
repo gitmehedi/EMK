@@ -8,7 +8,7 @@
                 <form string="Stock Requisition Form">
                     <header>
                         <button name="action_draft" type="object" states="submit"
-                                string="Draft" class=""/>
+                                string="Draft" class="oe_highlight"/>
                         <button name="action_submit" type="object" states="draft"
                                 string="Submit" class="oe_highlight"/>
                         <button name="action_receive" type="object" states="transfer"
@@ -97,6 +97,7 @@
         </record>
 
         <menuitem id="stock_requisition_menu" name="Requisition"
-                  sequence="5" action="stock_requisition_action" parent="menu_stock_transfer_root"/>
+                  sequence="5" action="stock_requisition_action" parent="menu_stock_transfer_root"
+                groups="pebbles_transfer_user.group_requisition_transfer_user"/>
     </data>
 </openerp>
