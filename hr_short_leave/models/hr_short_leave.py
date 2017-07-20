@@ -17,6 +17,15 @@ class HrShortLeave(models.Model):
     date_to = fields.Datetime('End Date', readonly=True, copy=False,
                               states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]})
 
+    # @api.model
+    # def create(self, values):
+    #     return super(HrShortLeave, self).create(values)
+    #
+    #
+    # @api.multi
+    # def write(self, values):
+    #     return super(HrShortLeave, self).write(values)
+
     def _get_number_of_days(self, date_from, date_to, employee_id):
         """ Returns a float equals to the timedelta between two dates given as string."""
         from_dt = fields.Datetime.from_string(date_from)
