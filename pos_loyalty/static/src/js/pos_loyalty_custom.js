@@ -1042,6 +1042,14 @@ function openerp_pos_loyalty(instance, module) { // module is
                 return true;
             }
         },
+        get_base_price: function () {
+            var rounding = this.pos.currency.rounding;
+            return Math.ceil(this.get_unit_price() * this.get_quantity() * (1 - this.get_discount() / 100));
+        },
+        // get_base_price:    function(){
+        //     var rounding = this.pos.currency.rounding;
+        //     return Math.ceil(this.get_unit_price() * this.get_quantity() * (1 - this.get_discount()/100));
+        // },
         // get_price_with_tax: function () {
         //     return Math.ceil(this.get_all_prices().priceWithTax);
         // },
@@ -1261,7 +1269,14 @@ function openerp_pos_loyalty(instance, module) { // module is
                     qty = qty + quantityObj[i].quantity;
                 }
                 return qty;
-            }
+            },
+            // getDiscountTotal: function () {
+            //     var disount = this.getDiscountTotal();
+            //     //
+            //     // return Math.ceil((this.get('orderLines')).reduce((function (sum, orderLine) {
+            //     //     return sum + (orderLine.get_unit_price() * (orderLine.get_discount() / 100) * orderLine.get_quantity());
+            //     // }), 0));
+            // },
         }
     );
 

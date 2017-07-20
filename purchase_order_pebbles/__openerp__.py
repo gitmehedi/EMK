@@ -24,8 +24,8 @@
     'website': 'www.genweb2.com',
     'category': 'Purchase',
     'data': [
-            'security/ir.model.access.csv',
             'security/security.xml',
+            'security/ir.model.access.csv',
             'views/root_menu.xml',
             'views/inherited_purchase_order_line_views.xml',
             'views/goods_receive_matrix_views.xml'
