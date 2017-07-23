@@ -1,39 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-
-    <record id="short_leave_permission_for_dept_manager" model="ir.rule">
-        <field name="name">Short Leaves Permission for Department Manager</field>
-        <field name="model_id" ref="model_hr_short_leave"/>
-        <field name="domain_force">[('department_id.manager_id.user_id','=',user.id)]</field>
-        <field name="perm_read" eval="True" />
-        <field name="perm_create" eval="True"/>
-        <field name="perm_write" eval="True"/>
-        <field name="perm_unlink" eval="True"/>
-        <field name="groups" eval="[(4,ref('gbs_base_package.group_dept_manager'))]"/>
-    </record>
-
-    <record id="short_leave_permission_for_emp" model="ir.rule">
-        <field name="name">Short Leave Employee Holidays</field>
-        <field name="model_id" ref="model_hr_short_leave"/>
-        <field name="domain_force">[('employee_id.user_id','=',user.id)]</field>
-        <field name="perm_create" eval="False"/>
-        <field name="perm_write" eval="False"/>
-        <field name="perm_unlink" eval="False"/>
-        <field name="groups" eval="[(4,ref('base.group_user'))]"/>
-    </record>
-
-
-    <record id="short_leave_permission_for_officer" model="ir.rule">
-        <field name="name">Short Leave Permission for Holidays Officer</field>
-        <field name="model_id" ref="model_hr_short_leave"/>
-        <field name="domain_force">[(1,'=',1)]</field>
-        <field name="groups" eval="[(4,ref('hr_holidays.group_hr_holidays_user'))]"/>
-    </record>
-
     <record id="ir_rule_hr_emp_11" model="ir.rule">
         <field name="model_id" ref="hr.model_hr_employee"/>
         <field name="domain_force">['|',('department_id','=',False),('department_id.manager_id.user_id','=',user.id)]</field>
-        <field name="name">Short Leaves Employee Permission For Dept Manager</field>
+        <field name="name">Employee Permission For Dept Manager</field>
         <field eval="0" name="perm_unlink"/>
         <field eval="0" name="perm_write"/>
         <field eval="1" name="perm_read"/>
@@ -41,26 +11,40 @@
         <field name="groups" eval="[(4,ref('gbs_base_package.group_dept_manager'))]"/>
     </record>
 
-    <record id="ir_rule_hr_emp_22" model="ir.rule">
-        <field name="model_id" ref="hr.model_hr_employee"/>
-        <field name="domain_force">[('user_id','=',user.id)]</field>
-        <field name="name">Short Leaves Employee Permission Employee</field>
-        <field eval="0" name="perm_unlink"/>
-        <field eval="0" name="perm_write"/>
-        <field eval="1" name="perm_read"/>
-        <field eval="0" name="perm_create"/>
-        <field name="groups" eval="[(4,ref('base.group_user'))]"/>
-    </record>
+    <!--<record id="short_leave_permission_for_dept_manager" model="ir.rule">-->
+        <!--<field name="name">Short Leaves Permission for Department Manager</field>-->
+        <!--<field name="model_id" ref="model_hr_short_leave"/>-->
+        <!--<field name="domain_force">[('department_id.manager_id.user_id','=',user.id)]</field>-->
+        <!--<field name="perm_read" eval="True" />-->
+        <!--<field name="perm_create" eval="True"/>-->
+        <!--<field name="perm_write" eval="True"/>-->
+        <!--<field name="perm_unlink" eval="True"/>-->
+        <!--<field name="groups" eval="[(4,ref('gbs_base_package.group_dept_manager'))]"/>-->
+    <!--</record>-->
 
-    <record id="ir_rule_hr_emp_33" model="ir.rule">
-        <field name="model_id" ref="hr.model_hr_employee"/>
-        <field name="domain_force">['|',('company_id','=',False),('company_id','in',[g.id for g in user.company_ids])]</field>
-        <field name="name">Short Leaves Employee Company Permission Employee</field>
-        <field eval="0" name="perm_unlink"/>
-        <field eval="0" name="perm_write"/>
-        <field eval="1" name="perm_read"/>
-        <field eval="0" name="perm_create"/>
-        <field name="groups" eval="[(4,ref('hr.group_hr_manager'))]"/>
-    </record>
+    <!--<record id="property_rule_short_leaves" model="ir.rule">-->
+        <!--<field name="name">Employee Short Leaves</field>-->
+        <!--<field name="model_id" ref="model_hr_short_leave"/>-->
+        <!--<field name="domain_force">[('employee_id.user_id','=',user.id)]</field>-->
+        <!--<field name="perm_create" eval="False"/>-->
+        <!--<field name="perm_write" eval="False"/>-->
+        <!--<field name="perm_unlink" eval="False"/>-->
+        <!--<field name="groups" eval="[(4,ref('base.group_user'))]"/>-->
+    <!--</record>-->
+
+    <!--<record id="property_rule_short_leaves_writes" model="ir.rule">-->
+        <!--<field name="name">Employee Short Leaves Create, Write, Unlink</field>-->
+        <!--<field name="model_id" ref="model_hr_short_leave"/>-->
+        <!--<field name="domain_force">[('employee_id.user_id','=',user.id), ('state', 'in', ['draft', 'confirm', 'cancel', 'refuse'])]</field>-->
+        <!--<field name="perm_read" eval="False"/>-->
+        <!--<field name="groups" eval="[(4,ref('base.group_user'))]"/>-->
+    <!--</record>-->
+
+    <!--<record id="property_rule_short_leaves_officers" model="ir.rule">-->
+        <!--<field name="name">Short Leaves Officer</field>-->
+        <!--<field name="model_id" ref="model_hr_short_leave"/>-->
+        <!--<field name="domain_force">[(1,'=',1)]</field>-->
+        <!--<field name="groups" eval="[(4,ref('hr_holidays.group_hr_holidays_user'))]"/>-->
+    <!--</record>-->
 
 </odoo>

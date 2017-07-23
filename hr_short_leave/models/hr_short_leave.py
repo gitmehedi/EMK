@@ -8,7 +8,7 @@ from odoo.exceptions import UserError, AccessError, ValidationError
 HOURS_PER_DAY = 8
 
 class HrShortLeave(models.Model):
-    _name = 'hr.short.leave'
+    _name = 'hr.short.leave11'
     _inherit = 'hr.holidays'
     _description = "Short Leave"
 
@@ -78,3 +78,78 @@ class HrShortLeave(models.Model):
                     self.number_of_days_temp = 0
             else:
                raise ValidationError('Start Date and End Date should be same')
+
+    @api.multi
+    def action_approve(self):
+        # if double_validation: this method is the first approval approval
+        # if not double_validation: this method calls action_validate() below
+        if not (self.env.user.has_group('hr_holidays.group_hr_holidays_user')
+                or self.env.user.has_group('gbs_base_package.group_dept_manager')):
+            raise ValidationError(('Only an HR Officer or Manager or Department Manager can approve leave requests.'))
+
+        manager = self.env['hr.employee'].search([('user_id', '=', self.env.uid)], limit=1)
+        for holiday in self:
+            if holiday.state != 'confirm':
+                raise ValidationError(('Leave request must be confirmed ("To Approve") in order to approve it.'))
+
+            if holiday.double_validation:
+                return holiday.write({'state': 'validate1', 'manager_id': manager.id if manager else False})
+            else:
+                holiday.action_validate()
+
+    @api.multi
+    def action_validate(self):
+        if not (self.env.user.has_group('hr_holidays.group_hr_holidays_user')
+                or self.env.user.has_group('gbs_base_package.group_dept_manager')):
+            raise UserError(('Only an HR Officer or Manager or Department Manager can approve leave requests.'))
+
+        manager = self.env['hr.employee'].search([('user_id', '=', self.env.uid)], limit=1)
+        for holiday in self:
+            if holiday.state not in ['confirm', 'validate1']:
+                raise ValidationError(('Leave request must be confirmed in order to approve it.'))
+            if holiday.state == 'validate1' and not ((holiday.env.user.has_group('hr_holidays.group_hr_holidays_manager')
+                                                     or holiday.env.user.has_group('gbs_base_package.group_dept_manager'))):
+                raise ValidationError(('Only an HR Manager can apply the second approval on leave requests.'))
+
+            holiday.write({'state': 'validate'})
+            if holiday.double_validation:
+                holiday.write({'manager_id2': manager.id})
+            else:
+                holiday.write({'manager_id': manager.id})
+            if holiday.holiday_type == 'employee' and holiday.type == 'remove':
+                meeting_values = {
+                    'name': holiday.display_name,
+                    'categ_ids': [
+                        (6, 0, [holiday.holiday_status_id.categ_id.id])] if holiday.holiday_status_id.categ_id else [],
+                    'duration': holiday.number_of_days_temp * HOURS_PER_DAY,
+                    'description': holiday.notes,
+                    'user_id': holiday.user_id.id,
+                    'start': holiday.date_from,
+                    'stop': holiday.date_to,
+                    'allday': False,
+                    'state': 'open',  # to block that meeting date in the calendar
+                    'privacy': 'confidential'
+                }
+                # Add the partner_id (if exist) as an attendee
+                if holiday.user_id and holiday.user_id.partner_id:
+                    meeting_values['partner_ids'] = [(4, holiday.user_id.partner_id.id)]
+
+                meeting = self.env['calendar.event'].with_context(no_mail_to_attendees=True).create(meeting_values)
+                holiday._create_resource_leave()
+                holiday.write({'meeting_id': meeting.id})
+            elif holiday.holiday_type == 'category':
+                leaves = self.env['hr.holidays']
+                for employee in holiday.category_id.employee_ids:
+                    values = holiday._prepare_create_by_category(employee)
+                    leaves += self.with_context(mail_notify_force_send=False).create(values)
+                # TODO is it necessary to interleave the calls?
+                leaves.action_approve()
+                if leaves and leaves[0].double_validation:
+                    leaves.action_validate()
+        return True
+
+    def _check_state_access_right(self, vals):
+        if vals.get('state') and vals['state'] not in ['draft', 'confirm', 'cancel'] and not (self.env['res.users'].has_group('hr_holidays.group_hr_holidays_user')
+                                                                                              or self.env['res.users'].has_group('gbs_base_package.group_dept_manager')):
+            return False
+        return True
