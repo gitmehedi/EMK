@@ -1042,26 +1042,12 @@ function openerp_pos_loyalty(instance, module) { // module is
                 return true;
             }
         },
-        get_base_price: function () {
-            var rounding = this.pos.currency.rounding;
-            return Math.ceil(this.get_unit_price() * this.get_quantity() * (1 - this.get_discount() / 100));
+        get_price_with_tax: function () {
+            return Math.round(this.get_all_prices().priceWithTax);
         },
-        // get_base_price:    function(){
-        //     var rounding = this.pos.currency.rounding;
-        //     return Math.ceil(this.get_unit_price() * this.get_quantity() * (1 - this.get_discount()/100));
-        // },
-        // get_price_with_tax: function () {
-        //     return Math.ceil(this.get_all_prices().priceWithTax);
-        // },
-        // get_tax: function () {
-        //     return Math.ceil(this.get_all_prices().tax);
-        // },
-        // get_unit_price: function () {
-        //     var digits = this.pos.dp['Product Price'];
-        //     // round and truncate to mimic _sybmbol_set behavior
-        //     return Math.ceil(round_di(this.price || 0, digits).toFixed(digits));
-        // },
-
+        get_tax: function () {
+            return this.get_all_prices().tax;
+        },
     });
 
     var currentPurchase = 0;
@@ -1270,15 +1256,26 @@ function openerp_pos_loyalty(instance, module) { // module is
                 }
                 return qty;
             },
-            // getDiscountTotal: function () {
-            //     var disount = this.getDiscountTotal();
-            //     //
-            //     // return Math.ceil((this.get('orderLines')).reduce((function (sum, orderLine) {
-            //     //     return sum + (orderLine.get_unit_price() * (orderLine.get_discount() / 100) * orderLine.get_quantity());
-            //     // }), 0));
-            // },
+            getTotalTaxIncluded: function () {
+                return Math.round(this.getTotalTaxExcluded() + this.getTax());
+            },
         }
     );
+
+
+    module.OrderWidget.include({
+        update_summary: function () {
+            var order = this.pos.get('selectedOrder');
+            var total = order ? order.getTotalTaxIncluded() : 0;
+            var taxes = order ? total - order.getTotalTaxExcluded() : 0;
+            var quantity = order ? order.get_total_qty() : 0;
+
+            this.el.querySelector('.summary .total > .value').textContent = this.format_currency(total);
+            this.el.querySelector('.summary .total .subentry .value').textContent = this.format_currency(taxes);
+            this.el.querySelector('.qty .quantity .value').textContent = quantity;
+        },
+    });
+
 
     module.Paymentline = module.Paymentline.extend({
         initialize: function (attributes, options) {

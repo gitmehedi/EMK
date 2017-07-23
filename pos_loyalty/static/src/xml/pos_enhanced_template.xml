@@ -18,39 +18,34 @@
         </div>
     </t>
 
-    <!--<t t-extend="OrderWidget">-->
-
-    <!--<t t-jquery=".order-container .order-scroller .order .summary.clearfix" t-operation='replace'>-->
-
-    <!--<div class="summary clearfix">-->
-    <!--<div t-attf-class="line #{orderlines.length === 0 ? 'empty' : ''}">-->
-    <!--<div class='entry total'>-->
-    <!--<div>-->
-    <!--<span class="label ">Total:</span>-->
-    <!--<span class="value total">0.00 €</span>-->
-    <!--</div>-->
-
-    <!--<div class='subentry label'>Taxes:-->
-    <!--<span class="value taxes">0.00€</span>-->
-    <!--</div>-->
-
-    <!--</div>-->
-    <!--</div>-->
-    <!--</div>-->
-
-    <!--<div class="total_point_block ">-->
-    <!--<t t-if="orderlines.length != 0">-->
-    <!--<div t-attf-class="loyalty-point #{order.getPoint() > 0 ? 'display-block' : 'display-none'}">-->
-    <!--<span class="label ">Loyalty Point:</span>-->
-    <!--<span class="label ">-->
-    <!--<t t-esc="order.getPoint()"/>-->
-    <!--</span>-->
-    <!--</div>-->
-    <!--</t>-->
-    <!--</div>-->
-    <!--</t>-->
-
-    <!--</t>-->
+    <t t-name="OrderWidget">
+        <div class="order-container">
+            <div class="order-scroller touch-scrollable">
+                <div class="order">
+                    <ul class="orderlines">
+                        <t t-if="orderlines.length === 0">
+                            <li class="orderline empty">
+                                Your shopping cart is empty
+                            </li>
+                        </t>
+                    </ul>
+                    <div t-attf-class=" #{orderlines.length === 0 ? 'empty' : ''}">
+                        <div class='qty' style="margin-top:27px; float: left;">
+                                    <strong class="quantity">Total Products: <span class="value">0.00</span></strong>
+                        </div>
+                    </div>
+                    <div class="summary clearfix">
+                        <div t-attf-class="line #{orderlines.length === 0 ? 'empty' : ''}">
+                            <div class='entry total'>
+                                <span class="label">Total: </span> <span class="value">0.00 €</span>
+                                <div class='subentry'>Taxes: <span class="value">0.00€</span></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
 
 
     <t t-extend='ClientLine'>
@@ -185,7 +180,7 @@
                             <t t-esc="orderline.get_unit_price()"/>
                         </td>
                         <td class="pos-right-align">
-                            <t t-esc="orderline.get_tax()"/>
+                            <t t-esc="orderline.get_tax().toFixed(2)"/>
                         </td>
                         <td class="pos-right-align">
                             <t t-esc="widget.format_currency(orderline.get_display_price())"/>
@@ -198,7 +193,7 @@
                         <td><strong>Total:</strong></td>
                         <td>
                             <strong>
-                                <t t-esc="order.get_total_qty()"/>
+                                <t t-esc="Math.ceil(order.get_total_qty())"/>
                             </strong>
                         </td>
                         <td class="pos-right-align">
