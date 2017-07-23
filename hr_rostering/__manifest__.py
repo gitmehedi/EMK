@@ -7,6 +7,7 @@
     'data': [
         'security/ir.model.access.csv',
         'security/alter.xml',
+        'security/shifting_rule.xml',
         'wizard/hr_shift_employee_batch_wizard_views.xml',
         'views/hr_shifting.xml',
         'views/hr_shifting_history.xml',

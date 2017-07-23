@@ -39,6 +39,14 @@
 							<field name="name" />
 							<field name="period"/>
 						</group>
+						<group col="2">
+							<group>
+								<field name="company_id" options='{"no_open": True,"no_create": 1, "no_create_edit":1}'/>
+							</group>
+							<group>
+								<field name="operating_unit_id" options='{"no_open": True,"no_create": 1, "no_create_edit":1}' />
+							</group>
+						</group>
 						<field name="att_summary_lines" readonly="1">
 							<tree string="List" editable="top" colors="red:is_entered_rostering == 0">
 								<field name="is_entered_rostering" invisible="1"/>
