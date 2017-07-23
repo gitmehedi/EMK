@@ -1,78 +1,66 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
     <data>
-        <!-- Holidays: Allocation Request -->
-        <record id="hr_short_leave_from" model="ir.ui.view">
-            <field name="name">Short Leave</field>
+
+        <record id="hr_short_leave_form_view" model="ir.ui.view">
+            <field name="name">hr.holidays.view.form</field>
             <field name="model">hr.short.leave</field>
+            <field name="mode">primary</field>
+            <field name="inherit_id" ref="hr_holidays.edit_holiday_new"/>
             <field name="arch" type="xml">
-                <form string="Short Leave">
-                	<header>
-						<button string="Confirm" name="action_confirm" states="draft" type="object" class="oe_highlight"/>
-                    	<button string="Approve" name="action_approve" states="applied" type="object" class="oe_highlight"/>
-                     	<button string="Refuse" name="action_refuse" states="applied,approved" type="object" />
-                    	<button string="Reset to Draft" name="action_draft" states="applied,refuse" type="object"/> 
-                    	<field name="state" widget="statusbar" statusbar_visible="draft,applied,approved"/>
-					</header>
-	                <sheet>
-	                    <group>
-	                        <group>
-	                            <field name="name"/>
-	                            <label for="number_of_days_temp" string="Duration"/>
-	                            <div>	                                
-	                                <div>
-	                                    <field name="number_of_days_temp" class="oe_inline"/> days
-	                                </div>
-	                            </div>
-	                        </group>
-	                        <group>
-	                            <field name="holiday_type" />
-	                            <field name="employee_id" />                   
-	                            <field name="department_id" />
-	                            <field name="payslip_status" />
-	                        </group>
-	                        <field name="notes" nolabel="1" colspan="4" placeholder="Add a reason..." />
-	                        <div >
-	                            <separator string="Comment by Manager"/>
-	                            <field name="report_note" placeholder="e.g. Report to the next month..."/>
-	                        </div>
-	                    </group>
-	                </sheet>
-               
-                </form>
+                <xpath expr="//button[@name='action_approve']" position="replace">
+                    <button string="Approve" name="action_approve" states="confirm" type="object"
+                            groups="gbs_base_package.group_dept_manager" class="oe_highlight"/>
+                </xpath>
+
+                <xpath expr="//button[@name='action_refuse']" position="replace">
+                    <button string="Refuse" name="action_refuse" states="confirm,validate,validate1" type="object"
+                            groups="hr_holidays.group_hr_holidays_user, gbs_base_package.group_dept_manager"/>
+                </xpath>
+
+                <xpath expr="//field[@name='date_from']" position="replace" >
+                    <field name="date_from" attrs="{'required':[('type', '=', 'remove')]}" class="oe_inline"/>
+                </xpath>
+
+                <xpath expr="//field[@name='date_to']" position="replace">
+                    <field name="date_to" attrs="{'required':[('type', '=', 'remove')]}" class="oe_inline"/>
+                </xpath>
+
+                <xpath expr="//field[@name='number_of_days_temp']" position="replace">
+                    <field name="number_of_days_temp" class="oe_inline"/> Hours
+                </xpath>
+
             </field>
         </record>
 
-        <record id="hr_short_leave_tree" model="ir.ui.view">
+        <record id="hr_short_leave_tree_view" model="ir.ui.view">
             <field name="name">hr.short.leave.tree</field>
             <field name="model">hr.short.leave</field>
+            <field name="mode">primary</field>
+            <field name="inherit_id" ref="hr_holidays.view_holiday_allocation_tree"/>
             <field name="arch" type="xml">
-                <tree >
-                    <field name="employee_id"/>
-                    <field name="holiday_type"/>                   
-                    <field name="department_id" invisible="1"/>                    
-                    <field name="name"/>
-                    <field name="number_of_days_temp"/>
-                    <field name="state"/> 
-                    
-                   
-                </tree>
+                <xpath expr="//field[@name='date_from']" position="replace">
+                    <field name="date_from" groups="hr_holidays.group_hr_holidays_user, gbs_base_package.group_dept_manager"/>
+                </xpath>
+
+                <xpath expr="//field[@name='date_to']" position="replace">
+                    <field name="date_to" groups="hr_holidays.group_hr_holidays_user, gbs_base_package.group_dept_manager"/>
+                </xpath>
+
             </field>
         </record>
-		
+
         <record model="ir.actions.act_window" id="hr_short_leave_action">
-            <field name="name">Short Leave</field>
+            <field name="name">Short Leaves</field>
             <field name="res_model">hr.short.leave</field>
             <field name="view_mode">tree,form</field>
         </record>
 
-        <menuitem id="short_leave_menu" name="Short Leave"
-                  action="hr_short_leave_action" groups="base.group_user"/>   
-        <menuitem id="leave_menu" name="Short Leave" parent="short_leave_menu" 
-                  action="hr_short_leave_action" groups="base.group_user"/> 
-        <menuitem id="short_leave" name="Short Leave" parent="leave_menu" 
-                  action="hr_short_leave_action" groups="base.group_user"/> 
-                  
-                  
+        <menuitem id="short_leave_menu" name="Short Leaves" parent="hr_holidays.menu_hr_holidays_root" action="hr_short_leave_action"
+                  groups="gbs_base_package.group_dept_manager,hr.group_hr_manager,base.group_user"/>
+
+        <menuitem id="short_leave" name="Short Leaves" parent="short_leave_menu" action="hr_short_leave_action"
+                  groups="gbs_base_package.group_dept_manager,hr.group_hr_manager,base.group_user"/>
+
     </data>
 </odoo>

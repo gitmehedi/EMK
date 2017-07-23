@@ -9,6 +9,13 @@ class AttendanceSummary(models.Model):
 
     name = fields.Char(size=100, string='Title', required='True')
     period = fields.Many2one("account.period", "Period", required=True)
+    company_id = fields.Many2one('res.company', string='Company', required='True',
+                                 default=lambda self: self.env['res.company']._company_default_get())
+    operating_unit_id = fields.Many2one('operating.unit', string='Operating Unit',
+                                        required='True',
+                                        default=lambda self: self.env['res.users'].
+                                        operating_unit_default_get(self._uid)
+                                        )
     state = fields.Selection([
         ('draft', "Draft"),
         ('generated', "Generated"),

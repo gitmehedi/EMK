@@ -39,7 +39,7 @@
 					<sheet>
 						<group>
 							<group>
-								<field name="employee_id"   attrs="{'readonly':['|', ('state','=','validate'),('state','=','confirm')]}"/>
+								<field name="employee_id"   attrs="{'readonly':['|', ('state','=','validate'),('state','=','confirm')]}" options="{'no_quick_create':True,'no_create_edit':True,'no_open': True}"/>
 								<field name="department_id" attrs="{'readonly':['|', ('state','=','validate'),('state','=','confirm'),('state','=','draft')]}" readonly="1" />
 							</group>
 							<group>

@@ -1,60 +1,80 @@
-from openerp import models, fields
+from odoo import models, fields
 import datetime
-from openerp import api
+from datetime import datetime
+from datetime import timedelta
+from odoo import api
+from odoo.exceptions import UserError, AccessError, ValidationError
+
+HOURS_PER_DAY = 8
 
 class HrShortLeave(models.Model):
     _name = 'hr.short.leave'
+    _inherit = 'hr.holidays'
     _description = "Short Leave"
-    _order = 'name desc'
-    
-#     name = fields.Char('Description',required=True,states={'approved':[('readonly', True)]})``
-    name = fields.Char(string='Description', required=True,
-                states={'approved': [('readonly', True)], 'refuse': [('readonly', True)]})
-    payslip_status = fields.Boolean('Reported in last payslips',
-        help='Green this button when the leave has been taken into account in the payslip.',
-        states={'approved': [('readonly', True)], 'refuse': [('readonly', True)]})
-    report_note = fields.Text('HR Comments', states={'approved': [('readonly', True)], 'refuse': [('readonly', True)]})
-    notes = fields.Text('Reasons', readonly=True, states={'approved': [('readonly', True)], 'refuse': [('readonly', True)]})
-    number_of_days_temp = fields.Float('Allocation Days', copy=False, states={'approved': [('readonly', True)], 'refuse': [('readonly', True)]})
-    state = fields.Selection([
-        ('draft', "Draft"),
-        ('applied', "To Approved"),
-        ('approved', "Approved"),
-        ('refuse', 'Refused'),
-    ], default='draft')
-    
-    #category_id = fields.Many2one('hr.employee.category', string='Employee Tag', readonly=True)
-    holiday_type = fields.Selection([
-        ('employee', 'By Employee'),
-        ('category', 'By Employee Tag')
-    ], string='Allocation Mode', readonly=True, required=True, default='employee')
-    def _default_employee(self):
-        return self.env['hr.employee'].search([('user_id', '=', self.env.uid)], limit=1)
 
-    employee_id = fields.Many2one('hr.employee', string="Employee", default=_default_employee,required=True, ondelete='cascade', index=True,
-       states={'approved': [('readonly', True)], 'refuse': [('readonly', True)]})
-                                 
-    department_id = fields.Many2one('hr.department', string="Department", related="employee_id.department_id" , store=True,
-        states={'approved': [('readonly', True)], 'refuse': [('readonly', True)]})
-    
-    @api.multi
-    def action_draft(self):
-        self.state = 'draft'
-        
-    @api.multi
-    def action_confirm(self):
-        self.state = 'applied'
-                       
-    @api.multi
-    def action_approve(self):
-        self.state = 'approved'
-        
-    @api.multi
-    def action_refuse(self):
-        self.state = 'refuse'
-            
-        
-        
-        
-        
-        
+    date_from = fields.Datetime('Start Date', readonly=True, index=True, copy=False,
+                                states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]})
+    date_to = fields.Datetime('End Date', readonly=True, copy=False,
+                              states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]})
+
+    # @api.model
+    # def create(self, values):
+    #     return super(HrShortLeave, self).create(values)
+    #
+    #
+    # @api.multi
+    # def write(self, values):
+    #     return super(HrShortLeave, self).write(values)
+
+    def _get_number_of_days(self, date_from, date_to, employee_id):
+        """ Returns a float equals to the timedelta between two dates given as string."""
+        from_dt = fields.Datetime.from_string(date_from)
+        to_dt = fields.Datetime.from_string(date_to)
+
+        if employee_id:
+            employee = self.env['hr.employee'].browse(employee_id)
+            resource = employee.resource_id.sudo()
+            if resource and resource.calendar_id:
+                hours = resource.calendar_id.get_working_hours(from_dt, to_dt, resource_id=resource.id, compute_leaves=True)
+                uom_hour = resource.calendar_id.uom_id
+                uom_day = self.env.ref('product.product_uom_day')
+                if uom_hour and uom_day:
+                    return uom_hour._compute_quantity(hours, uom_day)
+
+        time_delta = to_dt - from_dt
+        return time_delta.days + (float(time_delta.seconds) / 3600)  #Take only Time difference
+
+    @api.onchange('date_from')
+    def _onchange_date_from(self):
+        """ If there are no date set for date_to, automatically set one 8 hours later than
+            the date_from. Also update the number_of_days.
+        """
+        date_from = self.date_from
+        date_to = self.date_to
+
+        # No date_to set so far: automatically compute one 8 hours later
+        if date_from and not date_to:
+            date_to_with_delta = fields.Datetime.from_string(date_from) #+ timedelta(hours=HOURS_PER_DAY)
+            self.date_to = str(date_to_with_delta)
+
+        # Compute and update the number of days
+        if (date_to and date_from) and (date_from <= date_to):
+            self.number_of_days_temp = self._get_number_of_days(date_from, date_to, self.employee_id.id)
+        else:
+            self.number_of_days_temp = 0
+
+    @api.onchange('date_to')
+    def _onchange_date_to(self):
+        """ Update the number_of_days. """
+        date_from = self.date_from
+        date_to = self.date_to
+
+        if date_from and date_to:
+            if (date_from[:10] == date_to[:10]): #only date is equal
+                # Compute and update the number of days
+                if (date_to and date_from) and (date_from <= date_to):
+                    self.number_of_days_temp = self._get_number_of_days(date_from, date_to, self.employee_id.id)
+                else:
+                    self.number_of_days_temp = 0
+            else:
+               raise ValidationError('Start Date and End Date should be same')

@@ -10,16 +10,14 @@ class HRShiftAlter(models.Model):
 
     # user access funtion
     def _employee_check_hr_manager(self):
-        user = self.env['res.users'].browse(self.env.uid)
-
+        user = self.env.user.browse(self.env.uid)
         if user.has_group('hr.group_hr_manager'):
             return True
         else:
             return False
 
     def _employee_check_user(self):
-        user = self.env['res.users'].browse(self.env.uid)
-
+        user = self.env.user.browse(self.env.uid)
         if user.has_group('base.group_user'):
             return True
         else:
@@ -27,8 +25,7 @@ class HRShiftAlter(models.Model):
 
 
     def _employee_check_dept_manager(self):
-        user = self.env['res.users'].browse(self.env.uid)
-
+        user = self.env.user.browse(self.env.uid)
         if user.has_group('gbs_base_package.group_dept_manager'):
             return True
         else:
@@ -64,6 +61,13 @@ class HRShiftAlter(models.Model):
         ('approved', "Approved"), 
         ('refuse', 'Refused'),
     ], default = 'draft')
+
+    @api.onchange('user_access_dept_manager')
+    def onchange_user_access_dept_manager(self):
+        if self.user_access_hr_manager!=True and self.user_access_dept_manager:
+            return {'domain': {'employee_id': [('department_id', '=', self.department_id.id)]}}
+        else:
+            return {'domain': {'employee_id': [('company_id', '=', self.env.user.company_id.id )]}}
 
     @api.multi
     def action_approve(self):

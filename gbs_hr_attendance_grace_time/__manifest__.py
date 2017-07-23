@@ -1,6 +1,6 @@
 {
     "name": "GBS HR Attendance Grace Time",
-    "summary": """""",
+    "summary": """Create Grace time for employee shifting""",
     "version": "1.0.0",
     "author": "Genweb2 Limited",
     "website": "http://www.genweb2.com",
@@ -13,7 +13,7 @@
     ],
     "data": [
         "views/hr_attendance_grace_time_views.xml",
-        "security/ir_rule.xml",
+        'security/ir.model.access.csv',
     ],
     'installable': True,
     'application': True
