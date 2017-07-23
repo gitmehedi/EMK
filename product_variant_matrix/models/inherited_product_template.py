@@ -22,7 +22,7 @@ class InheritedProductAttributeLineExtend(models.Model):
 class InheritedProductTemplate(models.Model):
     _inherit = 'product.template'
 
-    product_variant_check = fields.Boolean('Show Variant Matrix', default=True)
+    product_variant_check = fields.Boolean('Show Variant Matrix', default=False)
     attribute_line_extend_ids = fields.One2many('product.attribute.line.extend', 'product_tmp_id', string='')
     
     def update_product_variant(self, product_tmp_id):
@@ -59,10 +59,12 @@ class InheritedProductTemplate(models.Model):
 
     @api.model
     def create(self, vals):
+
         ''' Store the initial standard price in order to be able to retrieve the cost of a product template for a given date'''
+        color_ids = []
+        size_ids = []
         product_template_id = super(InheritedProductTemplate, self).create(vals)
-	color_ids = []
-	size_ids = []
+
         for att in product_template_id.attribute_line_ids:
             if att.attribute_id.name == 'Color':
                 color_ids = att.value_ids
