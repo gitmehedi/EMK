@@ -1,6 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
-	<data noupdate="0">
+	<data>
+		<record id="property_rule_hr_summary" model="ir.rule">
+            <field name="name">HR Employee Summary Record</field>
+            <field name="model_id" ref="model_hr_attendance_summary"/>
+            <field name="domain_force">[('operating_unit_id','in',user.operating_unit_ids.ids)]</field>
+            <field name="perm_read" eval="True" />
+            <field name="perm_create" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
+        </record>
+
+        <record id="property_rule_hr_attendance_menu" model="ir.rule">
+            <field name="name">HR Employee Attendance Record</field>
+            <field name="model_id" ref="hr_attendance.model_hr_attendance"/>
+            <field name="domain_force">[('employee_id.operating_unit_id.id','in',user.operating_unit_ids.ids)]</field>
+            <field name="perm_read" eval="True" />
+            <field name="perm_create" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
+        </record>
 
 	</data>
 </openerp>

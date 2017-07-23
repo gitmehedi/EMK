@@ -21,6 +21,14 @@
 							   <field name="effective_from" class="oe_inline" readonly="1"/> - <field name="effective_end" class="oe_inline" readonly="1"/>
 							</div>
 	                    </group>
+						<group col="2">
+							<group>
+								<field name="company_id" options='{"no_open": True,"no_create": 1, "no_create_edit":1}'/>
+							</group>
+							<group>
+								<field name="operating_unit_id" options='{"no_open": True,"no_create": 1, "no_create_edit":1}' />
+							</group>
+						</group>
 						<separator string="Employees"/>
 						<field name="shift_emp_ids">
 						 	<tree create='false' editable='bottom'>
@@ -66,3 +74,4 @@
 				  groups="hr.group_hr_user"/>
     </data>
 </odoo>
+<!--groups="operating_unit.group_multi_operating_unit"-->
