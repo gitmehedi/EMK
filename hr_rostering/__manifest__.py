@@ -18,6 +18,7 @@
         'hr',
         'hr_payroll',
         'resource',
+        'hr_employee_operating_unit',
     ],    
     
     'description': 
