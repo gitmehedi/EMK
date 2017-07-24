@@ -2,7 +2,7 @@
 <odoo>
     <data>
 
-        <!-- Holidays: Allocation Request -->
+         Holidays: Allocation Request
         <record id="edit_holiday_new1" model="ir.ui.view">
             <field name="name">Short Leave Request</field>
             <field name="model">hr.short.leave</field>
@@ -12,7 +12,7 @@
                 <field name="type" invisible="1"/>
                 <header>
                     <button string="Confirm" name="action_confirm" states="draft" type="object" class="oe_highlight"/>
-                    <button string="Approve" name="action_approve" states="confirm" type="object" groups="gbs_base_package.group_dept_manager" class="oe_highlight"/>
+                    <button string="Approve" name="action_approve" states="confirm" type="object" class="oe_highlight"/>
                     <button string="Validate" name="action_validate" states="validate1" type="object" groups="hr_holidays.group_hr_holidays_manager" class="oe_highlight"/>
                     <button string="Refuse" name="action_refuse" states="confirm,validate,validate1" type="object"  groups="hr_holidays.group_hr_holidays_user,gbs_base_package.group_dept_manager"/>
                     <button string="Reset to Draft" name="action_draft" type="object"
@@ -26,7 +26,6 @@
                     <group>
                         <group>
                             <field name="name" attrs="{'readonly':[('state','!=','draft'),('state','!=','confirm')]}"/>
-                            <field name="holiday_status_id" attrs="{'readonly':[('state','!=','draft'),('state','!=','confirm')]}" context="{'employee_id':employee_id}"/>
                             <label for="number_of_days_temp" attrs="{'readonly':[('state','!=','draft'),('state','!=','confirm')]}"  string="Duration"/>
                             <div>
                                 <div attrs="{'invisible': [('type', '=', 'add')]}">
@@ -72,7 +71,6 @@
                     <field name="holiday_type"/>
                     <field name="category_id"/>
                     <field name="department_id" invisible="1"/>
-                    <field name="holiday_status_id"/>
                     <field name="name"/>
                     <field name="number_of_days" string="Allocated Hours" sum="Remaining Days"/>
                     <field name="manager_id" invisible="1"/>
@@ -92,11 +90,10 @@
         </record>
 
         <menuitem id="short_leave_menu" name="Short Leaves" parent="hr_holidays.menu_hr_holidays_root"
-                  action="hr_short_leave_action" sequence="7"
-                  groups="gbs_base_package.group_dept_manager,hr.group_hr_manager,base.group_user"/>
+                  action="hr_short_leave_action" groups="gbs_base_package.group_dept_manager,hr.group_hr_manager,base.group_user"/>
 
-        <menuitem id="short_leave" name="Short Leaves" parent="short_leave_menu" action="hr_short_leave_action"
-                  groups="gbs_base_package.group_dept_manager,hr.group_hr_manager,base.group_user"/>
+        <menuitem id="short_leave" name="Short Leaves" parent="short_leave_menu"
+                  action="hr_short_leave_action" groups="gbs_base_package.group_dept_manager,hr.group_hr_manager,base.group_user"/>
 
     </data>
 </odoo>

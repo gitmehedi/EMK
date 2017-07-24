@@ -56,11 +56,11 @@
             <field name="view_mode">tree,form</field>
         </record>
 
-        <menuitem id="short_leave_menu" name="Short Leaves" parent="hr_holidays.menu_hr_holidays_root" action="hr_short_leave_action"
-                  groups="gbs_base_package.group_dept_manager,hr.group_hr_manager,base.group_user"/>
+        <!--<menuitem id="short_leave_menu" name="Short Leaves" parent="hr_holidays.menu_hr_holidays_root" action="hr_short_leave_action"-->
+                  <!--groups="gbs_base_package.group_dept_manager,hr.group_hr_manager,base.group_user"/>-->
 
-        <menuitem id="short_leave" name="Short Leaves" parent="short_leave_menu" action="hr_short_leave_action"
-                  groups="gbs_base_package.group_dept_manager,hr.group_hr_manager,base.group_user"/>
+        <!--<menuitem id="short_leave" name="Short Leaves" parent="short_leave_menu" action="hr_short_leave_action"-->
+                  <!--groups="gbs_base_package.group_dept_manager,hr.group_hr_manager,base.group_user"/>-->
 
     </data>
 </odoo>

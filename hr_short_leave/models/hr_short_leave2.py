@@ -49,8 +49,8 @@ class HrShortLeave(models.Model):
         states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]})
     date_to = fields.Datetime('End Time', readonly=True, copy=False,
         states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]})
-    holiday_status_id = fields.Many2one("hr.holidays.status", string="Leave Type", readonly=True,
-        states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]})
+    # holiday_status_id = fields.Many2one("hr.holidays.status", string="Leave Type", readonly=True,
+    #     states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]})
     employee_id = fields.Many2one('hr.employee', string='Employee', index=True, readonly=True,
         states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]}, default=_default_employee)
     manager_id = fields.Many2one('hr.employee', string='First Approval', readonly=True, copy=False,
@@ -80,7 +80,7 @@ class HrShortLeave(models.Model):
         help='By Employee: Allocation/Request for individual Employee, By Employee Tag: Allocation/Request for group of employees in category')
     manager_id2 = fields.Many2one('hr.employee', string='Second Approval', readonly=True, copy=False,
         help='This area is automaticly filled by the user who validate the leave with second level (If Leave type need second validation)')
-    double_validation = fields.Boolean('Apply Double Validation', related='holiday_status_id.double_validation')
+    double_validation = fields.Boolean('Apply Double Validation', default=True)
     can_reset = fields.Boolean('Can reset', compute='_compute_can_reset')
 
     @api.multi
@@ -118,16 +118,16 @@ class HrShortLeave(models.Model):
             if nholidays:
                 raise ValidationError(_('You can not have 2 leaves that overlaps on same day!'))
 
-    @api.constrains('state', 'number_of_days_temp')
-    def _check_holidays(self):
-        for holiday in self:
-            if holiday.holiday_type != 'employee' or holiday.type != 'remove' or not holiday.employee_id or holiday.holiday_status_id.limit:
-                continue
-            leave_days = holiday.holiday_status_id.get_days(holiday.employee_id.id)[holiday.holiday_status_id.id]
-            if float_compare(leave_days['remaining_leaves'], 0, precision_digits=2) == -1 or \
-              float_compare(leave_days['virtual_remaining_leaves'], 0, precision_digits=2) == -1:
-                raise ValidationError(_('The number of remaining leaves is not sufficient for this leave type.\n'
-                                        'Please verify also the leaves waiting for validation.'))
+    # @api.constrains('state', 'number_of_days_temp')
+    # def _check_holidays(self):
+    #     for holiday in self:
+    #         if holiday.holiday_type != 'employee' or holiday.type != 'remove' or not holiday.employee_id or holiday.holiday_status_id.limit:
+    #             continue
+    #         leave_days = holiday.holiday_status_id.get_days(holiday.employee_id.id)[holiday.holiday_status_id.id]
+    #         if float_compare(leave_days['remaining_leaves'], 0, precision_digits=2) == -1 or \
+    #           float_compare(leave_days['virtual_remaining_leaves'], 0, precision_digits=2) == -1:
+    #             raise ValidationError(_('The number of remaining leaves is not sufficient for this leave type.\n'
+    #                                     'Please verify also the leaves waiting for validation.'))
 
     _sql_constraints = [
         ('type_value', "CHECK( (holiday_type='employee' AND employee_id IS NOT NULL) or (holiday_type='category' AND category_id IS NOT NULL))",
@@ -203,14 +203,16 @@ class HrShortLeave(models.Model):
     @api.multi
     def name_get(self):
         res = []
+
         for leave in self:
-            res.append((leave.id, _("%s on %s : %.2f hour(s)") % (leave.employee_id.name or leave.category_id.name, leave.holiday_status_id.name, leave.number_of_days_temp)))
+            computed_hours = leave.number_of_days_temp
+            res.append((leave.id, _("%s on %s : %.2f hour(s)") % (leave.employee_id.name or leave.category_id.name, ' Short Leave', computed_hours)))
         return res
 
-    def _check_state_access_right(self, vals):
-        if vals.get('state') and vals['state'] not in ['draft', 'confirm', 'cancel'] and not self.env['res.users'].has_group('hr_holidays.group_hr_holidays_user'):
-            return False
-        return True
+    # def _check_state_access_right(self, vals):
+    #     if vals.get('state') and vals['state'] not in ['draft', 'confirm', 'cancel'] and not self.env['res.users'].has_group('hr_holidays.group_hr_holidays_user'):
+    #         return False
+    #     return True
 
     @api.multi
     def add_follower(self, employee_id):
@@ -305,26 +307,26 @@ class HrShortLeave(models.Model):
                 raise UserError(_('Leave request must be confirmed ("To Approve") in order to approve it.'))
 
             if holiday.double_validation:
-                return holiday.write({'state': 'validate1', 'manager_id': manager.id if manager else False})
+                 return holiday.write({'state': 'validate1', 'manager_id': manager.id if manager else False})
             else:
-                holiday.action_validate()
+                 holiday.action_validate()
 
-    @api.multi
-    def _prepare_create_by_category(self, employee):
-        self.ensure_one()
-        values = {
-            'name': self.name,
-            'type': self.type,
-            'holiday_type': 'employee',
-            'holiday_status_id': self.holiday_status_id.id,
-            'date_from': self.date_from,
-            'date_to': self.date_to,
-            'notes': self.notes,
-            'number_of_days_temp': self.number_of_days_temp,
-            'parent_id': self.id,
-            'employee_id': employee.id
-        }
-        return values
+    # @api.multi
+    # def _prepare_create_by_category(self, employee):
+    #     self.ensure_one()
+    #     values = {
+    #         'name': self.name,
+    #         'type': self.type,
+    #         'holiday_type': 'employee',
+    #         'holiday_status_id': self.holiday_status_id.id,
+    #         'date_from': self.date_from,
+    #         'date_to': self.date_to,
+    #         'notes': self.notes,
+    #         'number_of_days_temp': self.number_of_days_temp,
+    #         'parent_id': self.id,
+    #         'employee_id': employee.id
+    #     }
+    #     return values
 
     @api.multi
     def action_validate(self):
@@ -346,7 +348,7 @@ class HrShortLeave(models.Model):
             if holiday.holiday_type == 'employee' and holiday.type == 'remove':
                 meeting_values = {
                     'name': holiday.display_name,
-                    'categ_ids': [(6, 0, [holiday.holiday_status_id.categ_id.id])] if holiday.holiday_status_id.categ_id else [],
+                    #'categ_ids': [(6, 0, [holiday.holiday_status_id.categ_id.id])] if holiday.holiday_status_id.categ_id else [],
                     'duration': holiday.number_of_days_temp * HOURS_PER_DAY,
                     'description': holiday.notes,
                     'user_id': holiday.user_id.id,
@@ -363,15 +365,15 @@ class HrShortLeave(models.Model):
                 meeting = self.env['calendar.event'].with_context(no_mail_to_attendees=True).create(meeting_values)
                 #holiday._create_resource_leave()
                 holiday.write({'meeting_id': meeting.id})
-            elif holiday.holiday_type == 'category':
-                leaves = self.env['hr.holidays']
-                for employee in holiday.category_id.employee_ids:
-                    values = holiday._prepare_create_by_category(employee)
-                    leaves += self.with_context(mail_notify_force_send=False).create(values)
-                # TODO is it necessary to interleave the calls?
-                leaves.action_approve()
-                if leaves and leaves[0].double_validation:
-                    leaves.action_validate()
+            # elif holiday.holiday_type == 'category':
+            #     leaves = self.env['hr.holidays']
+            #     for employee in holiday.category_id.employee_ids:
+            #         values = holiday._prepare_create_by_category(employee)
+            #         leaves += self.with_context(mail_notify_force_send=False).create(values)
+            #     # TODO is it necessary to interleave the calls?
+            #     leaves.action_approve()
+            #     if leaves and leaves[0].double_validation:
+            #         leaves.action_validate()
         return True
 
     @api.multi
