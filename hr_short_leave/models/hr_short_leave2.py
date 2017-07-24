@@ -209,10 +209,10 @@ class HrShortLeave(models.Model):
             res.append((leave.id, _("%s on %s : %.2f hour(s)") % (leave.employee_id.name or leave.category_id.name, ' Short Leave', computed_hours)))
         return res
 
-    # def _check_state_access_right(self, vals):
-    #     if vals.get('state') and vals['state'] not in ['draft', 'confirm', 'cancel'] and not self.env['res.users'].has_group('hr_holidays.group_hr_holidays_user'):
-    #         return False
-    #     return True
+    def _check_state_access_right(self, vals):
+        if vals.get('state') and vals['state'] not in ['draft', 'confirm', 'cancel'] and not self.env['res.users'].has_group('hr_holidays.group_hr_holidays_user'):
+            return False
+        return True
 
     @api.multi
     def add_follower(self, employee_id):
