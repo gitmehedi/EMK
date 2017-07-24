@@ -49,7 +49,7 @@ class HrShortLeave(models.Model):
         states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]})
     date_to = fields.Datetime('End Time', readonly=True, copy=False,
         states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]})
-    holiday_status_id = fields.Many2one("hr.holidays.status", string="Leave Type", required=True, readonly=True,
+    holiday_status_id = fields.Many2one("hr.holidays.status", string="Leave Type", readonly=True,
         states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]})
     employee_id = fields.Many2one('hr.employee', string='Employee', index=True, readonly=True,
         states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]}, default=_default_employee)

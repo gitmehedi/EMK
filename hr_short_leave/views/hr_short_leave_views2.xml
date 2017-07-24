@@ -35,7 +35,7 @@
                                     <field name="date_to"  attrs="{'required':[('type', '=', 'remove')], 'readonly':[('state','!=','draft'),('state','!=','confirm')]}" class="oe_inline"/>
                                 </div>
                                 <div>
-                                    <field name="number_of_days_temp" class="oe_inline"/> Hour(s)
+                                    <field name="number_of_days_temp" widget="float_time" class="oe_inline"/> Hour(s)
                                     <!--<field name="number_of_days_temp" attrs="{'readonly':[('type','=','remove')]}" class="oe_inline"/> Hour(s)-->
                                 </div>
                             </div>
@@ -44,8 +44,8 @@
                             <field name="holiday_type" attrs="{'readonly':[('type', '=', 'remove'),('state','!=','draft')]}" string="Mode" groups="hr_holidays.group_hr_holidays_user" context="{'employee_id':employee_id}" />
                             <field name="employee_id" attrs="{'required':[('holiday_type','=','employee')],'invisible':[('holiday_type','=','category')], 'readonly':[('state','!=','draft'),('state','!=','confirm')]}" groups="hr_holidays.group_hr_holidays_user"/>
                             <field name="category_id" attrs="{'required':[('holiday_type','=','category')], 'readonly': [('type', '=', 'remove'),('state','!=','draft'), ('state','!=','confirm')], 'invisible':[('holiday_type','=','employee')]}"/>
-                            <field name="department_id" groups="hr_holidays.group_hr_holidays_user" attrs="{'readonly':['|','|' ,('type','=','add'),('holiday_type','=','category'),('state','=', 'validate')],'invisible':[('holiday_type','=','category')],'readonly':[('state','!=','draft'),('state','!=','confirm')]}"/>
-                            <field name="payslip_status" groups="hr_holidays.group_hr_holidays_manager" attrs="{'invisible':[('type','=','add')]}" widget="toggle_button"/>
+                            <field name="department_id" groups="hr_holidays.group_hr_holidays_user" attrs="{'readonly':['|','|' ,('type','=','add'),('holiday_type','=','category'),('state','=', 'validate')],'invisible':[('holiday_type','=','category')],'readonly':[('state','!=','draft')]}"/>
+                            <field name="payslip_status" groups="hr_holidays.group_hr_holidays_manager" invisible="1" attrs="{'invisible':[('type','=','add')]}" widget="toggle_button"/>
                         </group>
                         <field name="notes" nolabel="1" colspan="4" placeholder="Add a reason..." attrs="{'invisible': [('type', '=', 'remove')]}"/>
                         <div groups="hr_holidays.group_hr_holidays_manager" attrs="{'invisible':[('type','=','add')]}">
