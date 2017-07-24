@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+	<data>
+		<record  id="inherited_pos_session_view" model="ir.ui.view">
+			<field name="name">Inherited Pos Session Views</field>
+			<field name="model">pos.session</field>
+			<field name="inherit_id" ref="point_of_sale.view_pos_session_form"/>
+			<field name="arch" type="xml">
+				<xpath expr="//sheet/group/group/field[@name='stop_at']" position="after">
+					<field name="total_sell_value"/>
+				</xpath>
+			</field>
+		</record>
+	</data>
+</openerp>

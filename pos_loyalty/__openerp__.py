@@ -12,6 +12,8 @@
             'views/assets.xml',
             'views/inherited_account_view.xml',
             'views/inherited_point_of_sale_view.xml',
+            'views/inherited_pos_session_view.xml',
+            'reports/inherited_pos_session_summary_report.xml',
              ],
     'summary': 'POS Loyalty for point calculation and redemption',
     'depends': ['point_of_sale'],

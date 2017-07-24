@@ -5,4 +5,5 @@ import inherited_res_partner
 import redemption_rule
 import inherited_account
 import inherited_point_of_sale
+import inherited_pos_session
 
