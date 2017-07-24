@@ -210,7 +210,9 @@ class HrShortLeave(models.Model):
         return res
 
     def _check_state_access_right(self, vals):
-        if vals.get('state') and vals['state'] not in ['draft', 'confirm', 'cancel'] and not self.env['res.users'].has_group('hr_holidays.group_hr_holidays_user'):
+        if vals.get('state') and vals['state'] not in ['draft', 'confirm', 'cancel'] and not (
+            self.env['res.users'].has_group('hr_holidays.group_hr_holidays_user')
+        or self.env['res.users'].has_group('gbs_base_package.group_dept_manager')):
             return False
         return True
 
@@ -298,8 +300,8 @@ class HrShortLeave(models.Model):
     def action_approve(self):
         # if double_validation: this method is the first approval approval
         # if not double_validation: this method calls action_validate() below
-        if not self.env.user.has_group('hr_holidays.group_hr_holidays_user') or self.env.user.has_group('gbs_base_package.group_dept_manager'):
-            raise UserError(_('Only an HR Officer or Manager or Department Manager can approve leave requests.'))
+        if not (self.env.user.has_group('hr_holidays.group_hr_holidays_user') or self.env.user.has_group('gbs_base_package.group_dept_manager')):
+            raise UserError(_('Only Department Manager can approve leave requests.'))
 
         manager = self.env['hr.employee'].search([('user_id', '=', self.env.uid)], limit=1)
         for holiday in self:
@@ -311,26 +313,9 @@ class HrShortLeave(models.Model):
             else:
                  holiday.action_validate()
 
-    # @api.multi
-    # def _prepare_create_by_category(self, employee):
-    #     self.ensure_one()
-    #     values = {
-    #         'name': self.name,
-    #         'type': self.type,
-    #         'holiday_type': 'employee',
-    #         'holiday_status_id': self.holiday_status_id.id,
-    #         'date_from': self.date_from,
-    #         'date_to': self.date_to,
-    #         'notes': self.notes,
-    #         'number_of_days_temp': self.number_of_days_temp,
-    #         'parent_id': self.id,
-    #         'employee_id': employee.id
-    #     }
-    #     return values
-
     @api.multi
     def action_validate(self):
-        if not self.env.user.has_group('hr_holidays.group_hr_holidays_user') or self.env.user.has_group('gbs_base_package.group_dept_manager'):
+        if not (self.env.user.has_group('hr_holidays.group_hr_holidays_user') or self.env.user.has_group('gbs_base_package.group_dept_manager')):
             raise UserError(_('Only an HR Officer or Manager or Department Manager can approve leave requests.'))
 
         manager = self.env['hr.employee'].search([('user_id', '=', self.env.uid)], limit=1)

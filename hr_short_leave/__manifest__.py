@@ -12,9 +12,8 @@
     ],
 
     'data': [
-        #'security/ir.model.access.csv',
-        #'security/security.xml',
-        #'views/hr_short_leave_views.xml',
+        'security/ir.model.access.csv',
+        'security/security.xml',
         'views/hr_short_leave_views2.xml',
 
     ],
