@@ -24,7 +24,7 @@
                 'hr_holidays',
                 'hr_recruitment',
                 'gbs_hr_calendar',
-                'gbs_hr_experience',
+                'hr_experience',
                 'gbs_hr_department_sequence',
                 'gbs_hr_employee_documents',
                 'gbs_hr_employee_seniority'],
