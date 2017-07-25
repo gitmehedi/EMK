@@ -11,5 +11,16 @@
 				</xpath>
 			</field>
 		</record>
+
+		<record  id="inherited_pos_session_tree_view" model="ir.ui.view">
+			<field name="name">Inherited Pos Session Tree</field>
+			<field name="model">pos.session</field>
+			<field name="inherit_id" ref="point_of_sale.view_pos_session_tree"/>
+			<field name="arch" type="xml">
+				<xpath expr="//field[@name='stop_at']" position="after">
+					<field name="total_sell_value" sum="total_sell_value"/>
+				</xpath>
+			</field>
+		</record>
 	</data>
 </openerp>
