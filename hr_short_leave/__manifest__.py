@@ -4,7 +4,7 @@
     'author': 'Genweb2 Limited',
     'category': 'Leave',
     'sequence': 26,
-    'summary': 'Short Leave',
+    'summary': 'Hourly Short Leave for Employee(s)',
     'website': 'https://www.genweb2.com',
 
     'depends': [
@@ -14,7 +14,7 @@
     'data': [
         'security/ir.model.access.csv',
         'security/security.xml',
-        'views/hr_short_leave_views2.xml',
+        'views/hr_short_leave_views.xml',
 
     ],
 
