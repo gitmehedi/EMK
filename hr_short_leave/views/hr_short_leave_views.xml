@@ -2,7 +2,6 @@
 <odoo>
     <data>
 
-         Holidays: Allocation Request
         <record id="edit_holiday_new1" model="ir.ui.view">
             <field name="name">Short Leave Request</field>
             <field name="model">hr.short.leave</field>
