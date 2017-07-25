@@ -30,6 +30,7 @@
                 'gbs_hr_employee_seniority'],
 
     # always loaded
-    'data': [
+    'data': ['security/ir.model.access.csv',
+             'security/hr_security.xml',
     ],
 }
