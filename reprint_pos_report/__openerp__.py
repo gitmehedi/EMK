@@ -10,12 +10,13 @@
     'description': """
         Reprint point of sale report from backend
     """,
-    'depends': ['point_of_sale',
-                ],
+    'depends': ['point_of_sale'],
     'data': [
+        'views/assets.xml',
         'report/reprint_sale_ticket.xml',
         'report/reprint_sale_ticket_view.xml',
         'views/inherit_pos_order_view.xml',
+
     ],
     'installable': True,
     'application': True,

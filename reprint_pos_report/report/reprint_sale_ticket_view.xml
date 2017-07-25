@@ -1,13 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
+
         <template id="reprint_sale_ticket">
             <t t-call="report.html_container">
                 <t t-foreach="docs" t-as="o">
-                    <div class="page">
-                        <div class="pos-sale-ticket"
-                             style="font-weight: 500; font-family: 'Times New Roman', Times, serif;">
-
+                    <div class="page" style="font-size: 12px; font-family: 'Inconsolata';">
+                        <div style="text-align: left;
+    width: 300px;
+    background-color: white;
+    margin: 20px;
+    padding: 15px;
+    font-size: 10px;
+    padding-bottom:30px;
+    display: inline-block;
+    border: solid 1px rgb(220,220,220);
+    border-radius: 3px;
+    overflow: hidden;
+    font-weight: 500;
+    ">
                             <div class="pos-center-align" style="text-align: center;">
                                 <strong>
                                     <t t-esc="main_header['company_name']"/>
@@ -71,17 +82,17 @@
                                 </colgroup>
                                 <tr>
                                     <th>Product</th>
-                                    <th class="pos-right-align">Qty</th>
-                                    <th class="pos-right-align">Rate</th>
-                                    <th class="pos-right-align">VAT</th>
-                                    <th class="pos-right-align">Amount</th>
+                                    <th style="text-align: right;">Qty</th>
+                                    <th style="text-align: right;">Rate</th>
+                                    <th style="text-align: right;">VAT</th>
+                                    <th style="text-align: right;">Amount</th>
                                 </tr>
                                 <tr t-foreach="orderlines" t-as="orderline">
                                     <td>
                                         <t t-esc="orderline['product_name']"/>
                                         <t t-if="orderline['discount'] > 0">
                                             <div style="font-size: 12px; font-style:italic; color: #808080;">
-                                                With a <t t-esc="orderline['discount']"/>% discount
+                                                With a<t t-esc="orderline['discount']"/>% discount
                                             </div>
                                         </t>
                                     </td>
@@ -140,6 +151,14 @@
                                         </strong>
                                     </td>
                                 </tr>
+                                <tr t-foreach="payment" t-as="line">
+                                    <td colspan="4" style="padding-top: 40px;">
+                                        <t t-esc="line['name']"/>
+                                    </td>
+                                    <td style="text-align: right;">
+                                        <t t-esc="line['amount']"/>
+                                    </td>
+                                </tr>
                             </table>
                             <br/>
 
@@ -166,27 +185,15 @@
                             <!--</tr>-->
                             <!--</table>-->
                             <!--</div>-->
-                            <br/>
 
-                            <!--&lt;!&ndash;<table>&ndash;&gt;-->
-                            <!--&lt;!&ndash;<tr t-foreach="paymentlines" t-as="line">&ndash;&gt;-->
-                            <!--&lt;!&ndash;<td>&ndash;&gt;-->
-                            <!--&lt;!&ndash;<t t-esc="line.name"/>&ndash;&gt;-->
-                            <!--&lt;!&ndash;</td>&ndash;&gt;-->
-                            <!--&lt;!&ndash;<td class="pos-right-align">&ndash;&gt;-->
-                            <!--&lt;!&ndash;<t t-esc="widget.format_currency(line.get_amount())"/>&ndash;&gt;-->
-                            <!--&lt;!&ndash;</td>&ndash;&gt;-->
-                            <!--&lt;!&ndash;</tr>&ndash;&gt;-->
-                            <!--&lt;!&ndash;</table>&ndash;&gt;-->
-                            <!--<br/>-->
-                            <!--&lt;!&ndash;<table>&ndash;&gt;-->
-                            <!--&lt;!&ndash;<tr>&ndash;&gt;-->
-                            <!--&lt;!&ndash;<td>Change:</td>&ndash;&gt;-->
-                            <!--&lt;!&ndash;<td class="pos-right-align">&ndash;&gt;-->
-                            <!--&lt;!&ndash;<t t-esc="widget.format_currency(order.getChange())"/>&ndash;&gt;-->
-                            <!--&lt;!&ndash;</td>&ndash;&gt;-->
-                            <!--&lt;!&ndash;</tr>&ndash;&gt;-->
-                            <!--&lt;!&ndash;</table>&ndash;&gt;-->
+                            <!--<table>-->
+                            <!--<tr>-->
+                            <!--<td>Change:</td>-->
+                            <!--<td class="pos-right-align">-->
+                            <!--<t t-esc="widget.format_currency(order.getChange())"/>-->
+                            <!--</td>-->
+                            <!--</tr>-->
+                            <!--</table>-->
 
 
                             <t t-if="sub_header['receipt_footer']">
