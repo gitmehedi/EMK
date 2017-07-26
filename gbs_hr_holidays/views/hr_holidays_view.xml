@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+	<data>
+		<record id="inherited_hr_edit_holiday_new" model="ir.ui.view">
+			<field name="name">HR Holiday Inherited</field>
+			<field name="model">hr.holidays</field>
+			<field name="inherit_id" ref="hr_holidays.edit_holiday_new" />
+			<field name="arch" type="xml">
+				<xpath expr="//button[@name='action_validate']" position="replace">
+                    <button string="Validate" name="action_validate" states="validate1" type="object"
+                            groups="hr_holidays.group_hr_holidays_manager,hr_holidays.group_hr_holidays_user" class="oe_highlight"/>
+                </xpath>
+			</field>
+		</record>
+	</data>
+</odoo>
