@@ -10,8 +10,9 @@
                 'hr_public_holidays'
                 ],
     'data': [
+        'security/ir_rule.xml',
         'views/hr_holidays_view.xml',
     ],
     'installable': True,
-    'application': True,
+    'application': False,
 }

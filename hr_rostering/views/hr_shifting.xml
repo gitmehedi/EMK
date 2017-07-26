@@ -66,6 +66,10 @@
 		<field name="view_mode">tree,form</field>
 	   </record>
 
+	<menuitem id="main_menu_hr_shifting" name="Rostering"
+		  parent="hr_attendance.menu_hr_attendance_root"
+		  sequence="29" groups="hr.group_hr_user"/>
+
    <menuitem id="menu_hr_shifting" name="Shifting"
 		parent="main_menu_hr_shifting" sequence="1"
 			action="hr_shift_conf" groups="hr.group_hr_user"/>
