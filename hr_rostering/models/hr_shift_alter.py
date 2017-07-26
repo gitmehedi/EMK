@@ -65,7 +65,7 @@ class HRShiftAlter(models.Model):
     @api.onchange('user_access_dept_manager')
     def onchange_user_access_dept_manager(self):
         if self.user_access_hr_manager!=True and self.user_access_dept_manager:
-            return {'domain': {'employee_id': [('department_id', '=', self.department_id.id)]}}
+            return {'domain': {'employee_id': [('department_id.manager_id.user_id','=',self.env.user.id)]}}
         else:
             return {'domain': {'employee_id': [('company_id', '=', self.env.user.company_id.id )]}}
 
