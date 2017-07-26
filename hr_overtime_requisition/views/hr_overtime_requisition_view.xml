@@ -11,10 +11,10 @@
 				<form string="OT Requisition">
 				 	<header>
                     	<button string="Submit" name="action_submit" states="to_submit" type="object" class="oe_highlight" groups="base.group_user"/>
-                    	<button string="To Approve" name="action_hod_approve" states="to_approve" type="object" class="oe_highlight" groups="gbs_base_package.group_dept_manager,hr.group_hr_manager"/>
-                    	<button string="Approve" name="action_hr_approve" states="hr_approve" type="object" class="oe_highlight" groups="hr.group_hr_manager"/>
-                    	<button string="Refuse" name="action_refuse" states="to_approve,hr_approve,approved" type="object" groups="hr.group_hr_manager"/>
-                    	<button string="Reset to Draft" name="action_reset" states="approved" type="object" groups="hr.group_hr_manager"/>
+                    	<button string="To Approve" name="action_hod_approve" states="to_approve" type="object" class="oe_highlight" groups="gbs_base_package.group_dept_manager,hr.group_hr_user"/>
+                    	<button string="Approve" name="action_hr_approve" states="hr_approve" type="object" class="oe_highlight" groups="hr.group_hr_user"/>
+                    	<button string="Refuse" name="action_refuse" states="to_approve,hr_approve,approved" type="object" groups="hr.group_hr_user"/>
+                    	<button string="Reset to Draft" name="action_reset" states="approved" type="object" groups="hr.group_hr_user"/>
                     	<field name="state" widget="statusbar" statusbar_visible="to_submit,to_approve,approved"/>
                 	</header>
 					<sheet>
@@ -28,10 +28,9 @@
 								<field name="total_hours"/>
 							</group>
 							<group>
-								<field name="user_access_hr_manager" />
-								<field name="user_access_dept_manager" />
-								<field name="user_access" />
-								<!--invisible="1"-->
+								<field name="user_access_hr_manager" invisible="1"/>
+								<field name="user_access_dept_manager" invisible="1"/>
+								<field name="user_access" invisible="1"/>
 							</group>
 						</group>
                         <group>
@@ -87,18 +86,19 @@
 		</record>
 
         <!-- Menu Item -->
-		<menuitem id="nav_menu_hr_ot_requisition" name="OT Requisition"
-					 sequence="20" groups="base.group_user"/>
-		<menuitem id="main_menu_hr_ot_requisition" name="OT Requisition" parent="nav_menu_hr_ot_requisition"
-					 sequence="20" groups="base.group_user"/>
+		<!--<menuitem id="nav_menu_hr_ot_requisition" name="OT Requisition"-->
+					 <!--sequence="20" groups="base.group_user"/>-->
+
+		<menuitem id="main_menu_hr_ot_requisition" name="OT Requisition" parent="hr_attendance.menu_hr_attendance_root"
+					 sequence="17" groups="base.group_user"/>
 		<menuitem id="menu_hr_ot_requisition" name="OT Request" parent="main_menu_hr_ot_requisition"
 					 sequence="1" action="action_hr_ot_requisition" groups="base.group_user"/>
 
 		<menuitem id="menu_hr_ot_requisition_pending" name="Pending Request" parent="main_menu_hr_ot_requisition"
-					 sequence="2" action="action_hr_ot_requisition_pending" groups="gbs_base_package.group_dept_manager,hr.group_hr_manager"/>
+					 sequence="2" action="action_hr_ot_requisition_pending" groups="gbs_base_package.group_dept_manager,hr.group_hr_user"/>
 
 		<menuitem id="menu_hr_ot_requisition_approved" name="Approved" parent="main_menu_hr_ot_requisition"
-					 sequence="3" action="action_hr_ot_requisition_approved" groups="hr.group_hr_manager"/>
+					 sequence="3" action="action_hr_ot_requisition_approved" groups="hr.group_hr_user"/>
 
     </data>
 </openerp>

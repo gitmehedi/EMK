@@ -26,7 +26,7 @@ class HROTRequisition(models.Model):
     @api.depends('employee_id')
     def _compute_employee_check_hr_manager(self):
         user = self.env.user.browse(self.env.uid)
-        if user.has_group('hr.group_hr_manager'):
+        if user.has_group('hr.group_hr_user'):
             self.user_access_hr_manager = 1
         else:
             self.user_access_hr_manager = 0
