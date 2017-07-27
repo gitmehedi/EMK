@@ -1,0 +1,4 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_hr_ot_requisition_user,hr_ot_requisition_user,model_hr_ot_requisition,base.group_user,1,1,1,1
+access_hr_ot_requisition_hr,hr_ot_requisition_hr,model_hr_ot_requisition,hr.group_hr_user,1,1,1,1
+access_hr_ot_requisition_hod,hr_ot_requisition_hod,model_hr_ot_requisition,gbs_base_package.group_dept_manager,1,1,1,1

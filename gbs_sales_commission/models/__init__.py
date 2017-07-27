@@ -1,0 +1,6 @@
+import customer_commission_configuration
+import customer_commission_configuration_customer
+import customer_commission_configuration_product
+import customer_commission
+import customer_commission_line
+import inherited_res_partner
