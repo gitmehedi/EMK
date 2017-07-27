@@ -5,12 +5,12 @@
     'category': 'Sale',
     'version': '1.0',
     'depends': [
-        'hr',
-        'base',
+        'sale',
     ],
     'data': [
         'views/limit_view.xml',
         'views/partner_inherit_view.xml',
+        #'wizard/customer_creditlimit.xml',
     ],
     'summary': '',
     'description':

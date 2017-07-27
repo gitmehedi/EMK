@@ -14,12 +14,12 @@
                             <group>
                                 <field name="credit_limit" />
                             </group>
-                            <!--<field name="limit_ids">
+                            <field name="limit_ids">
                                 <tree string="List" editable="bottom">
                                     <field  name="assign_date" />
                                     <field  name="value" />
                                 </tree>
-                            </field>-->
+                            </field>
                         </page>
                     </xpath>
                 </data>
