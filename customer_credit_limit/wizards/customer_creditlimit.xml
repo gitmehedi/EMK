@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <record id="view_creditlimit_by_partners" model="ir.ui.view">
+            <field name="name">credit.limit.partner</field>
+            <field name="model">creditlimit.partners</field>
+            <field name="arch" type="xml">
+                <form string="Creditlimit by Customers">
+                    <header>
+                        <button string="Generate" name="compute_sheet" type="object" class="oe_highlight" />
+                    </header>
+                    <sheet>
+                        <group>
+                            <label string="This wizard will generate limit for all selected Customer(s) based on the dates." />
+                        </group>
+                        <h3>Customers</h3>
+                        <field name="partner_ids"/>
+                    </sheet>
+               </form>
+            </field>
+        </record>
+
+        <record id="action_creditlimit_by_partner" model="ir.actions.act_window">
+            <field name="name">Generate Creditlimit</field>
+            <field name="res_model">creditlimit.partners</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="view_creditlimit_by_partners"/>
+            <field name="target">new</field>
+        </record>
+
+    </data>
+</openerp>

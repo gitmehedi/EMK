@@ -37,7 +37,7 @@
                 <form string="Credit Limit">
 	                <header>
 	                    <button name="approve_creditlimit_run" type="object" string="Approve" states="draft" class="oe_highlight"/>
-	                    <button name="action_creditlimit_by_partner" type="action" states="draft" string="Generate Limit" class="oe_highlight"/>
+	                    <button name="%(action_creditlimit_by_partner)d" type="action" states="draft" string="Generate Limit" class="oe_highlight"/>
 	                    <button string="Set to Draft" name="draft_creditlimit_run" type="object" states="approve" />
 	                    <field name="state" widget="statusbar"/>
 	                </header>

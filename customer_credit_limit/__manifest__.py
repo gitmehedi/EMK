@@ -10,11 +10,10 @@
     'data': [
         'views/limit_view.xml',
         'views/partner_inherit_view.xml',
-        #'wizard/customer_creditlimit.xml',
+        'wizards/customer_creditlimit.xml',
     ],
     'summary': '',
-    'description':
-        "",
+    'description':"",
     'installable': True,
     'application': True,
 }
