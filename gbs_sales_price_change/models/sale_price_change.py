@@ -29,6 +29,10 @@ class SalePriceChange(models.Model):
         ('validate', 'Approved')
     ], string='Status', readonly=True, track_visibility='onchange', copy=False, default='draft')
 
+    ## Relational Fields
+    line_ids = fields.One2many('product.sale.history.line','sale_price_history_id')
+
+
     @api.multi
     def action_confirm(self):
         self.state = 'confirm'
