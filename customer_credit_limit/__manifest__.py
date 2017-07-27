@@ -5,16 +5,15 @@
     'category': 'Sale',
     'version': '1.0',
     'depends': [
-        'hr',
-        'base',
+        'sale',
     ],
     'data': [
         'views/limit_view.xml',
         'views/partner_inherit_view.xml',
+        'wizards/customer_creditlimit.xml',
     ],
     'summary': '',
-    'description':
-        "",
+    'description':"",
     'installable': True,
     'application': True,
 }
