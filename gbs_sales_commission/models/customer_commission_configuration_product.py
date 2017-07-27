@@ -10,6 +10,7 @@ class CustomerCommissionConfigurationProduct(models.Model):
     status = fields.Boolean(string='Status',default=True, required=True)
 
     """ Relational Fields """
-    product_id = fields.Many2one('product.product', string="Product", required=True)
+    product_id = fields.Many2one('product.product', string="Product", required=True,
+                                 domain="([('sale_ok','=','True'),('type','=','consu')])")
     config_parent_id = fields.Many2one('customer.commission.configuration', ondelete='cascade')
 

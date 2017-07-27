@@ -30,6 +30,7 @@
                                     <tree>
                                         <field name="product_id"/>
                                         <field name="commission_rate"/>
+                                        <field name="effective_date"/>
                                         <field name="status"/>
                                     </tree>
                                 </field>
