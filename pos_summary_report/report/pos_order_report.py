@@ -34,33 +34,41 @@ class DailyCreditSettlementReport(models.AbstractModel):
         lines = []
         report_obj = self.env['report']
         report = report_obj._get_report_from_name('stock_summary_report.report_stock_summary_qweb')
-        cash_counter = self.env['pos.config'].search([('stock_location_id', '=', data['location_id'])])
+        # cash_counter = self.env['pos.config'].search([('stock_location_id', '=', data['location_id'])])
+
+        domain = []
+        if data['point_of_sale_id']:
+            domain.append(('point_of_sale_id', '=', data['point_of_sale_id']))
+        if data['start_date']:
+            domain.append(('date_order', '>=', data['start_date']))
+        if data['end_date']:
+            domain.append(('date_order', '<=', data['end_date']))
+
+        order_list = self.env['pos.order'].search(domain, order="date_order asc")
 
 
-        for orders in cash_counter:
-            order_list = self.env['pos.order'].search([('location_id', '=', orders.stock_location_id.id)],
-                                                      order="date_order asc")
-            for record in order_list:
-                rec = {}
-                sales_value = sum([r.qty * r.price_unit for r in record.lines])
-                discount = sum([r.qty * r.price_unit - r.price_subtotal for r in record.lines])
-                rec['date_order'] = self.format_date(record.date_order)
-                rec['pos_reference'] = record.pos_reference
-                rec['sales_value'] = self.decimal(sales_value)
-                rec['amount_tax'] = self.decimal(record.amount_tax)
-                rec['discount'] = 0 if discount == 0 else '- {0}'.format(self.decimal(discount))
-                rec['net_sales'] = self.decimal(record.amount_total)
-                cash, card = 0, 0
-                for statement in record.statement_ids:
-                    if statement.journal_id.type == 'cash':
-                        cash = cash + statement.amount
-                    if statement.journal_id.type == 'bank':
-                        card = card + statement.amount
+        for record in order_list:
+            rec = {}
+            sales_value = sum([r.qty * r.price_unit for r in record.lines])
+            discount = sum([r.qty * r.price_unit - r.price_subtotal for r in record.lines])
+            rec['date_order'] = self.format_date(record.date_order)
+            rec['pos_reference'] = record.pos_reference
+            rec['sales_value'] = self.decimal(sales_value)
+            rec['amount_tax'] = self.decimal(record.amount_tax)
+            rec['discount'] = 0 if discount == 0 else '- {0}'.format(self.decimal(discount))
+            rec['net_sales'] = self.decimal(record.amount_total)
+            cash, card = 0, 0
 
-                rec['cash'] = self.decimal(cash)
-                rec['credit_card'] = self.decimal(card)
-                rec['total'] = self.decimal(cash + card)
-                lines.append(rec)
+            for statement in record.statement_ids:
+                if statement.journal_id.name == 'Cash':
+                    cash = cash + statement.amount
+                if statement.journal_id.name == 'Card':
+                    card = card + statement.amount
+
+            rec['cash'] = self.decimal(cash)
+            rec['credit_card'] = self.decimal(card)
+            rec['total'] = self.decimal(cash + card)
+            lines.append(rec)
 
         address = {
             'name': self.env.user.company_id.name,

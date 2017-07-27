@@ -10,7 +10,7 @@ class PosSummaryReportWizard(models.TransientModel):
 
     start_date = fields.Date('Start Date', default=fields.Date.today(), required=True)
     end_date = fields.Date('End Date', default=fields.Date.today())
-    location_id = fields.Many2one('stock.location', string='Stock Location',
+    location_id = fields.Many2one('stock.location', string='Shop',
                                   domain="[('usage','=','internal')]",  required=True)
     point_of_sale_id = fields.Many2one('pos.config', string='Point of Sale',
                                        default=_default_operating_unit)
