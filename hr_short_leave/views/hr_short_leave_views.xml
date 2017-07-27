@@ -12,7 +12,7 @@
                 <header>
                     <button string="Confirm" name="action_confirm" states="draft" type="object" class="oe_highlight"/>
                     <button string="Approve" name="action_approve" groups="gbs_base_package.group_dept_manager" states="confirm" type="object" class="oe_highlight"/>
-                    <button string="Validate" name="action_validate" states="validate1" type="object" groups="hr_holidays.group_hr_holidays_manager" class="oe_highlight"/>
+                    <button string="Validate" name="action_validate" states="validate1" type="object" groups="hr_holidays.group_hr_holidays_manager,hr_holidays.group_hr_holidays_user" class="oe_highlight"/>
                     <button string="Refuse" name="action_refuse" states="confirm,validate,validate1" type="object"  groups="hr_holidays.group_hr_holidays_user,gbs_base_package.group_dept_manager"/>
                     <button string="Reset to Draft" name="action_draft" type="object"
                             attrs="{'invisible': ['|', ('can_reset', '=', False), ('state', 'not in', ['confirm', 'refuse'])]}"/>
@@ -88,10 +88,10 @@
         </record>
 
         <menuitem id="short_leave_menu" name="Short Leaves" parent="hr_holidays.menu_hr_holidays_root"
-                  action="hr_short_leave_action" groups="hr_holidays.group_hr_holidays_manager,hr_holidays.group_hr_holidays_user,gbs_base_package.group_dept_manager"/>
+                  action="hr_short_leave_action" groups="base.group_user,hr_holidays.group_hr_holidays_manager,hr_holidays.group_hr_holidays_user,gbs_base_package.group_dept_manager"/>
 
         <menuitem id="short_leave" name="Short Leaves" parent="short_leave_menu"
-                  action="hr_short_leave_action" groups="hr_holidays.group_hr_holidays_manager,hr_holidays.group_hr_holidays_user,gbs_base_package.group_dept_manager"/>
+                  action="hr_short_leave_action" groups="base.group_user,hr_holidays.group_hr_holidays_manager,hr_holidays.group_hr_holidays_user,gbs_base_package.group_dept_manager"/>
 
     </data>
 </odoo>

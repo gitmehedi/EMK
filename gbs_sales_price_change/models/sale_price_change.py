@@ -20,8 +20,6 @@ class SalePriceChange(models.Model):
     approver1_date = fields.Datetime(string='First Approval Date', default=date.today(), readonly=True)
     approver2_id = fields.Many2one('hr.employee', string='Second Approval', default=_current_employee, readonly=True)
     approver2_date = fields.Datetime(string='Second Approval Date', default=date.today(), readonly=True)
-    comments = fields.Text(string='Comments')
-
     state = fields.Selection([
         ('draft', 'To Submit'),
         ('cancel', 'Cancelled'),
@@ -50,11 +48,5 @@ class SalePriceChange(models.Model):
     @api.multi
     def action_draft(self):
         self.state = 'draft'
-
-
-    # manager_id = fields.Many2one('hr.employee', string='First Approval', readonly=True, copy=False,
-    #                              help='This area is automatically filled by the user who validate the leave')
-    # manager_id2 = fields.Many2one('hr.employee', string='Second Approval', readonly=True, copy=False,
-    #                               help='This area is automaticly filled by the user who validate the leave with second level (If Leave type need second validation)')
 
 
