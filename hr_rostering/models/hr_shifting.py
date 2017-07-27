@@ -17,9 +17,6 @@ class HrShifting(models.Model):
     #     if (self.hour_from >= self.hour_to) or (self.ot_hour_from >= self.ot_hour_to) or (self.hour_to >= self.ot_hour_from) :
     #         raise Warning(_("OT to can not less then OT from or \n OT from can not less then Work to or \n Work to can not less then Work from"))
 
-
-
-
 class HrResourceCal(models.Model):
 
     _inherit = ['resource.calendar']
@@ -31,6 +28,10 @@ class HrResourceCal(models.Model):
                                  default=lambda self: self.env['res.company']._company_default_get())
     attendance_ids = fields.One2many('resource.calendar.attendance', 'calendar_id', string='Working Time',copy=True,
                                      states={'applied': [('readonly', True)], 'approved': [('readonly', True)]})
+    operating_unit_id = fields.Many2one('operating.unit', string='Operating Unit',
+                                        default=lambda self: self.env['res.users'].
+                                        operating_unit_default_get(self._uid)
+                                        )
 
     state = fields.Selection([
         ('draft', "Draft"),

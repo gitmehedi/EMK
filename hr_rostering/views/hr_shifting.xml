@@ -22,6 +22,9 @@
                     </header>
 				</xpath>
 	            <field name="leave_ids" position="replace"/>
+				<xpath expr="//field[@name='company_id']" position="after">
+					<field name="operating_unit_id" options='{"no_open": True,"no_create": 1, "no_create_edit":1}' />
+				</xpath>
 	        </field>
 	    </record>
 		<record id="rostaring_shift_tree" model="ir.ui.view">
@@ -31,6 +34,7 @@
 	        <field name="arch" type="xml">
 				<xpath expr="//field[@name='company_id']" position="after">
 					<field name="state"/>
+					<field name="operating_unit_id" options='{"no_open": True,"no_create": 1, "no_create_edit":1}' />
 				</xpath>
 	        </field>
 	    </record>
@@ -61,6 +65,10 @@
 		<field name="res_model">resource.calendar</field>
 		<field name="view_mode">tree,form</field>
 	   </record>
+
+	<menuitem id="main_menu_hr_shifting" name="Rostering"
+		  parent="hr_attendance.menu_hr_attendance_root"
+		  sequence="29" groups="hr.group_hr_user"/>
 
    <menuitem id="menu_hr_shifting" name="Shifting"
 		parent="main_menu_hr_shifting" sequence="1"

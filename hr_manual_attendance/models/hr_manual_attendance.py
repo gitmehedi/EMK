@@ -48,7 +48,7 @@ class HrManualAttendance(models.Model):
 
     can_reset = fields.Boolean('Can reset', compute='_compute_can_reset')
 
-    
+
     """
         This method does below things: 
         1. Check in/out date can not be a future date

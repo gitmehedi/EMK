@@ -7,6 +7,7 @@
     'data': [
         'report/report_paperformat.xml',
         'security/ir.model.access.csv',
+        'security/security.xml',
         'views/attendance_summary_view.xml',
         'wizards/attendance_summary_wizard_views.xml',
         'report/hr_attendance_summary_report_template.xml',
@@ -22,6 +23,7 @@
         'gbs_hr_employee_sequence',
         'gbs_hr_department_sequence',
         'gbs_hr_attendance_error_correction',
+        'hr_employee_operating_unit',
     ],    
     
     'description': 

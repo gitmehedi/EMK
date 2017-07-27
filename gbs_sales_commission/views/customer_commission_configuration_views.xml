@@ -1,0 +1,143 @@
+<?xml version="1.0"?>
+<odoo>
+
+    <record id="sale_customer_commission_configuration_form_views" model="ir.ui.view">
+        <field name="name">Sale Customer Commission Configuration Form</field>
+        <field name="model">customer.commission.configuration</field>
+        <field name="priority" eval="30"/>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="action_request" type="object" states="draft"
+                            string="Request" class="oe_highlight"/>
+
+                    <button name="action_draft" type="object" states="request"
+                            string="Draft" class="oe_highlight"/>
+
+                    <button name="action_approve" type="object" states="request"
+                            string="Approve" class="oe_highlight"/>
+
+                    <button name="action_confirm" type="object" states="approve"
+                            string="Confirm" class="oe_highlight"/>
+
+                    <button name="action_cancel" type="object" states="request,approve"
+                            string="Cancel" class="oe_highlight"/>
+
+                    <button name="action_done" type="object" states="confirm"
+                            string="Done" class="oe_highlight"/>
+
+                    <field name="state" widget="statusbar"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="commission_type"/>
+                            <field name="product_id" attrs="{'invisible':[('commission_type', '!=', 'by_product')]}"
+                                   options="{'no_open': True, 'no_create': True}"/>
+                            <field name="customer_id" attrs="{'invisible':[('commission_type', '!=', 'by_customer')]}"
+                                   options="{'no_open': True, 'no_create': True}"/>
+
+                        </group>
+                        <group>
+                            <field name="requested_date"/>
+                            <field name="requested_by_id"
+                                   options="{'no_open': True, 'no_create': True}"/>
+                            <field name="approved_date"/>
+                            <field name="approved_user_id"
+                                   options="{'no_open': True, 'no_create': True}"/>
+                            <field name="confirmed_date"/>
+                            <field name="confirmed_user_id"
+                                   options="{'no_open': True, 'no_create': True}"/>
+                        </group>
+                    </group>
+
+                    <separator string="Products" attrs="{'invisible':[('commission_type', '!=', 'by_customer')]}"/>
+                    <field name="config_product_ids" attrs="{'invisible':[('commission_type', '!=', 'by_customer')]}">
+                        <tree string="Products" editable="top">
+                            <field name="product_id"
+                                   options="{'no_open': True, 'no_create': True}"/>
+                            <field name="old_value"/>
+                            <field name="new_value"/>
+                        </tree>
+                        <form string="Product">
+                            <group>
+                                <field name="product_id"
+                                       options="{'no_open': True, 'no_create': True}"/>
+                                <field name="old_value"/>
+                                <field name="new_value"/>
+                            </group>
+
+                        </form>
+                    </field>
+
+                    <separator string="Customer" attrs="{'invisible':[('commission_type', '!=', 'by_product')]}"/>
+                    <field name="config_customer_ids" attrs="{'invisible':[('commission_type', '!=', 'by_product')]}">
+                        <tree string="Customer" editable="top">
+                            <field name="customer_id"
+                                   options="{'no_open': True, 'no_create': True}"/>
+                            <field name="old_value"/>
+                            <field name="new_value"/>
+                        </tree>
+                        <form string="Customer">
+                            <group>
+                                <field name="customer_id"
+                                       options="{'no_open': True, 'no_create': True}"/>
+                                <field name="old_value"/>
+                                <field name="new_value"/>
+                            </group>
+
+                        </form>
+                    </field>
+
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="sale_customer_commission_configuration_tree" model="ir.ui.view">
+        <field name="name">Customer Commission Configuration Tree</field>
+        <field name="model">customer.commission.configuration</field>
+        <field name="type">tree</field>
+        <field name="arch" type="xml">
+            <tree string="Customer Commission Configuration Tree">
+                <field name="product_id"/>
+                <field name="customer_id"/>
+                <field name="state"/>
+            </tree>
+        </field>
+    </record>
+
+
+    <record id="sale_customer_commission_configuration_search" model="ir.ui.view">
+        <field name="name">Customer Commission Configuration Search</field>
+        <field name="model">customer.commission.configuration</field>
+        <field eval="10" name="priority"/>
+        <field name="arch" type="xml">
+            <search string="Customer Commission Configuration Search">
+                <field name="product_id"/>
+                <field name="customer_id"/>
+            </search>
+        </field>
+    </record>
+
+    <!-- Sequence Records -->
+    <!--<record id="seq_loan_request" model="ir.sequence">-->
+    <!--<field name="name">Loan Sequence</field>-->
+    <!--<field name="code">emp_code_id</field>-->
+    <!--<field name="prefix">EMPC/</field>-->
+    <!--<field name="padding">10</field>-->
+    <!--</record>-->
+
+
+    <record model="ir.actions.act_window" id="sale_customer_commission_configuration_action">
+        <field name="name">Customer Commission</field>
+        <field name="res_model">customer.commission.configuration</field>
+        <!--<field name="domain">[('state','in',('disbursed',))]</field>-->
+        <field name="view_mode">tree,form</field>
+    </record>
+
+
+    <menuitem id="sale_customer_commission_configuration_menu" name="Customer Commission"
+              parent="sales_team.menu_sales" sequence="12"
+              action="sale_customer_commission_configuration_action"/>
+</odoo>

@@ -59,8 +59,8 @@
         </record>
 
         <menuitem id="hr_meal_bill_menu" name="Meal Bills" parent="hr.menu_hr_root" sequence="95"
-                  action="hr_meal_bill_action" groups="hr.group_hr_user"/>
+                  action="hr_meal_bill_action"/>
         <menuitem id="hr_meal_bill" name="Meal Bills" parent="hr_meal_bill_menu"
-                  action="hr_meal_bill_action" groups="hr.group_hr_user"/>
+                  action="hr_meal_bill_action"/>
     </data>
 </odoo>

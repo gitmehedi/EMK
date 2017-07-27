@@ -74,7 +74,7 @@ class HrAttendanceGraceTime(models.Model):
     def unlink(self):
         for a in self:
             if str(a.effective_from_date) < str(date.today()):
-                user = self.env['res.users'].browse(self.env.uid)
+                user = self.env.user.browse(self.env.uid)
                 if user.has_group('base.group_system'):
                     pass
                 else:

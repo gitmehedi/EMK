@@ -5,12 +5,12 @@
             <field name="name">hr.batch.employees</field>
             <field name="model">hr.batch.employees</field>
             <field name="arch" type="xml">
-                <group col="3">
-                    <group><field name="shift_id" options='{"no_open": True,"no_create": 1, "no_create_edit":1}'/></group>
-                    <group><field name="effective_from"/></group>
-                    <group><field name="effective_end"/></group>
-                </group>
                 <form string="Employees">
+                    <group col="3">
+                        <group><field name="shift_id" options='{"no_open": True,"no_create": 1, "no_create_edit":1}'/></group>
+                        <group><field name="effective_from"/></group>
+                        <group><field name="effective_end"/></group>
+                    </group>
                     <group colspan="4" >
                         <separator string="Employees" colspan="4"/>
                         <newline/>
@@ -37,6 +37,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="view_id" ref="view_hr_shift_employees"/>
+            <field name="context">{'default_effective_end': context.get('effective_end', False),'default_shift_id': context.get('shift_id', False),'default_effective_from': context.get('effective_from', False)}</field>
             <field name="target">new</field>
         </record>
 
