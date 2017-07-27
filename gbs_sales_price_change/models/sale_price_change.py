@@ -13,14 +13,44 @@ class SalePriceChange(models.Model):
     product_id = fields.Many2one('product.template', string="Product", required=True, domain=[('sale_ok', '=', True)])
     list_price = fields.Float(string='Old Price', related='product_id.list_price', readonly=True)
     #uom_id = fields.Integer(string='Units of Measure', related='product_id.uom_id')
-    new_price = fields.Float(string='New Price')
+    new_price = fields.Float(string='New Price', required=True)
     request_date = fields.Datetime(string='Request Date', default=date.today(), readonly=True)
     requested_by = fields.Many2one('hr.employee', string="Requested By", default=_current_employee, readonly=True)
-    approver1_id = fields.Many2one('res.user', string='First Approval', readonly=True)
+    approver1_id = fields.Many2one('hr.employee', string='First Approval', default=_current_employee, readonly=True)
     approver1_date = fields.Datetime(string='First Approval Date', default=date.today(), readonly=True)
-    approver2_id = fields.Many2one('res.user', string='Final Approval', readonly=True)
-    approver2_date = fields.Datetime(string='Final Approval Date', default=date.today(), readonly=True)
+    approver2_id = fields.Many2one('hr.employee', string='Second Approval', default=_current_employee, readonly=True)
+    approver2_date = fields.Datetime(string='Second Approval Date', default=date.today(), readonly=True)
     comments = fields.Text(string='Comments')
+
+    state = fields.Selection([
+        ('draft', 'To Submit'),
+        ('cancel', 'Cancelled'),
+        ('confirm', 'To Approve'),
+        ('refuse', 'Refused'),
+        ('validate1', 'Second Approval'),
+        ('validate', 'Approved')
+    ], string='Status', readonly=True, track_visibility='onchange', copy=False, default='draft')
+
+    @api.multi
+    def action_confirm(self):
+        self.state = 'confirm'
+
+    @api.multi
+    def action_approve(self):
+        self.state = 'validate'
+
+    @api.multi
+    def action_validate(self):
+        self.state = 'validate1'
+
+    @api.multi
+    def action_refuse(self):
+        self.state = 'refuse'
+
+    @api.multi
+    def action_draft(self):
+        self.state = 'draft'
+
 
     # manager_id = fields.Many2one('hr.employee', string='First Approval', readonly=True, copy=False,
     #                              help='This area is automatically filled by the user who validate the leave')
