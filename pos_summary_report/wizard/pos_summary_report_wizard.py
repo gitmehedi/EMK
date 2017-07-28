@@ -10,9 +10,8 @@ class PosSummaryReportWizard(models.TransientModel):
 
     start_date = fields.Date('Start Date', default=fields.Date.today(), required=True)
     end_date = fields.Date('End Date', required=True)
-    operating_unit_id = fields.Many2one('operating.unit', string='Shop', required=True)
-    point_of_sale_id = fields.Many2one('pos.config', string='Point of Sale',
-                                       default=_default_operating_unit)
+    operating_unit_id = fields.Many2one('operating.unit', string='Shop',default=_default_operating_unit, required=True)
+    point_of_sale_id = fields.Many2one('pos.config', string='Point of Sale' )
 
     @api.onchange('operating_unit_id')
     def onchange_operating_unit_id(self):

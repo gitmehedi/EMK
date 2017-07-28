@@ -15,8 +15,8 @@ class DailyCreditSettlementReport(models.AbstractModel):
         domain = []
         if data['operating_unit_id']:
             domain.append(('operating_unit_id', '=', data['operating_unit_id']))
-        if data['point_of_sale_id']:
-            domain.append(('point_of_sale_id', '=', data['point_of_sale_id']))
+        # if data['point_of_sale_id']:
+        #     domain.append(('point_of_sale_id', '=', data['point_of_sale_id']))
         if data['start_date']:
             domain.append(('date_order', '>=', data['start_date']))
         if data['end_date']:
@@ -64,8 +64,11 @@ class DailyCreditSettlementReport(models.AbstractModel):
             grand_total['cash'] = grand_total['cash'] + cash
             grand_total['card'] = grand_total['card'] + card
             grand_total['total'] = grand_total['total'] + cash + card
-
-            lines.append(rec)
+            if data['point_of_sale_id']:
+                if record.session_id.config_id.id== data['point_of_sale_id']:
+                    lines.append(rec)
+            else:
+                lines.append(rec)
 
         header = self.env['operating.unit'].search([('id', '=', data['operating_unit_id'])])
 
