@@ -1,42 +1,20 @@
-# -*- coding: utf-8 -*-
-##############################################################################
-from openerp import api, models
 from datetime import datetime
+
+from openerp import api, models
 
 
 class DailyCreditSettlementReport(models.AbstractModel):
     _name = 'report.pos_summary_report.report_pos_summary_qweb'
-
-    def _generate_categories(self, category, categories):
-        categories.append(category.id)
-        for cat in category.child_id:
-            categories = self._generate_categories(cat, categories)
-        return categories
-
-    def _generate_lines(self, start_date, end_date, pos_config):
-
-        query = """
-                SELECT * FROM pos_order po 
-                    INNER JOIN stock_location sl
-                    ON (po.location_id = sl.id )
-                    INNER JOIN pos_config pc
-                    ON (pc.stock_location_id = sl.id )
-                    WHERE pc.id = %s and date_order between %s and %s 
-                    ORDER BY po.date_order;
-        """
-        params = (pos_config, start_date, end_date)
-        self.env.cr.execute(query, params)
-        res = self.env.cr.dictfetchall()
-        return res
 
     @api.multi
     def render_html(self, data=None):
         lines = []
         report_obj = self.env['report']
         report = report_obj._get_report_from_name('stock_summary_report.report_stock_summary_qweb')
-        # cash_counter = self.env['pos.config'].search([('stock_location_id', '=', data['location_id'])])
 
         domain = []
+        if data['operating_unit_id']:
+            domain.append(('operating_unit_id', '=', data['operating_unit_id']))
         if data['point_of_sale_id']:
             domain.append(('point_of_sale_id', '=', data['point_of_sale_id']))
         if data['start_date']:
@@ -46,6 +24,15 @@ class DailyCreditSettlementReport(models.AbstractModel):
 
         order_list = self.env['pos.order'].search(domain, order="date_order asc")
 
+        grand_total = {
+            'sales_value': 0,
+            'amount_tax': 0,
+            'discount': 0,
+            'net_sales': 0,
+            'cash': 0,
+            'card': 0,
+            'total': 0,
+        }
 
         for record in order_list:
             rec = {}
@@ -55,7 +42,8 @@ class DailyCreditSettlementReport(models.AbstractModel):
             rec['pos_reference'] = record.pos_reference
             rec['sales_value'] = self.decimal(sales_value)
             rec['amount_tax'] = self.decimal(record.amount_tax)
-            rec['discount'] = 0 if discount == 0 else '- {0}'.format(self.decimal(discount))
+            rec['discount'] = '' if discount == 0 else '- {0}'.format(
+                self.decimal(discount)) if discount > 0 else discount
             rec['net_sales'] = self.decimal(record.amount_total)
             cash, card = 0, 0
 
@@ -65,27 +53,52 @@ class DailyCreditSettlementReport(models.AbstractModel):
                 if statement.journal_id.name == 'Card':
                     card = card + statement.amount
 
-            rec['cash'] = self.decimal(cash)
-            rec['credit_card'] = self.decimal(card)
+            rec['cash'] = self.decimal(cash) if cash else ''
+            rec['credit_card'] = self.decimal(card) if card else ''
             rec['total'] = self.decimal(cash + card)
+
+            grand_total['sales_value'] = grand_total['sales_value'] + sales_value
+            grand_total['amount_tax'] = grand_total['amount_tax'] + record.amount_tax
+            grand_total['discount'] = grand_total['discount'] + discount
+            grand_total['net_sales'] = grand_total['net_sales'] + record.amount_total
+            grand_total['cash'] = grand_total['cash'] + cash
+            grand_total['card'] = grand_total['card'] + card
+            grand_total['total'] = grand_total['total'] + cash + card
+
             lines.append(rec)
 
+        header = self.env['operating.unit'].search([('id', '=', data['operating_unit_id'])])
+
+        total = {
+            'sales_value': self.decimal(grand_total['sales_value']),
+            'amount_tax': self.decimal(grand_total['amount_tax']),
+            'discount': '' if grand_total['discount'] == 0 else '- {0}'.format(self.decimal(grand_total['discount'])) if
+            grand_total['discount'] > 0 else self.decimal(grand_total['discount']),
+            'net_sales': self.decimal(grand_total['net_sales']),
+            'cash': self.decimal(grand_total['cash']),
+            'card': self.decimal(grand_total['card']),
+            'total': self.decimal(grand_total['total']),
+        }
+
         address = {
-            'name': self.env.user.company_id.name,
-            'contact1': self.env.user.default_operating_unit_id.partner_id.street,
-            'contact2': self.env.user.default_operating_unit_id.partner_id.street,
-            'phone': self.env.user.default_operating_unit_id.partner_id.phone
+            'name': header.name,
+            'street': header.street,
+            'street2': header.street2,
+            'city': header.city,
+            'zip': header.zip,
+            'contact_no': header.contact_no
         }
         docargs = {
             'doc_ids': self._ids,
             'doc_model': report.model,
             'docs': self,
-            'start_date': data['start_date'],
+            'data': data,
             'end_date': data['end_date'],
             'category_id': data['point_of_sale_id'],
             'lines': lines,
             'address': address,
-            'pos_config': 'name'
+            'pos_config': 'name',
+            'total': total
         }
         return report_obj.render('pos_summary_report.report_pos_summary_qweb', docargs)
 
@@ -93,4 +106,4 @@ class DailyCreditSettlementReport(models.AbstractModel):
         return datetime.strptime(date[:10], '%Y-%m-%d').strftime('%d-%m-%Y')
 
     def decimal(self, val):
-        return "{0:.2f}".format(round(val, 2))
+        return "{:,}".format(round(val, 0))
