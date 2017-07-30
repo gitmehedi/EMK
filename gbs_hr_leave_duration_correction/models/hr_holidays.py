@@ -147,7 +147,7 @@ class HRHolidays(models.Model):
         for holiday in self:
             if holiday.state not in ['confirm', 'validate1']:
                 raise ValidationError(('Leave request must be confirmed in order to approve it.'))
-            if holiday.state == 'validate1' and not ((holiday.env.user.has_group('hr_holidays.group_hr_holidays_manager')
+            if holiday.state == 'validate1' and not ((holiday.env.user.has_group('hr_holidays.group_hr_holidays_user')
                                                      or holiday.env.user.has_group('gbs_base_package.group_dept_manager'))):
                 raise ValidationError(('Only an HR Manager can apply the second approval on leave requests.'))
 

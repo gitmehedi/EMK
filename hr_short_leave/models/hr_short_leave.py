@@ -344,7 +344,8 @@ class HrShortLeave(models.Model):
 
     @api.multi
     def action_refuse(self):
-        if not self.env.user.has_group('hr_holidays.group_hr_holidays_user'):
+        if not (self.env.user.has_group('hr_holidays.group_hr_holidays_user')
+                or self.env.user.has_group('gbs_base_package.group_dept_manager')):
             raise UserError(_('Only an HR Officer or Manager can refuse leave requests.'))
 
         manager = self.env['hr.employee'].search([('user_id', '=', self.env.uid)], limit=1)
