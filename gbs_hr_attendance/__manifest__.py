@@ -6,7 +6,7 @@
     'category': 'Human Resources',
     
     'depends': ['hr',
-                'hr_Attendance',
+                'hr_attendance',
                 ],
     'data': [
 
