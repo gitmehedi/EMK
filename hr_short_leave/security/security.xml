@@ -26,12 +26,22 @@
    <record id="ir_rule_hr_emp_2234" model="ir.rule">
         <field name="model_id" ref="model_hr_short_leave"/>
         <field name="domain_force">[('user_id','=',user.id)]</field>
-        <field name="name">Employee Permission Employe1e</field>
+        <field name="name">Employee Permission Employlee</field>
         <field eval="0" name="perm_unlink"/>
         <field eval="0" name="perm_write"/>
         <field eval="1" name="perm_read"/>
         <field eval="0" name="perm_create"/>
         <field name="groups" eval="[(4,ref('base.group_user'))]"/>
+    </record>
+
+    <record id="property_unit_rule_hr_short_leave" model="ir.rule">
+        <field name="name">Unit Employee Short Leave</field>
+        <field name="model_id" ref="model_hr_short_leave"/>
+        <field name="domain_force">[('employee_id.operating_unit_id.id','in',user.operating_unit_ids.ids)]</field>
+        <field name="perm_read" eval="True" />
+        <field name="perm_create" eval="True"/>
+        <field name="perm_write" eval="True"/>
+        <field name="perm_unlink" eval="True"/>
     </record>
 
 </odoo>
