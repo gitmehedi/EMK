@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<openerp>
+    <data>
+
+        <record id="hr_attendance.group_hr_attendance_user" model="res.groups">
+            <field name="implied_ids" eval="[(3, ref('hr.group_hr_attendance'))]"/>
+        </record>
+         <!--<record id="hr_attendance.menu_hr_attendance_kiosk_mode" model="ir.ui.menu">-->
+            <!--<field name="implied_ids" eval="[(3, ref('hr_attendance.group_hr_attendance_user'))]"/>-->
+        <!--</record>-->
+    </data>
+</openerp>
