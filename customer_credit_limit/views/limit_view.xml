@@ -38,8 +38,8 @@
 	                <header>
 	                    <button name="approve_creditlimit_run" type="object" string="Approve" states="draft" class="oe_highlight"/>
 	                    <button name="%(action_creditlimit_by_partner)d" type="action" states="draft" string="Generate Limit" class="oe_highlight"/>
-	                    <button string="Set to Draft" name="draft_creditlimit_run" type="object" states="approve" />
-	                    <field name="state" widget="statusbar"/>
+						<button name="action_darft" type="object" string="Set to Draft" states="approve"/>
+						<field name="state" widget="statusbar"/>
 	                </header>
 	                <sheet>
 	                    <label for="name" class="oe_edit_only" attrs="{'invisible':[('state','=','approve')]}"/>

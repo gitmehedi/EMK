@@ -2,6 +2,7 @@ from openerp import models, fields,_
 from openerp import api
 import time
 from openerp.tools.translate import _
+from odoo.exceptions import UserError, ValidationError
 
 class customer_creditlimit_assign(models.Model):
     
@@ -19,20 +20,27 @@ class customer_creditlimit_assign(models.Model):
             ],select=True, readonly=True,default='draft')
 
     @api.multi
-    def approve_creditlimit_run(self, cr, uid, ids, context=None):
-        limit_pool = self.pool.get('res.partner.credit.limit')
-        partner_pool = self.pool.get('res.partner')
-        for assign in self.browse(cr, uid, ids, context):
+    def action_darft(self):
+        self.state = 'draft'
+
+    @api.multi
+    def approve_creditlimit_run(self):
+        limit_pool = self.env['res.partner.credit.limit']
+        partner_pool = self.env['res.partner']
+        for assign in self.browse():
             for limit in assign.limit_ids:
-                limit_pool.write(cr, uid, [limit.id], {'state': 'approve', 'assign_date': time.strftime('%Y-%m-%d')}, context)
-                partner_pool.write(cr, uid, [limit.partner_id.id], {'credit_limit':limit.value}, context=context)
-        return self.write(cr, uid, ids, {'state': 'approve', 'approve_date': time.strftime('%Y-%m-%d %H:%M:%S')}, context=context)
-    
-    def unlink(self, cr, uid, ids, context=None):
-        for limit in self.browse(cr, uid, ids, context=context):
-            if limit.state in ['approve']:
-                raise models.except_models(_('Warning!'),_('You cannot delete a record which is not draft state!'))
-        return super(customer_creditlimit_assign, self).unlink(cr, uid, ids, context)
+                limit_pool.write([limit.id], {'state': 'approve', 'assign_date': time.strftime('%Y-%m-%d')})
+                partner_pool.write([limit.partner_id.id], {'credit_limit':limit.value})
+        return self.write({'state': 'approve', 'approve_date': time.strftime('%Y-%m-%d %H:%M:%S')})
+
+    @api.multi
+    def unlink(self):
+        for limit in self:
+            if limit.state != 'draft':
+                raise UserError(_('You cannot delete a record which is not draft state!'))
+        return super(customer_creditlimit_assign, self).unlink()
+
+
 
 
 class res_partner(models.Model):
