@@ -68,7 +68,10 @@
             <field name="view_id" ref="customer_creditlimit_assign_tree"/>
         </record>
         
-        <menuitem action="action_creditlimit_tree" id="menu_action_creditlimit_tree"/>
+        <menuitem name = "Customer Credit Limit" id ="menu_action_creditlimit" parent="sales_team.menu_base_partner"
+            sequence="6"/>
+		<menuitem action="action_creditlimit_tree" id="menu_action_creditlimit_tree" parent="menu_action_creditlimit"
+            sequence="7"/>
 
     </data>
 </odoo>
