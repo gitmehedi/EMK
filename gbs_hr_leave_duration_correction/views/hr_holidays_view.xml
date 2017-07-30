@@ -1,28 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-        <menuitem
-                id="hr_holidays.menu_hr_holidays_approvals"
-                name="Leaves to Approve"
-                parent="hr_holidays.menu_hr_holidays_root"
-                sequence="3"
-                groups="hr_holidays.group_hr_holidays_manager,hr_holidays.group_hr_holidays_user,gbs_base_package.group_dept_manager"/>
-
-        <menuitem
-                id="hr_holidays.menu_open_department_leave_allocation_approve"
-                groups="hr_holidays.group_hr_holidays_manager,hr_holidays.group_hr_holidays_user,gbs_base_package.group_dept_manager"
-                name="Leaves Allocation"
-                parent="hr_holidays.menu_hr_holidays_approvals"
-                action="hr_holidays.open_department_holidays_allocation_approve"
-                sequence="2"/>
-
-        <menuitem
-                id="hr_holidays.menu_open_department_leave_approve"
-                name="Leaves"
-                parent="hr_holidays.menu_hr_holidays_approvals"
-                groups="hr_holidays.group_hr_holidays_manager,hr_holidays.group_hr_holidays_user,gbs_base_package.group_dept_manager"
-                action="hr_holidays.open_department_holidays_approve"
-                sequence="1"/>
 
         <!-- Inherited Form view-->
         <record id="hr_holidays_leave_req_view_form" model="ir.ui.view">
@@ -31,36 +9,10 @@
             <field name="inherit_id" ref="hr_holidays.edit_holiday_new"/>
             <field name="arch" type="xml">
 
-                <xpath expr="//button[@name='action_approve']" position="replace">
-                    <button string="Approve" name="action_approve" states="confirm" type="object" groups="gbs_base_package.group_dept_manager" class="oe_highlight"/>
-                </xpath>
-
-                <xpath expr="//button[@name='action_refuse']" position="replace">
-                    <button string="Refuse" name="action_refuse" states="confirm,validate,validate1" type="object"
-                            groups="hr_holidays.group_hr_holidays_user, gbs_base_package.group_dept_manager"/>
-                </xpath>
-
-
-
-                <xpath expr="//field[@name='department_id']" position="replace">
-                   <field name="department_id"  groups="hr_holidays.group_hr_holidays_user,gbs_base_package.group_dept_manager" attrs="{'invisible':[('holiday_type','=','category')]}"/>
-                </xpath>
-
-                <xpath expr="//field[@name='employee_id']" position="replace">
-                   <field name="employee_id" options="{'no_quick_create': True, 'no_create_edit': True, 'no_open': True}" attrs="{'required':[('holiday_type','=','employee')],'invisible':[('holiday_type','=','category')]}" groups="hr_holidays.group_hr_holidays_user,gbs_base_package.group_dept_manager"/>
-                </xpath>
-
                 <xpath expr="//field[@name='number_of_days_temp']" position="replace">
                    <field name="number_of_days_temp" attrs="{'readonly':[('type','=','remove')]}"/> days
                 </xpath>
 
-                <xpath expr="//field[@name='employee_id']" position="replace" >
-                    <field name="employee_id" attrs="{'required':[('holiday_type','=','employee')],'invisible':[('holiday_type','=','category')]}" groups="hr_holidays.group_hr_holidays_user,gbs_base_package.group_dept_manager"/>
-                </xpath>
-
-                <xpath expr="//field[@name='payslip_status']" position="replace" >
-                    <field name="payslip_status" groups="hr_holidays.group_hr_holidays_manager,gbs_base_package.group_dept_manager" attrs="{'invisible':[('type','=','add')]}" widget="toggle_button"/>
-                </xpath>
             </field>
         </record>
     </data>
