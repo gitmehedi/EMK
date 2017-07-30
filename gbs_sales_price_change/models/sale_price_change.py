@@ -10,7 +10,8 @@ class SalePriceChange(models.Model):
     def _current_employee(self):
         return self.env['hr.employee'].search([('user_id', '=', self.env.uid)], limit=1)
 
-    product_id = fields.Many2one('product.template', string="Product", required=True, domain=[('sale_ok', '=', True)])
+    #product_id = fields.Many2one('product.template', string="Product", required=True, domain=[('sale_ok', '=', True)], ondelete='cascade')
+    product_id = fields.Many2one('product.product', domain=[('sale_ok', '=', True)], string='Product', ondelete='cascade')
     list_price = fields.Float(string='Old Price', related='product_id.list_price', readonly=True)
     #uom_id = fields.Integer(string='Units of Measure', related='product_id.uom_id')
     new_price = fields.Float(string='New Price', required=True)
@@ -29,8 +30,24 @@ class SalePriceChange(models.Model):
         ('validate', 'Approved')
     ], string='Status', readonly=True, track_visibility='onchange', copy=False, default='draft')
 
-    ## Relational Fields
     line_ids = fields.One2many('product.sale.history.line','sale_price_history_id')
+
+    # @api.multi
+    # def write(self, values):
+    #     #if values.get('new_price'):
+    #         product_pool = self.env['product.product'].search([('product_tmpl_id','=', self.product_id.id)])
+    #         product_pool_update = product_pool.write({'list_price': values.get('new_price')})
+    #
+    #         return product_pool_update
+
+    # @api.model
+    # def create(self, values):
+    #     #self.write(values)
+    #     super(SalePriceChange, self).create(values)
+    #
+    #     if values:
+    #         product_pool = self.env['product.product'].search([('product_tmpl_id', '=', values.get('product_id'))])
+    #         product_pool_update = product_pool.write({'list_price': values.get('new_price')})
 
 
     @api.multi
@@ -39,6 +56,15 @@ class SalePriceChange(models.Model):
 
     @api.multi
     def action_approve(self):
+        sale_price_obj = self.env['sale.price.change'].browse(self.id)
+
+        vals = {}
+        vals['product_id'] = self.product_id.id
+        vals['list_price'] = self.list_price
+        vals['new_price'] = self.new_price
+        vals['sale_price_history_id'] = sale_price_obj.id
+
+        self.env['product.sale.history.line'].create(vals)
         self.state = 'validate'
 
     @api.multi

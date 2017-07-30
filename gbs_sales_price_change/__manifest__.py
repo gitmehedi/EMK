@@ -6,7 +6,7 @@
     'website': 'www.genweb2.com',
     'summary': "This module handles request of changing Product Sale Price",
     'depends': [
-        'sale',
+        'sale', 'product',
     ],
     'data': [
         #'security/hr_holidays_security.xml',
