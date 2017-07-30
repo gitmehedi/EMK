@@ -34,6 +34,9 @@ class HrManualAttendance(models.Model):
                                  related='employee_id.parent_id')
     approver_id = fields.Many2one('res.user', string='Approvar', readonly=True, copy=False,
                                   help='This field is automatically filled by the user who validate the manual attendance request')
+
+    my_menu_check = fields.Boolean(string='Check',readonly=True)
+
     state = fields.Selection([
         ('draft', 'Draft'),
         ('cancel', 'Cancelled'),

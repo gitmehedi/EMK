@@ -31,16 +31,16 @@
 				<form string="HR Manual Attendance" delete ="0" create = "0">
 				 	<header>
 	                    <button string="Confirm" name="action_confirm" states="draft" type="object" class="oe_highlight" />
-                    	<button string="Approve" name="action_approve" states="confirm" type="object" class="oe_highlight" groups="gbs_base_package.group_dept_manager"/>
-                     	<button string="Refuse" name="action_refuse" states="confirm" type="object" groups="gbs_base_package.group_dept_manager"/>
-                    	<button string="Reset to Draft" name="action_draft" type="object" states="confirm" groups="gbs_base_package.group_dept_manager"/>
+                    	<button string="Approve" name="action_approve" states="confirm" type="object" class="oe_highlight" groups="gbs_base_package.group_dept_manager,hr_attendance.group_hr_attendance_user"/>
+                     	<button string="Refuse" name="action_refuse" states="confirm" type="object" groups="gbs_base_package.group_dept_manager,hr_attendance.group_hr_attendance_user"/>
+                    	<button string="Reset to Draft" name="action_draft" type="object" states="confirm" groups="gbs_base_package.group_dept_manager,hr_attendance.group_hr_attendance_user"/>
                     	<field name="state" widget="statusbar" statusbar_visible="draft,confirm,validate"/>                    	
                 	</header>				
                 	
 					<sheet>
 						<group>
 							<group>
-								<field name="employee_id"   attrs="{'readonly':['|', ('state','=','validate'),('state','=','confirm')]}" options="{'no_quick_create':True,'no_create_edit':True,'no_open': True}"/>
+								<field name="employee_id"   attrs="{'readonly':[('my_menu_check','=',True)]}" options="{'no_quick_create':True,'no_create_edit':True,'no_open': True}"/>
 								<field name="department_id" attrs="{'readonly':['|', ('state','=','validate'),('state','=','confirm'),('state','=','draft')]}" readonly="1" />
 							</group>
 							<group>
@@ -51,7 +51,8 @@
 																'invisible': [('sign_type', '=','sign_in')],
 																'required': [('sign_type', '!=', 'sign_in')]}"/>
 
-								<field name="is_it_official" attrs="{'readonly':['|', ('state','=','validate'),('state','=','confirm')]}"/>							
+								<field name="is_it_official" attrs="{'readonly':['|', ('state','=','validate'),('state','=','confirm')]}"/>
+								<field name="my_menu_check" invisible="1"/>
 							</group>
 	                        <field name="reason" nolabel="1" colspan="4" placeholder="Add a reason..." attrs="{'readonly':['|', ('state','=','validate'),('state','=','confirm')]}"/>	
 						</group>
@@ -76,6 +77,7 @@
 			<field name="name">My Attendances</field>
 			<field name="res_model">hr.manual.attendance</field>
 			<field name="domain">[('employee_id.user_id', '=', uid)]</field>
+			<field name="context">{'default_my_menu_check': True}</field>
 			<field name="view_mode">tree,form</field>
 		</record>
 

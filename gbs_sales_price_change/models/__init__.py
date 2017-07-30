@@ -1,1 +1,2 @@
 import sale_price_change
+import product_sale_price_history_line

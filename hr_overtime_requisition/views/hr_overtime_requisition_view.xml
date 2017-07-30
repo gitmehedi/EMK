@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <openerp>
 	<data>
-
         <!-- Form View -->
 		<record id="hr_ot_requisition_form" model="ir.ui.view">
 			<field name="name">hr_ot_requisition_form</field>
@@ -11,30 +10,28 @@
 				<form string="OT Requisition">
 				 	<header>
                     	<button string="Submit" name="action_submit" states="to_submit" type="object" class="oe_highlight" groups="base.group_user"/>
-                    	<button string="To Approve" name="action_hod_approve" states="to_approve" type="object" class="oe_highlight" groups="gbs_base_package.group_dept_manager,hr.group_hr_user"/>
-                    	<button string="Approve" name="action_hr_approve" states="hr_approve" type="object" class="oe_highlight" groups="hr.group_hr_user"/>
-                    	<button string="Refuse" name="action_refuse" states="to_approve,hr_approve,approved" type="object" groups="hr.group_hr_user"/>
-                    	<button string="Reset to Draft" name="action_reset" states="approved" type="object" groups="hr.group_hr_user"/>
+                    	<button string="To Approve" name="action_hod_approve" states="to_approve" type="object" class="oe_highlight" groups="gbs_base_package.group_dept_manager,hr_attendance.group_hr_attendance_user"/>
+                    	<button string="Approve" name="action_hr_approve" states="hr_approve" type="object" class="oe_highlight" groups="hr_attendance.group_hr_attendance_user"/>
+                    	<button string="Refuse" name="action_refuse" states="to_approve,hr_approve,approved" type="object" groups="hr_attendance.group_hr_attendance_user"/>
+                    	<button string="Reset to Draft" name="action_reset" states="hr_approve,approved" type="object" groups="hr_attendance.group_hr_attendance_user"/>
                     	<field name="state" widget="statusbar" statusbar_visible="to_submit,to_approve,approved"/>
                 	</header>
 					<sheet>
 						<group>
 							<group>
-								<field name="employee_id" attrs="{'readonly':['|',('state','!=','to_submit'),('user_access_dept_manager','=',False),('user_access_hr_manager','=',False)]}"
+								<field name="employee_id" attrs="{'readonly':[('state','!=','to_submit')]}"
 									   options='{"no_open": True,"no_create": 1, "no_create_edit":1}'/>
 								<field name="department_id"/>
-								<field name="from_datetime" attrs="{'readonly':[('state','in',['hr_approve','approved']),('user_access_hr_manager','=',False)]}"/>
-								<field name="to_datetime" attrs="{'readonly':[('state','in',['hr_approve','approved']),('user_access_hr_manager','=',False)]}"/>
+								<field name="from_datetime" attrs="{'readonly':[('state','in',['hr_approve','approved'])]}"/>
+								<field name="to_datetime" attrs="{'readonly':[('state','in',['hr_approve','approved'])]}"/>
 								<field name="total_hours"/>
 							</group>
 							<group>
-								<field name="user_access_hr_manager" invisible="1"/>
-								<field name="user_access_dept_manager" invisible="1"/>
-								<field name="user_access" invisible="1"/>
+
 							</group>
 						</group>
                         <group>
-                            <field name="ot_reason" nolabel="1" colspan="4" placeholder="Add a reason..." attrs="{'readonly':[('state','in',['hr_approve','approved']),('user_access_hr_manager','=',False)]}"/>
+                            <field name="ot_reason" nolabel="1" colspan="4" placeholder="Add a reason..." attrs="{'readonly':[('state','in',['hr_approve','approved'])]}"/>
                         </group>
 
 						<div class="oe_chatter">
@@ -95,10 +92,10 @@
 					 sequence="1" action="action_hr_ot_requisition" groups="base.group_user"/>
 
 		<menuitem id="menu_hr_ot_requisition_pending" name="Pending Request" parent="main_menu_hr_ot_requisition"
-					 sequence="2" action="action_hr_ot_requisition_pending" groups="gbs_base_package.group_dept_manager,hr.group_hr_user"/>
+					 sequence="2" action="action_hr_ot_requisition_pending" groups="gbs_base_package.group_dept_manager,hr_attendance.group_hr_attendance_user"/>
 
 		<menuitem id="menu_hr_ot_requisition_approved" name="Approved" parent="main_menu_hr_ot_requisition"
-					 sequence="3" action="action_hr_ot_requisition_approved" groups="hr.group_hr_user"/>
+					 sequence="3" action="action_hr_ot_requisition_approved" groups="hr_attendance.group_hr_attendance_user"/>
 
     </data>
 </openerp>
