@@ -7,6 +7,27 @@
         <field name="priority" eval="30"/>
         <field name="arch" type="xml">
             <form>
+                <header>
+                    <button name="action_request" type="object" states="draft"
+                            string="Request" class="oe_highlight"/>
+
+                    <button name="action_draft" type="object" states="request"
+                            string="Draft" class="oe_highlight"/>
+
+                    <button name="action_approve" type="object" states="request"
+                            string="Approve" class="oe_highlight"/>
+
+                    <button name="action_confirm" type="object" states="approve"
+                            string="Confirm" class="oe_highlight"/>
+
+                    <button name="action_cancel" type="object" states="request,approve"
+                            string="Cancel" class="oe_highlight"/>
+
+                    <button name="action_done" type="object" states="confirm"
+                            string="Done" class="oe_highlight"/>
+
+                    <field name="state" widget="statusbar"/>
+                </header>
                 <sheet>
                     <group>
                         <group>
@@ -38,6 +59,15 @@
                             <field name="old_value"/>
                             <field name="new_value"/>
                         </tree>
+                        <form string="Product">
+                            <group>
+                                <field name="product_id"
+                                       options="{'no_open': True, 'no_create': True}"/>
+                                <field name="old_value"/>
+                                <field name="new_value"/>
+                            </group>
+
+                        </form>
                     </field>
 
                     <separator string="Customer" attrs="{'invisible':[('commission_type', '!=', 'by_product')]}"/>
@@ -48,6 +78,15 @@
                             <field name="old_value"/>
                             <field name="new_value"/>
                         </tree>
+                        <form string="Customer">
+                            <group>
+                                <field name="customer_id"
+                                       options="{'no_open': True, 'no_create': True}"/>
+                                <field name="old_value"/>
+                                <field name="new_value"/>
+                            </group>
+
+                        </form>
                     </field>
 
                 </sheet>
@@ -63,6 +102,7 @@
             <tree string="Customer Commission Configuration Tree">
                 <field name="product_id"/>
                 <field name="customer_id"/>
+                <field name="state"/>
             </tree>
         </field>
     </record>

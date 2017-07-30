@@ -312,7 +312,7 @@ class HrShortLeave(models.Model):
         for holiday in self:
             if holiday.state not in ['confirm', 'validate1']:
                 raise UserError(_('Leave request must be confirmed in order to approve it.'))
-            if holiday.state == 'validate1' and not holiday.env.user.has_group('hr_holidays.group_hr_holidays_manager'):
+            if holiday.state == 'validate1' and not holiday.env.user.has_group('hr_holidays.group_hr_holidays_user'):
                 raise UserError(_('Only an HR Manager can apply the second approval on leave requests.'))
 
             holiday.write({'state': 'validate'})
@@ -344,7 +344,8 @@ class HrShortLeave(models.Model):
 
     @api.multi
     def action_refuse(self):
-        if not self.env.user.has_group('hr_holidays.group_hr_holidays_user'):
+        if not (self.env.user.has_group('hr_holidays.group_hr_holidays_user')
+                or self.env.user.has_group('gbs_base_package.group_dept_manager')):
             raise UserError(_('Only an HR Officer or Manager can refuse leave requests.'))
 
         manager = self.env['hr.employee'].search([('user_id', '=', self.env.uid)], limit=1)

@@ -44,23 +44,21 @@
 				<form string="Alter Rostering" delete ="0" create = "0">
 				 	<header>
 	                    <button string="Confirm" name="action_confirm" states="draft" type="object" class="oe_highlight"/>
-                    	<button string="Approve" name="action_approve" states="confirmed" type="object" class="oe_highlight" groups="hr.group_hr_user"/>
-                     	<button string="Refuse" name="action_refuse" states="confirmed" type="object" groups="hr.group_hr_user"/>
-                    	<button string="Reset to Draft" name="action_draft" type="object" states="confirmed" groups="hr.group_hr_user"/>
+                    	<button string="Approve" name="action_approve" states="confirmed" type="object" class="oe_highlight" groups="gbs_base_package.group_dept_manager,hr_attendance.group_hr_attendance_user"/>
+                     	<button string="Refuse" name="action_refuse" states="confirmed" type="object" groups="hr_attendance.group_hr_attendance_user"/>
+                    	<button string="Reset to Draft" name="action_draft" type="object" states="confirmed" groups="hr_attendance.group_hr_attendance_user"/>
                     	<field name="state" widget="statusbar" statusbar_visible="draft,confirmed,approved"/>
                 	</header>	
 					<sheet>
 						<group>
 							<group>
-								<field name="employee_id" attrs="{'readonly':['|',('state','!=','draft'),('user_access_dept_manager','=',False),('user_access_hr_manager','=',False)]}"
+								<field name="employee_id" attrs="{'readonly':[('my_menu_check','=',True)]}"
 									   options='{"no_open": True,"no_create": 1, "no_create_edit":1}'/>
 								<field name="department_id" invisible="1"/>
 								<field name="alter_date" attrs="{'readonly':['|', ('state','=','approved'),('state','=','confirmed')]}"/>
 								<field name="duty_start" attrs="{'readonly':['|', ('state','=','approved'),('state','=','confirmed')]}"/>
 								<field name="duty_end" attrs="{'readonly':['|', ('state','=','approved'),('state','=','confirmed')]}"/>
-								<field name="user_access_hr_manager" invisible="1" />
-								<field name="user_access_dept_manager" invisible="1"/>
-								<field name="user_access" invisible="1"/>
+								<field name="my_menu_check" invisible="1"/>
 							</group>
 							<group>
 								<field name="is_included_ot" attrs="{'readonly':['|', ('state','=','approved'),('state','=','confirmed')]}"/>
@@ -84,6 +82,7 @@
 			<field name="name">My Shift Alter</field>
 			<field name="res_model">hr.shift.alter</field>
 			<field name="domain">[('employee_id.user_id', '=', uid)]</field>
+			<field name="context">{'default_my_menu_check': True}</field>
 			<field name="view_mode">tree,form</field>
 		</record>
 
@@ -92,8 +91,8 @@
 		<menuitem id="menu_hr_alter" name="Alter Rostering" parent="hr_attendance.menu_hr_attendance_root"
 					 sequence="16"/>
 		<menuitem id="menu_hr_my_alter" name="My Alter Rostering" parent="menu_hr_alter"
-					 sequence="5" action="hr_my_shift_alter" />
+					 sequence="5" action="hr_my_shift_alter" groups="base.group_user"/>
 		<menuitem id="menu_hr_sh_alter" name="Alter Rostering" parent="menu_hr_alter"
-					 sequence="10" action="hr_shift_alter_action" groups="hr.group_hr_user"/>
+					 sequence="10" action="hr_shift_alter_action" groups="gbs_base_package.group_dept_manager,hr_attendance.group_hr_attendance_user"/>
 	</data>
 </openerp>

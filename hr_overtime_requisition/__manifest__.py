@@ -15,7 +15,7 @@
         'resource',
         'hr_employee_operating_unit',
         ],
-    'summary': 'This Module Use for OverTime Requisition.',
+    'summary': 'This Module is use for OverTime Requisition.',
     'installable': True,
     'application': True,
 }
