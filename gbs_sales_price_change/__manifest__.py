@@ -6,10 +6,13 @@
     'website': 'www.genweb2.com',
     'summary': "This module handles request of changing Product Sale Price",
     'depends': [
-        'sale', 'product',
+        #'gbs_application_group',
+        'sale',
+        'product',
     ],
     'data': [
-        #'security/hr_holidays_security.xml',
+        'security/sales_price_security.xml',
+        'security/ir.model.access.csv',
         'views/sale_price_change_view.xml',
     ],
     'installable': True,

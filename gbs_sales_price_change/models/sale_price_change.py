@@ -47,15 +47,19 @@ class SalePriceChange(models.Model):
     #     super(SalePriceChange, self).create(values)
     #
     #     if values:
-    #         product_pool = self.env['product.product'].search([('product_tmpl_id', '=', values.get('product_id'))])
+    #         product_pool = self.env['product.product'].search([('product_tmpl_id', '=', 2)])
     #         product_pool_update = product_pool.write({'list_price': values.get('new_price')})
 
 
     @api.multi
     def action_confirm(self):
-        sale_price_obj = self.env['sale.price.change'].browse(self.id)
+        self.state = 'confirm'
 
+    @api.multi
+    def action_approve(self):
+        sale_price_obj = self.env['sale.price.change'].browse(self.id)
         vals = {}
+
         vals['product_id'] = self.product_id.id
         vals['list_price'] = self.list_price
         vals['new_price'] = self.new_price
@@ -63,10 +67,6 @@ class SalePriceChange(models.Model):
 
         self.env['product.sale.history.line'].create(vals)
 
-        self.state = 'confirm'
-
-    @api.multi
-    def action_approve(self):
         self.state = 'validate'
 
     @api.multi
