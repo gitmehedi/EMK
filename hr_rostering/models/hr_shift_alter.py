@@ -27,6 +27,8 @@ class HRShiftAlter(models.Model):
 
     manager_id = fields.Many2one('hr.employee', string='Final Approval', readonly=True, copy=False)
 
+    first_approval = fields.Boolean('First Approval', compute='compute_check_first_approval')
+
     state = fields.Selection([
         ('draft', "Draft"),
         ('confirmed', "Confirmed"),
@@ -60,3 +62,19 @@ class HRShiftAlter(models.Model):
             if a.state != 'draft':
                 raise UserError(_('You can not delete this.'))
         return super(HRShiftAlter, self).unlink()
+
+    ### User and state wise approve button hide function
+    @api.multi
+    def compute_check_first_approval(self):
+        user = self.env.user.browse(self.env.uid)
+        for h in self:
+            if h.state != 'confirmed':
+                h.first_approval = False
+            ### no one can approve own request
+            elif h.employee_id.user_id.id == self.env.user.id:
+                h.first_approval = False
+            elif user.has_group('hr_attendance.group_hr_attendance_user'):
+                h.first_approval = True
+            else:
+                res = h.employee_id.check_1st_level_approval()
+                h.first_approval = res

@@ -51,6 +51,8 @@ class HROTRequisition(models.Model):
     to_datetime = fields.Datetime('End Date', readonly=True, copy=False,required=True)
     total_hours = fields.Float(string='Total hours', compute='_compute_total_hours', store=True,digits=(15, 2),readonly=True)
     ot_reason = fields.Text(string='Reason for OT')
+
+    first_approval = fields.Boolean('First Approval', compute='compute_check_first_approval')
     # user access fields
     # user_access_hr_att_officer= fields.Boolean(string='User Access Hr Manager', compute='_compute_employee_check_hr_att_officer',readonly=True)
     # user_access_dept_manager = fields.Boolean(string='User Access Department Manager',compute='_compute_employee_check_dept_manager',readonly=True)
@@ -110,8 +112,21 @@ class HROTRequisition(models.Model):
         for a in self:
             if a.state != 'to_submit':
                 user = a.env.user.browse(self.env.uid)
-                if user.has_group('user_access_hr_att_officer'):
+                if user.has_group('hr_attendance.group_hr_attendance_user'):
                     pass
                 else:
                     raise UserError(_('You have no access to delete this record.'))
             return super(HROTRequisition, self).unlink()
+
+    ### User and state wise approve button hide function
+    @api.multi
+    def compute_check_first_approval(self):
+        for h in self:
+            if h.state != 'to_approve':
+                h.first_approval = False
+            ### no one can approve own request
+            elif h.employee_id.user_id.id == self.env.user.id:
+                h.first_approval = False
+            else:
+                res = h.employee_id.check_1st_level_approval()
+                h.first_approval = res

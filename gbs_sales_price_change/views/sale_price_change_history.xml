@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <!-- Tree View -->
+		<record id="sale_price_change_history_tree" model="ir.ui.view">
+			<field name="name">sale_price_change_history_tree_view</field>
+			<field name="model">product.sale.history.line</field>
+			<field name="arch" type="xml">
+				<tree string="Product Sale Price History">
+                    <field name="product_id"/>
+                    <field name="list_price"/>
+                    <field name="new_price"/>
+					<field name="approve_price_date"/>
+				</tree>
+			</field>
+		</record>
+
+		<!-- Form View -->
+		<record id="sale_price_change_history_form_view" model="ir.ui.view">
+			<field name="name">sale_price_change_history_form_view</field>
+			<field name="model">product.sale.history.line</field>
+			<field name="type">form</field>
+			<field name="arch" type="xml">
+				<form string="Change Products Sale Price" create="false" edit="false">
+					<sheet>
+						<group>
+							<field name="product_id"/>
+							<field name="list_price"/>
+							<field name="new_price"/>
+							<field name="approve_price_date"/>
+						</group>
+	                </sheet>
+				</form>
+			</field>
+		</record>
+
+		<record id="action_product_sale_price_change_history" model="ir.actions.act_window">
+			<field name="name">Product Price History</field>
+			<field name="res_model">product.sale.history.line</field>
+			<field name="view_mode">tree,form</field>
+		</record>
+
+        <menuitem id="product_sale_price_change_history_menu_action" name="Product Price History"
+				  groups="gbs_application_group.group_head_sale,gbs_application_group.group_head_account,gbs_application_group.group_derector"
+				   parent="sale.menu_product_template_action" action="action_product_sale_price_change_history"/>
+    </data>
+</odoo>

@@ -13,7 +13,10 @@
     'data': [
         'security/sales_price_security.xml',
         'security/ir.model.access.csv',
+        'views/sale_price_change_history.xml',
         'views/sale_price_change_view.xml',
+
+
     ],
     'installable': True,
     'application': True,

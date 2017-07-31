@@ -19,6 +19,7 @@
         'hr_payroll',
         'resource',
         'hr_employee_operating_unit',
+        'gbs_hr_package',
     ],    
     
     'description': 
