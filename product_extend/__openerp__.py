@@ -7,9 +7,11 @@
     'category': 'Human Resource',
     'depends': ['base',
                 'stock',
-                'product'
+                'product',
+                'point_of_sale',
                 ],
     'data': [
+        'security/ir.model.access.csv',
         'security/security.xml'
     ],
     'summary': 'Test Summary for Extended Product',

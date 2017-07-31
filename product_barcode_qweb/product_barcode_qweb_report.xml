@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <openerp>
     <data>
-
         <report
             id="product_barcode_qweb"
             string="Product Barcode"
@@ -12,17 +11,12 @@
             menu="False"
          />
 
-
         <record id="product_barcode_qweb" model="ir.actions.report.xml">
             <field name="paperformat_id" ref="product_barcode_qweb.paperformat_barcode_label"/>
         </record>
         
         <menuitem icon="STOCK_PRINT" id="menu_product_barcode_print" 
         		action="action_report_product_barcode_print" parent="stock.menu_stock_product" sequence="2"/>
-
-       <!--   <menuitem icon="STOCK_PRINT" action="action_report_product_barcode_print"
-                id="menu_product_barcode_print" parent="base.menu_product" sequence="40" />-->
-
 
     </data>
 </openerp>
