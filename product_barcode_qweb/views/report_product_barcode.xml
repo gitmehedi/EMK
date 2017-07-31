@@ -6,7 +6,7 @@
                 <div class="page" style="margin-left: 0mm">
                     <table style="font-size:8.0px;" cellspacing="1">
                         <tr style="height: 23.25mm; " t-foreach="getLabelRows(data['form'])" t-as="label_row">
-                            <td align="center" style="width: 65mm; border: 1px solid black; padding: 1mm 0mm 0mm 1.50mm" t-foreach="label_row"
+                            <td align="center" style="width: 65mm; padding: 1mm 0mm 0mm 1.50mm" t-foreach="label_row"
                                 t-as="label_data">
                                 <span style="font-weight:bold" t-esc="label_data['company_name']"/>
                                 <br/>
