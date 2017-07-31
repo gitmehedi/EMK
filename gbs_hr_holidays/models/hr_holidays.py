@@ -4,6 +4,21 @@ from odoo.exceptions import UserError, AccessError, ValidationError
 class Employee(models.Model):
     _inherit = 'hr.holidays'
 
+    first_approval = fields.Boolean('First Approval', compute='compute_check_first_approval')
+
+    @api.multi
+    def compute_check_first_approval(self):
+        for h in self:
+            if h.state != 'confirm':
+                h.first_approval = False
+            ### no one can approve own request
+            elif h.employee_id.user_id.id == self.env.user.id:
+                h.first_approval = False
+            else:
+                res = h.employee_id.check_1st_level_approval()
+                h.first_approval = res
+                # h.first_approval = False
+
     @api.multi
     def action_refuse(self):
         if not (self.env.user.has_group('hr_holidays.group_hr_holidays_user')

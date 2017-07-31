@@ -11,7 +11,7 @@
                 <field name="type" invisible="1"/>
                 <header>
                     <button string="Confirm" name="action_confirm" states="draft" type="object" class="oe_highlight"/>
-                    <button string="Approve" name="action_approve" groups="gbs_base_package.group_dept_manager" states="confirm" type="object" class="oe_highlight"/>
+                    <button string="Approve" name="action_approve" groups="gbs_base_package.group_dept_manager" type="object" class="oe_highlight" attrs="{'invisible':[('first_approval','=',False)]}"/>
                     <button string="Validate" name="action_validate" states="validate1" type="object" groups="hr_holidays.group_hr_holidays_manager,hr_holidays.group_hr_holidays_user" class="oe_highlight"/>
                     <button string="Refuse" name="action_refuse" states="confirm,validate,validate1" type="object"  groups="hr_holidays.group_hr_holidays_user,gbs_base_package.group_dept_manager"/>
                     <button string="Reset to Draft" name="action_draft" type="object"
@@ -34,6 +34,7 @@
                                 </div>
                                 <div>
                                     <field name="number_of_days_temp" widget="float_time" class="oe_inline"/> Hour(s)
+                                    <field name="first_approval" invisible="1"/>
                                     <!--<field name="number_of_days_temp" attrs="{'readonly':[('type','=','remove')]}" class="oe_inline"/> Hour(s)-->
                                 </div>
                             </div>

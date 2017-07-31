@@ -7,11 +7,11 @@
     
     'depends': ['hr',
                 'hr_attendance',
+                'gbs_hr_package',
                 ],
     'data': [
-        # 'views/hr_attendance_view.xml',
+        'views/hr_attendance_view.xml',
         'security/ir_rule.xml',
-
     ],
     'installable': True,
     'application': False,

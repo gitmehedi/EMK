@@ -81,6 +81,8 @@ class HrShortLeave(models.Model):
     double_validation = fields.Boolean('Apply Double Validation', default=True)
     can_reset = fields.Boolean('Can reset', compute='_compute_can_reset')
 
+    first_approval = fields.Boolean('First Approval', compute='compute_check_first_approval')
+
     @api.multi
     @api.depends('number_of_days_temp', 'type')
     def _compute_number_of_days(self):
@@ -408,3 +410,16 @@ class HrShortLeave(models.Model):
             })
 
         return [new_group] + groups
+
+    ###User and state wise approve button hide function
+    @api.multi
+    def compute_check_first_approval(self):
+        for h in self:
+            if h.state != 'confirm':
+                h.first_approval = False
+            ### no one can approve own request
+            elif h.employee_id.user_id.id == self.env.user.id:
+                h.first_approval = False
+            else:
+                res = h.employee_id.check_1st_level_approval()
+                h.first_approval = res
