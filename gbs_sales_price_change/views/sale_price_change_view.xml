@@ -31,11 +31,10 @@
 			<field name="arch" type="xml">
 				<form string="Change Products Sale Price">
 					<header>
-						<button string="Confirm" name="action_confirm" states="draft" type="object" class="oe_highlight"/>
-                    	<button string="Approve" name="action_approve" states="validate1" type="object" class="oe_highlight"/>
-                    	<button string="Validate" name="action_validate" states="confirm" type="object" class="oe_highlight"/>
-                    	<button string="Refuse" name="action_refuse" states="confirm,validate1" type="object"/>
-                    	<button string="Reset to Draft" name="action_draft" states="draft,confirm,validate1" type="object"/>
+						<button string="Confirm" name="action_confirm" groups="gbs_application_group.group_head_sale" states="draft" type="object" class="oe_highlight"/>
+                    	<button string="Approve" name="action_approve" groups="gbs_application_group.group_derector" states="validate1" type="object" class="oe_highlight"/>
+                    	<button string="Validate" name="action_validate" groups="gbs_application_group.group_head_account" states="confirm" type="object" class="oe_highlight"/>
+                    	<button string="Refuse" name="action_refuse" groups="gbs_application_group.group_head_account,gbs_application_group.group_derector" states="confirm,validate1" type="object"/>
                     	<field name="state" widget="statusbar" statusbar_visible="draft,confirm,validate1,validate"/>
                	 	</header>
 
@@ -88,12 +87,17 @@
 		</record>
 
 		<!-- Menu Item -->
-        <menuitem name="Sales" id="sales_team.menu_base_partner" web_icon="sale,static/description/icon.png"/>
+        <menuitem name="Sales" id="sales_team.menu_base_partner"
+				  groups="gbs_application_group.group_head_sale,gbs_application_group.group_head_account,gbs_application_group.group_derector"
+				  web_icon="sale,static/description/icon.png"/>
 
-        <menuitem id="product_sale_price_change_menu" name="Change Sales Price" parent="sales_team.menu_base_partner"/>
+        <menuitem id="product_sale_price_change_menu" name="Change Sales Price"
+				  groups="gbs_application_group.group_head_sale,gbs_application_group.group_head_account,gbs_application_group.group_derector"
+				  parent="sales_team.menu_base_partner"/>
 
-        <menuitem id="product_sale_price_change_menu_action" name="Change Sales Price" parent="product_sale_price_change_menu"
-                  sequence="9" action="action_product_sale_price_change"/>
+        <menuitem id="product_sale_price_change_menu_action" name="Change Sales Price"
+				  groups="gbs_application_group.group_head_sale,gbs_application_group.group_head_account,gbs_application_group.group_derector"
+				  parent="product_sale_price_change_menu" sequence="9" action="action_product_sale_price_change"/>
 
     </data>
 </odoo>
