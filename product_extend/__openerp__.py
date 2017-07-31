@@ -2,14 +2,16 @@
 
 {
     'name': 'Product Extend',
-    'author':  'Genweb2 Limited',
+    'author': 'Genweb2 Limited',
     'website': 'www.genweb2.com',
     'category': 'Human Resource',
-    'data': [],
     'depends': ['base',
                 'stock',
                 'product'
                 ],
+    'data': [
+        'security/security.xml'
+    ],
     'summary': 'Test Summary for Extended Product',
     'category': 'Product',
     'summary': 'Product Extend',
@@ -18,6 +20,3 @@
     'application': True,
     'auto_install': False,
 }
-
-
-
