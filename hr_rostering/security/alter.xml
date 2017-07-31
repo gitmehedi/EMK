@@ -2,14 +2,26 @@
 <odoo>
 
     <record id="rule_shift_alter_employee" model="ir.rule">
-        <field name="name">HR SHIFT ALTER (General Employee and Manager)</field>
+        <field name="name">HR SHIFT ALTER (General Employee)</field>
         <field name="model_id" ref="model_hr_shift_alter"/>
-        <field name="domain_force">['|',('employee_id.user_id','=',user.id),('employee_id.department_id.manager_id','in',[e.id for e in user.employee_ids])]</field>
+        <field name="domain_force">[('employee_id.user_id','=',user.id)]</field>
         <field name="perm_read" eval="True" />
         <field name="perm_create" eval="True" />
         <field name="perm_write" eval="True" />
         <field name="perm_unlink" eval="True" />
-        <field name="groups" eval="[(4,ref('base.group_user')),(4,ref('gbs_base_package.group_dept_manager'))]"/>
+        <field name="groups" eval="[(4,ref('base.group_user'))]"/>
+    </record>
+
+    <record id="hr_shift_alter_for_dept_manager" model="ir.rule">
+        <field name="name">Alter Rostering Permission for Department Manager</field>
+        <field name="model_id" ref="model_hr_shift_alter"/>
+        <field name="domain_force">['|',('employee_id.parent_id','in',[e.id for e in user.employee_ids]),
+            ('employee_id.department_id.manager_id','in',[e.id for e in user.employee_ids])]</field>
+        <field name="perm_read" eval="True" />
+        <field name="perm_create" eval="True"/>
+        <field name="perm_write" eval="True"/>
+        <field name="perm_unlink" eval="True"/>
+        <field name="groups" eval="[(4,ref('gbs_base_package.group_dept_manager'))]"/>
     </record>
 
     <!--<record id="rule_shift_alter_for_dept_manager" model="ir.rule">-->
@@ -34,14 +46,25 @@
         <field name="groups" eval="[(4,ref('hr_attendance.group_hr_attendance_user'))]"/>
     </record>
 
-    <record id="rule_shift_alter_unit" model="ir.rule">
-        <field name="name">HR Shift Alter(Unit Wise)</field>
+    <!--<record id="rule_shift_alter_unit" model="ir.rule">-->
+        <!--<field name="name">HR Shift Alter(Unit Wise)</field>-->
+        <!--<field name="model_id" ref="model_hr_shift_alter"/>-->
+        <!--<field name="domain_force">[('employee_id.operating_unit_id.id','in',user.operating_unit_ids.ids)]</field>-->
+        <!--<field name="perm_read" eval="True" />-->
+        <!--<field name="perm_create" eval="True"/>-->
+        <!--<field name="perm_write" eval="True"/>-->
+        <!--<field name="perm_unlink" eval="True"/>-->
+    <!--</record>-->
+
+    <record id="hr_shift_alter_rule_holidays_officer" model="ir.rule">
+        <field name="name">HR Shift Alter(Multi Operating Unit)</field>
         <field name="model_id" ref="model_hr_shift_alter"/>
-        <field name="domain_force">[('employee_id.operating_unit_id.id','in',user.operating_unit_ids.ids)]</field>
+        <field name="domain_force">[('employee_id.user_id.default_operating_unit_id','in',user.operating_unit_ids.ids)]</field>
         <field name="perm_read" eval="True" />
         <field name="perm_create" eval="True"/>
         <field name="perm_write" eval="True"/>
         <field name="perm_unlink" eval="True"/>
+        <field name="groups" eval="[(4,ref('hr_holidays.group_hr_holidays_user'))]"/>
     </record>
 </odoo>
 

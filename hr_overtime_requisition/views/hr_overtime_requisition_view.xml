@@ -10,7 +10,8 @@
 				<form string="OT Requisition">
 				 	<header>
                     	<button string="Submit" name="action_submit" states="to_submit" type="object" class="oe_highlight" groups="base.group_user"/>
-                    	<button string="To Approve" name="action_hod_approve" states="to_approve" type="object" class="oe_highlight" groups="gbs_base_package.group_dept_manager,hr_attendance.group_hr_attendance_user"/>
+                    	<button string="To Approve" name="action_hod_approve" type="object" class="oe_highlight" attrs="{'invisible':[('first_approval','=',False)]}"
+								groups="gbs_base_package.group_dept_manager,hr_attendance.group_hr_attendance_user"/>
                     	<button string="Approve" name="action_hr_approve" states="hr_approve" type="object" class="oe_highlight" groups="hr_attendance.group_hr_attendance_user"/>
                     	<button string="Refuse" name="action_refuse" states="to_approve,hr_approve,approved" type="object" groups="hr_attendance.group_hr_attendance_user"/>
                     	<button string="Reset to Draft" name="action_reset" states="hr_approve,approved" type="object" groups="hr_attendance.group_hr_attendance_user"/>
@@ -24,7 +25,8 @@
 								<field name="department_id"/>
 								<field name="from_datetime" attrs="{'readonly':[('state','in',['hr_approve','approved'])]}"/>
 								<field name="to_datetime" attrs="{'readonly':[('state','in',['hr_approve','approved'])]}"/>
-								<field name="total_hours"/>
+								<field name="total_hours" widget="float_time"/>
+								<field name="first_approval" invisible="1"/>
 							</group>
 							<group>
 
@@ -53,7 +55,7 @@
 					<field name="department_id" />
 					<field name="from_datetime" />
 					<field name="to_datetime" />
-					<field name="total_hours" />
+					<field name="total_hours" widget="float_time"/>
 					<field name="state" />
 				</tree>
 			</field>
