@@ -24,14 +24,25 @@
         <!--<field name="groups" eval="[(4,ref('gbs_base_package.group_dept_manager'))]"/>-->
     <!--</record>-->
 
-    <record id="property_rule_short_leaves_officers" model="ir.rule">
-        <field name="name">Short Leaves Officer</field>
+    <record id="property_rule_short_leaves_manager" model="ir.rule">
+        <field name="name">Short Leaves Manager</field>
         <field name="model_id" ref="model_hr_short_leave"/>
         <field name="perm_read" eval="True" />
         <field name="perm_create" eval="True"/>
         <field name="perm_write" eval="True"/>
         <field name="perm_unlink" eval="True"/>
         <field name="domain_force">[(1,'=',1)]</field>
+        <field name="groups" eval="[(4,ref('hr_holidays.group_hr_holidays_manager'))]"/>
+    </record>
+
+    <record id="property_rule_short_leaves_officer" model="ir.rule">
+        <field name="name">Short Leaves Officer</field>
+        <field name="model_id" ref="model_hr_short_leave"/>
+        <field name="perm_read" eval="True" />
+        <field name="perm_create" eval="True"/>
+        <field name="perm_write" eval="True"/>
+        <field name="perm_unlink" eval="True"/>
+        <field name="domain_force">[('employee_id.operating_unit_id.id','in',user.operating_unit_ids.ids)]</field>
         <field name="groups" eval="[(4,ref('hr_holidays.group_hr_holidays_user'))]"/>
     </record>
 

@@ -10,14 +10,7 @@
 				<tree string="Change Products Sale Price">
                     <field name="product_id"/>
                     <field name="list_price"/>
-                    <!--<field name="uom_po_id"/>-->
                     <field name="new_price"/>
-                    <field name="requested_by"/>
-                    <field name="request_date"/>
-                    <field name="approver1_id"/>
-                    <field name="approver1_date"/>
-                    <field name="approver2_id"/>
-                    <field name="approver2_date"/>
 					<field name="state"/>
 				</tree>
 			</field>
