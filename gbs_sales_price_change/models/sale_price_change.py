@@ -27,7 +27,7 @@ class SalePriceChange(models.Model):
         ('refuse', 'Refused'),
         ('validate1', 'Second Approval'),
         ('validate', 'Approved')
-    ], string='Status', readonly=True, track_visibility='onchange', copy=False, default='draft')
+    ], string='State', readonly=True, track_visibility='onchange', copy=False, default='draft')
 
 
     @api.onchange('product_id')
