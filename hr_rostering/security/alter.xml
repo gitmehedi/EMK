@@ -23,8 +23,8 @@
         <!--<field name="groups" eval="[(4,ref('gbs_base_package.group_dept_manager'))]"/>-->
     <!--</record>-->
 
-     <record id="rule_manual_attendance_employee" model="ir.rule">
-        <field name="name">HR SHIFT ALTER</field>
+     <record id="rule_shift_alter_officer" model="ir.rule">
+        <field name="name">HR SHIFT ALTER(HR Officer)</field>
         <field name="model_id" ref="model_hr_shift_alter"/>
         <field name="domain_force">[(1, '=', 1)]</field>
         <field name="perm_read" eval="True" />
@@ -34,8 +34,8 @@
         <field name="groups" eval="[(4,ref('hr_attendance.group_hr_attendance_user'))]"/>
     </record>
 
-    <record id="property_rule_hr_shift_alter" model="ir.rule">
-        <field name="name">HR Employee Alter Shift Record</field>
+    <record id="rule_shift_alter_unit" model="ir.rule">
+        <field name="name">HR Shift Alter(Unit Wise)</field>
         <field name="model_id" ref="model_hr_shift_alter"/>
         <field name="domain_force">[('employee_id.operating_unit_id.id','in',user.operating_unit_ids.ids)]</field>
         <field name="perm_read" eval="True" />

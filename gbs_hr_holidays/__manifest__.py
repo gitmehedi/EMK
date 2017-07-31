@@ -6,7 +6,8 @@
     'category': 'Human Resources',
     
     'depends': ['hr',
-                'hr_holidays', 
+                'hr_holidays',
+                'gbs_hr_package',
                 'hr_public_holidays'
                 ],
     'data': [
