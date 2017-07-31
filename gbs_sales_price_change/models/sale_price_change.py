@@ -1,5 +1,6 @@
 from odoo import api, fields, models
 from datetime import date
+import datetime
 
 class SalePriceChange(models.Model):
     _name = 'sale.price.change'
@@ -29,8 +30,6 @@ class SalePriceChange(models.Model):
         ('validate1', 'Second Approval'),
         ('validate', 'Approved')
     ], string='Status', readonly=True, track_visibility='onchange', copy=False, default='draft')
-
-    line_ids = fields.One2many('product.sale.history.line','sale_price_history_id')
 
     @api.multi
     def write(self, values):
@@ -64,6 +63,7 @@ class SalePriceChange(models.Model):
         vals['list_price'] = self.list_price
         vals['new_price'] = self.new_price
         vals['sale_price_history_id'] = sale_price_obj.id
+        vals['approve_price_date'] = datetime.datetime.now()
 
         self.env['product.sale.history.line'].create(vals)
 

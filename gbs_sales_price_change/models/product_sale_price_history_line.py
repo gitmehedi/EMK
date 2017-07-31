@@ -1,14 +1,13 @@
 from odoo import api, fields, models
+from datetime import date
 
-class SalePriceChange(models.Model):
+class ProductSalePriceHistiryLine(models.Model):
     _name = 'product.sale.history.line'
     _description = "Sale Price History"
+    _rec_name = 'product_id'
 
-    product_id = fields.Many2one('product.product', string="Product", required=True, domain=[('sale_ok', '=', True)],ondelete='cascade')
+    product_id = fields.Many2one('product.product', string="Product", required=True, domain=[('sale_ok', '=', True)],readonly=True)
     list_price = fields.Float(string='Old Price', related='product_id.list_price', readonly=True)
-    new_price = fields.Float(string='New Price', required=True)
-
-    ## Relational fields
-    sale_price_history_id = fields.Many2one('sale.price.change', 'id', ondelete='cascade')
-
+    new_price = fields.Float(string='New Price', required=True,readonly=True)
+    approve_price_date = fields.Date(string='Approved Date',readonly=True)
 
