@@ -32,6 +32,6 @@
     # always loaded
     'data': ['security/ir.model.access.csv',
              'security/hr_security.xml',
-             'views/hr_holidays_view.xml',
+
     ],
 }

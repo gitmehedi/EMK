@@ -1,16 +1,73 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 	<data>
-		<record id="inherited_hr_edit_holiday_new" model="ir.ui.view">
-			<field name="name">HR Holiday Inherited</field>
-			<field name="model">hr.holidays</field>
-			<field name="inherit_id" ref="hr_holidays.edit_holiday_new" />
-			<field name="arch" type="xml">
+
+		<menuitem
+                id="hr_holidays.menu_hr_holidays_approvals"
+                name="Leaves to Approve"
+                parent="hr_holidays.menu_hr_holidays_root"
+                sequence="3"
+                groups="hr_holidays.group_hr_holidays_manager,hr_holidays.group_hr_holidays_user,gbs_base_package.group_dept_manager"/>
+
+        <menuitem
+                id="hr_holidays.menu_open_department_leave_allocation_approve"
+                groups="hr_holidays.group_hr_holidays_manager,hr_holidays.group_hr_holidays_user,gbs_base_package.group_dept_manager"
+                name="Leaves Allocation"
+                parent="hr_holidays.menu_hr_holidays_approvals"
+                action="hr_holidays.open_department_holidays_allocation_approve"
+                sequence="2"/>
+
+        <menuitem
+                id="hr_holidays.menu_open_department_leave_approve"
+                name="Leaves"
+                parent="hr_holidays.menu_hr_holidays_approvals"
+                groups="hr_holidays.group_hr_holidays_manager,hr_holidays.group_hr_holidays_user,gbs_base_package.group_dept_manager"
+                action="hr_holidays.open_department_holidays_approve"
+                sequence="1"/>
+
+        <!-- Inherited Form view-->
+        <record id="hr_holidays_leave_req_view_form" model="ir.ui.view">
+            <field name="name">hr.holidays.view.form</field>
+            <field name="model">hr.holidays</field>
+            <field name="inherit_id" ref="hr_holidays.edit_holiday_new"/>
+            <field name="arch" type="xml">
+
+                <xpath expr="//button[@name='action_approve']" position="replace">
+                    <button string="Approve" name="action_approve" type="object"
+                            groups="base.group_user" class="oe_highlight"
+                            attrs="{'invisible':[('first_approval','=',False)]}"/>
+                </xpath>
+                <!-- states="confirm"  -->
+
+                <xpath expr="//button[@name='action_refuse']" position="replace">
+                    <button string="Refuse" name="action_refuse" states="confirm,validate,validate1" type="object"
+                            groups="hr_holidays.group_hr_holidays_user, gbs_base_package.group_dept_manager"/>
+                </xpath>
+
+                <xpath expr="//field[@name='department_id']" position="replace">
+                    <field name="first_approval" invisible="1"/>
+                    <field name="department_id"  groups="hr_holidays.group_hr_holidays_user,gbs_base_package.group_dept_manager" attrs="{'invisible':[('holiday_type','=','category')]}"/>
+                </xpath>
+
+                <xpath expr="//field[@name='employee_id']" position="replace">
+                   <field name="employee_id" options="{'no_quick_create': True, 'no_create_edit': True, 'no_open': True}" attrs="{'required':[('holiday_type','=','employee')],'invisible':[('holiday_type','=','category')]}" groups="hr_holidays.group_hr_holidays_user,gbs_base_package.group_dept_manager"/>
+                </xpath>
+
+                <xpath expr="//field[@name='employee_id']" position="replace" >
+                    <field name="employee_id" attrs="{'required':[('holiday_type','=','employee')],'invisible':[('holiday_type','=','category')]}" groups="hr_holidays.group_hr_holidays_user,gbs_base_package.group_dept_manager"/>
+                </xpath>
+
+                <xpath expr="//field[@name='payslip_status']" position="replace" >
+                    <field name="payslip_status" groups="hr_holidays.group_hr_holidays_manager,gbs_base_package.group_dept_manager" attrs="{'invisible':[('type','=','add')]}" widget="toggle_button"/>
+                </xpath>
+
 				<xpath expr="//button[@name='action_validate']" position="replace">
                     <button string="Validate" name="action_validate" states="validate1" type="object"
                             groups="hr_holidays.group_hr_holidays_manager,hr_holidays.group_hr_holidays_user" class="oe_highlight"/>
                 </xpath>
-			</field>
-		</record>
+            </field>
+        </record>
+
+
 	</data>
 </odoo>
