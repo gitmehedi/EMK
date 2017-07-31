@@ -32,13 +32,14 @@ class SalePriceChange(models.Model):
 
     line_ids = fields.One2many('product.sale.history.line','sale_price_history_id')
 
-    # @api.multi
-    # def write(self, values):
-    #     #if values.get('new_price'):
-    #         product_pool = self.env['product.product'].search([('product_tmpl_id','=', self.product_id.id)])
-    #         product_pool_update = product_pool.write({'list_price': values.get('new_price')})
-    #
-    #         return product_pool_update
+    @api.multi
+    def write(self, values):
+        if values.get('new_price'):
+            product_pool = self.env['product.product'].search([('product_tmpl_id','=', self.product_id.id)])
+            product_pool_update = product_pool.write({'list_price': values.get('new_price')})
+            return product_pool_update
+        else:
+            return super(SalePriceChange, self).write(values)
 
     # @api.model
     # def create(self, values):
@@ -52,10 +53,6 @@ class SalePriceChange(models.Model):
 
     @api.multi
     def action_confirm(self):
-        self.state = 'confirm'
-
-    @api.multi
-    def action_approve(self):
         sale_price_obj = self.env['sale.price.change'].browse(self.id)
 
         vals = {}
@@ -65,6 +62,11 @@ class SalePriceChange(models.Model):
         vals['sale_price_history_id'] = sale_price_obj.id
 
         self.env['product.sale.history.line'].create(vals)
+
+        self.state = 'confirm'
+
+    @api.multi
+    def action_approve(self):
         self.state = 'validate'
 
     @api.multi

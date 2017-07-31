@@ -9,6 +9,8 @@
                 'hr_attendance',
                 ],
     'data': [
+        # 'views/hr_attendance_view.xml',
+        'security/ir_rule.xml',
 
     ],
     'installable': True,
