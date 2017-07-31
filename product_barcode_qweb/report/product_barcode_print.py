@@ -50,7 +50,7 @@ class product_barcode_print(report_sxw.rml_parse):
                 label_row=[]
                 for row in [1,2,3,4,5]:
                     label_data = {
-                        'name': product['name'],
+                        'name': product['name'][:30],
                         'company_name': self.company_name,
                         'default_code': product['default_code'],
                         'price': product['list_price'],
