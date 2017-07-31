@@ -8,21 +8,21 @@
                         <tr style="height: 23.25mm" t-foreach="getLabelRows(data['form'])" t-as="label_row">
                             <td align="center" style="width: 45mm;padding: 0mm 0mm 0mm 0mm" t-foreach="label_row"
                                 t-as="label_data">
-                                <span t-esc="label_data['company_name']"/>
+                                <span style="font-weight:bold;" t-esc="label_data['company_name']"/>
                                 <br/>
-                                <span t-esc="label_data['name']"/>
+                                <span style="font-weight:bold;" t-esc="label_data['name']"/>
                                 <br/>
                                 <span>
                                     <img style="width: 35mm;height: 7mm;"
                                          t-att-src="'data:image/png;base64,'+generateBarcode(label_data['default_code'])"/>
                                 </span>
                                 <br/>
-                                <span t-esc="label_data['default_code']"/>
+                                <span style="font-weight:bold;" t-esc="label_data['default_code']"/>
                                 <br/>
-                                Price:
-                                <span style="font-size:14.0px;font-weight:bold" t-esc="res_company.currency_id.symbol"/>
-                                <span style="font-size:14.0px;font-weight:bold" t-esc="'%.2f'% label_data['price']"/>
-                                <span style="font-size:14.0px;font-weight:bold">+ VAT</span>
+                                <div align="center" style="font-size:14.0px;font-weight:bold;">
+                                    <t t-esc="res_company.currency_id.symbol"/>
+                                    <t t-esc="'%.2f'% label_data['price']"/>+VAT
+                                </div>
                                 <br/>
                             </td>
                         </tr>
