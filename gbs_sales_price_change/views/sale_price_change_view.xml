@@ -72,18 +72,9 @@
 			<field name="view_mode">tree,form</field>
 		</record>
 
-		<!-- Menu Item -->
-        <menuitem name="Sales" id="sales_team.menu_base_partner"
+        <menuitem id="product_sale_price_change_menu_action" name="Change Product Price"
 				  groups="gbs_application_group.group_head_sale,gbs_application_group.group_head_account,gbs_application_group.group_derector"
-				  web_icon="sale,static/description/icon.png"/>
-
-        <menuitem id="product_sale_price_change_menu" name="Change Sales Price"
-				  groups="gbs_application_group.group_head_sale,gbs_application_group.group_head_account,gbs_application_group.group_derector"
-				  parent="sales_team.menu_base_partner"/>
-
-        <menuitem id="product_sale_price_change_menu_action" name="Change Sales Price"
-				  groups="gbs_application_group.group_head_sale,gbs_application_group.group_head_account,gbs_application_group.group_derector"
-				  parent="product_sale_price_change_menu" sequence="9" action="action_product_sale_price_change"/>
+				  parent="sale.menu_product_template_action" sequence="9" action="action_product_sale_price_change"/>
 
     </data>
 </odoo>

@@ -41,17 +41,8 @@
 			<field name="view_mode">tree,form</field>
 		</record>
 
-		<!-- Menu Item -->
-        <menuitem name="Sales" id="sales_team.menu_base_partner"
-				  groups="gbs_application_group.group_head_sale,gbs_application_group.group_head_account,gbs_application_group.group_derector"
-				  web_icon="sale,static/description/icon.png"/>
-
-        <menuitem id="product_sale_price_change_menu" name="Change Sales Price"
-				  groups="gbs_application_group.group_head_sale,gbs_application_group.group_head_account,gbs_application_group.group_derector"
-				  parent="sales_team.menu_base_partner"/>
-
         <menuitem id="product_sale_price_change_history_menu_action" name="Product Price History"
 				  groups="gbs_application_group.group_head_sale,gbs_application_group.group_head_account,gbs_application_group.group_derector"
-				  parent="product_sale_price_change_menu" action="action_product_sale_price_change_history"/>
+				   parent="sale.menu_product_template_action" action="action_product_sale_price_change_history"/>
     </data>
 </odoo>
