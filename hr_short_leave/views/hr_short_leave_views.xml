@@ -33,7 +33,7 @@
                                     <field name="date_to"  attrs="{'required':[('type', '=', 'remove')], 'readonly':[('state','!=','draft'),('state','!=','confirm')]}" class="oe_inline"/>
                                 </div>
                                 <div>
-                                    <field name="number_of_days_temp" widget="float_time" class="oe_inline"/> Hour(s)
+                                    <field name="number_of_days_temp" widget="float_time" class="oe_inline" readonly="1"/> Hour(s)
                                     <field name="first_approval" invisible="1"/>
                                     <!--<field name="number_of_days_temp" attrs="{'readonly':[('type','=','remove')]}" class="oe_inline"/> Hour(s)-->
                                 </div>
@@ -71,7 +71,7 @@
                     <field name="category_id"/>
                     <field name="department_id" invisible="1"/>
                     <field name="name"/>
-                    <field name="number_of_days" string="Allocated Hours" sum="Remaining Days"/>
+                    <field name="number_of_days" widget="float_time" string="Allocated Hours" sum="Remaining Days"/>
                     <field name="manager_id" invisible="1"/>
                     <field name="user_id" invisible="1"/>
                     <field name="date_from"/>

@@ -31,7 +31,8 @@
 				<form string="HR Manual Attendance" delete ="0" create = "0">
 				 	<header>
 	                    <button string="Confirm" name="action_confirm" states="draft" type="object" class="oe_highlight" />
-                    	<button string="Approve" name="action_approve" states="confirm" type="object" class="oe_highlight" groups="gbs_base_package.group_dept_manager,hr_attendance.group_hr_attendance_user"/>
+                    	<button string="Approve" name="action_approve" type="object" class="oe_highlight"
+								groups="gbs_base_package.group_dept_manager,hr_attendance.group_hr_attendance_user" attrs="{'invisible':[('first_approval','=',False)]}"/>
                      	<button string="Refuse" name="action_refuse" states="confirm" type="object" groups="gbs_base_package.group_dept_manager,hr_attendance.group_hr_attendance_user"/>
                     	<button string="Reset to Draft" name="action_draft" type="object" states="confirm" groups="gbs_base_package.group_dept_manager,hr_attendance.group_hr_attendance_user"/>
                     	<field name="state" widget="statusbar" statusbar_visible="draft,confirm,validate"/>                    	
@@ -53,6 +54,7 @@
 
 								<field name="is_it_official" attrs="{'readonly':['|', ('state','=','validate'),('state','=','confirm')]}"/>
 								<field name="my_menu_check" invisible="1"/>
+								<field name="first_approval" invisible="1"/>
 							</group>
 	                        <field name="reason" nolabel="1" colspan="4" placeholder="Add a reason..." attrs="{'readonly':['|', ('state','=','validate'),('state','=','confirm')]}"/>	
 						</group>

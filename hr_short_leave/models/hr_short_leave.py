@@ -411,7 +411,7 @@ class HrShortLeave(models.Model):
 
         return [new_group] + groups
 
-    ###User and state wise approve button hide function
+    ### User and state wise approve button hide function
     @api.multi
     def compute_check_first_approval(self):
         for h in self:
