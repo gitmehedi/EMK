@@ -24,9 +24,9 @@
 			<field name="arch" type="xml">
 				<form string="Change Products Sale Price">
 					<header>
-						<button string="Confirm" name="action_confirm" groups="gbs_application_group.group_head_sale" states="draft" type="object" class="oe_highlight"/>
+						<button string="Confirm" name="action_confirm" groups="gbs_application_group.group_head_account,gbs_application_group.group_head_sale,gbs_application_group.group_derector" states="draft" type="object" class="oe_highlight"/>
                     	<button string="Approve" name="action_approve" groups="gbs_application_group.group_derector" states="validate1" type="object" class="oe_highlight"/>
-                    	<button string="Validate" name="action_validate" groups="gbs_application_group.group_head_account" states="confirm" type="object" class="oe_highlight"/>
+                    	<button string="Validate" name="action_validate" groups="gbs_application_group.group_derector,gbs_application_group.group_head_account" states="confirm" type="object" class="oe_highlight"/>
                     	<button string="Refuse" name="action_refuse" groups="gbs_application_group.group_head_account,gbs_application_group.group_derector" states="confirm,validate1" type="object"/>
                     	<field name="state" widget="statusbar" statusbar_visible="draft,confirm,validate1,validate"/>
                	 	</header>
@@ -36,7 +36,6 @@
 							<group>
                                 <field name="product_id" options="{'no_create_edit': True}" attrs="{'readonly': [('state','in',('validate','validate1'))]}"/>
                                 <field name="list_price" />
-                                <!--<field name="uom_po_id"/>-->
                                 <field name="new_price" attrs="{'readonly': [('state','in',('validate','validate1'))]}"/>
 							</group>
 							<group>
@@ -73,15 +72,25 @@
         </record>
 
 		<record id="action_product_sale_price_change" model="ir.actions.act_window">
-			<field name="name">Change Sales Price</field>
+			<field name="name">Change Product Price</field>
 			<field name="res_model">sale.price.change</field>
 			<field name="context">{'search_default_group_product_id': 1}</field>
 			<field name="view_mode">tree,form</field>
 		</record>
 
+        <menuitem name="Sales" id="sales_team.menu_base_partner" groups="gbs_application_group.group_head_sale,gbs_application_group.group_head_account,gbs_application_group.group_derector" web_icon="sale,static/description/icon.png"/>
+
+        <menuitem id="custom_menu_products" sequence="5" name="Products" groups="gbs_application_group.group_head_sale,gbs_application_group.group_head_account,gbs_application_group.group_derector" parent="sales_team.menu_base_partner"/>
+
         <menuitem id="product_sale_price_change_menu_action" name="Change Product Price"
 				  groups="gbs_application_group.group_head_sale,gbs_application_group.group_head_account,gbs_application_group.group_derector"
-				  parent="sale.menu_product_template_action" sequence="9" action="action_product_sale_price_change"/>
+				  parent="custom_menu_products" sequence="9" action="action_product_sale_price_change"/>
+
+        <menuitem id="sale.menu_product_template_action" parent="custom_menu_products" sequence="8" action="product.product_template_action" groups="gbs_application_group.group_head_sale,gbs_application_group.group_head_account,gbs_application_group.group_derector"/>
+
+        <menuitem id="product_sale_price_change_history_menu_action" name="Product Price History"
+				  groups="gbs_application_group.group_head_sale,gbs_application_group.group_head_account,gbs_application_group.group_derector"
+                  parent="custom_menu_products" sequence="10" action="action_product_sale_price_change_history"/>
 
     </data>
 </odoo>
