@@ -94,8 +94,8 @@ class HrShortLeave(models.Model):
                 raise ValidationError(_('You can not have 2 leaves that overlaps on same day!'))
 
     _sql_constraints = [
-        ('date_check2', "CHECK ( (type='add') OR (date_from <= date_to))", "The start date must be anterior to the end date."),
-        ('date_check', "CHECK ( number_of_days_temp >= 0 )", "The number of days must be greater than 0."),
+        ('date_check2', "CHECK ( (date_from <= date_to))", "The start date must be anterior to the end date."),
+        ('date_check', "CHECK ( number_of_days >= 0 )", "The number of days must be greater than 0."),
     ]
 
     @api.onchange('employee_id')

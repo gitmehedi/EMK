@@ -9,37 +9,6 @@ class HROTRequisition(models.Model):
     _inherit = ['mail.thread']
     _rec_name = 'employee_id'
 
-    # # user access funtion
-    # @api.one
-    # @api.depends('employee_id')
-    # def _compute_employee_check_user(self):
-    #     user = self.env.user.browse(self.env.uid)
-    #     if user.has_group('base.group_user'):
-    #         if user.has_group('hr_attendance.group_hr_attendance_user') or user.has_group('gbs_base_package.group_dept_manager'):
-    #             self.user_access=0
-    #         else:
-    #             self.user_access=1
-    #     else:
-    #         self.user_access = 0
-    #
-    # @api.one
-    # @api.depends('employee_id')
-    # def _compute_employee_check_hr_att_officer(self):
-    #     user = self.env.user.browse(self.env.uid)
-    #     if user.has_group('hr_attendance.group_hr_attendance_user'):
-    #         self.user_access_hr_manager = 1
-    #     else:
-    #         self.user_access_hr_manager = 0
-    #
-    # @api.one
-    # @api.depends('employee_id')
-    # def _compute_employee_check_dept_manager(self):
-    #     user = self.env.user.browse(self.env.uid)
-    #     if user.has_group('gbs_base_package.group_dept_manager'):
-    #         self.user_access_dept_manager = 1
-    #     else:
-    #         self.user_access_dept_manager = 0
-
     def _default_employee(self):
         return self.env['hr.employee'].search([('user_id', '=', self.env.uid)], limit=1)
 
@@ -53,10 +22,7 @@ class HROTRequisition(models.Model):
     ot_reason = fields.Text(string='Reason for OT')
 
     first_approval = fields.Boolean('First Approval', compute='compute_check_first_approval')
-    # user access fields
-    # user_access_hr_att_officer= fields.Boolean(string='User Access Hr Manager', compute='_compute_employee_check_hr_att_officer',readonly=True)
-    # user_access_dept_manager = fields.Boolean(string='User Access Department Manager',compute='_compute_employee_check_dept_manager',readonly=True)
-    # user_access = fields.Boolean(string='User Access Normal', compute='_compute_employee_check_user',readonly=True)
+
     state = fields.Selection([
         ('to_submit', "To Submit"),
         ('to_approve', "To Approve"),
@@ -65,12 +31,6 @@ class HROTRequisition(models.Model):
         ('refuse', 'Refused'),
     ], default='to_submit')
 
-    # @api.onchange('user_access_dept_manager')
-    # def onchange_user_access_dept_manager(self):
-    #     if self.user_access_hr_att_officer != True and self.user_access_dept_manager:
-    #         return {'domain': {'employee_id': [('department_id.manager_id.user_id','=',self.env.user.id)]}}
-    #     else:
-    #         return {'domain': {'employee_id': [('operating_unit_id.id', '=', self.env.user.operating_unit_ids.ids)]}}
 
     @api.constrains('to_datetime')
     def _check_to_datetime_validation(self):
@@ -86,6 +46,10 @@ class HROTRequisition(models.Model):
             diff=finish_dt-start_dt
             hours = float(diff.total_seconds()  / 3600)
             self.total_hours = hours
+
+    # _sql_constraints = [
+    #     ('duration_check', "CHECK ( total_hours >= 0 )", "Duration must be greater than 0."),
+    # ]
 
     @api.multi
     def action_submit(self):
