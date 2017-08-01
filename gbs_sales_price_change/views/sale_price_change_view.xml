@@ -59,9 +59,23 @@
 			</field>
 		</record>
 
+		<!--Default group by on product_id-->
+		<record id="view_product_price_change_search" model="ir.ui.view">
+            <field name="name">view_product_price_change_search_view</field>
+            <field name="model">sale.price.change</field>
+            <field name="arch" type="xml">
+                <search string="Search Products">
+                    <group expand="0" string="Group By">
+                        <filter string="Product" name = "group_product_id" context="{'group_by':'product_id'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
 		<record id="action_product_sale_price_change" model="ir.actions.act_window">
 			<field name="name">Change Sales Price</field>
 			<field name="res_model">sale.price.change</field>
+			<field name="context">{'search_default_group_product_id': 1}</field>
 			<field name="view_mode">tree,form</field>
 		</record>
 
