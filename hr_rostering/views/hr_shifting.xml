@@ -13,17 +13,19 @@
                                 string="Apply" states="draft"
                                 class="oe_highlight"/>
                         <button name="action_done" type="object"
-                                string="Approve" states="applied" groups="hr.group_hr_manager"
+                                string="Approve" states="applied" groups="hr.group_hr_manager,hr.group_hr_user"
                                 class="oe_highlight"/>
                         <button name="action_draft" type="object"
                                 string="Reject" groups="hr.group_hr_manager"
                                 states="applied"/>
+						<button string="Reset to Draft"
+								name="action_reset" states="applied,approved" type="object"/>
                         <field name="state" widget="statusbar"/>
                     </header>
 				</xpath>
 	            <field name="leave_ids" position="replace"/>
 				<xpath expr="//field[@name='company_id']" position="after">
-					<field name="operating_unit_id" options='{"no_open": True,"no_create": 1, "no_create_edit":1}' />
+					<field name="operating_unit_id" options='{"no_open": True,"no_create": 1, "no_create_edit":1}' attrs="{'readonly':[('state','!=','draft')]}"/>
 				</xpath>
 	        </field>
 	    </record>
@@ -34,7 +36,7 @@
 	        <field name="arch" type="xml">
 				<xpath expr="//field[@name='company_id']" position="after">
 					<field name="state"/>
-					<field name="operating_unit_id" options='{"no_open": True,"no_create": 1, "no_create_edit":1}' />
+					<field name="operating_unit_id" options='{"no_open": True,"no_create": 1, "no_create_edit":1}'/>
 				</xpath>
 	        </field>
 	    </record>

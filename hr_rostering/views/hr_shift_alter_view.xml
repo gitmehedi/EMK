@@ -53,7 +53,7 @@
 					<sheet>
 						<group>
 							<group>
-								<field name="employee_id" attrs="{'readonly':[('my_menu_check','=',True)]}"
+								<field name="employee_id" attrs="{'readonly':['|',('my_menu_check','=',True),('state','!=','draft')]}"
 									   options='{"no_open": True,"no_create": 1, "no_create_edit":1}'/>
 								<field name="department_id" invisible="1"/>
 								<field name="alter_date" attrs="{'readonly':['|', ('state','=','approved'),('state','=','confirmed')]}"/>

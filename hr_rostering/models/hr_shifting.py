@@ -1,4 +1,4 @@
-from openerp import api, fields, models, _
+from openerp import api, fields, models, _,SUPERUSER_ID
 from openerp.exceptions import UserError, ValidationError
 
 
@@ -50,6 +50,16 @@ class HrResourceCal(models.Model):
     @api.multi
     def action_done(self):
         self.state = 'approved'
+
+    @api.multi
+    def action_reset(self):
+        if self.state=='approved':
+            if SUPERUSER_ID == self.env.user.id:
+                self.write({'state': 'draft'})
+            else:
+                raise UserError(_('Only Admin can reset in this stage.'))
+        else:
+            self.write({'state': 'draft'})
 
     @api.multi
     def unlink(self):

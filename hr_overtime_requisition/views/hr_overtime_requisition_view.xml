@@ -13,8 +13,8 @@
                     	<button string="To Approve" name="action_hod_approve" type="object" class="oe_highlight" attrs="{'invisible':[('first_approval','=',False)]}"
 								groups="gbs_base_package.group_dept_manager,hr_attendance.group_hr_attendance_user"/>
                     	<button string="Approve" name="action_hr_approve" states="hr_approve" type="object" class="oe_highlight" groups="hr_attendance.group_hr_attendance_user"/>
-                    	<button string="Refuse" name="action_refuse" states="to_approve,hr_approve,approved" type="object" groups="hr_attendance.group_hr_attendance_user"/>
-                    	<button string="Reset to Draft" name="action_reset" states="hr_approve,approved" type="object" groups="hr_attendance.group_hr_attendance_user"/>
+                    	<button string="Refuse" name="action_refuse" states="to_approve,hr_approve,approved" type="object" groups="gbs_base_package.group_dept_manager,hr_attendance.group_hr_attendance_user"/>
+                    	<button string="Reset to Draft" name="action_reset" states="to_approve,hr_approve" type="object"/>
                     	<field name="state" widget="statusbar" statusbar_visible="to_submit,to_approve,approved"/>
                 	</header>
 					<sheet>
@@ -23,8 +23,8 @@
 								<field name="employee_id" attrs="{'readonly':[('state','!=','to_submit')]}"
 									   options='{"no_open": True,"no_create": 1, "no_create_edit":1}'/>
 								<field name="department_id"/>
-								<field name="from_datetime" attrs="{'readonly':[('state','in',['hr_approve','approved'])]}"/>
-								<field name="to_datetime" attrs="{'readonly':[('state','in',['hr_approve','approved'])]}"/>
+								<field name="from_datetime" attrs="{'readonly':[('state','in',['hr_approve','approved','refuse'])]}"/>
+								<field name="to_datetime" attrs="{'readonly':[('state','in',['hr_approve','approved','refuse'])]}"/>
 								<field name="total_hours" widget="float_time"/>
 								<field name="first_approval" invisible="1"/>
 							</group>

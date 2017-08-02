@@ -47,6 +47,12 @@ class HROTRequisition(models.Model):
             hours = float(diff.total_seconds()  / 3600)
             self.total_hours = hours
 
+    @api.one
+    @api.constrains('total_hours')
+    def _check_values(self):
+        if self.total_hours == 0.0:
+            raise ValidationError(_('Duration time should not be zero!!'))
+
     # _sql_constraints = [
     #     ('duration_check', "CHECK ( total_hours >= 0 )", "Duration must be greater than 0."),
     # ]
