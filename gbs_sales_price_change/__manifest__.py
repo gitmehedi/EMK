@@ -6,7 +6,6 @@
     'website': 'www.genweb2.com',
     'summary': "This module handles request of changing Product Sale Price",
     'depends': [
-        #'gbs_application_group',
         'sale',
         'product',
     ],
@@ -15,6 +14,8 @@
         'security/ir.model.access.csv',
         'views/sale_price_change_history.xml',
         'views/sale_price_change_view.xml',
+        'views/inherited_products_view.xml',
+
 
 
     ],

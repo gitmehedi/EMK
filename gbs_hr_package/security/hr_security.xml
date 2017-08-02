@@ -1,21 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+    <data>
+        <record id="hr.hr_job_comp_rule" model="ir.rule">
+            <field name="name">Job multi company rule</field>
+            <field name="model_id" ref="hr.model_hr_job"/>
+            <field name="global" eval="True"/>
+            <field name="domain_force">['|',('company_id','=',False),('company_id','in',[c.id for c in user.company_ids])]</field>
+        </record>
 
-<data noupdate="0">
-
-    <record id="hr.hr_job_comp_rule" model="ir.rule">
-        <field name="name">Job multi company rule</field>
-        <field name="model_id" ref="hr.model_hr_job"/>
-        <field name="global" eval="True"/>
-        <field name="domain_force">['|',('company_id','=',False),('company_id','in',[c.id for c in user.company_ids])]</field>
-    </record>
-
-    <record id="hr.hr_dept_comp_rule" model="ir.rule">
-        <field name="name">Department multi company rule</field>
-        <field name="model_id" ref="hr.model_hr_department"/>
-        <field name="global" eval="True"/>
-        <field name="domain_force">['|',('company_id','=',False),('company_id','in',user.company_ids.ids)]</field>
-    </record>
-
-</data>
+        <record id="hr.hr_dept_comp_rule" model="ir.rule">
+            <field name="name">Department multi company rule</field>
+            <field name="model_id" ref="hr.model_hr_department"/>
+            <field name="global" eval="True"/>
+            <field name="domain_force">['|',('company_id','=',False),('company_id','in',user.company_ids.ids)]</field>
+        </record>
+    </data>
 </odoo>

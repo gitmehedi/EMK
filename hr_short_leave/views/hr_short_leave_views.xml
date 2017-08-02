@@ -8,7 +8,6 @@
             <field name="arch" type="xml">
                 <form string="Leave Request">
                 <field name="can_reset" invisible="1"/>
-                <field name="type" invisible="1"/>
                 <header>
                     <button string="Confirm" name="action_confirm" states="draft" type="object" class="oe_highlight"/>
                     <button string="Approve" name="action_approve" groups="gbs_base_package.group_dept_manager" type="object" class="oe_highlight" attrs="{'invisible':[('first_approval','=',False)]}"/>
@@ -19,37 +18,38 @@
                     <field name="state" widget="statusbar" statusbar_visible="draft,confirm,validate"/>
                 </header>
                 <sheet>
-                    <div class="oe_title">
-                        <h1><field name="display_name"/></h1>
-                    </div>
+                    <!--<div class="oe_title">-->
+                        <!--<h1><field name="display_name"/></h1>-->
+                    <!--</div>-->
                     <group>
                         <group>
                             <field name="name" attrs="{'readonly':[('state','!=','draft'),('state','!=','confirm')]}"/>
                             <label for="number_of_days_temp" attrs="{'readonly':[('state','!=','draft'),('state','!=','confirm')]}"  string="Duration"/>
                             <div>
-                                <div attrs="{'invisible': [('type', '=', 'add')]}">
-                                    <field name="date_from" attrs="{'required':[('type', '=', 'remove')], 'readonly':[('state','!=','draft'),('state','!=','confirm')]}" class="oe_inline"/>
+                                <div>
+                                    <field name="date_from" attrs="{'readonly':[('state','!=','draft'),('state','!=','confirm')]}" class="oe_inline"/>
                                     <label string="-" class="oe_inline"/>
-                                    <field name="date_to"  attrs="{'required':[('type', '=', 'remove')], 'readonly':[('state','!=','draft'),('state','!=','confirm')]}" class="oe_inline"/>
+                                    <field name="date_to"  attrs="{'readonly':[('state','!=','draft'),('state','!=','confirm')]}" class="oe_inline"/>
                                 </div>
                                 <div>
-                                    <field name="number_of_days_temp" widget="float_time" class="oe_inline" readonly="1"/> Hour(s)
+                                    <field name="number_of_days" widget="float_time" class="oe_inline"/> Hour(s)
                                     <field name="first_approval" invisible="1"/>
-                                    <!--<field name="number_of_days_temp" attrs="{'readonly':[('type','=','remove')]}" class="oe_inline"/> Hour(s)-->
                                 </div>
                             </div>
                         </group>
                         <group>
-                            <field name="holiday_type" attrs="{'readonly':[('type', '=', 'remove'),('state','!=','draft')]}" string="Mode" groups="hr_holidays.group_hr_holidays_manager,gbs_base_package.group_dept_manager,hr_holidays.group_hr_holidays_user" context="{'employee_id':employee_id}" />
-                            <field name="employee_id" attrs="{'required':[('holiday_type','=','employee')],'invisible':[('holiday_type','=','category')], 'readonly':[('state','!=','draft'),('state','!=','confirm')]}" groups="gbs_base_package.group_dept_manager,hr_holidays.group_hr_holidays_user,hr_holidays.group_hr_holidays_manager"/>
-                            <field name="category_id" attrs="{'required':[('holiday_type','=','category')], 'readonly': [('type', '=', 'remove'),('state','!=','draft'), ('state','!=','confirm')], 'invisible':[('holiday_type','=','employee')]}"/>
-                            <field name="department_id" groups="gbs_base_package.group_dept_manager,hr_holidays.group_hr_holidays_user,hr_holidays.group_hr_holidays_manager" attrs="{'readonly':['|','|' ,('type','=','add'),('holiday_type','=','category'),('state','=', 'validate')],'invisible':[('holiday_type','=','category')],'readonly':[('state','!=','draft')]}"/>
+                            <field name="employee_id" attrs="{'readonly':[('state','!=','draft'),('state','!=','confirm')]}" groups="gbs_base_package.group_dept_manager,hr_holidays.group_hr_holidays_user,hr_holidays.group_hr_holidays_manager"/>
+                            <field name="department_id" attrs="{'readonly':[('state','!=','draft'),('state','!=','confirm')]}" groups="gbs_base_package.group_dept_manager,hr_holidays.group_hr_holidays_user,hr_holidays.group_hr_holidays_manager"/>
                         </group>
-                        <field name="notes" nolabel="1" colspan="4" placeholder="Add a reason..." attrs="{'invisible': [('type', '=', 'remove')]}"/>
-                        <div groups="hr_holidays.group_hr_holidays_manager,gbs_base_package.group_dept_manager,hr_holidays.group_hr_holidays_manager" attrs="{'invisible':[('type','=','add')]}">
+                        <group colspan="2">
+                            <group><field name="notes" nolabel="1" placeholder="Add a reason..." /></group>
+                            <group></group>
+                        </group>
+                        <div groups="hr_holidays.group_hr_holidays_manager,gbs_base_package.group_dept_manager,hr_holidays.group_hr_holidays_manager">
                             <separator string="Comment by Manager"/>
                             <field name="report_note" placeholder="e.g. Report to the next month..."/>
                         </div>
+
                     </group>
                 </sheet>
                 <div class="oe_chatter">
@@ -67,13 +67,9 @@
                 <tree decoration-danger="state == 'refuse'" decoration-info="state == 'draft'" string="Allocation Requests"
                        decoration-bf="message_needaction == True">
                     <field name="employee_id"/>
-                    <field name="holiday_type"/>
-                    <field name="category_id"/>
                     <field name="department_id" invisible="1"/>
                     <field name="name"/>
                     <field name="number_of_days" widget="float_time" string="Allocated Hours" sum="Remaining Days"/>
-                    <field name="manager_id" invisible="1"/>
-                    <field name="user_id" invisible="1"/>
                     <field name="date_from"/>
                     <field name="date_to"/>
                     <field name="message_needaction" invisible="1"/>
