@@ -8,6 +8,8 @@
         'sale',
     ],
     'data': [
+        'security/ir.model.access.csv',
+        'security/ir_rule.xml',
         'wizards/customer_creditlimit.xml',
         'views/limit_view.xml',
         'views/partner_inherit_view.xml',

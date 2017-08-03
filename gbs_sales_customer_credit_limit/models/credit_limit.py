@@ -9,12 +9,16 @@ class customer_creditlimit_assign(models.Model):
     
     _description = "Credit limit assign"
 
-    name = fields.Char('Name', required=True, states={'approve': [('readonly', True)]})
-    approve_date = fields.Datetime('Approve Date')
-    credit_limit = fields.Float('Limit',required=True, states={'approve': [('readonly', True)]})
+    name = fields.Char('Name', required=True,
+           states={'confirm': [('readonly', True)],'validate1': [('readonly', True)],'approve': [('readonly',True)]})
+    approve_date = fields.Datetime('Approve Date',
+                   states = {'confirm': [('readonly', True)], 'validate1': [('readonly', True)], 'approve': [('readonly', True)]})
+    credit_limit = fields.Float('Limit',required=True,
+                   states={'confirm': [('readonly', True)], 'validate1': [('readonly', True)], 'approve': [('readonly', True)]})
 
     """ Relational Fields """
-    limit_ids = fields.One2many('res.partner.credit.limit', 'assign_id', 'Limits')
+    limit_ids = fields.One2many('res.partner.credit.limit', 'assign_id', 'Limits',
+                states={'confirm': [('readonly', True)], 'validate1': [('readonly', True)], 'approve': [('readonly', True)]})
 
 
     """ State fields for containing various states """
@@ -25,7 +29,7 @@ class customer_creditlimit_assign(models.Model):
     @api.multi
     def approve_creditlimit_run(self):
         limit_pool = self.env['res.partner.credit.limit']
-        partner_pool = self.env['res.partner']
+        partner_pool = self.env['res.partner'].write({'id':1})
         for assign in self.browse():
             for limit in assign.limit_ids:
                 limit_pool.write([limit.id], {'state': 'approve', 'assign_date': time.strftime('%Y-%m-%d')})
