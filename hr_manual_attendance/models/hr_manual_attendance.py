@@ -195,22 +195,6 @@ class HrManualAttendance(models.Model):
 
             manual_attendance.write({'state': 'validate',
                                      'approver_id': self.env.uid})
-         
-        # attendance_obj2 = self.env['hr.attendance'].search([('employee_id', '=', manual_attendance.employee_id.id)])
-        #
-        # valr = {}
-        #
-        # for att in attendance_obj2:
-        #     for a in self:
-        #         if att.check_in and a.check_in:
-        #             valr['check_in'] = a.check_in
-        #
-        #         if att.check_out and a.check_out:
-        #             valr['check_out'] = a.check_out
-        #
-        #     attendance_obj2.write(valr)
-       
-        # return True
 
     @api.onchange('sign_type')
     def orientation_details(self):
