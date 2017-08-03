@@ -36,10 +36,12 @@
             <field name="arch" type="xml">
                 <form string="Credit Limit">
 	                <header>
-	                    <button name="approve_creditlimit_run" type="object" string="Approve" states="draft" class="oe_highlight"/>
-	                    <button name="%(action_creditlimit_by_partner)d" type="action" states="draft" string="Generate Limit" class="oe_highlight"/>
-						<button name="action_darft" type="object" string="Set to Draft" states="approve"/>
-						<field name="state" widget="statusbar"/>
+						<button string="Confirm" name="action_confirm" type="object" states="draft" class="oe_highlight"/>
+						<button string="Generate Limit" name="%(action_creditlimit_by_partner)d" type="action" states="draft" class="oe_highlight"/>
+						<button string="Approve" name="approve_creditlimit_run" type="object" states="validate1" class="oe_highlight"/>
+	                    <button string="Validate" name="action_validate" type="object" states="confirm" class="oe_highlight"/>
+						<button string="Refuse" name="action_refuse" type="object" states="confirm,validate1"/>
+						<field name="state" widget="statusbar" statusbar_visible="draft,confirm,validate1,validate"/>
 	                </header>
 	                <sheet>
 	                    <label for="name" class="oe_edit_only" attrs="{'invisible':[('state','=','approve')]}"/>
