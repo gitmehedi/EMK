@@ -1,5 +1,6 @@
 from openerp import models, fields
 from openerp import api
+from odoo.http import request
 import pyodbc
 import datetime
 from datetime import timedelta
@@ -93,6 +94,20 @@ class DeviceDetail(models.Model):
                 raise Warning("Successfully connect to the "+self.server+ " server.")
             else:
                 raise ValidationError("Unable to connect the "+self.server+ " server. Please check the configuration.")
+
+
+    @api.model
+    def pull_automation(self):
+        print "-------------------123243434343--------------------------"
+        for dc in self.search([]):
+            try:
+                dc.action_pull_data()
+            except Exception as e:
+                self.env.cr.commit()
+                _logger.error(e[0])
+                pass
+            finally:
+                self.env.cr.commit()
 
     @api.multi
     def action_pull_data(self):
