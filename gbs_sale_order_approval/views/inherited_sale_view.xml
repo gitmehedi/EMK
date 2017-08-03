@@ -2,30 +2,6 @@
 <odoo>
     <data>
 
-        <!--<record id="customized_sale_order_tree_view" model="ir.ui.view">-->
-            <!--<field name="name">customized_sale_order_tree</field>-->
-            <!--<field name="model">sale.order</field>-->
-            <!--<field name="inherit_id" ref="sale.view_order_tree"/>-->
-            <!--<field name="arch" type="xml">-->
-                <!--<data>-->
-                    <!--<xpath expr="////group/group/field[@name='payment_term_id']" position="after">-->
-                        <!--<field name="credit_sales_or_lc"/>-->
-                    <!--</xpath>-->
-                <!--</data>-->
-            <!--</field>-->
-        <!--</record>-->
-
- <!--<button name="action_quotation_send" string="Send by Email" type="object" states="draft" class="btn-primary"/>-->
-                    <!--<button name="print_quotation" string="Print" type="object" states="draft" class="btn-primary"/>-->
-                    <!--<button name="action_confirm" states="sent" string="Confirm Sale" class="btn-primary o_sale_confirm" type="object" />-->
-                    <!--<button name="action_confirm" states="draft" string="Confirm Sale" class="o_sale_confirm" type="object" />-->
-                    <!--<button name="print_quotation" string="Print" type="object" states="sent,sale"/>-->
-                    <!--<button name="action_quotation_send" string="Send by Email" type="object" states="sent,sale"/>-->
-
-
-
-
-
         <record id="customized_sale_order_form_view" model="ir.ui.view">
             <field name="name">customized_sale_order_form</field>
             <field name="model">sale.order</field>
@@ -36,6 +12,16 @@
                         <button name="action_submit" attrs="{'invisible': [('state','in',('validate','sent','done','cancel','sale'))]}" type="object" string="Submit Quotation"/>
                         <button name="action_validate" attrs="{'invisible': [('state','in',('draft','sent','done','submit_quotation','cancel','sale'))]}" states="submit_quotation" type="object" string="Validate" />
                     </header>
+
+                    <!-- Parent view has two buttons for Send by Email-->
+
+                    <!--<xpath expr="//button[@name='action_confirm']" position="replace">-->
+                          <!--<button name="action_confirm" states="sent" attrs="{'invisible': [('state','in',('draft','submit_quotation','validate'))]}" string="Approve Sale" type="object" />-->
+                    <!--</xpath>-->
+
+                    <!--<xpath expr="//button[@name='action_confirm']" position="replace">-->
+                         <!--<button name="action_confirm" states="sent" attrs="{'invisible': [('state','in',('draft','submit_quotation','validate'))]}" string="Approve Sale" type="object" />-->
+                    <!--</xpath>-->
 
                     <xpath expr="//field[@name='state']" position="replace">
                         <field name="state" widget="statusbar" statusbar_visible="draft,submit_quotation,sent,sale"/>

@@ -33,6 +33,7 @@ class SaleOrder(models.Model):
     @api.multi
     def action_submit(self):
 
+        #@Todo: Need to add checkings for Customer Commission, Customer Credit Limit and type of Sale Order i.e. LC/Credit
         # Business logic to apply double validation approval process
         is_double_validation = None
         for lines in self.order_line:
@@ -47,11 +48,10 @@ class SaleOrder(models.Model):
         else:
             self.write({'state': 'sent'}) # One level approval process
 
-
-
     @api.multi
     def action_validate(self):
         self.state = 'sent'
+
 
 
 
