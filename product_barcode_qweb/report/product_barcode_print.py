@@ -47,14 +47,16 @@ class product_barcode_print(report_sxw.rml_parse):
         product_obj = self.pool.get('product.product')
         data = []
         result = {}
-        product_ids = form['product_ids']
+        product_ids = [int(key) for key,val in form['product_ids'].iteritems()]
         if not product_ids:
             return {}
+
+
 
         products_data = product_obj.read(self.cr, self.uid, product_ids,
                                          ['name', 'default_code', 'attribute_value_ids', 'list_price'])
         for product in products_data:
-            for product_row in range(int(math.ceil(float(form['qty']) / 5))):
+            for product_row in range(int(math.ceil(float(form['product_ids'].get(str(product['id']))) / 5))):
                 label_row = []
                 for row in [1, 2, 3, 4, 5]:
                     attr = self.prepare_attr(product['attribute_value_ids'])

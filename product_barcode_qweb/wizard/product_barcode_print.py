@@ -22,23 +22,28 @@
 import time
 from openerp.osv import osv, fields
 
+
 import logging
 _logger = logging.getLogger(__name__)
+
+
+class ProductProduct(osv.osv_memory):
+    _name='product.barcode'
+    _columns = {
+        'product_id': fields.many2one('product.product', 'Product Name', required=True),
+        'parent_id': fields.many2one('product.barcode.print', 'Products to print Labels'),
+        'qty': fields.integer('Number of Labels', help='How many labels to print', required=True),
+
+    }
 
 class product_barcode_print(osv.osv_memory):
     _name = 'product.barcode.print'
     _description = 'Product Barcode Print'
 
     _columns = {
-        #'date_start': fields.date('Date Start', required=True),
-        #'date_end': fields.date('Date End', required=True),
-        'qty': fields.integer('Number of labels', help='How many labels to print'),
-        'product_ids': fields.many2many('product.product', 'product_barcode_print_product_product_rel', 'product_id', 'wizard_id', 'Products to print labels'),
+        'product_barcode_ids': fields.one2many('product.barcode', 'parent_id', 'Products to print labels'),
     }
-    #_defaults = {
-    #    'date_start': lambda *a: time.strftime('%Y-%m-%d'),
-    #    'date_end': lambda *a: time.strftime('%Y-%m-%d'),
-    #}
+
 
     def print_report(self, cr, uid, ids, context=None):
         """
@@ -51,13 +56,25 @@ class product_barcode_print(osv.osv_memory):
         """
         if context is None:
             context = {}
-        datas = {'ids': context.get('active_ids', [])}
+        datas = {'ids': context.get('active_ids', []),'form':[]}
         res = self.read(cr, uid, ids, ['qty', 'product_ids'], context=context)
+        res_data = self.browse(cr, uid, ids, context=context)
         res = res and res[0] or {}
-        datas['form'] = res
+
+        data={}
+        for result in res_data.product_barcode_ids:
+            data[result.product_id.id] = result.qty
+
+
+        datas['form'] ={
+            'product_ids':data,
+            'id': res['id']
+        }
+
         if res.get('id',False):
             datas['ids']=[res['id']]
         _logger.warning(datas)
+        print datas
 
         return self.pool['report'].get_action(cr, uid, [], 'product_barcode_qweb.report_product_barcode', data=datas, context=context)
 
