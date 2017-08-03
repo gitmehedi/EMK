@@ -18,8 +18,8 @@ class HrShifting(models.Model):
     #         raise Warning(_("OT to can not less then OT from or \n OT from can not less then Work to or \n Work to can not less then Work from"))
 
 class HrResourceCal(models.Model):
-
-    _inherit = ['resource.calendar']
+    _name = "resource.calendar"
+    _inherit = ['resource.calendar','mail.thread']
 
     name = fields.Char(required=True,states={'applied': [('readonly', True)],'approved': [('readonly', True)]})
     manager = fields.Many2one('res.users', string='Workgroup Manager', default=lambda self: self.env.uid,
