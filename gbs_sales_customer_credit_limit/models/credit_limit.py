@@ -6,6 +6,7 @@ from odoo.exceptions import UserError, ValidationError
 class customer_creditlimit_assign(models.Model):
     
     _name = 'customer.creditlimit.assign'
+    _inherit = ['mail.thread', 'ir.needaction_mixin']
     
     _description = "Credit limit assign"
 
@@ -28,12 +29,7 @@ class customer_creditlimit_assign(models.Model):
     """ All functions """
     @api.multi
     def approve_creditlimit_run(self):
-        limit_pool = self.env['res.partner.credit.limit']
-        partner_pool = self.env['res.partner'].write({'id':1})
-        for assign in self.browse():
-            for limit in assign.limit_ids:
-                limit_pool.write([limit.id], {'state': 'approve', 'assign_date': time.strftime('%Y-%m-%d')})
-                partner_pool.write([limit.partner_id.id], {'credit_limit':limit.value})
+        self.limit_ids.write({'state': 'approve', 'assign_date': time.strftime('%Y-%m-%d')})
         return self.write({'state': 'approve', 'approve_date': time.strftime('%Y-%m-%d %H:%M:%S')})
 
     @api.multi
@@ -60,7 +56,7 @@ class customer_creditlimit_assign(models.Model):
 class res_partner(models.Model):
     
     _inherit = 'res.partner'
-    limit_ids = fields.One2many('res.partner.credit.limit', 'partner_id', 'Limits')
+    limit_ids = fields.One2many('res.partner.credit.limit', 'partner_id', 'Limits', domain=[('state','=','approve')])
     credit_limit = fields.Float(compute='_current_limit', string='Credit Limit')
 
     """ All functions """
@@ -73,7 +69,7 @@ class res_partner(models.Model):
                             AND assign_date <= %s
                             AND state = %s
                             ORDER BY assign_date desc, id desc LIMIT 1"""
-            params = (partner.id, date, 'draft')
+            params = (partner.id, date, 'approve')
             self.env.cr.execute(sql_query, params)
             results = self.env.cr.dictfetchall()
             if len(results)>0:
