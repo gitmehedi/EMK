@@ -1,9 +1,9 @@
 {
-    'name': 'Customer Credit Limited',
-    'author': 'Genweb2 Limited',
-    'website': 'www.genweb2.com',
-    'category': 'Sale',
+    'name': 'GBS Sales Customer Credit Limited',
     'version': '1.0',
+    'author': 'Genweb2 Limited',
+    'website': 'http://www.genweb2.com',
+    'category': 'Sale',
     'depends': [
         'sale',
     ],
@@ -13,8 +13,8 @@
         'views/partner_inherit_view.xml',
 
     ],
-    'summary': '',
-    'description':"",
+    'summary': 'This module handles request of customer credit limit',
+    'description':"GBS Sales Customer Credit Limited",
     'installable': True,
     'application': True,
 }
