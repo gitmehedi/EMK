@@ -6,7 +6,7 @@ from openerp.exceptions import UserError, ValidationError
 
 class HROTRequisition(models.Model):
     _name='hr.ot.requisition'
-    _inherit = ['mail.thread']
+    _inherit = ['mail.thread','ir.needaction_mixin']
     _rec_name = 'employee_id'
 
     def _default_employee(self):
@@ -65,10 +65,6 @@ class HROTRequisition(models.Model):
         if self.total_hours == 0.0:
             raise ValidationError(_('Duration time should not be zero!!'))
 
-    # _sql_constraints = [
-    #     ('duration_check', "CHECK ( total_hours >= 0 )", "Duration must be greater than 0."),
-    # ]
-
     @api.multi
     def action_submit(self):
         self.write({'state': 'to_approve'})
@@ -99,6 +95,11 @@ class HROTRequisition(models.Model):
                 else:
                     raise UserError(_('You have no access to delete this record.'))
             return super(HROTRequisition, self).unlink()
+
+    ### Showing batch
+    @api.model
+    def _needaction_domain_get(self):
+        return [('state', 'in', ['to_approve','hr_approve'])]
 
     ### User and state wise approve button hide function
     @api.multi
