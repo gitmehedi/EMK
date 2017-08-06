@@ -43,7 +43,7 @@
                                 <field name="requested_by"/>
                                 <field name="approver1_id" attrs="{'invisible':['|', ('state','=','draft'),('state','=','confirm')]}"/>
                                 <field name="approver1_date" attrs="{'invisible':['|', ('state','=','draft'),('state','=','confirm')]}"/>
-                                <field name="approver2_id" attrs="{'invisible': [('state','in',('draft','confirm','validate1'))]}"/>
+									<field name="approver2_id" attrs="{'invisible': [('state','in',('draft','confirm','validate1'))]}"/>
                                 <field name="approver2_date" attrs="{'invisible': [('state','in',('draft','confirm','validate1'))]}"/>
 							</group>
 						</group>
@@ -80,7 +80,7 @@
 
         <menuitem name="Sales" id="sales_team.menu_base_partner" groups="gbs_application_group.group_head_sale,gbs_application_group.group_head_account,gbs_application_group.group_derector" web_icon="sale,static/description/icon.png"/>
 
-        <menuitem id="custom_menu_products" sequence="5" name="Products" groups="gbs_application_group.group_head_account,gbs_application_group.group_derector" parent="sales_team.menu_base_partner"/>
+        <menuitem id="custom_menu_products" sequence="5" name="Products" groups="gbs_application_group.group_head_sale,gbs_application_group.group_head_account,gbs_application_group.group_derector" parent="sales_team.menu_base_partner"/>
 
         <menuitem id="product_sale_price_change_menu_action" name="Change Product Price"
 				  groups="gbs_application_group.group_head_sale,gbs_application_group.group_head_account,gbs_application_group.group_derector"

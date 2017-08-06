@@ -47,7 +47,7 @@ class AttendanceErrorDataProcessor(models.Model):
                                       'worked_hours': durationInHour,
                                       'write_date': datetime.datetime.now(),
                                       'has_error': False,
-                                      'attendance_server_id': row.attendance_server_id})
+                                      'operating_unit_id': row.operating_unit_id})
                 else:
                     self.createDataFromError(row, employeeId, hr_att_pool)
             else:
@@ -63,7 +63,7 @@ class AttendanceErrorDataProcessor(models.Model):
                            'has_error': True,
                            'manual_attendance_request': False,
                            'is_system_generated': True,
-                           'attendance_server_id': row.attendance_server_id}
+                           'operating_unit_id': row.operating_unit_id}
         else:
             create_vals = {'employee_id': employeeId,
                            'check_in': None,
@@ -73,7 +73,7 @@ class AttendanceErrorDataProcessor(models.Model):
                            'has_error': True,
                            'manual_attendance_request': False,
                            'is_system_generated': True,
-                           'attendance_server_id': row.attendance_server_id}
+                           'operating_unit_id': row.operating_unit_id}
 
         res = hr_att_pool.create(create_vals)
 

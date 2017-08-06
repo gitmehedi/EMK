@@ -1,10 +1,16 @@
 from odoo import api, fields, models,_
 from odoo.exceptions import UserError, AccessError, ValidationError
 
-class Employee(models.Model):
+class HRHolidays(models.Model):
     _inherit = 'hr.holidays'
 
     first_approval = fields.Boolean('First Approval', compute='compute_check_first_approval')
+
+    @api.one
+    @api.constrains('number_of_days_temp')
+    def _check_values(self):
+        if self.number_of_days_temp == 0.0:
+            raise ValidationError(_('Duration time should not be zero!!'))
 
     @api.multi
     def compute_check_first_approval(self):

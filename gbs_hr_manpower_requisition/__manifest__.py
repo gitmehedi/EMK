@@ -10,8 +10,8 @@
     ],
 
     'data': [
-        'security/ir.model.access.csv',
         'security/security.xml',
+        'security/ir.model.access.csv',
         'views/gbs_hr_manpower_requisition_view.xml',
     ],
 

@@ -32,11 +32,23 @@ class HROTRequisition(models.Model):
     ], default='to_submit')
 
 
-    @api.constrains('to_datetime')
+    @api.constrains('from_datetime','to_datetime')
     def _check_to_datetime_validation(self):
-        if self.to_datetime < self.from_datetime:
-            raise ValidationError(_("End Time can not less then Start Time!!"))
 
+        for ot in self:
+            if ot.to_datetime < ot.from_datetime:
+                raise ValidationError(_("End Time can not less then Start Time!!"))
+
+        domain = [
+            ('from_datetime', '<=', ot.to_datetime),
+            ('to_datetime', '>=', ot.from_datetime),
+            ('employee_id', '=', ot.employee_id.id),
+            ('id', '!=', ot.id),
+            ('state', 'not in', ['refuse']),
+        ]
+        domainOT = self.search_count(domain)
+        if domainOT:
+            raise ValidationError(_('You can not have multiple OT requisition on same day!'))
 
     @api.depends('from_datetime', 'to_datetime')
     def _compute_total_hours(self):
