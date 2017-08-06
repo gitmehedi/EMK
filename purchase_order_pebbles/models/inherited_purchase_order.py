@@ -4,6 +4,8 @@ from openerp import api, fields, models
 class InheritedPurchaseOrder(models.Model):
 	_inherit = 'purchase.order'
 
+	product_id = fields.Many2one('product.template', 'Product', domain=[('type','!=','service')])
+
 
 
 
