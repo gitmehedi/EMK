@@ -10,7 +10,10 @@ class HrAttendance(models.Model):
 
 
     is_system_generated = fields.Boolean(string='Is System Generated', default=False)
-    attendance_server_id = fields.Integer(string='Server ID', required=False)
+    # attendance_server_id will be deprecated after 02-08-2017. operating_unit_id will fill
+    #attendance_server_id = fields.Integer(string='Server ID', required=False)
+    operating_unit_id = fields.Integer(string='Operating Unit Id', required=False)
+
     duty_date = fields.Date(string='Duty Date', required=False)
     check_in = fields.Datetime(string="Check In", required=False)
 

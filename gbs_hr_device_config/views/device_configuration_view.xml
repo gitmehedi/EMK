@@ -9,6 +9,7 @@
 			<field name="arch" type="xml">
 				<tree string="Devices">
 					<field name="name"/>
+					<field name="operating_unit_id"/>
 					<field name="connection_type"/>
 					<field name="server"/>
 					<field name="database"/>
@@ -25,8 +26,17 @@
                 <tree string="Devices" editable="top">
                     <field name="name"/>
                     <field name="sensor_id"/>
-                    <field name="in_code"/>
-                    <field name="out_code"/>
+                </tree>
+            </field>
+        </record>
+
+		<record id="view_attendance_device_line_details_tree" model="ir.ui.view">
+            <field name="name">hr.attendance.device.line.details.tree</field>
+            <field name="model">hr.attendance.device.line.details</field>
+            <field name="arch" type="xml" >
+                <tree string="Devices" editable="top">
+                    <field name="type_code"/>
+                    <field name="type_value"/>
                 </tree>
             </field>
         </record>
@@ -39,15 +49,11 @@
 			<field name="arch" type="xml">
 				<form string="Device Details">
 					<sheet>
-						<div class="oe_button_box" name="button_box">
-							<button name="action_pull_data" type="object" string="Pull" class="oe_highlight"/>
-							<button name="action_check_connection" type="object" string="Test Connection" class="oe_highlight"/>
-							<button name="action_pull_error_data" type="object" string="Pull Error Data" class="oe_highlight"/>
 
-						</div>
 						<group>
 							<group>
 								<field name="name" />
+								<field name="operating_unit_id"/>
 								<field name="connection_type" placeholder="Please Select"/>
 								<field name="last_update"/>
 								<field name="is_active"/>
@@ -58,33 +64,44 @@
 								<field name="username"/>
 								<field name="password"/>
 							</group>
-
-							<!--<field name="url"/>-->
-							<field name="device_lines"/>
-
 						</group>
+
+						<notebook>
+                            <page string="Device Details">
+								<field name="device_lines">
+									<tree editable="top">
+										 <field name="name"/>
+                        				 <field name="sensor_id"/>
+									</tree>
+								</field>
+	                        </page>
+                            <page string="Device Config">
+								<field name="device_line_details">
+									<tree editable="top">
+										 <field name="type_value" />
+										 <field name="type_code" placeholder="Please Select"/>
+									</tree>
+								</field>
+	                        </page>
+							<page string="Restricted Config">
+								<group>
+									<group>
+										<button name="action_check_connection" type="object" string="Test Connection" class="oe_highlight"/>
+									</group>
+									<group>
+										<button name="action_pull_data" type="object" string="Pull" class="oe_highlight"/>
+									</group>
+									<group>
+										<button name="action_pull_error_data" type="object" string="Pull Error Data" class="oe_highlight"/>
+									</group>
+								</group>
+	                        </page>
+                        </notebook>
 					</sheet>
 
 				</form>
 			</field>
 		</record>
-
-		<record id="view_attendance_device_line_form" model="ir.ui.view">
-            <field name="name">hr.attendance.device.line.form</field>
-            <field name="model">hr.attendance.device.line</field>
-            <field name="arch" type="xml">
-                <form string="Devices">
-                    <group>
-                        <field name="name"/>
-                        <field name="sensor_id"/>
-                        <field name="in_code"/>
-                        <field name="out_code"/>
-                    </group>
-                </form>
-            </field>
-        </record>
-
-
 
 		<record id="hr_attendance_device_detail_action" model="ir.actions.act_window">
 			<field name="name">Attendance Device Configuration</field>
