@@ -4,5 +4,18 @@
         <menuitem id="hr_attendance.menu_hr_attendance_kiosk_mode" name="Kiosk Mode" parent="hr_attendance.menu_hr_attendance_manage_attendances" sequence="20" groups="hr.group_hr_attendance" />
 
         <menuitem id="hr_attendance.menu_hr_attendance_view_attendances" name="Attendances" parent="hr_attendance.menu_hr_attendance_manage_attendances" sequence="10" groups="hr_attendance.group_hr_attendance_user,base.group_user" action="hr_attendance.hr_attendance_action"/>
+
+
+        <record id="hr_attendance_form_view_inherit" model="ir.ui.view">
+            <field name="name">hr.attendance.form.view.inherit</field>
+            <field name="model">hr.attendance</field>
+            <field name="inherit_id" ref="hr_attendance.hr_attendance_view_form" />
+            <field name="arch" type="xml">
+                <xpath expr="//form" position="attributes">
+                    <attribute name="create">0</attribute>
+                    <attribute name="edit">0</attribute>
+                </xpath>
+            </field>
+		</record>
     </data>
 </openerp>

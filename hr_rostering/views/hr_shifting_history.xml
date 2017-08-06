@@ -6,8 +6,8 @@
 			<field name="model">hr.shifting.history</field>
 			<field name="arch" type="xml">
 				<tree string="Shifting History">
-					<field name= "employee_id" />
-					<field name= "shift_id" />
+					<field name="employee_id" />
+					<field name="shift_id" />
 					<field name="effective_from" />
 					<field name="effective_end"/>
 				</tree>
