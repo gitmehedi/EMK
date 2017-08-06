@@ -60,9 +60,14 @@
 	                        <group>
 	                            <field name="approve_date"/>
 	                        </group>
+							<field name="limit_ids" string="Customers">
+								<tree string="List" editable="bottom">
+									<field name="partner_id" options="{'no_quick_create':True,'no_create_edit':True,'no_open':True}"/>
+									<field name="value"/>
+								</tree>
+							</field>
 	                    </group>
-	                    <separator string="Customers"/>
-	                    <field name="limit_ids"/>
+
 	                </sheet>
 					<div class="oe_chatter">
 						<field name="message_follower_ids" widget="mail_followers"/>
