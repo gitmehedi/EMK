@@ -1269,9 +1269,11 @@ function openerp_pos_loyalty(instance, module) { // module is
             var total = order ? order.getTotalTaxIncluded() : 0;
             var taxes = order ? total - order.getTotalTaxExcluded() : 0;
             var quantity = order ? order.get_total_qty() : 0;
+            var discount = order ? order.getDiscountTotal() : 0;
 
             this.el.querySelector('.summary .total > .value').textContent = this.format_currency(total);
             this.el.querySelector('.summary .total .subentry .value').textContent = this.format_currency(taxes);
+            this.el.querySelector('.qty .discount .value').textContent = this.format_currency(discount);
             this.el.querySelector('.qty .quantity .value').textContent = quantity;
         },
     });

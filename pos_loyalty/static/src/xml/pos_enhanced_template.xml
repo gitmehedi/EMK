@@ -30,15 +30,23 @@
                         </t>
                     </ul>
                     <div t-attf-class=" #{orderlines.length === 0 ? 'empty' : ''}">
-                        <div class='qty' style="margin-top:27px; float: left;">
-                                    <strong class="quantity">Total Products: <span class="value">0.00</span></strong>
+                        <div class='qty' style="margin-top:27px; float: left; background-color: #ccc7f9;">
+                            <strong class="quantity">Total Products:
+                                <span class="value">0.00</span>
+                            </strong>
+                            <div class='discount'>Discount:
+                                <span class="value">0.00 €</span>
+                            </div>
                         </div>
                     </div>
                     <div class="summary clearfix">
                         <div t-attf-class="line #{orderlines.length === 0 ? 'empty' : ''}">
-                            <div class='entry total'>
-                                <span class="label">Total: </span> <span class="value">0.00 €</span>
-                                <div class='subentry'>Taxes: <span class="value">0.00€</span></div>
+                            <div class='entry total' style="text-align: right;">
+                                <span class="label">Total:</span>
+                                <span class="value">0.00 €</span>
+                                <div class='subentry'>Taxes:
+                                    <span class="value">0.00 €</span>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -169,7 +177,7 @@
                             <t t-esc="orderline.get_product().display_name"/>
                             <t t-if="orderline.get_discount() > 0">
                                 <div class="pos-disc-font">
-                                    With a <t t-esc="orderline.get_discount()"/>% discount
+                                    With a<t t-esc="orderline.get_discount()"/>% discount
                                 </div>
                             </t>
                         </td>
@@ -190,16 +198,18 @@
                 <br/>
                 <table>
                     <tr>
-                        <td><strong>Total:</strong></td>
+                        <td>
+                            <strong>Total:</strong>
+                        </td>
                         <td>
                             <strong>
                                 <t t-esc="Math.ceil(order.get_total_qty())"/>
                             </strong>
                         </td>
                         <td class="pos-right-align">
-                             <strong>
+                            <strong>
                                 <t t-esc="widget.format_currency(order.getTotalTaxExcluded())"/>
-                             </strong>
+                            </strong>
                         </td>
                     </tr>
                     <tr>
