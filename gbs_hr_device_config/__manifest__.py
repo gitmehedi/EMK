@@ -13,6 +13,7 @@
         'hr',
         'hr_attendance',
         'hr_attendance_import',
+        "operating_unit",
     ],
     'description': 
     """This module will connect to attendance devices""",
