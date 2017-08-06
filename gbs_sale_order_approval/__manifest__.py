@@ -6,12 +6,14 @@
     'website': 'www.genweb2.com',
     'summary': "This module handles Sale Order requisition in a customized business logic way.",
     'depends': [
+        'gbs_application_group',
         'sale',
         'product',
+        'gbs_sales_commission',
     ],
     'data': [
-        'security/sale_order_approval_security.xml',
         'security/ir.model.access.csv',
+        'security/sale_order_approval_security.xml',
         'views/inherited_sale_view.xml',
     ],
     'installable': True,

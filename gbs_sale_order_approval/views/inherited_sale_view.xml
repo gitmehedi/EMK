@@ -13,15 +13,41 @@
                         <button name="action_validate" groups="gbs_application_group.group_head_account,gbs_application_group.group_derector"  attrs="{'invisible': [('state','in',('draft','sent','done','submit_quotation','cancel','sale'))]}" states="submit_quotation" type="object" string="Validate" />
                     </header>
 
-                    <!-- Parent view has two buttons for Send by Email-->
+                    <xpath expr="//button[@name='action_confirm' and @states='draft']" position="replace">
+                         <button name="action_confirm" states="sale" groups="gbs_application_group.group_derector"
+                                 attrs="{'invisible': [('state','in',('draft','submit_quotation','validate','sale','done'))]}"
+                                 string="Approve Sale" type="object" class="btn-primary o_sale_confirm"/>
+                    </xpath>
 
-                    <!--<xpath expr="//button[@name='action_confirm']" position="replace">-->
-                          <!--<button name="action_confirm" states="sent" attrs="{'invisible': [('state','in',('draft','submit_quotation','validate'))]}" string="Approve Sale" type="object" />-->
-                    <!--</xpath>-->
+                    <!--We don't need duplicate buttons, so hide it-->
+                    <xpath expr="//button[@name='action_confirm' and @states='sent']" position="replace">
+                        <button name="action_confirm" states="sent" string="Confirm Sale" class="btn-primary o_sale_confirm" type="object" invisible="1"/>
+                    </xpath>
 
-                    <!--<xpath expr="//button[@name='action_confirm']" position="replace">-->
-                         <!--<button name="action_confirm" states="sent" attrs="{'invisible': [('state','in',('draft','submit_quotation','validate'))]}" string="Approve Sale" type="object" />-->
-                    <!--</xpath>-->
+                    <xpath expr="//button[@name='action_quotation_send' and @states='draft']" position="replace">
+                        <button name="action_quotation_send"
+                                groups="gbs_application_group.group_head_sale,gbs_application_group.group_head_account,gbs_application_group.group_derector,sales_team.group_sale_salesman,sales_team.group_sale_manager"
+                                string="Send by Email" type="object" states="draft,submit_quotation,validate" class="btn-primary"/>
+                    </xpath>
+
+                    <xpath expr="//button[@name='print_quotation' and @states='draft']" position="replace">
+                           <button name="print_quotation"
+                                groups="gbs_application_group.group_head_sale,gbs_application_group.group_head_account,gbs_application_group.group_derector,sales_team.group_sale_salesman,sales_team.group_sale_manager"
+                                string="Print" type="object" states="draft,submit_quotation,validate" class="btn-primary"/>
+                    </xpath>
+
+                    <xpath expr="//button[@name='action_cancel']" position="replace">
+                        <button name="action_cancel" states="draft,validate,sent,sale" type="object" string="Cancel"/>
+                    </xpath>
+
+                    <xpath expr="//button[@name='action_draft']" position="replace">
+                        <button name="action_draft" states="cancel" type="object" string="Set to Quotation"/>
+                    </xpath>
+
+                    <xpath expr="//button[@name='action_done']" position="replace">
+                        <button name="action_done" type="object" string="Lock" states="sale"
+                        help="If the sale is locked, you can not modify it anymore. However, you will still be able to invoice or deliver."/>
+                    </xpath>
 
                     <xpath expr="//field[@name='state']" position="replace">
                         <field name="state" widget="statusbar" statusbar_visible="draft,submit_quotation,sent,sale"/>
@@ -39,7 +65,7 @@
 
          <menuitem action="sale.action_orders"
             id="menu_sale_order" parent="sales_team.menu_sales" sequence="12"
-            groups="gbs_application_group.group_head_sale,gbs_application_group.group_head_account,gbs_application_group.group_derector,sales_team.group_sale_salesman,sales_team.group_sale_manager"/>
+            groups="gbs_application_group.group_head_sale,gbs_application_group.group_head_account,gbs_application_group.group_derector"/>
 
     </data>
 </odoo>
