@@ -19,11 +19,11 @@ class creditlimit_partners(models.TransientModel):
         [data] = self.read()
         active_id = self.env.context.get('active_id')
         if active_id:
-            run_data = run_pool.browse(active_id)#.read(['active_id'], ['credit_limit'])
+            run_data = run_pool.browse(active_id)
             print run_data
         limit_data = run_data.credit_limit or 0
         assign_id = run_data.id or False
-        assign_date =  time.strftime('%Y-%m-%d')        
+        assign_date = time.strftime('%Y-%m-%d')        
         if not data['partner_ids']:
              raise UserError(_("You must select customer(s) to generate limit(s)."))
         for partner in partner_pool.browse((data['partner_ids'])):

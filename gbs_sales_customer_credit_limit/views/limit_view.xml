@@ -60,6 +60,10 @@
 	                        <group>
 	                            <field name="approve_date"/>
 	                        </group>
+							<field name="requested_by" />
+							<field name="approver1_id" />
+							<field name="approver2_id" />
+
 							<field name="limit_ids" string="Customers">
 								<tree string="List" editable="bottom">
 									<field name="partner_id" options="{'no_quick_create':True,'no_create_edit':True,'no_open':True}"/>

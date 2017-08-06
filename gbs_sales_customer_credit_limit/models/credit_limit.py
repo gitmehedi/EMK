@@ -10,13 +10,18 @@ class customer_creditlimit_assign(models.Model):
     
     _description = "Credit limit assign"
 
+    def _current_employee(self):
+        return self.env['hr.employee'].search([('user_id', '=', self.env.uid)], limit=1)
+
     name = fields.Char('Name', required=True,
            states={'confirm': [('readonly', True)],'validate1': [('readonly', True)],'approve': [('readonly',True)]})
-    approve_date = fields.Datetime('Approve Date',
+    approve_date = fields.Date('Approve Date',
                    states = {'draft': [('invisible', True)],'confirm': [('invisible', True)],'validate1': [('invisible', True)], 'approve': [('invisible',False),('readonly',True)]})
     credit_limit = fields.Float('Limit',required=True,
                    states={'confirm': [('readonly', True)], 'validate1': [('readonly', True)], 'approve': [('readonly', True)]})
-
+    requested_by = fields.Many2one('hr.employee', string="Requested By", default=_current_employee, readonly=True)
+    approver1_id = fields.Many2one('hr.employee', string='First Approval', default=_current_employee, readonly=True)
+    approver2_id = fields.Many2one('hr.employee', string='Second Approval', default=_current_employee, readonly=True)
     """ Relational Fields """
     limit_ids = fields.One2many('res.partner.credit.limit', 'assign_id', 'Limits',
                 states={'confirm': [('readonly', True)], 'validate1': [('readonly', True)], 'approve': [('readonly', True)]})
@@ -85,9 +90,9 @@ class res_partner_credit_limit(models.Model):
     _order = "assign_date desc, id desc"
 
     partner_id = fields.Many2one('res.partner', "Customer", required=True)
-    assign_date = fields.Date("Date")
+    assign_date = fields.Date("Date", _defaults=lambda *a: time.strftime('%Y-%m-%d'))
     value = fields.Float('Limit')
-    assign_id = fields.Many2one(comodel_name='customer.creditlimit.assign')
+    assign_id = fields.Many2one('customer.creditlimit.assign')
     state = fields.Selection([
         ('draft', 'Draft'),
         ('approve', 'Approve'),
@@ -98,7 +103,7 @@ class res_partner_credit_limit(models.Model):
     #             raise models.except_models(_('Warning!'),_('You cannot delete a value which is not draft state!'))
     #     return super(res_partner_credit_limit, self).unlink(cr, uid, ids, context)
     
-    _defaults = {
-        'assign_date': lambda *a: time.strftime('%Y-%m-%d')
-    }
+    # _defaults = {
+    #     'assign_date': lambda *a: time.strftime('%Y-%m-%d')
+    # }
 

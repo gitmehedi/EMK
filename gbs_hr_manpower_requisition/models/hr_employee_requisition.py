@@ -12,7 +12,7 @@ class HREmployeeRequisition(models.Model):
     employee_id = fields.Many2one('hr.employee', string="Requisition By", default=_current_employee, readonly=True)
     department_id = fields.Many2one('hr.department', related='employee_id.department_id',string='Department', store=True, readonly=True)
     issue_date = fields.Datetime(string='Date of Request', default=date.today(), readonly=True)
-    emp_head_count = fields.Integer(string='Current Emp(s)', readonly=True)
+    emp_head_count = fields.Integer(string='Current Emp(s)', readonly=True,compute='_compute_no_of_employee',store=True)
     expected_date = fields.Date(string='Expected Date', required=True)
     replaced_or_new = fields.Selection([('replaced','Replace'), ('new','New')], string='Replace or New')
     replace_of_whom_emp_id = fields.Many2one('hr.employee', string="Replace of Whom") # only current users employee
@@ -28,21 +28,39 @@ class HREmployeeRequisition(models.Model):
     state = fields.Selection([
         ('draft', 'Draft'),
         ('confirmed', 'Confirmed'),
-        ('verify', 'Verify'),
-        ('justify', 'Justify'),
+        ('hr_approve', 'HR Approve'),
+        ('cxo_approve', 'CXO Approve'),
         ('approved', 'Approved'),
         ('declined', 'Declined'),
+        ('reset', 'Reset To Draft'),
     ], string='Status', default='draft',
         help=" Verify is for Head of Plant, Justify is for HR Manager, Approve is for CXO")
 
     factory_or_head_office = fields.Boolean(string='Head Office?')
 
-    @api.multi
-    def action_confirm(self):
-        self.state = 'confirmed'
+    @api.one
+    @api.depends('department_id')
+    def _compute_no_of_employee(self):
+        pool_emp=self.env['hr.employee'].search(['|',('user_id','=',self.env.uid),('parent_id','=',self.department_id.manager_id.id)])
+        self.emp_head_count=len(pool_emp.ids)
 
     @api.multi
-    def action_approve(self):
+    def action_confirm(self):
+        if self.factory_or_head_office:
+            self.state='hr_approve'
+        else:
+            self.state = 'confirmed'
+
+    @api.multi
+    def action_hop_approve(self):
+        self.state = 'hr_approve'
+
+    @api.multi
+    def action_hr_approve(self):
+        self.state = 'cxo_approve'
+
+    @api.multi
+    def action_cxo_approve(self):
         self.state = 'approved'
 
     @api.multi
@@ -50,14 +68,6 @@ class HREmployeeRequisition(models.Model):
         self.state = 'declined'
 
     @api.multi
-    def action_draft(self):
+    def action_reset(self):
         self.state = 'draft'
-
-    @api.multi
-    def action_justify(self):
-        self.state = 'justify'
-
-    @api.multi
-    def action_verify(self):
-        self.state = 'verify'
 

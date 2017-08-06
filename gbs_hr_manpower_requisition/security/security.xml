@@ -6,20 +6,20 @@
         <field name="sequence">201</field>
     </record>
 
-    <record id="group_head_of_department" model="res.groups">
-        <field name="name">Head Of Department</field>
-        <field name="category_id" ref="module_category_emp_request"/>
-    </record>
+    <!--<record id="group_head_of_department" model="res.groups">-->
+        <!--<field name="name">Head Of Department</field>-->
+        <!--<field name="category_id" ref="module_category_emp_request"/>-->
+    <!--</record>-->
 
     <record id="group_head_of_plant" model="res.groups">
         <field name="name">Head Of Plant</field>
         <field name="category_id" ref="module_category_emp_request"/>
     </record>
 
-    <record id="group_cxo" model="res.groups">
-        <field name="name">CXO</field>
-        <field name="category_id" ref="module_category_emp_request"/>
-    </record>
+    <!--<record id="group_cxo" model="res.groups">-->
+        <!--<field name="name">CXO</field>-->
+        <!--<field name="category_id" ref="module_category_emp_request"/>-->
+    <!--</record>-->
 
 </odoo>
 
