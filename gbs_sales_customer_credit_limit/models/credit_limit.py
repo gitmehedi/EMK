@@ -10,13 +10,18 @@ class customer_creditlimit_assign(models.Model):
     
     _description = "Credit limit assign"
 
+    def _current_employee(self):
+        return self.env['hr.employee'].search([('user_id', '=', self.env.uid)], limit=1)
+
     name = fields.Char('Name', required=True,
            states={'confirm': [('readonly', True)],'validate1': [('readonly', True)],'approve': [('readonly',True)]})
     approve_date = fields.Date('Approve Date',
                    states = {'draft': [('invisible', True)],'confirm': [('invisible', True)],'validate1': [('invisible', True)], 'approve': [('invisible',False),('readonly',True)]})
     credit_limit = fields.Float('Limit',required=True,
                    states={'confirm': [('readonly', True)], 'validate1': [('readonly', True)], 'approve': [('readonly', True)]})
-
+    requested_by = fields.Many2one('hr.employee', string="Requested By", default=_current_employee, readonly=True)
+    approver1_id = fields.Many2one('hr.employee', string='First Approval', default=_current_employee, readonly=True)
+    approver2_id = fields.Many2one('hr.employee', string='Second Approval', default=_current_employee, readonly=True)
     """ Relational Fields """
     limit_ids = fields.One2many('res.partner.credit.limit', 'assign_id', 'Limits',
                 states={'confirm': [('readonly', True)], 'validate1': [('readonly', True)], 'approve': [('readonly', True)]})
