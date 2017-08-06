@@ -32,11 +32,23 @@ class HROTRequisition(models.Model):
     ], default='to_submit')
 
 
-    @api.constrains('to_datetime')
+    @api.constrains('from_datetime','to_datetime')
     def _check_to_datetime_validation(self):
-        if self.to_datetime < self.from_datetime:
-            raise ValidationError(_("End Time can not less then Start Time!!"))
 
+        for ot in self:
+            if ot.to_datetime < ot.from_datetime:
+                raise ValidationError(_("End Time can not less then Start Time!!"))
+
+        domain = [
+            ('from_datetime', '<=', ot.to_datetime),
+            ('to_datetime', '>=', ot.from_datetime),
+            ('employee_id', '=', ot.employee_id.id),
+            ('id', '!=', ot.id),
+            ('state', 'not in', ['refuse']),
+        ]
+        domainOT = self.search_count(domain)
+        if domainOT:
+            raise ValidationError(_('You can not have multiple OT requisition on same day!'))
 
     @api.depends('from_datetime', 'to_datetime')
     def _compute_total_hours(self):
@@ -46,6 +58,12 @@ class HROTRequisition(models.Model):
             diff=finish_dt-start_dt
             hours = float(diff.total_seconds()  / 3600)
             self.total_hours = hours
+
+    @api.one
+    @api.constrains('total_hours')
+    def _check_values(self):
+        if self.total_hours == 0.0:
+            raise ValidationError(_('Duration time should not be zero!!'))
 
     # _sql_constraints = [
     #     ('duration_check', "CHECK ( total_hours >= 0 )", "Duration must be greater than 0."),

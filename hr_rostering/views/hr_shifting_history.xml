@@ -1,44 +1,61 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 	<data>
-	    <record id="hr_shift_history" model="ir.ui.view">
+		<record id="hr_shift_history" model="ir.ui.view">
 			<field name="name">hr_shifting_history</field>
 			<field name="model">hr.shifting.history</field>
 			<field name="arch" type="xml">
 				<tree string="Shifting History">
-					<field name= "employee_id" />
-					<field name= "shift_id" />
+					<field name="employee_id" />
+					<field name="shift_id" />
 					<field name="effective_from" />
 					<field name="effective_end"/>
 				</tree>
 			</field>
 		</record>
-	    
-	     <record id="rostaring_shift_history" model="ir.ui.view">
-	            <field name="name">rostering.employee.shift.history</field>
-	            <field name="model">hr.employee</field>
-	            <field name="inherit_id" ref="hr.view_employee_form"/>
-	            <field name="arch" type="xml">
-	                <data>
-	                    <xpath expr="//page[3]" position="after">
-	                    	<page string="Shifting" groups="hr.group_hr_user">
-	                        <group>
-	                            <group string="Current Shift">
-	                            	<field name="current_shift_id" />
-	                            </group>
-	                            <field name="shift_ids">
+
+		<record id="rostering_shift_history" model="ir.ui.view">
+			<field name="name">rostering.employee.shift.history</field>
+			<field name="model">hr.employee</field>
+			<field name="inherit_id" ref="hr.view_employee_form"/>
+			<field name="arch" type="xml">
+				<data>
+					<xpath expr="//page[3]" position="after">
+						<page string="Shifting" groups="hr.group_hr_user">
+							<group>
+								<group string="Current Shift">
+									<field name="current_shift_id" />
+								</group>
+								<field name="shift_ids">
 									<tree editable="top">
-										<field name="shift_id" />
-										<field name="effective_from"/>
-										<field name="effective_end"/>
+										<field name="shift_id" readonly="1"/>
+										<field name="effective_from" readonly="1"/>
+										<field name="effective_end" readonly="1"/>
 									</tree>
-	                            </field>
-	                        </group>
-	                        </page>
-	                    </xpath>
-	                    
-	                </data>
-	            </field>
-	        </record> 
-	</data>			
+								</field>
+							</group>
+						</page>
+					</xpath>
+				</data>
+			</field>
+		</record>
+
+		<record id="inherit_view_rostering_shift_history" model="ir.ui.view">
+            <field name="name">hr.shifting.history.form.inherit.</field>
+            <field name="model">hr.employee</field>
+            <field name="inherit_id" ref="rostering_shift_history" />
+            <field name="groups_id" eval="[(6, 0, [ref('base.group_system')])]" />
+            <field name="arch" type="xml">
+                <field name="shift_id" position="attributes">
+                   <attribute name="readonly">0</attribute>
+                </field>
+				<field name="effective_from" position="attributes">
+                   <attribute name="readonly">0</attribute>
+                </field>
+				<field name="effective_end" position="attributes">
+                   <attribute name="readonly">0</attribute>
+                </field>
+            </field>
+		</record>
+	</data>
 </odoo>

@@ -43,7 +43,7 @@
                                 <field name="requested_by"/>
                                 <field name="approver1_id" attrs="{'invisible':['|', ('state','=','draft'),('state','=','confirm')]}"/>
                                 <field name="approver1_date" attrs="{'invisible':['|', ('state','=','draft'),('state','=','confirm')]}"/>
-                                <field name="approver2_id" attrs="{'invisible': [('state','in',('draft','confirm','validate1'))]}"/>
+									<field name="approver2_id" attrs="{'invisible': [('state','in',('draft','confirm','validate1'))]}"/>
                                 <field name="approver2_date" attrs="{'invisible': [('state','in',('draft','confirm','validate1'))]}"/>
 							</group>
 						</group>

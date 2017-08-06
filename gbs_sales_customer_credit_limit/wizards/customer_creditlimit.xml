@@ -6,16 +6,16 @@
             <field name="name">credit.limit.partner</field>
             <field name="model">creditlimit.partners</field>
             <field name="arch" type="xml">
-                <form string="Creditlimit by Customers">
-                    <header>
-                        <button string="Generate" name="compute_sheet" type="object" class="oe_highlight" />
-                    </header>
+                <form string="Creditlimit by Customers" edit="false" create="false" delete="false">
                     <sheet>
                         <group>
                             <label string="This wizard will generate limit for all selected Customer(s) based on the dates." />
                         </group>
                         <h3>Customers</h3>
                         <field name="partner_ids"/>
+                        <footer>
+						 <button string="Generate" name="compute_sheet" type="object" class="oe_highlight" />
+					    </footer>
                     </sheet>
                </form>
             </field>
