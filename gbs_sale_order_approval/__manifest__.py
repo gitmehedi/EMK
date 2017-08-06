@@ -10,8 +10,9 @@
         'product',
     ],
     'data': [
+        'security/sale_order_approval_security.xml',
+        'security/ir.model.access.csv',
         'views/inherited_sale_view.xml',
-
     ],
     'installable': True,
     'application': True,

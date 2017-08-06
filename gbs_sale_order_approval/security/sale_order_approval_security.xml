@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-    <record id="sale_price_change_permission_head_of_sales" model="ir.rule">
-        <field name="name">Product Sales Price Permission HOS</field>
-        <field name="model_id" ref="model_sale_price_change"/>
+    <record id="sale_order_permission_head_of_sales" model="ir.rule">
+        <field name="name">Sale Order Permission HOS</field>
+        <field name="model_id" ref="model_sale_order"/>
         <field name="domain_force">[(1,'=',1)]</field>
         <field name="perm_read" eval="True" />
         <field name="perm_create" eval="True"/>
@@ -12,9 +12,9 @@
         <field name="groups" eval="[(4,ref('gbs_application_group.group_head_sale'))]"/>
     </record>
 
-    <record id="sale_price_change_permission_head_of_accounts" model="ir.rule">
-        <field name="name">Product Sales Price Permission HOA</field>
-        <field name="model_id" ref="model_sale_price_change"/>
+    <record id="sale_order_permission_head_of_accounts" model="ir.rule">
+        <field name="name">Sale Order Permission HOA</field>
+        <field name="model_id" ref="model_sale_order"/>
         <field name="domain_force">[(1,'=',1)]</field>
         <field name="perm_read" eval="True" />
         <field name="perm_create" eval="True"/>
@@ -23,9 +23,9 @@
         <field name="groups" eval="[(4,ref('gbs_application_group.group_head_account'))]"/>
     </record>
 
-    <record id="sale_price_change_permission_director" model="ir.rule">
-        <field name="name">Product Sales Price Permission For M.D/Director</field>
-        <field name="model_id" ref="model_sale_price_change"/>
+    <record id="sale_order_permission_director" model="ir.rule">
+        <field name="name">Sale Order Permission For M.D/Director</field>
+        <field name="model_id" ref="model_sale_order"/>
         <field name="domain_force">[(1,'=',1)]</field>
         <field name="perm_read" eval="True" />
         <field name="perm_create" eval="True"/>
