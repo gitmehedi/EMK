@@ -35,7 +35,7 @@ class customer_creditlimit_assign(models.Model):
     @api.multi
     def approve_creditlimit_run(self):
         self.limit_ids.write({'state': 'approve', 'assign_date': time.strftime('%Y-%m-%d')})
-        self.approver2_id = self.env.user.id
+        self.approver2_id = self.env.user.employee_ids.id
         return self.write({'state': 'approve', 'approve_date': time.strftime('%Y-%m-%d %H:%M:%S')})
 
     @api.multi
@@ -52,7 +52,7 @@ class customer_creditlimit_assign(models.Model):
     @api.multi
     def action_validate(self):
         for record in self:
-            record.approver2_id = self.env.user.id
+            record.approver1_id = self.env.user.employee_ids.id
             record.state = 'validate1'
 
 
