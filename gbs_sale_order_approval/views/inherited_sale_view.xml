@@ -9,12 +9,12 @@
             <field name="arch" type="xml">
                 <data>
                     <header>
-                        <button name="action_submit" groups="gbs_application_group.group_head_sale,gbs_application_group.group_head_account,gbs_application_group.group_derector" attrs="{'invisible': [('state','in',('validate','sent','done','cancel','sale'))]}" type="object" string="Submit Quotation"/>
-                        <button name="action_validate" groups="gbs_application_group.group_head_account,gbs_application_group.group_derector"  attrs="{'invisible': [('state','in',('draft','sent','done','submit_quotation','cancel','sale'))]}" states="submit_quotation" type="object" string="Validate" />
+                        <button name="action_submit" groups="gbs_application_group.group_head_sale,gbs_application_group.group_head_account,gbs_application_group.group_cxo" attrs="{'invisible': [('state','in',('validate','sent','done','cancel','sale'))]}" type="object" string="Submit Quotation"/>
+                        <button name="action_validate" groups="gbs_application_group.group_head_account,gbs_application_group.group_cxo"  attrs="{'invisible': [('state','in',('draft','sent','done','submit_quotation','cancel','sale'))]}" states="submit_quotation" type="object" string="Validate" />
                     </header>
 
                     <xpath expr="//button[@name='action_confirm' and @states='draft']" position="replace">
-                         <button name="action_confirm" states="sale" groups="gbs_application_group.group_derector"
+                         <button name="action_confirm" states="sale" groups="gbs_application_group.group_cxo"
                                  attrs="{'invisible': [('state','in',('draft','submit_quotation','validate','sale','done'))]}"
                                  string="Approve Sale" type="object" class="btn-primary o_sale_confirm"/>
                     </xpath>
@@ -26,13 +26,13 @@
 
                     <xpath expr="//button[@name='action_quotation_send' and @states='draft']" position="replace">
                         <button name="action_quotation_send"
-                                groups="gbs_application_group.group_head_sale,gbs_application_group.group_head_account,gbs_application_group.group_derector,sales_team.group_sale_salesman,sales_team.group_sale_manager"
+                                groups="gbs_application_group.group_head_sale,gbs_application_group.group_head_account,gbs_application_group.group_cxo,sales_team.group_sale_salesman,sales_team.group_sale_manager"
                                 string="Send by Email" type="object" states="draft,submit_quotation,validate" class="btn-primary"/>
                     </xpath>
 
                     <xpath expr="//button[@name='print_quotation' and @states='draft']" position="replace">
                            <button name="print_quotation"
-                                groups="gbs_application_group.group_head_sale,gbs_application_group.group_head_account,gbs_application_group.group_derector,sales_team.group_sale_salesman,sales_team.group_sale_manager"
+                                groups="gbs_application_group.group_head_sale,gbs_application_group.group_head_account,gbs_application_group.group_cxo,sales_team.group_sale_salesman,sales_team.group_sale_manager"
                                 string="Print" type="object" states="draft,submit_quotation,validate" class="btn-primary"/>
                     </xpath>
 
@@ -65,7 +65,7 @@
 
          <menuitem action="sale.action_orders"
             id="menu_sale_order" parent="sales_team.menu_sales" sequence="12"
-            groups="gbs_application_group.group_head_sale,gbs_application_group.group_head_account,gbs_application_group.group_derector"/>
+            groups="gbs_application_group.group_head_sale,gbs_application_group.group_head_account,gbs_application_group.group_cxo"/>
 
     </data>
 </odoo>

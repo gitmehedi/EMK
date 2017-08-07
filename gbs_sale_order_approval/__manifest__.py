@@ -9,7 +9,7 @@
         'gbs_application_group',
         'sale',
         'product',
-        'gbs_sales_commission',
+       # 'gbs_sales_commission',
     ],
     'data': [
         'security/ir.model.access.csv',
