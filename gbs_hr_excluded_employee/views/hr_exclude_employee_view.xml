@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<openerp>
+	<data>
+		<!-- Tree View-->
+		<record id="hr_excluded_employee_tree" model="ir.ui.view">
+			<field name="name">hr.excluded.employee.tree</field>
+			<field name="model">hr.excluded.employee</field>
+			<field name="arch" type="xml">
+				<tree string="Employee">
+                    <field name="employee_name"/>
+					<field name="acc_number"/>
+					<field name="department_id" />
+				</tree>
+			</field>
+		</record>
+
+		<!-- Form View-->
+		<record id="hr_excluded_employee_form" model="ir.ui.view">
+			<field name="name">hr.excluded.employee.form</field>
+			<field name="model">hr.excluded.employee</field>
+			<field name="type">form</field>
+			<field name="arch" type="xml">
+				<form string="Employee">
+					<sheet>
+						<group>
+							<group>
+								<field name="employee_name"/>
+							</group>
+							<group>
+								<field name="acc_number"/>
+							</group>
+                            <group>
+								<field name="department_id"/>
+							</group>
+						</group>
+					</sheet>
+				</form>
+			</field>
+		</record>
+
+		<record id="action_hr_excluded_employee" model="ir.actions.act_window">
+			<field name="name">HR Excluded Employee</field>
+			<field name="res_model">hr.excluded.employee</field>
+			<field name="view_mode">tree,form</field>
+		</record>
+
+
+		<menuitem name="Exclude Employee"
+				  parent="hr.menu_human_resources_configuration"
+                  sequence="7"
+				  action="action_hr_excluded_employee"/>
+
+	</data>
+</openerp>
