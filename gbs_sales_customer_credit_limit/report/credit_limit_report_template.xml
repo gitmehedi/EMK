@@ -31,13 +31,15 @@
                                 </tbody>
                             </table>
                             <footer>
-                                <t t-foreach="docs" t-as="l">
+                                <p>Submitted by: <span t-field="o.requested_by"/></p>
+                                <p>First Approval by: <span t-field="o.approver1_id"/></p>
+                                <p>Final Approval by: <span t-field="o.approver2_id"/></p>
+                      <!--          <t t-foreach="docs" t-as="l">
                                     <tr><span t-esc="l.requested_by"/></tr>
                                     <tr><span t-esc="l.approver1_id"/></tr>
                                     <tr><span t-esc="l.approver2_id"/></tr>
                                     <tr><span t-esc="l.message_ids"/></tr>
                                 </t>
-<!--
                                 <p style="text-align:center"> Create by Head of Sale | First Approveal by Head of Account | Final Approveal by Manager</p>
 -->
                             </footer>
