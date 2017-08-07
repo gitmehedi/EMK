@@ -7,7 +7,6 @@ class customer_creditlimit_assign(models.Model):
     
     _name = 'customer.creditlimit.assign'
     _inherit = ['mail.thread', 'ir.needaction_mixin']
-    
     _description = "Credit limit assign"
 
     def _current_employee(self):
@@ -19,9 +18,10 @@ class customer_creditlimit_assign(models.Model):
                    states = {'draft': [('invisible', True)],'confirm': [('invisible', True)],'validate1': [('invisible', True)], 'approve': [('invisible',False),('readonly',True)]})
     credit_limit = fields.Float('Limit',required=True,
                    states={'confirm': [('readonly', True)], 'validate1': [('readonly', True)], 'approve': [('readonly', True)]})
-    requested_by = fields.Many2one('hr.employee', string="Requested By", default=_current_employee, readonly=True)
-    approver1_id = fields.Many2one('hr.employee', string='First Approval', default=_current_employee, readonly=True)
-    approver2_id = fields.Many2one('hr.employee', string='Second Approval', default=_current_employee, readonly=True)
+    requested_by = fields.Many2one('hr.employee', string="Requested By", default=_current_employee, readonly= True)
+    approver1_id = fields.Many2one('hr.employee', string='First Approval', readonly = True)
+    approver2_id = fields.Many2one('hr.employee', string='Second Approval', readonly =True)
+
     """ Relational Fields """
     limit_ids = fields.One2many('res.partner.credit.limit', 'assign_id', 'Limits',
                 states={'confirm': [('readonly', True)], 'validate1': [('readonly', True)], 'approve': [('readonly', True)]})
@@ -35,6 +35,7 @@ class customer_creditlimit_assign(models.Model):
     @api.multi
     def approve_creditlimit_run(self):
         self.limit_ids.write({'state': 'approve', 'assign_date': time.strftime('%Y-%m-%d')})
+        self.approver2_id = self.env.user.id
         return self.write({'state': 'approve', 'approve_date': time.strftime('%Y-%m-%d %H:%M:%S')})
 
     @api.multi
@@ -50,17 +51,19 @@ class customer_creditlimit_assign(models.Model):
 
     @api.multi
     def action_validate(self):
-        self.state = 'validate1'
+        for record in self:
+            record.approver2_id = self.env.user.id
+            record.state = 'validate1'
+
 
     @api.multi
     def action_refuse(self):
         self.state = 'refuse'
 
 
-
-class res_partner(models.Model):
-    
+class ResPartner(models.Model):
     _inherit = 'res.partner'
+
     limit_ids = fields.One2many('res.partner.credit.limit', 'partner_id', 'Limits', domain=[('state','=','approve')])
     credit_limit = fields.Float(compute='_current_limit', string='Credit Limit')
 
