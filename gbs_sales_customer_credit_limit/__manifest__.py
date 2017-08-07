@@ -5,6 +5,7 @@
     'website': 'http://www.genweb2.com',
     'category': 'Sale',
     'depends': [
+        'gbs_application_group',
         'sale',
     ],
     'data': [
