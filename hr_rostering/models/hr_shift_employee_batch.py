@@ -22,3 +22,18 @@ class HrShiftEmployeeBatch(models.Model):
     _sql_constraints = [
         ('name_uniq', 'unique(name)', 'This Name is already in use'),
     ]
+
+    @api.multi
+    def unlink(self):
+        for a in self:
+            if str(a.effective_from) < str(date.today()):
+                user = self.env.user.browse(self.env.uid)
+                if user.has_group('base.group_system'):
+                    pass
+                else:
+                    raise UserError(_('You can not delete this.'))
+            else:
+                print self.id
+                query = """ delete from hr_shifting_history where shift_batch_id=%s"""
+                self._cr.execute(query, tuple([self.id]))
+                return super(HrShiftEmployeeBatch, self).unlink()

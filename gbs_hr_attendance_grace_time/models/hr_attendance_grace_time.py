@@ -49,7 +49,6 @@ class HrAttendanceGraceTime(models.Model):
         query = """select MAX(effective_from_date) from hr_attendance_grace_time where company_id=%s and operating_unit_id=%s"""
         self._cr.execute(query, tuple([self.company_id.id,self.operating_unit_id.id]))
         get_previous_row_effective_from_date = self._cr.fetchone()
-        # get_previous_row_effective_from_date = get_previous_row_value[0]
         if get_previous_row_effective_from_date[0] > self.effective_from_date:
             raise ValidationError(_("Present effective date can not less then previous effective date!!"))
 
@@ -79,4 +78,5 @@ class HrAttendanceGraceTime(models.Model):
                     pass
                 else:
                     raise UserError(_('You can not delete previous dated record.'))
+            else:
                 return super(HrAttendanceGraceTime, self).unlink()
