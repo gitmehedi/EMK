@@ -18,6 +18,8 @@ class customer_creditlimit_assign(models.Model):
                    states = {'draft': [('invisible', True)],'confirm': [('invisible', True)],'validate1': [('invisible', True)], 'approve': [('invisible',False),('readonly',True)]})
     credit_limit = fields.Float('Limit',required=True,
                    states={'confirm': [('readonly', True)], 'validate1': [('readonly', True)], 'approve': [('readonly', True)]})
+    days = fields.Integer('Days',required=True,
+                   states={'confirm': [('readonly', True)], 'validate1': [('readonly', True)], 'approve': [('readonly', True)]})
     requested_by = fields.Many2one('hr.employee', string="Requested By", default=_current_employee, readonly= True)
     approver1_id = fields.Many2one('hr.employee', string='First Approval', readonly = True)
     approver2_id = fields.Many2one('hr.employee', string='Second Approval', readonly =True)
@@ -90,12 +92,14 @@ class ResPartner(models.Model):
 class res_partner_credit_limit(models.Model):
     
     _name = 'res.partner.credit.limit'
-    _order = "assign_date desc, id desc"
+    _order = "partner_id asc"
 
     partner_id = fields.Many2one('res.partner', "Customer", required=True)
     assign_date = fields.Date("Date", _defaults=lambda *a: time.strftime('%Y-%m-%d'))
     value = fields.Float('Limit')
+    day_num = fields.Integer('Days')
     assign_id = fields.Many2one('customer.creditlimit.assign')
+    #sl_num = fields.Integer(string="SL")
     state = fields.Selection([
         ('draft', 'Draft'),
         ('approve', 'Approve'),
