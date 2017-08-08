@@ -7,7 +7,7 @@
                 <t t-foreach="docs" t-as="o">
                     <t t-call="report.external_layout">
                         <div class="page" style="page-break-inside:auto">
-                            <br></br>
+                            
                             <div class="row">
                                     <div class="col-xs-12" style="text-align:center;">
                                         <h2><strong >Customer Credit Limit</strong></h2>
