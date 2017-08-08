@@ -26,12 +26,12 @@ class creditlimit_partners(models.TransientModel):
         day_data = run_data.days or 0
         assign_id = run_data.id or False
         assign_date = time.strftime('%Y-%m-%d')
-        i = 1
+        # i = 1
         if not data['partner_ids']:
              raise UserError(_("You must select customer(s) to generate limit(s)."))
         for partner in partner_pool.browse((data['partner_ids'])):
             res = {
-                'sl_num': i,
+                # 'sl_num': i,
                 'partner_id': partner.id,
                 'assign_date': assign_date,
                 'value': limit_data,
@@ -39,7 +39,7 @@ class creditlimit_partners(models.TransientModel):
                 'assign_id':assign_id,
                 'state': 'draft',
             }
-            i+=1
+            # i+=1
 
             limit_pool.create(res)
 

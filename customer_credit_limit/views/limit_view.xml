@@ -68,7 +68,7 @@
                                 <page string="Customers">
 									<field name="limit_ids">
 										<tree string="List" editable="bottom">
-											<field name="sl_num" invisible = '1'/>
+											<!--<field name="sl_num" invisible = '1'/>-->
 											<field name="partner_id" options="{'no_quick_create':True,'no_create_edit':True,'no_open':True}"/>
 											<field name="value"/>
 											<field  name="day_num"/>

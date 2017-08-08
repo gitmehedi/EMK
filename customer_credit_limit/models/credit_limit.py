@@ -99,7 +99,7 @@ class res_partner_credit_limit(models.Model):
     value = fields.Float('Limit')
     day_num = fields.Integer('Days')
     assign_id = fields.Many2one('customer.creditlimit.assign')
-    sl_num = fields.Integer(string="SL")
+    #sl_num = fields.Integer(string="SL")
     state = fields.Selection([
         ('draft', 'Draft'),
         ('approve', 'Approve'),
