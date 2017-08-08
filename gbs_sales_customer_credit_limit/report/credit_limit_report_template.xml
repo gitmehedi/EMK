@@ -20,9 +20,10 @@
                                 <table class="table table-bordered">
                                     <thead>
                                         <tr style="background-color:#C0C0C0;">
-                                            <th>SL Num</th>
+                                            <th>SL</th>
                                             <th>Customer</th>
                                             <th>Limit</th>
+                                            <th>Days</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -31,6 +32,7 @@
                                                 <td><span t-esc="l.sl_num"/></td>
                                                 <td><span t-esc="l.partner_id.name"/></td>
                                                 <td><span t-esc="'%.2f'%(l.value)"/></td>
+                                                <td><span t-esc="l.day_num"/></td>
                                             </tr>
                                          </t>
                                     </tbody>

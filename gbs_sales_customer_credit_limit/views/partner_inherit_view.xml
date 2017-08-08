@@ -16,9 +16,9 @@
                             </group>
                             <field name="limit_ids">
                                 <tree string="List" editable="bottom">
-                                    <field name="sl_num"/>
                                     <field  name="assign_date" />
                                     <field  name="value" />
+                                    <field  name="day_num" />
                                 </tree>
                             </field>
                         </page>
