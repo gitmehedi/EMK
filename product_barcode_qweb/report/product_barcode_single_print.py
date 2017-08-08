@@ -33,14 +33,7 @@ from openerp.report import report_sxw
 from openerp.tools import config
 
 
-class product_barcode_print(report_sxw.rml_parse):
-    def prepare_attr(self, ids):
-        attrs = self.pool.get('product.attribute.value').read(self.cr, self.uid, ids, ['name'])
-        name = ""
-        for attr in attrs:
-            name = name + ", " + attr['name'] if len(name) > 0 else  name + attr['name']
-
-        return "({0})".format(name) if len(name) > 0 else name
+class product_barcode_single_print(report_sxw.rml_parse):
 
     def _getLabelRows(self, form):
 
@@ -56,18 +49,16 @@ class product_barcode_print(report_sxw.rml_parse):
         products_data = product_obj.read(self.cr, self.uid, product_ids,
                                          ['name', 'default_code', 'attribute_value_ids', 'list_price'])
         for product in products_data:
-            for product_row in range(int(math.ceil(float(form['product_ids'].get(str(product['id']))) / 5))):
-                label_row = []
-                for row in [1, 2, 3, 4, 5]:
-                    # attr = self.prepare_attr(product['attribute_value_ids'])
-                    label_data = {
-                        'name': product['name'][:32] ,
-                        'company_name': self.company_name,
-                        'default_code': product['default_code'],
-                        'price': product['list_price'],
-                    }
-                    label_row.append(label_data)
-                data.append(label_row)
+            label_row = []
+
+            label_data = {
+                'name': product['name'][:32] ,
+                'company_name': self.company_name,
+                'default_code': product['default_code'],
+                'price': product['list_price'],
+            }
+            label_row.append(label_data)
+            data.append(label_row)
 
         if data:
             return data
@@ -75,7 +66,7 @@ class product_barcode_print(report_sxw.rml_parse):
             return {}
 
     def get_custom_data_dir(self):
-        my_data_directory = os.path.join(config['data_dir'], "custom_filestore", "product_barcode_qweb")
+        my_data_directory = os.path.join(config['data_dir'], "custom_filestore", "product_barcode_single_qweb")
 
         if not os.path.exists(my_data_directory):
             os.makedirs(my_data_directory)
@@ -93,7 +84,7 @@ class product_barcode_print(report_sxw.rml_parse):
         return barcode_data
 
     def __init__(self, cr, uid, name, context):
-        super(product_barcode_print, self).__init__(cr, uid, name, context=context)
+        super(product_barcode_single_print, self).__init__(cr, uid, name, context=context)
 
         user_pool = self.pool.get('res.users')
         user = user_pool.browse(cr, uid, [self.uid], context)
@@ -113,11 +104,10 @@ class product_barcode_print(report_sxw.rml_parse):
 
 
 
-class report_product_barcode_print(osv.AbstractModel):
-    _name = 'report.product_barcode_qweb.report_product_barcode'
+class report_product_barcode_single_print(osv.AbstractModel):
+    _name = 'report.product_barcode_qweb.report_product_single_barcode'
     _inherit = 'report.abstract_report'
-    _template = 'product_barcode_qweb.report_product_barcode'
-    _wrapped_report_class = product_barcode_print
-
+    _template = 'product_barcode_qweb.report_product_single_barcode'
+    _wrapped_report_class = product_barcode_single_print
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

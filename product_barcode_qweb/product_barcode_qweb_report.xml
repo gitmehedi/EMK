@@ -10,9 +10,22 @@
             file="product_barcode_qweb.report_product_barcode"
             menu="False"
          />
+        <report
+            id="product_barcode_single_qweb"
+            string="Product Barcode"
+            model="product.product"
+            report_type="qweb-pdf"
+            name="product_barcode_qweb.report_product_single_barcode"
+            file="product_barcode_qweb.report_product_single_barcode"
+            menu="False"
+         />
 
         <record id="product_barcode_qweb" model="ir.actions.report.xml">
             <field name="paperformat_id" ref="product_barcode_qweb.paperformat_barcode_label"/>
+        </record>
+
+        <record id="product_barcode_single_qweb" model="ir.actions.report.xml">
+            <field name="paperformat_id" ref="product_barcode_qweb.paperformat_barcode_single_label"/>
         </record>
         
         <menuitem icon="STOCK_PRINT" id="menu_product_barcode_print" 

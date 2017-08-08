@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <template id="report_product_single_barcode">
+            <t t-name="product_barcode_qweb.report_product_single_barcode">
+                <div class="page" style="margin-left: 0mm">
+                    <table style="font-size:15.0px; font-weight:900;" cellspacing="1">
+                        <tr style="height: 42.00mm; " t-foreach="getLabelRows(data['form'])" t-as="label_row">
+                            <td align="center" style="width: 80mm; padding: 0mm 0mm 0mm 2mm" t-foreach="label_row"
+                                t-as="label_data">
+                                <span style="font-weight:900" t-esc="label_data['company_name']"/>
+                                <br/>
+                                <span style="font-weight:900" t-esc="label_data['name']"/>
+                                <br/>
+                                <span>
+                                    <img style="width: 54mm;height: 10mm;"
+                                         t-att-src="'data:image/png;base64,'+generateBarcode(label_data['default_code'])"/>
+                                </span>
+                                <br/>
+                                <span t-esc="label_data['default_code']"/>
+                                <br/>
+                                <span style="font-size:15.0px;font-weight:900;" t-esc="res_company.currency_id.symbol"/>
+                                <span style="font-size:15.0px;font-weight:900;" t-esc="'%.2f'% label_data['price']"/>
+                                <span style="font-size:15.0px;font-weight:900;">+VAT</span>
+                                <br/>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </t>
+        </template>
+    </data>
+</openerp>
