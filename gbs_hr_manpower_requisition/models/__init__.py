@@ -1,1 +1,2 @@
 import hr_employee_requisition
+import hr_department_inherit
