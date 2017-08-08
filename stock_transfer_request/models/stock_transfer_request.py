@@ -9,7 +9,12 @@ class StockTransferRequest(models.Model):
     Send product to other shop
     """
     _name = 'stock.transfer.request'
-    _rec_name = "to_shop_id"
+    _rec_name = "transfer_shop_id"
+    _order = "id desc"
+
+    @api.model
+    def _default_operating_unit(self):
+        return self.env.user.default_operating_unit_id
 
     barcode = fields.Char(string='Product Barcode', size=20,
                           readonly=True, states={'draft':[('readonly', False)]})
@@ -17,11 +22,10 @@ class StockTransferRequest(models.Model):
     """ Relational Fields """
     product_line_ids = fields.One2many('stock.transfer.request.line', 'stock_transfer_id',
                                        readonly=True, states={'draft': [('readonly', False)], 'transfer':[('readonly', False)] })
-    to_shop_id = fields.Many2one('stock.location', string="To Shop", required=True, ondelete="cascade",
-                                 domain="[('usage','=','internal')]",
-                                 readonly=True, states={'draft': [('readonly', False)]})
-    requested_id = fields.Many2one('stock.location', string="Requested By", required=True, ondelete="cascade",
-                                   domain="[('usage','=','internal')]",
+    my_shop_id = fields.Many2one('operating.unit', string="My Shop", required=True, ondelete="cascade",
+                                 default=_default_operating_unit, store=True,
+                                  readonly=True, states={'draft': [('readonly', False)]})
+    transfer_shop_id = fields.Many2one('operating.unit', string="To Shop", store=True, required=True, ondelete="cascade",
                                    readonly=True, states={'draft': [('readonly', False)]})
     is_transfer = fields.Boolean(string="Is Transfer", default=False)
     is_receive = fields.Boolean(string="Is Receive", default=False)
@@ -39,11 +43,15 @@ class StockTransferRequest(models.Model):
                 list = [p.product_id.id for p in product_line_ids]
 
                 if self.state == 'transfer':
+                    location_id = self.env['pos.config'].search([('operating_unit_id','=',self.my_shop_id.id)])
+
                     quant = self.env['stock.quant'].search([('product_id', '=', product.id),
-                                                            ('location_id', '=', self.to_shop_id.id)])
+                                                            ('location_id', '=', self.get_location())])
                 else:
+                    location_id = self.env['pos.config'].search([('operating_unit_id', '=', self.my_shop_id.id)])
+
                     quant = self.env['stock.quant'].search([('product_id', '=', product.id),
-                                                            ('location_id', '=', self.requested_id.id)])
+                                                            ('location_id', '=', self.get_location())])
 
                 sumval = sum([val.qty for val in quant])
 
@@ -109,13 +117,14 @@ class StockTransferRequest(models.Model):
                 move['price_unit'] = val.product_id.price
                 move['invoice_state'] = 'invoiced'
                 move['date_expected'] = '{0}'.format(datetime.date.today())
-                move['location_id'] = self.requested_id.id
+                move['location_id'] = self.get_location(self.my_shop_id.id)
                 move['location_dest_id'] = transit_location.id
                 move['procure_method'] = "make_to_stock"
                 move_done = move_obj.create(move)
                 move_done.action_done()
 
         self.state = 'transfer'
+
         self.is_transfer = True
 
     @api.one
@@ -147,9 +156,8 @@ class StockTransferRequest(models.Model):
                 move['invoice_state'] = 'invoiced'
                 move['date_expected'] = '{0}'.format(datetime.date.today())
                 move['location_id'] = transit_location.id
-                move['location_dest_id'] = self.to_shop_id.id
+                move['location_dest_id'] = self.get_location(self.transfer_shop_id.id)
                 move['procure_method'] = "make_to_stock"
-                move_obj.create(move)
                 move_done = move_obj.create(move)
                 move_done.action_done()
 
@@ -168,3 +176,8 @@ class StockTransferRequest(models.Model):
                     "You cannot delete a record with state approve, transfer or receive state.")
             rec.unlink()
         return super(StockTransferRequest, self).unlink()
+
+    def get_location(self, operating_unit):
+        location = self.env['pos.config'].search([('operating_unit_id', '=', operating_unit)])
+        if location:
+            return location[0].stock_location_id.id

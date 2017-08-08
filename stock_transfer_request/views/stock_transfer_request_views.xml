@@ -27,11 +27,11 @@
                         </div>
                         <group>
                             <group>
-                                <field name="to_shop_id" string="To Shop"
+                                <field name="my_shop_id"
                                        options="{'no_quick_create': True, 'no_create_edit': True, 'no_open': True}"/>
                             </group>
                             <group>
-                                <field name="requested_id" string="My Shop"
+                                <field name="transfer_shop_id"
                                        options="{'no_quick_create': True, 'no_create_edit': True, 'no_open': True}"/>
                             </group>
                         </group>
@@ -56,8 +56,8 @@
                 <tree string="Stock Transfer Request Tree" decoration-info="state=='draft'"
                       decoration-success="state=='approve'" decoration-danger="state=='confirm'"
                       decoration-muted="state in ('reject')">
-                    <field name="to_shop_id"/>
-                    <field name="requested_id"/>
+                    <field name="my_shop_id"/>
+                    <field name="transfer_shop_id"/>
                     <field name="state"/>
                 </tree>
             </field>
@@ -69,8 +69,8 @@
             <field eval="10" name="priority"/>
             <field name="arch" type="xml">
                 <search string="Stock Transfer Request Search">
-                    <field name="to_shop_id"/>
-                    <field name="requested_id"/>
+                    <field name="my_shop_id"/>
+                    <field name="transfer_shop_id"/>
                 </search>
             </field>
         </record>
@@ -99,6 +99,6 @@
 
         <menuitem id="stock_transfer_request_menu" name="Transfer Request"
                   sequence="5" action="stock_transfer_request_action" parent="menu_stock_transfer_root"
-                groups="pebbles_transfer_user.group_requisition_transfer_user" />
+                  groups="pebbles_transfer_user.group_requisition_transfer_user"/>
     </data>
 </openerp>
