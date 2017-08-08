@@ -11,7 +11,7 @@ class SaleOrder(models.Model):
 
     state = fields.Selection([
         ('draft', 'Quotation'),
-        ('submit_quotation','Submit Quotation'),
+        ('submit_quotation','Confirmed'),
         ('validate', 'Second Approval'),
         ('sent', 'Quotation Sent'),
         ('sale', 'Sales Order'),
@@ -43,39 +43,11 @@ class SaleOrder(models.Model):
 
         if is_double_validation:
             self.write({'state': 'validate'}) #Go to two level approval process
-            #self.double_validation = True
         else:
             self.write({'state': 'sent'}) # One level approval process
-            #self.double_validation = False
 
 
     @api.multi
     def action_validate(self):
         self.state = 'sent'
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
