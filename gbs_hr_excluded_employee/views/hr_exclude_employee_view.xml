@@ -22,10 +22,13 @@
 			<field name="arch" type="xml">
 				<form string="Employee">
 					<sheet>
+						<div class="oe_title">
+                            <label for="name" class="oe_edit_only"/>
+                            <h1>
+                                <field name="employee_name" placeholder="Employee Name" required="1"/>
+                            </h1>
+                        </div>
 						<group>
-							<group>
-								<field name="employee_name"/>
-							</group>
 							<group>
 								<field name="acc_number"/>
 							</group>
@@ -39,16 +42,19 @@
 		</record>
 
 		<record id="action_hr_excluded_employee" model="ir.actions.act_window">
-			<field name="name">HR Excluded Employee</field>
+			<field name="name">Excluded Employee</field>
 			<field name="res_model">hr.excluded.employee</field>
 			<field name="view_mode">tree,form</field>
 		</record>
 
 
-		<menuitem name="Exclude Employee"
-				  parent="hr.menu_human_resources_configuration"
-                  sequence="7"
-				  action="action_hr_excluded_employee"/>
+		<menuitem
+				id="menu_excluded_employee"
+				name="Exclude Employee"
+			  	parent="hr.menu_human_resources_configuration"
+			  	sequence="100"
+				groups="base.user_root"
+			  	action="action_hr_excluded_employee"/>
 
 	</data>
 </openerp>
