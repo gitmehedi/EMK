@@ -4,7 +4,7 @@ from openerp import api, fields, models
 class InheritedPurchaseOrder(models.Model):
 	_inherit = 'purchase.order'
 
-	
+
 
 
 	def action_picking_create(self, cr, uid, ids, context=None):
