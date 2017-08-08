@@ -90,12 +90,13 @@ class ResPartner(models.Model):
 class res_partner_credit_limit(models.Model):
     
     _name = 'res.partner.credit.limit'
-    _order = "assign_date desc, id desc"
+    _order = "partner_id asc"
 
     partner_id = fields.Many2one('res.partner', "Customer", required=True)
     assign_date = fields.Date("Date", _defaults=lambda *a: time.strftime('%Y-%m-%d'))
     value = fields.Float('Limit')
     assign_id = fields.Many2one('customer.creditlimit.assign')
+    sl_num = fields.Integer(string="SL No")
     state = fields.Selection([
         ('draft', 'Draft'),
         ('approve', 'Approve'),

@@ -6,42 +6,39 @@
             <t t-call="report.html_container">
                 <t t-foreach="docs" t-as="o">
                     <t t-call="report.external_layout">
-                        <div class="page">
+                        <div class="page" style="page-break-inside:auto">
+                            <br></br>
                             <div class="row">
-                                <div class="col-xs-12" style="text-align:center;">
-                                    <h2 ><strong >Customer Credit Limit</strong></h2>
-                                    <p><span t-field="o.name"/></p>
-                                    <p><span t-field="o.approve_date"/></p>
+                                    <div class="col-xs-12" style="text-align:center;">
+                                        <h2><strong >Customer Credit Limit</strong></h2>
+                                    </div>
+                                    <div class="col-xs-12" style="text-align:left;">
+                                        <p><b>Description: </b><span t-field="o.name"/></p>
+                                        <p><b>Approval Date:</b><span t-field="o.approve_date"/></p>
+                                    </div>
                                 </div>
-                            </div>
-                            <table class="table table-condensed">
-                                <thead>
-                                    <tr style="background-color:#C0C0C0;">
-                                        <th>Customer</th>
-                                        <th>Limit</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <t t-foreach="o.limit_ids" t-as="l">
-                                        <tr>
-                                            <td><span t-esc="l.partner_id.name"/></td>
-                                            <td><span t-esc="l.value"/></td>
+                                <table class="table table-bordered">
+                                    <thead>
+                                        <tr style="background-color:#C0C0C0;">
+                                            <th>SL Num</th>
+                                            <th>Customer</th>
+                                            <th>Limit</th>
                                         </tr>
-                	                 </t>
-                                </tbody>
-                            </table>
-                            <footer>
+                                    </thead>
+                                    <tbody>
+                                        <t t-foreach="o.limit_ids" t-as="l">
+                                            <tr style="page-break-inside: avoid">
+                                                <td><span t-esc="l.sl_num"/></td>
+                                                <td><span t-esc="l.partner_id.name"/></td>
+                                                <td><span t-esc="'%.2f'%(l.value)"/></td>
+                                            </tr>
+                                         </t>
+                                    </tbody>
+                                </table>
+                                <footer>
                                 <p>Submitted by: <span t-field="o.requested_by"/></p>
                                 <p>First Approval by: <span t-field="o.approver1_id"/></p>
                                 <p>Final Approval by: <span t-field="o.approver2_id"/></p>
-                      <!--          <t t-foreach="docs" t-as="l">
-                                    <tr><span t-esc="l.requested_by"/></tr>
-                                    <tr><span t-esc="l.approver1_id"/></tr>
-                                    <tr><span t-esc="l.approver2_id"/></tr>
-                                    <tr><span t-esc="l.message_ids"/></tr>
-                                </t>
-                                <p style="text-align:center"> Create by Head of Sale | First Approveal by Head of Account | Final Approveal by Manager</p>
--->
                             </footer>
                         </div>
                     </t>
