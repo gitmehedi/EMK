@@ -8,6 +8,7 @@
     'depends': ['base', 'stock', 'purchase', 'product', 'pebbles_transfer_user'],
     'data': [
         'security/ir.model.access.csv',
+        'security/ir_rule.xml',
         'views/menu.xml',
         'views/stock_requisition_transfer_views.xml',
         'views/stock_requisition_approval_views.xml',
