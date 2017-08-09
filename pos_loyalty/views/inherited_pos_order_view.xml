@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+        <record id="inherited_view_pos_order_filter" model="ir.ui.view">
+            <field name="name">Inherited Point of Sale Search View</field>
+            <field name="model">pos.order</field>
+            <field name="inherit_id" ref="point_of_sale.view_pos_order_filter"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='date_order']" position="replace">
+                    <field name="pos_reference"/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</openerp>
