@@ -31,7 +31,6 @@
                                        options="{'no_quick_create': True, 'no_create_edit': True, 'no_open': True}"/>
                                 <field name="store_qty" readonly="1"/>
                                 <field name="quantity" readonly="1"/>
-                                <field name="receive_quantity" required="1"/>
                             </tree>
                         </field>
                     </sheet>
@@ -43,10 +42,13 @@
             <field name="name">Stock Requisition Transfer Tree View</field>
             <field name="model">stock.requisition.transfer</field>
             <field name="arch" type="xml">
-                <tree string="Stock Requisition Transfer Tree"  create="false" edit="false"
+                <tree string="Stock Requisition Transfer Tree" create="false" edit="false"
                       colors="blue:state == 'draft';red:state == 'submit';gray:state in ('receive','reject');green:state in ('approve','transfer');black:state in ('transfer')">
                     <field name="to_shop_id"/>
                     <field name="requested_id"/>
+                    <field name="approve_date"/>
+                    <field name="transfer_date"/>
+                    <field name="receive_date"/>
                     <field name="state"/>
                 </tree>
             </field>
@@ -60,6 +62,9 @@
                 <search string="Stock Requisition Transfer Search">
                     <field name="to_shop_id"/>
                     <field name="requested_id"/>
+                    <field name="approve_date"/>
+                    <field name="transfer_date"/>
+                    <field name="receive_date"/>
                 </search>
             </field>
         </record>

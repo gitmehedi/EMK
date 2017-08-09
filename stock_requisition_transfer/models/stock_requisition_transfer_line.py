@@ -8,7 +8,7 @@ class StockRequisitionTransferLine(models.Model):
     _name = 'stock.requisition.transfer.line'
 
 
-    store_qty = fields.Integer(string="Store Qty")
+    store_qty = fields.Integer(string="Store Quantity")
     quantity = fields.Integer(string="Quantity")
     receive_quantity = fields.Integer(string="Receive Quantity")
 
