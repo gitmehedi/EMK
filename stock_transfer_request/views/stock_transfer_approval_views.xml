@@ -5,7 +5,7 @@
             <field name="name">Stock Transfer Request Form View</field>
             <field name="model">stock.transfer.request</field>
             <field name="arch" type="xml">
-                <form string="Stock Transfer Request Form">
+                <form string="Stock Transfer Request Form"  create="false" edit="false">
                     <header>
                         <button name="action_draft" type="object" states="submit"
                                 string="Draft" class=""/>
@@ -45,7 +45,7 @@
             <field name="name">Stock Transfer Request Tree View</field>
             <field name="model">stock.transfer.request</field>
             <field name="arch" type="xml">
-                <tree string="Stock Transfer Request Tree"
+                <tree string="Stock Transfer Request Tree"  create="false" edit="false"
                       colors="blue:state == 'draft';red:state == 'submit';gray:state in ('receive','reject');green:state in ('approve','transfer');black:state in ('transfer')">
                     <field name="my_shop_id"/>
                     <field name="transfer_shop_id"/>
