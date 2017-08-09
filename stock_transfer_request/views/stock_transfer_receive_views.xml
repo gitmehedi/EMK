@@ -5,7 +5,7 @@
             <field name="name">Stock Transfer Receive Form View</field>
             <field name="model">stock.transfer.request</field>
             <field name="arch" type="xml">
-                <form string="Stock Transfer Receive Form" create="false" edit="false">
+                <form string="Stock Transfer Receive Form" create="false">
                     <header>
                         <button name="action_receive" type="object" states="transfer"
                                 string="Receive" class="oe_highlight"/>

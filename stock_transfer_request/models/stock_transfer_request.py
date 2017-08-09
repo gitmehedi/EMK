@@ -37,7 +37,7 @@ class StockTransferRequest(models.Model):
     is_transfer = fields.Boolean(string="Is Transfer", default=False)
     is_receive = fields.Boolean(string="Is Receive", default=False)
 
-    """ System User """
+    """ Approval Process User """
     submit_user_id = fields.Many2one('res.user', string="Submit User")
     approve_user_id = fields.Many2one('res.user', string="Approve User")
     transfer_user_id = fields.Many2one('res.user', string="Transfer User")
@@ -210,4 +210,4 @@ class StockTransferRequest(models.Model):
 
     @api.model
     def get_current_date(self):
-        return datetime.date.today()
+        return datetime.datetime.today()
