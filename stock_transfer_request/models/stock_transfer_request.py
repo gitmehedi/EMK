@@ -25,14 +25,12 @@ class StockTransferRequest(models.Model):
     receive_date = fields.Datetime(string="Receive Date")
 
     """ Relational Fields """
-    product_line_ids = fields.One2many('stock.transfer.request.line', 'stock_transfer_id',
-                                       readonly=True,
+    product_line_ids = fields.One2many('stock.transfer.request.line', 'stock_transfer_id', readonly=True,
                                        states={'draft': [('readonly', False)], 'transfer': [('readonly', False)]})
     my_shop_id = fields.Many2one('operating.unit', string="My Shop", required=True, ondelete="cascade",
                                  default=_default_operating_unit, store=True,
                                  readonly=True, states={'draft': [('readonly', False)]})
-    transfer_shop_id = fields.Many2one('operating.unit', string="To Shop", store=True, required=True,
-                                       ondelete="cascade",
+    transfer_shop_id = fields.Many2one('operating.unit', string="To Shop", store=True, required=True, ondelete="cascade",
                                        readonly=True, states={'draft': [('readonly', False)]})
     is_transfer = fields.Boolean(string="Is Transfer", default=False)
     is_receive = fields.Boolean(string="Is Receive", default=False)

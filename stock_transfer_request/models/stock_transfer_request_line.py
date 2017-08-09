@@ -7,7 +7,7 @@ class StockTransferRequestLine(models.Model):
     """
     _name = 'stock.transfer.request.line'
 
-    store_qty = fields.Integer(string="Store Qty", store=True)
+    store_qty = fields.Integer(string="Store Quantity", store=True)
     quantity = fields.Integer(string="Quantity", required=True)
     receive_quantity = fields.Integer(string="Receive Quantity")
 
