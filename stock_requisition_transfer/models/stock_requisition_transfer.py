@@ -11,6 +11,7 @@ class StockRequisitionTransfer(models.Model):
     """
     _name = 'stock.requisition.transfer'
     _rec_name = "to_shop_id"
+    _order = "id desc"
 
     @api.model
     def _default_operating_unit(self):
@@ -27,8 +28,8 @@ class StockRequisitionTransfer(models.Model):
     is_receive = fields.Boolean(string="Is Receive", default=False)
 
     """ States Fields """
-    state = fields.Selection([('draft', "Draft"), ('submit', "Submit"), ('approve', "Approve"),
-                              ('transfer', "Transfer"), ('receive', "Receive"), ('reject', "Reject")], default='draft')
+    state = fields.Selection([('draft', "Draft"), ('submit', "Submit"), ('approve', "Approved"),
+                              ('transfer', "Transfer"), ('receive', "Received"), ('reject', "Reject")], default='draft')
 
     @api.onchange('barcode')
     def _onchange_barcode(self):
@@ -40,10 +41,12 @@ class StockRequisitionTransfer(models.Model):
 
                 if self.state == 'transfer':
                     quant = self.env['stock.quant'].search([('product_id', '=', product.id),
-                                                            ('location_id', '=', self.get_location(self.to_shop_id.id))])
+                                                            (
+                                                            'location_id', '=', self.get_location(self.to_shop_id.id))])
                 else:
                     quant = self.env['stock.quant'].search([('product_id', '=', product.id),
-                                                            ('location_id', '=', self.get_location(self.requested_id.id))])
+                                                            ('location_id', '=',
+                                                             self.get_location(self.requested_id.id))])
 
                 sumval = sum([val.qty for val in quant])
 

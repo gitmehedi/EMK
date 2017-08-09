@@ -5,7 +5,7 @@
             <field name="name">Stock Requisition Transfer Form View</field>
             <field name="model">stock.requisition.transfer</field>
             <field name="arch" type="xml">
-                <form string="Stock Requisition Transfer Form">
+                <form string="Stock Requisition Transfer Form" create="false" edit="false">
                     <header>
                         <button name="action_transfer" type="object" states="approve"
                                 string="Transfer" class="oe_highlight"/>
@@ -43,9 +43,8 @@
             <field name="name">Stock Requisition Transfer Tree View</field>
             <field name="model">stock.requisition.transfer</field>
             <field name="arch" type="xml">
-                <tree string="Stock Requisition Transfer Tree" decoration-info="state=='draft'"
-                      decoration-success="state=='approve'" decoration-danger="state=='confirm'"
-                      decoration-muted="state in ('reject')">
+                <tree string="Stock Requisition Transfer Tree"  create="false" edit="false"
+                      colors="blue:state == 'draft';red:state == 'submit';gray:state in ('receive','reject');green:state in ('approve','transfer');black:state in ('transfer')">
                     <field name="to_shop_id"/>
                     <field name="requested_id"/>
                     <field name="state"/>
@@ -68,7 +67,8 @@
         <record id="stock_requisition_transfer_action" model="ir.actions.act_window">
             <field name="name">Stock Requisition Transfer</field>
             <field name="res_model">stock.requisition.transfer</field>
-            <field name="domain">[('is_transfer','=','1'),('state','in',('approve','transfer','receive','reject'))]</field>
+            <field name="domain">[('is_transfer','=','1'),('state','in',('approve','transfer','receive','reject'))]
+            </field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
         </record>
@@ -87,7 +87,7 @@
             <field name="act_window_id" ref="stock_requisition_transfer_action"/>
         </record>
 
-        <menuitem id="stock_requisition_transfer_menu" name="Requisition Transfer"
+        <menuitem id="stock_requisition_transfer_menu" name="Transfer"
                   sequence="15" action="stock_requisition_transfer_action" parent="menu_stock_transfer_root"
                   groups="pebbles_transfer_user.group_requisition_transfer_user"
         />

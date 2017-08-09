@@ -27,11 +27,11 @@
                         </div>
                         <group>
                             <group>
-                                <field name="to_shop_id" string="To Shop"
+                                <field name="requested_id" string="My Shop"
                                        options="{'no_quick_create': True, 'no_create_edit': True, 'no_open': True}"/>
                             </group>
                             <group>
-                                <field name="requested_id" string="My Shop"
+                                <field name="to_shop_id" string="To Shop"
                                        options="{'no_quick_create': True, 'no_create_edit': True, 'no_open': True}"/>
                             </group>
                         </group>
@@ -52,9 +52,8 @@
             <field name="name">Stock Requisition Tree View</field>
             <field name="model">stock.requisition.transfer</field>
             <field name="arch" type="xml">
-                <tree string="Stock Requisition Tree" decoration-info="state=='draft'"
-                      decoration-success="state=='approve'" decoration-danger="state=='confirm'"
-                      decoration-muted="state in ('reject')">
+                <tree string="Stock Requisition Tree"
+                colors="blue:state == 'draft';red:state == 'submit';gray:state in ('receive','reject');green:state in ('approve','transfer');black:state in ('transfer')">
                     <field name="to_shop_id"/>
                     <field name="requested_id"/>
                     <field name="state"/>
@@ -96,7 +95,7 @@
             <field name="act_window_id" ref="stock_requisition_action"/>
         </record>
 
-        <menuitem id="stock_requisition_menu" name="Requisition"
+        <menuitem id="stock_requisition_menu" name="Requisition/Receive"
                   sequence="5" action="stock_requisition_action" parent="menu_stock_transfer_root"
                 groups="pebbles_transfer_user.group_requisition_transfer_user"/>
     </data>
