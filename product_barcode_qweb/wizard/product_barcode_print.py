@@ -36,7 +36,7 @@ class ProductProduct(osv.osv_memory):
 
     }
     _defaults = {
-        'qty': 1
+        'qty': 0
     }
 
 class product_barcode_print(osv.osv_memory):
@@ -56,7 +56,8 @@ class product_barcode_print(osv.osv_memory):
             for record in variants:
                 product_barcode_ids.append({
                     'product_id': record,
-                    'parent_id': id
+                    'parent_id': id,
+                    'qty': 0
             })
         return product_barcode_ids
 
