@@ -45,9 +45,8 @@
             <field name="name">Stock Transfer Request Tree View</field>
             <field name="model">stock.transfer.request</field>
             <field name="arch" type="xml">
-                <tree string="Stock Transfer Request Tree" decoration-info="state=='draft'"
-                      decoration-success="state=='approve'" decoration-danger="state=='confirm'"
-                      decoration-muted="state in ('reject')">
+                <tree string="Stock Transfer Request Tree"
+                      colors="blue:state == 'draft';red:state == 'submit';gray:state in ('receive','reject');green:state in ('approve','transfer');black:state in ('transfer')">
                     <field name="my_shop_id"/>
                     <field name="transfer_shop_id"/>
                     <field name="state"/>
@@ -89,9 +88,8 @@
             <field name="act_window_id" ref="stock_transfer_approval_request_action"/>
         </record>
 
-        <menuitem id="stock_approval_request_menu" name="Transfer Approval"
+        <menuitem id="stock_approval_request_menu" name="Approval"
                   sequence="10" action="stock_transfer_approval_request_action" parent="menu_stock_transfer_root"
-                  groups="pebbles_transfer_user.group_requisition_transfer_approval_manager"
-        />
+                  groups="pebbles_transfer_user.group_requisition_transfer_approval_manager"/>
     </data>
 </openerp>

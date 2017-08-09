@@ -43,11 +43,10 @@
             <field name="name">Stock Transfer receive Tree View</field>
             <field name="model">stock.transfer.request</field>
             <field name="arch" type="xml">
-                <tree string="Stock Transfer receive Tree" decoration-info="state=='draft'"
-                      decoration-success="state=='approve'" decoration-danger="state=='confirm'"
-                      decoration-muted="state in ('reject')">
-                    <field name="my_shop_id"/>
-                    <field name="transfer_shop_id"/>
+                <tree string="Stock Transfer receive Tree"
+                      colors="blue:state == 'draft';red:state == 'submit';gray:state in ('receive','reject');green:state in ('approve','transfer');black:state in ('transfer')">
+                    <field name="my_shop_id" string="From Shop"/>
+                    <field name="transfer_shop_id" string="My Shop"/>
                     <field name="state"/>
                 </tree>
             </field>
@@ -59,8 +58,8 @@
             <field eval="10" name="priority"/>
             <field name="arch" type="xml">
                 <search string="Stock Transfer Receive Search">
-                    <field name="my_shop_id"/>
-                    <field name="transfer_shop_id"/>
+                    <field name="my_shop_id" string="From Shop"/>
+                    <field name="transfer_shop_id" string="My Shop"/>
                 </search>
             </field>
         </record>
@@ -87,7 +86,7 @@
             <field name="act_window_id" ref="stock_transfer_receive_action"/>
         </record>
 
-        <menuitem id="stock_transfer_receive_menu" name="Transfer Receive"
+        <menuitem id="stock_transfer_receive_menu" name="Receive"
                   sequence="15" action="stock_transfer_receive_action" parent="menu_stock_transfer_root"
                   groups="pebbles_transfer_user.group_requisition_transfer_user"/>
     </data>

@@ -31,8 +31,8 @@ class StockTransferRequest(models.Model):
     is_receive = fields.Boolean(string="Is Receive", default=False)
 
     """ States Fields """
-    state = fields.Selection([('draft', "Draft"), ('submit', "Submit"), ('approve', "Approve"),
-                              ('transfer', "Transfer"), ('receive', "Receive"), ('reject', "Reject")], default='draft')
+    state = fields.Selection([('draft', "Draft"), ('submit', "Submit"), ('approve', "Approved"),
+                              ('transfer', "Transfer"), ('receive', "Received"), ('reject', "Reject")], default='draft')
 
     @api.onchange('barcode')
     def _onchange_barcode(self):
