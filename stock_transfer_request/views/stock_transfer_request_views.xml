@@ -57,6 +57,9 @@
                       colors="blue:state == 'draft';red:state == 'submit';gray:state in ('receive','reject');green:state in ('approve','transfer');black:state in ('transfer')">
                     <field name="my_shop_id"/>
                     <field name="transfer_shop_id"/>
+                    <field name="approve_date"/>
+                    <field name="transfer_date"/>
+                    <field name="receive_date"/>
                     <field name="state"/>
                 </tree>
             </field>
@@ -70,6 +73,9 @@
                 <search string="Stock Transfer Request Search">
                     <field name="my_shop_id"/>
                     <field name="transfer_shop_id"/>
+                    <field name="approve_date"/>
+                    <field name="transfer_date"/>
+                    <field name="receive_date"/>
                 </search>
             </field>
         </record>

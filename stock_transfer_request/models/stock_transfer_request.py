@@ -17,18 +17,31 @@ class StockTransferRequest(models.Model):
         return self.env.user.default_operating_unit_id
 
     barcode = fields.Char(string='Product Barcode', size=20,
-                          readonly=True, states={'draft':[('readonly', False)]})
+                          readonly=True, states={'draft': [('readonly', False)]})
+
+    submit_date = fields.Datetime(string="Submit Date")
+    approve_date = fields.Datetime(string="Approve Date")
+    transfer_date = fields.Datetime(string="Transfer Date")
+    receive_date = fields.Datetime(string="Receive Date")
 
     """ Relational Fields """
     product_line_ids = fields.One2many('stock.transfer.request.line', 'stock_transfer_id',
-                                       readonly=True, states={'draft': [('readonly', False)], 'transfer':[('readonly', False)] })
+                                       readonly=True,
+                                       states={'draft': [('readonly', False)], 'transfer': [('readonly', False)]})
     my_shop_id = fields.Many2one('operating.unit', string="My Shop", required=True, ondelete="cascade",
                                  default=_default_operating_unit, store=True,
-                                  readonly=True, states={'draft': [('readonly', False)]})
-    transfer_shop_id = fields.Many2one('operating.unit', string="To Shop", store=True, required=True, ondelete="cascade",
-                                   readonly=True, states={'draft': [('readonly', False)]})
+                                 readonly=True, states={'draft': [('readonly', False)]})
+    transfer_shop_id = fields.Many2one('operating.unit', string="To Shop", store=True, required=True,
+                                       ondelete="cascade",
+                                       readonly=True, states={'draft': [('readonly', False)]})
     is_transfer = fields.Boolean(string="Is Transfer", default=False)
     is_receive = fields.Boolean(string="Is Receive", default=False)
+
+    """ System User """
+    submit_user_id = fields.Many2one('res.user', string="Submit User")
+    approve_user_id = fields.Many2one('res.user', string="Approve User")
+    transfer_user_id = fields.Many2one('res.user', string="Transfer User")
+    receive_user_id = fields.Many2one('res.user', string="Receive User")
 
     """ States Fields """
     state = fields.Selection([('draft', "Draft"), ('submit', "Submit"), ('approve', "Approved"),
@@ -43,7 +56,7 @@ class StockTransferRequest(models.Model):
                 list = [p.product_id.id for p in product_line_ids]
 
                 if self.state == 'transfer':
-                    location_id = self.env['pos.config'].search([('operating_unit_id','=',self.my_shop_id.id)])
+                    location_id = self.env['pos.config'].search([('operating_unit_id', '=', self.my_shop_id.id)])
 
                     quant = self.env['stock.quant'].search([('product_id', '=', product.id),
                                                             ('location_id', '=', self.get_location())])
@@ -83,10 +96,14 @@ class StockTransferRequest(models.Model):
     @api.one
     def action_submit(self):
         self.state = 'submit'
+        self.submit_date = self.get_current_date()
+        self.submit_user_id = self.get_login_user()
 
     @api.one
     def action_approve(self):
         self.state = 'approve'
+        self.approve_date = self.get_current_date()
+        self.approve_user_id = self.get_login_user()
 
     @api.one
     def action_transfer(self):
@@ -124,7 +141,8 @@ class StockTransferRequest(models.Model):
                 move_done.action_done()
 
         self.state = 'transfer'
-
+        self.transfer_date = self.get_current_date()
+        self.transfer_user_id = self.get_login_user()
         self.is_transfer = True
 
     @api.one
@@ -162,11 +180,15 @@ class StockTransferRequest(models.Model):
                 move_done.action_done()
 
         self.state = 'receive'
+        self.receive_date = self.get_current_date()
+        self.receive_user_id = self.get_login_user()
         self.is_receive = True
 
     @api.one
     def action_reject(self):
         self.state = 'reject'
+        self.receive_date = self.get_current_date()
+        self.receive_user_id = self.get_login_user()
 
     @api.multi
     def unlink(self):
@@ -181,3 +203,11 @@ class StockTransferRequest(models.Model):
         location = self.env['pos.config'].search([('operating_unit_id', '=', operating_unit)])
         if location:
             return location[0].stock_location_id.id
+
+    @api.model
+    def get_login_user(self):
+        return self.env.user.id
+
+    @api.model
+    def get_current_date(self):
+        return datetime.date.today()
