@@ -38,6 +38,7 @@ class SaleOrder(models.Model):
             product_pool = self.env['product.product'].search([('product_tmpl_id', '=', lines.product_id.ids)])
             if (lines.price_unit < product_pool.list_price):
                 is_double_validation = True
+                break;
             else:
                 is_double_validation = False
 
