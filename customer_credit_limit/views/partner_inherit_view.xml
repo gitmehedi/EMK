@@ -18,6 +18,7 @@
                                 <tree string="List" editable="bottom">
                                     <field  name="assign_date" />
                                     <field  name="value" />
+                                    <field  name="day_num" />
                                 </tree>
                             </field>
                         </page>

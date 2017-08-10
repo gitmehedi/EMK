@@ -56,20 +56,26 @@
 	                    <group>
 	                        <group>
 	                            <field name="credit_limit"/>
+								<field name="days"/>
 	                        </group>
 	                        <group>
 	                            <field name="approve_date"/>
 	                        </group>
-							<field name="requested_by" />
-							<field name="approver1_id" />
-							<field name="approver2_id" />
-
-							<field name="limit_ids" string="Customers">
-								<tree string="List" editable="bottom">
-									<field name="partner_id" options="{'no_quick_create':True,'no_create_edit':True,'no_open':True}"/>
-									<field name="value"/>
-								</tree>
-							</field>
+							<field name="requested_by" attrs="{'invisible': [('state','in',('draft','confirm','validate1','approve','cancel','refuse'))]}"/>
+							<field name="approver1_id" invisible = '1'/>
+							<field name="approver2_id" invisible = '1'/>
+							<notebook colspan="4">
+                                <page string="Customers">
+									<field name="limit_ids">
+										<tree string="List" editable="bottom">
+											<!--<field name="sl_num" invisible = '1'/>-->
+											<field name="partner_id" options="{'no_quick_create':True,'no_create_edit':True,'no_open':True}"/>
+											<field name="value"/>
+											<field  name="day_num"/>
+										</tree>
+									</field>
+								</page>
+							</notebook>
 	                    </group>
 
 	                </sheet>
