@@ -27,7 +27,7 @@
                                 <field name="product_id" readonly="1"
                                        options="{'no_quick_create': True, 'no_create_edit': True, 'no_open': True}"/>
                                 <field name="store_qty" readonly="1"/>
-                                <field name="quantity" readonly="1"/>
+                                <field name="quantity" sum="quantity" readonly="1"/>
                             </tree>
                         </field>
                     </sheet>

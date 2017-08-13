@@ -39,7 +39,7 @@
                             <tree string="Products" editable="bottom">
                                 <field name="product_id"
                                        options="{'no_quick_create': True, 'no_create_edit': True, 'no_open': True}"/>
-                                <field name="store_qty"/>
+                                <field name="store_qty" />
                                 <field name="quantity" sum="quantity"/>
                             </tree>
                         </field>
