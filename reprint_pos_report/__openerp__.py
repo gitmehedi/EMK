@@ -15,6 +15,7 @@
         'views/assets.xml',
         'report/reprint_sale_ticket.xml',
         'report/reprint_sale_ticket_view.xml',
+        'wizard/pos_product_return_view.xml',
         'views/inherit_pos_order_view.xml',
 
     ],
