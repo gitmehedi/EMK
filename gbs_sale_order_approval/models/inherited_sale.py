@@ -11,7 +11,7 @@ class SaleOrder(models.Model):
 
     state = fields.Selection([
         ('draft', 'Quotation'),
-        ('submit_quotation','Submit Quotation'),
+        ('submit_quotation','Confirmed'),
         ('validate', 'Second Approval'),
         ('sent', 'Quotation Sent'),
         ('sale', 'Sales Order'),
@@ -38,44 +38,17 @@ class SaleOrder(models.Model):
             product_pool = self.env['product.product'].search([('product_tmpl_id', '=', lines.product_id.ids)])
             if (lines.price_unit < product_pool.list_price):
                 is_double_validation = True
+                break;
             else:
                 is_double_validation = False
 
         if is_double_validation:
             self.write({'state': 'validate'}) #Go to two level approval process
-            #self.double_validation = True
         else:
             self.write({'state': 'sent'}) # One level approval process
-            #self.double_validation = False
 
 
     @api.multi
     def action_validate(self):
         self.state = 'sent'
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 

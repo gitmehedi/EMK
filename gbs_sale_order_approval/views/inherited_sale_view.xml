@@ -10,15 +10,18 @@
                 <data>
                     <header>
                         <button name="action_submit"
-                                groups="gbs_application_group.group_head_sale,gbs_application_group.group_head_account,gbs_application_group.group_cxo"
-                                attrs="{'invisible': [('state','in',('validate','sent','done','cancel','sale'))]}"
+                                groups="sales_team.group_sale_salesman_all_leads,sales_team.group_sale_salesman,gbs_application_group.group_head_sale,gbs_application_group.group_cxo"
+                                states="draft"
                                 type="object"
-                                string="Submit Quotation"/>
+                                class="btn-primary"
+                                string="Confirm"/>
+
                         <button name="action_validate"
                                 groups="gbs_application_group.group_head_account,gbs_application_group.group_cxo"
-                                attrs="{'invisible': [('state','in',('draft','sent','done','submit_quotation','cancel','sale'))]}"
-                                states="submit_quotation"
+                                attrs="{'invisible': [('double_validation','=',False)]}"
+                                states="validate"
                                 type="object"
+                                class="btn-primary "
                                 string="Validate" />
                     </header>
 
@@ -29,14 +32,13 @@
                                  string="Confirm Sale1"
                                  groups="gbs_application_group.group_head_sale,gbs_application_group.group_head_account"
                                  type="object"
-                                 class="btn-primary o_sale_confirm"/>
+                                 class="btn-primary o_sale_confirm" invisible="1"/>
                     </xpath>
 
                     <!--Approve Sale-->
                     <xpath expr="//button[@name='action_confirm' and @states='sent']" position="replace">
                         <button name="action_confirm" states="sent"
-                                groups="gbs_application_group.group_cxo"
-                                attrs="{'invisible': ['|', ('double_validation','=',False), ('state','in',('draft','submit_quotation','validate','sale','done'))]}   "
+                                groups="gbs_application_group.group_head_sale,gbs_application_group.group_cxo"
                                 string="Approve Sale"
                                 class="btn-primary o_sale_confirm"
                                 type="object"/>
@@ -68,7 +70,7 @@
                     </xpath>
 
                     <xpath expr="//field[@name='state']" position="replace">
-                        <field name="state" widget="statusbar" statusbar_visible="draft,submit_quotation,sent,sale"/>
+                        <field name="state" widget="statusbar" statusbar_visible="draft,sent,sale"/>
                     </xpath>
 
                     <xpath expr="//group/group/field[@name='payment_term_id']" position="after">
@@ -84,11 +86,12 @@
         </record>
 
         <!-- Add inherited menu here-->
-        <!--<menuitem name="Sales" id="sales_team.menu_base_partner" />-->
+        <menuitem name="Sales" id="sales_team.menu_base_partner"
+                  groups="sales_team.group_sale_salesman_all_leads,sales_team.group_sale_salesman,gbs_application_group.group_head_sale,gbs_application_group.group_cxo"/>
 
-         <!--<menuitem action="sale.action_orders"-->
-            <!--id="menu_sale_order" parent="sales_team.menu_sales" sequence="12"-->
-            <!--groups="gbs_application_group.group_head_sale,gbs_application_group.group_head_account,gbs_application_group.group_cxo"/>-->
+         <menuitem action="sale.action_orders"
+            id="menu_sale_order" parent="sales_team.menu_sales" sequence="12"
+            groups="sales_team.group_sale_salesman_all_leads,sales_team.group_sale_salesman,gbs_application_group.group_head_sale,gbs_application_group.group_cxo"/>
 
     </data>
 </odoo>
