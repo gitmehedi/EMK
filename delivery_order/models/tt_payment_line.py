@@ -4,7 +4,7 @@ class MrpDailyProductionLine(models.Model):
     _name = 'tt.payment.line'
     _description = 'Cash Payment Terms line'
 
-    ref_num = fields.Float("Ref.No")
+    ref_num = fields.Integer("Ref.No")
     bank = fields.Char("Bank")
     branch = fields.Char("Branch")
     amount = fields.Float("Amount")

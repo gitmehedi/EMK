@@ -4,12 +4,12 @@ class MrpDailyProductionLine(models.Model):
     _name = 'lc.payment.line'
     _description = 'L/C Payment Terms line'
 
-    number = fields.Float("Number")
+    number = fields.Integer("Number")
     bank = fields.Char("Bank")
     branch = fields.Char("Branch")
     amount = fields.Float("Amount")
     date = fields.Date('Date')
-    pi_no = fields.Float("PI No")
+    pi_no = fields.Integer("PI No")
     """ Relational Fields """
     pay_lc_id = fields.Many2one('delivery.order', ondelete='cascade')
 

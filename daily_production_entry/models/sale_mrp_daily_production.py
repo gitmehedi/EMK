@@ -14,8 +14,7 @@ class MrpDailyProduction(models.Model):
     """ All Selection fields """
     state = fields.Selection([
         ('draft', "Draft"),
-        ('applied', "Applied"),
-        ('approved', "Approved"),
+        ('approved', "Confirm"),
     ], default='draft')
 
     """All function which process data and operation"""
