@@ -13,6 +13,8 @@
         'views/stock_requisition_transfer_views.xml',
         'views/stock_requisition_approval_views.xml',
         'views/stock_requisition_request_views.xml',
+        'reports/stock_requisition_views.xml',
+        'reports/stock_requisition_menu.xml',
     ],
     "qweb": [
         'static/src/xml/template.xml',

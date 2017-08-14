@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<openerp>
+    <data>
+        <template id="stock_requisition">
+            <t t-call="report.html_container">
+                <div class="page">
+                    <div class="row mb32">
+                        <div class="col-xs-12">
+                            <h2 class="text-center">Stock Requisition Transfer</h2>
+                        </div>
+                    </div>
+                    <div class="row mb32" style="margin: 10mm 10mm 30mm 10mm;">
+                        <div class="col-xs-6">
+                            <p>
+                                <strong>Receive Shop Name:</strong>
+                                <span t-esc="record['transfer_shop_id']"/>
+                                <br/>
+                                <strong>Receive Date:</strong>
+                                <span t-esc="record['receive_date']"/>
+                            </p>
+                        </div>
+                        <div class="col-xs-5 col-xs-offset-1">
+                            <p>
+                                <strong>Transfer Shop Name:</strong>
+                                <span t-esc="record['my_shop_id']"/>
+                                <br/>
+                                <strong>Transfer Date:</strong>
+                                <span t-esc="record['transfer_date']"/>
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Report Body -->
+
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr colspan="4">
+                                <th class="text-center">Serial No</th>
+                                <th class="text-center">Name</th>
+                                <th class="text-center">Requested Quantity</th>
+                                <th class="text-center">Transfer Quantity</th>
+                                <th class="text-center">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <t t-foreach="data" t-as="o">
+                                <tr>
+                                    <td class="text-center">
+                                        <t t-esc="o['sn']"/>
+                                    </td>
+                                    <td>
+                                        <t t-esc="o['name']"/>
+                                    </td>
+                                    <td class="text-right">
+                                        <t t-esc="o['quantity']"/>
+                                    </td>
+                                    <td class="text-right">
+                                        <t t-esc="o['receive_quantity']"/>
+                                    </td>
+                                    <td>
+
+                                    </td>
+                                </tr>
+                            </t>
+                        </tbody>
+                    </table>
+                    <!-- End Report Body -->
+                    <div class="row mb32" style="margin: 30mm 10mm 10mm 10mm;">
+                        <div class="col-xs-6">
+                            <p>
+                                <strong>Signature:
+                                    <span style="color: ash;">_______________________</span>
+                                </strong>
+                                <br/>
+                                <strong>Transfered By:</strong>
+                                <span t-esc="record['receive_user_id']"/>
+                            </p>
+                        </div>
+                        <div class="col-xs-5 col-xs-offset-1">
+                            <p>
+                                <strong>Signature:
+                                    <span style="color: ash;">_______________________</span>
+                                </strong>
+                                <br/>
+                                <strong>Received By:</strong>
+                                <span t-esc="record['transfer_user_id']"/>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </t>
+        </template>
+    </data>
+</openerp>
