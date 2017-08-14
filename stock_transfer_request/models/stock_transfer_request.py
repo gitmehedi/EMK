@@ -36,10 +36,10 @@ class StockTransferRequest(models.Model):
     is_receive = fields.Boolean(string="Is Receive", default=False)
 
     """ Approval Process User """
-    submit_user_id = fields.Many2one('res.user', string="Submit User")
-    approve_user_id = fields.Many2one('res.user', string="Approve User")
-    transfer_user_id = fields.Many2one('res.user', string="Transfer User")
-    receive_user_id = fields.Many2one('res.user', string="Receive User")
+    submit_user_id = fields.Many2one('res.users', string="Submit User")
+    approve_user_id = fields.Many2one('res.users', string="Approve User")
+    transfer_user_id = fields.Many2one('res.users', string="Transfer User")
+    receive_user_id = fields.Many2one('res.users', string="Receive User")
 
     """ States Fields """
     state = fields.Selection([('draft', "Draft"), ('submit', "Submit"), ('approve', "Approved"),
