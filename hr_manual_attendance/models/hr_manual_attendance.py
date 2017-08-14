@@ -178,7 +178,7 @@ class HrManualAttendance(models.Model):
                 hr_att_pool = self.env['hr.attendance']
                 preAttData = hr_att_pool.search([('employee_id', '=', manual_attendance.employee_id.id),
                                                  ('check_out', '>', manual_attendance.check_in),
-                                                 ('check_in', '=', False)], limit=1, order='check_out desc')
+                                                 ('check_in', '=', False)], limit=1, order='check_out asc')
                 if preAttData:
                     timeDiffInHrs = (self.getDateTimeFromStr(preAttData.check_out) - self.getDateTimeFromStr(manual_attendance.check_in)).total_seconds() / 60 / 60
                     if timeDiffInHrs <= 15:

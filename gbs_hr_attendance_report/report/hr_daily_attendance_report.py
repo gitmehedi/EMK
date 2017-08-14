@@ -30,14 +30,21 @@ class GetDailyAttendanceReport(models.AbstractModel):
         preStartDate = requestedDate - day
         postEndDate = requestedDate + day
 
-
+        exclude_emp_pool = self.env['hr.excluded.employee'].search([])
+        exclude_emp_res = []
+        for i in exclude_emp_pool:
+            exclude_emp_res.append(i.acc_number)
 
         if data['department_id']:
             employeeList = emp_pool.search([('operating_unit_id', '=', data['operating_unit_id']),
-                                            ('department_id', '=', data['department_id']),('active', '=', True)])
+                                            ('department_id', '=', data['department_id']),
+                                            ('active', '=', True),('device_employee_acc','not in',exclude_emp_res)
+                                            ],order='department_id,employee_sequence desc')
 
         else:
-            employeeList = emp_pool.search([('operating_unit_id', '=', data['operating_unit_id']), ('active', '=', True)])
+            employeeList = emp_pool.search([('operating_unit_id', '=', data['operating_unit_id']),
+                                       ('active', '=', True),('device_employee_acc','not in',exclude_emp_res)
+                                       ],order='department_id,employee_sequence desc')
 
 
         att_summary["total_emp"] = len(employeeList)
