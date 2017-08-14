@@ -7,9 +7,7 @@
             # 'hr_attendance_dashboard_view.xml',
     ],
     'depends':
-        ['hr',
-         'hr_attendance',
-         'hr_employee_operating_unit'
+        [
          ],
     'installable': True,
 

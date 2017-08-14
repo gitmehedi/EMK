@@ -33,7 +33,23 @@ class AttendanceErrorDataProcessor(models.Model):
         hr_att_pool = self.env['hr.attendance']
 
         if row.check_in:
-            self.createDataFromError(row, employeeId, hr_att_pool)
+            preAttData = hr_att_pool.search([('employee_id', '=', employeeId),
+                                             ('check_out', '!=', False)], limit=1, order='check_out desc')
+
+            if preAttData and preAttData.check_in is False:
+                chk_out = self.getDateTimeFromStr(preAttData.check_out)
+                durationInHour = (self.getDateTimeFromStr(chk_out) - row.check_in).total_seconds() / 60 / 60
+                if durationInHour <= 15 and durationInHour >= 0:
+                    preAttData.write({'check_in': self.getDateTimeFromStr(row.check_in),
+                                      'worked_hours': durationInHour,
+                                      'write_date': datetime.datetime.now(),
+                                      'has_error': False,
+                                      'operating_unit_id': row.operating_unit_id})
+                else:
+                    self.createDataFromError(row, employeeId, hr_att_pool)
+            else:
+                self.createDataFromError(row, employeeId, hr_att_pool)
+            # self.createDataFromError(row, employeeId, hr_att_pool)
         elif row.check_out:
 
             preAttData = hr_att_pool.search([('employee_id', '=', employeeId),

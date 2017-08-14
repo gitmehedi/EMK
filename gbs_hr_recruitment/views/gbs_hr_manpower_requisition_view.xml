@@ -38,11 +38,11 @@
 					<header>
                         <button string="Confirm" name="action_confirm"
 								states="draft" type="object" class="oe_highlight"
-								groups="gbs_base_package.group_dept_manager,hr_recruitment.group_hr_recruitment_user,hr_recruitment.group_hr_recruitment_manager"/>
+								groups="gbs_base_package.group_dept_manager,hr_recruitment.group_hr_recruitment_manager"/>
 
                     	<button string="HOP Approve" name="action_hop_approve"
 								states="confirmed" type="object" class="oe_highlight"
-								groups="gbs_hr_manpower_requisition.group_head_of_plant,hr_recruitment.group_hr_recruitment_user,hr_recruitment.group_hr_recruitment_manager"
+								groups="gbs_application_group.group_head_of_plant"
 								/>
 
 						<button string="HR Approve" name="action_hr_approve"
@@ -55,13 +55,15 @@
 								groups="gbs_application_group.group_cxo"
 								/>
 
-                     	<button string="Decline" name="action_decline"
-								type="object" states="confirmed,hr_approve,cxo_approve"
-								/>
+                     	<button string="Decline" name="action_decline" attrs="{'invisible':[('check_edit_access','=',False)]}"
+								type="object"
+								groups="gbs_application_group.group_head_of_plant,hr_recruitment.group_hr_recruitment_manager,gbs_application_group.group_cxo"
+						/>
 
 						<button string="Reset To Draft" name="action_reset"
-								type="object" states="confirmed,hr_approve,cxo_approve"
-								/>
+								type="object" states="confirmed,hr_approve,cxo_approve,declined"
+								groups="gbs_application_group.group_head_of_plant,hr_recruitment.group_hr_recruitment_manager,gbs_application_group.group_cxo"
+						/>
 
 						<field name="state" widget="statusbar" statusbar_visible="draft,hr_approve,cxo_approve,approved"/>
 
@@ -86,6 +88,7 @@
 								<field name="req_no_of_employee" attrs="{'readonly':[('state','!=','draft')]}" />
 								<field name="approved_no_of_emp" />
 								<field name="comment_by_co_md" attrs="{'readonly':[('state','!=','draft')]}"/>
+								<field name="check_edit_access" invisible="1"/>
 							</group>
 							<field name="qualification" colspan="4" attrs="{'readonly':[('state','!=','draft')]}"/>
 							<field name="age" colspan="4" attrs="{'readonly':[('state','!=','draft')]}"/>
@@ -121,12 +124,16 @@
 		<menuitem name="Resumes and Letters" parent="hr_recruitment.menu_hr_recruitment_root" id="hr_recruitment.menu_crm_case_categ0_act_job02"
 				  action="hr_recruitment.hr_applicant_resumes" sequence="3" groups="hr_recruitment.group_hr_recruitment_user,hr_recruitment.group_hr_recruitment_manager"/>
 
-		<menuitem name="Manpower Requisition" parent="hr_recruitment.menu_hr_recruitment_root" id="main_menu_hr_manpower_requisition"
+		<menuitem name="Manpower Requisition"
+				  parent="hr_recruitment.menu_hr_recruitment_root"
+				  id="main_menu_hr_manpower_requisition"
 				  sequence="80"
-				  groups="gbs_base_package.group_dept_manager,hr_recruitment.group_hr_recruitment_user,hr_recruitment.group_hr_recruitment_manager"/>
+				  groups="gbs_base_package.group_dept_manager,gbs_application_group.group_head_of_plant,gbs_application_group.group_cxo,hr_recruitment.group_hr_recruitment_user,hr_recruitment.group_hr_recruitment_manager"/>
 
-		<menuitem name="Manpower Requisition" parent="main_menu_hr_manpower_requisition" id="menu_hr_manpower_requisition"
-				  groups="gbs_base_package.group_dept_manager,hr_recruitment.group_hr_recruitment_user,hr_recruitment.group_hr_recruitment_manager"
+		<menuitem name="Manpower Requisition"
+				  parent="main_menu_hr_manpower_requisition"
+				  id="menu_hr_manpower_requisition"
+				  groups="gbs_base_package.group_dept_manager,gbs_application_group.group_head_of_plant,hr_recruitment.group_hr_recruitment_user,hr_recruitment.group_hr_recruitment_manager,gbs_application_group.group_cxo"
 				  action="action_hr_manpower_requisition"/>
 
 	</data>
