@@ -89,11 +89,7 @@ class HROTRequisition(models.Model):
     def unlink(self):
         for a in self:
             if a.state != 'to_submit':
-                user = a.env.user.browse(self.env.uid)
-                if user.has_group('hr_attendance.group_hr_attendance_user'):
-                    pass
-                else:
-                    raise UserError(_('You have no access to delete this record.'))
+                raise UserError(_('You can not delete this.'))
             return super(HROTRequisition, self).unlink()
 
     ### Showing batch

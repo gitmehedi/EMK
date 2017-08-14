@@ -38,6 +38,21 @@ class HREmployeeRequisition(models.Model):
 
     factory_or_head_office = fields.Boolean(string='Is Head Office?')
 
+    check_edit_access = fields.Boolean(string='Check', compute='_compute_check_user')
+
+    @api.multi
+    def _compute_check_user(self):
+        user = self.env.user.browse(self.env.uid)
+        for i in self:
+            if user.has_group('hr_recruitment.group_hr_recruitment_manager') and i.state == 'hr_approve':
+                i.check_edit_access = True
+            elif user.has_group('gbs_application_group.group_head_of_plant') and i.state == 'confirmed':
+                i.check_edit_access = True
+            elif user.has_group('gbs_application_group.group_cxo') and i.state == 'cxo_approve':
+                i.check_edit_access = True
+            else:
+                i.check_edit_access = False
+
     @api.one
     @api.depends('department_id')
     def _compute_no_of_employee(self):

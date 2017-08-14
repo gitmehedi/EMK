@@ -15,8 +15,8 @@ class HRShiftAlter(models.Model):
     department_id = fields.Many2one('hr.department', related='employee_id.department_id', string='Department', store=True)
 
     alter_date = fields.Date(string='Alter Date')
-    duty_start = fields.Datetime(string='Duty Start')
-    duty_end = fields.Datetime(string='Duty End')
+    duty_start = fields.Datetime(string='Duty Start',required=True)
+    duty_end = fields.Datetime(string='Duty End',required=True)
     is_included_ot = fields.Boolean(string='Is OT')
 
     my_menu_check = fields.Boolean(string='Check',readonly=True)
@@ -54,8 +54,7 @@ class HRShiftAlter(models.Model):
     def action_draft(self):
         self.state = 'draft'
 
-        # Show a msg for applied & approved state should not be delete
-
+                # Show a msg for applied & approved state should not be delete
     @api.multi
     def unlink(self):
         for a in self:
@@ -63,7 +62,7 @@ class HRShiftAlter(models.Model):
                 raise UserError(_('You can not delete this.'))
         return super(HRShiftAlter, self).unlink()
 
-    ### User and state wise approve button hide function
+            ### User and state wise approve button hide function
     @api.multi
     def compute_check_first_approval(self):
         user = self.env.user.browse(self.env.uid)

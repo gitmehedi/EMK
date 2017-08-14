@@ -30,10 +30,12 @@
 					<header>
                         <button string="Confirm" name="action_confirm"
 								states="draft" type="object" class="oe_highlight"
+								groups="hr_recruitment.group_hr_recruitment_manager"
 								/>
 
 						<button string="Recommend" name="action_gm_approve"
 								states="gm_approve" type="object" class="oe_highlight"
+								groups="gbs_application_group.group_general_manager"
 								/>
 
 						<button string="Approve" name="action_cxo_approve"
@@ -42,11 +44,13 @@
 								/>
 
                      	<button string="Decline" name="action_decline"
-								type="object" states="gm_approve,cxo_approve"
+								type="object" attrs="{'invisible':[('check_edit_access','=',False)]}"
+								groups="hr_recruitment.group_hr_recruitment_manager,gbs_application_group.group_general_manager,gbs_application_group.group_cxo"
 								/>
 
 						<button string="Reset To Draft" name="action_reset"
 								type="object" states="gm_approve,cxo_approve"
+								groups="hr_recruitment.group_hr_recruitment_manager,gbs_application_group.group_general_manager,gbs_application_group.group_cxo"
 								/>
 
 						<field name="state" widget="statusbar" statusbar_visible="draft,gm_approve,cxo_approve,approved"/>
@@ -71,7 +75,7 @@
 								<field name="proposal_designation" attrs="{'readonly':[('state','!=','draft'),('check_edit_access','=',False)]}"/>
                                 <field name="expected_salary" attrs="{'readonly':[('state','!=','draft'),('check_edit_access','=',False)]}"/>
 								<field name="joining_date" attrs="{'readonly':[('state','!=','draft'),('check_edit_access','=',False)]}"/>
-								<field name="check_edit_access"/>
+								<field name="check_edit_access" invisible="1"/>
 							</group>
 							<field name="remarks" nolabel="1" placeholder="Remarks" colspan="4" attrs="{'readonly':[('check_edit_access','=',False)]}"/>
 						</group>
@@ -94,11 +98,10 @@
 
         <menuitem name="Internal Approval" parent="hr_recruitment.menu_hr_recruitment_root" id="main_menu_hr_internal_approval"
 				  sequence="81"
-				  groups="hr_recruitment.group_hr_recruitment_user,hr_recruitment.group_hr_recruitment_manager"/>
+				  groups="hr_recruitment.group_hr_recruitment_manager,gbs_application_group.group_general_manager,gbs_application_group.group_cxo"/>
 
 		<menuitem name="Internal Approval" parent="main_menu_hr_internal_approval" id="menu_hr_internal_approval"
-				  groups="hr_recruitment.group_hr_recruitment_user,hr_recruitment.group_hr_recruitment_manager"
-				  action="action_hr_internal_approval"/>
+				  groups="hr_recruitment.group_hr_recruitment_manager,gbs_application_group.group_general_manager,gbs_application_group.group_cxo"/>
 
 	</data>
 </openerp>

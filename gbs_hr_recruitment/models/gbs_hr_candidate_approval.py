@@ -31,7 +31,9 @@ class HRCandidateApproval(models.Model):
     def _compute_check_user(self):
         user = self.env.user.browse(self.env.uid)
         for i in self:
-            if user.has_group('hr_recruitment.group_hr_recruitment_manager') and i.state=='gm_approve':
+            if user.has_group('hr_recruitment.group_hr_recruitment_manager') and i.state=='draft':
+                i.check_edit_access = True
+            elif user.has_group('gbs_application_group.group_general_manager') and i.state=='gm_approve':
                 i.check_edit_access = True
             elif user.has_group('gbs_application_group.group_cxo') and i.state=='cxo_approve':
                 i.check_edit_access = True
