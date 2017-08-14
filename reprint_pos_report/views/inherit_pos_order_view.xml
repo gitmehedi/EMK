@@ -10,13 +10,9 @@
                     <button name="%(action_report_pos_sale_ticket)d" string="Reprint" type="action"
                             states="paid,done,invoiced"/>
                 </xpath>
-                <xpath expr="//button[@string='Payment']" position="replace">
-                    <button name="%(point_of_sale.action_pos_payment)d" string="Payment" class="oe_highlight" type="action"
-                            states="draft" context="{'pos_session_id' : session_id}"/>
-                    <button name="%(action_pos_proudct_return)d" string="Product Return" class="oe_highlight" type="action"
-                            states="draft" context="{'pos_session_id' : session_id}"/>
-                    <button string="Product Exchange" class="oe_highlight" type="action"
-                            states="draft" context="{'pos_session_id' : session_id}"/>
+                <xpath expr="//button[@string='Return Products']" position="replace">
+                     <button name="%(action_pos_proudct_return)d" string="Exchange Products" type="action"
+                             attrs="{'invisible':[('state','=','draft')]}"/>
                 </xpath>
             </field>
         </record>

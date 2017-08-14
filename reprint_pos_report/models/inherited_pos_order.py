@@ -1,8 +1,8 @@
 import time
 
-from openerp import models, fields
+from openerp import models, fields, api
 from openerp.tools.translate import _
-from openerp.osv import  osv
+from openerp.osv import osv
 
 
 class InheritedPosOrder(models.Model):
@@ -11,7 +11,7 @@ class InheritedPosOrder(models.Model):
     return_pos_ref = fields.Char(string="PoS Reference", required=False)
     order_id = fields.Many2one('pos.order', required=False)
 
-    def refund(self, cr, uid, ids, context=None):
+    def refund(self, cr, uid, ids,  context=None):
         """Create a copy of order  for refund order"""
         clone_list = []
         line_obj = self.pool.get('pos.order.line')
@@ -39,16 +39,22 @@ class InheritedPosOrder(models.Model):
 
                 # def unlink(self, cr, uid, ids, context=None):
 
-        abs = {
-            'name': _('Return Products'),
-            'view_type': 'form',
-            'view_mode': 'form',
-            'res_model': 'pos.order',
-            'res_id': clone_list[0],
-            'view_id': False,
-            'context': context,
-            'type': 'ir.actions.act_window',
-            'nodestroy': True,
-            'target': 'current',
-        }
-        return abs
+        return clone_list[0]
+
+
+class InheritedPosOrderLine(models.Model):
+    _inherit = 'pos.order.line'
+
+    def _check_return_prouduct_qty(self, cr, uid, ids, context=None):
+
+        record = self.browse(cr, uid, ids, context=context)
+        if record.qty < 0:
+            order = self.pool.get('pos.order.line').search(cr, uid,[('product_id','=',record.product_id.id),('order_id','=',record.order_id.order_id.id)])
+            if not order:
+                return False
+        return True
+
+    _constraints = [
+        (_check_return_prouduct_qty, "You cann't return product which didn't sold in last order!", ['qty']),
+
+    ]

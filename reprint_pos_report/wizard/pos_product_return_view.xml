@@ -10,7 +10,7 @@
                     <field name="product_ids" nolabel="1"/>
                 </group>
                 <footer>
-                    <button name="return_products" string="Return Product" type="object" class="oe_highlight"/>
+                    <button name="return_products" string="Exchange Products" type="object" class="oe_highlight"/>
                     or 
                     <button special="cancel" string="Cancel" class="oe_link"/>
                 </footer>
