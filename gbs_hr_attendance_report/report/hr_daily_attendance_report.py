@@ -4,6 +4,7 @@ from datetime import timedelta
 from openerp.addons.gbs_hr_attendance_utility.models.utility_class import Employee
 
 
+
 class GetDailyAttendanceReport(models.AbstractModel):
     _name='report.gbs_hr_attendance_report.report_daily_att_doc'
 
@@ -101,13 +102,21 @@ class GetDailyAttendanceReport(models.AbstractModel):
         emp_pool = self.env['hr.employee']
 
 
+        exclude_emp_pool=self.env['hr.excluded.employee'].search([])
+        exclude_emp_res=[]
+        for i in exclude_emp_pool:
+            exclude_emp_res.append(i.acc_number)
+
         if data['department_id']:
             emp_dept_ids = emp_pool.search([('operating_unit_id', '=', data['operating_unit_id']),
-                                       ('department_id', '=', data['department_id'])
-                                       ])
+                                            ('department_id', '=', data['department_id']),
+                                            ('active', '=', True),('device_employee_acc','not in',exclude_emp_res)
+                                            ],order='department_id,employee_sequence desc')
             res_emp_ids = emp_dept_ids.ids
         else:
-            emp_ids=emp_pool.search([('operating_unit_id', '=', data['operating_unit_id'])])
+            emp_ids = emp_pool.search([('operating_unit_id', '=', data['operating_unit_id']),
+                                       ('active', '=', True),('device_employee_acc','not in',exclude_emp_res)
+                                       ],order='department_id,employee_sequence desc')
             res_emp_ids = emp_ids.ids
 
         required_date = data['required_date']
@@ -192,19 +201,40 @@ class GetDailyAttendanceReport(models.AbstractModel):
             result_absent_list = self._cr.fetchall()
 
         data_total_present_employee = len(result_total_present)
-        data_total_absent_employee = len(res_emp_ids) - len(result_total_present)
+        # data_total_absent_employee = len(res_emp_ids) - len(result_total_present)
+        data_total_absent_employee = 5
         data_total_late_employee = len(result_total_late)
 
         data_absent_list = result_absent_list
         data_late_list =result_late_list
+
+        unset_rostering_emp=2
+        short_leave_emp=5
+        rest_emp=6
+        total_leave_employee=3
+        create_datetime="2017-05-27 06:02:25"
+        operating_unit_name="SPPL-HO"
+        company_name="Samuda Chemical Complex Ltd."
+        department_name="HR & Admin"
 
         docargs = {
             'required_date': data['required_date'],
             'total_present_employee':data_total_present_employee,
             'total_absent_employee':data_total_absent_employee,
             'total_late_employee':data_total_late_employee,
+            'total_leave_employee':total_leave_employee,
+
             'absent_list':data_absent_list,
-            'late_list':data_late_list
+            'late_list':data_late_list,
+
+            'unset_rostering_emp':unset_rostering_emp,
+            'short_leave_emp':short_leave_emp,
+            'rest_emp':rest_emp,
+
+            'create_datetime': create_datetime,
+            'operating_unit_name': operating_unit_name,
+            'company_name': company_name,
+            'department_name': department_name,
         }
 
         return self.env['report'].render('gbs_hr_attendance_report.report_daily_att_doc', docargs)
