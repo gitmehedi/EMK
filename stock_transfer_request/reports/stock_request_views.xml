@@ -36,6 +36,7 @@
                         <thead>
                             <tr colspan="4">
                                 <th class="text-center">Serial No</th>
+                                <th class="text-center">Barcode</th>
                                 <th class="text-center">Name</th>
                                 <th class="text-center">Transfer Quantity</th>
                                 <th class="text-center">Receive Quantity</th>
@@ -47,6 +48,9 @@
                                 <tr>
                                     <td class="text-center">
                                         <t t-esc="o['sn']"/>
+                                    </td>
+                                    <td>
+                                        <t t-esc="o['barcode']"/>
                                     </td>
                                     <td>
                                         <t t-esc="o['name']"/>
