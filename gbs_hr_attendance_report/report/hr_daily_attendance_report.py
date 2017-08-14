@@ -1,13 +1,105 @@
 from odoo import api, fields, models
-from datetime import datetime
+import datetime
+from datetime import timedelta
+from openerp.addons.gbs_hr_attendance_utility.models.utility_class import Employee
 
 
 class GetDailyAttendanceReport(models.AbstractModel):
     _name='report.gbs_hr_attendance_report.report_daily_att_doc'
 
+
+
+    @api.model
+    def render_html_5(self, docids, data=None):
+
+        emp_pool = self.env['hr.employee']
+
+        att_utility_pool = self.env['attendance.utility']
+
+        att_summary = {"total_emp": 0, "on_time_present":[],
+                       "late":[], "absent":[], "leave":[],
+                       "short_leave":[],"rest":[],
+                       "roster_obligation":[],"unworkable": 0,
+                       "holidays": 0}
+
+
+        requested_date = data['required_date']
+        day = datetime.timedelta(days=1)
+        requestedDate = att_utility_pool.getDateFromStr(requested_date)
+        preStartDate = requestedDate - day
+        postEndDate = requestedDate + day
+
+
+
+        if data['department_id']:
+            employeeList = emp_pool.search([('operating_unit_id', '=', data['operating_unit_id']),
+                                            ('department_id', '=', data['department_id']),('active', '=', True)])
+
+        else:
+            employeeList = emp_pool.search([('operating_unit_id', '=', data['operating_unit_id']), ('active', '=', True)])
+
+
+        att_summary["total_emp"] = len(employeeList)
+
+        for employee in employeeList:
+
+            employeeId = employee.id
+
+            dutyTimeMap = att_utility_pool.getDutyTimeByEmployeeId(employeeId, preStartDate, requested_date)
+            alterTimeMap = att_utility_pool.buildAlterDutyTime(requested_date, requested_date, employeeId)
+
+            # Getting Attendance for an employee
+            attendance_data = att_utility_pool.getAttendanceDataForDailyAtt(dutyTimeMap, employeeId, preStartDate, postEndDate)
+
+            if len(dutyTimeMap) != 0:  # Check Rostering data are entered or not
+                if alterTimeMap.get(att_utility_pool.getStrFromDate(requested_date)):  # Check this date is alter date
+                    alterDayDutyTime = alterTimeMap.get(att_utility_pool.getStrFromDate(requested_date))
+                    attendanceDayList = att_utility_pool.getAttendanceListByAlterDay(alterDayDutyTime, day, dutyTimeMap,
+                                                                         employeeId)
+
+                    att_summary = att_utility_pool.makeDecisionForADays(att_summary, attendanceDayList, requested_date,
+                                                       alterDayDutyTime, employee)
+
+                elif dutyTimeMap.get(att_utility_pool.getStrFromDate(requested_date)):  # Check this date is week end or not. If it is empty, then means this day is weekend
+                    currentDaydutyTime = dutyTimeMap.get(self.getStrFromDate(requested_date))
+                    attendanceDayList = self.getAttendanceListByDay(attendance_data, requested_date, currentDaydutyTime,
+                                                                    day, dutyTimeMap)
+                    att_summary = att_utility_pool.makeDecisionForADays(att_summary, attendanceDayList, requested_date,
+                                                       currentDaydutyTime, employee)
+                else:
+
+                    att_summary["rest"].append(Employee(employee))
+
+            else:
+                att_summary["roster_obligation"].append(Employee(employee))
+
+
+
+
+
+        result_total_present = []
+        result_total_late = []
+        result_late_list = []
+        result_absent_list = []
+
+
+        # docargs = {
+        #     'required_date': data['required_date'],
+        #     'total_present_employee': data_total_present_employee,
+        #     'total_absent_employee': data_total_absent_employee,
+        #     'total_late_employee': data_total_late_employee,
+        #     'absent_list': data_absent_list,
+        #     'late_list': data_late_list
+        # }
+
+        return self.env['report'].render('gbs_hr_attendance_report.report_daily_att_doc', docargs)
+
+
     @api.model
     def render_html(self, docids, data=None):
-        emp_pool=self.env['hr.employee']
+
+        emp_pool = self.env['hr.employee']
+
 
         if data['department_id']:
             emp_dept_ids = emp_pool.search([('operating_unit_id', '=', data['operating_unit_id']),
