@@ -1,4 +1,4 @@
-from odoo import models, fields, api
+from odoo import models, fields, api,SUPERUSER_ID
 import datetime
 from datetime import datetime
 from datetime import timedelta
@@ -55,6 +55,7 @@ class HrShortLeave(models.Model):
     can_reset = fields.Boolean('Can reset', compute='_compute_can_reset')
 
     first_approval = fields.Boolean('First Approval', compute='compute_check_first_approval')
+
 
     @api.depends('date_from', 'date_to')
     def _compute_total_hours(self):
@@ -138,7 +139,23 @@ class HrShortLeave(models.Model):
             values.update({'department_id': self.env['hr.employee'].browse(employee_id).department_id.id})
         holiday = super(HrShortLeave, self.with_context(mail_create_nolog=True, mail_create_nosubscribe=True)).create(values)
         holiday.add_follower(employee_id)
+        holiday._notify_approvers()
         return holiday
+
+    ### mail notification
+    @api.multi
+    def _notify_approvers(self):
+        """Input: res.user"""
+        self.ensure_one()
+        approvers = self.employee_id._get_employee_manager()
+        if not approvers:
+            return True
+        for approver in approvers:
+            self.sudo(SUPERUSER_ID).add_follower(approver.id)
+            if approver.sudo(SUPERUSER_ID).user_id:
+                self.sudo(SUPERUSER_ID)._message_auto_subscribe_notify(
+                    [approver.sudo(SUPERUSER_ID).user_id.partner_id.id])
+        return True
 
     @api.multi
     def write(self, values):

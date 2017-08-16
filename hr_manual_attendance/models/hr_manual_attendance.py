@@ -1,5 +1,5 @@
 from openerp import api
-from openerp import models, fields,_
+from openerp import models, fields,_,SUPERUSER_ID
 import datetime
 from openerp.exceptions import UserError, ValidationError
 
@@ -51,6 +51,8 @@ class HrManualAttendance(models.Model):
             "\nThe status is 'Approved', when manual attendance request is approved by manager.")    
 
     can_reset = fields.Boolean('Can reset', compute='_compute_can_reset')
+    user_id = fields.Many2one('res.users', string='User', related='employee_id.user_id', related_sudo=True, store=True,
+                              default=lambda self: self.env.uid, readonly=True)
 
 
     """
@@ -125,6 +127,33 @@ class HrManualAttendance(models.Model):
             raise ValidationError(('You can not enter signout date of {} days ago'.format(delta3)))
 
     """
+
+    @api.multi
+    def add_follower(self, employee_id):
+        employee = self.env['hr.employee'].browse(employee_id)
+        if employee.user_id:
+            self.message_subscribe_users(user_ids=employee.user_id.ids)
+
+    @api.model
+    def create(self, vals):
+        res = super(HrManualAttendance, self).create(vals)
+        res._notify_approvers()
+        return res
+
+    ### mail notification
+    @api.multi
+    def _notify_approvers(self):
+        """Input: res.user"""
+        self.ensure_one()
+        approvers = self.employee_id._get_employee_manager()
+        if not approvers:
+            return True
+        for approver in approvers:
+            self.sudo(SUPERUSER_ID).add_follower(approver.id)
+            if approver.sudo(SUPERUSER_ID).user_id:
+                self.sudo(SUPERUSER_ID)._message_auto_subscribe_notify(
+                    [approver.sudo(SUPERUSER_ID).user_id.partner_id.id])
+        return True
                   
     @api.multi
     def _compute_can_reset(self):
