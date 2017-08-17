@@ -77,6 +77,13 @@ class DeviceDetail(models.Model):
         attendanceErrorProcess.doErrorToSuccess()
 
     @api.multi
+    def action_set_duty_date(self):
+
+        attendanceErrorProcess = self.env['hr.attendance.error.data.temp']
+        attendanceErrorProcess.setDutyDate(self.operating_unit_id)
+
+
+    @api.multi
     def action_check_connection(self):
 
         isConnect = False

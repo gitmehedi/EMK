@@ -98,3 +98,12 @@ class AttendanceErrorDataProcessor(models.Model):
             return datetime.datetime.strptime(dateStr, "%Y-%m-%d %H:%M:%S")
         else:
             return None
+
+    def setDutyDate(self, operating_unit_id):
+        hr_att_pool = self.env['hr.attendance']
+        att_list = hr_att_pool.search([('attempt_set_duty_date', '<=', MAX_ATTEMPT_TO_SUCCESS),
+                                       ('duty_date', '=', None),
+                                       ('operating_unit_id', '=', operating_unit_id[0].id)], order='employee_id asc',limit=1000)
+
+        print datetime.datetime.now()
+

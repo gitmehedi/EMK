@@ -94,6 +94,9 @@
 									<group>
 										<button name="action_pull_error_data" type="object" string="Pull Error Data" class="oe_highlight"/>
 									</group>
+									<group>
+										<button name="action_set_duty_date" type="object" string="Set Duty Date" class="oe_highlight"/>
+									</group>
 								</group>
 	                        </page>
                         </notebook>
