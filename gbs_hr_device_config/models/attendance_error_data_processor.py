@@ -34,7 +34,7 @@ class AttendanceErrorDataProcessor(models.Model):
 
         if row.check_in:
             preAttData = hr_att_pool.search([('employee_id', '=', employeeId),
-                                             ('check_out', '!=', False)], limit=1, order='check_out desc')
+                                             ('check_out', '!=', False)], limit=1, order='check_out asc')
 
             if preAttData and preAttData.check_in is False:
                 chk_out = self.getDateTimeFromStr(preAttData.check_out)

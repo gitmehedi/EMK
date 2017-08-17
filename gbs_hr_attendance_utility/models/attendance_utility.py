@@ -259,3 +259,24 @@ class AttendanceUtility(models.Model):
 
     def getStrFromDate(self, date):
         return date.strftime('%Y.%m.%d')
+
+            ### Short Leave Check Method
+    def checkShortLeave(self,datetime_sl):
+        leave_pool=self.env['hr.short.leave'].search([('date_from', '<=', datetime_sl),
+                                                 ('date_to', '>=',datetime_sl )])
+        if leave_pool:
+            return True
+        else:
+            return False
+
+            ### Short Leave Duration
+    def getShortLeaveDuration(self,datetime_sl):
+        leave_pool = self.env['hr.short.leave'].search([('date_from', '<=', datetime_sl),
+                                                        ('date_to', '>=', datetime_sl)])
+        if leave_pool:
+            start_dt = fields.Datetime.from_string(leave_pool.date_from)
+            finish_dt = fields.Datetime.from_string(leave_pool.date_to)
+            diff = finish_dt - start_dt
+            mins = float(diff.total_seconds() / 60)
+            return mins
+        ##4.01666666667?

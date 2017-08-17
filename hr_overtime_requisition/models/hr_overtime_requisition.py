@@ -1,5 +1,5 @@
 from openerp import api
-from openerp import models, fields,_
+from openerp import models, fields,_,SUPERUSER_ID
 import datetime
 from openerp.exceptions import UserError, ValidationError
 
@@ -23,6 +23,9 @@ class HROTRequisition(models.Model):
 
     first_approval = fields.Boolean('First Approval', compute='compute_check_first_approval')
 
+    user_id = fields.Many2one('res.users', string='User', related='employee_id.user_id', related_sudo=True, store=True,
+                              default=lambda self: self.env.uid, readonly=True)
+
     state = fields.Selection([
         ('to_submit', "To Submit"),
         ('to_approve', "To Approve"),
@@ -30,6 +33,33 @@ class HROTRequisition(models.Model):
         ('approved', "Approved"),
         ('refuse', 'Refused'),
     ], default='to_submit')
+
+    @api.multi
+    def add_follower(self, employee_id):
+        employee = self.env['hr.employee'].browse(employee_id)
+        if employee.user_id:
+            self.message_subscribe_users(user_ids=employee.user_id.ids)
+
+    @api.model
+    def create(self, vals):
+        res = super(HROTRequisition, self).create(vals)
+        res._notify_approvers()
+        return res
+
+    ### mail notification
+    @api.multi
+    def _notify_approvers(self):
+        """Input: res.user"""
+        self.ensure_one()
+        approvers = self.employee_id._get_employee_manager()
+        if not approvers:
+            return True
+        for approver in approvers:
+            self.sudo(SUPERUSER_ID).add_follower(approver.id)
+            if approver.sudo(SUPERUSER_ID).user_id:
+                self.sudo(SUPERUSER_ID)._message_auto_subscribe_notify(
+                    [approver.sudo(SUPERUSER_ID).user_id.partner_id.id])
+        return True
 
 
     @api.constrains('from_datetime','to_datetime')
