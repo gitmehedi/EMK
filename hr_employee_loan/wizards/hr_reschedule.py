@@ -30,6 +30,7 @@ class HrLoanRescheduleWizard(models.TransientModel):
         loan_amt = loan.remaining_loan_amount
         repayment_date = datetime.datetime.strptime(self.new_repayment_date, '%Y-%m-%d')
         installament_amt = self.new_installment_amount
+        loan.installment_amount=installament_amt
         i = 1
         while loan_amt > 0:
             print i
