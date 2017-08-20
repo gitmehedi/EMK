@@ -15,6 +15,7 @@ class HrAttendance(models.Model):
     operating_unit_id = fields.Integer(string='Operating Unit Id', required=False)
 
     duty_date = fields.Date(string='Duty Date', required=False)
+    attempt_set_duty_date = fields.Integer(string='Duty Date', required=False,default=0)
     check_in = fields.Datetime(string="Check In", required=False)
 
     @api.depends('check_in', 'check_out')

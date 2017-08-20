@@ -41,7 +41,7 @@
 					<sheet>
 						<group>
 							<group>
-								<field name="employee_id"   attrs="{'readonly':[('my_menu_check','=',True)]}" options="{'no_quick_create':True,'no_create_edit':True,'no_open': True}"/>
+								<field name="employee_id"   attrs="{'readonly':['|', ('state','!=','draft'),('my_menu_check','=',True)]}" options="{'no_quick_create':True,'no_create_edit':True,'no_open': True}"/>
 								<field name="department_id" attrs="{'readonly':['|', ('state','=','validate'),('state','=','confirm'),('state','=','draft')]}" readonly="1" />
 							</group>
 							<group>
