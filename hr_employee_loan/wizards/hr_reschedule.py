@@ -17,7 +17,6 @@ class HrLoanRescheduleWizard(models.TransientModel):
 
     @api.multi
     def genarate_reschudle(self):
-
         ### Remove the Unpaid Schedule
         loan_pool = self.env['hr.employee.loan']
         loan_line_pool = self.env['hr.employee.loan.line']
