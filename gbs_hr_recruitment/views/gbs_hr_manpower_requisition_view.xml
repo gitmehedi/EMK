@@ -113,16 +113,33 @@
 			<field name="view_mode">tree,form</field>
 		</record>
 
-		<!--<menuitem name="Recruitment" id="hr_recruitment.menu_hr_recruitment_root" web_icon="hr_recruitment,static/description/icon.png"-->
-				   <!--sequence="80" groups="gbs_base_package.group_dept_manager,hr_recruitment.group_hr_recruitment_user"/>-->
-		<menuitem parent="hr_recruitment.menu_hr_recruitment_root" id="hr_recruitment.menu_hr_job_position" action="hr_recruitment.action_hr_job" sequence="1"
-			groups="hr_recruitment.group_hr_recruitment_user,hr_recruitment.group_hr_recruitment_manager"/>
+		<menuitem
+				name="Recruitment"
+				id="hr_recruitment.menu_hr_recruitment_root"
+				web_icon="hr_recruitment,static/description/icon.png"
+				sequence="80"
+				groups="gbs_base_package.group_dept_manager,gbs_application_group.group_head_of_plant,gbs_application_group.group_cxo,hr_recruitment.group_hr_recruitment_user,hr_recruitment.group_hr_recruitment_manager"/>
 
-		<menuitem id="hr_recruitment.menu_hr_recruitment_configuration" name="Configuration" parent="hr_recruitment.menu_hr_recruitment_root"
-        	sequence="100" groups="hr_recruitment.group_hr_recruitment_user,hr_recruitment.group_hr_recruitment_manager"/>
+		<menuitem
+				parent="hr_recruitment.menu_hr_recruitment_root"
+				id="hr_recruitment.menu_hr_job_position"
+				action="hr_recruitment.action_hr_job"
+				sequence="1"
+				groups="hr_recruitment.group_hr_recruitment_user,hr_recruitment.group_hr_recruitment_manager"/>
 
-		<menuitem name="Resumes and Letters" parent="hr_recruitment.menu_hr_recruitment_root" id="hr_recruitment.menu_crm_case_categ0_act_job02"
-				  action="hr_recruitment.hr_applicant_resumes" sequence="3" groups="hr_recruitment.group_hr_recruitment_user,hr_recruitment.group_hr_recruitment_manager"/>
+		<menuitem
+				id="hr_recruitment.menu_hr_recruitment_configuration"
+				name="Configuration" parent="hr_recruitment.menu_hr_recruitment_root"
+        		sequence="100"
+				groups="hr_recruitment.group_hr_recruitment_user,hr_recruitment.group_hr_recruitment_manager"/>
+
+		<menuitem
+				name="Resumes and Letters"
+				parent="hr_recruitment.menu_hr_recruitment_root"
+				id="hr_recruitment.menu_crm_case_categ0_act_job02"
+				action="hr_recruitment.hr_applicant_resumes"
+				sequence="3"
+				groups="hr_recruitment.group_hr_recruitment_user,hr_recruitment.group_hr_recruitment_manager"/>
 
 		<menuitem name="Manpower Requisition"
 				  parent="hr_recruitment.menu_hr_recruitment_root"
