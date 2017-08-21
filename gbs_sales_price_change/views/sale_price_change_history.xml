@@ -11,6 +11,7 @@
                     <field name="product_id"/>
                     <field name="list_price"/>
                     <field name="new_price"/>
+					<field name="currency_id"/>
 					<field name="approve_price_date"/>
 				</tree>
 			</field>
@@ -28,6 +29,7 @@
 							<field name="product_id"/>
 							<field name="list_price"/>
 							<field name="new_price"/>
+							<field name="currency_id"/>
 							<field name="approve_price_date"/>
 						</group>
 	                </sheet>
@@ -43,21 +45,21 @@
                 <search string="Search Products">
                     <group expand="0" string="Group By">
                         <filter string="Product" name = "group_product_id" context="{'group_by':'product_id'}"/>
+						<filter string="Currency" name = "group_currency_id" context="{'group_by':'currency_id'}"/>
                     </group>
                 </search>
             </field>
         </record>
 
-
 		<record id="action_product_sale_price_change_history" model="ir.actions.act_window">
 			<field name="name">Product Price History</field>
 			<field name="res_model">product.sale.history.line</field>
-			<field name="context">{'search_default_group_product_id': 1}</field>
+			<field name="context">{'search_default_group_product_id': 1,'search_default_group_currency_id': 1}</field>
+
 			<field name="view_mode">tree,form</field>
 		</record>
 
-        <!--<menuitem id="product_sale_price_change_history_menu_action" name="Product Price History"-->
-				  <!--groups="gbs_application_group.group_head_sale,gbs_application_group.group_head_account,gbs_application_group.group_derector"-->
-				   <!--parent="sale.menu_product_template_action" action="action_product_sale_price_change_history"/>-->
+
+
     </data>
 </odoo>
