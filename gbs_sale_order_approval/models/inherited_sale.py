@@ -5,9 +5,10 @@ class SaleOrder(models.Model):
     _inherit = "sale.order"
 
     credit_sales_or_lc = fields.Selection([
-        ('credit_sales', 'Credit Sales'),
-        ('lc_sales', 'LC Sales'),
-    ], string='Sale Order Type')
+        ('cash', 'Cash'),
+        ('credit_sales', 'Credit'),
+        ('lc_sales', 'L/C'),
+    ], string='Sale Order Type', required=True)
 
     state = fields.Selection([
         ('draft', 'Quotation'),
@@ -18,6 +19,12 @@ class SaleOrder(models.Model):
         ('done', 'Locked'),
         ('cancel', 'Cancelled'),
     ], string='Status', readonly=True, copy=False, index=True, track_visibility='onchange', default='draft')
+
+    pack_type = fields.Selection([
+        ('cylinder', 'Cylinder'),
+        ('cust_cylinder', 'Customer Cylinder'),
+        ('other', 'Others'),
+    ], string='Packing',required=True)
 
     @api.multi
     def _is_double_validation_applicable(self):
