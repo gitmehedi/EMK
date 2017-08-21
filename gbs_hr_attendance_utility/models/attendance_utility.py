@@ -250,6 +250,17 @@ class AttendanceUtility(models.Model):
         if dateStr:
             return self.getDateTimeFromStr(dateStr) + timedelta(hours=-6)
 
+    def convertStrDateTimeInc(self, dateStr):
+        if dateStr:
+            return self.getDateTimeFromStr(dateStr) + timedelta(hours=6)
+
+    def getDateTimeFromStr(self, dateStr):
+        if dateStr:
+            return datetime.datetime.strptime(dateStr, "%Y-%m-%d %H:%M:%S")
+        else:
+            return None
+
+
     # Utility Methods
     def getDateFromStr(self, dateStr):
         if dateStr:
