@@ -29,6 +29,7 @@ class SalePriceChange(models.Model):
         ('validate', 'Approved')
     ], string='State', readonly=True, track_visibility='onchange', copy=False, default='draft')
 
+    currency_id = fields.Many2one('res.currency', string="Currency")
 
     @api.onchange('product_id')
     def _onchange_product_form(self):
