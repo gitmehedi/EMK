@@ -80,7 +80,7 @@ class DeviceDetail(models.Model):
     def action_set_duty_date(self):
 
         attendanceErrorProcess = self.env['hr.attendance.error.data.temp']
-        attendanceErrorProcess.setDutyDate(self.operating_unit_id)
+        attendanceErrorProcess.setDutyDate(self.operating_unit_id[0].id)
 
 
     @api.multi
