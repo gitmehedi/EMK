@@ -135,7 +135,7 @@ class CustomerCommissionConfiguration(models.Model):
                 val_line['status'] = True
                 cusComLine.create(val_line)
 
-                # self.state = 'confirm'
+            self.state = 'confirm'
 
     @api.one
     def action_cancel(self):
