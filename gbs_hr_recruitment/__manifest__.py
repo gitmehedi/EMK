@@ -1,5 +1,6 @@
 {
     'name': 'GBS HR Recruitment',
+    'author': 'Genweb2',
     'version': '1.0',
     'category': 'Human Resources',
     'summary': 'Recruitment Process',

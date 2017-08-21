@@ -96,11 +96,16 @@
 			<field name="view_mode">tree,form</field>
 		</record>
 
-        <menuitem name="Internal Approval" parent="hr_recruitment.menu_hr_recruitment_root" id="main_menu_hr_internal_approval"
+        <menuitem name="Internal Approval"
+				  parent="hr_recruitment.menu_hr_recruitment_root"
+				  id="main_menu_hr_internal_approval"
 				  sequence="81"
 				  groups="hr_recruitment.group_hr_recruitment_manager,gbs_application_group.group_general_manager,gbs_application_group.group_cxo"/>
 
-		<menuitem name="Internal Approval" parent="main_menu_hr_internal_approval" id="menu_hr_internal_approval"
+		<menuitem name="Internal Approval"
+				  parent="main_menu_hr_internal_approval"
+				  id="menu_hr_internal_approval"
+				  action="action_hr_internal_approval"
 				  groups="hr_recruitment.group_hr_recruitment_manager,gbs_application_group.group_general_manager,gbs_application_group.group_cxo"/>
 
 	</data>

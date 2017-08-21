@@ -290,4 +290,16 @@ class AttendanceUtility(models.Model):
             diff = finish_dt - start_dt
             mins = float(diff.total_seconds() / 60)
             return mins
-        ##4.01666666667?
+
+            ### Get Grace Time
+    def getGraceTime(self,datetime_g):
+        get_grace_time_query = """SELECT grace_time FROM hr_attendance_grace_time 
+                                                             WHERE (%s between effective_from_date and effective_to_date) 
+                                                             OR (%s >= effective_from_date AND effective_to_date IS NULL)"""
+        self._cr.execute(get_grace_time_query, (datetime_g, datetime_g))
+        grace_time = self._cr.fetchone()
+        if grace_time:
+            mins = grace_time[0] * 60
+            return mins
+        else:
+            return 15.0
