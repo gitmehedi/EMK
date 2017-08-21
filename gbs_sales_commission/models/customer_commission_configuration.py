@@ -5,7 +5,11 @@ from odoo import api, fields, models
 
 class CustomerCommissionConfiguration(models.Model):
     _name = "customer.commission.configuration"
+    # _inherit = ['mail.thread', 'ir.needaction_mixin']
     _order = 'confirmed_date desc'
+
+    def _current_employee(self):
+        return self.env.user.id
 
     requested_date = fields.Date(string="Requested Date", required=True, default=datetime.date.today(),
                                  readonly=True, states={'draft': [('readonly', False)]})
@@ -30,11 +34,11 @@ class CustomerCommissionConfiguration(models.Model):
     customer_id = fields.Many2one('res.partner', string="Customer", domain="([('customer','=','True')])",
                                   readonly=True, states={'draft': [('readonly', False)]})
     requested_by_id = fields.Many2one('res.partner', string="Requested By", required=True,
-                                      default=lambda self: self.env.user.id,
+                                      default=_current_employee,
                                       readonly=True, states={'draft': [('readonly', False)]})
-    approved_user_id = fields.Many2one('res.partner', string="Approved By",
+    approved_user_id = fields.Many2one('res.partner', string="Approved By", default=_current_employee,
                                        readonly=True, states={'draft': [('readonly', False)]})
-    confirmed_user_id = fields.Many2one('res.partner', string="Confirmed By",
+    confirmed_user_id = fields.Many2one('res.partner', string="Confirmed By", default=_current_employee,
                                         readonly=True, states={'draft': [('readonly', False)]})
 
     config_product_ids = fields.One2many('customer.commission.configuration.product', 'config_parent_id',
@@ -43,12 +47,15 @@ class CustomerCommissionConfiguration(models.Model):
                                           readonly=True, states={'draft': [('readonly', False)]})
 
     """ State fields for containing various states """
-    state = fields.Selection(
-        [('draft', "Draft"), ('request', "Request"), ('approve', "Approve"), ('confirm', "Confirm"), ('done', "Done"),
-         ('close', "Closed")], default='draft')
+    state = fields.Selection([
+        ('draft', "Draft"),
+        ('request', "Request"),
+        ('approve', "Approve"),
+        ('confirm', "Confirm"),
+        ('done', "Done"),
+        ('close', "Closed")], readonly=True, track_visibility='onchange', copy=False, default='draft')
 
     """ All functions """
-
     @api.onchange('commission_type')
     def onchange_commission_type(self):
         if self.commission_type:
