@@ -9,6 +9,6 @@
     'depends':
         [
          ],
-    'installable': True,
+    #'installable': True,
 
 }
