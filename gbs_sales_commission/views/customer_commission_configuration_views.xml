@@ -8,23 +8,23 @@
         <field name="arch" type="xml">
             <form>
                 <header>
-                    <button name="action_request" type="object" states="draft"
-                            string="Request" class="oe_highlight"/>
-
-                    <button name="action_draft" type="object" states="request"
-                            string="Draft" class="oe_highlight"/>
-
-                    <button name="action_approve" type="object" states="request"
-                            string="Approve" class="oe_highlight"/>
-
-                    <button name="action_confirm" type="object" states="approve"
+                    <button name="action_validate" type="object" states="draft"
                             string="Confirm" class="oe_highlight"/>
 
-                    <button name="action_cancel" type="object" states="request,approve"
-                            string="Cancel" class="oe_highlight"/>
+                    <button name="action_draft" type="object" states="validate"
+                            string="Reset to Draft"/>
 
-                    <button name="action_done" type="object" states="confirm"
-                            string="Done" class="oe_highlight"/>
+                    <button name="action_approve" type="object" states="validate"
+                            string="Validate" class="oe_highlight"/>
+
+                    <button name="action_close" type="object" states="approve"
+                            string="Approve" class="oe_highlight"/>
+
+                    <button name="action_cancel" type="object" states="approve,validate"
+                            string="Refuse"/>
+
+                    <!--<button name="action_done" type="object" states="confirm"
+                            string="Done" class="oe_highlight"/>-->
 
                     <field name="state" widget="statusbar"/>
                 </header>
@@ -43,14 +43,14 @@
                             <field name="requested_by_id"
                                    options="{'no_open': True, 'no_create': True}"/>
                             <field name="approved_date"
-                                   attrs="{'invisible':['|', ('state','=','draft'),('state','=','approve')]}"/>
+                                   attrs="{'invisible':['|', ('state','=','draft'),('state','=','validate')]}"/>
                             <field name="approved_user_id"
-                                   attrs="{'invisible':['|', ('state','=','draft'),('state','=','approve')]}"
+                                   attrs="{'invisible':['|', ('state','=','draft'),('state','=','validate')]}"
                                    options="{'no_open': True, 'no_create': True}"/>
                             <field name="confirmed_date"
-                                   attrs="{'invisible': [('state','in',('draft','approve','confirm'))]}"/>
+                                   attrs="{'invisible': [('state','in',('draft','validate','approve'))]}"/>
                             <field name="confirmed_user_id"
-                                   attrs="{'invisible': [('state','in',('draft','approve','confirm'))]}"
+                                   attrs="{'invisible': [('state','in',('draft','validate','approve'))]}"
                                    options="{'no_open': True, 'no_create': True}"/>
                         </group>
                     </group>
