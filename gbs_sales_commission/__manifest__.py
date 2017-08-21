@@ -12,6 +12,8 @@
         'views/inherited_res_partner_views.xml',
         'views/inherited_sale_order_views.xml',
         'views/customer_commission_configuration_views.xml',
+        'security/ir.model.access.csv',
+        'security/ir_rule.xml',
         ],
     'description': 'GBS Sales Commission',
     'installable': True,
