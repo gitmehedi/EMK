@@ -29,7 +29,7 @@ class SalePriceChange(models.Model):
         ('validate', 'Approved')
     ], string='State', readonly=True, track_visibility='onchange', copy=False, default='draft')
 
-    currency_id = fields.Many2one('res.currency', string="Currency")
+    currency_id = fields.Many2one('res.currency', string="Currency", required=True)
 
     @api.onchange('product_id')
     def _onchange_product_form(self):
@@ -50,13 +50,20 @@ class SalePriceChange(models.Model):
         vals['new_price'] = self.new_price
         vals['sale_price_history_id'] = sale_price_obj.id
         vals['approve_price_date'] = datetime.datetime.now()
+        vals['currency_id'] = self.currency_id.id
 
         self.env['product.sale.history.line'].create(vals)
 
         product_pool = self.env['product.product'].search([('product_tmpl_id', '=', self.product_id.id)])
         product_pool_update = product_pool.write({'list_price': self.new_price})
 
+        product_pricelist = self.env['product.pricelist'].search([('currency_id', '=', self.currency_id.id)])
+
+        pricelist_pool = self.env['product.pricelist.item'].search([('product_tmpl_id', '=', self.product_id.id)])
+        pricelist_pool.write({'pricelist_id': product_pricelist.id})
+
         self.state = 'validate'
+
 
     @api.multi
     def action_validate(self):

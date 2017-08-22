@@ -10,3 +10,4 @@ class ProductSalePriceHistiryLine(models.Model):
     list_price = fields.Float(string='Old Price', readonly=True)
     new_price = fields.Float(string='New Price', required=True,readonly=True)
     approve_price_date = fields.Date(string='Approved Date',readonly=True)
+    currency_id = fields.Many2one('res.currency', string="Currency", readonly=True)
