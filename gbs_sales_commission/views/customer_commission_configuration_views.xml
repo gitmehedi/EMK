@@ -46,8 +46,7 @@
                             <field name="requested_date"/>
                             <field name="requested_by_id"
                                    options="{'no_open': True, 'no_create': True}"/>
-                            <field name="approved_date"
-                                   attrs="{'invisible':['|', ('state','=','draft'),('state','=','validate')]}"/>
+                            <field name="approved_date"/>
                             <field name="approved_user_id"
                                    attrs="{'invisible':['|', ('state','=','draft'),('state','=','validate')]}"
                                    options="{'no_open': True, 'no_create': True}"/>
