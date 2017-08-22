@@ -17,7 +17,8 @@
         'views/hr_short_leave_views.xml',
 
     ],
-
+    'summary': 'This module handles request of short leave',
+    'description':"Complete HR Short Leaves Program",
     'installable': True,
     'application': True,
 }

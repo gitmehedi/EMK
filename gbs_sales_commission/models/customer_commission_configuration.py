@@ -1,18 +1,24 @@
 import datetime
-
+import time
 from odoo import api, fields, models
 
 
 class CustomerCommissionConfiguration(models.Model):
     _name = "customer.commission.configuration"
+    # _inherit = ['mail.thread', 'ir.needaction_mixin']
     _order = 'confirmed_date desc'
+
+    def _current_employee(self):
+        return self.env.user.id
 
     requested_date = fields.Date(string="Requested Date", required=True, default=datetime.date.today(),
                                  readonly=True, states={'draft': [('readonly', False)]})
-    approved_date = fields.Date(string="Approved Date",
-                                readonly=True, states={'draft': [('readonly', False)]})
-    confirmed_date = fields.Date(string="Confirmed Date",
-                                 readonly=True, states={'draft': [('readonly', False)]})
+    approved_date = fields.Date('Approved Date',
+                   states = {'draft': [('invisible', True)],
+                             'validate': [('invisible', True)],
+                             'close': [('invisible',False),('readonly',True)],
+                             'approve': [('invisible',False),('readonly',True)]})
+    confirmed_date = fields.Date(string="Confirmed Date",readonly=True)
 
     status = fields.Boolean(string='Status', default=True, required=True)
 
@@ -30,11 +36,11 @@ class CustomerCommissionConfiguration(models.Model):
     customer_id = fields.Many2one('res.partner', string="Customer", domain="([('customer','=','True')])",
                                   readonly=True, states={'draft': [('readonly', False)]})
     requested_by_id = fields.Many2one('res.partner', string="Requested By", required=True,
-                                      default=lambda self: self.env.user.id,
+                                      default=_current_employee,
                                       readonly=True, states={'draft': [('readonly', False)]})
-    approved_user_id = fields.Many2one('res.partner', string="Approved By",
+    approved_user_id = fields.Many2one('res.partner', string="Approved By", default=_current_employee,
                                        readonly=True, states={'draft': [('readonly', False)]})
-    confirmed_user_id = fields.Many2one('res.partner', string="Confirmed By",
+    confirmed_user_id = fields.Many2one('res.partner', string="Confirmed By", default=_current_employee,
                                         readonly=True, states={'draft': [('readonly', False)]})
 
     config_product_ids = fields.One2many('customer.commission.configuration.product', 'config_parent_id',
@@ -43,12 +49,16 @@ class CustomerCommissionConfiguration(models.Model):
                                           readonly=True, states={'draft': [('readonly', False)]})
 
     """ State fields for containing various states """
-    state = fields.Selection(
-        [('draft', "Draft"), ('request', "Request"), ('approve', "Approve"), ('confirm', "Confirm"), ('done', "Done"),
-         ('close', "Closed")], default='draft')
+    state = fields.Selection([
+        ('draft', "To Submit"),
+        # ('request', "Request"),
+        ('validate', "To Approve"),
+        # ('confirm', "Confirm"),
+        ('approve', "Second Approval"),
+        ('close', "Approved")
+    ], readonly=True, track_visibility='onchange', copy=False, default='draft')
 
     """ All functions """
-
     @api.onchange('commission_type')
     def onchange_commission_type(self):
         if self.commission_type:
@@ -74,15 +84,19 @@ class CustomerCommissionConfiguration(models.Model):
         self.state = 'draft'
 
     @api.one
-    def action_request(self):
-        self.state = 'request'
-
-    @api.one
     def action_approve(self):
         self.state = 'approve'
+        return self.write({'state': 'approve', 'approved_date': time.strftime('%Y-%m-%d %H:%M:%S')})
 
     @api.one
-    def action_confirm(self):
+    def action_validate(self):
+        self.state = 'validate'
+
+    @api.one
+    def action_close(self):
+        self.state = 'close'
+    @api.one
+    def action_close(self):
         cusCom = self.env['customer.commission']
         cusComLine = self.env['customer.commission.line']
         customer_obj = self.env['res.partner']
@@ -128,12 +142,6 @@ class CustomerCommissionConfiguration(models.Model):
                 val_line['status'] = True
                 cusComLine.create(val_line)
 
-                # self.state = 'confirm'
+            self.state = 'close'
+            return self.write({'state': 'close', 'confirmed_date': time.strftime('%Y-%m-%d %H:%M:%S')})
 
-    @api.one
-    def action_cancel(self):
-        self.state = 'cancel'
-
-    @api.one
-    def action_done(self):
-        self.state = 'done'

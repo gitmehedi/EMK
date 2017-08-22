@@ -9,85 +9,59 @@
                     <div class="page" style="page-break-inside: auto">
                         <div class="row">
                             <div class="col-xs-12" style="text-align:center;">
-                                <h2><strong >Daily Attendance Report</strong></h2><h5>(<span t-esc="required_date"/>)</h5>
+                                <h2><strong >Daily Attendance</strong></h2>
                                 <hr></hr>
                             </div>
                         </div>
-                        <!--<div class="row">-->
-                        <!--<div class="col-xs-offset-6">-->
-                        <!--<div class="row">-->
-                        <!--<div class="col-xs-3"><font size="6">Report Create Time</font></div>-->
-                        <!--<div class="col-xs-3"><p t-esc="create_datetime"/></div>-->
-                        <!--</div>-->
-                        <!--</div>-->
-                        <!--</div>-->
-
                         <div class="row">
-                            <div class="col-xs-4"><strong>Company</strong></div>
-                            <div class="col-xs-5"><strong>: <span t-esc="company_name"/></strong></div>
+                            <div class="col-xs-4"><strong>Report Date</strong></div>
+                            <div class="col-xs-3"><strong>: <span t-esc="required_date"/></strong></div>
                         </div>
                         <div class="row">
-                            <div class="col-xs-4"><strong>Oparating Unit</strong></div>
-                            <div class="col-xs-5"><strong>: <span t-esc="operating_unit_name"/></strong></div>
+                            <div class="col-xs-4"><strong>Total Present Employee</strong></div>
+                            <div class="col-xs-3"><strong>: <span t-esc="total_present_employee"/></strong></div>
                         </div>
-
+                        <div class="row">
+                            <div class="col-xs-4"><strong>Total Absent Employee</strong></div>
+                            <div class="col-xs-3"><strong>: <span t-esc="total_absent_employee"/></strong></div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-4"><strong>Total Late Employee</strong></div>
+                            <div class="col-xs-3"><strong>: <span t-esc="total_late_employee"/></strong></div>
+                        </div>
                         <br></br>
-                        <!--<t t-if="department_name">-->
-                        <!--<div class="row">-->
-                        <!--<div class="col-xs-4"><strong>Department</strong></div>-->
-                        <!--<div class="col-xs-5"><strong>: <span t-esc="department_name"/></strong></div>-->
-                        <!--</div>-->
-                        <!--</t>-->
+                        <t t-if="total_absent_employee">
+                            <div>
+                                <div class="row">
+                                    <div class="col-xs-12" style="text-align:center;">
+                                        <h4><strong>Absent Employee List</strong></h4>
+                                    </div>
+                                </div>
+                                <div>
+                                    <table class="table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th>Sl</th>
+                                            <th>Name</th>
+                                            <th>Department</th>
+                                            <th>Designation</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <t t-foreach="absent_list" t-as="l">
+                                            <tr style="page-break-inside: avoid">
+                                                <td><span t-esc="l_index+1"/></td>
+                                                <td><span t-esc="l[0]"/></td>
+                                                <td><span t-esc="l[1]"/></td>
+                                                <td><span t-esc="l[2]"/></td>
+                                            </tr>
+                                        </t>
+                                    </tbody>
+                                </table>
+                                </div>
 
-                        <!--<div class="row">-->
-                        <!--<div class="col-xs-4"><strong>Report Date</strong></div>-->
-                        <!--<div class="col-xs-3"><strong>: <span t-esc="required_date"/></strong></div>-->
-                        <!--</div>-->
-                        <div class="row">
-                            <div class="col-xs-6">
-                                <div class="row">
-                                    <div class="col-xs-8"><strong>Total Present Employee</strong></div>
-                                    <div class="col-xs-3"><strong>: <span t-esc="total_present_employee"/></strong></div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-xs-8"><strong>Total Late Employee</strong></div>
-                                    <div class="col-xs-3"><strong>: <span t-esc="total_late_employee"/></strong></div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-xs-8"><strong>Total Absent Employee</strong></div>
-                                    <div class="col-xs-3"><strong>: <span t-esc="total_absent_employee"/></strong></div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-xs-8"><strong>Total Leave Employee</strong></div>
-                                    <div class="col-xs-3"><strong>: <span t-esc="total_leave_employee"/></strong></div>
-                                </div>
                             </div>
-                            <div class="col-xs-6">
-                                <t t-if="unset_rostering_emp">
-                                    <div class="row">
-                                        <div class="col-xs-8"><strong>Unset Roster Employee</strong></div>
-                                        <div class="col-xs-3"><strong>: <span t-esc="unset_rostering_emp"/></strong></div>
-                                    </div>
-                                </t>
-                                <t t-if="short_leave_emp">
-                                    <div class="row">
-                                        <div class="col-xs-8"><strong>Short leave Employee</strong></div>
-                                        <div class="col-xs-3"><strong>: <span t-esc="short_leave_emp"/></strong></div>
-                                    </div>
-                                </t>
-                                <t t-if="rest_emp">
-                                    <div class="row">
-                                        <div class="col-xs-8"><strong>Rest Employee</strong></div>
-                                        <div class="col-xs-3"><strong>: <span t-esc="rest_emp"/></strong></div>
-                                    </div>
-                                </t>
-                            </div>
-                        </div>
-
-
-
-                        <br></br>
-
+                        </t>
                         <t t-if="total_late_employee">
                             <div>
                                 <div class="row">
@@ -98,7 +72,7 @@
                                 <table class="table table-bordered">
                                     <thead>
                                         <tr>
-                                            <th>SL</th>
+                                            <th>Sl</th>
                                             <th>Name</th>
                                             <th>Department</th>
                                             <th>Designation</th>
@@ -119,41 +93,6 @@
                                 </table>
                             </div>
                         </t>
-
-                        <t t-if="total_absent_employee">
-                            <div>
-                                <div class="row">
-                                    <div class="col-xs-12" style="text-align:center;">
-                                        <h4><strong>Absent Employee List</strong></h4>
-                                    </div>
-                                </div>
-                                <div>
-                                    <table class="table table-bordered">
-                                        <thead>
-                                            <tr>
-                                                <th>SL</th>
-                                                <th>Name</th>
-                                                <th>Department</th>
-                                                <th>Designation</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <t t-foreach="absent_list" t-as="l">
-                                                <tr style="page-break-inside: avoid">
-                                                    <td><span t-esc="l_index+1"/></td>
-                                                    <td><span t-esc="l[0]"/></td>
-                                                    <td><span t-esc="l[1]"/></td>
-                                                    <td><span t-esc="l[2]"/></td>
-                                                </tr>
-                                            </t>
-                                        </tbody>
-                                    </table>
-                                </div>
-
-                            </div>
-                        </t>
-
-
                     </div>
                     <!--</t>-->
                 </t>

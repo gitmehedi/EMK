@@ -2,15 +2,33 @@ from odoo import api, fields, models
 
 
 class CustomerCommissionConfigurationCustomer(models.Model):
-    _name="customer.commission.configuration.customer"
-    _order='id desc'
+    _name = "customer.commission.configuration.customer"
+    _order = 'id desc'
 
-    old_value= fields.Float(string="Old Value", digits=(16,2), readonly=True)
-    new_value= fields.Float(string="New Value", digits=(16,2), required=True)
-    status = fields.Boolean(string='Status',default=True, required=True)
+    old_value = fields.Float(string="Old Value", compute='store_old_value', digits=(16, 2), store=True)
+    new_value = fields.Float(string="New Value", digits=(16, 2), required=True)
+    status = fields.Boolean(string='Status', default=True, required=True)
 
     """ Relational Fields """
     customer_id = fields.Many2one('res.partner', string="Customer", required=True, domain="([('customer','=','True')])")
     config_parent_id = fields.Many2one('customer.commission.configuration', ondelete='cascade')
 
+    @api.onchange('customer_id')
+    def onchange_customer(self):
+        self.old_value = 0
+        if self.customer_id and self.config_parent_id.product_id:
+            commission = self.env['customer.commission'].search(
+                [('customer_id', '=', self.customer_id.id), ('product_id', '=', self.config_parent_id.product_id.id),
+                 ('status', '=', True)])
 
+            self.old_value = commission.commission_rate if commission else 0
+
+    @api.depends('customer_id')
+    def store_old_value(self):
+        for rec in self:
+            if rec.customer_id and rec.config_parent_id.product_id:
+                commission = self.env['customer.commission'].search(
+                    [('customer_id', '=', rec.customer_id.id), ('product_id', '=', rec.config_parent_id.product_id.id),
+                     ('status', '=', True)])
+
+                rec.old_value = commission.commission_rate if commission else 0
