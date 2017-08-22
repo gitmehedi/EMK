@@ -11,9 +11,10 @@ class SalePriceChange(models.Model):
     def _current_employee(self):
         return self.env['hr.employee'].search([('user_id', '=', self.env.uid)], limit=1)
 
-    product_id = fields.Many2one('product.product', domain=[('sale_ok', '=', True)], string='Product', required=True)
+    product_id = fields.Many2one('product.product', domain=[('sale_ok', '=', True)],
+                                 states={'confirm': [('readonly', True)], 'validate1': [('readonly', True)], 'validate': [('readonly', True)]}, string='Product', required=True)
     list_price = fields.Float(string='Old Price')
-    new_price = fields.Float(string='New Price', required=True)
+    new_price = fields.Float(string='New Price', states={'confirm': [('readonly', True)], 'validate1': [('readonly', True)],'validate': [('readonly', True)]}, required=True)
     request_date = fields.Datetime(string='Request Date', default=date.today(), readonly=True)
     requested_by = fields.Many2one('hr.employee', string="Requested By", default=_current_employee, readonly=True)
     approver1_id = fields.Many2one('hr.employee', string='First Approval', default=_current_employee, readonly=True)
@@ -29,7 +30,7 @@ class SalePriceChange(models.Model):
         ('validate', 'Approved')
     ], string='State', readonly=True, track_visibility='onchange', copy=False, default='draft')
 
-    currency_id = fields.Many2one('res.currency', string="Currency", required=True)
+    currency_id = fields.Many2one('res.currency', string="Currency", states={'confirm': [('readonly', True)], 'validate1': [('readonly', True)],'validate': [('readonly', True)]}, required=True)
     company_id = fields.Many2one('res.company', 'Company',
                                  default=lambda self: self.env['res.company']._company_default_get('gbs_sales_price_change'),
                                  required=True)
@@ -65,9 +66,9 @@ class SalePriceChange(models.Model):
         pricelist_pool = self.env['product.pricelist.item'].search([('product_tmpl_id', '=', self.product_id.id)])
 
         if pricelist_pool:
-            pricelist_pool.write({'pricelist_id': product_pricelist.id})
+            pricelist_pool.write({'fixed_price':self.new_price, 'pricelist_id': product_pricelist.id})
         else:
-            pricelist_pool.create({'product_tmpl_id':self.product_id.id, 'pricelist_id': product_pricelist.id})
+            pricelist_pool.create({'fixed_price':self.new_price, 'product_tmpl_id':self.product_id.id, 'pricelist_id': product_pricelist.id})
 
         self.state = 'validate'
 
