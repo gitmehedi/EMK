@@ -18,7 +18,7 @@ class CustomerCommissionConfiguration(models.Model):
                              'validate': [('invisible', True)],
                              'close': [('invisible',False),('readonly',True)],
                              'approve': [('invisible',False),('readonly',True)]})
-    confirmed_date = fields.Date(string="Confirmed Date",readonly=True)
+    confirmed_date = fields.Date(string="Confirmed Date", _defaults=lambda *a: time.strftime('%Y-%m-%d'),readonly=True)
 
     status = fields.Boolean(string='Status', default=True, required=True)
 
@@ -143,5 +143,5 @@ class CustomerCommissionConfiguration(models.Model):
                 cusComLine.create(val_line)
 
             self.state = 'close'
-            return self.write({'state': 'close', 'confirmed_date': time.strftime('%Y-%m-%d %H:%M:%S')})
+
 
