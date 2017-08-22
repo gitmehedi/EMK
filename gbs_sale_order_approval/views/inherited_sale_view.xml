@@ -39,7 +39,7 @@
                     <xpath expr="//button[@name='action_confirm' and @states='sent']" position="replace">
                         <button name="action_confirm" states="sent"
                                 groups="gbs_application_group.group_head_sale,gbs_application_group.group_cxo"
-                                string="Approve Sale"
+                                string="Approve"
                                 class="btn-primary o_sale_confirm"
                                 type="object"/>
                     </xpath>
@@ -80,6 +80,12 @@
                     <xpath expr="//group/group/field[@name='payment_term_id']" position="before">
                         <field name="double_validation" invisible="1"/>
                     </xpath>
+
+                    <xpath expr="//group/group/field[@name='payment_term_id']" position="before">
+                        <field name="pack_type"/>
+                    </xpath>
+
+
 
                 </data>
             </field>

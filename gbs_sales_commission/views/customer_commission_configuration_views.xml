@@ -8,23 +8,27 @@
         <field name="arch" type="xml">
             <form>
                 <header>
-                    <button name="action_request" type="object" states="draft"
-                            string="Request" class="oe_highlight"/>
+                    <button name="action_validate" type="object" states="draft" string="Confirm" class="oe_highlight"
+                    groups="gbs_application_group.group_head_account,gbs_application_group.group_head_sale,gbs_application_group.group_cxo"/>
 
-                    <button name="action_draft" type="object" states="request"
-                            string="Draft" class="oe_highlight"/>
+                    <button name="action_draft" type="object"
+                            states="validate" string="Reset to Draft"
+                            groups="gbs_application_group.group_head_account,gbs_application_group.group_cxo"/>
 
-                    <button name="action_approve" type="object" states="request"
-                            string="Approve" class="oe_highlight"/>
+                    <button name="action_approve" type="object" states="validate"
+                            string="Validate" class="oe_highlight"
+                            groups="gbs_application_group.group_cxo,gbs_application_group.group_head_account"/>
 
-                    <button name="action_confirm" type="object" states="approve"
-                            string="Confirm" class="oe_highlight"/>
+                    <button name="action_close" type="object" states="approve"
+                            string="Approve" class="oe_highlight"
+                            groups="gbs_application_group.group_cxo"/>
 
-                    <button name="action_cancel" type="object" states="request,approve"
-                            string="Cancel" class="oe_highlight"/>
+                    <button name="action_cancel" type="object" states="approve,validate"
+                            string="Refuse"
+                            groups="gbs_application_group.group_head_account,gbs_application_group.group_cxo"/>
 
-                    <button name="action_done" type="object" states="confirm"
-                            string="Done" class="oe_highlight"/>
+                    <!--<button name="action_done" type="object" states="confirm"
+                            string="Done" class="oe_highlight"/>-->
 
                     <field name="state" widget="statusbar"/>
                 </header>
@@ -42,11 +46,15 @@
                             <field name="requested_date"/>
                             <field name="requested_by_id"
                                    options="{'no_open': True, 'no_create': True}"/>
-                            <field name="approved_date"/>
+                            <field name="approved_date"
+                                   attrs="{'invisible':['|', ('state','=','draft'),('state','=','validate')]}"/>
                             <field name="approved_user_id"
+                                   attrs="{'invisible':['|', ('state','=','draft'),('state','=','validate')]}"
                                    options="{'no_open': True, 'no_create': True}"/>
-                            <field name="confirmed_date"/>
+                            <field name="confirmed_date"
+                                   attrs="{'invisible': [('state','in',('draft','validate','approve'))]}"/>
                             <field name="confirmed_user_id"
+                                   attrs="{'invisible': [('state','in',('draft','validate','approve'))]}"
                                    options="{'no_open': True, 'no_create': True}"/>
                         </group>
                     </group>
@@ -88,8 +96,12 @@
 
                         </form>
                     </field>
-
                 </sheet>
+
+                <!--<div class="oe_chatter">-->
+                    <!--<field name="message_follower_ids" widget="mail_followers"/>-->
+                    <!--<field name="message_ids" widget="mail_thread"/>-->
+                <!--</div>-->
             </form>
         </field>
     </record>
