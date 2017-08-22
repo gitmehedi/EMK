@@ -1,6 +1,7 @@
 from odoo import api, fields, models
 from datetime import date
 import datetime
+import time
 
 class SalePriceChange(models.Model):
     _name = 'sale.price.change'
@@ -17,10 +18,13 @@ class SalePriceChange(models.Model):
     new_price = fields.Float(string='New Price', states={'confirm': [('readonly', True)], 'validate1': [('readonly', True)],'validate': [('readonly', True)]}, required=True)
     request_date = fields.Datetime(string='Request Date', default=date.today(), readonly=True)
     requested_by = fields.Many2one('hr.employee', string="Requested By", default=_current_employee, readonly=True)
-    approver1_id = fields.Many2one('hr.employee', string='First Approval', default=_current_employee, readonly=True)
-    approver1_date = fields.Datetime(string='First Approval Date', default=date.today(), readonly=True)
-    approver2_id = fields.Many2one('hr.employee', string='Second Approval', default=_current_employee, readonly=True)
-    approver2_date = fields.Datetime(string='Second Approval Date', default=date.today(), readonly=True)
+
+    approver1_id = fields.Many2one('hr.employee', string='First Approval', readonly=True)
+    approver2_id = fields.Many2one('hr.employee', string='Second Approval', readonly=True)
+
+    approver1_date = fields.Datetime(string='First Approval Date', readonly=True)
+    approver2_date = fields.Datetime(string='Second Approval Date', readonly=True)
+
     state = fields.Selection([
         ('draft', 'To Submit'),
         ('cancel', 'Cancelled'),
@@ -70,12 +74,14 @@ class SalePriceChange(models.Model):
         else:
             pricelist_pool.create({'fixed_price':self.new_price, 'product_tmpl_id':self.product_id.id, 'pricelist_id': product_pricelist.id})
 
-        self.state = 'validate'
+        return self.write({'approver2_id':self.env.user.employee_ids.id, 'state': 'validate', 'approver2_date': time.strftime('%Y-%m-%d %H:%M:%S')})
 
 
     @api.multi
     def action_validate(self):
-        self.state = 'validate1'
+       # self.approver1_id = self.env.user.employee_ids.id
+        return self.write({'approver1_id':self.env.user.employee_ids.id, 'state': 'validate1', 'approver1_date': time.strftime('%Y-%m-%d %H:%M:%S')})
+
 
     @api.multi
     def action_refuse(self):
