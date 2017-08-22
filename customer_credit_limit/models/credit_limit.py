@@ -14,7 +14,7 @@ class customer_creditlimit_assign(models.Model):
 
     name = fields.Char('Name', required=True,
            states={'confirm': [('readonly', True)],'validate1': [('readonly', True)],'approve': [('readonly',True)]})
-    approve_date = fields.Date('Approve Date',
+    approve_date = fields.Date('Approved Date',
                    states = {'draft': [('invisible', True)],'confirm': [('invisible', True)],'validate1': [('invisible', True)], 'approve': [('invisible',False),('readonly',True)]})
     credit_limit = fields.Float('Limit',required=True,
                    states={'confirm': [('readonly', True)], 'validate1': [('readonly', True)], 'approve': [('readonly', True)]})
