@@ -60,11 +60,14 @@ class SalePriceChange(models.Model):
         product_pool = self.env['product.product'].search([('product_tmpl_id', '=', self.product_id.id)])
         product_pool_update = product_pool.write({'list_price': self.new_price})
 
-        # Need to add company_id on search
         product_pricelist = self.env['product.pricelist'].search([('currency_id', '=', self.currency_id.id), ('company_id','=', self.company_id.id)])
 
         pricelist_pool = self.env['product.pricelist.item'].search([('product_tmpl_id', '=', self.product_id.id)])
-        pricelist_pool.write({'pricelist_id': product_pricelist.id})
+
+        if pricelist_pool:
+            pricelist_pool.write({'pricelist_id': product_pricelist.id})
+        else:
+            pricelist_pool.create({'product_tmpl_id':self.product_id.id, 'pricelist_id': product_pricelist.id})
 
         self.state = 'validate'
 
