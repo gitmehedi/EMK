@@ -55,7 +55,9 @@ class DeviceDetail(models.Model):
 
 
 
-    last_update = fields.Datetime(string='Last Update')
+    last_update = fields.Datetime(string='Update On(Pull)')
+
+    duty_date_set_last_update = fields.Datetime(string='Updated On(Duty Date)')
 
     """ Relational Fields """
     device_lines = fields.One2many('hr.attendance.device.line', 'device_detail_id', string='Devices')
@@ -81,6 +83,7 @@ class DeviceDetail(models.Model):
 
         attendanceErrorProcess = self.env['hr.attendance.error.data.temp']
         attendanceErrorProcess.setDutyDate(self.operating_unit_id[0].id)
+        self.duty_date_set_last_update = datetime.datetime.now()
 
 
     @api.multi

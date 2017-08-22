@@ -54,6 +54,27 @@ class AttendanceUtility(models.Model):
 
         return alterTimeMap
 
+
+    def buildAlterDutyTimeForDailyAtt(self,startDate, endDate, employeeId):
+        att_query = """SELECT alter_date, (duty_start+ interval '6h') AS duty_start,
+                        (duty_end+ interval '6h') AS duty_end,
+                        is_included_ot, (ot_start+ interval '6h') AS ot_start,
+                         (ot_end+ interval '6h') AS ot_end, grace_time
+                        FROM hr_shift_alter
+                        WHERE employee_id = %s AND state = 'approved' AND
+                        alter_date BETWEEN %s AND %s
+                        ORDER BY alter_date ASC"""
+        self._cr.execute(att_query, (employeeId,startDate,endDate))
+        alterLines = self._cr.fetchall()
+        alterTimeMap = {}
+        for i, alter in enumerate(alterLines):
+            alterTimeMap[self.getStrFromDate(self.getDateTimeFromStr(alter[1]).date())] = DutyTime(self.getDateTimeFromStr(alter[1]),
+                                                                            self.getDateTimeFromStr(alter[2]),
+                                                                            alter[3], self.getDateTimeFromStr(alter[4]),
+                                                                            self.getDateTimeFromStr(alter[5]), alter[6])
+
+        return alterTimeMap
+
     def printDutyTime(self, preStartDate, postEndDate, dutyTimeMap):
         day = datetime.timedelta(days=1)
         print ">>>>>>>>>>>>>>>>>> For Test Data >>>>>>>>>>>>>>>>>"
