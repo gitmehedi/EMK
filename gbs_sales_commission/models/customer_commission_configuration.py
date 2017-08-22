@@ -1,5 +1,5 @@
 import datetime
-
+import time
 from odoo import api, fields, models
 
 
@@ -13,10 +13,12 @@ class CustomerCommissionConfiguration(models.Model):
 
     requested_date = fields.Date(string="Requested Date", required=True, default=datetime.date.today(),
                                  readonly=True, states={'draft': [('readonly', False)]})
-    approved_date = fields.Date(string="Approved Date",
-                                readonly=True, states={'draft': [('readonly', False)]})
-    confirmed_date = fields.Date(string="Confirmed Date",
-                                 readonly=True, states={'draft': [('readonly', False)]})
+    approved_date = fields.Date('Approved Date',
+                   states = {'draft': [('invisible', True)],
+                             'validate': [('invisible', True)],
+                             'close': [('invisible',False),('readonly',True)],
+                             'approve': [('invisible',False),('readonly',True)]})
+    confirmed_date = fields.Date(string="Confirmed Date",readonly=True)
 
     status = fields.Boolean(string='Status', default=True, required=True)
 
@@ -84,6 +86,7 @@ class CustomerCommissionConfiguration(models.Model):
     @api.one
     def action_approve(self):
         self.state = 'approve'
+        return self.write({'state': 'approve', 'approved_date': time.strftime('%Y-%m-%d %H:%M:%S')})
 
     @api.one
     def action_validate(self):
@@ -140,5 +143,5 @@ class CustomerCommissionConfiguration(models.Model):
                 cusComLine.create(val_line)
 
             self.state = 'close'
-
+            return self.write({'state': 'close', 'confirmed_date': time.strftime('%Y-%m-%d %H:%M:%S')})
 
