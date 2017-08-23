@@ -96,8 +96,9 @@
         
         <menuitem name = "Customer Credit Limit" id ="menu_action_creditlimit" parent="sales_team.menu_base_partner"
             sequence="6"/>
-		<menuitem action="action_creditlimit_tree" id="menu_action_creditlimit_tree" parent="menu_action_creditlimit"
-            sequence="7"/>
+		<menuitem action="action_creditlimit_tree"
+			id="menu_action_creditlimit_tree" parent="menu_action_creditlimit" sequence="7"
+			groups="gbs_application_group.group_head_account,gbs_application_group.group_head_sale,gbs_application_group.group_cxo"/>
 
     </data>
 </odoo>
