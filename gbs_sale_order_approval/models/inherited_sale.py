@@ -39,23 +39,32 @@ class SaleOrder(models.Model):
 
     @api.multi
     def action_submit(self):
-        #@Todo: Need to add checkings for Customer Commission, Customer Credit Limit and type of Sale Order i.e. LC/Credit
         is_double_validation = None
+
         for lines in self.order_line:
             product_pool = self.env['product.product'].search([('product_tmpl_id', '=', lines.product_id.ids)])
-            if (lines.price_unit < product_pool.list_price):
-                is_double_validation = True
-                break;
-            else:
-                is_double_validation = False
+            cust_commission_pool = self.env['customer.commission'].search([('customer_id', '=', self.partner_id.id),('product_id', '=', lines.product_id.ids)])
+
+            if (self.credit_sales_or_lc == 'cash'):
+                if (lines.commission_rate < cust_commission_pool.commission_rate
+                        or lines.price_unit < product_pool.list_price):
+
+                    is_double_validation = True
+                    break;
+                else:
+                    is_double_validation = False
+
+            elif (self.credit_sales_or_lc == 'credit_sales'):
+                print '------CREDIT-----'
+
+            elif (self.credit_sales_or_lc == 'lc_sales'):
+                print '-----LC-----'
 
         if is_double_validation:
             self.write({'state': 'validate'}) #Go to two level approval process
         else:
             self.write({'state': 'sent'}) # One level approval process
 
-
     @api.multi
     def action_validate(self):
         self.state = 'sent'
-

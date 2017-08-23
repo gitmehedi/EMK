@@ -7,3 +7,7 @@ access_product_sale_history_line2,access_product_sale_history_line2,model_produc
 access_sale_price_change2,access_sale_price_change2,model_sale_price_change,gbs_application_group.group_cxo,1,1,1,1
 access_sale_price_change23,access_sale_price_change23,product.model_product_product,gbs_application_group.group_cxo,1,1,1,1
 access_sale_price_change231,access_sale_price_change231,product.model_product_template,gbs_application_group.group_cxo,1,1,1,1
+access_prod_price,access_prod_price,product.model_product_pricelist_item,gbs_application_group.group_cxo,1,1,1,1
+access_stock_mv,access_stock_mv,stock.model_stock_move,gbs_application_group.group_cxo,1,1,1,1
+access_stock_mv1,access_stock_mv1,stock.model_stock_move,gbs_application_group.group_head_account,1,1,1,1
+access_stock_mv2,access_stock_mv2,stock.model_stock_move,gbs_application_group.group_head_sale,1,1,1,1
