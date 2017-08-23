@@ -57,34 +57,32 @@
 
                         <field name="state" widget="statusbar"/>
                     </header>
-                    <sheet>
-                        <div class="oe_title">
-                            <h1>
-                                <label string="Distribution Reference: "  />
-                                <field name="name" class="oe_inline" readonly="1"/>
-                            </h1>
-                        </div>
+                    <div class="oe_title">
+                        <h1>
+                            <label string="Distribution Reference: "/>
+                            <field name="name" class="oe_inline" readonly="1"/>
+                        </h1>
+                    </div>
+                    <group>
                         <group>
-                            <group>
-                                <field name="product_tmp_id"
-                                       options="{'no_open': 1,'no_create': 1, 'no_create_edit': 1}"
-                                       attrs="{'readonly': [('id', '!=', False)]}"/>
-                            </group>
-                            <group>
-                                <field name="warehoue_id"
-                                       options="{'no_open': 1,'no_create': 1, 'no_create_edit': 1}"
-                                       attrs="{'readonly': [('id', '!=', False)]}"/>
-                            </group>
+                            <field name="product_tmp_id"
+                                   options="{'no_open': 1,'no_create': 1, 'no_create_edit': 1}"
+                                   attrs="{'readonly': [('id', '!=', False)]}"/>
                         </group>
-                        <notebook attrs="{'invisible':[('state','=','draft')]}">
-                            <page string="Distribution Matrix" >
-                                <field name="stock_distribution_lines_ids" widget="x2many_2d_distribution_matrix"
-                                       field_x_axis="pos_shop_id" field_y_axis="product_id"
-                                       field_value="distribute_qty"
-                                       attrs="{'readonly':['|',('state','=','confirm'),('state','=','transfer')]}"/>
-                            </page>
-                        </notebook>
-                    </sheet>
+                        <group>
+                            <field name="warehoue_id"
+                                   options="{'no_open': 1,'no_create': 1, 'no_create_edit': 1}"
+                                   attrs="{'readonly': [('id', '!=', False)]}"/>
+                        </group>
+                    </group>
+                    <notebook attrs="{'invisible':[('state','=','draft')]}">
+                        <page string="Distribution Matrix">
+                            <field name="stock_distribution_lines_ids" widget="x2many_2d_distribution_matrix"
+                                   field_x_axis="pos_shop_id" field_y_axis="product_id"
+                                   field_value="distribute_qty"
+                                   attrs="{'readonly':['|',('state','=','confirm'),('state','=','transfer')]}"/>
+                        </page>
+                    </notebook>
                 </form>
             </field>
         </record>
