@@ -74,7 +74,7 @@
                     </xpath>
 
                     <xpath expr="//group/group/field[@name='payment_term_id']" position="after">
-                        <field name="credit_sales_or_lc"/>
+                        <field name="credit_sales_or_lc" attrs="{'readonly':[('state','in',('sent','validate','done','cancel','sale'))]}"/>
                     </xpath>
 
                     <xpath expr="//group/group/field[@name='payment_term_id']" position="before">
@@ -82,10 +82,32 @@
                     </xpath>
 
                     <xpath expr="//group/group/field[@name='payment_term_id']" position="before">
-                        <field name="pack_type"/>
+                        <field name="pack_type" attrs="{'readonly':[('state','in',('sent','validate','done','cancel','sale'))]}"/>
                     </xpath>
 
+                     <xpath expr="//field[@name='payment_term_id']" position="replace">
+                            <field name="payment_term_id" attrs="{'readonly':[('state','in',('sent','validate','done','cancel','sale'))]}" options="{'no_create': True}"/>
+                    </xpath>
 
+                    <xpath expr="//field[@name='partner_id']" position="replace">
+                        <field name="partner_id" attrs="{'readonly':[('state','in',('sent','validate','done','cancel','sale'))]}" domain="[('customer','=',True)]" context="{'search_default_customer':1, 'show_address': 1}" options='{"always_reload": True}'/>
+                    </xpath>
+                    <xpath expr="//field[@name='date_order']" position="replace">
+                        <field name="date_order" attrs="{'invisible': [('state', 'in', ['sale', 'done', 'cancel'])],'readonly':[('state','in',('sent','validate','done','cancel','sale'))]}"/>
+                    </xpath>
+
+                    <xpath expr="//field[@name='validity_date']" position="replace">
+                        <field name="validity_date" attrs="{'invisible': [('state', 'in', ['sale', 'done'])],'readonly':[('state','in',('sent','validate','done','cancel','sale'))]}"/>
+                    </xpath>
+
+                    <xpath expr="//field[@name='pricelist_id']" position="replace">
+                         <field name="pricelist_id" groups="product.group_sale_pricelist"
+                                attrs="{'readonly':[('state','in',('sent','validate','done','cancel','sale'))]}"/>
+                    </xpath>
+
+                    <xpath expr="//field[@name='price_subtotal']" position="replace">
+                        <field name="price_subtotal" attrs="{'readonly':[('state','in',('sent','validate','done','cancel','sale'))]}" widget="monetary" groups="sale.group_show_price_subtotal"/>
+                    </xpath>
 
                 </data>
             </field>
