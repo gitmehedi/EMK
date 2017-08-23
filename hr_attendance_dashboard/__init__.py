@@ -1,1 +1,1 @@
-import hr_attendance_dashboard
+import models
