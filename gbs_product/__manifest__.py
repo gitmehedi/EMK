@@ -1,11 +1,13 @@
 {
-    "name": "Employee Blood Group",
+    "name": "GBS PRODUCT",
     "author": "Genweb2 Ltd.",
     "website": "http://www.genweb2.com",
-    "category": "Human Resources",
-    "depends": ["hr"],
+    "category": "Sale",
+    "depends": ["sale",
+                "product",
+                ],
     "data": [
-        "views/hr_emplyee_blood_group_view.xml",
+        "views/inherited_product_temp_gen_view.xml",
     ],
 
     'installable': True,
