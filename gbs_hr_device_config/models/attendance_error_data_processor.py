@@ -113,7 +113,7 @@ class AttendanceErrorDataProcessor(models.Model):
         att_list = hr_att_pool.search([('attempt_set_duty_date', '<=', MAX_ATTEMPT_TO_SUCCESS),
                                        ('duty_date', '=', None),
                                        ('check_in', '!=', None),
-                                       ('operating_unit_id', '=', operating_unit_id)], order='id, employee_id DESC', limit=1000)
+                                       ('operating_unit_id', '=', operating_unit_id)], order='id, employee_id DESC', limit=3000)
 
         if att_list:
             self.setDutyDateByEmployee(startDate, endDate, att_list, day, att_utility_pool)
