@@ -10,7 +10,7 @@
         This module integrate employees IOU with payroll.
     """,
     "depends": [
-        'gbs_hr_employee_iou',
+        'hr_employee_iou',
         'hr_payroll',
     ],
     'data': [
