@@ -1,5 +1,5 @@
 import datetime
-
+import time
 from odoo import api, fields, models
 
 
@@ -9,14 +9,15 @@ class CustomerCommissionConfiguration(models.Model):
     _order = 'confirmed_date desc'
 
     def _current_employee(self):
-        return self.env.user.id
+        return self.env['hr.employee'].search([('user_id', '=', self.env.uid)], limit=1)
 
-    requested_date = fields.Date(string="Requested Date", required=True, default=datetime.date.today(),
-                                 readonly=True, states={'draft': [('readonly', False)]})
-    approved_date = fields.Date(string="Approved Date",
-                                readonly=True, states={'draft': [('readonly', False)]})
-    confirmed_date = fields.Date(string="Confirmed Date",
-                                 readonly=True, states={'draft': [('readonly', False)]})
+    requested_date = fields.Date(string="Requested Date", default=datetime.date.today(),readonly=True)
+    approved_date = fields.Date('Approved Date',
+                   states = {'draft': [('invisible', True)],
+                             'validate': [('invisible', True)],
+                             'close': [('invisible',False),('readonly',True)],
+                             'approve': [('invisible',False),('readonly',True)]})
+    confirmed_date = fields.Date(string="Confirmed Date", _defaults=lambda *a: time.strftime('%Y-%m-%d'),readonly=True)
 
     status = fields.Boolean(string='Status', default=True, required=True)
 
@@ -33,13 +34,13 @@ class CustomerCommissionConfiguration(models.Model):
 
     customer_id = fields.Many2one('res.partner', string="Customer", domain="([('customer','=','True')])",
                                   readonly=True, states={'draft': [('readonly', False)]})
-    requested_by_id = fields.Many2one('res.partner', string="Requested By", required=True,
-                                      default=_current_employee,
-                                      readonly=True, states={'draft': [('readonly', False)]})
-    approved_user_id = fields.Many2one('res.partner', string="Approved By", default=_current_employee,
-                                       readonly=True, states={'draft': [('readonly', False)]})
-    confirmed_user_id = fields.Many2one('res.partner', string="Confirmed By", default=_current_employee,
-                                        readonly=True, states={'draft': [('readonly', False)]})
+    requested_by = fields.Many2one('hr.employee', string="Requested By", default=_current_employee, readonly=True)
+
+    approver1_id = fields.Many2one('hr.employee', string="Approved By",
+                                       readonly=True)
+    approver2_id = fields.Many2one('hr.employee', string="Confirmed By",
+                                        readonly=True)
+
 
     config_product_ids = fields.One2many('customer.commission.configuration.product', 'config_parent_id',
                                          readonly=True, states={'draft': [('readonly', False)]})
@@ -84,6 +85,8 @@ class CustomerCommissionConfiguration(models.Model):
     @api.one
     def action_approve(self):
         self.state = 'approve'
+        self.approver1_id = self.env.user.employee_ids.id
+        return self.write({'state': 'approve', 'approved_date': time.strftime('%Y-%m-%d %H:%M:%S')})
 
     @api.one
     def action_validate(self):
@@ -92,8 +95,6 @@ class CustomerCommissionConfiguration(models.Model):
     @api.one
     def action_close(self):
         self.state = 'close'
-    @api.one
-    def action_close(self):
         cusCom = self.env['customer.commission']
         cusComLine = self.env['customer.commission.line']
         customer_obj = self.env['res.partner']
@@ -139,6 +140,7 @@ class CustomerCommissionConfiguration(models.Model):
                 val_line['status'] = True
                 cusComLine.create(val_line)
 
-            self.state = 'close'
 
+        self.approver2_id = self.env.user.employee_ids.id
+        return self.write({'state': 'close', 'confirmed_date': time.strftime('%Y-%m-%d %H:%M:%S')})
 

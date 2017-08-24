@@ -1,12 +1,115 @@
 from odoo import api, fields, models
-from datetime import datetime
-
+import datetime
+from datetime import timedelta
+from openerp.addons.gbs_hr_attendance_utility.models.utility_class import Employee
 
 class GetDailyAttendanceReport(models.AbstractModel):
     _name='report.gbs_hr_attendance_report.report_daily_att_doc'
 
     @api.model
     def render_html(self, docids, data=None):
+
+        emp_pool = self.env['hr.employee']
+        att_utility_pool = self.env['attendance.utility']
+
+        att_summary_list = []
+
+        # Get exclude employee acc number
+        exclude_emp_pool = self.env['hr.excluded.employee'].search([])
+        exclude_emp_res = []
+        for i in exclude_emp_pool:
+            exclude_emp_res.append(i.acc_number)
+
+        requested_date = data['required_date']
+        current_time =  datetime.datetime.now()
+        graceTime = att_utility_pool.getGraceTime(requested_date)
+
+        #@Todo- Getting operating unit by company and travers by unit
+        operating_unit_id = data['operating_unit_id']
+        att_summary = self.getSummaryByUnit(operating_unit_id, data, graceTime, exclude_emp_res, emp_pool, att_utility_pool, current_time)
+
+        att_summary_list.append(att_summary)
+
+        # if data['department_id']:
+        #     employeeList = emp_pool.search([('operating_unit_id', '=', data['operating_unit_id']),
+        #                                     ('department_id', '=', data['department_id']),
+        #                                     ('active', '=', True), ('device_employee_acc', 'not in', exclude_emp_res)
+        #                                     ], order='department_id,employee_sequence desc')
+        #
+        # else:
+        #     employeeList = emp_pool.search([('operating_unit_id', '=', data['operating_unit_id']),
+        #                                     ('active', '=', True), ('device_employee_acc', 'not in', exclude_emp_res)
+        #                                     ], order='department_id,employee_sequence desc')
+
+
+        docargs = {
+            'required_date': data['required_date'],
+            'required_on': data['required_date'],
+            'required_by': data['required_date'],
+            'att_summary_list': att_summary_list
+        }
+
+        return self.env['report'].render('gbs_hr_attendance_report.report_daily_att_doc', docargs)
+
+    def getSummaryByUnit(self, operating_unit_id, data, graceTime, exclude_emp_res, emp_pool, att_utility_pool, current_time):
+
+        requested_date = data['required_date']
+        day = datetime.timedelta(days=1)
+        requestedDate = att_utility_pool.getDateFromStr(requested_date)
+
+        att_summary = {"total_emp": 0, "on_time_present": [],"late": [], "absent": [], "leave": [],
+                       "short_leave": [], "rest": [],"roster_obligation": [], "unworkable": [],
+                       "holidays": [], "alter_roster": []}
+
+        employeeList = emp_pool.search([('operating_unit_id', '=', operating_unit_id),
+                                        ('active', '=', True), ('device_employee_acc', 'not in', exclude_emp_res)
+                                        ], order='department_id,employee_sequence desc')
+
+        employeeAttMap = att_utility_pool.getDailyAttByDateAndUnit(requestedDate, operating_unit_id)
+
+        att_summary["total_emp"] = len(employeeList)
+
+        for employee in employeeList:
+
+            employeeId = employee.id
+
+            alterTimeMap = att_utility_pool.buildAlterDutyTime(requestedDate, requestedDate, employeeId)
+            if alterTimeMap:
+                att_summary["alter_roster"].append(Employee(employee))
+                break
+
+            dutyTimeMap = att_utility_pool.getDutyTimeByEmployeeId(employeeId, requestedDate, requestedDate)
+
+            if len(dutyTimeMap) == 0:
+                isSetRoster = att_utility_pool.isSetRosterByEmployeeId(employeeId, requestedDate, requestedDate)
+                if isSetRoster == True:
+                    att_summary["rest"].append(Employee(employee))
+                else:
+                    att_summary["roster_obligation"].append(Employee(employee))
+                break
+            else:
+                currentDaydutyTime = dutyTimeMap.get(att_utility_pool.getStrFromDate(requestedDate))
+                if currentDaydutyTime.startDutyTime < current_time:
+                    att_summary = att_utility_pool.makeDecisionForADays(att_summary, employeeAttMap, requested_date, currentDaydutyTime, employee, graceTime)
+                else:
+                    att_summary["unworkable"].append(Employee(employee))
+
+        return att_summary
+
+        # if alterTimeMap.get(att_utility_pool.getStrFromDate(requested_date)):  # Check this date is alter date
+        #     alterDayDutyTime = alterTimeMap.get(att_utility_pool.getStrFromDate(requested_date))
+        #     attendanceDayList = att_utility_pool.getAttendanceListByAlterDay(alterDayDutyTime, day, dutyTimeMap,
+        #                                                                      employeeId)
+        #
+        #     att_summary = att_utility_pool.makeDecisionForADays(att_summary, attendanceDayList, requested_date,
+        #                                                         alterDayDutyTime, employee)
+        #
+        # elif dutyTimeMap.get(att_utility_pool.getStrFromDate(requested_date)):
+        #     currentDaydutyTime = dutyTimeMap.get(att_utility_pool.getStrFromDate(requested_date))
+        #     att_summary = att_utility_pool.makeDecisionForADays(att_summary, attendanceDayList, requested_date,
+
+    @api.model
+    def render_html_5(self, docids, data=None):
         emp_pool=self.env['hr.employee']
 
         if data['department_id']:

@@ -10,7 +10,7 @@
         'sale',
         'product',
         'sales_team',
-       # 'gbs_sales_commission',
+        'gbs_sales_commission',
     ],
     'data': [
         'security/ir.model.access.csv',

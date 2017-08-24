@@ -56,13 +56,14 @@
 								<field name="operating_unit_id"/>
 								<field name="connection_type" placeholder="Please Select"/>
 								<field name="last_update"/>
-								<field name="is_active"/>
+								<field name="duty_date_set_last_update"/>
 							</group>
 							<group>
 								<field name="server"/>
 								<field name="database"/>
 								<field name="username"/>
 								<field name="password"/>
+								<field name="is_active"/>
 							</group>
 						</group>
 

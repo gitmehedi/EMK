@@ -5,7 +5,7 @@ class CustomerCommissionConfigurationCustomer(models.Model):
     _name = "customer.commission.configuration.customer"
     _order = 'id desc'
 
-    old_value = fields.Float(string="Old Value", compute='store_old_value', digits=(16, 2), store=True)
+    old_value = fields.Float(string="Old Value", compute='store_old_value', digits=(16, 2), readonly = False,store=True)
     new_value = fields.Float(string="New Value", digits=(16, 2), required=True)
     status = fields.Boolean(string='Status', default=True, required=True)
 

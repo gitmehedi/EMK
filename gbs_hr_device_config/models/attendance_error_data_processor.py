@@ -113,7 +113,7 @@ class AttendanceErrorDataProcessor(models.Model):
         att_list = hr_att_pool.search([('attempt_set_duty_date', '<=', MAX_ATTEMPT_TO_SUCCESS),
                                        ('duty_date', '=', None),
                                        ('check_in', '!=', None),
-                                       ('operating_unit_id', '=', operating_unit_id)], order='employee_id desc',limit=10)
+                                       ('operating_unit_id', '=', operating_unit_id)], order='id, employee_id DESC', limit=3000)
 
         if att_list:
             self.setDutyDateByEmployee(startDate, endDate, att_list, day, att_utility_pool)
@@ -139,18 +139,19 @@ class AttendanceErrorDataProcessor(models.Model):
                 # Get Next Employee Duty Schedule
                 employeeId = attendance.employee_id.id
                 dutyTimeMap = att_utility_pool.getDutyTimeByEmployeeId(employeeId, preStartDate, postEndDate)
-                alterTimeMap = att_utility_pool.buildAlterDutyTime(startDate, endDate, employeeId)
+                alterTimeMap = att_utility_pool.buildAlterDutyTimeForDailyAtt(startDate, endDate, employeeId)
 
 
             att_date = att_utility_pool.convertStrDateTimeInc(attendance.check_in)
 
             if alterTimeMap.get(att_utility_pool.getStrFromDate(att_date)): # Check this date is alter date
                 alterDayDutyTime = alterTimeMap.get(att_utility_pool.getStrFromDate(att_date))
-                attendanceDayList = self.getAttendanceListByAlterDay(alterDayDutyTime, day, dutyTimeMap, employeeId, att_utility_pool)
-
+                self.updateAttendanceByDay(attendance, att_date, alterDayDutyTime, day, dutyTimeMap, att_utility_pool)
             elif dutyTimeMap.get(att_utility_pool.getStrFromDate(att_date)):
                 currentDaydutyTime = dutyTimeMap.get(att_utility_pool.getStrFromDate(att_date))
-                attendanceDayList = self.getAttendanceListByDay(attendance, att_date, currentDaydutyTime, day, dutyTimeMap, att_utility_pool)
+                self.updateAttendanceByDay(attendance, att_date, currentDaydutyTime, day, dutyTimeMap, att_utility_pool)
+            else:
+                attendance.write({'attempt_set_duty_date': attendance.attempt_set_duty_date + 1})
 
 
     def getDateTimeFromStr(self, dateStr):
@@ -160,30 +161,15 @@ class AttendanceErrorDataProcessor(models.Model):
             return None
 
 
-    def getAttendanceListByAlterDay(self, alterDayDutyTime, day, dutyTimeMap, employeeId, att_utility_pool):
+    def updateAttendanceByDay(self, attendance, currDate, currentDaydutyTime, day, dutyTimeMap, att_utility_pool):
 
-        #@TODO- Need to Update
-        previousDayDutyTime = att_utility_pool.getPreviousDutyTime(alterDayDutyTime.startDutyTime - day, dutyTimeMap)
-        nextDayDutyTime = att_utility_pool.getNextDutyTime(alterDayDutyTime.startDutyTime + day, dutyTimeMap)
+        previousDayDutyTime = att_utility_pool.getPreviousDutyTime(currDate - day, dutyTimeMap)
+        nextDayDutyTime = att_utility_pool.getNextDutyTime(currDate + day, dutyTimeMap)
 
-        self._cr.execute(self.alter_attendance_query, (att_utility_pool.convertDateTime(previousDayDutyTime.endActualDutyTime),
-                                                       att_utility_pool.convertDateTime(alterDayDutyTime.endActualDutyTime),
-                                                       att_utility_pool.convertDateTime(alterDayDutyTime.startDutyTime),
-                                                       att_utility_pool.convertDateTime(nextDayDutyTime.startDutyTime),
-                                                       employeeId))
-        attendance_line = self._cr.fetchall()
-
-
-    def getAttendanceListByDay(self, attendance, currDate, currentDaydutyTime, day, dutyTimeMap, att_utility_pool):
-
-        attendanceDayList = []
-        previousDayDutyTime = self.getPreviousDutyTime(currDate - day, dutyTimeMap)
-        nextDayDutyTime = self.getNextDutyTime(currDate + day, dutyTimeMap)
-
-        if previousDayDutyTime.endActualDutyTime < self.getDateTimeFromStr(
-                attendance[0]) < currentDaydutyTime.endActualDutyTime and \
-                                currentDaydutyTime.startDutyTime < self.getDateTimeFromStr(
-                            attendance[1]) < nextDayDutyTime.startDutyTime:
-            attendance.write({'attempt_to_success': currDate})
+        if previousDayDutyTime.endActualDutyTime < att_utility_pool.convertStrDateTimeInc(
+                attendance.check_in) < currentDaydutyTime.endActualDutyTime and ( attendance.check_out == False or
+                                currentDaydutyTime.startDutyTime < att_utility_pool.convertStrDateTimeInc(
+                            attendance.check_out) < nextDayDutyTime.startDutyTime):
+            attendance.write({'duty_date': currDate})
         else:
-            attendance.write({'attempt_to_success': attendance.attempt_set_duty_date + 1})
+            attendance.write({'attempt_set_duty_date': attendance.attempt_set_duty_date + 1})
