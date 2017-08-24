@@ -48,8 +48,9 @@ class TempLateTime(object):
 
 
 class Employee(object):
-    def __init__(self, employee):
+    def __init__(self, employee, check_in=None):
         self.employeeId = employee.id
         self.name = employee.name
         self.dept = employee.department_id.name
         self.designation = employee.job_id.name
+        self.check_in = check_in
