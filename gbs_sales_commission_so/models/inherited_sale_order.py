@@ -4,15 +4,13 @@ from odoo import fields, api, models
 class InheritedSaleOrderLine(models.Model):
     _inherit = 'sale.order.line'
 
-    commission_rate = fields.Float(string="Commission (%)")
-    commission_sub_total = fields.Float(string="Total Commission", compute='calculate_commission_subtotal')
+    commission_rate = fields.Float(string="Com. (%)")
+    commission_sub_total = fields.Float(string="Total Com.", compute='calculate_commission_subtotal')
 
     @api.depends('commission_rate','product_uom_qty','price_subtotal')
     def calculate_commission_subtotal(self):
         for rec in self:
             rec.commission_sub_total = ((rec.commission_rate * rec.price_subtotal) / 100 )
-
-
 
     @api.onchange('product_id')
     def onchange_customer(self):

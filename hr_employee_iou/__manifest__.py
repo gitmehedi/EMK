@@ -1,5 +1,5 @@
 {
-    'name': 'GBS HR Employee IOU',
+    'name': 'Employee IOU',
     'author': 'Genweb2 Limited',
     'website': 'www.genweb2.com',
     'category': 'employee',
@@ -14,6 +14,5 @@
     ],
 
     'summary': 'HR Employee IOU',
-    'installable': True,
-    'application': True,
+    'application': False,
 }
