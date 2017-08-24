@@ -10,7 +10,8 @@ class AttendanceUtility(models.Model):
 
     employee_shift_history_query = """SELECT effective_from, shift_id
                                     FROM hr_shifting_history
-                                    WHERE employee_id = %s AND effective_from BETWEEN %s AND %s
+                                    WHERE employee_id = %s AND (%s BETWEEN effective_from AND effective_end
+                                    OR %s BETWEEN effective_from AND effective_end)
                                     ORDER BY effective_from ASC"""
 
     daily_attendance_query = """SELECT (check_in + interval '6h') AS check_in, (check_out + interval '6h') AS check_out, worked_hours
@@ -33,6 +34,15 @@ class AttendanceUtility(models.Model):
         self.printDutyTime(preStartDate, postEndDate, dutyTimeMap)
         return dutyTimeMap
 
+    def isSetRosterByEmployeeId(self, employeeId, preStartDate, postEndDate):
+        # Getting Shift Ids for an employee
+        self._cr.execute(self.employee_shift_history_query, (employeeId, preStartDate, postEndDate))
+        calendarList = self._cr.fetchall()
+        if calendarList:
+            return True
+        else:
+            return False
+
 
     def buildAlterDutyTime(self,startDate, endDate, employeeId):
         att_query = """SELECT alter_date, (duty_start+ interval '6h') AS duty_start,
@@ -53,6 +63,18 @@ class AttendanceUtility(models.Model):
                                                                             self.getDateTimeFromStr(alter[5]), alter[6])
 
         return alterTimeMap
+
+    def getDailyAttByDateAndUnit(self, requestedDate, operating_unit_id):
+        att_query = """SELECT employee_id, MIN(check_in) + interval '6h' AS check_in FROM hr_attendance
+                       WHERE duty_date = %s AND operating_unit_id = %s
+                       GROUP BY employee_id ORDER BY employee_id"""
+        self._cr.execute(att_query, (requestedDate, operating_unit_id))
+        attLines = self._cr.fetchall()
+        employeeAttMap = {}
+        for i, att in enumerate(attLines):
+            employeeAttMap[att[0]] = self.getDateTimeFromStr(att[1])
+
+        return employeeAttMap
 
 
     def buildAlterDutyTimeForDailyAtt(self,startDate, endDate, employeeId):
@@ -205,24 +227,22 @@ class AttendanceUtility(models.Model):
             preStartDate = preStartDate + day
         return dutyTimeMap
 
-    def makeDecisionForADays(self, att_summary, attendanceDay, currDate, currentDaydutyTime, employee):
+    def makeDecisionForADays(self, att_summary, employeeAttMap, currDate, currentDaydutyTime, employee, graceTime):
 
         employeeId = employee.id
+        check_in = employeeAttMap.get(employeeId)
 
-        if attendanceDay:
+        if check_in:
 
-            ##### Check is late or not by checking day first in time. We collect first row
-            # because attendance are shorted by check_in time ASC
-            isLate = self.isLateByInTime(attendanceDay, currentDaydutyTime)
+            isLate = self.isLateByInTime(check_in, currentDaydutyTime, graceTime)
 
-            if isLate == True:  # Check Absent OR Late
+            if isLate is True:  # Check Absent OR Late
                 # Check this day is holiday or personal leave
                 if self.checkOnHolidays(currDate) is True:
-                    att_summary["holidays"] =  att_summary["holidays"] + 1
+                    att_summary["holidays"].append(Employee(employee))
                 elif self.checkOnPersonalLeave(employeeId, currDate) is True:
                     att_summary["leave"].append(Employee(employee))
-                elif 1 == 1:
-                    # @Todo- Check Short Leave
+                elif self.checkShortLeave(self.convertDateTime(currentDaydutyTime.startDutyTime)) is True:
                     att_summary["short_leave"].append(Employee(employee))
                 elif isLate == True:
                     att_summary["late"].append(Employee(employee))
@@ -235,8 +255,7 @@ class AttendanceUtility(models.Model):
                 att_summary["holidays"].append(Employee(employee))
             elif self.checkOnPersonalLeave(employeeId, currDate) is True:
                 att_summary["leave"].append(Employee(employee))
-            elif 1==1:
-                # @Todo- Check Short Leave
+            elif self.checkShortLeave(self.convertDateTime(currentDaydutyTime.startDutyTime)) is True:
                 att_summary["short_leave"].append(Employee(employee))
             else:
                 att_summary["absent"].append(Employee(employee))
@@ -292,10 +311,13 @@ class AttendanceUtility(models.Model):
     def getStrFromDate(self, date):
         return date.strftime('%Y.%m.%d')
 
+    def getStrFromDateTime(self, date):
+        return date.strftime('%Y-%m-%d %H:%M:%S')
+
             ### Short Leave Check Method
     def checkShortLeave(self,datetime_sl):
-        leave_pool=self.env['hr.short.leave'].search([('date_from', '<=', datetime_sl),
-                                                 ('date_to', '>=',datetime_sl )])
+        leave_pool=self.env['hr.short.leave'].search([('date_from', '<=', self.getStrFromDateTime(datetime_sl)),
+                                                 ('date_to', '>=',self.getStrFromDateTime(datetime_sl))])
         if leave_pool:
             return True
         else:
@@ -312,6 +334,15 @@ class AttendanceUtility(models.Model):
             mins = float(diff.total_seconds() / 60)
             return mins
 
+    def isLateByInTime(self, check_in, currentDayDutyTime, graceTime):
+
+        if check_in > currentDayDutyTime.startDutyTime:
+            lateMinutes = (check_in - currentDayDutyTime.startDutyTime).total_seconds() / 60
+            if lateMinutes > graceTime:
+                return True
+        return False
+
+
             ### Get Grace Time
     def getGraceTime(self,datetime_g):
         get_grace_time_query = """SELECT grace_time FROM hr_attendance_grace_time 
@@ -324,3 +355,28 @@ class AttendanceUtility(models.Model):
             return mins
         else:
             return 15.0
+
+    def checkOnHolidays(self, startDate):
+
+        query_str = """SELECT COUNT(id) FROM hr_holidays_public_line
+                       WHERE date = %s AND status = true"""
+
+        self._cr.execute(query_str, (startDate,))
+        count = self._cr.fetchall()
+        if count[0][0] > 0:
+            return True
+        else:
+            return False
+
+    def checkOnPersonalLeave(self, employeeId, startDate):
+
+        query_str = """SELECT COUNT(id) FROM hr_holidays
+                           WHERE employee_id = %s AND type='remove' AND state = 'validate' AND
+                           %s BETWEEN date_from::DATE AND date_to::DATE"""
+
+        self._cr.execute(query_str, (employeeId, startDate))
+        count = self._cr.fetchall()
+        if count[0][0] > 0:
+            return True
+        else:
+            return False
