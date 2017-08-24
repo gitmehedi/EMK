@@ -20,10 +20,16 @@ class AttendanceProcessor(models.Model):
                        JOIN account_period ap ON ap.id = ac.period
                        WHERE ac.id = %s LIMIT 1"""
 
+    # employee_shift_history_query = """SELECT effective_from, shift_id
+    #                             FROM hr_shifting_history
+    #                             WHERE employee_id = %s AND effective_from BETWEEN %s AND %s
+    #                             ORDER BY effective_from ASC"""
+
     employee_shift_history_query = """SELECT effective_from, shift_id
-                                FROM hr_shifting_history
-                                WHERE employee_id = %s AND effective_from BETWEEN %s AND %s
-                                ORDER BY effective_from ASC"""
+                                        FROM hr_shifting_history
+                                        WHERE employee_id = %s AND (%s BETWEEN effective_from AND effective_end
+                                        OR %s BETWEEN effective_from AND effective_end)
+                                        ORDER BY effective_from ASC"""
 
     attendance_query = """SELECT (check_in + interval '6h') AS check_in, (check_out + interval '6h') AS check_out, worked_hours
                             FROM hr_attendance

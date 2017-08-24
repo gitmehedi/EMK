@@ -48,7 +48,6 @@ class SaleOrder(models.Model):
 
             if (self.credit_sales_or_lc == 'cash'):
                 if (lines.commission_rate < cust_commission_pool.commission_rate or lines.price_unit < product_pool.list_price):
-
                     is_double_validation = True
                     break;
                 else:

@@ -9,27 +9,86 @@
                     <div class="page" style="page-break-inside: auto">
                         <div class="row">
                             <div class="col-xs-12" style="text-align:center;">
-                                <h2><strong >Daily Attendance</strong></h2>
+                                <h2><strong >Daily Attendance Summary Report</strong></h2>
                                 <hr></hr>
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-xs-4"><strong>Report Date</strong></div>
-                            <div class="col-xs-3"><strong>: <span t-esc="required_date"/></strong></div>
-                        </div>
-                        <div class="row">
-                            <div class="col-xs-4"><strong>Total Present Employee</strong></div>
-                            <div class="col-xs-3"><strong>: <span t-esc="total_present_employee"/></strong></div>
-                        </div>
-                        <div class="row">
-                            <div class="col-xs-4"><strong>Total Absent Employee</strong></div>
-                            <div class="col-xs-3"><strong>: <span t-esc="total_absent_employee"/></strong></div>
-                        </div>
-                        <div class="row">
-                            <div class="col-xs-4"><strong>Total Late Employee</strong></div>
-                            <div class="col-xs-3"><strong>: <span t-esc="total_late_employee"/></strong></div>
+                            <div class="col-xs-6">
+                                <div class="col-xs-4"><strong>Report Date:</strong></div>
+                                <div class="col-xs-3"><span t-esc="required_date"/></div>
+                            </div>
+                            <div class="col-xs-6">
+                                <div class="row">
+                                    <div class="col-xs-4"><strong>Created On:</strong></div>
+                                    <div class="col-xs-3"><span t-esc="required_date"/></div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-xs-4"><strong>Created By:</strong></div>
+                                    <div class="col-xs-3"><span t-esc="user.name"/></div>
+                                </div>
+                            </div>
                         </div>
                         <br></br>
+                        <t t-foreach="att_summary_list" t-as="att_summary">
+                            <div class="row">
+                                <div class="col-xs-2"><strong>Operating Unit:</strong></div>
+                                <div class="col-xs-2"><span />SCCL-DF</div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-xs-6">
+                                    <div class="row">
+                                        <div class="col-xs-4">Total Employee :</div>
+                                        <div class="col-xs-3"><span t-esc="att_summary['total_emp']"/></div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-xs-4">Total On Time Present:</div>
+                                        <div class="col-xs-3"><span t-esc="len(att_summary['on_time_present'])"/></div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-xs-4">Late:</div>
+                                        <div class="col-xs-3"><span t-esc="len(att_summary['late'])"/></div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-xs-4">Absent:</div>
+                                        <div class="col-xs-3"><span t-esc="len(att_summary['absent'])"/></div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-xs-4">Leave:</div>
+                                        <div class="col-xs-3"><span t-esc="len(att_summary['leave'])"/></div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-xs-4">Alter Roster:</div>
+                                        <div class="col-xs-3"><span t-esc="len(att_summary['alter_roster'])"/></div>
+                                    </div>
+                                </div>
+                                <div class="col-xs-6">
+                                    <div class="row">
+                                        <div class="col-xs-4">Short Leave:</div>
+                                        <div class="col-xs-3"><span t-esc="len(att_summary['short_leave'])"/></div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-xs-4">Rest:</div>
+                                        <div class="col-xs-3"><span t-esc="len(att_summary['rest'])"/></div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-xs-4">Roster Obligation:</div>
+                                        <div class="col-xs-3"><span t-esc="len(att_summary['roster_obligation'])"/></div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-xs-4">Unworkable:</div>
+                                        <div class="col-xs-3"><span t-esc="len(att_summary['unworkable'])"/></div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-xs-4">Holidays:</div>
+                                        <div class="col-xs-3"><span t-esc="len(att_summary['holidays'])"/></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <br></br>
+                        </t>
+
                         <t t-if="total_absent_employee">
                             <div>
                                 <div class="row">
@@ -39,25 +98,25 @@
                                 </div>
                                 <div>
                                     <table class="table table-bordered">
-                                    <thead>
-                                        <tr>
-                                            <th>Sl</th>
-                                            <th>Name</th>
-                                            <th>Department</th>
-                                            <th>Designation</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <t t-foreach="absent_list" t-as="l">
-                                            <tr style="page-break-inside: avoid">
-                                                <td><span t-esc="l_index+1"/></td>
-                                                <td><span t-esc="l[0]"/></td>
-                                                <td><span t-esc="l[1]"/></td>
-                                                <td><span t-esc="l[2]"/></td>
+                                        <thead>
+                                            <tr>
+                                                <th>Sl</th>
+                                                <th>Name</th>
+                                                <th>Department</th>
+                                                <th>Designation</th>
                                             </tr>
-                                        </t>
-                                    </tbody>
-                                </table>
+                                        </thead>
+                                        <tbody>
+                                            <t t-foreach="absent_list" t-as="l">
+                                                <tr style="page-break-inside: avoid">
+                                                    <td><span t-esc="l_index+1"/></td>
+                                                    <td><span t-esc="l[0]"/></td>
+                                                    <td><span t-esc="l[1]"/></td>
+                                                    <td><span t-esc="l[2]"/></td>
+                                                </tr>
+                                            </t>
+                                        </tbody>
+                                    </table>
                                 </div>
 
                             </div>
