@@ -27,14 +27,17 @@ class HrEmployeeMealBill(models.Model):
     @api.multi
     def action_draft(self):
         self.state = 'draft'
+        self.line_ids.write({'state':'draft'})
     
     @api.multi
     def action_confirm(self):
         self.state = 'applied'
+        self.line_ids.write({'state':'applied'})
 
     @api.multi
     def action_done(self):
         self.state = 'approved'
+        self.line_ids.write({'state':'approved'})
 
     @api.multi
     def unlink(self):
