@@ -6,13 +6,9 @@
         <field name="model">sale.order</field>
         <field name="inherit_id" ref="sale.view_order_form"/>
         <field name="priority" eval="30"/>
-        <!--<field name="groups_id" eval="[(4, ref('sales_team.group_sale_salesman'))]"/>-->
         <field name="arch" type="xml">
             <xpath expr="//field[@name='order_line']/tree/field[@name='qty_delivered']" position="after">
                 <field name="commission_rate"/>
-            </xpath>
-            <xpath expr="//sheet/group/group/field[@name='payment_term_id']" position="after">
-                <field name="commission_total"/>
             </xpath>
             <xpath expr="//field[@name='order_line']/tree/field[@name='tax_id']" position="after">
                 <field name="commission_sub_total"/>
