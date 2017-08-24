@@ -22,6 +22,7 @@ class HrMealBillLine(models.Model):
         ('draft', "Draft"),
         ('applied', "Applied"),
         ('approved', "Approved"),
+        ('adjusted', "Adjusted")
     ], default='draft')
 
 # Show a msg for minus value

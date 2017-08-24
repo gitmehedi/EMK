@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<openerp>
+    <data>
+        <!-- Inherited Form view-->
+        <record id="product_temp_inventory_from_view" model="ir.ui.view">
+            <field name="name">product.temp.inven.from.view</field>
+            <field name="model">product.template</field>
+            <field name="inherit_id" ref="stock.view_template_property_form"/>
+            <field name="arch" type="xml">
+                <data>
+                    <xpath expr="//group[@name='inventory']" position="replace">
+                        <page string="Inventory" groups="base_technical_features.group_technical_features">
+                            <group name="inventory">
+                                <group>
+                                    <field name="route_ids" widget="many2many_checkboxes" attrs="{'invisible':[('type', 'in', ['service', 'digital'])]}"/>
+                                    <field name="route_from_categ_ids" widget="many2many_tags" readonly="1" attrs="{'invisible':[('route_from_categ_ids', '=', [])]}"/>
+                                </group>
+                                <group name="group_lots_and_weight">
+                                    <label for="weight" attrs="{'invisible':['|', ('type', 'not in', ['product', 'consu']), ('product_variant_count', '&gt;', 1)]}"/>
+                                    <div class="o_row" name="weight" attrs="{'invisible':['|', ('type', 'not in', ['product', 'consu']), ('product_variant_count', '&gt;', 1)]}">
+                                        <field name="weight"/>
+                                    </div>
+                                    <field name="tracking" widget="radio" attrs="{'invisible':[('type', 'in', ['service', 'digital'])]}" groups="stock.group_production_lot"/>
+                                    <label for="volume" attrs="{'invisible':['|', ('type', 'not in', ['product', 'consu']), ('product_variant_count', '&gt;', 1)]}"/>
+                                    <div class="o_row" name="volume" attrs="{'invisible':['|', ('type', 'not in', ['product', 'consu']), ('product_variant_count', '&gt;', 1)]}">
+                                        <field name="volume" string="Volume"/>
+                                    </div>
+                                </group>
+                                <group name="stock_property" groups="base.group_no_one">
+                                    <field name="property_stock_procurement" domain="[('usage','=','procurement')]"/>
+                                    <field name="property_stock_production" domain="[('usage','=','production')]"/>
+                                    <field name="property_stock_inventory" domain="[('usage','=','inventory')]"/>
+                                </group>
+                            </group>
+                        </page>
+                    </xpath>
+                </data>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="product_view_invoice_policy">
+            <field name="name">product.invoice.policy</field>
+            <field name="model">product.template</field>
+            <field name="inherit_id" ref="sale.product_template_form_view_invoice_policy"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='invoice_policy']" position="replace">
+                    <separator string="Invoicing Policy"/>
+                    <group>
+                        <field name="invoice_policy" widget="radio" groups="base_technical_features.group_technical_features"/>
+                        <field name="track_service" widget="radio" invisible="True"/>
+                    </group>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</openerp>
