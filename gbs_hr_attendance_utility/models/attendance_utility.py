@@ -245,10 +245,10 @@ class AttendanceUtility(models.Model):
                 elif self.checkShortLeave(self.convertDateTime(currentDaydutyTime.startDutyTime)) is True:
                     att_summary["short_leave"].append(Employee(employee))
                 elif isLate == True:
-                    att_summary["late"].append(Employee(employee))
+                    att_summary["late"].append(Employee(employee, check_in))
 
             else:
-                att_summary["on_time_present"].append(Employee(employee))
+                att_summary["on_time_present"].append(Employee(employee, check_in))
 
         else:
             if self.checkOnHolidays(currDate) is True:

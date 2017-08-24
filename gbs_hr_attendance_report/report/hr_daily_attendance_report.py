@@ -76,7 +76,7 @@ class GetDailyAttendanceReport(models.AbstractModel):
             alterTimeMap = att_utility_pool.buildAlterDutyTime(requestedDate, requestedDate, employeeId)
             if alterTimeMap:
                 att_summary["alter_roster"].append(Employee(employee))
-                break
+                continue
 
             dutyTimeMap = att_utility_pool.getDutyTimeByEmployeeId(employeeId, requestedDate, requestedDate)
 
@@ -86,7 +86,7 @@ class GetDailyAttendanceReport(models.AbstractModel):
                     att_summary["rest"].append(Employee(employee))
                 else:
                     att_summary["roster_obligation"].append(Employee(employee))
-                break
+                    continue
             else:
                 currentDaydutyTime = dutyTimeMap.get(att_utility_pool.getStrFromDate(requestedDate))
                 if currentDaydutyTime.startDutyTime < current_time:
