@@ -9,11 +9,6 @@
             <field name="inherit_id" ref="product.product_template_form_view"/>
             <field name="arch" type="xml">
                 <data>
-                    <!--<xpath expr="//field[@name='purchase_ok']" position="replace">
-                        <field name="purchase_ok" invisible="1"/>
-                    </xpath>-->
-
-
                     <xpath expr="//field[@name='property_account_income_id']" position="replace">
                         <field name="property_account_income_id"
                                domain="[('internal_type','=','other'),('deprecated','=',False)]"
@@ -57,6 +52,33 @@
                                 attrs="{'invisible': [('purchase_ok', '=', False)]}"/>
                         </div>
                     </xpath>
+
+                     <!--<xpath expr="//group[@name='Inventory']" position="replace">-->
+                        <!--<page string="Inventory" groups="stock.group_stock_multi_warehouses">-->
+                            <!--<group name="inventory">-->
+                                <!--<group>-->
+                                    <!--<field name="route_ids" widget="many2many_checkboxes" attrs="{'invisible':[('type', 'in', ['service', 'digital'])]}"/>-->
+                                    <!--<field name="route_from_categ_ids" widget="many2many_tags" readonly="1" attrs="{'invisible':[('route_from_categ_ids', '=', [])]}"/>-->
+                                <!--</group>-->
+                                <!--<group name="group_lots_and_weight">-->
+                                    <!--<label for="weight" attrs="{'invisible':['|', ('type', 'not in', ['product', 'consu']), ('product_variant_count', '&gt;', 1)]}"/>-->
+                                    <!--<div class="o_row" name="weight" attrs="{'invisible':['|', ('type', 'not in', ['product', 'consu']), ('product_variant_count', '&gt;', 1)]}">-->
+                                        <!--<field name="weight"/>-->
+                                    <!--</div>-->
+                                    <!--<field name="tracking" widget="radio" attrs="{'invisible':[('type', 'in', ['service', 'digital'])]}" groups="stock.group_production_lot"/>-->
+                                    <!--<label for="volume" attrs="{'invisible':['|', ('type', 'not in', ['product', 'consu']), ('product_variant_count', '&gt;', 1)]}"/>-->
+                                    <!--<div class="o_row" name="volume" attrs="{'invisible':['|', ('type', 'not in', ['product', 'consu']), ('product_variant_count', '&gt;', 1)]}">-->
+                                        <!--<field name="volume" string="Volume"/>-->
+                                    <!--</div>-->
+                                <!--</group>-->
+                                <!--<group name="stock_property" groups="base.group_no_one">-->
+                                    <!--<field name="property_stock_procurement" domain="[('usage','=','procurement')]"/>-->
+                                    <!--<field name="property_stock_production" domain="[('usage','=','production')]"/>-->
+                                    <!--<field name="property_stock_inventory" domain="[('usage','=','inventory')]"/>-->
+                                <!--</group>-->
+                            <!--</group>-->
+                        <!--</page>-->
+                    <!--</xpath>-->
                 </data>
             </field>
         </record>

@@ -18,8 +18,18 @@ class HrEmpMobileBillLine(models.Model):
     parent_id = fields.Many2one(comodel_name='hr.mobile.bill',ondelete='cascade')
     employee_id = fields.Many2one('hr.employee', string="Employee", store=True,ondelete='cascade',
                                   compute='onchange_emp_mobile_phone')
-    
-    
+
+    """ All Selection fields """
+
+    """ All Selection fields """
+
+    state = fields.Selection([
+        ('draft', "Draft"),
+        ('applied', "Applied"),
+        ('approved', "Approved"),
+        ('adjusted',"Adjusted")
+    ], default='draft')
+
     _sql_constraints = [
         ('unique_mobile_number', 'unique(parent_id, emp_mobile_phone)',
          'Mobile Number must be unique per bill!'),
