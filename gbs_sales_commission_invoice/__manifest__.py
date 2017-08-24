@@ -1,17 +1,16 @@
 {
-    'name': 'Customer Commission on Sales Order',
+    'name': 'Customer Commission on Invoices',
     'version': '1.0',
     'author': 'Genweb2 Limited',
     'website': 'http://www.genweb2.com',
     'category': 'Sales',
     'depends': [
-        'sale',
-        'gbs_sales_commission',
+        'account',
     ],
     'data': [
         'views/inherited_sale_order_views.xml',
         ],
-    'description': 'This module adds Customer Commission to Sales Orde line',
+    'description': 'This module adds Customer Commission to Account Invoice Line',
     'installable': True,
     'application': True,
 }
