@@ -13,11 +13,12 @@ class daily_attendance_report(orm.TransientModel):
 
     company_id = fields.Many2one('res.company', 'Company',required=True,
         default=lambda self: self.env.user.company_id)
-    operating_unit_id = fields.Many2one('operating.unit','Select Operating Unit')
+    operating_unit_id = fields.Many2one('operating.unit','Select Operating Unit' )
     department_id = fields.Many2one('hr.department', 'Select Department')
-
+    # , domain = [('company_id', '=', company_id.id)]
     @api.onchange('company_id')
     def onchange_company_id(self):
+        self.operating_unit_id=[]
         return {'domain': {'operating_unit_id': [('company_id', '=', self.company_id.id)]}}
 
     @api.multi
