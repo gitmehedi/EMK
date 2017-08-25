@@ -123,9 +123,9 @@
             <field name="view_mode">tree,form</field>
         </record>
 
-        <menuitem id="delivery_order_menu" name="Delivery Order" parent="sales_team.menu_base_partner"
+        <menuitem id="delivery_order_menu" name="Delivery Authorization" parent="sales_team.menu_base_partner"
             sequence="12" action="delivery_order_action"/>
-        <menuitem id="delivery_order_submenu" name="Delivery Order" parent="delivery_order_menu"
+        <menuitem id="delivery_order_submenu" name="Delivery Authorization" parent="delivery_order_menu"
                   action="delivery_order_action"/>
     </data>
 </odoo>
