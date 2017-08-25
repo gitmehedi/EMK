@@ -5,17 +5,11 @@ class InheritHRPayslipInput(models.Model):
 
     ref = fields.Char('Reference')
 
-
-class InheritedHrMobilePayslip(models.Model):
-    """
-    Inherit HR Payslip models and add onchange functionality on 
-    employee_id
-    """
     _inherit = "hr.payslip"
 
     @api.multi
     def action_payslip_done(self):
-        res = super(InheritedHrMobilePayslip, self).action_payslip_done()
+        res = super(InheritHRPayslipInput, self).action_payslip_done()
 
         meal_ids = []
         for input in self.input_line_ids:
@@ -33,7 +27,7 @@ class InheritedHrMobilePayslip(models.Model):
 
         if self.employee_id:
             self.input_line_ids = 0
-            super(InheritedHrMobilePayslip, self).onchange_employee()
+            super(InheritHRPayslipInput, self).onchange_employee()
 
             """
             Incorporate other payroll data
