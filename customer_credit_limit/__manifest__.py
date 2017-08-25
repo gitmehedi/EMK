@@ -1,5 +1,5 @@
 {
-    'name': 'GBS Sales Customer Credit Limited',
+    'name': 'Customer Credit Limit',
     'version': '1.0',
     'author': 'Genweb2 Limited',
     'website': 'http://www.genweb2.com',
@@ -19,7 +19,6 @@
 
     ],
     'summary': 'This module handles request of customer credit limit',
-    'description':"GBS Sales Customer Credit Limited",
-    'installable': True,
-    'application': True,
+    'description':"Customer Credit Limit",
+    'application': False,
 }
