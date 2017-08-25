@@ -8,3 +8,10 @@ class HrEmployeeIouLine(models.Model):
 
     # Relational fields
     repay_id = fields.Many2one('hr.employee.iou', 'id', ondelete='cascade')
+
+    state = fields.Selection([
+        ('draft', 'Draft'),
+        ('cancel', 'Cancelled'),
+        ('confirm', 'Confirmed'),
+        ('adjusted', "Adjusted")
+    ], string='Status', default='draft', )
