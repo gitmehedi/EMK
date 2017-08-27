@@ -11,6 +11,7 @@
         'product',
         'sales_team',
         'gbs_sales_commission',
+        'gbs_sales_commission_so',
     ],
     'data': [
         'security/ir.model.access.csv',

@@ -1,5 +1,4 @@
-from odoo import api,models,fields
-from datetime import datetime
+from odoo import models
 
 class CustomerCreditLimit(models.AbstractModel):
     _name = "report.customer_credit_limit.report_credit_limit"

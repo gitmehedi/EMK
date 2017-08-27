@@ -29,7 +29,7 @@ class HrEmployeeIou(models.Model):
     @api.multi
     def action_confirm(self):
         self.state = 'confirm'
-
+        self.line_ids.write({'state':'confirm'})
     @api.multi
     def action_repay(self):
         print 'Hello! Repay'
