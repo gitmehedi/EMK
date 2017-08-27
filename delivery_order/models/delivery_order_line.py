@@ -4,7 +4,7 @@ class MrpDailyProductionLine(models.Model):
     _name = 'delivery.order.line'
     _description = 'Sales Delivery Order line'
 
-    product_id = fields.Many2one('product.template', string="Product", ondelete='cascade')
+    product_id = fields.Many2one('product.product', string="Product", ondelete='cascade')
     uom_id = fields.Many2one('product.uom', string="UOM",ondelete='cascade')
     quantity = fields.Integer(string="Quantity", required=True, default= "1")
 
