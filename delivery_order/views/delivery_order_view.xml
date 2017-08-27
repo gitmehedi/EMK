@@ -6,21 +6,30 @@
             <field name="model">delivery.order</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Delivery Order" delete="false">
+                <form string="Delivery Order" delete="false" copy='0'>
                     <header>
-                        <button name="action_confirm" type="object"
-                                string="Apply" states="draft"
-                                class="oe_highlight"/>
-                        <button name="action_done" type="object"
-                                string="Approve" states="applied"
-                                class="oe_highlight"/>
+                        <button name="action_validate" type="object" states="draft" string="Confirm" class="oe_highlight"
+                        groups="gbs_application_group.group_head_account,gbs_application_group.group_head_sale,gbs_application_group.group_cxo"/>
+
                         <button name="action_draft" type="object"
-                                string="Reject"
-                                states="applied"/>
+                                states="validate" string="Reset to Draft"
+                                groups="gbs_application_group.group_head_account,gbs_application_group.group_cxo"/>
+
+                        <button name="action_approve" type="object" states="validate"
+                                string="Validate" class="oe_highlight"
+                                groups="gbs_application_group.group_cxo,gbs_application_group.group_head_account"/>
+
+                        <button name="action_close" type="object" states="approve"
+                                string="Approve" class="oe_highlight"
+                                groups="gbs_application_group.group_cxo"/>
+
+                        <button name="action_draft" type="object" states="approve,validate"
+                                string="Refuse"
+                                groups="gbs_application_group.group_head_account,gbs_application_group.group_cxo"/>
+
                         <field name="state" widget="statusbar"/>
                     </header>
                     <sheet>
-                        <label for="name" class="oe_edit_only"/>
 	                    <h1>
 	                        <field name="name"/>
 	                    </h1>
@@ -36,10 +45,22 @@
                             </group>
                             <group>
                                 <field name="deli_address"/>
-                                <field name="approve_date"/>
-                                <field name="approve_by"/>
+                                <field name="requested_by"
+                                       options="{'no_open': True, 'no_create': True}"/>
+                                <field name="requested_date"/>
+                                 <field name="approver2_id"
+                                       attrs="{'invisible':['|', ('state','=','draft'),('state','=','validate')]}"
+                                       options="{'no_open': True, 'no_create': True}"/>
+                                <field name="confirmed_date"
+                                    attrs="{'invisible': [('state','in',('draft','validate','approve'))]}"/>
+                                <field name="approver1_id"
+                                       attrs="{'invisible': [('state','in',('draft','validate','approve'))]}"
+                                       options="{'no_open': True, 'no_create': True}"/>
+                                <field name="approved_date"/>
+
 
                             </group>
+
                             <notebook colspan="4">
                                 <page string="Products">
                                     <field name="line_ids">
@@ -52,7 +73,7 @@
                                         </tree>
                                     </field>
                                 </page>
-                                <page string="Payment Terms:Cash">
+                                <page string="Cash" attrs="{'invisible':[('so_type', '!=', 'cash')]}">
                                     <field name="cash_ids">
                                         <tree string="List" editable="bottom">
                                             <field name="amount"/>
@@ -62,7 +83,7 @@
                                         </tree>
                                     </field>
                                 </page>
-                                <page string="Payment Terms:Cheque">
+                                <page string="Cheque" attrs="{'invisible':[('so_type', '!=', 'cash')]}">
                                     <field name="cheque_ids">
                                         <tree string="List" editable="bottom">
                                             <field name="number"/>
@@ -73,7 +94,7 @@
                                         </tree>
                                     </field>
                                 </page>
-                                <page string="Payment Terms:T.T">
+                                <page string="T.T" attrs="{'invisible':[('so_type', '!=', 'cash')]}">
                                     <field name="tt_ids">
                                         <tree string="List" editable="bottom">
                                             <field name="ref_num"/>
@@ -84,7 +105,7 @@
                                         </tree>
                                     </field>
                                 </page>
-                                <page string="Payment Terms:L/C">
+                                <page string="L/C" attrs="{'invisible':[('so_type', '!=', 'lc_sales')]}">
                                     <field name="lc_ids">
                                         <tree string="List" editable="bottom">
                                             <field name="number"/>
@@ -105,7 +126,7 @@
                 </form>
             </field>
         </record>
-        <record id="hr_meal_bill_tree" model="ir.ui.view">
+        <record id="delivery_order_tree" model="ir.ui.view">
             <field name="name">delivery.order.tree</field>
             <field name="model">delivery.order</field>
             <field name="type">tree</field>
