@@ -10,6 +10,7 @@
 
     'data': [
         'views/hr_exclude_employee_view.xml',
+        'security/ir.model.access.csv',
     ],
 
     'summary': 'Employee Custom list',
