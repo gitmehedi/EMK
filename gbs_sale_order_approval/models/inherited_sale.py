@@ -8,7 +8,7 @@ class SaleOrder(models.Model):
         ('cash', 'Cash'),
         ('credit_sales', 'Credit'),
         ('lc_sales', 'L/C'),
-    ], string='Sale Order Type', required=True)
+    ], string='Sale Order Type',)
 
     state = fields.Selection([
         ('draft', 'Quotation'),
@@ -24,7 +24,7 @@ class SaleOrder(models.Model):
         ('cylinder', 'Cylinder'),
         ('cust_cylinder', 'Customer Cylinder'),
         ('other', 'Others'),
-    ], string='Packing',required=True)
+    ], string='Packing',)
 
     @api.multi
     def _is_double_validation_applicable(self):
