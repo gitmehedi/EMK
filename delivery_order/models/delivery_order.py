@@ -122,6 +122,9 @@ class SaleDeliveryOrder(models.Model):
                     product_id = sale_order_line_obj.product_id.id
                     # val['product_id']=record.product_id
                     val.append((0, 0, {'product_id': product_id,
+                                       'quantity': record.product_uom_qty,
+                                       'pack_type': sale_order_obj.pack_type,
+                                       'uom_id': record.product_uom,
                                                 }))
 
             self.line_ids = val
