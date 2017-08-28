@@ -210,6 +210,36 @@
                                 </div>
                             </t>
                             <br/>
+                            <t t-if="att_summary['roster_obligation']">
+                                <div>
+                                    <div class="row">
+                                        <div class="col-xs-12" style="text-align:center;">
+                                            <h4><strong>Roster Not Mapped</strong></h4>
+                                        </div>
+                                    </div>
+                                    <table class="table table-bordered" style="font-size:12px">
+                                        <thead style=" background-color:  #FFEBCD;">
+                                            <tr>
+                                                <th>Sl</th>
+                                                <th>Name</th>
+                                                <th>Department</th>
+                                                <th>Designation</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <t t-foreach="att_summary['roster_obligation']" t-as="l">
+                                                <tr style="page-break-inside: avoid">
+                                                    <td><span t-esc="l_index+1"/></td>
+                                                    <td><span t-esc="att_summary['roster_obligation'][l_index].name"/></td>
+                                                    <td><span t-esc="att_summary['roster_obligation'][l_index].dept"/></td>
+                                                    <td><span t-esc="att_summary['roster_obligation'][l_index].designation"/></td>
+                                                </tr>
+                                            </t>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </t>
+                            <br/>
                         </t>
                     </div>
                 </t>
