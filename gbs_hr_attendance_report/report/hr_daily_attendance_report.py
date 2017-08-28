@@ -18,6 +18,7 @@ class GetDailyAttendanceReport(models.AbstractModel):
 
         requested_date = data['required_date']
         current_time =  datetime.datetime.now()
+        updated_curr_time = current_time + timedelta(hours=6)
         graceTime = att_utility_pool.getGraceTime(requested_date)
 
         companyName = ""
