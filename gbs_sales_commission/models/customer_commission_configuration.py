@@ -1,15 +1,13 @@
 import datetime
 import time
-from odoo import api, fields, models
+from openerp.exceptions import UserError, ValidationError
+from odoo import api, fields, models,_
 
 
 class CustomerCommissionConfiguration(models.Model):
     _name = "customer.commission.configuration"
     # _inherit = ['mail.thread', 'ir.needaction_mixin']
     _order = 'confirmed_date desc'
-
-    def _current_employee(self):
-        return self.env['hr.employee'].search([('user_id', '=', self.env.uid)], limit=1)
 
     requested_date = fields.Date(string="Requested Date", default=datetime.date.today(),readonly=True)
     approved_date = fields.Date('Approved Date',
@@ -34,12 +32,10 @@ class CustomerCommissionConfiguration(models.Model):
 
     customer_id = fields.Many2one('res.partner', string="Customer", domain="([('customer','=','True')])",
                                   readonly=True, states={'draft': [('readonly', False)]})
-    requested_by = fields.Many2one('hr.employee', string="Requested By", default=_current_employee, readonly=True)
+    requested_by = fields.Many2one('res.users', string="Requested By", default=lambda self: self.env.user, readonly=True)
 
-    approver1_id = fields.Many2one('hr.employee', string="Approved By",
-                                       readonly=True)
-    approver2_id = fields.Many2one('hr.employee', string="Confirmed By",
-                                        readonly=True)
+    approver1_id = fields.Many2one('res.users', string="Approved By", readonly=True)
+    approver2_id = fields.Many2one('res.users', string="Confirmed By",readonly=True)
 
 
     config_product_ids = fields.One2many('customer.commission.configuration.product', 'config_parent_id',
@@ -85,7 +81,7 @@ class CustomerCommissionConfiguration(models.Model):
     @api.one
     def action_approve(self):
         self.state = 'approve'
-        self.approver1_id = self.env.user.employee_ids.id
+        self.approver2_id = self.env.user
         return self.write({'state': 'approve', 'approved_date': time.strftime('%Y-%m-%d %H:%M:%S')})
 
     @api.one
@@ -141,6 +137,14 @@ class CustomerCommissionConfiguration(models.Model):
                 cusComLine.create(val_line)
 
 
-        self.approver2_id = self.env.user.employee_ids.id
+        self.approver1_id = self.env.user
         return self.write({'state': 'close', 'confirmed_date': time.strftime('%Y-%m-%d %H:%M:%S')})
+
+    @api.multi
+    def unlink(self):
+        for bill in self:
+            if bill.state != 'draft':
+                raise UserError(_('You can not delete this.'))
+            bill.line_ids.unlink()
+        return super(CustomerCommissionConfiguration, self).unlink()
 
