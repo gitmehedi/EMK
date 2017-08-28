@@ -29,9 +29,10 @@ class HrShiftEmployeeBatch(models.Model):
             if str(a.effective_from) < str(date.today()):
                 user = self.env.user.browse(self.env.uid)
                 if user.has_group('base.group_system'):
-                    query = """ delete from hr_shifting_history where shift_batch_id=%s"""
-                    self._cr.execute(query, tuple([self.id]))
-                    return super(HrShiftEmployeeBatch, self).unlink()
+                    pass
                 else:
                     raise UserError(_('You can not delete this.'))
 
+            query = """ delete from hr_shifting_history where shift_batch_id=%s"""
+            self._cr.execute(query, tuple([self.id]))
+            return super(HrShiftEmployeeBatch, self).unlink()
