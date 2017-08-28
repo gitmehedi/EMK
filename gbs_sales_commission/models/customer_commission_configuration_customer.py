@@ -50,4 +50,4 @@ class CustomerCommissionConfigurationCustomer(models.Model):
     @api.onchange('new_value', 'old_value')
     def _onchange_value(self):
         if self.new_value < 0 or self.old_value < 0:
-            raise UserError(_('New value or Old value Amount naver take negative value!'))
+            raise UserError(_('New value or Old value naver take negative value!'))
