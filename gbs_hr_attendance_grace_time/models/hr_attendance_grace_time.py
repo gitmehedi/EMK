@@ -78,5 +78,5 @@ class HrAttendanceGraceTime(models.Model):
                     pass
                 else:
                     raise UserError(_('You can not delete previous dated record.'))
-            else:
-                return super(HrAttendanceGraceTime, self).unlink()
+
+            return super(HrAttendanceGraceTime, self).unlink()

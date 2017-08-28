@@ -9,9 +9,6 @@ class customer_creditlimit_assign(models.Model):
     _inherit = ['mail.thread', 'ir.needaction_mixin']
     _description = "Credit limit assign"
 
-    def _current_employee(self):
-        return self.env['hr.employee'].search([('user_id', '=', self.env.uid)], limit=1)
-
     name = fields.Char('Name', required=True,
            states={'confirm': [('readonly', True)],'validate1': [('readonly', True)],'approve': [('readonly',True)]})
     approve_date = fields.Date('Approved Date',
@@ -20,9 +17,9 @@ class customer_creditlimit_assign(models.Model):
                    states={'confirm': [('readonly', True)], 'validate1': [('readonly', True)], 'approve': [('readonly', True)]})
     days = fields.Integer('Days',required=True,
                    states={'confirm': [('readonly', True)], 'validate1': [('readonly', True)], 'approve': [('readonly', True)]})
-    requested_by = fields.Many2one('hr.employee', string="Requested By", default=_current_employee, readonly= True)
-    approver1_id = fields.Many2one('hr.employee', string='First Approval', readonly = True)
-    approver2_id = fields.Many2one('hr.employee', string='Second Approval', readonly =True)
+    requested_by = fields.Many2one('res.users', string="Requested By",default=lambda self: self.env.user, readonly=True)
+    approver1_id = fields.Many2one('res.users', string='First Approval', readonly = True)
+    approver2_id = fields.Many2one('res.users', string='Second Approval', readonly =True)
 
     """ Relational Fields """
     limit_ids = fields.One2many('res.partner.credit.limit', 'assign_id', 'Limits',
@@ -37,7 +34,7 @@ class customer_creditlimit_assign(models.Model):
     @api.multi
     def approve_creditlimit_run(self):
         self.limit_ids.write({'state': 'approve', 'assign_date': time.strftime('%Y-%m-%d')})
-        self.approver2_id = self.env.user.employee_ids.id
+        self.approver2_id = self.env.user
         return self.write({'state': 'approve', 'approve_date': time.strftime('%Y-%m-%d %H:%M:%S')})
 
     @api.multi
@@ -47,6 +44,19 @@ class customer_creditlimit_assign(models.Model):
                 raise UserError(_('You cannot delete a record which is not draft state!'))
         return super(customer_creditlimit_assign, self).unlink()
 
+    @api.constrains('credit_limit', 'days')
+    def _check_value(self):
+        if self.credit_limit <= 0 or self.days <= 0:
+            raise Warning("[Error] Limit or Days naver take zero or negative value!")
+
+    @api.constrains('name')
+    def _check_unique_constraint(self):
+        if self.name:
+            filters = [['name', '=ilike', self.name]]
+            name = self.search(filters)
+            if len(name) > 1:
+                raise Warning('[Unique Error] Name must be unique!')
+
     @api.multi
     def action_confirm(self):
         self.state = 'confirm'
@@ -54,7 +64,7 @@ class customer_creditlimit_assign(models.Model):
     @api.multi
     def action_validate(self):
         for record in self:
-            record.approver1_id = self.env.user.employee_ids.id
+            record.approver1_id = self.env.user
             record.state = 'validate1'
 
 

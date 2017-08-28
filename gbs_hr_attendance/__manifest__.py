@@ -12,6 +12,7 @@
                 ],
     'data': [
         'views/hr_attendance_view.xml',
+        'views/hr_emp_map_to_device.xml',
         'security/ir_rule.xml',
     ],
     'installable': True,
