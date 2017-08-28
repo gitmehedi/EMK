@@ -110,18 +110,15 @@ class SaleDeliveryOrder(models.Model):
             if sale_order_obj:
                 #self.parent_id = sale_order_obj.partner_id.id
                 #self.payment_term_id = sale_order_obj.payment_term_id.id
-
                 self.warehouse_id = sale_order_obj.warehouse_id.id
                 self.so_type = sale_order_obj.credit_sales_or_lc
                 self.so_date = sale_order_obj.confirmation_date
 
                 for record in sale_order_obj.order_line:
-                    print record
-                    sale_order_line_obj = record.env['sale.order.line'].search([('order_id', '=', self.sale_order_id.id)])
-                    print sale_order_line_obj.product_id.id
-                    product_id = sale_order_line_obj.product_id.id
+                    #sale_order_line_obj = record.env['sale.order.line'].search([('order_id', '=', self.sale_order_id.id)])
+                    #product_id = sale_order_line_obj.product_id.id
                     # val['product_id']=record.product_id
-                    val.append((0, 0, {'product_id': product_id,
+                    val.append((0, 0, {'product_id': record.product_id,
                                        'quantity': record.product_uom_qty,
                                        'pack_type': sale_order_obj.pack_type,
                                        'uom_id': record.product_uom,
