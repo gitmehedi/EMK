@@ -23,6 +23,7 @@ class GetDailyAttendanceReport(models.AbstractModel):
 
         requested_date = data['required_date']
         current_time =  datetime.datetime.now()
+        updated_curr_time = current_time + timedelta(hours=6)
         graceTime = att_utility_pool.getGraceTime(requested_date)
 
         companyName = ""
@@ -31,7 +32,7 @@ class GetDailyAttendanceReport(models.AbstractModel):
             operating_unit_id = data['operating_unit_id']
             unit = op_pool.search([('id','=',operating_unit_id)])
             companyName = unit.company_id.name
-            att_summary = self.getSummaryByUnit(unit, data, graceTime, exclude_emp_res, emp_pool, att_utility_pool, current_time)
+            att_summary = self.getSummaryByUnit(unit, data, graceTime, exclude_emp_res, emp_pool, att_utility_pool, updated_curr_time)
             att_summary_list.append(att_summary)
         else:
 
@@ -41,7 +42,7 @@ class GetDailyAttendanceReport(models.AbstractModel):
 
             for unit in unitList:
                 att_summary = self.getSummaryByUnit(unit, data, graceTime, exclude_emp_res, emp_pool,
-                                                att_utility_pool, current_time)
+                                                att_utility_pool, updated_curr_time)
                 att_summary_list.append(att_summary)
 
         docargs = {
