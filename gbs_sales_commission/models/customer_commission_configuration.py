@@ -142,9 +142,10 @@ class CustomerCommissionConfiguration(models.Model):
 
     @api.multi
     def unlink(self):
-        for bill in self:
-            if bill.state != 'draft':
+        for com in self:
+            if com.state != 'draft':
                 raise UserError(_('You can not delete this.'))
-            bill.line_ids.unlink()
+            com.config_customer_ids.unlink()
+            com.config_product_ids.unlink()
         return super(CustomerCommissionConfiguration, self).unlink()
 

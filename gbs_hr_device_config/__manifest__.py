@@ -7,7 +7,6 @@
     'data': [
         'data/ir_cron.xml',
         'views/device_configuration_view.xml',
-        'views/hr_emp_map_to_device.xml',
         'security/ir.model.access.csv',
     ],
     'depends': [
@@ -15,7 +14,8 @@
         'hr_attendance',
         'hr_attendance_import',
         "operating_unit",
-        "gbs_hr_attendance_utility"
+        "gbs_hr_attendance_utility",
+        "gbs_hr_attendance",
     ],
     'description': 
     """This module will connect to attendance devices""",
