@@ -30,7 +30,6 @@
                         <field name="state" widget="statusbar"/>
                     </header>
                     <sheet>
-                        <label for="name" class="oe_edit_only"/>
 	                    <h1>
 	                        <field name="name"/>
 	                    </h1>
@@ -74,7 +73,7 @@
                                         </tree>
                                     </field>
                                 </page>
-                                <page string="Payment Terms:Cash">
+                                <page string="Cash" attrs="{'invisible':[('so_type', '!=', 'cash')]}">
                                     <field name="cash_ids">
                                         <tree string="List" editable="bottom">
                                             <field name="amount"/>
@@ -84,7 +83,7 @@
                                         </tree>
                                     </field>
                                 </page>
-                                <page string="Payment Terms:Cheque">
+                                <page string="Cheque" attrs="{'invisible':[('so_type', '!=', 'cash')]}">
                                     <field name="cheque_ids">
                                         <tree string="List" editable="bottom">
                                             <field name="number"/>
@@ -95,7 +94,7 @@
                                         </tree>
                                     </field>
                                 </page>
-                                <page string="Payment Terms:T.T">
+                                <page string="T.T" attrs="{'invisible':[('so_type', '!=', 'cash')]}">
                                     <field name="tt_ids">
                                         <tree string="List" editable="bottom">
                                             <field name="ref_num"/>
@@ -106,7 +105,7 @@
                                         </tree>
                                     </field>
                                 </page>
-                                <page string="Payment Terms:L/C">
+                                <page string="L/C" attrs="{'invisible':[('so_type', '!=', 'lc_sales')]}">
                                     <field name="lc_ids">
                                         <tree string="List" editable="bottom">
                                             <field name="number"/>

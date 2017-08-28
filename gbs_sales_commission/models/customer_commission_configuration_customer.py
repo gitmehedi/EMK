@@ -1,4 +1,5 @@
-from odoo import api, fields, models
+from odoo import api, fields, models,_
+from openerp.exceptions import UserError, ValidationError
 
 
 class CustomerCommissionConfigurationCustomer(models.Model):
@@ -6,7 +7,7 @@ class CustomerCommissionConfigurationCustomer(models.Model):
     _order = 'id desc'
 
     old_value = fields.Float(string="Old Value", compute='store_old_value', digits=(16, 2), readonly = False,store=True)
-    new_value = fields.Float(string="New Value", digits=(16, 2), required=True)
+    new_value = fields.Float(string="New Value",required=True)
     status = fields.Boolean(string='Status', default=True, required=True)
 
     """ Relational Fields """
@@ -32,3 +33,10 @@ class CustomerCommissionConfigurationCustomer(models.Model):
                      ('status', '=', True)])
 
                 rec.old_value = commission.commission_rate if commission else 0
+
+    """All function which process data and operation"""
+
+    @api.constrains('new_value')
+    def _check_unique_constraint(self):
+            if self.new_value > 100:
+                raise Warning("[Error]'New Value' must be between 0 to 100 !")

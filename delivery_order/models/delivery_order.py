@@ -5,44 +5,43 @@ import time,datetime
 class SaleDeliveryOrder(models.Model):
     _name = 'delivery.order'
     _description = 'Delivery Order'
+    _inherit = ['mail.thread', 'ir.needaction_mixin']
 
-    def _current_employee(self):
-        return self.env['hr.employee'].search([('user_id', '=', self.env.uid)], limit=1)
+    # def _current_employee(self):
+    #     return self.env['hr.employee'].search([('user_id', '=', self.env.uid)], limit=1)
 
-    name = fields.Char(size=100, string="Name", required=True ,readonly=True,
-                             states={'draft': [('readonly', False)]})
+    name = fields.Char(string='Name',readonly = True, index=True, default=lambda self: _('New'))
+
     so_date = fields.Date('Sales Order Date', readonly=True,
                              states={'draft': [('readonly', False)]})
     deli_address = fields.Char('Delivery Address', readonly=True,
                              states={'draft': [('readonly', False)]})
     """ All relations fields """
 
-    sale_order_id = fields.Many2one('sale.order',string='Order Lines', required=True, readonly=True,
-                             states={'draft': [('readonly', False)]})
+    sale_order_id = fields.Many2one('sale.order',string='Order Lines',
+                                    required=True, readonly=True,states={'draft': [('readonly', False)]})
     parent_id = fields.Many2one('res.partner', 'Customer', ondelete='cascade', readonly=True,
-                             states={'draft': [('readonly', False)]})
+                             related='sale_order_id.partner_id')
     payment_term_id = fields.Many2one('account.payment.term', string='Payment Terms', readonly=True,
-                             states={'draft': [('readonly', False)]})
+                                      related='sale_order_id.payment_term_id')
     warehouse_id = fields.Many2one('stock.warehouse', string='Warehouse', readonly=True,
-                             states={'draft': [('readonly', False)]})
+                                   states={'draft': [('readonly', False)]})
     line_ids = fields.One2many('delivery.order.line', 'parent_id', string="Products", readonly=True,
                                states={'draft': [('readonly', False)]})
-    cash_ids = fields.One2many('cash.payment.line', 'pay_cash_id', string="Payment Terms:Cash", readonly=True,
+    cash_ids = fields.One2many('cash.payment.line', 'pay_cash_id', string="Cash", readonly=True, invisible =True,
                                states={'draft': [('readonly', False)]})
 
-    cheque_ids=  fields.One2many('cheque.payment.line', 'pay_cash_id', string="Payment Terms:Cash", readonly=True,
+    cheque_ids=  fields.One2many('cheque.payment.line', 'pay_cash_id', string="Cheque", readonly=True,
                                states={'draft': [('readonly', False)]})
-    tt_ids = fields.One2many('tt.payment.line', 'pay_tt_id', string="Payment Terms:Cash", readonly=True,
+    tt_ids = fields.One2many('tt.payment.line', 'pay_tt_id', string="T.T", readonly=True,
                                  states={'draft': [('readonly', False)]})
-    lc_ids = fields.One2many('lc.payment.line', 'pay_lc_id', string="Payment Terms:Cash", readonly=True,
+    lc_ids = fields.One2many('lc.payment.line', 'pay_lc_id', string="L/C", readonly=True,
                              states={'draft': [('readonly', False)]})
 
-    requested_by = fields.Many2one('hr.employee', string="Requested By", default=_current_employee, readonly=True)
+    requested_by = fields.Many2one('res.users', string='Requested By', readonly=True, default=lambda self: self.env.user)
 
-    approver1_id = fields.Many2one('hr.employee', string="Approved By",
-                                   readonly=True)
-    approver2_id = fields.Many2one('hr.employee', string="Confirmed By",
-                                   readonly=True)
+    approver1_id = fields.Many2one('res.users', readonly=True)
+    approver2_id = fields.Many2one('res.users', readonly=True)
 
     requested_date = fields.Date(string="Requested Date", default=datetime.date.today(), readonly=True)
     approved_date = fields.Date('Approved Date',
@@ -86,7 +85,7 @@ class SaleDeliveryOrder(models.Model):
     def action_approve(self):
         self.state = 'approve'
         self.line_ids.write({'state':'approve'})
-        self.approver2_id = self.env.user.employee_ids.id
+        self.approver2_id = self.env.user
         return self.write({'state': 'approve', 'approved_date': time.strftime('%Y-%m-%d %H:%M:%S')})
 
     @api.one
@@ -98,19 +97,31 @@ class SaleDeliveryOrder(models.Model):
     def action_close(self):
         self.state = 'close'
         self.line_ids.write({'state':'close'})
-        self.approver1_id = self.env.user.employee_ids.id
+        self.approver1_id = self.env.user
         return self.write({'state': 'close', 'confirmed_date': time.strftime('%Y-%m-%d %H:%M:%S')})
 
 
     @api.onchange('sale_order_id')
     def onchange_sale_order_id(self):
         if self.sale_order_id:
+            val = []
             sale_order_obj = self.env['sale.order'].search([('id', '=',self.sale_order_id.id)])
+
             if sale_order_obj:
-                self.parent_id = sale_order_obj.partner_id.id
-                self.payment_term_id = sale_order_obj.payment_term_id.id
+                #self.parent_id = sale_order_obj.partner_id.id
+                #self.payment_term_id = sale_order_obj.payment_term_id.id
                 self.warehouse_id = sale_order_obj.warehouse_id.id
                 self.so_type = sale_order_obj.credit_sales_or_lc
                 self.so_date = sale_order_obj.confirmation_date
 
+                for record in sale_order_obj.order_line:
+                    #sale_order_line_obj = record.env['sale.order.line'].search([('order_id', '=', self.sale_order_id.id)])
+                    #product_id = sale_order_line_obj.product_id.id
+                    # val['product_id']=record.product_id
+                    val.append((0, 0, {'product_id': record.product_id,
+                                       'quantity': record.product_uom_qty,
+                                       'pack_type': sale_order_obj.pack_type,
+                                       'uom_id': record.product_uom,
+                                                }))
 
+            self.line_ids = val

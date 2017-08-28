@@ -4,9 +4,9 @@ class MrpDailyProductionLine(models.Model):
     _name = 'delivery.order.line'
     _description = 'Sales Delivery Order line'
 
-    product_id = fields.Many2one('product.template', string="Product", ondelete='cascade')
-    uom_id = fields.Many2one('product.uom', string="UOM",ondelete='cascade')
-    quantity = fields.Integer(string="Quantity", required=True, default= "1")
+    product_id = fields.Many2one('product.product', string="Product", readonly=True, ondelete='cascade')
+    uom_id = fields.Many2one('product.uom', string="UOM",ondelete='cascade',readonly=True)
+    quantity = fields.Integer(string="Quantity", required=True, default= "1",readonly=True)
 
     """ Relational Fields """
     parent_id = fields.Many2one('delivery.order', ondelete='cascade')
@@ -21,7 +21,7 @@ class MrpDailyProductionLine(models.Model):
         ('cylinder', 'Cylinder'),
         ('cus_cylinder', 'Customer Cylinder'),
         ('other', 'Others'),
-    ], string='Packing')
+    ], string='Packing',readonly=True)
 
     deli_mode = fields.Selection([
         ('bonded', 'Bonded'),
