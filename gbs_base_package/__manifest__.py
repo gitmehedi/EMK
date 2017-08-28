@@ -20,7 +20,7 @@
 
     # any module necessary for this one to work correctly
     'depends': ['base',
-                'web_export_view',
+                # 'web_export_view',
                 'web_chatter_paste',
                 'disable_odoo_online',
                 'base_technical_features',
