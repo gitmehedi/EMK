@@ -4,11 +4,12 @@ from odoo import api, fields, models
 class SaleOrder(models.Model):
     _inherit = "sale.order"
 
+
     credit_sales_or_lc = fields.Selection([
         ('cash', 'Cash'),
         ('credit_sales', 'Credit'),
         ('lc_sales', 'L/C'),
-    ], string='Sale Order Type',)
+    ], string='Sale Order Type', required=True)
 
     state = fields.Selection([
         ('draft', 'Quotation'),
@@ -24,7 +25,11 @@ class SaleOrder(models.Model):
         ('cylinder', 'Cylinder'),
         ('cust_cylinder', 'Customer Cylinder'),
         ('other', 'Others'),
-    ], string='Packing',)
+    ], string='Packing',required=True)
+
+    @api.multi
+    def action_validate(self):
+        self.state = 'sent'
 
     @api.multi
     def _is_double_validation_applicable(self):
@@ -70,7 +75,7 @@ class SaleOrder(models.Model):
                     is_double_validation = False
 
 
-            elif (self.credit_sales_or_lc == 'lc_sales'):
+            elif self.credit_sales_or_lc == 'lc_sales':
                 print '-----LC-----'
 
         if is_double_validation:
@@ -79,5 +84,15 @@ class SaleOrder(models.Model):
             self.write({'state': 'sent'}) # One level approval process
 
     @api.multi
-    def action_validate(self):
-        self.state = 'sent'
+    def action_create_delivery_order(self):
+        view = self.env.ref('delivery_order.delivery_order_form')
+
+        return {
+            'name': ('Delivery Authorization'),
+            'view_type': 'form',
+            'view_mode': 'form',
+            'res_model': 'delivery.order',
+            'view_id': [view.id],
+            'type': 'ir.actions.act_window',
+            'context': {'default_sale_order_id': self.id}
+        }
