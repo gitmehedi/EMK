@@ -64,13 +64,5 @@ class HrEmployee(models.Model):
     _inherit = ['hr.employee']
 
     device_employee_acc = fields.Integer(string='AC No.')
-
-
-
-
-
-# class HrAttendanceImportError(models.Model):
-#     _inherit = ['hr.attendance.import.error']
-#
-#     import_id = fields.Many2one('hr.attendance.import', 'id', ondelete='cascade', required=True)
+    is_monitor_attendance=fields.Boolean(string='Monitor Attendance',default=True)
 

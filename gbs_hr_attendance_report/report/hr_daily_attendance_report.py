@@ -15,11 +15,6 @@ class GetDailyAttendanceReport(models.AbstractModel):
 
         att_summary_list = []
 
-        # Get exclude employee acc number
-        exclude_emp_pool = self.env['hr.excluded.employee'].search([])
-        exclude_emp_res = []
-        for i in exclude_emp_pool:
-            exclude_emp_res.append(i.acc_number)
 
         requested_date = data['required_date']
         current_time =  datetime.datetime.now()
@@ -31,7 +26,7 @@ class GetDailyAttendanceReport(models.AbstractModel):
             operating_unit_id = data['operating_unit_id']
             unit = op_pool.search([('id','=',operating_unit_id)])
             companyName = unit.company_id.name
-            att_summary = self.getSummaryByUnit(unit, data, graceTime, exclude_emp_res, emp_pool, att_utility_pool, current_time)
+            att_summary = self.getSummaryByUnit(unit, data, graceTime,  emp_pool, att_utility_pool, current_time)
             att_summary_list.append(att_summary)
         else:
 
@@ -40,7 +35,7 @@ class GetDailyAttendanceReport(models.AbstractModel):
                 companyName = unitList[0].company_id.name
 
             for unit in unitList:
-                att_summary = self.getSummaryByUnit(unit, data, graceTime, exclude_emp_res, emp_pool,
+                att_summary = self.getSummaryByUnit(unit, data, graceTime, emp_pool,
                                                 att_utility_pool, current_time)
                 att_summary_list.append(att_summary)
 
@@ -48,12 +43,13 @@ class GetDailyAttendanceReport(models.AbstractModel):
             'required_date': data['required_date'],
             'created_on': current_time,
             'company_name': companyName,
-            'att_summary_list': att_summary_list
+            'att_summary_list': att_summary_list,
+            'operating_unit':data['operating_unit_id']
         }
 
         return self.env['report'].render('gbs_hr_attendance_report.report_daily_att_doc', docargs)
 
-    def getSummaryByUnit(self, unit, data, graceTime, exclude_emp_res, emp_pool, att_utility_pool, current_time):
+    def getSummaryByUnit(self, unit, data, graceTime,  emp_pool, att_utility_pool, current_time):
 
         operating_unit_id = unit.id
 
@@ -66,7 +62,7 @@ class GetDailyAttendanceReport(models.AbstractModel):
                        "holidays": [], "alter_roster": []}
 
         employeeList = emp_pool.search([('operating_unit_id', '=', operating_unit_id),
-                                        ('active', '=', True), ('device_employee_acc', 'not in', exclude_emp_res)
+                                        ('active', '=', True), ('is_monitor_attendance', '=', False)
                                         ], order='department_id,employee_sequence desc')
 
         employeeAttMap = att_utility_pool.getDailyAttByDateAndUnit(requestedDate, operating_unit_id)
