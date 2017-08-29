@@ -5,7 +5,7 @@
         <field name="model">sale.config.settings</field>
         <field name="inherit_id" ref="sales_team.view_sale_config_settings"/>
         <field name="arch" type="xml">
-            <div id="main" position="inside">
+            <div id="main">
                 <group string="Delivery Order">
                     <field name="delivery_order_auto_generate" class="oe_inline" widget="radio"/>
                 </group>

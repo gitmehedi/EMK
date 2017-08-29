@@ -23,6 +23,14 @@
                                 type="object"
                                 class="btn-primary "
                                 string="Validate" />
+
+                        <button name="action_create_delivery_order"
+                                states="sale"
+                                type="object"
+                                groups="gbs_application_group.group_head_account,gbs_application_group.group_cxo"
+                                class="btn-primary"
+                                string="Create Delivery Order"/>
+
                     </header>
 
                     <!-- Conform Sale 1 -->
@@ -114,8 +122,8 @@
         </record>
 
         <!-- Add inherited menu here-->
-        <menuitem name="Sales" id="sales_team.menu_base_partner"
-                  groups="gbs_application_group.group_head_sale,gbs_application_group.group_cxo"/>
+        <!--<menuitem name="Sales" id="sales_team.menu_base_partner"-->
+                  <!--groups="gbs_application_group.group_head_sale,gbs_application_group.group_cxo"/>-->
 
          <menuitem action="sale.action_orders"
             id="menu_sale_order" parent="sales_team.menu_sales" sequence="12"

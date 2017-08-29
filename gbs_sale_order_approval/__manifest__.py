@@ -12,6 +12,7 @@
         'sales_team',
         'gbs_sales_commission',
         'gbs_sales_commission_so',
+        'delivery_order',
 
     ],
     'data': [
