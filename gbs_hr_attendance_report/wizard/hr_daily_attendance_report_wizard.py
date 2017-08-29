@@ -19,7 +19,8 @@ class daily_attendance_report(orm.TransientModel):
 
     @api.onchange('company_id')
     def onchange_company_id(self):
-        self.operating_unit_id= []
+        if self.env.user.has_group('operating_unit.group_multi_operating_unit'):
+            self.operating_unit_id= []
         return {'domain': {'operating_unit_id': ['|',('company_id','=', self.company_id.id),('active','=', False)]}}
 
 
@@ -29,7 +30,10 @@ class daily_attendance_report(orm.TransientModel):
 
         data['company_id'] = self.company_id.id
         data['required_date'] = self.required_date
-        data['operating_unit_id'] = self.operating_unit_id.id or False
-        data['operating_unit_name'] = self.operating_unit_id.name or False
+        if self.operating_unit_id.name=='All':
+            data['operating_unit_id']=False
+        else:
+            data['operating_unit_id'] = self.operating_unit_id.id
+        # data['operating_unit_name'] = self.operating_unit_id.name or False
 
         return self.env['report'].get_action(self, 'gbs_hr_attendance_report.report_daily_att_doc', data=data)
