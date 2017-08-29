@@ -6,11 +6,12 @@ class SaleDeliveryOrder(models.Model):
     _name = 'delivery.order'
     _description = 'Delivery Order'
     _inherit = ['mail.thread', 'ir.needaction_mixin']
+    _rec_name='name'
 
     # def _current_employee(self):
     #     return self.env['hr.employee'].search([('user_id', '=', self.env.uid)], limit=1)
 
-    name = fields.Char(string='Name',readonly = True, index=True, default=lambda self: _('New'))
+    name = fields.Char(string='Name', index=True)
 
     so_date = fields.Date('Sales Order Date', readonly=True,
                              states={'draft': [('readonly', False)]})
@@ -40,16 +41,16 @@ class SaleDeliveryOrder(models.Model):
 
     requested_by = fields.Many2one('res.users', string='Requested By', readonly=True, default=lambda self: self.env.user)
 
-    approver1_id = fields.Many2one('res.users', readonly=True)
-    approver2_id = fields.Many2one('res.users', readonly=True)
+    approver1_id = fields.Many2one('res.users', string="First Approval", readonly=True)
+    approver2_id = fields.Many2one('res.users', string="Final Approval", readonly=True)
 
     requested_date = fields.Date(string="Requested Date", default=datetime.date.today(), readonly=True)
-    approved_date = fields.Date('Approved Date',
+    approved_date = fields.Date(string='Final Approval Date',
                                 states={'draft': [('invisible', True)],
                                         'validate': [('invisible', True)],
                                         'close': [('invisible', False), ('readonly', True)],
                                         'approve': [('invisible', False), ('readonly', True)]})
-    confirmed_date = fields.Date(string="Confirmed Date", _defaults=lambda *a: time.strftime('%Y-%m-%d'), readonly=True)
+    confirmed_date = fields.Date(string="First Approval Date", _defaults=lambda *a: time.strftime('%Y-%m-%d'), readonly=True)
 
 
     """ State fields for containing various states """

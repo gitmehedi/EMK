@@ -32,8 +32,7 @@ class HrShiftEmployeeBatch(models.Model):
                     pass
                 else:
                     raise UserError(_('You can not delete this.'))
-            else:
-                query = """ delete from hr_shifting_history where shift_batch_id=%s"""
-                self._cr.execute(query, tuple([self.id]))
 
+            query = """ delete from hr_shifting_history where shift_batch_id=%s"""
+            self._cr.execute(query, tuple([self.id]))
             return super(HrShiftEmployeeBatch, self).unlink()

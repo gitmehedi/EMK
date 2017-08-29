@@ -8,6 +8,8 @@
         'sale',
     ],
     'data': [
+        'security/ir.model.access.csv',
+        'security/ir_rule.xml',
         'views/delivery_order_view.xml',
     ],
     'summary': 'Sales delivery Order/Authorization Information',

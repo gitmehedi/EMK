@@ -34,7 +34,7 @@
             <field name="name">customer.creditlimit.assign.form</field>
             <field name="model">customer.creditlimit.assign</field>
             <field name="arch" type="xml">
-                <form string="Credit Limit">
+                <form string="Credit Limit" copy="0" delete="false">
 	                <header>
 						<button string="Confirm" name="action_confirm" type="object" states="draft" class="oe_highlight"
 							groups="gbs_application_group.group_head_account,gbs_application_group.group_head_sale,gbs_application_group.group_cxo"/>
