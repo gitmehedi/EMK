@@ -27,11 +27,14 @@ class HrEmployee(models.Model):
 
     @api.multi
     def _get_employee_manager(self):
+        res = {}
         """Get Employee Supervisor / Manager / Department Manager."""
-        manager = []
-        self.ensure_one()
-        if self.parent_id:
-            manager.append(self.parent_id)
-        if self.department_id and self.department_id.manager_id:
-            manager.append(self.department_id.manager_id)
-        return manager
+        for emp in self:
+            manager = []
+            #self.ensure_one()
+            if emp.parent_id:
+                manager.append(emp.parent_id)
+            if emp.department_id and emp.department_id.manager_id:
+                manager.append(emp.department_id.manager_id)
+            res[emp.id] = manager
+        return res
