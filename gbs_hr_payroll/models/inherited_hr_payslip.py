@@ -7,14 +7,16 @@ class HrPayslipEmployees(models.TransientModel):
 
     @api.multi
     def compute_sheet(self):
+        active_id = self.env.context.get('active_id')
+
         res = super(HrPayslipEmployees, self).compute_sheet()
 
-        active_id = self.env.context.get('active_id')
         payslip_run = self.env['hr.payslip.run'].browse(active_id)
-
         for payslip in payslip_run.slip_ids:
             payslip.onchange_employee()
             payslip.compute_sheet()
+            if not payslip.contract_id:
+                payslip.unlink()
 
         return res
 
