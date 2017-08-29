@@ -29,7 +29,7 @@ class HrEmployee(models.Model):
     def _get_employee_manager(self):
         """Get Employee Supervisor / Manager / Department Manager."""
         manager = []
-        # self.ensure_one()
+        self.ensure_one()
         if self.parent_id:
             manager.append(self.parent_id)
         if self.department_id and self.department_id.manager_id:
