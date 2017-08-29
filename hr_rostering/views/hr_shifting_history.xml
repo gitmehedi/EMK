@@ -28,9 +28,9 @@
 								</group>
 								<field name="shift_ids">
 									<tree editable="top">
-										<field name="shift_id" readonly="1"/>
-										<field name="effective_from" readonly="1"/>
-										<field name="effective_end" readonly="1"/>
+										<field name="shift_id" />
+										<field name="effective_from" />
+										<field name="effective_end" />
 									</tree>
 								</field>
 							</group>
@@ -40,22 +40,22 @@
 			</field>
 		</record>
 
-		<record id="inherit_view_rostering_shift_history" model="ir.ui.view">
-            <field name="name">hr.shifting.history.form.inherit.</field>
-            <field name="model">hr.employee</field>
-            <field name="inherit_id" ref="rostering_shift_history" />
-            <field name="groups_id" eval="[(6, 0, [ref('base.group_system')])]" />
-            <field name="arch" type="xml">
-                <field name="shift_id" position="attributes">
-                   <attribute name="readonly">0</attribute>
-                </field>
-				<field name="effective_from" position="attributes">
-                   <attribute name="readonly">0</attribute>
-                </field>
-				<field name="effective_end" position="attributes">
-                   <attribute name="readonly">0</attribute>
-                </field>
-            </field>
-		</record>
+		<!--<record id="inherit_view_rostering_shift_history" model="ir.ui.view">-->
+            <!--<field name="name">hr.shifting.history.form.inherit.</field>-->
+            <!--<field name="model">hr.employee</field>-->
+            <!--<field name="inherit_id" ref="rostering_shift_history" />-->
+            <!--<field name="groups_id" eval="[(6, 0, [ref('base.group_system')])]" />-->
+            <!--<field name="arch" type="xml">-->
+                <!--<field name="shift_id" position="attributes">-->
+                   <!--<attribute name="readonly">0</attribute>-->
+                <!--</field>-->
+				<!--<field name="effective_from" position="attributes">-->
+                   <!--<attribute name="readonly">0</attribute>-->
+                <!--</field>-->
+				<!--<field name="effective_end" position="attributes">-->
+                   <!--<attribute name="readonly">0</attribute>-->
+                <!--</field>-->
+            <!--</field>-->
+		<!--</record>-->
 	</data>
 </odoo>
