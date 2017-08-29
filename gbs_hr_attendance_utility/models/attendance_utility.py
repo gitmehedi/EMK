@@ -4,9 +4,9 @@ from datetime import timedelta
 from utility_class import Shift,ShiftLine,DutyTime,TempLateTime,Employee
 
 
-class AttendanceUtility(models.Model):
+class AttendanceUtility(models.TransientModel):
     _name = "attendance.utility"
-    _auto = False
+    # _auto = False
 
     employee_shift_history_query = """SELECT effective_from, shift_id
                                     FROM hr_shifting_history
