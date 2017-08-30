@@ -25,10 +25,8 @@
                             <field name="company_id" groups="base.group_multi_company"
                                         options='{"no_open": True,"no_create": 1, "no_create_edit":1}' />
                             <field name="operating_unit_id"
-                                   options='{"no_open": True,"no_create": 1, "no_create_edit":1,"context":1}' placeholder="All"
-                                   groups="operating_unit.group_multi_operating_unit"   />
-                            <!--<field name="department_id" options='{"no_open": True,"no_create": 1, "no_create_edit":1}'/>-->
-                            <!--options='{"no_open": True,"no_create": 1, "no_create_edit":1,"context":1}' placeholder="All" widget="selection" context="{'name': 'ALL'}"-->
+                                   options='{"no_open": True,"no_create": 1, "no_create_edit":1}'
+                                   groups="operating_unit.group_multi_operating_unit"/>
                         </group>
                         <footer>
                             <button name ="process_report" string="Print" type="object" class="oe_highlight"  />
