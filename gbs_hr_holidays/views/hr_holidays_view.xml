@@ -73,10 +73,11 @@
             <field name="model">hr.holidays</field>
             <field name="inherit_id" ref="hr_holidays.view_hr_holidays_filter"/>
             <field name="arch" type="xml">
+                <filter name="department" domain="[('department_id.manager_id.user_id', '=', uid)]" position="replace"/>
                 <search string="Search Leave">
-                    <xpath expr="//filter[@name='department']"  position="replace">
-                        <filter string="My Department Leaves" name="department" domain="[('employee_id.department_id.manager_id','in',[e.id for e in user.employee_ids])]" help="My Department Leaves"/>
-                    </xpath>
+                    <!--<xpath expr="//filter[@name='department']"  position="attributes">-->
+                        <!--<attribute name='invisible'>1</attribute>-->
+                    <!--</xpath>-->
                 </search>
             </field>
         </record>
