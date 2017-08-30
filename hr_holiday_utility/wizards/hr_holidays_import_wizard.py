@@ -420,7 +420,8 @@ class HrAttendanceImportWizard(models.TransientModel):
             temp_vals = {}
             temp_vals['employee_id'] = line['employee_id']
             temp_vals['holiday_status_id'] = line['holiday_status_id']
-            temp_vals['number_of_days_temp'] = line['number_of_days_temp']
+            temp_vals['number_of_days'] = line['number_of_days']
+            temp_vals['type'] = line['type']
             temp_vals['import_id'] = move.id
              
             temp_pool = self.env['hr.holidays.import.temp']
@@ -429,7 +430,8 @@ class HrAttendanceImportWizard(models.TransientModel):
             """ search employee model with employee ID """
             vals = {}
             vals['holiday_status_id'] = line['holiday_status_id']
-            vals['number_of_days_temp'] = line['number_of_days_temp']
+            vals['number_of_days'] = line['number_of_days']
+            vals['type'] = line['type']
             vals['import_id'] = move.id
 
             emp_pool = self.env['hr.employee'].search([('id','=',line['employee_id'])])
@@ -443,7 +445,8 @@ class HrAttendanceImportWizard(models.TransientModel):
 
                 error_vals = {}
                 error_vals['holiday_status_id'] = line['holiday_status_id']
-                error_vals['number_of_days_temp'] = line['number_of_days_temp']
+                error_vals['number_of_days'] = line['number_of_days']
+                error_vals['type'] = line['type']
                 error_vals['import_id'] = move.id
 
                 error_vals['employee_id'] = line['employee_id']

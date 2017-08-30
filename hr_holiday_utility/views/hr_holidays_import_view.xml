@@ -19,13 +19,12 @@
 			<field name="model">hr.holidays.import</field>
 			<field name="type">form</field>
 			<field name="arch" type="xml">
-				<form string="Import Leave Data" delete ="0" create = "0">
+				<form string="Import Leave Data">
 				 	<header>
-	                    <button name="hr_holidays_data_import.hr_earned_leave_encashment_wizard_action_view"
+	                    <button name="hr_holiday_utility.hr_earned_leave_encashment_wizard_action_view"
 							states="draft,confirmed" type="action" string="Browse" /> 
 					 	<button name="validated" type="object" string="Import" states="draft,confirmed"/>
-					 	<field name="state" widget="statusbar" statusbar_visible="draft,confirmed,imported"/>                    	
-					 	
+					 	<field name="state" widget="statusbar" statusbar_visible="draft,confirmed,imported"/>
                 	</header>				
                 	
 					<sheet>
@@ -40,8 +39,9 @@
 								<field name="import_temp">
 									<tree string="List" editable="bottom">
 										<field name="employee_id"/>
-										<field name="number_of_days_temp"/>
 										<field name="holiday_status_id"/>
+										<field name="number_of_days"/>
+										<field name="type"/>
 									</tree>
 								</field>	
 							</page>
@@ -49,8 +49,9 @@
 								<field name="import_error_lines">
 									<tree string="List" editable="bottom">
 										<field name="employee_id"/>
-										<field name="number_of_days_temp"/>
 										<field name="holiday_status_id"/>
+										<field name="number_of_days"/>
+										<field name="type"/>
 									</tree>
 								</field>
 							</page>
@@ -58,8 +59,9 @@
 								<field name="lines">
 									<tree string="List" editable="bottom">
 										<field name="employee_id"/>
-										<field name="number_of_days_temp"/>
 										<field name="holiday_status_id"/>
+										<field name="number_of_days"/>
+										<field name="type"/>
 									</tree>
 								</field>	
 							</page>

@@ -1,5 +1,5 @@
 {
-    'name': 'Leave Holidays Data Import',
+    'name': 'Holiday Utility',
     'author': 'Genweb2 Limited',
     'website': 'www.genweb2.com',
     'category': 'leave',

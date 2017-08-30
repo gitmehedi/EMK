@@ -5,7 +5,8 @@ class HrHolidaysImportError(models.Model):
 
     employee_id = fields.Char(string='Employee')
     holiday_status_id = fields.Char(string='Leave Type')
-    number_of_days_temp = fields.Char(string='Remaining Days')
+    number_of_days = fields.Char(string='Remaining Days')
+    type = fields.Char(string='Request Type')
 
     import_id = fields.Many2one('hr.holidays.import', 'id', ondelete='cascade')
     
