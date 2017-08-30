@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+	<data>
+		<record id="view_holidays_exception_tree" model="ir.ui.view">
+			<field name="name">hr_emp_holidays_batch_tree</field>
+			<field name="model">hr.holidays.exception.employee.batch</field>
+			<field name="arch" type="xml">
+				<tree string="Holidays Exception">
+					<field name="name" />
+					<field name="operating_unit_id" />
+					<field name="public_holidays_title" />
+				</tree>
+			</field>
+		</record>
+
+		<record id="view_holidays_exception_form" model="ir.ui.view">
+			<field name="name">hr_holidays_public_form</field>
+			<field name="model">hr.holidays.exception.employee.batch</field>
+			<field name="arch" type="xml">
+				<form string="Holidays Exception">
+					<!--<header>-->
+						<!--<button name="geneare_yearly_calendar" type="object"-->
+							<!--string="Generate" clashr_employee_holidays_batch_views="oe_highlight" />-->
+					<!--</header>-->
+					<sheet>
+						<group>
+							<group>
+								<field name="name" />
+								<field name="operating_unit_id" options='{"no_open": True,"no_create": 1, "no_create_edit":1}'/>
+								<field name="public_holidays_title" options='{"no_open": True,"no_create": 1, "no_create_edit":1}'/>
+							</group>
+						</group>
+						<notebook colspan="2">
+							<page string="Public Holidays">
+								<field name="public_details_ids">
+									<tree string="List" create="0">
+										<field name="name"/>
+										<field name="date"/>
+									</tree>
+								</field>
+							</page>
+							<page string="Exception Compensatory Leave">
+								<field name="compensatory_leave_ids">
+									<tree string="Employees" create="0">
+										<field name='employee_id' readonly='1'/>
+									</tree>
+								</field>
+								<button name="%(hr_rostering.action_hr_batch_employees)d" type="action" string="Assign Employee" class="oe_highlight"/>
+							</page>
+							<page string="Exception Overtime">
+								<field name="overtime_alter_duty_ids">
+									<tree string="Employees" create="0">
+										<field name='employee_id' readonly='1'/>
+									</tree>
+								</field>
+								<button name="%(hr_rostering.action_hr_batch_employees)d" type="action" string="Assign Employee" class="oe_highlight"/>
+							</page>
+						</notebook>
+					</sheet>
+				</form>
+			</field>
+		</record>
+
+		<record id="action_hr_holidays_exception_batch" model="ir.actions.act_window">
+			<field name="name">Holidays Exception</field>
+			<field name="res_model">hr.holidays.exception.employee.batch</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+		</record>
+
+		<menuitem
+                name="Holidays Exception"
+                id="menu_holidays_exception_batch"
+			    parent="hr_rostering.main_menu_hr_shifting"
+                sequence="2" action="action_hr_holidays_exception_batch"
+        />
+
+	</data>
+</odoo>

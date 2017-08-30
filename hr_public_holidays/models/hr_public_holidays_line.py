@@ -21,7 +21,7 @@ class HrPublicHolidaysLine(models.Model):
 
     public_type_id = fields.Many2one('hr.holidays.public', string="Public Type")
     weekly_type_id = fields.Many2one('hr.holidays.public', string="Weekly Type" )
-    
+
     """ Selection fields """
     
     weekly_type = fields.Selection([
