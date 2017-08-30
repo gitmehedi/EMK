@@ -68,6 +68,19 @@
             </field>
         </record>
 
+        <record id="view_hr_holidays_filter_inherit" model="ir.ui.view">
+            <field name="name">hr.holidays.filter.inherit</field>
+            <field name="model">hr.holidays</field>
+            <field name="inherit_id" ref="hr_holidays.view_hr_holidays_filter"/>
+            <field name="arch" type="xml">
+                <search string="Search Leave">
+                    <xpath expr="//filter[@name='department']"  position="replace">
+                        <filter string="My Department Leaves" name="department" domain="[('employee_id.department_id.manager_id','in',[e.id for e in user.employee_ids])]" help="My Department Leaves"/>
+                    </xpath>
+                </search>
+            </field>
+        </record>
+
 
 	</data>
 </odoo>
