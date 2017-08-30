@@ -58,7 +58,7 @@
             <field name="view_mode">tree,form</field>
         </record>
 
-        <menuitem id="hr_arrear_menu" name="Arrear" parent="hr.menu_hr_root" sequence="100"/>
+        <menuitem id="hr_arrear_menu" name="Arrear" parent="hr.menu_hr_root" sequence="96"/>
         <menuitem id="hr_arrear_submenu" name="Arrear" parent="hr_arrear_menu"
                   action="hr_arrear_action"/>
     </data>
