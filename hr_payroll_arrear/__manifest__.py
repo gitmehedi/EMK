@@ -4,7 +4,10 @@
     'website': 'www.genweb2.com',
     'category': 'HR Payroll Arrear',
     'version': '1.0',
-    'depends': ['hr'],
+    'depends': ['hr',
+        'hr_payroll',
+        'l10n_in_hr_payroll',
+        'hr_employee_meal_bills'],
     'data': [
         #'security/ir.model.access.csv',
         'views/hr_payroll_arrear.xml',
