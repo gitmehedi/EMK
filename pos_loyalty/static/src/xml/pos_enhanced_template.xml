@@ -102,7 +102,7 @@
 
     <t t-extend='PosTicket'>
         <t t-jquery=".pos-sale-ticket" t-operation='replace'>
-            <div class="pos-sale-ticket" style="font-weight: 500; font-family: 'Times New Roman', Times, serif;">
+            <div class="pos-sale-ticket" style="font-family: Arial, Helvetica, sans-serif;">
 
                 <div class="pos-center-align">
                     <strong>
@@ -172,14 +172,17 @@
                         <th class="pos-right-align">VAT</th>
                         <th class="pos-right-align">Amount</th>
                     </tr>
+                    <tr>
+                        <th>-------</th>
+                        <th class="pos-right-align">---</th>
+                        <th class="pos-right-align">----</th>
+                        <th class="pos-right-align">---</th>
+                        <th class="pos-right-align">------</th>
+                    </tr>
+
                     <tr t-foreach="orderlines" t-as="orderline">
                         <td>
                             <t t-esc="orderline.get_product().display_name"/>
-                            <t t-if="orderline.get_discount() > 0">
-                                <div class="pos-disc-font">
-                                    With a<t t-esc="orderline.get_discount()"/>% discount
-                                </div>
-                            </t>
                         </td>
                         <td class="pos-right-align">
                             <t t-esc="orderline.get_quantity_str_with_unit()"/>
