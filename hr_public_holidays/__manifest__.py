@@ -21,7 +21,6 @@
 #         'security/ir.model.access.csv',
 #         'security/ir_rule.xml',
         'wizard/hr_calendar_clone_wizard_view.xml',
-        'wizard/hr_holidays_exception_wizard_view.xml',
         'views/hr_public_holidays_view.xml',
         'views/hr_holidays_calendar_view.xml',
         'views/hr_holidays_exception_employee_batch_view.xml',
