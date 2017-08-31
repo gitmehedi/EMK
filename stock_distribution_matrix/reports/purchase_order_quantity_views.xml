@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8" ?>
+odoo
+<openerp>
+    <data>
+        <template id="purchase_order">
+            <t t-call="report.html_container">
+                <div class="page">
+                    <div class="row mb32">
+                        <div class="col-xs-12">
+                            <h2 class="text-center">Purchase Order Quantity</h2>
+                        </div>
+                    </div>
+
+                    <!-- Report Body -->
+                    <!--<table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th class="text-center">Style No</th>
+                                <th class="text-center">Product Name</th>
+                                <th class="text-center">Barcode</th>
+                                <th class="text-center" colspan="20">Quantity</th>
+                            </tr>
+
+                        </thead>
+                        <tbody>
+
+                            <t t-foreach="data" t-as="val">
+                                <tr>
+                                    <td>
+                                        <t t-esc="val['name']"/>
+                                    </td>
+                                    <td>
+                                        <t t-esc="val['barcode']"/>
+                                    </td>
+                                    <td>
+                                        <t t-esc="val['quantity']"/>
+                                    </td>
+                                </tr>
+                            </t>
+                        </tbody>
+                    </table>-->
+
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th class="text-center">Style No</th>
+                                <th class="text-center">Color</th>
+                                <th class="text-center" colspan="20">Size wise Quantity</th>
+                            </tr>
+
+                        </thead>
+                        <tbody>
+                            <t t-foreach="data" t-as="o">
+                                <!--<tr style="background-color: #254512;">-->
+                                    <!--<td colspan="2"></td>-->
+                                    <!--<t t-foreach="o_value['size']" t-as="size">-->
+                                        <!--<td>-->
+                                            <!--<t t-esc="size"/>-->
+                                        <!--</td>-->
+                                    <!--</t>-->
+                                <!--</tr>-->
+                                <tr>
+                                    <td rowspan="5">
+                                        <t t-esc="o"/>
+                                    </td>
+                                </tr>
+
+                                <t t-foreach="o_value['color']" t-as="color">
+                                    <tr>
+                                        <td>
+                                            <t t-esc="color"/>
+                                        </td>
+
+                                        <t t-foreach="color_value" t-as="val">
+                                            <td>
+                                                <t t-esc="val_value"/>
+                                            </td>
+                                        </t>
+                                    </tr>
+                                </t>
+                            </t>
+                        </tbody>
+                    </table>
+                    <!-- End Report Body -->
+                </div>
+            </t>
+        </template>
+odoo_
+    </data>
+</openerp>
