@@ -32,28 +32,30 @@
 						</group>
 						<notebook colspan="2">
 							<page string="Public Holidays">
-								<field name="public_details_ids">
+								<field name="public_holidays_ids">
 									<tree string="List" create="0">
 										<field name="name"/>
-										<field name="date"/>
+										<field name="holiday_date"/>
 									</tree>
 								</field>
 							</page>
 							<page string="Exception Compensatory Leave">
 								<field name="compensatory_leave_ids">
-									<tree string="Employees" create="0">
+									<tree string="Employees" create='false' editable='bottom'>
 										<field name='employee_id' readonly='1'/>
 									</tree>
 								</field>
-								<button name="%(hr_rostering.action_hr_batch_employees)d" type="action" string="Assign Employee" class="oe_highlight"/>
+								<button name="%(action_hr_compensatory_leave_wizard)d" type="action" string="Assign Employee"
+										class="oe_highlight" context="{'operating_unit_id': operating_unit_id}"/>
 							</page>
 							<page string="Exception Overtime">
-								<field name="overtime_alter_duty_ids">
-									<tree string="Employees" create="0">
+									<field name="overtime_duty_ids" >
+									<tree string="Employees" create='false' editable='bottom'>
 										<field name='employee_id' readonly='1'/>
 									</tree>
 								</field>
-								<button name="%(hr_rostering.action_hr_batch_employees)d" type="action" string="Assign Employee" class="oe_highlight"/>
+								<button name="%(action_hr_exception_overtime_wizard)d" type="action" string="Assign Employee"
+										class="oe_highlight" context="{'operating_unit_id': operating_unit_id}"/>
 							</page>
 						</notebook>
 					</sheet>

@@ -34,7 +34,7 @@ class HrShiftBatchEmployees(models.TransientModel):
                 'shift_id': shift_id.id,
                 'effective_from': effective_from,
                 'effective_end': effective_end,
-                'shift_batch_id': active_id,
+                'rel_exception_leave_id': active_id,
             }
             pool_shift_emp += self.env['hr.shifting.history'].create(res)
         query = """ UPDATE hr_shift_employee_batch SET effective_from = %s,effective_end=%s,shift_id=%s WHERE id = %s"""

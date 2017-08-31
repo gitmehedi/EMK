@@ -14,13 +14,14 @@ class HrEmployeeHolidaysBatch(models.Model):
     public_holidays_title=fields.Many2one('hr.holidays.public',string='Public Holidays Title',required=True)
 
     compensatory_leave_ids=fields.One2many('hr.exception.compensatory.leave','rel_exception_leave_id',string='Compensatory Leave')
-    overtime_alter_duty_ids=fields.One2many('hr.exception.overtime.duty','rel_exception_ot_id',string='Overtime Duty')
-    public_details_ids = fields.One2many('hr.holidays.public.line', 'public_type_id', string="Public Holidays Details")
+    overtime_duty_ids=fields.One2many('hr.exception.overtime.duty','rel_exception_ot_id',string='Overtime Duty')
+    public_holidays_ids = fields.One2many('hr.exception.public.holidays.line', 'rel_exception_id', string="Public Holidays Details")
 
     @api.onchange('operating_unit_id')
     def onchange_operating_unit_id(self):
         self.public_holidays_title=[]
-        self.public_details_ids=[]
+        self.public_holidays_ids=[]
+        return {'domain': {'public_holidays_title': [('operating_unit_ids', '=', self.operating_unit_id.id)]}}
 
     @api.onchange('public_holidays_title')
     def onchange_public_holidays_title(self):
@@ -35,10 +36,10 @@ class HrEmployeeHolidaysBatch(models.Model):
                     holidays_line_pool=self.env['hr.holidays.public.line'].search([('public_type_id','=',public_holiday_id)])
                     for i in holidays_line_pool:
                         val.append((0, 0, {'name': i.name,
-                                           'date': i.date,
+                                           'holiday_date': i.date,
                                            }))
 
-                        self.public_details_ids = val
+                        self.public_holidays_ids = val
             else:
                 raise UserError(_('Select Operating Unit!!'))
 
@@ -52,7 +53,7 @@ class HrCompensatoryLeave(models.Model):
 
     """Relational Fields"""
     rel_exception_leave_id=fields.Many2one('hr.holidays.exception.employee.batch', string='Compensatory Leave')
-    employee_id = fields.Many2one("hr.employee", string='Employee Name')
+    employee_id = fields.Many2one("hr.employee",string='Employee Name')
 
 
 class HrOverTimeAlterDuty(models.Model):
@@ -62,3 +63,13 @@ class HrOverTimeAlterDuty(models.Model):
     """Relational Fields"""
     rel_exception_ot_id=fields.Many2one('hr.holidays.exception.employee.batch', string='Overtime Duty')
     employee_id = fields.Many2one("hr.employee", string='Employee Name')
+
+class HrOverTimeAlterDuty(models.Model):
+    _name = 'hr.exception.public.holidays.line'
+    _description = 'Exception Public Holidays'
+
+    """Relational Fields"""
+    rel_exception_id=fields.Many2one('hr.holidays.exception.employee.batch', string='Overtime Duty')
+    name = fields.Char('Name')
+    holiday_date = fields.Date('Date')
+
