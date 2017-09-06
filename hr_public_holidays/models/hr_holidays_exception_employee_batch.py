@@ -3,7 +3,7 @@ from openerp import fields, models, api,_
 from openerp.exceptions import Warning as UserError
 
 
-class HrEmployeeHolidaysBatch(models.Model):
+class HrEmployeeExceptionHolidaysBatch(models.Model):
     _name = 'hr.holidays.exception.employee.batch'
     _description = 'Employee Holidays Exception'
     _rec_name = 'name'
@@ -64,7 +64,7 @@ class HrOverTimeAlterDuty(models.Model):
     rel_exception_ot_id=fields.Many2one('hr.holidays.exception.employee.batch', string='Overtime Duty')
     employee_id = fields.Many2one("hr.employee", string='Employee Name')
 
-class HrOverTimeAlterDuty(models.Model):
+class HrEmployeeExceptionHolidaysBatchLine(models.Model):
     _name = 'hr.exception.public.holidays.line'
     _description = 'Exception Public Holidays'
 
