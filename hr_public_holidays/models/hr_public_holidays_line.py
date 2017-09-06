@@ -34,6 +34,17 @@ class HrPublicHolidaysLine(models.Model):
         ('thursday', 'Thursday'),
         ])
 
+
+    @api.multi
+    def name_get(self):
+        res = []
+        for holiday in self:
+            if holiday.date:
+                res.append((holiday.id, holiday.name + ', ' + holiday.date))
+            else:
+                res.append((holiday.id, holiday.name))
+        return res
+
 #     @api.one
 #     @api.constrains('date', 'state_ids')
 #     def _check_date_state(self):

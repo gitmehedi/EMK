@@ -18,27 +18,26 @@
 			<field name="model">hr.holidays.exception.employee.batch</field>
 			<field name="arch" type="xml">
 				<form string="Holidays Exception">
-					<!--<header>-->
-						<!--<button name="geneare_yearly_calendar" type="object"-->
-							<!--string="Generate" clashr_employee_holidays_batch_views="oe_highlight" />-->
-					<!--</header>-->
+					<header>
+	                    <button string="Confirm" name="action_confirm" states="draft" type="object" class="oe_highlight"/>
+                    	<button string="Approve" name="action_approve" states="confirmed" type="object" class="oe_highlight"
+								groups="hr_holidays.group_hr_holidays_user" />
+                     	<button string="Refuse" name="action_refuse" states="confirmed" type="object" groups="hr_holidays.group_hr_holidays_user"/>
+                    	<button string="Reset to Draft" name="action_draft" type="object" states="confirmed" groups="hr_holidays.group_hr_holidays_user"/>
+                    	<field name="state" widget="statusbar" statusbar_visible="draft,confirmed,approved"/>
+                	</header>
 					<sheet>
 						<group>
 							<group>
 								<field name="name" />
-								<field name="operating_unit_id" options='{"no_open": True,"no_create": 1, "no_create_edit":1}'/>
 								<field name="public_holidays_title" options='{"no_open": True,"no_create": 1, "no_create_edit":1}'/>
+							</group>
+							<group>
+								<field name="operating_unit_id" options='{"no_open": True,"no_create": 1, "no_create_edit":1}'/>
+								<field name="public_holidays_line" options='{"no_open": True,"no_create": 1, "no_create_edit":1}'/>
 							</group>
 						</group>
 						<notebook colspan="2">
-							<page string="Public Holidays">
-								<field name="public_holidays_ids">
-									<tree string="List" create="0">
-										<field name="name"/>
-										<field name="holiday_date"/>
-									</tree>
-								</field>
-							</page>
 							<page string="Exception Compensatory Leave">
 								<field name="compensatory_leave_ids">
 									<tree string="Employees" create='false' editable='bottom'>
