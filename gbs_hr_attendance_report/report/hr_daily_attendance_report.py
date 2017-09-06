@@ -17,8 +17,8 @@ class GetDailyAttendanceReport(models.AbstractModel):
 
 
         requested_date = data['required_date']
-        current_time =  datetime.datetime.now()
-        updated_curr_time = current_time + timedelta(hours=6)
+        curr_time_gmt =  datetime.datetime.now()
+        current_time = curr_time_gmt + timedelta(hours=6)
         graceTime = att_utility_pool.getGraceTime(requested_date)
 
         companyName = ""
@@ -42,7 +42,7 @@ class GetDailyAttendanceReport(models.AbstractModel):
 
         docargs = {
             'required_date': data['required_date'],
-            'created_on': current_time,
+            'created_on': curr_time_gmt,
             'company_name': companyName,
             'att_summary_list': att_summary_list,
             'operating_unit':data['operating_unit_id']
