@@ -21,7 +21,7 @@ class HrPublicHolidaysLine(models.Model):
 
     public_type_id = fields.Many2one('hr.holidays.public', string="Public Type")
     weekly_type_id = fields.Many2one('hr.holidays.public', string="Weekly Type" )
-    
+
     """ Selection fields """
     
     weekly_type = fields.Selection([
@@ -33,6 +33,17 @@ class HrPublicHolidaysLine(models.Model):
         ('wednesday', 'Wednesday'),
         ('thursday', 'Thursday'),
         ])
+
+
+    @api.multi
+    def name_get(self):
+        res = []
+        for holiday in self:
+            if holiday.date:
+                res.append((holiday.id, holiday.name + ', ' + holiday.date))
+            else:
+                res.append((holiday.id, holiday.name))
+        return res
 
 #     @api.one
 #     @api.constrains('date', 'state_ids')

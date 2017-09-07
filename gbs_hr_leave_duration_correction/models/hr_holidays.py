@@ -34,7 +34,11 @@ class HRHolidays(models.Model):
 
     @api.model
     def create(self, values):
-        if (values.get('date_from') is not False and values.get('date_to') is not False):
+
+        if (values.get('type') == 'remove'
+            and values.get('date_from') is not False
+            and values.get('date_to') is not False):
+
             date_from = values.get('date_from')
             date_to = values.get('date_to')
             d1 = datetime.strptime(str(date_from), "%Y-%m-%d")
