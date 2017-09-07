@@ -40,9 +40,8 @@ class HrPublicHolidaysLine(models.Model):
         res = []
         for holiday in self:
             if holiday.date:
-                res.append((holiday.id, holiday.name + ', ' + holiday.date))
-            else:
-                res.append((holiday.id, holiday.name))
+                name = "%s [%s]" % (holiday.name, holiday.date)
+                res.append((holiday.id, name))
         return res
 
 #     @api.one

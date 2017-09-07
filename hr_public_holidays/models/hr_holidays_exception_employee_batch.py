@@ -50,7 +50,24 @@ class HrEmployeeExceptionHolidaysBatch(models.Model):
 
     @api.multi
     def action_approve(self):
+        com_pool = self.env['hr.exception.compensatory.leave'].search([('rel_exception_leave_id', '=', self.id)])
+        holiday_status_pool=self.env['hr.holidays.status'].search([('name', '=', 'Compensatory Days')])
+        if com_pool:
+            for i in com_pool:
+                holidays_create_pool= self.env['hr.holidays'].create({
+                    'name':("%s's %s on %s [%s]") % (i.employee_id.name,holiday_status_pool.name,self.public_holidays_line.name ,self.public_holidays_line.date ),
+                    'type': 'add',
+                    'number_of_days_temp':1,
+                    'holiday_type': 'employee',
+                    'holiday_status_id': holiday_status_pool.id,
+                    'employee_id': i.employee_id.id,
+                    'department_id':i.employee_id.department_id.id,
+                    'leave_year_id':self.public_holidays_title.year_id.id,
+                    'notes':("%s on %s : %.2f day(s)") % (i.employee_id.name , holiday_status_pool.name, 1),
+                    'state':'validate',
+                })
         self.write({'state': 'approved'})
+
 
     @api.multi
     def action_refuse(self):
@@ -59,6 +76,60 @@ class HrEmployeeExceptionHolidaysBatch(models.Model):
     @api.multi
     def action_draft(self):
         self.write({'state': 'draft'})
+
+    @api.multi
+    def action_assign_compensatory(self):
+        com_pool = self.env['hr.exception.overtime.duty'].search([('rel_exception_ot_id', '=', self.id)])
+        emp_ids = []
+        if com_pool:
+            for i in com_pool:
+                emp_ids.append(i.employee_id.id)
+
+        res = self.env.ref('hr_public_holidays.view_hr_compensatory_leave_wizard_form')
+        result = {
+            'name': _('Exception Compensatory Leave'),
+            'view_type': 'form',
+            'view_mode': 'form',
+            'view_id': res and res.id or False,
+            'res_model': 'hr.exception.compensatory.leave.wizard',
+            'type': 'ir.actions.act_window',
+            'nodestroy': True,
+            'target': 'new',
+            # 'domain': [('employee_ids.operating_unit_id', '=', self.operating_unit_id.id)],
+            'context': {'create': False, 'emp_ids': emp_ids, 'operating_unit_id': self.operating_unit_id.id},
+        }
+        return result
+
+    @api.multi
+    def action_assign_overtime(self):
+        com_pool=self.env['hr.exception.compensatory.leave'].search([('rel_exception_leave_id','=',self.id)])
+        emp_ids=[]
+        if com_pool:
+            for i in com_pool:
+                emp_ids.append(i.employee_id.id)
+
+        res = self.env.ref('hr_public_holidays.view_hr_exception_overtime_wizard_form')
+        result = {
+            'name': _('Exception Overtime'),
+            'view_type': 'form',
+            'view_mode': 'form',
+            'view_id': res and res.id or False,
+            'res_model': 'hr.exception.overtime.wizard',
+            'type': 'ir.actions.act_window',
+            'nodestroy': True,
+            'target': 'new',
+            # 'domain': [('employee_ids.operating_unit_id', '=', self.operating_unit_id.id)],
+            'context': {'create': False,'emp_ids':emp_ids,'operating_unit_id':self.operating_unit_id.id},
+        }
+        return result
+
+    @api.multi
+    def unlink(self):
+        for excep in self:
+            if excep.state=='approved':
+                raise UserError(_('You can not delete in this state!!'))
+            else:
+                return super(HrEmployeeExceptionHolidaysBatch, self).unlink()
 
 
 class HrCompensatoryLeave(models.Model):

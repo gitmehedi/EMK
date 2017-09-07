@@ -29,32 +29,32 @@
 					<sheet>
 						<group>
 							<group>
-								<field name="name" />
-								<field name="public_holidays_title" options='{"no_open": True,"no_create": 1, "no_create_edit":1}'/>
+								<field name="name" attrs="{'readonly':[('state','=','approved')]}"/>
+								<field name="public_holidays_title" options='{"no_open": True,"no_create": 1, "no_create_edit":1}' attrs="{'readonly':[('state','=','approved')]}"/>
 							</group>
 							<group>
-								<field name="operating_unit_id" options='{"no_open": True,"no_create": 1, "no_create_edit":1}'/>
-								<field name="public_holidays_line" options='{"no_open": True,"no_create": 1, "no_create_edit":1}'/>
+								<field name="operating_unit_id" options='{"no_open": True,"no_create": 1, "no_create_edit":1}' attrs="{'readonly':[('state','=','approved')]}"/>
+								<field name="public_holidays_line" options='{"no_open": True,"no_create": 1, "no_create_edit":1}' attrs="{'readonly':[('state','=','approved')]}"/>
 							</group>
 						</group>
 						<notebook colspan="2">
 							<page string="Exception Compensatory Leave">
-								<field name="compensatory_leave_ids">
+								<field name="compensatory_leave_ids" attrs="{'readonly':[('state','=','approved')]}">
 									<tree string="Employees" create='false' editable='bottom'>
 										<field name='employee_id' readonly='1'/>
 									</tree>
 								</field>
-								<button name="%(action_hr_compensatory_leave_wizard)d" type="action" string="Assign Employee"
-										class="oe_highlight" context="{'operating_unit_id': operating_unit_id}"/>
+								<button name="action_assign_compensatory" type="object" string="Assign Employee"
+										class="oe_highlight" attrs="{'invisible':[('state','=','approved')]}"/>
 							</page>
 							<page string="Exception Overtime">
-									<field name="overtime_duty_ids" >
+									<field name="overtime_duty_ids" attrs="{'readonly':[('state','=','approved')]}">
 									<tree string="Employees" create='false' editable='bottom'>
 										<field name='employee_id' readonly='1'/>
 									</tree>
 								</field>
-								<button name="%(action_hr_exception_overtime_wizard)d" type="action" string="Assign Employee"
-										class="oe_highlight" context="{'operating_unit_id': operating_unit_id}"/>
+								<button name="action_assign_overtime" type="object" string="Assign Employee"
+										class="oe_highlight" attrs="{'invisible':[('state','=','approved')]}"/>
 							</page>
 						</notebook>
 					</sheet>
