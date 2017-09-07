@@ -53,8 +53,8 @@
 								</field>
 							</page>
 							<page string="Operating Unit">
-								<field name="operating_unit_ids" widget="many2many" options="{'no_create': True}"  groups="hr.group_hr_user">
-									<tree string="Ids" editable="bottom">
+								<field name="operating_unit_ids" widget="many2many" options="{'no_create': True}">
+									<tree string="Operating Units" editable="bottom">
 										<field name="name"/>
 									</tree>
 								</field>

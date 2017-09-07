@@ -63,7 +63,7 @@ class HrEmployeeExceptionHolidaysBatch(models.Model):
                     'employee_id': i.employee_id.id,
                     'department_id':i.employee_id.department_id.id,
                     'leave_year_id':self.public_holidays_title.year_id.id,
-                    'notes':("%s on %s : %.2f day(s)") % (i.employee_id.name , holiday_status_pool.name, 1),
+                    'notes':("Getting 1 day(s) Compensatory Leave instead of %s [%s]") % (self.public_holidays_line.name , self.public_holidays_line.date),
                     'state':'validate',
                 })
         self.write({'state': 'approved'})

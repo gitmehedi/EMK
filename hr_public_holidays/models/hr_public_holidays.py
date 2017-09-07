@@ -27,6 +27,7 @@ class HrPublicHolidays(models.Model):
     """ one2many fields """
     public_details_ids = fields.One2many('hr.holidays.public.line', 'public_type_id', string="Public Details")
     weekly_details_ids = fields.One2many('hr.holidays.public.line', 'weekly_type_id', string="Weekly Details")
+    """ many2many fields """
     operating_unit_ids = fields.Many2many('operating.unit', 'public_holiday_operating_unit_rel','public_holiday_id','operating_unit_id',string="Operating Unit")
 
     
