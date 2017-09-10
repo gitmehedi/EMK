@@ -37,7 +37,7 @@ class InheritHRPayslipInput(models.Model):
                                                               ('state','=','approved')])
 
             """
-            Meal Bills
+            Arrear Bills
             """
             for arrear_data in arrear_datas:
                 other_line_ids += other_line_ids.new({

@@ -6,8 +6,7 @@ class HrExceptionCompensatoryLeaveWizard(models.TransientModel):
 
     employee_ids = fields.Many2many('hr.employee', 'hr_exception_compensatory_leave_employee_rel',
                                     'compensatory_leave_id', 'employee_id', string='Employees',
-                                    domain = "[('operating_unit_id', '=',operating_unit_id )]")
-    operating_unit_id = fields.Many2one('operating.unit', string='Operating Unit', readonly=True)
+                                    domain="[('operating_unit_id','=',operating_unit_id),('id','not in',emp_ids)]")
 
     @api.multi
     def generate_compensatory_record(self):
@@ -29,9 +28,7 @@ class HrExceptionOverTimeWizard(models.TransientModel):
 
     employee_ids = fields.Many2many('hr.employee', 'hr_exception_overtime_employee_rel',
                                     'exception_overtime_id', 'employee_id', string='Employees',
-                                    domain = "[('operating_unit_id', '=',operating_unit_id )]")
-
-    operating_unit_id = fields.Many2one('operating.unit', string='Operating Unit', readonly=True)
+                                    domain="[('operating_unit_id','=',operating_unit_id),('id','not in',emp_ids)]")
 
     @api.multi
     def generate_overtime_record(self):

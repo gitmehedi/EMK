@@ -43,7 +43,7 @@ class AttendanceErrorDataProcessor(models.Model):
 
             if preAttData and preAttData.check_in is False:
                 chk_out = self.getDateTimeFromStr(preAttData.check_out)
-                durationInHour = (self.getDateTimeFromStr(chk_out) - row.check_in).total_seconds() / 60 / 60
+                durationInHour = (chk_out - self.getDateTimeFromStr(row.check_in)).total_seconds() / 60 / 60
                 if durationInHour <= 15 and durationInHour >= 0:
                     preAttData.write({'check_in': self.getDateTimeFromStr(row.check_in),
                                       'worked_hours': durationInHour,

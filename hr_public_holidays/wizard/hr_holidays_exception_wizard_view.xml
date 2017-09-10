@@ -9,7 +9,7 @@
                     <group colspan="4" >
                         <separator string="Employees" colspan="4"/>
                         <newline/>
-                        <field name="employee_ids" nolabel="1">
+                        <field name="employee_ids" nolabel="1" options="{'no_create': True}" >
                         	<tree string="List" editable="bottom">
                         		<field name="name"/>
                         		<field name="operating_unit_id"/>
@@ -26,29 +26,15 @@
             </field>
         </record>
 
-        <record id="action_hr_compensatory_leave_wizard" model="ir.actions.act_window">
-            <field name="name">Exception Compensatory Leave</field>
-            <field name="res_model">hr.exception.compensatory.leave.wizard</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
-            <field name="view_id" ref="view_hr_compensatory_leave_wizard_form"/>
-            <field name="context">{'default_operating_unit_id': context.get('operating_unit_id', False)}</field>
-            <field name="target">new</field>
-        </record>
-
-
         <record id="view_hr_exception_overtime_wizard_form" model="ir.ui.view">
             <field name="name">hr.exception.overtime.wizard.form</field>
             <field name="model">hr.exception.overtime.wizard</field>
             <field name="arch" type="xml">
                 <form string="Employees">
-                    <!--<group>-->
-                        <!--<field name="operating_unit_id"/>-->
-                    <!--</group>-->
                     <group colspan="4" >
                         <separator string="Employees" colspan="4"/>
                         <newline/>
-                        <field name="employee_ids" nolabel="1">
+                        <field name="employee_ids" nolabel="1" options="{'no_create': True}" >
                         	<tree string="List" editable="bottom">
                         		<field name="name"/>
                         		<field name="operating_unit_id"/>
@@ -64,17 +50,5 @@
                </form>
             </field>
         </record>
-
-        <record id="action_hr_exception_overtime_wizard" model="ir.actions.act_window">
-            <field name="name">Exception Overtime Duty</field>
-            <field name="res_model">hr.exception.overtime.wizard</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
-            <field name="view_id" ref="view_hr_exception_overtime_wizard_form"/>
-            <field name="context">{'default_operating_unit_id': context.get('operating_unit_id', False)}</field>
-            <field name="target">new</field>
-        </record>
-
     </data>
-
 </odoo>
