@@ -16,7 +16,7 @@ class InheritedHrMobilePayslip(models.Model):
 
         mobile_ids = []
         for input in self.input_line_ids:
-            if input.code == 'MEAL':
+            if input.code == 'MOBILE':
                 mobile_ids.append(int(input.ref))
 
         mobile_line_pool = self.env['hr.mobile.bill.line']
