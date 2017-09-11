@@ -44,6 +44,10 @@ class SalePriceChange(models.Model):
         product_pool = self.env['product.product'].search([('product_tmpl_id', '=', self.product_id.id)])
         self.list_price = product_pool.list_price
 
+        if product_pool:
+            self.currency_id = product_pool.currency_id.id
+
+
     @api.multi
     def action_confirm(self):
         self.state = 'confirm'
