@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<openerp>
+    <data>
+        <template id="fav_title" name="Title Icon" inherit_id="web.layout">
+            <xpath expr="//html/head/title" position="replace">
+                <title>Pebbles</title>
+            </xpath>
+            <xpath expr="//html/head/link[1]" position="replace">
+                <link rel="shortcut icon"
+                      href='/web/binary/company_logo'
+                      type="image/x-icon"/>
+            </xpath>
+        </template>
+
+
+        <template id="fav_powered_by" name="Powered By" inherit_id="web.login_layout">
+            <xpath expr='//div/div[2]' position="replace">
+                <div class="text-center" t-if="not disable_footer">
+                    <a href="https://genweb2.com/" target="_blank">Powered by
+                        <span>Genweb2 Limited</span>
+                    </a>
+                </div>
+            </xpath>
+        </template>
+
+        <template id="fav_powered_by_submenu" name="Powered By" inherit_id="web.menu_secondary">
+            <xpath expr='//div[@class="oe_footer"]' position="replace">
+                <div class="o_sub_menu_footer">
+                    Powered by
+                    <a href="https://genweb2.com/" target="_blank">
+                        <span>Genweb2 Limited</span>
+                    </a>
+                </div>
+            </xpath>
+        </template>
+
+        <!--<template id="assets_backend_2" name="Chrome JS" inherit_id="web.assets_backend">-->
+            <!--<xpath expr="." position="inside">-->
+                <!--<script type="text/javascript"-->
+                        <!--src="/web_branding/static/src/js/chrome.js"></script>-->
+            <!--</xpath>-->
+        <!--</template>-->
+
+    </data>
+</openerp>

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<openerp>
+    <data>
+        <template id="pos_title" name="Point of Sale Title" inherit_id="point_of_sale.index">
+            <xpath expr="//html/head/title" position="replace">
+                <title t-esc="title or 'Pebbles'"/>
+            </xpath>
+        </template>
+
+        <template id="pos_fav_ico" name="Point of Sale Icon" inherit_id="point_of_sale.index">
+            <xpath expr="//html/head/link[1]" sizes="196x196" position="replace">
+                <link rel="shortcut icon" href='/web/binary/company_logo'/>
+            </xpath>
+
+            <xpath expr="//html/head/link[2]" position="replace">
+                <link rel="shortcut icon" sizes="128x128" href='/web/binary/company_logo'/>
+            </xpath>
+
+            <xpath expr="//html/head/link[7]" position="replace">
+                <link rel="shortcut icon" href='/web/binary/company_logo' type="image/x-icon"/>
+            </xpath>
+        </template>
+    </data>
+</openerp>
