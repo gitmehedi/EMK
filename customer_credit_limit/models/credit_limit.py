@@ -13,9 +13,9 @@ class customer_creditlimit_assign(models.Model):
            states={'confirm': [('readonly', True)],'validate1': [('readonly', True)],'approve': [('readonly',True)]})
     approve_date = fields.Date('Approved Date',
                    states = {'draft': [('invisible', True)],'confirm': [('invisible', True)],'validate1': [('invisible', True)], 'approve': [('invisible',False),('readonly',True)]})
-    credit_limit = fields.Float('Limit',required=True,
+    credit_limit = fields.Float('Credit Limit',required=True,
                    states={'confirm': [('readonly', True)], 'validate1': [('readonly', True)], 'approve': [('readonly', True)]})
-    days = fields.Integer('Days',required=True,
+    days = fields.Integer('Credit Days',required=True,
                    states={'confirm': [('readonly', True)], 'validate1': [('readonly', True)], 'approve': [('readonly', True)]})
     requested_by = fields.Many2one('res.users', string="Requested By",default=lambda self: self.env.user, readonly=True)
     approver1_id = fields.Many2one('res.users', string='First Approval', readonly = True)
@@ -105,9 +105,9 @@ class res_partner_credit_limit(models.Model):
     _order = "partner_id asc"
 
     partner_id = fields.Many2one('res.partner', "Customer", required=True)
-    assign_date = fields.Date("Date", _defaults=lambda *a: time.strftime('%Y-%m-%d'))
-    value = fields.Float('Limit')
-    day_num = fields.Integer('Days')
+    assign_date = fields.Date("Credit Date", _defaults=lambda *a: time.strftime('%Y-%m-%d'))
+    value = fields.Float('Credit Limit')
+    day_num = fields.Integer('Credit Days')
     assign_id = fields.Many2one('customer.creditlimit.assign')
     #sl_num = fields.Integer(string="SL")
     state = fields.Selection([
