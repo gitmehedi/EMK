@@ -12,75 +12,51 @@
                     </div>
 
                     <!-- Report Body -->
-                    <!--<table class="table table-bordered">
-                        <thead>
-                            <tr>
-                                <th class="text-center">Style No</th>
-                                <th class="text-center">Product Name</th>
-                                <th class="text-center">Barcode</th>
-                                <th class="text-center" colspan="20">Quantity</th>
-                            </tr>
+                    <t t-if="data">
 
-                        </thead>
-                        <tbody>
-
-                            <t t-foreach="data" t-as="val">
+                        <table class="table table-bordered">
+                            <thead>
                                 <tr>
-                                    <td>
-                                        <t t-esc="val['name']"/>
-                                    </td>
-                                    <td>
-                                        <t t-esc="val['barcode']"/>
-                                    </td>
-                                    <td>
-                                        <t t-esc="val['quantity']"/>
-                                    </td>
+                                    <th class="text-center">Style</th>
+                                    <th class="text-center">Color</th>
+                                    <th class="text-center" colspan="20">Size Wise Quantity</th>
                                 </tr>
-                            </t>
-                        </tbody>
-                    </table>-->
-
-                    <table class="table table-bordered">
-                        <thead>
-                            <tr>
-                                <th class="text-center">Style No</th>
-                                <th class="text-center">Color</th>
-                                <th class="text-center" colspan="20">Size wise Quantity</th>
-                            </tr>
-
-                        </thead>
-                        <tbody>
-                            <t t-foreach="data" t-as="o">
-                                <!--<tr style="background-color: #254512;">-->
-                                    <!--<td colspan="2"></td>-->
-                                    <!--<t t-foreach="o_value['size']" t-as="size">-->
-                                        <!--<td>-->
-                                            <!--<t t-esc="size"/>-->
-                                        <!--</td>-->
-                                    <!--</t>-->
-                                <!--</tr>-->
-                                <tr>
-                                    <td rowspan="5">
-                                        <t t-esc="o"/>
-                                    </td>
-                                </tr>
-
-                                <t t-foreach="o_value['color']" t-as="color">
-                                    <tr>
+                                <tr style="background-color: #fff;">
+                                    <td colspan="2"></td>
+                                    <t t-foreach="sizes" t-as="size">
                                         <td>
-                                            <t t-esc="color"/>
+                                            <t t-esc="size"/>
                                         </td>
-
-                                        <t t-foreach="color" t-as="val">
-                                            <td>
-                                                <t t-esc="val"/>
-                                            </td>
-                                        </t>
+                                    </t>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <t t-foreach="data" t-as="order">
+                                    <tr>
+                                        <td rowspan="4">
+                                            <t t-esc="order"/>
+                                        </td>
                                     </tr>
+                                    <t t-foreach="order_value['color']" t-as="colors">
+                                        <t t-if="colors_value">
+                                            <tr>
+                                                <td>
+                                                    <t t-esc="colors"/>
+                                                </td>
+                                                <t t-foreach="colors_value" t-as="quantity">
+                                                    <td>
+                                                        <t t-if="len(quantity_value)>0">
+                                                            <strong><t t-esc="quantity_value['code']"/></strong>(<t t-esc="int(quantity_value['qty'])"/>)
+                                                        </t>
+                                                    </td>
+                                                </t>
+                                            </tr>
+                                        </t>
+                                    </t>
                                 </t>
-                            </t>
-                        </tbody>
-                    </table>
+                            </tbody>
+                        </table>
+                    </t>
                     <!-- End Report Body -->
                 </div>
             </t>
