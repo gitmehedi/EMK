@@ -1,12 +1,10 @@
-from openerp import models, fields
-from openerp import api
+from odoo import api, models, fields
 
-class AttendanceErrorCorrection(models.TransientModel):
+
+class SalePriceChangeWizards(models.TransientModel):
     _name = 'sale.price.details'
 
-    _description = 'HR attendance error correction'
-
-    product_id = fields.Many2one('product.product', 'Product',)
+    product_id = fields.Many2one('product.product', 'Product', required=True)
     currency_id = fields.Many2one('res.currency', string="Currency")
 
     @api.multi

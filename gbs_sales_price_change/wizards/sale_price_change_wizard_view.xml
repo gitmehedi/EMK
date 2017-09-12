@@ -7,9 +7,9 @@
 			<field name="model">sale.price.details</field>
 			<field name="type">form</field>
 			<field name="arch" type="xml">
-				<form string="Products Price Details">
+				<form string="Product Sale Price Change History">
 					<header>
-						<button name= "search_data" type="object" string="Generate" class="oe_highlight" />
+						<button name= "search_data" type="object" string="View History" class="oe_highlight" />
 					</header>
 					<sheet>
 						<group>
@@ -37,9 +37,6 @@
 			<field name="view_mode">form</field>
 			<field name="target">new</field>
 		</record>
-
-        <!--Menu Item-->
-
 
     </data>
 </openerp>
