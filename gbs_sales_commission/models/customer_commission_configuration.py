@@ -6,7 +6,7 @@ from odoo import api, fields, models,_
 
 class CustomerCommissionConfiguration(models.Model):
     _name = "customer.commission.configuration"
-    # _inherit = ['mail.thread', 'ir.needaction_mixin']
+    _inherit = ['mail.thread']
     _order = 'confirmed_date desc'
 
     requested_date = fields.Date(string="Requested Date", default=datetime.date.today(),readonly=True)

@@ -5,7 +5,7 @@
             <field name="name">Job multi company rule</field>
             <field name="model_id" ref="hr.model_hr_job"/>
             <field name="global" eval="True"/>
-            <field name="domain_force">['|',('company_id','=',False),('company_id','in',[c.id for c in user.company_ids])]</field>
+            <field name="domain_force">['|',('company_id','=',False),('company_id','in',user.company_ids.ids)]</field>
         </record>
 
         <record id="hr.hr_dept_comp_rule" model="ir.rule">

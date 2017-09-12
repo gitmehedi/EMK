@@ -4,6 +4,7 @@ from openerp.exceptions import UserError, ValidationError
 
 class HrEmployeeMealBill(models.Model):
     _name = 'hr.meal.bill'
+    _inherit = ['mail.thread']
     _order = 'name desc'
 
     name = fields.Char(size=100, string="Description", required=True, readonly=True,

@@ -9,4 +9,4 @@ access_hr_shift_alter_officer,access_hr_shift_alter_officer,model_hr_shift_alter
 access_hr_shift_alter_user,access_hr_shift_alter_user,model_hr_shift_alter,base.group_user,1,1,1,1
 access_hr_shifting_batch_officer,access_hr_shifting_batch_officer,model_hr_shift_employee_batch,hr_attendance.group_hr_attendance_user,1,1,1,1
 access_hr_shifting_batch_employee,access_hr_shifting_batch_employee,model_hr_shift_employee_batch,base.group_user,1,1,1,1
-access_hr_job_user,hr_job_user,hr.model_hr_job,base.group_user,1,1,0,0
+access_hr_job_user_emp,hr_job_user_emp,hr.model_hr_job,base.group_user,1,1,0,0
