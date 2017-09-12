@@ -36,9 +36,7 @@
             <field name="target">new</field>
         </record>
 
-        <menuitem name="Reports" id="pos_custom_report" parent="point_of_sale.menu_point_root" sequence="100"
-                  groups="point_of_sale.group_pos_manager"/>
-        <menuitem name="Order Summery" id="pos_order_summery_report" action="action_pos_summary_report_wizard"
-                  parent="pos_custom_report" groups="point_of_sale.group_pos_manager"/>
+        <menuitem name="Order Wise Sale" id="pos_order_summery_report" action="action_pos_summary_report_wizard"
+                  parent="point_of_sale.menu_point_rep" groups="point_of_sale.group_pos_manager"/>
     </data>
 </openerp>
