@@ -8,6 +8,7 @@ class SalePriceChange(models.Model):
     _description = "Sale Price Change"
     _inherit = ['mail.thread', 'ir.needaction_mixin']
     _rec_name = 'requested_by'
+    _order = "approver2_date desc"
 
     def _current_employee(self):
         return self.env['hr.employee'].search([('user_id', '=', self.env.uid)], limit=1)

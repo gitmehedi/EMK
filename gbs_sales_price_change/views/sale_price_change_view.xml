@@ -11,7 +11,9 @@
                     <field name="product_id"/>
                     <field name="list_price"/>
                     <field name="new_price"/>
+					<field name="currency_id"/>
 					<field name="state"/>
+					<field name="approver2_date"/>
 				</tree>
 			</field>
 		</record>
@@ -38,7 +40,6 @@
 								<field name="currency_id"/>
                                 <field name="list_price"/>
                                 <field name="new_price"/>
-
 							</group>
 							<group>
                                 <field name="request_date"/>
