@@ -81,6 +81,9 @@
         <menuitem id="product_sale_price_change_history_menu_action" name="Product Price History"
 				  groups="gbs_application_group.group_head_sale,gbs_application_group.group_head_account,gbs_application_group.group_cxo"
                   parent="custom_menu_products" sequence="10" action="action_product_sale_price_change_history"/>
+		<menuitem id="price_history_menu" name="Price History" sequence="11"
+				  parent="custom_menu_products" groups="hr.group_hr_user"
+                  action="price_history_action" />
 
     </data>
 </odoo>

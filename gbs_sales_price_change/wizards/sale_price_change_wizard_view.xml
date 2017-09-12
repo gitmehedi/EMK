@@ -29,7 +29,7 @@
 		</record>
 
 		<!-- Menu Action -->
-		<record id="attendance_error_correct_action" model="ir.actions.act_window">
+		<record id="price_history_action" model="ir.actions.act_window">
 			<field name="name">Products Price Details</field>
 			<field name="type">ir.actions.act_window</field>
 			<field name="res_model">sale.price.details</field>
@@ -39,8 +39,7 @@
 		</record>
 
         <!--Menu Item-->
-		<menuitem id="attendance_error_correct_menu" name="Price History"
-				  parent="custom_menu_products" groups="hr.group_hr_user"
-                  action="attendance_error_correct_action" />
+
+
     </data>
 </openerp>
