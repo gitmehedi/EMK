@@ -5,6 +5,7 @@ from openerp import api
 
 class HrMobileBill(models.Model):
     _name = 'hr.mobile.bill'
+    _inherit = ['mail.thread']
     _order = 'name desc'
 
     name = fields.Char(size=100, string="Name", required=True,states={'draft': [('invisible', False)],

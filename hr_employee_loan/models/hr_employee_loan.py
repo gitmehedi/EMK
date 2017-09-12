@@ -7,6 +7,7 @@ from openerp.exceptions import UserError, ValidationError
 
 class HrEmployeeLoanRequest(models.Model):
     _name = 'hr.employee.loan'
+    _inherit = ['mail.thread']
     _order = 'name desc'
 
     name = fields.Char(size=100, string='Loan Name', default="/")
