@@ -5,7 +5,7 @@ import time,datetime
 class SaleDeliveryOrder(models.Model):
     _name = 'delivery.order'
     _description = 'Delivery Order'
-    _inherit = ['mail.thread', 'ir.needaction_mixin']
+    _inherit = ['mail.thread']
     _rec_name='name'
 
     # def _current_employee(self):
