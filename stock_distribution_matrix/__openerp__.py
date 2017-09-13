@@ -17,7 +17,8 @@
         """,
     'depends': ['stock',
                 'point_of_sale',
-                'web_widget_distribution_matrix'
+                'web_widget_distribution_matrix',
+                'purchase_order_pebbles',
                 ],
     'data': [
             'security/ir.model.access.csv',

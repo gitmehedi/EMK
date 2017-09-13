@@ -10,19 +10,14 @@ class StockRequisitionTransfer(models.AbstractModel):
         report = report_obj._get_report_from_name('stock_distribution_matrix.stock_distribution_to_shop')
 
         records = self.env['stock.distribution.to.shop'].search([('id', '=', self.id)])
-        data = []
+        data, count = [], 0
 
         if records:
-            header_info = {}
-            header_info['transfer_date'] = records.transfer_date
-            header_info['receive_date'] = records.receive_date
-            header_info['transfer_user_id'] = records.transfer_user_id.name
-            header_info['receive_user_id'] = records.receive_user_id.name
-            header_info['my_shop_id'] = records.requested_id.name
-            header_info['transfer_shop_id'] = records.to_shop_id.name
+            header = {}
+            header['product_name'] = records.product_tmp_id.name
+            header['warehouse'] = records.warehoue_id.name
 
-        count = 0
-        for record in records.product_line_ids:
+        for record in records.stock_distribution_lines_ids:
             rec = {}
             count = count + 1
             rec['sn'] = count

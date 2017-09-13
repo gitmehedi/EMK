@@ -62,10 +62,10 @@
 		</record>
 
 
-		<menuitem name="Inventory Adjustment Matrix" id="menu_stock_inventory_maxtix"
-			parent="stock.menu_stock_inventory_control" action="stock_inventory_matrix_action" />
+		<!--<menuitem name="Inventory Adjustment Matrix" id="menu_stock_inventory_maxtix"-->
+			<!--parent="stock.menu_stock_inventory_control" action="stock_inventory_matrix_action"/>-->
 			
 		<menuitem action="stock.action_inventory_form" id="stock.menu_action_inventory_form"
-			parent="stock.menu_stock_inventory_control" sequence="30" groups='base.group_erp_manager' />
+			parent="stock.menu_stock_inventory_control" sequence="1" groups='purchase_order_pebbles.warehouse_group_user_admin' />
 	</data>
 </openerp>
