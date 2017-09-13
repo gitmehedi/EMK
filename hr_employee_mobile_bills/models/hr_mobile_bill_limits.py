@@ -3,6 +3,8 @@ from openerp.exceptions import UserError, ValidationError
 
 class HrMobileBillLimits(models.Model):
     _name = 'hr.mobile.bill.limit'
+    _inherit = ['mail.thread']
+
 
     name = fields.Char('Name', required=True,states={'draft': [('invisible', False)],
             'applied': [('readonly', True)], 'approved':[('readonly', True)]})

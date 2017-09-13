@@ -41,7 +41,7 @@
                             <div class="row" style="font-size:12px">
                                 <div class="col-xs-4">
                                     <div class="row">
-                                        <div class="col-xs-9"><strong>Total Monitor Employee :</strong></div>
+                                        <div class="col-xs-9"><strong>Total Employee:</strong></div>
                                         <div class="col-xs-3"><span t-esc="sum(l['total_emp'] for l in att_summary_list)"/></div>
                                     </div>
                                     <div class="row">
@@ -100,7 +100,7 @@
                             <div class="row" style="font-size:12px">
                                 <div class="col-xs-4">
                                     <div class="row">
-                                        <div class="col-xs-9"><strong>Total Monitor Employee :</strong></div>
+                                        <div class="col-xs-9"><strong>Total Employee:</strong></div>
                                         <div class="col-xs-3"><span t-esc="att_summary['total_emp']"/></div>
                                     </div>
                                     <div class="row">
