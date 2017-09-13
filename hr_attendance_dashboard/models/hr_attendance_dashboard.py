@@ -51,8 +51,9 @@ class HrAttendanceDashboard(models.Model):
                        "holidays": [], "alter_roster": []}
 
         employeeList = emp_pool.search([('operating_unit_id', '=', operating_unit_id),
-                                        ('active', '=', True), ('is_monitor_attendance', '=', True)
-                                        ], order='department_id,employee_sequence desc')
+                                        ('active', '=', True)],
+                                       order='department_id,employee_sequence desc')
+
 
         employeeAttMap = att_utility_pool.getDailyAttByDateAndUnit(requestedDate, operating_unit_id)
 
@@ -61,6 +62,9 @@ class HrAttendanceDashboard(models.Model):
         for employee in employeeList:
 
             employeeId = employee.id
+            if employee.is_monitor_attendance == False:
+                att_summary["on_time_present"].append(Employee(employee))
+                continue
 
             alterTimeMap = att_utility_pool.buildAlterDutyTime(requestedDate, requestedDate, employeeId)
             if alterTimeMap:
@@ -115,7 +119,8 @@ class HrAttendanceDashboard(models.Model):
             'domain': [('id', '=', res_ids)],
             'view_id': [view.id],
             'context': {'create': False, 'edit': False},
-            'type': 'ir.actions.act_window'
+            'type': 'ir.actions.act_window',
+            'target':'new'
         }
 
     @api.multi
@@ -147,5 +152,6 @@ class HrAttendanceDashboard(models.Model):
             'domain': [('employee_id', '=', res_ids),('duty_date','=',requested_date)],
             'view_id': [view.id],
             'context': {'create': False, 'edit': False},
-            'type': 'ir.actions.act_window'
+            'type': 'ir.actions.act_window',
+            'target':'new'
         }
