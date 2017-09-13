@@ -8,7 +8,7 @@
         'views/hr_attendance_dashboard_view.xml',
         'security/ir.model.access.csv',
     ],
-    'depends': ['hr','hr_employee_operating_unit'],
+    'depends': ['hr','hr_employee_operating_unit','gbs_hr_attendance_error_correction'],
     'description': '''This module help user to see attendance records by the dashboard''',
     'application': False,
     'installable': True,
