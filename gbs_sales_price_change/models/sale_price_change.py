@@ -44,7 +44,6 @@ class SalePriceChange(models.Model):
     @api.onchange('product_id')
     def _onchange_product_form(self):
         product_pool = self.env['product.product'].search([('product_tmpl_id', '=', self.product_id.id)])
-        # self.list_price = product_pool.list_price
         if product_pool:
             self.currency_id = product_pool.currency_id.id
 
@@ -76,13 +75,7 @@ class SalePriceChange(models.Model):
         product_pool_update = product_pool.write({'list_price': self.new_price})
 
         product_pricelist = self.env['product.pricelist'].search([('currency_id', '=', self.currency_id.id)])
-
         pricelist_pool = self.env['product.pricelist.item'].search([('product_tmpl_id', '=', self.product_id.id)])
-
-        # if pricelist_pool:
-        #     pricelist_pool.write({'fixed_price':self.new_price, 'pricelist_id': product_pricelist.id})
-        # else:
-
         pricelist_pool.create({'fixed_price':self.new_price, 'product_tmpl_id':self.product_id.id, 'pricelist_id': product_pricelist.id ,'currency_id': self.currency_id.id})
 
         return self.write({'approver2_id':self.env.user.employee_ids.id, 'state': 'validate', 'approver2_date': time.strftime('%Y-%m-%d %H:%M:%S')})
@@ -90,7 +83,6 @@ class SalePriceChange(models.Model):
 
     @api.multi
     def action_validate(self):
-       # self.approver1_id = self.env.user.employee_ids.id
         return self.write({'approver1_id':self.env.user.employee_ids.id, 'state': 'validate1', 'approver1_date': time.strftime('%Y-%m-%d %H:%M:%S')})
 
 
@@ -101,5 +93,3 @@ class SalePriceChange(models.Model):
     @api.multi
     def action_draft(self):
         self.state = 'draft'
-
-
