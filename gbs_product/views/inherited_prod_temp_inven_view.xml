@@ -38,6 +38,7 @@
                 </data>
             </field>
         </record>
+        
         <record model="ir.ui.view" id="product_view_invoice_policy">
             <field name="name">product.invoice.policy</field>
             <field name="model">product.template</field>
