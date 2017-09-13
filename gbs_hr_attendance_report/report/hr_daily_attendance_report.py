@@ -63,8 +63,8 @@ class GetDailyAttendanceReport(models.AbstractModel):
                        "holidays": [], "alter_roster": []}
 
         employeeList = emp_pool.search([('operating_unit_id', '=', operating_unit_id),
-                                        ('active', '=', True), ('is_monitor_attendance', '=', True)
-                                        ], order='department_id,employee_sequence desc')
+                                        ('active', '=', True)],
+                                       order='department_id,employee_sequence desc')
 
         employeeAttMap = att_utility_pool.getDailyAttByDateAndUnit(requestedDate, operating_unit_id)
 
@@ -73,6 +73,9 @@ class GetDailyAttendanceReport(models.AbstractModel):
         for employee in employeeList:
 
             employeeId = employee.id
+            if employee.is_monitor_attendance == False:
+                att_summary["on_time_present"].append(Employee(employee))
+                continue
 
             alterTimeMap = att_utility_pool.buildAlterDutyTime(requestedDate, requestedDate, employeeId)
             if alterTimeMap:

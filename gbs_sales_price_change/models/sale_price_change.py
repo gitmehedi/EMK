@@ -15,9 +15,9 @@ class SalePriceChange(models.Model):
 
     product_id = fields.Many2one('product.product', domain=[('sale_ok', '=', True)],
                                  states={'confirm': [('readonly', True)], 'validate1': [('readonly', True)], 'validate': [('readonly', True)]}, string='Product', required=True)
-    list_price = fields.Float(string='Old Price')
+    list_price = fields.Float(string='Old Price',related='product_id.list_price',readonly=True, store=True)
     new_price = fields.Float(string='New Price', states={'confirm': [('readonly', True)], 'validate1': [('readonly', True)],'validate': [('readonly', True)]}, required=True)
-    request_date = fields.Datetime(string='Request Date', default=date.today(), readonly=True)
+    request_date = fields.Datetime(string='Request Date', default=datetime.datetime.now(), readonly=True)
     requested_by = fields.Many2one('hr.employee', string="Requested By", default=_current_employee, readonly=True)
 
     approver1_id = fields.Many2one('hr.employee', string='First Approval', readonly=True)
@@ -43,8 +43,7 @@ class SalePriceChange(models.Model):
     @api.onchange('product_id')
     def _onchange_product_form(self):
         product_pool = self.env['product.product'].search([('product_tmpl_id', '=', self.product_id.id)])
-        self.list_price = product_pool.list_price
-
+        # self.list_price = product_pool.list_price
         if product_pool:
             self.currency_id = product_pool.currency_id.id
 

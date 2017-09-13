@@ -12,12 +12,12 @@ class HrAttendanceDashboard(models.Model):
 
     @api.one
     def _kanban_dashboard(self):
-        self.kanban_dashboard = json.dumps(self.get_journal_dashboard_datas())
+        self.kanban_dashboard = json.dumps(self.get_attendance_dashboard_datas())
 
     kanban_dashboard = fields.Text(compute='_kanban_dashboard')
 
     @api.multi
-    def get_journal_dashboard_datas(self):
+    def get_attendance_dashboard_datas(self):
         emp_pool = self.env['hr.employee']
         att_utility_pool = self.env['attendance.utility']
         op_pool = self.env['operating.unit']
@@ -44,8 +44,6 @@ class HrAttendanceDashboard(models.Model):
 
         operating_unit_id = unit.id
 
-        day = datetime.timedelta(days=1)
-
         requestedDate = att_utility_pool.getDateFromStr(requested_date)
 
         att_summary = {"unit_name": unit.name, "total_emp": 0, "on_time_present": [],"late": [], "absent": [], "leave": [],
@@ -53,8 +51,9 @@ class HrAttendanceDashboard(models.Model):
                        "holidays": [], "alter_roster": []}
 
         employeeList = emp_pool.search([('operating_unit_id', '=', operating_unit_id),
-                                        ('active', '=', True), ('is_monitor_attendance', '=', True)
-                                        ], order='department_id,employee_sequence desc')
+                                        ('active', '=', True)],
+                                       order='department_id,employee_sequence desc')
+
 
         employeeAttMap = att_utility_pool.getDailyAttByDateAndUnit(requestedDate, operating_unit_id)
 
@@ -63,6 +62,9 @@ class HrAttendanceDashboard(models.Model):
         for employee in employeeList:
 
             employeeId = employee.id
+            if employee.is_monitor_attendance == False:
+                att_summary["on_time_present"].append(Employee(employee))
+                continue
 
             alterTimeMap = att_utility_pool.buildAlterDutyTime(requestedDate, requestedDate, employeeId)
             if alterTimeMap:
@@ -87,3 +89,69 @@ class HrAttendanceDashboard(models.Model):
 
         return att_summary
 
+    @api.multi
+    def dashboard_absent_employee_action_id(self):
+        view = self.env.ref('hr.view_employee_tree')
+
+        emp_pool = self.env['hr.employee']
+        att_utility_pool = self.env['attendance.utility']
+        op_pool = self.env['operating.unit']
+
+        requested_date = date.today().strftime('%Y-%m-%d')
+        curr_time_gmt = datetime.datetime.now()
+        current_time = curr_time_gmt + timedelta(hours=6)
+        graceTime = att_utility_pool.getGraceTime(requested_date)
+
+        unit = op_pool.search([('id', '=', self.id)])
+
+        att_summary = self.getSummaryByUnit(unit, requested_date, graceTime, emp_pool, att_utility_pool, current_time)
+
+        res_ids=[]
+        for i in att_summary["absent"]:
+            res_ids.append(i.employeeId)
+        # [i.employeeId for i in att_summary['absent']]
+
+        return {
+            'name': ('Absent Employee'),
+            'view_type': 'form',
+            'view_mode': 'tree',
+            'res_model': 'hr.employee',
+            'domain': [('id', '=', res_ids)],
+            'view_id': [view.id],
+            'context': {'create': False, 'edit': False},
+            'type': 'ir.actions.act_window',
+            'target':'new'
+        }
+
+    @api.multi
+    def dashboard_late_employee_action_id(self):
+        view = self.env.ref('gbs_hr_attendance_error_correction.hr_attendance_error_tree')
+
+        emp_pool = self.env['hr.employee']
+        att_utility_pool = self.env['attendance.utility']
+        op_pool = self.env['operating.unit']
+
+        requested_date = date.today().strftime('%Y-%m-%d')
+        curr_time_gmt = datetime.datetime.now()
+        current_time = curr_time_gmt + timedelta(hours=6)
+        graceTime = att_utility_pool.getGraceTime(requested_date)
+
+        unit = op_pool.search([('id', '=', self.id)])
+
+        att_summary = self.getSummaryByUnit(unit, requested_date, graceTime, emp_pool, att_utility_pool, current_time)
+
+        res_ids = []
+        for i in att_summary["late"]:
+            res_ids.append(i.employeeId)
+
+        return {
+            'name': ('Late Employee'),
+            'view_type': 'form',
+            'view_mode': 'tree',
+            'res_model': 'hr.attendance',
+            'domain': [('employee_id', '=', res_ids),('duty_date','=',requested_date)],
+            'view_id': [view.id],
+            'context': {'create': False, 'edit': False},
+            'type': 'ir.actions.act_window',
+            'target':'new'
+        }
