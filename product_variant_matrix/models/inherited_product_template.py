@@ -55,15 +55,10 @@ class InheritedProductTemplate(models.Model):
                     product.write({'active': attribute_line_extend.is_active})
                     attribute_line_extend.write({'product_id':product.id}) 
                     
+    def update_attribute_line_extend(self, product_template_id):
 
-
-    @api.model
-    def create(self, vals):
-
-        ''' Store the initial standard price in order to be able to retrieve the cost of a product template for a given date'''
         color_ids = []
         size_ids = []
-        product_template_id = super(InheritedProductTemplate, self).create(vals)
 
         for att in product_template_id.attribute_line_ids:
             if att.attribute_id.name == 'Color':
@@ -108,15 +103,30 @@ class InheritedProductTemplate(models.Model):
                     attribute_line_extend_obj.is_active = True
                     product_template_id.attribute_line_extend_ids = product_template_id.attribute_line_extend_ids | attribute_line_extend_obj
 
+
+    @api.model
+    def create(self, vals):
+
+        ''' Store the initial standard price in order to be able to retrieve the cost of a product template for a given date'''
+
+        product_template_id = super(InheritedProductTemplate, self).create(vals)
+
+        self.update_attribute_line_extend(product_template_id)
         self.update_product_variant(product_template_id.id)
 
         return product_template_id
     
     @api.multi
-    def write(self,vals):
+    def write(self, vals):
+        # This will make sure we have on record, not multiple records.
+        self.ensure_one()
         #TODO: process before updating resource
         res = super(InheritedProductTemplate, self).write(vals)
-        self.update_product_variant(self.id)
+
+        if vals and not vals.get('attribute_line_extend_ids', False):
+            self.update_attribute_line_extend(self)
+            self.update_product_variant(self.id)
+
         return res 
     
     @api.onchange('categ_id')
