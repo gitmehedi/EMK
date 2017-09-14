@@ -41,7 +41,7 @@
                                         <div class="col-xs-6 o_kanban_primary_right">
                                             <div class="row">
                                                 <div class="col-xs-9">
-                                                    <a>Total Monitor</a>
+                                                    <a>Total Employee</a>
                                                 </div>
                                                 <div class="col-xs-3">
                                                     <t t-esc="dashboard.total_emp"/>

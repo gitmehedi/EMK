@@ -21,5 +21,35 @@
             </field>
         </record>
 
+        <record id="inherited_product_template_kanban_view" model="ir.ui.view">
+            <field name="name">inherited_product_template_kanban_view</field>
+            <field name="model">product.template</field>
+            <field name="inherit_id" ref="product.product_template_kanban_view"/>
+            <field name="arch" type="xml">
+                <data>
+
+                    <xpath expr="//div[contains(@class, 'oe_kanban_details')]" position="replace">
+                        <div class="row">
+                            <strong>
+                                    <span t-if="record.default_code.value">[<field name="default_code"/>]</span>
+                                    <field name="name"/>
+                                </strong>
+                                <div t-if="record.product_variant_count.value &gt; 1" groups="product.group_product_variant">
+                                    <strong>
+                                        <t t-esc="record.product_variant_count.value"/> Variants
+                                    </strong>
+                                </div>
+                                <div name="tags"/>
+                                <ul>
+                                    <li></li>
+                                </ul>
+                                <div name="tags"/>
+                        </div>
+                    </xpath>
+
+                </data>
+            </field>
+        </record>
+
     </data>
 </odoo>

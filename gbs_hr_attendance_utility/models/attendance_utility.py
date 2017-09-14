@@ -31,7 +31,7 @@ class AttendanceUtility(models.TransientModel):
         calendarList = self._cr.fetchall()
         shiftList = self.getShiftList(calendarList, postEndDate)
         dutyTimeMap = self.buildDutyTime(preStartDate, postEndDate, shiftList)
-        self.printDutyTime(preStartDate, postEndDate, dutyTimeMap)
+        # self.printDutyTime(preStartDate, postEndDate, dutyTimeMap)
         return dutyTimeMap
 
     def isSetRosterByEmployeeId(self, employeeId, preStartDate, postEndDate):
@@ -65,9 +65,10 @@ class AttendanceUtility(models.TransientModel):
         return alterTimeMap
 
     def getDailyAttByDateAndUnit(self, requestedDate, operating_unit_id):
-        att_query = """SELECT employee_id, MIN(check_in) + interval '6h' AS check_in FROM hr_attendance
-                       WHERE duty_date = %s AND operating_unit_id = %s
-                       GROUP BY employee_id ORDER BY employee_id"""
+        att_query = """SELECT employee_id, MIN(check_in) + interval '6h' AS check_in FROM hr_attendance att
+                        JOIN hr_employee emp ON emp.id = att.employee_id
+                        WHERE duty_date = %s AND emp.operating_unit_id = %s
+                        GROUP BY employee_id ORDER BY employee_id"""
         self._cr.execute(att_query, (requestedDate, operating_unit_id))
         attLines = self._cr.fetchall()
         employeeAttMap = {}
