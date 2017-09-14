@@ -8,13 +8,7 @@
     'summary': """
         Product Distribution Matrix module allow you to Distribute product with matrix input 
         """,
-    'description': """
-        Quick and Easy
-        ===========================
-        
-        This module allows to manager Stock Distribution Matrix.
-
-        """,
+    'description': """""",
     'depends': ['stock',
                 'point_of_sale',
                 'web_widget_distribution_matrix',
