@@ -2,7 +2,7 @@
 <openerp>
     <data>
         <report id="action_report_stock_distribution_to_shop"
-                string="Stock Distribution To Shop Report"
+                string="Distribution To Shop "
                 model="stock.distribution.to.shop"
                 report_type="qweb-pdf"
                 name="stock_distribution_matrix.stock_distribution_to_shop"

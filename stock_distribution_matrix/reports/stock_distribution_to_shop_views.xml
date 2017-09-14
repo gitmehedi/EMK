@@ -12,20 +12,17 @@
                     <div class="row mb32" style="margin: 10mm 10mm 30mm 10mm;">
                         <div class="col-xs-6">
                             <p>
-                                <strong>Receive Shop Name:</strong>
-                                <span t-esc="record['transfer_shop_id']"/>
+                                <strong>Distribution Reference:</strong>
+                                <span t-esc="record['name']"/>
                                 <br/>
-                                <strong>Receive Date:</strong>
-                                <span t-esc="record['receive_date']"/>
+                                <strong>Style No:</strong>
+                                <span t-esc="record['product_name']"/>
                             </p>
                         </div>
                         <div class="col-xs-5 col-xs-offset-1">
                             <p>
-                                <strong>Transfer Shop Name:</strong>
-                                <span t-esc="record['my_shop_id']"/>
-                                <br/>
-                                <strong>Transfer Date:</strong>
-                                <span t-esc="record['transfer_date']"/>
+                                <strong>Warehouse Name:</strong>
+                                <span t-esc="record['warehouse']"/>
                             </p>
                         </div>
                     </div>
@@ -34,41 +31,31 @@
 
                     <table class="table table-bordered">
                         <thead>
-                            <tr colspan="4">
-                                <th class="text-center">Serial No</th>
-                                <th class="text-center">Barocde</th>
-                                <th class="text-center">Name</th>
-                                <th class="text-center">Requested Quantity</th>
-                                <th class="text-center">Transfer Quantity</th>
-                                <th class="text-center">Status</th>
+                            <tr style="background-color: yellow;">
+                                <th class="text-center">Product Name</th>
+                                <t t-foreach="config" t-as="conf">
+                                    <th>
+                                        <t t-esc="conf_value"/>
+                                    </th>
+                                </t>
                             </tr>
                         </thead>
                         <tbody>
-                            <t t-foreach="data" t-as="o">
+                            <t t-foreach="data" t-as="vals">
                                 <tr>
-                                    <td class="text-center">
-                                        <t t-esc="o['sn']"/>
-                                    </td>
                                     <td>
-                                        <t t-esc="o['barcode']"/>
+                                        <t t-esc="vals_value['name']"/>
                                     </td>
-                                    <td>
-                                        <t t-esc="o['name']"/>
-                                    </td>
-                                    <td class="text-right">
-                                        <t t-esc="o['quantity']"/>
-                                    </td>
-                                    <td class="text-right">
-                                        <t t-esc="o['receive_quantity']"/>
-                                    </td>
-                                    <td>
-
-                                    </td>
+                                    <t t-foreach="vals_value['value']" t-as="val">
+                                        <td style="text-align: center;">
+                                            <t t-esc="val_value['value']"/>
+                                        </td>
+                                    </t>
                                 </tr>
                             </t>
                         </tbody>
                     </table>
-                    <!-- End Report Body -->
+
                     <div class="row mb32" style="margin: 30mm 10mm 10mm 10mm;">
                         <div class="col-xs-6">
                             <p>
@@ -76,8 +63,12 @@
                                     <span style="color: ash;">_______________________</span>
                                 </strong>
                                 <br/>
-                                <strong>Transfered By:</strong>
-                                <span t-esc="record['receive_user_id']"/>
+                                <br/>
+                                <br/>
+                                <strong>Transfered By:
+                                    <span style="color: ash;">_______________________</span>
+                                </strong>
+
                             </p>
                         </div>
                         <div class="col-xs-5 col-xs-offset-1">
@@ -86,8 +77,11 @@
                                     <span style="color: ash;">_______________________</span>
                                 </strong>
                                 <br/>
-                                <strong>Received By:</strong>
-                                <span t-esc="record['transfer_user_id']"/>
+                                <br/>
+                                <br/>
+                                <strong>Received By:
+                                    <span style="color: ash;">_______________________</span>
+                                </strong>
                             </p>
                         </div>
                     </div>
