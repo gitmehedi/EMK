@@ -15,6 +15,7 @@ class HrAttendanceDashboard(models.Model):
         self.kanban_dashboard = json.dumps(self.get_attendance_dashboard_datas())
 
     kanban_dashboard = fields.Text(compute='_kanban_dashboard')
+    color = fields.Integer(string='Color Index', help="The color of the team")
 
     @api.multi
     def get_attendance_dashboard_datas(self):
@@ -22,7 +23,8 @@ class HrAttendanceDashboard(models.Model):
         att_utility_pool = self.env['attendance.utility']
         op_pool = self.env['operating.unit']
 
-        requested_date = date.today().strftime('%Y-%m-%d')
+        requested_date = '2017-08-16'
+        # requested_date = date.today().strftime('%Y-%m-%d')
         curr_time_gmt = datetime.datetime.now()
         current_time = curr_time_gmt + timedelta(hours=6)
         graceTime = att_utility_pool.getGraceTime(requested_date)
@@ -91,13 +93,14 @@ class HrAttendanceDashboard(models.Model):
 
     @api.multi
     def dashboard_absent_employee_action_id(self):
-        view = self.env.ref('hr.view_employee_tree')
+        view = self.env.ref('hr_attendance_dashboard.hr_att_absent_tree_view')
 
         emp_pool = self.env['hr.employee']
         att_utility_pool = self.env['attendance.utility']
         op_pool = self.env['operating.unit']
 
-        requested_date = date.today().strftime('%Y-%m-%d')
+        requested_date = '2017-08-16'
+        # requested_date = date.today().strftime('%Y-%m-%d')
         curr_time_gmt = datetime.datetime.now()
         current_time = curr_time_gmt + timedelta(hours=6)
         graceTime = att_utility_pool.getGraceTime(requested_date)
@@ -125,13 +128,14 @@ class HrAttendanceDashboard(models.Model):
 
     @api.multi
     def dashboard_late_employee_action_id(self):
-        view = self.env.ref('gbs_hr_attendance_error_correction.hr_attendance_error_tree')
+        view = self.env.ref('hr_attendance_dashboard.hr_att_late_tree_view')
 
         emp_pool = self.env['hr.employee']
         att_utility_pool = self.env['attendance.utility']
         op_pool = self.env['operating.unit']
 
-        requested_date = date.today().strftime('%Y-%m-%d')
+        requested_date = '2017-08-16'
+        # requested_date = date.today().strftime('%Y-%m-%d')
         curr_time_gmt = datetime.datetime.now()
         current_time = curr_time_gmt + timedelta(hours=6)
         graceTime = att_utility_pool.getGraceTime(requested_date)
@@ -144,12 +148,19 @@ class HrAttendanceDashboard(models.Model):
         for i in att_summary["late"]:
             res_ids.append(i.employeeId)
 
+        if res_ids:
+            query = """select max(check_in) from hr_attendance 
+                       where employee_id in %s and duty_date=%s
+                       group by employee_id"""
+            self._cr.execute(query, tuple([tuple(res_ids),requested_date]))
+            res_check_in = [x[0] for x in self._cr.fetchall()]
+
         return {
             'name': ('Late Employee'),
             'view_type': 'form',
             'view_mode': 'tree',
             'res_model': 'hr.attendance',
-            'domain': [('employee_id', '=', res_ids),('duty_date','=',requested_date)],
+            'domain': [('check_in', 'in', res_check_in)],
             'view_id': [view.id],
             'context': {'create': False, 'edit': False},
             'type': 'ir.actions.act_window',
