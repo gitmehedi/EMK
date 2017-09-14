@@ -35,8 +35,7 @@ class SalePriceChange(models.Model):
         ('validate', 'Approved')
     ], string='State', readonly=True, track_visibility='onchange', copy=False, default='draft')
 
-    currency_id = fields.Many2one('res.currency', string="Currency", domain=['company_id','=',lambda self: self.env['res.company']._company_default_get('gbs_sales_price_change')],
-                                  states={'confirm': [('readonly', True)], 'validate1': [('readonly', True)],'validate': [('readonly', True)]}, required=True)
+    currency_id = fields.Many2one('res.currency', string="Currency", states={'confirm': [('readonly', True)], 'validate1': [('readonly', True)],'validate': [('readonly', True)]}, required=True)
     company_id = fields.Many2one('res.company', 'Company',
                                  default=lambda self: self.env['res.company']._company_default_get('gbs_sales_price_change'),
                                  required=True)
