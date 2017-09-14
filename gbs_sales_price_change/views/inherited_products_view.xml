@@ -17,9 +17,9 @@
                     </div>
 
                 </data>
-
             </field>
         </record>
+
 
         <record id="inherited_product_template_kanban_view" model="ir.ui.view">
             <field name="name">inherited_product_template_kanban_view</field>
