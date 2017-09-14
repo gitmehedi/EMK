@@ -31,7 +31,7 @@
 
                     <table class="table table-bordered">
                         <thead>
-                            <tr style="background-color: yellow;">
+                            <tr style="background-color: #b2beb5;">
                                 <th class="text-center">Product Name</th>
                                 <t t-foreach="config" t-as="conf">
                                     <th>
