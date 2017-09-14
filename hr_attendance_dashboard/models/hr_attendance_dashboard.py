@@ -23,8 +23,8 @@ class HrAttendanceDashboard(models.Model):
         att_utility_pool = self.env['attendance.utility']
         op_pool = self.env['operating.unit']
 
-        requested_date = '2017-08-16'
-        # requested_date = date.today().strftime('%Y-%m-%d')
+
+        requested_date = date.today().strftime('%Y-%m-%d')
         curr_time_gmt = datetime.datetime.now()
         current_time = curr_time_gmt + timedelta(hours=6)
         graceTime = att_utility_pool.getGraceTime(requested_date)
@@ -99,8 +99,8 @@ class HrAttendanceDashboard(models.Model):
         att_utility_pool = self.env['attendance.utility']
         op_pool = self.env['operating.unit']
 
-        requested_date = '2017-08-16'
-        # requested_date = date.today().strftime('%Y-%m-%d')
+
+        requested_date = date.today().strftime('%Y-%m-%d')
         curr_time_gmt = datetime.datetime.now()
         current_time = curr_time_gmt + timedelta(hours=6)
         graceTime = att_utility_pool.getGraceTime(requested_date)
@@ -134,8 +134,7 @@ class HrAttendanceDashboard(models.Model):
         att_utility_pool = self.env['attendance.utility']
         op_pool = self.env['operating.unit']
 
-        requested_date = '2017-08-16'
-        # requested_date = date.today().strftime('%Y-%m-%d')
+        requested_date = date.today().strftime('%Y-%m-%d')
         curr_time_gmt = datetime.datetime.now()
         current_time = curr_time_gmt + timedelta(hours=6)
         graceTime = att_utility_pool.getGraceTime(requested_date)
