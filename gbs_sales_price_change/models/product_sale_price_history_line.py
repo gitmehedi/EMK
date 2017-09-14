@@ -11,3 +11,6 @@ class ProductSalePriceHistiryLine(models.Model):
     new_price = fields.Float(string='New Price', required=True,readonly=True)
     approve_price_date = fields.Date(string='Approved Date',readonly=True)
     currency_id = fields.Many2one('res.currency', string="Currency", readonly=True)
+
+    product_package_mode = fields.Many2one('product.packaging.mode', string= 'Packaging Mode', readonly=True)
+    uom_id = fields.Many2one('product.uom', string="UoM", readonly=True)

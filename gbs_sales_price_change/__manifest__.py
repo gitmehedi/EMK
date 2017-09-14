@@ -17,6 +17,7 @@
         'views/sale_price_change_history.xml',
         'views/sale_price_change_view.xml',
         'views/inherited_products_view.xml',
+        'views/product_packaging_mode_view.xml',
     ],
     'installable': True,
     'application': True,

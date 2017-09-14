@@ -17,6 +17,9 @@ class SalePriceChange(models.Model):
                                  states={'confirm': [('readonly', True)], 'validate1': [('readonly', True)], 'validate': [('readonly', True)]}, string='Product', required=True)
     list_price = fields.Float(string='Old Price',compute='compute_list_price',readonly=True, store=True)
     new_price = fields.Float(string='New Price', states={'confirm': [('readonly', True)], 'validate1': [('readonly', True)],'validate': [('readonly', True)]}, required=True)
+    product_package_mode = fields.Many2one('product.packaging.mode', string= 'Packaging Mode', required=True)
+    uom_id = fields.Many2one('product.uom', string="UoM", required=True)
+
     request_date = fields.Datetime(string='Request Date', default=datetime.datetime.now(), readonly=True)
     requested_by = fields.Many2one('hr.employee', string="Requested By", default=_current_employee, readonly=True)
 
@@ -67,15 +70,13 @@ class SalePriceChange(models.Model):
         vals['sale_price_history_id'] = sale_price_obj.id
         vals['approve_price_date'] = datetime.datetime.now()
         vals['currency_id'] = self.currency_id.id
+        vals['product_package_mode '] = self.product_package_mode
+        vals['uom_id'] = self.uom_id
 
         self.env['product.sale.history.line'].create(vals)
 
         product_pool = self.env['product.product'].search([('product_tmpl_id', '=', self.product_id.id)])
-        product_pool_update = product_pool.write({'list_price': self.new_price})
-
-        product_pricelist = self.env['product.pricelist'].search([('currency_id', '=', self.currency_id.id)])
-        pricelist_pool = self.env['product.pricelist.item'].search([('product_tmpl_id', '=', self.product_id.id)])
-        pricelist_pool.create({'fixed_price':self.new_price, 'product_tmpl_id':self.product_id.id, 'pricelist_id': product_pricelist.id ,'currency_id': self.currency_id.id})
+        product_pool.write({'list_price': self.new_price})
 
         return self.write({'approver2_id':self.env.user.employee_ids.id, 'state': 'validate', 'approver2_date': time.strftime('%Y-%m-%d %H:%M:%S')})
 
