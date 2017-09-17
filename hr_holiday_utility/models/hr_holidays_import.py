@@ -28,6 +28,7 @@ class HrHolidaysImport(models.Model):
         vals = {}
 
         for line in holidays_import_line_pool:
+            vals['name'] = line.name
             vals['holiday_status_id'] = line.holiday_status_id
             vals['employee_id'] = int(line.employee_id)
             vals['holiday_type'] = 'employee'
