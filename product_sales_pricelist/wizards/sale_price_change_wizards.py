@@ -4,7 +4,7 @@ from odoo import api, models, fields
 class SalePriceChangeWizards(models.TransientModel):
     _name = 'sale.price.details'
 
-    product_id = fields.Many2one('product.product', 'Product', required=True)
+    product_id = fields.Many2one('product.product', 'Product', domain=[('sale_ok', '=', True)], required=True)
     currency_id = fields.Many2one('res.currency', string="Currency")
 
     @api.multi
