@@ -33,6 +33,7 @@ class HrHolidaysImport(models.Model):
             vals['employee_id'] = int(line.employee_id)
             vals['holiday_type'] = 'employee'
             vals['type'] = line.type
+            vals['state'] = 'validate'
             vals['number_of_days_temp'] = line.number_of_days
 
             if (line.type == 'add'):

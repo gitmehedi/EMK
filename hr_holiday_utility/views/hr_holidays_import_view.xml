@@ -43,7 +43,6 @@
 										<field name="holiday_status_id"/>
 										<field name="number_of_days"/>
 										<field name="type"/>
-										<field name="state"/>
 									</tree>
 								</field>	
 							</page>
@@ -55,7 +54,6 @@
 										<field name="holiday_status_id"/>
 										<field name="number_of_days"/>
 										<field name="type"/>
-										<field name="state"/>
 									</tree>
 								</field>
 							</page>
@@ -67,7 +65,6 @@
 										<field name="holiday_status_id"/>
 										<field name="number_of_days"/>
 										<field name="type"/>
-										<field name="state"/>
 									</tree>
 								</field>	
 							</page>
