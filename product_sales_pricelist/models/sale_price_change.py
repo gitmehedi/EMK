@@ -18,7 +18,7 @@ class SalePriceChange(models.Model):
     list_price = fields.Float(string='Old Price',compute='compute_list_price',readonly=True, store=True)
     new_price = fields.Float(string='New Price', states={'confirm': [('readonly', True)], 'validate1': [('readonly', True)],'validate': [('readonly', True)]}, required=True)
     product_package_mode = fields.Many2one('product.packaging.mode', string= 'Packaging Mode', required=True)
-    uom_id = fields.Many2one('product.uom', string="UoM", required=True)
+    uom_id = fields.Many2one('product.uom', string="UoM", domain=[('category_id', '=', 2)], required=True)
 
     request_date = fields.Datetime(string='Request Date', default=datetime.datetime.now(), readonly=True)
     requested_by = fields.Many2one('hr.employee', string="Requested By", default=_current_employee, readonly=True)
@@ -47,13 +47,15 @@ class SalePriceChange(models.Model):
     def _onchange_product_form(self):
         product_pool = self.env['product.product'].search([('product_tmpl_id', '=', self.product_id.id)])
         if product_pool:
-            self.currency_id = product_pool.currency_id.id
+            for ps in product_pool:
+                self.currency_id = ps.currency_id.id
 
     @api.depends('product_id')
     def compute_list_price(self):
         product_pool = self.env['product.product'].search([('product_tmpl_id', '=', self.product_id.id)])
         if product_pool:
-            self.list_price = product_pool.list_price
+            for ps in product_pool:
+                self.list_price = ps.list_price
 
     @api.multi
     def action_confirm(self):

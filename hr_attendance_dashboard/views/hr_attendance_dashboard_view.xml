@@ -7,6 +7,7 @@
                 <!--<field name="name"/>default_group_by="operating_unit_id"-->
                 <field name="color"/>
                 <field name="kanban_dashboard"/>
+                <field name="kanban_dashboard_graph"/>
                 <!--<field name="operating_unit_id"/>-->
                 <templates>
                     <t t-name="kanban-box">
@@ -90,6 +91,9 @@
                                     </div>
 
                                 </div>
+                                <!--<div class="o_kanban_graph_section">-->
+                                    <!--<field name="kanban_dashboard_graph" t-att-graph_type="bar" widget="dashboard_graph"/>-->
+                                <!--</div>-->
                             </div>
                         </div>
                     </t>
