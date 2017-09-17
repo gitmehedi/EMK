@@ -228,7 +228,8 @@ class AttendanceUtility(models.TransientModel):
             preStartDate = preStartDate + day
         return dutyTimeMap
 
-    def makeDecisionForADays(self, att_summary, employeeAttMap, currDate, currentDaydutyTime, employee, graceTime):
+    def makeDecisionForADays(self, att_summary, employeeAttMap, currDate, currentDaydutyTime, employee, graceTime,
+                             todayIsHoliday, compensatoryLeaveMap, oTMap):
 
         employeeId = employee.id
         check_in = employeeAttMap.get(employeeId)
@@ -239,7 +240,7 @@ class AttendanceUtility(models.TransientModel):
 
             if isLate is True:  # Check Absent OR Late
                 # Check this day is holiday or personal leave
-                if self.checkOnHolidays(currDate) is True:
+                if self.checkOnHolidays(employeeId, todayIsHoliday, compensatoryLeaveMap, oTMap) is True:
                     att_summary["holidays"].append(Employee(employee))
                 elif self.checkOnPersonalLeave(employeeId, currDate) is True:
                     att_summary["leave"].append(Employee(employee))
@@ -252,7 +253,7 @@ class AttendanceUtility(models.TransientModel):
                 att_summary["on_time_present"].append(Employee(employee, check_in))
 
         else:
-            if self.checkOnHolidays(currDate) is True:
+            if self.checkOnHolidays(employeeId, todayIsHoliday, compensatoryLeaveMap, oTMap) is True:
                 att_summary["holidays"].append(Employee(employee))
             elif self.checkOnPersonalLeave(employeeId, currDate) is True:
                 att_summary["leave"].append(Employee(employee))
@@ -357,17 +358,17 @@ class AttendanceUtility(models.TransientModel):
         else:
             return 15.0
 
-    def checkOnHolidays(self, startDate):
+    def checkOnHolidays(self, employeeId, todayIsHoliday, compensatoryLeaveMap, oTMap):
 
-        query_str = """SELECT COUNT(id) FROM hr_holidays_public_line
-                       WHERE date = %s AND status = true"""
-
-        self._cr.execute(query_str, (startDate,))
-        count = self._cr.fetchall()
-        if count[0][0] > 0:
-            return True
-        else:
+        if todayIsHoliday == False:
             return False
+
+        if compensatoryLeaveMap.get(employeeId):
+            return False
+        elif oTMap.get(employeeId):
+            return False
+        else:
+            return True
 
     def checkOnPersonalLeave(self, employeeId, startDate):
 
@@ -381,3 +382,42 @@ class AttendanceUtility(models.TransientModel):
             return True
         else:
             return False
+
+    def getHolidaysByUnit(self, unitId, requested_date):
+        holidays_query = """select t1.id,t1.date from hr_holidays_public_line as t1
+                            join hr_holidays_public as t2 on t2.id=t1.public_type_id
+                            join public_holiday_operating_unit_rel as t3 on t3.public_holiday_id=t2.id
+                            join hr_leave_fiscal_year as t4 on t4.id=t2.year_id
+                            where t3.operating_unit_id=%s and %s between t4.date_start and t4.date_stop"""
+        # key date value id from
+        self._cr.execute(holidays_query, (unitId,requested_date))
+        holidaysLines = self._cr.fetchall()
+        holidaysMap={}
+        for i, line in enumerate(holidaysLines):
+            holidaysMap[line[1]] = line[0]
+
+        return holidaysMap
+
+    def getCompensatoryLeaveEmpByHolidayLineId(self, lineId):
+        holidays_query = """select t1.employee_id from hr_exception_compensatory_leave as t1
+                            join hr_holidays_exception_employee_batch as t2 on t1.rel_exception_leave_id=t2.id
+                            where t2.public_holidays_line=%s and t2.state='approved'"""
+        self._cr.execute(holidays_query, (lineId,))
+        holidaysLines = self._cr.fetchall()
+        compensatoryLeaveMap={}
+        for i, line in enumerate(holidaysLines):
+            compensatoryLeaveMap["employee_id"] = ""
+
+        return compensatoryLeaveMap
+
+    def getOTEmpByHolidayLineId(self, lineId):
+        ot_query = """select t1.employee_id from hr_exception_overtime_duty as t1
+                            join hr_holidays_exception_employee_batch as t2 on t1.rel_exception_ot_id=t2.id
+                            where t2.public_holidays_line=%s and t2.state='approved'"""
+        self._cr.execute(ot_query, (lineId,))
+        otLines = self._cr.fetchall()
+        oTMap={}
+        for i, line in enumerate(otLines):
+            oTMap["employee_id"] = ""
+
+        return oTMap
