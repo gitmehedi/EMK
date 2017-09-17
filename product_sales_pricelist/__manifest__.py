@@ -1,5 +1,5 @@
 {
-    'name': 'GBS Sales Price Change',
+    'name': 'Product Sales Pricelist',
     'version': '1.0',
     'category': 'sales',
     'author': 'Genweb2 Limited',

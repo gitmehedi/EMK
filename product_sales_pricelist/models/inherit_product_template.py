@@ -7,7 +7,7 @@ class InheritProductTemplate(models.Model):
     @api.multi
     def action_view_pricing_history(self):
 
-        view = self.env.ref('gbs_sales_price_change.sale_price_change_history_tree')
+        view = self.env.ref('product_sales_pricelist.sale_price_change_history_tree')
 
         return {
             'name': ('Product Price History'),

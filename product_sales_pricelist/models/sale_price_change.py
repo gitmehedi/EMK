@@ -40,7 +40,7 @@ class SalePriceChange(models.Model):
 
     currency_id = fields.Many2one('res.currency', string="Currency", states={'confirm': [('readonly', True)], 'validate1': [('readonly', True)],'validate': [('readonly', True)]}, required=True)
     company_id = fields.Many2one('res.company', 'Company',
-                                 default=lambda self: self.env['res.company']._company_default_get('gbs_sales_price_change'),
+                                 default=lambda self: self.env['res.company']._company_default_get('product_sales_pricelist'),
                                  required=True)
 
     @api.onchange('product_id')
@@ -71,7 +71,7 @@ class SalePriceChange(models.Model):
         vals['approve_price_date'] = datetime.datetime.now()
         vals['currency_id'] = self.currency_id.id
         vals['product_package_mode '] = self.product_package_mode
-        vals['uom_id'] = self.uom_id
+        vals['uom_id'] = self.uom_id.id
 
         self.env['product.sale.history.line'].create(vals)
 
