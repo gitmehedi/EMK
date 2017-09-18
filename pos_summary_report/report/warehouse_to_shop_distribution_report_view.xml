@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+        <!-- Main template -->
+        <template id="report_warehouse_to_shop_distribution_report_view_qweb">
+            <t t-call="report.html_container">
+                <t t-call="report.internal_layout">
+                    <div class="page">
+                        <div class="row mb32">
+                            <div class="col-xs-12">
+                                <h2 class="text-center">Warehouse To Shop Distribution</h2>
+                            </div>
+                        </div>
+                        <div class="row mb32" style="margin: 10mm 10mm 30mm 10mm;">
+                            <div class="col-xs-6">
+                                <p>
+                                    <strong>Transfer From:</strong>
+                                    <span>Warehouse</span>
+                                </p>
+                            </div>
+                            <div class="col-xs-5 col-xs-offset-1">
+                                <p>
+                                    <strong>Receive Shop Name:</strong>
+                                    <span t-esc="record['shop_name']"/>
+                                </p>
+                            </div>
+                            <br/>
+                            <div class="col-xs-8 col-xs-offset-4">
+                                <p>
+                                        <span t-esc="record['start_date']"/>
+                                    <strong>To</strong>
+                                    <span t-esc="record['end_date']"/>
+                                </p>
+                            </div>
+                        </div>
+
+
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr style="background-color: #EFECEB;">
+                                    <th class="text-center">S.N</th>
+                                    <th class="text-center">Code</th>
+                                    <th class="text-center">Product Name</th>
+                                    <th class="text-center">Transfer Quantity</th>
+                                    <th class="text-center">Receive Quantity</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <t t-foreach="lines" t-as="line">
+                                    <tr>
+                                        <td>
+                                            <t t-esc="line_index+1"/>
+                                        </td>
+                                        <td>
+                                            <t t-esc="line['barcode']"/>
+                                        </td>
+                                        <td>
+                                            <t t-esc="line['product_name']"/>
+                                        </td>
+                                        <td style="text-align: right;">
+                                            <t t-esc="line['quantity']"/>
+                                        </td>
+                                        <td></td>
+                                    </tr>
+                                </t>
+                                <t t-if="lines">
+                                    <tr style="background-color: #EFECEB;">
+
+                                        <td colspan="3" style="text-align: right;">
+                                            <strong>Grand Total</strong>
+                                        </td>
+                                        <td style="text-align: right;">
+                                            <strong>
+                                                <t t-esc="total"/>
+                                            </strong>
+                                        </td>
+                                        <td></td>
+                                    </tr>
+                                </t>
+                            </tbody>
+                        </table>
+                    </div>
+                </t>
+            </t>
+        </template>
+    </data>
+</openerp>

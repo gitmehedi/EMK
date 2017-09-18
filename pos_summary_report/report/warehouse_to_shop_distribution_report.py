@@ -1,0 +1,56 @@
+from datetime import datetime
+
+from openerp import api, models
+
+
+class DailyCreditSettlementReport(models.AbstractModel):
+    _name = 'report.pos_summary_report.report_warehouse_to_shop_distribution_report_view_qweb'
+
+    @api.multi
+    def render_html(self, data=None):
+        lines, grand = [], {}
+        report_obj = self.env['report']
+        report = report_obj._get_report_from_name(
+            'pos_summary_report.report_warehouse_to_shop_distribution_report_view_qweb')
+
+        domain = []
+        if data['source_location_id']:
+            domain.append(('location_id', '=', data['source_location_id']))
+        if data['destination_location_id']:
+            domain.append(('location_dest_id', '=', data['destination_location_id']))
+        if data['start_date']:
+            domain.append(('date', '>=', data['start_date']))
+        if data['end_date']:
+            domain.append(('date', '<=', data['end_date']))
+
+        moves = self.env['stock.move'].search(domain, order="date asc")
+
+        for record in moves:
+            rec = {}
+            rec['barcode'] = record.product_id.default_code
+            rec['display_name'] = record.display_name
+            rec['product_name'] = record.product_id.display_name
+            rec['quantity'] = record.product_qty
+            lines.append(rec)
+
+        total = sum([val['quantity'] for val in lines])
+
+        op_unit = self.env['operating.unit'].search([('id', '=', data['operating_unit_id'])])
+        data['shop_name'] = op_unit.name
+
+        docargs = {
+            'doc_ids': self._ids,
+            'doc_model': report.model,
+            'docs': self,
+            'record': data,
+            'total': total,
+            'lines': lines
+
+        }
+        return report_obj.render('pos_summary_report.report_warehouse_to_shop_distribution_report_view_qweb', docargs)
+
+    def format_date(self, date):
+        return datetime.strptime(date[:10], '%Y-%m-%d').strftime('%d-%m-%Y')
+
+    def decimal(self, val):
+        return "{:,}".format(round(val, 0))
