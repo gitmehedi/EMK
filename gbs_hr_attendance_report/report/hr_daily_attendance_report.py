@@ -68,13 +68,31 @@ class GetDailyAttendanceReport(models.AbstractModel):
 
         employeeAttMap = att_utility_pool.getDailyAttByDateAndUnit(requestedDate, operating_unit_id)
 
+        # Getting data for holidays
+
+        compensatoryLeaveMap = {}
+        oTMap = {}
+        todayIsHoliday = False
+        holidayMap = att_utility_pool.getHolidaysByUnit(operating_unit_id, requested_date)
+        if holidayMap.get(requested_date):
+            lineId = holidayMap.get(requested_date)
+            todayIsHoliday = True
+            compensatoryLeaveMap = att_utility_pool.getCompensatoryLeaveEmpByHolidayLineId(lineId)
+            oTMap = att_utility_pool.getOTEmpByHolidayLineId(lineId)
+
+        # End Getting data for holidays
+
         att_summary["total_emp"] = len(employeeList)
 
         for employee in employeeList:
 
             employeeId = employee.id
+
             if employee.is_monitor_attendance == False:
-                att_summary["on_time_present"].append(Employee(employee))
+                if todayIsHoliday == True:
+                    att_summary["holidays"].append(Employee(employee))
+                else:
+                    att_summary["on_time_present"].append(Employee(employee))
                 continue
 
             alterTimeMap = att_utility_pool.buildAlterDutyTime(requestedDate, requestedDate, employeeId)
@@ -94,7 +112,9 @@ class GetDailyAttendanceReport(models.AbstractModel):
             else:
                 currentDaydutyTime = dutyTimeMap.get(att_utility_pool.getStrFromDate(requestedDate))
                 if currentDaydutyTime.startDutyTime < current_time:
-                    att_summary = att_utility_pool.makeDecisionForADays(att_summary, employeeAttMap, requested_date, currentDaydutyTime, employee, graceTime)
+                    att_summary = att_utility_pool.makeDecisionForADays(att_summary, employeeAttMap, requested_date,
+                                                                        currentDaydutyTime, employee, graceTime,
+                                                                        todayIsHoliday, compensatoryLeaveMap, oTMap)
                 else:
                     att_summary["unworkable"].append(Employee(employee))
 

@@ -4,12 +4,12 @@ from odoo import api, models, fields
 class SalePriceChangeWizards(models.TransientModel):
     _name = 'sale.price.details'
 
-    product_id = fields.Many2one('product.product', 'Product', required=True)
+    product_id = fields.Many2one('product.product', 'Product', domain=[('sale_ok', '=', True)], required=True)
     currency_id = fields.Many2one('res.currency', string="Currency")
 
     @api.multi
     def search_data(self):
-        view = self.env.ref('gbs_sales_price_change.sale_price_change_tree')
+        view = self.env.ref('product_sales_pricelist.sale_price_change_tree')
         employee_pool = self.env['sale.price.change']
 
         if self.product_id and self.currency_id:

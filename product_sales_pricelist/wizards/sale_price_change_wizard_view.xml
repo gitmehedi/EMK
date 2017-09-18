@@ -8,9 +8,6 @@
 			<field name="type">form</field>
 			<field name="arch" type="xml">
 				<form string="Product Sale Price Change History">
-					<header>
-						<button name= "search_data" type="object" string="View History" class="oe_highlight" />
-					</header>
 					<sheet>
 						<group>
 							<group>
@@ -20,6 +17,7 @@
 						</group>
 						<footer>
 							<footer>
+								<button name= "search_data" type="object" string="View History" class="oe_highlight" />
 								<button string="Cancel" class="btn btn-sm btn-default o_form_button_cancel" special="cancel"/>
                 			</footer>
 						</footer>
@@ -30,7 +28,7 @@
 
 		<!-- Menu Action -->
 		<record id="price_history_action" model="ir.actions.act_window">
-			<field name="name">Products Price Details</field>
+			<field name="name">Product Price History</field>
 			<field name="type">ir.actions.act_window</field>
 			<field name="res_model">sale.price.details</field>
 			<field name="view_type">form</field>

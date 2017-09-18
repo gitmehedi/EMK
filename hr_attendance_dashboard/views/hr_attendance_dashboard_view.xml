@@ -3,15 +3,16 @@
         <field name="name">hr.attendance.dashboard.kanban</field>
         <field name="model">operating.unit</field>
         <field name="arch" type="xml">
-            <kanban default_order="id" class="oe_background_grey o_kanban_dashboard o_stock_kanban" create="0" >
+            <kanban default_order="operating_unit_sequence" class="oe_background_grey o_kanban_dashboard o_stock_kanban" create="0" >
                 <!--<field name="name"/>default_group_by="operating_unit_id"-->
-                <!--<field name="color"/>-->
+                <field name="color"/>
                 <field name="kanban_dashboard"/>
+                <field name="kanban_dashboard_graph"/>
                 <!--<field name="operating_unit_id"/>-->
                 <templates>
                     <t t-name="kanban-box">
                         <div>
-                            <div t-attf-class="#{kanban_color(0)}">
+                            <div t-attf-class="#{kanban_color(record.color.raw_value)}">
                                 <t t-value="JSON.parse(record.kanban_dashboard.raw_value)" t-set="dashboard"/>
                                 <!--<t t-value="record.type.raw_value" t-set="journal_type"/>-->
                                 <div class="o_project_kanban_manage">
@@ -22,9 +23,9 @@
                                             </div>
                                             <!--<div class="o_secondary"><field class="o_secondary" name="operating_unit_id"/></div>-->
                                         </div>
-                                        <!--<div class="o_kanban_manage_button_section">-->
-                                            <!--<a class="o_kanban_manage_toggle_button" href="#">More <i class="fa fa-caret-down"/></a>-->
-                                        <!--</div>-->
+                                        <div class="o_kanban_manage_button_section">
+                                            <a class="o_kanban_manage_toggle_button" href="#">More <i class="fa fa-caret-down"/></a>
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="container o_kanban_card_content o_visible" >
@@ -74,21 +75,24 @@
                                         </div>
                                     </div>
                                 </div>
-                                <!--<div class="container o_kanban_card_manage_pane o_invisible">-->
-                                    <!--&lt;!&ndash;<div class="col-xs-6 o_kanban_card_manage_section o_kanban_manage_view">&ndash;&gt;-->
-                                    <!--&lt;!&ndash;<div class="o_kanban_card_manage_title">&ndash;&gt;-->
-                                    <!--&lt;!&ndash;<span>View</span>&ndash;&gt;-->
-                                    <!--&lt;!&ndash;</div>&ndash;&gt;-->
-                                    <!--&lt;!&ndash;</div>&ndash;&gt;-->
-                                    <!--<div t-if="widget.editable" class="o_kanban_card_manage_settings row">-->
-                                        <!--<div class="col-xs-8">-->
-                                            <!--&lt;!&ndash;<ul class="oe_kanban_colorpicker" data-field="color"/>&ndash;&gt;-->
-                                        <!--</div>-->
+                                <div class="container o_kanban_card_manage_pane o_invisible">
+                                    <!--<div class="col-xs-6 o_kanban_card_manage_section o_kanban_manage_view">-->
+                                    <!--<div class="o_kanban_card_manage_title">-->
+                                    <!--<span>View</span>-->
+                                    <!--</div>-->
+                                    <!--</div>-->
+                                    <div t-if="widget.editable" class="o_kanban_card_manage_settings row">
+                                        <div class="col-xs-8">
+                                            <ul class="oe_kanban_colorpicker" data-field="color"/>
+                                        </div>
                                         <!--<div class="col-xs-4 text-right">-->
                                             <!--<a type="edit">Settings</a>-->
                                         <!--</div>-->
-                                    <!--</div>-->
+                                    </div>
 
+                                </div>
+                                <!--<div class="o_kanban_graph_section">-->
+                                    <!--<field name="kanban_dashboard_graph" t-att-graph_type="bar" widget="dashboard_graph"/>-->
                                 <!--</div>-->
                             </div>
                         </div>

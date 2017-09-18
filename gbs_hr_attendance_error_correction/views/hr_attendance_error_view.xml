@@ -8,6 +8,7 @@
 			<field name="arch" type="xml">
 				<tree string="Error Attendances" editable="bottom">
 					<field name="employee_id" readonly="True"></field>
+					<field name="duty_date" readonly="True"></field>
 					<field name="check_in" readonly="True"></field>
 					<field name="check_out" readonly="True"></field>
 				</tree>

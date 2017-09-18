@@ -38,6 +38,7 @@
 							<page string="Raw Input">
 								<field name="import_temp">
 									<tree string="List" editable="bottom">
+										<field name="name"/>
 										<field name="employee_id"/>
 										<field name="holiday_status_id"/>
 										<field name="number_of_days"/>
@@ -48,6 +49,7 @@
 							<page string="Error Data">
 								<field name="import_error_lines">
 									<tree string="List" editable="bottom">
+										<field name="name"/>
 										<field name="employee_id"/>
 										<field name="holiday_status_id"/>
 										<field name="number_of_days"/>
@@ -58,6 +60,7 @@
 							<page string="Ready to Import">
 								<field name="lines">
 									<tree string="List" editable="bottom">
+										<field name="name"/>
 										<field name="employee_id"/>
 										<field name="holiday_status_id"/>
 										<field name="number_of_days"/>

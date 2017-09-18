@@ -1,5 +1,5 @@
 {
-    'name': 'GBS Sales Price Change',
+    'name': 'Product Sales Pricelist',
     'version': '1.0',
     'category': 'sales',
     'author': 'Genweb2 Limited',
@@ -17,6 +17,7 @@
         'views/sale_price_change_history.xml',
         'views/sale_price_change_view.xml',
         'views/inherited_products_view.xml',
+        'views/product_packaging_mode_view.xml',
     ],
     'installable': True,
     'application': True,
