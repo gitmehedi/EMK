@@ -8,6 +8,7 @@
         'hr_attendance',
         'hr',
         'gbs_hr_calendar',
+        'gbs_operating_unit',
         'gbs_hr_employee_sequence',
         'hr_employee_operating_unit',
         'gbs_hr_attendance_utility',
