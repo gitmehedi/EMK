@@ -3,7 +3,7 @@
         <field name="name">hr.attendance.dashboard.kanban</field>
         <field name="model">operating.unit</field>
         <field name="arch" type="xml">
-            <kanban default_order="id" class="oe_background_grey o_kanban_dashboard o_stock_kanban" create="0" >
+            <kanban default_order="operating_unit_sequence" class="oe_background_grey o_kanban_dashboard o_stock_kanban" create="0" >
                 <!--<field name="name"/>default_group_by="operating_unit_id"-->
                 <field name="color"/>
                 <field name="kanban_dashboard"/>
