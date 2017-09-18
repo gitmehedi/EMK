@@ -79,11 +79,21 @@ class HrEmployeeExceptionHolidaysBatch(models.Model):
 
     @api.multi
     def action_assign_compensatory(self):
-        com_pool = self.env['hr.exception.overtime.duty'].search([('rel_exception_ot_id', '=', self.id)])
+        ot_pool = self.env['hr.exception.overtime.duty'].search([('rel_exception_ot_id', '=', self.id)])
+        com_pool = self.env['hr.exception.compensatory.leave'].search([('rel_exception_leave_id', '=', self.id)])
         emp_ids = []
-        if com_pool:
-            for i in com_pool:
-                emp_ids.append(i.employee_id.id)
+        if com_pool and ot_pool:
+            for com_obj in com_pool:
+                emp_ids.append(com_obj.employee_id.id)
+            for ot_obj in ot_pool:
+                emp_ids.append(ot_obj.employee_id.id)
+        elif com_pool:
+            for com_obj in com_pool:
+                emp_ids.append(com_obj.employee_id.id)
+        elif ot_pool:
+            for ot_obj in ot_pool:
+                emp_ids.append(ot_obj.employee_id.id)
+
 
         res = self.env.ref('hr_public_holidays.view_hr_compensatory_leave_wizard_form')
         result = {
@@ -102,11 +112,20 @@ class HrEmployeeExceptionHolidaysBatch(models.Model):
 
     @api.multi
     def action_assign_overtime(self):
+        ot_pool = self.env['hr.exception.overtime.duty'].search([('rel_exception_ot_id', '=', self.id)])
         com_pool=self.env['hr.exception.compensatory.leave'].search([('rel_exception_leave_id','=',self.id)])
         emp_ids=[]
-        if com_pool:
-            for i in com_pool:
-                emp_ids.append(i.employee_id.id)
+        if com_pool and ot_pool:
+            for com_obj in com_pool:
+                emp_ids.append(com_obj.employee_id.id)
+            for ot_obj in ot_pool:
+                emp_ids.append(ot_obj.employee_id.id)
+        elif com_pool:
+            for com_obj in com_pool:
+                emp_ids.append(com_obj.employee_id.id)
+        elif ot_pool:
+            for ot_obj in ot_pool:
+                emp_ids.append(ot_obj.employee_id.id)
 
         res = self.env.ref('hr_public_holidays.view_hr_exception_overtime_wizard_form')
         result = {
