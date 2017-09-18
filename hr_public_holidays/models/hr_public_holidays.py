@@ -80,21 +80,21 @@ class HrPublicHolidays(models.Model):
 
         return True
     
-    @api.one
-    @api.constrains('year_id', 'country_id')
-    def _check_year(self):
-        if self.country_id:
-            domain = [('year_id', '=', self.year_id.id),
-                      ('country_id', '=', self.country_id.id),
-                      ('id', '!=', self.id)]
-        else:
-            domain = [('year_id', '=', self.year_id.id),
-                      ('country_id', '=', False),
-                      ('id', '!=', self.id)]
-        if self.search_count(domain):
-            raise UserError('You can\'t create duplicate public holiday '
-                            'per year')
-        return True
+    # @api.one
+    # @api.constrains('year_id', 'country_id')
+    # def _check_year(self):
+    #     if self.country_id:
+    #         domain = [('year_id', '=', self.year_id.id),
+    #                   ('country_id', '=', self.country_id.id),
+    #                   ('id', '!=', self.id)]
+    #     else:
+    #         domain = [('year_id', '=', self.year_id.id),
+    #                   ('country_id', '=', False),
+    #                   ('id', '!=', self.id)]
+    #     if self.search_count(domain):
+    #         raise UserError('You can\'t create duplicate public holiday '
+    #                         'per year')
+    #     return True
 
     @api.one
     @api.depends('year', 'name')
