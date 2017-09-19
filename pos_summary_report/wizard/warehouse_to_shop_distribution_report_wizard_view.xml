@@ -38,8 +38,11 @@
             <field name="target">new</field>
         </record>
 
+        <menuitem name="Product Distribution" id="product_to_shop_distribution"
+                  parent="base.menu_reporting" sequence="100" groups="stock.group_stock_user"/>
+
         <menuitem name="Shop Distribution" id="warehouse_to_shop_distribution_report"
                   action="action_warehouse_to_shop_distribution_report_wizard"
-                  parent="point_of_sale.menu_point_rep" groups="point_of_sale.group_pos_manager"/>
+                  parent="product_to_shop_distribution" groups="stock.group_stock_user"/>
     </data>
 </openerp>
