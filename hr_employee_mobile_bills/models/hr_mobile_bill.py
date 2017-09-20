@@ -1,6 +1,6 @@
-from openerp import models, fields,_
-from openerp.exceptions import UserError, ValidationError
-from openerp import api
+from odoo import models, fields,_
+from odoo.exceptions import UserError, ValidationError
+from odoo import api
 
 
 class HrMobileBill(models.Model):
