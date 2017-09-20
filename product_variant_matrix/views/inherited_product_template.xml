@@ -41,7 +41,7 @@
 				<data>
 					<xpath expr="//field[@name='categ_id']" position="replace">
 						<field name="id" invisible="1" />
-						<field name="categ_id" attrs="{'readonly': [('id', '!=', False)]}" />
+						<field name="categ_id"/>
 					</xpath>
 				</data>
 			</field>
