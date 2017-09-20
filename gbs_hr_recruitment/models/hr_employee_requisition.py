@@ -21,7 +21,7 @@ class HREmployeeRequisition(models.Model):
     reson_or_justification = fields.Text(string = 'Reason / Justification')
     approved_no_of_emp = fields.Integer(string = 'No. of Approved' ,related='department_id.approved_no_of_emp',readonly=True)
     qualification = fields.Text(string = 'Qualification', required=True)
-    age = fields.Text(string = 'Age', required=True)
+    age = fields.Integer(string = 'Age', required=True)
     training_or_practical_skills = fields.Text(string='Training / Practical experience / Skill', required=True)
     principle_duties = fields.Text(string = 'Principle Duties', required=True)
     comment_by_co_md = fields.Text(string='Comments', required=True)

@@ -44,6 +44,17 @@ class HrEmployeeExceptionHolidaysBatch(models.Model):
         ('name_uniq', 'unique(name)', 'This Name is already in use'),
     ]
 
+    @api.one
+    @api.constrains('public_holidays_line', 'operating_unit_id')
+    def _check_public_holidays_line(self):
+        domain = [('public_holidays_line', '=', self.public_holidays_line.id),
+                  ('operating_unit_id', '=', self.operating_unit_id.id),
+                 ('id', '!=', self.id)]
+        if self.search_count(domain):
+            raise UserError('You can\'t create duplicate exceptions holiday for same operating unit')
+
+        return True
+
     @api.multi
     def action_confirm(self):
         self.write({'state': 'confirmed'})

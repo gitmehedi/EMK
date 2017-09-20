@@ -34,7 +34,7 @@ class SaleOrder(models.Model):
     @api.multi
     def _is_double_validation_applicable(self):
         for lines in self.order_line:
-            product_pool = self.env['product.product'].search([('product_tmpl_id', '=', lines.product_id.ids)])
+            product_pool = self.env['product.product'].search([('id', '=', lines.product_id.ids)])
             if (lines.price_unit < product_pool.list_price):
                 return True # Go to two level approval process
             else:
@@ -47,12 +47,15 @@ class SaleOrder(models.Model):
         is_double_validation = None
 
         for lines in self.order_line:
-            product_pool = self.env['product.product'].search([('product_tmpl_id', '=', lines.product_id.ids)])
-            cust_commission_pool = self.env['customer.commission'].search([('customer_id', '=', self.partner_id.id),('product_id', '=', lines.product_id.ids)])
+            product_pool = self.env['product.product'].search([('id', '=', lines.product_id.ids)])
+            cust_commission_pool = self.env['customer.commission'].search([('customer_id', '=', self.partner_id.id),
+                                                                           ('product_id', '=', lines.product_id.ids)])
             credit_limit_pool = self.env['res.partner'].search([('id', '=', self.partner_id.id)])
 
             if (self.credit_sales_or_lc == 'cash'):
-                if (lines.commission_rate < cust_commission_pool.commission_rate or lines.price_unit < product_pool.list_price):
+                if (lines.commission_rate < cust_commission_pool.commission_rate
+                    or lines.price_unit < product_pool.list_price):
+
                     is_double_validation = True
                     break;
                 else:

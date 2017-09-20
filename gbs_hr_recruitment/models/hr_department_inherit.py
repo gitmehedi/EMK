@@ -4,5 +4,5 @@ from openerp import api, fields, models
 class HrDepartmentInherit(models.Model):
     _inherit = ['hr.department']
 
-    approved_no_of_emp = fields.Integer(string='No. of Approved',
-                                        required=True)
+    approved_no_of_emp = fields.Integer(string='No. of Approved Employee')
+
