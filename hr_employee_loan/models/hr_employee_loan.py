@@ -1,8 +1,8 @@
-from openerp import models, fields,_
+from odoo import models, fields,_
 import datetime
 from dateutil.relativedelta import relativedelta
-from openerp import api
-from openerp.exceptions import UserError, ValidationError
+from odoo import api
+from odoo.exceptions import UserError, ValidationError
 
 
 class HrEmployeeLoanRequest(models.Model):

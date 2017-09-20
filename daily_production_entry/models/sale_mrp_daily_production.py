@@ -1,4 +1,4 @@
-from openerp import api, fields, models, exceptions, _
+from odoo import api, fields, models, exceptions, _
 
 class MrpDailyProduction(models.Model):
     _name = 'mrp.daily.production'

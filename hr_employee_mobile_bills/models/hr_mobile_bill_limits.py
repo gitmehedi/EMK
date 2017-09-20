@@ -1,5 +1,5 @@
-from openerp import models, fields,api, _
-from openerp.exceptions import UserError, ValidationError
+from odoo import models, fields,api, _
+from odoo.exceptions import UserError, ValidationError
 
 class HrMobileBillLimits(models.Model):
     _name = 'hr.mobile.bill.limit'

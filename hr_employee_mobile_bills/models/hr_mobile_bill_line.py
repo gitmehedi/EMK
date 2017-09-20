@@ -1,6 +1,6 @@
-from openerp import models, fields,_
-from openerp import api
-from openerp.exceptions import UserError, ValidationError
+from odoo import models, fields,_
+from odoo import api
+from odoo.exceptions import UserError, ValidationError
 
 
 

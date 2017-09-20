@@ -1,4 +1,4 @@
-from openerp import models, fields,api
+from odoo import models, fields,api
 
 class HrEmployeeLoanType(models.Model):
     _name = 'hr.employee.loan.type'

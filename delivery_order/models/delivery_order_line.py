@@ -1,4 +1,4 @@
-from openerp import api, fields, models, exceptions, _
+from odoo import api, fields, models, exceptions, _
 
 class MrpDailyProductionLine(models.Model):
     _name = 'delivery.order.line'
