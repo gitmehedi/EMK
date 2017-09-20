@@ -44,7 +44,7 @@ class SaleOrder(models.Model):
 
     @api.multi
     def action_submit(self):
-        is_double_validation = None
+        is_double_validation = False
 
         for lines in self.order_line:
             product_pool = self.env['product.product'].search([('id', '=', lines.product_id.ids)])
@@ -53,13 +53,13 @@ class SaleOrder(models.Model):
             credit_limit_pool = self.env['res.partner'].search([('id', '=', self.partner_id.id)])
 
             if (self.credit_sales_or_lc == 'cash'):
-                if (lines.commission_rate < cust_commission_pool.commission_rate
-                    or lines.price_unit < product_pool.list_price):
-
-                    is_double_validation = True
-                    break;
-                else:
-                    is_double_validation = False
+                for coms in cust_commission_pool:
+                    if (lines.commission_rate < coms.commission_rate
+                        or lines.price_unit < product_pool.list_price):
+                        is_double_validation = True
+                        break;
+                    else:
+                        is_double_validation = False
 
             elif (self.credit_sales_or_lc == 'credit_sales'):
                 account_receivable = credit_limit_pool.credit
