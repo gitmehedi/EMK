@@ -15,7 +15,7 @@
             <field name="name">hr.department.form.inherit.hr</field>
             <field name="model">hr.department</field>
             <field name="inherit_id" ref="hr_department_form_view_inherit" />
-            <field name="groups_id" eval="[(6, 0, [ref('hr.group_hr_manager') ])]" />
+            <field name="groups_id" eval="[(6, 0, [ref('hr.group_hr_manager')])]" />
             <field name="arch" type="xml">
                 <field name="approved_no_of_emp" position="attributes">
                    <attribute name="readonly">0</attribute>

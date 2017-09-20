@@ -1,14 +1,15 @@
-from openerp import api, fields, models
+from odoo import api, fields, models
 from datetime import date
 
 class HREmployeeRequisition(models.Model):
     _name='hr.employee.requisition'
     _inherit = ['mail.thread']
-    _rec_name = 'employee_id'
+    # _rec_name = 'employee_id'
 
     def _current_employee(self):
         return self.env['hr.employee'].search([('user_id', '=', self.env.uid)], limit=1)
 
+    name=fields.Char(string="Manpower Requisition Ref", compute='compute_manpower_requisition',store=True)
     employee_id = fields.Many2one('hr.employee', string="Requisition By", default=_current_employee, readonly=True)
     department_id = fields.Many2one('hr.department', related='employee_id.department_id',string='Department', store=True, readonly=True)
     issue_date = fields.Datetime(string='Date of Request', default=date.today(), readonly=True)
@@ -28,8 +29,8 @@ class HREmployeeRequisition(models.Model):
     state = fields.Selection([
         ('draft', 'Draft'),
         ('confirmed', 'Confirmed'),
-        ('hr_approve', 'Verify'),
-        ('cxo_approve', 'Justify'),
+        ('hr_approve', 'HR Approval'),
+        ('cxo_approve', 'Second Approval'),
         ('approved', 'Approved'),
         ('declined', 'Declined'),
         ('reset', 'Reset To Draft'),
@@ -39,6 +40,12 @@ class HREmployeeRequisition(models.Model):
     factory_or_head_office = fields.Boolean(string='Is Head Office?')
 
     check_edit_access = fields.Boolean(string='Check', compute='_compute_check_user')
+
+    @api.one
+    @api.depends('department_id')
+    def compute_manpower_requisition(self):
+        if self.department_id:
+            self.name="Manpower Requisition for %s on %s" % (self.department_id.name,date.today())
 
     @api.multi
     def _compute_check_user(self):
@@ -78,6 +85,12 @@ class HREmployeeRequisition(models.Model):
     @api.multi
     def action_cxo_approve(self):
         self.state = 'approved'
+        if self.replaced_or_new=="new":
+            dept_pool = self.env['hr.department'].search([('id','=',self.department_id.id)])
+            no_of_approval_emp=dept_pool.approved_no_of_emp
+            res_num=no_of_approval_emp+self.req_no_of_employee
+            dept_pool.write({'approved_no_of_emp': res_num})
+
 
     @api.multi
     def action_decline(self):
@@ -86,4 +99,3 @@ class HREmployeeRequisition(models.Model):
     @api.multi
     def action_reset(self):
         self.state = 'draft'
-
