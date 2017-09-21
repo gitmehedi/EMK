@@ -1,7 +1,70 @@
 <?xml version="1.0"?>
 <openerp>
 	<data>
+		<record id="rule_hr_mobile_bill" model="ir.rule">
+			<field name="name">HR Employee Mobile Rule</field>
+			<field name="model_id" ref="model_hr_mobile_bill" />
+			<field name="domain_force">[('user_id','=',user.id)]</field>
+			<field name="perm_read" eval="True" />
+			<field name="perm_create" eval="False" />
+			<field name="perm_write" eval="False" />
+			<field name="perm_unlink" eval="False" />
+			<field name="groups" eval="[(4,ref('base.group_user'))]" />
+		</record>
 
+		<record id="rule_hr_mobile_bill" model="ir.rule">
+			<field name="name">HR Employee Mobile Rule</field>
+			<field name="model_id" ref="model_hr_mobile_bill" />
+			<field name="domain_force">[('user_id','=',user.id)]</field>
+			<field name="perm_read" eval="True" />
+			<field name="perm_create" eval="False" />
+			<field name="perm_write" eval="False" />
+			<field name="perm_unlink" eval="False" />
+			<field name="groups" eval="[(4,ref('hr.group_hr_user'))]" />
+		</record>
+		<record id="rule_hr_mobile_bill" model="ir.rule">
+			<field name="name">HR Employee Mobile Rule</field>
+			<field name="model_id" ref="model_hr_mobile_bill" />
+			<field name="domain_force">[('user_id','=',user.id)]</field>
+			<field name="perm_read" eval="True" />
+			<field name="perm_create" eval="False" />
+			<field name="perm_write" eval="False" />
+			<field name="perm_unlink" eval="False" />
+			<field name="groups" eval="[(4,ref('hr.group_hr_manager'))]" />
+		</record>
+
+		<record id="rule_hr_mobile_bill" model="ir.rule">
+			<field name="name">HR Employee Mobile Rule</field>
+			<field name="model_id" ref="model_hr_mobile_bill_limit" />
+			<field name="domain_force">[('employee_id.user_id','=',user.id)]</field>
+			<field name="perm_read" eval="True" />
+			<field name="perm_create" eval="False" />
+			<field name="perm_write" eval="False" />
+			<field name="perm_unlink" eval="False" />
+			<field name="groups" eval="[(4,ref('base.group_user'))]" />
+		</record>
+
+		<record id="rule_hr_mobile_bill" model="ir.rule">
+			<field name="name">HR Employee Mobile Rule</field>
+			<field name="model_id" ref="model_hr_mobile_bill_limit" />
+			<field name="domain_force">[('employee_id.user_id','=',user.id)]</field>
+			<field name="perm_read" eval="True" />
+			<field name="perm_create" eval="False" />
+			<field name="perm_write" eval="False" />
+			<field name="perm_unlink" eval="False" />
+			<field name="groups" eval="[(4,ref('hr.group_hr_user'))]" />
+		</record>
+
+		<record id="rule_hr_mobile_bill" model="ir.rule">
+			<field name="name">HR Employee Mobile Rule</field>
+			<field name="model_id" ref="model_hr_mobile_bill_limit" />
+			<field name="domain_force">[('employee_id.user_id','=',user.id)]</field>
+			<field name="perm_read" eval="True" />
+			<field name="perm_create" eval="False" />
+			<field name="perm_write" eval="False" />
+			<field name="perm_unlink" eval="False" />
+			<field name="groups" eval="[(4,ref('hr.group_hr_manager'))]" />
+		</record>
 
 	</data>
 </openerp>
