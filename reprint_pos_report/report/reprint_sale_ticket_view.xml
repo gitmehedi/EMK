@@ -3,161 +3,163 @@
     <data>
         <template id="reprint_sale_ticket">
             <t t-call="report.html_container">
-                <t t-foreach="docs" t-as="o">
-                    <div style="font-family: Arial, Helvetica, sans-serif;">
-                        <div class="pos-center-align" style="text-align: center;">
-                            <strong>
-                                <t t-esc="main_header['company_name']"/>
-                            </strong>
-                            <br/>
-                            <strong>MARISHIPA OUTFITTERS</strong>
+                <div class="page">
+                    <t t-foreach="docs" t-as="o">
+                        <div style="font-family: Arial, Helvetica, sans-serif;">
+                            <div class="pos-center-align" style="text-align: center;">
+                                <strong>
+                                    <t t-esc="main_header['company_name']"/>
+                                </strong>
+                                <br/>
+                                <strong>MARISHIPA OUTFITTERS</strong>
 
+                                <br/>
+                                <t t-esc="main_header['street']"/>
+                                <t t-esc="main_header['street2']"/>
+                                <br/>
+                                <t t-esc="main_header['city']"/>
+                                <t t-esc="main_header['zip']"/>
+                                ,
+                                <t t-esc="main_header['contact_no']"/>
+                                <br/>
+                                VAT Reg. No.
+                                <t t-esc="main_header['vat']"/>
+                                <br/>
+                                Musak-11(ka)
+                                <br/>
+                                <br/>
+                                Shop:
+                                <t t-esc="main_header['shop_name']"/>
+                                <br/>
+                            </div>
                             <br/>
-                            <t t-esc="main_header['street']"/>
-                            <t t-esc="main_header['street2']"/>
-                            <br/>
-                            <t t-esc="main_header['city']"/>
-                            <t t-esc="main_header['zip']"/>
-                            ,
-                            <t t-esc="main_header['contact_no']"/>
-                            <br/>
-                            VAT Reg. No.
-                            <t t-esc="main_header['vat']"/>
-                            <br/>
-                            Musak-11(ka)
-                            <br/>
-                            <br/>
-                            Shop:
-                            <t t-esc="main_header['shop_name']"/>
-                            <br/>
-                        </div>
-                        <br/>
-                        <div>
                             <div>
-                                Invoice#
-                                <t t-esc="sub_header['order_id']"/>
-                                <br/>
-                                Customer:
-                                <t t-esc="sub_header['customer_name']"/>
-                                <br/>
-                                Cashier:
-                                <t t-esc="sub_header['cashier']"/>
-                                <br/>
-                                Date:
-                                <t t-esc="sub_header['date_order']"/>
-                                <br/>
+                                <div>
+                                    Invoice#
+                                    <t t-esc="sub_header['order_id']"/>
+                                    <br/>
+                                    Customer:
+                                    <t t-esc="sub_header['customer_name']"/>
+                                    <br/>
+                                    Cashier:
+                                    <t t-esc="sub_header['cashier']"/>
+                                    <br/>
+                                    Date:
+                                    <t t-esc="sub_header['date_order']"/>
+                                    <br/>
+                                </div>
+
                             </div>
+                            <div style="clear: both;"></div>
+
+                            <br/>
+                            <t t-if="sub_header['receipt_header']">
+                                <div style='text-align:center'>
+                                    <t t-esc="sub_header['receipt_header']"/>
+                                </div>
+                                <br/>
+                            </t>
+                            <table>
+                                <colgroup>
+                                    <col width='30%'/>
+                                    <col width='10%'/>
+                                    <col width='20%'/>
+                                    <col width='15%'/>
+                                    <col width='25%'/>
+                                </colgroup>
+                                <tr>
+                                    <th>Product</th>
+                                    <th style="text-align: right;">Qty</th>
+                                    <th style="text-align: right;">Rate</th>
+                                    <th style="text-align: right;">VAT</th>
+                                    <th style="text-align: right;">Amount</th>
+                                </tr>
+                                <tr>
+                                    <th>-------</th>
+                                    <th class="pos-right-align">---</th>
+                                    <th class="pos-right-align">----</th>
+                                    <th class="pos-right-align">---</th>
+                                    <th class="pos-right-align">------</th>
+                                </tr>
+                                <tr t-foreach="orderlines" t-as="orderline">
+                                    <td>
+                                        <t t-esc="orderline['product_name']"/>
+                                    </td>
+                                    <td style="text-align: right;">
+                                        <t t-esc="orderline['quantity']"/>
+                                    </td>
+                                    <td style="text-align: right;">
+                                        <t t-esc="orderline['rate']"/>
+                                    </td>
+                                    <td style="text-align: right;">
+                                        <t t-esc="orderline['vat']"/>
+                                    </td>
+                                    <td style="text-align: right;">
+                                        <t t-esc="orderline['total_amount']"/>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="padding-bottom:40px;"></td>
+                                </tr>
+
+                                <tr>
+                                    <td>
+                                        <strong>Total:</strong>
+                                    </td>
+                                    <td colspan="3">
+                                        <strong>
+                                            <t t-esc="total_value['quantity']"/>
+                                        </strong>
+                                    </td>
+                                    <td style="text-align: right;">
+                                        <strong>
+                                            <t t-esc="total_value['total']"/>
+                                        </strong>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="4">Discount:</td>
+                                    <td style="text-align: right;">
+                                        <t t-esc="total_value['discount']"/>
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <td colspan="4">VAT</td>
+                                    <td style="text-align: right;">
+                                        <t t-esc="total_value['vat']"/>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="4">
+                                        <strong>Net Amount:</strong>
+                                    </td>
+                                    <td style="text-align: right;">
+                                        <strong>
+                                            <t t-esc="total_value['net_amount']"/>
+                                        </strong>
+                                    </td>
+                                </tr>
+                                <tr t-foreach="payment" t-as="line">
+                                    <td colspan="4" style="padding-top: 40px;">
+                                        <t t-esc="line['name']"/>
+                                    </td>
+                                    <td style="text-align: right;">
+                                        <t t-esc="line['amount']"/>
+                                    </td>
+                                </tr>
+                            </table>
+                            <br/>
+                            <t t-if="sub_header['receipt_footer']">
+                                <br/>
+                                <div style='text-align:center'>
+                                    <t t-esc="sub_header['receipt_footer']"/>
+                                </div>
+                            </t>
 
                         </div>
-                        <div style="clear: both;"></div>
-
-                        <br/>
-                        <t t-if="sub_header['receipt_header']">
-                            <div style='text-align:center'>
-                                <t t-esc="sub_header['receipt_header']"/>
-                            </div>
-                            <br/>
-                        </t>
-                        <table>
-                            <colgroup>
-                                <col width='30%'/>
-                                <col width='10%'/>
-                                <col width='20%'/>
-                                <col width='15%'/>
-                                <col width='25%'/>
-                            </colgroup>
-                            <tr>
-                                <th>Product</th>
-                                <th style="text-align: right;">Qty</th>
-                                <th style="text-align: right;">Rate</th>
-                                <th style="text-align: right;">VAT</th>
-                                <th style="text-align: right;">Amount</th>
-                            </tr>
-                            <tr>
-                                <th>-------</th>
-                                <th class="pos-right-align">---</th>
-                                <th class="pos-right-align">----</th>
-                                <th class="pos-right-align">---</th>
-                                <th class="pos-right-align">------</th>
-                            </tr>
-                            <tr t-foreach="orderlines" t-as="orderline">
-                                <td>
-                                    <t t-esc="orderline['product_name']"/>
-                                </td>
-                                <td style="text-align: right;">
-                                    <t t-esc="orderline['quantity']"/>
-                                </td>
-                                <td style="text-align: right;">
-                                    <t t-esc="orderline['rate']"/>
-                                </td>
-                                <td style="text-align: right;">
-                                    <t t-esc="orderline['vat']"/>
-                                </td>
-                                <td style="text-align: right;">
-                                    <t t-esc="orderline['total_amount']"/>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td style="padding-bottom:40px;"></td>
-                            </tr>
-
-                            <tr>
-                                <td>
-                                    <strong>Total:</strong>
-                                </td>
-                                <td colspan="3">
-                                    <strong>
-                                        <t t-esc="total_value['quantity']"/>
-                                    </strong>
-                                </td>
-                                <td style="text-align: right;">
-                                    <strong>
-                                        <t t-esc="total_value['total']"/>
-                                    </strong>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td colspan="4">Discount:</td>
-                                <td style="text-align: right;">
-                                    <t t-esc="total_value['discount']"/>
-                                </td>
-                            </tr>
-
-                            <tr>
-                                <td colspan="4">VAT</td>
-                                <td style="text-align: right;">
-                                    <t t-esc="total_value['vat']"/>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td colspan="4">
-                                    <strong>Net Amount:</strong>
-                                </td>
-                                <td style="text-align: right;">
-                                    <strong>
-                                        <t t-esc="total_value['net_amount']"/>
-                                    </strong>
-                                </td>
-                            </tr>
-                            <tr t-foreach="payment" t-as="line">
-                                <td colspan="4" style="padding-top: 40px;">
-                                    <t t-esc="line['name']"/>
-                                </td>
-                                <td style="text-align: right;">
-                                    <t t-esc="line['amount']"/>
-                                </td>
-                            </tr>
-                        </table>
-                        <br/>
-                        <t t-if="sub_header['receipt_footer']">
-                            <br/>
-                            <div style='text-align:center'>
-                                <t t-esc="sub_header['receipt_footer']"/>
-                            </div>
-                        </t>
-
-                    </div>
-                </t>
+                    </t>
+                </div>
             </t>
         </template>
     </data>

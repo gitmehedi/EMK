@@ -1,4 +1,5 @@
 import time
+import datetime
 
 from openerp.osv import osv, fields
 from openerp.tools.translate import _
@@ -32,6 +33,8 @@ class PosProductReturn(osv.osv_memory):
             rec['discount'] = product.discount if product else 0
             rec['price_unit'] = product.price_unit if product else record.list_price
             pos_line.create(cr, uid, rec)
+            dat = obj.browse(cr, uid, refund)
+            dat.write({'date_order': datetime.datetime.today()})
 
         abs = {
             'name': _('Return Products'),
