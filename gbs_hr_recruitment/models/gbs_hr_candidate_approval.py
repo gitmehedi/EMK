@@ -7,12 +7,13 @@ class HRCandidateApproval(models.Model):
     _rec_name = 'approval_form_name'
 
     approval_form_name = fields.Char(string='Candidate Name',required=True)
-    manpower_requisition_id = fields.Many2one('hr.employee.requisition', string='Manpower Requisition Reference', required=True)
-    department_id = fields.Many2one('hr.department', string='Department',
-                                    store=True, required='True')
-    job_id = fields.Many2one('hr.job', string='Job Title',
-                             store=True,required='True')
-    applicant_ids = fields.One2many('hr.candidate.details', 'candidate_details_id')
+    manpower_requisition_id = fields.Many2one('hr.employee.requisition', string='Manpower Requisition Reference',
+                                              store=True,required=True,domain=[('state', '=', 'approved')])
+    department_id = fields.Many2one('hr.department', string='Department',related='manpower_requisition_id.department_id',
+                                    store=True,readonly=True)
+    job_id = fields.Many2one('hr.job', string='Job Title',related='manpower_requisition_id.job_id',
+                             store=True,readonly=True)
+    applicant_ids = fields.One2many('hr.candidate.details', 'candidate_approval_id')
     check_edit_access = fields.Boolean(string='Check', compute='_compute_check_user')
 
     state = fields.Selection([
@@ -31,16 +32,14 @@ class HRCandidateApproval(models.Model):
             manpower_requisition_obj = self.env['hr.employee.requisition'].search([('id', '=', self.manpower_requisition_id.id)])
 
             if manpower_requisition_obj:
-                self.department_id = manpower_requisition_obj.department_id.id
-                self.job_id = manpower_requisition_obj.job_id.id
-
                 applicant_pool=self.env['hr.applicant'].search([('job_id','=',self.job_id.id)])
                 for record in applicant_pool:
                     val.append((0, 0, {'applicant_name': record.partner_name,
                                        'education_id': record.type_id.id,
-                                       'proposal_designation': record.job_id.id,
+                                       'proposed_designation': record.job_id.id,
                                        'expected_salary': record.salary_expected,
                                        'joining_date': record.availability,
+                                       'applicant_id':record.id,
                                        }))
             self.applicant_ids = val
 
@@ -48,7 +47,7 @@ class HRCandidateApproval(models.Model):
     def _compute_check_user(self):
         user = self.env.user.browse(self.env.uid)
         for i in self:
-            if user.has_group('hr_recruitment.group_hr_recruitment_manager') and i.state=='draft':
+            if user.has_group('hr_recruitment.group_hr_recruitment_user') and i.state=='draft':
                 i.check_edit_access = True
             elif user.has_group('gbs_application_group.group_general_manager') and i.state=='gm_approve':
                 i.check_edit_access = True
@@ -59,6 +58,11 @@ class HRCandidateApproval(models.Model):
 
     @api.multi
     def action_confirm(self):
+        for applicant_details_id in self.applicant_ids:
+            if applicant_details_id.is_selected==True:
+                applicant_pool = self.env['hr.applicant'].search([('id', '=', applicant_details_id.applicant_id)], limit=1)
+                # for applicant_obj in applicant_pool:
+                applicant_pool.write({'state': 'gm_approve'})
         self.state = 'gm_approve'
 
     @api.multi
@@ -81,8 +85,9 @@ class HRCandidateApproval(models.Model):
 class HRCandidateDetails(models.Model):
     _name = 'hr.candidate.details'
 
-    candidate_details_id = fields.Many2one('hr.candidate.approval')
-    applicant_name = fields.Char("Applicant's Name")
+    candidate_approval_id = fields.Many2one('hr.candidate.approval')
+    applicant_name = fields.Char(string="Applicant's Name")
+    applicant_id = fields.Integer(string='Applicant Application Id')
     address = fields.Text(string='Address')
     education_id = fields.Many2one('hr.recruitment.degree',string='Education')
     experience = fields.Float(string='Experience')
@@ -90,4 +95,5 @@ class HRCandidateDetails(models.Model):
     expected_salary = fields.Float(string='Expected Salary')
     joining_date = fields.Date(string='Joining Date')
     remarks = fields.Text(string='Remarks')
+    is_selected=fields.Boolean(string='Selected')
 

@@ -27,12 +27,12 @@
 					<header>
                         <button string="Confirm" name="action_confirm"
 								states="draft" type="object" class="oe_highlight"
-								groups="hr_recruitment.group_hr_recruitment_manager"
+								groups="hr_recruitment.group_hr_recruitment_user"
 								/>
 
 						<button string="Recommend" name="action_gm_approve"
 								states="gm_approve" type="object" class="oe_highlight"
-								groups="gbs_application_group.group_general_manager"
+								groups="gbs_application_group.group_general_user"
 								/>
 
 						<button string="Approve" name="action_cxo_approve"
@@ -42,33 +42,36 @@
 
                      	<button string="Decline" name="action_decline"
 								type="object" attrs="{'invisible':[('check_edit_access','=',False)]}"
-								groups="hr_recruitment.group_hr_recruitment_manager,gbs_application_group.group_general_manager,gbs_application_group.group_cxo"
+								groups="hr_recruitment.group_hr_recruitment_user,gbs_application_group.group_general_manager,gbs_application_group.group_cxo"
 								/>
 
 						<button string="Reset To Draft" name="action_reset"
 								type="object" states="gm_approve,cxo_approve"
-								groups="hr_recruitment.group_hr_recruitment_manager,gbs_application_group.group_general_manager,gbs_application_group.group_cxo"
+								groups="hr_recruitment.group_hr_recruitment_user,gbs_application_group.group_general_manager,gbs_application_group.group_cxo"
 								/>
 
 						<field name="state" widget="statusbar" statusbar_visible="draft,gm_approve,cxo_approve,approved"/>
 
 					</header>
 					<sheet>
+						<div class="oe_button_box"></div>
                         <div class="oe_title">
                             <h2>
-                                <field name="approval_form_name" placeholder="Application Form" attrs="{'readonly':[('state','!=','draft')]}"/>
+                                <field name="approval_form_name" placeholder="Description" attrs="{'readonly':[('state','!=','draft')]}"/>
                             </h2>
 							<h5 class="o_row">
-								<label for="manpower_requisition_id" class="oe_edit_only"/>
-								<field name="manpower_requisition_id" options='{"no_open": True,"no_create": 1, "no_create_edit":1}'
-								   attrs="{'readonly':[('state','!=','draft')]}" nolable="1"/>
-							</h5>
+                        		<div>
+                            		<label for="manpower_requisition_id" class="oe_edit_only"/>
+                            		<field name="manpower_requisition_id" options='{"no_open": True,"no_create": 1, "no_create_edit":1}'
+							   			attrs="{'readonly':[('state','!=','draft')]}" />
+								</div>
+                    		</h5>
+
                         </div>
 
-
 						<group>
-							<group><field name="department_id" readonly='1'/></group>
-							<group><field name="job_id" readonly='1'/></group>
+							<group><field name="department_id" /></group>
+							<group><field name="job_id" /></group>
 						</group>
 						<group>
 							<!--Access field-->
@@ -76,8 +79,10 @@
 						</group>
 						<separator string="Applicant's Detail"/>
 						<field name="applicant_ids">
-						 	<tree string="Applicant's Detail" create='false' editable='bottom'>
+						 	<tree string="Applicant's Detail" create='false' editable="bottom">
+            					<field name='is_selected' />
             					<field name='applicant_name' readonly='1'/>
+            					<field name='applicant_id' readonly='1'/>
             					<!--<field name='address' readonly='1'/>-->
             					<field name='education_id' readonly='1'/>
             					<field name='experience' readonly='1'/>
@@ -109,13 +114,13 @@
 				  parent="hr_recruitment.menu_hr_recruitment_root"
 				  id="main_menu_hr_internal_approval"
 				  sequence="81"
-				  groups="hr_recruitment.group_hr_recruitment_manager,gbs_application_group.group_general_manager,gbs_application_group.group_cxo"/>
+				  groups="hr_recruitment.group_hr_recruitment_user,gbs_application_group.group_general_manager,gbs_application_group.group_cxo"/>
 
 		<menuitem name="Internal Approval"
 				  parent="main_menu_hr_internal_approval"
 				  id="menu_hr_internal_approval"
 				  action="action_hr_internal_approval"
-				  groups="hr_recruitment.group_hr_recruitment_manager,gbs_application_group.group_general_manager,gbs_application_group.group_cxo"/>
+				  groups="hr_recruitment.group_hr_recruitment_user,gbs_application_group.group_general_manager,gbs_application_group.group_cxo"/>
 
 	</data>
 </openerp>
