@@ -75,11 +75,11 @@
                                     <th style="text-align: right;">Amount</th>
                                 </tr>
                                 <tr>
-                                    <th>-------</th>
-                                    <th class="pos-right-align">---</th>
-                                    <th class="pos-right-align">----</th>
-                                    <th class="pos-right-align">---</th>
-                                    <th class="pos-right-align">------</th>
+                                    <th>---------------</th>
+                                    <th style="text-align: right;">-----</th>
+                                    <th style="text-align: right;">-----</th>
+                                    <th style="text-align: right;">-----</th>
+                                    <th style="text-align: right;">----------</th>
                                 </tr>
                                 <tr t-foreach="orderlines" t-as="orderline">
                                     <td>
