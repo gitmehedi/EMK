@@ -1,17 +1,18 @@
-from odoo import api, fields, models
+from odoo import _,api, fields, models
 from datetime import date
 
 class HREmployeeRequisition(models.Model):
-    _name='hr.employee.requisition'
+    _name = 'hr.employee.requisition'
     _inherit = ['mail.thread']
     # _rec_name = 'employee_id'
 
     def _current_employee(self):
         return self.env['hr.employee'].search([('user_id', '=', self.env.uid)], limit=1)
 
-    name=fields.Char(string="Manpower Requisition Ref", compute='compute_manpower_requisition',store=True)
+    name=fields.Char(string="Manpower Requisition Ref", store=True,default = lambda self: _('New'),required = True)
     employee_id = fields.Many2one('hr.employee', string="Requisition By", default=_current_employee, readonly=True)
     department_id = fields.Many2one('hr.department', related='employee_id.department_id',string='Department', store=True, readonly=True)
+    job_id = fields.Many2one('hr.job', string='Job Title',required='True')
     issue_date = fields.Datetime(string='Date of Request', default=date.today(), readonly=True)
     current_no_of_emp = fields.Integer(string='Current Emp(s)', readonly=True,compute='_compute_no_of_employee',store=True)
     expected_date = fields.Date(string='Expected Date', required=True)
@@ -41,11 +42,11 @@ class HREmployeeRequisition(models.Model):
 
     check_edit_access = fields.Boolean(string='Check', compute='_compute_check_user')
 
-    @api.one
-    @api.depends('department_id')
-    def compute_manpower_requisition(self):
-        if self.department_id:
-            self.name="Manpower Requisition for %s on %s" % (self.department_id.name,date.today())
+    # @api.one
+    # @api.depends('department_id')
+    # def compute_manpower_requisition(self):
+    #     if self.department_id:
+    #         self.name="Manpower Requisition for %s on %s" % (self.department_id.name,date.today())
 
     @api.multi
     def _compute_check_user(self):
@@ -66,6 +67,12 @@ class HREmployeeRequisition(models.Model):
         if self.department_id:
             pool_emp=self.env['hr.employee'].search([('department_id','=',self.department_id.id)])
             self.current_no_of_emp=len(pool_emp.ids)
+
+    @api.model
+    def create(self,vals):
+        if vals.get('name', 'New') == 'New':
+            vals['name'] = self.env['ir.sequence'].next_by_code('hr.employee.requisition') or _('New')
+        return super(HREmployeeRequisition, self).create(vals)
 
     @api.multi
     def action_confirm(self):
