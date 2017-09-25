@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <data>
+        <report
+            id = "app_letter"
+            string = "appointment letter"
+            model = "app.letter"
+            report_type = "qweb-pdf"
+            file ="appointment_letter.report_app_letter"
+            name ="appointment_letter.report_app_letter"
+        />
+    </data>
+</odoo>
