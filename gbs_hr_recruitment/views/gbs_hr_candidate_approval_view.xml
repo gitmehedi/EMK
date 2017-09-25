@@ -30,9 +30,9 @@
 								groups="hr_recruitment.group_hr_recruitment_user"
 								/>
 
-						<button string="Recommend" name="action_gm_approve"
+						<button string="Approve" name="action_gm_approve"
 								states="gm_approve" type="object" class="oe_highlight"
-								groups="gbs_application_group.group_general_user"
+								groups="gbs_application_group.group_general_manager"
 								/>
 
 						<button string="Approve" name="action_cxo_approve"
@@ -77,19 +77,22 @@
 							<!--Access field-->
 							<field name='check_edit_access' invisible='1'/>
 						</group>
-						<separator string="Applicant's Detail"/>
+						<separator string="Applicant's List"/>
 						<field name="applicant_ids">
-						 	<tree string="Applicant's Detail" create='false' editable="bottom">
+						 	<tree string="Applicant's List" create='false' editable="bottom">
             					<field name='is_selected' />
             					<field name='applicant_name' readonly='1'/>
-            					<field name='applicant_id' readonly='1'/>
+            					<field name='applicant_id' invisible='1'/>
             					<!--<field name='address' readonly='1'/>-->
             					<field name='education_id' readonly='1'/>
-            					<field name='experience' readonly='1'/>
+            					<!--<field name='experience' readonly='1'/>-->
             					<field name='proposed_designation' readonly='1'/>
             					<field name='expected_salary' readonly='1'/>
             					<field name='joining_date' readonly='1'/>
             					<field name='remarks' readonly='1'/>
+            					<field name='is_approved' invisible='1'/>
+								<button name="generate_appointletter" string="Action" type="object" icon='fa-file-text'
+										attrs="{'invisible':['|',('is_selected','=',False),('is_approved','=',False)]}"/>
 
 							</tree>
 						</field>
