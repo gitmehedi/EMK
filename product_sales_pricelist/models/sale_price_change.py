@@ -27,7 +27,7 @@ class SalePriceChange(models.Model):
     approver2_id = fields.Many2one('hr.employee', string='Second Approval', readonly=True)
 
     approver1_date = fields.Datetime(string='First Approval Date', readonly=True)
-    approver2_date = fields.Datetime(string='Second Approval Date', readonly=True)
+    approver2_date = fields.Datetime(string='Effective Date', readonly=True)
 
     state = fields.Selection([
         ('draft', 'To Submit'),
