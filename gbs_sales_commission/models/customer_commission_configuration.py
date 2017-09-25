@@ -27,7 +27,7 @@ class CustomerCommissionConfiguration(models.Model):
 
     """ Relational Fields """
     product_id = fields.Many2one('product.product', string="Product",
-                                 domain="([('sale_ok','=','True'),('type','=','consu')])",
+                                 domain="([('sale_ok','=','True')])",
                                  readonly=True, states={'draft': [('readonly', False)]})
 
     customer_id = fields.Many2one('res.partner', string="Customer", domain="([('customer','=','True')])",

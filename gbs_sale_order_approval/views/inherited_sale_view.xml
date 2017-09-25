@@ -27,7 +27,7 @@
                         <button name="action_create_delivery_order"
                                 states="sale"
                                 type="object"
-                                groups="gbs_application_group.group_head_account,gbs_application_group.group_cxo"
+
                                 class="btn-primary"
                                 string="Create Delivery Order"/>
 

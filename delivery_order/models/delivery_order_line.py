@@ -19,7 +19,7 @@ class MrpDailyProductionLine(models.Model):
 
     pack_type = fields.Selection([
         ('cylinder', 'Cylinder'),
-        ('cus_cylinder', 'Customer Cylinder'),
+        ('cust_cylinder', 'Customer Cylinder'),
         ('other', 'Others'),
     ], string='Packing',readonly=True)
 
