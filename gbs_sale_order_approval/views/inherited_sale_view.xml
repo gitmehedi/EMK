@@ -93,6 +93,14 @@
                         <field name="pack_type" attrs="{'readonly':[('state','in',('sent','validate','done','cancel','sale'))]}"/>
                     </xpath>
 
+                    <xpath expr="//group/group/field[@name='pack_type']" position="after">
+                        <field name="currency_ids"/>
+                    </xpath>
+
+                    <xpath expr="//group/group/field[@name='pack_type']" position="after">
+                        <field name="uom_id"/>
+                    </xpath>
+
                      <xpath expr="//field[@name='payment_term_id']" position="replace">
                             <field name="payment_term_id" attrs="{'readonly':[('state','in',('sent','validate','done','cancel','sale'))]}" options="{'no_create': True}"/>
                     </xpath>
@@ -120,14 +128,6 @@
                 </data>
             </field>
         </record>
-
-        <!-- Add inherited menu here-->
-        <!--<menuitem name="Sales" id="sales_team.menu_base_partner"-->
-                  <!--groups="gbs_application_group.group_head_sale,gbs_application_group.group_cxo"/>-->
-
-         <!--<menuitem action="sale.action_orders"-->
-            <!--id="menu_sale_order" parent="sales_team.menu_sales" sequence="12"-->
-            <!--groups="gbs_application_group.group_head_sale,gbs_application_group.group_cxo"/>-->
 
     </data>
 </odoo>

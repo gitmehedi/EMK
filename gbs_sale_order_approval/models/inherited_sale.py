@@ -4,7 +4,6 @@ from odoo import api, fields, models
 class SaleOrder(models.Model):
     _inherit = "sale.order"
 
-
     credit_sales_or_lc = fields.Selection([
         ('cash', 'Cash'),
         ('credit_sales', 'Credit'),
@@ -21,8 +20,9 @@ class SaleOrder(models.Model):
         ('cancel', 'Cancelled'),
     ], string='Status', readonly=True, copy=False, index=True, track_visibility='onchange', default='draft')
 
-    pack_type = fields.Many2one('product.packaging.mode',string='Packaging Mode')
-    currency_id = fields.Many2one('res.currency', string="Currency", required=True)
+    pack_type = fields.Many2one('product.packaging.mode',string='Packing Mode', required=True)
+    currency_ids = fields.Many2one('res.currency', string="Currency", required=True)
+    uom_id = fields.Many2one('product.uom', string="UoM", domain=[('category_id', '=', 2)], required=True)
 
     @api.multi
     def action_validate(self):
@@ -96,4 +96,34 @@ class SaleOrder(models.Model):
             'type': 'ir.actions.act_window',
             'context': {'default_sale_order_id': self.id}
         }
+
+class InheritedSaleOrderLine(models.Model):
+    _inherit='sale.order.line'
+
+
+    @api.onchange('product_id')
+    def product_id_change(self):
+        res = super(InheritedSaleOrderLine, self).product_id_change()
+        vals = {}
+
+        if self.product_id:
+
+            price_change_pool = self.env['sale.price.change'].search([('product_id', '=', self.order_id.product_id.id),
+                                                                      ('currency_id', '=', self.order_id.currency_ids.id),
+                                                                      ('product_package_mode', '=', self.order_id.pack_type.id),
+                                                                      ('uom_id', '=', self.order_id.uom_id.id)],
+                                                                     order='approver2_date desc', limit=1)
+
+            price_pool_len = len(price_change_pool)
+
+            if price_pool_len == 1:
+                vals['price_unit']  = price_change_pool.new_price
+            elif price_pool_len > 1:
+                for price_pol in price_change_pool:
+                    vals['price_unit'] = price_pol.new_price
+            elif price_pool_len == 0:
+                product_pool = self.env['product.product'].search([('id', '=', self.product_id.id)])
+                vals['price_unit']  = product_pool.list_price
+
+            self.update(vals)
 
