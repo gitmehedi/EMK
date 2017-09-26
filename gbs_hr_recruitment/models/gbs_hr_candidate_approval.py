@@ -61,24 +61,38 @@ class HRCandidateApproval(models.Model):
         for applicant_details_id in self.applicant_ids:
             if applicant_details_id.is_selected==True:
                 applicant_pool = self.env['hr.applicant'].search([('id', '=', applicant_details_id.applicant_id)], limit=1)
-                # for applicant_obj in applicant_pool:
                 applicant_pool.write({'state': 'gm_approve'})
         self.state = 'gm_approve'
 
     @api.multi
     def action_gm_approve(self):
+        for applicant_details_id in self.applicant_ids:
+            if applicant_details_id.is_selected==True:
+                applicant_pool = self.env['hr.applicant'].search([('id', '=', applicant_details_id.applicant_id)], limit=1)
+                applicant_pool.write({'state': 'cxo_approve'})
         self.state = 'cxo_approve'
 
     @api.multi
     def action_cxo_approve(self):
+        for applicant_details_id in self.applicant_ids:
+            if applicant_details_id.is_selected==True:
+                applicant_details_id.is_approved=True
+                applicant_pool = self.env['hr.applicant'].search([('id', '=', applicant_details_id.applicant_id)], limit=1)
+                applicant_pool.write({'state': 'approved'})
         self.state = 'approved'
 
     @api.multi
     def action_decline(self):
+        for applicant_obj in self.applicant_ids:
+            applicant_pool = self.env['hr.applicant'].search([('id', '=', applicant_obj.applicant_id)],limit=1)
+            applicant_pool.write({'state': 'declined'})
         self.state = 'declined'
 
     @api.multi
     def action_reset(self):
+        for applicant_obj in self.applicant_ids:
+            applicant_pool = self.env['hr.applicant'].search([('id', '=', applicant_obj.applicant_id)],limit=1)
+            applicant_pool.write({'state': 'draft'})
         self.state = 'draft'
 
 
@@ -96,4 +110,12 @@ class HRCandidateDetails(models.Model):
     joining_date = fields.Date(string='Joining Date')
     remarks = fields.Text(string='Remarks')
     is_selected=fields.Boolean(string='Selected')
+    is_approved=fields.Boolean(string='Approved',default=False)
 
+    @api.multi
+    def generate_appointletter(self):
+        data = {}
+
+        data['applicant_id']=self.applicant_id
+
+        return self.env['report'].get_action(self, 'gbs_hr_recruitment.report_app_letter', data=data)
