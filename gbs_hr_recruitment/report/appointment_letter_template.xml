@@ -10,7 +10,6 @@
             menu="False"
             file ="gbs_hr_recruitment.report_app_letter"
             name ="gbs_hr_recruitment.report_app_letter"
-
         />
         <template id="report_app_letter">
             <t t-call="report.html_container">

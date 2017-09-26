@@ -75,7 +75,7 @@
 						<group>
 							<field name="comment_by_co_md" colspan="2" attrs="{'readonly':[('state','!=','draft')]}"/>
 							<field name="employee_id"/>
-							<field name="department_id"/>
+							<field name="department_id" options='{"no_open": True,"no_create": 1, "no_create_edit":1}'/>
 							<field name="job_id" options='{"no_open": True,"no_create": 1, "no_create_edit":1}' domain="[('department_id','=',department_id)]"/>
 							<field name="current_no_of_emp" />
 							<field name="factory_or_head_office" attrs="{'readonly':[('state','!=','draft')]}"/>

@@ -79,7 +79,7 @@
 						</group>
 						<separator string="Applicant's List"/>
 						<field name="applicant_ids">
-						 	<tree string="Applicant's List" create='false' editable="bottom">
+						 	<tree string="Applicant's List" create='false' delete='false' editable="bottom">
             					<field name='is_selected' />
             					<field name='applicant_name' readonly='1'/>
             					<field name='applicant_id' invisible='1'/>
@@ -90,9 +90,9 @@
             					<field name='expected_salary' readonly='1'/>
             					<field name='joining_date' readonly='1'/>
             					<field name='remarks' readonly='1'/>
-            					<field name='is_approved' invisible='1'/>
+            					<field name='state' readonly='1'/>
 								<button name="generate_appointletter" string="Action" type="object" icon='fa-file-text'
-										attrs="{'invisible':['|',('is_selected','=',False),('is_approved','=',False)]}"/>
+										attrs="{'invisible':[('state','!=','approved')]}"/>
 
 							</tree>
 						</field>

@@ -1,5 +1,6 @@
 from odoo import _,api, fields, models
 from datetime import date
+from openerp.exceptions import Warning as UserError
 
 class HREmployeeRequisition(models.Model):
     _name = 'hr.employee.requisition'
@@ -9,9 +10,26 @@ class HREmployeeRequisition(models.Model):
     def _current_employee(self):
         return self.env['hr.employee'].search([('user_id', '=', self.env.uid)], limit=1)
 
+    # related = 'employee_id.department_id'
+    @api.model
+    def get_domain_id(self):
+        user = self.env.user.browse(self.env.uid)
+        if user.has_group('hr_recruitment.group_hr_recruitment_user') or user.has_group('hr_recruitment.group_hr_recruitment_manager'):
+            query = """SELECT  distinct(department_id) FROM hr_employee WHERE operating_unit_id in %s """
+            self._cr.execute(query, [tuple(user.operating_unit_ids.ids)])
+            res = []
+            for data in self._cr.fetchall():
+                if data[0] != res:
+                    res.append(data[0])
+            return [('id', 'in', res)]
+        elif user.has_group('gbs_base_package.group_dept_manager'):
+            emp_id = self.env['hr.employee'].search([('user_id', '=', self.env.uid)], limit=1).id
+            return [('manager_id', '=', emp_id)]
+
+
     name=fields.Char(string="Manpower Requisition Ref", store=True,default = lambda self: _('New'),required = True)
     employee_id = fields.Many2one('hr.employee', string="Requisition By", default=_current_employee, readonly=True)
-    department_id = fields.Many2one('hr.department', related='employee_id.department_id',string='Department', store=True, readonly=True)
+    department_id = fields.Many2one('hr.department', string='Department',required = True,domain=get_domain_id)
     job_id = fields.Many2one('hr.job', string='Job Title',required='True')
     issue_date = fields.Datetime(string='Date of Request', default=date.today(), readonly=True)
     current_no_of_emp = fields.Integer(string='Current Emp(s)', readonly=True,compute='_compute_no_of_employee',store=True)
@@ -26,7 +44,7 @@ class HREmployeeRequisition(models.Model):
     age = fields.Integer(string = 'Age', required=True)
     training_or_practical_skills = fields.Text(string='Training / Practical experience / Skill', required=True)
     principle_duties = fields.Text(string = 'Principle Duties', required=True)
-    comment_by_co_md = fields.Text(string='Comments', required=True)
+    comment_by_co_md = fields.Text(string='Description', required=True)
     state = fields.Selection([
         ('draft', 'Draft'),
         ('confirmed', 'Confirmed'),
@@ -106,3 +124,11 @@ class HREmployeeRequisition(models.Model):
     @api.multi
     def action_reset(self):
         self.state = 'draft'
+
+    @api.multi
+    def unlink(self):
+        for excep in self:
+            if excep.state == 'approved':
+                raise UserError(_('You can not delete in this state!!'))
+            else:
+                return super(HREmployeeRequisition, self).unlink()
