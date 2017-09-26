@@ -103,7 +103,6 @@ class InheritedSaleOrderLine(models.Model):
 
     @api.onchange('product_id')
     def product_id_change(self):
-        res = super(InheritedSaleOrderLine, self).product_id_change()
         vals = {}
 
         if self.product_id:
@@ -125,5 +124,10 @@ class InheritedSaleOrderLine(models.Model):
                 product_pool = self.env['product.product'].search([('id', '=', self.product_id.id)])
                 vals['price_unit']  = product_pool.list_price
 
+            self.order_id.pricelist_id = None
+            self.order_id.partner_id = None
+
             self.update(vals)
+            res = super(InheritedSaleOrderLine, self).product_id_change()
+
 
