@@ -21,11 +21,8 @@ class SaleOrder(models.Model):
         ('cancel', 'Cancelled'),
     ], string='Status', readonly=True, copy=False, index=True, track_visibility='onchange', default='draft')
 
-    pack_type = fields.Selection([
-        ('cylinder', 'Cylinder'),
-        ('cust_cylinder', 'Customer Cylinder'),
-        ('other', 'Others'),
-    ], string='Packing',required=True)
+    pack_type = fields.Many2one('product.packaging.mode',string='Packaging Mode')
+    currency_id = fields.Many2one('res.currency', string="Currency", required=True)
 
     @api.multi
     def action_validate(self):
@@ -99,3 +96,4 @@ class SaleOrder(models.Model):
             'type': 'ir.actions.act_window',
             'context': {'default_sale_order_id': self.id}
         }
+
