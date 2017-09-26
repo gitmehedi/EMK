@@ -49,15 +49,15 @@ class IndentIndent(models.Model):
     approve_date = fields.Datetime('Approve Date', readonly=True)
     indent_date = fields.Datetime('Indent Date', required=True, readonly=True,
                                   default=datetime.datetime.today())
-    required_date = fields.Datetime('Required Date', required=True, 
-                                    default=lambda self: self._get_required_date())
+    required_date = fields.Date('Required Date', required=True,
+                                     default=lambda self: self._get_required_date())
     indentor_id = fields.Many2one('res.users', string='Indentor', required=True, readonly=True, 
                                   default=lambda self: self.env.user,
                                   states={'draft': [('readonly', False)]})
-    department_id = fields.Many2one('stock.location', string='Department', required=True, readonly=True,  states={'draft': [('readonly', False)]}, domain=[('can_request','=', True)])
-    manager_id = fields.Many2one('res.users', string='Department Manager', related='department_id.manager_id', store=True)
+    #department_id = fields.Many2one('stock.location', string='Department', required=True, readonly=True,  states={'draft': [('readonly', False)]}, domain=[('can_request','=', True)])
+    #manager_id = fields.Many2one('res.users', string='Department Manager', related='department_id.manager_id', store=True)
     analytic_account_id = fields.Many2one('account.analytic.account', string='Project', ondelete="cascade",readonly=True,  states={'draft': [('readonly', False)]})
-    requirement = fields.Selection([('1', 'Ordinary'), ('2', 'Urgent')], 'Requirement', readonly=True, 
+    requirement = fields.Selection([('1', 'Ordinary'), ('2', 'Urgent')], 'Priority', readonly=True,
                                    default="1", required=True,  states={'draft': [('readonly', False)]})
     # type = fields.Selection([('new', 'Purchase Indent'), ('existing', 'Repairing Indent')], 'Type', required=True,
     #              readonly=True, states={'draft': [('readonly', False)]}),
@@ -67,7 +67,7 @@ class IndentIndent(models.Model):
     picking_id = fields.Many2one('stock.picking','Picking')
     in_picking_id = fields.Many2one('stock.picking','Picking')
     description = fields.Text('Additional Information', readonly=True, states={'draft': [('readonly', False)]})
-    company_id = fields.Many2one('res.company', 'Company', readonly=True, states={'draft': [('readonly', False)]})
+    company_id = fields.Many2one('res.company', 'Company', readonly=True, states={'draft': [('readonly', False)]},default=lambda self: self.env.user.company_id)
     active = fields.Boolean('Active', default=True)
     amount_total = fields.Float(string='Total', compute=_compute_amount, store=True)
     approver_id = fields.Many2one('res.users', string='Authority', readonly=True, states={'draft': [('readonly', False)]}, help="who have approve or reject indent.")
@@ -75,7 +75,7 @@ class IndentIndent(models.Model):
                                    default=lambda self: self._get_default_warehouse(),
                                    help="default warehose where inward will be taken", 
                                    states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]})
-    picking_type_id = fields.Many2one('stock.picking.type', 'Picking Type', states={'done': [('readonly', True)], 'cancel': [('readonly', True)]}, required=True)
+    #picking_type_id = fields.Many2one('stock.picking.type', 'Picking Type', states={'done': [('readonly', True)], 'cancel': [('readonly', True)]}, required=True)
     move_type = fields.Selection([('direct', 'Partial'), ('one', 'All at once')], 'Receive Method',
                                  readonly=True, required=True, default='direct',
                                  states={'draft':[('readonly', False)], 'cancel':[('readonly',True)]}, 
