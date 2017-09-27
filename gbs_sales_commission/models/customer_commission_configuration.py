@@ -27,7 +27,7 @@ class CustomerCommissionConfiguration(models.Model):
 
     """ Relational Fields """
     product_id = fields.Many2one('product.product', string="Product",
-                                 domain="([('sale_ok','=','True'),('type','=','consu')])",
+                                 domain="([('sale_ok','=','True')])",
                                  readonly=True, states={'draft': [('readonly', False)]})
 
     customer_id = fields.Many2one('res.partner', string="Customer", domain="([('customer','=','True')])",
@@ -122,7 +122,8 @@ class CustomerCommissionConfiguration(models.Model):
                     vals['commission_rate'] = rec.new_value
                     commission = customer.commission_ids.create(vals)
                 else:
-                    find_cust.write({'commission_rate': rec.new_value})
+                    for cust in find_cust:
+                        cust.write({'commission_rate': rec.new_value})
 
                 update = cusComLine.search(
                     [('customer_id', '=', rec.customer_id.id), ('product_id', '=', self.product_id.id)])
@@ -132,10 +133,15 @@ class CustomerCommissionConfiguration(models.Model):
                 val_line['product_id'] = self.product_id.id
                 val_line['effective_date'] = datetime.date.today()
                 val_line['commission_rate'] = rec.new_value
-                val_line['commission_id'] = find_cust.id if find_cust  else commission.id
+
+                if find_cust:
+                    for custs in find_cust:
+                        val_line['commission_id'] = custs.id
+                else:
+                    val_line['commission_id'] = commission.id
+
                 val_line['status'] = True
                 cusComLine.create(val_line)
-
 
         self.approver1_id = self.env.user
         return self.write({'state': 'close', 'confirmed_date': time.strftime('%Y-%m-%d %H:%M:%S')})

@@ -1,4 +1,4 @@
-from openerp import api, fields, models, exceptions, _
+from odoo import api, fields, models, exceptions, _
 
 class MrpDailyProductionLine(models.Model):
     _name = 'delivery.order.line'
@@ -19,7 +19,7 @@ class MrpDailyProductionLine(models.Model):
 
     pack_type = fields.Selection([
         ('cylinder', 'Cylinder'),
-        ('cus_cylinder', 'Customer Cylinder'),
+        ('cust_cylinder', 'Customer Cylinder'),
         ('other', 'Others'),
     ], string='Packing',readonly=True)
 

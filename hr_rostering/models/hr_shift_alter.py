@@ -38,7 +38,7 @@ class HRShiftAlter(models.Model):
         ('confirmed', "Confirmed"),
         ('approved', "Approved"), 
         ('refuse', 'Refused'),
-    ], default = 'draft')
+    ], default = 'draft',track_visibility='onchange')
 
     @api.multi
     def add_follower(self, employee_id):

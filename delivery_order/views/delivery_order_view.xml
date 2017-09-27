@@ -136,7 +136,8 @@
             <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Delivery Order">
-                    <field name="name"/>
+                    <field name="sale_order_id"/>
+                    <field name="so_type"/>
                     <field name="state"/>
                 </tree>
             </field>

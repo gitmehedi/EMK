@@ -27,7 +27,7 @@ class SalePriceChange(models.Model):
     approver2_id = fields.Many2one('hr.employee', string='Second Approval', readonly=True)
 
     approver1_date = fields.Datetime(string='First Approval Date', readonly=True)
-    approver2_date = fields.Datetime(string='Second Approval Date', readonly=True)
+    approver2_date = fields.Datetime(string='Effective Date', readonly=True)
 
     state = fields.Selection([
         ('draft', 'To Submit'),
@@ -45,14 +45,14 @@ class SalePriceChange(models.Model):
 
     @api.onchange('product_id')
     def _onchange_product_form(self):
-        product_pool = self.env['product.product'].search([('product_tmpl_id', '=', self.product_id.id)])
+        product_pool = self.env['product.product'].search([('id', '=', self.product_id.id)])
         if product_pool:
             for ps in product_pool:
                 self.currency_id = ps.currency_id.id
 
     @api.depends('product_id')
     def compute_list_price(self):
-        product_pool = self.env['product.product'].search([('product_tmpl_id', '=', self.product_id.id)])
+        product_pool = self.env['product.product'].search([('id', '=', self.product_id.id)])
         if product_pool:
             for ps in product_pool:
                 self.list_price = ps.list_price
@@ -77,7 +77,7 @@ class SalePriceChange(models.Model):
 
         self.env['product.sale.history.line'].create(vals)
 
-        product_pool = self.env['product.product'].search([('product_tmpl_id', '=', self.product_id.id)])
+        product_pool = self.env['product.product'].search([('id', '=', self.product_id.id)])
         product_pool.write({'list_price': self.new_price})
 
         return self.write({'approver2_id':self.env.user.employee_ids.id, 'state': 'validate', 'approver2_date': time.strftime('%Y-%m-%d %H:%M:%S')})

@@ -1,5 +1,5 @@
-from openerp import api, fields, models, exceptions, _
-from openerp.exceptions import UserError, ValidationError
+from odoo import api, fields, models, exceptions, _
+from odoo.exceptions import UserError, ValidationError
 import time,datetime
 
 class SaleDeliveryOrder(models.Model):

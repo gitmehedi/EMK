@@ -7,6 +7,7 @@
     'depends': ['hr'],
     'data': [
         'security/ir.model.access.csv',
+        'security/ir_rule.xml',
         'views/hr_mobile_bill_view.xml',
         'views/hr_emp_mb_bill_view.xml',
         'views/hr_emp_mb_bill_limit_view.xml',
