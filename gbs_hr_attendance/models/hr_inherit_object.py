@@ -65,4 +65,5 @@ class HrEmployee(models.Model):
 
     device_employee_acc = fields.Integer(string='AC No.')
     is_monitor_attendance=fields.Boolean(string='Monitor Attendance',default=True)
+    is_executive = fields.Boolean(string='Executive',default=False)
 

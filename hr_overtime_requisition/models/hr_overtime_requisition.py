@@ -32,7 +32,7 @@ class HROTRequisition(models.Model):
         ('hr_approve', "HR Approve"),
         ('approved', "Approved"),
         ('refuse', 'Refused'),
-    ], default='to_submit')
+    ], default='to_submit',track_visibility='onchange')
 
     @api.multi
     def add_follower(self, employee_id):

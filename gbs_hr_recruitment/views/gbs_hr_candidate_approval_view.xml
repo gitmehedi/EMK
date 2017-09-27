@@ -89,7 +89,7 @@
             					<field name='proposed_designation' readonly='1'/>
             					<field name='expected_salary' readonly='1'/>
             					<field name='joining_date' readonly='1'/>
-            					<field name='remarks' readonly='1'/>
+            					<!--<field name='remarks' readonly='1'/>-->
             					<field name='state' readonly='1'/>
 								<button name="generate_appointletter" string="Action" type="object" icon='fa-file-text'
 										attrs="{'invisible':[('state','!=','approved')]}"/>

@@ -97,13 +97,54 @@ class SaleOrder(models.Model):
             'context': {'default_sale_order_id': self.id}
         }
 
+    @api.onchange('pack_type')
+    def pack_type_onchange(self):
+        self.update_onchanged_product_price()
+
+    @api.onchange('uom_id')
+    def uom_id_onchange(self):
+        self.update_onchanged_product_price()
+
+    @api.onchange('currency_ids')
+    def currency_ids_onchange(self):
+        self.update_onchanged_product_price()
+
+
+    def update_onchanged_product_price(self):
+
+        if self.product_id:
+
+            price_change_pool = self.env['sale.price.change'].search([('product_id', '=', self.product_id.id),
+                                                                      ('currency_id', '=', self.currency_ids.id),
+                                                                      ('product_package_mode', '=', self.pack_type.id),
+                                                                      ('uom_id', '=', self.uom_id.id)],
+                                                                     order='approver2_date desc', limit=1)
+
+            price_pool_len = len(price_change_pool)
+
+            vals = {}
+
+            if price_pool_len == 1:
+                vals['price_unit'] = price_change_pool.new_price
+            elif price_pool_len > 1:
+                for price_pol in price_change_pool:
+                    vals['price_unit'] = price_pol.new_price
+            elif price_pool_len == 0:
+                product_pool = self.env['product.product'].search([('id', '=', self.product_id.id)])
+                vals['price_unit'] = product_pool.list_price
+
+            self.order_line.pricelist_id = None
+            self.order_line.partner_id = None
+
+            self.order_line.update(vals)
+
+
 class InheritedSaleOrderLine(models.Model):
     _inherit='sale.order.line'
 
-
+    @api.multi
     @api.onchange('product_id')
     def product_id_change(self):
-        vals = {}
 
         if self.product_id:
 
@@ -114,6 +155,8 @@ class InheritedSaleOrderLine(models.Model):
                                                                      order='approver2_date desc', limit=1)
 
             price_pool_len = len(price_change_pool)
+
+            vals = {}
 
             if price_pool_len == 1:
                 vals['price_unit']  = price_change_pool.new_price
@@ -129,5 +172,4 @@ class InheritedSaleOrderLine(models.Model):
 
             self.update(vals)
             res = super(InheritedSaleOrderLine, self).product_id_change()
-
 
