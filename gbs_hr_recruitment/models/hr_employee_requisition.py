@@ -1,17 +1,33 @@
 from odoo import _,api, fields, models
 from datetime import date
+from openerp.exceptions import Warning as UserError
 
 class HREmployeeRequisition(models.Model):
     _name = 'hr.employee.requisition'
     _inherit = ['mail.thread']
-    # _rec_name = 'employee_id'
 
     def _current_employee(self):
         return self.env['hr.employee'].search([('user_id', '=', self.env.uid)], limit=1)
 
+    @api.model
+    def get_domain_id(self):
+        user = self.env.user.browse(self.env.uid)
+        if user.has_group('hr_recruitment.group_hr_recruitment_user') or user.has_group('hr_recruitment.group_hr_recruitment_manager'):
+            query = """SELECT  distinct(department_id) FROM hr_employee WHERE operating_unit_id in %s """
+            self._cr.execute(query, [tuple(user.operating_unit_ids.ids)])
+            res = []
+            for data in self._cr.fetchall():
+                if data[0] != res:
+                    res.append(data[0])
+            return [('id', 'in', res)]
+        elif user.has_group('gbs_base_package.group_dept_manager'):
+            emp_id = self.env['hr.employee'].search([('user_id', '=', self.env.uid)], limit=1).id
+            return [('manager_id', '=', emp_id)]
+
+
     name=fields.Char(string="Manpower Requisition Ref", store=True,default = lambda self: _('New'),required = True)
     employee_id = fields.Many2one('hr.employee', string="Requisition By", default=_current_employee, readonly=True)
-    department_id = fields.Many2one('hr.department', related='employee_id.department_id',string='Department', store=True, readonly=True)
+    department_id = fields.Many2one('hr.department', string='Department',required = True,domain=get_domain_id)
     job_id = fields.Many2one('hr.job', string='Job Title',required='True')
     issue_date = fields.Datetime(string='Date of Request', default=date.today(), readonly=True)
     current_no_of_emp = fields.Integer(string='Current Emp(s)', readonly=True,compute='_compute_no_of_employee',store=True)
@@ -26,7 +42,7 @@ class HREmployeeRequisition(models.Model):
     age = fields.Integer(string = 'Age', required=True)
     training_or_practical_skills = fields.Text(string='Training / Practical experience / Skill', required=True)
     principle_duties = fields.Text(string = 'Principle Duties', required=True)
-    comment_by_co_md = fields.Text(string='Comments', required=True)
+    comment_by_co_md = fields.Text(string='Description', required=True)
     state = fields.Selection([
         ('draft', 'Draft'),
         ('confirmed', 'Confirmed'),
@@ -35,18 +51,16 @@ class HREmployeeRequisition(models.Model):
         ('approved', 'Approved'),
         ('declined', 'Declined'),
         ('reset', 'Reset To Draft'),
-    ], string='Status', default='draft',
+    ], string='Status',track_visibility='onchange', default='draft',
         help=" Verify is for Head of Plant, Justify is for HR Manager, Approve is for CXO")
 
     factory_or_head_office = fields.Boolean(string='Is Head Office?')
 
     check_edit_access = fields.Boolean(string='Check', compute='_compute_check_user')
 
-    # @api.one
-    # @api.depends('department_id')
-    # def compute_manpower_requisition(self):
-    #     if self.department_id:
-    #         self.name="Manpower Requisition for %s on %s" % (self.department_id.name,date.today())
+    ####################################################
+    # Business methods
+    ####################################################
 
     @api.multi
     def _compute_check_user(self):
@@ -67,12 +81,6 @@ class HREmployeeRequisition(models.Model):
         if self.department_id:
             pool_emp=self.env['hr.employee'].search([('department_id','=',self.department_id.id)])
             self.current_no_of_emp=len(pool_emp.ids)
-
-    @api.model
-    def create(self,vals):
-        if vals.get('name', 'New') == 'New':
-            vals['name'] = self.env['ir.sequence'].next_by_code('hr.employee.requisition') or _('New')
-        return super(HREmployeeRequisition, self).create(vals)
 
     @api.multi
     def action_confirm(self):
@@ -106,3 +114,38 @@ class HREmployeeRequisition(models.Model):
     @api.multi
     def action_reset(self):
         self.state = 'draft'
+
+        ####################################################
+        # ORM Overrides methods
+        ####################################################
+
+    @api.multi
+    def add_follower(self, employee_id):
+        employee = self.env['hr.employee'].browse(employee_id)
+        if employee.user_id:
+            self.message_subscribe_users(user_ids=employee.user_id.ids)
+
+    @api.model
+    def create(self, vals):
+        employee_id = vals.get('employee_id', False)
+        if vals.get('name', 'New') == 'New':
+            vals['name'] = self.env['ir.sequence'].next_by_code('hr.employee.requisition') or _('New')
+        requisition = super(HREmployeeRequisition, self).create(vals)
+        requisition.add_follower(employee_id)
+        return requisition
+        # return super(HREmployeeRequisition, self).create(vals)
+
+    @api.multi
+    def write(self, vals):
+        employee_id = vals.get('employee_id', False)
+        result = super(HREmployeeRequisition, self).write(vals)
+        self.add_follower(employee_id)
+        return result
+
+    @api.multi
+    def unlink(self):
+        for excep in self:
+            if excep.state == 'approved':
+                raise UserError(_('You can not delete in this state!!'))
+            else:
+                return super(HREmployeeRequisition, self).unlink()

@@ -1,4 +1,3 @@
-from datetime import date
 from openerp import fields, models, api,_
 from openerp.exceptions import Warning as UserError
 

@@ -58,12 +58,12 @@
                      	<button string="Decline" name="action_decline" attrs="{'invisible':[('check_edit_access','=',False)]}"
 								type="object"
 								groups="gbs_application_group.group_head_of_plant,hr_recruitment.group_hr_recruitment_manager,gbs_application_group.group_cxo"
-						/>
+								/>
 
 						<button string="Reset To Draft" name="action_reset"
 								type="object" states="confirmed,hr_approve,cxo_approve,declined"
 								groups="gbs_application_group.group_head_of_plant,hr_recruitment.group_hr_recruitment_manager,gbs_application_group.group_cxo"
-						/>
+								/>
 
 						<field name="state" widget="statusbar" statusbar_visible="draft,hr_approve,cxo_approve,approved"/>
 
@@ -72,28 +72,41 @@
 						<div class="oe_title">
 							<h2><field name="name" readonly="True"/></h2>
 						</div>
+						<separator string="Description" colspan="2"/>
+						<field name="comment_by_co_md" colspan="2" attrs="{'readonly':[('state','!=','draft')]}"/>
 						<group>
-							<field name="comment_by_co_md" colspan="2" attrs="{'readonly':[('state','!=','draft')]}"/>
-							<field name="employee_id"/>
-							<field name="department_id"/>
-							<field name="job_id" options='{"no_open": True,"no_create": 1, "no_create_edit":1}' domain="[('department_id','=',department_id)]"/>
-							<field name="current_no_of_emp" />
-							<field name="factory_or_head_office" attrs="{'readonly':[('state','!=','draft')]}"/>
-							<field name="replaced_or_new" widget="radio" options="{'horizontal': true}" attrs="{'readonly':[('state','!=','draft')]}"/>
-							<field name="replace_of_whom_emp_id" attrs="{'invisible': [('replaced_or_new', '!=','replaced')],'required':[('replaced_or_new', '=','replaced')]}"
-								   options='{"no_open": True,"no_create": 1, "no_create_edit":1}' domain="[('department_id','=',department_id)]"/>
-							<field name="replace_of_whom_designation" attrs="{'invisible': [('replaced_or_new', '!=','replaced')]}"/>
-							<field name="reson_or_justification" attrs="{'invisible': [('replaced_or_new', '!=','new')]}"/>
-							<field name="issue_date"/>
-							<field name="req_no_of_employee" attrs="{'readonly':[('state','!=','draft')]}" />
-							<field name="expected_date" attrs="{'readonly':[('state','!=','draft')]}"/>
-							<field name="approved_no_of_emp" />
+        					<group>
+								<field name="employee_id"/>
+								<field name="department_id" options='{"no_open": True,"no_create": 1, "no_create_edit":1}' attrs="{'readonly':[('state','!=','draft')]}"/>
+								<field name="job_id" options='{"no_open": True,"no_create": 1, "no_create_edit":1}' domain="[('department_id','=',department_id)]" attrs="{'readonly':[('state','!=','draft')]}"/>
+								<field name="req_no_of_employee" attrs="{'readonly':[('state','!=','draft')]}" />
+								<field name="age"  attrs="{'readonly':[('state','!=','draft')]}"/>
+								<field name="check_edit_access" invisible="1"/>
+							</group>
+							<group>
+								<field name="issue_date"/>
+								<field name="expected_date" attrs="{'readonly':[('state','!=','draft')]}"/>
+								<field name="approved_no_of_emp" />
+								<field name="current_no_of_emp" />
+								<field name="factory_or_head_office" attrs="{'readonly':[('state','!=','draft')]}"/>
+								<field name="replaced_or_new" widget="radio" options="{'horizontal': true}" attrs="{'readonly':[('state','!=','draft')]}"/>
+								<field name="replace_of_whom_emp_id" attrs="{'invisible': [('replaced_or_new', '!=','replaced')],'required':[('replaced_or_new', '=','replaced')]}"
+									   options='{"no_open": True,"no_create": 1, "no_create_edit":1}' domain="[('department_id','=',department_id)]"/>
+								<field name="replace_of_whom_designation" attrs="{'invisible': [('replaced_or_new', '!=','replaced')]}"/>
+								<field name="reson_or_justification" attrs="{'invisible': [('replaced_or_new', '!=','new')],'required':[('replaced_or_new', '=','new')]}"/>
+							</group>
+							 <notebook colspan="4">
+            					<page string="Requirements">
+									<separator string="Qualification" colspan="2" />
+									<field name="qualification" placeholder="Give some description..."  attrs="{'readonly':[('state','!=','draft')]}"/>
 
-							<field name="qualification"  attrs="{'readonly':[('state','!=','draft')]}"/>
-							<field name="age"  attrs="{'readonly':[('state','!=','draft')]}"/>
-							<field name="training_or_practical_skills"  attrs="{'readonly':[('state','!=','draft')]}" />
-							<field name="principle_duties"  attrs="{'readonly':[('state','!=','draft')]}"/>
-							<field name="check_edit_access" invisible="1"/>
+									<separator string="Training / Practical experience / Skill"/>
+									<field name="training_or_practical_skills"  placeholder="Give some description about Training / Practical experience / Skill..."  attrs="{'readonly':[('state','!=','draft')]}" />
+
+									<separator string="Principle Duties"/>
+									<field name="principle_duties"  placeholder="Give some description about your principle duties" attrs="{'readonly':[('state','!=','draft')]}"/>
+								</page>
+							 </notebook>
 						</group>
 					</sheet>
 

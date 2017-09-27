@@ -1,4 +1,5 @@
-from odoo import api, fields, models
+from odoo import api, fields, models,_
+from openerp.exceptions import Warning as UserError
 
 
 class HRCandidateApproval(models.Model):
@@ -23,7 +24,11 @@ class HRCandidateApproval(models.Model):
         ('approved', 'Approved'),
         ('declined', 'Declined'),
         ('reset', 'Reset To Draft'),
-    ], string='Status', default='draft')
+    ], string='Status', default='draft',track_visibility='onchange')
+
+    ####################################################
+    # Business methods
+    ####################################################
 
     @api.onchange('manpower_requisition_id')
     def onchange_manpower_requisition_id(self):
@@ -40,6 +45,7 @@ class HRCandidateApproval(models.Model):
                                        'expected_salary': record.salary_expected,
                                        'joining_date': record.availability,
                                        'applicant_id':record.id,
+                                       'state':'draft',
                                        }))
             self.applicant_ids = val
 
@@ -56,44 +62,76 @@ class HRCandidateApproval(models.Model):
             else:
                 i.check_edit_access = False
 
+    @api.one
+    @api.constrains('manpower_requisition_id','department_id','job_id')
+    def _check_duplications(self):
+        domain = [('manpower_requisition_id', '=', self.manpower_requisition_id.id),
+                  ('department_id', '=', self.department_id.id),
+                  ('job_id', '=', self.job_id.id),
+                  ('id', '!=', self.id)]
+        if self.search_count(domain):
+            raise UserError('You can\'t create duplicate Approval process')
+        return True
+
     @api.multi
     def action_confirm(self):
         for applicant_details_id in self.applicant_ids:
             if applicant_details_id.is_selected==True:
+                applicant_details_id.write({'state': 'gm_approve'})
                 applicant_pool = self.env['hr.applicant'].search([('id', '=', applicant_details_id.applicant_id)], limit=1)
                 applicant_pool.write({'state': 'gm_approve'})
+                applicant_details_id.is_selected = False
         self.state = 'gm_approve'
 
     @api.multi
     def action_gm_approve(self):
         for applicant_details_id in self.applicant_ids:
             if applicant_details_id.is_selected==True:
+                applicant_details_id.write({'state': 'cxo_approve'})
                 applicant_pool = self.env['hr.applicant'].search([('id', '=', applicant_details_id.applicant_id)], limit=1)
                 applicant_pool.write({'state': 'cxo_approve'})
+                applicant_details_id.is_selected=False
         self.state = 'cxo_approve'
 
     @api.multi
     def action_cxo_approve(self):
         for applicant_details_id in self.applicant_ids:
             if applicant_details_id.is_selected==True:
-                applicant_details_id.is_approved=True
+                applicant_details_id.write({'state': 'approved'})
                 applicant_pool = self.env['hr.applicant'].search([('id', '=', applicant_details_id.applicant_id)], limit=1)
                 applicant_pool.write({'state': 'approved'})
+                applicant_details_id.is_selected = False
         self.state = 'approved'
 
     @api.multi
     def action_decline(self):
         for applicant_obj in self.applicant_ids:
+            applicant_obj.write({'state': 'declined'})
             applicant_pool = self.env['hr.applicant'].search([('id', '=', applicant_obj.applicant_id)],limit=1)
             applicant_pool.write({'state': 'declined'})
+            applicant_obj.is_selected = False
         self.state = 'declined'
 
     @api.multi
     def action_reset(self):
         for applicant_obj in self.applicant_ids:
+            applicant_obj.write({'state': 'draft'})
             applicant_pool = self.env['hr.applicant'].search([('id', '=', applicant_obj.applicant_id)],limit=1)
             applicant_pool.write({'state': 'draft'})
+            applicant_obj.is_selected = False
         self.state = 'draft'
+
+    ####################################################
+    # ORM Overrides methods
+    ####################################################
+
+    @api.multi
+    def unlink(self):
+        for excep in self:
+            if excep.state == 'approved':
+                raise UserError(_('You can not delete in this state!!'))
+            else:
+                return super(HRCandidateApproval, self).unlink()
 
 
 class HRCandidateDetails(models.Model):
@@ -110,7 +148,15 @@ class HRCandidateDetails(models.Model):
     joining_date = fields.Date(string='Joining Date')
     remarks = fields.Text(string='Remarks')
     is_selected=fields.Boolean(string='Selected')
-    is_approved=fields.Boolean(string='Approved',default=False)
+
+    state = fields.Selection([
+        ('draft', 'Draft'),
+        ('gm_approve', 'Confirmed'),
+        ('cxo_approve', 'To Approve'),
+        ('approved', 'Approved'),
+        ('declined', 'Declined'),
+        ('reset', 'Reset To Draft'),
+    ], string='Status', default='draft')
 
     @api.multi
     def generate_appointletter(self):

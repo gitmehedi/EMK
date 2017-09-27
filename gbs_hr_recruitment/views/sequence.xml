@@ -4,7 +4,7 @@
         <record id="manpower_req_id" model="ir.sequence">
             <field name="name">Manpower Requisition Name</field>
             <field name="code">hr.employee.requisition</field>
-            <field name="prefix">Manpower Requisition </field>
+            <field name="prefix">MR-</field>
             <field name="padding">4</field>
         </record>
     </data>
