@@ -11,6 +11,7 @@
                         <group string="Attendance Device Configuration">
                             <field name="device_employee_acc"/>
                             <field name="is_monitor_attendance"/>
+                            <field name="is_executive"/>
                         </group>
                     </xpath>
                 </data>
