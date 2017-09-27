@@ -77,8 +77,8 @@
 						<group>
         					<group>
 								<field name="employee_id"/>
-								<field name="department_id" options='{"no_open": True,"no_create": 1, "no_create_edit":1}'/>
-								<field name="job_id" options='{"no_open": True,"no_create": 1, "no_create_edit":1}' domain="[('department_id','=',department_id)]"/>
+								<field name="department_id" options='{"no_open": True,"no_create": 1, "no_create_edit":1}' attrs="{'readonly':[('state','!=','draft')]}"/>
+								<field name="job_id" options='{"no_open": True,"no_create": 1, "no_create_edit":1}' domain="[('department_id','=',department_id)]" attrs="{'readonly':[('state','!=','draft')]}"/>
 								<field name="req_no_of_employee" attrs="{'readonly':[('state','!=','draft')]}" />
 								<field name="age"  attrs="{'readonly':[('state','!=','draft')]}"/>
 								<field name="check_edit_access" invisible="1"/>
@@ -93,10 +93,10 @@
 								<field name="replace_of_whom_emp_id" attrs="{'invisible': [('replaced_or_new', '!=','replaced')],'required':[('replaced_or_new', '=','replaced')]}"
 									   options='{"no_open": True,"no_create": 1, "no_create_edit":1}' domain="[('department_id','=',department_id)]"/>
 								<field name="replace_of_whom_designation" attrs="{'invisible': [('replaced_or_new', '!=','replaced')]}"/>
-								<field name="reson_or_justification" attrs="{'invisible': [('replaced_or_new', '!=','new')]}"/>
+								<field name="reson_or_justification" attrs="{'invisible': [('replaced_or_new', '!=','new')],'required':[('replaced_or_new', '=','new')]}"/>
 							</group>
 							 <notebook colspan="4">
-            					<page string="Others">
+            					<page string="Requirements">
 									<separator string="Qualification" colspan="2" />
 									<field name="qualification" placeholder="Give some description..."  attrs="{'readonly':[('state','!=','draft')]}"/>
 

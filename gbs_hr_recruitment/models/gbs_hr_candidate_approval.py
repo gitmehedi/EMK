@@ -24,7 +24,11 @@ class HRCandidateApproval(models.Model):
         ('approved', 'Approved'),
         ('declined', 'Declined'),
         ('reset', 'Reset To Draft'),
-    ], string='Status', default='draft')
+    ], string='Status', default='draft',track_visibility='onchange')
+
+    ####################################################
+    # Business methods
+    ####################################################
 
     @api.onchange('manpower_requisition_id')
     def onchange_manpower_requisition_id(self):
@@ -41,6 +45,7 @@ class HRCandidateApproval(models.Model):
                                        'expected_salary': record.salary_expected,
                                        'joining_date': record.availability,
                                        'applicant_id':record.id,
+                                       'state':'draft',
                                        }))
             self.applicant_ids = val
 
@@ -57,16 +62,16 @@ class HRCandidateApproval(models.Model):
             else:
                 i.check_edit_access = False
 
-    # @api.one
-    # @api.constrains('public_holidays_line', 'operating_unit_id')
-    # def _check_public_holidays_line(self):
-    #     domain = [('public_holidays_line', '=', self.public_holidays_line.id),
-    #               ('operating_unit_id', '=', self.operating_unit_id.id),
-    #               ('id', '!=', self.id)]
-    #     if self.search_count(domain):
-    #         raise UserError('You can\'t create duplicate exceptions holiday for same operating unit')
-    #
-    #     return True
+    @api.one
+    @api.constrains('manpower_requisition_id','department_id','job_id')
+    def _check_duplications(self):
+        domain = [('manpower_requisition_id', '=', self.manpower_requisition_id.id),
+                  ('department_id', '=', self.department_id.id),
+                  ('job_id', '=', self.job_id.id),
+                  ('id', '!=', self.id)]
+        if self.search_count(domain):
+            raise UserError('You can\'t create duplicate Approval process')
+        return True
 
     @api.multi
     def action_confirm(self):
@@ -95,7 +100,7 @@ class HRCandidateApproval(models.Model):
                 applicant_details_id.write({'state': 'approved'})
                 applicant_pool = self.env['hr.applicant'].search([('id', '=', applicant_details_id.applicant_id)], limit=1)
                 applicant_pool.write({'state': 'approved'})
-                # applicant_details_id.is_selected = False
+                applicant_details_id.is_selected = False
         self.state = 'approved'
 
     @api.multi
@@ -104,6 +109,7 @@ class HRCandidateApproval(models.Model):
             applicant_obj.write({'state': 'declined'})
             applicant_pool = self.env['hr.applicant'].search([('id', '=', applicant_obj.applicant_id)],limit=1)
             applicant_pool.write({'state': 'declined'})
+            applicant_obj.is_selected = False
         self.state = 'declined'
 
     @api.multi
@@ -112,7 +118,12 @@ class HRCandidateApproval(models.Model):
             applicant_obj.write({'state': 'draft'})
             applicant_pool = self.env['hr.applicant'].search([('id', '=', applicant_obj.applicant_id)],limit=1)
             applicant_pool.write({'state': 'draft'})
+            applicant_obj.is_selected = False
         self.state = 'draft'
+
+    ####################################################
+    # ORM Overrides methods
+    ####################################################
 
     @api.multi
     def unlink(self):

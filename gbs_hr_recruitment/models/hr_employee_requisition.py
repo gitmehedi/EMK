@@ -5,12 +5,10 @@ from openerp.exceptions import Warning as UserError
 class HREmployeeRequisition(models.Model):
     _name = 'hr.employee.requisition'
     _inherit = ['mail.thread']
-    # _rec_name = 'employee_id'
 
     def _current_employee(self):
         return self.env['hr.employee'].search([('user_id', '=', self.env.uid)], limit=1)
 
-    # related = 'employee_id.department_id'
     @api.model
     def get_domain_id(self):
         user = self.env.user.browse(self.env.uid)
@@ -53,18 +51,16 @@ class HREmployeeRequisition(models.Model):
         ('approved', 'Approved'),
         ('declined', 'Declined'),
         ('reset', 'Reset To Draft'),
-    ], string='Status', default='draft',
+    ], string='Status',track_visibility='onchange', default='draft',
         help=" Verify is for Head of Plant, Justify is for HR Manager, Approve is for CXO")
 
     factory_or_head_office = fields.Boolean(string='Is Head Office?')
 
     check_edit_access = fields.Boolean(string='Check', compute='_compute_check_user')
 
-    # @api.one
-    # @api.depends('department_id')
-    # def compute_manpower_requisition(self):
-    #     if self.department_id:
-    #         self.name="Manpower Requisition for %s on %s" % (self.department_id.name,date.today())
+    ####################################################
+    # Business methods
+    ####################################################
 
     @api.multi
     def _compute_check_user(self):
@@ -85,12 +81,6 @@ class HREmployeeRequisition(models.Model):
         if self.department_id:
             pool_emp=self.env['hr.employee'].search([('department_id','=',self.department_id.id)])
             self.current_no_of_emp=len(pool_emp.ids)
-
-    @api.model
-    def create(self,vals):
-        if vals.get('name', 'New') == 'New':
-            vals['name'] = self.env['ir.sequence'].next_by_code('hr.employee.requisition') or _('New')
-        return super(HREmployeeRequisition, self).create(vals)
 
     @api.multi
     def action_confirm(self):
@@ -124,6 +114,33 @@ class HREmployeeRequisition(models.Model):
     @api.multi
     def action_reset(self):
         self.state = 'draft'
+
+        ####################################################
+        # ORM Overrides methods
+        ####################################################
+
+    @api.multi
+    def add_follower(self, employee_id):
+        employee = self.env['hr.employee'].browse(employee_id)
+        if employee.user_id:
+            self.message_subscribe_users(user_ids=employee.user_id.ids)
+
+    @api.model
+    def create(self, vals):
+        employee_id = vals.get('employee_id', False)
+        if vals.get('name', 'New') == 'New':
+            vals['name'] = self.env['ir.sequence'].next_by_code('hr.employee.requisition') or _('New')
+        requisition = super(HREmployeeRequisition, self).create(vals)
+        requisition.add_follower(employee_id)
+        return requisition
+        # return super(HREmployeeRequisition, self).create(vals)
+
+    @api.multi
+    def write(self, vals):
+        employee_id = vals.get('employee_id', False)
+        result = super(HREmployeeRequisition, self).write(vals)
+        self.add_follower(employee_id)
+        return result
 
     @api.multi
     def unlink(self):
