@@ -15,7 +15,11 @@ class SalePriceChange(models.Model):
 
     product_id = fields.Many2one('product.product', domain=[('sale_ok', '=', True)],
                                  states={'confirm': [('readonly', True)], 'validate1': [('readonly', True)], 'validate': [('readonly', True)]}, string='Product', required=True)
-    list_price = fields.Float(string='Old Price', compute='compute_list_price',readonly=True, store=True)
+
+    list_price = fields.Float(string='Old Price')
+    #@todo: Need to rewrite logic for computed field
+    #list_price = fields.Float(string='Old Price', compute='compute_list_price', readonly=True, store=True)
+
     new_price = fields.Float(string='New Price', states={'confirm': [('readonly', True)], 'validate1': [('readonly', True)],'validate': [('readonly', True)]}, required=True)
     product_package_mode = fields.Many2one('product.packaging.mode', string= 'Packaging Mode', required=True)
     uom_id = fields.Many2one('product.uom', string="UoM", domain=[('category_id', '=', 2)], required=True)
