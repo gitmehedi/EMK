@@ -118,11 +118,11 @@ class SaleDeliveryOrder(models.Model):
                 for record in sale_order_obj.order_line:
                     #sale_order_line_obj = record.env['sale.order.line'].search([('order_id', '=', self.sale_order_id.id)])
                     #product_id = sale_order_line_obj.product_id.id
-                    # val['product_id']=record.product_id
-                    val.append((0, 0, {'product_id': record.product_id,
+                    #val['product_id']=record.product_id
+                    val.append((0, 0, {'product_id': record.product_id.id,
                                        'quantity': record.product_uom_qty,
-                                       'pack_type': sale_order_obj.pack_type,
-                                       'uom_id': record.product_uom,
+                                       'pack_type': sale_order_obj.pack_type.id,
+                                       'uom_id': record.product_uom.id,
                                                 }))
 
             self.line_ids = val

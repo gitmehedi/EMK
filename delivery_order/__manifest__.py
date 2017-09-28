@@ -6,6 +6,7 @@
     'version':'1.0',
     'depends': [
         'sale',
+        'product_sales_pricelist'
     ],
     'data': [
         'security/ir.model.access.csv',
