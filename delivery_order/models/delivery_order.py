@@ -13,8 +13,8 @@ class SaleDeliveryOrder(models.Model):
 
     name = fields.Char(string='Name', index=True)
 
-    so_date = fields.Date('Sales Order Date', readonly=True,
-                             states={'draft': [('readonly', False)]})
+    so_date = fields.Date('Sales Order Date', readonly=True)
+
     deli_address = fields.Char('Delivery Address', readonly=True,
                              states={'draft': [('readonly', False)]})
     """ All relations fields """
@@ -25,8 +25,7 @@ class SaleDeliveryOrder(models.Model):
                              related='sale_order_id.partner_id')
     payment_term_id = fields.Many2one('account.payment.term', string='Payment Terms', readonly=True,
                                       related='sale_order_id.payment_term_id')
-    warehouse_id = fields.Many2one('stock.warehouse', string='Warehouse', readonly=True,
-                                   states={'draft': [('readonly', False)]})
+    warehouse_id = fields.Many2one('stock.warehouse', string='Warehouse', readonly=True)
     line_ids = fields.One2many('delivery.order.line', 'parent_id', string="Products", readonly=True,
                                states={'draft': [('readonly', False)]})
     cash_ids = fields.One2many('cash.payment.line', 'pay_cash_id', string="Cash", readonly=True, invisible =True,
@@ -58,7 +57,7 @@ class SaleDeliveryOrder(models.Model):
         ('cash', 'Cash'),
         ('credit_sales', 'Credit'),
         ('lc_sales', 'L/C'),
-    ], string='Sale Order Type', readonly=True, states={'draft': [('readonly', False)]})
+    ], string='Sale Order Type', readonly=True)
 
     """ State fields for containing various states """
     state = fields.Selection([
