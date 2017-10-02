@@ -22,7 +22,7 @@ class SaleOrder(models.Model):
 
     pack_type = fields.Many2one('product.packaging.mode',string='Packing Mode', required=True)
     currency_ids = fields.Many2one('res.currency', string="Currency", required=True)
-    uom_id = fields.Many2one('product.uom', string="UoM", domain=[('category_id', '=', 2)], required=True)
+    #uom_id = fields.Many2one('product.uom', string="UoM", domain=[('category_id', '=', 2)], required=True)
 
     @api.multi
     def action_validate(self):
@@ -101,10 +101,6 @@ class SaleOrder(models.Model):
     def pack_type_onchange(self):
         self.update_onchanged_product_price()
 
-    @api.onchange('uom_id')
-    def uom_id_onchange(self):
-        self.update_onchanged_product_price()
-
     @api.onchange('currency_ids')
     def currency_ids_onchange(self):
         self.update_onchanged_product_price()
@@ -116,8 +112,7 @@ class SaleOrder(models.Model):
 
             price_change_pool = self.env['product.sales.pricelist'].search([('product_id', '=', self.product_id.id),
                                                                       ('currency_id', '=', self.currency_ids.id),
-                                                                      ('product_package_mode', '=', self.pack_type.id),
-                                                                      ('uom_id', '=', self.uom_id.id)],
+                                                                      ('product_package_mode', '=', self.pack_type.id)],
                                                                      order='approver2_date desc', limit=1)
 
             price_pool_len = len(price_change_pool)
@@ -151,7 +146,7 @@ class InheritedSaleOrderLine(models.Model):
             price_change_pool = self.env['product.sales.pricelist'].search([('product_id', '=', self.order_id.product_id.id),
                                                                       ('currency_id', '=', self.order_id.currency_ids.id),
                                                                       ('product_package_mode', '=', self.order_id.pack_type.id),
-                                                                      ('uom_id', '=', self.order_id.uom_id.id)],
+                                                                      ('uom_id', '=', self.product_uom.id)],
                                                                      order='approver2_date desc', limit=1)
 
             price_pool_len = len(price_change_pool)
