@@ -9,6 +9,8 @@
         'product_sales_pricelist'
     ],
     'data': [
+        'report/delivery_order_report.xml',
+        'report/delivery_order_report_template.xml',
         'security/ir.model.access.csv',
         'security/ir_rule.xml',
         'views/delivery_order_view.xml',

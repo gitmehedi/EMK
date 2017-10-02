@@ -19,7 +19,7 @@ class SaleDeliveryOrder(models.Model):
                              states={'draft': [('readonly', False)]})
     """ All relations fields """
 
-    sale_order_id = fields.Many2one('sale.order',string='Order Lines',
+    sale_order_id = fields.Many2one('sale.order',string='Sale Order',
                                     required=True, readonly=True,states={'draft': [('readonly', False)]})
     parent_id = fields.Many2one('res.partner', 'Customer', ondelete='cascade', readonly=True,
                              related='sale_order_id.partner_id')
@@ -57,7 +57,7 @@ class SaleDeliveryOrder(models.Model):
         ('cash', 'Cash'),
         ('credit_sales', 'Credit'),
         ('lc_sales', 'L/C'),
-    ], string='Sale Order Type', readonly=True)
+    ], string='Sale Order Type')
 
     """ State fields for containing various states """
     state = fields.Selection([
