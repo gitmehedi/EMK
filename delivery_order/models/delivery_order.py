@@ -13,20 +13,19 @@ class SaleDeliveryOrder(models.Model):
 
     name = fields.Char(string='Name', index=True)
 
-    so_date = fields.Date('Sales Order Date', readonly=True,
-                             states={'draft': [('readonly', False)]})
+    so_date = fields.Date('Sales Order Date', readonly=True)
+
     deli_address = fields.Char('Delivery Address', readonly=True,
                              states={'draft': [('readonly', False)]})
     """ All relations fields """
 
-    sale_order_id = fields.Many2one('sale.order',string='Order Lines',
+    sale_order_id = fields.Many2one('sale.order',string='Sale Order',
                                     required=True, readonly=True,states={'draft': [('readonly', False)]})
     parent_id = fields.Many2one('res.partner', 'Customer', ondelete='cascade', readonly=True,
                              related='sale_order_id.partner_id')
     payment_term_id = fields.Many2one('account.payment.term', string='Payment Terms', readonly=True,
                                       related='sale_order_id.payment_term_id')
-    warehouse_id = fields.Many2one('stock.warehouse', string='Warehouse', readonly=True,
-                                   states={'draft': [('readonly', False)]})
+    warehouse_id = fields.Many2one('stock.warehouse', string='Warehouse', readonly=True)
     line_ids = fields.One2many('delivery.order.line', 'parent_id', string="Products", readonly=True,
                                states={'draft': [('readonly', False)]})
     cash_ids = fields.One2many('cash.payment.line', 'pay_cash_id', string="Cash", readonly=True, invisible =True,
@@ -58,7 +57,7 @@ class SaleDeliveryOrder(models.Model):
         ('cash', 'Cash'),
         ('credit_sales', 'Credit'),
         ('lc_sales', 'L/C'),
-    ], string='Sale Order Type', readonly=True, states={'draft': [('readonly', False)]})
+    ], string='Sale Order Type')
 
     """ State fields for containing various states """
     state = fields.Selection([
@@ -118,11 +117,11 @@ class SaleDeliveryOrder(models.Model):
                 for record in sale_order_obj.order_line:
                     #sale_order_line_obj = record.env['sale.order.line'].search([('order_id', '=', self.sale_order_id.id)])
                     #product_id = sale_order_line_obj.product_id.id
-                    # val['product_id']=record.product_id
-                    val.append((0, 0, {'product_id': record.product_id,
+                    #val['product_id']=record.product_id
+                    val.append((0, 0, {'product_id': record.product_id.id,
                                        'quantity': record.product_uom_qty,
-                                       'pack_type': sale_order_obj.pack_type,
-                                       'uom_id': record.product_uom,
+                                       'pack_type': sale_order_obj.pack_type.id,
+                                       'uom_id': record.product_uom.id,
                                                 }))
 
             self.line_ids = val

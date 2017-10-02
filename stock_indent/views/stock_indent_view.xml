@@ -46,6 +46,8 @@
 						<group>
 							<group>
 								<field name="indentor_id" readonly="1" />
+								<field name="requirement"
+									on_change="onchange_requirement(indent_date, requirement)" />
 								<!--<field name="department_id"-->
 								<!--options="{&quot;no_open&quot;: True}"-->
 									<!--domain="[('location_id', '!=',False),-->
@@ -57,55 +59,53 @@
 								<field name="indent_date" />
 								<field name="required_date" />
 								<field name="approve_date" invisible="1"/>
+								<field name="company_id" readonly="1" groups="base.group_multi_company" />
 							</group>
 							<group></group>
 							<group>
-								<field name="requirement"
-									on_change="onchange_requirement(indent_date, requirement)" />
+
 								<!-- <field name="type" /> -->
 								<!--<field name="picking_type_id" options="{&quot;no_open&quot;: True}"/>-->
-								<field name="company_id" groups="base.group_multi_company"
-									readonly="1" />
+
 							</group>
 						</group>
 						<notebook>
 							<page string="Products">
 								<field name="product_lines">
-									<form string="Products" version="7.0">
-										<group>
-											<group>
-												<field name="product_id" groups="base.group_user" />
-												<label for="product_uom_qty" />
-												<div>
-													<field name="product_uom_qty" class="oe_inline" />
-													<field name="product_uom" groups="product.group_uom"
-														class="oe_inline oe_no_button"
-														 />
-												</div>
-												<field name="price_unit" />
-											</group>
-											<group>
-												<!-- <field name="type" /> -->
-												<field name="qty_available"
-													 />
-												<field name="virtual_available"
-													 />
-												<field name="delay" />
-											</group>
-										</group>
-										<label for="name" />
-										<field name="name" />
-										<label for="specification" />
-										<field name="specification" />
-									</form>
-                                    <tree string="Products">
+									<!--<form string="Products" version="7.0">-->
+										<!--<group>-->
+											<!--<group>-->
+												<!--<field name="product_id" groups="base.group_user" />-->
+												<!--<label for="product_uom_qty" />-->
+												<!--<div>-->
+													<!--<field name="product_uom_qty" class="oe_inline" />-->
+													<!--<field name="product_uom" groups="product.group_uom"-->
+														<!--class="oe_inline oe_no_button"-->
+														 <!--/>-->
+												<!--</div>-->
+												<!--<field name="price_unit" />-->
+											<!--</group>-->
+											<!--<group>-->
+												<!--&lt;!&ndash; <field name="type" /> &ndash;&gt;-->
+												<!--<field name="qty_available"-->
+													 <!--/>-->
+												<!--<field name="virtual_available"-->
+													 <!--/>-->
+												<!--<field name="delay" />-->
+											<!--</group>-->
+										<!--</group>-->
+										<!--<label for="name" />-->
+										<!--<field name="name" />-->
+										<!--<label for="specification" />-->
+										<!--<field name="specification" />-->
+									<!--</form>-->
+                                    <tree string="Products" editable="bottom">
                                         <field name="sequence" widget="handle"/>
                                         <field name="product_id"/>
-                                        <!-- <field name="type"/> -->
+										<field name="name"/>
+										<field name="qty_available"/>
                                         <field name="product_uom_qty" sum="Total Qty"/>
-                                        <field name="qty_available"/>
-                                        <field name="product_uom" string="Unit" groups="product.group_uom"/>
-                                        <field name="name"/>
+                                        <field name="product_uom" string="UOM" groups="product.group_uom"/>
                                         <field name="price_unit" sum="Total Price"/>
                                         <field name="price_subtotal" sum="Total Price"/>
                                     </tree>

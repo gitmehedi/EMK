@@ -54,7 +54,7 @@ class IndentIndent(models.Model):
     indentor_id = fields.Many2one('res.users', string='Indentor', required=True, readonly=True, 
                                   default=lambda self: self.env.user,
                                   states={'draft': [('readonly', False)]})
-    #department_id = fields.Many2one('stock.location', string='Department', required=True, readonly=True,  states={'draft': [('readonly', False)]}, domain=[('can_request','=', True)])
+    #department_id = fields.Many2one('stock.location', string='Department', readonly=True,  states={'draft': [('readonly', False)]}, domain=[('can_request','=', True)])
     #manager_id = fields.Many2one('res.users', string='Department Manager', related='department_id.manager_id', store=True)
     analytic_account_id = fields.Many2one('account.analytic.account', string='Project', ondelete="cascade",readonly=True,  states={'draft': [('readonly', False)]})
     requirement = fields.Selection([('1', 'Ordinary'), ('2', 'Urgent')], 'Priority', readonly=True,
@@ -162,8 +162,10 @@ class IndentIndent(models.Model):
     @api.multi
     def approve_indent(self):
         self.check_approval()
-        for indent in self:
-            indent.action_picking_create()
+        self.state = 'inprogress'
+        # for indent in self:
+        #     indent.action_picking_create()
+
             
     @api.multi
     def check_approval(self):
@@ -236,7 +238,7 @@ class IndentIndent(models.Model):
 
         if line.product_id.type in ('service'):
             if not line.original_product_id:
-                raise osv.except_osv(_("Warning !"), _("You must define material or parts that you are going to repair !"))
+                raise models.except_osv(_("Warning !"), _("You must define material or parts that you are going to repair !"))
 
             upd_res = {
                 'product_id':line.original_product_id.id,
@@ -245,8 +247,8 @@ class IndentIndent(models.Model):
             }
             res.update(upd_res)
 
-        if self.company_id:
-            res = dict(res, company_id = indent.company_id.id)
+        # if self.company_id:
+        #     res = dict(res, company_id = .company_id.id)
         return res
     
     def _prepare_indent_picking(self):
@@ -262,7 +264,7 @@ class IndentIndent(models.Model):
             'move_type':self.move_type,
             'partner_id': self.indentor_id.partner_id.id or False,
             'location_id': self.warehouse_id.lot_stock_id.id,
-            'location_dest_id': self.department_id.id
+            #'location_dest_id': self.department_id.id
         }
         if self.company_id:
             res = dict(res, company_id = self.company_id.id)
@@ -452,7 +454,7 @@ class IndentProductLines(models.Model):
                             'Procure', required=True,
                             default="make_to_order",
                             help="From stock: When needed, the product is taken from the stock or we wait for replenishment.\nOn order: When needed, the product is purchased or produced.")
-    product_uom_qty = fields.Float('Quantity Required', digits= dp.get_precision('Product UoS'), 
+    product_uom_qty = fields.Float('Quantity', digits= dp.get_precision('Product UoS'),
                                    required=True, default=1)
     product_uom = fields.Many2one('product.uom', 'Unit of Measure', required=True)
     product_uos_qty = fields.Float('Quantity (UoS)' ,digits= dp.get_precision('Product UoS'),

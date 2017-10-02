@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <data>
+        <record id="view_hr_evaluation_tree" model="ir.ui.view">
+			<field name="name">hr_evaluation_tree</field>
+			<field name="model">hr.performance.evaluation</field>
+			<field name="arch" type="xml">
+				<tree string="HR Evaluation">
+					<field name="employee_id" />
+					<field name="emp_department" />
+					<field name="emp_designation" />
+					<field name="state" />
+				</tree>
+			</field>
+		</record>
+        <record id="hr_internal_approval_form" model="ir.ui.view">
+			<field name="name">hr_evaluation_form</field>
+			<field name="model">hr.performance.evaluation</field>
+			<field name="type">form</field>
+			<field name="arch" type="xml">
+                <form string="HR Evaluation">
+                    <header>
+
+						<field name="state" widget="statusbar" statusbar_visible="draft,supervisor,hod_approve,gm_approve,cxo_approve,approved"/>
+
+					</header>
+                    <sheet>
+                        <group>
+                            <group>
+                                <separator string="Personal Information" colspan="2"/>
+                                <field name="employee_id"/>
+                                <field name="emp_department"/>
+                                <field name="given_reward"/>
+                            </group>
+                            <group>
+                                <separator string="Job History" colspan="2"/>
+                                <field name="emp_designation"/>
+                                <field name="joining_date"/>
+                                <field name="disciplinary_action"/>
+                            </group>
+                        </group>
+                        <group>
+                            <separator string="Attendance" colspan="2"/>
+                            <group>
+                                <field name="total_available_days"/>
+                                <field name="late_attended_days"/>
+                                <field name="casual_leave_days"/>
+                                <field name="sick_leave_days"/>
+                            </group>
+                            <group>
+                                <field name="on_time_attended_days"/>
+                                <field name="absent_days"/>
+                                <field name="earned_leave_days"/>
+                                <field name="extra_purpose_leave_days"/>
+                            </group>
+                        </group>
+                        <div colspan="1">
+                            <separator string="Comment by Employee"/>
+                            <field name="emp_comment" placeholder="I do hereby acknowledge that i have reviewed the above information about me which is correct. "/>
+                        </div>
+
+                        <group colspan="4" >
+                        <separator string="Evaluation Criteria" colspan="4"/>
+                        <newline/>
+                            <field name="criteria_line_ids" nolabel="1">
+                                <tree string="Evaluation Criteria Line" editable="bottom">
+                                    <field name="seq" readonly="1"/>
+                                    <field name="name" readonly="1"/>
+                                    <field name="marks" readonly="1"/>
+                                    <field name="obtain_marks"/>
+                                </tree>
+                            </field>
+                        </group>
+
+                        <separator string="Judgement of evaluating person"/>
+                        <group colspan="4">
+                            <group>
+                                <field name="judgment_promotion"/>
+                                <field name="judgment_observation"/>
+                            </group>
+                            <group>
+                                <field name="judgment_increment"/>
+                                <field name="judgment_training_requirement"/>
+                            </group>
+                        </group>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+        <record id="action_hr_evaluation" model="ir.actions.act_window">
+			<field name="name">HR Evaluation</field>
+			<field name="res_model">hr.performance.evaluation</field>
+			<field name="view_mode">tree,form</field>
+		</record>
+
+        <menuitem
+				name="HR Evaluation"
+                parent="hr_evaluation_main_menu"
+				id="hr_evaluation_menu"
+				sequence="20"
+                action="action_hr_evaluation"
+        />
+    </data>
+</odoo>
