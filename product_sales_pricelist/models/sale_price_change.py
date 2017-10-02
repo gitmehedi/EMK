@@ -23,7 +23,7 @@ class SalePriceChange(models.Model):
     new_price = fields.Float(string='New Price', states={'confirm': [('readonly', True)], 'validate1': [('readonly', True)],'validate': [('readonly', True)]}, required=True)
     product_package_mode = fields.Many2one('product.packaging.mode', string= 'Packaging Mode', required=True)
     uom_id = fields.Many2one('product.uom', string="UoM", domain=[('category_id', '=', 2)], required=True)
-
+    category_id = fields.Many2one(string='UoM Category', related="uom_id.category_id", store=True)
     request_date = fields.Datetime(string='Request Date', default=datetime.datetime.now(), readonly=True)
     requested_by = fields.Many2one('hr.employee', string="Requested By", default=_current_employee, readonly=True)
 
