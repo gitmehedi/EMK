@@ -8,7 +8,7 @@
             <field name="subject">${object.company_id.name}</field>
             <field name="model_id" ref="hr_recruitment.model_hr_applicant"/>
             <field name="auto_delete" eval="True"/>
-            <field name="report_template" ref="old_app_letter"/>
+            <field name="report_template" ref="app_letter"/>
             <field name="report_name">${(object.name or '').replace('/','_')}${object.state == 'approved' and '_approved' or ''}</field>
             <field name="lang">${object.partner_id.lang}</field>
             <field name="body_html"><![CDATA[
