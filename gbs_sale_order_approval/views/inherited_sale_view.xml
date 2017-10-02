@@ -97,10 +97,6 @@
                         <field name="currency_ids"/>
                     </xpath>
 
-                    <xpath expr="//group/group/field[@name='pack_type']" position="after">
-                        <field name="uom_id"/>
-                    </xpath>
-
                      <xpath expr="//field[@name='payment_term_id']" position="replace">
                             <field name="payment_term_id" attrs="{'readonly':[('state','in',('sent','validate','done','cancel','sale'))]}" options="{'no_create': True}"/>
                     </xpath>

@@ -17,7 +17,7 @@ class HrEmployeeIouWizard(models.TransientModel):
         emp_id = emp_iou_pool.employee_id.id
 
         if self.repay is not None and amount is not None:
-            if(self.repay > amount):
+            if(self.repay > amount or self.repay > due_amount):
                 raise UserError(('Repayment can not be greater than actual amount'))
 
         if self.repay:
