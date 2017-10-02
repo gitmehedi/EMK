@@ -10,7 +10,7 @@ class AttendanceSummaryLine(models.Model):
     deduction_days = fields.Integer(string='Deduction Day(s)')
     leave_days = fields.Integer(string='Leave Days')
     holidays_days = fields.Integer(string='Holidays Days')
-    late_hrs = fields.Float(string='Late Hours')
+    late_hrs = fields.Float(string='Off Duty Hrs')
     schedule_ot_hrs = fields.Float(string='Schedule OT Hrs')
     cal_ot_hrs = fields.Float(string='Cal OT Hrs')
 
