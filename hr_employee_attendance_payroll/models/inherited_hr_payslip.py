@@ -40,7 +40,9 @@ class InheritedHrAttendancePayslip(models.Model):
                                 'number_of_hours': emp.cal_ot_hrs,
                                 'name': 'OT Hours',
                             })
-                        if emp.late_hrs:
+
+                        ### Deduction Days
+                        if emp.deduction_days > 0:
                             worked_days_lines += worked_days_lines.new({
                                 'code': 'ABS',
                                 'contract_id': self.contract_id.id,
