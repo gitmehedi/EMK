@@ -10,7 +10,7 @@
             <field name="arch" type="xml">
                 <data>
                     <xpath expr="//field[@name='requirement']" position="after">
-                        <field name="oparating_unit_id"/>
+                        <field name="operating_unit_id" readonly="1" groups="base.group_multi_company" />
                     </xpath>
                 </data>
             </field>

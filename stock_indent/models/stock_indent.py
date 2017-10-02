@@ -454,7 +454,7 @@ class IndentProductLines(models.Model):
                             'Procure', required=True,
                             default="make_to_order",
                             help="From stock: When needed, the product is taken from the stock or we wait for replenishment.\nOn order: When needed, the product is purchased or produced.")
-    product_uom_qty = fields.Float('Quantity Required', digits= dp.get_precision('Product UoS'), 
+    product_uom_qty = fields.Float('Quantity', digits= dp.get_precision('Product UoS'),
                                    required=True, default=1)
     product_uom = fields.Many2one('product.uom', 'Unit of Measure', required=True)
     product_uos_qty = fields.Float('Quantity (UoS)' ,digits= dp.get_precision('Product UoS'),
