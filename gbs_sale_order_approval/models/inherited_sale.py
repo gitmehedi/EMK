@@ -114,7 +114,7 @@ class SaleOrder(models.Model):
 
         if self.product_id:
 
-            price_change_pool = self.env['sale.price.change'].search([('product_id', '=', self.product_id.id),
+            price_change_pool = self.env['product.sales.pricelist'].search([('product_id', '=', self.product_id.id),
                                                                       ('currency_id', '=', self.currency_ids.id),
                                                                       ('product_package_mode', '=', self.pack_type.id),
                                                                       ('uom_id', '=', self.uom_id.id)],
@@ -148,7 +148,7 @@ class InheritedSaleOrderLine(models.Model):
 
         if self.product_id:
 
-            price_change_pool = self.env['sale.price.change'].search([('product_id', '=', self.order_id.product_id.id),
+            price_change_pool = self.env['product.sales.pricelist'].search([('product_id', '=', self.order_id.product_id.id),
                                                                       ('currency_id', '=', self.order_id.currency_ids.id),
                                                                       ('product_package_mode', '=', self.order_id.pack_type.id),
                                                                       ('uom_id', '=', self.order_id.uom_id.id)],

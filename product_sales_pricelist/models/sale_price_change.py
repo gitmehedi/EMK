@@ -4,8 +4,8 @@ import datetime
 import time
 
 class SalePriceChange(models.Model):
-    _name = 'sale.price.change'
-    _description = "Sale Price Change"
+    _name = 'product.sales.pricelist'
+    _description = "Product Sales Pricelist"
     _inherit = ['mail.thread', 'ir.needaction_mixin']
     _rec_name = 'requested_by'
     _order = "approver2_date desc"
@@ -57,7 +57,7 @@ class SalePriceChange(models.Model):
     @api.onchange('currency_id')
     def _onchange_currency_id(self):
         if self.product_id:
-            price_change_pool = self.env['sale.price.change'].search([('product_id', '=', self.product_id.id),
+            price_change_pool = self.env['product.sales.pricelist'].search([('product_id', '=', self.product_id.id),
                                                                       ('currency_id', '=', self.currency_id.id)],
                                                                      order='approver2_date desc', limit=1)
 
@@ -80,7 +80,7 @@ class SalePriceChange(models.Model):
 
     @api.multi
     def action_approve(self):
-        sale_price_obj = self.env['sale.price.change'].browse(self.id)
+        sale_price_obj = self.env['product.sales.pricelist'].browse(self.id)
         vals = {}
 
         vals['product_id'] = self.product_id.id
