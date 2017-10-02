@@ -45,7 +45,7 @@
         <field eval="0" name="perm_write"/>
         <field eval="1" name="perm_read"/>
         <field eval="0" name="perm_create"/>
-        <field name="groups" eval="[(4,ref('hr.group_hr_manager'))]"/>
+        <field name="groups" eval="[(4,ref('hr.group_hr_manager')),(4,ref('gbs_application_group.group_cxo'))]"/>
     </record>
 
 </data>

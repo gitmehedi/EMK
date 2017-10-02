@@ -5,11 +5,10 @@
         <!-- Tree View -->
 		<record id="sale_price_change_tree" model="ir.ui.view">
 			<field name="name">sale_price_change_tree_view</field>
-			<field name="model">sale.price.change</field>
+			<field name="model">product.sales.pricelist</field>
 			<field name="arch" type="xml">
 				<tree string="Change Products Sale Price">
                     <field name="product_id"/>
-                    <field name="list_price"/>
                     <field name="new_price"/>
 					<field name="currency_id"/>
 					<field name="state"/>
@@ -21,7 +20,7 @@
 		<!-- Form View -->
 		<record id="sale_price_change_form_view" model="ir.ui.view">
 			<field name="name">sale_price_change_form_view</field>
-			<field name="model">sale.price.change</field>
+			<field name="model">product.sales.pricelist</field>
 			<field name="type">form</field>
 			<field name="arch" type="xml">
 				<form string="Change Products Sale Price">
@@ -64,8 +63,8 @@
 		</record>
 
 		<record id="action_product_sale_price_change" model="ir.actions.act_window">
-			<field name="name">Change Product Price</field>
-			<field name="res_model">sale.price.change</field>
+			<field name="name">Product Sales Pricelist</field>
+			<field name="res_model">product.sales.pricelist</field>
 			<field name="context">{'search_default_group_product_id': 1}</field>
 			<field name="view_mode">tree,form</field>
 		</record>
@@ -79,10 +78,6 @@
 				  parent="custom_menu_products" sequence="9" action="action_product_sale_price_change"/>
 
         <menuitem id="sale.menu_product_template_action" parent="custom_menu_products" sequence="8" action="product.product_template_action" groups="gbs_application_group.group_head_sale,gbs_application_group.group_head_account,gbs_application_group.group_cxo"/>
-
-        <!--<menuitem id="product_sale_price_change_history_menu_action" name="Product Price History"-->
-				  <!--groups="gbs_application_group.group_head_sale,gbs_application_group.group_head_account,gbs_application_group.group_cxo"-->
-                  <!--parent="custom_menu_products" sequence="10" action="action_product_sale_price_change_history"/>-->
 
 		<menuitem id="price_history_menu" name="Product Price History" sequence="11"
 				  parent="custom_menu_products" groups="gbs_application_group.group_head_sale,gbs_application_group.group_head_account,gbs_application_group.group_cxo"

@@ -30,7 +30,7 @@ class SaleOrder(models.Model):
         if default is None:
             default = {}
         default['name'] = '/'
-        return super(SaleOrder, self).copy(default=default)
+        return super(SaleOrder, self).copy()
 
     @api.model
     def create(self, vals):

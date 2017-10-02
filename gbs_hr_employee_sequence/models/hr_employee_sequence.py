@@ -1,5 +1,4 @@
-from openerp import models, fields
-from openerp import api
+from odoo import models, fields ,api
 
 class HrEmployeeSequenceInherit(models.Model):
     _inherit = ['hr.employee']

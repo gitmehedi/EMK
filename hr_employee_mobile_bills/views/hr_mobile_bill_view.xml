@@ -12,11 +12,11 @@
                          <button name="action_confirm" type="object"
                                 string="Apply" states="draft"
                                 class="oe_highlight"/>
-                         <button name="action_done" type="object"
+                         <button name="action_done" type="object" groups ="hr.group_hr_manager"
                                 string="Approve" states="applied"
                                 class="oe_highlight"/>
 						<button name="action_draft" type="object"
-                                string="Reject"
+                                string="Reject" groups ="hr.group_hr_manager"
                                 states="applied"/>
                          <field name="state" widget="statusbar"/>
 					</header>

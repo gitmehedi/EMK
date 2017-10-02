@@ -22,7 +22,11 @@ class CustomerCommissionConfigurationCustomer(models.Model):
                 [('customer_id', '=', self.customer_id.id), ('product_id', '=', self.config_parent_id.product_id.id),
                  ('status', '=', True)])
 
-            self.old_value = commission.commission_rate if commission else 0
+            if commission:
+                for coms in commission:
+                    self.old_value = coms.commission_rate
+            else:
+                self.old_value = 0
 
     @api.depends('customer_id')
     def store_old_value(self):
@@ -32,7 +36,12 @@ class CustomerCommissionConfigurationCustomer(models.Model):
                     [('customer_id', '=', rec.customer_id.id), ('product_id', '=', rec.config_parent_id.product_id.id),
                      ('status', '=', True)])
 
-                rec.old_value = commission.commission_rate if commission else 0
+                if commission:
+                    for coms in commission:
+                        rec.old_value = coms.commission_rate
+                else:
+                    rec.old_value = 0
+
 
     # show a warning when input data
     @api.onchange('new_value')
