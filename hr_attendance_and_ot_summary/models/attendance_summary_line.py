@@ -57,11 +57,12 @@ class AttendanceSummaryLine(models.Model):
     @api.multi
     def action_regenerate(self):
 
-        print ("Employee ID :", self[0].employee_id)
         empIds = [self.employee_id.id]
         summaryId = self.att_summary_id.id
+        operating_unit_id = self.env['hr.attendance.summary'].browse(summaryId).operating_unit_id.id
+
         attendanceProcess = self.env['hr.attendance.summary.temp']
-        attendanceProcess.process(empIds, summaryId)
+        attendanceProcess.process(empIds, summaryId, operating_unit_id)
         return {
             'view_type': 'form',
             'view_mode': 'form',
