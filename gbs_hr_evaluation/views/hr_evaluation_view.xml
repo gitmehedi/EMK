@@ -20,7 +20,44 @@
 			<field name="arch" type="xml">
                 <form string="HR Evaluation">
                     <header>
+                        <button string="Confirm" name="action_confirm"
+								states="draft" type="object" class="oe_highlight"
+								groups="hr.group_hr_user"/>
 
+                    	<button string="Approve" name="action_supervisor_approve"
+								states="supervisor" type="object" class="oe_highlight"
+								groups="base.group_user"
+								/>
+
+						<button string="Approve" name="action_hod_approve"
+								states="hod_approve" type="object" class="oe_highlight"
+								groups="gbs_base_package.group_dept_manager"
+								/>
+
+                        <button string="Approve" name="action_gm_approve"
+								states="gm_approve" type="object" class="oe_highlight"
+								groups="gbs_application_group.group_general_manager,gbs_application_group.group_head_of_plant"
+								/>
+
+                        <button string="Approve" name="action_hr_approve"
+								states="hr_approve" type="object" class="oe_highlight"
+								groups="hr_recruitment.group_hr_recruitment_manager"
+								/>
+
+						<button string="Approve" name="action_cxo_approve"
+								states="cxo_approve" type="object" class="oe_highlight"
+								groups="gbs_application_group.group_cxo"
+								/>
+
+                     	<button string="Decline" name="action_decline"
+								type="object"
+								groups="gbs_application_group.group_head_of_plant,hr_recruitment.group_hr_recruitment_manager,gbs_application_group.group_cxo"
+								/>
+
+						<button string="Reset To Draft" name="action_reset"
+								type="object" states="confirmed,hr_approve,cxo_approve,declined"
+								groups="gbs_application_group.group_head_of_plant,hr_recruitment.group_hr_recruitment_manager,gbs_application_group.group_cxo"
+								/>
 						<field name="state" widget="statusbar" statusbar_visible="draft,supervisor,hod_approve,gm_approve,cxo_approve,approved"/>
 
 					</header>
@@ -28,30 +65,30 @@
                         <group>
                             <group>
                                 <separator string="Personal Information" colspan="2"/>
-                                <field name="employee_id"/>
-                                <field name="emp_department"/>
+                                <field name="employee_id" readonly="1"/>
+                                <field name="emp_department" readonly="1"/>
                                 <field name="given_reward"/>
                             </group>
                             <group>
                                 <separator string="Job History" colspan="2"/>
-                                <field name="emp_designation"/>
-                                <field name="joining_date"/>
+                                <field name="emp_designation" readonly="1"/>
+                                <field name="joining_date" readonly="1"/>
                                 <field name="disciplinary_action"/>
                             </group>
                         </group>
                         <group>
                             <separator string="Attendance" colspan="2"/>
                             <group>
-                                <field name="total_available_days"/>
-                                <field name="late_attended_days"/>
-                                <field name="casual_leave_days"/>
-                                <field name="sick_leave_days"/>
+                                <field name="total_available_days" readonly="1"/>
+                                <field name="late_attended_days" readonly="1"/>
+                                <field name="casual_leave_days" readonly="1"/>
+                                <field name="sick_leave_days" readonly="1"/>
                             </group>
                             <group>
-                                <field name="on_time_attended_days"/>
-                                <field name="absent_days"/>
-                                <field name="earned_leave_days"/>
-                                <field name="extra_purpose_leave_days"/>
+                                <field name="on_time_attended_days" readonly="1"/>
+                                <field name="absent_days" readonly="1"/>
+                                <field name="earned_leave_days" readonly="1"/>
+                                <field name="extra_purpose_leave_days" readonly="1"/>
                             </group>
                         </group>
                         <div colspan="1">
@@ -83,6 +120,11 @@
                                 <field name="judgment_training_requirement"/>
                             </group>
                         </group>
+                        <div colspan="1">
+                            <separator string="Comment by Evaluating Person"/>
+                            <field name="evaluating_persons_comment"/>
+                        </div>
+
                     </sheet>
                     <div class="oe_chatter">
                         <field name="message_follower_ids" widget="mail_followers"/>

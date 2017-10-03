@@ -10,7 +10,7 @@ class AttendanceSummaryLine(models.Model):
     deduction_days = fields.Integer(string='Deduction Day(s)')
     leave_days = fields.Integer(string='Leave Days')
     holidays_days = fields.Integer(string='Holidays Days')
-    late_hrs = fields.Float(string='Late Hours')
+    late_hrs = fields.Float(string='Off Duty Hrs')
     schedule_ot_hrs = fields.Float(string='Schedule OT Hrs')
     cal_ot_hrs = fields.Float(string='Cal OT Hrs')
 
@@ -57,11 +57,12 @@ class AttendanceSummaryLine(models.Model):
     @api.multi
     def action_regenerate(self):
 
-        print ("Employee ID :", self[0].employee_id)
         empIds = [self.employee_id.id]
         summaryId = self.att_summary_id.id
+        operating_unit_id = self.env['hr.attendance.summary'].browse(summaryId).operating_unit_id.id
+
         attendanceProcess = self.env['hr.attendance.summary.temp']
-        attendanceProcess.process(empIds, summaryId)
+        attendanceProcess.process(empIds, summaryId, operating_unit_id)
         return {
             'view_type': 'form',
             'view_mode': 'form',

@@ -196,6 +196,7 @@ class HrManualAttendance(models.Model):
 
             vals1 = {}
             vals1['employee_id'] = manual_attendance.employee_id.id
+            vals1['operating_unit_id'] = manual_attendance.employee_id.operating_unit_id.id
             vals1['manual_attendance_request'] = True
 
             if manual_attendance.sign_type == 'both':
