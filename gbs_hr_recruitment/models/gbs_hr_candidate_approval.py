@@ -37,7 +37,7 @@ class HRCandidateApproval(models.Model):
             manpower_requisition_obj = self.env['hr.employee.requisition'].search([('id', '=', self.manpower_requisition_id.id)])
 
             if manpower_requisition_obj:
-                applicant_pool=self.env['hr.applicant'].search([('job_id','=',self.job_id.id)])
+                applicant_pool=self.env['hr.applicant'].search([('department_id','=',self.department_id.id),('job_id','=',self.job_id.id)])
                 for record in applicant_pool:
                     val.append((0, 0, {'applicant_name': record.partner_name,
                                        'education_id': record.type_id.id,

@@ -5,7 +5,7 @@ class HrAttendanceSummaryWizard(models.TransientModel):
     _name = 'attendance.summary.wizard.a'
     
     employee_ids = fields.Many2many('hr.employee', 'hr_employee_group_rel_1_a', 'payslip_id',
-                                    'employee_id', 'Employees')
+                                    'employee_id', 'Employees',domain="[('operating_unit_id','=',operating_unit_id)]")
 
     @api.multi
     def process_employee_line(self,context):

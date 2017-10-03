@@ -23,7 +23,7 @@
 				<form string="Attendance and Over Time Summary" delete="false" create="0">
 					<header>
 						<button name="hr_attendance_and_ot_summary.attendance_summary_wizard_action_view"
-							type="action" string="Select Employee" states="draft"/>
+							type="action" string="Select Employee" states="draft" context="{'operating_unit_id': operating_unit_id}"/>
 						<button name="hr_attendance_and_ot_summary.attendance_summary_wizard_action_view"
 							 type="action" string="Re Generate" states="generated"/>
 						<!--<button name="get_summary_data" type="object" string="Get Summary" />-->
