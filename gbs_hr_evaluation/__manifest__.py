@@ -31,6 +31,8 @@ Manages several types of evaluations: bottom-up, top-down, self-evaluations and 
         'wizard/hr_evaluation_employee_list_wizard_view.xml',
         'views/hr_evaluation_plan_view.xml',
         'views/hr_evaluation_view.xml',
+        'security/ir.model.access.csv',
+        'security/ir_rule.xml',
     ],
     'auto_install': False,
     'installable': True,

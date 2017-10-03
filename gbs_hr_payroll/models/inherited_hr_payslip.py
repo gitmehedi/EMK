@@ -37,7 +37,7 @@ class HrPayslip(models.Model):
     _inherit = 'hr.payslip'
 
     days_in_period= fields.Integer('Days in Period', compute= '_compute_days',
-                                   store= True, required=True)
+                                   store= True)
 
     @api.depends('date_from', 'date_to')
     def _compute_days(self):

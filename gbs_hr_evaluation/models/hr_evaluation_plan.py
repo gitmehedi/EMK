@@ -8,13 +8,11 @@ class HREvaluationPlan(models.Model):
     _order = "plan_year desc"
 
     name = fields.Char(string='Name', required=True,default='New')
-    plan_year = fields.Selection([(num, str(num)) for num in range(2010, (datetime.now().year)+1 )],
+    plan_year = fields.Selection([(num, str(num)) for num in range(2016, (datetime.now().year)+1 )],
                                  string='Plan Year',required=True)
     evaluation_form_ids = fields.One2many('hr.performance.evaluation','rel_plan_id')
 
-    ####################################################
-    # Business methods
-    ####################################################
+
 
 class HREvaluationCriteria(models.Model):
     _name='hr.evaluation.criteria'

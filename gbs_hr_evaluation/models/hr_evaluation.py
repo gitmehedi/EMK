@@ -11,6 +11,8 @@ class HRPerformanceEvaluation(models.Model):
     emp_department = fields.Many2one('hr.department',string = 'Department Name',requiered=True)
     emp_designation = fields.Many2one('hr.job',string = 'Designation',requiered=True)
     joining_date = fields.Date(string = 'Joining Date')
+    academic_qualification = fields.Date(string = 'Academic Qualification')
+    joining_designation = fields.Date(string = 'Designation On Joining')
 
     given_reward = fields.Text(string = 'Reward Given')
     disciplinary_action = fields.Text(string = 'Disciplinary Action')
@@ -33,6 +35,8 @@ class HRPerformanceEvaluation(models.Model):
 
     evaluating_persons_comment = fields.Text(string='Comment',track_visibility='onchange')
 
+    manager_id = fields.Many2one('hr.employee', string='Manager', readonly=True, copy=False)
+
     state = fields.Selection([
         ('draft', 'Draft'),
         ('supervisor', 'Confirmed'),
@@ -54,7 +58,11 @@ class HRPerformanceEvaluation(models.Model):
 
     @api.multi
     def action_confirm(self):
-        self.state = 'supervisor'
+        user_manager = self.env['res.users'].search([('id','=',self.manager_id.sudo().user_id.id)])
+        if user_manager.has_group('gbs_base_package.group_dept_manager'):
+            self.state = 'hod_approve'
+        else:
+            self.state = 'supervisor'
 
     @api.multi
     def action_supervisor_approve(self):
@@ -62,7 +70,12 @@ class HRPerformanceEvaluation(models.Model):
 
     @api.multi
     def action_hod_approve(self):
-        self.state = 'gm_approve'
+        current_user_emp_id = self.env['hr.employee'].search([('user_id', '=', self.env.uid)])
+        user_manager = self.env['res.users'].search([('id', '=', current_user_emp_id.parent_id.sudo().user_id.id)])
+        if user_manager.has_group('gbs_application_group.group_general_manager') or user_manager.has_group('gbs_application_group.group_head_of_plant'):
+            self.state = 'gm_approve'
+        else:
+            self.state = 'hr_approve'
 
     @api.multi
     def action_gm_approve(self):
