@@ -15,12 +15,14 @@ class HrAttendanceSummaryWizard(models.TransientModel):
 
         summaryId = context['active_id']
 
+        operating_unit_id = self.env['hr.attendance.summary'].browse(summaryId).operating_unit_id.id
+
         selected_ids_for_line = line_obj.search([('att_summary_id', '=', summaryId)])
         inserted_employee_ids = set([val.employee_id.id for val in selected_ids_for_line])
         duplicate_employee_ids_filter = list(set(self.employee_ids.ids)-(inserted_employee_ids))
 
         attendanceProcess = self.env['hr.attendance.summary.temp']
-        attendanceProcess.process(duplicate_employee_ids_filter, summaryId)
+        attendanceProcess.process(duplicate_employee_ids_filter, summaryId, operating_unit_id)
 
 
 

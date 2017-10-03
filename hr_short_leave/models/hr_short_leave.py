@@ -191,11 +191,22 @@ class HrShortLeave(models.Model):
         if not (self.env.user.has_group('hr_holidays.group_hr_holidays_user') or self.env.user.has_group('gbs_base_package.group_dept_manager')):
             raise UserError(_('Only an HR Officer or Manager or Department Manager can approve leave requests.'))
 
+        attendance_obj = self.env['hr.attendance']
         for holiday in self:
             if holiday.state not in ['confirm', 'validate1']:
                 raise UserError(_('Leave request must be confirmed in order to approve it.'))
             if holiday.state == 'validate1' and not holiday.env.user.has_group('hr_holidays.group_hr_holidays_user'):
                 raise UserError(_('Only an HR Manager can apply the second approval on leave requests.'))
+            vals1 = {}
+            vals1['employee_id'] = holiday.employee_id.id
+            vals1['operating_unit_id'] = holiday.employee_id.operating_unit_id.id
+            vals1['manual_attendance_request'] = False
+            vals1['is_system_generated'] = False
+            vals1['has_error'] = False
+            vals1['is_short_leave'] = True
+            vals1['check_in'] = holiday.date_from
+            vals1['check_out'] = holiday.date_to
+            attendance_obj.create(vals1)
 
             holiday.write({'state': 'validate'})
 
@@ -225,3 +236,9 @@ class HrShortLeave(models.Model):
             else:
                 res = h.employee_id.check_1st_level_approval()
                 h.first_approval = res
+
+
+class HrEmployee(models.Model):
+    _inherit = "hr.attendance"
+
+    is_short_leave = fields.Boolean(string='Is Short Leave', default=False)

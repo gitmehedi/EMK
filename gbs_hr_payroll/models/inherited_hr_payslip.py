@@ -1,7 +1,7 @@
 from odoo import api, fields, models, tools, _
-from odoo.exceptions import UserError
-
-
+#from datetime import date
+#from datetime import datetime
+import datetime
 class HrPayslipEmployees(models.TransientModel):
     _inherit = 'hr.payslip.employees'
 
@@ -36,6 +36,16 @@ class HrPayslipRun(models.Model):
 class HrPayslip(models.Model):
     _inherit = 'hr.payslip'
 
+    days_in_period= fields.Integer('Days in Period',compute= '_compute_days', store= True)
+
+    @api.depends('date_from', 'date_to')
+    def _compute_days(self):
+        for payslip in self:
+            if payslip.date_from and payslip.date_to:
+                start = datetime.datetime.strptime(payslip.date_from, "%Y-%m-%d").date()
+                end = datetime.datetime.strptime(payslip.date_to, "%Y-%m-%d").date()
+                payslip.days_in_period = (((end - start).days)) + 1
+
     @api.multi
     def action_compute_payslip(self):
         context = dict(self._context or {})
@@ -43,3 +53,8 @@ class HrPayslip(models.Model):
         for payslip in self.browse(active_ids):
             payslip.compute_sheet()
 
+
+class HrPayslipWorkedDays(models.Model):
+    _inherit = 'hr.payslip.worked_days'
+
+    days_in_period = fields.Integer('Days in Period', related='payslip_id.days_in_period')

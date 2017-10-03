@@ -137,6 +137,27 @@ class SaleOrder(models.Model):
 class InheritedSaleOrderLine(models.Model):
     _inherit='sale.order.line'
 
+    @api.onchange('product_uom', 'product_uom_qty')
+    def product_uom_change(self):
+
+        if self.product_uom:
+            product_pool = self.env['product.product'].search([('id', '=', self.order_id.product_id.id)])
+            price_change_pool = self.env['product.sales.pricelist'].search([('product_id', '=', self.product_id.id),
+                                                                            ('currency_id', '=',  product_pool.currency_id.id),],
+                                                                           order='approver2_date desc', limit=1)
+
+            if price_change_pool.uom_id.id == self.product_uom.id:
+                self.price_unit = price_change_pool.new_price
+                return
+
+            if self.product_uom.uom_type == 'smaller':
+                self.price_unit = (self.price_unit / self.product_uom.factor) / 1000
+            elif self.product_uom.uom_type == 'bigger':
+                self.price_unit = self.price_unit * self.product_uom.factor
+            elif self.product_uom.uom_type == 'reference':
+                self.price_unit = self.price_unit / 1000
+
+
     @api.multi
     @api.onchange('product_id')
     def product_id_change(self):
@@ -163,7 +184,9 @@ class InheritedSaleOrderLine(models.Model):
                 vals['price_unit']  = product_pool.list_price
 
             self.order_id.pricelist_id = None
-            self.order_id.partner_id = None
+
+            # self.order_id.partner_id = None
+            # self.product_id.uom_id = None
 
             self.update(vals)
             res = super(InheritedSaleOrderLine, self).product_id_change()

@@ -149,6 +149,29 @@ class AttendanceUtility(models.TransientModel):
                 attendanceDayList.append(TempLateTime(attendance[0], attendance[1], duration))
         return attendanceDayList
 
+    def getAttendanceListByDay(self, attendance_data, currDate, currentDaydutyTime, day, dutyTimeMap):
+
+        attendanceDayList = []
+        previousDayDutyTime = self.getPreviousDutyTime(currDate - day, dutyTimeMap)
+        nextDayDutyTime = self.getNextDutyTime(currDate + day, dutyTimeMap)
+
+        temp_attendance_data = list(attendance_data)
+        for i, attendance in enumerate(attendance_data):
+            if previousDayDutyTime.endActualDutyTime < self.getDateTimeFromStr(
+                    attendance[0]) < currentDaydutyTime.endActualDutyTime and \
+                                    currentDaydutyTime.startDutyTime < self.getDateTimeFromStr(
+                                attendance[1]) < nextDayDutyTime.startDutyTime:
+                duration = (self.getDateTimeFromStr(attendance[1]) - self.getDateTimeFromStr(
+                    attendance[0])).total_seconds() / 60 / 60
+                attendanceDayList.append(TempLateTime(attendance[0], attendance[1], duration))
+                temp_attendance_data.remove(attendance)
+            # If attendance data is greater then 48 hours from current date (startDate) then call break.
+            # Means rest of the attendance date are not illegible for current date. Break condition apply for better optimization
+            elif (self.getDateTimeFromStr(attendance[0]) - currDate).total_seconds() / 60 / 60 > 48:
+                break
+        attendance_data = temp_attendance_data
+        return attendanceDayList
+
     def getShiftList(self, calendarList, postEndDate):
         shiftList = []
         day = datetime.timedelta(days=1)
@@ -313,6 +336,9 @@ class AttendanceUtility(models.TransientModel):
     def getStrFromDate(self, date):
         return date.strftime('%Y.%m.%d')
 
+    def getStrFromDate2(self, date):
+        return date.strftime('%Y-%m-%d')
+
     def getStrFromDateTime(self, date):
         return date.strftime('%Y-%m-%d %H:%M:%S')
 
@@ -337,6 +363,8 @@ class AttendanceUtility(models.TransientModel):
             return mins
 
     def isLateByInTime(self, check_in, currentDayDutyTime, graceTime):
+
+        check_in = self.getDateTimeFromStr(check_in)
 
         if check_in > currentDayDutyTime.startDutyTime:
             lateMinutes = (check_in - currentDayDutyTime.startDutyTime).total_seconds() / 60
@@ -373,7 +401,7 @@ class AttendanceUtility(models.TransientModel):
     def checkOnPersonalLeave(self, employeeId, startDate):
 
         query_str = """SELECT COUNT(id) FROM hr_holidays
-                           WHERE employee_id = %s AND type='remove' AND state = 'validate' AND
+                           WHERE employee_id = %s AND type='remove' AND state IN ('validate1','validate') AND
                            %s BETWEEN date_from::DATE AND date_to::DATE"""
 
         self._cr.execute(query_str, (employeeId, startDate))
@@ -393,6 +421,21 @@ class AttendanceUtility(models.TransientModel):
         self._cr.execute(holidays_query, (unitId,requested_date))
         holidaysLines = self._cr.fetchall()
         holidaysMap={}
+        for i, line in enumerate(holidaysLines):
+            holidaysMap[line[1]] = line[0]
+
+        return holidaysMap
+
+    def getHolidaysByUnitDateRange(self, unitId, from_date, to_date):
+        holidays_query = """select t1.id,t1.date from hr_holidays_public_line as t1
+                            join hr_holidays_public as t2 on t2.id=t1.public_type_id
+                            join public_holiday_operating_unit_rel as t3 on t3.public_holiday_id=t2.id
+                            join hr_leave_fiscal_year as t4 on t4.id=t2.year_id
+                            where t3.operating_unit_id=%s and %s >= t4.date_start and %s <= t4.date_stop"""
+
+        self._cr.execute(holidays_query, (unitId, from_date, to_date))
+        holidaysLines = self._cr.fetchall()
+        holidaysMap = {}
         for i, line in enumerate(holidaysLines):
             holidaysMap[line[1]] = line[0]
 

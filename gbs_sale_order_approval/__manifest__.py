@@ -1,5 +1,5 @@
 {
-    'name': 'GBS Sale Order Approval Process',
+    'name': 'Order to Cash Process',
     'version': '1.0',
     'category': 'sales',
     'author': 'Genweb2 Limited',
