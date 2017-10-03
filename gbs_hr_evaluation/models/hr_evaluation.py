@@ -1,6 +1,7 @@
 from odoo import fields, models, api,_
+from odoo.exceptions import UserError
 
-class HREvaluationPlan(models.Model):
+class HRPerformanceEvaluation(models.Model):
     _name='hr.performance.evaluation'
     _inherit = ['mail.thread']
     _description = 'Employee Evaluation'
@@ -30,20 +31,69 @@ class HREvaluationPlan(models.Model):
     judgment_increment = fields.Boolean(string = 'Increment')
     judgment_training_requirement = fields.Boolean(string = 'Training Requirement')
 
+    evaluating_persons_comment = fields.Text(string='Comment',track_visibility='onchange')
+
     state = fields.Selection([
         ('draft', 'Draft'),
         ('supervisor', 'Confirmed'),
         ('hod_approve', 'HOD Approve'),
         ('gm_approve', 'GM Approve'),
+        ('hr_approve', 'HR Approve'),
         ('cxo_approve', 'CXO Approve'),
         ('approved', 'Approved'),
         ('declined', 'Declined'),
-        ('reset', 'Reset To Draft'),
     ], string='Status', default='draft', track_visibility='onchange')
 
     ### Relational Fields ###
     rel_plan_id = fields.Many2one('hr.evaluation.plan')
     criteria_line_ids = fields.One2many('hr.evaluation.criteria.line','rel_evaluation_id')
+
+    ####################################################
+    # Business methods
+    ####################################################
+
+    @api.multi
+    def action_confirm(self):
+        self.state = 'supervisor'
+
+    @api.multi
+    def action_supervisor_approve(self):
+        self.state = 'hod_approve'
+
+    @api.multi
+    def action_hod_approve(self):
+        self.state = 'gm_approve'
+
+    @api.multi
+    def action_gm_approve(self):
+        self.state = 'hr_approve'
+
+    @api.multi
+    def action_hr_approve(self):
+        self.state = 'cxo_approve'
+
+    @api.multi
+    def action_cxo_approve(self):
+        self.state = 'approved'
+
+    @api.multi
+    def action_decline(self):
+        self.state = 'declined'
+
+    @api.multi
+    def action_reset(self):
+        self.state = 'draft'
+
+    ####################################################
+    # Override methods
+    ####################################################
+
+    @api.multi
+    def unlink(self):
+        for m in self:
+            if m.state != 'draft':
+                raise UserError(_('You can not delete in this state.'))
+        return super(HRPerformanceEvaluation, self).unlink()
 
 
 class HREvaluationCriteriaLine(models.Model):
@@ -54,6 +104,5 @@ class HREvaluationCriteriaLine(models.Model):
     rel_evaluation_id = fields.Many2one('hr.performance.evaluation')
     seq = fields.Integer(string = 'Sequence')
     name = fields.Char(string = 'Criteria Name')
-    marks = fields.Float(string = 'Total Marks',default=10)
+    marks = fields.Float(string = 'Total Marks')
     obtain_marks = fields.Float(string = 'Obtain Marks')
-    # is_active = fields.Boolean(string = 'Active')

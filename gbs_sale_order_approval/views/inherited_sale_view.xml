@@ -25,9 +25,9 @@
                                 string="Validate" />
 
                         <button name="action_create_delivery_order"
-                                states="sale"
+                                states="done"
                                 type="object"
-
+                                groups="gbs_application_group.group_cxo"
                                 class="btn-primary"
                                 string="Create Delivery Order"/>
 
