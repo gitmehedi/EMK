@@ -40,10 +40,11 @@ class HrPayslip(models.Model):
 
     @api.depends('date_from', 'date_to')
     def _compute_days(self):
-        if self.date_from and self.date_to:
-            start = datetime.datetime.strptime(self.date_from, "%Y-%m-%d").date()
-            end = datetime.datetime.strptime(self.date_to, "%Y-%m-%d").date()
-            self.days_in_period = (((end - start).days))
+        for payslip in self:
+            if payslip.date_from and payslip.date_to:
+                start = datetime.datetime.strptime(payslip.date_from, "%Y-%m-%d").date()
+                end = datetime.datetime.strptime(payslip.date_to, "%Y-%m-%d").date()
+                payslip.days_in_period = (((end - start).days))
 
     @api.multi
     def action_compute_payslip(self):
@@ -51,12 +52,3 @@ class HrPayslip(models.Model):
         active_ids = context.get('active_ids', []) or []
         for payslip in self.browse(active_ids):
             payslip.compute_sheet()
-
-    @api.onchange('date_from', 'date_to')
-    def onchange_days_in_period(self):
-        val = []
-        if self.days_in_period:
-            for i in self:
-                val.append((0, 0, {'number_of_days': i.days_in_period,
-                                   }))
-            self.worked_days_line_ids = val
