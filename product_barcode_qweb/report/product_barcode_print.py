@@ -35,10 +35,12 @@ from openerp.tools import config
 
 class product_barcode_print(report_sxw.rml_parse):
     def prepare_attr(self, ids):
-        attrs = self.pool.get('product.attribute.value').read(self.cr, self.uid, ids, ['name'])
+        attrs = self.pool.get('product.attribute.value').read(self.cr, self.uid, ids, ['name', 'attribute_id'])
+
         name = ""
         for attr in attrs:
-            name = name + ", " + attr['name'] if len(name) > 0 else  name + attr['name']
+            if attr['attribute_id'][1] == 'Size':
+                name = name + ", " + attr['name'] if len(name) > 0 else  name + attr['name']
 
         return "({0})".format(name) if len(name) > 0 else name
 
@@ -47,11 +49,9 @@ class product_barcode_print(report_sxw.rml_parse):
         product_obj = self.pool.get('product.product')
         data = []
         result = {}
-        product_ids = [int(key) for key,val in form['product_ids'].iteritems()]
+        product_ids = [int(key) for key, val in form['product_ids'].iteritems()]
         if not product_ids:
             return {}
-
-
 
         products_data = product_obj.read(self.cr, self.uid, product_ids,
                                          ['name', 'default_code', 'attribute_value_ids', 'list_price'])
@@ -59,9 +59,9 @@ class product_barcode_print(report_sxw.rml_parse):
             for product_row in range(int(math.ceil(float(form['product_ids'].get(str(product['id']))) / 5))):
                 label_row = []
                 for row in [1, 2, 3, 4, 5]:
-                    # attr = self.prepare_attr(product['attribute_value_ids'])
+                    attr = self.prepare_attr(product['attribute_value_ids'])
                     label_data = {
-                        'name': product['name'][:32] ,
+                        'name': product['name'][:26] + attr,
                         'company_name': self.company_name,
                         'default_code': product['default_code'],
                         'price': product['list_price'],
@@ -111,13 +111,10 @@ class product_barcode_print(report_sxw.rml_parse):
         })
 
 
-
-
 class report_product_barcode_print(osv.AbstractModel):
     _name = 'report.product_barcode_qweb.report_product_barcode'
     _inherit = 'report.abstract_report'
     _template = 'product_barcode_qweb.report_product_barcode'
     _wrapped_report_class = product_barcode_print
-
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

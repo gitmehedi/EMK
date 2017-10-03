@@ -34,25 +34,32 @@ from openerp.tools import config
 
 
 class product_barcode_single_print(report_sxw.rml_parse):
+    def prepare_attr(self, ids):
+        attrs = self.pool.get('product.attribute.value').read(self.cr, self.uid, ids, ['name', 'attribute_id'])
+
+        name = ""
+        for attr in attrs:
+            if attr['attribute_id'][1] == 'Size':
+                name = name + ", " + attr['name'] if len(name) > 0 else  name + attr['name']
+
+        return "({0})".format(name) if len(name) > 0 else name
 
     def _getLabelRows(self, form):
 
         product_obj = self.pool.get('product.product')
         data = []
         result = {}
-        product_ids = [int(key) for key,val in form['product_ids'].iteritems()]
+        product_ids = [int(key) for key, val in form['product_ids'].iteritems()]
         if not product_ids:
             return {}
-
-
 
         products_data = product_obj.read(self.cr, self.uid, product_ids,
                                          ['name', 'default_code', 'attribute_value_ids', 'list_price'])
         for product in products_data:
             label_row = []
-
+            attr = self.prepare_attr(product['attribute_value_ids'])
             label_data = {
-                'name': product['name'][:32] ,
+                'name': product['name'][:26] + attr,
                 'company_name': self.company_name,
                 'default_code': product['default_code'],
                 'price': product['list_price'],
@@ -100,8 +107,6 @@ class product_barcode_single_print(report_sxw.rml_parse):
             'getLabelRows': self._getLabelRows,
             'generateBarcode': self._generateBarcode,
         })
-
-
 
 
 class report_product_barcode_single_print(osv.AbstractModel):
