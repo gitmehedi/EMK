@@ -22,43 +22,39 @@
                     <header>
                         <button string="Confirm" name="action_confirm"
 								states="draft" type="object" class="oe_highlight"
-								groups="hr.group_hr_user"/>
+								groups="hr.group_hr_user,base.group_user"/>
 
                     	<button string="Approve" name="action_supervisor_approve"
 								states="supervisor" type="object" class="oe_highlight"
-								groups="base.group_user"
-								/>
+								groups="hr.group_hr_user,base.group_user"/>
 
 						<button string="Approve" name="action_hod_approve"
 								states="hod_approve" type="object" class="oe_highlight"
-								groups="gbs_base_package.group_dept_manager"
-								/>
+								groups="gbs_base_package.group_dept_manager"/>
 
                         <button string="Approve" name="action_gm_approve"
 								states="gm_approve" type="object" class="oe_highlight"
-								groups="gbs_application_group.group_general_manager,gbs_application_group.group_head_of_plant"
-								/>
+								groups="gbs_application_group.group_general_manager,gbs_application_group.group_head_of_plant"/>
 
                         <button string="Approve" name="action_hr_approve"
 								states="hr_approve" type="object" class="oe_highlight"
-								groups="hr_recruitment.group_hr_recruitment_manager"
-								/>
+								groups="hr.group_hr_manager"/>
 
 						<button string="Approve" name="action_cxo_approve"
 								states="cxo_approve" type="object" class="oe_highlight"
-								groups="gbs_application_group.group_cxo"
-								/>
+								groups="gbs_application_group.group_cxo"/>
 
                      	<button string="Decline" name="action_decline"
-								type="object"
-								groups="gbs_application_group.group_head_of_plant,hr_recruitment.group_hr_recruitment_manager,gbs_application_group.group_cxo"
-								/>
+								type="object" states="supervisor,hod_approve,gm_approve,hr_approve,cxo_approve"
+								groups="gbs_application_group.group_head_of_plant,gbs_application_group.group_general_manager,
+								hr.group_hr_manager,gbs_application_group.group_cxo"/>
 
 						<button string="Reset To Draft" name="action_reset"
-								type="object" states="confirmed,hr_approve,cxo_approve,declined"
-								groups="gbs_application_group.group_head_of_plant,hr_recruitment.group_hr_recruitment_manager,gbs_application_group.group_cxo"
-								/>
-						<field name="state" widget="statusbar" statusbar_visible="draft,supervisor,hod_approve,gm_approve,cxo_approve,approved"/>
+								type="object" states="supervisor,hod_approve,gm_approve,hr_approve,cxo_approve,declined"
+								groups="gbs_application_group.group_head_of_plant,gbs_application_group.group_general_manager,
+								hr.group_hr_manager,gbs_application_group.group_cxo"/>
+
+						<field name="state" widget="statusbar" statusbar_visible="draft,hod_approve,hr_approve,cxo_approve,approved"/>
 
 					</header>
                     <sheet>
@@ -67,12 +63,14 @@
                                 <separator string="Personal Information" colspan="2"/>
                                 <field name="employee_id" readonly="1"/>
                                 <field name="emp_department" readonly="1"/>
+                                <field name="academic_qualification" readonly="1"/>
                                 <field name="given_reward"/>
                             </group>
                             <group>
                                 <separator string="Job History" colspan="2"/>
-                                <field name="emp_designation" readonly="1"/>
                                 <field name="joining_date" readonly="1"/>
+                                <field name="emp_designation" readonly="1"/>
+                                <field name="joining_designation" readonly="1"/>
                                 <field name="disciplinary_action"/>
                             </group>
                         </group>
@@ -92,39 +90,41 @@
                             </group>
                         </group>
                         <div colspan="1">
+                            <field name="manager_id" invisible="1"/>
                             <separator string="Comment by Employee"/>
                             <field name="emp_comment" placeholder="I do hereby acknowledge that i have reviewed the above information about me which is correct. "/>
                         </div>
-
-                        <group colspan="4" >
-                        <separator string="Evaluation Criteria" colspan="4"/>
-                        <newline/>
-                            <field name="criteria_line_ids" nolabel="1">
-                                <tree string="Evaluation Criteria Line" editable="bottom">
-                                    <field name="seq" readonly="1"/>
-                                    <field name="name" readonly="1"/>
-                                    <field name="marks" readonly="1"/>
-                                    <field name="obtain_marks"/>
-                                </tree>
-                            </field>
-                        </group>
-
-                        <separator string="Judgement of evaluating person"/>
-                        <group colspan="4">
-                            <group>
-                                <field name="judgment_promotion"/>
-                                <field name="judgment_observation"/>
+                        <!--management view part-->
+                        <div groups="gbs_application_group.group_head_of_plant,gbs_application_group.group_general_manager,
+								hr.group_hr_manager,gbs_application_group.group_cxo">
+                            <group colspan="4">
+                                <separator string="Evaluation Criteria" colspan="4"/>
+                                <newline/>
+                                <field name="criteria_line_ids" nolabel="1">
+                                    <tree string="Evaluation Criteria Line" editable="bottom">
+                                        <field name="seq" readonly="1"/>
+                                        <field name="name" readonly="1"/>
+                                        <field name="marks" readonly="1"/>
+                                        <field name="obtain_marks"/>
+                                    </tree>
+                                </field>
                             </group>
-                            <group>
-                                <field name="judgment_increment"/>
-                                <field name="judgment_training_requirement"/>
+                            <separator string="Judgement of evaluating person"/>
+                            <group colspan="4">
+                                <group>
+                                    <field name="judgment_promotion"/>
+                                    <field name="judgment_observation"/>
+                                </group>
+                                <group>
+                                    <field name="judgment_increment"/>
+                                    <field name="judgment_training_requirement"/>
+                                </group>
                             </group>
-                        </group>
-                        <div colspan="1">
-                            <separator string="Comment by Evaluating Person"/>
-                            <field name="evaluating_persons_comment"/>
+                            <div colspan="1">
+                                <separator string="Comment by Evaluating Person"/>
+                                <field name="evaluating_persons_comment"/>
+                            </div>
                         </div>
-
                     </sheet>
                     <div class="oe_chatter">
                         <field name="message_follower_ids" widget="mail_followers"/>
