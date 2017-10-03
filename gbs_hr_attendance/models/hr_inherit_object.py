@@ -67,3 +67,8 @@ class HrEmployee(models.Model):
     is_monitor_attendance=fields.Boolean(string='Monitor Attendance',default=True)
     is_executive = fields.Boolean(string='Executive',default=False)
 
+    _sql_constraints = [
+        ('device_employee_acc_uniq', 'unique(device_employee_acc, operating_unit_id)',
+         'The Account Number must be unique per Unit!'),
+    ]
+
