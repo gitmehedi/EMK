@@ -51,14 +51,9 @@
 
                             </div>
                             <div style="clear: both;"></div>
-
                             <br/>
-                            <t t-if="sub_header['receipt_header']">
-                                <div style='text-align:center'>
-                                    <t t-esc="sub_header['receipt_header']"/>
-                                </div>
-                                <br/>
-                            </t>
+                            <br/>
+                            <br/>
                             <table>
                                 <colgroup>
                                     <col width='30%'/>
