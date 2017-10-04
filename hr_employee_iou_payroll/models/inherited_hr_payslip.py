@@ -17,7 +17,7 @@ class InheritedEmployeeIouPayslip(models.Model):
 
         iou_line_pool = self.env['hr.employee.iou.line']
         iou_data = iou_line_pool.browse(iou_ids)
-        iou_data.write({'state': 'adjested'})
+        iou_data.write({'state': 'adjusted'})
 
         return res
 

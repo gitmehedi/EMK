@@ -5,11 +5,12 @@ class InheritHRPayslipInput(models.Model):
 
     ref = fields.Char('Reference')
 
+class InheritHRPayslip(models.Model):
     _inherit = "hr.payslip"
 
     @api.multi
     def action_payslip_done(self):
-        res = super(InheritHRPayslipInput, self).action_payslip_done()
+        res = super(InheritHRPayslip, self).action_payslip_done()
 
         meal_ids = []
         for input in self.input_line_ids:
@@ -18,7 +19,7 @@ class InheritHRPayslipInput(models.Model):
 
         meal_line_pool = self.env['hr.meal.bill.line']
         meal_data  = meal_line_pool.browse(meal_ids)
-        meal_data.write({'state':'adjested'})
+        meal_data.write({'state':'adjusted'})
 
         return res
 
@@ -27,7 +28,7 @@ class InheritHRPayslipInput(models.Model):
 
         if self.employee_id:
             self.input_line_ids = 0
-            super(InheritHRPayslipInput, self).onchange_employee()
+            super(InheritHRPayslip, self).onchange_employee()
 
             """
             Incorporate other payroll data

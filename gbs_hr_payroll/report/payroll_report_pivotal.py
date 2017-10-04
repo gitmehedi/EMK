@@ -43,7 +43,11 @@ class PayrollReportPivotal(models.AbstractModel):
                     payslip['designation'] = slip.employee_id.job_id.name
                     payslip['doj'] = slip.employee_id.initial_employment_date                    
                     payslip['emp_seq'] = slip.employee_id.employee_sequence
-                    
+                    loan_remain = self.env['hr.employee.loan'].search([('employee_id', '=', slip.employee_id.id),
+                                                              ('remaining_loan_amount', '>', 0),
+                                                              ('state', '=', 'disbursed')], limit=1)
+                    payslip['loan_balance'] = format(loan_remain.remaining_loan_amount, '.2f') if loan_remain.remaining_loan_amount else None
+
                     for rule in rule_list:
                         payslip[rule['code']] = 0
                         for line in slip.line_ids:
@@ -78,7 +82,9 @@ class PayrollReportPivotal(models.AbstractModel):
                 payslip['emp_name'] = other_slip.employee_id.name    
                 payslip['designation'] = other_slip.employee_id.job_id.name
                 payslip['doj'] = other_slip.employee_id.initial_employment_date
-                                
+
+
+
 
                 for rule in rule_list:
                     payslip[rule['code']] = 0
