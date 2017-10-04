@@ -64,8 +64,8 @@ class SalePriceChange(models.Model):
             if price_change_pool:
                 self.list_price = price_change_pool.new_price
             else:
-                product_pool = self.env['product.product'].search([('id', '=', self.product_id.id)])
-                self.list_price = product_pool.list_price
+                #product_pool = self.env['product.product'].search([('id', '=', self.product_id.id)])
+                self.list_price = 0.00
 
     @api.depends('product_id')
     def compute_list_price(self):
