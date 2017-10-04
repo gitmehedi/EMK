@@ -97,14 +97,14 @@ class SaleOrder(models.Model):
             'context': {'default_sale_order_id': self.id}
         }
 
+    @api.multi
     @api.onchange('pack_type')
     def pack_type_onchange(self):
         self.update_onchanged_product_price()
 
     @api.onchange('currency_ids')
     def currency_ids_onchange(self):
-        self.update_onchanged_product_price()
-
+        self.update_onchanged_currency_id()
 
     def update_onchanged_product_price(self):
 
@@ -114,6 +114,51 @@ class SaleOrder(models.Model):
                                                                       ('currency_id', '=', self.currency_ids.id),
                                                                       ('product_package_mode', '=', self.pack_type.id)],
                                                                      order='approver2_date desc', limit=1)
+
+            line_pol = self.env['sale.order.line.temp'].search([('pack_type','=',self.pack_type.id),
+                                                                ('product_id','=',self.order_line.product_id.id)],
+                                                               order='create_date desc', limit=1)
+
+
+            price_pool_len = len(price_change_pool)
+
+            vals = {}
+
+            if price_pool_len == 1:
+                vals['price_unit'] = price_change_pool.new_price
+                vals['product_uom'] = price_change_pool.uom_id.id
+                vals['product_id'] = price_change_pool.product_id.id
+
+                if price_change_pool.uom_id.name != self.order_line.product_uom.name:
+                   pass
+                else:
+                    vals['price_unit'] = line_pol.price_unit
+                    vals['product_uom'] = line_pol.product_uom
+                    vals['product_id'] =  price_change_pool.product_id.id
+
+            elif price_pool_len > 1:
+                for price_pol in price_change_pool:
+                    vals['price_unit'] = price_pol.new_price
+            elif price_pool_len == 0:
+                product_pool = self.env['product.product'].search([('id', '=', self.product_id.id)])
+                vals['price_unit'] = product_pool.list_price
+
+            self.order_line.pricelist_id = None
+            self.order_line.partner_id = None
+
+            self.order_line.update(vals)
+
+
+
+    def update_onchanged_currency_id(self):
+
+        if self.product_id:
+
+            price_change_pool = self.env['product.sales.pricelist'].search([('product_id', '=', self.product_id.id),
+                                                                      ('currency_id', '=', self.currency_ids.id),
+                                                                      ('product_package_mode', '=', self.pack_type.id)],
+                                                                     order='approver2_date desc', limit=1)
+
 
             price_pool_len = len(price_change_pool)
 
@@ -157,6 +202,18 @@ class InheritedSaleOrderLine(models.Model):
             elif self.product_uom.uom_type == 'reference':
                 self.price_unit = self.price_unit / 1000
 
+            self.amount_untaxed = self.price_unit
+            self.amount_tax = (self.tax_id.amount * self.price_unit) / 100
+            self.price_subtotal = self.price_unit * self.product_uom_qty
+
+            line_temp = {}
+            line_temp['price_unit'] = self.price_unit
+            line_temp['product_uom'] = self.product_uom.id
+            line_temp['product_id'] = self.product_id.id
+            line_temp['pack_type'] = self.order_id.pack_type.id
+
+            self.env['sale.order.line.temp'].create(line_temp)
+
 
     @api.multi
     @api.onchange('product_id')
@@ -184,10 +241,15 @@ class InheritedSaleOrderLine(models.Model):
                 vals['price_unit']  = product_pool.list_price
 
             self.order_id.pricelist_id = None
-
-            # self.order_id.partner_id = None
-            # self.product_id.uom_id = None
+            self.order_id.partner_id = None
 
             self.update(vals)
             res = super(InheritedSaleOrderLine, self).product_id_change()
 
+class SaleOrderLineTemp(models.Model):
+    _name = 'sale.order.line.temp'
+
+    product_id = fields.Integer()
+    price_unit = fields.Float()
+    product_uom = fields.Integer()
+    pack_type = fields.Integer()
