@@ -13,7 +13,7 @@ from weekend_day import TempWeekendDay
 class AttendanceProcessor(models.Model):
     _name = 'hr.attendance.summary.temp'
 
-    in_time_grace_minutes = 30 #Minutes
+    salary_deduction_late_day = 3
 
     period_query = """SELECT ap.date_start, ap.date_stop
                        FROM hr_attendance_summary ac
@@ -133,7 +133,7 @@ class AttendanceProcessor(models.Model):
 
             # Check is late or not by checking day first in time.
             # We collect first row because attendance are shorted by check_in time ASC
-            isLate = att_utility_pool.isLateByInTime(attendanceDayList[0].check_in, currentDaydutyTime, graceTime)
+            isLate = att_utility_pool.isLateByInTime(self.getDateTimeFromStr(attendanceDayList[0].check_in), currentDaydutyTime, graceTime)
 
             if isLate == True:
                 attSummaryLine = self.buildLateDetails(attSummaryLine, currentDaydutyTime, currDate,totalPresentTime, attendanceDayList)
@@ -276,6 +276,7 @@ class AttendanceProcessor(models.Model):
                 'present_days':     attSummaryLine.present_days,
                 'holidays_days':    attSummaryLine.holidays_days,
                 'leave_days':       attSummaryLine.leave_days,
+                'deduction_days':   int(len(attSummaryLine.late_days)/self.salary_deduction_late_day),
                 'late_hrs':         attSummaryLine.late_hrs,
                 'schedule_ot_hrs':  attSummaryLine.schedule_ot_hrs,
                 'cal_ot_hrs':       calOtHours,

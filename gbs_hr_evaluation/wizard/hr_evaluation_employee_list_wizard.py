@@ -22,13 +22,15 @@ class HREvaluationEmployeeListWizard(models.TransientModel):
                 'employee_id': employee.id,
                 'emp_department': employee.department_id.id,
                 'emp_designation': employee.job_id.id,
+                'joining_date': employee.initial_employment_date,
+                'manager_id': employee.parent_id.id,
                 'rel_plan_id': active_id,
                 # 'state':'supervisor',
             }
             pool_evaluation_emp += self.env['hr.performance.evaluation'].create(res)
 
         for i in pool_evaluation_emp.search([('rel_plan_id','=',active_id)]):
-            for criteria in self.env['hr.evaluation.criteria'].search(['is_active','=',True]):
+            for criteria in self.env['hr.evaluation.criteria'].search([('is_active','=',True)]):
                 criteria_res = {
                     'seq': criteria.seq,
                     'name': criteria.name,

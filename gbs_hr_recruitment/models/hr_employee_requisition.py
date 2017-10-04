@@ -79,7 +79,7 @@ class HREmployeeRequisition(models.Model):
     @api.depends('department_id')
     def _compute_no_of_employee(self):
         if self.department_id:
-            pool_emp=self.env['hr.employee'].search([('department_id','=',self.department_id.id)])
+            pool_emp=self.env['hr.employee'].search([('department_ids','=',self.department_id.id)])
             self.current_no_of_emp=len(pool_emp.ids)
 
     @api.multi

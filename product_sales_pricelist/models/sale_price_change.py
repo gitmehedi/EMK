@@ -62,10 +62,10 @@ class SalePriceChange(models.Model):
                                                                      order='approver2_date desc', limit=1)
 
             if price_change_pool:
-                self.list_price = price_change_pool.list_price
+                self.list_price = price_change_pool.new_price
             else:
-                product_pool = self.env['product.product'].search([('id', '=', self.product_id.id)])
-                self.list_price = product_pool.list_price
+                #product_pool = self.env['product.product'].search([('id', '=', self.product_id.id)])
+                self.list_price = 0.00
 
     @api.depends('product_id')
     def compute_list_price(self):
@@ -96,6 +96,7 @@ class SalePriceChange(models.Model):
 
         product_pool = self.env['product.product'].search([('id', '=', self.product_id.id)])
         product_pool.write({'list_price': self.new_price})
+        self.company_id.write({'currency_id':self.currency_id.id})
 
         return self.write({'approver2_id':self.env.user.employee_ids.id, 'state': 'validate', 'approver2_date': time.strftime('%Y-%m-%d %H:%M:%S')})
 
