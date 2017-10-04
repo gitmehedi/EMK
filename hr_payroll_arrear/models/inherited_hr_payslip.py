@@ -18,7 +18,7 @@ class InheritHRPayslipInput(models.Model):
 
         arrear_line_pool = self.env['hr.payroll.arrear.line']
         arrear_data  = arrear_line_pool.browse(arrear_ids)
-        arrear_data.write({'state':'adjested'})
+        arrear_data.write({'state':'adjusted'})
 
         return res
 

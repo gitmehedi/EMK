@@ -29,7 +29,7 @@ class HrPayslipRun(models.Model):
         res = super(HrPayslipRun, self).close_payslip_run()
 
         for payslip in self.slip_ids:
-            payslip.action_payslip_done_with_loan()
+            payslip.action_payslip_done()
 
         return res
 

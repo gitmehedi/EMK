@@ -24,7 +24,8 @@
 											<th>SN</th>
 											<th>Employee</th>
 											<th>Designation</th>
-											<th style="min-width:90px">DOJ</th>
+											<th style="min-width:90px">D.O.J</th>
+											<th style="min-width:90px">Loan Balance</th>
 											<t t-foreach="rules" t-as="r">
 												<th>
 													<span t-esc="r['name']"></span>
@@ -57,6 +58,9 @@
 														</td>
 														<td>
 															<span t-esc="o['doj']"></span>
+														</td>
+														<td>
+															<span t-esc="o['loan_balance']"></span>
 														</td>
 
 														<t t-foreach="rules" t-as="r">

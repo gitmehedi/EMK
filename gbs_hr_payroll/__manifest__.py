@@ -12,6 +12,7 @@
         'gbs_hr_department_sequence',
         'gbs_hr_calendar',
         'gbs_hr_employee_sequence',
+        'hr_employee_loan_payroll',
     ],
     'data': [
         'report/report_paperformat.xml',

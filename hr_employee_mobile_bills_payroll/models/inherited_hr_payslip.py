@@ -21,7 +21,7 @@ class InheritedHrMobilePayslip(models.Model):
 
         mobile_line_pool = self.env['hr.mobile.bill.line']
         mobile_data = mobile_line_pool.browse(mobile_ids)
-        mobile_data.write({'state': 'adjested'})
+        mobile_data.write({'state': 'adjusted'})
 
         return res
 
