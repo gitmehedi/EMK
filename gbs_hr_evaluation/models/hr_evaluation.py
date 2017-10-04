@@ -1,5 +1,5 @@
 from odoo import fields, models, api,_
-from odoo.exceptions import UserError
+from odoo.exceptions import UserError,ValidationError
 
 class HRPerformanceEvaluation(models.Model):
     _name='hr.performance.evaluation'
@@ -119,3 +119,9 @@ class HREvaluationCriteriaLine(models.Model):
     name = fields.Char(string = 'Criteria Name')
     marks = fields.Float(string = 'Total Marks')
     obtain_marks = fields.Float(string = 'Obtain Marks')
+
+    @api.constrains('obtain_marks')
+    def _check_obtain_marks(self):
+        for x in self:
+            if x.obtain_marks>x.marks:
+                raise ValidationError(_("Obtain marks can not be greater then total marks"))
