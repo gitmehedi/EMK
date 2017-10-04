@@ -62,7 +62,7 @@ class SalePriceChange(models.Model):
                                                                      order='approver2_date desc', limit=1)
 
             if price_change_pool:
-                self.list_price = price_change_pool.list_price
+                self.list_price = price_change_pool.new_price
             else:
                 product_pool = self.env['product.product'].search([('id', '=', self.product_id.id)])
                 self.list_price = product_pool.list_price
