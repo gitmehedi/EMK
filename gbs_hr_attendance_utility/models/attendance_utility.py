@@ -364,7 +364,7 @@ class AttendanceUtility(models.TransientModel):
 
     def isLateByInTime(self, check_in, currentDayDutyTime, graceTime):
 
-        check_in = self.getDateTimeFromStr(check_in)
+
 
         if check_in > currentDayDutyTime.startDutyTime:
             lateMinutes = (check_in - currentDayDutyTime.startDutyTime).total_seconds() / 60

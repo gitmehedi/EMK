@@ -133,7 +133,7 @@ class AttendanceProcessor(models.Model):
 
             # Check is late or not by checking day first in time.
             # We collect first row because attendance are shorted by check_in time ASC
-            isLate = att_utility_pool.isLateByInTime(attendanceDayList[0].check_in, currentDaydutyTime, graceTime)
+            isLate = att_utility_pool.isLateByInTime(self.getDateTimeFromStr(attendanceDayList[0].check_in), currentDaydutyTime, graceTime)
 
             if isLate == True:
                 attSummaryLine = self.buildLateDetails(attSummaryLine, currentDaydutyTime, currDate,totalPresentTime, attendanceDayList)
