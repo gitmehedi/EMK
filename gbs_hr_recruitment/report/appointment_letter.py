@@ -22,3 +22,17 @@ class GetAppointLetter(models.AbstractModel):
 
         }
         return self.env['report'].render('gbs_hr_recruitment.report_app_letter', docargs)
+
+
+        # class GetAppointLetter(models.AbstractModel):
+        #     _name='report.gbs_hr_recruitment.report_letter'
+        #
+        #     @api.model
+        #     def render_html(self,docids,data=None):
+        #
+        #
+        #         docargs = {
+        #
+        #
+        #         }
+        #         return self.env['report'].render('gbs_hr_recruitment.report_letter', docargs)

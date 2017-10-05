@@ -1,5 +1,5 @@
 from odoo import _,api, fields, models
-from datetime import date
+from datetime import datetime
 from openerp.exceptions import Warning as UserError
 
 class HREmployeeRequisition(models.Model):
@@ -29,7 +29,7 @@ class HREmployeeRequisition(models.Model):
     employee_id = fields.Many2one('hr.employee', string="Requisition By", default=_current_employee, readonly=True)
     department_id = fields.Many2one('hr.department', string='Department',required = True,domain=get_domain_id)
     job_id = fields.Many2one('hr.job', string='Job Title',required='True')
-    issue_date = fields.Datetime(string='Date of Request', default=date.today(), readonly=True)
+    issue_date = fields.Datetime(string='Date of Request', default = datetime.now(), readonly=True)
     current_no_of_emp = fields.Integer(string='Current Emp(s)', readonly=True,compute='_compute_no_of_employee',store=True)
     expected_date = fields.Date(string='Expected Date', required=True)
     replaced_or_new = fields.Selection([('replaced','Replace'), ('new','New')], string='Replace or New')
@@ -79,7 +79,7 @@ class HREmployeeRequisition(models.Model):
     @api.depends('department_id')
     def _compute_no_of_employee(self):
         if self.department_id:
-            pool_emp=self.env['hr.employee'].search([('department_ids','=',self.department_id.id)])
+            pool_emp=self.env['hr.employee'].search([('department_id','=',self.department_id.id)])
             self.current_no_of_emp=len(pool_emp.ids)
 
     @api.multi
@@ -99,12 +99,12 @@ class HREmployeeRequisition(models.Model):
 
     @api.multi
     def action_cxo_approve(self):
-        self.state = 'approved'
         if self.replaced_or_new=="new":
             dept_pool = self.env['hr.department'].search([('id','=',self.department_id.id)])
             no_of_approval_emp=dept_pool.approved_no_of_emp
             res_num=no_of_approval_emp+self.req_no_of_employee
             dept_pool.write({'approved_no_of_emp': res_num})
+        self.state = 'approved'
 
 
     @api.multi

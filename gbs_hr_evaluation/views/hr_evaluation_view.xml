@@ -95,7 +95,7 @@
                             <field name="emp_comment" placeholder="I do hereby acknowledge that i have reviewed the above information about me which is correct. "/>
                         </div>
                         <!--management view part-->
-                        <div groups="gbs_application_group.group_head_of_plant,gbs_application_group.group_general_manager,
+                        <div groups="gbs_base_package.group_dept_manager,gbs_application_group.group_head_of_plant,gbs_application_group.group_general_manager,
 								hr.group_hr_manager,gbs_application_group.group_cxo">
                             <group colspan="4">
                                 <separator string="Evaluation Criteria" colspan="4"/>

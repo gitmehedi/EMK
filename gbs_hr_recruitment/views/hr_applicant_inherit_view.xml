@@ -12,6 +12,10 @@
                 <xpath expr="//field[@name='department_id']" position="after">
                     <field name="manager_id"/>
                 </xpath>
+                <xpath expr="//field[@name='type_id']" position="after">
+                    <field name="gender"/>
+                    <field name="marital_status"/>
+                </xpath>
                 <xpath expr="//button[@name='create_employee_from_applicant']" position="replace">
                     <button string="Create Employee" name="create_employee_from_applicant" type="object"
                         class="oe_highlight" attrs="{'invisible': [('state', '!=', 'approved')]}"/>
