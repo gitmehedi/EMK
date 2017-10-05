@@ -27,7 +27,8 @@
 					<header>
 						<button string="Confirm" name="action_confirm" groups="gbs_application_group.group_head_account,gbs_application_group.group_head_sale,gbs_application_group.group_cxo" states="draft" type="object" class="oe_highlight"/>
                     	<button string="Approve" name="action_approve" groups="gbs_application_group.group_cxo" states="validate1" type="object" class="oe_highlight"/>
-                    	<button string="Validate" name="action_validate" groups="gbs_application_group.group_cxo,gbs_application_group.group_head_account" states="confirm" type="object" class="oe_highlight"/>
+                    	<button string="Validate" name="action_validate"
+								groups="gbs_application_group.group_cxo,gbs_application_group.group_head_account" states="confirm" type="object" class="oe_highlight"/>
                     	<button string="Refuse" name="action_refuse" groups="gbs_application_group.group_head_account,gbs_application_group.group_cxo" states="confirm,validate1" type="object"/>
                     	<field name="state" widget="statusbar" statusbar_visible="draft,confirm,validate1,validate"/>
                	 	</header>
