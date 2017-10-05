@@ -78,7 +78,7 @@
         					<group>
 								<field name="employee_id"/>
 								<field name="department_id" options='{"no_open": True,"no_create": 1, "no_create_edit":1}' attrs="{'readonly':[('state','!=','draft')]}"/>
-								<field name="job_id" options='{"no_open": True,"no_create": 1, "no_create_edit":1}' domain="[('department_id','=',department_id)]" attrs="{'readonly':[('state','!=','draft')]}"/>
+								<field name="job_id" options='{"no_open": True,"no_create": 1, "no_create_edit":1}' domain="[('department_ids','=',department_id)]" attrs="{'readonly':[('state','!=','draft')]}"/>
 								<field name="req_no_of_employee" attrs="{'readonly':[('state','!=','draft')]}" />
 								<field name="age"  attrs="{'readonly':[('state','!=','draft')]}"/>
 								<field name="check_edit_access" invisible="1"/>

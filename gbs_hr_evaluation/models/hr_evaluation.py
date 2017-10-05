@@ -61,12 +61,15 @@ class HRPerformanceEvaluation(models.Model):
         user_manager = self.env['res.users'].search([('id','=',self.manager_id.sudo().user_id.id)])
         if user_manager.has_group('gbs_base_package.group_dept_manager'):
             self.state = 'hod_approve'
+            self.evaluating_persons_comment = ""
         else:
             self.state = 'supervisor'
+            self.evaluating_persons_comment = ""
 
     @api.multi
     def action_supervisor_approve(self):
         self.state = 'hod_approve'
+        self.evaluating_persons_comment = ""
 
     @api.multi
     def action_hod_approve(self):
@@ -74,12 +77,15 @@ class HRPerformanceEvaluation(models.Model):
         user_manager = self.env['res.users'].search([('id', '=', current_user_emp_id.parent_id.sudo().user_id.id)])
         if user_manager.has_group('gbs_application_group.group_general_manager') or user_manager.has_group('gbs_application_group.group_head_of_plant'):
             self.state = 'gm_approve'
+            self.evaluating_persons_comment = ""
         else:
             self.state = 'hr_approve'
+            self.evaluating_persons_comment = ""
 
     @api.multi
     def action_gm_approve(self):
         self.state = 'hr_approve'
+        self.evaluating_persons_comment = ""
 
     @api.multi
     def action_hr_approve(self):
