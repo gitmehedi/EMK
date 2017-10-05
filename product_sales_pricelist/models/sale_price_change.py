@@ -96,6 +96,7 @@ class SalePriceChange(models.Model):
 
         product_pool = self.env['product.product'].search([('id', '=', self.product_id.id)])
         product_pool.write({'list_price': self.new_price})
+        self.company_id.write({'currency_id':self.currency_id.id})
 
         return self.write({'approver2_id':self.env.user.employee_ids.id, 'state': 'validate', 'approver2_date': time.strftime('%Y-%m-%d %H:%M:%S')})
 
