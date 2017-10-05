@@ -1,6 +1,5 @@
 from odoo import api, fields, models
 
-
 class SaleOrder(models.Model):
     _inherit = "sale.order"
 
@@ -13,6 +12,7 @@ class SaleOrder(models.Model):
     ], string='Sale Order Type', required=True)
 
     state = fields.Selection([
+        ('to_submit', 'To Submit'),
         ('draft', 'Quotation'),
         ('submit_quotation','Confirmed'),
         ('validate', 'Second Approval'),
@@ -20,13 +20,18 @@ class SaleOrder(models.Model):
         ('sale', 'Sales Order'),
         ('done', 'Locked'),
         ('cancel', 'Cancelled'),
-    ], string='Status', readonly=True, copy=False, index=True, track_visibility='onchange', default='draft')
+    ], string='Status', readonly=True, copy=False, index=True, track_visibility='onchange', default='to_submit')
 
     pack_type = fields.Many2one('product.packaging.mode',string='Packing Mode', required=True)
 
     @api.multi
     def action_validate(self):
         self.state = 'sent'
+
+    @api.multi
+    def action_to_submit(self):
+        self.state = 'draft'
+
 
     @api.multi
     def _is_double_validation_applicable(self):
@@ -44,19 +49,26 @@ class SaleOrder(models.Model):
         is_double_validation = False
 
         for lines in self.order_line:
-            product_pool = self.env['product.product'].search([('id', '=', lines.product_id.ids)])
+            product_pool = self.env['product.product'].search([('currency_id','=',self.currency_id.id), ('id', '=', lines.product_id.ids)])
             cust_commission_pool = self.env['customer.commission'].search([('customer_id', '=', self.partner_id.id),
                                                                            ('product_id', '=', lines.product_id.ids)])
             credit_limit_pool = self.env['res.partner'].search([('id', '=', self.partner_id.id)])
 
             if (self.credit_sales_or_lc == 'cash'):
                 for coms in cust_commission_pool:
-                    if (lines.commission_rate < coms.commission_rate
-                        or lines.price_unit < product_pool.list_price):
-                        is_double_validation = True
-                        break;
+                    if product_pool.currency_id.id == lines.currency_id.id:
+                        if (lines.commission_rate < coms.commission_rate or lines.price_unit < product_pool.list_price):
+                            is_double_validation = True
+                            break;
+                        else:
+                            is_double_validation = False
                     else:
-                        is_double_validation = False
+                        if (lines.commission_rate < coms.commission_rate):
+                            is_double_validation = True
+                            break;
+                        else:
+                            is_double_validation = False
+
 
             elif (self.credit_sales_or_lc == 'credit_sales'):
                 account_receivable = credit_limit_pool.credit
