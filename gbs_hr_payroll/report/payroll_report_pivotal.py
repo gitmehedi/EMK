@@ -1,4 +1,4 @@
-from openerp import api, exceptions, fields, models
+from odoo import api, exceptions, fields, models
 import operator, math
 import locale
 
@@ -109,7 +109,7 @@ class PayrollReportPivotal(models.AbstractModel):
             'doc_ids': self.ids,
             'doc_model': 'hr.payslip.run',
             'docs': dpt_payslips_list,
-            'docs_len': len(rule_list)+4,
+            'docs_len': len(rule_list)+8,
             'rules': rule_list,
             'total_sum': thousand_separated_total_sum,
             'amt_to_word': amt_to_word,
