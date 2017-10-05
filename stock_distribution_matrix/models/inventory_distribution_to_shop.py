@@ -6,6 +6,7 @@ from openerp.tools.translate import _
 class InventoryDistributionToShop(models.Model):
     _name = 'stock.distribution.to.shop'
     _rec_name = 'product_tmp_id'
+    _order = 'id desc'
 
     @api.model
     def _Filter_DefaultWareHouse(self):
@@ -89,29 +90,33 @@ class InventoryDistributionToShop(models.Model):
     @api.one
     def action_confirm(self):
         self.state = 'confirm'
+        for record in self.stock_distribution_lines_ids:
+            record.write({'state': 'confirm'})
 
     @api.one
     def action_transfer(self):
-        self.state = 'transfer'
-        move_new_obj = self.env['stock.move']
+        # self.state = 'transfer'
+        return True
 
-        stock_picking_hrd = {}
-        stock_picking_hrd['origin'] = self.name
-        stock_picking_hrd['picking_type_id'] = 1
-        picking = self.env['stock.picking'].create(stock_picking_hrd)
-        picking.action_done()
-        for distribute_line in self.stock_distribution_lines_ids:
-            if distribute_line.distribute_qty > 0:
-                record = {}
-                record['picking_id'] = picking.id
-                record['product_id'] = distribute_line.product_id.id
-                record['product_uom'] = distribute_line.product_id.uom_id.id
-                record['name'] = distribute_line.product_id.name
-                record['product_uom_qty'] = distribute_line.distribute_qty
-                record['location_id'] = distribute_line.source_location_id.id
-                record['location_dest_id'] = distribute_line.target_location_id.id
-                record['procure_method'] = "make_to_stock"
-                record['state'] = 'draft'
-                move_insert = move_new_obj.create(record)
-                print "move id --- ", move_insert.id
-                move_insert.action_done()
+        # move_new_obj = self.env['stock.move']
+        #
+        # stock_picking_hrd = {}
+        # stock_picking_hrd['origin'] = self.name
+        # stock_picking_hrd['picking_type_id'] = 1
+        # picking = self.env['stock.picking'].create(stock_picking_hrd)
+        # picking.action_done()
+        # for distribute_line in self.stock_distribution_lines_ids:
+        #     if distribute_line.distribute_qty > 0:
+        #         record = {}
+        #         record['picking_id'] = picking.id
+        #         record['product_id'] = distribute_line.product_id.id
+        #         record['product_uom'] = distribute_line.product_id.uom_id.id
+        #         record['name'] = distribute_line.product_id.name
+        #         record['product_uom_qty'] = distribute_line.distribute_qty
+        #         record['location_id'] = distribute_line.source_location_id.id
+        #         record['location_dest_id'] = distribute_line.target_location_id.id
+        #         record['procure_method'] = "make_to_stock"
+        #         record['state'] = 'draft'
+        #         move_insert = move_new_obj.create(record)
+        #         print "move id --- ", move_insert.id
+        #         move_insert.action_done()

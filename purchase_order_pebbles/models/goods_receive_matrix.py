@@ -6,6 +6,7 @@ from openerp.exceptions import Warning
 
 class GoodsReceiveMatrix(models.Model):
     _name = 'goods.receive.matrix'
+    _order = 'id desc'
 
 
     """ Required and Optional Fields """

@@ -4,8 +4,21 @@ from openerp import api, fields, models
 class InheritedPurchaseOrderLine(models.Model):
 	_inherit = 'purchase.order.line'
 
-	product_id = fields.Many2one('product.template', 'Product', domain=[('type','!=','service')])
+	product_id = fields.Many2one('product.template', 'Product', domain=[('type','!=','service')],required=True)
 	receive_qty = fields.Float(string='Receive Quantity',default="0.0")
+	product_qty =  fields.Float('Quantity', required=True)
+	product_qty_text =  fields.Integer('Quantity', required=True, default=None)
+	price_unit= fields.Float('Unit Price', required=True)
+	product_uom = fields.Many2one('product.uom', 'UoM', required=True)
+
+
+
+
+	@api.onchange('product_qty_text')
+	def onchange_product_qty(self):
+		if self.product_qty_text:
+			self.product_qty = self.product_qty_text
+
 
 	def onchange_product_id(self, cr, uid, ids, pricelist_id, product_id, qty, uom_id,
 							partner_id, date_order=False, fiscal_position_id=False, date_planned=False,
