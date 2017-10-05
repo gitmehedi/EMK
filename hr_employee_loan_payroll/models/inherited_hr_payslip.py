@@ -8,7 +8,7 @@ class InheritedHrMobilePayslip(models.Model):
     """
     _inherit = "hr.payslip"
 
-    remaining_loan = fields.Float(string='Remaining Loan')
+    remaining_loan = fields.Float(string='Remaining Loan', default=0.00, required=True)
 
     @api.onchange('employee_id', 'date_from', 'date_to')
     def onchange_employee(self):
@@ -18,7 +18,7 @@ class InheritedHrMobilePayslip(models.Model):
             emp_loan=self.env['hr.employee.loan'].search([('employee_id.id','=',self.employee_id.id),
                                                             ('state','=','disbursed')],limit=1)
             if emp_loan:
-                self.remaining_loan = emp_loan.remaining_loan_amount
+                self.remaining_loan = emp_loan.remaining_loan_amount or 0.00
 
             self.input_line_ids = 0
             super(InheritedHrMobilePayslip, self).onchange_employee()
