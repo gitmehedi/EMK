@@ -54,10 +54,14 @@ class SaleOrder(models.Model):
                                                                            ('product_id', '=', lines.product_id.ids)])
             credit_limit_pool = self.env['res.partner'].search([('id', '=', self.partner_id.id)])
 
+            price_change_pool = self.env['product.sales.pricelist'].search([('product_id', '=', self.product_id.id),
+                                                                            ('currency_id', '=', self.currency_id.id)],
+                                                                           order='approver2_date desc', limit=1)
+
             if (self.credit_sales_or_lc == 'cash'):
                 for coms in cust_commission_pool:
-                    if product_pool.currency_id.id == lines.currency_id.id:
-                        if (lines.commission_rate < coms.commission_rate or lines.price_unit < product_pool.list_price):
+                    if price_change_pool.currency_id.id == lines.currency_id.id:
+                        if (lines.commission_rate < coms.commission_rate or lines.price_unit < price_change_pool.list_price):
                             is_double_validation = True
                             break;
                         else:
@@ -79,7 +83,7 @@ class SaleOrder(models.Model):
 
                 if (abs(customer_total_credit) > customer_credit_limit
                     or lines.commission_rate < cust_commission_pool.commission_rate
-                    or lines.price_unit < product_pool.list_price):
+                    or lines.price_unit < price_change_pool.list_price):
 
                         is_double_validation = True
                         break;
