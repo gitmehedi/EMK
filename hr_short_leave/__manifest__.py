@@ -8,7 +8,13 @@
     'website': 'https://www.genweb2.com',
 
     'depends': [
-        'hr_holidays', 'hr', 'calendar', 'resource', 'product', 'report','gbs_hr_package',
+        'hr_holidays',
+        'hr',
+        'calendar',
+        'resource',
+        'product',
+        'report',
+        'gbs_application_group',
     ],
 
     'data': [

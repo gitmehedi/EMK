@@ -11,7 +11,7 @@
             <field name="perm_create" eval="True"/>
             <field name="perm_write" eval="True"/>
             <field name="perm_unlink" eval="True"/>
-            <field name="groups" eval="[(4,ref('gbs_base_package.group_dept_manager')),(4,ref('gbs_application_group.group_head_of_plant'))]"/>
+            <field name="groups" eval="[(4,ref('gbs_application_group.group_dept_manager')),(4,ref('gbs_application_group.group_head_of_plant'))]"/>
         </record>
 
         <record id="hr_performance_evaluation_manager" model="ir.rule">

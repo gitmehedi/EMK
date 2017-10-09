@@ -52,20 +52,19 @@ class SaleDeliveryOrder(models.Model):
     confirmed_date = fields.Date(string="First Approval Date", _defaults=lambda *a: time.strftime('%Y-%m-%d'), readonly=True)
 
 
-    """ State fields for containing various states """
     so_type = fields.Selection([
         ('cash', 'Cash'),
         ('credit_sales', 'Credit'),
         ('lc_sales', 'L/C'),
     ], string='Sale Order Type')
 
-    """ State fields for containing various states """
     state = fields.Selection([
         ('draft', "To Submit"),
         ('validate', "To Approve"),
         ('approve', "Second Approval"),
         ('close', "Approved")
     ], default='draft')
+
     """ All functions """
 
     @api.multi
@@ -108,16 +107,11 @@ class SaleDeliveryOrder(models.Model):
             sale_order_obj = self.env['sale.order'].search([('id', '=',self.sale_order_id.id)])
 
             if sale_order_obj:
-                #self.parent_id = sale_order_obj.partner_id.id
-                #self.payment_term_id = sale_order_obj.payment_term_id.id
                 self.warehouse_id = sale_order_obj.warehouse_id.id
                 self.so_type = sale_order_obj.credit_sales_or_lc
                 self.so_date = sale_order_obj.confirmation_date
 
                 for record in sale_order_obj.order_line:
-                    #sale_order_line_obj = record.env['sale.order.line'].search([('order_id', '=', self.sale_order_id.id)])
-                    #product_id = sale_order_line_obj.product_id.id
-                    #val['product_id']=record.product_id
                     val.append((0, 0, {'product_id': record.product_id.id,
                                        'quantity': record.product_uom_qty,
                                        'pack_type': sale_order_obj.pack_type.id,

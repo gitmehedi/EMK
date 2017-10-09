@@ -36,7 +36,7 @@
         <field name="perm_create" eval="True"/>
         <field name="perm_write" eval="True"/>
         <field name="perm_unlink" eval="True"/>
-        <field name="groups" eval="[(4,ref('gbs_base_package.group_dept_manager'))]"/>
+        <field name="groups" eval="[(4,ref('gbs_application_group.group_dept_manager'))]"/>
     </record>
     </data>
 </openerp>
