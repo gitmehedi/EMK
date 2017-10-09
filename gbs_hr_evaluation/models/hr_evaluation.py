@@ -59,7 +59,7 @@ class HRPerformanceEvaluation(models.Model):
     @api.multi
     def action_confirm(self):
         user_manager = self.env['res.users'].search([('id','=',self.manager_id.sudo().user_id.id)])
-        if user_manager.has_group('gbs_base_package.group_dept_manager'):
+        if user_manager.has_group('gbs_application_group.group_dept_manager'):
             self.state = 'hod_approve'
             self.evaluating_persons_comment = ""
         else:

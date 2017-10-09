@@ -38,7 +38,7 @@
 					<header>
                         <button string="Confirm" name="action_confirm"
 								states="draft" type="object" class="oe_highlight"
-								groups="gbs_base_package.group_dept_manager,hr_recruitment.group_hr_recruitment_manager"/>
+								groups="gbs_application_group.group_dept_manager,hr_recruitment.group_hr_recruitment_manager"/>
 
                     	<button string="Approve" name="action_hop_approve"
 								states="confirmed" type="object" class="oe_highlight"
@@ -130,7 +130,7 @@
 				id="hr_recruitment.menu_hr_recruitment_root"
 				web_icon="hr_recruitment,static/description/icon.png"
 				sequence="80"
-				groups="gbs_base_package.group_dept_manager,gbs_application_group.group_head_of_plant,gbs_application_group.group_cxo,hr_recruitment.group_hr_recruitment_user,hr_recruitment.group_hr_recruitment_manager"/>
+				groups="gbs_application_group.group_dept_manager,gbs_application_group.group_head_of_plant,gbs_application_group.group_cxo,hr_recruitment.group_hr_recruitment_user,hr_recruitment.group_hr_recruitment_manager"/>
 
 		<menuitem
 				parent="hr_recruitment.menu_hr_recruitment_root"
@@ -157,12 +157,12 @@
 				  parent="hr_recruitment.menu_hr_recruitment_root"
 				  id="main_menu_hr_manpower_requisition"
 				  sequence="80"
-				  groups="gbs_base_package.group_dept_manager,gbs_application_group.group_head_of_plant,gbs_application_group.group_cxo,hr_recruitment.group_hr_recruitment_user,hr_recruitment.group_hr_recruitment_manager"/>
+				  groups="gbs_application_group.group_dept_manager,gbs_application_group.group_head_of_plant,gbs_application_group.group_cxo,hr_recruitment.group_hr_recruitment_user,hr_recruitment.group_hr_recruitment_manager"/>
 
 		<menuitem name="Manpower Requisition"
 				  parent="main_menu_hr_manpower_requisition"
 				  id="menu_hr_manpower_requisition"
-				  groups="gbs_base_package.group_dept_manager,gbs_application_group.group_head_of_plant,hr_recruitment.group_hr_recruitment_user,hr_recruitment.group_hr_recruitment_manager,gbs_application_group.group_cxo"
+				  groups="gbs_application_group.group_dept_manager,gbs_application_group.group_head_of_plant,hr_recruitment.group_hr_recruitment_user,hr_recruitment.group_hr_recruitment_manager,gbs_application_group.group_cxo"
 				  action="action_hr_manpower_requisition"/>
 
 	</data>

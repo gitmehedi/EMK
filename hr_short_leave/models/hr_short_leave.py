@@ -119,7 +119,7 @@ class HrShortLeave(models.Model):
     def _check_state_access_right(self, vals):
         if vals.get('state') and vals['state'] not in ['draft', 'confirm', 'cancel'] and not (
             self.env['res.users'].has_group('hr_holidays.group_hr_holidays_user')
-        or self.env['res.users'].has_group('gbs_base_package.group_dept_manager')):
+        or self.env['res.users'].has_group('gbs_application_group.group_dept_manager')):
             return False
         return True
 
@@ -188,7 +188,7 @@ class HrShortLeave(models.Model):
 
     @api.multi
     def action_validate(self):
-        if not (self.env.user.has_group('hr_holidays.group_hr_holidays_user') or self.env.user.has_group('gbs_base_package.group_dept_manager')):
+        if not (self.env.user.has_group('hr_holidays.group_hr_holidays_user') or self.env.user.has_group('gbs_application_group.group_dept_manager')):
             raise UserError(_('Only an HR Officer or Manager or Department Manager can approve leave requests.'))
 
         attendance_obj = self.env['hr.attendance']
@@ -216,7 +216,7 @@ class HrShortLeave(models.Model):
     @api.multi
     def action_refuse(self):
         if not (self.env.user.has_group('hr_holidays.group_hr_holidays_user')
-                or self.env.user.has_group('gbs_base_package.group_dept_manager')):
+                or self.env.user.has_group('gbs_application_group.group_dept_manager')):
             raise UserError(_('Only an HR Officer or Manager can refuse leave requests.'))
         for holiday in self:
             if holiday.state not in ['confirm', 'validate', 'validate1']:
