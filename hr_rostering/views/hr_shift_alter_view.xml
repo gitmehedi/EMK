@@ -45,7 +45,7 @@
 				 	<header>
 	                    <button string="Confirm" name="action_confirm" states="draft" type="object" class="oe_highlight"/>
                     	<button string="Approve" name="action_approve" type="object" class="oe_highlight"
-								groups="gbs_base_package.group_dept_manager,hr_attendance.group_hr_attendance_user" attrs="{'invisible':[('first_approval','=',False)]}"/>
+								groups="gbs_application_group.group_dept_manager,hr_attendance.group_hr_attendance_user" attrs="{'invisible':[('first_approval','=',False)]}"/>
                      	<button string="Refuse" name="action_refuse" states="confirmed" type="object" groups="hr_attendance.group_hr_attendance_user"/>
                     	<button string="Reset to Draft" name="action_draft" type="object" states="confirmed" groups="hr_attendance.group_hr_attendance_user"/>
                     	<field name="state" widget="statusbar" statusbar_visible="draft,confirmed,approved"/>
@@ -99,6 +99,7 @@
 		<menuitem id="menu_hr_my_alter" name="My Alter Rostering" parent="menu_hr_alter"
 					 sequence="5" action="hr_my_shift_alter" groups="base.group_user"/>
 		<menuitem id="menu_hr_sh_alter" name="Alter Rostering" parent="menu_hr_alter"
-					 sequence="10" action="hr_shift_alter_action" groups="gbs_base_package.group_dept_manager,hr_attendance.group_hr_attendance_user"/>
+					 sequence="10" action="hr_shift_alter_action"
+				  groups="gbs_application_group.group_dept_manager,hr_attendance.group_hr_attendance_user"/>
 	</data>
 </openerp>
