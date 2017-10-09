@@ -102,7 +102,7 @@ class PayrollReportPivotal(models.AbstractModel):
         dpt_payslips_list.append(dpt_payslips)
         amt_to_word = self.env['res.currency'].amount_to_word(float(all_total))
 
-        locale.setlocale(locale.LC_ALL, '')
+        locale.setlocale(locale.LC_ALL, 'bn_BD.UTF-8')
         thousand_separated_total_sum = locale.currency(all_total, grouping=True)
 
         docargs = {
