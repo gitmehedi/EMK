@@ -2,96 +2,85 @@
 <openerp>
 	<data>
 		<template id="report_individual_payslip">
-			<t t-call="report.external_layout">
-				<t t-call="report.html_container">
-					<t t-name="external_layout_header">
-						<div class="header">
-							<div class="row">
-								<div class="col-xs-4 col-xs-offset-8">
-									<h5>Individual Payslip Summary Report</h5>
-								</div>
-							</div>
-						</div>
-					</t>
+			<t t-call="report.html_container">
+				<t t-call="report.external_layout">
 					<t t-name="report.external_layout">
-						<div class="page">
-							<div class="row">
-								<table class="table table-bordered">
-									<thead>
-										<tr
-											style="background-color:#B4FDF0; 
-												border-bottom: 1px solid #030303;">
-											<th>SN</th>
-											<th>Employee</th>
-											<th>Designation</th>
-											<th style="min-width:90px">D.O.J</th>
-											<th style="min-width:90px">Loan Balance</th>
-											<t t-foreach="rules" t-as="r">
-												<th>
-													<span t-esc="r['name']"></span>
-												</th>
-											</t>
-											
-										</tr>
-									</thead>
-									<tbody>
+					<div class="page" style="page-break-inside:auto">
+						<div class="row">
+							<table class="table table-bordered">
+								<thead>
+									<tr style="background-color:#B4FDF0;
+											border-bottom: 1px solid #030303;">
+										<th>SN</th>
+										<th>Employee</th>
+										<th>Designation</th>
+										<th style="min-width:90px">D.O.J</th>
+										<th style="min-width:90px">Loan Balance</th>
+										<t t-foreach="rules" t-as="r">
+											<th>
+												<span t-esc="r['name']"></span>
+											</th>
+										</t>
 
-										<t t-foreach="docs" t-as="k">
-											<t t-if="k['val']">
-												<td
+									</tr>
+								</thead>
+								<tbody>
+
+									<t t-foreach="docs" t-as="k">
+										<t t-if="k['val']">
+											<td
 													style="background-color:#DDDBDB; text-align:center;
 												border-bottom: 1px solid #030303; color:#000000;"
 													t-att-colspan="docs_len">
-													<strong t-esc="k['name']"></strong>
-												</td>
+												<strong t-esc="k['name']"></strong>
+											</td>
 
-												<t t-foreach="k['val']" t-as="o">
-													<tr>
-														<td>
-															<span t-esc="o['sn']"></span>
-														</td>
-														<td>
-															<span t-esc="o['emp_name']"></span>
-														</td>
-														<td>
-															<span t-esc="o['designation']"></span>
-														</td>
-														<td>
-															<span t-esc="o['doj']"></span>
-														</td>
-														<td>
-															<span t-esc="o['loan_balance']"></span>
-														</td>
+											<t t-foreach="k['val']" t-as="o">
+												<tr>
+													<td>
+														<span t-esc="o['sn']"></span>
+													</td>
+													<td>
+														<span t-esc="o['emp_name']"></span>
+													</td>
+													<td>
+														<span t-esc="o['designation']"></span>
+													</td>
+													<td>
+														<span t-esc="o['doj']"></span>
+													</td>
+													<td>
+														<span t-esc="o['loan_balance']"></span>
+													</td>
 
-														<t t-foreach="rules" t-as="r">
-															<td class="text-right">
-																<span t-esc="'%.2f'% o[r['code']]"></span>
-															</td>
-														</t>
+													<t t-foreach="rules" t-as="r">
+														<td class="text-right">
+															<span t-esc="'%.2f'% o[r['code']]"></span>
+														</td>
+													</t>
 
-													</tr>
-												</t>
+												</tr>
 											</t>
 										</t>
-										
-										<td style="background-color:#DDDBDB; text-align:center;
+									</t>
+
+									<td style="background-color:#DDDBDB; text-align:center;
 												border-bottom: 1px solid #030303; color:#000000;"
-												t-att-colspan="docs_len">
-												
-												<h5 style="float:right;">
-													<b> Total: <span t-esc="total_sum"></span></b>
-												</h5>					
-												
-										</td>
+										t-att-colspan="docs_len">
 
-									</tbody>
+										<h5 style="float:right;">
+											<b> Total: <span t-esc="total_sum"></span></b>
+										</h5>
 
-								</table>										
-							</div>
+									</td>
 
-							<b>In Words: </b><span t-esc="amt_to_word"></span>
+								</tbody>
 
+							</table>
 						</div>
+						<b>In Words: </b><span t-esc="amt_to_word"></span>
+
+					</div>
 					</t>
 				</t>
 			</t>
