@@ -21,10 +21,6 @@
                     <button name="view_invoice" string="Receive Invoice" type="object" invisible="1"
                             class="oe_highlight"/>
                 </xpath>
-                <xpath expr="//button[@name='view_invoice']" position="after">
-                    <button name="action_purchase_done" string="Done" type="object" states="approved"
-                            class="oe_highlight"/>
-                </xpath>
                 <xpath expr="//button[@string='Send PO by Email']" position="replace">
                     <button name="wkf_send_rfq" states="approved" string="Send PO by Email" type="object"
                             invisible="1" context="{'send_rfq':False}"/>
@@ -44,8 +40,6 @@
                                    domain="[('type','not in',('view','template'))]"/>
                             <field name="product_qty"
                                    on_change="onchange_product_id(parent.pricelist_id,product_id,product_qty,product_uom,parent.partner_id,parent.date_order,parent.fiscal_position,date_planned,name,False,parent.state,context)"/>
-                            <field name="product_qty_text"/>
-
                             <field name="product_uom" groups="product.group_uom"
                                    on_change="onchange_product_uom(parent.pricelist_id,product_id,product_qty,product_uom,parent.partner_id, parent.date_order,parent.fiscal_position,date_planned,name,False,parent.state,context)"/>
                             <field name="price_unit"/>
@@ -58,5 +52,21 @@
                 </xpath>
             </field>
         </record>
+        <record id="action_purchase_done_action" model="ir.actions.server">
+            <field name="name">Done</field>
+            <field name="model_id" ref="model_purchase_order"/>
+            <field name="state">code</field>
+            <field name="condition">True</field>
+            <field name="code">if object: self.browse(cr,uid,context.get('active_ids', [])).action_purchase_done()
+            </field>
+        </record>
+        <record id="action_purchase_done" model="ir.values">
+            <field name="name">name</field>
+            <field name="model">purchase.order</field>
+            <field name="key">action</field>
+            <field name="key2">client_action_multi</field>
+            <field name="value" eval="'ir.actions.server,%d'%action_purchase_done_action"/>
+        </record>
+
     </data>
 </openerp>

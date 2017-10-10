@@ -10,8 +10,12 @@
                         </div>
                     </div>
                     <div class="row mb32" style="margin: 10mm 10mm 30mm 10mm;">
+                        <div class="col-xs-12">
+                            <h3><strong>Challan No:</strong> 
+                                <span t-esc="record['chalan_no']"/>
+                            </h3>
+                        </div>
                         <div class="col-xs-6">
-                            <h2>Chalan No: <span t-esc="record['chalan_no']"/></h2>
                             <p>
                                 <strong>Warehouse Name:</strong>
                                 <span t-esc="record['warehoue_id']"/>

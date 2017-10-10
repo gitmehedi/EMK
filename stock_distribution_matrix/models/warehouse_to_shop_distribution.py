@@ -1,6 +1,9 @@
-from openerp import api, fields, models
+from datetime import datetime
 from lxml import etree
+
+from openerp import api, fields, models
 from openerp.tools.translate import _
+from openerp.exceptions import ValidationError, Warning
 
 
 class WarehouseToShopDistribution(models.Model):
@@ -14,14 +17,14 @@ class WarehouseToShopDistribution(models.Model):
     def _Filter_DefaultWareHouse(self):
         return [('id', '=', self.env.ref('stock.warehouse0').id)]
 
-    def _Default_WareHouse_Id(self):
-        res = self.env['stock.warehouse'].search([('id', '=', self.env.ref('stock.warehouse0').id)])
-        return res and res[0] or False
+    @api.model
+    def _default_operating_unit(self):
+        return self.env.user.default_operating_unit_id
 
     name = fields.Char('Distribution', readonly=True)
-    distribute_date = fields.Date(string='Distribute Date', default=fields.Date.today, required=True,
+    distribute_date = fields.Date(string='Distribute Date', default=fields.Date.today, required=True, readonly=True,
                                   states={'draft': [('readonly', False)]})
-    receive_date = fields.Date(string='Received Date',
+    receive_date = fields.Date(string='Received Date', readonly=True,
                                states={'draft': [('readonly', False)], 'transfer': [('readonly', False)]})
     notification_date = fields.Date(string='Notification Date', default=fields.Date.today, required=True, readonly=True)
 
@@ -29,9 +32,10 @@ class WarehouseToShopDistribution(models.Model):
     stock_distribution_lines_ids = fields.One2many('warehouse.to.shop.distribution.line', 'warehouse_distribution_id',
                                                    states={'confirm': [('readonly', True)]},
                                                    string='Product Distribution')
-    warehoue_id = fields.Many2one('operating.unit', string='Warehouse', required=True,
+    warehoue_id = fields.Many2one('operating.unit', string='Warehouse', required=True, readonly=True,
+                                  default=_default_operating_unit,
                                   states={'draft': [('readonly', False)]})
-    shop_id = fields.Many2one('operating.unit', string='Shop Name', required=True,
+    shop_id = fields.Many2one('operating.unit', string='Shop Name', required=True, readonly=True,
                               states={'draft': [('readonly', False)]})
 
     state = fields.Selection([
@@ -39,7 +43,6 @@ class WarehouseToShopDistribution(models.Model):
         ('waiting', 'Waiting'),
         ('transfer', 'Transfer'),
         ('received', 'Received'),
-        ('done', 'Done'),
     ], string='Status', index=True, readonly=True, default='draft', copy=False,
         states={'draft': [('readonly', False)]})
 
@@ -49,7 +52,9 @@ class WarehouseToShopDistribution(models.Model):
         shop = self.env['pos.config'].search([('operating_unit_id', '=', self.shop_id.id), ('active_shop', '=', True)])
 
         distributions = line_obj.search(
-            [('target_location_id', '=', shop.stock_location_id.id), ('state', '=', 'draft')])
+            [('target_location_id', '=', shop.stock_location_id.id), ('state', '=', 'confirm')])
+        if not distributions:
+            raise Warning(_("No product available to distribution. Please create stock distribution."))
 
         for record in distributions:
             if record.distribute_qty > 0:
@@ -78,6 +83,14 @@ class WarehouseToShopDistribution(models.Model):
     @api.multi
     def write(self, vals):
         return super(WarehouseToShopDistribution, self).write(vals)
+
+    @api.multi
+    def unlink(self):
+        for record in self:
+            if record.state == 'draft':
+                super(WarehouseToShopDistribution,record).unlink()
+            else:
+                raise Warning(_("You cann't delete a distribution except draft state."))
 
     @api.one
     def action_transfer(self):
@@ -108,7 +121,7 @@ class WarehouseToShopDistribution(models.Model):
                 move_insert.action_done()
                 line_obj.search([('id', '=', record.stock_distribution_line_id.id)]).write({'state': 'transfer'})
 
-                record.write({'receive_qty': record.transfer_qty})
+                record.write({'receive_qty': record.transfer_qty, 'is_transfer': True})
 
         self.state = 'transfer'
 
@@ -138,9 +151,15 @@ class WarehouseToShopDistribution(models.Model):
                 rec['state'] = 'draft'
                 move_insert = move_new_obj.create(rec)
                 move_insert.action_done()
+                record.write({'is_receive': True})
 
+        self.receive_date = self.get_current_date()
         self.state = 'received'
 
     @api.one
     def action_done(self):
         self.state = 'done'
+
+    @api.model
+    def get_current_date(self):
+        return datetime.today()

@@ -8,6 +8,8 @@ class WarehouseToShopDistributionLine(models.Model):
 
     transfer_qty = fields.Float(string='Transfer Quantity', required=True)
     receive_qty = fields.Float(string='Receive Quantity')
+    is_transfer = fields.Boolean(default=False)
+    is_receive = fields.Boolean(default=False)
 
     """ Realtional Fields """
     warehouse_distribution_id = fields.Many2one('warehouse.to.shop.distribution', required=True, ondelete='cascade')

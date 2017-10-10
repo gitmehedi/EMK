@@ -22,10 +22,3 @@ class InventoryDistributionToShopLine(models.Model):
         ('transfer', 'Transfer'),
     ], string='Status', default='draft', states={'draft': [('readonly', False)]})
 
-    @api.onchange('state')
-    def onchange_state(self):
-        if self.state == 'transfer':
-            transfer_count = sum([1 for record in self.stock_distributions_id.stock_distribution_lines_ids if
-                                  record.state == 'transfer'])
-            if len(self.stock_distributions_id.stock_distribution_lines_ids) == transfer_count:
-                self.stock_distributions_id.write({'state': 'transfer'})

@@ -26,6 +26,16 @@
                                 groups="purchase_order_pebbles.warehouse_group_user_admin"/>
                         <field name="state" widget="statusbar" statusbar_colors="{'waiting': 'red'}"/>
                     </header>
+                    <br/>
+
+                    <field name="product_image" widget="image" class="oe_left oe_avatar"/>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="product_tmpl_id"
+                                   options='{"no_open": True,"no_create":1, "no_create_edit": 1}'/>
+                        </h1>
+
+                    </div>
                     <group>
                         <group>
                             <field name="readonly_check" attrs="{'invisible':1 }"/>
@@ -38,6 +48,8 @@
                             <field name="line_id" class="oe_inline" string="Product" options='{"no_open": True,"no_create":
 									1, "no_create_edit": 1}' widget="selection" domain="[('order_id','=', po_no),('state','=',
 									'confirmed')]" attrs="{'readonly':[('readonly_check','!=',False)]}"/>
+
+
                         </group>
                         <group>
                             <field name="warehouse_id" class="oe_inline"

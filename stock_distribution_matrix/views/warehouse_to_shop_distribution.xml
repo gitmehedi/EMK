@@ -23,20 +23,19 @@
             <field name="arch" type="xml">
                 <form string="Warehouse To Shop Distribution Form" duplicate="false" copy="false">
                     <header>
-                        <button string="Generate Product" name="generate_confirm_product" type="object" class="oe_highlight"
-                                states="draft" />
+                        <button string="Generate" name="generate_confirm_product" type="object"
+                                class="oe_highlight"
+                                states="draft"/>
                         <button string="Transfer" name="action_transfer" type="object" class="oe_highlight"
-                                states="waiting" />
+                                states="waiting"/>
                         <button string="Receive" name="action_receive" type="object" class="oe_highlight"
-                                states="transfer" />
-                        <button string="Done" name="action_done" type="object"
-                                states="received" />
-                        <field name="state" widget="statusbar" statusbar_visible="waiting,transfer,received,done"/>
+                                states="transfer"/>
+                        <field name="state" widget="statusbar" statusbar_visible="waiting,transfer,received"/>
                     </header>
                     <sheet>
                         <div class="oe_title">
                             <h1>
-                                <label string="Chalan No: "/>
+                                <label string="Challan No: "/>
                                 <field name="name" class="oe_inline" readonly="1"/>
                             </h1>
                         </div>
@@ -56,30 +55,27 @@
                         <group string="Product Distribution">
                             <field name="stock_distribution_lines_ids" nolabel="1">
                                 <tree editable="bottom">
+                                    <field name="is_transfer" invisible="1"/>
+                                    <field name="is_receive" invisible="1"/>
                                     <field name="product_id"
                                            options="{'no_open': 1,'no_create': 1, 'no_create_edit': 1}"/>
                                     <field name="product_uom_id"
                                            options="{'no_open': 1,'no_create': 1, 'no_create_edit': 1}"/>
-                                    <field name="transfer_qty"/>
-                                    <field name="receive_qty"/>
+                                    <field name="transfer_qty"
+                                           attrs="{'readonly':[('is_transfer','=',True)]}"/>
+                                    <field name="receive_qty"
+                                           attrs="{'readonly':[('is_transfer','=',True),('is_receive','=',True)],
+                                          'invisible':[('is_transfer','=',False)],
+                                          'required':[('is_transfer','=',True)]}"/>
                                 </tree>
                             </field>
                         </group>
-
-                        <!--<group string="Distribution Matrix" attrs="{'invisible':[('state','=','draft')]}">-->
-                        <!--<div>-->
-                        <!--<field name="stock_distribution_lines_ids" widget="x2many_2d_distribution_matrix"-->
-                        <!--field_x_axis="pos_shop_id" field_y_axis="product_id"-->
-                        <!--field_value="distribute_qty"-->
-                        <!--attrs="{'readonly':['|',('state','=','confirm'),('state','=','transfer')]}"/>-->
-                        <!--</div>-->
-                        <!--</group>-->
                     </sheet>
                 </form>
             </field>
         </record>
 
-        <record id="stock_distribution_search_view" model="ir.ui.view">
+        <record id="warehouse_to_shop_distribution_search_view" model="ir.ui.view">
             <field name="name">warehouse.to.shop.distribution.search</field>
             <field name="model">warehouse.to.shop.distribution</field>
             <field name="arch" type="xml">
@@ -92,20 +88,19 @@
                     <field name="state" filter_domain="[('state','ilike',self)]"/>
                     <separator/>
 
-                    <!--<filter string="Distribute Soon" name="distribute_soon"-->
-                    <!--domain="[('notification_date','&lt;=',context_today().strftime('%Y-%m-%d') )]"/>-->
+                    <filter string="Distribute Soon" name="distribute_soon"
+                            domain="[('notification_date','&lt;=',context_today().strftime('%Y-%m-%d') )]"/>
 
-                    <!--<filter string="Waiting" domain="[('state','=','draft')]"-->
-                    <!--icon="terp-camera_test"/>-->
-                    <!--<filter string="Generate" domain="[('state','=','generate')]"-->
-                    <!--icon="terp-camera_test"/>-->
-                    <!--<filter string="Confirm" domain="[('state','=','confirm')]"-->
-                    <!--icon="terp-camera_test"/>-->
-                    <!--<filter string="Closed" domain="[('state','=','transfer')]"-->
-                    <!--icon="terp-dialog-close"/>-->
+                    <filter string="Waiting" domain="[('state','=','draft')]"
+                            icon="terp-camera_test"/>
+                    <filter string="Generate" domain="[('state','=','generate')]"
+                            icon="terp-camera_test"/>
+                    <filter string="Confirm" domain="[('state','=','confirm')]"
+                            icon="terp-camera_test"/>
+                    <filter string="Closed" domain="[('state','=','transfer')]"
+                            icon="terp-dialog-close"/>
                     <group string="Group By">
-                        <filter name="state" string="State" context="{'group_by': 'state'}"
-                                icon="terp-stock_effects-object-colorize"/>
+                        <filter name="state" string="State" context="{'group_by': 'state'}"/>
                     </group>
 
                 </search>
@@ -119,7 +114,7 @@
         <record id="seq_warehouse_to_shop_distribution" model="ir.sequence">
             <field name="name">Stock Distribution</field>
             <field name="code">warehouse_to_shop_distribution</field>
-            <field name="prefix">WTSD-</field>
+            <field name="prefix">CHN-</field>
             <field name="padding">10</field>
         </record>
 
@@ -129,15 +124,12 @@
             <field name="res_model">warehouse.to.shop.distribution</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
-            <!--<field name="context">{'search_default_distribute_soon':1, 'search_default_state':1}</field>-->
+            <field name="context">{'search_default_state':1}</field>
             <field name="view_id" ref="warehouse_to_shop_distribution_tree_view"/>
         </record>
 
         <menuitem name="Warehouse To Shop Distribution" id="menu_warehouse_to_shop_distribution"
                   parent="stock.menu_stock_warehouse_mgmt" action="action_warehouse_to_shop_distribution"
                   sequence="253" groups='stock.group_stock_manager'/>
-        <!--<menuitem id="stock.menu_stock_warehouse_mgmt" name="Operations" parent="stock.menu_stock_root" sequence="1"-->
-        <!--groups='stock.group_stock_manager'/>-->
-
     </data>
 </openerp>

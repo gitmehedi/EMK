@@ -53,21 +53,23 @@
                         <button name="action_confirm" states="generate" string="Confirm"
                                 type="object" class="oe_highlight"/>
                         <!--<button name="action_transfer" type="object" states="confirm"-->
-                                <!--string="Transfer " class="oe_highlight"/>-->
+                        <!--string="Transfer " class="oe_highlight"/>-->
 
                         <field name="state" widget="statusbar"/>
                     </header>
+                    <br/>
+
+                    <field name="product_image" widget="image" class="oe_left oe_avatar"/>
                     <div class="oe_title">
                         <h1>
-                            <label string="Distribution Reference: "/>
-                            <field name="name" class="oe_inline" readonly="1"/>
+                            <field name="product_tmp_id"
+                                   options="{'no_open': 1,'no_create': 1, 'no_create_edit': 1}"
+                                   attrs="{'readonly': [('id', '!=', False)]}"/>
                         </h1>
                     </div>
                     <group>
                         <group>
-                            <field name="product_tmp_id"
-                                   options="{'no_open': 1,'no_create': 1, 'no_create_edit': 1}"
-                                   attrs="{'readonly': [('id', '!=', False)]}"/>
+                            <field name="name" class="oe_inline" readonly="1"/>
                         </group>
                         <group>
                             <field name="warehoue_id"
@@ -88,7 +90,7 @@
             </field>
         </record>
 
-        <record id="stock_distribution_search_view" model="ir.ui.view">
+        <record id="stock_distribution_to_shop_search_view" model="ir.ui.view">
             <field name="name">stock.distribution.to.shop.search</field>
             <field name="model">stock.distribution.to.shop</field>
             <field name="arch" type="xml">
@@ -113,8 +115,10 @@
                     <filter string="Closed" domain="[('state','=','transfer')]"
                             icon="terp-dialog-close"/>
                     <group string="Group By">
-                        <filter name="state" string="State" context="{'group_by': 'state'}"
-                                icon="terp-stock_effects-object-colorize"/>
+                        <filter name="product_tmp_id" string="Purchase Order" context="{'group_by': 'product_tmp_id'}"/>
+                    </group>
+                    <group string="Group By">
+                        <filter name="state" string="State" context="{'group_by': 'state'}"/>
                     </group>
 
                 </search>
