@@ -5,6 +5,7 @@ class HRPerformanceEvaluation(models.Model):
     _name='hr.performance.evaluation'
     _inherit = ['mail.thread']
     _description = 'Employee Evaluation'
+    _rec_name = 'employee_id'
     _order = "id desc"
 
     employee_id = fields.Many2one('hr.employee',string = 'Name',requiered=True)
@@ -33,9 +34,15 @@ class HRPerformanceEvaluation(models.Model):
     judgment_increment = fields.Boolean(string = 'Increment')
     judgment_training_requirement = fields.Boolean(string = 'Training Requirement')
 
-    evaluating_persons_comment = fields.Text(string='Comment',track_visibility='onchange')
+    supervisor_comment = fields.Text(string='Supervisor Comments',track_visibility='onchange')
+    hod_comment = fields.Text(string='Head of Department Comments',track_visibility='onchange')
+    plant_incharge_comment = fields.Text(string='Plant In-Charge Comments',track_visibility='onchange')
+    hr_manager_comment = fields.Text(string='HR Manager Comments',track_visibility='onchange')
+    cxo_comment = fields.Text(string='Chief Officer Comments',track_visibility='onchange')
 
     manager_id = fields.Many2one('hr.employee', string='Manager', readonly=True, copy=False)
+
+    check_access = fields.Boolean(string = 'Check', compute = 'compute_access')
 
     state = fields.Selection([
         ('draft', 'Draft'),
@@ -55,6 +62,15 @@ class HRPerformanceEvaluation(models.Model):
     ####################################################
     # Business methods
     ####################################################
+
+    @api.multi
+    def compute_access(self):
+        for h in self:
+            if h.employee_id.user_id.id == self.env.user.id:
+                h.check_access = False
+            else:
+                res = h.employee_id.check_1st_level_approval()
+                h.check_access = res
 
     @api.multi
     def action_confirm(self):
@@ -102,6 +118,123 @@ class HRPerformanceEvaluation(models.Model):
     @api.multi
     def action_reset(self):
         self.state = 'draft'
+
+    @api.multi
+    def action_hr_comment_wizard(self):
+        res = self.env.ref('gbs_hr_evaluation.evaluation_hr_comment_wizard')
+        result = {
+            'name': _('HR Comments'),
+            'view_type': 'form',
+            'view_mode': 'form',
+            'view_id': res and res.id or False,
+            'res_model': 'evaluation.hr.comment.wizard',
+            'type': 'ir.actions.act_window',
+            'nodestroy': True,
+            'target': 'new',
+            'context': {'given_reward': self.given_reward or False, 'disciplinary_action': self.disciplinary_action or False},
+
+        }
+        return result
+
+    @api.multi
+    def action_employee_comment_wizard(self):
+        res = self.env.ref('gbs_hr_evaluation.evaluation_employee_comment_wizard')
+        result = {
+            'name': _('Employee Comments'),
+            'view_type': 'form',
+            'view_mode': 'form',
+            'view_id': res and res.id or False,
+            'res_model': 'evaluation.employee.comment.wizard',
+            'type': 'ir.actions.act_window',
+            'nodestroy': True,
+            'target': 'new',
+            'context': {'emp_comment': self.emp_comment or False},
+        }
+        return result
+
+    @api.multi
+    def action_hr_manager_comment(self):
+        res = self.env.ref('gbs_hr_evaluation.evaluating_hr_manager_comment_wizard')
+        result = {
+            'name': _('HR Manager Comments'),
+            'view_type': 'form',
+            'view_mode': 'form',
+            'view_id': res and res.id or False,
+            'res_model': 'evaluating.persons.comment.wizard',
+            'type': 'ir.actions.act_window',
+            'nodestroy': True,
+            'target': 'new',
+            'context': {'hr_manager_comment': self.hr_manager_comment or False},
+        }
+        return result
+
+    @api.multi
+    def action_cxo_comment(self):
+        res = self.env.ref('gbs_hr_evaluation.evaluating_cxo_comment_wizard')
+        result = {
+            'name': _('Chief Officer Comments'),
+            'view_type': 'form',
+            'view_mode': 'form',
+            'view_id': res and res.id or False,
+            'res_model': 'evaluating.persons.comment.wizard',
+            'type': 'ir.actions.act_window',
+            'nodestroy': True,
+            'target': 'new',
+            'context': {'cxo_comment': self.cxo_comment or False},
+        }
+        return result
+
+    @api.multi
+    def action_supervisor_comment(self):
+        res = self.env.ref('gbs_hr_evaluation.evaluating_supervisor_comment_wizard')
+        result = {
+            'name': _('Supervisor Comments'),
+            'view_type': 'form',
+            'view_mode': 'form',
+            'view_id': res and res.id or False,
+            'res_model': 'evaluating.persons.comment.wizard',
+            'type': 'ir.actions.act_window',
+            'nodestroy': True,
+            'target': 'new',
+            'context': {'supervisor_comment': self.supervisor_comment or False},
+        }
+        return result
+
+    @api.multi
+    def action_supervisor_comment(self):
+        res = self.env.ref('gbs_hr_evaluation.evaluating_supervisor_comment_wizard')
+        result = {
+            'name': _('Supervisor Comments'),
+            'view_type': 'form',
+            'view_mode': 'form',
+            'view_id': res and res.id or False,
+            'res_model': 'evaluating.persons.comment.wizard',
+            'type': 'ir.actions.act_window',
+            'nodestroy': True,
+            'target': 'new',
+            'context': {'supervisor_comment': self.supervisor_comment or False},
+        }
+        return result
+
+    @api.multi
+    def action_judge(self):
+        res = self.env.ref('gbs_hr_evaluation.evaluating_judgement_wizard')
+        result = {
+            'name': _('Performance Evaluation'),
+            'view_type': 'form',
+            'view_mode': 'form',
+            'view_id': res and res.id or False,
+            'res_model': 'evaluating.judgement.wizard',
+            'type': 'ir.actions.act_window',
+            'nodestroy': True,
+            'target': 'new',
+            'context': {'judgment_promotion': self.judgment_promotion or False,
+                        'judgment_observation': self.judgment_observation or False,
+                        'judgment_increment': self.judgment_increment or False,
+                        'judgment_training_requirement': self.judgment_training_requirement or False,
+                        },
+        }
+        return result
 
     ####################################################
     # Override methods
