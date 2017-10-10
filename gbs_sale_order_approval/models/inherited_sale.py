@@ -3,7 +3,6 @@ from odoo import api, fields, models
 class SaleOrder(models.Model):
     _inherit = "sale.order"
 
-    currency_id = fields.Many2one("res.currency", string="Currency", required=True)
 
     credit_sales_or_lc = fields.Selection([
         ('cash', 'Cash'),
@@ -23,6 +22,12 @@ class SaleOrder(models.Model):
     ], string='Status', readonly=True, copy=False, index=True, track_visibility='onchange', default='to_submit')
 
     pack_type = fields.Many2one('product.packaging.mode',string='Packing Mode', required=True)
+    currency_id = fields.Many2one("res.currency", related='', string="Currency", required=True)
+
+    def _get_real_price_currency(self, product, rule_id, qty, uom, pricelist_id):
+        product_currency = None
+
+
 
     @api.multi
     def action_validate(self):
