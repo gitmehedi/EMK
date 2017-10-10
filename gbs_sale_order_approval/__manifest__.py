@@ -1,6 +1,6 @@
 {
     'name': 'Order to Cash Process',
-    'version': '1.0',
+    'version': '10.1.0.1',
     'category': 'sales',
     'author': 'Genweb2 Limited',
     'website': 'www.genweb2.com',
