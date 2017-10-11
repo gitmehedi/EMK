@@ -143,6 +143,42 @@
             </field>
         </record>
 
+        <record id="evaluating_hod_comment_wizard" model="ir.ui.view">
+            <field name="name">evaluating.hod.comment.wizard</field>
+            <field name="model">evaluating.persons.comment.wizard</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml" >
+                <form string="Comments" create="false" edit="false">
+                    <div colspan="1">
+                        <separator string="Comments by Head Of department"/>
+                        <field name="hod_comment"/>
+                    </div>
+                    <footer>
+                        <button string="Save" name="save_hod_comment" type="object" class="oe_highlight"  />
+                        <button special="cancel" string="Close" type="object"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="evaluating_plant_incharge_comment_wizard" model="ir.ui.view">
+            <field name="name">evaluating.plant.incharge.comment.wizard</field>
+            <field name="model">evaluating.persons.comment.wizard</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml" >
+                <form string="Comments" create="false" edit="false">
+                    <div colspan="1">
+                        <separator string="Comments by Plant Incharge"/>
+                        <field name="plant_incharge_comment"/>
+                    </div>
+                    <footer>
+                        <button string="Save" name="save_plant_incharge_comment" type="object" class="oe_highlight"  />
+                        <button special="cancel" string="Close" type="object"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
         <!--<record id="action_performance_evaluation_wizard" model="ir.actions.act_window">-->
         <!--<field name="name">Performance Evaluation</field>-->
         <!--<field name="res_model">hr.performance.evaluation</field>-->

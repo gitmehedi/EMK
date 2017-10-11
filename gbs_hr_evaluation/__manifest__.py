@@ -33,6 +33,7 @@ Manages several types of evaluations: bottom-up, top-down, self-evaluations and 
         'views/hr_evaluation_view.xml',
         'security/ir.model.access.csv',
         'security/ir_rule.xml',
+        # 'report/hr_evaluation_report.xml',
     ],
     'auto_install': False,
     'installable': True,

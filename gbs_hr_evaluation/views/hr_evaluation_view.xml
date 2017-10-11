@@ -5,7 +5,7 @@
 			<field name="name">hr_evaluation_tree</field>
 			<field name="model">hr.performance.evaluation</field>
 			<field name="arch" type="xml">
-				<tree string="HR Evaluation">
+				<tree string="HR Evaluation" create="false">
 					<field name="employee_id" />
 					<field name="emp_department" />
 					<field name="emp_designation" />
@@ -27,9 +27,12 @@
                         <button string="Employee Comments" name="action_employee_comment_wizard"
 								states="draft" type="object" class="oe_highlight"
 								groups="base.group_user"/>
-                        <button string="Judgement" name="action_judge" attrs="{'invisible':['|',('check_access','=',False),('state','not in',['supervisor','hod_approve'])]}"
+                        <button string="Judgement" name="action_judge_incharge" attrs="{'invisible':['|',('check_access','=',False),('state','not in',['supervisor'])]}"
 								type="object" class="oe_highlight"
 								groups="base.group_user"/>
+                        <button string="Judgement" name="action_judge_hod" attrs="{'invisible':['|',('check_access','=',False),('state','not in',['hod_approve'])]}"
+								type="object" class="oe_highlight"
+								groups="gbs_application_group.group_dept_manager"/>
                         <button string="HR Feedback" name="action_hr_manager_comment"
 								states="hr_approve" type="object" class="oe_highlight"
 								groups="hr.group_hr_manager"/>
@@ -39,6 +42,12 @@
                         <button string="Supervisor Feedback" name="action_supervisor_comment"
 								states="supervisor" type="object" class="oe_highlight"
 								groups="base.group_user"/>
+                        <button string="HOD Feedback" name="action_hod_comment"
+								states="hod_approve" type="object" class="oe_highlight"
+								groups="gbs_application_group.group_dept_manager"/>
+                        <button string="GM Feedback" name="action_plant_incharge_comment"
+								states="gm_approve" type="object" class="oe_highlight"
+								groups="gbs_application_group.group_general_manager,gbs_application_group.group_head_of_plant"/>
                         <!--stages button-->
                         <button string="Confirm" name="action_confirm"
 								states="draft" type="object" class="oe_highlight"

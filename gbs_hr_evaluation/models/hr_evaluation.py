@@ -77,15 +77,14 @@ class HRPerformanceEvaluation(models.Model):
         user_manager = self.env['res.users'].search([('id','=',self.manager_id.sudo().user_id.id)])
         if user_manager.has_group('gbs_application_group.group_dept_manager'):
             self.state = 'hod_approve'
-            self.evaluating_persons_comment = ""
         else:
             self.state = 'supervisor'
-            self.evaluating_persons_comment = ""
+
 
     @api.multi
     def action_supervisor_approve(self):
         self.state = 'hod_approve'
-        self.evaluating_persons_comment = ""
+
 
     @api.multi
     def action_hod_approve(self):
@@ -93,15 +92,15 @@ class HRPerformanceEvaluation(models.Model):
         user_manager = self.env['res.users'].search([('id', '=', current_user_emp_id.parent_id.sudo().user_id.id)])
         if user_manager.has_group('gbs_application_group.group_general_manager') or user_manager.has_group('gbs_application_group.group_head_of_plant'):
             self.state = 'gm_approve'
-            self.evaluating_persons_comment = ""
+
         else:
             self.state = 'hr_approve'
-            self.evaluating_persons_comment = ""
+
 
     @api.multi
     def action_gm_approve(self):
         self.state = 'hr_approve'
-        self.evaluating_persons_comment = ""
+
 
     @api.multi
     def action_hr_approve(self):
@@ -217,7 +216,59 @@ class HRPerformanceEvaluation(models.Model):
         return result
 
     @api.multi
-    def action_judge(self):
+    def action_hod_comment(self):
+        res = self.env.ref('gbs_hr_evaluation.evaluating_hod_comment_wizard')
+        result = {
+            'name': _('Head of department Comments'),
+            'view_type': 'form',
+            'view_mode': 'form',
+            'view_id': res and res.id or False,
+            'res_model': 'evaluating.persons.comment.wizard',
+            'type': 'ir.actions.act_window',
+            'nodestroy': True,
+            'target': 'new',
+            'context': {'hod_comment': self.hod_comment or False},
+        }
+        return result
+
+    @api.multi
+    def action_plant_incharge_comment(self):
+        res = self.env.ref('gbs_hr_evaluation.evaluating_plant_incharge_comment_wizard')
+        result = {
+            'name': _('Plant Incharge Comments'),
+            'view_type': 'form',
+            'view_mode': 'form',
+            'view_id': res and res.id or False,
+            'res_model': 'evaluating.persons.comment.wizard',
+            'type': 'ir.actions.act_window',
+            'nodestroy': True,
+            'target': 'new',
+            'context': {'plant_incharge_comment': self.plant_incharge_comment or False},
+        }
+        return result
+
+    @api.multi
+    def action_judge_incharge(self):
+        res = self.env.ref('gbs_hr_evaluation.evaluating_judgement_wizard')
+        result = {
+            'name': _('Performance Evaluation'),
+            'view_type': 'form',
+            'view_mode': 'form',
+            'view_id': res and res.id or False,
+            'res_model': 'evaluating.judgement.wizard',
+            'type': 'ir.actions.act_window',
+            'nodestroy': True,
+            'target': 'new',
+            'context': {'judgment_promotion': self.judgment_promotion or False,
+                        'judgment_observation': self.judgment_observation or False,
+                        'judgment_increment': self.judgment_increment or False,
+                        'judgment_training_requirement': self.judgment_training_requirement or False,
+                        },
+        }
+        return result
+
+    @api.multi
+    def action_judge_hod(self):
         res = self.env.ref('gbs_hr_evaluation.evaluating_judgement_wizard')
         result = {
             'name': _('Performance Evaluation'),

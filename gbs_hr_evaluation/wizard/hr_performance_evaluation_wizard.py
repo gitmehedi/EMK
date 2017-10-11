@@ -39,7 +39,8 @@ class EvaluatingPersonsComments(models.TransientModel):
                                      default=lambda self: self.env.context.get('supervisor_comment'))
     hod_comment = fields.Text(string='Head of Department Comments',
                               default=lambda self: self.env.context.get('hod_comment'))
-    plant_incharge_comment = fields.Text(string='Plant In-Charge Comments')
+    plant_incharge_comment = fields.Text(string='Plant In-Charge Comments',
+                                         default=lambda self: self.env.context.get('plant_incharge_comment'))
     hr_manager_comment = fields.Text(string='HR Manager Comments',
                                      default=lambda self: self.env.context.get('hr_manager_comment'))
     cxo_comment = fields.Text(string='Chief Officer Comments',
@@ -69,6 +70,22 @@ class EvaluatingPersonsComments(models.TransientModel):
             {'supervisor_comment': self.supervisor_comment})
         return {'type': 'ir.actions.act_window_close'}
 
+    @api.multi
+    def save_hod_comment(self):
+        form_id = self.env.context.get('active_id')
+        evaluation_form_pool = self.env['hr.performance.evaluation'].search([('id', '=', form_id)])
+        evaluation_form_pool.write(
+            {'hod_comment': self.hod_comment})
+        return {'type': 'ir.actions.act_window_close'}
+
+    @api.multi
+    def save_plant_incharge_comment(self):
+        form_id = self.env.context.get('active_id')
+        evaluation_form_pool = self.env['hr.performance.evaluation'].search([('id', '=', form_id)])
+        evaluation_form_pool.write(
+            {'plant_incharge_comment': self.plant_incharge_comment})
+        return {'type': 'ir.actions.act_window_close'}
+
 
 class EvaluationJudgement(models.TransientModel):
     _name = 'evaluating.judgement.wizard'
@@ -79,6 +96,7 @@ class EvaluationJudgement(models.TransientModel):
         evalution_ids = self.criteria_line_ids
         for record in evalution.criteria_line_ids:
             evalution_ids += evalution_ids.new({
+                'parent_id':record.id,
                 'seq': record.seq,
                 'name': record.name,
                 'marks': record.marks,
@@ -98,7 +116,7 @@ class EvaluationJudgement(models.TransientModel):
     def save_evaluating_judgement(self):
         for wizard_line in self.criteria_line_ids:
             evaluating_line_form_pool = self.env['hr.evaluation.criteria.line'].search(
-                [('seq', '=', wizard_line.seq)])
+                [('id', '=', wizard_line.parent_id)])
             evaluating_line_form_pool.write({
                 'obtain_marks': wizard_line.obtain_marks,
             })
@@ -119,6 +137,7 @@ class HREvaluationCriteriaLine(models.TransientModel):
     _order = "seq asc"
 
     rel_judgement_wizard_id = fields.Many2one('evaluating.judgement.wizard')
+    parent_id = fields.Integer(string='Parent Id')
     seq = fields.Integer(string='Sequence')
     name = fields.Char(string='Criteria Name')
     marks = fields.Float(string='Total Marks')
