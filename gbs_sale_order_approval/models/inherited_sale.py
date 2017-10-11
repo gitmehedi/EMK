@@ -1,4 +1,5 @@
 from odoo import api, fields, models
+from odoo.exceptions import UserError, ValidationError
 
 class SaleOrder(models.Model):
     _inherit = "sale.order"
@@ -35,6 +36,9 @@ class SaleOrder(models.Model):
 
     @api.multi
     def action_to_submit(self):
+        if self.validity_date and self.validity_date < self.date_order:
+            raise UserError('Expiration Date can not be less than Order Date')
+
         self.state = 'draft'
 
 
