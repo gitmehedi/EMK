@@ -42,6 +42,7 @@
                             <group>
                                 <field name="parent_id" options="{'no_quick_create':True,'no_create_edit':True,'no_open':True}"/>
                                 <field name="payment_term_id" options="{'no_quick_create':True,'no_create_edit':True,'no_open':True}"/>
+                                <field name="account_payment_id" attrs="{'invisible':[('so_type', '!=', 'cash')]}"/>
                                 <field name="warehouse_id" options="{'no_quick_create':True,'no_create_edit':True,'no_open':True}"/>
                                 <field name="so_type"/>
                                 <field name="so_date"/>

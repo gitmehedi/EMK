@@ -1,5 +1,6 @@
-from odoo import api, fields, models, exceptions, _
+from odoo import api, fields, models
 from odoo.exceptions import UserError, ValidationError
+
 import time,datetime
 
 class SaleDeliveryOrder(models.Model):
@@ -51,6 +52,7 @@ class SaleDeliveryOrder(models.Model):
                                         'approve': [('invisible', False), ('readonly', True)]})
     confirmed_date = fields.Date(string="First Approval Date", _defaults=lambda *a: time.strftime('%Y-%m-%d'), readonly=True)
 
+    account_payment_id = fields.Many2one('account.payment', string='Payment Information', required=True)
 
     so_type = fields.Selection([
         ('cash', 'Cash'),
@@ -82,10 +84,38 @@ class SaleDeliveryOrder(models.Model):
 
     @api.one
     def action_approve(self):
-        self.state = 'approve'
-        self.line_ids.write({'state':'approve'})
-        self.approver2_id = self.env.user
-        return self.write({'state': 'approve', 'approved_date': time.strftime('%Y-%m-%d %H:%M:%S')})
+        account_payment_pool = self.env['account.payment'].search(
+            [('is_this_payment_checked','=',False),('sale_order_id', '=', self.sale_order_id.id), ('partner_id', '=', self.parent_id.id)])
+
+        delivery_order_pool = self.env['delivery.order'].search(
+            [('state', '=', 'close'), ('account_payment_id', '=', self.account_payment_id.id),
+             ('sale_order_id', '=', self.sale_order_id.id)])
+
+        if not account_payment_pool:
+            raise UserError("Either Payment Information not found for this Sale Order Or Payment Information entered is already in use")
+
+        if account_payment_pool.is_this_payment_checked == False:
+
+            if self.so_type == 'cash' \
+                    and account_payment_pool.state == 'posted' \
+                    and account_payment_pool \
+                    and account_payment_pool.payment_type == 'inbound' \
+                    and self.sale_order_id.id == account_payment_pool.sale_order_id.id:
+
+
+                if delivery_order_pool.account_payment_id.id == self.account_payment_id.id:
+                    raise UserError('This Payment Information is already in use')
+                    return;
+                else:
+                    self.state = 'approve'
+                    self.line_ids.write({'state': 'approve'})
+                    self.approver2_id = self.env.user
+                    account_payment_pool.write({'is_this_payment_checked':True})
+
+                    return self.write({'state': 'approve', 'approved_date': time.strftime('%Y-%m-%d %H:%M:%S')})
+        else:
+            raise UserError('Payment Information is already checkied')
+
 
     @api.one
     def action_validate(self):

@@ -25,11 +25,6 @@ class SaleOrder(models.Model):
     pack_type = fields.Many2one('product.packaging.mode',string='Packing Mode', required=True)
     currency_id = fields.Many2one("res.currency", related='', string="Currency", required=True)
 
-    def _get_real_price_currency(self, product, rule_id, qty, uom, pricelist_id):
-        product_currency = None
-
-
-
     @api.multi
     def action_validate(self):
         self.state = 'sent'
@@ -110,18 +105,19 @@ class SaleOrder(models.Model):
 
     @api.multi
     def action_create_delivery_order(self):
-        view = self.env.ref('delivery_order.delivery_order_form')
 
-        return {
-            'name': ('Delivery Authorization'),
-            'view_type': 'form',
-            'view_mode': 'form',
-            'res_model': 'delivery.order',
-            'view_id': [view.id],
-            'type': 'ir.actions.act_window',
-            'context': {'default_sale_order_id': self.id}
-        }
 
+            view = self.env.ref('delivery_order.delivery_order_form')
+
+            return {
+                'name': ('Delivery Authorization'),
+                'view_type': 'form',
+                'view_mode': 'form',
+                'res_model': 'delivery.order',
+                'view_id': [view.id],
+                'type': 'ir.actions.act_window',
+                'context': {'default_sale_order_id': self.id}
+            }
 
     @api.multi
     @api.onchange('currency_id')
@@ -204,3 +200,8 @@ class InheritedSaleOrderLine(models.Model):
 
         return res
 
+class InheritedAccountPayment(models.Model):
+    _inherit='account.payment'
+
+    sale_order_id = fields.Many2one('sale.order',string='Sale Order')
+    is_this_payment_checked = fields.Boolean(string='Is This Payment checked with SO', default=False)
