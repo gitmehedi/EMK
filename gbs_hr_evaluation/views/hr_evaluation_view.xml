@@ -5,7 +5,7 @@
 			<field name="name">hr_evaluation_tree</field>
 			<field name="model">hr.performance.evaluation</field>
 			<field name="arch" type="xml">
-				<tree string="HR Evaluation">
+				<tree string="HR Evaluation" create="false">
 					<field name="employee_id" />
 					<field name="emp_department" />
 					<field name="emp_designation" />
@@ -13,43 +13,65 @@
 				</tree>
 			</field>
 		</record>
-        <record id="hr_internal_approval_form" model="ir.ui.view">
+        <record id="hr_performance_evaluation_form" model="ir.ui.view">
 			<field name="name">hr_evaluation_form</field>
 			<field name="model">hr.performance.evaluation</field>
 			<field name="type">form</field>
-			<field name="arch" type="xml">
-                <form string="HR Evaluation">
+			<field name="arch" type="xml" >
+                <form string="HR Evaluation" create="false" edit="false">
                     <header>
+                        <!--wizard button-->
+                        <button string="Remark" name="action_hr_comment_wizard"
+								states="draft" type="object" class="oe_highlight"
+								groups="hr.group_hr_user"/>
+                        <button string="Employee Comments" name="action_employee_comment_wizard"
+								states="draft" type="object" class="oe_highlight"
+								groups="base.group_user"/>
+                        <button string="Judgement" name="action_judge_incharge" attrs="{'invisible':['|',('check_access','=',False),('state','not in',['supervisor'])]}"
+								type="object" class="oe_highlight"
+								groups="base.group_user"/>
+                        <button string="Judgement" name="action_judge_hod" attrs="{'invisible':['|',('check_access','=',False),('state','not in',['hod_approve'])]}"
+								type="object" class="oe_highlight"
+								groups="gbs_application_group.group_dept_manager"/>
+                        <button string="HR Feedback" name="action_hr_manager_comment"
+								states="hr_approve" type="object" class="oe_highlight"
+								groups="hr.group_hr_manager"/>
+                        <button string="Chief Officer Feedback" name="action_cxo_comment"
+								states="cxo_approve" type="object" class="oe_highlight"
+								groups="gbs_application_group.group_cxo"/>
+                        <button string="Supervisor Feedback" name="action_supervisor_comment"
+								states="supervisor" type="object" class="oe_highlight"
+								groups="base.group_user"/>
+                        <button string="HOD Feedback" name="action_hod_comment"
+								states="hod_approve" type="object" class="oe_highlight"
+								groups="gbs_application_group.group_dept_manager"/>
+                        <button string="GM Feedback" name="action_plant_incharge_comment"
+								states="gm_approve" type="object" class="oe_highlight"
+								groups="gbs_application_group.group_general_manager,gbs_application_group.group_head_of_plant"/>
+                        <!--stages button-->
                         <button string="Confirm" name="action_confirm"
 								states="draft" type="object" class="oe_highlight"
 								groups="hr.group_hr_user,base.group_user"/>
-
-                    	<button string="Approve" name="action_supervisor_approve"
+                        <button string="Approve" name="action_supervisor_approve" attrs="{'invisible':['|',('check_access','=',False),('state','not in',['supervisor'])]}"
 								states="supervisor" type="object" class="oe_highlight"
 								groups="hr.group_hr_user,base.group_user"/>
-
-						<button string="Approve" name="action_hod_approve"
-								states="hod_approve" type="object" class="oe_highlight"
-								groups="gbs_base_package.group_dept_manager"/>
-
+                        <button string="Approve" name="action_hod_approve" attrs="{'invisible':['|',('check_access','=',False),('state','not in',['hod_approve'])]}"
+								type="object" class="oe_highlight"
+								groups="gbs_application_group.group_dept_manager"/>
                         <button string="Approve" name="action_gm_approve"
 								states="gm_approve" type="object" class="oe_highlight"
 								groups="gbs_application_group.group_general_manager,gbs_application_group.group_head_of_plant"/>
-
                         <button string="Approve" name="action_hr_approve"
 								states="hr_approve" type="object" class="oe_highlight"
 								groups="hr.group_hr_manager"/>
-
-						<button string="Approve" name="action_cxo_approve"
+                        <button string="Approve" name="action_cxo_approve"
 								states="cxo_approve" type="object" class="oe_highlight"
 								groups="gbs_application_group.group_cxo"/>
-
-                     	<button string="Decline" name="action_decline"
+                        <button string="Decline" name="action_decline"
 								type="object" states="supervisor,hod_approve,gm_approve,hr_approve,cxo_approve"
 								groups="gbs_application_group.group_head_of_plant,gbs_application_group.group_general_manager,
 								hr.group_hr_manager,gbs_application_group.group_cxo"/>
-
-						<button string="Reset To Draft" name="action_reset"
+                        <button string="Reset To Draft" name="action_reset"
 								type="object" states="supervisor,hod_approve,gm_approve,hr_approve,cxo_approve,declined"
 								groups="gbs_application_group.group_head_of_plant,gbs_application_group.group_general_manager,
 								hr.group_hr_manager,gbs_application_group.group_cxo"/>
@@ -91,12 +113,12 @@
                         </group>
                         <div colspan="1">
                             <field name="manager_id" invisible="1"/>
+                            <field name="check_access" invisible="1"/>
                             <separator string="Comment by Employee"/>
                             <field name="emp_comment" placeholder="I do hereby acknowledge that i have reviewed the above information about me which is correct. "/>
                         </div>
                         <!--management view part-->
-                        <div groups="gbs_application_group.group_head_of_plant,gbs_application_group.group_general_manager,
-								hr.group_hr_manager,gbs_application_group.group_cxo">
+                        <div>
                             <group colspan="4">
                                 <separator string="Evaluation Criteria" colspan="4"/>
                                 <newline/>
@@ -122,7 +144,11 @@
                             </group>
                             <div colspan="1">
                                 <separator string="Comment by Evaluating Person"/>
-                                <field name="evaluating_persons_comment"/>
+                                <field name="supervisor_comment" attrs="{'invisible':[('state','!=','supervisor')]}"/>
+                                <field name="hod_comment" attrs="{'invisible':[('state','!=','hod_approve')]}"/>
+                                <field name="plant_incharge_comment" attrs="{'invisible':[('state','!=','gm_approve')]}"/>
+                                <field name="hr_manager_comment" attrs="{'invisible':[('state','!=','hr_approve')]}"/>
+                                <field name="cxo_comment" attrs="{'invisible':[('state','!=','cxo_approve')]}"/>
                             </div>
                         </div>
                     </sheet>

@@ -1,10 +1,9 @@
 from odoo import api, fields, models
-
+from odoo.exceptions import UserError, ValidationError
 
 class SaleOrder(models.Model):
     _inherit = "sale.order"
 
-    currency_id = fields.Many2one("res.currency", string="Currency", required=True)
 
     credit_sales_or_lc = fields.Selection([
         ('cash', 'Cash'),
@@ -13,6 +12,7 @@ class SaleOrder(models.Model):
     ], string='Sale Order Type', required=True)
 
     state = fields.Selection([
+        ('to_submit', 'To Submit'),
         ('draft', 'Quotation'),
         ('submit_quotation','Confirmed'),
         ('validate', 'Second Approval'),
@@ -20,13 +20,27 @@ class SaleOrder(models.Model):
         ('sale', 'Sales Order'),
         ('done', 'Locked'),
         ('cancel', 'Cancelled'),
-    ], string='Status', readonly=True, copy=False, index=True, track_visibility='onchange', default='draft')
+    ], string='Status', readonly=True, copy=False, index=True, track_visibility='onchange', default='to_submit')
 
     pack_type = fields.Many2one('product.packaging.mode',string='Packing Mode', required=True)
+    currency_id = fields.Many2one("res.currency", related='', string="Currency", required=True)
+
+    def _get_real_price_currency(self, product, rule_id, qty, uom, pricelist_id):
+        product_currency = None
+
+
 
     @api.multi
     def action_validate(self):
         self.state = 'sent'
+
+    @api.multi
+    def action_to_submit(self):
+        if self.validity_date and self.validity_date < self.date_order:
+            raise UserError('Expiration Date can not be less than Order Date')
+
+        self.state = 'draft'
+
 
     @api.multi
     def _is_double_validation_applicable(self):
@@ -44,19 +58,30 @@ class SaleOrder(models.Model):
         is_double_validation = False
 
         for lines in self.order_line:
-            product_pool = self.env['product.product'].search([('id', '=', lines.product_id.ids)])
+            product_pool = self.env['product.product'].search([('currency_id','=',self.currency_id.id), ('id', '=', lines.product_id.ids)])
             cust_commission_pool = self.env['customer.commission'].search([('customer_id', '=', self.partner_id.id),
                                                                            ('product_id', '=', lines.product_id.ids)])
             credit_limit_pool = self.env['res.partner'].search([('id', '=', self.partner_id.id)])
 
+            price_change_pool = self.env['product.sales.pricelist'].search([('product_id', '=', self.product_id.id),
+                                                                            ('currency_id', '=', self.currency_id.id)],
+                                                                           order='approver2_date desc', limit=1)
+
             if (self.credit_sales_or_lc == 'cash'):
                 for coms in cust_commission_pool:
-                    if (lines.commission_rate < coms.commission_rate
-                        or lines.price_unit < product_pool.list_price):
-                        is_double_validation = True
-                        break;
+                    if price_change_pool.currency_id.id == lines.currency_id.id:
+                        if (lines.commission_rate < coms.commission_rate or lines.price_unit < price_change_pool.list_price):
+                            is_double_validation = True
+                            break;
+                        else:
+                            is_double_validation = False
                     else:
-                        is_double_validation = False
+                        if (lines.commission_rate < coms.commission_rate):
+                            is_double_validation = True
+                            break;
+                        else:
+                            is_double_validation = False
+
 
             elif (self.credit_sales_or_lc == 'credit_sales'):
                 account_receivable = credit_limit_pool.credit
@@ -67,7 +92,7 @@ class SaleOrder(models.Model):
 
                 if (abs(customer_total_credit) > customer_credit_limit
                     or lines.commission_rate < cust_commission_pool.commission_rate
-                    or lines.price_unit < product_pool.list_price):
+                    or lines.price_unit < price_change_pool.list_price):
 
                         is_double_validation = True
                         break;

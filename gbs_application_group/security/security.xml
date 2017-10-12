@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
+    <record id="group_dept_manager" model="res.groups">
+        <field name="name">Department Managers</field>
+        <field name="category_id" ref="base.module_category_human_resources"/>
+    </record>
+
     <record id="module_category_sale" model="ir.module.category" >
         <field name="name">GBS</field>
         <field name="sequence">300</field>

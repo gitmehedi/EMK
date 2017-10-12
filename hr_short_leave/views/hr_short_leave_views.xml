@@ -10,9 +10,9 @@
                 <field name="can_reset" invisible="1"/>
                 <header>
                     <button string="Confirm" name="action_confirm" states="draft" type="object" class="oe_highlight"/>
-                    <button string="Approve" name="action_approve" groups="gbs_base_package.group_dept_manager" type="object" class="oe_highlight" attrs="{'invisible':[('first_approval','=',False)]}"/>
+                    <button string="Approve" name="action_approve" groups="gbs_application_group.group_dept_manager,hr_holidays.group_hr_holidays_user" type="object" class="oe_highlight" attrs="{'invisible':[('first_approval','=',False)]}"/>
                     <button string="Validate" name="action_validate" states="validate1" type="object" groups="hr_holidays.group_hr_holidays_manager,hr_holidays.group_hr_holidays_user" class="oe_highlight"/>
-                    <button string="Refuse" name="action_refuse" states="confirm,validate,validate1" type="object"  groups="hr_holidays.group_hr_holidays_user,gbs_base_package.group_dept_manager"/>
+                    <button string="Refuse" name="action_refuse" states="confirm,validate,validate1" type="object"  groups="hr_holidays.group_hr_holidays_user,gbs_application_group.group_dept_manager"/>
                     <button string="Reset to Draft" name="action_draft" type="object"
                             attrs="{'invisible': ['|', ('can_reset', '=', False), ('state', 'not in', ['confirm', 'refuse'])]}"/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,confirm,validate"/>
@@ -38,14 +38,16 @@
                             </div>
                         </group>
                         <group>
-                            <field name="employee_id" attrs="{'readonly':[('state','!=','draft'),('state','!=','confirm')]}" groups="gbs_base_package.group_dept_manager,hr_holidays.group_hr_holidays_user,hr_holidays.group_hr_holidays_manager"/>
-                            <field name="department_id" attrs="{'readonly':[('state','!=','draft'),('state','!=','confirm')]}" groups="gbs_base_package.group_dept_manager,hr_holidays.group_hr_holidays_user,hr_holidays.group_hr_holidays_manager"/>
+                            <field name="employee_id" attrs="{'readonly':[('state','!=','draft'),('state','!=','confirm')]}"
+                                   groups="gbs_application_group.group_dept_manager,hr_holidays.group_hr_holidays_user,hr_holidays.group_hr_holidays_manager"/>
+                            <field name="department_id" attrs="{'readonly':[('state','!=','draft'),('state','!=','confirm')]}"
+                                   groups="gbs_application_group.group_dept_manager,hr_holidays.group_hr_holidays_user,hr_holidays.group_hr_holidays_manager"/>
                         </group>
                         <group colspan="2">
                             <group><field name="notes" nolabel="1" placeholder="Add a reason..." /></group>
                             <group></group>
                         </group>
-                        <div groups="hr_holidays.group_hr_holidays_manager,gbs_base_package.group_dept_manager,hr_holidays.group_hr_holidays_manager">
+                        <div groups="hr_holidays.group_hr_holidays_manager,gbs_application_group.group_dept_manager,hr_holidays.group_hr_holidays_manager">
                             <separator string="Comment by Manager"/>
                             <field name="report_note" placeholder="e.g. Report to the next month..."/>
                         </div>
@@ -85,10 +87,10 @@
         </record>
 
         <menuitem id="short_leave_menu" name="Short Leaves" parent="hr_holidays.menu_hr_holidays_root"
-                  action="hr_short_leave_action" groups="base.group_user,hr_holidays.group_hr_holidays_manager,hr_holidays.group_hr_holidays_user,gbs_base_package.group_dept_manager"/>
+                  action="hr_short_leave_action" groups="base.group_user,hr_holidays.group_hr_holidays_manager,hr_holidays.group_hr_holidays_user,gbs_application_group.group_dept_manager"/>
 
         <menuitem id="short_leave" name="Short Leaves" parent="short_leave_menu"
-                  action="hr_short_leave_action" groups="base.group_user,hr_holidays.group_hr_holidays_manager,hr_holidays.group_hr_holidays_user,gbs_base_package.group_dept_manager"/>
+                  action="hr_short_leave_action" groups="base.group_user,hr_holidays.group_hr_holidays_manager,hr_holidays.group_hr_holidays_user,gbs_application_group.group_dept_manager"/>
 
     </data>
 </odoo>

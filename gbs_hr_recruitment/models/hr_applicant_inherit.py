@@ -7,6 +7,10 @@ class HrApplicantInherit(models.Model):
 
     manager_id = fields.Many2one('hr.employee', string='Manager', related='department_id.manager_id',
                                  readonly=True, copy=False)
+    gender = fields.Selection([('male', 'Male'),('female', 'Female'),('other','Other')],
+                               string='Gender')
+    marital_status = fields.Selection([('single', 'Single'),('married', 'Married'),('other','Other')],
+                               string='Marital Status')
 
     state = fields.Selection([
         ('draft', 'Draft'),
@@ -27,28 +31,20 @@ class HrApplicantInherit(models.Model):
     # @api.multi
     # def generate_appointment_letter(self):
     #
-    #     ctx = dict()
-    #     ctx.update({
-    #         'default_use_template': True,
-    #          'default_composition_mode': 'comment',
-    #          'default_template_id': 17,
-    #          'mark_so_as_sent': True,
-    #          'custom_layout': 'sale.mail_template_data_notification_email_sale_order',
-    #          'default_model': 'sale.order',
-    #          'default_res_id': 1
-    #     })
+    #     self.ensure_one()
+    #     ir_model_data = self.env['ir.model.data']
+    #     try:
+    #         template_id = ir_model_data.get_object_reference('gbs_hr_recruitment', 'template_appointment_letter')[1]
+    #     except ValueError:
+    #         template_id = False
     #
-    #     return {
-    #         'type': 'ir.actions.act_window',
-    #         'view_type': 'form',
-    #         'view_mode': 'form',
-    #         'res_model': 'mail.compose.message',
-    #         'views': [(compose_form_id, 'form')],
-    #         'view_id': compose_form_id,
-    #         'target': 'new',
-    #         'context': ctx,
+    #     base_template = self.env.ref("gbs_hr_recruitment.template_appointment_letter", raise_if_not_found=False)
+    #
+    #     data = {
+    #
     #     }
-    #     return self.env['report'].render('gbs_hr_recruitment.report_app_letter1', ctx)
+    #
+    #     return self.env['report'].render('gbs_hr_recruitment.report_letter', data)
 
 
     ####################################################

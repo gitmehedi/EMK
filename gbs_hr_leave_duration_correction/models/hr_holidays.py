@@ -128,7 +128,7 @@ class HRHolidays(models.Model):
         # if double_validation: this method is the first approval approval
         # if not double_validation: this method calls action_validate() below
         if not (self.env.user.has_group('hr_holidays.group_hr_holidays_user')
-                or self.env.user.has_group('gbs_base_package.group_dept_manager')):
+                or self.env.user.has_group('gbs_application_group.group_dept_manager')):
             raise ValidationError(('Only an HR Officer or Manager or Department Manager can approve leave requests.'))
 
         manager = self.env['hr.employee'].search([('user_id', '=', self.env.uid)], limit=1)
@@ -144,7 +144,7 @@ class HRHolidays(models.Model):
     @api.multi
     def action_validate(self):
         if not (self.env.user.has_group('hr_holidays.group_hr_holidays_user')
-                or self.env.user.has_group('gbs_base_package.group_dept_manager')):
+                or self.env.user.has_group('gbs_application_group.group_dept_manager')):
             raise UserError(('Only an HR Officer or Manager or Department Manager can approve leave requests.'))
 
         manager = self.env['hr.employee'].search([('user_id', '=', self.env.uid)], limit=1)
@@ -152,7 +152,7 @@ class HRHolidays(models.Model):
             if holiday.state not in ['confirm', 'validate1']:
                 raise ValidationError(('Leave request must be confirmed in order to approve it.'))
             if holiday.state == 'validate1' and not ((holiday.env.user.has_group('hr_holidays.group_hr_holidays_user')
-                                                     or holiday.env.user.has_group('gbs_base_package.group_dept_manager'))):
+                                                     or holiday.env.user.has_group('gbs_application_group.group_dept_manager'))):
                 raise ValidationError(('Only an HR Manager can apply the second approval on leave requests.'))
 
             holiday.write({'state': 'validate'})
@@ -194,6 +194,6 @@ class HRHolidays(models.Model):
 
     def _check_state_access_right(self, vals):
         if vals.get('state') and vals['state'] not in ['draft', 'confirm', 'cancel'] and not (self.env['res.users'].has_group('hr_holidays.group_hr_holidays_user')
-                                                                                              or self.env['res.users'].has_group('gbs_base_package.group_dept_manager')):
+                                                                                              or self.env['res.users'].has_group('gbs_application_group.group_dept_manager')):
             return False
         return True

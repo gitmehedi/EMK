@@ -119,7 +119,7 @@ class HrShortLeave(models.Model):
     def _check_state_access_right(self, vals):
         if vals.get('state') and vals['state'] not in ['draft', 'confirm', 'cancel'] and not (
             self.env['res.users'].has_group('hr_holidays.group_hr_holidays_user')
-        or self.env['res.users'].has_group('gbs_base_package.group_dept_manager')):
+        or self.env['res.users'].has_group('gbs_application_group.group_dept_manager')):
             return False
         return True
 
@@ -188,7 +188,7 @@ class HrShortLeave(models.Model):
 
     @api.multi
     def action_validate(self):
-        if not (self.env.user.has_group('hr_holidays.group_hr_holidays_user') or self.env.user.has_group('gbs_base_package.group_dept_manager')):
+        if not (self.env.user.has_group('hr_holidays.group_hr_holidays_user') or self.env.user.has_group('gbs_application_group.group_dept_manager')):
             raise UserError(_('Only an HR Officer or Manager or Department Manager can approve leave requests.'))
 
         attendance_obj = self.env['hr.attendance']
@@ -216,7 +216,7 @@ class HrShortLeave(models.Model):
     @api.multi
     def action_refuse(self):
         if not (self.env.user.has_group('hr_holidays.group_hr_holidays_user')
-                or self.env.user.has_group('gbs_base_package.group_dept_manager')):
+                or self.env.user.has_group('gbs_application_group.group_dept_manager')):
             raise UserError(_('Only an HR Officer or Manager can refuse leave requests.'))
         for holiday in self:
             if holiday.state not in ['confirm', 'validate', 'validate1']:
@@ -227,12 +227,15 @@ class HrShortLeave(models.Model):
     ### User and state wise approve button hide function
     @api.multi
     def compute_check_first_approval(self):
+        user = self.env.user.browse(self.env.uid)
         for h in self:
             if h.state != 'confirm':
                 h.first_approval = False
             ### no one can approve own request
             elif h.employee_id.user_id.id == self.env.user.id:
                 h.first_approval = False
+            elif user.has_group('hr_holidays.group_hr_holidays_user'):
+                h.first_approval = True
             else:
                 res = h.employee_id.check_1st_level_approval()
                 h.first_approval = res
