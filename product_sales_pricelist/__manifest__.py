@@ -1,6 +1,6 @@
 {
     'name': 'Product Sales Pricelist',
-    'version': '1.0',
+    'version': '10.1.0.0',
     'category': 'sales',
     'author': 'Genweb2 Limited',
     'website': 'www.genweb2.com',
