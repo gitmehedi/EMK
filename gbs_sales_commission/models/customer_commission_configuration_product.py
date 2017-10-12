@@ -1,4 +1,5 @@
 from odoo import api, fields, models
+from odoo.exceptions import UserError, ValidationError
 
 
 class CustomerCommissionConfigurationProduct(models.Model):
@@ -14,3 +15,21 @@ class CustomerCommissionConfigurationProduct(models.Model):
                                  domain="([('sale_ok','=','True'),('type','=','consu')])")
     config_parent_id = fields.Many2one('customer.commission.configuration', ondelete='cascade')
 
+
+    # show a warning when input data
+    @api.onchange('new_value')
+    def _onchange_new_value(self):
+        if self.new_value > 100:
+            raise UserError("[Error] 'New Value' must be between 0 to 100 !")
+
+    #show a warning when click save burtton
+    @api.constrains('new_value')
+    def _check_value(self):
+        if self.new_value > 100:
+            raise Warning("[Error] 'New Value' must be between 0 to 100 !")
+
+    # Show a msg for minus value
+    @api.onchange('new_value', 'old_value')
+    def _onchange_value(self):
+        if self.new_value < 0 or self.old_value < 0:
+            raise UserError('New value or Old value naver take negative value!')
