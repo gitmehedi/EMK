@@ -10,7 +10,7 @@
                 <field name="can_reset" invisible="1"/>
                 <header>
                     <button string="Confirm" name="action_confirm" states="draft" type="object" class="oe_highlight"/>
-                    <button string="Approve" name="action_approve" groups="gbs_application_group.group_dept_manager" type="object" class="oe_highlight" attrs="{'invisible':[('first_approval','=',False)]}"/>
+                    <button string="Approve" name="action_approve" groups="gbs_application_group.group_dept_manager,hr_holidays.group_hr_holidays_user" type="object" class="oe_highlight" attrs="{'invisible':[('first_approval','=',False)]}"/>
                     <button string="Validate" name="action_validate" states="validate1" type="object" groups="hr_holidays.group_hr_holidays_manager,hr_holidays.group_hr_holidays_user" class="oe_highlight"/>
                     <button string="Refuse" name="action_refuse" states="confirm,validate,validate1" type="object"  groups="hr_holidays.group_hr_holidays_user,gbs_application_group.group_dept_manager"/>
                     <button string="Reset to Draft" name="action_draft" type="object"
