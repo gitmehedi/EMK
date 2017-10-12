@@ -7,7 +7,7 @@ class HrEmployeeIouLine(models.Model):
     repay_amount = fields.Float(string="Repay Amount")
 
     # Relational fields
-    repay_id = fields.Many2one('hr.employee.iou', 'id', ondelete='cascade')
+    iou_id = fields.Many2one('hr.employee.iou', 'id', ondelete='cascade')
 
     state = fields.Selection([
         ('draft', 'Draft'),
