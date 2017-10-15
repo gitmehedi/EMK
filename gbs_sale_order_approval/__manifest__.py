@@ -14,15 +14,13 @@
         'gbs_sales_commission_so',
         'delivery_order',
         'sale_order_type',
-        'account',
-
     ],
+
     'data': [
         'security/ir.model.access.csv',
         'security/sale_order_approval_security.xml',
         'views/inherited_sale_view.xml',
         'views/inherited_sale_order_view.xml',
-        'views/inherited_account_payment_view.xml',
     ],
     'installable': True,
     'application': True,

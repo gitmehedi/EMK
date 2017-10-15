@@ -199,9 +199,3 @@ class InheritedSaleOrderLine(models.Model):
             self.update(vals)
 
         return res
-
-class InheritedAccountPayment(models.Model):
-    _inherit='account.payment'
-
-    sale_order_id = fields.Many2one('sale.order',string='Sale Order')
-    is_this_payment_checked = fields.Boolean(string='Is This Payment checked with SO', default=False)

@@ -88,8 +88,7 @@ class SaleDeliveryOrder(models.Model):
             [('is_this_payment_checked','=',False),('sale_order_id', '=', self.sale_order_id.id), ('partner_id', '=', self.parent_id.id)])
 
         delivery_order_pool = self.env['delivery.order'].search(
-            [('state', '=', 'close'), ('account_payment_id', '=', self.account_payment_id.id),
-             ('sale_order_id', '=', self.sale_order_id.id)])
+            [('state', '=', 'close'), ('account_payment_id', '=', self.account_payment_id.id),('sale_order_id', '=', self.sale_order_id.id)])
 
         if not account_payment_pool:
             raise UserError("Either Payment Information not found for this Sale Order Or Payment Information entered is already in use")
