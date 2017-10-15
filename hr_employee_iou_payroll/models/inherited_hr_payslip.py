@@ -15,9 +15,14 @@ class InheritedEmployeeIouPayslip(models.Model):
             if input.code == 'IOU':
                 iou_ids.append(int(input.ref))
 
+        iou_pool = self.env['hr.employee.iou']
         iou_line_pool = self.env['hr.employee.iou.line']
-        iou_data = iou_line_pool.browse(iou_ids)
-        iou_data.write({'state': 'adjested'})
+        for iou in iou_pool.browse(iou_ids):
+            vals = {}
+            vals['employee_id'] = iou.employee_id.id
+            vals['repay_amount'] = iou.due
+            vals['iou_id'] = iou.id
+            iou_line_pool.create(vals)
 
         return res
 

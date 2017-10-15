@@ -1,6 +1,5 @@
 from odoo import fields, api, models
 
-
 class InheritedSaleOrderLine(models.Model):
     _inherit = 'sale.order.line'
 
@@ -20,4 +19,8 @@ class InheritedSaleOrderLine(models.Model):
                 [('customer_id', '=', self.order_id.partner_id.id), ('product_id', '=', self.product_id.id),
                  ('status', '=', True)])
 
-            self.commission_rate = commission.commission_rate if commission else 0
+            if commission:
+                for coms in commission:
+                    self.commission_rate = coms.commission_rate
+            else:
+                self.commission_rate = 0

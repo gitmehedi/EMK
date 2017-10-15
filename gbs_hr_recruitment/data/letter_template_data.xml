@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <!--Email template -->
+        <record id="template_appointment_letter" model="mail.template">
+            <field name="name">Appointment Letter</field>
+            <field name="subject">${object.company_id.name}</field>
+            <field name="model_id" ref="hr_recruitment.model_hr_applicant"/>
+            <field name="auto_delete" eval="True"/>
+            <field name="report_template" ref="appointment_report_letter"/>
+            <field name="report_name">${(object.name or '').replace('/','_')}${object.state == 'approved' and '_approved' or ''}</field>
+            <field name="lang">${object.partner_id.lang}</field>
+            <field name="body_html"><![CDATA[
+<p>Dear ${object.partner_name}
+<div class="page">
+                            <div class="oe_structure"/>
+                            <div class="row">
+                                <div class="col-xs-6" style="text-align:left">
+                                    <p>${object.partner_name}</p>
+                                    <p>S/O: MD Abdul Momin Talukder</p>
+                                    <p>Vill: Dhanbandhi J.C Road,Sirajgoanj Sadar,Narayanganj</p>
+                                </div>
+                                <div class="col-xs-6" style="text-align:right">
+                                    <p>${object.availability}</p>
+                                    <p>Department: ${object.department_id.name}</p>
+                                    <p>Ref:HR-Appt-39-08/17</p>
+                                </div>
+                            </div>
+
+                            <div class="row" style="padding-top:30px">
+                                <div class="col-xs-6"  style="text-align:left">
+                                    <p><b>Dear ${object.partner_name}</b></p>
+                                </div>
+                            </div>
+
+                            <div class="row" style="padding-top:30px">
+                                <div style="text-align:center">
+                                    <p>Sub:<b><u>Appointment Letter</u></b></p>
+                                </div>
+                            </div>
+
+                            <div class="row" style="padding-top:30px">
+                                <div class="col-xs-12" style="text-align:left">
+                                    <p>Further to your application asn the subsequent interviews that you had with us,
+                                        we are pleased to offer you an appointment as <b>${object.job_id.name}</b>
+                                        in our organization under the following terms and conditions:</p>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-xs-12" style="padding-left:50px">
+                                    <p>1. You will be ucder probation for aperiod of 6(Six) months abd after successful completion of your probation period you will be confirmed as a permanent employee of the company.</p>
+                                    <p>2. During your probation, you will get a condolidated salary of BDT ${object.salary_proposed} only per month and you will not be entitled to any other financial benefits.</p>
+                                    <p>3. You will be initially posted to ${object.company_id.name},Sikirgaon,Gazaria,Munshigoanj but your service may be transferred to any department of factory of ${object.company_id.name} within the territory of Bangladesh. You will report to ${object.manager_id.name} on or before ${object.availability}</p>
+                                    <p>4. During the probation and confirmation period your service may be terminatedby the company or you may resign at any time by giving 1(one)month's notice or pay in lien thereof.</p>
+                                    <p>5. On principle as agreed you need serve in this organixation for a period of minimum 2.5 years.</p>
+                                </div>
+                            </div>
+
+                            <div class="row" style="padding-top:20px">
+                                <div class="col-xs-12">
+                                    <p>This letter of appointment shall take effect and be valid only when a copy of this letter is signed
+                                    by you before a withness and the same is returned to the under as an acknowledgement of your aceptance of the above terms and conditions.</p>
+                                    <p>We have pleasure in welcoming you to our organization and we sincerely hope that our close collaboration will be mutually beneficial to both of us.</p>
+                                </div>
+                            </div>
+                            <div class="oe_structure"/>
+                            <div class="row" style="padding-top:10px">
+                                <div class="col-xs-6"  style="text-align:left">
+                                    <p>Your sincerely,</p>
+                                </div>
+                            </div>
+                            <div class="row" style="padding-top:10px">
+                                <div class="col-xs-6" style="text-align:left">
+                                    <hr/>
+                                    <p>${object.company_id.name}</p>
+                                    <p>Human Resource Department</p>
+                                </div>
+                            </div>
+                        </div>
+
+]]></field>
+        </record>
+
+
+    </data>
+</odoo>

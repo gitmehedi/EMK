@@ -1,4 +1,4 @@
-from openerp import api, exceptions, fields, models
+from odoo import api, exceptions, fields, models
 import operator, math
 import locale
 
@@ -43,7 +43,9 @@ class PayrollReportPivotal(models.AbstractModel):
                     payslip['designation'] = slip.employee_id.job_id.name
                     payslip['doj'] = slip.employee_id.initial_employment_date                    
                     payslip['emp_seq'] = slip.employee_id.employee_sequence
-                    
+                    loan_remain = slip.remaining_loan or 0.00
+                    payslip['loan_balance'] = format(loan_remain, '.2f') if loan_remain else None
+
                     for rule in rule_list:
                         payslip[rule['code']] = 0
                         for line in slip.line_ids:
@@ -78,7 +80,9 @@ class PayrollReportPivotal(models.AbstractModel):
                 payslip['emp_name'] = other_slip.employee_id.name    
                 payslip['designation'] = other_slip.employee_id.job_id.name
                 payslip['doj'] = other_slip.employee_id.initial_employment_date
-                                
+
+
+
 
                 for rule in rule_list:
                     payslip[rule['code']] = 0
@@ -98,14 +102,14 @@ class PayrollReportPivotal(models.AbstractModel):
         dpt_payslips_list.append(dpt_payslips)
         amt_to_word = self.env['res.currency'].amount_to_word(float(all_total))
 
-        locale.setlocale(locale.LC_ALL, '')
+        locale.setlocale(locale.LC_ALL, 'bn_BD.UTF-8')
         thousand_separated_total_sum = locale.currency(all_total, grouping=True)
 
         docargs = {
             'doc_ids': self.ids,
             'doc_model': 'hr.payslip.run',
             'docs': dpt_payslips_list,
-            'docs_len': len(rule_list)+4,
+            'docs_len': len(rule_list)+8,
             'rules': rule_list,
             'total_sum': thousand_separated_total_sum,
             'amt_to_word': amt_to_word,

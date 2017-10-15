@@ -15,7 +15,8 @@
         'hr_holidays',
         'hr_payroll',
         'gbs_hr_calendar',
-        
+        'operating_unit',
+        'hr_rostering',
     ],
     'data': [
         'security/ir.model.access.csv',

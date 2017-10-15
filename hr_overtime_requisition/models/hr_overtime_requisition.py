@@ -32,7 +32,7 @@ class HROTRequisition(models.Model):
         ('hr_approve', "HR Approve"),
         ('approved', "Approved"),
         ('refuse', 'Refused'),
-    ], default='to_submit')
+    ], default='to_submit',track_visibility='onchange')
 
     @api.multi
     def add_follower(self, employee_id):
@@ -130,12 +130,15 @@ class HROTRequisition(models.Model):
     ### User and state wise approve button hide function
     @api.multi
     def compute_check_first_approval(self):
+        user = self.env.user.browse(self.env.uid)
         for h in self:
             if h.state != 'to_approve':
                 h.first_approval = False
             ### no one can approve own request
             elif h.employee_id.user_id.id == self.env.user.id:
                 h.first_approval = False
+            elif user.has_group('hr_attendance.group_hr_attendance_user'):
+                h.first_approval = True
             else:
                 res = h.employee_id.check_1st_level_approval()
                 h.first_approval = res

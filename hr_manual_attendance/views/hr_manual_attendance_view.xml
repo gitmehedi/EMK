@@ -32,9 +32,9 @@
 				 	<header>
 	                    <button string="Confirm" name="action_confirm" states="draft" type="object" class="oe_highlight" />
                     	<button string="Approve" name="action_approve" type="object" class="oe_highlight"
-								groups="gbs_base_package.group_dept_manager,hr_attendance.group_hr_attendance_user" attrs="{'invisible':[('first_approval','=',False)]}"/>
-                     	<button string="Refuse" name="action_refuse" states="confirm" type="object" groups="gbs_base_package.group_dept_manager,hr_attendance.group_hr_attendance_user"/>
-                    	<button string="Reset to Draft" name="action_draft" type="object" states="confirm" groups="gbs_base_package.group_dept_manager,hr_attendance.group_hr_attendance_user"/>
+								groups="gbs_application_group.group_dept_manager,hr_attendance.group_hr_attendance_user" attrs="{'invisible':[('first_approval','=',False)]}"/>
+                     	<button string="Refuse" name="action_refuse" states="confirm" type="object" groups="gbs_application_group.group_dept_manager,hr_attendance.group_hr_attendance_user"/>
+                    	<button string="Reset to Draft" name="action_draft" type="object" states="confirm" groups="gbs_application_group.group_dept_manager,hr_attendance.group_hr_attendance_user"/>
                     	<field name="state" widget="statusbar" statusbar_visible="draft,confirm,validate"/>                    	
                 	</header>				
                 	
@@ -96,8 +96,8 @@
 		<menuitem id="menu_my_attendance" name="My Attendances" parent="menu_hr_manual_attendance"
 					 sequence="5" action="hr_my_attendance" />
 		<menuitem id="menu_pending_attendance" name="Pending Approvals" parent="menu_hr_manual_attendance"
-					 sequence="10" action="hr_pandding_attendance" groups="gbs_base_package.group_dept_manager"/>
+					 sequence="10" action="hr_pandding_attendance" groups="gbs_application_group.group_dept_manager"/>
 		<menuitem id="menu_manual_attendance" name="Manual Attendances" parent="menu_hr_manual_attendance"
-					 sequence="15" action="hr_manual_attendance" groups="gbs_base_package.group_dept_manager" />
+					 sequence="15" action="hr_manual_attendance" groups="gbs_application_group.group_dept_manager" />
 	</data>
 </openerp>

@@ -1,5 +1,6 @@
-from openerp import api, fields, models, exceptions, _
-from openerp.exceptions import UserError, ValidationError
+from odoo import api, fields, models
+from odoo.exceptions import UserError, ValidationError
+
 import time,datetime
 
 class SaleDeliveryOrder(models.Model):
@@ -13,20 +14,19 @@ class SaleDeliveryOrder(models.Model):
 
     name = fields.Char(string='Name', index=True)
 
-    so_date = fields.Date('Sales Order Date', readonly=True,
-                             states={'draft': [('readonly', False)]})
+    so_date = fields.Date('Sales Order Date', readonly=True)
+
     deli_address = fields.Char('Delivery Address', readonly=True,
                              states={'draft': [('readonly', False)]})
     """ All relations fields """
 
-    sale_order_id = fields.Many2one('sale.order',string='Order Lines',
+    sale_order_id = fields.Many2one('sale.order',string='Sale Order',
                                     required=True, readonly=True,states={'draft': [('readonly', False)]})
     parent_id = fields.Many2one('res.partner', 'Customer', ondelete='cascade', readonly=True,
                              related='sale_order_id.partner_id')
     payment_term_id = fields.Many2one('account.payment.term', string='Payment Terms', readonly=True,
                                       related='sale_order_id.payment_term_id')
-    warehouse_id = fields.Many2one('stock.warehouse', string='Warehouse', readonly=True,
-                                   states={'draft': [('readonly', False)]})
+    warehouse_id = fields.Many2one('stock.warehouse', string='Warehouse', readonly=True)
     line_ids = fields.One2many('delivery.order.line', 'parent_id', string="Products", readonly=True,
                                states={'draft': [('readonly', False)]})
     cash_ids = fields.One2many('cash.payment.line', 'pay_cash_id', string="Cash", readonly=True, invisible =True,
@@ -52,21 +52,21 @@ class SaleDeliveryOrder(models.Model):
                                         'approve': [('invisible', False), ('readonly', True)]})
     confirmed_date = fields.Date(string="First Approval Date", _defaults=lambda *a: time.strftime('%Y-%m-%d'), readonly=True)
 
+    account_payment_id = fields.Many2one('account.payment', string='Payment Information', required=True)
 
-    """ State fields for containing various states """
     so_type = fields.Selection([
         ('cash', 'Cash'),
         ('credit_sales', 'Credit'),
         ('lc_sales', 'L/C'),
-    ], string='Sale Order Type', readonly=True, states={'draft': [('readonly', False)]})
+    ], string='Sale Order Type')
 
-    """ State fields for containing various states """
     state = fields.Selection([
         ('draft', "To Submit"),
         ('validate', "To Approve"),
         ('approve', "Second Approval"),
         ('close', "Approved")
     ], default='draft')
+
     """ All functions """
 
     @api.multi
@@ -84,10 +84,37 @@ class SaleDeliveryOrder(models.Model):
 
     @api.one
     def action_approve(self):
-        self.state = 'approve'
-        self.line_ids.write({'state':'approve'})
-        self.approver2_id = self.env.user
-        return self.write({'state': 'approve', 'approved_date': time.strftime('%Y-%m-%d %H:%M:%S')})
+        account_payment_pool = self.env['account.payment'].search(
+            [('is_this_payment_checked','=',False),('sale_order_id', '=', self.sale_order_id.id), ('partner_id', '=', self.parent_id.id)])
+
+        delivery_order_pool = self.env['delivery.order'].search(
+            [('state', '=', 'close'), ('account_payment_id', '=', self.account_payment_id.id),('sale_order_id', '=', self.sale_order_id.id)])
+
+        if not account_payment_pool:
+            raise UserError("Either Payment Information not found for this Sale Order Or Payment Information entered is already in use")
+
+        if account_payment_pool.is_this_payment_checked == False:
+
+            if self.so_type == 'cash' \
+                    and account_payment_pool.state == 'posted' \
+                    and account_payment_pool \
+                    and account_payment_pool.payment_type == 'inbound' \
+                    and self.sale_order_id.id == account_payment_pool.sale_order_id.id:
+
+
+                if delivery_order_pool.account_payment_id.id == self.account_payment_id.id:
+                    raise UserError('This Payment Information is already in use')
+                    return;
+                else:
+                    self.state = 'approve'
+                    self.line_ids.write({'state': 'approve'})
+                    self.approver2_id = self.env.user
+                    account_payment_pool.write({'is_this_payment_checked':True})
+
+                    return self.write({'state': 'approve', 'approved_date': time.strftime('%Y-%m-%d %H:%M:%S')})
+        else:
+            raise UserError('Payment Information is already checkied')
+
 
     @api.one
     def action_validate(self):
@@ -109,20 +136,15 @@ class SaleDeliveryOrder(models.Model):
             sale_order_obj = self.env['sale.order'].search([('id', '=',self.sale_order_id.id)])
 
             if sale_order_obj:
-                #self.parent_id = sale_order_obj.partner_id.id
-                #self.payment_term_id = sale_order_obj.payment_term_id.id
                 self.warehouse_id = sale_order_obj.warehouse_id.id
                 self.so_type = sale_order_obj.credit_sales_or_lc
                 self.so_date = sale_order_obj.confirmation_date
 
                 for record in sale_order_obj.order_line:
-                    #sale_order_line_obj = record.env['sale.order.line'].search([('order_id', '=', self.sale_order_id.id)])
-                    #product_id = sale_order_line_obj.product_id.id
-                    # val['product_id']=record.product_id
-                    val.append((0, 0, {'product_id': record.product_id,
+                    val.append((0, 0, {'product_id': record.product_id.id,
                                        'quantity': record.product_uom_qty,
-                                       'pack_type': sale_order_obj.pack_type,
-                                       'uom_id': record.product_uom,
+                                       'pack_type': sale_order_obj.pack_type.id,
+                                       'uom_id': record.product_uom.id,
                                                 }))
 
             self.line_ids = val

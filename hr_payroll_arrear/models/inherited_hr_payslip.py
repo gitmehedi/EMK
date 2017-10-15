@@ -13,12 +13,12 @@ class InheritHRPayslipInput(models.Model):
 
         arrear_ids = []
         for input in self.input_line_ids:
-            if input.code == 'ARREAR':
+            if input.code == 'ARS':
                 arrear_ids.append(int(input.ref))
 
         arrear_line_pool = self.env['hr.payroll.arrear.line']
         arrear_data  = arrear_line_pool.browse(arrear_ids)
-        arrear_data.write({'state':'adjested'})
+        arrear_data.write({'state':'adjusted'})
 
         return res
 
@@ -42,7 +42,7 @@ class InheritHRPayslipInput(models.Model):
             for arrear_data in arrear_datas:
                 other_line_ids += other_line_ids.new({
                     'name': 'Arrear',
-                    'code': "ARREAR",
+                    'code': "ARS",
                     'amount': arrear_data.arear_amount,
                     'contract_id': self.contract_id.id,
                     'ref': arrear_data.id,

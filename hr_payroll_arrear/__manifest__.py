@@ -9,7 +9,8 @@
         'l10n_in_hr_payroll',
         ],
     'data': [
-        #'security/ir.model.access.csv',
+        'security/ir.model.access.csv',
+        'security/ir_rule.xml',
         'views/hr_payroll_arrear.xml',
     ],
 

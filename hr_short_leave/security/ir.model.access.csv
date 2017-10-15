@@ -1,5 +1,5 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-access_hr_short_leave_manager,access_hr_short_leave_manager,model_hr_short_leave,gbs_base_package.group_dept_manager,1,1,1,1
+access_hr_short_leave_manager,access_hr_short_leave_manager,model_hr_short_leave,gbs_application_group.group_dept_manager,1,1,1,1
 access_hr_short_leave_hruser,access_hr_short_leave_hruser,model_hr_short_leave,hr_holidays.group_hr_holidays_user,1,1,1,1
 access_hr_short_leave_employee,access_hr_short_leave_employee,model_hr_short_leave,base.group_user,1,1,1,1
 access_hr_short_leave_hrmanager,access_hr_short_leave_hrmanager,model_hr_short_leave,hr_holidays.group_hr_holidays_manager,1,1,1,1

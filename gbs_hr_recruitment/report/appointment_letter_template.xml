@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--Custom report.-->
+<odoo>
+    <data>
+        <report
+            id = "app_letter"
+            string = "appointment letter"
+            model = "hr.applicant"
+            report_type = "qweb-pdf"
+            menu="False"
+            file ="gbs_hr_recruitment.report_app_letter"
+            name ="gbs_hr_recruitment.report_app_letter"
+        />
+        <template id="report_app_letter">
+            <t t-call="report.html_container">
+                <!--<t t-foreach="docs" t-as="o">-->
+                    <t t-call="report.external_layout">
+                        <div class="page">
+                            <div class="oe_structure"/>
+                            <div class="row">
+                                <div class="col-xs-6" style="text-align:left">
+                                    <p><span t-esc="applicant_name" /></p>
+                                    <p>S/O: MD Abdul Momin Talukder</p>
+                                    <p>Vill: Dhanbandhi J.C Road,Sirajgoanj Sadar,Narayanganj</p>
+                                </div>
+                                <div class="col-xs-6" style="text-align:right">
+                                    <p><span t-esc="context_timestamp(datetime.datetime.now()).strftime('%B %d,%Y')"/></p>
+                                    <p>Department: <span t-esc="department_id.name" /></p>
+                                    <p>Ref:HR-Appt-39-08/17</p>
+                                </div>
+                            </div>
+
+                            <div class="row" style="padding-top:30px">
+                                <div class="col-xs-6"  style="text-align:left">
+                                    <p><b>Dear <span t-esc="applicant_name" /></b></p>
+                                </div>
+                            </div>
+
+                            <div class="row" style="padding-top:30px">
+                                <div style="text-align:center">
+                                    <p>Sub:<b><u>Appointment Letter</u></b></p>
+                                </div>
+                            </div>
+
+                            <div class="row" style="padding-top:30px">
+                                <div class="col-xs-12" style="text-align:left">
+                                    <p>Further to your application asn the subsequent interviews that you had with us,
+                                        we are pleased to offer you an appointment as <b><span t-esc="job_id.name" /></b>
+                                        in our organization under the following terms and conditions:</p>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-xs-12" style="padding-left:50px">
+                                    <p>1. You will be ucder probation for aperiod of 6(Six) months abd after successful completion of your probation period you will be confirmed as a permanent employee of the company.</p>
+                                    <p>2. During your probation, you will get a condolidated salary of BDT <span t-esc="salary_proposed"/>(<span t-esc="amount_to_text_bdt"/>)only per month and you will not be entitled to any other financial benefits.</p>
+                                    <p>3. You will be initially posted to <span t-esc="company_id.name"/>,Sikirgaon,Gazaria,Munshigoanj but your service may be transferred to any department of factory of <span t-esc="company_id.name"/> within the territory of Bangladesh. You will report to <span t-esc="manager_id.name"/> on or before <span t-esc="availability"/></p>
+                                    <p>4. During the probation and confirmation period your service may be terminatedby the company or you may resign at any time by giving 1(one)month's notice or pay in lien thereof.</p>
+                                    <p>5. On principle as agreed you need serve in this organixation for a period of minimum 2.5 years.</p>
+                                </div>
+                            </div>
+
+                            <div class="row" style="padding-top:20px">
+                                <div class="col-xs-12">
+                                    <p>This letter of appointment shall take effect and be valid only when a copy of this letter is signed
+                                    by you before a withness and the same is returned to the under as an acknowledgement of your aceptance of the above terms and conditions.</p>
+                                    <p>We have pleasure in welcoming you to our organization and we sincerely hope that our close collaboration will be mutually beneficial to both of us.</p>
+                                </div>
+                            </div>
+                            <div class="oe_structure"/>
+                            <div class="row" style="padding-top:10px">
+                                <div class="col-xs-6"  style="text-align:left">
+                                    <p>Your sincerely,</p>
+                                </div>
+                            </div>
+                            <div class="row" style="padding-top:10px">
+                                <div class="col-xs-6" style="text-align:left">
+                                    <hr/>
+                                    <p><span t-esc="company_id.name"/></p>
+                                    <p>Human Resource Department</p>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                <!--</t>-->
+            </t>
+        </template>
+    </data>
+</odoo>

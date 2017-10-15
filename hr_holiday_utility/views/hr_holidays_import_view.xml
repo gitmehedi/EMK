@@ -82,11 +82,13 @@
 
     <!-- Menu Item -->
 	  <menuitem id="menu_holidays_data_import" name="Leave Data Import"
-			parent="hr_holidays.menu_hr_holidays_root" sequence="7"/>
+			parent="hr_holidays.menu_hr_holidays_root" groups="base_technical_features.group_technical_features" sequence="7"/>
 
 		<menuitem id="menu_hr_holidays_sub" name="Leave Data Import"
 			parent="menu_holidays_data_import"
-			action="hr_holidays_import_action"/>
+			action="hr_holidays_import_action"
+		    groups="base_technical_features.group_technical_features"
+		/>
 
   </data>
 </odoo>

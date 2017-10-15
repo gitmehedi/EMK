@@ -55,8 +55,8 @@ class HrAttendanceSummaryReport(models.AbstractModel):
             'doc_model': 'hr.attendance.summary',
             'docs': dpt_att_summary_list,
             'doc_name': docs.name,
-            'period_to': pool_period.date_start,
-            'period_from': pool_period.date_stop,
+            'period_from': pool_period.date_start,
+            'period_to': pool_period.date_stop,
             'docs_len': 20,
             'state': docs.state,
         }

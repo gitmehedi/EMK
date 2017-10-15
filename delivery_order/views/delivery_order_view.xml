@@ -36,15 +36,16 @@
                         <group>
                             <group>
                                 <field name="sale_order_id" options="{'no_quick_create':True,'no_create_edit':True,'no_open':True}"/>
-                                <field name="parent_id" options="{'no_quick_create':True,'no_create_edit':True,'no_open':True}"/>
-                                <field name="payment_term_id" options="{'no_quick_create':True,'no_create_edit':True,'no_open':True}"/>
-                                <field name="warehouse_id" options="{'no_quick_create':True,'no_create_edit':True,'no_open':True}"/>
-                                <field name="so_type"/>
-                                <field name="so_date"/>
+                                <field name="deli_address"/>
 
                             </group>
                             <group>
-                                <field name="deli_address"/>
+                                <field name="parent_id" options="{'no_quick_create':True,'no_create_edit':True,'no_open':True}"/>
+                                <field name="payment_term_id" options="{'no_quick_create':True,'no_create_edit':True,'no_open':True}"/>
+                                <field name="account_payment_id" attrs="{'invisible':[('so_type', '!=', 'cash')]}"/>
+                                <field name="warehouse_id" options="{'no_quick_create':True,'no_create_edit':True,'no_open':True}"/>
+                                <field name="so_type"/>
+                                <field name="so_date"/>
                                 <field name="requested_by"
                                        options="{'no_open': True, 'no_create': True}"/>
                                 <field name="requested_date"/>
@@ -136,7 +137,8 @@
             <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Delivery Order">
-                    <field name="name"/>
+                    <field name="sale_order_id"/>
+                    <field name="so_type"/>
                     <field name="state"/>
                 </tree>
             </field>

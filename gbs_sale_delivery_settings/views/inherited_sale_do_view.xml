@@ -5,11 +5,11 @@
         <field name="model">sale.config.settings</field>
         <field name="inherit_id" ref="sales_team.view_sale_config_settings"/>
         <field name="arch" type="xml">
-            <div id="main">
+            <xpath expr="//form/div[@id='main']" position="after">
                 <group string="Delivery Order">
                     <field name="delivery_order_auto_generate" class="oe_inline" widget="radio"/>
                 </group>
-            </div>
+            </xpath>
         </field>
     </record>
 </odoo>
