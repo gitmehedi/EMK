@@ -1,0 +1,2 @@
+import bmd_inherit_hr_applicant
+import bmd_inherit_job_position

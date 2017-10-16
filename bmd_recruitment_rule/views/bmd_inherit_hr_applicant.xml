@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record model="ir.ui.view" id="inherited_hr_applicant_bmb">
+        <field name="name">BMD Jobs - Recruitment Form</field>
+        <field name="model">hr.applicant</field>
+        <field name="inherit_id" ref="website_job_application.inherited_hr_applicant_bmb"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='birth_date']" position="after">
+                <field name="applicant_age"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

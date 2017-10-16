@@ -16,6 +16,10 @@ class InheritedHrApplicant(models.Model):
     religion = fields.Char(string='Religion', size=60)
     occupation = fields.Char(string='Occupation', size=60)
     divisional_candiate = fields.Char(string='Divisional Candiate', size=60)
+    ex_service_personnel = fields.Char(string='Ex-Service Personnel', size=60)
+    quota = fields.Char(string='Quota', size=60)
+    experience_remarks = fields.Char(string='Experience Remarks', size=60)
+    curriculam_activities = fields.Char(string='Extra Curriculam Activities', size=60)
 
     """Present Address"""
     pre_address_1 = fields.Char(string='House and Road(Name/No)', size=60)

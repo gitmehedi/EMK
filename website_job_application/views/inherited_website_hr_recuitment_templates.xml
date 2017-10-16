@@ -5,12 +5,7 @@
             <xpath expr="." position="inside">
                 <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
                 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-                <script>
-                    $( function() {
-                    $( "#datepicker" ).datepicker();
-                    $( "#datepicker_challan" ).datepicker();
-                    } );
-                </script>
+                <script type="text/javascript" src="/website_job_application/static/src/js/custom.js"></script>
             </xpath>
         </template>
 
@@ -65,39 +60,48 @@
                                        name="national_id" required=""/>
                             </div>
                             <div class="form-group col-md-6 form-field o_website_form_required_custom  pull-right">
-                                <label class="control-label">Birth Registration No / জন্ম নিবন্ধন নম্বর</label>
+                                <label class="control-label">Birth Registration Number / জন্ম নিবন্ধন নম্বর</label>
                                 <input type="text" class="form-control o_website_form_input input-sm"
                                        name="birth_registration_no" required=""/>
                             </div>
-                            <div class="form-group col-md-6 form-field o_website_form_required_custom">
+                                <div class="form-group col-md-6 form-field o_website_form_required_custom ">
+                                <label class="control-label">Father Name / পিতার নাম</label>
+                                <input type="text" class="form-control o_website_form_input input-sm"
+                                       name="father_name" required=""/>
+                            </div>
+                            <div class="form-group col-md-6 form-field o_website_form_required_custom pull-right">
                                 <label class="control-label">Birth Date / জন্মতারিখ</label>
                                 <input type="text" class="form-control o_website_form_input input-sm" id="datepicker"
                                        name="birth_date" required=""/>
                             </div>
-                            <div class="form-group col-md-6 form-field o_website_form_required_custom  pull-right">
-                                <label class="control-label">Birth Location / জন্মস্থান</label>
-                                <input type="text" class="form-control o_website_form_input input-sm"
-                                       name="birth_city" required=""/>
-                            </div>
+
+
                             <div class="form-group col-md-6 form-field o_website_form_required_custom">
                                 <label class="control-label">Mother Name / মাতার নাম</label>
                                 <input type="text" class="form-control o_website_form_input input-sm"
                                        name="mother_name" required=""/>
                             </div>
-                            <div class="form-group col-md-6 form-field o_website_form_required_custom pull-right">
-                                <label class="control-label">Father Name / পিতার নাম</label>
-                                <input type="text" class="form-control o_website_form_input input-sm"
-                                       name="father_name" required=""/>
+                            <div class="form-group col-md-6 form-field o_website_form_required_custom  pull-right">
+                                <label class="control-label">Birth Location / জন্মস্থান</label>
+                                <select class="form-control o_website_form_input input-sm" name="birth_city"
+                                        required="">
+                                    <t t-foreach='districts' t-as='label'>
+                                        <option t-att-value="label">
+                                            <t t-esc="label_value"/>
+                                        </option>
+                                    </t>
+                                </select>
                             </div>
+
                         </div>
                         <div class="form-group col-md-6 form-field o_website_form_required_custom">
-                            <label class="control-label">Mobile No / মোবাইল</label>
+                            <label class="control-label">Mobile / মোবাইল</label>
                             <input type="text" class="form-control o_website_form_input input-sm"
                                    name="partner_phone" required=""/>
                         </div>
-                        <div class="form-group col-md-6 form-field o_website_form_required_custom pull-right">
+                        <div class="form-group col-md-6 form-field pull-right">
                             <label class="control-label">Email / ইমেইল</label>
-                            <input type="email" class="form-control o_website_form_input input-sm"
+                            <input type="email" class="form-control input-sm"
                                    name="email_from" required=""
                                    placeholder="johnodh@gmail.com"/>
                         </div>
@@ -116,18 +120,13 @@
                         </div>
                         <div class="form-group col-md-6 form-field o_website_form_required_custom">
                             <label class="control-label">Religion / ধর্ম</label>
-                            <select class="form-control o_website_form_input input-sm" name="religion" required="">
-                                <t t-foreach='religion' t-as='label'>
-                                    <option t-att-value="label">
-                                        <t t-esc="label_value"/>
-                                    </option>
-                                </t>
-                            </select>
+                            <input type="text" class="form-control o_website_form_input input-sm"
+                                   name="religion" required=""/>
                         </div>
-                        <div class="form-group col-md-6 form-field o_website_form_required_custom pull-right">
+                        <div class="form-group col-md-6 form-field pull-right">
                             <label class="control-label">Occupation / পেশা</label>
                             <input type="text" class="form-control o_website_form_input input-sm "
-                                   name="occupation" required=""/>
+                                   name="occupation"/>
                         </div>
                     </div>
                     <div class="col-md-12">
@@ -151,21 +150,22 @@
                                            class="form-control o_website_form_input input-sm" required=""/>
                                 </div>
                                 <div class="form-group col-md-7 pull-left o_website_form_required_custom">
-                                    <label class="control-label">Union/Ward / (বর্তমান ইউনিয়ন/ওয়ার্ড)</label>
+                                    <label class="control-label">Union/Ward/ (বর্তমান ইউনিয়ন/ওয়ার্ড)</label>
                                     <input id="pre_city_town" name="pre_city_town" type="text"
                                            class="form-control o_website_form_input input-sm" required=""/>
                                 </div>
                                 <div class="form-group col-md-6 pull-right o_website_form_required_custom">
-                                    <label class="control-label">Postal Code / পোস্ট কোড নম্বর</label>
+                                    <label class="control-label">Postal Code/পোস্ট কোড নম্বর</label>
                                     <input id="pre_zip_postal" name="pre_zip_postal" type="text"
                                            class="form-control o_website_form_input input-sm"/>
                                 </div>
 
                                 <div class="form-group col-md-7 pull-left o_website_form_required_custom">
                                     <label class="control-label">Sub-District / উপজেলা</label>
-                                    <input name="pre_state_province" class="form-control o_website_form_input input-sm" required=""/>
+                                    <input name="pre_state_province" class="form-control o_website_form_input input-sm"
+                                           required=""/>
                                 </div>
-                                <div class="form-group col-md-6 pull-right o_website_form_required_custom">
+                                <div class="form-group col-md-5 pull-right o_website_form_required_custom">
                                     <label class="control-label">Districts / জেলা</label>
                                     <select class="form-control o_website_form_input input-sm" name="pre_zip_postal">
                                         <t t-foreach='districts' t-as='label'>
@@ -197,14 +197,15 @@
                                            class="form-control o_website_form_input input-sm" required=""/>
                                 </div>
                                 <div class="form-group col-md-6 pull-right o_website_form_required_custom">
-                                    <label class="control-label">Postal Code / পোস্ট কোড নম্বর</label>
+                                    <label class="control-label">Postal Code/পোস্ট কোড নম্বর</label>
                                     <input id="pre_zip_postal" name="per_zip_postal" type="text"
                                            class="form-control o_website_form_input input-sm" required=""/>
                                 </div>
 
                                 <div class="form-group col-md-7 pull-left o_website_form_required_custom">
                                     <label class="control-label">Sub-District / উপজেলা</label>
-                                    <input name="per_state_province" class="form-control o_website_form_input input-sm"/>
+                                    <input name="per_state_province"
+                                           class="form-control o_website_form_input input-sm"/>
                                 </div>
                                 <div class="form-group col-md-6 pull-right o_website_form_required_custom">
                                     <label class="control-label">Districts / জেলা</label>
@@ -231,7 +232,7 @@
                                         <th>Institute</th>
                                         <th>Passing Year</th>
                                         <th>Board/University</th>
-                                        <th>Grade/Class</th>
+                                        <th>Grade/Class/Division</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -419,7 +420,7 @@
 
                             <div class="form-group form-field col-md-6 o_website_form_required_custom">
                                 <label class="control-label">Quota / কোটা</label>
-                                <select class="form-control input-sm o_website_form_input">
+                                <select class="form-control input-sm  o_website_form_input" name="quota">
                                     <t t-foreach='quota' t-as='label'>
                                         <option t-att-value="label">
                                             <t t-esc="label_value"/>
@@ -433,19 +434,23 @@
                                 <input type="text" class="form-control input-sm o_website_form_input"
                                        name="treasury_challan"></input>
                             </div>
+
+                            <div class="form-group form-field col-md-6 o_website_form_required_custom pull-right">
+                                <label class="control-label">Ex-Service Personnel / প্রাক্তন সেবা কর্মী</label>
+                                <select class="form-control input-sm" name="ex_service_personnel">
+                                    <option value="yes">Yes</option>
+                                    <option value="no">No</option>
+                                </select>
+                            </div>
+
                             <div class="form-group form-field col-md-6 o_website_form_required_custom">
                                 <label class="control-label" for="description">Date / তারিখ</label>
                                 <input type="text" class="form-control input-sm o_website_form_input"
                                        id="datepicker_challan"
                                        name="treasury_date"></input>
                             </div>
-                            <div class="form-group form-field col-md-6 o_website_form_required_custom pull-right">
-                                <label class="control-label" for="description">Bank and Branch Name / ব্যাংক ও শাখার
-                                    নাম
-                                </label>
-                                <input type="text" class="form-control input-sm o_website_form_input"
-                                       name="bank_branch_name"></input>
-                            </div>
+
+
                             <div class="form-group form-field col-md-6 o_website_form_required_custom">
                                 <label for="sel1">Is Divisional Candidate / বিভাগীয় প্রার্থী কিনা</label>
                                 <select class="form-control input-sm" name="divisional_candiate">
@@ -453,9 +458,18 @@
                                     <option value="no">No</option>
                                 </select>
                             </div>
-                            <div class="form-group col-md-6 form-field o_website_form_required_custom pull-right">
-                                <label class="control-label" for="exampleInputFile">Resume Upload / জীবনবৃত্তান্ত
-                                    আপলোড
+
+                            <div class="form-group form-field col-md-6 o_website_form_required_custom pull-right">
+                                <label class="control-label" for="description">Bank and Branch Name / ব্যাংক ও শাখার
+                                    নাম
+                                </label>
+                                <input type="text" class="form-control input-sm o_website_form_input"
+                                       name="bank_branch_name"></input>
+                            </div>
+
+
+                            <div class="form-group col-md-6 form-field o_website_form_required_custom">
+                                <label class="control-label" for="exampleInputFile">Resume / জীবনবৃত্তান্ত
                                 </label>
                                 <input type="file" name="Resume"/>
                                 <p class="help-block">Upload resume in any format.</p>
