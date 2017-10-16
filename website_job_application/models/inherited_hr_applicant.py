@@ -33,7 +33,7 @@ class InheritedHrApplicant(models.Model):
     per_zip_postal = fields.Char(string='Post Code', size=60)
     per_district = fields.Char(string='District', size=60)
 
-    """Teasury Information"""
+    """Treasury Information"""
     treasury_challan = fields.Char(string="Treasury Challan")
     treasury_date = fields.Char(string="Treasury Date")
     bank_branch_name = fields.Char(string="Bank and Branch Name")
