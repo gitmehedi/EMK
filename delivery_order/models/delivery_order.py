@@ -3,47 +3,29 @@ from odoo.exceptions import UserError, ValidationError
 
 import time,datetime
 
+
 class SaleDeliveryOrder(models.Model):
     _name = 'delivery.order'
     _description = 'Delivery Order'
     _inherit = ['mail.thread']
     _rec_name='name'
 
-    # def _current_employee(self):
-    #     return self.env['hr.employee'].search([('user_id', '=', self.env.uid)], limit=1)
-
-    name = fields.Char(string='Name', index=True)
-
+    name = fields.Char(string='Name', index=True, readonly=True)
     so_date = fields.Date('Sales Order Date', readonly=True)
-
-    deli_address = fields.Char('Delivery Address', readonly=True,
-                             states={'draft': [('readonly', False)]})
-    """ All relations fields """
-
-    sale_order_id = fields.Many2one('sale.order',string='Sale Order',
-                                    required=True, readonly=True,states={'draft': [('readonly', False)]})
-    parent_id = fields.Many2one('res.partner', 'Customer', ondelete='cascade', readonly=True,
-                             related='sale_order_id.partner_id')
-    payment_term_id = fields.Many2one('account.payment.term', string='Payment Terms', readonly=True,
-                                      related='sale_order_id.payment_term_id')
+    sequence_id = fields.Char('Sequence', readonly=True)
+    deli_address = fields.Char('Delivery Address', readonly=True,states={'draft': [('readonly', False)]})
+    sale_order_id = fields.Many2one('sale.order',string='Sale Order',required=True, readonly=True,states={'draft': [('readonly', False)]})
+    parent_id = fields.Many2one('res.partner', 'Customer', ondelete='cascade', readonly=True,related='sale_order_id.partner_id')
+    payment_term_id = fields.Many2one('account.payment.term', string='Payment Terms', readonly=True,related='sale_order_id.payment_term_id')
     warehouse_id = fields.Many2one('stock.warehouse', string='Warehouse', readonly=True)
-    line_ids = fields.One2many('delivery.order.line', 'parent_id', string="Products", readonly=True,
-                               states={'draft': [('readonly', False)]})
-    cash_ids = fields.One2many('cash.payment.line', 'pay_cash_id', string="Cash", readonly=True, invisible =True,
-                               states={'draft': [('readonly', False)]})
-
-    cheque_ids=  fields.One2many('cheque.payment.line', 'pay_cash_id', string="Cheque", readonly=True,
-                               states={'draft': [('readonly', False)]})
-    tt_ids = fields.One2many('tt.payment.line', 'pay_tt_id', string="T.T", readonly=True,
-                                 states={'draft': [('readonly', False)]})
-    lc_ids = fields.One2many('lc.payment.line', 'pay_lc_id', string="L/C", readonly=True,
-                             states={'draft': [('readonly', False)]})
-
+    line_ids = fields.One2many('delivery.order.line', 'parent_id', string="Products", readonly=True,states={'draft': [('readonly', False)]})
+    cash_ids = fields.One2many('cash.payment.line', 'pay_cash_id', string="Cash", readonly=True, invisible =True,states={'draft': [('readonly', False)]})
+    cheque_ids=  fields.One2many('cheque.payment.line', 'pay_cash_id', string="Cheque", readonly=True,states={'draft': [('readonly', False)]})
+    tt_ids = fields.One2many('tt.payment.line', 'pay_tt_id', string="T.T", readonly=True,states={'draft': [('readonly', False)]})
+    lc_ids = fields.One2many('lc.payment.line', 'pay_lc_id', string="L/C", readonly=True,states={'draft': [('readonly', False)]})
     requested_by = fields.Many2one('res.users', string='Requested By', readonly=True, default=lambda self: self.env.user)
-
     approver1_id = fields.Many2one('res.users', string="First Approval", readonly=True)
     approver2_id = fields.Many2one('res.users', string="Final Approval", readonly=True)
-
     requested_date = fields.Date(string="Requested Date", default=datetime.date.today(), readonly=True)
     approved_date = fields.Date(string='Final Approval Date',
                                 states={'draft': [('invisible', True)],
@@ -51,9 +33,6 @@ class SaleDeliveryOrder(models.Model):
                                         'close': [('invisible', False), ('readonly', True)],
                                         'approve': [('invisible', False), ('readonly', True)]})
     confirmed_date = fields.Date(string="First Approval Date", _defaults=lambda *a: time.strftime('%Y-%m-%d'), readonly=True)
-
-   # account_payment_id = fields.Many2one('account.payment', string='Payment Information', required=True)
-
     so_type = fields.Selection([
         ('cash', 'Cash'),
         ('credit_sales', 'Credit'),
@@ -68,6 +47,12 @@ class SaleDeliveryOrder(models.Model):
     ], default='draft')
 
     """ All functions """
+
+    @api.model
+    def create(self, vals):
+        seq = self.env['ir.sequence'].next_by_code('delivery.order') or '/'
+        vals['name'] = seq
+        return super(SaleDeliveryOrder, self).create(vals)
 
     @api.multi
     def unlink(self):
@@ -84,30 +69,21 @@ class SaleDeliveryOrder(models.Model):
 
     @api.multi
     def action_approve(self):
-        # account_payment_pool = self.env['account.payment'].search(
-        #     [('is_this_payment_checked','=',False),('sale_order_id', '=', self.sale_order_id.id), ('partner_id', '=', self.parent_id.id)])
-
-        # if not account_payment_pool:
-        #     raise UserError("Either Payment Information not found for this Sale Order Or Payment Information entered is already in use")
-
         for cash_line in self.cash_ids:
+
+            if cash_line.account_payment_id.sale_order_id.id != self.sale_order_id.id:
+                raise UserError("%s Payment Information is of a different Sale Order!" %(cash_line.account_payment_id.display_name))
+                break;
+
             if cash_line.account_payment_id.is_this_payment_checked == True:
                 raise UserError("Payment Information entered is already in use: %s" %(cash_line.account_payment_id.display_name))
                 break;
 
-        # delivery_order_pool = self.env['delivery.order'].search(
-        #     [('state', '=', 'close'), ('cash_ids', '=', cash_line.account_payment_id.id),('sale_order_id', '=', self.sale_order_id.id)])
-
         if self.so_type == 'cash' :
-            # and account_payment_pool.state == 'posted' \
-            # and account_payment_pool \
-            # and account_payment_pool.payment_type == 'inbound' \
-            # and self.sale_order_id.id == account_payment_pool.sale_order_id.id:
 
             self.state = 'approve'
             self.line_ids.write({'state': 'approve'})
             self.approver2_id = self.env.user
-            #account_payment_pool.write({'is_this_payment_checked':True})
 
             return self.write({'state': 'approve', 'approved_date': time.strftime('%Y-%m-%d %H:%M:%S')})
 

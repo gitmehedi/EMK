@@ -13,7 +13,7 @@
                     <field name="my_menu_check" invisible="1"/>
                 </field>
 
-                <field name="payment_type" position="before">
+                <field name="payment_date" position="before">
                     <field name="sale_order_id" attrs="{'invisible':[('my_menu_check','=',False)]}" options="{'no_open': True, 'no_create': True}"/>
                 </field>
 
@@ -29,6 +29,11 @@
                     <field name="partner_type" nolabel="1" widget="selection" string="" attrs="{'required': [('payment_type', 'in', ('inbound', 'outbound'))],
                     'invisible': [('payment_type', 'not in', ('inbound', 'outbound'))], 'readonly': [('state', '=', 'draft'), ('my_menu_check','=',True)]}"/>
                 </field>
+
+                <field name="operating_unit_id" position="replace">
+                    <field name="operating_unit_id" invisible="1"/>
+                </field>
+
 
             </field>
         </record>
