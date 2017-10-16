@@ -5,12 +5,7 @@
             <xpath expr="." position="inside">
                 <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
                 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-                <script>
-                    $( function() {
-                    $( "#datepicker" ).datepicker();
-                    $( "#datepicker_challan" ).datepicker();
-                    } );
-                </script>
+                <script type="text/javascript" src="/website_job_application/static/src/js/custom.js"></script>
             </xpath>
         </template>
 
