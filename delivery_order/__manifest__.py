@@ -3,12 +3,11 @@
     'author': 'Genweb2 Limited',
     'website': 'www.genweb2.com',
     'category': 'Sales',
-    'version':'10.1.0.0',
+    'version':'10.1.1.1',
     'depends': [
         'sale',
         'product_sales_pricelist',
         'account',
-
     ],
 
     'data': [
