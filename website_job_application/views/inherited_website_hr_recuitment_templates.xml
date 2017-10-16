@@ -415,24 +415,24 @@
                                        name="treasury_challan"></input>
                             </div>
                             <div class="form-group form-field col-md-6 o_website_form_required_custom">
-                                <label class="control-label" for="description">Date</label>
+                                <label class="control-label" for="description">Date/তারিখ</label>
                                 <input type="text" class="form-control o_website_form_input"
                                        name="treasury_date"></input>
                             </div>
                             <div class="form-group form-field col-md-6 o_website_form_required_custom pull-right">
-                                <label class="control-label" for="description">Bank and Branch Name</label>
+                                <label class="control-label" for="description">Bank and Branch Name/ব্যাংক ও শাখার নাম</label>
                                 <input type="text" class="form-control o_website_form_input"
                                        name="bank_branch_name"></input>
                             </div>
                             <div class="form-group form-field col-md-6 o_website_form_required_custom">
-                                <label for="sel1">Is Divisional Candidate</label>
+                                <label for="sel1">Is Divisional Candidate/বিভাগীয় প্রার্থী কিনা</label>
                                 <select class="form-control input-sm" name="divisional_candiate">
                                     <option value="yes">Yes</option>
                                     <option value="no">No</option>
                                 </select>
                             </div>
                             <div class="form-group col-md-6 form-field o_website_form_required_custom pull-right">
-                                <label class="control-label" for="exampleInputFile">Resume Upload</label>
+                                <label class="control-label" for="exampleInputFile">Resume Upload/জীবনবৃত্তান্ত আপলোড</label>
                                 <input type="file" name="Resume"/>
                                 <p class="help-block">Upload resume in any format.</p>
                             </div>
