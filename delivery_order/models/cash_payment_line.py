@@ -1,14 +1,18 @@
-from odoo import api, fields, models, exceptions, _
+from odoo import fields, models
 
-class MrpDailyProductionLine(models.Model):
+class CashPaymentLine(models.Model):
     _name = 'cash.payment.line'
     _description = 'Cash Payment Terms line'
 
-    amount = fields.Float("Amount")
-    dep_bank = fields.Char("Deposited Bank")
-    branch = fields.Char("Branch")
-    validity = fields.Float("Validity(Days)")
+    amount = fields.Float(string="Amount")
+    dep_bank = fields.Char(string="Deposited Bank")
+    branch = fields.Char(string="Branch")
+    validity = fields.Float(string="Validity(Days)")
+    account_payment_id = fields.Many2one('account.payment', string='Payment Information')
+
     """ Relational Fields """
     pay_cash_id = fields.Many2one('delivery.order', ondelete='cascade')
+
+
 
 

@@ -22,7 +22,7 @@
         <field eval="0" name="perm_write"/>
         <field eval="1" name="perm_read"/>
         <field eval="0" name="perm_create"/>
-        <field name="groups" eval="[(4,ref('gbs_base_package.group_dept_manager'))]"/>
+        <field name="groups" eval="[(4,ref('gbs_application_group.group_dept_manager'))]"/>
     </record>
 
     <record id="ir_rule_hr_emp_2" model="ir.rule">

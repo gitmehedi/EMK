@@ -19,13 +19,14 @@
     'version': '0.1',
 
     # any module necessary for this one to work correctly
-    'depends': ['gbs_base_package',
+    'depends': [
                 'hr',
                 'hr_holidays',
                 'hr_recruitment',
                 'gbs_hr_calendar',
                 #'hr_experience',
                 'gbs_hr_department_sequence',
+                'gbs_application_group',
                 'gbs_hr_employee_documents',
                 'gbs_hr_employee_seniority'],
 

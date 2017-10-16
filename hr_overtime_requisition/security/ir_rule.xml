@@ -19,7 +19,7 @@
         <field name="perm_create" eval="True"/>
         <field name="perm_write" eval="True"/>
         <field name="perm_unlink" eval="True"/>
-        <field name="groups" eval="[(4,ref('gbs_base_package.group_dept_manager'))]"/>
+        <field name="groups" eval="[(4,ref('gbs_application_group.group_dept_manager'))]"/>
     </record>
 
     <record id="rule_ot_requisition_hr_manager" model="ir.rule">
@@ -43,37 +43,5 @@
         <field name="perm_unlink" eval="True"/>
         <field name="groups" eval="[(4,ref('hr_attendance.group_hr_attendance_user'))]"/>
     </record>
-
-    <!--<record id="rule_ot_requisition_for_dept_manager" model="ir.rule">-->
-        <!--<field name="name">OT Requisition(Department Manager)</field>-->
-        <!--<field name="model_id" ref="model_hr_ot_requisition"/>-->
-        <!--<field name="domain_force">[('department_id.manager_id.user_id','=',user.id)]</field>-->
-        <!--<field name="perm_read" eval="True" />-->
-        <!--<field name="perm_create" eval="True"/>-->
-        <!--<field name="perm_write" eval="True"/>-->
-        <!--<field name="perm_unlink" eval="True"/>-->
-        <!--<field name="groups" eval="[(4,ref('gbs_base_package.group_dept_manager'))]"/>-->
-    <!--</record>-->
-
-    <!--<record id="attendance_rule_dept_manager" model="ir.rule">-->
-        <!--<field name="name">Attendance Permission for Department Manager</field>-->
-        <!--<field name="model_id" ref="hr_attendance.model_hr_attendance"/>-->
-        <!--<field name="domain_force">[('department_id.manager_id.user_id','=',user.id)]</field>-->
-        <!--<field name="perm_read" eval="True" />-->
-        <!--<field name="perm_create" eval="True"/>-->
-        <!--<field name="perm_write" eval="False"/>-->
-        <!--<field name="perm_unlink" eval="False"/>-->
-        <!--<field name="groups" eval="[(4,ref('gbs_base_package.group_dept_manager'))]"/>-->
-    <!--</record>-->
-
-    <!--<record id="property_rule_hr_ot_requisition" model="ir.rule">-->
-        <!--<field name="name">HR Employee OT Requisition</field>-->
-        <!--<field name="model_id" ref="model_hr_ot_requisition"/>-->
-        <!--<field name="domain_force">[('employee_id.operating_unit_id.id','in',user.operating_unit_ids.ids)]</field>-->
-        <!--<field name="perm_read" eval="True" />-->
-        <!--<field name="perm_create" eval="True"/>-->
-        <!--<field name="perm_write" eval="True"/>-->
-        <!--<field name="perm_unlink" eval="True"/>-->
-    <!--</record>-->
 
 </odoo>

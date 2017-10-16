@@ -20,7 +20,7 @@ class HREmployeeRequisition(models.Model):
                 if data[0] != res:
                     res.append(data[0])
             return [('id', 'in', res)]
-        elif user.has_group('gbs_base_package.group_dept_manager'):
+        elif user.has_group('gbs_application_group.group_dept_manager'):
             emp_id = self.env['hr.employee'].search([('user_id', '=', self.env.uid)], limit=1).id
             return [('manager_id', '=', emp_id)]
 

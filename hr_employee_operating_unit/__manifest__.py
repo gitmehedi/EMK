@@ -3,7 +3,8 @@
     "author": "Genweb2 Ltd.",
     "website": "http://www.genweb2.com",
     "category": "Human Resources",
-    "depends": ["hr", "operating_unit","gbs_application_group"],
+    "depends": ["hr", "operating_unit",
+                "gbs_application_group",],
     "data": [
         "views/hr_views.xml",
         "security/hr_emp_security.xml",

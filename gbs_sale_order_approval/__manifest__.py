@@ -1,6 +1,6 @@
 {
     'name': 'Order to Cash Process',
-    'version': '1.0',
+    'version': '10.1.0.1',
     'category': 'sales',
     'author': 'Genweb2 Limited',
     'website': 'www.genweb2.com',
@@ -14,8 +14,8 @@
         'gbs_sales_commission_so',
         'delivery_order',
         'sale_order_type',
-
     ],
+
     'data': [
         'security/ir.model.access.csv',
         'security/sale_order_approval_security.xml',

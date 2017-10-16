@@ -4,3 +4,4 @@ import cash_payment_line
 import cheque_payment_line
 import tt_payment_line
 import lc_payment_line
+import inherit_account_payment

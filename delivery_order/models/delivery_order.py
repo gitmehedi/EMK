@@ -1,5 +1,6 @@
-from odoo import api, fields, models, exceptions, _
+from odoo import api, fields, models
 from odoo.exceptions import UserError, ValidationError
+
 import time,datetime
 
 class SaleDeliveryOrder(models.Model):
@@ -51,6 +52,7 @@ class SaleDeliveryOrder(models.Model):
                                         'approve': [('invisible', False), ('readonly', True)]})
     confirmed_date = fields.Date(string="First Approval Date", _defaults=lambda *a: time.strftime('%Y-%m-%d'), readonly=True)
 
+   # account_payment_id = fields.Many2one('account.payment', string='Payment Information', required=True)
 
     so_type = fields.Selection([
         ('cash', 'Cash'),
@@ -71,7 +73,7 @@ class SaleDeliveryOrder(models.Model):
     def unlink(self):
         for order in self:
             if order.state != 'draft':
-                raise UserError(_('You can not delete this.'))
+                raise UserError('You can not delete this.')
             order.line_ids.unlink()
         return super(SaleDeliveryOrder, self).unlink()
 
@@ -80,12 +82,35 @@ class SaleDeliveryOrder(models.Model):
         self.state = 'draft'
         self.line_ids.write({'state':'draft'})
 
-    @api.one
+    @api.multi
     def action_approve(self):
-        self.state = 'approve'
-        self.line_ids.write({'state':'approve'})
-        self.approver2_id = self.env.user
-        return self.write({'state': 'approve', 'approved_date': time.strftime('%Y-%m-%d %H:%M:%S')})
+        # account_payment_pool = self.env['account.payment'].search(
+        #     [('is_this_payment_checked','=',False),('sale_order_id', '=', self.sale_order_id.id), ('partner_id', '=', self.parent_id.id)])
+
+        # if not account_payment_pool:
+        #     raise UserError("Either Payment Information not found for this Sale Order Or Payment Information entered is already in use")
+
+        for cash_line in self.cash_ids:
+            if cash_line.account_payment_id.is_this_payment_checked == True:
+                raise UserError("Payment Information entered is already in use: %s" %(cash_line.account_payment_id.display_name))
+                break;
+
+        # delivery_order_pool = self.env['delivery.order'].search(
+        #     [('state', '=', 'close'), ('cash_ids', '=', cash_line.account_payment_id.id),('sale_order_id', '=', self.sale_order_id.id)])
+
+        if self.so_type == 'cash' :
+            # and account_payment_pool.state == 'posted' \
+            # and account_payment_pool \
+            # and account_payment_pool.payment_type == 'inbound' \
+            # and self.sale_order_id.id == account_payment_pool.sale_order_id.id:
+
+            self.state = 'approve'
+            self.line_ids.write({'state': 'approve'})
+            self.approver2_id = self.env.user
+            #account_payment_pool.write({'is_this_payment_checked':True})
+
+            return self.write({'state': 'approve', 'approved_date': time.strftime('%Y-%m-%d %H:%M:%S')})
+
 
     @api.one
     def action_validate(self):
@@ -97,6 +122,11 @@ class SaleDeliveryOrder(models.Model):
         self.state = 'close'
         self.line_ids.write({'state':'close'})
         self.approver1_id = self.env.user
+        account_payment_pool = self.env['account.payment'].search(
+            [('is_this_payment_checked', '=', False), ('sale_order_id', '=', self.sale_order_id.id),
+             ('partner_id', '=', self.parent_id.id)])
+        account_payment_pool.write({'is_this_payment_checked': True})
+
         return self.write({'state': 'close', 'confirmed_date': time.strftime('%Y-%m-%d %H:%M:%S')})
 
 

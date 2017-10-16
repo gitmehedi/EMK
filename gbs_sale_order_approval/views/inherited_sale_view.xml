@@ -36,7 +36,7 @@
                                 type="object"
                                 groups="gbs_application_group.group_cxo"
                                 class="btn-primary"
-                                string="Create Delivery Order"/>
+                                string="Delivery Authorization"/>
 
                     </header>
 

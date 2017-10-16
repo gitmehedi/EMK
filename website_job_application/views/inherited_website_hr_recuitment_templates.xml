@@ -1,0 +1,452 @@
+<?xml version="1.0"?>
+<odoo>
+    <data>
+        <template id="website_job_description" inherit_id="website_hr_recruitment.detail"
+                  name="Job description on Portal">
+            <xpath expr="//div[hasclass('container')]" position="after">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-8">
+                            <h3 class="text-primary">Job Description</h3>
+                            <div t-field="job.description"/>
+                        </div>
+                    </div>
+                </div>
+            </xpath>
+            <xpath expr="//section/div/div/a[hasclass('pull-right')]" position="replace">
+                <div></div>
+            </xpath>
+            <xpath expr="//section[hasclass('o_job_bottom_bar')]" position="replace">
+                <section class="o_job_bottom_bar mt32 mb32">
+                    <div class="text-center">
+                        <a t-attf-href="/jobs/apply/#{job.id}" class="btn btn-info">Apply Now!</a>
+                    </div>
+                </section>
+
+            </xpath>
+        </template>
+        <template id="inherited_website_job_apply" inherit_id="website_hr_recruitment.apply"
+                  name="Job description on Portal">
+            <xpath expr="//form" position="replace">
+                <div class="col-md-12">
+                    <div class="panel panel-success">
+                        <div class="panel-heading">Basic Information</div>
+                        <div class="form-group col-md-6 form-field o_website_form_required_custom">
+                            <label class="control-label">Name(English)</label>
+                            <input type="text" class="form-control o_website_form_input input-sm"
+                                   name="partner_name" required=""/>
+                        </div>
+                        <div class="form-group col-md-6 form-field o_website_form_required_custom pull-right">
+                            <label class="control-label">Name(Bangla)</label>
+                            <input type="text" class="form-control o_website_form_input input-sm"
+                                   name="partner_name_bangla" required=""/>
+                        </div>
+                        <div class="form-group col-md-6 form-field o_website_form_required_custom">
+                            <label class="control-label">National ID</label>
+                            <input type="text" class="form-control o_website_form_input input-sm"
+                                   name="national_id" required=""/>
+                        </div>
+                        <div class="form-group col-md-6 form-field o_website_form_required_custom  pull-right">
+                            <label class="control-label">Birth Registration No</label>
+                            <input type="text" class="form-control o_website_form_input input-sm"
+                                   name="birth_registration_no" required=""/>
+                        </div>
+                        <div class="form-group col-md-6 form-field o_website_form_required_custom">
+                            <label class="control-label">Birth Date</label>
+                            <input type="text" class="form-control o_website_form_input input-sm"
+                                   name="birth_date" required=""/>
+                        </div>
+                        <div class="form-group col-md-6 form-field o_website_form_required_custom  pull-right">
+                            <label class="control-label">Birth Location</label>
+                            <input type="text" class="form-control o_website_form_input input-sm"
+                                   name="birth_city" required=""/>
+                        </div>
+                        <div class="form-group col-md-6 form-field o_website_form_required_custom">
+                            <label class="control-label">Mother Name</label>
+                            <input type="text" class="form-control o_website_form_input input-sm"
+                                   name="mother_name" required=""/>
+                        </div>
+                        <div class="form-group col-md-6 form-field o_website_form_required_custom pull-right">
+                            <label class="control-label">Father Name</label>
+                            <input type="text" class="form-control o_website_form_input input-sm"
+                                   name="father_name" required=""/>
+                        </div>
+                    </div>
+                    <div class="form-group col-md-6 form-field o_website_form_required_custom">
+                        <label class="control-label">Mobile No</label>
+                        <input type="text" class="form-control o_website_form_input input-sm"
+                               name="partner_phone" required=""/>
+                    </div>
+                    <div class="form-group col-md-6 form-field o_website_form_required_custom pull-right">
+                        <label class="control-label">Email</label>
+                        <input type="email" class="form-control o_website_form_input input-sm"
+                               name="email_from"/>
+                    </div>
+                    <div class="form-group col-md-6 form-field o_website_form_required_custom">
+                        <label class="control-label">Nationality</label>
+                        <input type="text" class="form-control o_website_form_input input-sm"
+                               name="nationality" required=""/>
+                    </div>
+                    <div class="form-group col-md-6 form-field o_website_form_required_custom pull-right">
+                        <label class="control-label">Gender</label>
+                        <select class="form-control o_website_form_input input-sm" name="gender">
+                            <t t-foreach='department' t-as='label'>
+                                <option t-att-value="label['id']">
+                                    <t t-esc="label['name']"/>
+                                </option>
+                            </t>
+                        </select>
+                    </div>
+                    <div class="form-group col-md-6 form-field o_website_form_required_custom">
+                        <label class="control-label">Religion</label>
+                        <select class="form-control o_website_form_input input-sm" name="religion">
+                            <t t-foreach='department' t-as='label'>
+                                <option t-att-value="label['id']">
+                                    <t t-esc="label['name']"/>
+                                </option>
+                            </t>
+                        </select>
+                    </div>
+                    <div class="form-group col-md-6 form-field o_website_form_required_custom pull-right">
+                        <label class="control-label">Occupation</label>
+                        <input type="text" class="form-control o_website_form_input input-sm"
+                               name="occupation"/>
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <div class="panel panel-success">
+                        <div class="panel-heading">Present Address and Permanent Address</div>
+                        <div class="col-md-5 pull-left">
+                            <div class="form-group">
+                                <label class="control-label">Present House and Road(Name/No)</label>
+                                <input id="pre_address_1" name="pre_address_1" type="text"
+                                       class="form-control input-sm"/>
+                            </div>
+                            <div class="form-group ">
+                                <label class="control-label">Present Village/Para/Moholla</label>
+                                <input id="pre_address_2" name="pre_address_2" type="text"
+                                       class="form-control input-sm"/>
+                            </div>
+                            <div class="form-group col-md-6 pull-left">
+                                <label class="control-label">Present Union/Ward</label>
+                                <input id="pre_city_town" name="pre_city_town" type="text"
+                                       class="form-control input-sm"/>
+                            </div>
+                            <div class="form-group col-md-6 pull-right o_website_form_required_custom">
+                                <label class="control-label">Postal Code</label>
+                                <input id="pre_zip_postal" name="pre_zip_postal" type="text"
+                                       class="form-control input-sm"/>
+                            </div>
+
+                            <div class="form-group col-md-6 pull-left o_website_form_required_custom">
+                                <label class="control-label">Sub-District</label>
+                                <select class="form-control input-sm" name="pre_state_province">
+                                    <t t-foreach='department' t-as='label'>
+                                        <option t-att-value="label['id']">
+                                            <t t-esc="label['name']"/>
+                                        </option>
+                                    </t>
+                                </select>
+                            </div>
+                            <div class="form-group col-md-6 pull-right o_website_form_required_custom">
+                                <label class="control-label">Districts</label>
+                                <select class="form-control input-sm" name="pre_zip_postal">
+                                    <t t-foreach='department' t-as='label'>
+                                        <option t-att-value="label['id']">
+                                            <t t-esc="label['name']"/>
+                                        </option>
+                                    </t>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-5 pull-right">
+                            <div class="form-group">
+                                <label class="control-label">Permanent House and Road(Name/No)</label>
+                                <input id="per_address_1" name="per_address_1" type="text"
+                                       class="form-control input-sm"/>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label">Permanent Village/Para/Moholla</label>
+                                <input id="per_address_2" name="per_address_2" type="text"
+                                       class="form-control input-sm"/>
+                            </div>
+                            <div class="form-group col-md-6 pull-left o_website_form_required_custom">
+                                <label class="control-label">Present Union/Ward</label>
+                                <input id="per_city_town" name="per_city_town" type="text"
+                                       class="form-control input-sm"/>
+                            </div>
+                            <div class="form-group col-md-6 pull-right o_website_form_required_custom">
+                                <label class="control-label">Postal Code</label>
+                                <input id="pre_zip_postal" name="per_zip_postal" type="text"
+                                       class="form-control input-sm"/>
+                            </div>
+
+                            <div class="form-group col-md-6 pull-left o_website_form_required_custom">
+                                <label class="control-label">Sub-District</label>
+                                <select class="form-control input-sm" name="per_state_province">
+                                    <t t-foreach='department' t-as='label'>
+                                        <option t-att-value="label['id']">
+                                            <t t-esc="label['name']"/>
+                                        </option>
+                                    </t>
+                                </select>
+                            </div>
+                            <div class="form-group col-md-6 pull-right o_website_form_required_custom">
+                                <label class="control-label">Districts</label>
+                                <select class="form-control input-sm" name="per_district">
+                                    <t t-foreach='department' t-as='label'>
+                                        <option t-att-value="label['id']">
+                                            <t t-esc="label['name']"/>
+                                        </option>
+                                    </t>
+                                </select>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <div class="panel panel-success">
+                        <div class="panel-heading">Educational Qualification</div>
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>Examination Name</th>
+                                    <th>Subject</th>
+                                    <th>Institute</th>
+                                    <th>Passing Year</th>
+                                    <th>Board/University</th>
+                                    <th>Grade/Class</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+
+                                    <td>
+                                        <input type="text"
+                                               class="form-control o_website_form_input input-sm"
+                                               name="exm_ssc"/>
+                                    </td>
+                                    <td>
+                                        <input type="text"
+                                               class="form-control o_website_form_input input-sm"
+                                               name="exm_ssc_subject"/>
+                                    </td>
+                                    <td>
+                                        <input type="text"
+                                               class="form-control o_website_form_input input-sm"
+                                               name="exm_ssc_institute"/>
+                                    </td>
+                                    <td>
+                                        <input type="text"
+                                               class="form-control o_website_form_input input-sm"
+                                               name="exm_ssc_passing_year"/>
+                                    </td>
+                                    <td>
+                                        <input type="text"
+                                               class="form-control o_website_form_input input-sm"
+                                               name="exm_ssc_board"/>
+                                    </td>
+                                    <td>
+                                        <input type="text"
+                                               class="form-control o_website_form_input input-sm"
+                                               name="exm_ssc_class"/>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <input type="text"
+                                               class="form-control o_website_form_input input-sm"
+                                               name="exm_hsc"/>
+                                    </td>
+                                    <td>
+                                        <input type="text"
+                                               class="form-control o_website_form_input input-sm"
+                                               name="exm_hsc_subject"/>
+                                    </td>
+                                    <td>
+                                        <input type="text"
+                                               class="form-control o_website_form_input input-sm"
+                                               name="exm_hsc_institute"/>
+                                    </td>
+                                    <td>
+                                        <input type="text"
+                                               class="form-control o_website_form_input input-sm"
+                                               name="exm_hsc_passing_year"/>
+                                    </td>
+                                    <td>
+                                        <input type="text"
+                                               class="form-control o_website_form_input input-sm"
+                                               name="exm_hsc_board"/>
+                                    </td>
+                                    <td>
+                                        <input type="text"
+                                               class="form-control o_website_form_input input-sm"
+                                               name="exm_hsc_class"/>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <input type="text"
+                                               class="form-control o_website_form_input input-sm"
+                                               name="exm_bsc"/>
+                                    </td>
+                                    <td>
+                                        <input type="text"
+                                               class="form-control o_website_form_input input-sm"
+                                               name="exm_bsc_subject"/>
+                                    </td>
+                                    <td>
+                                        <input type="text"
+                                               class="form-control o_website_form_input input-sm"
+                                               name="exm_bsc_institute"/>
+                                    </td>
+                                    <td>
+                                        <input type="text"
+                                               class="form-control o_website_form_input input-sm"
+                                               name="exm_bsc_passing_year"/>
+                                    </td>
+                                    <td>
+                                        <input type="text"
+                                               class="form-control o_website_form_input input-sm"
+                                               name="exm_bsc_board"/>
+                                    </td>
+                                    <td>
+                                        <input type="text"
+                                               class="form-control o_website_form_input input-sm"
+                                               name="exm_bsc_class"/>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <input type="text"
+                                               class="form-control o_website_form_input input-sm"
+                                               name="exm_msc"/>
+                                    </td>
+                                    <td>
+                                        <input type="text"
+                                               class="form-control o_website_form_input input-sm"
+                                               name="exm_msc_subject"/>
+                                    </td>
+                                    <td>
+                                        <input type="text"
+                                               class="form-control o_website_form_input input-sm"
+                                               name="exm_msc_institute"/>
+                                    </td>
+                                    <td>
+                                        <input type="text"
+                                               class="form-control o_website_form_input input-sm"
+                                               name="exm_msc_passing_year"/>
+                                    </td>
+                                    <td>
+                                        <input type="text"
+                                               class="form-control o_website_form_input input-sm"
+                                               name="exm_msc_board"/>
+                                    </td>
+                                    <td>
+                                        <input type="text"
+                                               class="form-control o_website_form_input input-sm"
+                                               name="exm_msc_class"/>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <input type="text"
+                                               class="form-control o_website_form_input input-sm"
+                                               name="exm_other"/>
+                                    </td>
+                                    <td>
+                                        <input type="text"
+                                               class="form-control o_website_form_input input-sm"
+                                               name="exm_other_subject"/>
+                                    </td>
+                                    <td>
+                                        <input type="text"
+                                               class="form-control o_website_form_input input-sm"
+                                               name="exm_other_institute"/>
+                                    </td>
+                                    <td>
+                                        <input type="text"
+                                               class="form-control o_website_form_input input-sm"
+                                               name="exm_other_passing_year"/>
+                                    </td>
+                                    <td>
+                                        <input type="text"
+                                               class="form-control o_website_form_input input-sm"
+                                               name="exm_other_board"/>
+                                    </td>
+                                    <td>
+                                        <input type="text"
+                                               class="form-control o_website_form_input input-sm"
+                                               name="exm_other_class"/>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <div class="panel panel-success">
+                        <div class="panel-heading">Additional Information</div>
+                        <div class="form-group form-field col-md-6 o_website_form_required_custom">
+                            <label class="control-label" for="description">Extra Curriculam Activities
+                            </label>
+                            <textarea class="form-control o_website_form_input"
+                                      name="curriculam_activities"></textarea>
+                        </div>
+                        <div class="form-group form-field col-md-6 o_website_form_required_custom pull-right">
+                            <label class="control-label" for="description">Experience Remarks</label>
+                            <textarea class="form-control o_website_form_input"
+                                      name="experience_remarks"></textarea>
+                        </div>
+
+                        <div class="form-group form-field col-md-6">
+                            <label for="sel1">Quota</label>
+                            <select class="form-control input-sm">
+                                <t t-foreach='department' t-as='label'>
+                                    <option t-att-value="label['id']">
+                                        <t t-esc="label['name']"/>
+                                    </option>
+                                </t>
+                            </select>
+                        </div>
+                        <div class="form-group form-field col-md-6 o_website_form_required_custom">
+                            <label class="control-label" for="description">Treasury Challan</label>
+                            <input type="text" class="form-control o_website_form_input"
+                                   name="treasury_challan"></input>
+                        </div>
+                        <div class="form-group form-field col-md-6 o_website_form_required_custom pull-right">
+                            <label class="control-label" for="description">Date</label>
+                            <input type="text" class="form-control o_website_form_input"
+                                   name="treasury_date"></input>
+                        </div>
+                        <div class="form-group form-field col-md-6 o_website_form_required_custom pull-right">
+                            <label class="control-label" for="description">Bank and Branch Name</label>
+                            <input type="text" class="form-control o_website_form_input"
+                                   name="bank_branch_name"></input>
+                        </div>
+                        <div class="form-group form-field col-md-6 pull-right o_website_form_required_custom">
+                            <label for="sel1">Is Divisional Candidate</label>
+                            <select class="form-control input-sm" name="divisional_candiate">
+                                <option value="yes">Yes</option>
+                                <option value="no">No</option>
+                            </select>
+                        </div>
+                        <div class="form-group col-md-6 form-field o_website_form_required_custom">
+                            <label class="control-label" for="exampleInputFile">Resume Upload</label>
+                            <input type="file" name="Resume"/>
+                            <p class="help-block">Upload resume in any format.</p>
+                        </div>
+
+                        <div class="form-group col-md-12 form-field o_website_form_required_custom">
+                            <div>
+                                <span class="btn btn-success o_website_form_send">Submit</span>
+                                <span id="o_website_form_result"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </xpath>
+        </template>
+    </data>
+</odoo>

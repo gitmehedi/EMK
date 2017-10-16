@@ -1,9 +1,9 @@
 from odoo import api, fields, models
+from odoo.exceptions import UserError, ValidationError
 
 class SaleOrder(models.Model):
     _inherit = "sale.order"
 
-    currency_id = fields.Many2one("res.currency", string="Currency", required=True)
 
     credit_sales_or_lc = fields.Selection([
         ('cash', 'Cash'),
@@ -23,6 +23,7 @@ class SaleOrder(models.Model):
     ], string='Status', readonly=True, copy=False, index=True, track_visibility='onchange', default='to_submit')
 
     pack_type = fields.Many2one('product.packaging.mode',string='Packing Mode', required=True)
+    currency_id = fields.Many2one("res.currency", related='', string="Currency", required=True)
 
     @api.multi
     def action_validate(self):
@@ -30,6 +31,9 @@ class SaleOrder(models.Model):
 
     @api.multi
     def action_to_submit(self):
+        if self.validity_date and self.validity_date < self.date_order:
+            raise UserError('Expiration Date can not be less than Order Date')
+
         self.state = 'draft'
 
 
@@ -101,18 +105,19 @@ class SaleOrder(models.Model):
 
     @api.multi
     def action_create_delivery_order(self):
-        view = self.env.ref('delivery_order.delivery_order_form')
 
-        return {
-            'name': ('Delivery Authorization'),
-            'view_type': 'form',
-            'view_mode': 'form',
-            'res_model': 'delivery.order',
-            'view_id': [view.id],
-            'type': 'ir.actions.act_window',
-            'context': {'default_sale_order_id': self.id}
-        }
 
+            view = self.env.ref('delivery_order.delivery_order_form')
+
+            return {
+                'name': ('Delivery Authorization'),
+                'view_type': 'form',
+                'view_mode': 'form',
+                'res_model': 'delivery.order',
+                'view_id': [view.id],
+                'type': 'ir.actions.act_window',
+                'context': {'default_sale_order_id': self.id}
+            }
 
     @api.multi
     @api.onchange('currency_id')
@@ -194,4 +199,3 @@ class InheritedSaleOrderLine(models.Model):
             self.update(vals)
 
         return res
-
