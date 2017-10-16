@@ -8,7 +8,8 @@ class CashPaymentLine(models.Model):
     branch = fields.Char(string="Branch")
     validity = fields.Integer(string="Validity (Days)")
     account_payment_id = fields.Many2one('account.payment', string='Payment Information')
-    amount = fields.Float(string="Amount", compute='compute_amount')
+    #amount = fields.Float(string="Amount", compute='compute_amount')
+    amount = fields.Float(string="Amount")
 
     """ Relational Fields """
     pay_cash_id = fields.Many2one('delivery.order', ondelete='cascade')
