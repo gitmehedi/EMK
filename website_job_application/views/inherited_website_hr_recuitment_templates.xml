@@ -64,7 +64,7 @@
                                 <input type="text" class="form-control o_website_form_input input-sm"
                                        name="birth_registration_no" required=""/>
                             </div>
-                                <div class="form-group col-md-6 form-field o_website_form_required_custom ">
+                            <div class="form-group col-md-6 form-field o_website_form_required_custom ">
                                 <label class="control-label">Father Name / পিতার নাম</label>
                                 <input type="text" class="form-control o_website_form_input input-sm"
                                        name="father_name" required=""/>
@@ -133,6 +133,18 @@
                             <input type="text" class="form-control input-sm "
                                    name="occupation"/>
                         </div>
+                        <t t-if="authorize_districts">
+                            <div class="form-group col-md-6 form-field o_website_form_required_custom">
+                                <label class="control-label">Authorize District</label>
+                                <select class="form-control o_website_form_input input-sm" name="authorize_district" required="">
+                                    <t t-foreach='authorize_districts' t-as='label'>
+                                        <option t-att-value="label['id']">
+                                            <t t-esc="label['name']"/>
+                                        </option>
+                                    </t>
+                                </select>
+                            </div>
+                        </t>
                     </div>
                     <div class="col-md-12">
                         <div class="panel panel-success">

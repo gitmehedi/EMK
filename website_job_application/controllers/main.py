@@ -9,6 +9,8 @@ class ExtendWebsiteHrRecruitment(WebsiteHrRecruitment):
         error = {}
         default = {}
         districts = self.get_districts()
+        authorize_districts = request.env['job.district'].sudo().browse(job.authorize_district.ids)
+
         quota = self.get_quota()
         religion = self.get_religion()
         department = request.env['hr.job'].sudo().search([])
@@ -23,6 +25,7 @@ class ExtendWebsiteHrRecruitment(WebsiteHrRecruitment):
             'districts': districts,
             'quota': quota,
             'religion': religion,
+            'authorize_districts': authorize_districts,
         })
 
     def get_religion(self):
