@@ -69,24 +69,44 @@ class SaleDeliveryOrder(models.Model):
 
     @api.multi
     def action_approve(self):
+        if self.so_type == 'cash':
+            self.payment_information_check()
+
+        self.state = 'approve'
+        self.line_ids.write({'state': 'approve'})
+        self.approver2_id = self.env.user
+
+        self.create_delivery_order()
+
+        return self.write({'state': 'approve', 'approved_date': time.strftime('%Y-%m-%d %H:%M:%S')})
+
+
+    def create_delivery_order(self):
+        for order in self.sale_order_id:
+            order.state = 'sale'
+            order.confirmation_date = fields.Datetime.now()
+            if self.env.context.get('send_email'):
+                self.sale_order_id.force_quotation_send()
+
+            order.order_line._action_procurement_create()
+
+        if self.env['ir.values'].get_default('sale.config.settings', 'auto_done_setting'):
+            self.sale_order_id.action_done()
+        return True
+
+
+    def payment_information_check(self):
         for cash_line in self.cash_ids:
 
             if cash_line.account_payment_id.sale_order_id.id != self.sale_order_id.id:
-                raise UserError("%s Payment Information is of a different Sale Order!" %(cash_line.account_payment_id.display_name))
+                raise UserError("%s Payment Information is of a different Sale Order!" % (
+                cash_line.account_payment_id.display_name))
                 break;
 
             if cash_line.account_payment_id.is_this_payment_checked == True:
-                raise UserError("Payment Information entered is already in use: %s" %(cash_line.account_payment_id.display_name))
+                raise UserError(
+                    "Payment Information entered is already in use: %s" % (cash_line.account_payment_id.display_name))
                 break;
-
-        if self.so_type == 'cash' :
-
-            self.state = 'approve'
-            self.line_ids.write({'state': 'approve'})
-            self.approver2_id = self.env.user
-
-            return self.write({'state': 'approve', 'approved_date': time.strftime('%Y-%m-%d %H:%M:%S')})
-
 
     @api.one
     def action_validate(self):
