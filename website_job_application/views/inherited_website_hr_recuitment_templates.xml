@@ -138,11 +138,6 @@
                             <input type="text" class="form-control o_website_form_input input-sm "
                                    name="occupation" required=""/>
                         </div>
-                        <div class="form-group col-md-6 form-field">
-                            <label class="control-label">Ex-Service Personnel / প্রাক্তন সেবা কর্মী</label>
-                            <input type="text" class="form-control input-sm "
-                                   name="ex_service_personnel"/>
-                        </div>
                     </div>
                     <div class="col-md-12">
                         <div class="panel panel-success">
@@ -435,7 +430,7 @@
 
                             <div class="form-group form-field col-md-6 o_website_form_required_custom">
                                 <label class="control-label">Quota / কোটা</label>
-                                <select class="form-control input-sm o_website_form_input">
+                                <select class="form-control input-sm  o_website_form_input" name="quota">
                                     <t t-foreach='quota' t-as='label'>
                                         <option t-att-value="label">
                                             <t t-esc="label_value"/>
@@ -469,7 +464,15 @@
                                     <option value="no">No</option>
                                 </select>
                             </div>
-                            <div class="form-group col-md-6 form-field o_website_form_required_custom pull-right">
+                            <div class="form-group form-field col-md-6 o_website_form_required_custom pull-right">
+                                <label class="control-label">Ex-Service Personnel / প্রাক্তন সেবা কর্মী</label>
+                                <select class="form-control input-sm" name="ex_service_personnel">
+                                    <option value="yes">Yes</option>
+                                    <option value="no">No</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group col-md-6 form-field o_website_form_required_custom">
                                 <label class="control-label" for="exampleInputFile">Resume Upload / জীবনবৃত্তান্ত
                                     আপলোড
                                 </label>
