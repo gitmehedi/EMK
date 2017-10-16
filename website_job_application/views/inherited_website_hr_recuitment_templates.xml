@@ -232,7 +232,7 @@
                                         <th>Institute</th>
                                         <th>Passing Year</th>
                                         <th>Board/University</th>
-                                        <th>Grade/Class</th>
+                                        <th>Grade/Class/Division</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -450,7 +450,7 @@
                                        name="treasury_date"></input>
                             </div>
 
-                            
+
                             <div class="form-group form-field col-md-6 o_website_form_required_custom">
                                 <label for="sel1">Is Divisional Candidate / বিভাগীয় প্রার্থী কিনা</label>
                                 <select class="form-control input-sm" name="divisional_candiate">
