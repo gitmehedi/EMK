@@ -128,10 +128,10 @@
                                 </t>
                             </select>
                         </div>
-                        <div class="form-group col-md-6 form-field o_website_form_required_custom pull-right">
+                        <div class="form-group col-md-6 form-field pull-right">
                             <label class="control-label">Occupation / পেশা</label>
-                            <input type="text" class="form-control o_website_form_input input-sm "
-                                   name="occupation" required=""/>
+                            <input type="text" class="form-control input-sm "
+                                   name="occupation"/>
                         </div>
                     </div>
                     <div class="col-md-12">
