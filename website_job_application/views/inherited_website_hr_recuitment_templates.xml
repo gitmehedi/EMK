@@ -434,26 +434,7 @@
                                 <input type="text" class="form-control input-sm o_website_form_input"
                                        name="treasury_challan"></input>
                             </div>
-                            <div class="form-group form-field col-md-6 o_website_form_required_custom">
-                                <label class="control-label" for="description">Date / তারিখ</label>
-                                <input type="text" class="form-control input-sm o_website_form_input"
-                                       id="datepicker_challan"
-                                       name="treasury_date"></input>
-                            </div>
-                            <div class="form-group form-field col-md-6 o_website_form_required_custom pull-right">
-                                <label class="control-label" for="description">Bank and Branch Name / ব্যাংক ও শাখার
-                                    নাম
-                                </label>
-                                <input type="text" class="form-control input-sm o_website_form_input"
-                                       name="bank_branch_name"></input>
-                            </div>
-                            <div class="form-group form-field col-md-6 o_website_form_required_custom">
-                                <label for="sel1">Is Divisional Candidate / বিভাগীয় প্রার্থী কিনা</label>
-                                <select class="form-control input-sm" name="divisional_candiate">
-                                    <option value="yes">Yes</option>
-                                    <option value="no">No</option>
-                                </select>
-                            </div>
+
                             <div class="form-group form-field col-md-6 o_website_form_required_custom pull-right">
                                 <label class="control-label">Ex-Service Personnel / প্রাক্তন সেবা কর্মী</label>
                                 <select class="form-control input-sm" name="ex_service_personnel">
@@ -461,6 +442,31 @@
                                     <option value="no">No</option>
                                 </select>
                             </div>
+
+                            <div class="form-group form-field col-md-6 o_website_form_required_custom">
+                                <label class="control-label" for="description">Date / তারিখ</label>
+                                <input type="text" class="form-control input-sm o_website_form_input"
+                                       id="datepicker_challan"
+                                       name="treasury_date"></input>
+                            </div>
+
+                            
+                            <div class="form-group form-field col-md-6 o_website_form_required_custom">
+                                <label for="sel1">Is Divisional Candidate / বিভাগীয় প্রার্থী কিনা</label>
+                                <select class="form-control input-sm" name="divisional_candiate">
+                                    <option value="yes">Yes</option>
+                                    <option value="no">No</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group form-field col-md-6 o_website_form_required_custom pull-right">
+                                <label class="control-label" for="description">Bank and Branch Name / ব্যাংক ও শাখার
+                                    নাম
+                                </label>
+                                <input type="text" class="form-control input-sm o_website_form_input"
+                                       name="bank_branch_name"></input>
+                            </div>
+
 
                             <div class="form-group col-md-6 form-field o_website_form_required_custom">
                                 <label class="control-label" for="exampleInputFile">Resume / জীবনবৃত্তান্ত
