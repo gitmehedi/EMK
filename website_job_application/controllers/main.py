@@ -17,4 +17,4 @@ class ExtendWebsiteHrRecruitment(WebsiteHrRecruitment):
             'error': error,
             'default': default,
             'department': department,
-        })
+        }) 
