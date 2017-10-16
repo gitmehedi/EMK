@@ -101,7 +101,7 @@ class SaleOrder(models.Model):
         if is_double_validation:
             self.write({'state': 'validate'}) #Go to two level approval process
         else:
-            self.write({'state': 'sent'}) # One level approval process
+            self.write({'state': 'done'}) # One level approval process
 
     @api.multi
     def action_create_delivery_order(self):

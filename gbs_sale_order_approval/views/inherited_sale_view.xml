@@ -14,7 +14,7 @@
                                 states="to_submit"
                                 type="object"
                                 class="btn-primary"
-                                string="To Submit"/>
+                                string="Submit"/>
 
                          <button name="action_submit"
                                 groups="gbs_application_group.group_head_sale,gbs_application_group.group_cxo"
