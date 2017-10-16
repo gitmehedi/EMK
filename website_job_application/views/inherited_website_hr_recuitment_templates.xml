@@ -60,7 +60,7 @@
                                        name="national_id" required=""/>
                             </div>
                             <div class="form-group col-md-6 form-field o_website_form_required_custom  pull-right">
-                                <label class="control-label">Birth Registration No / জন্ম নিবন্ধন নম্বর</label>
+                                <label class="control-label">Birth Registration Number / জন্ম নিবন্ধন নম্বর</label>
                                 <input type="text" class="form-control o_website_form_input input-sm"
                                        name="birth_registration_no" required=""/>
                             </div>
@@ -95,7 +95,7 @@
 
                         </div>
                         <div class="form-group col-md-6 form-field o_website_form_required_custom">
-                            <label class="control-label">Mobile No / মোবাইল</label>
+                            <label class="control-label">Mobile / মোবাইল</label>
                             <input type="text" class="form-control o_website_form_input input-sm"
                                    name="partner_phone" required=""/>
                         </div>
@@ -120,18 +120,13 @@
                         </div>
                         <div class="form-group col-md-6 form-field o_website_form_required_custom">
                             <label class="control-label">Religion / ধর্ম</label>
-                            <select class="form-control o_website_form_input input-sm" name="religion" required="">
-                                <t t-foreach='religion' t-as='label'>
-                                    <option t-att-value="label">
-                                        <t t-esc="label_value"/>
-                                    </option>
-                                </t>
-                            </select>
+                            <input type="text" class="form-control o_website_form_input input-sm"
+                                   name="religion" required=""/>
                         </div>
                         <div class="form-group col-md-6 form-field o_website_form_required_custom pull-right">
                             <label class="control-label">Occupation / পেশা</label>
                             <input type="text" class="form-control o_website_form_input input-sm "
-                                   name="occupation" required=""/>
+                                   name="occupation"/>
                         </div>
                     </div>
                     <div class="col-md-12">
