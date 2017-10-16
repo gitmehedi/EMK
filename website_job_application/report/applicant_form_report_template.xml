@@ -29,7 +29,7 @@
                                 <tbody >
                                     <tr>
                                         <td colspan="1">১.</td>
-                                        <td colspan="27">পদের নাম</td>
+                                        <td colspan="27">পদের নাম :<span t-field="o.job_id.name"/></td>
                                     </tr>
                                     <tr>
                                         <td rowspan="2" colspan="1">২.</td>
@@ -56,12 +56,12 @@
                                     </tr>
                                     <tr>
                                         <td rowspan="2" colspan="1">৩.</td>
-                                        <td rowspan="2" colspan="3"> প্রার্থীর নাম</td>
-                                        <td colspan="24">বাংলায়: </td>
+                                        <td rowspan="2" colspan="3"> প্রার্থীর নাম :</td>
+                                        <td colspan="24">বাংলায়: <span t-field="o.partner_name_bangla"/></td>
 
                                     </tr>
                                     <tr>
-                                        <td colspan="24">ইংরেজিতে(বড় অক্ষরে) :</td>
+                                        <td colspan="24">ইংরেজিতে(বড় অক্ষরে) :<span t-field="o.partner_name"/></td>
                                     </tr>
                                     <tr>
                                         <td rowspan="2" colspan="1">৪.</td>
@@ -126,7 +126,7 @@
                                         <td colspan="1">ৎ </td>
                                         <td colspan="1">স </td>
                                         <td colspan="1">র </td>
-                                        <td colspan="13" rowspan="2">৬. জন্মস্থান(জেলা):</td>
+                                        <td colspan="13" rowspan="2">৬. জন্মস্থান(জেলা):<span t-field="o.divisional_candiate"/></td>
                                     </tr>
                                     <tr>
                                         <td colspan="1"></td>
@@ -147,11 +147,11 @@
                                     </tr>
                                     <tr>
                                         <td colspan="1">৮.</td>
-                                        <td colspan="27">মাতার নাম: </td>
+                                        <td colspan="27">মাতার নাম: <span t-field="o.father_name"/></td>
                                     </tr>
                                     <tr>
                                         <td colspan="1">৯.</td>
-                                        <td colspan="27">পিতার নাম: </td>
+                                        <td colspan="27">পিতার নাম: <span t-field="o.mother_name"/></td>
                                     </tr>
                                     <tr>
                                         <td rowspan="7" colspan="1">১০.</td>
@@ -161,51 +161,52 @@
                                     </tr>
                                     <tr>
                                         <td colspan="7">বাসা ও সড়ক(নাম ও নম্বর ): </td>
-                                        <td colspan="10"></td>
-                                        <td colspan="10"></td>
+                                        <td colspan="10"><span t-field="o.pre_address_1"/></td>
+                                        <td colspan="10"><span t-field="o.per_address_1"/></td>
                                     </tr>
                                     <tr>
                                         <td colspan="7">ইউনিয়ন/ওয়ার্ড</td>
-                                        <td colspan="10"></td>
-                                        <td colspan="10"></td>
+                                        <td colspan="10"><span t-field="o.pre_city_town"/></td>
+                                        <td colspan="10"><span t-field="o.per_city_town"/></td>
                                     </tr>
                                     <tr>
                                         <td colspan="7">ডাকঘর</td>
-                                        <td colspan="10"></td>
-                                        <td colspan="10"></td>
+                                        <td colspan="10"><span t-field="o.pre_address_2"/></td>
+                                        <td colspan="10"><span t-field="o.per_address_2"/></td>
                                     </tr>
                                     <tr>
                                         <td colspan="7">পোস্ট কোড নম্বর</td>
-                                        <td colspan="10"></td>
-                                        <td colspan="10"></td>
+                                        <td colspan="10"><span t-field="o.pre_zip_postal"/></td>
+                                        <td colspan="10"><span t-field="o.per_zip_postal"/></td>
                                     </tr>
                                     <tr>
                                         <td colspan="7">উপজেলা</td>
-                                        <td colspan="10"></td>
-                                        <td colspan="10"></td>
+                                        <td colspan="10"><span t-field="o.pre_state_province"/></td>
+                                        <td colspan="10"><span t-field="o.per_state_province"/></td>
                                     </tr>
                                     <tr>
                                         <td colspan="7">জেলা</td>
-                                        <td colspan="10"></td>
-                                        <td colspan="10"></td>
+                                        <td colspan="10"><span t-field="o.pre_district"/></td>
+                                        <td colspan="10"><span t-field="o.per_district"/></td>
                                     </tr>
                                     <tr>
                                         <td colspan="1">১১.</td>
-                                        <td colspan="9">যোগাযোগ</td>
-                                        <td colspan="9">মোবাইল/টেলিফোন নম্বর</td>
-                                        <td colspan="9">ইমেইল(যদি থাকে )</td>
+                                        <td colspan="3">যোগাযোগ</td>
+                                        <td colspan="12">মোবাইল/টেলিফোন নম্বর :<span t-field="o.partner_mobile"/></td>
+                                        <td colspan="12">ইমেইল(যদি থাকে ) :<span t-field="o.user_email"/></td>
                                     </tr>
                                     <tr>
                                         <td colspan="1">১২.</td>
-                                        <td colspan="13">জাতীয়তা</td>
+                                        <td colspan="13">জাতীয়তা :<span t-field="o.nationality"/></td>
                                         <td colspan="1">১৩.</td>
-                                        <td colspan="13">জেন্ডার</td>
+                                        <td colspan="13">জেন্ডার :</td>
+                                        <!--<span t-field="o.gender"/>-->
                                     </tr>
                                     <tr>
                                         <td colspan="1">১৪.</td>
-                                        <td colspan="13">ধর্ম</td>
+                                        <td colspan="13">ধর্ম :<span t-field="o.religion"/></td>
                                         <td colspan="1">১৫.</td>
-                                        <td colspan="13">পেশা</td>
+                                        <td colspan="13">পেশা :<span t-field="o.occupation"/></td>
                                     </tr>
                                     <tr>
                                         <td rowspan="7" colspan="1">১৬.</td>
@@ -220,44 +221,44 @@
                                         <td colspan="4">গ্রেড/শ্রেণি/বিভাগ</td>
                                     </tr>
                                     <tr>
-                                        <td colspan="4"></td>
-                                        <td colspan="4"></td>
-                                        <td colspan="10"></td>
-                                        <td colspan="2"></td>
-                                        <td colspan="4"></td>
-                                        <td colspan="4"></td>
+                                        <td colspan="4"><span t-field="o.exm_ssc"/></td>
+                                        <td colspan="4"><span t-field="o.exm_ssc_subject"/></td>
+                                        <td colspan="10"><span t-field="o.exm_ssc_institute"/></td>
+                                        <td colspan="2"><span t-field="o.exm_ssc_passing_year"/></td>
+                                        <td colspan="4"><span t-field="o.exm_ssc_board"/></td>
+                                        <td colspan="4"><span t-field="o.exm_ssc_class"/></td>
                                     </tr>
                                     <tr>
-                                        <td colspan="4"></td>
-                                        <td colspan="4"></td>
-                                        <td colspan="10"></td>
-                                        <td colspan="2"></td>
-                                        <td colspan="4"></td>
-                                        <td colspan="4"></td>
+                                        <td colspan="4"><span t-field="o.exm_hsc"/></td>
+                                        <td colspan="4"><span t-field="o.exm_hsc_subject"/></td>
+                                        <td colspan="10"><span t-field="o.exm_hsc_institute"/></td>
+                                        <td colspan="2"><span t-field="o.exm_hsc_passing_year"/></td>
+                                        <td colspan="4"><span t-field="o.exm_hsc_board"/></td>
+                                        <td colspan="4"><span t-field="o.exm_hsc_class"/></td>
                                     </tr>
                                     <tr>
-                                        <td colspan="4"></td>
-                                        <td colspan="4"></td>
-                                        <td colspan="10"></td>
-                                        <td colspan="2"></td>
-                                        <td colspan="4"></td>
-                                        <td colspan="4"></td>
+                                        <td colspan="4"><span t-field="o.exm_bsc"/></td>
+                                        <td colspan="4"><span t-field="o.exm_bsc_subject"/></td>
+                                        <td colspan="10"><span t-field="o.exm_bsc_institute"/></td>
+                                        <td colspan="2"><span t-field="o.exm_bsc_passing_year"/></td>
+                                        <td colspan="4"><span t-field="o.exm_bsc_board"/></td>
+                                        <td colspan="4"><span t-field="o.exm_bsc_class"/></td>
                                     </tr>
                                     <tr>
-                                        <td colspan="4"></td>
-                                        <td colspan="4"></td>
-                                        <td colspan="10"></td>
-                                        <td colspan="2"></td>
-                                        <td colspan="4"></td>
-                                        <td colspan="4"></td>
+                                        <td colspan="4"><span t-field="o.exm_msc"/></td>
+                                        <td colspan="4"><span t-field="o.exm_msc_subject"/></td>
+                                        <td colspan="10"><span t-field="o.exm_msc_institute"/></td>
+                                        <td colspan="2"><span t-field="o.exm_msc_passing_year"/></td>
+                                        <td colspan="4"><span t-field="o.exm_msc_board"/></td>
+                                        <td colspan="4"><span t-field="o.exm_msc_class"/></td>
                                     </tr>
                                     <tr>
-                                        <td colspan="4"></td>
-                                        <td colspan="4"></td>
-                                        <td colspan="10"></td>
-                                        <td colspan="2"></td>
-                                        <td colspan="4"></td>
-                                        <td colspan="4"></td>
+                                        <td colspan="4"><span t-field="o.exm_other"/></td>
+                                        <td colspan="4"><span t-field="o.exm_other_subject"/></td>
+                                        <td colspan="10"><span t-field="o.exm_other_institute"/></td>
+                                        <td colspan="2"><span t-field="o.exm_other_passing_year"/></td>
+                                        <td colspan="4"><span t-field="o.exm_other_board"/></td>
+                                        <td colspan="4"><span t-field="o.exm_other_class"/></td>
                                     </tr>
                                     <tr>
                                         <td colspan="1">১৭.</td>

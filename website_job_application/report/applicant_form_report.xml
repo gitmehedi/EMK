@@ -6,8 +6,8 @@
             string = "Application Form"
             model = "hr.applicant"
             report_type = "qweb-pdf"
-            file ="applicant_form.app_form_template"
-            name ="applicant_form.app_form_template"
+            file ="website_job_application.app_form_template"
+            name ="website_job_application.app_form_template"
         />
     </data>
 </odoo>
