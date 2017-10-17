@@ -8,7 +8,7 @@ class ExtendWebsiteHrRecruitment(WebsiteHrRecruitment):
     def jobs_apply(self, job, **kwargs):
         error = {}
         default = {}
-        districts = self.get_districts()
+        districts = sorted(self.get_districts())
         authorize_districts = request.env['job.district'].sudo().browse(job.authorize_district.ids)
 
         quota = self.get_quota()

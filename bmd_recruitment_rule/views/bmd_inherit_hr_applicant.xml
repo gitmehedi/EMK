@@ -7,7 +7,7 @@
         <field name="arch" type="xml">
             <xpath expr="//field[@name='birth_date']" position="after">
                 <field name="applicant_age"/>
-                <field name="eligible"/>
+                <field name="eligible" />
             </xpath>
         </field>
     </record>
@@ -19,14 +19,15 @@
         <field name="inherit_id" ref="hr_recruitment.view_crm_case_jobs_filter"/>
         <field name="arch" type="xml">
             <search string="Search Applicants">
-                <filter string="Eligible" domain="[('eligible', '=', True)]"/>
+                <filter name="eligible" string="Eligible" domain="[('eligible', '=', True)]"/>
             </search>
         </field>
     </record>
-     <record id="hr_recruitment.action_hr_job_applications" model="ir.actions.act_window">
+
+    <record id="hr_recruitment.action_hr_job_applications" model="ir.actions.act_window">
         <field name="name">Applications</field>
         <field name="res_model">hr.applicant</field>
         <field name="view_mode">kanban,tree,form,graph,calendar,pivot</field>
-        <field name="context">{'search_default_group_eligible': 1}</field>
+        <field name="context">{'search_default_eligible': 1}</field>
     </record>
 </odoo>

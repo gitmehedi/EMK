@@ -450,8 +450,8 @@
                             <div class="form-group form-field col-md-6 o_website_form_required_custom pull-right">
                                 <label class="control-label">Ex-Service Personnel / প্রাক্তন সেবা কর্মী</label>
                                 <select class="form-control input-sm" name="ex_service_personnel">
-                                    <option value="yes">Yes</option>
                                     <option value="no">No</option>
+                                    <option value="yes">Yes</option>
                                 </select>
                             </div>
 
@@ -466,8 +466,8 @@
                             <div class="form-group form-field col-md-6 o_website_form_required_custom">
                                 <label for="sel1">Is Divisional Candidate / বিভাগীয় প্রার্থী কিনা</label>
                                 <select class="form-control input-sm" name="divisional_candiate">
-                                    <option value="yes">Yes</option>
                                     <option value="no">No</option>
+                                    <option value="yes">Yes</option>
                                 </select>
                             </div>
 
