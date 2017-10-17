@@ -110,7 +110,8 @@
                             <input type="text" class="form-control o_website_form_input input-sm"
                                    name="nationality" required=""/>
                         </div>
-                        <div class="form-group col-md-6 form-field o_website_form_required_custom pull-right">
+
+                        <div class="form-group col-md-6 form-field o_website_form_required_custom  pull-right">
                             <label class="control-label">Gender / জেন্ডার</label>
                             <select class="form-control o_website_form_input input-sm" name="gender" required="">
                                 <option value="male">Male / পুরুষ</option>
@@ -147,81 +148,83 @@
                                 ঠিকানা
                             </div>
                             <div class="col-md-5 pull-left">
-                                <div class="form-group o_website_form_required_custom">
-                                    <label class="control-label">Present House and Road(Name/No) / বর্তমান বাসা ও
-                                        সড়ক(নাম ও নম্বর)
-                                    </label>
-                                    <input id="pre_address_1" name="pre_address_1" type="text"
-                                           class="form-control o_website_form_input input-sm" required=""/>
-                                </div>
-                                <div class="form-group o_website_form_required_custom">
-                                    <label class="control-label">Present Village/Para/Moholla/ (বর্তমান
-                                        গ্রাম/পাড়া/মহল্লা)
-                                    </label>
-                                    <input id="pre_address_2" name="pre_address_2" type="text"
-                                           class="form-control o_website_form_input input-sm" required=""/>
-                                </div>
-                                <div class="form-group col-md-7 pull-left o_website_form_required_custom">
-                                    <label class="control-label">Union/Ward/ (বর্তমান ইউনিয়ন/ওয়ার্ড)</label>
-                                    <input id="pre_city_town" name="pre_city_town" type="text"
-                                           class="form-control o_website_form_input input-sm" required=""/>
-                                </div>
-                                <div class="form-group col-md-6 pull-right o_website_form_required_custom">
-                                    <label class="control-label">Postal Code/পোস্ট কোড নম্বর</label>
-                                    <input id="pre_zip_postal" name="pre_zip_postal" type="text"
-                                           class="form-control o_website_form_input input-sm"/>
-                                </div>
+                                    <div class="form-group form-field col-md-14 o_website_form_required_custom">
+                                        <label class="control-label">Present House and Road(Name/No) / বর্তমান বাসা ও
+                                                সড়ক(নাম ও নম্বর)
+                                        </label>
+                                        <input id="pre_address_1" name="pre_address_1" type="text"
+                                                   class="form-control o_website_form_input input-sm" required="required"/>
+                                    </div>
+                                    <div class="form-group form-field col-md-14 o_website_form_required_custom">
+                                        <label class="control-label">Present Village/Para/Moholla/ (বর্তমান
+                                            গ্রাম/পাড়া/মহল্লা)
+                                        </label>
+                                        <input id="pre_address_2" name="pre_address_2" type="text"
+                                               class="form-control o_website_form_input input-sm" required="required"/>
+                                    </div>
 
-                                <div class="form-group col-md-7 pull-left o_website_form_required_custom">
-                                    <label class="control-label">Sub-District / উপজেলা</label>
-                                    <input name="pre_state_province" class="form-control o_website_form_input input-sm"
-                                           required=""/>
-                                </div>
-                                <div class="form-group col-md-5 pull-right o_website_form_required_custom">
-                                    <label class="control-label">Districts / জেলা</label>
-                                    <select class="form-control o_website_form_input input-sm" name="pre_zip_postal">
-                                        <t t-foreach='districts' t-as='label'>
-                                            <option t-att-value="label">
-                                                <t t-esc="label_value"/>
-                                            </option>
-                                        </t>
-                                    </select>
-                                </div>
+                                    <div class="form-group form-field col-md-7 pull-left o_website_form_required_custom">
+                                        <label class="control-label">Union/Ward/ (বর্তমান ইউনিয়ন/ওয়ার্ড)</label>
+                                        <input id="pre_city_town" name="pre_city_town" type="text"
+                                               class="form-control o_website_form_input input-sm" required="required"/>
+                                    </div>
+                                    <div class="form-group form-field col-md-6 pull-right o_website_form_required_custom">
+                                        <label class="control-label">Postal Code/পোস্ট কোড নম্বর</label>
+                                        <input id="pre_zip_postal" name="pre_zip_postal" type="text"
+                                               class="form-control o_website_form_input input-sm" required="required"/>
+                                    </div>
+
+                                    <div class="form-group form-field col-md-7 pull-left o_website_form_required_custom">
+                                        <label class="control-label">Sub-District / উপজেলা</label>
+                                        <input name="pre_state_province" class="form-control o_website_form_input input-sm"
+                                               required="required"/>
+                                    </div>
+                                    <div class="form-group form-field col-md-6 pull-right o_website_form_required_custom">
+                                        <label class="control-label">Districts / জেলা</label>
+                                        <select class="form-control o_website_form_input input-sm" name="pre_zip_postal" required="required">
+                                            <t t-foreach='districts' t-as='label'>
+                                                <option t-att-value="label">
+                                                    <t t-esc="label_value"/>
+                                                </option>
+                                            </t>
+                                        </select>
+                                    </div>
+
                             </div>
                             <div class="col-md-5 pull-right">
-                                <div class="form-group o_website_form_required_custom">
+                                <div class="form-group form-field o_website_form_required_custom ">
                                     <label class="control-label">Permanent House and Road(Name/No) / বর্তমান বাসা ও
                                         সড়ক(নাম ও নম্বর)
                                     </label>
                                     <input id="per_address_1" name="per_address_1" type="text"
-                                           class="form-control o_website_form_input input-sm" required=""/>
+                                           class="form-control o_website_form_input input-sm" required="required"/>
                                 </div>
-                                <div class="form-group o_website_form_required_custom">
+                                <div class="form-group form-field o_website_form_required_custom">
                                     <label class="control-label">Permanent Village/Para/Moholla / (বর্তমান
                                         গ্রাম/পাড়া/মহল্লা)
                                     </label>
                                     <input id="per_address_2" name="per_address_2" type="text"
-                                           class="form-control o_website_form_input input-sm" required=""/>
+                                           class="form-control o_website_form_input input-sm" required="required"/>
                                 </div>
-                                <div class="form-group col-md-7 pull-left o_website_form_required_custom">
+                                <div class="form-group form-field col-md-7 pull-left o_website_form_required_custom">
                                     <label class="control-label">Union/Ward (বর্তমান ইউনিয়ন/ওয়ার্ড)</label>
                                     <input id="per_city_town" name="per_city_town" type="text"
-                                           class="form-control o_website_form_input input-sm" required=""/>
+                                           class="form-control o_website_form_input input-sm" required="required"/>
                                 </div>
-                                <div class="form-group col-md-6 pull-right o_website_form_required_custom">
+                                <div class="form-group form-field col-md-6 pull-right o_website_form_required_custom">
                                     <label class="control-label">Postal Code/পোস্ট কোড নম্বর</label>
                                     <input id="pre_zip_postal" name="per_zip_postal" type="text"
-                                           class="form-control o_website_form_input input-sm" required=""/>
+                                           class="form-control o_website_form_input input-sm" required="required"/>
                                 </div>
 
-                                <div class="form-group col-md-7 pull-left o_website_form_required_custom">
+                                <div class="form-group form-field col-md-6 pull-left o_website_form_required_custom">
                                     <label class="control-label">Sub-District / উপজেলা</label>
                                     <input name="per_state_province"
-                                           class="form-control o_website_form_input input-sm"/>
+                                           class="form-control o_website_form_input input-sm" required="required"/>
                                 </div>
-                                <div class="form-group col-md-6 pull-right o_website_form_required_custom">
+                                <div class="form-group form-field col-md-6 pull-right o_website_form_required_custom">
                                     <label class="control-label">Districts / জেলা</label>
-                                    <select class="form-control o_website_form_input input-sm" name="per_district">
+                                    <select class="form-control o_website_form_input input-sm" name="per_district" required="required">
                                         <t t-foreach='districts' t-as='label'>
                                             <option t-att-value="label">
                                                 <t t-esc="label_value"/>
@@ -421,18 +424,18 @@
                                     যোগ্যতা
                                 </label>
                                 <textarea class="form-control o_website_form_input"
-                                          name="curriculam_activities"></textarea>
+                                          name="curriculam_activities" required="required"></textarea>
                             </div>
                             <div class="form-group form-field col-md-6 o_website_form_required_custom pull-right">
                                 <label class="control-label" for="description">Experience Remarks / অভিজ্ঞতার বিবরণী
                                 </label>
                                 <textarea class="form-control o_website_form_input"
-                                          name="experience_remarks"></textarea>
+                                          name="experience_remarks" required="required"></textarea>
                             </div>
 
                             <div class="form-group form-field col-md-6 o_website_form_required_custom">
                                 <label class="control-label">Quota / কোটা</label>
-                                <select class="form-control input-sm  o_website_form_input" name="quota">
+                                <select class="form-control input-sm  o_website_form_input" name="quota" required="required">
                                     <t t-foreach='quota' t-as='label'>
                                         <option t-att-value="label">
                                             <t t-esc="label_value"/>
@@ -444,12 +447,12 @@
                                 <label class="control-label" for="description">Treasury Challan / ট্রেজারি চালান নম্বর
                                 </label>
                                 <input type="text" class="form-control input-sm o_website_form_input"
-                                       name="treasury_challan"></input>
+                                       name="treasury_challan" required="required"></input>
                             </div>
 
                             <div class="form-group form-field col-md-6 o_website_form_required_custom pull-right">
                                 <label class="control-label">Ex-Service Personnel / প্রাক্তন সেবা কর্মী</label>
-                                <select class="form-control input-sm" name="ex_service_personnel">
+                                <select class="form-control input-sm" name="ex_service_personnel" required="required">
                                     <option value="no">No</option>
                                     <option value="yes">Yes</option>
                                 </select>
@@ -459,13 +462,13 @@
                                 <label class="control-label" for="description">Date / তারিখ</label>
                                 <input type="text" class="form-control input-sm o_website_form_input"
                                        id="datepicker_challan"
-                                       name="treasury_date"></input>
+                                       name="treasury_date" required="required"></input>
                             </div>
 
 
                             <div class="form-group form-field col-md-6 o_website_form_required_custom">
                                 <label for="sel1">Is Divisional Candidate / বিভাগীয় প্রার্থী কিনা</label>
-                                <select class="form-control input-sm" name="divisional_candiate">
+                                <select class="form-control input-sm" name="divisional_candiate" required="required">
                                     <option value="no">No</option>
                                     <option value="yes">Yes</option>
                                 </select>
@@ -476,14 +479,14 @@
                                     নাম
                                 </label>
                                 <input type="text" class="form-control input-sm o_website_form_input"
-                                       name="bank_branch_name"></input>
+                                       name="bank_branch_name" required="required"></input>
                             </div>
 
 
                             <div class="form-group col-md-6 form-field o_website_form_required_custom">
                                 <label class="control-label" for="exampleInputFile">Resume / জীবনবৃত্তান্ত
                                 </label>
-                                <input type="file" name="Resume"/>
+                                <input type="file" name="Resume" required="required"/>
                                 <p class="help-block">Upload resume in any format.</p>
                             </div>
 
