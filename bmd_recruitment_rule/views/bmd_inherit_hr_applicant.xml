@@ -24,10 +24,10 @@
         </field>
     </record>
 
-    <record id="hr_recruitment.action_hr_job_applications" model="ir.actions.act_window">
+    <record id="hr_recruitment.crm_case_categ0_act_job" model="ir.actions.act_window">
         <field name="name">Applications</field>
         <field name="res_model">hr.applicant</field>
-        <field name="view_mode">kanban,tree,form,graph,calendar,pivot</field>
+        <field name="view_mode">kanban,tree,form,pivot,graph,calendar,pivot</field>
         <field name="context">{'search_default_eligible': 1}</field>
     </record>
 </odoo>
