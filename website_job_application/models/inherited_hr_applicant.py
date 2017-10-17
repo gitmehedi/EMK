@@ -20,6 +20,7 @@ class InheritedHrApplicant(models.Model):
     quota = fields.Char(string='Quota', size=60)
     experience_remarks = fields.Char(string='Experience Remarks', size=60)
     curriculam_activities = fields.Char(string='Extra Curriculam Activities', size=60)
+    authorize_district = fields.Char(string='Authorize District', size=60)
 
     """Present Address"""
     pre_address_1 = fields.Char(string='House and Road(Name/No)', size=60)

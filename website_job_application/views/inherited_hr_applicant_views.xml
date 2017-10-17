@@ -56,6 +56,7 @@
                 <group>
                     <group>
                        <field name="experience_remarks"/>
+                       <field name="authorize_district"/>
                     </group>
                     <group>
                         <field name="curriculam_activities"/>

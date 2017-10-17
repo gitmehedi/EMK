@@ -51,7 +51,10 @@ class BMDInheritedHrApplicant(models.Model):
             if applicant.eligible:
                 applicant.eligible = applicant._check_academic_qualification()
 
-            ###
+            ###Authorize District
+            if applicant.eligible:
+                if applicant.authorize_district:
+                    applicant.eligible = True
 
 
     @api.one
