@@ -9,7 +9,7 @@ class ExtendWebsiteHrRecruitment(WebsiteHrRecruitment):
         error = {}
         default = {}
         districts = sorted(self.get_districts())
-        authorize_districts = request.env['job.district'].sudo().browse(job.authorize_district.ids)
+        authorize_districts = request.env['bd.district'].sudo().browse(job.authorize_district.ids)
 
         quota = self.get_quota()
         religion = self.get_religion()
@@ -66,8 +66,6 @@ class ExtendWebsiteHrRecruitment(WebsiteHrRecruitment):
             'Dinajpur': "Dinajpur",
             'Faridpur': "Faridpur",
             'Feni': "Feni",
-            'Dhaka': "Dhaka",
-            'Faridpur': "Faridpur",
             'Gaibandha': "Gaibandha",
             'Gazipur': "Gazipur",
             'Gopalganj': "Gopalganj",
