@@ -45,7 +45,7 @@
                         <div class="panel panel-success">
                             <div class="panel-heading">Basic Information / প্রাথমিক তথ্য</div>
                             <div class="form-group col-md-6 form-field o_website_form_required_custom">
-                                <label class="control-label">Name(English) / প্রার্থীর নাম(ইংরেজিতে)</label>
+                                <label class="control-label">Name(English in Capital Letter) / প্রার্থীর নাম(ইংরেজিতে)</label>
                                 <input type="text" class="form-control o_website_form_input input-sm"
                                        name="partner_name" required=""/>
                             </div>
@@ -417,7 +417,7 @@
                         <div class="panel panel-success">
                             <div class="panel-heading">Additional Information / অতিরিক্ত তথ্য</div>
                             <div class="form-group form-field col-md-6 o_website_form_required_custom">
-                                <label class="control-label" for="description">Extra Curriculam Activities / অতিরিক্ত
+                                <label class="control-label" for="description">Extra Curriculum Activities / অতিরিক্ত
                                     যোগ্যতা
                                 </label>
                                 <textarea class="form-control o_website_form_input"
