@@ -7,6 +7,7 @@
         <field name="arch" type="xml">
             <xpath expr="//field[@name='no_of_recruitment']" position="after">
                 <field name="job_publish_date"/>
+                <field name="required_education"/>
                 <field name="authorize_district" widget="many2many_tags"/>
             </xpath>
         </field>

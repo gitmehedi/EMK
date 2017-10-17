@@ -30,6 +30,8 @@ class BMDInheritedHrApplicant(models.Model):
     @api.depends('applicant_age')
     def _compute_eligibility(self):
         for applicant in self:
+
+            ### Eligibility check for Age
             min_applicable_age = 18
             max_applicable_age = 30
             if applicant.quota:
@@ -45,5 +47,27 @@ class BMDInheritedHrApplicant(models.Model):
             else:
                 applicant.eligible = False
 
+            ### Educational Eligibility Checking
+            if applicant.eligible:
+                applicant.eligible = applicant._check_academic_qualification()
+
+            ###
 
 
+    @api.one
+    def _check_academic_qualification(self):
+
+        if self.exm_ssc:
+            if self.job_id.required_education.name == self.exm_ssc.strip():
+                return True
+        elif self.exm_hsc:
+            if self.job_id.required_education.name == self.exm_hsc.strip():
+                return True
+        elif self.exm_bsc:
+            if self.job_id.required_education.name == self.exm_bsc.strip():
+                return True
+        elif self.exm_msc:
+            if self.job_id.required_education.name == self.exm_msc.strip():
+                return True
+        else:
+            return False

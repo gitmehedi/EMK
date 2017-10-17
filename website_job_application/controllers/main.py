@@ -10,6 +10,7 @@ class ExtendWebsiteHrRecruitment(WebsiteHrRecruitment):
         default = {}
         districts = sorted(self.get_districts())
         authorize_districts = request.env['bd.district'].sudo().browse(job.authorize_district.ids)
+        degree = request.env['hr.recruitment.degree'].sudo().search([])
 
         quota = self.get_quota()
         religion = self.get_religion()
@@ -26,6 +27,7 @@ class ExtendWebsiteHrRecruitment(WebsiteHrRecruitment):
             'quota': quota,
             'religion': religion,
             'authorize_districts': authorize_districts,
+            'degree': degree,
         })
 
     def get_religion(self):
@@ -49,7 +51,6 @@ class ExtendWebsiteHrRecruitment(WebsiteHrRecruitment):
 
     def get_districts(self):
         return {
-            '': "---Please Select---",
             'Bagerhat': "Bagerhat",
             'Bandarban': "Bandarban",
             'Barguna': "Barguna",

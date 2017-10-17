@@ -85,6 +85,7 @@
                                 <label class="control-label">Birth Location / জন্মস্থান</label>
                                 <select class="form-control o_website_form_input input-sm" name="birth_city"
                                         required="">
+                                    <option value="">--Please Select--</option>
                                     <t t-foreach='districts' t-as='label'>
                                         <option t-att-value="label">
                                             <t t-esc="label_value"/>
@@ -131,9 +132,11 @@
                         <t t-if="authorize_districts">
                             <div class="form-group col-md-6 form-field o_website_form_required_custom">
                                 <label class="control-label">Authorize District</label>
-                                <select class="form-control o_website_form_input input-sm" name="authorize_district" required="">
+                                <select class="form-control o_website_form_input input-sm" name="authorize_district"
+                                        required="">
+                                    <option value="">--Please Select--</option>
                                     <t t-foreach='authorize_districts' t-as='label'>
-                                        <option t-att-value="label['id']">
+                                        <option t-att-value="label['name']">
                                             <t t-esc="label['name']"/>
                                         </option>
                                     </t>
@@ -179,7 +182,8 @@
                                 </div>
                                 <div class="form-group col-md-5 pull-right o_website_form_required_custom">
                                     <label class="control-label">Districts / জেলা</label>
-                                    <select class="form-control o_website_form_input input-sm" name="pre_zip_postal">
+                                    <select class="form-control o_website_form_input input-sm" name="pre_district">
+                                        <option value="">--Please Select--</option>
                                         <t t-foreach='districts' t-as='label'>
                                             <option t-att-value="label">
                                                 <t t-esc="label_value"/>
@@ -210,7 +214,7 @@
                                 </div>
                                 <div class="form-group col-md-6 pull-right o_website_form_required_custom">
                                     <label class="control-label">Postal Code/পোস্ট কোড নম্বর</label>
-                                    <input id="pre_zip_postal" name="per_zip_postal" type="text"
+                                    <input id="per_zip_postal" name="per_zip_postal" type="text"
                                            class="form-control o_website_form_input input-sm" required=""/>
                                 </div>
 
@@ -222,6 +226,7 @@
                                 <div class="form-group col-md-6 pull-right o_website_form_required_custom">
                                     <label class="control-label">Districts / জেলা</label>
                                     <select class="form-control o_website_form_input input-sm" name="per_district">
+                                        <option value="">--Please Select--</option>
                                         <t t-foreach='districts' t-as='label'>
                                             <option t-att-value="label">
                                                 <t t-esc="label_value"/>
@@ -251,9 +256,17 @@
                                     <tr>
 
                                         <td>
-                                            <input type="text"
-                                                   class="form-control o_website_form_input input-sm"
-                                                   name="exm_ssc"/>
+                                            <select class="form-control o_website_form_input input-sm" name="exm_ssc">
+                                                <option value="">--Please Select--</option>
+                                                <t t-foreach='degree' t-as='label'>
+                                                    <option t-att-value="label['name']">
+                                                        <t t-esc="label['name']"/>
+                                                    </option>
+                                                </t>
+                                            </select>
+                                            <!--<input type="text"-->
+                                            <!--class="form-control o_website_form_input input-sm"-->
+                                            <!--name="exm_ssc"/>-->
                                         </td>
                                         <td>
                                             <input type="text"
@@ -283,9 +296,18 @@
                                     </tr>
                                     <tr>
                                         <td>
-                                            <input type="text"
-                                                   class="form-control o_website_form_input input-sm"
-                                                   name="exm_hsc"/>
+                                            <select class="form-control o_website_form_input input-sm" name="exm_hsc">
+                                                <option value="">--Please Select--</option>
+                                                <t t-foreach='degree' t-as='label'>
+                                                    <option t-att-value="label['name']">
+                                                        <t t-esc="label['name']"/>
+                                                    </option>
+                                                </t>
+                                            </select>
+
+                                            <!--<input type="text"-->
+                                            <!--class="form-control o_website_form_input input-sm"-->
+                                            <!--name="exm_hsc"/>-->
                                         </td>
                                         <td>
                                             <input type="text"
@@ -315,9 +337,17 @@
                                     </tr>
                                     <tr>
                                         <td>
-                                            <input type="text"
-                                                   class="form-control o_website_form_input input-sm"
-                                                   name="exm_bsc"/>
+                                            <select class="form-control o_website_form_input input-sm" name="exm_bsc">
+                                                <option value="">--Please Select--</option>
+                                                <t t-foreach='degree' t-as='label'>
+                                                    <option t-att-value="label['name']">
+                                                        <t t-esc="label['name']"/>
+                                                    </option>
+                                                </t>
+                                            </select>
+                                            <!--<input type="text"-->
+                                            <!--class="form-control o_website_form_input input-sm"-->
+                                            <!--name="exm_bsc"/>-->
                                         </td>
                                         <td>
                                             <input type="text"
@@ -347,9 +377,17 @@
                                     </tr>
                                     <tr>
                                         <td>
-                                            <input type="text"
-                                                   class="form-control o_website_form_input input-sm"
-                                                   name="exm_msc"/>
+                                            <select class="form-control o_website_form_input input-sm" name="exm_msc">
+                                                <option value="">--Please Select--</option>
+                                                <t t-foreach='degree' t-as='label'>
+                                                    <option t-att-value="label['name']">
+                                                        <t t-esc="label['name']"/>
+                                                    </option>
+                                                </t>
+                                            </select>
+                                            <!--<input type="text"-->
+                                            <!--class="form-control o_website_form_input input-sm"-->
+                                            <!--name="exm_msc"/>-->
                                         </td>
                                         <td>
                                             <input type="text"
@@ -381,7 +419,7 @@
                                         <td>
                                             <input type="text"
                                                    class="form-control o_website_form_input input-sm"
-                                                   name="exm_other"/>
+                                                   name="exm_other" placeholder="other"/>
                                         </td>
                                         <td>
                                             <input type="text"
