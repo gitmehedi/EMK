@@ -6,6 +6,7 @@ class BMDInheritedHrJob(models.Model):
 
     job_publish_date = fields.Date(string='Published Date')
     authorize_district = fields.Many2many('job.district', 'job_id', 'job_district_id', 'trans_id')
+    job_publish_number = fields.Char(string='Published Date')
 
 
 

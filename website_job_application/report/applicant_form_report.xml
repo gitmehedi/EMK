@@ -9,5 +9,10 @@
             file ="website_job_application.app_form_template"
             name ="website_job_application.app_form_template"
         />
+
+
+        <record id="app_form" model="ir.actions.report.xml">
+            <field name="paperformat_id" ref="paperformat_application"/>
+        </record>
     </data>
 </odoo>
