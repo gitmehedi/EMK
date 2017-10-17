@@ -38,8 +38,6 @@
         <menuitem
 				name="District"
 				id="main_menu_district"
-				sequence="20"
-                action="action_hr_evaluation"
         />
         <menuitem
 				name="District"
