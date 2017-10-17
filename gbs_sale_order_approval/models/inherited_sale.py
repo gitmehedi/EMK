@@ -12,7 +12,7 @@ class SaleOrder(models.Model):
     ], string='Sale Order Type', required=True)
 
     state = fields.Selection([
-        ('to_submit', 'To Submit'),
+        ('to_submit', 'Submit'),
         ('draft', 'Quotation'),
         ('submit_quotation','Confirmed'),
         ('validate', 'Second Approval'),
@@ -53,7 +53,7 @@ class SaleOrder(models.Model):
         is_double_validation = False
 
         for lines in self.order_line:
-            product_pool = self.env['product.product'].search([('currency_id','=',self.currency_id.id), ('id', '=', lines.product_id.ids)])
+            #product_pool = self.env['product.product'].search([('currency_id','=',self.currency_id.id), ('id', '=', lines.product_id.ids)])
             cust_commission_pool = self.env['customer.commission'].search([('customer_id', '=', self.partner_id.id),
                                                                            ('product_id', '=', lines.product_id.ids)])
             credit_limit_pool = self.env['res.partner'].search([('id', '=', self.partner_id.id)])

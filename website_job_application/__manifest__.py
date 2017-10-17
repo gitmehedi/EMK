@@ -4,7 +4,7 @@
     'summary': 'Extend Job Application Module',
     'author': 'Md. Mehedi Hasan',
     'website': 'https://github.com/gitmehedi',
-    'depends': ['web','hr_recruitment','website_hr_recruitment'],
+    'depends': ['web','hr_recruitment','website_hr_recruitment','gbs_bd_district'],
     'data': [
         'report/report_paperformat1.xml',
         'report/applicant_form_report.xml',
