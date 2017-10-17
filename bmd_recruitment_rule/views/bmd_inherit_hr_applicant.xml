@@ -9,6 +9,9 @@
                 <field name="applicant_age"/>
                 <field name="eligible" />
             </xpath>
+            <xpath expr="//field[@name='description']" position="replace">
+
+            </xpath>
         </field>
     </record>
 

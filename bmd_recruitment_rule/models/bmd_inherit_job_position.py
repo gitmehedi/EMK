@@ -5,11 +5,7 @@ class BMDInheritedHrJob(models.Model):
     _inherit = 'hr.job'
 
     job_publish_date = fields.Date(string='Published Date')
-    authorize_district = fields.Many2many('job.district', 'job_id', 'job_district_id', 'trans_id')
+    job_publish_number = fields.Char(string='Published Number')
+    required_education = fields.Many2one('hr.recruitment.degree',string = 'Educational Qualification')
+    authorize_district = fields.Many2many('bd.district','job_district_rel', 'job_id', 'job_district_id')
 
-
-
-class BMDJobDistrict(models.Model):
-    _name = 'job.district'
-
-    name = fields.Char(string='District Name')
