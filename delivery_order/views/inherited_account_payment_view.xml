@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <!--Inherit Payments form view-->
+        <record id="inherited_acc_payment_view" model="ir.ui.view">
+            <field name="name">Account.payment.view.form</field>
+            <field name="model">account.payment</field>
+            <field name="inherit_id" ref="account.view_account_payment_form"/>
+            <field name="arch" type="xml">
+
+                <field name="payment_type" position="before">
+                    <field name="my_menu_check" invisible="1"/>
+                </field>
+
+                <field name="payment_date" position="before">
+                    <field name="sale_order_id" attrs="{'invisible':[('my_menu_check','=',False)]}" options="{'no_open': True, 'no_create': True}"/>
+                </field>
+
+                <field name="payment_type" position="replace">
+                    <field name="payment_type" widget="radio" attrs="{'invisible':[('my_menu_check','=',True)]}" />
+                </field>
+
+                <field name="payment_type" position="after">
+                    <field name="is_this_payment_checked" invisible="1"/>
+                </field>
+
+                <field name="partner_type" position="replace">
+                    <field name="partner_type" nolabel="1" widget="selection" string="" attrs="{'required': [('payment_type', 'in', ('inbound', 'outbound'))],
+                    'invisible': [('payment_type', 'not in', ('inbound', 'outbound'))], 'readonly': [('state', '=', 'draft'), ('my_menu_check','=',True)]}"/>
+                </field>
+
+                <field name="operating_unit_id" position="replace">
+                    <field name="operating_unit_id" invisible="1"/>
+                </field>
+
+
+            </field>
+        </record>
+
+        <!-- Inherited action to set context value-->
+        <record id="account.action_account_payments" model="ir.actions.act_window">
+            <field name="context">{'default_my_menu_check': False}</field>
+        </record>
+
+        <!-- Newly added action-->
+        <record id="action_account_payments_new" model="ir.actions.act_window">
+            <field name="name">Customer Payments</field>
+            <field name="res_model">account.payment</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form,graph</field>
+            <field name="context">{'default_my_menu_check': True, 'default_payment_type': 'inbound', 'default_partner_type': 'customer'}</field>
+            <field name="domain">[('partner_type', '=', 'customer')]</field>
+            <field name="view_id" ref="account.view_account_payment_tree"/>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                  Click to register a payment
+                </p><p>
+                  Payments are used to register liquidity movements (send, collect or transfer money).
+                  You can then process those payments by your own means or by using installed facilities.
+                </p>
+            </field>
+        </record>
+
+        <!--Inherit Accounting Menus-->
+         <menuitem id="menu_finance_receivables"
+                  name="Sales"
+                  parent="account.menu_finance"
+                  sequence="2"/>
+
+        <menuitem action="action_account_payments_new"
+                  id="menu_action_account_payments_receivable_new"
+                  parent="account.menu_finance_receivables"
+                  sequence="19"/>
+
+    </data>
+</odoo>

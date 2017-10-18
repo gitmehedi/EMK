@@ -294,7 +294,7 @@ class AttendanceUtility(models.TransientModel):
         if previousDayDutyTime:
             return previousDayDutyTime
         else:
-            previousDayDutyTime = DutyTime(date + timedelta(hours=22), date + timedelta(hours=23), False, 0, 0, 0)
+            previousDayDutyTime = DutyTime(date.replace(hour=22, minute=00), date.replace(hour=23, minute=00), False, 0, 0, 0)
             return previousDayDutyTime
 
     # Get next duty time. If previous duty time is null that means this day was weekend.

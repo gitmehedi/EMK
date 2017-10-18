@@ -14,8 +14,8 @@
         'gbs_sales_commission_so',
         'delivery_order',
         'sale_order_type',
-
     ],
+
     'data': [
         'security/ir.model.access.csv',
         'security/sale_order_approval_security.xml',

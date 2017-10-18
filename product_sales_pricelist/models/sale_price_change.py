@@ -97,12 +97,12 @@ class SalePriceChange(models.Model):
         product_pool = self.env['product.product'].search([('id', '=', self.product_id.id)])
         product_pool.write({'list_price': self.new_price})
 
-        return self.write({'approver2_id':self.env.user.employee_ids[0].id, 'state': 'validate', 'approver2_date': time.strftime('%Y-%m-%d %H:%M:%S')})
+        return self.write({'approver2_id':self.env.user.employee_ids.id, 'state': 'validate', 'approver2_date': time.strftime('%Y-%m-%d %H:%M:%S')})
 
 
     @api.multi
     def action_validate(self):
-        return self.write({'approver1_id':self.env.user.employee_ids[0].id, 'state': 'validate1', 'approver1_date': time.strftime('%Y-%m-%d %H:%M:%S')})
+        return self.write({'approver1_id':self.env.user.employee_ids.id, 'state': 'validate1', 'approver1_date': time.strftime('%Y-%m-%d %H:%M:%S')})
 
 
     @api.multi
