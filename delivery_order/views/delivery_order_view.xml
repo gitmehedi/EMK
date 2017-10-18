@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
     <data>
+
         <record id="delivery_order_form" model="ir.ui.view">
             <field name="name">delivery.order.form</field>
             <field name="model">delivery.order</field>
@@ -28,8 +29,11 @@
                                 groups="gbs_application_group.group_head_account,gbs_application_group.group_cxo"/>
 
                         <field name="state" widget="statusbar"/>
+
                     </header>
                     <sheet>
+
+
 	                    <h1>
 	                        <field name="name"/>
 	                    </h1>
@@ -40,6 +44,7 @@
 
                             </group>
                             <group>
+
                                 <field name="parent_id" options="{'no_quick_create':True,'no_create_edit':True,'no_open':True}"/>
                                 <field name="payment_term_id" options="{'no_quick_create':True,'no_create_edit':True,'no_open':True}"/>
                                 <field name="warehouse_id" options="{'no_quick_create':True,'no_create_edit':True,'no_open':True}"/>
@@ -76,10 +81,13 @@
                                 <page string="Cash" attrs="{'invisible':[('so_type', '!=', 'cash')]}">
                                     <field name="cash_ids">
                                         <tree string="List" editable="bottom">
+                                            <field name="account_payment_id"/>
                                             <field name="amount"/>
                                             <field name="dep_bank"/>
                                             <field name="branch"/>
                                             <field name="validity"/>
+
+
                                         </tree>
                                     </field>
                                 </page>
@@ -123,13 +131,16 @@
                             </notebook>
                         </group>
                     </sheet>
+
                     <div class="oe_chatter">
                         <field name="message_follower_ids" widget="mail_followers"/>
                         <field name="message_ids" widget="mail_thread"/>
                     </div>
+
                 </form>
             </field>
         </record>
+
         <record id="delivery_order_tree" model="ir.ui.view">
             <field name="name">delivery.order.tree</field>
             <field name="model">delivery.order</field>
@@ -138,10 +149,20 @@
                 <tree string="Delivery Order">
                     <field name="sale_order_id"/>
                     <field name="so_type"/>
+                    <field name="name" string="Delivery Authorization"/>
                     <field name="state"/>
                 </tree>
             </field>
         </record>
+
+        <!-- Generate automated sequence -->
+        <record id="seq_hr_employee" model="ir.sequence">
+            <field name="name">DA Sequences</field>
+            <field name="code">delivery.order</field>
+            <field name="prefix">DA</field>
+            <field name="padding">3</field>
+        </record>
+
 
         <record model="ir.actions.act_window" id="delivery_order_action">
             <field name="name">Delivery Order</field>

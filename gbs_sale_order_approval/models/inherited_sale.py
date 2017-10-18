@@ -12,7 +12,7 @@ class SaleOrder(models.Model):
     ], string='Sale Order Type', required=True)
 
     state = fields.Selection([
-        ('to_submit', 'To Submit'),
+        ('to_submit', 'Submit'),
         ('draft', 'Quotation'),
         ('submit_quotation','Confirmed'),
         ('validate', 'Second Approval'),
@@ -24,11 +24,6 @@ class SaleOrder(models.Model):
 
     pack_type = fields.Many2one('product.packaging.mode',string='Packing Mode', required=True)
     currency_id = fields.Many2one("res.currency", related='', string="Currency", required=True)
-
-    def _get_real_price_currency(self, product, rule_id, qty, uom, pricelist_id):
-        product_currency = None
-
-
 
     @api.multi
     def action_validate(self):
@@ -58,7 +53,7 @@ class SaleOrder(models.Model):
         is_double_validation = False
 
         for lines in self.order_line:
-            product_pool = self.env['product.product'].search([('currency_id','=',self.currency_id.id), ('id', '=', lines.product_id.ids)])
+            #product_pool = self.env['product.product'].search([('currency_id','=',self.currency_id.id), ('id', '=', lines.product_id.ids)])
             cust_commission_pool = self.env['customer.commission'].search([('customer_id', '=', self.partner_id.id),
                                                                            ('product_id', '=', lines.product_id.ids)])
             credit_limit_pool = self.env['res.partner'].search([('id', '=', self.partner_id.id)])
@@ -106,22 +101,23 @@ class SaleOrder(models.Model):
         if is_double_validation:
             self.write({'state': 'validate'}) #Go to two level approval process
         else:
-            self.write({'state': 'sent'}) # One level approval process
+            self.write({'state': 'done'}) # One level approval process
 
     @api.multi
     def action_create_delivery_order(self):
-        view = self.env.ref('delivery_order.delivery_order_form')
 
-        return {
-            'name': ('Delivery Authorization'),
-            'view_type': 'form',
-            'view_mode': 'form',
-            'res_model': 'delivery.order',
-            'view_id': [view.id],
-            'type': 'ir.actions.act_window',
-            'context': {'default_sale_order_id': self.id}
-        }
 
+            view = self.env.ref('delivery_order.delivery_order_form')
+
+            return {
+                'name': ('Delivery Authorization'),
+                'view_type': 'form',
+                'view_mode': 'form',
+                'res_model': 'delivery.order',
+                'view_id': [view.id],
+                'type': 'ir.actions.act_window',
+                'context': {'default_sale_order_id': self.id}
+            }
 
     @api.multi
     @api.onchange('currency_id')
@@ -203,4 +199,3 @@ class InheritedSaleOrderLine(models.Model):
             self.update(vals)
 
         return res
-
