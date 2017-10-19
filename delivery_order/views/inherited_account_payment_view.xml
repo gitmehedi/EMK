@@ -30,9 +30,9 @@
                     'invisible': [('payment_type', 'not in', ('inbound', 'outbound'))], 'readonly': [('state', '=', 'draft'), ('my_menu_check','=',True)]}"/>
                 </field>
 
-                <field name="operating_unit_id" position="replace">
-                    <field name="operating_unit_id" invisible="1"/>
-                </field>
+                <!--<field name="operating_unit_id" position="replace">-->
+                    <!--<field name="operating_unit_id" invisible="1"/>-->
+                <!--</field>-->
 
 
             </field>

@@ -88,7 +88,7 @@
                         <field name="state" widget="statusbar" statusbar_visible="draft,sent,sale"/>
                     </xpath>
 
-                    <xpath expr="//group/group/field[@name='payment_term_id']" position="after">
+                    <xpath expr="//field[@name='company_id']" position="after">
                         <field name="credit_sales_or_lc" attrs="{'readonly':[('state','in',('draft','sent','validate','done','cancel','sale'))]}"/>
                     </xpath>
 
@@ -124,7 +124,11 @@
                         <field name="price_subtotal" attrs="{'readonly':[('state','in',('draft','sent','validate','done','cancel','sale'))]}" widget="monetary" groups="sale.group_show_price_subtotal"/>
                     </xpath>
 
-                    <xpath expr="//field[@name='currency_id']" position="replace">
+                    <!--<xpath expr="//field[@name='currency_id']" position="replace">-->
+                        <!--<field name="currency_id"  invisible="1" options="{'no_open': True, 'no_create': True}" attrs="{'readonly':[('state','in',('draft','sent','validate','done','cancel','sale'))]}"/>-->
+                    <!--</xpath>-->
+
+                    <xpath expr="//field[@name='credit_sales_or_lc']" position="after">
                         <field name="currency_id" options="{'no_open': True, 'no_create': True}" attrs="{'readonly':[('state','in',('draft','sent','validate','done','cancel','sale'))]}"/>
                     </xpath>
 
