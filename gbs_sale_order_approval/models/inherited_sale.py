@@ -37,6 +37,14 @@ class SaleOrder(models.Model):
         self.state = 'draft'
 
 
+    @api.onchange('type_id')
+    def onchange_type(self):
+        sale_type_pool = self.env['sale.order.type'].search([('id', '=', self.type_id.id)])
+        if self.type_id:
+            #self.credit_sales_or_lc = sale_type_pool.sale_order_type.name
+            self.currency_id = sale_type_pool.currency_id.id
+
+
     @api.multi
     def _is_double_validation_applicable(self):
         for lines in self.order_line:
