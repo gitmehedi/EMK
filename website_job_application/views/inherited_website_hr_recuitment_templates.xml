@@ -463,7 +463,7 @@
                                           name="experience_remarks" required="required"></textarea>
                             </div>
 
-                            <div class="form-group form-field col-md-6 o_website_form_required_custom">
+                            <div class="form-group form-field col-md-6">
                                 <label class="control-label">Quota / কোটা</label>
                                 <select class="form-control input-sm  o_website_form_input" name="quota" required="required">
                                     <t t-foreach='quota' t-as='label'>
@@ -490,11 +490,11 @@
 
                             <div class="form-group form-field col-md-6 o_website_form_required_custom">
                                 <label class="control-label" for="description">Date / তারিখ</label>
-                                <input type="text" class="form-control input-sm o_website_form_input"
-                                       id="datepicker_challan"
-                                       name="treasury_date" required="required"></input>
-                            </div>
 
+                                <input type="text" class="form-control o_website_form_input input-sm" id="datepicker"
+                                       name="treasury_date"></input>
+                            </div>
+<!--id="datepicker_challan"-->
 
                             <div class="form-group form-field col-md-6 o_website_form_required_custom">
                                 <label for="sel1">Is Divisional Candidate / বিভাগীয় প্রার্থী কিনা</label>
