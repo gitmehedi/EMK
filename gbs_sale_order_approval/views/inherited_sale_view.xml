@@ -97,7 +97,7 @@
                     </xpath>
 
                     <xpath expr="//group/group/field[@name='payment_term_id']" position="before">
-                        <field name="pack_type"  options="{'no_open': True, 'no_create': True}" attrs="{'readonly':[('state','in',('draft','sent','validate','done','cancel','sale'))]}"/>
+                        <field name="pack_type"  options="{'no_open': True, 'no_create': False}" attrs="{'readonly':[('state','in',('draft','sent','validate','done','cancel','sale'))]}"/>
                     </xpath>
 
                      <xpath expr="//field[@name='payment_term_id']" position="replace">

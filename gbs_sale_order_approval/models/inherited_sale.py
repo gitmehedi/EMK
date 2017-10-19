@@ -41,7 +41,7 @@ class SaleOrder(models.Model):
     def onchange_type(self):
         sale_type_pool = self.env['sale.order.type'].search([('id', '=', self.type_id.id)])
         if self.type_id:
-            #self.credit_sales_or_lc = sale_type_pool.sale_order_type.name
+            self.credit_sales_or_lc = sale_type_pool.sale_order_type
             self.currency_id = sale_type_pool.currency_id.id
 
 
