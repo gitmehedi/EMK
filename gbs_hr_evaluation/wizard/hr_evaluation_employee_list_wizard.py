@@ -6,12 +6,12 @@ class HREvaluationEmployeeListWizard(models.TransientModel):
     _description = 'Genarate Evaluation form for selected employee'
 
     employee_ids = fields.Many2many('hr.employee', 'hr_evaluation_employee_rel',
-                                    'evaluation_id', 'employee_id', string='Employees')
+                                    'evaluation_id', 'employee_id', string='Employees',
+                                    domain = "[('operating_unit_id', '=',operating_unit_id )]")
 
     @api.multi
     def generate_record(self):
         pool_evaluation_emp = self.env['hr.performance.evaluation']
-        pool_criteria_emp = self.env['hr.evaluation.criteria.line']
         [data] = self.read()
         active_id = self.env.context.get('active_id')
 
@@ -28,15 +28,5 @@ class HREvaluationEmployeeListWizard(models.TransientModel):
                 # 'state':'supervisor',
             }
             pool_evaluation_emp += self.env['hr.performance.evaluation'].create(res)
-
-        for i in pool_evaluation_emp.search([('rel_plan_id','=',active_id)]):
-            for criteria in self.env['hr.evaluation.criteria'].search([('is_active','=',True)]):
-                criteria_res = {
-                    'seq': criteria.seq,
-                    'name': criteria.name,
-                    'marks': criteria.marks,
-                    'rel_evaluation_id': i.id,
-                }
-                pool_criteria_emp += self.env['hr.evaluation.criteria.line'].create(criteria_res)
 
         return {'type': 'ir.actions.act_window_close'}
