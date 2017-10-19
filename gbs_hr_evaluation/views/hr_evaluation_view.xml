@@ -126,8 +126,8 @@
                                     <tree string="Evaluation Criteria Line" editable="bottom">
                                         <field name="seq" readonly="1"/>
                                         <field name="name" readonly="1"/>
-                                        <field name="marks" readonly="1"/>
-                                        <field name="obtain_marks"/>
+                                        <field name="marks" readonly="1" sum="Total"/>
+                                        <field name="obtain_marks" sum="Total"/>
                                     </tree>
                                 </field>
                             </group>
