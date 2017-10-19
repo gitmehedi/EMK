@@ -14,6 +14,7 @@
         'gbs_sales_commission_so',
         'delivery_order',
         'sale_order_type',
+        'operating_unit'
     ],
 
     'data': [
