@@ -21,6 +21,7 @@
         'security/sale_order_approval_security.xml',
         'views/inherited_sale_view.xml',
         'views/inherited_sale_order_view.xml',
+        'views/inherited_sale_order_type_view.xml',
     ],
     'installable': True,
     'application': True,
