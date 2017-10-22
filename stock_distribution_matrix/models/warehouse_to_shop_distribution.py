@@ -52,7 +52,7 @@ class WarehouseToShopDistribution(models.Model):
         shop = self.env['pos.config'].search([('operating_unit_id', '=', self.shop_id.id), ('active_shop', '=', True)])
 
         distributions = line_obj.search(
-            [('target_location_id', '=', shop.stock_location_id.id), ('state', '=', 'confirm')])
+            [('target_location_id', '=', shop.stock_location_id.id), ('state', '=', 'confirm'),('distribute_qty','>',0)])
         if not distributions:
             raise Warning(_("No product available to distribution. Please create stock distribution."))
 

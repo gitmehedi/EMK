@@ -11,7 +11,7 @@
                     </div>
                     <div class="row mb32" style="margin: 10mm 10mm 30mm 10mm;">
                         <div class="col-xs-12">
-                            <h3><strong>Challan No:</strong> 
+                            <h3><strong>Challan No:</strong>
                                 <span t-esc="record['chalan_no']"/>
                             </h3>
                         </div>
