@@ -14,9 +14,9 @@
                     <label for="id" string="Salary Rule On Attendance"/>
                     <div>
                         <div>
-                            <p>1 Day salary will deduct for each
-                                <field name="late_salary_deduction_rule" class="oe_inline" nolable="1" /> day's late.
-                            </p>
+                            <p>1 Day salary will deduct for each<field name="late_salary_deduction_rule" class="oe_inline" nolable="1" /> day's late
+
+                            days his/her salary will deduct.</p>
                         </div>
                     </div>
                 </group>

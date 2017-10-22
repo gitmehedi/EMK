@@ -5,8 +5,9 @@ class HRAttendanceConfigSettings(models.TransientModel):
 
     late_salary_deduction_rule = fields.Char(size=2,string = 'Allow rule, if any employee late in 3 days his/her salary will deduct.')
 
-    @api.model
+    @api.one
     def execute(self):
-        return
+        vals = {'late_salary_deduction_rule':self.late_salary_deduction_rule}
+        return self.create(vals)
 
 
