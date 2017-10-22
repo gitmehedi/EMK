@@ -10,8 +10,9 @@ class SalePriceChange(models.Model):
     _rec_name = 'product_id'
     _order = "approver2_date desc"
 
-    def _current_employee(self):
-        return self.env['hr.employee'].search([('user_id', '=', self.env.uid)], limit=1)
+    # def _current_employee(self):
+    #
+    #     # return self.env['hr.employee'].search([('user_id', '=', self.env.uid)], limit=1)
 
     product_id = fields.Many2one('product.product', domain=[('sale_ok', '=', True)],
                                  states={'confirm': [('readonly', True)], 'validate1': [('readonly', True)], 'validate': [('readonly', True)]}, string='Product', required=True)
@@ -25,10 +26,10 @@ class SalePriceChange(models.Model):
     uom_id = fields.Many2one('product.uom', string="UoM", domain=[('category_id', '=', 2)], required=True)
     category_id = fields.Many2one(string='UoM Category', related="uom_id.category_id", store=True)
     request_date = fields.Datetime(string='Request Date', default=datetime.datetime.now(), readonly=True)
-    requested_by = fields.Many2one('hr.employee', string="Requested By", default=_current_employee, readonly=True)
+    requested_by = fields.Many2one('res.users', string="Requested By", default=lambda self: self.env.user, readonly=True)
 
-    approver1_id = fields.Many2one('hr.employee', string='First Approval', readonly=True)
-    approver2_id = fields.Many2one('hr.employee', string='Second Approval', readonly=True)
+    approver1_id = fields.Many2one('res.users', string='First Approval', readonly=True)
+    approver2_id = fields.Many2one('res.users', string='Second Approval', readonly=True)
 
     approver1_date = fields.Datetime(string='First Approval Date', readonly=True)
     approver2_date = fields.Datetime(string='Effective Date', readonly=True)
@@ -97,12 +98,15 @@ class SalePriceChange(models.Model):
         product_pool = self.env['product.product'].search([('id', '=', self.product_id.id)])
         product_pool.write({'list_price': self.new_price})
 
-        return self.write({'approver2_id':self.env.user.employee_ids.id, 'state': 'validate', 'approver2_date': time.strftime('%Y-%m-%d %H:%M:%S')})
+        self.approver2_id=self.env.user
+        return self.write({'state': 'validate', 'approver2_date': time.strftime('%Y-%m-%d %H:%M:%S')})
 
 
     @api.multi
     def action_validate(self):
-        return self.write({'approver1_id':self.env.user.employee_ids.id, 'state': 'validate1', 'approver1_date': time.strftime('%Y-%m-%d %H:%M:%S')})
+
+        self.approver1_id=self.env.user
+        return self.write({'state': 'validate1', 'approver1_date': time.strftime('%Y-%m-%d %H:%M:%S')})
 
 
     @api.multi
