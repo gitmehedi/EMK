@@ -32,8 +32,6 @@ class StockRequisitionTransfer(models.AbstractModel):
             rec['receive_quantity'] = record.receive_quantity
             data.append(rec)
 
-        print data
-
         docargs = {
             'doc_ids': self._ids,
             'data': data,

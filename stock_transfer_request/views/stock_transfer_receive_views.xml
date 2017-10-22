@@ -29,7 +29,7 @@
                             <tree string="Products" editable="top">
                                 <field name="product_id" readonly="1"
                                        options="{'no_quick_create': True, 'no_create_edit': True, 'no_open': True}"/>
-                                <field name="quantity" sum="quantity" readonly="1"/>
+                                <field name="quantity" sum="quantity" readonly="1" string="Transfer Quantity"/>
                                 <field name="receive_quantity" sum="receive_quantity" required="1"/>
                             </tree>
                         </field>

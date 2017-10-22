@@ -29,18 +29,15 @@
                             </p>
                         </div>
                     </div>
-
-                    <!-- Report Body -->
-
                     <table class="table table-bordered">
                         <thead>
                             <tr colspan="4">
-                                <th class="text-center">Serial No</th>
-                                <th class="text-center">Barcode</th>
-                                <th class="text-center">Name</th>
+                                <th class="text-center">S.N</th>
+                                <th class="text-center">Product Name</th>
+                                <th class="text-center">UoM</th>
                                 <th class="text-center">Transfer Quantity</th>
                                 <th class="text-center">Receive Quantity</th>
-                                <th class="text-center">Status</th>
+                                <th class="text-center">Note</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -50,10 +47,10 @@
                                         <t t-esc="o['sn']"/>
                                     </td>
                                     <td>
-                                        <t t-esc="o['barcode']"/>
+                                        <t t-esc="o['name']"/>
                                     </td>
                                     <td>
-                                        <t t-esc="o['name']"/>
+                                        <t t-esc="o['uom']"/>
                                     </td>
                                     <td class="text-right">
                                         <t t-esc="o['quantity']"/>
@@ -66,9 +63,30 @@
                                     </td>
                                 </tr>
                             </t>
+                            <t t-if="data">
+                                <tr>
+                                    <td colspan="3" class="text-right">
+                                        <strong>Total</strong>
+                                    </td>
+                                    <td class="text-right">
+                                        <strong>
+                                            <t t-esc="total['transfer']"/>
+                                        </strong>
+                                    </td>
+                                    <td class="text-right">
+                                        <t t-if="total['receive']">
+                                            <strong>
+                                                <t t-esc="total['receive']"/>
+                                            </strong>
+                                        </t>
+
+                                    </td>
+                                    <td></td>
+                                </tr>
+                            </t>
                         </tbody>
                     </table>
-                    <!-- End Report Body -->
+
                     <div class="row mb32" style="margin: 30mm 10mm 10mm 10mm;">
                         <div class="col-xs-6">
                             <p>

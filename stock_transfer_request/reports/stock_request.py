@@ -22,21 +22,28 @@ class StockTransferRequestReport(models.AbstractModel):
             header_info['transfer_shop_id'] = records.transfer_shop_id.name
 
         count = 0
+        total = {}
+        total['transfer'] = 0
+        total['receive'] = 0
+
         for record in records.product_line_ids:
             rec = {}
             count = count + 1
             rec['sn'] = count
-            rec['barcode'] = record.product_id.default_code
-            rec['name'] = record.product_id.name
+            rec['name'] = record.product_id.display_name
+            rec['uom'] = record.product_id.uom_id.name
             rec['quantity'] = record.quantity
-            rec['receive_quantity'] = record.receive_quantity
+            receive = record.receive_quantity if record.receive_quantity else None
+            rec['receive_quantity'] = receive
+            total['transfer'] = total['transfer'] + record.quantity
+            if receive > 0:
+                total['receive'] = total['receive'] + receive
             data.append(rec)
-
-        print data
 
         docargs = {
             'doc_ids': self._ids,
             'data': data,
+            'total': total,
             'record': header_info,
             'doc_model': report.model,
             'docs': self,

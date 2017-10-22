@@ -21,21 +21,29 @@ class ChallanReport(models.AbstractModel):
             header_info['shop_id'] = records.shop_id.name
 
         count = 0
+        total = {}
+        total['transfer'] = 0
+        total['receive'] = 0
         for record in records.stock_distribution_lines_ids:
             rec = {}
             count = count + 1
             rec['sn'] = count
-            rec['barcode'] = record.product_id.default_code
-            rec['name'] = record.product_id.name
+            rec['name'] = record.product_id.display_name
+            rec['uom'] = record.product_uom_id.name
             rec['transfer_qty'] = record.transfer_qty
-            rec['receive_qty'] = record.receive_qty if record.receive_qty else None
+            receive = record.receive_qty if record.receive_qty else None
+            rec['receive_qty'] = receive
             data.append(rec)
 
-        print data
+            total['transfer'] = total['transfer'] + record.transfer_qty
+            if receive > 0:
+                total['receive'] = total['receive'] + receive
+
 
         docargs = {
             'doc_ids': self._ids,
             'data': data,
+            'total': total,
             'record': header_info,
             'doc_model': report.model,
             'docs': self,

@@ -8,12 +8,12 @@ class StockTransferRequestLine(models.Model):
     _name = 'stock.transfer.request.line'
 
     store_qty = fields.Integer(string="Store Quantity", store=True)
-    quantity = fields.Integer(string="Quantity", required=True)
+    quantity = fields.Integer(string="Transfer Quantity", required=True)
     receive_quantity = fields.Integer(string="Receive Quantity")
 
     """ Relational Fields """
     stock_transfer_id = fields.Many2one('stock.transfer.request')
-    product_id = fields.Many2one('product.product', string="Product", required=True, ondelete="cascade")
+    product_id = fields.Many2one('product.product', string="Product Name", required=True, ondelete="cascade")
 
     @api.onchange('product_id')
     def onchange_product(self):
