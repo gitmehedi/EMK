@@ -7,7 +7,7 @@ class SalePriceChange(models.Model):
     _name = 'product.sales.pricelist'
     _description = "Product Sales Pricelist"
     _inherit = ['mail.thread', 'ir.needaction_mixin']
-    _rec_name = 'requested_by'
+    _rec_name = 'product_id'
     _order = "approver2_date desc"
 
     def _current_employee(self):
