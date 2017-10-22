@@ -11,13 +11,13 @@ class SaleDeliveryOrder(models.Model):
     _rec_name='name'
 
     name = fields.Char(string='Name', index=True, readonly=True)
-    so_date = fields.Date('Sales Order Date', readonly=True)
+    so_date = fields.Datetime('Order Date', readonly=True)
     sequence_id = fields.Char('Sequence', readonly=True)
     deli_address = fields.Char('Delivery Address', readonly=True,states={'draft': [('readonly', False)]})
     sale_order_id = fields.Many2one('sale.order',string='Sale Order',required=True, readonly=True,states={'draft': [('readonly', False)]})
     parent_id = fields.Many2one('res.partner', 'Customer', ondelete='cascade', readonly=True,related='sale_order_id.partner_id')
     payment_term_id = fields.Many2one('account.payment.term', string='Payment Terms', readonly=True,related='sale_order_id.payment_term_id')
-    warehouse_id = fields.Many2one('stock.warehouse', string='Warehouse', readonly=True)
+    warehouse_id = fields.Many2one('stock.warehouse', string='Warehouse', readonly=True, states={'draft': [('readonly', False)]})
     line_ids = fields.One2many('delivery.order.line', 'parent_id', string="Products", readonly=True,states={'draft': [('readonly', False)]})
     cash_ids = fields.One2many('cash.payment.line', 'pay_cash_id', string="Cash", readonly=True, invisible =True,states={'draft': [('readonly', False)]})
     cheque_ids=  fields.One2many('cheque.payment.line', 'pay_cash_id', string="Cheque", readonly=True,states={'draft': [('readonly', False)]})
@@ -135,7 +135,8 @@ class SaleDeliveryOrder(models.Model):
             if sale_order_obj:
                 self.warehouse_id = sale_order_obj.warehouse_id.id
                 self.so_type = sale_order_obj.credit_sales_or_lc
-                self.so_date = sale_order_obj.confirmation_date
+                self.so_date = sale_order_obj.date_order
+                self.deli_address = sale_order_obj.partner_shipping_id.name
 
                 for record in sale_order_obj.order_line:
                     val.append((0, 0, {'product_id': record.product_id.id,
