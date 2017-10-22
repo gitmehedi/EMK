@@ -151,6 +151,13 @@ class SaleOrder(models.Model):
 class InheritedSaleOrderLine(models.Model):
     _inherit='sale.order.line'
 
+    @api.constrains('product_uom_qty','commission_rate')
+    def _check_order_line_inputs(self):
+        if self.product_uom_qty or self.commission_rate:
+            if self.product_uom_qty < 0 or self.commission_rate < 0:
+                raise ValidationError('Ordered Qty or Commission Rate  can not be Minus value')
+
+
     def _get_product_sales_price(self, product):
 
         if product:
