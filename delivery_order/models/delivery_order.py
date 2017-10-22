@@ -11,7 +11,7 @@ class SaleDeliveryOrder(models.Model):
     _rec_name='name'
 
     name = fields.Char(string='Name', index=True, readonly=True)
-    so_date = fields.Datetime('Order Date', readonly=True)
+    so_date = fields.Datetime('Order Date', readonly=True, states={'draft': [('readonly', False)]})
     sequence_id = fields.Char('Sequence', readonly=True)
     deli_address = fields.Char('Delivery Address', readonly=True,states={'draft': [('readonly', False)]})
     sale_order_id = fields.Many2one('sale.order',string='Sale Order',required=True, readonly=True,states={'draft': [('readonly', False)]})
@@ -37,14 +37,16 @@ class SaleDeliveryOrder(models.Model):
         ('cash', 'Cash'),
         ('credit_sales', 'Credit'),
         ('lc_sales', 'L/C'),
-    ], string='Sale Order Type')
+    ], string='Sales Type', readonly=True,states={'draft': [('readonly', False)]})
 
     state = fields.Selection([
-        ('draft', "To Submit"),
-        ('validate', "To Approve"),
+        ('draft', "Submit"),
+        ('validate', "Approved"),
         ('approve', "Second Approval"),
         ('close', "Approved")
     ], default='draft')
+
+    #type_id = fields.Many2one('sale.order.type',string='Order Type')
 
     """ All functions """
 
@@ -143,6 +145,9 @@ class SaleDeliveryOrder(models.Model):
                                        'quantity': record.product_uom_qty,
                                        'pack_type': sale_order_obj.pack_type.id,
                                        'uom_id': record.product_uom.id,
+                                       'commission_rate': record.commission_rate,
+                                       'price_unit':record.price_unit,
+                                       'price_subtotal': record.price_subtotal
                                                 }))
 
             self.line_ids = val

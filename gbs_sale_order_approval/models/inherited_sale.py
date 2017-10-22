@@ -9,7 +9,7 @@ class SaleOrder(models.Model):
         ('cash', 'Cash'),
         ('credit_sales', 'Credit'),
         ('lc_sales', 'L/C'),
-    ], string='Sale Order Type', required=True)
+    ], string='Sales Type', required=True)
 
     state = fields.Selection([
         ('to_submit', 'Submit'),

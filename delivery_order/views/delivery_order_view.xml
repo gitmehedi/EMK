@@ -43,6 +43,7 @@
                             <group>
                                 <field name="parent_id" options="{'no_quick_create':True,'no_create_edit':True,'no_open':True}"/>
                                 <field name="so_type"/>
+                                <!--<field name="type_id"/>-->
                                 <field name="so_date"/>
                             </group>
 
@@ -51,10 +52,14 @@
                                     <field name="line_ids">
                                         <tree string="List" editable="bottom">
                                             <field name="product_id" options="{'no_quick_create':True,'no_create_edit':True}"/>
-                                            <field name="quantity"/>
+                                            <field name="quantity" string="Ordered Qty"/>
+                                            <field name="uom_id" string="UoM" options="{'no_quick_create':True,'no_create_edit':True}"/>
                                             <field name="pack_type"/>
-                                            <field name="deli_mode"/>
-                                            <field name="uom_id" options="{'no_quick_create':True,'no_create_edit':True}"/>
+                                            <field name="deli_mode" invisible="1"/>
+                                            <field name="commission_rate"/>
+                                            <field name="price_unit"/>
+                                            <field name="price_subtotal"/>
+
                                         </tree>
                                     </field>
                                 </page>
@@ -143,7 +148,7 @@
             <field name="arch" type="xml">
                 <tree string="Delivery Order">
                     <field name="sale_order_id"/>
-                    <field name="so_type"/>
+                    <!--<field name="type_id"/>-->
                     <field name="name" string="Delivery Authorization"/>
                     <field name="state"/>
                 </tree>
