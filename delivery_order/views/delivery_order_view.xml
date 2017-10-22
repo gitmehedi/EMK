@@ -37,7 +37,7 @@
 	                    </h1>
                         <group>
                             <group>
-                                <field name="sale_order_id" options="{'no_quick_create':True,'no_create_edit':True,'no_open':True}"/>
+                                <field name="sale_order_id"/>
                                 <field name="deli_address"/>
                             </group>
                             <group>
@@ -62,7 +62,7 @@
                                 <page string="Other Information">
                                     <group>
                                         <group>
-                                            <field name="warehouse_id" options="{'no_quick_create':True,'no_create_edit':True,'no_open':True}"/>
+                                            <field name="warehouse_id"/>
                                             <field name="requested_by" options="{'no_open': True, 'no_create': True}"/>
                                             <field name="requested_date"/>
                                         </group>
