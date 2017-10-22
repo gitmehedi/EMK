@@ -1,13 +1,20 @@
 from odoo import api,fields, models
 
-class HRAttendanceConfigSettings(models.TransientModel):
+class HRAttendanceConfigSettings(models.Model):
     _name = 'hr.attendance.config.settings'
+    _inherit = 'res.config.settings'
 
-    late_salary_deduction_rule = fields.Char(size=2,string = 'Allow rule, if any employee late in 3 days his/her salary will deduct.')
+    @api.multi
+    def _get_default(self):
+        query = """select late_salary_deduction_rule from hr_attendance_config_settings order by id desc limit 1"""
+        self._cr.execute(query, tuple([]))
+        deduction_rule_value = self._cr.fetchone()
+        return deduction_rule_value[0]
 
-    @api.one
-    def execute(self):
-        vals = {'late_salary_deduction_rule':self.late_salary_deduction_rule}
-        return self.create(vals)
 
+    late_salary_deduction_rule = fields.Integer(size=2,default=_get_default)
 
+    @api.model
+    def create(self,vals):
+        config_id = super(HRAttendanceConfigSettings, self).create( vals)
+        return config_id
