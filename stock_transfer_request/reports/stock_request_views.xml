@@ -31,7 +31,7 @@
                     </div>
                     <table class="table table-bordered">
                         <thead>
-                            <tr colspan="4">
+                            <tr colspan="4" style="background-color: #D8D5D4;">
                                 <th class="text-center">S.N</th>
                                 <th class="text-center">Product Name</th>
                                 <th class="text-center">UoM</th>
@@ -64,7 +64,7 @@
                                 </tr>
                             </t>
                             <t t-if="data">
-                                <tr>
+                                <tr style="background-color: #D8D5D4;">
                                     <td colspan="3" class="text-right">
                                         <strong>Total</strong>
                                     </td>
@@ -87,7 +87,7 @@
                         </tbody>
                     </table>
 
-                    <div class="row mb32" style="margin: 30mm 10mm 10mm 10mm;">
+                    <div class="row mb32" style="margin: 20mm 10mm 10mm 10mm;">
                         <div class="col-xs-6">
                             <p>
                                 <strong>Signature:
