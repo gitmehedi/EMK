@@ -73,7 +73,8 @@ class SaleOrder(models.Model):
             if (self.credit_sales_or_lc == 'cash'):
                 for coms in cust_commission_pool:
                     if price_change_pool.currency_id.id == lines.currency_id.id:
-                        if (lines.commission_rate < coms.commission_rate or lines.price_unit < price_change_pool.list_price):
+                        if (lines.commission_rate < coms.commission_rate
+                            or lines.price_unit < price_change_pool.new_price):
                             is_double_validation = True
                             break;
                         else:
@@ -95,7 +96,7 @@ class SaleOrder(models.Model):
 
                 if (abs(customer_total_credit) > customer_credit_limit
                     or lines.commission_rate < cust_commission_pool.commission_rate
-                    or lines.price_unit < price_change_pool.list_price):
+                    or lines.price_unit < price_change_pool.new_price):
 
                         is_double_validation = True
                         break;
