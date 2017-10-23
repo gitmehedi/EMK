@@ -49,7 +49,6 @@
 						<field name="state" widget="statusbar" statusbar_visible="draft,confirm,validate1,validate"/>
 	                </header>
 	                <sheet>
-	                    <label for="name" class="oe_edit_only" attrs="{'invisible':[('state','=','approve')]}"/>
 	                    <h1>
 	                        <field name="name"/>
 	                    </h1>
@@ -86,7 +85,23 @@
                 </form>
             </field>
         </record>
-        
+
+        <!-- Sequence Records -->
+        <record id="seq_creadit_limit" model="ir.sequence">
+            <field name="name">Sequence</field>
+            <field name="code">customer.creditlimit.assign</field>
+            <field name="prefix">CL</field>
+            <field name="padding">3</field>
+        </record>
+
+		<!--&lt;!&ndash; Generate automated sequence &ndash;&gt;-->
+        <!--<record id="seq_hr_employee" model="ir.sequence">-->
+            <!--<field name="name">DA Sequences</field>-->
+            <!--<field name="code">delivery.order</field>-->
+            <!--<field name="prefix">DA</field>-->
+            <!--<field name="padding">3</field>-->
+        <!--</record>-->
+
         <record id="action_creditlimit_tree" model="ir.actions.act_window">
             <field name="name">Customer Credit Limit</field>
             <field name="res_model">customer.creditlimit.assign</field>
