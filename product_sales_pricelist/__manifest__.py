@@ -13,8 +13,8 @@
         'report'
     ],
     'data': [
-        'security/ir.model.access.csv',
-        'security/sales_price_security.xml',
+        #'security/ir.model.access.csv',
+        #'security/sales_price_security.xml',
         'wizards/sale_price_change_wizard_view.xml',
         'views/sale_price_change_history.xml',
         'views/sale_price_change_view.xml',
