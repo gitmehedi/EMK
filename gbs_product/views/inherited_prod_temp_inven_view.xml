@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<openerp>
+<odoo>
     <data>
         <!-- Inherited Form view-->
         <record id="product_temp_inventory_from_view" model="ir.ui.view">
@@ -10,7 +10,7 @@
             <field name="arch" type="xml">
                 <data>
                     <xpath expr="//page[2]" position="replace">
-                        <page string="Inventory" groups="stock.group_stock_user">
+                        <page string="Inventory" groups="base_technical_features.group_technical_features">
                             <group name="inventory">
                                 <group>
                                     <field name="route_ids" widget="many2many_checkboxes" attrs="{'invisible':[('type', 'in', ['service', 'digital'])]}"/>
@@ -52,5 +52,19 @@
                 </xpath>
             </field>
         </record>
+
+        <record id="product_template_view1" model="ir.ui.view">
+            <field name="name">product.template.new</field>
+            <field name="model">product.template</field>
+            <field name="inherit_id" ref="procurement.product_template_view_form_procurement_button"/>
+            <field name="arch" type="xml">
+                <xpath expr="//button[@name='%(procurement.procurement_order_action_product_template_stat)d']" position="replace">
+                   <button class="oe_stat_button" name="%(procurement.procurement_order_action_product_template_stat)d"
+                           icon="fa-truck" string="Procurements" type="action"
+                           groups="base.group_no_one"
+                           attrs="{'invisible': [('purchase_ok', '=', False)]}"/>
+                </xpath>
+            </field>
+        </record>
     </data>
-</openerp>
+</odoo>
