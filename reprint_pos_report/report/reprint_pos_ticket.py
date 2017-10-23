@@ -11,7 +11,7 @@ class ReprintSalePosTicket(models.AbstractModel):
         pos_order = self.env['pos.order'].search([('id', '=', self.id)])
 
         if pos_order:
-
+            reprint = True if pos_order.pos_reference else False
             main_header = {
                 'company_name': pos_order.company_id.name,
                 'shop_name': pos_order.session_id.config_id.name,
@@ -65,6 +65,7 @@ class ReprintSalePosTicket(models.AbstractModel):
             'sub_header': sub_header,
             'orderlines': orderlines,
             'total_value': total_value,
+            'reprint': reprint,
             'payment': journal,
             'doc_model': report.model,
             'docs': self,

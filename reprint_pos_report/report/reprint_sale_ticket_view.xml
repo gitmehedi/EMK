@@ -52,7 +52,11 @@
                             </div>
                             <div style="clear: both;"></div>
                             <br/>
-                            <br/>
+                            <t t-if="reprint">
+                                <div style='text-align:center'>
+                                    <t t-esc="sub_header['receipt_header']"/>
+                                </div>
+                            </t>
                             <br/>
                             <table>
                                 <colgroup>
