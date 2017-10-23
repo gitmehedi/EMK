@@ -9,7 +9,7 @@
             <field name="perm_write" eval="1"/>
             <field name="perm_create" eval="0"/>
             <field name="perm_unlink" eval="0"/>
-            <field name="domain_force">[('shop_id','in', [rec.id for rec in user.operating_unit_ids]),('state','=', 'transfer')]</field>
+            <field name="domain_force">[('shop_id','in', [rec.id for rec in user.operating_unit_ids]),('state','in', ['transfer','received'])]</field>
         </record>
 
         <record id="rule_warehouse_to_shop_distribution_by_manager_line" model="ir.rule">
