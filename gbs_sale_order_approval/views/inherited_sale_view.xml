@@ -160,7 +160,5 @@
             </field>
         </record>
 
-        <menuitem id="delivery_order.pending_delivery_order_sub_menu" parent="delivery_order.delivery_order_menu"
-                  action="pending_delivery_order_action"/>
     </data>
 </odoo>
