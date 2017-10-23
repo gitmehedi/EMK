@@ -22,14 +22,20 @@ class DailyCreditSettlementReport(models.AbstractModel):
             domain.append(('date', '>=', data['start_date']))
         if data['end_date']:
             domain.append(('date', '<=', data['end_date']))
+        if data['product_id']:
+            domain.append(('product_id', '=', data['product_id']))
 
-        moves = self.env['stock.move'].search(domain, order="date asc")
+
+
+        moves = self.env['stock.move'].search(domain, order="product_id asc,write_date asc")
 
         for record in moves:
             rec = {}
-            rec['barcode'] = record.product_id.default_code
-            rec['display_name'] = record.display_name
             rec['product_name'] = record.product_id.display_name
+            rec['uom'] = record.product_id.uom_id.name
+            rec['create_uid'] = record.create_uid.name
+            rec['write_uid'] = record.write_uid.name
+            rec['write_date'] = record.write_date
             rec['quantity'] = record.product_qty
             lines.append(rec)
 
@@ -50,7 +56,7 @@ class DailyCreditSettlementReport(models.AbstractModel):
         return report_obj.render('pos_summary_report.report_warehouse_to_shop_distribution_report_view_qweb', docargs)
 
     def format_date(self, date):
-        return datetime.strptime(date[:10], '%Y-%m-%d').strftime('%d-%m-%Y')
+        return datetime.strptime(date[:10], '%Y-%m-%d').strftime('%d-%m-%Y %H:%M:%S')
 
     def decimal(self, val):
         return "{:,}".format(round(val, 0))

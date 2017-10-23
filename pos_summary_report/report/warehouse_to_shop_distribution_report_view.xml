@@ -18,16 +18,18 @@
                                     <span>Warehouse</span>
                                 </p>
                             </div>
-                            <div class="col-xs-5 col-xs-offset-1">
-                                <p>
-                                    <strong>Receive Shop Name:</strong>
-                                    <span t-esc="record['shop_name']"/>
-                                </p>
-                            </div>
+                            <t t-if="record['receive_shop']">
+                                <div class="col-xs-5 col-xs-offset-1">
+                                    <p>
+                                        <strong>Receive Shop Name:</strong>
+                                        <span t-esc="record['shop_name']"/>
+                                    </p>
+                                </div>
+                            </t>
                             <br/>
                             <div class="col-xs-8 col-xs-offset-4">
                                 <p>
-                                        <span t-esc="record['start_date']"/>
+                                    <span t-esc="record['start_date']"/>
                                     <strong>To</strong>
                                     <span t-esc="record['end_date']"/>
                                 </p>
@@ -39,10 +41,11 @@
                             <thead>
                                 <tr style="background-color: #EFECEB;">
                                     <th class="text-center">S.N</th>
-                                    <th class="text-center">Code</th>
                                     <th class="text-center">Product Name</th>
-                                    <th class="text-center">Transfer Quantity</th>
-                                    <th class="text-center">Receive Quantity</th>
+                                    <th class="text-center">UoM</th>
+                                    <th class="text-center">Reponsible</th>
+                                    <th class="text-center">Date</th>
+                                    <th class="text-center">Quantity</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -52,29 +55,32 @@
                                             <t t-esc="line_index+1"/>
                                         </td>
                                         <td>
-                                            <t t-esc="line['barcode']"/>
+                                            <t t-esc="line['product_name']"/>
                                         </td>
                                         <td>
-                                            <t t-esc="line['product_name']"/>
+                                            <t t-esc="line['uom']"/>
+                                        </td>
+                                        <td>
+                                            <t t-esc="line['write_uid']"/>
+                                        </td>
+                                        <td>
+                                            <t t-esc="line['write_date']"/>
                                         </td>
                                         <td style="text-align: right;">
                                             <t t-esc="line['quantity']"/>
                                         </td>
-                                        <td></td>
                                     </tr>
                                 </t>
                                 <t t-if="lines">
                                     <tr style="background-color: #EFECEB;">
-
-                                        <td colspan="3" style="text-align: right;">
-                                            <strong>Grand Total</strong>
+                                        <td colspan="5" style="text-align: right;">
+                                            <strong>Total</strong>
                                         </td>
                                         <td style="text-align: right;">
                                             <strong>
                                                 <t t-esc="total"/>
                                             </strong>
                                         </td>
-                                        <td></td>
                                     </tr>
                                 </t>
                             </tbody>

@@ -94,67 +94,69 @@ class WarehouseToShopDistribution(models.Model):
 
     @api.one
     def action_transfer(self):
-        line_obj = self.env['stock.distribution.to.shop.line']
-        move_new_obj = self.env['stock.move']
-        warehouse = self.env['pos.config'].search(
-            [('operating_unit_id', '=', self.warehoue_id.id), ('active_shop', '=', True)])
-        transit_location = self.env['stock.location'].search([('name', 'ilike', 'Inter Company Transit')])
+        if self.state == 'transfer':
+            line_obj = self.env['stock.distribution.to.shop.line']
+            move_new_obj = self.env['stock.move']
+            warehouse = self.env['pos.config'].search(
+                [('operating_unit_id', '=', self.warehoue_id.id), ('active_shop', '=', True)])
+            transit_location = self.env['stock.location'].search([('name', 'ilike', 'Inter Company Transit')])
 
-        stock_picking_hrd = {}
-        stock_picking_hrd['origin'] = self.name
-        stock_picking_hrd['picking_type_id'] = 1
-        picking = self.env['stock.picking'].create(stock_picking_hrd)
-        picking.action_done()
-        for record in self.stock_distribution_lines_ids:
-            if record.transfer_qty > 0:
-                rec = {}
-                rec['picking_id'] = picking.id
-                rec['product_id'] = record.product_id.id
-                rec['product_uom'] = record.product_id.uom_id.id
-                rec['name'] = record.product_id.name
-                rec['product_uom_qty'] = record.transfer_qty
-                rec['location_id'] = warehouse.stock_location_id.id
-                rec['location_dest_id'] = transit_location.id
-                rec['procure_method'] = "make_to_stock"
-                rec['state'] = 'draft'
-                move_insert = move_new_obj.create(rec)
-                move_insert.action_done()
-                line_obj.search([('id', '=', record.stock_distribution_line_id.id)]).write({'state': 'transfer'})
+            stock_picking_hrd = {}
+            stock_picking_hrd['origin'] = self.name
+            stock_picking_hrd['picking_type_id'] = 1
+            picking = self.env['stock.picking'].create(stock_picking_hrd)
+            picking.action_done()
+            for record in self.stock_distribution_lines_ids:
+                if record.transfer_qty > 0:
+                    rec = {}
+                    rec['picking_id'] = picking.id
+                    rec['product_id'] = record.product_id.id
+                    rec['product_uom'] = record.product_id.uom_id.id
+                    rec['name'] = record.product_id.name
+                    rec['product_uom_qty'] = record.transfer_qty
+                    rec['location_id'] = warehouse.stock_location_id.id
+                    rec['location_dest_id'] = transit_location.id
+                    rec['procure_method'] = "make_to_stock"
+                    rec['state'] = 'draft'
+                    move_insert = move_new_obj.create(rec)
+                    move_insert.action_done()
+                    line_obj.search([('id', '=', record.stock_distribution_line_id.id)]).write({'state': 'transfer'})
 
-                record.write({'receive_qty': record.transfer_qty, 'is_transfer': True})
+                    record.write({'receive_qty': record.transfer_qty, 'is_transfer': True})
 
-        self.state = 'transfer'
+            self.state = 'transfer'
 
     @api.one
     def action_receive(self):
-        move_new_obj = self.env['stock.move']
-        shop = self.env['pos.config'].search(
-            [('operating_unit_id', '=', self.shop_id.id), ('active_shop', '=', True)])
-        transit_location = self.env['stock.location'].search([('name', 'ilike', 'Inter Company Transit')])
+        if self.state=='transfer':
+            move_new_obj = self.env['stock.move']
+            shop = self.env['pos.config'].search(
+                [('operating_unit_id', '=', self.shop_id.id), ('active_shop', '=', True)])
+            transit_location = self.env['stock.location'].search([('name', 'ilike', 'Inter Company Transit')])
 
-        stock_picking_hrd = {}
-        stock_picking_hrd['origin'] = self.name
-        stock_picking_hrd['picking_type_id'] = 1
-        picking = self.env['stock.picking'].create(stock_picking_hrd)
-        picking.action_done()
-        for record in self.stock_distribution_lines_ids:
-            if record.transfer_qty > 0:
-                rec = {}
-                rec['picking_id'] = picking.id
-                rec['product_id'] = record.product_id.id
-                rec['product_uom'] = record.product_id.uom_id.id
-                rec['name'] = record.product_id.name
-                rec['product_uom_qty'] = record.transfer_qty
-                rec['location_id'] = transit_location.id
-                rec['location_dest_id'] = shop.stock_location_id.id
-                rec['procure_method'] = "make_to_stock"
-                rec['state'] = 'draft'
-                move_insert = move_new_obj.create(rec)
-                move_insert.action_done()
-                record.write({'is_receive': True})
+            stock_picking_hrd = {}
+            stock_picking_hrd['origin'] = self.name
+            stock_picking_hrd['picking_type_id'] = 1
+            picking = self.env['stock.picking'].create(stock_picking_hrd)
+            picking.action_done()
+            for record in self.stock_distribution_lines_ids:
+                if record.transfer_qty > 0:
+                    rec = {}
+                    rec['picking_id'] = picking.id
+                    rec['product_id'] = record.product_id.id
+                    rec['product_uom'] = record.product_id.uom_id.id
+                    rec['name'] = record.product_id.name
+                    rec['product_uom_qty'] = record.transfer_qty
+                    rec['location_id'] = transit_location.id
+                    rec['location_dest_id'] = shop.stock_location_id.id
+                    rec['procure_method'] = "make_to_stock"
+                    rec['state'] = 'draft'
+                    move_insert = move_new_obj.create(rec)
+                    move_insert.action_done()
+                    record.write({'is_receive': True})
 
-        self.receive_date = self.get_current_date()
-        self.state = 'received'
+            self.receive_date = self.get_current_date()
+            self.state = 'received'
 
     @api.one
     def action_done(self):
