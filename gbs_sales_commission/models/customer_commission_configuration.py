@@ -54,6 +54,39 @@ class CustomerCommissionConfiguration(models.Model):
     ], readonly=True, track_visibility='onchange', copy=False, default='draft')
 
     """ All functions """
+
+    @api.onchange('product_id')
+    def onchange_product_id(self):
+         for rec in self.config_customer_ids:
+             if rec.customer_id:
+                 commission=self.env['customer.commission'].search(
+                     [('product_id', '=', self.product_id.id),
+                      ('customer_id', '=',rec.customer_id.id),
+                      ('status', '=', True)])
+                 if commission:
+                     for coms in commission:
+                         rec.old_value = coms.commission_rate
+                 else:
+                     rec.old_value = 0
+
+    @api.onchange('customer_id')
+    def onchange_customer_id(self):
+        for rec in self.config_product_ids:
+            if rec.product_id:
+                commission = self.env['customer.commission'].search(
+                    [('product_id', '=', rec.product_id.id),
+                     ('customer_id', '=', self.customer_id.id),
+                     ('status', '=', True)])
+                if commission:
+                    for coms in commission:
+                        rec.old_value = coms.commission_rate
+                else:
+                    rec.old_value = 0
+
+
+
+
+
     @api.onchange('commission_type')
     def onchange_commission_type(self):
         if self.commission_type:
