@@ -9,13 +9,14 @@ class customer_creditlimit_assign(models.Model):
     _inherit = ['mail.thread', 'ir.needaction_mixin']
     _description = "Credit limit assign"
 
-    name = fields.Char('Name', required=True,
-           states={'confirm': [('readonly', True)],'validate1': [('readonly', True)],'approve': [('readonly',True)]})
+
+    name = fields.Char(string='Name',index=True, readonly=True)
+    sequence_id = fields.Char('Sequence', readonly=True)
     approve_date = fields.Date('Approved Date',
                    states = {'draft': [('invisible', True)],'confirm': [('invisible', True)],'validate1': [('invisible', True)], 'approve': [('invisible',False),('readonly',True)]})
-    credit_limit = fields.Float('Credit Limit',required=True,
+    credit_limit = fields.Float('Credit Limit',
                    states={'confirm': [('readonly', True)], 'validate1': [('readonly', True)], 'approve': [('readonly', True)]})
-    days = fields.Integer('Credit Days',required=True,
+    days = fields.Integer('Credit Days',
                    states={'confirm': [('readonly', True)], 'validate1': [('readonly', True)], 'approve': [('readonly', True)]})
     requested_by = fields.Many2one('res.users', string="Requested By",default=lambda self: self.env.user, readonly=True)
     approver1_id = fields.Many2one('res.users', string='First Approval', readonly = True)
@@ -31,6 +32,13 @@ class customer_creditlimit_assign(models.Model):
                               ('validate1', 'Second Approval'),('approve', 'Approved'),],default='draft')
 
     """ All functions """
+
+    @api.model
+    def create(self, vals):
+        seq = self.env['ir.sequence'].next_by_code('customer.creditlimit.assign') or '/'
+        vals['name'] = seq
+        return super(customer_creditlimit_assign, self).create(vals)
+
     @api.multi
     def approve_creditlimit_run(self):
         self.limit_ids.write({'state': 'approve', 'assign_date': time.strftime('%Y-%m-%d')})
@@ -49,17 +57,19 @@ class customer_creditlimit_assign(models.Model):
         if self.credit_limit <= 0 or self.days <= 0:
             raise Warning("[Error] Limit or Days naver take zero or negative value!")
 
-    @api.constrains('name')
-    def _check_unique_constraint(self):
-        if self.name:
-            filters = [['name', '=ilike', self.name]]
-            name = self.search(filters)
-            if len(name) > 1:
-                raise Warning('[Unique Error] Name must be unique!')
+    # @api.constrains('name')
+    # def _check_unique_constraint(self):
+    #     if self.name:
+    #         filters = [['name', '=ilike', self.name]]
+    #         name = self.search(filters)
+    #         if len(name) > 1:
+    #             raise Warning('[Unique Error] Name must be unique!')
 
     @api.multi
     def action_confirm(self):
-        self.state = 'confirm'
+        for limit in self:
+            limit.state = 'confirm'
+            #limit.name = self.env['ir.sequence'].get('sequence_id')
 
     @api.multi
     def action_validate(self):
