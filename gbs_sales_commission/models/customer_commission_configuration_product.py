@@ -15,6 +15,9 @@ class CustomerCommissionConfigurationProduct(models.Model):
                                  domain="([('sale_ok','=','True'),('type','=','consu')])")
     config_parent_id = fields.Many2one('customer.commission.configuration', ondelete='cascade')
 
+
+
+
     @api.onchange('product_id')
     def onchange_product(self):
         self.old_value = 0
