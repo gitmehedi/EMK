@@ -5,10 +5,13 @@ class MrpDailyProductionLine(models.Model):
     _description = 'Sales Delivery Order line'
 
     product_id = fields.Many2one('product.product', string="Product", readonly=True, ondelete='cascade')
-    uom_id = fields.Many2one('product.uom', string="UOM",ondelete='cascade',readonly=True)
+    uom_id = fields.Many2one('product.uom', string="UoM",ondelete='cascade',readonly=True)
     pack_type = fields.Many2one('product.packaging.mode', string="Packing",ondelete='cascade',readonly=False)
-    quantity = fields.Integer(string="Quantity", required=True, default= "1",readonly=True)
-    #pack_type = fields.Many2one('product.packaging.mode', string='Packing', readonly=True)
+    quantity = fields.Integer(string="Ordered Qty", required=True, default= "1",readonly=True)
+    price_unit = fields.Float(string="Price Unit")
+    commission_rate = fields.Float(string="Com. (%)")
+    price_subtotal = fields.Float(string="Subtotal")
+
 
     """ Relational Fields """
     parent_id = fields.Many2one('delivery.order', ondelete='cascade')
@@ -18,7 +21,6 @@ class MrpDailyProductionLine(models.Model):
         ('approve', "Second Approval"),
         ('close', "Approved")
     ], default='draft')
-
 
 
     deli_mode = fields.Selection([
