@@ -101,13 +101,11 @@ class SaleDeliveryOrder(models.Model):
         for cash_line in self.cash_ids:
 
             if cash_line.account_payment_id.sale_order_id.id != self.sale_order_id.id:
-                raise UserError("%s Payment Information is of a different Sale Order!" % (
-                cash_line.account_payment_id.display_name))
+                raise UserError("%s Payment Information is of a different Sale Order!" % (cash_line.account_payment_id.display_name))
                 break;
 
             if cash_line.account_payment_id.is_this_payment_checked == True:
-                raise UserError(
-                    "Payment Information entered is already in use: %s" % (cash_line.account_payment_id.display_name))
+                raise UserError("Payment Information entered is already in use: %s" % (cash_line.account_payment_id.display_name))
                 break;
 
     @api.one
@@ -130,9 +128,14 @@ class SaleDeliveryOrder(models.Model):
 
     @api.onchange('sale_order_id')
     def onchange_sale_order_id(self):
+        self.set_payment_info_automatically()
+
+        self.set_products_info_automatically()
+
+    def set_products_info_automatically(self):
         if self.sale_order_id:
             val = []
-            sale_order_obj = self.env['sale.order'].search([('id', '=',self.sale_order_id.id)])
+            sale_order_obj = self.env['sale.order'].search([('id', '=', self.sale_order_id.id)])
 
             if sale_order_obj:
                 self.warehouse_id = sale_order_obj.warehouse_id.id
@@ -146,8 +149,20 @@ class SaleDeliveryOrder(models.Model):
                                        'pack_type': sale_order_obj.pack_type.id,
                                        'uom_id': record.product_uom.id,
                                        'commission_rate': record.commission_rate,
-                                       'price_unit':record.price_unit,
+                                       'price_unit': record.price_unit,
                                        'price_subtotal': record.price_subtotal
-                                                }))
+                                       }))
 
             self.line_ids = val
+
+    def set_payment_info_automatically(self):
+        account_payment_pool = self.env['account.payment'].search([('sale_order_id', '=', self.sale_order_id.id)])
+        if account_payment_pool:
+            vals = []
+            for payments in account_payment_pool:
+                if not payments.is_this_payment_checked:
+                    vals.append((0, 0, {'account_payment_id': payments.id,
+                                        'amount': payments.amount,
+                                        }))
+
+                    self.cash_ids = vals
