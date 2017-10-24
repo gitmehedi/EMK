@@ -2,7 +2,7 @@
 <openerp>
     <data>
         <report id="action_report_challan_report_request"
-                string="Challan Report"
+                string="Delivery Challan"
                 model="warehouse.to.shop.distribution"
                 report_type="qweb-pdf"
                 name="stock_distribution_matrix.challan_report"
@@ -13,14 +13,14 @@
             <field name="default" eval="True"/>
             <field name="format">custom</field>
             <field name="page_height">297</field>
-            <field name="page_width">213</field>
+            <field name="page_width">210</field>
             <field name="orientation">Portrait</field>
-            <field name="margin_top">11</field>
-            <field name="margin_bottom">1</field>
+            <field name="margin_top">25</field>
+            <field name="margin_bottom">12</field>
             <field name="margin_left">0</field>
             <field name="margin_right">0</field>
             <field name="header_line" eval="False"/>
-            <field name="header_spacing">0</field>
+            <field name="header_spacing">25</field>
             <field name="dpi">250</field>
         </record>
 

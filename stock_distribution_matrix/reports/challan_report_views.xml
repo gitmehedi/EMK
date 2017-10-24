@@ -3,126 +3,130 @@
     <data>
         <template id="challan_report">
             <t t-call="report.html_container">
-                <div class="page">
-                    <div class="row mb32">
-                        <div class="col-xs-12">
-                            <h2 class="text-center">Challan Report</h2>
+                <t t-call="report.external_layout">
+                    <div class="page">
+                        <div class="row">
+                            <div class="col-xs-12">
+                                <h2 class="text-center">Delivery Challan</h2>
+                            </div>
                         </div>
-                    </div>
-                    <div class="row mb32" style="margin: 10mm 10mm 30mm 10mm;">
-                        <div class="col-xs-12">
-                            <h3>
-                                <strong>Challan No:</strong>
-                                <span t-esc="record['chalan_no']"/>
-                            </h3>
+                        <div class="row">
+                            <div class="col-xs-12">
+                                <h3>
+                                    <strong>Challan No:</strong>
+                                    <span t-esc="record['chalan_no']"/>
+                                </h3>
+                            </div>
+                            <div class="col-xs-6">
+                                <p>
+                                    <strong>Warehouse Name:</strong>
+                                    <span t-esc="record['warehoue_id']"/>
+                                    <br/>
+                                    <strong>Transfer Date:</strong>
+                                    <span t-esc="record['distribute_date']"/>
+                                </p>
+                            </div>
+                            <div class="col-xs-5 col-xs-offset-1">
+                                <p>
+                                    <strong>Receive Shop Name:</strong>
+                                    <span t-esc="record['shop_id']"/>
+                                    <br/>
+                                    <strong>Receive Date:</strong>
+                                    <span t-esc="record['receive_date']"/>
+                                </p>
+                            </div>
                         </div>
-                        <div class="col-xs-6">
-                            <p>
-                                <strong>Warehouse Name:</strong>
-                                <span t-esc="record['warehoue_id']"/>
-                                <br/>
-                                <strong>Transfer Date:</strong>
-                                <span t-esc="record['distribute_date']"/>
-                            </p>
-                        </div>
-                        <div class="col-xs-5 col-xs-offset-1">
-                            <p>
-                                <strong>Receive Shop Name:</strong>
-                                <span t-esc="record['shop_id']"/>
-                                <br/>
-                                <strong>Receive Date:</strong>
-                                <span t-esc="record['receive_date']"/>
-                            </p>
-                        </div>
-                    </div>
-                    <!-- Report Body -->
+                        <!-- Report Body -->
 
-                    <table class="table table-bordered">
-                        <thead>
-                            <tr colspan="4" style="background-color: #D8D5D4;">
-                                <th class="text-center">S.N</th>
-                                <th class="text-center">Product Name</th>
-                                <th class="text-center">UoM</th>
-                                <th class="text-center">Transfer Quantity</th>
-                                <th class="text-center">Receive Quantity</th>
-                                <th class="text-center">Note</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <t t-foreach="data" t-as="o">
-                                <tr>
-                                    <td class="text-center">
-                                        <t t-esc="o['sn']"/>
-                                    </td>
-                                    <td>
-                                        <t t-esc="o['name']"/>
-                                    </td><td>
-                                        <t t-esc="o['uom']"/>
-                                    </td>
-                                    <td class="text-right">
-                                        <t t-esc="o['transfer_qty']"/>
-                                    </td>
-                                    <td class="text-right">
-                                        <t t-esc="o['receive_qty']"/>
-                                    </td>
-                                    <td></td>
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr colspan="4" style="background-color: #D8D5D4;">
+                                    <th class="text-center">S.N</th>
+                                    <th class="text-center">Product Name</th>
+                                    <th class="text-center">UoM</th>
+                                    <th class="text-center">Transfer Quantity</th>
+                                    <th class="text-center">Receive Quantity</th>
+                                    <th class="text-center">Note</th>
                                 </tr>
-                            </t>
-                            <t t-if="data">
-                                <tr style="background-color: #D8D5D4;">
-                                    <td colspan="3" class="text-right">
-                                        <strong>Total</strong>
-                                    </td>
-                                    <td class="text-right">
-                                        <strong>
-                                            <t t-esc="total['transfer']"/>
-                                        </strong>
-                                    </td>
-                                    <td class="text-right">
-                                        <t t-if="total['receive']">
+                            </thead>
+                            <tbody>
+                                <t t-foreach="data" t-as="o">
+                                    <tr>
+                                        <td class="text-center">
+                                            <t t-esc="o['sn']"/>
+                                        </td>
+                                        <td>
+                                            <t t-esc="o['name']"/>
+                                        </td>
+                                        <td>
+                                            <t t-esc="o['uom']"/>
+                                        </td>
+                                        <td class="text-right">
+                                            <t t-esc="o['transfer_qty']"/>
+                                        </td>
+                                        <td class="text-right">
+                                            <t t-esc="o['receive_qty']"/>
+                                        </td>
+                                        <td></td>
+                                    </tr>
+                                </t>
+                                <t t-if="data">
+                                    <tr style="background-color: #D8D5D4;">
+                                        <td colspan="3" class="text-right">
+                                            <strong>Total</strong>
+                                        </td>
+                                        <td class="text-right">
                                             <strong>
-                                                <t t-esc="total['receive']"/>
+                                                <t t-esc="total['transfer']"/>
                                             </strong>
-                                        </t>
+                                        </td>
+                                        <td class="text-right">
+                                            <t t-if="total['receive']">
+                                                <strong>
+                                                    <t t-esc="total['receive']"/>
+                                                </strong>
+                                            </t>
 
-                                    </td>
-                                    <td></td>
-                                </tr>
-                            </t>
-                        </tbody>
+                                        </td>
+                                        <td></td>
+                                    </tr>
+                                </t>
+                            </tbody>
 
-                    </table>
-                    <!-- End Report Body -->
-                    <div class="row mb32" style="margin: 20mm 10mm 10mm 10mm;">
-                        <div class="col-xs-6">
-                            <p>
-                                <strong>Signature:
-                                    <span style="color: ash;">_______________________</span>
-                                </strong>
-                                <br/>
-                                <br/>
-                                <br/>
-                                <strong>Transfered By:
-                                    <span style="color: ash;">_______________________</span>
-                                </strong>
-                            </p>
-                        </div>
-                        <div class="col-xs-5 col-xs-offset-1">
-                            <p>
-                                <strong>Signature:
-                                    <span style="color: ash;">_______________________</span>
-                                </strong>
-                                <br/>
-                                <br/>
-                                <br/>
-                                <strong>Received By:
-                                    <span style="color: ash;">_______________________</span>
-                                </strong>
-                            </p>
+                        </table>
+                        <!-- End Report Body -->
+                        <div class="row mb32" style="margin: 20mm 10mm 10mm 10mm;">
+                            <div class="col-xs-6">
+                                <p>
+                                    <strong>Signature:
+                                        <span style="color: ash;">_______________________</span>
+                                    </strong>
+                                    <br/>
+                                    <br/>
+                                    <br/>
+                                    <strong>Transfered By:
+                                        <span style="color: ash;">_______________________</span>
+                                    </strong>
+                                </p>
+                            </div>
+                            <div class="col-xs-5 col-xs-offset-1">
+                                <p>
+                                    <strong>Signature:
+                                        <span style="color: ash;">_______________________</span>
+                                    </strong>
+                                    <br/>
+                                    <br/>
+                                    <br/>
+                                    <strong>Received By:
+                                        <span style="color: ash;">_______________________</span>
+                                    </strong>
+                                </p>
+                            </div>
                         </div>
                     </div>
-                </div>
+                </t>
             </t>
         </template>
+
     </data>
 </openerp>
