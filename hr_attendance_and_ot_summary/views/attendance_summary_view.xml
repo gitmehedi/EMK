@@ -63,6 +63,7 @@
 								<field name="late_hrs" readonly='1' widget="float_time"/>
 								<field name="schedule_ot_hrs" readonly='1' widget="float_time"/>
 								<field name="cal_ot_hrs" readonly='1' widget="float_time"/>
+								<field name="extra_ot" readonly='1' widget="float_time"/>
 								<button name="action_regenerate" string="Action" type="object" icon="fa-cogs" />
 							</tree>
 						</field>

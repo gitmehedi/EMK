@@ -13,6 +13,7 @@ class AttendanceSummaryLine(models.Model):
     late_hrs = fields.Float(string='Off Duty Hrs')
     schedule_ot_hrs = fields.Float(string='Schedule OT Hrs')
     cal_ot_hrs = fields.Float(string='Cal OT Hrs')
+    extra_ot = fields.Float(string='Extra OT Hrs')
 
     """" Relational Fields """
     att_summary_id = fields.Many2one("hr.attendance.summary", string="Summary", required=True, ondelete='cascade')
