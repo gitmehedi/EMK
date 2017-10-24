@@ -41,10 +41,12 @@ class SaleDeliveryOrder(models.Model):
 
     state = fields.Selection([
         ('draft', "Submit"),
-        ('validate', "Approved"),
+        ('validate', "Validate"),
         ('approve', "Second Approval"),
         ('close', "Approved")
     ], default='draft')
+
+    company_id = fields.Many2one('res.company', string='Company', readonly=True, default=lambda self: self.env.user.company_id)
 
     #type_id = fields.Many2one('sale.order.type',string='Order Type')
 
@@ -74,6 +76,10 @@ class SaleDeliveryOrder(models.Model):
         if self.so_type == 'cash':
             self.payment_information_check()
 
+            #check if payment is same as the subtotal amount
+            return self.check_cash_amount_with_subtotal()
+
+
         self.state = 'approve'
         self.line_ids.write({'state': 'approve'})
         self.approver2_id = self.env.user
@@ -82,6 +88,33 @@ class SaleDeliveryOrder(models.Model):
 
         return self.write({'state': 'approve', 'approved_date': time.strftime('%Y-%m-%d %H:%M:%S')})
 
+    #@todo Need to refactor below method -- rabbi
+    def check_cash_amount_with_subtotal(self):
+        account_payment_pool = self.env['account.payment'].search(
+            [('is_this_payment_checked', '=', False), ('sale_order_id', '=', self.sale_order_id.id),
+             ('partner_id', '=', self.parent_id.id)])
+
+        if not self.line_ids:
+            return self.write({'state': 'approve'})  # Only Second level approval
+
+        product_line_subtotal = 0
+        for do_product_line in self.line_ids:
+            product_line_subtotal = product_line_subtotal + do_product_line.price_subtotal
+
+        cash_line_total_amount = 0
+        for do_cash_line in self.cash_ids:
+            cash_line_total_amount = cash_line_total_amount + do_cash_line.amount
+
+        if not cash_line_total_amount or cash_line_total_amount == 0:
+            account_payment_pool.write({'is_this_payment_checked': True})
+            return self.write({'state': 'approve'})  # Only Second level approval
+
+        if cash_line_total_amount >= product_line_subtotal:
+            account_payment_pool.write({'is_this_payment_checked': True})
+            return self.write({'state': 'close'})  # directly go to final approval level
+        else:
+            account_payment_pool.write({'is_this_payment_checked': True})
+            return self.write({'state': 'approve'})  # Only Second level approval
 
     def create_delivery_order(self):
         for order in self.sale_order_id:
@@ -155,7 +188,9 @@ class SaleDeliveryOrder(models.Model):
 
             self.line_ids = val
 
+
     def set_payment_info_automatically(self):
+
         account_payment_pool = self.env['account.payment'].search([('sale_order_id', '=', self.sale_order_id.id)])
         if account_payment_pool:
             vals = []
@@ -166,3 +201,10 @@ class SaleDeliveryOrder(models.Model):
                                         }))
 
                     self.cash_ids = vals
+
+    ###
+    ### Process Unattached payments of specific Sales Order
+    ##
+    def action_process_unattached_payments(self):
+      #self.set_payment_info_automatically()
+      pass

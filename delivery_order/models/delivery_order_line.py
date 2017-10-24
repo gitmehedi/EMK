@@ -7,7 +7,7 @@ class MrpDailyProductionLine(models.Model):
     product_id = fields.Many2one('product.product', string="Product", readonly=True, ondelete='cascade')
     uom_id = fields.Many2one('product.uom', string="UoM",ondelete='cascade',readonly=True)
     pack_type = fields.Many2one('product.packaging.mode', string="Packing",ondelete='cascade',readonly=True)
-    quantity = fields.Integer(string="Ordered Qty", required=True, default= "1",readonly=True)
+    quantity = fields.Float(string="Ordered Qty", required=True, default= "1")
     price_unit = fields.Float(string="Price Unit", readonly=True)
     commission_rate = fields.Float(string="Com. (%)", readonly=True)
     price_subtotal = fields.Float(string="Subtotal", readonly=True)
@@ -22,12 +22,16 @@ class MrpDailyProductionLine(models.Model):
         ('close', "Approved")
     ], default='draft')
 
-
     deli_mode = fields.Selection([
         ('bonded', 'Bonded'),
         ('non_bonded', 'Non-bonded'),
         ('vat', 'VAT'),
     ], string='Delivery Mode')
+
+    @api.onchange('quantity')
+    def onchange_quantity(self):
+        if self.quantity:
+            self.price_subtotal = self.price_unit * self.quantity
 
 
     @api.onchange('product_id')

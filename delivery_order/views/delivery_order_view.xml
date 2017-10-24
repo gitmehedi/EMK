@@ -28,10 +28,19 @@
                                 string="Refuse"
                                 groups="gbs_application_group.group_head_account,gbs_application_group.group_cxo"/>
 
-                        <field name="state" widget="statusbar"/>
+                        <field name="state" statusbar_visible="draft,validate,close" widget="statusbar"/>
 
                     </header>
                     <sheet>
+                         <div class="oe_button_box" name="button_box">
+                            <button type="object" string="Process Payments"
+                                    name="action_process_unattached_payments"
+                                    class="oe_stat_button"
+                                    attrs="{'invisible':[('so_type', '!=', 'cash')]}"
+                                    icon="fa-usd">
+                            </button>
+                         </div>
+
 	                    <h1>
 	                        <field name="name"/>
 	                    </h1>
@@ -43,7 +52,7 @@
                             <group>
                                 <field name="parent_id" options="{'no_quick_create':True,'no_create_edit':True,'no_open':True}"/>
                                 <field name="so_type"/>
-                                <!--<field name="type_id"/>-->
+                                <field name="company_id" invisible="1"/>
                                 <field name="so_date"/>
                             </group>
 
