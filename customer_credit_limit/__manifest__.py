@@ -7,6 +7,10 @@
     'depends': [
         'gbs_application_group',
         'sale',
+        'base',
+        'sales_team',
+        'account',
+        'stock',
     ],
     'data': [
         'report/credit_limit_report.xml',
