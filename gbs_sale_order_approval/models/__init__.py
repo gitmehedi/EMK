@@ -1,2 +1,1 @@
 import inherited_sale
-import inherited_sale_order_type
