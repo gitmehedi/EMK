@@ -102,12 +102,22 @@ class SalePriceChange(models.Model):
                     self.currency_id = ps.currency_id.id
 
                 count = self.search_count([('product_id', '=', self.product_id.id),
-                                           ('currency_id', '=', self.currency_id.id)])
+                                           ('currency_id', '=', self.currency_id.id),
+                                           ('state', '=', 'validate')])
 
                 if count > 0:
-                    price_change_pool = self.env['product.sales.pricelist'].search([('product_id', '=', self.product_id.id),
-                                                                                    ('currency_id', '=', self.currency_id.id)],
-                                                                                   order='id desc')[0]
+                    price_change_pool = self.env['product.sales.pricelist'].search(
+                        [
+                            ('product_id',
+                             '=',
+                             self.product_id.id),
+                            ('currency_id',
+                             '=',
+                             self.currency_id.id),
+                            ('state',
+                             '=',
+                             'validate')],
+                        order='id desc')[0]
                     self.list_price = price_change_pool.new_price
                 else:
                     self.list_price = product_pool.list_price
@@ -125,12 +135,22 @@ class SalePriceChange(models.Model):
                     self.currency_id = ps.currency_id.id
 
                 count = self.search_count([('product_id', '=', self.product_id.id),
-                                           ('currency_id', '=', self.currency_id.id)])
+                                           ('currency_id', '=', self.currency_id.id),
+                                           ('state', '=', 'validate')])
 
                 if count > 0:
-                    price_change_pool = self.env['product.sales.pricelist'].search([('product_id', '=', self.product_id.id),
-                                                                                    ('currency_id', '=', self.currency_id.id)],
-                                                                                   order='id desc')[0]
+                    price_change_pool = self.env['product.sales.pricelist'].search(
+                        [
+                            ('product_id',
+                             '=',
+                             self.product_id.id),
+                            ('currency_id',
+                             '=',
+                             self.currency_id.id),
+                            ('state',
+                             '=',
+                             'validate')],
+                        order='id desc')[0]
                     self.list_price = price_change_pool.new_price
                 else:
                     self.list_price = product_pool.list_price
@@ -141,13 +161,29 @@ class SalePriceChange(models.Model):
     @api.depends('product_id')
     def compute_list_price(self):
         if self.product_id:
-            count = self.search_count([('product_id', '=', self.product_id.id),
-                                       ('currency_id', '=', self.currency_id.id)])
+            count = self.search_count([('product_id',
+                                        '=',
+                                        self.product_id.id),
+                                       ('currency_id',
+                                        '=',
+                                        self.currency_id.id),
+                                       ('state',
+                                        '=',
+                                        'validate')])
 
             if count > 1:
-                price_change_pool = self.env['product.sales.pricelist'].search([('product_id', '=', self.product_id.id),
-                                                                                ('currency_id', '=', self.currency_id.id)],
-                                                                               order='id desc')[1]
+                price_change_pool = self.env['product.sales.pricelist'].search(
+                    [
+                        ('product_id',
+                         '=',
+                         self.product_id.id),
+                        ('currency_id',
+                         '=',
+                         self.currency_id.id),
+                        ('state',
+                         '=',
+                         'validate')],
+                    order='id desc')[1]
                 if price_change_pool:
                     self.list_price = price_change_pool.new_price
                 else:
