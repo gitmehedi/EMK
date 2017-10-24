@@ -81,7 +81,17 @@ class AttendanceProcessor(models.Model):
             attSummaryLine.is_entered_rostering = 0
 
         noOfDays = (endDate - startDate).days + 1
-        self.saveAttSummary(employeeId, summaryId, noOfDays, attSummaryLine)
+        # @Todo-Bappy Get extra OT
+        query = """SELECT total_hours FROM hr_ot_requisition WHERE from_datetime 
+                    BETWEEN %s AND %s AND state = 'approved' AND employee_id = %s"""
+        self._cr.execute(query, tuple([startDate, endDate, employeeId]))
+        get_query_extra_ot = self._cr.fetchone()
+        if get_query_extra_ot:
+            get_extra_ot = get_query_extra_ot[0]
+        else:
+            get_extra_ot = 0
+
+        self.saveAttSummary(employeeId, summaryId, noOfDays, attSummaryLine,get_extra_ot)
 
     def makeDecision(self, attSummaryLine, attendanceDayList, currDate, currentDaydutyTime, employee, graceTime, holidayMap, att_utility_pool):
 
@@ -153,6 +163,17 @@ class AttendanceProcessor(models.Model):
     def process(self, employeeIds, summaryId, operating_unit_id):
         att_utility_pool = self.env['attendance.utility']
         graceTime = att_utility_pool.getGraceTime(datetime.datetime.now())
+
+        # @Todo-Bappy Get Joining Date
+        # Get Date from Account Period
+        # self._cr.execute(self.period_query, (summaryId,))
+        # accountPeriod = self._cr.fetchall()
+        # if accountPeriod:
+        #     startDate = self.getDateFromStr(accountPeriod[0][0])
+        #     endDate = self.getDateFromStr(accountPeriod[0][1])
+
+        #################################################################
+
 
         for empId in employeeIds:
             self.get_summary_data(empId, summaryId, graceTime, operating_unit_id, att_utility_pool)
@@ -254,7 +275,7 @@ class AttendanceProcessor(models.Model):
 
 
 
-    def saveAttSummary(self, employeeId, summaryId, noOfDays, attSummaryLine):
+    def saveAttSummary(self, employeeId, summaryId, noOfDays, attSummaryLine,get_extra_ot):
 
         summary_line_pool = self.env['hr.attendance.summary.line']
         weekend_pool = self.env['hr.attendance.weekend.day']
@@ -265,7 +286,8 @@ class AttendanceProcessor(models.Model):
 
         ############## Save Summary Lines ######################
         salaryDays = noOfDays - len(attSummaryLine.absent_days)
-        calOtHours = attSummaryLine.schedule_ot_hrs
+        calOtHours = attSummaryLine.schedule_ot_hrs + get_extra_ot
+        #@Todo-Bappy Add extra OT with calOtHours
         if attSummaryLine.schedule_ot_hrs > attSummaryLine.late_hrs:
             calOtHours = attSummaryLine.schedule_ot_hrs - attSummaryLine.late_hrs
 
@@ -280,6 +302,7 @@ class AttendanceProcessor(models.Model):
                 'late_hrs':         attSummaryLine.late_hrs,
                 'schedule_ot_hrs':  attSummaryLine.schedule_ot_hrs,
                 'cal_ot_hrs':       calOtHours,
+                'extra_ot':         get_extra_ot,
                 'is_entered_rostering': attSummaryLine.is_entered_rostering
 
                 }
