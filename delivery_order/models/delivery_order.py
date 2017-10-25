@@ -9,6 +9,7 @@ class DeliveryOrder(models.Model):
     _description = 'Delivery Order'
     _inherit = ['mail.thread']
     _rec_name='name'
+    _order = "approved_date desc"
 
     name = fields.Char(string='Name', index=True, readonly=True)
     so_date = fields.Datetime('Order Date', readonly=True, states={'draft': [('readonly', False)]})
@@ -77,8 +78,8 @@ class DeliveryOrder(models.Model):
             self.payment_information_check()
 
             #check if payment is same as the subtotal amount
-            return self.check_cash_amount_with_subtotal()
-
+            self.check_cash_amount_with_subtotal()
+            return self.create_delivery_order()
 
         self.state = 'approve'
         self.line_ids.write({'state': 'approve'})
@@ -162,6 +163,7 @@ class DeliveryOrder(models.Model):
     @api.onchange('sale_order_id')
     def onchange_sale_order_id(self):
         self.set_products_info_automatically()
+
         account_payment_pool = self.env['account.payment'].search([('sale_order_id', '=', self.sale_order_id.id)])
 
         for payments in account_payment_pool:
@@ -235,5 +237,17 @@ class DeliveryOrder(models.Model):
     ### Process Unattached payments of specific Sales Order
     ##
     def action_process_unattached_payments(self):
-      #self.set_payment_info_automatically()
-     pass
+        account_payment_pool = self.env['account.payment'].search([('is_this_payment_checked', '=', False),
+                                                                   ('sale_order_id', '=', self.sale_order_id.id)])
+
+        ## check if Payment Info is already tagged into DO Cash Line Tab!!
+        vals = {}
+        for payments in account_payment_pool:
+            for cash_line in self.cash_ids:
+                if cash_line.account_payment_id.id != payments.id:
+                    vals['account_payment_id'] = payments.id
+                    vals['amount'] = payments.amount
+
+                self.cash_ids.create(vals)
+
+
