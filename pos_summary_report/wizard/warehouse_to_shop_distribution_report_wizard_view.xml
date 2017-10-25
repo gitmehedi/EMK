@@ -23,7 +23,7 @@
                         </group>
                     </group>
                     <footer>
-                        <button name="pos_order_report" string="Submit" type="object" class="oe_highlight"/>
+                        <button name="pos_order_report" string="Print Report" type="object" class="oe_highlight"/>
                         or
                         <button string="Cancel" class="oe_link" special="cancel"/>
                     </footer>
@@ -53,7 +53,7 @@
                         </group>
                     </group>
                     <footer>
-                        <button name="pos_order_report" string="Submit" type="object" class="oe_highlight"/>
+                        <button name="pos_order_report" string="Print Report" type="object" class="oe_highlight"/>
                         or
                         <button string="Cancel" class="oe_link" special="cancel"/>
                     </footer>
