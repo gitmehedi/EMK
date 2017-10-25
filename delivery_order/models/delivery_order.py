@@ -4,7 +4,7 @@ from odoo.exceptions import UserError, ValidationError
 import time,datetime
 
 
-class SaleDeliveryOrder(models.Model):
+class DeliveryOrder(models.Model):
     _name = 'delivery.order'
     _description = 'Delivery Order'
     _inherit = ['mail.thread']
@@ -56,7 +56,7 @@ class SaleDeliveryOrder(models.Model):
     def create(self, vals):
         seq = self.env['ir.sequence'].next_by_code('delivery.order') or '/'
         vals['name'] = seq
-        return super(SaleDeliveryOrder, self).create(vals)
+        return super(DeliveryOrder, self).create(vals)
 
     @api.multi
     def unlink(self):
@@ -64,7 +64,7 @@ class SaleDeliveryOrder(models.Model):
             if order.state != 'draft':
                 raise UserError('You can not delete this.')
             order.line_ids.unlink()
-        return super(SaleDeliveryOrder, self).unlink()
+        return super(DeliveryOrder, self).unlink()
 
     @api.one
     def action_draft(self):
@@ -183,7 +183,7 @@ class SaleDeliveryOrder(models.Model):
                                         'amount': payments.amount,
                                         'bank': payments.deposited_bank,
                                         'branch': payments.bank_branch,
-                                        'date': payments.payment_date,
+                                        'payment_date': payments.payment_date,
                                         'number':payments.cheque_no,
                                         }))
 
@@ -220,16 +220,16 @@ class SaleDeliveryOrder(models.Model):
         if account_payment_pool:
             vals = []
             for payments in account_payment_pool:
+                if not payments.cheque_no:
+                    if payments.sale_order_id and not payments.is_this_payment_checked:
+                        vals.append((0, 0, {'account_payment_id': payments.id,
+                                            'amount': payments.amount,
+                                            'dep_bank':payments.deposited_bank,
+                                            'branch':payments.bank_branch,
+                                            'payment_date': payments.payment_date,
+                                            }))
 
-                if payments.sale_order_id and not payments.is_this_payment_checked:
-                    vals.append((0, 0, {'account_payment_id': payments.id,
-                                        'amount': payments.amount,
-                                        'dep_bank':payments.deposited_bank,
-                                        'branch':payments.bank_branch,
-                                        'date': payments.payment_date,
-                                        }))
-
-                    self.cash_ids = vals
+                        self.cash_ids = vals
 
     ###
     ### Process Unattached payments of specific Sales Order

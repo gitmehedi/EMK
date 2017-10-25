@@ -1,10 +1,10 @@
-from odoo import api, fields, models, exceptions, _
+from odoo import fields, models
 
 class ChequePaymentLine(models.Model):
     _name = 'cheque.payment.line'
     _description = 'Cash Payment Terms line'
 
-    number = fields.Float("Cheque No.")
+    number = fields.Char("Cheque No.")
     bank = fields.Char("Deposit Bank")
     branch = fields.Char("Branch")
     amount = fields.Float("Amount")
