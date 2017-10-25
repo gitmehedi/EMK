@@ -161,9 +161,35 @@ class SaleDeliveryOrder(models.Model):
 
     @api.onchange('sale_order_id')
     def onchange_sale_order_id(self):
-        self.set_payment_info_automatically()
-
         self.set_products_info_automatically()
+        account_payment_pool = self.env['account.payment'].search([('sale_order_id', '=', self.sale_order_id.id)])
+
+        for payments in account_payment_pool:
+            if payments.cheque_no:
+                self.set_cheque_info_automatically(account_payment_pool)
+                break;
+
+            else:
+                self.set_payment_info_automatically(account_payment_pool)
+
+
+
+    def set_cheque_info_automatically(self, account_payment_pool):
+        vals = []
+        for payments in account_payment_pool:
+            if payments.journal_id.id != 12:## Changeit! 12 == cash
+                if not payments.is_this_payment_checked:
+                    vals.append((0, 0, {'account_payment_id': payments.id,
+                                        'amount': payments.amount,
+                                        'bank': payments.deposited_bank,
+                                        'branch': payments.bank_branch,
+                                        'date': payments.payment_date,
+                                        'number':payments.cheque_no,
+                                        }))
+
+                self.cheque_ids = vals
+
+
 
     def set_products_info_automatically(self):
         if self.sale_order_id:
@@ -189,15 +215,18 @@ class SaleDeliveryOrder(models.Model):
             self.line_ids = val
 
 
-    def set_payment_info_automatically(self):
+    def set_payment_info_automatically(self, account_payment_pool):
 
-        account_payment_pool = self.env['account.payment'].search([('sale_order_id', '=', self.sale_order_id.id)])
         if account_payment_pool:
             vals = []
             for payments in account_payment_pool:
-                if not payments.is_this_payment_checked:
+
+                if payments.sale_order_id and not payments.is_this_payment_checked:
                     vals.append((0, 0, {'account_payment_id': payments.id,
                                         'amount': payments.amount,
+                                        'dep_bank':payments.deposited_bank,
+                                        'branch':payments.bank_branch,
+                                        'date': payments.payment_date,
                                         }))
 
                     self.cash_ids = vals
@@ -207,4 +236,4 @@ class SaleDeliveryOrder(models.Model):
     ##
     def action_process_unattached_payments(self):
       #self.set_payment_info_automatically()
-      pass
+     pass

@@ -97,17 +97,20 @@
                                             <field name="dep_bank"/>
                                             <field name="branch"/>
                                             <field name="validity"/>
+                                            <field name="payment_date" string="Payment Date"/>
+
                                         </tree>
                                     </field>
                                 </page>
                                 <page string="Cheque" attrs="{'invisible':[('so_type', '!=', 'cash')]}">
                                     <field name="cheque_ids">
                                         <tree string="List" editable="bottom">
+                                            <field name="account_payment_id"/>
                                             <field name="number"/>
                                             <field name="bank"/>
                                             <field name="branch"/>
                                             <field name="amount"/>
-                                            <field name="date"/>
+                                            <field name="payment_date" string="Payment Date"/>
                                         </tree>
                                     </field>
                                 </page>
