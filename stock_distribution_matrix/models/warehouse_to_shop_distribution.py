@@ -94,7 +94,7 @@ class WarehouseToShopDistribution(models.Model):
 
     @api.one
     def action_transfer(self):
-        if self.state == 'transfer':
+        if self.state == 'waiting':
             line_obj = self.env['stock.distribution.to.shop.line']
             move_new_obj = self.env['stock.move']
             warehouse = self.env['pos.config'].search(
