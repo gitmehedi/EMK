@@ -13,7 +13,7 @@ from weekend_day import TempWeekendDay
 class AttendanceProcessor(models.Model):
     _name = 'hr.attendance.summary.temp'
 
-    salary_deduction_late_day = 3
+    # salary_deduction_late_day = 3
 
     period_query = """SELECT ap.date_start, ap.date_stop
                        FROM hr_attendance_summary ac
@@ -162,7 +162,8 @@ class AttendanceProcessor(models.Model):
 
         startDate = self.getAccountPeriodDate(summaryId).values()[0]
         endDate = self.getAccountPeriodDate(summaryId).values()[1]
-        query_res_map = self.getJoingDate(startDate,endDate,employeeIds)
+        if employeeIds:
+            query_res_map = self.getJoingDate(startDate,endDate,employeeIds)
         for empId in employeeIds:
             self.get_summary_data(empId, summaryId, graceTime, operating_unit_id, att_utility_pool,query_res_map)
 
@@ -279,6 +280,7 @@ class AttendanceProcessor(models.Model):
         if attSummaryLine.schedule_ot_hrs > attSummaryLine.late_hrs:
             calOtHours = attSummaryLine.schedule_ot_hrs - attSummaryLine.late_hrs
 
+        deduction_days = self.getLateSalaryDeductionCountedDate(attSummaryLine)
 
         vals = {'employee_id':      employeeId,
                 'att_summary_id':   summaryId,
@@ -286,7 +288,7 @@ class AttendanceProcessor(models.Model):
                 'present_days':     attSummaryLine.present_days,
                 'holidays_days':    attSummaryLine.holidays_days,
                 'leave_days':       attSummaryLine.leave_days,
-                'deduction_days':   int(len(attSummaryLine.late_days)/self.salary_deduction_late_day),
+                'deduction_days':   deduction_days,
                 'late_hrs':         attSummaryLine.late_hrs,
                 'schedule_ot_hrs':  attSummaryLine.schedule_ot_hrs,
                 'cal_ot_hrs':       calOtHours,
@@ -381,13 +383,33 @@ class AttendanceProcessor(models.Model):
                         hr_employee
                    WHERE 
                         initial_employment_date > %s AND initial_employment_date <= %s AND id IN %s"""
-        self._cr.execute(query, (startDate, endDate, tuple(employeeIds)))
+        self._cr.execute(query, (self.getStrFromDate(startDate) , self.getStrFromDate(endDate) , tuple(employeeIds)))
         query_res = self._cr.fetchall()
         query_res_map = {}
         for i, line in enumerate(query_res):
             query_res_map[line[1]] = line[0]
 
         return query_res_map
+
+    def getLateSalaryDeductionCountedDate(self,attSummaryLine):
+        query = """SELECT 
+                         late_salary_deduction_rule
+                    FROM
+                         hr_attendance_config_settings 
+                    order by id desc limit 1"""
+        self._cr.execute(query, (tuple([])))
+        qry_deduction_rule_value = self._cr.fetchone()
+        if qry_deduction_rule_value:
+            salary_deduction_late_day = qry_deduction_rule_value[0]
+            if salary_deduction_late_day > 0:
+                deduction_rule_value = int(len(attSummaryLine.late_days) / salary_deduction_late_day)
+            else:
+                deduction_rule_value = 0
+        else:
+            deduction_rule_value = 0
+
+        return deduction_rule_value
+
 
     def getAccountPeriodDate(self,summaryId):
         self._cr.execute(self.period_query, (summaryId,))
