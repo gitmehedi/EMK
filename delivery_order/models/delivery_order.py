@@ -233,21 +233,23 @@ class DeliveryOrder(models.Model):
 
                         self.cash_ids = vals
 
-    ###
-    ### Process Unattached payments of specific Sales Order
-    ##
     def action_process_unattached_payments(self):
-        account_payment_pool = self.env['account.payment'].search([('is_this_payment_checked', '=', False),
-                                                                   ('sale_order_id', '=', self.sale_order_id.id)])
-
-        ## check if Payment Info is already tagged into DO Cash Line Tab!!
-        vals = {}
-        for payments in account_payment_pool:
-            for cash_line in self.cash_ids:
-                if cash_line.account_payment_id.id != payments.id:
-                    vals['account_payment_id'] = payments.id
-                    vals['amount'] = payments.amount
-
-                self.cash_ids.create(vals)
-
-
+        # account_payment_pool = self.env['account.payment'].search([('is_this_payment_checked', '=', False),
+        #                                                            ('sale_order_id', '=', self.sale_order_id.id)])
+        #
+        # ## check if Payment Info is already tagged into DO Cash Line Tab!!
+        # vals = []
+        # if account_payment_pool:
+        #     for payments in account_payment_pool:
+        #         for cash_line in self.cash_ids:
+        #             if cash_line.account_payment_id.id != payments.id:
+        #                 vals.append((0, 0, {'account_payment_id': payments.id,
+        #                                     'amount': payments.amount,
+        #                                     'dep_bank': payments.deposited_bank,
+        #                                     'branch': payments.bank_branch,
+        #                                     'payment_date': payments.payment_date,
+        #                                     }))
+        #
+        #
+        #     self.cash_ids = vals
+        pass
