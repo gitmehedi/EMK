@@ -26,6 +26,7 @@
         'hr_employee_operating_unit',
         'hr_overtime_requisition',
         'gbs_hr_employee_seniority',
+        'hr_attendance_settings',
     ],
     
     'description': 
