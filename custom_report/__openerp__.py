@@ -6,8 +6,9 @@
     'website': 'https://github.com/gitmehedi',
     'depends': ['web', 'point_of_sale'],
     'data': [
-        'views/inherite_layout.xml',
         'data/paperformat.xml',
+        'views/inherite_layout.xml',
+        'views/templates.xml',
     ],
     'installable': True,
     'auto_install': False,

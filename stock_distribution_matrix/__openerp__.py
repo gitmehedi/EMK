@@ -14,6 +14,7 @@
                 'web_widget_distribution_matrix',
                 'purchase_order_pebbles',
                 'pebbles_transfer_user',
+                'custom_report',
                 ],
     'data': [
         'security/ir.model.access.csv',
@@ -24,11 +25,9 @@
         'views/inherited_pos_config_view.xml',
         'views/inherited_purchase_order_view.xml',
         'views/warehouse_to_shop_distribution.xml',
-        'reports/stock_distribution_to_shop_menu.xml',
         'reports/stock_distribution_to_shop_views.xml',
         'reports/purchase_order_quantity_menu.xml',
         'reports/purchase_order_quantity_views.xml',
-        'reports/challan_report_menu.xml',
         'reports/challan_report_views.xml',
 
     ],
