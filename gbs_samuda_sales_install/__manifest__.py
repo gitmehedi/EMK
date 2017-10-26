@@ -17,6 +17,7 @@
         'gbs_sale_order_approval',
         'sale_order_type',
         'sale_order_revision',
+        'samuda_so_type',
         #'sale_revision_history'
     ],
 

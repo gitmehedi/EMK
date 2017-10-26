@@ -8,6 +8,7 @@
         'sale',
         'product_sales_pricelist',
         'account',
+        'sale_order_type',
     ],
 
     'data': [

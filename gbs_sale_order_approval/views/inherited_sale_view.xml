@@ -16,7 +16,7 @@
                                 class="btn-primary"
                                 string="Submit"/>
 
-                         <button name="action_submit"
+                        <button name="action_submit"
                                 groups="gbs_application_group.group_head_sale,gbs_application_group.group_cxo"
                                 states="draft"
                                 type="object"
@@ -29,7 +29,7 @@
                                 states="validate"
                                 type="object"
                                 class="btn-primary "
-                                string="Validate" />
+                                string="Validate"/>
 
                         <button name="action_create_delivery_order"
                                 states="done"
@@ -42,12 +42,12 @@
 
                     <!-- Conform Sale 1 -->
                     <xpath expr="//button[@name='action_confirm' and @states='draft']" position="replace">
-                         <button name="action_confirm"
-                                 attrs="{'invisible':['|', ('double_validation','=',True),('state','in',('draft','validate','done','cancel','sale'))]}"
-                                 string="Confirm Sale1"
-                                 groups="gbs_application_group.group_head_sale,gbs_application_group.group_head_account"
-                                 type="object"
-                                 class="btn-primary o_sale_confirm" invisible="1"/>
+                        <button name="action_confirm"
+                                attrs="{'invisible':['|', ('double_validation','=',True),('state','in',('draft','validate','done','cancel','sale'))]}"
+                                string="Confirm Sale1"
+                                groups="gbs_application_group.group_head_sale,gbs_application_group.group_head_account"
+                                type="object"
+                                class="btn-primary o_sale_confirm" invisible="1"/>
                     </xpath>
 
                     <!--Approve Sale-->
@@ -62,13 +62,15 @@
                     <xpath expr="//button[@name='action_quotation_send' and @states='draft']" position="replace">
                         <button name="action_quotation_send"
                                 groups="gbs_application_group.group_head_sale,gbs_application_group.group_cxo"
-                                string="Send by Email" type="object" states="draft,submit_quotation,validate" class="btn-primary"/>
+                                string="Send by Email" type="object" states="draft,submit_quotation,validate"
+                                class="btn-primary"/>
                     </xpath>
 
                     <xpath expr="//button[@name='print_quotation' and @states='draft']" position="replace">
-                           <button name="print_quotation"
+                        <button name="print_quotation"
                                 groups="gbs_application_group.group_head_sale,gbs_application_group.group_cxo"
-                                string="Print" type="object" states="draft,submit_quotation,validate" class="btn-primary"/>
+                                string="Print" type="object" states="draft,submit_quotation,validate"
+                                class="btn-primary"/>
                     </xpath>
 
                     <xpath expr="//button[@name='action_cancel']" position="replace">
@@ -81,15 +83,16 @@
 
                     <xpath expr="//button[@name='action_done']" position="replace">
                         <button name="action_done" type="object" string="Lock" states="sale"
-                        help="If the sale is locked, you can not modify it anymore. However, you will still be able to invoice or deliver."/>
+                                help="If the sale is locked, you can not modify it anymore. However, you will still be able to invoice or deliver."/>
                     </xpath>
 
                     <xpath expr="//field[@name='state']" position="replace">
                         <field name="state" widget="statusbar" statusbar_visible="draft,sent,sale"/>
                     </xpath>
 
-                    <xpath expr="//group/group/field[@name='payment_term_id']" position="after">
-                        <field name="credit_sales_or_lc" attrs="{'readonly':[('state','in',('draft','sent','validate','done','cancel','sale'))]}"/>
+                    <xpath expr="//field[@name='company_id']" position="after">
+                        <field name="credit_sales_or_lc"
+                               attrs="{'readonly':[('state','in',('draft','sent','validate','done','cancel','sale'))]}"/>
                     </xpath>
 
                     <xpath expr="//group/group/field[@name='payment_term_id']" position="before">
@@ -97,43 +100,61 @@
                     </xpath>
 
                     <xpath expr="//group/group/field[@name='payment_term_id']" position="before">
-                        <field name="pack_type"  options="{'no_open': True, 'no_create': True}" attrs="{'readonly':[('state','in',('draft','sent','validate','done','cancel','sale'))]}"/>
-                    </xpath>
-
-                     <xpath expr="//field[@name='payment_term_id']" position="replace">
-                            <field name="payment_term_id" attrs="{'readonly':[('state','in',('draft','sent','validate','done','cancel','sale'))]}" options="{'no_create': True}"/>
-                    </xpath>
-
-                    <xpath expr="//field[@name='partner_id']" position="replace">
-                        <field name="partner_id" attrs="{'readonly':[('state','in',('draft','sent','validate','done','cancel','sale'))]}" domain="[('customer','=',True)]" context="{'search_default_customer':1, 'show_address': 1}" options='{"always_reload": True}'/>
-                    </xpath>
-                    <xpath expr="//field[@name='date_order']" position="replace">
-                        <field name="date_order" attrs="{'invisible': [('state', 'in', ['sale', 'done', 'cancel'])],'readonly':[('state','in',('draft','sent','validate','done','cancel','sale'))]}"/>
-                    </xpath>
-
-                    <xpath expr="//field[@name='validity_date']" position="replace">
-                        <field name="validity_date" attrs="{'invisible': [('state', 'in', ['sale', 'done'])],'readonly':[('state','in',('draft','sent','validate','done','cancel','sale'))]}"/>
-                    </xpath>
-
-                    <xpath expr="//field[@name='pricelist_id']" position="replace">
-                         <field name="pricelist_id" groups="product.group_sale_pricelist"
-                                attrs="{'readonly':[('state','in',('draft','sent','validate','done','cancel','sale'))]}"/>
-                    </xpath>
-
-                    <xpath expr="//field[@name='price_subtotal']" position="replace">
-                        <field name="price_subtotal" attrs="{'readonly':[('state','in',('draft','sent','validate','done','cancel','sale'))]}" widget="monetary" groups="sale.group_show_price_subtotal"/>
-                    </xpath>
-
-                    <xpath expr="//field[@name='currency_id']" position="replace">
-                        <field name="currency_id" options="{'no_open': True, 'no_create': True}" attrs="{'readonly':[('state','in',('draft','sent','validate','done','cancel','sale'))]}"/>
-                    </xpath>
-
-                    <xpath expr="//field[@name='state']" position="replace">
-                        <field name="state" widget="statusbar" statusbar_visible="to_submit,draft,sent,sale"/>
+                        <field name="pack_type" options="{'no_open': True, 'no_create': False}"
+                               attrs="{'readonly':[('state','in',('draft','sent','validate','done','cancel','sale'))]}"/>
                     </xpath>
 
                     <xpath expr="//field[@name='payment_term_id']" position="replace">
-                        <field name="payment_term_id" attrs="{'readonly':[('state','in',('draft','sent','validate','done','cancel','sale'))]}" options="{'no_open': True, 'no_create': True}"/>
+                        <field name="payment_term_id"
+                               attrs="{'readonly':[('state','in',('draft','sent','validate','done','cancel','sale'))]}"
+                               options="{'no_create': True}"/>
+                    </xpath>
+
+                    <xpath expr="//field[@name='partner_id']" position="replace">
+                        <field name="partner_id"
+                               attrs="{'readonly':[('state','in',('draft','sent','validate','done','cancel','sale'))]}"
+                               domain="[('customer','=',True)]"
+                               context="{'search_default_customer':1, 'show_address': 1}"
+                               options='{"always_reload": True}'/>
+                    </xpath>
+                    <xpath expr="//field[@name='date_order']" position="replace">
+                        <field name="date_order"
+                               attrs="{'invisible': [('state', 'in', ['sale', 'done', 'cancel'])],'readonly':[('state','in',('draft','sent','validate','done','cancel','sale'))]}"/>
+                    </xpath>
+
+                    <xpath expr="//field[@name='validity_date']" position="replace">
+                        <field name="validity_date"
+                               attrs="{'invisible': [('state', 'in', ['sale', 'done'])],'readonly':[('state','in',('draft','sent','validate','done','cancel','sale'))]}"/>
+                    </xpath>
+
+                    <xpath expr="//field[@name='pricelist_id']" position="replace">
+                        <field name="pricelist_id" groups="product.group_sale_pricelist"
+                               attrs="{'readonly':[('state','in',('draft','sent','validate','done','cancel','sale'))]}"/>
+                    </xpath>
+
+                    <xpath expr="//field[@name='price_subtotal']" position="replace">
+                        <field name="price_subtotal"
+                               attrs="{'readonly':[('state','in',('draft','sent','validate','done','cancel','sale'))]}"
+                               widget="monetary" groups="sale.group_show_price_subtotal"/>
+                    </xpath>
+
+                    <!--<xpath expr="//field[@name='currency_id']" position="replace">-->
+                    <!--<field name="currency_id"  invisible="1" options="{'no_open': True, 'no_create': True}" attrs="{'readonly':[('state','in',('draft','sent','validate','done','cancel','sale'))]}"/>-->
+                    <!--</xpath>-->
+
+                    <xpath expr="//field[@name='credit_sales_or_lc']" position="after">
+                        <field name="currency_id" options="{'no_open': True, 'no_create': True}"
+                               attrs="{'readonly':[('state','in',('draft','sent','validate','done','cancel','sale'))]}"/>
+                    </xpath>
+
+                    <xpath expr="//field[@name='state']" position="replace">
+                        <field name="state" widget="statusbar" statusbar_visible="to_submit,draft,sent,sale,done"/>
+                    </xpath>
+
+                    <xpath expr="//field[@name='payment_term_id']" position="replace">
+                        <field name="payment_term_id"
+                               attrs="{'readonly':[('state','in',('draft','sent','validate','done','cancel','sale'))]}"
+                               options="{'no_open': True, 'no_create': True}"/>
                     </xpath>
 
                     <xpath expr="//field[@name='confirmation_date']" position="replace">
@@ -141,20 +162,45 @@
                     </xpath>
 
                     <xpath expr="//field[@name='partner_invoice_id']" position="replace">
-                        <field name="partner_invoice_id" attrs="{'readonly':[('state','in',('draft','sent','validate','done','cancel','sale'))]}"/>
+                        <field name="partner_invoice_id"
+                               attrs="{'readonly':[('state','in',('draft','sent','validate','done','cancel','sale'))]}"/>
                     </xpath>
 
                     <xpath expr="//field[@name='partner_shipping_id']" position="replace">
-                        <field name="partner_shipping_id" attrs="{'readonly':[('state','in',('draft','sent','validate','done','cancel','sale'))]}"/>
+                        <field name="partner_shipping_id"
+                               attrs="{'readonly':[('state','in',('draft','sent','validate','done','cancel','sale'))]}"/>
                     </xpath>
 
                     <xpath expr="//field[@name='payment_term_id']" position="replace">
                         <field name="payment_term_id" invisible="1"/>
                     </xpath>
-                                      
+
                 </data>
             </field>
         </record>
 
+
+        <record id="gbs_sale_order_action_pendding_orders" model="ir.actions.act_window">
+            <field name="name">Sales Orders New</field>
+            <!--<field name="type">ir.actions.act_window</field>-->
+            <field name="res_model">sale.order</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,kanban,form,calendar,pivot,graph</field>
+            <field name="domain">[('state','=','done')]</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Create a Quotation, the first step of a new sale.
+                </p>
+                <p>
+                    Once the quotation is confirmed, it becomes a sales order.
+                    You'll be able to invoice it and collect payments.
+                    From the <i>Sales Orders</i> menu, you can track delivery
+                    orders or services.
+                </p>
+
+            </field>
+        </record>
+        <menuitem id="delivery_order_pendding" name="Pending Delivery Authorization" parent="delivery_order.delivery_order_menu"
+                  action="gbs_sale_order_action_pendding_orders" sequence="14"/>
     </data>
 </odoo>

@@ -1,4 +1,5 @@
 from odoo import fields, models, api,_
+from odoo.exceptions import UserError
 
 
 class HREvaluationPlan(models.Model):
@@ -7,7 +8,7 @@ class HREvaluationPlan(models.Model):
     _description = 'Employee Evaluation Plan'
     _order = "plan_year desc"
 
-    name = fields.Char(string='Name', required=True,default='New')
+    name = fields.Char(string='Name', required=True)
     plan_year = fields.Many2one('hr.leave.fiscal.year', string="Plan Year", required=True)
     company_id = fields.Many2one('res.company', string='Company', required='True',
                                  default=lambda self: self.env['res.company']._company_default_get())
@@ -51,6 +52,16 @@ class HREvaluationPlan(models.Model):
                 pool_criteria_emp += self.env['hr.evaluation.criteria.line'].create(criteria_res)
         self.state = 'confirm'
 
+    ####################################################
+    # Override methods
+    ####################################################
+
+    @api.multi
+    def unlink(self):
+        for m in self:
+            if m.state != 'draft':
+                raise UserError(_('You can not delete in this state.'))
+        return super(HREvaluationPlan, self).unlink()
 
 
 class HREvaluationCriteria(models.Model):

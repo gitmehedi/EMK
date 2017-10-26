@@ -30,10 +30,21 @@
                     'invisible': [('payment_type', 'not in', ('inbound', 'outbound'))], 'readonly': [('state', '=', 'draft'), ('my_menu_check','=',True)]}"/>
                 </field>
 
-                <field name="operating_unit_id" position="replace">
-                    <field name="operating_unit_id" invisible="1"/>
+                <field name="journal_id" position="after">
+                    <field name="deposited_bank" attrs="{'invisible':[('my_menu_check','=',False)]}" />
                 </field>
 
+                <field name="journal_id" position="after">
+                    <field name="bank_branch" attrs="{'invisible':[('my_menu_check','=',False)]}"/>
+                </field>
+
+                <field name="journal_id" position="after">
+                    <field name="deposit_slip" attrs="{'invisible':['|',('my_menu_check','=',False),('journal_id','=',12)]}"/>
+                </field>
+
+                <field name="journal_id" position="after">
+                    <field name="cheque_no" attrs="{'invisible':['|',('my_menu_check','=',False),('journal_id','=',12)]}"/>
+                </field>
 
             </field>
         </record>

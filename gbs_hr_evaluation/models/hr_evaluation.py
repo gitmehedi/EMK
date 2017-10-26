@@ -1,5 +1,5 @@
 from odoo import fields, models, api,_
-from odoo.exceptions import UserError,ValidationError
+from odoo.exceptions import UserError
 
 class HRPerformanceEvaluation(models.Model):
     _name='hr.performance.evaluation'
@@ -83,7 +83,12 @@ class HRPerformanceEvaluation(models.Model):
 
     @api.multi
     def action_supervisor_approve(self):
-        self.state = 'hod_approve'
+        current_user_emp_id = self.env['hr.employee'].search([('user_id', '=', self.env.uid)])
+        user_manager = self.env['res.users'].search([('id', '=', current_user_emp_id.parent_id.sudo().user_id.id)])
+        if user_manager.has_group('gbs_application_group.group_dept_manager'):
+            self.state = 'hod_approve'
+        else:
+            self.state = 'hr_approve'
 
 
     @api.multi

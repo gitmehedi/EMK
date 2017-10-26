@@ -10,6 +10,8 @@
         'sale',
         'product',
         'sales_team',
+        'account',
+        'stock',
     ],
     'data': [
         'security/ir.model.access.csv',
@@ -19,6 +21,7 @@
         'views/sale_price_change_view.xml',
         'views/inherited_products_view.xml',
         'views/product_packaging_mode_view.xml',
+        'report/change_product_price_report.xml'
     ],
     'installable': True,
     'application': True,

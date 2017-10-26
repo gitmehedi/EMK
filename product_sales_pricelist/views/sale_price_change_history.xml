@@ -54,9 +54,9 @@
 		<record id="action_product_sale_price_change_history" model="ir.actions.act_window">
 			<field name="name">Product Price History</field>
 			<field name="res_model">product.sale.history.line</field>
-			<field name="context">{'search_default_group_product_id': 1,'search_default_group_currency_id': 1}</field>
-
 			<field name="view_mode">tree,form</field>
+			<field name="context">{'search_default_group_product_id': 1}</field>
+			<field name="view_id" ref="sale_price_change_history_tree"/>
 		</record>
 
 

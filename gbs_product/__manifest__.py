@@ -5,7 +5,8 @@
     "category": "Sale",
     "depends": ["sale",
                 "product",
-                "purchase"
+                "purchase",
+                "procurement"
                 ],
     "data": [
         "views/inherited_product_temp_gen_view.xml",

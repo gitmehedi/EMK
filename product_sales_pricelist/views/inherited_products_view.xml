@@ -9,11 +9,12 @@
             <field name="arch" type="xml">
                 <data>
 					<div class="oe_button_box" name="button_box">
-                        <button type="object" string="Pricing History"
-                                name="action_view_pricing_history"
+                        <button type="action" string="Pricing History"
+                                name="%(action_product_sale_price_change_history)d"
 								class="oe_stat_button"
 								icon="fa-usd">
                         </button>
+                        <!--name="action_view_pricing_history"-->
                     </div>
 
                 </data>

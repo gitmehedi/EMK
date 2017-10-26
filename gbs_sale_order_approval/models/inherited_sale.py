@@ -9,7 +9,7 @@ class SaleOrder(models.Model):
         ('cash', 'Cash'),
         ('credit_sales', 'Credit'),
         ('lc_sales', 'L/C'),
-    ], string='Sale Order Type', required=True)
+    ], string='Sales Type', required=True)
 
     state = fields.Selection([
         ('to_submit', 'Submit'),
@@ -20,6 +20,7 @@ class SaleOrder(models.Model):
         ('sale', 'Sales Order'),
         ('done', 'Locked'),
         ('cancel', 'Cancelled'),
+        ('da', 'Delivery Authorisation'),
     ], string='Status', readonly=True, copy=False, index=True, track_visibility='onchange', default='to_submit')
 
     pack_type = fields.Many2one('product.packaging.mode',string='Packing Mode', required=True)
@@ -35,6 +36,14 @@ class SaleOrder(models.Model):
             raise UserError('Expiration Date can not be less than Order Date')
 
         self.state = 'draft'
+
+
+    @api.onchange('type_id')
+    def onchange_type(self):
+        sale_type_pool = self.env['sale.order.type'].search([('id', '=', self.type_id.id)])
+        if self.type_id:
+            self.credit_sales_or_lc = sale_type_pool.sale_order_type
+            self.currency_id = sale_type_pool.currency_id.id
 
 
     @api.multi
@@ -65,7 +74,8 @@ class SaleOrder(models.Model):
             if (self.credit_sales_or_lc == 'cash'):
                 for coms in cust_commission_pool:
                     if price_change_pool.currency_id.id == lines.currency_id.id:
-                        if (lines.commission_rate < coms.commission_rate or lines.price_unit < price_change_pool.list_price):
+                        if (lines.commission_rate < coms.commission_rate
+                            or lines.price_unit < price_change_pool.new_price):
                             is_double_validation = True
                             break;
                         else:
@@ -87,7 +97,7 @@ class SaleOrder(models.Model):
 
                 if (abs(customer_total_credit) > customer_credit_limit
                     or lines.commission_rate < cust_commission_pool.commission_rate
-                    or lines.price_unit < price_change_pool.list_price):
+                    or lines.price_unit < price_change_pool.new_price):
 
                         is_double_validation = True
                         break;
@@ -106,7 +116,7 @@ class SaleOrder(models.Model):
     @api.multi
     def action_create_delivery_order(self):
 
-
+            self.state = 'da'
             view = self.env.ref('delivery_order.delivery_order_form')
 
             return {
@@ -116,7 +126,8 @@ class SaleOrder(models.Model):
                 'res_model': 'delivery.order',
                 'view_id': [view.id],
                 'type': 'ir.actions.act_window',
-                'context': {'default_sale_order_id': self.id}
+                'context': {'default_sale_order_id': self.id},
+                'state': 'DA'
             }
 
     @api.multi
@@ -142,6 +153,13 @@ class SaleOrder(models.Model):
 
 class InheritedSaleOrderLine(models.Model):
     _inherit='sale.order.line'
+
+    @api.constrains('product_uom_qty','commission_rate')
+    def _check_order_line_inputs(self):
+        if self.product_uom_qty or self.commission_rate:
+            if self.product_uom_qty < 0 or self.commission_rate < 0:
+                raise ValidationError('Ordered Qty or Commission Rate  can not be Minus value')
+
 
     def _get_product_sales_price(self, product):
 

@@ -136,6 +136,6 @@
                sequence="0"
                name="Dashboard"
                action="custom_sales_dashboard_action"
-               groups="hr_attendance.group_hr_attendance_user"
+               groups="hr_attendance.group_hr_attendance_user,gbs_application_group.group_head_of_plant,gbs_application_group.group_cxo"
     />
 </odoo>

@@ -92,13 +92,13 @@
 														</td>
 
 														<td>
-															<span t-esc="'%.2f'% o['late_hrs']"></span>
+															<span t-esc="o['late_hrs']"></span>
 														</td>
 														<td>
 															<span t-esc="o['schedule_ot_hrs']"></span>
 														</td>
 														<td>
-															<span t-esc="'%.2f'% o['cal_ot_hrs']"></span>
+															<span t-esc="o['cal_ot_hrs']"></span>
 														</td>
 
 													</tr>
