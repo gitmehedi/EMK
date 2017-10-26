@@ -9,6 +9,9 @@
                 <xpath expr="/form/header/button" position="replace">
                     <button name="confirm_payslip" type="object" string="Close" states="draft" class="oe_highlight"/>
                 </xpath>
+                <xpath expr="//label[@for='name']" position="replace">
+                    <label for="name" string="Description" class="oe_edit_only"/>
+                </xpath>
             </field>
         </record>
     </data>

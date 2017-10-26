@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="inherited_view_hr_payslip_by_employees" model="ir.ui.view">
+        <field name="name">inherited_hr_payroll_payslip_employees</field>
+        <field name="model">hr.payslip.employees</field>
+        <field name="inherit_id" ref="hr_payroll.view_hr_payslip_by_employees"/>
+        <field name="arch" type="xml">
+            <form string="Payslips by Employees">
+                <footer>
+                    <button special="cancel" string="Close" type="object"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>
