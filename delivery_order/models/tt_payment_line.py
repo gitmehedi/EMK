@@ -1,8 +1,8 @@
-from odoo import api, fields, models, exceptions, _
+from odoo import fields, models
 
-class MrpDailyProductionLine(models.Model):
+class TTPaymentLine(models.Model):
     _name = 'tt.payment.line'
-    _description = 'Cash Payment Terms line'
+    _description = 'TT Payment Terms line'
 
     ref_num = fields.Integer("Ref.No")
     bank = fields.Char("Bank")

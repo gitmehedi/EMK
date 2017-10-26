@@ -4,17 +4,19 @@ from odoo.exceptions import UserError, ValidationError
 import time,datetime
 
 
-class SaleDeliveryOrder(models.Model):
+class DeliveryOrder(models.Model):
     _name = 'delivery.order'
     _description = 'Delivery Order'
     _inherit = ['mail.thread']
     _rec_name='name'
+    _order = "approved_date desc"
 
     name = fields.Char(string='Name', index=True, readonly=True)
     so_date = fields.Datetime('Order Date', readonly=True, states={'draft': [('readonly', False)]})
     sequence_id = fields.Char('Sequence', readonly=True)
     deli_address = fields.Char('Delivery Address', readonly=True,states={'draft': [('readonly', False)]})
-    sale_order_id = fields.Many2one('sale.order',string='Sale Order',required=True, readonly=True,states={'draft': [('readonly', False)]})
+    sale_order_id = fields.Many2one('sale.order',string='Sale Order',required=True, readonly=True, domain=[('state','=','done')],
+                    states={'draft': [('readonly', False)]})
     parent_id = fields.Many2one('res.partner', 'Customer', ondelete='cascade', readonly=True,related='sale_order_id.partner_id')
     payment_term_id = fields.Many2one('account.payment.term', string='Payment Terms', readonly=True,related='sale_order_id.payment_term_id')
     warehouse_id = fields.Many2one('stock.warehouse', string='Warehouse', readonly=True, states={'draft': [('readonly', False)]})
@@ -41,10 +43,12 @@ class SaleDeliveryOrder(models.Model):
 
     state = fields.Selection([
         ('draft', "Submit"),
-        ('validate', "Approved"),
+        ('validate', "Validate"),
         ('approve', "Second Approval"),
         ('close', "Approved")
     ], default='draft')
+
+    company_id = fields.Many2one('res.company', string='Company', readonly=True, default=lambda self: self.env.user.company_id)
 
     #type_id = fields.Many2one('sale.order.type',string='Order Type')
 
@@ -54,7 +58,7 @@ class SaleDeliveryOrder(models.Model):
     def create(self, vals):
         seq = self.env['ir.sequence'].next_by_code('delivery.order') or '/'
         vals['name'] = seq
-        return super(SaleDeliveryOrder, self).create(vals)
+        return super(DeliveryOrder, self).create(vals)
 
     @api.multi
     def unlink(self):
@@ -62,7 +66,7 @@ class SaleDeliveryOrder(models.Model):
             if order.state != 'draft':
                 raise UserError('You can not delete this.')
             order.line_ids.unlink()
-        return super(SaleDeliveryOrder, self).unlink()
+        return super(DeliveryOrder, self).unlink()
 
     @api.one
     def action_draft(self):
@@ -74,6 +78,10 @@ class SaleDeliveryOrder(models.Model):
         if self.so_type == 'cash':
             self.payment_information_check()
 
+            #check if payment is same as the subtotal amount
+            self.check_cash_amount_with_subtotal()
+            return self.create_delivery_order()
+
         self.state = 'approve'
         self.line_ids.write({'state': 'approve'})
         self.approver2_id = self.env.user
@@ -82,6 +90,33 @@ class SaleDeliveryOrder(models.Model):
 
         return self.write({'state': 'approve', 'approved_date': time.strftime('%Y-%m-%d %H:%M:%S')})
 
+    #@todo Need to refactor below method -- rabbi
+    def check_cash_amount_with_subtotal(self):
+        account_payment_pool = self.env['account.payment'].search(
+            [('is_this_payment_checked', '=', False), ('sale_order_id', '=', self.sale_order_id.id),
+             ('partner_id', '=', self.parent_id.id)])
+
+        if not self.line_ids:
+            return self.write({'state': 'approve'})  # Only Second level approval
+
+        product_line_subtotal = 0
+        for do_product_line in self.line_ids:
+            product_line_subtotal = product_line_subtotal + do_product_line.price_subtotal
+
+        cash_line_total_amount = 0
+        for do_cash_line in self.cash_ids:
+            cash_line_total_amount = cash_line_total_amount + do_cash_line.amount
+
+        if not cash_line_total_amount or cash_line_total_amount == 0:
+            account_payment_pool.write({'is_this_payment_checked': True})
+            return self.write({'state': 'approve'})  # Only Second level approval
+
+        if cash_line_total_amount >= product_line_subtotal:
+            account_payment_pool.write({'is_this_payment_checked': True})
+            return self.write({'state': 'close'})  # directly go to final approval level
+        else:
+            account_payment_pool.write({'is_this_payment_checked': True})
+            return self.write({'state': 'approve'})  # Only Second level approval
 
     def create_delivery_order(self):
         for order in self.sale_order_id:
@@ -128,9 +163,36 @@ class SaleDeliveryOrder(models.Model):
 
     @api.onchange('sale_order_id')
     def onchange_sale_order_id(self):
-        self.set_payment_info_automatically()
-
         self.set_products_info_automatically()
+
+        account_payment_pool = self.env['account.payment'].search([('sale_order_id', '=', self.sale_order_id.id)])
+
+        for payments in account_payment_pool:
+            if payments.cheque_no:
+                self.set_cheque_info_automatically(account_payment_pool)
+                break;
+
+            else:
+                self.set_payment_info_automatically(account_payment_pool)
+
+
+
+    def set_cheque_info_automatically(self, account_payment_pool):
+        vals = []
+        for payments in account_payment_pool:
+            if payments.journal_id.id != 12:## Changeit! 12 == cash
+                if not payments.is_this_payment_checked:
+                    vals.append((0, 0, {'account_payment_id': payments.id,
+                                        'amount': payments.amount,
+                                        'bank': payments.deposited_bank,
+                                        'branch': payments.bank_branch,
+                                        'payment_date': payments.payment_date,
+                                        'number':payments.cheque_no,
+                                        }))
+
+                self.cheque_ids = vals
+
+
 
     def set_products_info_automatically(self):
         if self.sale_order_id:
@@ -155,14 +217,40 @@ class SaleDeliveryOrder(models.Model):
 
             self.line_ids = val
 
-    def set_payment_info_automatically(self):
-        account_payment_pool = self.env['account.payment'].search([('sale_order_id', '=', self.sale_order_id.id)])
+
+    def set_payment_info_automatically(self, account_payment_pool):
+
         if account_payment_pool:
             vals = []
             for payments in account_payment_pool:
-                if not payments.is_this_payment_checked:
-                    vals.append((0, 0, {'account_payment_id': payments.id,
-                                        'amount': payments.amount,
-                                        }))
+                if not payments.cheque_no:
+                    if payments.sale_order_id and not payments.is_this_payment_checked:
+                        vals.append((0, 0, {'account_payment_id': payments.id,
+                                            'amount': payments.amount,
+                                            'dep_bank':payments.deposited_bank,
+                                            'branch':payments.bank_branch,
+                                            'payment_date': payments.payment_date,
+                                            }))
 
-                    self.cash_ids = vals
+                        self.cash_ids = vals
+
+    def action_process_unattached_payments(self):
+        # account_payment_pool = self.env['account.payment'].search([('is_this_payment_checked', '=', False),
+        #                                                            ('sale_order_id', '=', self.sale_order_id.id)])
+        #
+        # ## check if Payment Info is already tagged into DO Cash Line Tab!!
+        # vals = []
+        # if account_payment_pool:
+        #     for payments in account_payment_pool:
+        #         for cash_line in self.cash_ids:
+        #             if cash_line.account_payment_id.id != payments.id:
+        #                 vals.append((0, 0, {'account_payment_id': payments.id,
+        #                                     'amount': payments.amount,
+        #                                     'dep_bank': payments.deposited_bank,
+        #                                     'branch': payments.bank_branch,
+        #                                     'payment_date': payments.payment_date,
+        #                                     }))
+        #
+        #
+        #     self.cash_ids = vals
+        pass

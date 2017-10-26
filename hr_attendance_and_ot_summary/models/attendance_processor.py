@@ -13,7 +13,7 @@ from weekend_day import TempWeekendDay
 class AttendanceProcessor(models.Model):
     _name = 'hr.attendance.summary.temp'
 
-    salary_deduction_late_day = 3
+    # salary_deduction_late_day = 3
 
     period_query = """SELECT ap.date_start, ap.date_stop
                        FROM hr_attendance_summary ac
@@ -26,9 +26,16 @@ class AttendanceProcessor(models.Model):
                           WHERE check_out > %s AND check_in < %s AND employee_id = %s AND has_error = False
                           ORDER BY check_in ASC"""
 
+    getExtraOTQuery = """SELECT 
+                            SUM(total_hours)
+                       FROM 
+                            hr_ot_requisition 
+                       WHERE 
+                            from_datetime BETWEEN %s AND %s AND 
+                            state = 'approved' AND 
+                            employee_id = %s"""
 
-
-    def get_summary_data(self, employeeId, summaryId, graceTime, operating_unit_id, att_utility_pool):
+    def get_summary_data(self, employeeId, summaryId, graceTime, operating_unit_id, att_utility_pool, empJoiningDateMap):
 
         ############### Delete Current Records ##########################################
         self.env["hr.attendance.summary.line"].search([('employee_id', '=', employeeId), ('att_summary_id', '=', summaryId)]).unlink()
@@ -36,16 +43,12 @@ class AttendanceProcessor(models.Model):
         hr_employee_pool = self.env['hr.employee']
         employee = hr_employee_pool.search([('id', '=', employeeId)])
 
-        startDate = datetime.datetime.now() #Current date
-        endDate = datetime.datetime.now() #Current date
         day = datetime.timedelta(days=1)
 
         # Get Date from Account Period
-        self._cr.execute(self.period_query, (summaryId,))
-        accountPeriod = self._cr.fetchall()
-        if accountPeriod:
-            startDate = self.getDateFromStr(accountPeriod[0][0])
-            endDate = self.getDateFromStr(accountPeriod[0][1])
+        accPeriodResult = self.getAccountPeriodDate(summaryId)
+        startDate = accPeriodResult.values()[0]
+        endDate = accPeriodResult.values()[1]
 
         preStartDate = startDate - day
         postEndDate = endDate + day
@@ -67,12 +70,12 @@ class AttendanceProcessor(models.Model):
                 if alterTimeMap.get(self.getStrFromDate(currDate)): # Check this date is alter date
                     alterDayDutyTime = alterTimeMap.get(self.getStrFromDate(currDate))
                     attendanceDayList = att_utility_pool.getAttendanceListByAlterDay(alterDayDutyTime, day, dutyTimeMap, employeeId)
-                    attSummaryLine = self.makeDecision(attSummaryLine, attendanceDayList, currDate, alterDayDutyTime, employee, graceTime, holidayMap, att_utility_pool)
+                    attSummaryLine = self.makeDecision(attSummaryLine, attendanceDayList, currDate, alterDayDutyTime, employee, graceTime, holidayMap, empJoiningDateMap, att_utility_pool)
 
                 elif dutyTimeMap.get(self.getStrFromDate(currDate)): # Check this date is week end or not. If it is empty, then means this day is weekend
                     currentDaydutyTime = dutyTimeMap.get(self.getStrFromDate(currDate))
                     attendanceDayList = att_utility_pool.getAttendanceListByDay(attendance_data, currDate, currentDaydutyTime, day, dutyTimeMap)
-                    attSummaryLine = self.makeDecision(attSummaryLine, attendanceDayList, currDate, currentDaydutyTime, employee, graceTime, holidayMap, att_utility_pool)
+                    attSummaryLine = self.makeDecision(attSummaryLine, attendanceDayList, currDate, currentDaydutyTime, employee, graceTime, holidayMap, empJoiningDateMap, att_utility_pool)
                 else:
                     attSummaryLine = self.buildWeekEnd(attSummaryLine, currDate)
 
@@ -81,19 +84,12 @@ class AttendanceProcessor(models.Model):
             attSummaryLine.is_entered_rostering = 0
 
         noOfDays = (endDate - startDate).days + 1
-        # @Todo-Bappy Get extra OT
-        query = """SELECT total_hours FROM hr_ot_requisition WHERE from_datetime 
-                    BETWEEN %s AND %s AND state = 'approved' AND employee_id = %s"""
-        self._cr.execute(query, tuple([startDate, endDate, employeeId]))
-        get_query_extra_ot = self._cr.fetchone()
-        if get_query_extra_ot:
-            get_extra_ot = get_query_extra_ot[0]
-        else:
-            get_extra_ot = 0
 
-        self.saveAttSummary(employeeId, summaryId, noOfDays, attSummaryLine,get_extra_ot)
+        get_extra_ot = self.getExtraOT(startDate, endDate, employeeId)
 
-    def makeDecision(self, attSummaryLine, attendanceDayList, currDate, currentDaydutyTime, employee, graceTime, holidayMap, att_utility_pool):
+        self.saveAttSummary(employeeId, summaryId, noOfDays, attSummaryLine, get_extra_ot)
+
+    def makeDecision(self, attSummaryLine, attendanceDayList, currDate, currentDaydutyTime, employee, graceTime, holidayMap, empJoiningDateMap, att_utility_pool):
 
         employeeId = employee.id
 
@@ -156,7 +152,13 @@ class AttendanceProcessor(models.Model):
                 # Present without late
                 attSummaryLine = self.calculateScheduleOtHrs(attSummaryLine, currentDaydutyTime)
         else:
-            attSummaryLine = self.buildAbsentDetails(attSummaryLine, currentDaydutyTime, currDate, totalPresentTime, attendanceDayList)
+            if empJoiningDateMap.get(employeeId):
+                joiningDate = empJoiningDateMap.get(employeeId)
+                if self.getDateFromStr(joiningDate) <= currDate:
+                    attSummaryLine = self.buildAbsentDetails(attSummaryLine, currentDaydutyTime, currDate,
+                                                             totalPresentTime, attendanceDayList)
+            else:
+                attSummaryLine = self.buildAbsentDetails(attSummaryLine, currentDaydutyTime, currDate, totalPresentTime, attendanceDayList)
 
         return attSummaryLine
 
@@ -164,19 +166,12 @@ class AttendanceProcessor(models.Model):
         att_utility_pool = self.env['attendance.utility']
         graceTime = att_utility_pool.getGraceTime(datetime.datetime.now())
 
-        # @Todo-Bappy Get Joining Date
-        # Get Date from Account Period
-        # self._cr.execute(self.period_query, (summaryId,))
-        # accountPeriod = self._cr.fetchall()
-        # if accountPeriod:
-        #     startDate = self.getDateFromStr(accountPeriod[0][0])
-        #     endDate = self.getDateFromStr(accountPeriod[0][1])
-
-        #################################################################
-
-
+        startDate = self.getAccountPeriodDate(summaryId).values()[0]
+        endDate = self.getAccountPeriodDate(summaryId).values()[1]
+        if employeeIds:
+            empJoiningDateMap = self.getJoingDate(startDate, endDate, employeeIds)
         for empId in employeeIds:
-            self.get_summary_data(empId, summaryId, graceTime, operating_unit_id, att_utility_pool)
+            self.get_summary_data(empId, summaryId, graceTime, operating_unit_id, att_utility_pool,empJoiningDateMap)
 
 
     ############################# Utility Methods ####################################################################
@@ -275,7 +270,7 @@ class AttendanceProcessor(models.Model):
 
 
 
-    def saveAttSummary(self, employeeId, summaryId, noOfDays, attSummaryLine,get_extra_ot):
+    def saveAttSummary(self, employeeId, summaryId, noOfDays, attSummaryLine, get_extra_ot):
 
         summary_line_pool = self.env['hr.attendance.summary.line']
         weekend_pool = self.env['hr.attendance.weekend.day']
@@ -287,10 +282,16 @@ class AttendanceProcessor(models.Model):
         ############## Save Summary Lines ######################
         salaryDays = noOfDays - len(attSummaryLine.absent_days)
         calOtHours = attSummaryLine.schedule_ot_hrs + get_extra_ot
-        #@Todo-Bappy Add extra OT with calOtHours
+
         if attSummaryLine.schedule_ot_hrs > attSummaryLine.late_hrs:
             calOtHours = attSummaryLine.schedule_ot_hrs - attSummaryLine.late_hrs
 
+        deductionRule = self.getLateSalaryDeductionRule()
+
+        if deductionRule == 0:
+            deduction_days = len(attSummaryLine.absent_days)
+        else:
+            deduction_days = int(len(attSummaryLine.late_days) / deductionRule) + len(attSummaryLine.absent_days)
 
         vals = {'employee_id':      employeeId,
                 'att_summary_id':   summaryId,
@@ -298,7 +299,7 @@ class AttendanceProcessor(models.Model):
                 'present_days':     attSummaryLine.present_days,
                 'holidays_days':    attSummaryLine.holidays_days,
                 'leave_days':       attSummaryLine.leave_days,
-                'deduction_days':   int(len(attSummaryLine.late_days)/self.salary_deduction_late_day),
+                'deduction_days':   deduction_days,
                 'late_hrs':         attSummaryLine.late_hrs,
                 'schedule_ot_hrs':  attSummaryLine.schedule_ot_hrs,
                 'cal_ot_hrs':       calOtHours,
@@ -365,6 +366,62 @@ class AttendanceProcessor(models.Model):
                 res = late_time_pool.create(timeVals)
 
 
+    def getExtraOT(self, startDate, endDate, employeeId):
+
+        startDateTime = startDate + datetime.timedelta(seconds=1)
+        endDateTime = endDate + datetime.timedelta(hours=23,minutes=59)
+
+        self._cr.execute(self.getExtraOTQuery, (startDateTime, endDateTime, employeeId))
+        get_query_extra_ot = self._cr.fetchone()
+
+        get_extra_ot = get_query_extra_ot[0]
+        if get_extra_ot:
+            return get_extra_ot
+        else:
+            return 0
+
+    def getJoingDate(self,startDate, endDate, employeeIds):
+        query = """SELECT 
+                        initial_employment_date, id 
+                   FROM 
+                        hr_employee
+                   WHERE 
+                        initial_employment_date > %s AND initial_employment_date <= %s AND id IN %s"""
+        self._cr.execute(query, (self.getStrFromDate(startDate) , self.getStrFromDate(endDate) , tuple(employeeIds)))
+        query_res = self._cr.fetchall()
+        query_res_map = {}
+        for i, line in enumerate(query_res):
+            query_res_map[line[1]] = line[0]
+
+        return query_res_map
+
+    def getLateSalaryDeductionRule(self):
+
+        query = """SELECT 
+                         late_salary_deduction_rule
+                    FROM
+                         hr_attendance_config_settings 
+                    order by id desc limit 1"""
+
+        self._cr.execute(query, (tuple([])))
+        deduction_rule_value = self._cr.fetchone()
+
+        if not deduction_rule_value:
+            deduction_rule_value = 0
+
+        return deduction_rule_value
+
+
+    def getAccountPeriodDate(self,summaryId):
+        self._cr.execute(self.period_query, (summaryId,))
+        accountPeriod = self._cr.fetchall()
+        if accountPeriod:
+            result = {
+                'startDate' : self.getDateFromStr(accountPeriod[0][0]),
+                'endDate' : self.getDateFromStr(accountPeriod[0][1])
+            }
+
+            return result
 
     def getStrFromDate(self, date):
         return date.strftime('%Y.%m.%d')

@@ -9,6 +9,7 @@ class CashPaymentLine(models.Model):
     validity = fields.Integer(string="Validity (Days)")
     account_payment_id = fields.Many2one('account.payment', string='Payment Information')
     amount = fields.Float(string="Amount")
+    payment_date = fields.Date('Date')
 
     """ Relational Fields """
     pay_cash_id = fields.Many2one('delivery.order', ondelete='cascade')
