@@ -11,15 +11,15 @@ class LetterOfCredit(models.Model):
     _rec_name='name'
 
 
-    name = fields.Char(string='Name', index=True, readonly=True)
+    name = fields.Char(string='Name', index=True, readonly=True,states={'confirm': [('readonly', False)]})
     applicant = fields.Many2one('res.partner',string='Applicant', required=True)
     issue_date = fields.Date('Issue Date', readonly=True,required=True, states={'confirm': [('readonly', False)]})
     lc_expiry_date = fields.Date('LC Expiry Date', readonly=True,required=True, states={'confirm': [('readonly', False)]})
     lc_opening_bank = fields.Char(string='LC Opening Bank', readonly=True,  states={'confirm': [('readonly', False)]})
     require_lien = fields.Boolean(string='Require Lieu', required=True,readonly=True, default=False, states={'confirm': [('readonly', False)]})
-    lc_lieu_bank = fields.Text(string='LC Lieu Bank')
-    lc_lieu_date = fields.Date('LC Lieu Date')
-    advising_bank = fields.Text(string='Advising Bank')
+    lc_lieu_bank = fields.Text(string='LC Lieu Bank',states={'confirm': [('readonly', False)]})
+    lc_lieu_date = fields.Date('LC Lieu Date',states={'confirm': [('readonly', False)]})
+    advising_bank = fields.Text(string='Advising Bank', states={'confirm': [('readonly', False)]})
 
     lc_value = fields.Integer(string='LC Value',  required=True, readonly=True, states={'confirm': [('readonly', False)]})
     currency_id = fields.Many2one('res.currency', string='Currency',readonly=True,required=True, states={'confirm': [('readonly', False)]})
@@ -32,7 +32,6 @@ class LetterOfCredit(models.Model):
     trans_shipment =  fields.Boolean(string='Allow Trans. Shipment', readonly=True, states={'confirm': [('readonly', False)]})
     shipment_date = fields.Date('Shipment Date',readonly=True, states={'confirm': [('readonly', False)]})
     lc_mode = fields.Char(string='LC Mode', readonly=True, states={'confirm': [('readonly', False)]})
-
     terms_condition = fields.Text(string='Terms of Condition', readonly=True, states={'confirm': [('readonly', False)]})
     remarks = fields.Text(string='Remarks', readonly=True, states={'confirm': [('readonly', False)]})
 
