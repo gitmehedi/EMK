@@ -41,6 +41,7 @@
                             <thead>
                                 <tr style="background-color: #EFECEB;">
                                     <th class="text-center">S.N</th>
+                                    <th class="text-center">Barcode</th>
                                     <th class="text-center">Product Name</th>
                                     <th class="text-center">UoM</th>
                                     <th class="text-center">Reponsible</th>
@@ -53,6 +54,9 @@
                                     <tr>
                                         <td>
                                             <t t-esc="line_index+1"/>
+                                        </td>
+                                        <td>
+                                            <t t-esc="line['barcode']"/>
                                         </td>
                                         <td>
                                             <t t-esc="line['product_name']"/>
@@ -73,7 +77,7 @@
                                 </t>
                                 <t t-if="lines">
                                     <tr style="background-color: #EFECEB;">
-                                        <td colspan="5" style="text-align: right;">
+                                        <td colspan="6" style="text-align: right;">
                                             <strong>Total</strong>
                                         </td>
                                         <td style="text-align: right;">

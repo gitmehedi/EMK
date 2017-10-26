@@ -32,12 +32,13 @@
                         </div>
                         <table class="table table-bordered">
                             <thead>
-                                <tr colspan="4" style="background-color: #D8D5D4;">
+                                <tr colspan="4" style="background-color: #EFECEB;">
                                     <th class="text-center">S.N</th>
+                                    <th class="text-center">Barcode</th>
                                     <th class="text-center">Product Name</th>
                                     <th class="text-center">UoM</th>
-                                    <th class="text-center">Transfer Quantity</th>
-                                    <th class="text-center">Receive Quantity</th>
+                                    <th class="text-center">Transfer Qty</th>
+                                    <th class="text-center">Receive Qty</th>
                                     <th class="text-center">Note</th>
                                 </tr>
                             </thead>
@@ -46,6 +47,9 @@
                                     <tr>
                                         <td class="text-center">
                                             <t t-esc="o['sn']"/>
+                                        </td>
+                                        <td>
+                                            <t t-esc="o['barcode']"/>
                                         </td>
                                         <td>
                                             <t t-esc="o['name']"/>
@@ -65,8 +69,8 @@
                                     </tr>
                                 </t>
                                 <t t-if="data">
-                                    <tr style="background-color: #D8D5D4;">
-                                        <td colspan="3" class="text-right">
+                                    <tr style="background-color: #EFECEB;">
+                                        <td colspan="4" class="text-right">
                                             <strong>Total</strong>
                                         </td>
                                         <td class="text-right">

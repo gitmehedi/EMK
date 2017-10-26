@@ -32,6 +32,7 @@ class DailyCreditSettlementReport(models.AbstractModel):
         for record in moves:
             rec = {}
             rec['product_name'] = record.product_id.display_name
+            rec['barcode'] = record.product_id.default_code
             rec['uom'] = record.product_id.uom_id.name
             rec['create_uid'] = record.create_uid.name
             rec['write_uid'] = record.write_uid.name

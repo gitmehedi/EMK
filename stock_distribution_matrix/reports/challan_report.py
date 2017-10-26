@@ -28,6 +28,7 @@ class ChallanReport(models.AbstractModel):
             rec = {}
             count = count + 1
             rec['sn'] = count
+            rec['barcode'] = record.product_id.default_code
             rec['name'] = record.product_id.display_name
             rec['uom'] = record.product_uom_id.name
             rec['transfer_qty'] = record.transfer_qty
