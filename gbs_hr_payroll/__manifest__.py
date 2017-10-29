@@ -15,6 +15,7 @@
         'hr_employee_loan_payroll',
     ],
     'data': [
+        'wizard/inherited_hr_payroll_payslips_by_employees_views.xml',
         'report/report_paperformat.xml',
         'report/gbs_hr_payroll_report.xml',
         'report/payroll_report_view.xml',
