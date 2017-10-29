@@ -92,8 +92,7 @@ class SalePriceChange(models.Model):
         default=lambda self: self.env['res.company']._company_default_get('product_sales_pricelist'),
         required=True)
 
-    @api.onchange('product_id')
-    def _onchange_product_form(self):
+    def price_change(self):
         if self.product_id:
             product_pool = self.env['product.product'].search(
                 [('id', '=', self.product_id.id)])
@@ -107,10 +106,9 @@ class SalePriceChange(models.Model):
 
                 if count > 0:
                     price_change_pool = self.env['product.sales.pricelist'].search(
-                        [
-                            ('product_id',
-                             '=',
-                             self.product_id.id),
+                        [('product_id',
+                          '=',
+                          self.product_id.id),
                             ('currency_id',
                              '=',
                              self.currency_id.id),
@@ -124,39 +122,14 @@ class SalePriceChange(models.Model):
 
         else:
             self.list_price = 0.00
+
+    @api.onchange('product_id')
+    def _onchange_product_form(self):
+        self.price_change()
 
     @api.onchange('currency_id')
     def _onchange_currency_id(self):
-        if self.product_id:
-            product_pool = self.env['product.product'].search(
-                [('id', '=', self.product_id.id)])
-            if product_pool:
-                for ps in product_pool:
-                    self.currency_id = ps.currency_id.id
-
-                count = self.search_count([('product_id', '=', self.product_id.id),
-                                           ('currency_id', '=', self.currency_id.id),
-                                           ('state', '=', 'validate')])
-
-                if count > 0:
-                    price_change_pool = self.env['product.sales.pricelist'].search(
-                        [
-                            ('product_id',
-                             '=',
-                             self.product_id.id),
-                            ('currency_id',
-                             '=',
-                             self.currency_id.id),
-                            ('state',
-                             '=',
-                             'validate')],
-                        order='id desc')[0]
-                    self.list_price = price_change_pool.new_price
-                else:
-                    self.list_price = product_pool.list_price
-
-        else:
-            self.list_price = 0.00
+        self.price_change()
 
     @api.depends('product_id')
     def compute_list_price(self):
