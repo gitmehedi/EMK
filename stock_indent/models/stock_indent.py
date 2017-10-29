@@ -75,7 +75,7 @@ class IndentIndent(models.Model):
                                    default=lambda self: self._get_default_warehouse(),
                                    help="default warehose where inward will be taken", 
                                    states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]})
-    #picking_type_id = fields.Many2one('stock.picking.type', 'Picking Type', states={'done': [('readonly', True)], 'cancel': [('readonly', True)]}, required=True)
+    picking_type_id = fields.Many2one('stock.picking.type', 'Picking Type', states={'done': [('readonly', True)], 'cancel': [('readonly', True)]}, required=True)
     move_type = fields.Selection([('direct', 'Partial'), ('one', 'All at once')], 'Receive Method',
                                  readonly=True, required=True, default='direct',
                                  states={'draft':[('readonly', False)], 'cancel':[('readonly',True)]}, 
@@ -163,8 +163,8 @@ class IndentIndent(models.Model):
     def approve_indent(self):
         self.check_approval()
         self.state = 'inprogress'
-        # for indent in self:
-        #     indent.action_picking_create()
+        for indent in self:
+            indent.action_picking_create()
 
             
     @api.multi
@@ -396,14 +396,15 @@ class IndentIndent(models.Model):
     @api.multi
     def _get_picking_id(self):
         #indent = self.browse(cr, uid, ids[0], context=context)
-        picking_id = self.picking_id.id
-        picking_obj = self.env['stock.picking']
-        picking = picking_obj.browse(picking_id)
-        if picking.state not in ('done'):
-            return [picking.id]
-        elif picking.state in ('done') and self.state == 'inprogress':
-            picking_ids = picking_obj.search([('origin','=', self.name)])
-            return picking_ids.ids
+        if self.picking_id:
+            picking_id = self.picking_id.id
+            picking_obj = self.env['stock.picking']
+            picking = picking_obj.browse(picking_id)
+            if picking.state not in ('done'):
+                return [picking.id]
+            elif picking.state in ('done') and self.state == 'inprogress':
+                picking_ids = picking_obj.search([('origin','=', self.name)])
+                return picking_ids.ids
         return False
 
     @api.multi
