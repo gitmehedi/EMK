@@ -1,4 +1,6 @@
 from odoo import api, fields, models
+from odoo.exceptions import UserError, ValidationError
+
 
 class ProformaInvoice(models.Model):
     _name = 'proforma.invoice'
@@ -35,6 +37,14 @@ class ProformaInvoice(models.Model):
 
     sequence_id = fields.Char('Sequence', readonly=True)
 
+    """ Calculations fields after """
+    sub_total = fields.Float(string='Sub Total',readonly=True)
+    taxable_amount = fields.Float(string='Taxable Amount',readonly=True)
+    taxed_amount = fields.Float(string='Tax',readonly=True)
+    freight_charge = fields.Float(string='Freight Charge',readonly=True, states={'confirm': [('readonly', False)]})
+    total = fields.Float(string='Total', readonly=True)
+
+
     """ Relational field"""
     line_ids = fields.One2many('proforma.invoice.line', 'parent_id', string="Products", readonly=True, states={'confirm': [('readonly', False)]})
 
@@ -53,6 +63,22 @@ class ProformaInvoice(models.Model):
     def onchange_sale_order_id(self):
         self.set_products_info_automatically()
 
+    @api.constrains('freight_charge','sale_order_id')
+    def check_freight_charge_val(self):
+        if self.freight_charge < 0:
+            raise UserError('Freight Charge can not be minus value')
+        self.set_products_info_automatically()
+
+    @api.onchange('freight_charge')
+    def onchange_freight_charge(self):
+        if self.freight_charge < 0:
+            raise UserError('Freight Charge can not be minus value')
+
+        sale_order_obj = self.env['sale.order'].search([('id', '=', self.sale_order_id.id)])
+
+        if self.freight_charge:
+            self.total = sale_order_obj.amount_total + self.freight_charge
+
 
     def set_products_info_automatically(self):
         if self.sale_order_id:
@@ -61,6 +87,9 @@ class ProformaInvoice(models.Model):
 
             if sale_order_obj:
                 self.partner_id = sale_order_obj.partner_id.id
+                self.sub_total = sale_order_obj.amount_untaxed
+                self.taxed_amount = sale_order_obj.amount_tax
+                self.total = sale_order_obj.amount_total
 
                 for record in sale_order_obj.order_line:
                     val.append((0, 0, {'product_id': record.product_id.id,
@@ -69,7 +98,8 @@ class ProformaInvoice(models.Model):
                                        'uom_id': record.product_uom.id,
                                        'commission_rate': record.commission_rate,
                                        'price_unit': record.price_unit,
-                                       'price_subtotal': record.price_subtotal
+                                       'price_subtotal': record.price_subtotal,
+                                       'tax':record.tax_id.id,
                                        }))
 
             self.line_ids = val
@@ -80,19 +110,12 @@ class ProformaInvoiceLine(models.Model):
     _description = 'Proforma Invoice Line (PI Line)'
 
     """ Line values"""
-    product_id = fields.Many2one('product.product', string="Product", ondelete='cascade')
-    uom_id = fields.Many2one('product.uom', string="UoM", ondelete='cascade')
-    quantity = fields.Float(string="Ordered Qty", default="1")
-    price_unit = fields.Float(string="Price Unit")
-    tax = fields.Many2one('account.tax',string='Tax (%)')
+    product_id = fields.Many2one('product.product', string="Product", ondelete='cascade',readonly=True)
+    uom_id = fields.Many2one('product.uom', string="UoM", ondelete='cascade',readonly=True)
+    quantity = fields.Float(string="Ordered Qty", default="1",readonly=True)
+    price_unit = fields.Float(string="Price Unit",readonly=True)
+    tax = fields.Many2one('account.tax',string='Tax (%)',readonly=True)
     price_subtotal = fields.Float(string="Price Subtotal", readonly=True)
-
-    """ Calculations fields after """
-    sub_total = fields.Float(string='Sub Total',readonly=True)
-    taxable_amount = fields.Float(string='Taxable Amount',readonly=True)
-    taxed_amount = fields.Float(string='Taxed Amount',readonly=True)
-    freight_charge = fields.Float(string='Freight Charge',readonly=True)
-    total = fields.Float(string='Total', readonly=True)
 
     """ Relational field"""
     parent_id = fields.Many2one('proforma.invoice', ondelete='cascade')
