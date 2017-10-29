@@ -16,9 +16,9 @@ class LetterOfCredit(models.Model):
     issue_date = fields.Date('Issue Date', readonly=True,required=True, states={'confirm': [('readonly', False)]})
     lc_expiry_date = fields.Date('LC Expiry Date', readonly=True,required=True, states={'confirm': [('readonly', False)]})
     lc_opening_bank = fields.Char(string='LC Opening Bank', readonly=True,  states={'confirm': [('readonly', False)]})
-    require_lien = fields.Boolean(string='Require Lieu', required=True,readonly=True, default=False, states={'confirm': [('readonly', False)]})
-    lc_lieu_bank = fields.Text(string='LC Lieu Bank',states={'confirm': [('readonly', False)]})
-    lc_lieu_date = fields.Date('LC Lieu Date',states={'confirm': [('readonly', False)]})
+    require_lien = fields.Boolean(string='Require Lien', required=True,readonly=True, default=False, states={'confirm': [('readonly', False)]})
+    lc_lieu_bank = fields.Text(string='LC Lien Bank',states={'confirm': [('readonly', False)]})
+    lc_lieu_date = fields.Date('LC Lien Date',states={'confirm': [('readonly', False)]})
     advising_bank = fields.Text(string='Advising Bank', states={'confirm': [('readonly', False)]})
 
     lc_value = fields.Integer(string='LC Value',  required=True, readonly=True, states={'confirm': [('readonly', False)]})
