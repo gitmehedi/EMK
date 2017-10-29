@@ -11,7 +11,8 @@ class AttendanceUtility(models.TransientModel):
     employee_shift_history_query = """SELECT effective_from, shift_id
                                     FROM hr_shifting_history
                                     WHERE employee_id = %s AND (%s BETWEEN effective_from AND effective_end
-                                    OR %s BETWEEN effective_from AND effective_end)
+                                    OR %s BETWEEN effective_from AND effective_end
+                                    OR (%s <= effective_from AND effective_end <= %s))
                                     ORDER BY effective_from ASC"""
 
     daily_attendance_query = """SELECT (check_in + interval '6h') AS check_in, (check_out + interval '6h') AS check_out, worked_hours
@@ -27,7 +28,7 @@ class AttendanceUtility(models.TransientModel):
 
     def getDutyTimeByEmployeeId(self, employeeId, preStartDate, postEndDate):
         # Getting Shift Ids for an employee
-        self._cr.execute(self.employee_shift_history_query, (employeeId, preStartDate, postEndDate))
+        self._cr.execute(self.employee_shift_history_query, (employeeId, preStartDate, postEndDate, preStartDate, postEndDate))
         calendarList = self._cr.fetchall()
         shiftList = self.getShiftList(calendarList, postEndDate)
         dutyTimeMap = self.buildDutyTime(preStartDate, postEndDate, shiftList)
@@ -36,7 +37,7 @@ class AttendanceUtility(models.TransientModel):
 
     def isSetRosterByEmployeeId(self, employeeId, preStartDate, postEndDate):
         # Getting Shift Ids for an employee
-        self._cr.execute(self.employee_shift_history_query, (employeeId, preStartDate, postEndDate))
+        self._cr.execute(self.employee_shift_history_query, (employeeId, preStartDate, postEndDate, preStartDate, postEndDate))
         calendarList = self._cr.fetchall()
         if calendarList:
             return True

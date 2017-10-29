@@ -1,5 +1,6 @@
 from odoo import fields, models
 
+
 class InheritedSaleOrderType(models.Model):
     _inherit = 'sale.order.type'
 

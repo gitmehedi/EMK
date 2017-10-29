@@ -1,6 +1,6 @@
-from odoo import api, fields, models, exceptions, _
+from odoo import fields, models
 
-class MrpDailyProductionLine(models.Model):
+class LCPaymentLine(models.Model):
     _name = 'lc.payment.line'
     _description = 'L/C Payment Terms line'
 
