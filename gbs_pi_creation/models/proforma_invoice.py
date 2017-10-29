@@ -7,9 +7,10 @@ class ProformaInvoice(models.Model):
     _rec_name='name'
 
     name = fields.Char(string='Name', index=True, readonly=True)
-    partner_id = fields.Many2one('res.partner',string='Customer', required=True)
+    sale_order_id = fields.Many2one('sale.order',string='Ref. No.', readonly=True,required=True, states={'confirm': [('readonly', False)]})
+    partner_id = fields.Many2one('res.partner',string='Customer', domain=[('customer', '=', True)],required=True)
     invoice_date = fields.Date('Invoice Date', readonly=True,required=True, states={'confirm': [('readonly', False)]})
-    advising_bank = fields.Char(string='Advising Bank', states={'confirm': [('readonly', False)]})
+    advising_bank = fields.Text(string='Advising Bank', states={'confirm': [('readonly', False)]})
     currency_id = fields.Many2one('res.currency', string='Currency', readonly=True,required=True, states={'confirm': [('readonly', False)]})
     country_of_origin = fields.Char(string='Country of Origin',readonly=True, states={'confirm': [('readonly', False)]})
 
@@ -47,6 +48,32 @@ class ProformaInvoice(models.Model):
     @api.multi
     def action_confirm(self):
         self.state = 'approve'
+
+    @api.onchange('sale_order_id')
+    def onchange_sale_order_id(self):
+        self.set_products_info_automatically()
+
+
+    def set_products_info_automatically(self):
+        if self.sale_order_id:
+            val = []
+            sale_order_obj = self.env['sale.order'].search([('id', '=', self.sale_order_id.id)])
+
+            if sale_order_obj:
+                self.partner_id = sale_order_obj.partner_id.id
+
+                for record in sale_order_obj.order_line:
+                    val.append((0, 0, {'product_id': record.product_id.id,
+                                       'quantity': record.product_uom_qty,
+                                       'pack_type': sale_order_obj.pack_type.id,
+                                       'uom_id': record.product_uom.id,
+                                       'commission_rate': record.commission_rate,
+                                       'price_unit': record.price_unit,
+                                       'price_subtotal': record.price_subtotal
+                                       }))
+
+            self.line_ids = val
+
 
 class ProformaInvoiceLine(models.Model):
     _name = 'proforma.invoice.line'
