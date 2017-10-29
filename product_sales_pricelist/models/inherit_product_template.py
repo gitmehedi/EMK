@@ -15,6 +15,7 @@ class InheritProductTemplate(models.Model):
             'view_mode': 'tree',
             'res_model': 'product.sale.history.line',
             'domain': [('product_id','in', self.product_variant_ids.ids)],
+            'context':{'search_default_group_product_id': 1},
             'view_id': [view.id],
             'type': 'ir.actions.act_window'
         }
