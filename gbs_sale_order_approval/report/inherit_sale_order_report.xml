@@ -3,10 +3,94 @@
     <data>
         <template id="report_quotation_inherit_add_property" inherit_id="sale.report_saleorder_document">
 
+            <xpath expr="//table[@class='table table-condensed']" position="before">
+                <div style="background-color:#C8C8C8; margin:20px 0px">
+                    <div>
+                        <div style="display:inline;padding-left:5px">
+                            <strong>Operating Unit:</strong>
+                            <span t-field="doc.type_id.operating_unit"/>
+                        </div>
+                        <div style="display:inline; padding:20px">
+                            <strong>Type:</strong>
+                            <span t-field="doc.type_id"/>
+                        </div>
+                        <div style="display:inline; padding:20px">
+                            <strong>Packing Mode:</strong>
+                            <span t-field="doc.pack_type"/>
+                        </div>
+                        <div style="display:inline; padding:20px">
+                            <strong>Sales type:</strong>
+                            <span t-field="doc.credit_sales_or_lc"/>
+                        </div>
+                        <div style="display:inline; padding:20px">
+                            <strong>Currency:</strong>
+                            <span t-field="doc.currency_id"/>
+                        </div>
+                    </div>
+                </div>
+            </xpath>
 
-                <xpath expr="//table[@class='table table-condensed']//thead//tr" position="after">
-                    <th class="text-right">Commission Rate</th>
-                </xpath>
+
+            <xpath expr="//th[@class='text-right'][2]" position="after">
+                <th class="text-right">Commission Rate(%)</th>
+            </xpath>
+
+            <xpath expr="//td[@class='text-right'][2]" position="after">
+                <td class="text-center">
+                    <span t-field="l.commission_rate"/>
+                </td>
+            </xpath>
+
+            <xpath expr="//th[@class='text-right'][6]" position="replace">
+                <th class="text-right">Price</th>
+            </xpath>
+
+            <xpath expr="//td[@class='text-right'][5]" position="replace">
+                <td class="text-right">
+                    <span t-field="l.price_subtotal"
+                          t-field-options='{"widget": "monetary", "display_currency": "doc.type_id.currency_id"}'/>
+                </td>
+            </xpath>
+
+
+            <xpath expr="//div/div/div/table/tr[@class='border-black'][1]" position="replace">
+                <tr class="border-black">
+                    <td>
+                        <strong>Total Without Taxes</strong>
+                    </td>
+                    <td class="text-right">
+                        <span t-field="doc.amount_untaxed"
+                              t-field-options='{"widget": "monetary", "display_currency": "doc.type_id.currency_id"}'/>
+                    </td>
+                </tr>
+            </xpath>
+
+            <xpath expr="//div[@class='col-xs-4 pull-right']//table//t" position="replace">
+                <t t-foreach="doc._get_tax_amount_by_group()" t-as="amount_by_group">
+                    <tr>
+                        <td>
+                            <span t-esc="amount_by_group[0] or 'Taxes'"/>
+                        </td>
+                        <td class="text-right">
+                            <span t-esc="amount_by_group[1]"
+                                  t-options='{"widget": "monetary", "display_currency": doc.type_id.currency_id}'/>
+                        </td>
+                    </tr>
+                </t>
+            </xpath>
+
+            <xpath expr="//div/div/div/table/tr[@class='border-black'][2]" position="replace">
+                <tr>
+                    <td>
+                        <strong>Total</strong>
+                    </td>
+                    <td class="text-right">
+                        <span t-field="doc.amount_total"
+                              t-field-options='{"widget": "monetary", "display_currency": "doc.type_id.currency_id"}'/>
+                    </td>
+                </tr>
+            </xpath>
+
 
         </template>
     </data>

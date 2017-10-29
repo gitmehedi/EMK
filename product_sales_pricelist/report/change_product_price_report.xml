@@ -23,7 +23,7 @@
                             </p>
                             <table class="table table-bordered">
                                 <thead>
-                                    <tr>
+                                    <tr style="background-color:#C0C0C0;">
                                         <th>Product</th>
                                         <th>Packaging Mode</th>
                                         <th>UoM</th>

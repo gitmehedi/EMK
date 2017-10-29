@@ -28,42 +28,32 @@
                                 string="Refuse"
                                 groups="gbs_application_group.group_head_account,gbs_application_group.group_cxo"/>
 
-                        <field name="state" widget="statusbar"/>
+                        <field name="state" statusbar_visible="draft,validate,close" widget="statusbar"/>
 
                     </header>
                     <sheet>
-
+                         <div class="oe_button_box" name="button_box">
+                            <button type="object" string="Process Payments"
+                                    name="action_process_unattached_payments"
+                                    class="oe_stat_button"
+                                    attrs="{'invisible':['|', ('state','=','close'), ('so_type', '!=', 'cash')]}"
+                                    icon="fa-usd">
+                            </button>
+                         </div>
 
 	                    <h1>
 	                        <field name="name"/>
 	                    </h1>
                         <group>
                             <group>
-                                <field name="sale_order_id" options="{'no_quick_create':True,'no_create_edit':True,'no_open':True}"/>
+                                <field name="sale_order_id"/>
                                 <field name="deli_address"/>
-
                             </group>
                             <group>
-
                                 <field name="parent_id" options="{'no_quick_create':True,'no_create_edit':True,'no_open':True}"/>
-                                <field name="payment_term_id" options="{'no_quick_create':True,'no_create_edit':True,'no_open':True}"/>
-                                <field name="warehouse_id" options="{'no_quick_create':True,'no_create_edit':True,'no_open':True}"/>
                                 <field name="so_type"/>
+                                <field name="company_id" invisible="1"/>
                                 <field name="so_date"/>
-                                <field name="requested_by"
-                                       options="{'no_open': True, 'no_create': True}"/>
-                                <field name="requested_date"/>
-                                 <field name="approver2_id"
-                                       attrs="{'invisible':['|', ('state','=','draft'),('state','=','validate')]}"
-                                       options="{'no_open': True, 'no_create': True}"/>
-                                <field name="confirmed_date"
-                                    attrs="{'invisible': [('state','in',('draft','validate','approve'))]}"/>
-                                <field name="approver1_id"
-                                       attrs="{'invisible': [('state','in',('draft','validate','approve'))]}"
-                                       options="{'no_open': True, 'no_create': True}"/>
-                                <field name="approved_date"/>
-
-
                             </group>
 
                             <notebook colspan="4">
@@ -71,13 +61,34 @@
                                     <field name="line_ids">
                                         <tree string="List" editable="bottom">
                                             <field name="product_id" options="{'no_quick_create':True,'no_create_edit':True}"/>
-                                            <field name="quantity"/>
+                                            <field name="quantity" string="Ordered Qty"/>
+                                            <field name="uom_id" string="UoM" options="{'no_quick_create':True,'no_create_edit':True}"/>
                                             <field name="pack_type"/>
-                                            <field name="deli_mode"/>
-                                            <field name="uom_id" options="{'no_quick_create':True,'no_create_edit':True}"/>
+                                            <field name="deli_mode" invisible="1"/>
+                                            <field name="commission_rate"/>
+                                            <field name="price_unit"/>
+                                            <field name="price_subtotal"/>
+
                                         </tree>
                                     </field>
                                 </page>
+
+                                <page string="Other Information">
+                                    <group>
+                                        <group>
+                                            <field name="warehouse_id"/>
+                                            <field name="requested_by" options="{'no_open': True, 'no_create': True}"/>
+                                            <field name="requested_date"/>
+                                        </group>
+                                        <group>
+                                            <field name="approver1_id" attrs="{'invisible': [('state','in',('draft','validate','approve'))]}" options="{'no_open': True, 'no_create': True}"/>
+                                            <field name="confirmed_date" attrs="{'invisible': [('state','in',('draft','validate','approve'))]}"/>
+                                            <field name="approver2_id" attrs="{'invisible':['|', ('state','=','draft'),('state','=','validate')]}" options="{'no_open': True, 'no_create': True}"/>
+                                            <field name="approved_date"/>
+                                        </group>
+                                    </group>
+                                </page>
+
                                 <page string="Cash" attrs="{'invisible':[('so_type', '!=', 'cash')]}">
                                     <field name="cash_ids">
                                         <tree string="List" editable="bottom">
@@ -86,7 +97,7 @@
                                             <field name="dep_bank"/>
                                             <field name="branch"/>
                                             <field name="validity"/>
-
+                                            <field name="payment_date" string="Payment Date"/>
 
                                         </tree>
                                     </field>
@@ -94,11 +105,12 @@
                                 <page string="Cheque" attrs="{'invisible':[('so_type', '!=', 'cash')]}">
                                     <field name="cheque_ids">
                                         <tree string="List" editable="bottom">
+                                            <field name="account_payment_id"/>
                                             <field name="number"/>
                                             <field name="bank"/>
                                             <field name="branch"/>
                                             <field name="amount"/>
-                                             <field name="date"/>
+                                            <field name="payment_date" string="Payment Date"/>
                                         </tree>
                                     </field>
                                 </page>
@@ -148,7 +160,7 @@
             <field name="arch" type="xml">
                 <tree string="Delivery Order">
                     <field name="sale_order_id"/>
-                    <field name="so_type"/>
+                    <!--<field name="type_id"/>-->
                     <field name="name" string="Delivery Authorization"/>
                     <field name="state"/>
                 </tree>

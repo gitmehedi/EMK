@@ -17,6 +17,10 @@
         'gbs_sale_order_approval',
         'sale_order_type',
         'sale_order_revision',
+        'samuda_so_type',
+        'gbs_lc_creation',
+        'gbs_pi_creation',
+        'daily_production_entry',
         #'sale_revision_history'
     ],
 

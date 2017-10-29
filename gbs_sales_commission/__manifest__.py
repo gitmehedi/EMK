@@ -7,12 +7,14 @@
     'depends': [
         'sale',
         'sales_team',
+        'report'
     ],
     'data': [
         'views/inherited_res_partner_views.xml',
         'views/customer_commission_configuration_views.xml',
         'security/ir.model.access.csv',
         'security/ir_rule.xml',
+        'report/commission_report.xml'
         ],
     'description': 'GBS Sales Commission',
     'installable': True,

@@ -10,7 +10,8 @@
         'sale',
         'product',
         'sales_team',
-        'report'
+        'account',
+        'stock',
     ],
     'data': [
         'security/ir.model.access.csv',

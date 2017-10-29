@@ -9,7 +9,7 @@ class SaleOrder(models.Model):
         ('cash', 'Cash'),
         ('credit_sales', 'Credit'),
         ('lc_sales', 'L/C'),
-    ], string='Sale Order Type', required=True)
+    ], string='Sales Type', required=True)
 
     state = fields.Selection([
         ('to_submit', 'Submit'),
@@ -20,6 +20,7 @@ class SaleOrder(models.Model):
         ('sale', 'Sales Order'),
         ('done', 'Locked'),
         ('cancel', 'Cancelled'),
+        ('da', 'Delivery Authorisation'),
     ], string='Status', readonly=True, copy=False, index=True, track_visibility='onchange', default='to_submit')
 
     pack_type = fields.Many2one('product.packaging.mode',string='Packing Mode', required=True)
@@ -115,7 +116,7 @@ class SaleOrder(models.Model):
     @api.multi
     def action_create_delivery_order(self):
 
-
+            self.state = 'da'
             view = self.env.ref('delivery_order.delivery_order_form')
 
             return {
@@ -125,7 +126,8 @@ class SaleOrder(models.Model):
                 'res_model': 'delivery.order',
                 'view_id': [view.id],
                 'type': 'ir.actions.act_window',
-                'context': {'default_sale_order_id': self.id}
+                'context': {'default_sale_order_id': self.id},
+                'state': 'DA'
             }
 
     @api.multi
