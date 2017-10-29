@@ -7,9 +7,10 @@ class ProformaInvoice(models.Model):
     _rec_name='name'
 
     name = fields.Char(string='Name', index=True, readonly=True)
-    partner_id = fields.Many2one('res.partner',string='Customer', required=True)
+    sale_order_id = fields.Many2one('sale.order',string='Ref. No.', readonly=True,required=True, states={'confirm': [('readonly', False)]})
+    partner_id = fields.Many2one('res.partner',string='Customer', domain=[('customer', '=', True)],required=True)
     invoice_date = fields.Date('Invoice Date', readonly=True,required=True, states={'confirm': [('readonly', False)]})
-    advising_bank = fields.Char(string='Advising Bank', states={'confirm': [('readonly', False)]})
+    advising_bank = fields.Text(string='Advising Bank', states={'confirm': [('readonly', False)]})
     currency_id = fields.Many2one('res.currency', string='Currency', readonly=True,required=True, states={'confirm': [('readonly', False)]})
     country_of_origin = fields.Char(string='Country of Origin',readonly=True, states={'confirm': [('readonly', False)]})
 

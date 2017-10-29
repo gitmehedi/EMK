@@ -12,7 +12,7 @@ class LetterOfCredit(models.Model):
 
 
     name = fields.Char(string='Name', index=True, readonly=True)
-    applicant = fields.Many2one('res.partner',string='Applicant', required=True)
+    applicant = fields.Many2one('res.partner', domain=[('customer', '=', True)], string='Applicant', required=True)
     issue_date = fields.Date('Issue Date', readonly=True,required=True, states={'confirm': [('readonly', False)]})
     lc_expiry_date = fields.Date('LC Expiry Date', readonly=True,required=True, states={'confirm': [('readonly', False)]})
     lc_opening_bank = fields.Char(string='LC Opening Bank', readonly=True,  states={'confirm': [('readonly', False)]})
