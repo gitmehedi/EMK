@@ -1,5 +1,5 @@
 {
-    'name': 'Sales Delivery Authorization',
+    'name': 'Delivery Authorization',
     'author': 'Genweb2 Limited',
     'website': 'www.genweb2.com',
     'category': 'Sales',
@@ -9,6 +9,7 @@
         'product_sales_pricelist',
         'account',
         'sale_order_type',
+        'gbs_lc_creation',
     ],
 
     'data': [
@@ -16,6 +17,7 @@
         'security/ir_rule.xml',
         'report/delivery_order_report.xml',
         'report/delivery_order_report_template.xml',
+        'wizards/letter_of_credits_view.xml',
         'views/delivery_order_view.xml',
         'views/inherited_account_payment_view.xml',
     ],
@@ -24,5 +26,5 @@
     'description':
     """Create Delivery Authorization based on specific Sales Order""",
     'installable': True,
-    'application': True,
+    'application': False,
 }

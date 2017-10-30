@@ -61,5 +61,5 @@ class IrSequenceOperatingUnit(models.Model):
 
         seq_id = seq_ids[0]
         res = seq_id._next()
-        
-        return res.replace('%OU', self.env.user.default_operating_unit_id.code)
+        abc = res.replace('OU', self.env.user.default_operating_unit_id.code)
+        return abc

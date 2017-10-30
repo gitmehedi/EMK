@@ -28,6 +28,10 @@
                                 string="Refuse"
                                 groups="gbs_application_group.group_head_account,gbs_application_group.group_cxo"/>
 
+                        <button string="Tag LC" name="%(action_view_lc_wizard)d" type="action"
+                                attrs="{'invisible':['|', ('so_type','!=','lc_sales'), ('lc_no', '!=', False)]}"
+                                class="oe_highlight"/>
+
                         <field name="state" statusbar_visible="draft,validate,close" widget="statusbar"/>
 
                     </header>
@@ -46,7 +50,7 @@
 	                    </h1>
                         <group>
                             <group>
-                                <field name="sale_order_id"/>
+                                <field name="sale_order_id" options="{'no_quick_create':True,'no_create_edit':True,'no_open':True}"/>
                                 <field name="deli_address"/>
                             </group>
                             <group>
@@ -54,6 +58,10 @@
                                 <field name="so_type"/>
                                 <field name="company_id" invisible="1"/>
                                 <field name="so_date"/>
+
+                                <field name="pi_no" attrs="{'invisible':[('so_type', '!=', 'lc_sales')]}" options="{'no_quick_create':True,'no_create_edit':True,'no_open':True}"/>
+                                <field name="lc_no" attrs="{'invisible':[('so_type', '!=', 'lc_sales')]}" options="{'no_quick_create':True,'no_create_edit':True,'no_open':True}"/>
+
                             </group>
 
                             <notebook colspan="4">
