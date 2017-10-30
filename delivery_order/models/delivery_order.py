@@ -15,8 +15,7 @@ class DeliveryOrder(models.Model):
     so_date = fields.Datetime('Order Date', readonly=True, states={'draft': [('readonly', False)]})
     sequence_id = fields.Char('Sequence', readonly=True)
     deli_address = fields.Char('Delivery Address', readonly=True,states={'draft': [('readonly', False)]})
-    sale_order_id = fields.Many2one('sale.order',string='Sale Order',required=True, readonly=True, domain=[('state','=','done')],
-                    states={'draft': [('readonly', False)]})
+    sale_order_id = fields.Many2one('sale.order',string='Sale Order',required=True, readonly=True,states={'draft': [('readonly', False)]})
     parent_id = fields.Many2one('res.partner', 'Customer', ondelete='cascade', readonly=True,related='sale_order_id.partner_id')
     payment_term_id = fields.Many2one('account.payment.term', string='Payment Terms', readonly=True,related='sale_order_id.payment_term_id')
     warehouse_id = fields.Many2one('stock.warehouse', string='Warehouse', readonly=True, states={'draft': [('readonly', False)]})
@@ -52,6 +51,11 @@ class DeliveryOrder(models.Model):
 
     #type_id = fields.Many2one('sale.order.type',string='Order Type')
 
+    """ PI and LC """
+    pi_no = fields.Many2one('proforma.invoice', string='PI Ref. No.')
+    lc_no = fields.Many2one('letter.credit',string='LC Ref. No.')
+
+
     """ All functions """
 
     @api.model
@@ -82,6 +86,22 @@ class DeliveryOrder(models.Model):
             self.check_cash_amount_with_subtotal()
             return self.create_delivery_order()
 
+        elif self.so_type == 'lc_sales':
+            #If LC and PI ref is present, go to the Final Approval
+            if self.lc_no and self.pi_no:
+                if self.lc_no.lc_value == self.products_total_price() \
+                        or self.lc_no.lc_value > self.products_total_price():
+
+                    return self.write({'state': 'close'})
+                else:
+                    raise UserError("LC Amount is not equal or greater than Product total price")
+                ## go to Second level approval
+
+
+
+
+
+
         self.state = 'approve'
         self.line_ids.write({'state': 'approve'})
         self.approver2_id = self.env.user
@@ -89,6 +109,11 @@ class DeliveryOrder(models.Model):
         self.create_delivery_order()
 
         return self.write({'state': 'approve', 'approved_date': time.strftime('%Y-%m-%d %H:%M:%S')})
+
+    def products_total_price(self):
+        product_line_subtotal = 0
+        for do_product_line in self.line_ids:
+            product_line_subtotal = product_line_subtotal + do_product_line.price_subtotal
 
     #@todo Need to refactor below method -- rabbi
     def check_cash_amount_with_subtotal(self):
