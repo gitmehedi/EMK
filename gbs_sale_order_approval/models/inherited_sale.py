@@ -1,9 +1,10 @@
 from odoo import api, fields, models
 from odoo.exceptions import UserError, ValidationError
+from odoo.tools import amount_to_text_en
+import math
 
 class SaleOrder(models.Model):
     _inherit = "sale.order"
-
 
     credit_sales_or_lc = fields.Selection([
         ('cash', 'Cash'),
@@ -26,10 +27,14 @@ class SaleOrder(models.Model):
     pack_type = fields.Many2one('product.packaging.mode',string='Packing Mode', required=True)
     currency_id = fields.Many2one("res.currency", related='', string="Currency", required=True)
 
-
     @api.multi
     def amount_to_word(self, number):
-        return self.env['res.currency'].amount_to_word(float(number))
+        if(self.currency_id.name.encode('ascii','ignore')=='BDT'):
+            return self.env['res.currency'].amount_to_word(float(number))
+        else:
+            currency=self.currency_id.name.encode('ascii', 'ignore')
+            return amount_to_text_en.amount_to_text(number, 'en', currency)
+
 
     @api.multi
     def action_validate(self):
