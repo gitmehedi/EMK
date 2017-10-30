@@ -59,6 +59,7 @@ class ProformaInvoice(models.Model):
     def action_confirm(self):
         self.state = 'approve'
 
+
     @api.onchange('sale_order_id')
     def onchange_sale_order_id(self):
         self.set_products_info_automatically()
@@ -67,7 +68,16 @@ class ProformaInvoice(models.Model):
     def check_freight_charge_val(self):
         if self.freight_charge < 0:
             raise UserError('Freight Charge can not be minus value')
-        self.set_products_info_automatically()
+
+        sale_order_obj = self.env['sale.order'].search([('id', '=', self.sale_order_id.id)])
+
+        if sale_order_obj:
+            self.sub_total = sale_order_obj.amount_untaxed
+            self.taxed_amount = sale_order_obj.amount_tax
+            self.total = sale_order_obj.amount_total
+
+        if self.freight_charge:
+            self.total = sale_order_obj.amount_total + self.freight_charge
 
     @api.onchange('freight_charge')
     def onchange_freight_charge(self):
@@ -90,6 +100,7 @@ class ProformaInvoice(models.Model):
                 self.sub_total = sale_order_obj.amount_untaxed
                 self.taxed_amount = sale_order_obj.amount_tax
                 self.total = sale_order_obj.amount_total
+                self.currency_id = sale_order_obj.currency_id.id
 
                 for record in sale_order_obj.order_line:
                     val.append((0, 0, {'product_id': record.product_id.id,
