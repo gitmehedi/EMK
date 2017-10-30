@@ -98,7 +98,7 @@
         <record id="seq_letter_credit" model="ir.sequence">
             <field name="name">LC Sequences</field>
             <field name="code">letter.credit</field>
-            <field name="prefix">MLC-</field>
+            <field name="prefix">LC-</field>
             <field name="padding">9</field>
         </record>
 
