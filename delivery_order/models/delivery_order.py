@@ -89,18 +89,29 @@ class DeliveryOrder(models.Model):
         elif self.so_type == 'lc_sales':
             #If LC and PI ref is present, go to the Final Approval
             if self.lc_no and self.pi_no:
-                if self.lc_no.lc_value == self.products_total_price() \
-                        or self.lc_no.lc_value > self.products_total_price():
+                if self.lc_no.lc_value == self.products_price_sum() \
+                        or self.lc_no.lc_value > self.products_price_sum():
 
                     return self.write({'state': 'close'})
                 else:
                     raise UserError("LC Amount is not equal or greater than Product total price")
-                ## go to Second level approval
+                    ## go to Second level approval
 
+            # Has PI & no LC then go to second level approval
+            if self.pi_no and not self.lc_no:
+                ##Check 100MT checking for this product, company wise
+                qty_sum = 0
+                for line in self.line_ids:
+                    product_pool = self.env['product.product'].search([('id','=',line.product_id.id),
+                                                                        ('company_id','=',self.company_id.id),
+                                                                        ('uom_id','=',line.uom_id.id)])
 
+                    qty_sum = qty_sum + line.quantity
 
-
-
+                    if qty_sum > product_pool.max_ordering_qty:
+                        ## go to second level approval
+                        raise ValidationError('%s : Max Ordering Qty. is over to 100 MT' %(line.product_id.display_name))
+                        return self.write({'state': 'close'})
 
         self.state = 'approve'
         self.line_ids.write({'state': 'approve'})
@@ -110,7 +121,8 @@ class DeliveryOrder(models.Model):
 
         return self.write({'state': 'approve', 'approved_date': time.strftime('%Y-%m-%d %H:%M:%S')})
 
-    def products_total_price(self):
+
+    def products_price_sum(self):
         product_line_subtotal = 0
         for do_product_line in self.line_ids:
             product_line_subtotal = product_line_subtotal + do_product_line.price_subtotal

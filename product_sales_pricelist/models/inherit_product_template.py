@@ -3,6 +3,8 @@ from odoo import api, fields, models
 
 class InheritProductTemplate(models.Model):
     _inherit = 'product.template'
+    max_ordering_qty = fields.Float(string='Max Ordering Qty.', default=100, required=True)
+
 
     @api.multi
     def action_view_pricing_history(self):

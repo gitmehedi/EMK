@@ -28,6 +28,10 @@
                                 string="Refuse"
                                 groups="gbs_application_group.group_head_account,gbs_application_group.group_cxo"/>
 
+                        <button string="Tag LC" name="%(action_view_lc_wizard)d" type="action"
+                                attrs="{'invisible':['|', ('so_type','!=','lc_sales'), ('lc_no', '!=', False)]}"
+                                class="oe_highlight"/>
+
                         <field name="state" statusbar_visible="draft,validate,close" widget="statusbar"/>
 
                     </header>
