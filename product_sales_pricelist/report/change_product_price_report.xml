@@ -12,15 +12,28 @@
                 <t t-foreach="docs" t-as="doc">
                     <t t-call="report.external_layout">
                         <div class="page">
-                            <h2 style="padding: 15px 0px; text-align: center;">
+                            <h2 style="padding: 25px 0px; text-align: center;">
                                 Product Sales Pricelist
                             </h2>
-                            <p>Request Date:
-                                <span t-field="doc.request_date"/>
-                            </p>
-                            <p>Effective Date:
-                                <span t-field="doc.approver2_date"/>
-                            </p>
+                            <div style="margin-bottom:70px;">
+                                <div class="col-xs-3">
+                                    <strong>Prepared By:</strong>
+                                    <p t-field="doc.requested_by"/>
+                                </div>
+                                <div class="col-xs-3">
+                                    <strong>First Approval By:</strong>
+                                    <p t-field="doc.approver1_id"/>
+                                </div>
+                                <div class="col-xs-3">
+                                    <strong>Second Approval By:</strong>
+                                    <p t-field="doc.approver2_id"/>
+                                </div>
+                                <div class="col-xs-3">
+                                    <strong>Effective Date:</strong>
+                                    <p t-field="doc.effective_date"/>
+                                </div>
+                            </div>
+
                             <table class="table table-bordered">
                                 <thead>
                                     <tr style="background-color:#C0C0C0;">
