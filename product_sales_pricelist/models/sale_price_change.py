@@ -1,4 +1,5 @@
 from odoo import api, fields, models
+from odoo.exceptions import ValidationError
 from datetime import date
 import datetime
 import time
@@ -9,7 +10,7 @@ class SalePriceChange(models.Model):
     _description = "Product Sales Pricelist"
     _inherit = ['mail.thread', 'ir.needaction_mixin']
     _rec_name = 'product_id'
-    _order = "approver2_date desc"
+    _order = "effective_date desc"
 
     # def _current_employee(self):
     #
@@ -20,11 +21,11 @@ class SalePriceChange(models.Model):
             ('sale_ok', '=', True)], states={
             'confirm': [
                 ('readonly', True)], 'validate1': [
-                    ('readonly', True)], 'validate': [
-                        ('readonly', True)]}, string='Product', required=True)
+                ('readonly', True)], 'validate': [
+                ('readonly', True)]}, string='Product', required=True)
 
     # list_price = fields.Float(string='Old Price')
-    #@todo: Need to rewrite logic for computed field
+    # @todo: Need to rewrite logic for computed field
     list_price = fields.Float(
         string='Old Price',
         compute='compute_list_price',
@@ -36,19 +37,27 @@ class SalePriceChange(models.Model):
             'confirm': [
                 ('readonly', True)], 'validate1': [
                 ('readonly', True)], 'validate': [
-                    ('readonly', True)]}, required=True)
+                ('readonly', True)]}, required=True)
     product_package_mode = fields.Many2one(
         'product.packaging.mode',
-        string='Packaging Mode',
+        string='Packaging Mode', states={
+            'confirm': [
+                ('readonly', True)], 'validate1': [
+                ('readonly', True)], 'validate': [
+                ('readonly', True)]},
         required=True)
     uom_id = fields.Many2one(
         'product.uom', string="UoM", domain=[
-            ('category_id', '=', 2)], required=True)
+            ('category_id', '=', 2)], states={
+            'confirm': [
+                ('readonly', True)], 'validate1': [
+                ('readonly', True)], 'validate': [
+                ('readonly', True)]}, required=True)
     category_id = fields.Many2one(
         string='UoM Category',
         related="uom_id.category_id",
         store=True)
-    request_date = fields.Datetime(
+    request_date = fields.Date(
         string='Request Date',
         default=datetime.datetime.now(),
         readonly=True)
@@ -67,9 +76,11 @@ class SalePriceChange(models.Model):
         string='Second Approval',
         readonly=True)
 
-    approver1_date = fields.Datetime(
+    approver1_date = fields.Date(
         string='First Approval Date', readonly=True)
-    approver2_date = fields.Datetime(string='Effective Date', readonly=True)
+    approver2_date = fields.Date(string='Second Approval Date', readonly=True)
+    effective_date = fields.Date(string='Effective Date', states={
+        'validate': [('readonly', True)]}, required=True)
 
     state = fields.Selection([
         ('draft', 'To Submit'),
@@ -85,12 +96,17 @@ class SalePriceChange(models.Model):
             'confirm': [
                 ('readonly', True)], 'validate1': [
                 ('readonly', True)], 'validate': [
-                    ('readonly', True)]}, required=True)
+                ('readonly', True)]}, required=True)
     company_id = fields.Many2one(
         'res.company',
         'Company',
         default=lambda self: self.env['res.company']._company_default_get('product_sales_pricelist'),
         required=True)
+
+    @api.constrains('effective_date')
+    def check_effective_date(self):
+        if (self.approver2_date >= self.effective_date):
+            raise ValidationError('Effective date must be after final approval date')
 
     def price_change(self):
         if self.product_id:
@@ -109,12 +125,12 @@ class SalePriceChange(models.Model):
                         [('product_id',
                           '=',
                           self.product_id.id),
-                            ('currency_id',
-                             '=',
-                             self.currency_id.id),
-                            ('state',
-                             '=',
-                             'validate')],
+                         ('currency_id',
+                          '=',
+                          self.currency_id.id),
+                         ('state',
+                          '=',
+                          'validate')],
                         order='id desc')[0]
                     self.list_price = price_change_pool.new_price
                 else:
@@ -127,9 +143,61 @@ class SalePriceChange(models.Model):
     def _onchange_product_form(self):
         self.price_change()
 
+    @api.onchange('product_package_mode')
+    def _onchange_packaging_mode(self):
+        if self.product_id:
+            product_pool = self.env['product.product'].search(
+                [('id', '=', self.product_id.id)])
+            count = self.search_count([('product_id', '=', self.product_id.id),
+                                       ('currency_id', '=', self.currency_id.id),
+                                       ('product_package_mode', '=', self.product_package_mode.id),
+                                       ('state', '=', 'validate')])
+            if count > 0:
+                price_change_pool = self.env['product.sales.pricelist'].search(
+                    [('product_id',
+                      '=',
+                      self.product_id.id),
+                     ('currency_id',
+                      '=',
+                      self.currency_id.id),
+                     ('product_package_mode',
+                      '=',
+                      self.product_package_mode.id),
+                     ('state',
+                      '=',
+                      'validate')],
+                    order='id desc')[0]
+                self.list_price = price_change_pool.new_price
+            else:
+                self.list_price = 0.00
+
     @api.onchange('currency_id')
     def _onchange_currency_id(self):
-        self.price_change()
+        if self.product_id:
+            product_pool = self.env['product.product'].search(
+                [('id', '=', self.product_id.id)])
+
+            if self.currency_id.name == "BDT":
+                count = self.search_count([('product_id', '=', self.product_id.id),
+                                           ('currency_id', '=', self.currency_id.id),
+                                           ('state', '=', 'validate')])
+                if count > 0:
+                    price_change_pool = self.env['product.sales.pricelist'].search(
+                        [('product_id',
+                          '=',
+                          self.product_id.id),
+                         ('currency_id',
+                          '=',
+                          self.currency_id.id),
+                         ('state',
+                          '=',
+                          'validate')],
+                        order='id desc')[0]
+                    self.list_price = price_change_pool.new_price
+                else:
+                    self.list_price = product_pool.list_price
+            else:
+                self.list_price = 0.00
 
     @api.depends('product_id')
     def compute_list_price(self):
@@ -191,12 +259,14 @@ class SalePriceChange(models.Model):
         product_pool.write({'list_price': self.new_price})
 
         self.approver2_id = self.env.user
+
+        if (time.strftime('%Y-%m-%d') > self.effective_date):
+            raise ValidationError('Effective date must be after final approval date')
         return self.write({'state': 'validate',
                            'approver2_date': time.strftime('%Y-%m-%d %H:%M:%S')})
 
     @api.multi
     def action_validate(self):
-
         self.approver1_id = self.env.user
         return self.write({'state': 'validate1',
                            'approver1_date': time.strftime('%Y-%m-%d %H:%M:%S')})

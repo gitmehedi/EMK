@@ -14,7 +14,8 @@
         'gbs_sales_commission_so',
         'delivery_order',
         'samuda_so_type',
-        'operating_unit'
+        'operating_unit',
+        'amount_to_word_bd'
     ],
 
     'data': [

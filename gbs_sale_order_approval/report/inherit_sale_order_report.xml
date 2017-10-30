@@ -73,13 +73,20 @@
                     </td>
                 </tr>
             </xpath>
+
+            <xpath expr="//div/div[@name='total']" position="after">
+                <div style="text-align:right">
+                    <strong>Amount in words:</strong>
+                    <span t-esc="doc.amount_to_word(doc.amount_total)"/>
+                </div>
+            </xpath>
+
         </template>
 
         <template id="report_quotation_footer" inherit_id="report.external_layout_footer">
             <xpath expr="//div/div/ul[@class='list-inline'][1]" position="before">
                 <p>This is a computer generated report. No signature is required.</p>
             </xpath>
-
         </template>
     </data>
 </odoo>
