@@ -26,6 +26,11 @@ class SaleOrder(models.Model):
     pack_type = fields.Many2one('product.packaging.mode',string='Packing Mode', required=True)
     currency_id = fields.Many2one("res.currency", related='', string="Currency", required=True)
 
+
+    @api.multi
+    def amount_to_word(self, number):
+        return self.env['res.currency'].amount_to_word(float(number))
+
     @api.multi
     def action_validate(self):
         self.state = 'sent'
