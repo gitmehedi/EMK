@@ -2,6 +2,7 @@ from odoo import api, fields, models
 from odoo.exceptions import UserError, ValidationError
 
 import time,datetime
+from collections import Counter
 
 
 class DeliveryOrder(models.Model):
@@ -51,8 +52,6 @@ class DeliveryOrder(models.Model):
 
     company_id = fields.Many2one('res.company', string='Company', readonly=True, default=lambda self: self.env.user.company_id)
 
-    #type_id = fields.Many2one('sale.order.type',string='Order Type')
-
     """ PI and LC """
     pi_no = fields.Many2one('proforma.invoice', string='PI Ref. No.', readonly=True, states={'draft': [('readonly', False)]})
     lc_no = fields.Many2one('letter.credit',string='LC Ref. No.', readonly=True, states={'draft': [('readonly', False)]})
@@ -89,31 +88,8 @@ class DeliveryOrder(models.Model):
             return self.create_delivery_order()
 
         elif self.so_type == 'lc_sales':
-            #If LC and PI ref is present, go to the Final Approval
-            if self.lc_no and self.pi_no:
-                if self.lc_no.lc_value == self.products_price_sum() \
-                        or self.lc_no.lc_value > self.products_price_sum():
+            self.lc_sales_business_logics()
 
-                    return self.write({'state': 'close'})
-                else:
-                    ## go to Second level approval
-                    return self.write({'state': 'approve'})
-
-            # Has PI & no LC then go to second level approval
-            if self.pi_no and not self.lc_no:
-                ##Check 100MT checking for this product, company wise
-                qty_sum = 0
-                for line in self.line_ids:
-                    product_pool = self.env['product.product'].search([('id','=',line.product_id.id),
-                                                                        ('company_id','=',self.company_id.id),
-                                                                        ('uom_id','=',line.uom_id.id)])
-
-                    qty_sum = qty_sum + line.quantity
-
-                    if qty_sum > product_pool.max_ordering_qty:
-                        ## go to second level approval
-                        raise ValidationError('%s : Max Ordering Qty. is over to 100 MT' %(line.product_id.display_name))
-                        return self.write({'state': 'close'})
 
         self.state = 'approve'
         self.line_ids.write({'state': 'approve'})
@@ -122,6 +98,43 @@ class DeliveryOrder(models.Model):
         self.create_delivery_order()
 
         return self.write({'state': 'approve', 'approved_date': time.strftime('%Y-%m-%d %H:%M:%S')})
+
+
+    def lc_sales_business_logics(self):
+
+        mylist = [20, 30, 25, 20]
+        [k for k, v in Counter(mylist).items() if v > 1]
+
+        print Counter(mylist)
+
+        # If LC and PI ref is present, go to the Final Approval
+        if self.lc_no and self.pi_no:
+            if self.lc_no.lc_value == self.products_price_sum() \
+                    or self.lc_no.lc_value > self.products_price_sum():
+
+                return self.write({'state': 'close'})
+            else:
+                ## go to Second level approval
+                return self.write({'state': 'approve'})
+
+        # Has PI & no LC then go to second level approval
+        if self.pi_no and not self.lc_no:
+            ##Check 100MT checking for this product, company wise
+            qty_sum = 0
+            for line in self.line_ids:
+                qty_sum = qty_sum + line.quantity
+
+                product_pool = self.env['product.product'].search([('id', '=', line.product_id.id),
+                                                                   ('company_id', '=', self.company_id.id),
+                                                                   ('uom_id', '=', line.uom_id.id)])
+
+                if qty_sum > product_pool.max_ordering_qty:
+                    ## go to second level approval
+                    self.write({'state': 'close'})
+                    raise ValidationError('Max Ordering Qty. of %s is over to 100 MT' % (line.product_id.display_name))
+
+
+
 
 
     def products_price_sum(self):

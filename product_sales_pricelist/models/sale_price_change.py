@@ -10,7 +10,7 @@ class SalePriceChange(models.Model):
     _description = "Product Sales Pricelist"
     _inherit = ['mail.thread', 'ir.needaction_mixin']
     _rec_name = 'product_id'
-    _order = "effective_date desc"
+    _order = "approver2_date desc"
 
     # def _current_employee(self):
     #
@@ -254,6 +254,7 @@ class SalePriceChange(models.Model):
         vals['new_price'] = self.new_price
         vals['sale_price_history_id'] = sale_price_obj.id
         vals['approve_price_date'] = datetime.datetime.now()
+        vals['effective_price_date'] = self.effective_date
         vals['currency_id'] = self.currency_id.id
         vals['product_package_mode '] = self.product_package_mode
         vals['uom_id'] = self.uom_id.id

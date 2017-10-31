@@ -10,6 +10,7 @@
         'account',
         'sale_order_type',
         'gbs_lc_creation',
+        'gbs_pi_creation',
     ],
 
     'data': [
