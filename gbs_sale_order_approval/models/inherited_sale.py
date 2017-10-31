@@ -26,6 +26,7 @@ class SaleOrder(models.Model):
 
     pack_type = fields.Many2one('product.packaging.mode',string='Packing Mode', required=True)
     currency_id = fields.Many2one("res.currency", related='', string="Currency", required=True)
+    date_order=fields.Date()
 
     @api.multi
     def amount_to_word(self, number):
