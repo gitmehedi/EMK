@@ -13,6 +13,7 @@
                     <field name="new_price"/>
 					<field name="currency_id"/>
 					<field name="approve_price_date"/>
+					<field name="effective_price_date"/>
 				</tree>
 			</field>
 		</record>
