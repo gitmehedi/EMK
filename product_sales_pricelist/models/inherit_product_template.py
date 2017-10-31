@@ -21,3 +21,15 @@ class InheritProductTemplate(models.Model):
             'view_id': [view.id],
             'type': 'ir.actions.act_window'
         }
+
+    @api.constrains('name')
+    def _check_unique_constraint(self):
+        if self.name:
+            filters = [['name', '=ilike', self.name]]
+            name = self.search(filters)
+            if len(name) > 1:
+                raise Warning('[Unique Error] Name must be unique!')
+
+    # _sql_constraints = [
+    #     ('name_uniq', 'unique(name)', 'This Name is already in use'),
+    # ]
