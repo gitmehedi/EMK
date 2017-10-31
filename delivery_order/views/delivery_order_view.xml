@@ -10,7 +10,7 @@
                 <form string="Delivery Order" delete="false" copy='0'>
                     <header>
                         <button name="action_validate" type="object" states="draft" string="Confirm" class="oe_highlight"
-                        groups="gbs_application_group.group_head_account,gbs_application_group.group_head_sale,gbs_application_group.group_cxo"/>
+                        groups="account.group_account_user,gbs_application_group.group_head_account,gbs_application_group.group_cxo"/>
 
                         <button name="action_draft" type="object"
                                 states="validate" string="Reset to Draft"
@@ -30,6 +30,7 @@
 
                         <button string="Tag LC" name="%(action_view_lc_wizard)d" type="action"
                                 attrs="{'invisible':['|', ('so_type','!=','lc_sales'), ('lc_no', '!=', False)]}"
+                                groups="account.group_account_user,gbs_application_group.group_head_account,gbs_application_group.group_cxo"
                                 class="oe_highlight"/>
 
                         <field name="state" statusbar_visible="draft,validate,close" widget="statusbar"/>
@@ -39,6 +40,7 @@
                          <div class="oe_button_box" name="button_box">
                             <button type="object" string="Process Payments"
                                     name="action_process_unattached_payments"
+                                    groups="account.group_account_user,gbs_application_group.group_head_account,gbs_application_group.group_cxo"
                                     class="oe_stat_button"
                                     attrs="{'invisible':['|', ('state','=','close'), ('so_type', '!=', 'cash')]}"
                                     icon="fa-usd">
@@ -191,8 +193,10 @@
         </record>
 
         <menuitem id="delivery_order_menu" name="Delivery Authorization" parent="sales_team.menu_base_partner"
-            sequence="12" action="delivery_order_action"/>
+                  groups="account.group_account_user,gbs_application_group.group_head_account,gbs_application_group.group_cxo"
+                  sequence="12" action="delivery_order_action"/>
         <menuitem id="delivery_order_submenu" name="Delivery Authorization" parent="delivery_order_menu"
+                  groups="account.group_account_user,gbs_application_group.group_head_account,gbs_application_group.group_cxo"
                   action="delivery_order_action"/>
     </data>
 </odoo>

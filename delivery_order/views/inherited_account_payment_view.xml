@@ -75,12 +75,14 @@
 
         <!--Inherit Accounting Menus-->
          <menuitem id="menu_finance_receivables"
-                  name="Sales"
-                  parent="account.menu_finance"
-                  sequence="2"/>
+                   name="Sales"
+                   groups="account.group_account_user,gbs_application_group.group_head_account,gbs_application_group.group_cxo"
+                   parent="account.menu_finance"
+                   sequence="2"/>
 
         <menuitem action="action_account_payments_new"
                   id="menu_action_account_payments_receivable_new"
+                  groups="account.group_account_user,gbs_application_group.group_head_account,gbs_application_group.group_cxo"
                   parent="account.menu_finance_receivables"
                   sequence="19"/>
 
