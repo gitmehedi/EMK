@@ -196,7 +196,9 @@
 
             </field>
         </record>
+
         <menuitem id="delivery_order_pendding" name="Pending DA" parent="delivery_order.delivery_order_menu"
+                  groups="account.group_account_user,gbs_application_group.group_head_account,gbs_application_group.group_cxo"
                   action="gbs_sale_order_action_pendding_orders" sequence="14"/>
     </data>
 </odoo>

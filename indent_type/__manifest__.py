@@ -5,8 +5,7 @@
     'website': 'https://www.genweb2.com',
 
     'depends': [
-        'stock_indent'
-    ],
+        ],
 
     'data': [
         'views/indent_type_views.xml'
