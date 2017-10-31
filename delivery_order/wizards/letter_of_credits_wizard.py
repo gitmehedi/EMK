@@ -11,3 +11,10 @@ class LetterOfCredits(models.TransientModel):
         do_pool = self.env['delivery.order'].browse([self._context['active_id']])
         if do_pool:
             do_pool.write({'lc_no':self.lc_no.id})
+
+        """ Update LC field to keep track of 100MT condition"""
+        ordered_qty_pool = self.env['ordered.qty'].search([('product_id','=', do_pool.id)])
+        if ordered_qty_pool:
+            ordered_qty_pool.write({'lc_no': self.lc_no.id})
+
+
