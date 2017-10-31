@@ -17,13 +17,11 @@ access_lc_payment_line_director,access_lc_payment_line_director,model_lc_payment
 access_tt_payment_line_hos,access_tt_payment_line_hos,model_tt_payment_line,account.group_account_user,1,1,1,0
 access_tt_payment_line_hoa,access_tt_payment_line_hoa,model_tt_payment_line,gbs_application_group.group_head_account,1,1,1,1
 access_tt_payment_line_director,access_tt_payment_line_director,model_tt_payment_line,gbs_application_group.group_cxo,1,1,1,1
-access_lc_hos,access_delivery_order_hos,model_letter_credit,account.group_account_user,1,1,1,0
-access_lc_hoa,access_delivery_order_hoa,model_letter_credit,gbs_application_group.group_head_account,1,1,1,1
-access_lc_director,access_delivery_order_director,model_letter_credit,gbs_application_group.group_cxo,1,1,1,1
-access_pi_hos,access_delivery_order_hos,model_proforma_invoice,account.group_account_user,1,1,1,0
-access_pi_hoa,access_delivery_order_hoa,model_proforma_invoice,gbs_application_group.group_head_account,1,1,1,1
-access_pi_director,access_delivery_order_director,model_proforma_invoice,gbs_application_group.group_cxo,1,1,1,1
 
+access_lc_hos,access_lc_hos,gbs_lc_creation.model_letter_credit,account.group_account_user,1,1,1,0
+access_lc_hoa,access_lc_hoa,gbs_lc_creation.model_letter_credit,gbs_application_group.group_head_account,1,1,1,1
+access_lc_director,access_lc_director,gbs_lc_creation.model_letter_credit,gbs_application_group.group_cxo,1,1,1,1
 
-
-
+access_pi_hos,access_pi_hos,gbs_pi_creation.model_proforma_invoice,account.group_account_user,1,1,1,0
+access_pi_hoa,access_pi_hoa,gbs_pi_creation.model_proforma_invoice,gbs_application_group.group_head_account,1,1,1,1
+access_pi_director,access_pi_director,gbs_pi_creation.model_proforma_invoice,gbs_application_group.group_cxo,1,1,1,1
