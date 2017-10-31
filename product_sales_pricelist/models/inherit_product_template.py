@@ -4,6 +4,7 @@ from odoo import api, fields, models
 class InheritProductTemplate(models.Model):
     _inherit = 'product.template'
     max_ordering_qty = fields.Float(string='Max Ordering Qty.', default=100, required=True)
+    purchase_ok = fields.Boolean(string='Can be Purchased',default=False)
 
 
     @api.multi

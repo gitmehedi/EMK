@@ -1,0 +1,51 @@
+#uploaded_image {
+          background-image: url('/website_job_application/static/src/images/default_picture.jpg');
+          background-repeat:no-repeat;
+          background-size:contain;
+          height:200px;
+          width:200px;
+          display:block;
+          float:right;
+          border-style: solid;
+          border-width: 5px;
+          border-color: #d6e9c6;
+}
+#img_wrap{
+          position: relative;
+          height:200px;
+          width:200px;
+          display:block;
+          float:right;
+
+}
+.img__description_layer {
+          position: absolute;
+          top: 0;
+          bottom: 0;
+          left: 0;
+          right: 0;
+          background: rgba(36, 62, 206, 0.6);
+          color: #fff;
+          visibility: hidden;
+          opacity: 0;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          transition: opacity .2s, visibility .2s;
+}
+
+.img__wrap:hover .img__description_layer {
+          visibility: visible;
+          opacity: 1;
+          cursor:pointer;
+}
+.img__description {
+          transition: .2s;
+          transform: translateY(1em);
+
+}
+
+.img__wrap:hover .img__description {
+          transform: translateY(0);
+
+}
