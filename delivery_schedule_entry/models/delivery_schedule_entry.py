@@ -14,26 +14,24 @@ class DeliveryScheduleEntry(models.Model):
     requested_by = fields.Many2one('res.users', string='Requested By', readonly=True, default=lambda self: self.env.user)
     approved_by = fields.Many2one('res.users', string='Approved By', readonly = True)
     line_ids = fields.One2many('delivery.schedule.entry.line', 'parent_id', string="Products", readonly=True,states={'draft': [('readonly', False)]})
-
+    notes = fields.Text('Notes')
     state = fields.Selection([
         ('draft', "Submit"),
-        ('validate', "Validate"),
-        ('approve', "Approved")
+        ('approve', "Confirm")
     ], default='draft')
 
     @api.model
     def create(self, vals):
-        seq = self.env['ir.sequence'].next_by_code('delivery.schedule.entry') or 'NEW'
+        seq = self.env['ir.sequence'].next_by_code('delivery.schedule.entry') or '/'
         vals['name'] = seq
         return super(DeliveryScheduleEntry, self).create(vals)
+    # @api.one
+    # def action_draft(self):
+    #     self.state = 'draft'
 
-    @api.one
-    def action_draft(self):
-        self.state = 'draft'
-
-    @api.one
-    def action_validate(self):
-        self.state = 'validate'
+    # @api.one
+    # def action_validate(self):
+    #     self.state = 'validate'
 
     @api.multi
     def action_approve(self):

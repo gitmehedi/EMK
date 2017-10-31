@@ -60,7 +60,7 @@ class SalePriceChange(models.Model):
     request_date = fields.Date(
         string='Request Date',
         default=datetime.datetime.now(),
-        readonly=True)
+        readonly=False)
     requested_by = fields.Many2one(
         'res.users',
         string="Requested By",
@@ -103,10 +103,16 @@ class SalePriceChange(models.Model):
         default=lambda self: self.env['res.company']._company_default_get('product_sales_pricelist'),
         required=True)
 
+    @api.constrains('new_price')
+    def check_new_price(self):
+        if (self.new_price < 0.00):
+            raise ValidationError('Money can not be negative')
+
+
     @api.constrains('effective_date')
     def check_effective_date(self):
-        if (self.approver2_date >= self.effective_date):
-            raise ValidationError('Effective date must be after final approval date')
+        if (self.request_date > self.effective_date):
+            raise ValidationError('Effective date must be after request date')
 
     def price_change(self):
         if self.product_id:
@@ -269,6 +275,8 @@ class SalePriceChange(models.Model):
     @api.multi
     def action_validate(self):
         self.approver1_id = self.env.user
+        if (time.strftime('%Y-%m-%d') > self.effective_date):
+            raise ValidationError('Effective date must be after first approval date')
         return self.write({'state': 'validate1',
                            'approver1_date': time.strftime('%Y-%m-%d %H:%M:%S')})
 
