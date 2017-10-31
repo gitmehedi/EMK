@@ -99,6 +99,7 @@
                                         <thead style=" background-color:#a9a9a9;">
                                             <tr>
                                                 <th>Sl</th>
+                                                <th>Payment Information</th>
                                                 <th>Amount</th>
                                                 <th>Deposited Bank</th>
                                                 <th>Branch</th>
@@ -109,6 +110,7 @@
                                             <t t-foreach="o.cash_ids" t-as="l">
                                                 <tr style="page-break-inside: avoid">
                                                     <td><span t-esc="l_index+1"/></td>
+                                                    <td><span t-esc="l.account_payment_id.name"/></td>
                                                     <td><span t-esc="l.amount"/></td>
                                                     <td><span t-esc="l.dep_bank"/></td>
                                                     <td><span t-esc="l.branch"/></td>

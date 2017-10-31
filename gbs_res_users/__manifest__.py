@@ -1,16 +1,15 @@
 {
-    'name': 'Ir Sequence Oparating Unit',
+    'name': 'GBS USERS',
     'version': '10.0.1',
     'author': 'Genweb2 Limited',
-    'sequence': 1,
     'website': 'https://www.genweb2.com',
 
     'depends': [
-        'base','operating_unit'
+        'base'
     ],
 
     'data': [
-        'views/ir_sequence_view.xml'
+        'views/res_users_view.xml'
     ],
     'summary': 'This module handles custom ir sequence',
     'description':"Complete Solution for operating unit wise sequence",
