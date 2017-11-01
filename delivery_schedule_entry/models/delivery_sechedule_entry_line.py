@@ -5,7 +5,7 @@ class DeliveryScheduleEntryLine(models.Model):
     _description = 'Delivery Schedule Entry line'
 
     partner_id = fields.Many2one('res.partner', 'Customer',domain="([('customer','=','True')])")
-    product_id = fields.Many2one('product.product','Products',requried=True)
+    product_id = fields.Many2one('product.product','Products',required=True)
     quantity = fields.Float(string="Ordered Qty")
     uom_id = fields.Many2one('product.uom', string="UoM")
     pack_type = fields.Many2one('product.packaging.mode', string="Packing",ondelete='cascade')

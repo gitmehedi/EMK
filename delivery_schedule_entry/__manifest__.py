@@ -14,10 +14,11 @@
     'data': [
         # 'security/ir.model.access.csv',
         # 'security/ir_rule.xml',
-        # 'report/delivery_order_report.xml',
-        # 'report/delivery_order_report_template.xml',
-          'views/delivery_schedule_entry_view.xml',
-        # 'views/inherited_account_payment_view.xml',
+        #'data/mail_template_data.xml',
+        'reports/delivery_se_report.xml',
+        'reports/delivery_se_report_templates.xml',
+        'views/delivery_schedule_entry_view.xml',
+
     ],
 
     'summary': 'Sales Delivery Schedule Entry',

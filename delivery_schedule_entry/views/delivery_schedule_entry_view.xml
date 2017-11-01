@@ -12,14 +12,9 @@
                     <header>
                         <button name="action_approve" type="object" states="draft" string="Confirm" class="oe_highlight"/>
 
-                        <!--<button name="action_draft" type="object"-->
-                                <!--states="validate" string="Reset to Draft"/>-->
-
-                        <!--<button type="object" states="validate"-->
-                                <!--string="Approve" class="oe_highlight"/>-->
-
-                        <button type="object" states="approve"
-                                string="Sent By Email"/>
+                        <!--<button type="object" states="approve"-->
+                                <!--string="Sent By Email"/>-->
+                        <button name="action_quotation_send" string="Send by Email" type="object" states="draft" class="btn-primary"/>
 
                         <field name="state" statusbar_visible="draft,approve" widget="statusbar"/>
 
@@ -50,10 +45,9 @@
                                         </tree>
                                     </field>
                                 </page>
-                                <page string="Notes">
-                                    <field name="notes" placeholder="Add a reason..." />
-                                </page>
                             </notebook>
+                            <separator string="Notes" />
+						    <field name="notes"  nolabel="1" placeholder="Add Notes..................." />
                         </group>
                     </sheet>
 

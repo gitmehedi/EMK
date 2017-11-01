@@ -23,3 +23,4 @@
 import stock_location
 import stock_indent
 import stock_move
+import stock_picking
