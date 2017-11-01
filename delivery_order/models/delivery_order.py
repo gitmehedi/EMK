@@ -153,7 +153,7 @@ class DeliveryOrder(models.Model):
                        self.write({'state': 'approve'})
 
                     else:
-                        fgfg
+
                         self.write({'state': 'close'})
 
 
