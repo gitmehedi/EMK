@@ -499,9 +499,9 @@ class IndentProductLines(models.Model):
         return context.get('indent_type')
 
     def _check_stock_available(self):
-        #         for move in self.browse(cr, uid, ids, context):
-        #             if move.type == 'make_to_stock' and move.product_uom_qty > move.qty_available:
-        #                 return False
+        for move in self:
+            if move.type == 'make_to_stock' and move.product_uom_qty > move.qty_available:
+                return False
         return True
 
     _constraints = [
@@ -525,7 +525,7 @@ class IndentProductLines(models.Model):
                     }
 
         # product = product_obj.browse(cr, uid, product_id, context=context)
-        product = self.product_id
+        product = product_obj.search[([('id','=',self.product_id)])]
 
         if product.qty_available > 0:
             # result['type'] = 'make_to_stock'
