@@ -123,35 +123,32 @@ class DeliveryOrder(models.Model):
             for line in self.line_ids:
                 qty_sum = qty_sum + line.quantity
 
-                product_pool = self.env['product.product'].search([('id', '=', line.product_id.id),
+                product_pool = self.env['product.template'].search([('id', '=', line.product_id.id),
                                                                    ('company_id', '=', self.company_id.id),
                                                                    ('uom_id', '=', line.uom_id.id)])
 
                 ordered_qty_pool = self.env['ordered.qty'].search([('product_id','=', line.product_id.id)])
 
-
                 res['product_id'] = line.product_id.id
                 res['ordered_qty'] = qty_sum
-                res['delivery_auth_no'] = self.id
+                res['delivery_auth_no'] =  self.id
 
                 if ordered_qty_pool and not ordered_qty_pool.lc_no:
-                    #avail_qty = product_pool.max_ordering_qty - ordered_qty_pool.available_qty
 
                     if qty_sum > ordered_qty_pool.available_qty:
-                        pass
+                        print '----------------------- Second approval'
+                        self.write({'state': 'approve'})
                     else:
                         res['available_qty'] = qty_sum + ordered_qty_pool.available_qty
                         ordered_qty_pool.write(res)
 
                         if ordered_qty_pool.available_qty > product_pool.max_ordering_qty:
                             ## go to second level approval
-                            print '----------------------- Second approval'
                             self.write({'state': 'approve'})
                             # raise ValidationError('Max Ordering Qty. of %s is over to 100 MT' % (line.product_id.display_name))
                         else:
                             ##final approval
                             self.write({'state': 'close'})
-                            print '----------------------- Final approval'
 
                 else:
                     res['available_qty'] = product_pool.max_ordering_qty - qty_sum
@@ -159,13 +156,11 @@ class DeliveryOrder(models.Model):
 
                     if qty_sum > product_pool.max_ordering_qty:
                         ## go to second level approval
-                        print '----------------------- Second approval'
                         self.write({'state': 'approve'})
                         #raise ValidationError('Max Ordering Qty. of %s is over to 100 MT' % (line.product_id.display_name))
                     else:
                         ##final approval
                         self.write({'state': 'close'})
-                        print '----------------------- Final approval'
 
 
 
