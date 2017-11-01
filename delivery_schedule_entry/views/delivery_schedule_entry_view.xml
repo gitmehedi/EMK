@@ -10,18 +10,18 @@
             <field name="arch" type="xml">
                 <form string="Delivery Schedule Entry" delete="false" copy='0'>
                     <header>
-                        <button name="action_validate" type="object" states="draft" string="Confirm" class="oe_highlight"/>
+                        <button name="action_approve" type="object" states="draft" string="Confirm" class="oe_highlight"/>
 
-                        <button name="action_draft" type="object"
-                                states="validate" string="Reset to Draft"/>
+                        <!--<button name="action_draft" type="object"-->
+                                <!--states="validate" string="Reset to Draft"/>-->
 
-                        <button name="action_approve" type="object" states="validate"
-                                string="Approve" class="oe_highlight"/>
+                        <!--<button type="object" states="validate"-->
+                                <!--string="Approve" class="oe_highlight"/>-->
 
-                        <button name="action_draft" type="object" states="approve,validate"
-                                string="Refuse"/>
+                        <button type="object" states="approve"
+                                string="Sent By Email"/>
 
-                        <field name="state" statusbar_visible="draft,validate,approve" widget="statusbar"/>
+                        <field name="state" statusbar_visible="draft,approve" widget="statusbar"/>
 
                     </header>
                     <sheet>
@@ -42,11 +42,16 @@
                                         <tree string="List" editable="bottom">
                                             <field name="partner_id"/>
                                             <field name="product_id" options="{'no_quick_create':True,'no_create_edit':True}"/>
-                                            <field name="quantity" string="Ordered Qty"/>
-                                            <field name="uom_id" string="UoM" options="{'no_quick_create':True,'no_create_edit':True}"/>
+                                            <field name="quantity"/>
+                                            <field name="uom_id" options="{'no_quick_create':True,'no_create_edit':True}"/>
+                                            <field name="pack_type" options="{'no_quick_create':True,'no_create_edit':True}"/>
                                             <field name="deli_address"/>
+                                            <field name="remarks"/>
                                         </tree>
                                     </field>
+                                </page>
+                                <page string="Notes">
+                                    <field name="notes" placeholder="Add a reason..." />
                                 </page>
                             </notebook>
                         </group>
@@ -76,7 +81,7 @@
         <!-- Generate automated sequence -->
         <record id="seq_hr_employee" model="ir.sequence">
             <field name="name">DSE Sequences</field>
-            <field name="code">delivery.order</field>
+            <field name="code">delivery.schedule.entry</field>
             <field name="prefix">DSE</field>
             <field name="padding">3</field>
         </record>
