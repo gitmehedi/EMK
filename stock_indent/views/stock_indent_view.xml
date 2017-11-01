@@ -102,12 +102,13 @@
 									<group>
 										<field name="company_id" groups="base.group_multi_company" />
 										<field name="move_type" />
-										<field name="warehouse_id" />
-										<field name="stock_location_id" placeholder="Please Select"/>
+										<field name="warehouse_id" groups="stock.group_stock_manager"/>
+										<field name="stock_location_id" placeholder="Please Select"
+											   groups="stock.group_stock_manager"/>
 									</group>
 									<group>
 										<!--<field name="manager_id" readonly="1" />-->
-										<field name="approver_id" readonly="1" />
+										<field name="approver_id" invisible="1" />
 										<field name="picking_type_id"/>
 									</group>
 								</group>
@@ -156,11 +157,11 @@
 
 		<menuitem action="action_indent_indent" name="Indents"
 				  parent="menu_indent_indent_main" id="menu_indent_indent" sequence="1"
-				  groups="stock.group_stock_user"/>
+				  groups="stock.group_stock_user,stock_indent.group_stock_indent_issuer"/>
 
 		<menuitem action="action_indent_waiting_for_approval" name="Indents Waiting For Approval"
 				  parent="menu_indent_indent_main" id="menu_indent_waiting_for_approval" sequence="2"
-				  groups="group_stock_indent_approver"/>
+				  groups="stock_indent.group_stock_indent_approver"/>
 
 	</data>
 </odoo>

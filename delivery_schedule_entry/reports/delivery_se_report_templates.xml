@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--Custom report.-->
+<odoo>
+    <data>
+        <template id="report_ds_entry">
+            <t t-call="report.html_container">
+                <t t-foreach="docs" t-as="o">
+                    <t t-call="report.external_layout">
+                        <div class="page">
+                            <h2 style="padding: 15px 0px; text-align: center;">
+                                Delivery Schedule Entry Report
+                            </h2>
+                            <div style="text-align:left;">
+                                <p><b>Description: </b><span t-field="o.name"/></p>
+                                <p><b>Approval Date:</b><span t-field="o.approved_date"/></p>
+                            </div>
+
+                            <table class="table table-bordered" style="padding: 15px 0px;">
+                                <thead>
+                                    <tr style="background-color:#C0C0C0;">
+                                        <th>Customer</th>
+                                        <th>Product</th>
+                                        <th>Quantity</th>
+                                        <th>UOM</th>
+                                        <th>Packing Mod</th>
+                                        <th>Delivery Address</th>
+                                        <th>Remarks</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <t t-foreach="o.line_ids" t-as="l">
+                                        <tr>
+                                            <td><span t-esc="l.partner_id.name"/></td>
+                                            <td><span t-esc="l.product_id.name"/></td>
+                                            <td><span t-esc="l.quantity"/></td>
+                                            <td><span t-esc="l.uom_id.name"/></td>
+                                            <td><span t-esc="l.pack_type.id"/></td>
+                                            <td><span t-esc="l.deli_address"/></td>
+                                            <td><span t-esc="l.remarks"/></td>
+                                        </tr>
+                	                 </t>
+
+                                </tbody>
+                            </table>
+                            <!--<p><span t-field="o.notes"/></p>-->
+                        </div>
+                    </t>
+                </t>
+            </t>
+        </template>
+        <template id="report_saleorder">
+            <t t-call="report.html_container">
+                <t t-foreach="docs" t-as="doc">
+                    <t t-call="delivery_schedule_entry.report_ds_entry" t-lang="doc.partner_id.lang"/>
+                </t>
+            </t>
+        </template>
+    </data>
+</odoo>

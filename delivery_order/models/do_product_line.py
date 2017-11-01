@@ -1,4 +1,5 @@
 from odoo import api, fields, models
+from odoo.exceptions import UserError, ValidationError
 
 class DOProductLine(models.Model):
     _name = 'delivery.order.line'
@@ -27,6 +28,11 @@ class DOProductLine(models.Model):
         ('non_bonded', 'Non-bonded'),
         ('vat', 'VAT'),
     ], string='Delivery Mode')
+
+    @api.constrains('quantity')
+    def check_quantity(self):
+        if self.quantity < 0.00:
+            raise ValidationError('Quantity can not be negative')
 
     @api.onchange('quantity')
     def onchange_quantity(self):
