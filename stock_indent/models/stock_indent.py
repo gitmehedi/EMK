@@ -61,7 +61,7 @@ class IndentIndent(models.Model):
                                   default=lambda self: self.env.user,
                                   states={'draft': [('readonly', False)]})
     department_id = fields.Many2one('hr.department', string='Department', readonly=True,default=_default_department)
-    stock_location_id = fields.Many2one('stock.location', string='Stock Location', readonly=True,required=True,
+    stock_location_id = fields.Many2one('stock.location', string='Stock Location', readonly=True,required=True,domain=[('can_request', '=', True)],
                                     states={'draft': [('readonly', False)]}, default=lambda self: self.env.user.default_location_id)
     # manager_id = fields.Many2one('res.users', string='Department Manager', related='department_id.manager_id', store=True)
     analytic_account_id = fields.Many2one('account.analytic.account', string='Project', ondelete="cascade",
@@ -82,11 +82,12 @@ class IndentIndent(models.Model):
     amount_total = fields.Float(string='Total', compute=_compute_amount, store=True)
     approver_id = fields.Many2one('res.users', string='Authority', readonly=True,
                                   states={'draft': [('readonly', False)]}, help="who have approve or reject indent.")
-    warehouse_id = fields.Many2one('stock.warehouse', 'Warehouse', readonly=True,
+    warehouse_id = fields.Many2one('stock.warehouse', 'Warehouse', readonly=True,required=True,
                                    default=lambda self: self._get_default_warehouse(),
                                    help="default warehose where inward will be taken",
                                    states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]})
-    picking_type_id = fields.Many2one('stock.picking.type', 'Picking Type', states={'done': [('readonly', True)], 'cancel': [('readonly', True)]}, required=True)
+    picking_type_id = fields.Many2one('stock.picking.type',string='Picking Type',compute = '_compute_default_picking_type',
+                                      readonly=True, store = True)
     move_type = fields.Selection([('direct', 'Partial'), ('one', 'All at once')], 'Receive Method',
                                  readonly=True, required=True, default='direct',
                                  states={'draft': [('readonly', False)], 'cancel': [('readonly', True)]},
@@ -115,11 +116,14 @@ class IndentIndent(models.Model):
             stock_location = False
         return stock_location
 
-    def _get_default_picking_type(self):
-        picking_type_obj = self.pool.get('stock.picking.type')
-        picking_type_ids = picking_type_obj.search([])
-        picking_type_id = picking_type_ids and picking_type_ids[0] or False
-        return picking_type_id
+    @api.multi
+    @api.depends('warehouse_id','stock_location_id')
+    def _compute_default_picking_type(self):
+        for indent in self:
+            picking_type_obj = indent.env['stock.picking.type']
+            picking_type_ids = picking_type_obj.search([('default_location_src_id', '=', indent.warehouse_id.lot_stock_id.id),('default_location_dest_id', '=', indent.stock_location_id.id)])
+            picking_type_id = picking_type_ids and picking_type_ids[0] or False
+            indent.picking_type_id = picking_type_id
 
     def _check_purchase_limit(self):
         return True
