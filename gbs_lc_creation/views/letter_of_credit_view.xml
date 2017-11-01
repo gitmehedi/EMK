@@ -22,14 +22,26 @@
                                     <field name="type" widget="radio"/>
                                 </group>
                             </group>
-                            <group string="Applicant">
-                               <field name="first_party"/>
-                               <field name="first_party_bank"/>
+                            <!--Same Group-->
+                            <group string="Beneficiary" attrs="{'invisible': [('type', '=', 'import')]}">
+                               <field name="first_party" attrs="{'required':[('type', '!=','import')]}"/>
+                               <field name="first_party_bank" attrs="{'required':[('type', '!=','import')]}"/>
                             </group>
-                            <group string="Beneficiary">
-                               <field name="second_party"/>
-                               <field name="second_party_bank"/>
+                            <group string="Applicant" attrs="{'invisible': [('type', '!=', 'import')]}">
+                               <field name="first_party" attrs="{'required':[('type', '=','import')]}"/>
+                               <field name="first_party_bank" attrs="{'required':[('type', '=','import')]}"/>
                             </group>
+                            <!--Same Group-->
+                            <!--Same Group-->
+                            <group string="Applicant" attrs="{'invisible': [('type', '=', 'import')]}">
+                               <field name="second_party" attrs="{'required':[('type', '!=','import')]}"/>
+                               <field name="second_party_bank" attrs="{'required':[('type', '!=','import')]}"/>
+                            </group>
+                            <group string="Beneficiary" attrs="{'invisible': [('type', '!=', 'import')]}">
+                               <field name="second_party" attrs="{'required':[('type', '=','import')]}"/>
+                               <field name="second_party_bank" attrs="{'required':[('type', '=','import')]}"/>
+                            </group>
+                            <!--Same Group-->
                             <group string="LC Value">
                                 <field name="lc_value"/>
                                 <field name="currency_id" options="{'no_open':True,'no_quick_create':True,'no_create_edit':True}"/>
@@ -84,14 +96,18 @@
                                       </group>
                                   </page>
                                   <page string="Terms &amp; Condition">
-                                      <group>
-                                         <field name="terms_condition" widget="html" options="{'style-inline': true}"/>
-                                      </group>
+                                      <field name="terms_condition" widget="html" options="{'style-inline': true}"/>
                                   </page>
                                   <page string="Remarks">
-                                      <group>
-                                         <field name="remarks" widget="html" options="{'style-inline': true}"/>
-                                      </group>
+                                      <field name="remarks" widget="html" options="{'style-inline': true}"/>
+                                  </page>
+                                  <page string="Attachments">
+                                      <field name="attachment_ids">
+                                            <tree editable="top">
+                                                <field name="title" />
+                                                <field name="file"/>
+                                            </tree>
+                                      </field>
                                   </page>
 
                             </notebook>
@@ -124,23 +140,12 @@
         </record>
 
         <!-- Generate automated sequence -->
-        <record id="seq_letter_credit" model="ir.sequence">
-            <field name="name">LC Sequences</field>
-            <field name="code">letter.credit</field>
-            <field name="prefix">LC-</field>
-            <field name="padding">9</field>
-        </record>
+        <!--<record id="seq_letter_credit" model="ir.sequence">-->
+            <!--<field name="name">LC Sequences</field>-->
+            <!--<field name="code">letter.credit</field>-->
+            <!--<field name="prefix">LC-</field>-->
+            <!--<field name="padding">9</field>-->
+        <!--</record>-->
 
-
-        <record model="ir.actions.act_window" id="lc_creation_action">
-            <field name="name">Letter of Credit</field>
-            <field name="res_model">letter.credit</field>
-            <field name="view_mode">tree,form</field>
-        </record>
-
-        <menuitem id="lc_creation_menu" parent="sales_team.menu_base_partner"
-            sequence="10" action="lc_creation_action"/>
-        <menuitem id="lc_creation_submenu" name="Letter of Credit (LC)" parent="lc_creation_menu"
-                  action="lc_creation_action"/>
     </data>
 </odoo>
