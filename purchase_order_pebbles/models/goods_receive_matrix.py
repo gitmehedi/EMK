@@ -100,22 +100,34 @@ class GoodsReceiveMatrix(models.Model):
 
     @api.multi
     def _get_receive_matrix_lines(self, matrix):
-        vals = []
-        product_variant = self.env['product.attribute.line.extend'].search(
-            [('product_tmp_id', '=', matrix.line_id.product_id.id)])
+        vals, color, size = [], [], []
+        for col_siz in matrix.product_tmpl_id.attribute_line_ids:
+            if col_siz.attribute_id.name == 'Size':
+                color = col_siz.value_ids.ids
+            else:
+                size = col_siz.value_ids.ids
 
-        for objproduct in product_variant:
-            product = self.env['product.product'].browse([objproduct.product_id.id])
+        for record in matrix.product_tmpl_id.product_variant_ids:
 
-            product_line = {}
-            product_line['matrix_id'] = matrix.id
-            product_line['product_id'] = product.id
-            product_line['size_variant_id'] = objproduct.size_value_id.id
-            product_line['color_variant_id'] = objproduct.color_value_id.id
-            product_line['product_uom_id'] = product.uom_id.id
-            product_line['status'] = objproduct.is_active
+            if len(record.attribute_line_ids) == 2:
+                rec = {}
 
-            vals.append(product_line)
+                if record.attribute_value_ids[0].id in color:
+                    rec['matrix_id'] = matrix.id
+                    rec['product_id'] = record.id
+                    rec['product_uom_id'] = record.uom_id.id
+                    rec['size_variant_id'] = record.attribute_value_ids[1].id
+                    rec['color_variant_id'] = record.attribute_value_ids[0].id
+                    vals.append(rec)
+                else:
+                    rec['matrix_id'] = matrix.id
+                    rec['product_id'] = record.id
+                    rec['product_uom_id'] = record.uom_id.id
+                    rec['size_variant_id'] = record.attribute_value_ids[0].id
+                    rec['color_variant_id'] = record.attribute_value_ids[1].id
+                    vals.append(rec)
+            else:
+                raise Warning(_('Please Create Product According To Pebbles Product Creating Instruction'))
 
         return vals
 
