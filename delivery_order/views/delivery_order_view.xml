@@ -22,7 +22,7 @@
 
                         <button name="action_close" type="object" states="approve"
                                 string="Approve" class="oe_highlight"
-                                groups="gbs_application_group.group_cxo"/>
+                                groups="gbs_application_group.group_cxo,gbs_application_group.group_head_account"/>
 
                         <button name="action_draft" type="object" states="approve,validate"
                                 string="Refuse"
