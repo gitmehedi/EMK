@@ -2,19 +2,7 @@
 <odoo>
     <data>
 
-        <!--Commercial Menu-->
-        <menuitem name="Commercial"
-            id="menu_commercial_root"
-            sequence="23"/>
 
-        <menuitem id="lc_commercial_creation_menu" parent="menu_commercial_root"
-            sequence="1" name="Letter of Credit" />
-
-        <menuitem id="lc_commercial_export_creation_submenu" name="Export LC" parent="lc_commercial_creation_menu"
-                sequence="1" action="lc_export_creation_action"/>
-
-        <menuitem id="lc_commercial_import_creation_submenu" name="Import LC" parent="lc_commercial_creation_menu"
-                  sequence="2" action="lc_import_creation_action"/>
 
         <!--Sales Menu-->
 
@@ -47,5 +35,21 @@
 
         <menuitem id="lc_import_creation_submenu" name="Import LC" parent="lc_import_creation_menu"
                   action="lc_import_creation_action"/>
+
+         <!--Commercial Menu-->
+        <menuitem name="Commercial"
+            id="menu_commercial_root"
+            sequence="23"/>
+
+        <menuitem id="lc_commercial_creation_menu" parent="menu_commercial_root"
+            sequence="1" name="Letter of Credit" />
+
+        <menuitem id="lc_commercial_export_creation_submenu" name="Export LC" parent="lc_commercial_creation_menu"
+                sequence="1" action="lc_export_creation_action"/>
+
+        <menuitem id="lc_commercial_import_creation_submenu" name="Import LC" parent="lc_commercial_creation_menu"
+                  sequence="2" action="lc_import_creation_action"/>
+
+
     </data>
 </odoo>
