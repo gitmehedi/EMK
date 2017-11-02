@@ -22,6 +22,13 @@ class LetterOfCredit(models.Model):
         help="Export: Product Export.\n"
              "Import: Product Import.", default="import")
 
+    region_type = fields.Selection([
+        ('local', 'Local'),
+        ('foreign', 'Foreign'),
+    ], string="LC Region Type",
+        help="Local: Local LC.\n"
+             "Foreign: Foreign LC.", default="foreign")
+
     first_party = fields.Many2one('res.company', string='Candidate')
     first_party_bank = fields.Many2one('res.bank', string='Bank')
 

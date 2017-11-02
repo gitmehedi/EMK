@@ -19,7 +19,8 @@
                             <group colspan="4">
                                 <group>
                                     <field name="name"/>
-                                    <field name="type" widget="radio"/>
+                                     <field name="region_type" widget="radio"/>
+                                    <field name="type" attrs="{'invisible': '1'}" />
                                 </group>
                             </group>
                             <!--Same Group-->
