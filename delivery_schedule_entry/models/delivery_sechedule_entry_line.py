@@ -1,4 +1,6 @@
 from odoo import api, fields, models
+from odoo.exceptions import UserError,ValidationError
+
 
 class DeliveryScheduleEntryLine(models.Model):
     _name = 'delivery.schedule.entry.line'
@@ -6,7 +8,7 @@ class DeliveryScheduleEntryLine(models.Model):
 
     partner_id = fields.Many2one('res.partner', 'Customer',domain="([('customer','=','True')])")
     product_id = fields.Many2one('product.product','Products',required=True)
-    quantity = fields.Float(string="Ordered Qty")
+    quantity = fields.Float(string="Ordered Qty",default=1.0)
     uom_id = fields.Many2one('product.uom', string="UoM")
     pack_type = fields.Many2one('product.packaging.mode', string="Packing",ondelete='cascade')
     deli_address = fields.Char('Delivery Address')
@@ -31,3 +33,8 @@ class DeliveryScheduleEntryLine(models.Model):
             customer_obj = self.env['res.partner'].search([('id', '=', self.partner_id.id)])
             if customer_obj:
                 self.deli_address = customer_obj.street
+
+    @api.constrains('quantity')
+    def check_credit_days(self):
+        if self.quantity < 0.00:
+            raise ValidationError('Days can not be negative')

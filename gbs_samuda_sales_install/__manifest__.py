@@ -20,6 +20,7 @@
         'samuda_so_type',
         'gbs_lc_creation',
         'gbs_pi_creation',
+        'delivery_schedule_entry'
         #'sale_revision_history'
     ],
 

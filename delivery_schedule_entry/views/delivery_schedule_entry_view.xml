@@ -10,11 +10,11 @@
             <field name="arch" type="xml">
                 <form string="Delivery Schedule Entry" delete="false" copy='0'>
                     <header>
-                        <button name="action_approve" type="object" states="draft" string="Confirm" class="oe_highlight"/>
+                        <button name="action_approve" type="object" states="draft" string="Confirm" class="oe_highlight" groups="gbs_application_group.group_sales_product_manager"/>
 
                         <!--<button type="object" states="approve"-->
                                 <!--string="Sent By Email"/>-->
-                        <button name="action_quotation_send" string="Send by Email" type="object" states="draft" class="btn-primary"/>
+                        <button name="action_quotation_send" string="Send by Email" type="object" states="draft,approve" class="btn-primary" groups="gbs_application_group.group_sales_product_manager"/>
 
                         <field name="state" statusbar_visible="draft,approve" widget="statusbar"/>
 
@@ -87,8 +87,8 @@
             <field name="view_mode">tree,form</field>
         </record>
 
-        <menuitem id="delivery_schedule_menu" name="Delivery Schedule Entry" parent="sales_team.menu_base_partner"/>
-        <menuitem id="delivery_schedule_submenu" name="Delivery Schedule Entry" parent="delivery_schedule_menu"
+        <menuitem id="delivery_schedule_menu" name="Delivery Schedule Entry" parent="sales_team.menu_base_partner" groups="gbs_application_group.group_sales_product_manager"/>
+        <menuitem id="delivery_schedule_submenu" name="Delivery Schedule Entry" parent="delivery_schedule_menu" groups="gbs_application_group.group_sales_product_manager"
                   action="delivery_schedule_action"  sequence="15"/>
     </data>
 </odoo>

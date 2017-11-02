@@ -5,15 +5,15 @@
     'category': 'Sales',
     'version':'10.1.1.1',
     'depends': [
-        'sale',
-        'product_sales_pricelist',
-        'account',
+        # 'sale',
+        # 'product_sales_pricelist',
+        # 'account',
         'sale_order_type',
     ],
 
     'data': [
-        # 'security/ir.model.access.csv',
-        # 'security/ir_rule.xml',
+        'security/ir.model.access.csv',
+        #'security/ir_rule.xml',
         #'data/mail_template_data.xml',
         'reports/delivery_se_report.xml',
         'reports/delivery_se_report_templates.xml',
