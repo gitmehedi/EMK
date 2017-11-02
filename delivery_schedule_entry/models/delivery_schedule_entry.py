@@ -1,5 +1,5 @@
-from odoo import api, fields, models
-from odoo.exceptions import UserError
+from odoo import api, fields, models,_
+from odoo.exceptions import UserError,ValidationError
 
 
 import time,datetime
@@ -27,13 +27,7 @@ class DeliveryScheduleEntry(models.Model):
         seq = self.env['ir.sequence'].next_by_code('delivery.schedule.entry') or '/'
         vals['name'] = seq
         return super(DeliveryScheduleEntry, self).create(vals)
-    # @api.one
-    # def action_draft(self):
-    #     self.state = 'draft'
 
-    # @api.one
-    # def action_validate(self):
-    #     self.state = 'validate'
 
     @api.multi
     def action_approve(self):
@@ -41,7 +35,27 @@ class DeliveryScheduleEntry(models.Model):
         self.approved_by = self.env.user
         return self.write({'state': 'approve', 'approved_date': time.strftime('%Y-%m-%d %H:%M:%S')})
 
-#     @api.multi
+    @api.multi
+    def unlink(self):
+        for entry in self:
+            if entry.state != 'draft':
+                raise UserError(_('You can not delete this.'))
+            entry.line_ids.unlink()
+        return super(DeliveryScheduleEntry, self).unlink()
+
+    @api.constrains('name')
+    def _check_unique_constraint(self):
+        if self.name:
+            filters = [['name', '=ilike', self.name]]
+            name = self.search(filters)
+            if len(name) > 1:
+                raise Warning('[Unique Error] Name must be unique!')
+
+
+
+
+
+            #     @api.multi
 #     def action_quotation_send(self):
 #         '''
 #         This function opens a window to compose an email, with the edi sale template message loaded by default
