@@ -9,8 +9,9 @@
             <field name="inherit_id" ref="stock_indent.view_stock_indent_indent_form"/>
             <field name="arch" type="xml">
                 <data>
-                    <xpath expr="//field[@name='approver_id']" position="before">
-                        <field name="operating_unit_id" groups="operating_unit.group_multi_operating_unit" />
+                    <xpath expr="//field[@name='company_id']" position="after">
+                        <field name="operating_unit_id" options="{'no_create': True,'no_open':True}"
+                               groups="operating_unit.group_multi_operating_unit" />
                     </xpath>
                 </data>
             </field>

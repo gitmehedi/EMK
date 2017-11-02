@@ -5,6 +5,7 @@
     'website': 'https://www.genweb2.com',
 
     'depends': [
+        'stock',
         ],
 
     'data': [

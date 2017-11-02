@@ -8,14 +8,14 @@ class DeliveryScheduleEntryLine(models.Model):
 
     partner_id = fields.Many2one('res.partner', 'Customer',domain="([('customer','=','True')])")
     product_id = fields.Many2one('product.product','Products',required=True)
-    quantity = fields.Float(string="Ordered Qty",default=1.0)
-    uom_id = fields.Many2one('product.uom', string="UoM")
-    pack_type = fields.Many2one('product.packaging.mode', string="Packing",ondelete='cascade')
+    quantity = fields.Float(string="Ordered Qty",default=1.0, required=True)
+    uom_id = fields.Many2one('product.uom', string="UoM",required=True)
+    pack_type = fields.Many2one('product.packaging.mode', string="Packing", required=True,ondelete='cascade')
     deli_address = fields.Char('Delivery Address')
     parent_id = fields.Many2one('delivery.schedule.entry')
     remarks = fields.Char('Remarks')
     state = fields.Selection([
-        ('draft', "To Submit"),
+        ('draft', "Draft"),
         ('approve', "Confirm"),
     ], default='draft')
 
