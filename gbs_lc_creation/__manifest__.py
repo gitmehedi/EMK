@@ -7,10 +7,13 @@
     'depends': [
         #'sale',
         'stock',
+        'sales_team',
+        'purchase',
     ],
 
     'data': [
         'views/letter_of_credit_view.xml',
+        'views/letter_of_credit_menu.xml',
     ],
 
     'summary': 'Letter of Credit (LC) Creation',

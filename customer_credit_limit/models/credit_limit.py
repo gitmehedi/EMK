@@ -72,9 +72,9 @@ class customer_creditlimit_assign(models.Model):
 
     @api.multi
     def action_confirm(self):
-        val_id=[]
+        val_id = []
         for line in self.limit_ids:
-            if val_id !=[]:
+            if val_id != []:
                 if line.partner_id.id in val_id:
                     raise ValidationError('Same Customer can not be added')
             val_id.append(line.partner_id.id)
@@ -101,6 +101,12 @@ class ResPartner(models.Model):
     credit_limit = fields.Float(compute='_current_limit', string='Credit Limit')
 
     """ All functions """
+
+    @api.constrains('name')
+    def _check_unique_name(self):
+        name = self.env['res.partner'].search([('name', '=', self.name)])
+        if len(name) > 1:
+            raise ValidationError('Customer already exists.')
 
     @api.multi
     def _current_limit(self, context=None):
@@ -148,8 +154,8 @@ class res_partner_credit_limit(models.Model):
 
     @api.constrains('value')
     def check_credit_limit(self):
-        if self.value < 0.00:
-            raise ValidationError('Limit can not be negative')
+        if self.value <= 0.00:
+            raise ValidationError('Limit can not be zero or negative')
 
     # @api.constrains('assign_id','partner_id')
     # def check_partner_id(self):
@@ -163,5 +169,5 @@ class res_partner_credit_limit(models.Model):
 
     @api.constrains('day_num')
     def check_credit_days(self):
-        if self.day_num < 0.00:
-            raise ValidationError('Days can not be negative')
+        if self.day_num <= 0.00:
+            raise ValidationError('Days can not be zero or negative')

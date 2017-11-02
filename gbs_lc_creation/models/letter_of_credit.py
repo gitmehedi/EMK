@@ -8,11 +8,13 @@ class LetterOfCredit(models.Model):
     _name = 'letter.credit'
     _description = 'Letter of Credit (L/C)'
     _inherit = ['mail.thread']
+    _order = "issue_date desc"
+
     #_rec_name='name'
 
     # Import -> Applicant(Samuda)
 
-    name = fields.Char(string='Number', index=True)
+    name = fields.Char(string='Number', required=True, index=True)
     type = fields.Selection([
         ('export', 'Export'),
         ('import', 'Import'),
@@ -20,11 +22,18 @@ class LetterOfCredit(models.Model):
         help="Export: Product Export.\n"
              "Import: Product Import.", default="import")
 
-    first_party = fields.Many2one('res.company', string='Candidate', required=True)
-    first_party_bank = fields.Many2one('res.bank', string='Bank', required=True)
+    region_type = fields.Selection([
+        ('local', 'Local'),
+        ('foreign', 'Foreign'),
+    ], string="LC Region Type",
+        help="Local: Local LC.\n"
+             "Foreign: Foreign LC.", default="foreign")
 
-    second_party = fields.Many2one('res.partner', domain=[('customer', '=', True)], string='Candidate', required=True)
-    second_party_bank = fields.Text(string='Bank', states={'confirm': [('readonly', False)]})
+    first_party = fields.Many2one('res.company', string='Candidate')
+    first_party_bank = fields.Many2one('res.bank', string='Bank')
+
+    second_party = fields.Many2one('res.partner', domain=[('customer', '=', True)], string='Candidate')
+    second_party_bank = fields.Text(string='Bank')
 
     require_lien = fields.Boolean(string='Require Lien', required=True, readonly=True, default=False,
                                   states={'confirm': [('readonly', False)]})
@@ -58,7 +67,12 @@ class LetterOfCredit(models.Model):
     lc_mode = fields.Char(string='LC Mode', readonly=True, states={'confirm': [('readonly', False)]})
     terms_condition = fields.Text(string='Terms of Condition', readonly=True, states={'confirm': [('readonly', False)]})
     remarks = fields.Text(string='Remarks', readonly=True, states={'confirm': [('readonly', False)]})
-    # body_html = fields.Text('Rich-text Contents', help="Rich-text/HTML message")
+
+    attachment_ids = fields.One2many('commercial.attachment', 'lc_id', string='Attachment')
+
+
+
+
     state = fields.Selection([
         ('confirm', "Confirm"),
         ('approve', "Approved")
@@ -77,3 +91,11 @@ class LetterOfCredit(models.Model):
     @api.multi
     def action_confirm(self):
         self.state = 'approve'
+
+class CommercialAttachment(models.Model):
+    _name = 'commercial.attachment'
+    _description = 'Attachment'
+
+    title = fields.Char(string='Title', required=True)
+    file = fields.Binary(default='Attachment', required=True)
+    lc_id = fields.Many2one("letter.credit", string='LC Number')
