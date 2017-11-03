@@ -35,8 +35,10 @@
             <field name="view_mode">tree,form</field>
         </record>
 
-        <menuitem id="menu_indent_type" name="Indent Type" parent="stock_indent.menu_indent_indent_main"
-                  action="action_indent_type" sequence="100"/>
+        <menuitem id="menu_indent_type" name="Indent Type"
+                  parent="stock.menu_stock_root"
+                  action="action_indent_type" sequence="3"
+                  groups="stock.group_stock_user,stock.group_stock_manager"/>
 
     </data>
 </odoo>

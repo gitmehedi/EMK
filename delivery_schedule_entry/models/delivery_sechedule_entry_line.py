@@ -1,19 +1,21 @@
 from odoo import api, fields, models
+from odoo.exceptions import UserError,ValidationError
+
 
 class DeliveryScheduleEntryLine(models.Model):
     _name = 'delivery.schedule.entry.line'
     _description = 'Delivery Schedule Entry line'
 
     partner_id = fields.Many2one('res.partner', 'Customer',domain="([('customer','=','True')])")
-    product_id = fields.Many2one('product.product','Products',requried=True)
-    quantity = fields.Float(string="Ordered Qty")
-    uom_id = fields.Many2one('product.uom', string="UoM")
-    pack_type = fields.Many2one('product.packaging.mode', string="Packing",ondelete='cascade')
+    product_id = fields.Many2one('product.product','Products',required=True)
+    quantity = fields.Float(string="Ordered Qty",default=1.0, required=True)
+    uom_id = fields.Many2one('product.uom', string="UoM",required=True)
+    pack_type = fields.Many2one('product.packaging.mode', string="Packing", required=True,ondelete='cascade')
     deli_address = fields.Char('Delivery Address')
     parent_id = fields.Many2one('delivery.schedule.entry')
     remarks = fields.Char('Remarks')
     state = fields.Selection([
-        ('draft', "To Submit"),
+        ('draft', "Draft"),
         ('approve', "Confirm"),
     ], default='draft')
 
@@ -31,3 +33,8 @@ class DeliveryScheduleEntryLine(models.Model):
             customer_obj = self.env['res.partner'].search([('id', '=', self.partner_id.id)])
             if customer_obj:
                 self.deli_address = customer_obj.street
+
+    @api.constrains('quantity')
+    def check_credit_days(self):
+        if self.quantity < 0.00:
+            raise ValidationError('Days can not be negative')

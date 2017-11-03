@@ -9,21 +9,6 @@ class IrSequenceOperatingUnit(models.Model):
     operating_unit_id = fields.Many2one('operating.unit', 'Operating Unit',
                                         default=lambda self: self.env.user.default_operating_unit_id)
 
-    # def _get_number_next_actual(self):
-    #     for seq in self:
-    #         if seq.implementation != 'standard':
-    #             seq.number_next_actual = seq.number_next
-    #         else:
-    #             # get number from postgres sequence. Cannot use currval, because that might give an error when
-    #             # not having used nextval before.
-    #             query = "SELECT last_value, increment_by, is_called FROM ir_sequence_%03d" % seq.id
-    #             self._cr.execute(query)
-    #             (last_value, increment_by, is_called) = self._cr.fetchone()
-    #             if is_called:
-    #                 seq.number_next_actual = last_value + increment_by
-    #             else:
-    #                 seq.number_next_actual = last_value
-
     @api.model
     def next_by_code(self, sequence_code):
         """ Draw an interpolated string using a sequence with the requested code.
@@ -61,5 +46,5 @@ class IrSequenceOperatingUnit(models.Model):
 
         seq_id = seq_ids[0]
         res = seq_id._next()
-        abc = res.replace('OU', self.env.user.default_operating_unit_id.code)
-        return abc
+        res_val = res.replace('OU', self.env.user.default_operating_unit_id.code)
+        return res_val

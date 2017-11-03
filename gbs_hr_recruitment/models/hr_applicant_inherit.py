@@ -37,15 +37,30 @@ class HrApplicantInherit(models.Model):
     #         template_id = ir_model_data.get_object_reference('gbs_hr_recruitment', 'template_appointment_letter')[1]
     #     except ValueError:
     #         template_id = False
-    #
-    #     base_template = self.env.ref("gbs_hr_recruitment.template_appointment_letter", raise_if_not_found=False)
-    #
-    #     data = {
-    #
+    #     try:
+    #         compose_form_id = ir_model_data.get_object_reference('mail', 'email_compose_message_wizard_form')[1]
+    #     except ValueError:
+    #         compose_form_id = False
+    #     ctx = dict()
+    #     ctx.update({
+    #         'default_model': 'hr.applicant',
+    #         'default_res_id': self.ids[0],
+    #         'default_use_template': bool(template_id),
+    #         'default_template_id': template_id,
+    #         'default_composition_mode': 'comment',
+    #         'mark_so_as_sent': True,
+    #         'custom_layout': "gbs_hr_recruitment.template_appointment_letter"
+    #     })
+    #     return {
+    #         'type': 'ir.actions.act_window',
+    #         'view_type': 'form',
+    #         'view_mode': 'form',
+    #         'res_model': 'mail.compose.message',
+    #         'views': [(compose_form_id, 'form')],
+    #         'view_id': compose_form_id,
+    #         'target': 'new',
+    #         'context': ctx,
     #     }
-    #
-    #     return self.env['report'].render('gbs_hr_recruitment.report_letter', data)
-
 
     ####################################################
     # ORM Overrides methods

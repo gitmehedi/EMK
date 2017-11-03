@@ -1,5 +1,6 @@
 from odoo import api, fields, models
-from odoo.exceptions import UserError, ValidationError
+
+from odoo.exceptions import UserError, ValidationError, Warning
 
 import time,datetime
 from collections import Counter
@@ -88,7 +89,7 @@ class DeliveryOrder(models.Model):
             return self.create_delivery_order()
 
         elif self.so_type == 'lc_sales':
-            self.lc_sales_business_logics()
+            return self.lc_sales_business_logics()
 
 
         self.state = 'approve'
@@ -100,40 +101,71 @@ class DeliveryOrder(models.Model):
         return self.write({'state': 'approve', 'approved_date': time.strftime('%Y-%m-%d %H:%M:%S')})
 
 
+    @api.one
     def lc_sales_business_logics(self):
 
-        mylist = [20, 30, 25, 20]
-        [k for k, v in Counter(mylist).items() if v > 1]
-
-        print Counter(mylist)
-
         # If LC and PI ref is present, go to the Final Approval
+        # Else  ## go to Second level approval
         if self.lc_no and self.pi_no:
             if self.lc_no.lc_value == self.products_price_sum() \
                     or self.lc_no.lc_value > self.products_price_sum():
 
                 return self.write({'state': 'close'})
             else:
-                ## go to Second level approval
                 return self.write({'state': 'approve'})
 
-        # Has PI & no LC then go to second level approval
+        # 1. Has PI & no LC then go to second level approval
+        # 2. Check 100MT checking for this product, company wise
         if self.pi_no and not self.lc_no:
-            ##Check 100MT checking for this product, company wise
-            qty_sum = 0
+            res = {}
+            list = dict.fromkeys(set([val.product_id.product_tmpl_id.id for val in self.line_ids]),0)
+
+
             for line in self.line_ids:
-                qty_sum = qty_sum + line.quantity
 
-                product_pool = self.env['product.product'].search([('id', '=', line.product_id.id),
-                                                                   ('company_id', '=', self.company_id.id),
-                                                                   ('uom_id', '=', line.uom_id.id)])
+                list[line.product_id.product_tmpl_id.id] = list[line.product_id.product_tmpl_id.id] + line.quantity
 
-                if qty_sum > product_pool.max_ordering_qty:
-                    ## go to second level approval
-                    self.write({'state': 'close'})
-                    raise ValidationError('Max Ordering Qty. of %s is over to 100 MT' % (line.product_id.display_name))
+            for rec in list:
+                pro_tmpl = self.env['product.template'].search([('id','=',rec)])
 
 
+
+                ordered_qty_pool = self.env['ordered.qty'].search([('lc_no','=',False),
+                                                                   ('product_id','=', rec)])
+                res['product_id'] = rec
+                res['ordered_qty'] = list[rec]
+                res['delivery_auth_no'] = self.id
+
+                if not ordered_qty_pool:
+                    res['available_qty'] = 100 - list[rec]
+                    self.env['ordered.qty'].create(res)
+
+                    if list[rec] > 100:
+                        self.write({'state': 'approve'}) # Second Approval
+                        print 'second --------------------'
+                    else:
+                        self.write({'state': 'close'}) # Final Approval
+                        print '------------ final'
+
+                elif ordered_qty_pool and not ordered_qty_pool.lc_no:
+                    for order in ordered_qty_pool:
+                        if list[rec] > order.available_qty:
+                            res['available_qty'] = order.available_qty - list[rec]
+                            self.write({'state': 'approve'})  # Second Approval
+                            order.write(res)
+                        else:
+                            res['available_qty'] = order.available_qty - list[rec]
+                            self.write({'state': 'close'})  # Final Approval
+                            order.write(res)
+
+
+                    # if list[rec] > 100:
+                    #     # self.write({'state': 'approve'}) # second level
+                    #     warningstr = warningstr + 'Product {0} has order quantity is {1} which is more than 100\n'.format(
+                    #         pro_tmpl.name, list[rec])
+                    #
+                    # print warningstr
+                    #raise Warning(warningstr)
 
 
 
@@ -143,6 +175,7 @@ class DeliveryOrder(models.Model):
             product_line_subtotal = product_line_subtotal + do_product_line.price_subtotal
 
         return product_line_subtotal
+
 
     #@todo Need to refactor below method -- rabbi
     def check_cash_amount_with_subtotal(self):
@@ -172,6 +205,7 @@ class DeliveryOrder(models.Model):
             account_payment_pool.write({'is_this_payment_checked': True})
             return self.write({'state': 'approve'})  # Only Second level approval
 
+
     def create_delivery_order(self):
         for order in self.sale_order_id:
             order.state = 'sale'
@@ -197,10 +231,12 @@ class DeliveryOrder(models.Model):
                 raise UserError("Payment Information entered is already in use: %s" % (cash_line.account_payment_id.display_name))
                 break;
 
+
     @api.one
     def action_validate(self):
         self.state = 'validate'
         self.line_ids.write({'state':'validate'})
+
 
     @api.one
     def action_close(self):
@@ -230,7 +266,6 @@ class DeliveryOrder(models.Model):
                 self.set_payment_info_automatically(account_payment_pool)
 
 
-
     def set_cheque_info_automatically(self, account_payment_pool):
         vals = []
         for payments in account_payment_pool:
@@ -245,7 +280,6 @@ class DeliveryOrder(models.Model):
                                         }))
 
                 self.cheque_ids = vals
-
 
 
     def set_products_info_automatically(self):
@@ -309,4 +343,25 @@ class DeliveryOrder(models.Model):
                                         }))
 
             self.cash_ids = vals
+
+
+
+
+
+class OrderedQty(models.Model):
+    _name='ordered.qty'
+    _description='Store Product wise ordered qty to track max qty value'
+
+    product_id = fields.Many2one('product.product', string='Product')
+    ordered_qty = fields.Float(string='Ordered Qty')
+    available_qty = fields.Float(string='Allowed Qty', default=0.00) ## available_qty = max_qty - ordered_qty
+    lc_no = fields.Many2one('letter.credit', string='LC No')
+    delivery_auth_no = fields.Many2one('delivery.order', string='Delivery Authrozation ref')
+
+
+
+
+
+
+
 
