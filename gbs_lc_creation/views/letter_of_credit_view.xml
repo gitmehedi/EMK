@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
     <data>
-
         <record id="view_local_credit_form" model="ir.ui.view">
             <field name="name">letter.credit.form</field>
             <field name="model">letter.credit</field>
@@ -9,9 +8,12 @@
             <field name="arch" type="xml">
                 <form string="Letter Credit" delete="false" copy='0'>
                     <header>
-                        <button name="action_confirm" type="object" states="confirm" string="Confirm" class="oe_highlight"/>
-                        <field name="state" widget="statusbar"/>
-                        <button name="action_revision" states="confirm" type="object" string="Amendment"/>
+                        <button string="Confirm" name="action_confirm" states="draft" type="object" class="oe_highlight"/>
+                    	<button string="Approve" name="action_approve" states="confirmed" type="object" class="oe_highlight"/>
+                     	<button string="Reset to Draft" name="action_draft" type="object" states="approved" class="oe_read_only"/>
+                        <button string="Amendment" name="action_revision" class="oe_read_only" type="object" attrs="{'invisible': [('state', 'in', ('draft', 'confirmed'))]}"/>
+                        <field name="state" widget="statusbar" statusbar_visible="draft,confirmed,approved"/>
+
                     </header>
 
                     <sheet>
@@ -150,13 +152,7 @@
             </field>
         </record>
 
-        <!-- Generate automated sequence -->
-        <!--<record id="seq_letter_credit" model="ir.sequence">-->
-        <!--<field name="name">LC Sequences</field>-->
-        <!--<field name="code">letter.credit</field>-->
-        <!--<field name="prefix">LC-</field>-->
-        <!--<field name="padding">9</field>-->
-        <!--</record>-->
+
 
     </data>
 </odoo>

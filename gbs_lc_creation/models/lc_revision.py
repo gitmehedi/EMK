@@ -24,7 +24,7 @@ class LcRevision(models.Model):
         view_ref = self.env['ir.model.data'].get_object_reference('gbs_lc_creation', 'view_local_credit_form')
         view_id = view_ref and view_ref[1] or False,
         self.with_context(new_lc_revision=True).copy()
-        self.write({'state': 'confirm'})
+        self.write({'state': self.state})
         return {
             'type': 'ir.actions.act_window',
             'name': _('LC'),
@@ -35,7 +35,22 @@ class LcRevision(models.Model):
             'view_id': view_id,
             'target': 'current',
             'nodestroy': True,
+            'flags': {'initial_mode': 'edit'},
         }
+
+
+
+    # return {
+    #     'type': 'ir.actions.act_window',
+    #     'name': _('LC'),
+    #     'res_model': 'letter.credit',
+    #     'res_id': self.id,
+    #     'view_type': 'form',
+    #     'view_mode': 'form',
+    #     'view_id': view_id,
+    #     'target': 'current',
+    #     'nodestroy': True,
+    # }
         
     @api.returns('self', lambda value: value.id)
     @api.multi
@@ -46,7 +61,7 @@ class LcRevision(models.Model):
             prev_name = self.name
             revno = self.revision_number
             self.write({'revision_number': revno + 1,'name': '%s-%02d' % (self.unrevisioned_name,revno + 1)})
-            defaults.update({'name': prev_name,'revision_number': revno,'active': False,'state': 'confirm','current_revision_id': self.id,'unrevisioned_name': self.unrevisioned_name,})
+            defaults.update({'name': prev_name,'revision_number': revno,'active': False,'state': 'amendment','current_revision_id': self.id,'unrevisioned_name': self.unrevisioned_name,})
         return super(LcRevision, self).copy(defaults)
 
 
