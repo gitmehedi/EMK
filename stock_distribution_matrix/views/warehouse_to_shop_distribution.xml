@@ -62,11 +62,11 @@
                                     <field name="product_uom_id"
                                            options="{'no_open': 1,'no_create': 1, 'no_create_edit': 1}"/>
                                     <field name="transfer_qty"
-                                           attrs="{'readonly':[('is_transfer','=',True)]}"/>
+                                           attrs="{'readonly':[('is_transfer','=',True)]}" sum="transfer_qty"/>
                                     <field name="receive_qty"
                                            attrs="{'readonly':[('is_transfer','=',True),('is_receive','=',True)],
                                           'invisible':[('is_transfer','=',False)],
-                                          'required':[('is_transfer','=',True)]}"/>
+                                          'required':[('is_transfer','=',True)]}" sum="receive_qty"/>
                                 </tree>
                             </field>
                         </group>
