@@ -1,6 +1,6 @@
 {
     'name': 'Customer Commission on Sales Order',
-    'version': '1.0',
+    'version': '10.0.1.0.0',
     'author': 'Genweb2 Limited',
     'website': 'http://www.genweb2.com',
     'category': 'Sales',
