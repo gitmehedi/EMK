@@ -12,7 +12,7 @@
                             </h2>
                             <div style="text-align:left;">
                                 <p><b>Description: </b><span t-field="o.name"/></p>
-                                <p><b>Approval Date:</b><span t-field="o.approved_date"/></p>
+                                <p><b>Requested Date:</b><span t-field="o.requested_date"/></p>
                             </div>
 
                             <table class="table table-bordered" style="padding: 15px 0px;">
