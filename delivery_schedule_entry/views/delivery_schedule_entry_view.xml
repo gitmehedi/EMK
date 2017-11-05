@@ -10,11 +10,11 @@
             <field name="arch" type="xml">
                 <form string="Delivery Schedules" delete="false" copy='0'>
                     <header>
-                        <button name="action_approve" type="object" states="draft" string="Confirm" class="oe_highlight" groups="gbs_application_group.group_sales_product_manager,base.group_user"/>
+                        <button name="action_approve" type="object" states="draft" string="Confirm" class="oe_highlight" groups="gbs_application_group.group_delivery_schedule_manager"/>
 
                         <!--<button type="object" states="approve"-->
                                 <!--string="Sent By Email"/>-->
-                        <button name="generate_schedule_letter" string="Send by Email" type="object" states="approve" class="btn-primary" groups="base.group_user,gbs_application_group.group_sales_product_manager"/>
+                        <button name="generate_schedule_letter" string="Send by Email" type="object" states="approve" class="btn-primary" groups="gbs_application_group.group_delivery_schedule_manager"/>
 
                         <field name="state" statusbar_visible="draft,approve" widget="statusbar"/>
 
@@ -89,8 +89,8 @@
             <field name="view_mode">tree,form</field>
         </record>
 
-        <menuitem id="delivery_schedule_menu" name="Delivery Schedules" parent="sales_team.menu_base_partner" groups="gbs_application_group.group_sales_product_manager,base.group_user"/>
-        <menuitem id="delivery_schedule_submenu" name="Delivery Schedules" parent="delivery_schedule_menu" groups="gbs_application_group.group_sales_product_manager,base.group_user"
+        <menuitem id="delivery_schedule_menu" name="Delivery Schedules" parent="sales_team.menu_base_partner" groups="gbs_application_group.group_delivery_schedule_manager"/>
+        <menuitem id="delivery_schedule_submenu" name="Delivery Schedules" parent="delivery_schedule_menu" groups="gbs_application_group.group_delivery_schedule_manager"
                   action="delivery_schedule_action"  sequence="15"/>
     </data>
 </odoo>
