@@ -1,6 +1,6 @@
 {
     'name': 'Employee Seniority',
-    'version': '1.0',
+    'version': '10.0.1.0.0',
     'category': 'Generic Modules/Human Resources',
     'description': """
 Keep Track of Length of Employment

@@ -1,14 +1,13 @@
 
 {
     'name': 'GBS Samuda Sales Installation',
-    'version': '1.0',
+    'version': '10.0.1.0.0',
     'author': 'Genweb2 Limited',
     'website': 'http://www.genweb2.com',
     'category': 'Sales',
     'depends': [
         'gbs_sales_commission',
         'customer_credit_limit',
-        'gbs_sales_commission',
         'gbs_sales_commission_so',
         'gbs_sale_delivery_settings',
         'gbs_product',
@@ -20,7 +19,8 @@
         'samuda_so_type',
         'gbs_lc_creation',
         'gbs_pi_creation',
-        'delivery_schedule_entry'
+        'delivery_schedule_entry',
+        'gbs_application_group'
         #'sale_revision_history'
     ],
 

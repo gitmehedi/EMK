@@ -4,7 +4,7 @@
 
 {
     'name': 'HR Holidays',
-    'version': '1.0',
+    'version': '10.0.1.0.0',
     'sequence': 30,
     'category': 'Human Resources',
     'author': 'Genweb2 Limited',
