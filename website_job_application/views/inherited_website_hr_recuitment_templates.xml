@@ -4,7 +4,6 @@
 
         <template id="website_hr_recuitment_tests" name="Website HR Recruitment Tests" inherit_id="web.assets_common">
             <xpath expr="." position="inside">
-                <script src="/website_job_application/static/src/js/jquery-ui.js"></script>
                 <script type="text/javascript" src="/website_job_application/static/src/js/custom.js"></script>
                 <link rel="stylesheet" href="/website_job_application/static/src/css/design_profile_pic.css"/>
             </xpath>
@@ -541,7 +540,7 @@
                                                             <!--</tr>-->
                                                             <tr>
                                                                 <td colspan="1">১.</td>
-                                                                <td colspan="2"></td>
+                                                                <td colspan="2">সাময়িক সনদ</td>
                                                                 <td colspan="3">
                                                                     <input class="form-control o_website_form_input input-sm"
                                                                            type="text"/>
@@ -557,7 +556,7 @@
                                                             </tr>
                                                             <tr>
                                                                 <td colspan="1">২.</td>
-                                                                <td colspan="2"></td>
+                                                                <td colspan="2">গেজেট</td>
                                                                 <td colspan="3">
                                                                     <input class="form-control o_website_form_input input-sm"
                                                                            type="text"/>
@@ -573,7 +572,7 @@
                                                             </tr>
                                                             <tr>
                                                                 <td colspan="1">৩.</td>
-                                                                <td colspan="2"></td>
+                                                                <td colspan="2">লাল মুক্তিবার্তা</td>
                                                                 <td colspan="3">
                                                                     <input class="form-control o_website_form_input input-sm"
                                                                            type="text"/>
@@ -589,7 +588,7 @@
                                                             </tr>
                                                             <tr>
                                                                 <td colspan="1">৪.</td>
-                                                                <td colspan="2"></td>
+                                                                <td colspan="2">বামুস সনদ</td>
                                                                 <td colspan="3">
                                                                     <input class="form-control o_website_form_input input-sm"
                                                                            type="text"/>
@@ -605,7 +604,7 @@
                                                             </tr>
                                                             <tr>
                                                                 <td colspan="1">৫.</td>
-                                                                <td colspan="2"></td>
+                                                                <td colspan="2">ভারতীয় তালিকা</td>
                                                                 <td colspan="3">
                                                                     <input class="form-control o_website_form_input input-sm"
                                                                            type="text"/>
@@ -619,22 +618,22 @@
                                                                            type="text"/>
                                                                 </td>
                                                             </tr>
-                                                            <tr>
-                                                                <td colspan="1"></td>
-                                                                <td colspan="2"></td>
-                                                                <td colspan="3">
-                                                                    <input class="form-control o_website_form_input input-sm"
-                                                                           type="text"/>
-                                                                </td>
-                                                                <td colspan="3">
-                                                                    <input class="form-control o_website_form_input input-sm"
-                                                                           type="text"/>
-                                                                </td>
-                                                                <td colspan="3">
-                                                                    <input class="form-control o_website_form_input input-sm"
-                                                                           type="text"/>
-                                                                </td>
-                                                            </tr>
+                                                            <!--<tr>-->
+                                                                <!--<td colspan="1"></td>-->
+                                                                <!--<td colspan="2"></td>-->
+                                                                <!--<td colspan="3">-->
+                                                                    <!--<input class="form-control o_website_form_input input-sm"-->
+                                                                           <!--type="text"/>-->
+                                                                <!--</td>-->
+                                                                <!--<td colspan="3">-->
+                                                                    <!--<input class="form-control o_website_form_input input-sm"-->
+                                                                           <!--type="text"/>-->
+                                                                <!--</td>-->
+                                                                <!--<td colspan="3">-->
+                                                                    <!--<input class="form-control o_website_form_input input-sm"-->
+                                                                           <!--type="text"/>-->
+                                                                <!--</td>-->
+                                                            <!--</tr>-->
                                                         </tbody>
                                                     </table>
                                                     <table class="table table-default table-bordered table-condensed margin-0">

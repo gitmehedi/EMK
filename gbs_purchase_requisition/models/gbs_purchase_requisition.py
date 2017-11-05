@@ -1,5 +1,5 @@
-from openerp import api, fields, models
-
+from odoo import api, fields, models
+from datetime import date
 
 
 class PurchaseRequisition(models.Model):
@@ -13,6 +13,28 @@ class PurchaseRequisition(models.Model):
     buying_type = fields.Selection([('Local', 'Local'), ('Foreign', 'Foreign')], string="Type")
 
     purchase_by = fields.Selection([('Cash', 'Cash'), ('Credit', 'Credit'), ('LC', 'LC'), ('TT', 'TT')], string="Purchase By")
+
+    requisition_date = fields.Date(string='Requisition Date',default = date.today())
+
+    required_date = fields.Date(string='Required Date')
+
+    state = fields.Selection([('draft', 'Draft'), ('in_progress', 'Confirmed'),
+                              ('review_plant_incharge', 'Review'),
+                              ('approve_head_procurement', 'Waiting For Approval'),('done', 'Approved'),
+                              ('cancel', 'Cancelled')],'Status', track_visibility='onchange', required=True,
+                             copy=False, default='draft')
+
+    @api.multi
+    def action_open(self):
+        self.write({'state': 'review_plant_incharge'})
+
+    @api.multi
+    def action_reviewed(self):
+        self.write({'state': 'approve_head_procurement'})
+
+    @api.multi
+    def action_approve(self):
+        self.write({'state': 'done'})
 
 class PurchaseRequisitionLine(models.Model):
     _inherit = "purchase.requisition.line"
