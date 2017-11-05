@@ -3,10 +3,12 @@
     "author": "Genweb2 Ltd.",
     "website": "http://www.genweb2.com",
     "category": "Sale",
-    "depends": ["sale",
-                "product",
-                "purchase",
-                "procurement"
+    "depends": [
+        "gbs_application_group",
+        "sale",
+        "product",
+        "purchase",
+        "procurement"
                 ],
     "data": [
         "views/inherited_product_temp_gen_view.xml",
