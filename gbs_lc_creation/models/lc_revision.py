@@ -3,7 +3,7 @@ from odoo import api, fields, models, _
 class LcRevision(models.Model):
     _inherit = "letter.credit"
    
-    current_revision_id = fields.Many2one('letter.credit','Current revision',readonly=True,copy=True)
+    current_revision_id = fields.Many2one('letter.credit','Current revision',readonly=True,copy=True, ondelete='cascade')
     old_revision_ids = fields.One2many('letter.credit','current_revision_id','Old revisions',readonly=True,context={'active_test': False})
     revision_number = fields.Integer('Revision', copy=False)
     unrevisioned_name = fields.Char('LC Reference',copy=True,readonly=True)
@@ -24,7 +24,7 @@ class LcRevision(models.Model):
         view_ref = self.env['ir.model.data'].get_object_reference('gbs_lc_creation', 'view_local_credit_form')
         view_id = view_ref and view_ref[1] or False,
         self.with_context(new_lc_revision=True).copy()
-        self.write({'state': self.state})
+        self.write({'state': self.state,'status':'amendment'})
         return {
             'type': 'ir.actions.act_window',
             'name': _('LC'),
@@ -38,20 +38,6 @@ class LcRevision(models.Model):
             'flags': {'initial_mode': 'edit'},
         }
 
-
-
-    # return {
-    #     'type': 'ir.actions.act_window',
-    #     'name': _('LC'),
-    #     'res_model': 'letter.credit',
-    #     'res_id': self.id,
-    #     'view_type': 'form',
-    #     'view_mode': 'form',
-    #     'view_id': view_id,
-    #     'target': 'current',
-    #     'nodestroy': True,
-    # }
-        
     @api.returns('self', lambda value: value.id)
     @api.multi
     def copy(self, defaults=None):
