@@ -41,7 +41,7 @@ class LetterOfCredit(models.Model):
     lien_date = fields.Date('LC Lien Date')
 
     lc_value = fields.Integer(string='LC Value', readonly=False, states={'approved': [('readonly', True)]}, track_visibility='onchange', required=True)
-    currency_id = fields.Many2one('res.currency', string='Currency', track_visibility='onchange', required=True)
+    currency_id = fields.Many2one('res.currency', string='Currency', track_visibility='onchange')
 
     insurance_company_name = fields.Char(string='Insurance Company Name')
     insurance_number = fields.Char(string='Insurance Number')
@@ -51,9 +51,9 @@ class LetterOfCredit(models.Model):
     discharge_port = fields.Char(string='Discharge Port', track_visibility='onchange')
     cnf_agent = fields.Char(string='C&F Agent', track_visibility='onchange')
 
-    issue_date = fields.Date('Issue Date', required=True, track_visibility='onchange')
-    expiry_date = fields.Date('Expiry Date', required=True, track_visibility='onchange')
-    shipment_date = fields.Date('Shipment Date', required=True, track_visibility='onchange')
+    issue_date = fields.Date('Issue Date', track_visibility='onchange')
+    expiry_date = fields.Date('Expiry Date', track_visibility='onchange')
+    shipment_date = fields.Date('Shipment Date', track_visibility='onchange')
 
     master_lc_number = fields.Char(string='Master LC Number', track_visibility='onchange')
     hs_code = fields.Char(string='HS Code', track_visibility='onchange')
@@ -75,22 +75,41 @@ class LetterOfCredit(models.Model):
 
     state = fields.Selection([
         ('draft', "Draft"),
+        ('open', "Open"),
         ('confirmed', "Confirmed"),
-        ('approved', "Approved"),
-        ('amendment', "Amendment")
-    ], track_visibility='onchange', default='draft')
+        ('amendment', "Amendment"),
+        ('progress', "In Progress"),
+        ('done', "Done")
+    ], default='draft')
+
+    status = fields.Selection([
+        ('open', "LC Open"),
+        ('confirmed', "Getting Bank Confirmation"),
+        ('amendment', "Amendment the LC"),
+        ('progress', "LC In Progress"),
+        ('done', "Close/Done the LC")
+    ], track_visibility='always', default='open')
 
     _sql_constraints = [
         ('name_uniq', 'unique(name)', 'This Number is already in use')
     ]
 
     @api.multi
-    def action_confirm(self):
-        self.write({'state': 'confirmed'})
+    def unlink(self):
+        for lc in self:
+            if str(lc.state) != 'draft' and str(lc.state) != 'open':
+                raise UserError('You can not delete this.')
+            else:
+                return super(LetterOfCredit, self).unlink()
+
 
     @api.multi
-    def action_approve(self):
-        self.write({'state': 'approved'})
+    def action_open(self):
+        self.write({'state': 'open','status':'open'})
+
+    @api.multi
+    def action_confirm(self):
+        self.write({'state': 'confirmed','status': 'confirmed'})
 
     @api.multi
     def action_draft(self):
@@ -104,4 +123,4 @@ class CommercialAttachment(models.Model):
 
     title = fields.Char(string='Title', required=True)
     file = fields.Binary(default='Attachment', required=True)
-    lc_id = fields.Many2one("letter.credit", string='LC Number')
+    lc_id = fields.Many2one("letter.credit", string='LC Number', ondelete='cascade')
