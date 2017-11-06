@@ -14,6 +14,7 @@ class StockTransferRequestReport(models.AbstractModel):
 
         if records:
             header_info = {}
+            header_info['name'] = records.name
             header_info['transfer_date'] = records.transfer_date
             header_info['receive_date'] = records.receive_date
             header_info['transfer_user_id'] = records.transfer_user_id.name
