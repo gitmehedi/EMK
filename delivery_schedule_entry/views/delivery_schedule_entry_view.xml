@@ -11,11 +11,7 @@
                 <form string="Delivery Schedules" delete="false" copy='0'>
                     <header>
                         <button name="action_approve" type="object" states="draft" string="Confirm" class="oe_highlight" groups="gbs_application_group.group_delivery_schedule_manager"/>
-
-                        <!--<button type="object" states="approve"-->
-                                <!--string="Sent By Email"/>-->
                         <button name="generate_schedule_letter" string="Send by Email" type="object" states="approve" class="btn-primary" groups="gbs_application_group.group_delivery_schedule_manager"/>
-
                         <field name="state" statusbar_visible="draft,approve" widget="statusbar"/>
 
                     </header>
