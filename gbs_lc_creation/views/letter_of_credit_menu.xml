@@ -2,12 +2,9 @@
 <odoo>
     <data>
 
-
-
         <!--Sales Menu-->
-
         <record model="ir.actions.act_window" id="lc_export_creation_action">
-            <field name="name">Letter of Credit</field>
+            <field name="name">Letter of Credit: Export</field>
             <field name="res_model">letter.credit</field>
             <field name="view_mode">tree,form</field>
             <field name="domain">[('type','=','export')]</field>
@@ -21,9 +18,8 @@
                   action="lc_export_creation_action"/>
 
         <!--Purchase Menu-->
-
         <record model="ir.actions.act_window" id="lc_import_creation_action">
-            <field name="name">Letter of Credit</field>
+            <field name="name">Letter of Credit: Import</field>
             <field name="res_model">letter.credit</field>
             <field name="view_mode">tree,form</field>
             <field name="domain">[('type','=','import')]</field>
@@ -49,7 +45,5 @@
 
         <menuitem id="lc_commercial_import_creation_submenu" name="Import LC" parent="lc_commercial_creation_menu"
                   sequence="2" action="lc_import_creation_action"/>
-
-
     </data>
 </odoo>
