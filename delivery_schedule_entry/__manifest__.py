@@ -8,6 +8,7 @@
         # 'sale',
         # 'product_sales_pricelist',
         # 'account',
+        'gbs_application_group',
         'sale_order_type',
     ],
 

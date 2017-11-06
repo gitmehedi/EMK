@@ -11,6 +11,8 @@
         "procurement"
                 ],
     "data": [
+        "security/ir.model.access.csv",
+        "security/security.xml",
         "views/inherited_product_temp_gen_view.xml",
         "views/inherited_prod_temp_inven_view.xml",
     ],
