@@ -10,11 +10,14 @@
                         <button name="action_receive" type="object" states="transfer"
                                 string="Receive" class="oe_highlight"/>
                         <button name="action_reject" type="object" states="transfer"
-                                string="Reject" class="oe_highlight"/>
+                                string="Reject"/>
 
                         <field name="state" widget="statusbar"/>
                     </header>
                     <sheet>
+                        <h1>
+                            <field name="name"/>
+                        </h1>
                         <group>
                             <group>
                                 <field name="my_shop_id"
@@ -23,6 +26,12 @@
                             <group>
                                 <field name="transfer_shop_id"
                                        options="{'no_quick_create': True, 'no_create_edit': True, 'no_open': True}"/>
+                                <field name="approve_date"
+                                       attrs="{'invisible': [('state','in',('draft','submit'))]}"/>
+                                <field name="transfer_date"
+                                       attrs="{'invisible': [('state','in',('draft','submit','approve'))]}"/>
+                                <field name="receive_date"
+                                       attrs="{'invisible': [('state','in',('draft','submit','approve','transfer'))]}"/>
                             </group>
                         </group>
                         <field name="product_line_ids">
@@ -45,6 +54,7 @@
             <field name="arch" type="xml">
                 <tree string="Stock Transfer receive Tree" create="false" edit="false"
                       colors="blue:state == 'draft';red:state == 'submit';gray:state in ('receive','reject');green:state in ('approve','transfer');black:state in ('transfer')">
+                    <field name="name"/>
                     <field name="my_shop_id" string="From Shop"/>
                     <field name="transfer_shop_id" string="My Shop"/>
                     <field name="approve_date"/>
@@ -61,11 +71,17 @@
             <field eval="10" name="priority"/>
             <field name="arch" type="xml">
                 <search string="Stock Transfer Receive Search">
-                    <field name="my_shop_id" string="From Shop"/>
-                    <field name="transfer_shop_id" string="My Shop"/>
+                    <field name="name"
+                           filter_domain="[('name', 'ilike', self)]"/>
+                    <field name="my_shop_id" string="From Shop"
+                           filter_domain="[('my_shop_id', 'ilike', self)]"/>
+                    <field name="transfer_shop_id" string="My Shop"
+                           filter_domain="[('transfer_shop_id', 'ilike', self)]"/>
                     <field name="approve_date"/>
                     <field name="transfer_date"/>
                     <field name="receive_date"/>
+                    <field name="state"
+                           filter_domain="[('state', 'ilike', self)]"/>
                 </search>
             </field>
         </record>
@@ -75,6 +91,7 @@
             <field name="res_model">stock.transfer.request</field>
             <field name="domain">[('is_transfer','=','1')]</field>
             <field name="view_type">form</field>
+            <field name="search_view_id" ref="stock_transfer_receive_search_view"/>
             <field name="view_mode">tree,form</field>
         </record>
 

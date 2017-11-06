@@ -19,10 +19,15 @@ class StockTransferRequest(models.Model):
     barcode = fields.Char(string='Product Barcode', size=20,
                           readonly=True, states={'draft': [('readonly', False)]})
 
-    submit_date = fields.Datetime(string="Submit Date")
-    approve_date = fields.Datetime(string="Approve Date")
-    transfer_date = fields.Datetime(string="Transfer Date")
-    receive_date = fields.Datetime(string="Receive Date")
+    name = fields.Char('Challan No', readonly=True)
+    submit_date = fields.Datetime(string="Submit Date", readonly=True,
+                                  states={'draft': [('readonly', False)], 'transfer': [('readonly', False)]})
+    approve_date = fields.Datetime(string="Approve Date", readonly=True,
+                                   states={'submit': [('readonly', False)]})
+    transfer_date = fields.Datetime(string="Transfer Date", readonly=True,
+                                    states={'approve': [('readonly', False)]})
+    receive_date = fields.Datetime(string="Receive Date", readonly=True,
+                                   states={'transfer': [('readonly', False)]})
 
     """ Relational Fields """
     product_line_ids = fields.One2many('stock.transfer.request.line', 'stock_transfer_id', readonly=True,
@@ -30,7 +35,8 @@ class StockTransferRequest(models.Model):
     my_shop_id = fields.Many2one('operating.unit', string="My Shop", required=True, ondelete="cascade",
                                  default=_default_operating_unit, store=True,
                                  readonly=True, states={'draft': [('readonly', False)]})
-    transfer_shop_id = fields.Many2one('operating.unit', string="To Shop", store=True, required=True, ondelete="cascade",
+    transfer_shop_id = fields.Many2one('operating.unit', string="To Shop", store=True, required=True,
+                                       ondelete="cascade",
                                        readonly=True, states={'draft': [('readonly', False)]})
     is_transfer = fields.Boolean(string="Is Transfer", default=False)
     is_receive = fields.Boolean(string="Is Receive", default=False)
@@ -87,6 +93,13 @@ class StockTransferRequest(models.Model):
                     self.product_line_ids = product_line_ids
             self.barcode = None
 
+    @api.model
+    def create(self, vals):
+        if vals.get('name', 'New') == 'New':
+            vals['name'] = self.env['ir.sequence'].next_by_code(
+                'stock.transfer.request') or '/'
+        return super(StockTransferRequest, self).create(vals)
+
     @api.one
     def action_draft(self):
         self.state = 'draft'
@@ -108,6 +121,8 @@ class StockTransferRequest(models.Model):
 
         move_obj = self.env['stock.move']
         transit_location = self.env['stock.location'].search([('name', 'ilike', 'Inter Company Transit')])
+        shop_location = self.get_location(self.my_shop_id.id)
+        picking_id = self.env['stock.picking.type'].search([('default_location_src_id', '=', shop_location)])
 
         pic_val = {
             'picking_type_id': 1,

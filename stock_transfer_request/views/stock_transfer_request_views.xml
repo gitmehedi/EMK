@@ -19,6 +19,9 @@
                         <field name="state" widget="statusbar"/>
                     </header>
                     <sheet>
+                        <h1>
+                            <field name="name"/>
+                        </h1>
                         <group>
                             <group>
                                 <field name="my_shop_id"
@@ -27,13 +30,19 @@
                             <group>
                                 <field name="transfer_shop_id"
                                        options="{'no_quick_create': True, 'no_create_edit': True, 'no_open': True}"/>
+                                <field name="approve_date"
+                                       attrs="{'invisible': [('state','in',('draft','submit'))]}"/>
+                                <field name="transfer_date"
+                                       attrs="{'invisible': [('state','in',('draft','submit','approve'))]}"/>
+                                <field name="receive_date"
+                                       attrs="{'invisible': [('state','in',('draft','submit','approve','transfer'))]}"/>
                             </group>
                         </group>
                         <field name="product_line_ids">
                             <tree string="Products" editable="bottom">
                                 <field name="product_id"
                                        options="{'no_quick_create': True, 'no_create_edit': True, 'no_open': True}"/>
-                                <field name="store_qty" />
+                                <field name="store_qty"/>
                                 <field name="quantity" sum="quantity"/>
                             </tree>
                         </field>
@@ -49,6 +58,7 @@
             <field name="arch" type="xml">
                 <tree string="Stock Transfer Request Tree"
                       colors="blue:state == 'draft';red:state == 'submit';gray:state in ('receive','reject');green:state in ('approve','transfer');black:state in ('transfer')">
+                    <field name="name"/>
                     <field name="my_shop_id"/>
                     <field name="transfer_shop_id"/>
                     <field name="approve_date"/>
@@ -65,11 +75,17 @@
             <field eval="10" name="priority"/>
             <field name="arch" type="xml">
                 <search string="Stock Transfer Request Search">
-                    <field name="my_shop_id"/>
-                    <field name="transfer_shop_id"/>
+                    <field name="name"
+                           filter_domain="[('name', 'ilike', self)]"/>
+                    <field name="my_shop_id" string="My Shop"
+                           filter_domain="[('my_shop_id', 'ilike', self)]"/>
+                    <field name="transfer_shop_id" string="To Shop"
+                           filter_domain="[('transfer_shop_id', 'ilike', self)]"/>
                     <field name="approve_date"/>
                     <field name="transfer_date"/>
                     <field name="receive_date"/>
+                    <field name="state"
+                           filter_domain="[('state', 'ilike', self)]"/>
                 </search>
             </field>
         </record>
@@ -79,6 +95,7 @@
             <field name="res_model">stock.transfer.request</field>
             <field name="domain">[('state','in',('draft','submit','approve','transfer','receive','reject'))]</field>
             <field name="view_type">form</field>
+            <field name="search_view_id" ref="stock_transfer_request_search_view"/>
             <field name="view_mode">tree,form</field>
         </record>
 
@@ -94,6 +111,18 @@
             <field name="view_mode">form</field>
             <field name="view_id" ref="stock_transfer_request_form_view"/>
             <field name="act_window_id" ref="stock_transfer_request_action"/>
+        </record>
+
+        <record id="seq_type_stock_transfer_request" model="ir.sequence.type">
+            <field name="name">Stock Transfer Request</field>
+            <field name="code">stock.transfer.request</field>
+        </record>
+
+        <record id="seq_stock_transfer_request" model="ir.sequence">
+            <field name="name">Stock Transfer Request</field>
+            <field name="code">stock.transfer.request</field>
+            <field name="prefix">TM/CN/</field>
+            <field name="padding">5</field>
         </record>
 
         <menuitem id="stock_transfer_request_menu" name="Request"
