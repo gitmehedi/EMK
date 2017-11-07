@@ -9,6 +9,7 @@
         'stock',
         'sales_team',
         'purchase',
+        'commercial',
     ],
 
     'data': [

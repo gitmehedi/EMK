@@ -1,7 +1,5 @@
 from odoo import api, fields, models
 from odoo.exceptions import UserError, ValidationError
-from lxml import etree
-
 import datetime
 
 
@@ -124,3 +122,5 @@ class CommercialAttachment(models.Model):
     title = fields.Char(string='Title', required=True)
     file = fields.Binary(default='Attachment', required=True)
     lc_id = fields.Many2one("letter.credit", string='LC Number', ondelete='cascade')
+
+

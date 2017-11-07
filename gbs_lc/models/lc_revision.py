@@ -21,7 +21,7 @@ class LcRevision(models.Model):
     @api.multi
     def action_revision(self):
         self.ensure_one()
-        view_ref = self.env['ir.model.data'].get_object_reference('gbs_lc_creation', 'view_local_credit_form')
+        view_ref = self.env['ir.model.data'].get_object_reference('gbs_lc', 'view_local_credit_form')
         view_id = view_ref and view_ref[1] or False,
         self.with_context(new_lc_revision=True).copy()
         self.write({'state': self.state,'status':'amendment'})
