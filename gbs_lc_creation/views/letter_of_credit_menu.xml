@@ -2,7 +2,6 @@
 <odoo>
     <data>
 
-        <!--Sales Menu-->
         <record model="ir.actions.act_window" id="lc_export_creation_action">
             <field name="name">Letter of Credit: Export</field>
             <field name="res_model">letter.credit</field>
@@ -11,13 +10,6 @@
             <field name="context">{'default_type': 'export'}</field>
         </record>
 
-        <menuitem id="lc_export_creation_menu" parent="sales_team.menu_base_partner"
-            sequence="10" name="Letter of Credit" />
-
-        <menuitem id="lc_export_creation_submenu" name="Export LC" parent="lc_export_creation_menu"
-                  action="lc_export_creation_action"/>
-
-        <!--Purchase Menu-->
         <record model="ir.actions.act_window" id="lc_import_creation_action">
             <field name="name">Letter of Credit: Import</field>
             <field name="res_model">letter.credit</field>
@@ -26,18 +18,40 @@
             <field name="context">{'default_type': 'import'}</field>
         </record>
 
+
+        <!--Sales Menu-->
+        <!--<record model="ir.actions.act_window" id="lc_export_creation_action">-->
+            <!--<field name="name">Letter of Credit: Export</field>-->
+            <!--<field name="res_model">letter.credit</field>-->
+            <!--<field name="view_mode">tree,form</field>-->
+            <!--<field name="domain">[('type','=','export')]</field>-->
+            <!--<field name="context">{'default_type': 'export'}</field>-->
+        <!--</record>-->
+
+        <menuitem id="lc_export_creation_menu" parent="sales_team.menu_base_partner"
+            sequence="10" name="Letter of Credit" />
+
+        <menuitem id="lc_export_creation_submenu" name="Export LC" parent="lc_export_creation_menu"
+                  action="lc_export_creation_action"/>
+
+        <!--Purchase Menu-->
+        <!--<record model="ir.actions.act_window" id="lc_import_creation_action">-->
+            <!--<field name="name">Letter of Credit: Import</field>-->
+            <!--<field name="res_model">letter.credit</field>-->
+            <!--<field name="view_mode">tree,form</field>-->
+            <!--<field name="domain">[('type','=','import')]</field>-->
+            <!--<field name="context">{'default_type': 'import'}</field>-->
+        <!--</record>-->
+
         <menuitem id="lc_import_creation_menu" parent="purchase.menu_purchase_root"
             sequence="10" name="Letter of Credit" />
 
         <menuitem id="lc_import_creation_submenu" name="Import LC" parent="lc_import_creation_menu"
                   action="lc_import_creation_action"/>
 
-         <!--Commercial Menu-->
-        <menuitem name="Commercial"
-            id="menu_commercial_root"
-            sequence="23"/>
-
-        <menuitem id="lc_commercial_creation_menu" parent="menu_commercial_root"
+         <!--&lt;!&ndash;Commercial Menu&ndash;&gt;-->
+        <!--<menuitem name="Commercial"-->
+        <menuitem id="lc_commercial_creation_menu" parent="commercial.menu_commercial_root"
             sequence="1" name="Letter of Credit" />
 
         <menuitem id="lc_commercial_export_creation_submenu" name="Export LC" parent="lc_commercial_creation_menu"
@@ -45,5 +59,18 @@
 
         <menuitem id="lc_commercial_import_creation_submenu" name="Import LC" parent="lc_commercial_creation_menu"
                   sequence="2" action="lc_import_creation_action"/>
+
+
+            <!--id="menu_commercial_root"-->
+            <!--sequence="23"/>-->
+
+        <!--<menuitem id="lc_commercial_creation_menu" parent="menu_commercial_root"-->
+            <!--sequence="1" name="Letter of Credit" />-->
+
+        <!--<menuitem id="lc_commercial_export_creation_submenu" name="Export LC" parent="lc_commercial_creation_menu"-->
+                <!--sequence="1" action="lc_export_creation_action"/>-->
+
+        <!--<menuitem id="lc_commercial_import_creation_submenu" name="Import LC" parent="lc_commercial_creation_menu"-->
+                  <!--sequence="2" action="lc_import_creation_action"/>-->
     </data>
 </odoo>
