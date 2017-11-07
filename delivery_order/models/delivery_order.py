@@ -1,9 +1,6 @@
 from odoo import api, fields, models
-
 from odoo.exceptions import UserError, ValidationError, Warning
-
 import time,datetime
-from collections import Counter
 
 
 class DeliveryOrder(models.Model):
@@ -14,12 +11,11 @@ class DeliveryOrder(models.Model):
     _order = "approved_date desc"
 
 
-
     name = fields.Char(string='Name', index=True, readonly=True)
     so_date = fields.Datetime('Order Date', readonly=True, states={'draft': [('readonly', False)]})
     sequence_id = fields.Char('Sequence', readonly=True)
     deli_address = fields.Char('Delivery Address', readonly=True,states={'draft': [('readonly', False)]})
-    sale_order_id = fields.Many2one('sale.order', string='Sale Order', required=True, readonly=True, states={'draft': [('readonly', False)]})
+
     parent_id = fields.Many2one('res.partner', 'Customer', ondelete='cascade', readonly=True,related='sale_order_id.partner_id')
     payment_term_id = fields.Many2one('account.payment.term', string='Payment Terms', readonly=True,related='sale_order_id.payment_term_id')
     warehouse_id = fields.Many2one('stock.warehouse', string='Warehouse', readonly=True, states={'draft': [('readonly', False)]})
@@ -60,11 +56,19 @@ class DeliveryOrder(models.Model):
 
     """ All functions """
 
+    sale_order_id = fields.Many2one('sale.order',
+                                    string='Sale Order',
+                                    required=True,
+                                    readonly=True,
+                                    states={'draft': [('readonly', False)]})
+    #domain = [('da_button_show', '=', 'True')]
+
     @api.model
     def create(self, vals):
         seq = self.env['ir.sequence'].next_by_code('delivery.order') or '/'
         vals['name'] = seq
         return super(DeliveryOrder, self).create(vals)
+
 
     @api.multi
     def unlink(self):
@@ -90,6 +94,7 @@ class DeliveryOrder(models.Model):
 
         elif self.so_type == 'lc_sales':
             return self.lc_sales_business_logics()
+            #return self.create_delivery_order()
 
 
         self.state = 'approve'
@@ -168,7 +173,7 @@ class DeliveryOrder(models.Model):
                     #raise Warning(warningstr)
 
 
-
+    @api.one
     def products_price_sum(self):
         product_line_subtotal = 0
         for do_product_line in self.line_ids:
@@ -178,6 +183,7 @@ class DeliveryOrder(models.Model):
 
 
     #@todo Need to refactor below method -- rabbi
+    @api.one
     def check_cash_amount_with_subtotal(self):
         account_payment_pool = self.env['account.payment'].search(
                 [('is_this_payment_checked', '=', False), ('sale_order_id', '=', self.sale_order_id.id),
@@ -206,6 +212,7 @@ class DeliveryOrder(models.Model):
             return self.write({'state': 'approve'})  # Only Second level approval
 
 
+    @api.one
     def create_delivery_order(self):
         for order in self.sale_order_id:
             order.state = 'sale'
@@ -219,7 +226,7 @@ class DeliveryOrder(models.Model):
             self.sale_order_id.action_done()
         return True
 
-
+    @api.one
     def payment_information_check(self):
         for cash_line in self.cash_ids:
 
@@ -248,8 +255,16 @@ class DeliveryOrder(models.Model):
              ('partner_id', '=', self.parent_id.id)])
         account_payment_pool.write({'is_this_payment_checked': True})
 
+        for sale_line in self.sale_order_id.order_line:
+            for da_line in self.line_ids:
+                sale_line.write({'da_qty': da_line.quantity})
+
         return self.write({'state': 'close', 'confirmed_date': time.strftime('%Y-%m-%d %H:%M:%S')})
 
+    @api.onchange('quantity')
+    def onchange_quantity(self):
+        if self.quantity < 0 or self.quantity == 0:
+            raise UserError("Qty can not be Zero or Negative value")
 
     @api.onchange('sale_order_id')
     def onchange_sale_order_id(self):
@@ -265,7 +280,7 @@ class DeliveryOrder(models.Model):
             else:
                 self.set_payment_info_automatically(account_payment_pool)
 
-
+    @api.one
     def set_cheque_info_automatically(self, account_payment_pool):
         vals = []
         for payments in account_payment_pool:
@@ -282,6 +297,7 @@ class DeliveryOrder(models.Model):
                 self.cheque_ids = vals
 
 
+    @api.one
     def set_products_info_automatically(self):
         if self.sale_order_id:
             val = []
@@ -305,7 +321,7 @@ class DeliveryOrder(models.Model):
 
             self.line_ids = val
 
-
+    @api.one
     def set_payment_info_automatically(self, account_payment_pool):
 
         if account_payment_pool:
@@ -323,6 +339,7 @@ class DeliveryOrder(models.Model):
                         self.cash_ids = vals
 
 
+    @api.one
     def action_process_unattached_payments(self):
         account_payment_pool = self.env['account.payment'].search(
             [('is_this_payment_checked', '=', False), ('sale_order_id', '=', self.sale_order_id.id)])
@@ -343,8 +360,6 @@ class DeliveryOrder(models.Model):
                                         }))
 
             self.cash_ids = vals
-
-
 
 
 

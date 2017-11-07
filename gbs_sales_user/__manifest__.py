@@ -10,5 +10,5 @@
     'data': [ ],
     'description': 'All kinds of sales users',
     'installable': True,
-    'application' : True,
+    'application' : False,
 }
