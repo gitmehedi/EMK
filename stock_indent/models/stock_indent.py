@@ -286,35 +286,9 @@ class IndentIndent(models.Model):
             res = dict(res, company_id=self.company_id.id)
         return res
 
-    @api.one
-    def _create_purchase_req(self, indent_name):
-        pur_req_obj = self.env['purchase.requisition']
-
-        values = {
-            # 'name': line.name,
-            'origin': 'Indent : ' + indent_name,
-            'user_id': self.env.user.id,
-            'exclusive': 'exclusive',
-        }
-
-        return pur_req_obj.create(values)
-
-    def _create_purchase_req_line(self, line, req_id):
-        pur_line_obj = self.env['purchase.requisition.line']
-
-        values = {
-            'requisition_id': req_id,
-            'product_id': line.product_id.id,
-            'product_qty': line.product_uom_qty,
-            'product_uom_id': line.product_uom.id,
-            'schedule_date': line.indent_id.required_date or False,
-        }
-
-        return pur_line_obj.create(values)
 
     @api.model
     def _create_pickings_and_procurements(self):
-        #"============_create_pickings_and_procurements=============="
         move_obj = self.env['stock.move']
         picking_obj = self.env['stock.picking']
         # Check if the indent is for purchase indent
@@ -322,16 +296,6 @@ class IndentIndent(models.Model):
         need_purchase_req = False
         picking_id = False
         for line in self.product_lines:
-            if line.type == 'make_to_order':
-                need_purchase_req = True
-
-            if need_purchase_req:
-                purchase_req = self._create_purchase_req(self.name)
-                need_purchase_req = False
-
-            if purchase_req:
-                self._create_purchase_req_line(line, purchase_req[0].id or False)
-
             date_planned = datetime.datetime.strptime(self.indent_date, DEFAULT_SERVER_DATETIME_FORMAT) + relativedelta(
                 days=line.delay or 0.0)
 
@@ -344,44 +308,12 @@ class IndentIndent(models.Model):
 
                 move_obj.create(self._prepare_indent_line_move(line, picking_id, date_planned))
         return picking_id
+
     def _check_gatepass_flow(self, indent):
         if indent.type == 'existing':
             return True
         else:
             return False
-
-    # def create_transfer_move(self, indent, internal=None):
-    #     move_obj = self.pool.get('stock.move')
-    #     picking_obj = self.pool.get('stock.picking')
-    #     product_pool = self.pool.get('product.product')
-    #
-    #     location_id = indent.warehouse_id.lot_stock_id.id
-    #
-    #     picking_id = False
-    #     for line in indent.product_lines:
-    #         date_planned = self._get_date_planned(self, indent, line, indent.indent_date)
-    #
-    #         if line.product_id:
-    #             move_id = False
-    #             if not picking_id:
-    #                 picking_id = picking_obj.create(self, self._prepare_indent_picking(self, indent))
-    #
-    #             res = self._prepare_indent_line_move(self, indent, line, picking_id, date_planned)
-    #             res.update({
-    #                 'location_id': indent.department_id.id,
-    #                 'location_dest_id': location_id
-    #             })
-    #             if internal:
-    #                 move_id = move_obj.create(self, res)
-    #             elif not internal and not product_pool.browse(self, res.get('product_id')).repair_ok:
-    #                 move_id = move_obj.create(self, res)
-    #
-    #     wf_service = netsvc.LocalService("workflow")
-    #     if picking_id:
-    #         wf_service.trg_validate('stock.picking', picking_id, 'button_confirm')
-    #
-    #     self.write(self, [indent.id], {'in_picking_id': picking_id})
-    #     return True
 
     def create_repairing_gatepass(self, indent):
         pass
@@ -392,13 +324,9 @@ class IndentIndent(models.Model):
         picking_id = False
         if self.product_lines:
             picking_id = self._create_pickings_and_procurements()
-            print picking_id
         move_ids = move_obj.search([('picking_id', '=', picking_id)])
         self.write({'picking_id': picking_id,
                     'state': 'inprogress',
-                    # 'message_follower_ids': [(4, self.approver_id and
-                    #                           self.approver_id.partner_id and
-                    #                           self.approver_id.partner_id.id)]
                     }
                    )
 

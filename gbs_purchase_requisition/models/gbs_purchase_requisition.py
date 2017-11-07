@@ -3,7 +3,7 @@ from datetime import date
 
 
 class PurchaseRequisition(models.Model):
-    _inherit = ['purchase.requisition']
+    _inherit = 'purchase.requisition'
 
     department_id = fields.Many2one('hr.department',
                                     string='Department', store=True)
@@ -19,22 +19,33 @@ class PurchaseRequisition(models.Model):
     required_date = fields.Date(string='Required Date')
 
     state = fields.Selection([('draft', 'Draft'), ('in_progress', 'Confirmed'),
-                              ('review_plant_incharge', 'Review'),
                               ('approve_head_procurement', 'Waiting For Approval'),('done', 'Approved'),
                               ('cancel', 'Cancelled')],'Status', track_visibility='onchange', required=True,
                              copy=False, default='draft')
 
-    @api.multi
-    def action_open(self):
-        self.write({'state': 'review_plant_incharge'})
+    indent_ids = fields.Many2many('indent.indent','pr_indent_rel','pr_id','indent_id',string='Indent')
+    attachment_ids = fields.One2many('purchase.requisition.attachments', 'pr_id', string='Attachments')
 
     @api.multi
-    def action_reviewed(self):
+    def action_open(self):
         self.write({'state': 'approve_head_procurement'})
 
     @api.multi
     def action_approve(self):
         self.write({'state': 'done'})
+
+    @api.onchange('indent_ids')
+    def indent_product_line(self):
+        vals = []
+        for indent_id in self.indent_ids:
+            indent_product_line_obj = self.env['indent.product.lines'].search([('indent_id','=',indent_id.id)])
+            for indent_product_line in indent_product_line_obj:
+                vals.append((0, 0, {'product_id': indent_product_line.product_id,
+                                'product_uom_id': indent_product_line.product_uom,
+                                'product_qty': indent_product_line.product_uom_qty,
+                          }))
+                self.line_ids = vals
+
 
 class PurchaseRequisitionLine(models.Model):
     _inherit = "purchase.requisition.line"
@@ -44,3 +55,12 @@ class PurchaseRequisitionLine(models.Model):
     last_product_uom_id = fields.Many2one('product.uom', string='Last Purchase Unit')
     last_price_unit = fields.Float(string='Last Unit Price')
     remark = fields.Char(string='Remarks')
+
+
+class PurchaseRequisitionAttachments(models.Model):
+    _name = 'purchase.requisition.attachments'
+    _description = 'Purchase Requisition Attachments'
+
+    title = fields.Char(string='Title', required=True)
+    file = fields.Binary(default='Attachment', required=True)
+    pr_id = fields.Many2one('purchase.requisition', string='LC Number')

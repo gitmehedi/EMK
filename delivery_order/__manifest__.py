@@ -15,7 +15,7 @@
 
     'data': [
         'security/ir.model.access.csv',
-        'security/ir_rule.xml',
+        #'security/ir_rule.xml',
         'report/delivery_order_report.xml',
         'report/delivery_order_report_template.xml',
         'wizards/letter_of_credits_view.xml',

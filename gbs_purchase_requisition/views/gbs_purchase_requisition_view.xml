@@ -1,8 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <odoo>
     <data>
-        <!-- Inherited Tree view-->
+        <!-- Inherited menuitem-->
+        <menuitem name="Purchases"
+                  id="purchase.menu_purchase_root"
+                  groups="purchase.group_purchase_manager,purchase.group_purchase_user,stock.group_stock_user"
+                  web_icon="purchase,static/description/icon.png"
+                  sequence="25"/>
+        <!-- Inherited tree view-->
         <record id="indent_pr_view_tree" model="ir.ui.view">
             <field name="name">purchase.requisition.view.tree</field>
             <field name="model">purchase.requisition</field>
@@ -18,6 +23,9 @@
                     <xpath expr="//field[@name='ordering_date']" position="replace">
                         <field name="requisition_date"/>
                     </xpath>
+                    <xpath expr="//field[@name='origin']" position="attributes">
+                        <attribute name="invisible">1</attribute>
+                    </xpath>
                 </data>
             </field>
         </record>
@@ -29,12 +37,17 @@
             <field name="arch" type="xml">
                 <data>
                     <header>
-                        <button name="action_reviewed" states="review_plant_incharge" string="Done" type="object" class="btn-primary"/>
-                        <button name="action_approve" states="approve_head_procurement" string="Approve" type="object" class="btn-primary"/>
-                        <button name="action_cancel" states="review_plant_incharge,approve_head_procurement" string="Cancel" type="object"/>
+                        <button name="action_approve" groups="gbs_purchase_requisition.group_purchase_requisition_approver"
+                                states="approve_head_procurement" string="Approve" type="object" class="btn-primary"/>
+                        <button name="action_cancel" groups="gbs_purchase_requisition.group_purchase_requisition_validator,gbs_purchase_requisition.group_purchase_requisition_approver"
+                                states="review_plant_incharge,approve_head_procurement" string="Cancel" type="object"/>
                     </header>
+                    <xpath expr="//button[@name='action_open']" position="replace">
+                        <button name="action_open" groups="gbs_purchase_requisition.group_purchase_requisition_validator"
+                                states="in_progress" string="Validate" type="object" class="btn-primary"/>
+                    </xpath>
                     <xpath expr="//field[@name='state']" position="replace">
-                        <field name="state" widget="statusbar" statusbar_visible="draft,in_progress,review_plant_incharge,approve_head_procurement,done"/>
+                        <field name="state" widget="statusbar" statusbar_visible="draft,in_progress,approve_head_procurement,done"/>
                     </xpath>
                     <xpath expr="//label[@for='name']" position="replace">
                         <label for="name" class="oe_edit_only oe_inline" string="Purchase Requisition"/>
@@ -45,24 +58,37 @@
                     <xpath expr="//field[@name='schedule_date']" position="attributes">
                         <attribute name="invisible">1</attribute>
                     </xpath>
+                    <xpath expr="//field[@name='origin']" position="attributes">
+                        <attribute name="invisible">1</attribute>
+                    </xpath>
                     <xpath expr="//field[@name='date_end']" position="replace">
-                        <field name="requisition_date"/>
+                        <field name="requisition_date" attrs="{'readonly': [('state','in',('done'))]}"/>
                     </xpath>
                     <xpath expr="//field[@name='ordering_date']" position="replace">
-                        <field name="required_date"/>
+                        <field name="required_date" attrs="{'readonly': [('state','in',('done'))]}"/>
                     </xpath>
-
                     <xpath expr="//field[@name='user_id']" position="after" type="object">
-                        <field name="department_id"/>
-                        <field name="operating_unit_id" groups="operating_unit.group_multi_operating_unit"
+                        <field name="department_id" attrs="{'readonly': [('state','in',('done'))]}"
                                options='{"no_open": True,"no_create": 1, "no_create_edit":1}'/>
-                        <field name="buying_type" widget="selection" placeholder="Please Select"
-                               attrs="{'invisible': [('state','in',('draft','in_progress','review_plant_incharge'))]}"/>
-                        <field name="purchase_by" widget="selection" placeholder="Please Select"/>
+                        <field name="operating_unit_id" groups="operating_unit.group_multi_operating_unit"
+                               options='{"no_open": True,"no_create": 1, "no_create_edit":1}' attrs="{'readonly': [('state','in',('done'))]}"/>
+                    </xpath>
+                    <xpath expr="//field[@name='vendor_id']" position="attributes">
+                        <attribute name="attrs">{'readonly': [('state','in',('done'))]}</attribute>
+                    </xpath>
+                    <xpath expr="//field[@name='vendor_id']" position="after">
+                        <field name="indent_ids" widget="many2many_tags" domain="[('operating_unit_id','=',operating_unit_id)]"
+                               attrs="{'readonly': [('state','in',('done'))]}"/>
                     </xpath>
                     <xpath expr="//field[@name='company_id']" position="replace">
-                        <field name="company_id" groups="base.group_multi_company"
+                        <field name="company_id" groups="base.group_multi_company" attrs="{'readonly': [('state','in',('done'))]}"
                                options='{"no_open": True,"no_create": 1, "no_create_edit":1}'/>
+                    </xpath>
+                    <xpath expr="//field[@name='company_id']" position="after">
+                        <field name="buying_type" widget="selection" placeholder="Please Select"
+                               attrs="{'invisible': [('state','in',('draft','in_progress','review_plant_incharge'))],'required':[('state', '=','approve_head_procurement')],'readonly': [('state','in',('done'))]}"/>
+                        <field name="purchase_by" widget="selection" placeholder="Please Select"
+                               attrs="{'invisible': [('state','in',('draft','in_progress','review_plant_incharge'))],'required':[('state', '=','approve_head_procurement')],'readonly': [('state','in',('done'))]}"/>
                     </xpath>
                     <xpath expr="//field[@name='price_unit']" position="after" type="object">
                         <field name="last_purchse_date"/>
@@ -70,6 +96,17 @@
                         <field name="last_product_uom_id"/>
                         <field name="last_price_unit"/>
                         <field name="remark"/>
+                    </xpath>
+
+                    <xpath expr="//page[1]" position="after">
+                        <page string="Attachments">
+                            <field name="attachment_ids">
+                                <tree editable="top">
+                                    <field name="title" />
+                                    <field name="file"/>
+                                </tree>
+                            </field>
+                        </page>
                     </xpath>
                 </data>
             </field>
@@ -106,6 +143,7 @@
                 sequence="10"
                 name="Purchase Requisition"
                 parent="purchase.menu_procurement_management"
-                action="purchase_requisition.action_purchase_requisition"/>
+                action="purchase_requisition.action_purchase_requisition"
+                groups="gbs_purchase_requisition.group_purchase_requisition_validator,gbs_purchase_requisition.group_purchase_requisition_approver,stock.group_stock_user"/>
     </data>
 </odoo>

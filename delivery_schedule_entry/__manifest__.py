@@ -5,9 +5,8 @@
     'category': 'Sales',
     'version':'10.1.1.1',
     'depends': [
-        # 'sale',
-        # 'product_sales_pricelist',
-        # 'account',
+        'sale',
+        'product_sales_pricelist',
         'gbs_application_group',
         'sale_order_type',
     ],
