@@ -49,7 +49,7 @@
 
 	                    <h1>
 	                        <field name="name"/>
-                            <field name="da_button_show" invisible="1"/>
+                            <!--<field name="da_button_show" invisible="1"/>-->
 	                    </h1>
                         <group>
                             <group>

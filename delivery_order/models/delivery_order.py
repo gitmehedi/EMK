@@ -59,8 +59,9 @@ class DeliveryOrder(models.Model):
     sale_order_id = fields.Many2one('sale.order',
                                     string='Sale Order',
                                     required=True,
-                                    readonly=True, domain=[('da_button_show', '=', 'True')],
+                                    readonly=True,
                                     states={'draft': [('readonly', False)]})
+    #domain = [('da_button_show', '=', 'True')]
 
     @api.model
     def create(self, vals):
