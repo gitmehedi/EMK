@@ -363,9 +363,59 @@ class IndentIndent(models.Model):
             result['res_id'] = pick_ids and pick_ids[0] or False
         return result
 
-        ####################################################
-        # ORM Overrides methods
-        ####################################################
+    @api.multi
+    def action_view_purchase_requisition(self):
+        res = self.env.ref('purchase_requisition.view_purchase_requisition_form')
+        purchase_req = self._create_purchase_req()
+        if purchase_req:
+            self._create_purchase_req_line(purchase_req[0].id or False)
+        result = {
+            'name': _('PR'),
+            'view_type': 'form',
+            'view_mode': 'form',
+            'view_id': res and res.id or False,
+            'res_model': 'purchase.requisition',
+            'type': 'ir.actions.act_window',
+            'nodestroy': True,
+            'target': 'current',
+            'res_id':purchase_req[0].id
+        }
+        query = """ INSERT INTO pr_indent_rel (pr_id,indent_id)VALUES (%s, %s) """
+        self._cr.execute(query, tuple([purchase_req[0].id,self.id]))
+        return result
+
+    @api.one
+    def _create_purchase_req(self):
+        pur_req_obj = self.env['purchase.requisition']
+
+        values = {
+            'user_id': self.env.user.id,
+            'department_id': self.department_id.id,
+            'operating_unit_id': self.operating_unit_id.id,
+            'required_date': self.required_date,
+            'picking_type_id': self.picking_type_id.id,
+            'company_id': self.company_id.id,
+        }
+
+        return pur_req_obj.create(values)
+
+    def _create_purchase_req_line(self,req_id):
+        pur_line_obj = self.env['purchase.requisition.line']
+
+        values = {
+            'requisition_id': req_id,
+            'product_id': self.product_lines.product_id.id,
+            'name': self.product_lines.name or False,
+            'product_qty': self.product_lines.qty_available or False,
+            'product_uom_id': self.product_lines.product_uom.id or False,
+            'qty_ordered': self.product_lines.product_uom_qty or False,
+            'schedule_date': self.required_date or False,
+        }
+        return pur_line_obj.create(values)
+
+    ####################################################
+    # ORM Overrides methods
+    ####################################################
     @api.model
     def _needaction_domain_get(self):
         return [('state', 'in', ['waiting_approval'])]
@@ -408,8 +458,8 @@ class IndentProductLines(models.Model):
     qty_available = fields.Float('In Stock')
     virtual_available = fields.Float('Forecasted Qty')
     delay = fields.Float('Lead Time', required=True, default=0.0)
-    name = fields.Text('Purpose',store=True)
-    specification = fields.Text('Specification')
+    name = fields.Text('Specification',store=True)
+    # specification = fields.Text('Specification')
     remarks = fields.Text('Remarks')
     sequence = fields.Integer('Sequence')
 
@@ -474,5 +524,3 @@ class IndentProductLines(models.Model):
             # raise osv.except_osv(_("Warning !"), _("You must define at least one supplier for this product"))
         else:
             self.delay = product.seller_ids[0].delay
-
-

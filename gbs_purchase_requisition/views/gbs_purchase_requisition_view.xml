@@ -85,10 +85,16 @@
                                options='{"no_open": True,"no_create": 1, "no_create_edit":1}'/>
                     </xpath>
                     <xpath expr="//field[@name='company_id']" position="after">
-                        <field name="buying_type" widget="selection" placeholder="Please Select"
-                               attrs="{'invisible': [('state','in',('draft','in_progress','review_plant_incharge'))],'required':[('state', '=','approve_head_procurement')],'readonly': [('state','in',('done'))]}"/>
-                        <field name="purchase_by" widget="selection" placeholder="Please Select"
-                               attrs="{'invisible': [('state','in',('draft','in_progress','review_plant_incharge'))],'required':[('state', '=','approve_head_procurement')],'readonly': [('state','in',('done'))]}"/>
+                        <field name="region_type" widget="selection" readonly="1"
+                               attrs="{'invisible': [('state','in',('draft','in_progress','review_plant_incharge'))]}"/>
+                        <field name="purchase_by" widget="selection" readonly="1"
+                               attrs="{'invisible': [('state','in',('draft','in_progress','review_plant_incharge'))]}"/>
+                    </xpath>
+                    <xpath expr="//field[@name='product_id']" position="after" type="object">
+                        <field name="name"/>
+                    </xpath>
+                    <xpath expr="//field[@name='product_qty']" position="attributes" type="object">
+                        <attribute name="string">In Stock</attribute>
                     </xpath>
                     <xpath expr="//field[@name='price_unit']" position="after" type="object">
                         <field name="last_purchse_date"/>
@@ -100,17 +106,28 @@
 
                     <xpath expr="//page[1]" position="after">
                         <page string="Attachments">
-                            <field name="attachment_ids">
-                                <tree editable="top">
-                                    <field name="title" />
-                                    <field name="file"/>
-                                </tree>
-                            </field>
+                            <field name="attachment_ids" widget="many2many"/>
                         </page>
                     </xpath>
+
                 </data>
             </field>
         </record>
+        <!--Inherited view for field access-->
+        <!--<record id="inherit_indent_pr_view_form" model="ir.ui.view">-->
+            <!--<field name="name">indent.pr.view.form.inherit</field>-->
+            <!--<field name="model">purchase.requisition</field>-->
+            <!--<field name="inherit_id" ref="indent_pr_view_form" />-->
+            <!--<field name="groups_id" eval="[(6, 0, [ref('gbs_purchase_requisition.group_purchase_requisition_approver') ])]" />-->
+            <!--<field name="arch" type="xml">-->
+                <!--<field name="buying_type" position="attributes">-->
+                   <!--<attribute name="readonly">0</attribute>-->
+                <!--</field>-->
+				<!--<field name="purchase_by" position="attributes">-->
+                   <!--<attribute name="readonly">0</attribute>-->
+                <!--</field>-->
+            <!--</field>-->
+		<!--</record>-->
 
         <record model="ir.actions.act_window" id="purchase_requisition.action_purchase_requisition">
             <field name="name">Purchase Requisition</field>
