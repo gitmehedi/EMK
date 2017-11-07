@@ -49,6 +49,7 @@
 
 	                    <h1>
 	                        <field name="name"/>
+                            <field name="da_button_show" invisible="1"/>
 	                    </h1>
                         <group>
                             <group>
@@ -182,7 +183,7 @@
             <field name="name">DA Sequences</field>
             <field name="code">delivery.order</field>
             <field name="prefix">DA</field>
-            <field name="padding">3</field>
+            <field name="padding">6</field>
         </record>
 
 

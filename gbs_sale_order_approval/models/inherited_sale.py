@@ -26,7 +26,17 @@ class SaleOrder(models.Model):
 
     pack_type = fields.Many2one('product.packaging.mode',string='Packing Mode', required=True)
     currency_id = fields.Many2one("res.currency", related='', string="Currency", required=True)
-    date_order=fields.Date()
+
+    @api.multi
+    def _DA_button_show_hide(self):
+        for sale_line in self.order_line:
+            if sale_line.product_uom_qty == sale_line.da_qty:
+                return False
+                break;
+            else:
+                return True
+
+    da_button_show = fields.Boolean('DA Button show hide', compute="_DA_button_show_hide")
 
     @api.multi
     def amount_to_word(self, number):
@@ -43,7 +53,7 @@ class SaleOrder(models.Model):
 
     @api.multi
     def action_to_submit(self):
-        if self.validity_date and self.validity_date < self.date_order:
+        if self.validity_date and self.validity_date <= self.date_order:
             raise UserError('Expiration Date can not be less than Order Date')
 
         self.state = 'draft'
@@ -165,6 +175,8 @@ class SaleOrder(models.Model):
 class InheritedSaleOrderLine(models.Model):
     _inherit='sale.order.line'
 
+    da_qty = fields.Float(string='DA Qty.', default=3)
+
     @api.constrains('product_uom_qty','commission_rate')
     def _check_order_line_inputs(self):
         if self.product_uom_qty or self.commission_rate:
@@ -172,6 +184,7 @@ class InheritedSaleOrderLine(models.Model):
                 raise ValidationError('Price Unit, Ordered Qty. & Commission Rate can not be Negative value')
 
 
+    @api.one
     def _get_product_sales_price(self, product):
 
         if product:
