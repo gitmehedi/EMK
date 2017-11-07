@@ -8,7 +8,7 @@ class DOProductLine(models.Model):
     product_id = fields.Many2one('product.product', string="Product", readonly=True, ondelete='cascade')
     uom_id = fields.Many2one('product.uom', string="UoM",ondelete='cascade',readonly=True)
     pack_type = fields.Many2one('product.packaging.mode', string="Packing",ondelete='cascade',readonly=True)
-    quantity = fields.Float(string="Ordered Qty", required=True, default= "1")
+    quantity = fields.Float(string="Ordered Qty", required=True, default= 1)
     price_unit = fields.Float(string="Price Unit", readonly=True)
     commission_rate = fields.Float(string="Com. (%)", readonly=True)
     price_subtotal = fields.Float(string="Subtotal", readonly=True)

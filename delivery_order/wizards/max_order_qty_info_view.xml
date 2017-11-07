@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="view_max_order_qty_wizard" model="ir.ui.view">
+            <field name="name">max.order.wizard.view</field>
+            <field name="model">max.order.wizard</field>
+            <field name="arch" type="xml">
+                <form string="Max Order Qty" edit="false" create="false" delete="false">
+                    <sheet>
+                        <group>
+                            <field name="msg"/>
+                        </group>
+                        <footer>
+						    <button string="Yes" name="action_yes" type="object" class="oe_highlight" options="{'no_open': True, 'no_create': True}"/>
+                            <button string="No" name="action_no" type="object" class="oe_highlight" options="{'no_open': True, 'no_create': True}"/>
+					    </footer>
+                    </sheet>
+               </form>
+            </field>
+        </record>
+
+		<!--<record id="action_wizard_max_order_qty" model="ir.actions.act_window">-->
+			<!--<field name="name">Max Order Info Qty</field>-->
+			<!--<field name="type">ir.actions.act_window</field>-->
+            <!--<field name="res_model">max.order.wizard</field>-->
+			<!--<field name="view_type">form</field>-->
+			<!--<field name="view_mode">form</field>-->
+			<!--<field name="target">new</field>-->
+		<!--</record>-->
+
+    </data>
+</odoo>
