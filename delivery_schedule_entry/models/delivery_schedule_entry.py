@@ -62,8 +62,7 @@ class DeliveryScheduleEntry(models.Model):
         self.ensure_one()
         ir_model_data = self.env['ir.model.data']
         try:
-            template_id = \
-            ir_model_data.get_object_reference('delivery_schedule_entry', 'template_schedule_letter')[1]
+            template_id = ir_model_data.get_object_reference('delivery_schedule_entry', 'template_schedule_letter')[1]
         except ValueError:
             template_id = False
         try:

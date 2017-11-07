@@ -1,16 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
     <data>
-
-        <record id="local_credit_form_view" model="ir.ui.view">
+        <record id="view_local_credit_form" model="ir.ui.view">
             <field name="name">letter.credit.form</field>
             <field name="model">letter.credit</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Letter Credit" delete="false" copy='0'>
                     <header>
-                        <button name="action_confirm" type="object" states="confirm" string="Confirm" class="oe_highlight"/>
-                        <field name="state" widget="statusbar"/>
+                        <button string="Open" name="action_open" states="draft" type="object" class="oe_highlight"/>
+                    	<button string="Confirm" name="action_confirm" states="open" type="object" class="oe_highlight"/>
+                     	<button string="Reset to Draft" name="action_draft" type="object" states="confirmed" class="oe_read_only"/>
+                        <button string="Amendment" name="action_revision" class="oe_read_only" type="object" attrs="{'invisible': [('state', 'in', ('draft', 'open'))]}"/>
+                        <field name="state" widget="statusbar" statusbar_visible="draft,open,confirmed,progress,done"/>
+
                     </header>
 
                     <sheet>
@@ -19,29 +22,25 @@
                             <group colspan="4">
                                 <group>
                                     <field name="name"/>
-                                     <field name="region_type" widget="radio"/>
+                                    <field name="region_type" widget="radio"/>
                                     <field name="type" attrs="{'invisible': '1'}" />
                                 </group>
                             </group>
-                            <!--Same Group-->
-                            <group string="Beneficiary" attrs="{'invisible': [('type', '=', 'import')]}">
-                               <field name="first_party" attrs="{'required':[('type', '!=','import')]}"/>
-                               <field name="first_party_bank" attrs="{'required':[('type', '!=','import')]}"/>
+
+                            <group>
+                                <separator string="Beneficiary" colspan="2" attrs="{'invisible': [('type', '=', 'import')]}"/>
+                                <separator string="Applicant" colspan="2" attrs="{'invisible': [('type', '=', 'export')]}"/>
+                                <field name="first_party"/>
+                                <field name="first_party_bank"/>
                             </group>
-                            <group string="Applicant" attrs="{'invisible': [('type', '!=', 'import')]}">
-                               <field name="first_party" attrs="{'required':[('type', '=','import')]}"/>
-                               <field name="first_party_bank" attrs="{'required':[('type', '=','import')]}"/>
+
+                            <group>
+                                <separator string="Beneficiary" colspan="2" attrs="{'invisible': [('type', '=', 'export')]}"/>
+                                <separator string="Applicant" colspan="2" attrs="{'invisible': [('type', '=', 'import')]}"/>
+                                <field name="second_party"/>
+                                <field name="second_party_bank"/>
                             </group>
-                            <!--Same Group-->
-                            <!--Same Group-->
-                            <group string="Applicant" attrs="{'invisible': [('type', '=', 'import')]}">
-                               <field name="second_party" attrs="{'required':[('type', '!=','import')]}"/>
-                               <field name="second_party_bank" attrs="{'required':[('type', '!=','import')]}"/>
-                            </group>
-                            <group string="Beneficiary" attrs="{'invisible': [('type', '!=', 'import')]}">
-                               <field name="second_party" attrs="{'required':[('type', '=','import')]}"/>
-                               <field name="second_party_bank" attrs="{'required':[('type', '=','import')]}"/>
-                            </group>
+
                             <!--Same Group-->
                             <group string="LC Value">
                                 <field name="lc_value"/>
@@ -54,63 +53,76 @@
                                 <field name="shipment_date"/>
                             </group>
                             <group string="Others Info" colspan="4">
-                                    <group>
-                                        <field name="hs_code"/>
-                                        <field name="lc_mode"/>
-                                        <field name="payment_terms"/>
-                                        <field name="period_of_presentation"/>
-                                        <field name="trans_shipment"/>
-                                    </group>
-                                    <group>
-                                        <field name="master_lc_number"/>
-                                        <field name="ship_mode"/>
-                                        <field name="inco_terms"/>
-                                        <field name="partial_shipment"/>
-                                    </group>
+                                <group>
+                                    <field name="hs_code"/>
+                                    <field name="lc_mode"/>
+                                    <field name="payment_terms"/>
+                                    <field name="period_of_presentation"/>
+                                    <field name="trans_shipment"/>
+                                </group>
+                                <group>
+                                    <field name="master_lc_number"/>
+                                    <field name="ship_mode"/>
+                                    <field name="inco_terms"/>
+                                    <field name="partial_shipment"/>
+                                </group>
                             </group>
                             <notebook colspan="4">
-                                  <page string="Port Info">
+                                <page string="Port Info">
                                     <group>
                                         <group>
-                                        <field name="landing_port"/>
-                                        <field name="discharge_port"/>
-                                        <field name="cnf_agent"/>
+                                            <field name="landing_port"/>
+                                            <field name="discharge_port"/>
+                                            <field name="cnf_agent"/>
                                         </group>
                                     </group>
-                                  </page>
-                                  <page string="Lien Bank">
-                                      <group>
-                                          <group>
-                                        <field name="require_lien"/>
-                                        <field name="lien_bank" attrs="{'invisible': [('require_lien','=',False)]}"/>
-                                        <field name="lien_date" attrs="{'invisible': [('require_lien','=',False)]}"/>
-                                          </group>
-                                      </group>
-                                  </page>
-                                  <page string="Insurance">
-                                      <group>
-                                          <group>
-                                        <field name="insurance_company_name"/>
-                                        <field name="insurance_number"/>
-                                        <field name="insurance_bill"/>
-                                          </group>
-                                      </group>
-                                  </page>
-                                  <page string="Terms &amp; Condition">
-                                      <field name="terms_condition" widget="html" options="{'style-inline': true}"/>
-                                  </page>
-                                  <page string="Remarks">
-                                      <field name="remarks" widget="html" options="{'style-inline': true}"/>
-                                  </page>
-                                  <page string="Attachments">
-                                      <field name="attachment_ids">
-                                            <tree editable="top">
-                                                <field name="title" />
-                                                <field name="file"/>
-                                            </tree>
-                                      </field>
-                                  </page>
-
+                                </page>
+                                <page string="Lien Bank">
+                                    <group>
+                                        <group>
+                                            <field name="require_lien"/>
+                                            <field name="lien_bank" attrs="{'invisible': [('require_lien','=',False)]}"/>
+                                            <field name="lien_date" attrs="{'invisible': [('require_lien','=',False)]}"/>
+                                        </group>
+                                    </group>
+                                </page>
+                                <page string="Insurance">
+                                    <group>
+                                        <group>
+                                            <field name="insurance_company_name"/>
+                                            <field name="insurance_number"/>
+                                            <field name="insurance_bill"/>
+                                        </group>
+                                    </group>
+                                </page>
+                                <page string="Terms &amp; Condition">
+                                    <field name="terms_condition" widget="html" options="{'style-inline': true}"/>
+                                </page>
+                                <page string="Remarks">
+                                    <field name="remarks" widget="html" options="{'style-inline': true}"/>
+                                </page>
+                                <page string="Attachments">
+                                    <field name="attachment_ids">
+                                        <tree editable="top">
+                                            <field name="title" />
+                                            <field name="file"/>
+                                        </tree>
+                                    </field>
+                                </page>
+                                <page string="Amendment">
+                                    <field name="old_revision_ids" >
+                                        <tree>
+                                            <field name='name'/>
+                                            <field name='create_date' string="Superseeded on"/>
+                                            <field name='create_uid' string="Superseeded by"/>
+                                            <field name='state' invisible='1'/>
+                                        </tree>
+                                    </field>
+                                    <group attrs="{'invisible': [('active', '=', True)]}">
+                                        <field name="current_revision_id"/>
+                                        <field name="active" invisible="1"/>
+                                    </group>
+                                </page>
                             </notebook>
                         </group>
                     </sheet>
@@ -140,13 +152,7 @@
             </field>
         </record>
 
-        <!-- Generate automated sequence -->
-        <!--<record id="seq_letter_credit" model="ir.sequence">-->
-            <!--<field name="name">LC Sequences</field>-->
-            <!--<field name="code">letter.credit</field>-->
-            <!--<field name="prefix">LC-</field>-->
-            <!--<field name="padding">9</field>-->
-        <!--</record>-->
+
 
     </data>
 </odoo>

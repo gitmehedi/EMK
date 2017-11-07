@@ -31,8 +31,14 @@ access_pi_hos,access_pi_hos,gbs_pi_creation.model_proforma_invoice,account.group
 access_pi_hoa,access_pi_hoa,gbs_pi_creation.model_proforma_invoice,gbs_application_group.group_head_account,1,1,1,1
 access_pi_director,access_pi_director,gbs_pi_creation.model_proforma_invoice,gbs_application_group.group_cxo,1,1,1,1
 
-
 access_acc_hos,access_acc_hos,account.model_account_payment,account.group_account_user,1,1,1,0
 access_acc_hoa,access_acc_hoa,account.model_account_payment,gbs_application_group.group_head_account,1,1,1,1
 access_acc_director,access_acc_director,account.model_account_payment,gbs_application_group.group_cxo,1,1,1,1
 
+access_sale_order_hos,access_sale_order_hos,sale.model_sale_order,account.group_account_user,1,0,0,0
+access_sale_order_hoa,access_sale_order_hoa,sale.model_sale_order,gbs_application_group.group_head_account,1,0,0,0
+access_sale_order_director,access_sale_order_director,sale.model_sale_order,gbs_application_group.group_cxo,1,0,0,0
+
+access_sale_order_line_hos,access_sale_order_line_hos,sale.model_sale_order_line,account.group_account_user,1,0,0,0
+access_sale_order_line_hoa,access_sale_order_line_hoa,sale.model_sale_order_line,gbs_application_group.group_head_account,1,0,0,0
+access_sale_order_line_director,access_sale_order_line_director,sale.model_sale_order_line,gbs_application_group.group_cxo,1,0,0,0

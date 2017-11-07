@@ -1,1 +1,0 @@
-import inherited_product_temp_gen

@@ -283,7 +283,7 @@ class DeliveryOrder(models.Model):
     def set_cheque_info_automatically(self, account_payment_pool):
         vals = []
         for payments in account_payment_pool:
-            if payments.journal_id.id != 12:## Changeit! 12 == cash
+            if payments.journal_id.type != 'cash':
                 if not payments.is_this_payment_checked:
                     vals.append((0, 0, {'account_payment_id': payments.id,
                                         'amount': payments.amount,

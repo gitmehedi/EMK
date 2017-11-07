@@ -1,1 +1,1 @@
-import gbs_pr
+import gbs_purchase_requisition
