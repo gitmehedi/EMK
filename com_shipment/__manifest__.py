@@ -6,7 +6,7 @@
     'version':'1.0.0',
     'depends': [
         'commercial',
-        'gbs_lc_creation',
+        'gbs_lc',
     ],
 
     'data': [
