@@ -8,6 +8,7 @@
             <field name="view_mode">tree,form</field>
             <field name="domain">[('type','=','export')]</field>
             <field name="context">{'default_type': 'export'}</field>
+            <field name="view_id" ref="export_letter_credit_tree_view"/>
         </record>
 
         <record model="ir.actions.act_window" id="lc_import_creation_action">
@@ -16,6 +17,7 @@
             <field name="view_mode">tree,form</field>
             <field name="domain">[('type','=','import')]</field>
             <field name="context">{'default_type': 'import'}</field>
+            <field name="view_id" ref="import_letter_credit_tree_view"/>
         </record>
 
 

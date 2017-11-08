@@ -7,19 +7,13 @@ from odoo.addons import decimal_precision as dp
 class PurchaseRequisition(models.Model):
     _inherit = 'purchase.requisition'
 
-    department_id = fields.Many2one('hr.department',
-                                    string='Department', store=True)
+    department_id = fields.Many2one('hr.department',string='Department', store=True)
     operating_unit_id = fields.Many2one('operating.unit', 'Operating Unit', required=True,
                                         default=lambda self: self.env.user.default_operating_unit_id)
-
     region_type = fields.Selection([('local', 'Local'),('foreign', 'Foreign')], string="LC Region Type",help="Local: Local LC.\n""Foreign: Foreign LC.")
-
     purchase_by = fields.Selection([('cash', 'Cash'), ('credit', 'Credit'), ('lc', 'LC'), ('tt', 'TT')], string="Purchase By")
-
     requisition_date = fields.Date(string='Requisition Date',default = date.today())
-
     required_date = fields.Date(string='Required Date')
-
     state = fields.Selection([('draft', 'Draft'), ('in_progress', 'Confirmed'),
                               ('approve_head_procurement', 'Waiting For Approval'),('done', 'Approved'),
                               ('cancel', 'Cancelled')],'Status', track_visibility='onchange', required=True,
@@ -47,7 +41,6 @@ class PurchaseRequisition(models.Model):
             'nodestroy': True,
             'target': 'new',
         }
-        # self.write({'state': 'done'})
         return result
 
     @api.onchange('indent_ids')
