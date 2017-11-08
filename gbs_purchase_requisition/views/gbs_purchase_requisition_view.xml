@@ -109,7 +109,7 @@
 
                     <xpath expr="//page[1]" position="after">
                         <page string="Attachments">
-                            <field name="attachment_ids" widget="one2many" >
+                            <field name="attachment_ids" widget="one2many" class="lc_principals">
                                 <tree string="Attachments" editable="top">
                                     <field name="name" string="Title"/>
                                     <field name="datas_fname" invisible="1"/>
