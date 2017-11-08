@@ -72,8 +72,10 @@
 					<xpath expr="//page[6]" position="after">
 						<page string="Shipment">
                             <field name="shipment_ids">
-                                <tree editable="top">
+                                <tree create="false">
                                     <field name="name" />
+                                    <button name="action_view_shipment" string="View" type="object" icon="fa-search-plus" />
+                                    <button name="action_edit_shipment" string="Edit" type="object" icon="fa-pencil-square-o" />
                                 </tree>
                             </field>
                         </page>

@@ -11,7 +11,7 @@ class Shipment(models.Model):
     _inherit = ['mail.thread']
     _order = "id desc"
 
-    name = fields.Char(string='Number', required=True, index=True, default=lambda self: self.env.context.get('shipment_number'))
+    name = fields.Char(string='Number', required=True, readonly=True, index=True, default=lambda self: self.env.context.get('shipment_number'))
     comments = fields.Text(string='Comments')
 
     etd_date = fields.Date('ETD Date', help="Estimated Time of Departure")
@@ -31,10 +31,49 @@ class Shipment(models.Model):
          ('done', "Done")], default='draft')
 
     lc_id = fields.Many2one("letter.credit", string='LC Number', ondelete='cascade', default=lambda self: self.env.context.get('lc_id'))
-    # bill_of_landin_id = fields.Many2one('bill.of.landing', string='Bill of Landing',ondelete="cascade")
+    bill_of_landin_id = fields.Many2one('bill.of.landing', string='Bill of Landing',ondelete="cascade")
     # packing_list_id = fields.Many2one('packing.list', string='Packing List', ondelete="cascade")
 
+    @api.model
+    def create(self, vals):
 
+        self.env['letter.credit'].search([('id', '=', self.env.context.get('lc_id'))], limit=1).write(
+            {'last_note': "Initiate " + self.env.context.get('shipment_number')})
+
+        return super(Shipment, self).create(vals)
+
+    @api.multi
+    def action_view_shipment(self):
+
+        res = self.env.ref('com_shipment.view_shipment_form')
+
+        result = {'name': _('Shipment'),
+                  'view_type': 'form',
+                  'view_mode': 'form',
+                  'view_id': res and res.id or False,
+                  'res_model': 'purchase.shipment',
+                  'type': 'ir.actions.act_window',
+                  'target': 'current',
+                  'res_id': self.id}
+
+        return result
+
+    @api.multi
+    def action_edit_shipment(self):
+
+        res = self.env.ref('com_shipment.view_shipment_form')
+
+        result = {'name': _('Shipment'),
+                  'view_type': 'form',
+                  'view_mode': 'form',
+                  'view_id': res and res.id or False,
+                  'res_model': 'purchase.shipment',
+                  'type': 'ir.actions.act_window',
+                  'target': 'current',
+                  'res_id': self.id,
+                  'flags': {'initial_mode': 'edit'}}
+
+        return result
 
 
 class LetterOfCredit(models.Model):
