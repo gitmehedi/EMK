@@ -15,7 +15,9 @@
         'delivery_order',
         'samuda_so_type',
         'operating_unit',
-        'amount_to_word_bd'
+        'amount_to_word_bd',
+        'gbs_lc_creation',
+        'gbs_pi_creation',
     ],
 
     'data': [

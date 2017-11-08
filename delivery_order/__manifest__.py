@@ -11,6 +11,7 @@
         'sale_order_type',
         'gbs_lc_creation',
         'gbs_pi_creation',
+        #'gbs_sale_order_approval'
     ],
 
     'data': [

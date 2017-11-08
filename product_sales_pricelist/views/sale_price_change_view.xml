@@ -26,6 +26,10 @@
             <field name="arch" type="xml">
                 <form string="Change Products Sale Price">
                     <header>
+                        <!--<button string="Submit" name="action_submit"-->
+                                <!--groups="gbs_application_group.group_head_account,gbs_application_group.group_head_sale,gbs_application_group.group_cxo"-->
+                                <!--states="draft" type="object" class="oe_highlight"/>-->
+
                         <button string="Confirm" name="action_confirm"
                                 groups="gbs_application_group.group_head_account,gbs_application_group.group_head_sale,gbs_application_group.group_cxo"
                                 states="draft" type="object" class="oe_highlight"/>
@@ -37,6 +41,7 @@
                         <button string="Refuse" name="action_refuse"
                                 groups="gbs_application_group.group_head_account,gbs_application_group.group_cxo"
                                 states="confirm,validate1" type="object"/>
+
                         <field name="state" widget="statusbar" statusbar_visible="draft,confirm,validate1,validate"/>
                     </header>
                     <sheet>
@@ -101,7 +106,7 @@
                   groups="account.group_account_user,gbs_application_group.group_sales_customer_manager,gbs_application_group.group_sales_product_manager,sales_team.group_sale_salesman_all_leads,gbs_application_group.group_head_sale,gbs_application_group.group_head_account,gbs_application_group.group_cxo"
                   parent="sales_team.menu_base_partner"/>
 
-        <menuitem id="product_sale_price_change_menu_action" name="Change Product Price"
+        <menuitem id="product_sale_price_change_menu_action" name="Product Sales Pricelist"
                   groups="account.group_account_user,gbs_application_group.group_sales_customer_manager,gbs_application_group.group_sales_product_manager,sales_team.group_sale_salesman_all_leads,gbs_application_group.group_head_sale,gbs_application_group.group_head_account,gbs_application_group.group_cxo"
                   parent="custom_menu_products" sequence="9" action="action_product_sale_price_change"/>
 

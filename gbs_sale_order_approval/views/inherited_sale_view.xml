@@ -32,9 +32,9 @@
                                 string="Validate"/>
 
                         <button name="action_create_delivery_order"
-                                states="done"
                                 type="object"
-                                groups="gbs_application_group.group_cxo"
+                                states="done"
+                                groups="account.group_account_user,gbs_application_group.group_head_account,gbs_application_group.group_cxo"
                                 class="btn-primary"
                                 string="Delivery Authorization"/>
 
@@ -59,31 +59,35 @@
                                 type="object"/>
                     </xpath>
 
+                    <!--Send by email-->
                     <xpath expr="//button[@name='action_quotation_send' and @states='draft']" position="replace">
                         <button name="action_quotation_send"
                                 groups="gbs_application_group.group_head_sale,gbs_application_group.group_cxo"
-                                string="Send by Email" type="object" states="draft,submit_quotation,validate"
-                                class="btn-primary"/>
+                                string="Send by Email" type="object" states="done"/>
                     </xpath>
 
+                    <!--Print-->
                     <xpath expr="//button[@name='print_quotation' and @states='draft']" position="replace">
                         <button name="print_quotation"
                                 groups="gbs_application_group.group_head_sale,gbs_application_group.group_cxo"
-                                string="Print" type="object" states="draft,submit_quotation,validate"
-                                class="btn-primary"/>
+                                string="Print" type="object" states="done"/>
                     </xpath>
 
+                    <!-- Cancel-->
                     <xpath expr="//button[@name='action_cancel']" position="replace">
-                        <button name="action_cancel" states="draft,validate,sent,sale" type="object" string="Cancel"/>
+                        <button name="action_cancel" states="validate,sent,sale,sent" type="object" string="Cancel"/>
                     </xpath>
 
+                    <!--Set to quotation-->
                     <xpath expr="//button[@name='action_draft']" position="replace">
                         <button name="action_draft" states="cancel" type="object" string="Set to Quotation"/>
                     </xpath>
 
+                    <!--Lock-->
                     <xpath expr="//button[@name='action_done']" position="replace">
-                        <button name="action_done" type="object" string="Lock" states="sale"
-                                help="If the sale is locked, you can not modify it anymore. However, you will still be able to invoice or deliver."/>
+                        <button name="action_done" type="object" string="Lock" states="sale"  class="btn-primary"
+                             groups="gbs_application_group.group_head_sale,gbs_application_group.group_cxo"
+                             help="If the sale is locked, you can not modify it anymore. However, you will still be able to invoice or deliver."/>
                     </xpath>
 
                     <xpath expr="//field[@name='state']" position="replace">
@@ -100,12 +104,7 @@
                     </xpath>
 
                     <xpath expr="//group/group/field[@name='payment_term_id']" position="before">
-                        <field name="da_button_show" invisible="1"/>
-                    </xpath>
-
-                    <xpath expr="//group/group/field[@name='payment_term_id']" position="before">
-                        <field name="pack_type" options="{'no_open': True, 'no_create': False}"
-                               attrs="{'readonly':[('state','in',('draft','sent','validate','done','cancel','sale'))]}"/>
+                        <field name="pack_type" options="{'no_open': True, 'no_create': False}" attrs="{'readonly':[('state','in',('draft','sent','validate','done','cancel','sale'))]}"/>
                     </xpath>
 
                     <xpath expr="//field[@name='payment_term_id']" position="replace">
@@ -175,8 +174,12 @@
                         <field name="payment_term_id" invisible="1"/>
                     </xpath>
 
-                    <xpath expr="//field[@name='order_line']/tree/field[@name='price_unit']" position="after">
-                        <field name="da_qty"/>
+                    <xpath expr="//field[@name='pack_type']" position="after">
+                        <field name="pi_no" attrs="{'invisible':[('credit_sales_or_lc', '!=', 'lc_sales')]}" options="{'no_quick_create':True,'no_create_edit':True,'no_open':True}"/>
+                    </xpath>
+
+                    <xpath expr="//field[@name='pi_no']" position="after">
+                        <field name="lc_no" attrs="{'invisible':[('credit_sales_or_lc', '!=', 'lc_sales')]}" options="{'no_quick_create':True,'no_create_edit':True,'no_open':True}"/>
                     </xpath>
 
                 </data>

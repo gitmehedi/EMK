@@ -59,8 +59,12 @@ class SalePriceChange(models.Model):
         store=True)
     request_date = fields.Date(
         string='Request Date',
-        default=datetime.datetime.now(),
-        readonly=False)
+        default=datetime.datetime.now(), states={
+            'confirm': [
+                ('readonly', True)], 'validate1': [
+                ('readonly', True)], 'validate': [
+                ('readonly', True)]},
+        readonly=True)
     requested_by = fields.Many2one(
         'res.users',
         string="Requested By",
@@ -77,10 +81,21 @@ class SalePriceChange(models.Model):
         readonly=True)
 
     approver1_date = fields.Date(
-        string='First Approval Date', readonly=True)
-    approver2_date = fields.Date(string='Second Approval Date', readonly=True)
+        string='First Approval Date',states={
+            'confirm': [
+                ('readonly', True)], 'validate1': [
+                ('readonly', True)], 'validate': [
+                ('readonly', True)]}, readonly=True)
+    approver2_date = fields.Date(string='Second Approval Date', states={
+            'confirm': [
+                ('readonly', True)], 'validate1': [
+                ('readonly', True)], 'validate': [
+                ('readonly', True)]},readonly=True)
     effective_date = fields.Date(string='Effective Date', states={
-        'validate': [('readonly', True)]}, required=True)
+            'confirm': [
+                ('readonly', True)], 'validate1': [
+                ('readonly', True)], 'validate': [
+                ('readonly', True)]}, required=True)
 
     state = fields.Selection([
         ('draft', 'To Submit'),
