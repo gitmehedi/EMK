@@ -1,6 +1,7 @@
 from odoo import api, fields, models,_
 from odoo.exceptions import ValidationError
 from datetime import date
+from odoo.addons import decimal_precision as dp
 
 
 class PurchaseRequisition(models.Model):
@@ -25,8 +26,9 @@ class PurchaseRequisition(models.Model):
                              copy=False, default='draft')
 
     indent_ids = fields.Many2many('indent.indent','pr_indent_rel','pr_id','indent_id',string='Indent')
-    # attachment_ids = fields.One2many('purchase.requisition.attachments', 'pr_id', string='Attachments')
-    attachment_ids = fields.Many2many('ir.attachment', 'ir_att_pr_rel', 'pr_id', 'ir_att_id', string='Attachment')
+    attachment_ids = fields.One2many('ir.attachment', 'res_id', string='Attachments')
+
+
 
     @api.multi
     def action_open(self):
@@ -76,18 +78,11 @@ class PurchaseRequisition(models.Model):
 class PurchaseRequisitionLine(models.Model):
     _inherit = "purchase.requisition.line"
 
+    product_ordered_qty = fields.Float('Ordered Quantities', digits=dp.get_precision('Product UoS'),
+                                       default=1)
     name = fields.Text(string='Description')
     last_purchse_date = fields.Date(string='Last Purchase Date')
     last_qty = fields.Float(string='Last Purchase Qnty')
     last_product_uom_id = fields.Many2one('product.uom', string='Last Purchase Unit')
     last_price_unit = fields.Float(string='Last Unit Price')
     remark = fields.Char(string='Remarks')
-
-
-# class PurchaseRequisitionAttachments(models.Model):
-#     _name = 'purchase.requisition.attachments'
-#     _description = 'Purchase Requisition Attachments'
-#
-#     title = fields.Char(string='Title', required=True)
-#     file = fields.Binary(default='Attachment', required=True)
-#     pr_id = fields.Many2one('purchase.requisition', string='LC Number')
