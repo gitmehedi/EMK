@@ -6,7 +6,7 @@
     'version':'1.0.0',
     'depends': [
         'commercial',
-        'gbs_lc',
+        'letter_of_credit',
     ],
 
     'data': [
