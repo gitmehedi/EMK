@@ -1,5 +1,7 @@
-from odoo import api, fields, models
+from odoo import api, fields, models,_
+from odoo.exceptions import ValidationError
 from datetime import date
+from odoo.addons import decimal_precision as dp
 
 
 class PurchaseRequisition(models.Model):
@@ -10,9 +12,9 @@ class PurchaseRequisition(models.Model):
     operating_unit_id = fields.Many2one('operating.unit', 'Operating Unit', required=True,
                                         default=lambda self: self.env.user.default_operating_unit_id)
 
-    buying_type = fields.Selection([('Local', 'Local'), ('Foreign', 'Foreign')], string="Type")
+    region_type = fields.Selection([('local', 'Local'),('foreign', 'Foreign')], string="LC Region Type",help="Local: Local LC.\n""Foreign: Foreign LC.")
 
-    purchase_by = fields.Selection([('Cash', 'Cash'), ('Credit', 'Credit'), ('LC', 'LC'), ('TT', 'TT')], string="Purchase By")
+    purchase_by = fields.Selection([('cash', 'Cash'), ('credit', 'Credit'), ('lc', 'LC'), ('tt', 'TT')], string="Purchase By")
 
     requisition_date = fields.Date(string='Requisition Date',default = date.today())
 
@@ -24,7 +26,9 @@ class PurchaseRequisition(models.Model):
                              copy=False, default='draft')
 
     indent_ids = fields.Many2many('indent.indent','pr_indent_rel','pr_id','indent_id',string='Indent')
-    attachment_ids = fields.One2many('purchase.requisition.attachments', 'pr_id', string='Attachments')
+    attachment_ids = fields.One2many('ir.attachment', 'res_id', string='Attachments')
+
+
 
     @api.multi
     def action_open(self):
@@ -32,7 +36,19 @@ class PurchaseRequisition(models.Model):
 
     @api.multi
     def action_approve(self):
-        self.write({'state': 'done'})
+        res = self.env.ref('gbs_purchase_requisition.purchase_requisition_type_wizard')
+        result = {
+            'name': _('Please Select LC Region Type and Purchase By before approve'),
+            'view_type': 'form',
+            'view_mode': 'form',
+            'view_id': res and res.id or False,
+            'res_model': 'purchase.requisition.type.wizard',
+            'type': 'ir.actions.act_window',
+            'nodestroy': True,
+            'target': 'new',
+        }
+        # self.write({'state': 'done'})
+        return result
 
     @api.onchange('indent_ids')
     def indent_product_line(self):
@@ -41,26 +57,32 @@ class PurchaseRequisition(models.Model):
             indent_product_line_obj = self.env['indent.product.lines'].search([('indent_id','=',indent_id.id)])
             for indent_product_line in indent_product_line_obj:
                 vals.append((0, 0, {'product_id': indent_product_line.product_id,
+                                'name': indent_product_line.name,
                                 'product_uom_id': indent_product_line.product_uom,
                                 'product_qty': indent_product_line.product_uom_qty,
                           }))
                 self.line_ids = vals
 
+    ####################################################
+    # ORM Overrides methods
+    ####################################################
+
+    def unlink(self):
+        for indent in self:
+            if indent.state != 'draft':
+                raise ValidationError(_('You cannot delete in this state'))
+
+        return super(PurchaseRequisition, self).unlink()
+
 
 class PurchaseRequisitionLine(models.Model):
     _inherit = "purchase.requisition.line"
 
+    product_ordered_qty = fields.Float('Ordered Quantities', digits=dp.get_precision('Product UoS'),
+                                       default=1)
+    name = fields.Text(string='Description')
     last_purchse_date = fields.Date(string='Last Purchase Date')
     last_qty = fields.Float(string='Last Purchase Qnty')
     last_product_uom_id = fields.Many2one('product.uom', string='Last Purchase Unit')
     last_price_unit = fields.Float(string='Last Unit Price')
     remark = fields.Char(string='Remarks')
-
-
-class PurchaseRequisitionAttachments(models.Model):
-    _name = 'purchase.requisition.attachments'
-    _description = 'Purchase Requisition Attachments'
-
-    title = fields.Char(string='Title', required=True)
-    file = fields.Binary(default='Attachment', required=True)
-    pr_id = fields.Many2one('purchase.requisition', string='LC Number')
