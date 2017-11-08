@@ -98,23 +98,29 @@
             <field name="view_mode">tree,form</field>
         </record>
 
-        <menuitem name="Sales" id="sales_team.menu_base_partner"
+        <menuitem name="Sales"
+                  id="sales_team.menu_base_partner"
                   groups="account.group_account_user,gbs_application_group.group_sales_customer_manager,gbs_application_group.group_sales_product_manager,sales_team.group_sale_salesman_all_leads,gbs_application_group.group_head_sale,gbs_application_group.group_head_account,gbs_application_group.group_cxo"
                   web_icon="sale,static/description/icon.png"/>
 
-        <menuitem id="custom_menu_products" sequence="5" name="Products"
-                  groups="account.group_account_user,gbs_application_group.group_sales_customer_manager,gbs_application_group.group_sales_product_manager,sales_team.group_sale_salesman_all_leads,gbs_application_group.group_head_sale,gbs_application_group.group_head_account,gbs_application_group.group_cxo"
+        <menuitem id="custom_menu_products"
+                  sequence="5"
+                  name="Products"
+                  groups="sales_team.group_sale_salesman_all_leads,account.group_account_user,gbs_application_group.group_sales_customer_manager,gbs_application_group.group_sales_product_manager,gbs_application_group.group_head_sale,gbs_application_group.group_head_account,gbs_application_group.group_cxo"
                   parent="sales_team.menu_base_partner"/>
 
-        <menuitem id="product_sale_price_change_menu_action" name="Product Sales Pricelist"
+        <menuitem id="product_sale_price_change_menu_action"
+                  name="Product Sales Pricelist"
                   groups="account.group_account_user,gbs_application_group.group_sales_customer_manager,gbs_application_group.group_sales_product_manager,sales_team.group_sale_salesman_all_leads,gbs_application_group.group_head_sale,gbs_application_group.group_head_account,gbs_application_group.group_cxo"
                   parent="custom_menu_products" sequence="9" action="action_product_sale_price_change"/>
 
-        <menuitem id="sale.menu_product_template_action" parent="custom_menu_products" sequence="8"
+        <menuitem id="sale.menu_product_template_action"
+                  parent="custom_menu_products" sequence="8"
                   action="product.product_template_action"
                   groups="account.group_account_user,gbs_application_group.group_sales_customer_manager,gbs_application_group.group_sales_product_manager,sales_team.group_sale_salesman_all_leads,gbs_application_group.group_head_sale,gbs_application_group.group_head_account,gbs_application_group.group_cxo"/>
 
-        <menuitem id="price_history_menu" name="Product Price History" sequence="11"
+        <menuitem id="price_history_menu"
+                  name="Product Price History" sequence="11"
                   parent="custom_menu_products"
                   groups="account.group_account_user,gbs_application_group.group_sales_customer_manager,gbs_application_group.group_sales_product_manager,sales_team.group_sale_salesman_all_leads,gbs_application_group.group_head_sale,gbs_application_group.group_head_account,gbs_application_group.group_cxo"
                   action="price_history_action"/>
