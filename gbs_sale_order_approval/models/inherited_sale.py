@@ -77,8 +77,7 @@ class SaleOrder(models.Model):
     def _is_double_validation_applicable(self):
         for orders in self:
             if orders.credit_sales_or_lc == 'lc_sales':
-                # If LC and PI ref is present, go to the Final Approval
-                # Else  ## go to Second level approval
+                # If LC and PI ref is present, go to the Final Approval, Else go to Second level approval
                 if orders.lc_no and orders.pi_no:
                     for lines in orders.order_line:
                         product_pool = orders.env['product.product'].search([('id', '=', lines.product_id.ids)])
@@ -102,80 +101,50 @@ class SaleOrder(models.Model):
 
     @api.multi
     def action_submit(self):
+
         is_double_validation = False
 
-        for lines in self.order_line:
-            #product_pool = self.env['product.product'].search([('currency_id','=',self.currency_id.id), ('id', '=', lines.product_id.ids)])
-            cust_commission_pool = self.env['customer.commission'].search([('customer_id', '=', self.partner_id.id),
-                                                                           ('product_id', '=', lines.product_id.ids)])
-            credit_limit_pool = self.env['res.partner'].search([('id', '=', self.partner_id.id)])
+        for order in self:
+            for lines in order.order_line:
+                cust_commission_pool = order.env['customer.commission'].search([('customer_id', '=', order.partner_id.id),('product_id', '=', lines.product_id.ids)])
+                credit_limit_pool = order.env['res.partner'].search([('id', '=', order.partner_id.id)])
+                price_change_pool = order.env['product.sales.pricelist'].search([('product_id', '=', order.product_id.id),('currency_id', '=', order.currency_id.id)],order='approver2_date desc', limit=1)
 
-            price_change_pool = self.env['product.sales.pricelist'].search([('product_id', '=', self.product_id.id),
-                                                                            ('currency_id', '=', self.currency_id.id)],
-                                                                           order='approver2_date desc', limit=1)
+                if (order.credit_sales_or_lc == 'cash'):
+                    is_double_validation = order.second_approval_business_logics(cust_commission_pool,lines, price_change_pool)
 
-            if (self.credit_sales_or_lc == 'cash'):
-                for coms in cust_commission_pool:
-                    if price_change_pool.currency_id.id == lines.currency_id.id:
-                        if (lines.commission_rate < coms.commission_rate
-                            or lines.price_unit < price_change_pool.new_price):
+                elif (order.credit_sales_or_lc == 'credit_sales'):
+                    account_receivable = credit_limit_pool.credit
+                    sales_order_amount_total = -order.amount_total #actually it should be minus value
+
+                    customer_total_credit = account_receivable + sales_order_amount_total
+                    customer_credit_limit = credit_limit_pool.credit_limit
+
+                    if (abs(customer_total_credit) > customer_credit_limit
+                        or lines.commission_rate < cust_commission_pool.commission_rate
+                        or lines.price_unit < price_change_pool.new_price):
+
                             is_double_validation = True
                             break;
-                        else:
-                            is_double_validation = False
                     else:
-                        if (lines.commission_rate < coms.commission_rate):
-                            is_double_validation = True
-                            break;
-                        else:
-                            is_double_validation = False
+                        is_double_validation = False
 
-
-            elif (self.credit_sales_or_lc == 'credit_sales'):
-                account_receivable = credit_limit_pool.credit
-                sales_order_amount_total = -self.amount_total #actually it should be minus value
-
-                customer_total_credit = account_receivable + sales_order_amount_total
-                customer_credit_limit = credit_limit_pool.credit_limit
-
-                if (abs(customer_total_credit) > customer_credit_limit
-                    or lines.commission_rate < cust_commission_pool.commission_rate
-                    or lines.price_unit < price_change_pool.new_price):
-
+                elif order.credit_sales_or_lc == 'lc_sales':
+                    # If LC and PI ref is present, go to the Final Approval, else go to Second level approval
+                    if order.lc_no and order.pi_no:
+                        is_double_validation = order.second_approval_business_logics(cust_commission_pool, lines, price_change_pool)
+                    else:
                         is_double_validation = True
-                        break;
-                else:
-                    is_double_validation = False
+
+                    if order.pi_no and not order.lc_no:
+                        is_double_validation = True
 
 
-            elif self.credit_sales_or_lc == 'lc_sales':
-                # If LC and PI ref is present, go to the Final Approval
-                # Else  ## go to Second level approval
-                cust_commission_pool = self.env['customer.commission'].search([('customer_id', '=', self.partner_id.id),
-                                                                               ('product_id', '=',
-                                                                                lines.product_id.ids)])
+            if is_double_validation:
+                order.write({'state': 'validate'}) #Go to two level approval process
+            else:
+                order.write({'state': 'sale'}) # One level approval process
 
-               #credit_limit_pool = self.env['res.partner'].search([('id', '=', self.partner_id.id)])
-
-                price_change_pool = self.env['product.sales.pricelist'].search([('product_id', '=', self.product_id.id),
-                                                                                ('currency_id', '=',
-                                                                                 self.currency_id.id)],
-                                                                               order='approver2_date desc', limit=1)
-                if self.lc_no and self.pi_no:
-                    is_double_validation = self.second_approval_business_logics(cust_commission_pool, lines, price_change_pool)
-                   # is_double_validation = False
-                else:
-                    is_double_validation = True
-
-                if self.pi_no and not self.lc_no:
-                    #self.second_approval_business_logics(cust_commission_pool, lines, price_change_pool)
-                    is_double_validation = True
-
-
-        if is_double_validation:
-            self.write({'state': 'validate'}) #Go to two level approval process
-        else:
-            self.write({'state': 'sale'}) # One level approval process
 
     def second_approval_business_logics(self, cust_commission_pool, lines, price_change_pool):
         for coms in cust_commission_pool:
