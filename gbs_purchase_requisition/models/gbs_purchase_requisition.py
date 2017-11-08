@@ -1,12 +1,14 @@
 from odoo import api, fields, models,_
 from odoo.exceptions import ValidationError
 from datetime import date
+from odoo.exceptions import UserError
 from odoo.addons import decimal_precision as dp
 
 
 class PurchaseRequisition(models.Model):
     _inherit = 'purchase.requisition'
 
+    name = fields.Char(string='Purchase Requisition',default='/')
     department_id = fields.Many2one('hr.department',string='Department', store=True)
     operating_unit_id = fields.Many2one('operating.unit', 'Operating Unit', required=True,
                                         default=lambda self: self.env.user.default_operating_unit_id)
@@ -22,7 +24,19 @@ class PurchaseRequisition(models.Model):
     indent_ids = fields.Many2many('indent.indent','pr_indent_rel','pr_id','indent_id',string='Indent')
     attachment_ids = fields.One2many('ir.attachment', 'res_id', string='Attachments')
 
+    @api.multi
+    def action_in_progress(self):
+        if not all(obj.line_ids for obj in self):
+            raise UserError(_('You cannot confirm call because there is no product line.'))
+        res = {
+            'state': 'in_progress'
+        }
+        new_seq = self.env['ir.sequence'].next_by_code('purchase.requisition')
 
+        if new_seq:
+            res['name'] = new_seq
+
+        self.write(res)
 
     @api.multi
     def action_open(self):
@@ -79,3 +93,30 @@ class PurchaseRequisitionLine(models.Model):
     last_product_uom_id = fields.Many2one('product.uom', string='Last Purchase Unit')
     last_price_unit = fields.Float(string='Last Unit Price')
     remark = fields.Char(string='Remarks')
+
+    @api.onchange('product_id')
+    def onchange_product_id(self):
+        if not self.product_id:
+            return {'value': {'product_ordered_qty': 1.0,
+                              'product_uom_id': False,
+                              'product_qty': 0.0,
+                              'name': '',
+                              'delay': 0.0
+                              }
+                    }
+        # ..........................................
+        if self.product_id:
+            product_obj = self.env['product.product']
+            product = product_obj.search([('id', '=', self.product_id.id)])
+            product_name = product.name_get()[0][1]
+            self.name = product_name
+            self.product_uom = product.uom_id.id
+            self.product_qty = product.qty_available
+        if not self.account_analytic_id:
+            self.account_analytic_id = self.requisition_id.account_analytic_id
+        if not self.schedule_date:
+            self.schedule_date = self.requisition_id.schedule_date
+
+        # /////////////////////////////////////////
+
+

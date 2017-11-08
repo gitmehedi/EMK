@@ -7,8 +7,10 @@
     'depends': [
         'purchase_requisition',
         'stock_indent',
+        'ir_sequence_operating_unit',
     ],
     'data': [
+        'data/pr_sequence.xml',
         'security/security.xml',
         'security/ir_rule.xml',
         'security/ir.model.access.csv',
