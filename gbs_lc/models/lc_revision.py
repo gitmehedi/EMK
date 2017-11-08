@@ -1,4 +1,5 @@
 from odoo import api, fields, models, _
+from openerp.addons.commercial.models.utility import Status, UtilityNumber
 
 class LcRevision(models.Model):
     _inherit = "letter.credit"
@@ -24,7 +25,13 @@ class LcRevision(models.Model):
         view_ref = self.env['ir.model.data'].get_object_reference('gbs_lc', 'view_local_credit_form')
         view_id = view_ref and view_ref[1] or False,
         self.with_context(new_lc_revision=True).copy()
-        self.write({'state': self.state,'status':'amendment'})
+
+        number = len(self.old_revision_ids)
+
+        comm_utility_pool = self.env['commercial.utility']
+        note = comm_utility_pool.getStrNumber(number) + ' ' + Status.AMENDMENT.value
+
+        self.write({'state': self.state,'last_note': note})
         return {
             'type': 'ir.actions.act_window',
             'name': _('LC'),

@@ -1,6 +1,6 @@
 from odoo import api, fields, models
 from odoo.exceptions import UserError, ValidationError
-import datetime
+from openerp.addons.commercial.models.utility import Status, UtilityNumber
 
 
 class LetterOfCredit(models.Model):
@@ -80,13 +80,7 @@ class LetterOfCredit(models.Model):
         ('done', "Done")
     ], default='draft')
 
-    status = fields.Selection([
-        ('open', "LC Open"),
-        ('confirmed', "Getting Bank Confirmation"),
-        ('amendment', "Amendment the LC"),
-        ('progress', "LC In Progress"),
-        ('done', "Close/Done the LC")
-    ], track_visibility='always', default='open')
+    last_note = fields.Char(string='Step', track_visibility='onchange')
 
     _sql_constraints = [
         ('name_uniq', 'unique(name)', 'This Number is already in use')
@@ -103,11 +97,11 @@ class LetterOfCredit(models.Model):
 
     @api.multi
     def action_open(self):
-        self.write({'state': 'open','status':'open'})
+        self.write({'state': 'open','last_note': Status.OPEN.value})
 
     @api.multi
     def action_confirm(self):
-        self.write({'state': 'confirmed','status': 'confirmed'})
+        self.write({'state': 'confirmed','last_note': Status.CONFIRM.value})
 
     @api.multi
     def action_draft(self):
@@ -122,5 +116,6 @@ class CommercialAttachment(models.Model):
     title = fields.Char(string='Title', required=True)
     file = fields.Binary(default='Attachment', required=True)
     lc_id = fields.Many2one("letter.credit", string='LC Number', ondelete='cascade')
+
 
 

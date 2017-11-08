@@ -3,8 +3,8 @@
     <data>
 
         <record id="view_shipment_form" model="ir.ui.view">
-            <field name="name">lc.shipment.form</field>
-            <field name="model">lc.shipment</field>
+            <field name="name">purchase.shipment.form</field>
+            <field name="model">purchase.shipment</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Shipment" delete="false" copy='0'>
@@ -20,6 +20,7 @@
                             <group colspan="4">
                                 <group>
                                     <field name="name"/>
+                                    <field name="lc_id" invisible="1"/>
                                 </group>
                             </group>
 
@@ -49,8 +50,8 @@
         </record>
 
         <record id="shipment_tree_view" model="ir.ui.view">
-            <field name="name">lc.shipment.tree</field>
-            <field name="model">lc.shipment</field>
+            <field name="name">purchase.shipment.tree</field>
+            <field name="model">purchase.shipment</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Shipment">
@@ -79,7 +80,7 @@
 					</xpath>
 				</data>
                 <xpath expr="//button[@name='action_revision']" position="after">
-                    <button string="Shipment" name="action_create_shipment" type="object" states="confirmed" class="oe_highlight"/>
+                    <button string="Shipment" name="action_shipment" type="object" attrs="{'invisible': [('state', 'in', ('draft', 'open', 'done'))]}" class="oe_highlight"/>
 
                 </xpath>
 			</field>
