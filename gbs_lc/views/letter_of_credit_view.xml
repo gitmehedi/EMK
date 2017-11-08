@@ -11,7 +11,7 @@
                         <button string="Open" name="action_open" states="draft" type="object" class="oe_highlight"/>
                     	<button string="Confirm" name="action_confirm" states="open" type="object" class="oe_highlight"/>
                      	<button string="Reset to Draft" name="action_draft" type="object" states="confirmed" class="oe_read_only"/>
-                        <button string="Amendment" name="action_revision" class="oe_read_only" type="object" attrs="{'invisible': [('state', 'in', ('draft', 'open'))]}"/>
+                        <button string="Amendment" name="action_revision" class="oe_read_only" type="object" attrs="{'invisible': [('state', 'in', ('draft', 'open', 'done'))]}"/>
                         <field name="state" widget="statusbar" statusbar_visible="draft,open,confirmed,progress,done"/>
 
                     </header>
