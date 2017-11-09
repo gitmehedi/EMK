@@ -11,9 +11,9 @@ class DeliveryScheduleEntryLine(models.Model):
     quantity = fields.Float(string="Ordered Qty",default=1.0, required=True)
     uom_id = fields.Many2one('product.uom', string="UoM",required=True)
     pack_type = fields.Many2one('product.packaging.mode', string="Packing")
-    deli_address = fields.Char('Delivery Address')
+    deli_address = fields.Text('Delivery Address')
     parent_id = fields.Many2one('delivery.schedule.entry')
-    remarks = fields.Char('Remarks')
+    remarks = fields.Text('Remarks')
     state = fields.Selection([
         ('draft', "Draft"),
         ('approve', "Confirm"),

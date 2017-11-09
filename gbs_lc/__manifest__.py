@@ -9,9 +9,11 @@
         'stock',
         'sales_team',
         'purchase',
+        'commercial',
     ],
 
     'data': [
+        'wizard/lc_wizard_view.xml',
         'views/letter_of_credit_view.xml',
         'views/letter_of_credit_menu.xml',
     ],

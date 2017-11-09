@@ -41,7 +41,8 @@ A purchase order is generated for the service taken for the supplier who repairs
     'data': [
         'security/security.xml',
         'security/ir.model.access.csv',
-        # 'security/ir_rule.xml',
+        'security/ir_rule.xml',
+        'report/stock_indent.xml',
         'data/stock_indent_data.xml',
         'data/stock_indent_sequence.xml',
         'views/stock_location_view.xml',

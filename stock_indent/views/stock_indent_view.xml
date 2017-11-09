@@ -25,7 +25,7 @@
 			<field name="model">indent.indent</field>
 			<field name="arch" type="xml">
 				<tree string="Indents" ecoration-bf="message_needaction == True"
-					  colors="gray:state=='received';green:state=='waiting_approval';red:state=='reject';">
+					  colors="gray:state=='received';green:state=='waiting_approval';blue:state=='inprogress';red:state=='reject';">
 					<field name="name" />
 					<field name="indentor_id" />
 					<field name="department_id" />
@@ -51,6 +51,8 @@
 						<button name="reject_indent" string="Reject" states="waiting_approval"
 								groups="stock_indent.group_stock_indent_approver" type="object"/>
 						<button name="action_view_picking" string="Issue Product(s)" type="object"
+								states="inprogress" class="oe_highlight" groups="stock_indent.group_stock_indent_issuer"/>
+						<button name="action_view_purchase_requisition" string="Issue PR" type="object"
 								states="inprogress" class="oe_highlight" groups="stock_indent.group_stock_indent_issuer"/>
 						<field name="state" widget="statusbar"
 							   statusbar_visible="draft,waiting_approval,inprogress,received"
@@ -81,8 +83,7 @@
 									<tree string="Products" editable="bottom">
 										<field name="sequence" widget="handle"/>
 										<field name="product_id"/>
-										<field name="name" invisible="1"/>
-										<field name="specification"/>
+										<field name="name"/>
 										<field name="qty_available"/>
 										<field name="product_uom" string="UOM" groups="product.group_uom"/>
 										<field name="product_uom_qty" sum="Total Qty"/>

@@ -1,8 +1,6 @@
-from odoo import api, fields, models
+from odoo import api, fields, models,_
 from odoo.exceptions import UserError, ValidationError
-from lxml import etree
-
-import datetime
+from openerp.addons.commercial.models.utility import Status, UtilityNumber
 
 
 class LetterOfCredit(models.Model):
@@ -15,7 +13,9 @@ class LetterOfCredit(models.Model):
 
     # Import -> Applicant(Samuda)
 
-    name = fields.Char(string='Number', required=True, index=True)
+    name = fields.Char(string='LC Number', index=True,readonly=True)
+    title = fields.Text(string='LC Head', required=True)
+
     type = fields.Selection([
         ('export', 'Export'),
         ('import', 'Import'),
@@ -68,10 +68,7 @@ class LetterOfCredit(models.Model):
     terms_condition = fields.Text(string='Terms of Condition')
     remarks = fields.Text(string='Remarks')
 
-    attachment_ids = fields.One2many('commercial.attachment', 'lc_id', string='Attachment')
-
-
-
+    attachment_ids = fields.One2many('ir.attachment', 'res_id', string='Attachments')
 
     state = fields.Selection([
         ('draft', "Draft"),
@@ -82,17 +79,7 @@ class LetterOfCredit(models.Model):
         ('done', "Done")
     ], default='draft')
 
-    status = fields.Selection([
-        ('open', "LC Open"),
-        ('confirmed', "Getting Bank Confirmation"),
-        ('amendment', "Amendment the LC"),
-        ('progress', "LC In Progress"),
-        ('done', "Close/Done the LC")
-    ], track_visibility='always', default='open')
-
-    _sql_constraints = [
-        ('name_uniq', 'unique(name)', 'This Number is already in use')
-    ]
+    last_note = fields.Char(string='Step', track_visibility='onchange')
 
     @api.multi
     def unlink(self):
@@ -105,22 +92,45 @@ class LetterOfCredit(models.Model):
 
     @api.multi
     def action_open(self):
-        self.write({'state': 'open','status':'open'})
+        self.write({'state': 'open','last_note': Status.OPEN.value})
 
     @api.multi
     def action_confirm(self):
-        self.write({'state': 'confirmed','status': 'confirmed'})
+        res = self.env.ref('gbs_lc.lc_number_wizard')
+        result = {
+            'name': _('Please Give The Number Of LC'),
+            'view_type': 'form',
+            'view_mode': 'form',
+            'view_id': res and res.id or False,
+            'res_model': 'lc.number.wizard',
+            'type': 'ir.actions.act_window',
+            'nodestroy': True,
+            'target': 'new',
+        }
+        return result
 
     @api.multi
     def action_draft(self):
         self.write({'state': 'draft'})
 
+    @api.one
+    @api.constrains('name')
+    def _check_name(self):
+        domain = ['&','&','|',('name', '=', self.name),
+                  ('type','=',self.type),
+                  ('id', '=', False),
+                  ('id', '!=', self.id)]
+        if self.search_count(domain):
+            raise UserError('You can\'t create duplicate Number')
+        return True
+
+# class CommercialAttachment(models.Model):
+#     _name = 'commercial.attachment'
+#     _description = 'Attachment'
+#
+#     title = fields.Char(string='Title', required=True)
+#     file = fields.Binary(default='Attachment', required=True)
+#     lc_id = fields.Many2one("letter.credit", string='LC Number', ondelete='cascade')
 
 
-class CommercialAttachment(models.Model):
-    _name = 'commercial.attachment'
-    _description = 'Attachment'
 
-    title = fields.Char(string='Title', required=True)
-    file = fields.Binary(default='Attachment', required=True)
-    lc_id = fields.Many2one("letter.credit", string='LC Number', ondelete='cascade')

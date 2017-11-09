@@ -9,7 +9,7 @@
         'product_sales_pricelist',
         'account',
         'sale_order_type',
-        'gbs_lc_creation',
+        'gbs_lc',
         'gbs_pi_creation',
         #'gbs_sale_order_approval'
     ],

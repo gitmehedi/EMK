@@ -13,9 +13,7 @@ class DeliveryScheduleEntry(models.Model):
     name = fields.Char(string='Name', index=True, readonly=True)
     sequence_id = fields.Char('Sequence', readonly=True)
     requested_date = fields.Date('Requested Date', default=datetime.date.today(), readonly=True)
-    #approved_date = fields.Date('Approved Date', default=datetime.date.today(),readonly=True)
     requested_by = fields.Many2one('res.users', string='Requested By', readonly=True, default=lambda self: self.env.user)
-    #approved_by = fields.Many2one('res.users', string='Approved By', readonly = True)
     line_ids = fields.One2many('delivery.schedule.entry.line', 'parent_id', string="Products", readonly=True,states={'draft': [('readonly', False)]})
     notes = fields.Text()
     state = fields.Selection([
@@ -37,12 +35,13 @@ class DeliveryScheduleEntry(models.Model):
             self.state = 'approve'
             self.approved_by = self.env.user
             return self.write({'state': 'approve', 'approved_date': time.strftime('%Y-%m-%d %H:%M:%S')})
+        raise ValidationError("Without Product Details information, you can't confirm it.")
 
     @api.multi
     def unlink(self):
         for entry in self:
             if entry.state != 'draft':
-                raise UserError(_('You can not delete this.'))
+                raise UserError(_('After confirmation You can not delete this.'))
             entry.line_ids.unlink()
         return super(DeliveryScheduleEntry, self).unlink()
 
@@ -53,8 +52,6 @@ class DeliveryScheduleEntry(models.Model):
             name = self.search(filters)
             if len(name) > 1:
                 raise Warning('[Unique Error] Name must be unique!')
-
-
 
     @api.multi
     def generate_schedule_letter(self):
