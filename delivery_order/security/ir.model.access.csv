@@ -23,7 +23,6 @@ access_tt_payment_line_hos,access_tt_payment_line_hos,model_tt_payment_line,acco
 access_tt_payment_line_hoa,access_tt_payment_line_hoa,model_tt_payment_line,gbs_application_group.group_head_account,1,1,1,0
 access_tt_payment_line_director,access_tt_payment_line_director,model_tt_payment_line,gbs_application_group.group_cxo,1,1,1,0
 
-
 access_lc_hos,access_lc_hos,gbs_lc_creation.model_letter_credit,account.group_account_user,1,1,1,0
 access_lc_hoa,access_lc_hoa,gbs_lc_creation.model_letter_credit,gbs_application_group.group_head_account,1,1,1,0
 access_lc_director,access_lc_director,gbs_lc_creation.model_letter_credit,gbs_application_group.group_cxo,1,1,1,0

@@ -17,7 +17,7 @@
         'sale_order_type',
         'sale_order_revision',
         'samuda_so_type',
-        'gbs_lc',
+        'letter_of_credit',
         'gbs_pi_creation',
         'delivery_schedule_entry',
         'gbs_application_group'

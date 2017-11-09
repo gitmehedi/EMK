@@ -66,7 +66,7 @@
         <record id="lc_shipment_history" model="ir.ui.view">
 			<field name="name">view_local_credit_form_inherit</field>
 			<field name="model">letter.credit</field>
-			<field name="inherit_id" ref="gbs_lc.view_local_credit_form"/>
+			<field name="inherit_id" ref="letter_of_credit.view_local_credit_form"/>
 			<field name="arch" type="xml">
 				<data>
 					<xpath expr="//page[6]" position="after">
