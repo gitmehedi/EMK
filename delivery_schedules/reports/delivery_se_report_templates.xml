@@ -48,10 +48,10 @@
                 </t>
             </t>
         </template>
-        <template id="report_saleorder">
+        <template id="report_del_schedules">
             <t t-call="report.html_container">
                 <t t-foreach="docs" t-as="doc">
-                    <t t-call="delivery_schedule_entry.report_ds_entry" t-lang="doc.partner_id.lang"/>
+                    <t t-call="delivery_schedules.report_ds_entry" t-lang="doc.partner_id.lang"/>
                 </t>
             </t>
         </template>

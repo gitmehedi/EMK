@@ -4,10 +4,10 @@
         <report 
             id="custome_report_ds_entry"
             string="Delivery Schedule Entry"
-            model="delivery.schedule.entry"
+            model="delivery.schedules"
             report_type="qweb-pdf"
-            file="delivery_schedule_entry.report_ds_entry"
-            name="delivery_schedule_entry.report_ds_entry"
+            file="delivery_schedules.report_ds_entry"
+            name="delivery_schedules.report_ds_entry"
         />
     </data>
 </odoo>

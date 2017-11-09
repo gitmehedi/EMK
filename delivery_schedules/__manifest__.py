@@ -1,29 +1,26 @@
 {
-    'name': 'Sales Delivery Schedule Entry',
+    'name': 'Sales Delivery Schedules',
     'author': 'Genweb2 Limited',
     'website': 'www.genweb2.com',
     'category': 'Sales',
-    'version':'10.1.1.1',
+    'version':'10.0.1.0.0',
     'depends': [
-        'sale',
         'product_sales_pricelist',
-        'gbs_application_group',
-        'sale_order_type',
     ],
 
     'data': [
+        'security/security.xml',
         'security/ir.model.access.csv',
-        #'security/ir_rule.xml',
         'data/mail_template_data.xml',
         'reports/delivery_se_report.xml',
         'reports/delivery_se_report_templates.xml',
-        'views/delivery_schedule_entry_view.xml',
+        'views/delivery_schedules_view.xml',
 
     ],
 
-    'summary': 'Sales Delivery Schedule Entry',
+    'summary': 'Sales Delivery Schedules',
     'description':
-    """Create Sales Delivery Schedule Entry based on specific Sales Order""",
+    """Create Sales Delivery Schedules based on specific Sales Order""",
     'installable': True,
     'application': True,
 }

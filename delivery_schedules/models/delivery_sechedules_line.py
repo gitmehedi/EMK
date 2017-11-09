@@ -3,8 +3,8 @@ from odoo.exceptions import UserError,ValidationError
 
 
 class DeliveryScheduleEntryLine(models.Model):
-    _name = 'delivery.schedule.entry.line'
-    _description = 'Delivery Schedule Entry line'
+    _name = 'delivery.schedules.line'
+    _description = 'Delivery Schedule line'
 
     partner_id = fields.Many2one('res.partner', 'Customer',domain="([('customer','=','True')])")
     product_id = fields.Many2one('product.product','Products',required=True)
@@ -12,7 +12,7 @@ class DeliveryScheduleEntryLine(models.Model):
     uom_id = fields.Many2one('product.uom', string="UoM",required=True)
     pack_type = fields.Many2one('product.packaging.mode', string="Packing")
     deli_address = fields.Text('Delivery Address')
-    parent_id = fields.Many2one('delivery.schedule.entry')
+    parent_id = fields.Many2one('delivery.schedules')
     remarks = fields.Text('Remarks')
     state = fields.Selection([
         ('draft', "Draft"),
