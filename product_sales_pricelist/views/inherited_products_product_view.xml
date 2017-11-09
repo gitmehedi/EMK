@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="inherited_product_product_view" model="ir.ui.view">
+            <field name="name">inherited_product_product_form</field>
+            <field name="model">product.product</field>
+            <field name="inherit_id" ref="product.product_normal_form_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='company_id']" position="after">
+                    <field name="variant_new_price" invisible="1"/>
+                </xpath>
+
+            </field>
+        </record>
+
+         <record id="inherited_product_product_tree" model="ir.ui.view">
+            <field name="name">inherited_product_product_tree</field>
+            <field name="model">product.product</field>
+            <field name="inherit_id" ref="product.product_product_tree_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='lst_price']" position="after">
+                    <field name="variant_new_price"/>
+                </xpath>
+
+            </field>
+        </record>
+
+    </data>
+</odoo>
