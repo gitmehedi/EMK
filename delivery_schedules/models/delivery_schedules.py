@@ -4,9 +4,9 @@ from odoo.exceptions import UserError,ValidationError
 
 import time,datetime
 
-class DeliveryScheduleEntry(models.Model):
+class DeliverySchedules(models.Model):
     _name = 'delivery.schedules'
-    _description = 'Delivery Schedule Entry'
+    _description = 'Delivery Schedule'
     _inherit = ['mail.thread']
     _order_by = "name,requested_date desc"
 
@@ -25,7 +25,7 @@ class DeliveryScheduleEntry(models.Model):
     def create(self, vals):
         seq = self.env['ir.sequence'].next_by_code('delivery.schedules') or '/'
         vals['name'] = seq
-        return super(DeliveryScheduleEntry, self).create(vals)
+        return super(DeliverySchedules, self).create(vals)
 
 
     @api.multi
@@ -43,7 +43,7 @@ class DeliveryScheduleEntry(models.Model):
             if entry.state != 'draft':
                 raise UserError(_('After confirmation You can not delete this.'))
             entry.line_ids.unlink()
-        return super(DeliveryScheduleEntry, self).unlink()
+        return super(DeliverySchedules, self).unlink()
 
     @api.constrains('name')
     def _check_unique_constraint(self):

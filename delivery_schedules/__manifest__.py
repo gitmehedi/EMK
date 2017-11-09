@@ -9,11 +9,11 @@
     ],
 
     'data': [
-        'security/security.xml',
-        'security/ir.model.access.csv',
         'data/mail_template_data.xml',
         'reports/delivery_se_report.xml',
         'reports/delivery_se_report_templates.xml',
+        'security/security.xml',
+        'security/ir.model.access.csv',
         'views/delivery_schedules_view.xml',
 
     ],

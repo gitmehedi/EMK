@@ -2,7 +2,7 @@ from odoo import api, fields, models
 from odoo.exceptions import UserError,ValidationError
 
 
-class DeliveryScheduleEntryLine(models.Model):
+class DeliveryScheduleLine(models.Model):
     _name = 'delivery.schedules.line'
     _description = 'Delivery Schedule line'
 
