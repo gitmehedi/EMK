@@ -6,7 +6,7 @@ class InheritProductProduct(models.Model):
     _inherit = 'product.product'
 
     @api.model
-    def pull_automation(self):
+    def update_product_variants_wise_pricing(self):
         print "-------------------calling data pulling automatically rabbi--------------------------"
         for data_pull in self:
             try:
@@ -19,3 +19,6 @@ class InheritProductProduct(models.Model):
 
     def update_product_price(self):
         print '----------------------------------------'
+
+
+

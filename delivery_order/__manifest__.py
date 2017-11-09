@@ -11,12 +11,11 @@
         'sale_order_type',
         'letter_of_credit',
         'gbs_pi_creation',
-        #'gbs_sale_order_approval'
+        'letter_of_credit',
     ],
 
     'data': [
         'security/ir.model.access.csv',
-        #'security/ir_rule.xml',
         'report/delivery_order_report.xml',
         'report/delivery_order_report_template.xml',
         'wizards/letter_of_credits_view.xml',

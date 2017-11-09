@@ -16,7 +16,7 @@
         'samuda_so_type',
         'operating_unit',
         'amount_to_word_bd',
-        'gbs_lc_creation',
+        'letter_of_credit',
         'gbs_pi_creation',
     ],
 
@@ -27,5 +27,5 @@
         'report/inherit_sale_order_report.xml',
     ],
     'installable': True,
-    'application': True,
+    'application': False,
 }

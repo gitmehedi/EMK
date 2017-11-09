@@ -216,15 +216,10 @@
                    eval="[(4,ref('gbs_application_group.group_cxo')),(4,ref('gbs_application_group.group_head_account'))]"/>
         </record>
 
-        <!--<menuitem id="menu_products"-->
-                  <!--action="product.product_normal_action_sell"-->
-                  <!--parent="sales_team.menu_sales"-->
-                  <!--groups="product.group_product_variant"-->
-                  <!--sequence="99"/>-->
-        <!--groups="sales_team.group_sale_salesman_all_leads"-->
         <menuitem id="sale.menu_products"
                   name="Product Variants"
                   parent="product_sales_pricelist.custom_menu_products"
+                  groups="sales_team.group_sale_salesman_all_leads"
                   action="product.product_normal_action_sell"
                   sequence="10" />
 
