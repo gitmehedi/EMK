@@ -29,7 +29,7 @@
                                 </group>
                             </group>
                             <group colspan="4">
-                                <field name="title"/>
+                                <field name="title" class="gbs-text-area"/>
                             </group>
 
                             <group>

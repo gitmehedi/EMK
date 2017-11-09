@@ -8,6 +8,7 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Shipment" delete="false" copy='0'>
+                    <link rel="stylesheet" href="/com_shipment/static/src/css/lc_style.css"></link>
                     <header>
                         <!--<button string="Open" name="action_open" states="draft" type="object" class="oe_highlight"/>-->
                     	<!--<button string="Confirm" name="action_confirm" states="open" type="object" class="oe_highlight"/>-->
@@ -17,26 +18,41 @@
                     </header>
                     <sheet>
                         <group>
-                            <group colspan="4">
+                            <group string="Shipment Details" colspan="4">
                                 <group>
                                     <field name="name"/>
                                     <field name="lc_id" invisible="1"/>
+                                    <field name="etd_date"/>
+                                </group>
+                                <group>
+                                   <field name="eta_date"/>
+                                    <field name="arrival_date"/>
                                 </group>
                             </group>
-
-
-                            <group string="Shipment Details">
-                                <field name="comments"/>
-                                <field name="etd_date"/>
-                                <field name="eta_date"/>
-                                <field name="arrival_date"/>
+                            <group string="Bill Of Lading">
+                                <field name="bill_of_lading_number"/>
+                                <field name="shipment_date"/>
                             </group>
                             <group string="Packing List">
-
+                                <field name="net_weight"/>
+                                <field name="gross_weight"/>
                             </group>
-                            <group string="Bill Of Landin">
 
-                            </group>
+                            <notebook colspan="4">
+                                <page string="Attachments">
+                                    <field name="shipment_attachment_ids" widget="one2many" class="lc_attachment">
+                                        <tree string="Attachments" editable="top">
+                                            <field name="name" string="Title"/>
+                                            <field name="datas_fname" invisible="1"/>
+                                            <field name="db_datas" filename="datas_fname"/>
+                                        </tree>
+                                    </field>
+                                </page>
+                                <page string="Remarks">
+                                    <field name="comments" widget="html" options="{'style-inline': true}"/>
+                                </page>
+
+                            </notebook>
                         </group>
                     </sheet>
 
@@ -56,8 +72,10 @@
             <field name="arch" type="xml">
                 <tree string="Shipment">
                     <field name="name"/>
-                    <field name="comments"/>
                     <field name="etd_date"/>
+                    <field name="shipment_date"/>
+                    <field name="eta_date"/>
+                    <field name="arrival_date"/>
                     <field name="state"/>
                 </tree>
             </field>
@@ -73,7 +91,12 @@
 						<page string="Shipment">
                             <field name="shipment_ids">
                                 <tree create="false">
-                                    <field name="name" />
+                                    <field name="name"/>
+                                    <field name="etd_date"/>
+                                    <field name="shipment_date"/>
+                                    <field name="eta_date"/>
+                                    <field name="arrival_date"/>
+                                    <field name="state"/>
                                     <button name="action_view_shipment" string="View" type="object" icon="fa-search-plus" />
                                     <button name="action_edit_shipment" string="Edit" type="object" icon="fa-pencil-square-o" />
                                 </tree>
