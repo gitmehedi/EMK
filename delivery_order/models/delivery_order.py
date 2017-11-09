@@ -106,7 +106,6 @@ class DeliveryOrder(models.Model):
         return self.write({'state': 'approve', 'approved_date': time.strftime('%Y-%m-%d %H:%M:%S')})
 
 
-    @api.one
     def lc_sales_business_logics(self):
 
         # If LC and PI ref is present, go to the Final Approval
@@ -173,7 +172,6 @@ class DeliveryOrder(models.Model):
                     #raise Warning(warningstr)
 
 
-    @api.one
     def products_price_sum(self):
         product_line_subtotal = 0
         for do_product_line in self.line_ids:
@@ -255,9 +253,9 @@ class DeliveryOrder(models.Model):
              ('partner_id', '=', self.parent_id.id)])
         account_payment_pool.write({'is_this_payment_checked': True})
 
-        for sale_line in self.sale_order_id.order_line:
-            for da_line in self.line_ids:
-                sale_line.write({'da_qty': da_line.quantity})
+        # for sale_line in self.sale_order_id.order_line:
+        #     for da_line in self.line_ids:
+        #         sale_line.write({'da_qty': da_line.quantity})
 
         return self.write({'state': 'close', 'confirmed_date': time.strftime('%Y-%m-%d %H:%M:%S')})
 
@@ -308,6 +306,8 @@ class DeliveryOrder(models.Model):
                 self.so_type = sale_order_obj.credit_sales_or_lc
                 self.so_date = sale_order_obj.date_order
                 self.deli_address = sale_order_obj.partner_shipping_id.name
+                self.pi_no = sale_order_obj.pi_no.id
+                self.lc_no = sale_order_obj.lc_no.id
 
                 for record in sale_order_obj.order_line:
                     val.append((0, 0, {'product_id': record.product_id.id,

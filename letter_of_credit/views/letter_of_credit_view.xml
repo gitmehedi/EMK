@@ -7,24 +7,29 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Letter Credit" delete="false" copy='0'>
+                    <link rel="stylesheet" href="/letter_of_credit/static/src/css/lc_style.css"></link>
                     <header>
                         <button string="Open" name="action_open" states="draft" type="object" class="oe_highlight"/>
-                    	<button string="Confirm" name="action_confirm" states="open" type="object" class="oe_highlight"/>
-                     	<button string="Reset to Draft" name="action_draft" type="object" states="confirmed" class="oe_read_only"/>
-                        <button string="Amendment" name="action_revision" class="oe_read_only" type="object" attrs="{'invisible': [('state', 'in', ('draft', 'open'))]}"/>
+                        <button string="Confirm" name="action_confirm" states="open" type="object" class="oe_highlight"/>
+                        <button string="Reset to Draft" name="action_draft" type="object" states="confirmed" class="oe_read_only"/>
+                        <button string="Amendment" name="action_revision" class="oe_read_only" type="object" attrs="{'invisible': [('state', 'in', ('draft', 'open', 'done'))]}"/>
                         <field name="state" widget="statusbar" statusbar_visible="draft,open,confirmed,progress,done"/>
 
                     </header>
 
                     <sheet>
-
                         <group>
-                            <group colspan="4">
+                            <group colspan="2">
                                 <group>
                                     <field name="name"/>
-                                    <field name="region_type" widget="radio"/>
                                     <field name="type" attrs="{'invisible': '1'}" />
                                 </group>
+                                <group>
+                                    <field name="region_type" widget="radio" options="{'horizontal': true}"/>
+                                </group>
+                            </group>
+                            <group colspan="4">
+                                <field name="title"/>
                             </group>
 
                             <group>
@@ -40,6 +45,7 @@
                                 <field name="second_party"/>
                                 <field name="second_party_bank"/>
                             </group>
+
 
                             <!--Same Group-->
                             <group string="LC Value">
@@ -102,10 +108,11 @@
                                     <field name="remarks" widget="html" options="{'style-inline': true}"/>
                                 </page>
                                 <page string="Attachments">
-                                    <field name="attachment_ids">
-                                        <tree editable="top">
-                                            <field name="title" />
-                                            <field name="file"/>
+                                    <field name="attachment_ids" widget="one2many" class="lc_attachment">
+                                        <tree string="Attachments" editable="top">
+                                            <field name="name" string="Title"/>
+                                            <field name="datas_fname" invisible="1"/>
+                                            <field name="db_datas" filename="datas_fname"/>
                                         </tree>
                                     </field>
                                 </page>
@@ -136,17 +143,35 @@
             </field>
         </record>
 
-        <record id="letter_credit_tree_view" model="ir.ui.view">
-            <field name="name">local.credit.tree</field>
+        <record id="export_letter_credit_tree_view" model="ir.ui.view">
+            <field name="name">export.local.credit.tree</field>
             <field name="model">letter.credit</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Letter of Credit">
                     <field name="name"/>
-                    <field name="first_party"/>
+                    <field name="first_party" string="Applicant Candidate"/>
                     <field name="issue_date"/>
                     <field name="expiry_date"/>
-                    <field name="first_party_bank"/>
+                    <field name="shipment_date"/>
+                    <field name="first_party_bank" string="Applicant Bank"/>
+                    <field name="state"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="import_letter_credit_tree_view" model="ir.ui.view">
+            <field name="name">import.local.credit.tree</field>
+            <field name="model">letter.credit</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Letter of Credit">
+                    <field name="name"/>
+                    <field name="first_party" string="Beneficiary Candidate"/>
+                    <field name="issue_date"/>
+                    <field name="expiry_date"/>
+                    <field name="shipment_date"/>
+                    <field name="first_party_bank" string="Beneficiary Bank"/>
                     <field name="state"/>
                 </tree>
             </field>

@@ -4,7 +4,7 @@
 
         <record model="ir.actions.act_window" id="shipment_creation_action">
             <field name="name">LC Shipment</field>
-            <field name="res_model">lc.shipment</field>
+            <field name="res_model">purchase.shipment</field>
             <field name="view_mode">tree,form</field>
         </record>
 

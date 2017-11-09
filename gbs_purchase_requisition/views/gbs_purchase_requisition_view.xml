@@ -52,6 +52,9 @@
                     <xpath expr="//label[@for='name']" position="replace">
                         <label for="name" class="oe_edit_only oe_inline" string="Purchase Requisition"/>
                     </xpath>
+                    <xpath expr="//field[@name='name']" position="attributes">
+                        <attribute name="readonly">1</attribute>
+                    </xpath>
                     <xpath expr="//field[@name='type_id']" position="attributes">
                         <attribute name="invisible">1</attribute>
                     </xpath>
@@ -96,6 +99,9 @@
                     <xpath expr="//field[@name='product_qty']" position="attributes" type="object">
                         <attribute name="string">In Stock</attribute>
                     </xpath>
+                    <xpath expr="//field[@name='qty_ordered']" position="replace" type="object">
+                    <field name="product_ordered_qty"/>
+                    </xpath>
                     <xpath expr="//field[@name='price_unit']" position="after" type="object">
                         <field name="last_purchse_date"/>
                         <field name="last_qty"/>
@@ -106,7 +112,20 @@
 
                     <xpath expr="//page[1]" position="after">
                         <page string="Attachments">
-                            <field name="attachment_ids" widget="many2many"/>
+                            <field name="attachment_ids" widget="one2many" >
+                                <tree string="Attachments" editable="top">
+                                    <field name="name" string="Title"/>
+                                    <field name="datas_fname" invisible="1"/>
+                                    <field name="db_datas" filename="datas_fname"/>
+                                    <!--<field name="res_name"/>-->
+                                    <!--<field name="res_model"/>-->
+                                    <!--<field name="res_field"/>-->
+                                    <!--<field name="res_id"/>-->
+                                    <!--<field name="create_uid"/>-->
+                                    <!--<field name="create_date"/>-->
+                                    <!--<field name="company_id"/>-->
+                                </tree>
+                            </field>
                         </page>
                     </xpath>
 
@@ -115,19 +134,19 @@
         </record>
         <!--Inherited view for field access-->
         <!--<record id="inherit_indent_pr_view_form" model="ir.ui.view">-->
-            <!--<field name="name">indent.pr.view.form.inherit</field>-->
-            <!--<field name="model">purchase.requisition</field>-->
-            <!--<field name="inherit_id" ref="indent_pr_view_form" />-->
-            <!--<field name="groups_id" eval="[(6, 0, [ref('gbs_purchase_requisition.group_purchase_requisition_approver') ])]" />-->
-            <!--<field name="arch" type="xml">-->
-                <!--<field name="buying_type" position="attributes">-->
-                   <!--<attribute name="readonly">0</attribute>-->
-                <!--</field>-->
-				<!--<field name="purchase_by" position="attributes">-->
-                   <!--<attribute name="readonly">0</attribute>-->
-                <!--</field>-->
-            <!--</field>-->
-		<!--</record>-->
+        <!--<field name="name">indent.pr.view.form.inherit</field>-->
+        <!--<field name="model">purchase.requisition</field>-->
+        <!--<field name="inherit_id" ref="indent_pr_view_form" />-->
+        <!--<field name="groups_id" eval="[(6, 0, [ref('gbs_purchase_requisition.group_purchase_requisition_approver') ])]" />-->
+        <!--<field name="arch" type="xml">-->
+        <!--<field name="buying_type" position="attributes">-->
+        <!--<attribute name="readonly">0</attribute>-->
+        <!--</field>-->
+        <!--<field name="purchase_by" position="attributes">-->
+        <!--<attribute name="readonly">0</attribute>-->
+        <!--</field>-->
+        <!--</field>-->
+        <!--</record>-->
 
         <record model="ir.actions.act_window" id="purchase_requisition.action_purchase_requisition">
             <field name="name">Purchase Requisition</field>

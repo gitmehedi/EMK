@@ -1,6 +1,6 @@
-from odoo import api, fields, models
+from odoo import api, fields, models,_
 from odoo.exceptions import UserError, ValidationError
-import datetime
+from openerp.addons.commercial.models.utility import Status, UtilityNumber
 
 
 class LetterOfCredit(models.Model):
@@ -9,11 +9,11 @@ class LetterOfCredit(models.Model):
     _inherit = ['mail.thread']
     _order = "issue_date desc"
 
-    #_rec_name='name'
-
     # Import -> Applicant(Samuda)
 
-    name = fields.Char(string='Number', required=True, index=True)
+    name = fields.Char(string='LC Number', index=True,readonly=True)
+    title = fields.Text(string='LC Head', required=True)
+
     type = fields.Selection([
         ('export', 'Export'),
         ('import', 'Import'),
@@ -66,10 +66,19 @@ class LetterOfCredit(models.Model):
     terms_condition = fields.Text(string='Terms of Condition')
     remarks = fields.Text(string='Remarks')
 
-    attachment_ids = fields.One2many('commercial.attachment', 'lc_id', string='Attachment')
+    attachment_ids = fields.One2many('ir.attachment', 'res_id', string='Attachments')
 
 
 
+    # For LC Revision
+
+    current_revision_id = fields.Many2one('letter.credit', 'Current revision', readonly=True, copy=True,
+                                          ondelete='cascade')
+    old_revision_ids = fields.One2many('letter.credit', 'current_revision_id', 'Old revisions', readonly=True,
+                                       context={'active_test': False})
+    revision_number = fields.Integer('Revision', copy=False)
+    unrevisioned_name = fields.Char('LC Reference', copy=True, readonly=True)
+    active = fields.Boolean('Active', default=True, copy=True)
 
     state = fields.Selection([
         ('draft', "Draft"),
@@ -80,17 +89,7 @@ class LetterOfCredit(models.Model):
         ('done', "Done")
     ], default='draft')
 
-    status = fields.Selection([
-        ('open', "LC Open"),
-        ('confirmed', "Getting Bank Confirmation"),
-        ('amendment', "Amendment the LC"),
-        ('progress', "LC In Progress"),
-        ('done', "Close/Done the LC")
-    ], track_visibility='always', default='open')
-
-    _sql_constraints = [
-        ('name_uniq', 'unique(name)', 'This Number is already in use')
-    ]
+    last_note = fields.Char(string='Step', track_visibility='onchange')
 
     @api.multi
     def unlink(self):
@@ -103,24 +102,86 @@ class LetterOfCredit(models.Model):
 
     @api.multi
     def action_open(self):
-        self.write({'state': 'open','status':'open'})
+        self.write({'state': 'open','last_note': Status.OPEN.value})
 
     @api.multi
     def action_confirm(self):
-        self.write({'state': 'confirmed','status': 'confirmed'})
+        res = self.env.ref('letter_of_credit.lc_number_wizard')
+        result = {
+            'name': _('Please Give The Number Of LC'),
+            'view_type': 'form',
+            'view_mode': 'form',
+            'view_id': res and res.id or False,
+            'res_model': 'lc.number.wizard',
+            'type': 'ir.actions.act_window',
+            'nodestroy': True,
+            'target': 'new',
+        }
+        return result
 
     @api.multi
     def action_draft(self):
         self.write({'state': 'draft'})
 
+    @api.one
+    @api.constrains('name')
+    def _check_name(self):
+        domain = ['&','&','|',('name', '=', self.name),
+                  ('type','=',self.type),
+                  ('id', '=', False),
+                  ('id', '!=', self.id)]
+        if self.search_count(domain):
+            raise UserError('You can\'t create duplicate Number')
+        return True
+
+    @api.model
+    def create(self, vals):
+        if 'unrevisioned_name' not in vals:
+            if vals.get('name', 'New') == 'New':
+                seq = self.env['ir.sequence']
+                vals['name'] = seq.next_by_code('letter.credit') or '/'
+            vals['unrevisioned_name'] = vals['name']
+        return super(LetterOfCredit, self).create(vals)
+
+    @api.multi
+    def action_revision(self):
+        self.ensure_one()
+        view_ref = self.env['ir.model.data'].get_object_reference('letter_of_credit', 'view_local_credit_form')
+        view_id = view_ref and view_ref[1] or False,
+        self.with_context(new_lc_revision=True).copy()
+
+        number = len(self.old_revision_ids)
+
+        comm_utility_pool = self.env['commercial.utility']
+        note = comm_utility_pool.getStrNumber(number) + ' ' + Status.AMENDMENT.value
+
+        self.write({'state': self.state, 'last_note': note})
+        return {
+            'type': 'ir.actions.act_window',
+            'name': _('LC'),
+            'res_model': 'letter.credit',
+            'res_id': self.id,
+            'view_type': 'form',
+            'view_mode': 'form',
+            'view_id': view_id,
+            'target': 'current',
+            'nodestroy': True,
+            'flags': {'initial_mode': 'edit'},
+        }
+
+    @api.returns('self', lambda value: value.id)
+    @api.multi
+    def copy(self, defaults=None):
+        if not defaults:
+            defaults = {}
+        if self.env.context.get('new_lc_revision'):
+            prev_name = self.name
+            revno = self.revision_number
+            self.write({'revision_number': revno + 1, 'name': '%s-%02d' % (self.unrevisioned_name, revno + 1)})
+            defaults.update({'name': prev_name, 'revision_number': revno, 'active': False, 'state': 'amendment',
+                             'current_revision_id': self.id, 'unrevisioned_name': self.unrevisioned_name, })
+        return super(LetterOfCredit, self).copy(defaults)
 
 
-class CommercialAttachment(models.Model):
-    _name = 'commercial.attachment'
-    _description = 'Attachment'
-
-    title = fields.Char(string='Title', required=True)
-    file = fields.Binary(default='Attachment', required=True)
-    lc_id = fields.Many2one("letter.credit", string='LC Number', ondelete='cascade')
 
 

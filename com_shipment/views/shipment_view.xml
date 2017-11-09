@@ -3,8 +3,8 @@
     <data>
 
         <record id="view_shipment_form" model="ir.ui.view">
-            <field name="name">lc.shipment.form</field>
-            <field name="model">lc.shipment</field>
+            <field name="name">purchase.shipment.form</field>
+            <field name="model">purchase.shipment</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Shipment" delete="false" copy='0'>
@@ -20,6 +20,7 @@
                             <group colspan="4">
                                 <group>
                                     <field name="name"/>
+                                    <field name="lc_id" invisible="1"/>
                                 </group>
                             </group>
 
@@ -49,8 +50,8 @@
         </record>
 
         <record id="shipment_tree_view" model="ir.ui.view">
-            <field name="name">lc.shipment.tree</field>
-            <field name="model">lc.shipment</field>
+            <field name="name">purchase.shipment.tree</field>
+            <field name="model">purchase.shipment</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Shipment">
@@ -65,21 +66,23 @@
         <record id="lc_shipment_history" model="ir.ui.view">
 			<field name="name">view_local_credit_form_inherit</field>
 			<field name="model">letter.credit</field>
-			<field name="inherit_id" ref="gbs_lc.view_local_credit_form"/>
+			<field name="inherit_id" ref="letter_of_credit.view_local_credit_form"/>
 			<field name="arch" type="xml">
 				<data>
 					<xpath expr="//page[6]" position="after">
 						<page string="Shipment">
                             <field name="shipment_ids">
-                                <tree editable="top">
+                                <tree create="false">
                                     <field name="name" />
+                                    <button name="action_view_shipment" string="View" type="object" icon="fa-search-plus" />
+                                    <button name="action_edit_shipment" string="Edit" type="object" icon="fa-pencil-square-o" />
                                 </tree>
                             </field>
                         </page>
 					</xpath>
 				</data>
                 <xpath expr="//button[@name='action_revision']" position="after">
-                    <button string="Shipment" name="action_create_shipment" type="object" states="confirmed" class="oe_highlight"/>
+                    <button string="Shipment" name="action_shipment" type="object" attrs="{'invisible': [('state', 'in', ('draft', 'open', 'done'))]}" class="oe_highlight oe_read_only"/>
 
                 </xpath>
 			</field>

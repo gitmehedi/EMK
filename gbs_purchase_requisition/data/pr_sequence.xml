@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+        <!-- PR Sequences -->
+        <record id="sequence_pr" model="ir.sequence">
+            <field name="name">Purchase Requisition</field>
+            <field name="code">purchase.requisition</field>
+            <field name="prefix">PR-OU-%(year)s-</field>
+            <field eval="6" name="padding"/>
+            <field eval="1" name="number_next"/>
+            <field eval="1" name="number_increment"/>
+            <field eval="False" name="company_id"/>
+        </record>
+
+
+</odoo>

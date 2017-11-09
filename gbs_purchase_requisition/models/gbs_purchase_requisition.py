@@ -1,32 +1,42 @@
 from odoo import api, fields, models,_
 from odoo.exceptions import ValidationError
 from datetime import date
+from odoo.exceptions import UserError
+from odoo.addons import decimal_precision as dp
 
 
 class PurchaseRequisition(models.Model):
     _inherit = 'purchase.requisition'
 
-    department_id = fields.Many2one('hr.department',
-                                    string='Department', store=True)
+    name = fields.Char(string='Purchase Requisition',default='/')
+    department_id = fields.Many2one('hr.department',string='Department', store=True)
     operating_unit_id = fields.Many2one('operating.unit', 'Operating Unit', required=True,
                                         default=lambda self: self.env.user.default_operating_unit_id)
-
     region_type = fields.Selection([('local', 'Local'),('foreign', 'Foreign')], string="LC Region Type",help="Local: Local LC.\n""Foreign: Foreign LC.")
-
     purchase_by = fields.Selection([('cash', 'Cash'), ('credit', 'Credit'), ('lc', 'LC'), ('tt', 'TT')], string="Purchase By")
-
     requisition_date = fields.Date(string='Requisition Date',default = date.today())
-
     required_date = fields.Date(string='Required Date')
-
     state = fields.Selection([('draft', 'Draft'), ('in_progress', 'Confirmed'),
                               ('approve_head_procurement', 'Waiting For Approval'),('done', 'Approved'),
                               ('cancel', 'Cancelled')],'Status', track_visibility='onchange', required=True,
                              copy=False, default='draft')
 
     indent_ids = fields.Many2many('indent.indent','pr_indent_rel','pr_id','indent_id',string='Indent')
-    # attachment_ids = fields.One2many('purchase.requisition.attachments', 'pr_id', string='Attachments')
-    attachment_ids = fields.Many2many('ir.attachment', 'ir_att_pr_rel', 'pr_id', 'ir_att_id', string='Attachment')
+    attachment_ids = fields.One2many('ir.attachment', 'res_id', string='Attachments')
+
+    @api.multi
+    def action_in_progress(self):
+        if not all(obj.line_ids for obj in self):
+            raise UserError(_('You cannot confirm call because there is no product line.'))
+        res = {
+            'state': 'in_progress'
+        }
+        new_seq = self.env['ir.sequence'].next_by_code('purchase.requisition')
+
+        if new_seq:
+            res['name'] = new_seq
+
+        self.write(res)
 
     @api.multi
     def action_open(self):
@@ -45,7 +55,6 @@ class PurchaseRequisition(models.Model):
             'nodestroy': True,
             'target': 'new',
         }
-        # self.write({'state': 'done'})
         return result
 
     @api.onchange('indent_ids')
@@ -76,6 +85,8 @@ class PurchaseRequisition(models.Model):
 class PurchaseRequisitionLine(models.Model):
     _inherit = "purchase.requisition.line"
 
+    product_ordered_qty = fields.Float('Ordered Quantities', digits=dp.get_precision('Product UoS'),
+                                       default=1)
     name = fields.Text(string='Description')
     last_purchse_date = fields.Date(string='Last Purchase Date')
     last_qty = fields.Float(string='Last Purchase Qnty')
@@ -83,11 +94,29 @@ class PurchaseRequisitionLine(models.Model):
     last_price_unit = fields.Float(string='Last Unit Price')
     remark = fields.Char(string='Remarks')
 
+    @api.onchange('product_id')
+    def onchange_product_id(self):
+        if not self.product_id:
+            return {'value': {'product_ordered_qty': 1.0,
+                              'product_uom_id': False,
+                              'product_qty': 0.0,
+                              'name': '',
+                              'delay': 0.0
+                              }
+                    }
+        # ..........................................
+        if self.product_id:
+            product_obj = self.env['product.product']
+            product = product_obj.search([('id', '=', self.product_id.id)])
+            product_name = product.name_get()[0][1]
+            self.name = product_name
+            self.product_uom = product.uom_id.id
+            self.product_qty = product.qty_available
+        if not self.account_analytic_id:
+            self.account_analytic_id = self.requisition_id.account_analytic_id
+        if not self.schedule_date:
+            self.schedule_date = self.requisition_id.schedule_date
 
-# class PurchaseRequisitionAttachments(models.Model):
-#     _name = 'purchase.requisition.attachments'
-#     _description = 'Purchase Requisition Attachments'
-#
-#     title = fields.Char(string='Title', required=True)
-#     file = fields.Binary(default='Attachment', required=True)
-#     pr_id = fields.Many2one('purchase.requisition', string='LC Number')
+        # /////////////////////////////////////////
+
+

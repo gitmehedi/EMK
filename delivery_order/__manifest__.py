@@ -9,8 +9,9 @@
         'product_sales_pricelist',
         'account',
         'sale_order_type',
-        'gbs_lc',
+        'letter_of_credit',
         'gbs_pi_creation',
+        #'gbs_sale_order_approval'
     ],
 
     'data': [

@@ -20,7 +20,7 @@ class CashPaymentLine(models.Model):
         if self.amount <= 0.00:
             raise ValidationError('Amount can not be zero or negative')
 
-    @api.constrains('validity')
-    def check_validity(self):
-        if self.validity <= 0.00:
-            raise ValidationError('Validity can not be zero or negative')
+    # @api.constrains('validity')
+    # def check_validity(self):
+    #     if self.validity <= 0.00:
+    #         raise ValidationError('Validity can not be zero or negative')
