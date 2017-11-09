@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <report 
+            id="custome_report_ds_entry"
+            string="Delivery Schedules"
+            model="delivery.schedules"
+            report_type="qweb-pdf"
+            file="delivery_schedules.report_ds_entry"
+            name="delivery_schedules.report_ds_entry"
+        />
+    </data>
+</odoo>

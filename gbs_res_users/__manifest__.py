@@ -5,7 +5,8 @@
     'website': 'https://www.genweb2.com',
 
     'depends': [
-        'base'
+        'base',
+        'stock',
     ],
 
     'data': [

@@ -8,7 +8,7 @@
                     <t t-call="report.external_layout">
                         <div class="page">
                             <h2 style="padding: 15px 0px; text-align: center;">
-                                Delivery Schedule Entry Report
+                                Delivery Schedules Report
                             </h2>
                             <div style="text-align:left;">
                                 <p><b>Description: </b><span t-field="o.name"/></p>
@@ -48,10 +48,10 @@
                 </t>
             </t>
         </template>
-        <template id="report_saleorder">
+        <template id="report_del_schedules">
             <t t-call="report.html_container">
                 <t t-foreach="docs" t-as="doc">
-                    <t t-call="delivery_schedule_entry.report_ds_entry" t-lang="doc.partner_id.lang"/>
+                    <t t-call="delivery_schedules.report_ds_entry" t-lang="doc.partner_id.lang"/>
                 </t>
             </t>
         </template>

@@ -4,9 +4,9 @@ from odoo.exceptions import UserError,ValidationError
 
 import time,datetime
 
-class DeliveryScheduleEntry(models.Model):
-    _name = 'delivery.schedule.entry'
-    _description = 'Delivery Schedule Entry'
+class DeliverySchedules(models.Model):
+    _name = 'delivery.schedules'
+    _description = 'Delivery Schedule'
     _inherit = ['mail.thread']
     _order_by = "name,requested_date desc"
 
@@ -14,7 +14,7 @@ class DeliveryScheduleEntry(models.Model):
     sequence_id = fields.Char('Sequence', readonly=True)
     requested_date = fields.Date('Requested Date', default=datetime.date.today(), readonly=True)
     requested_by = fields.Many2one('res.users', string='Requested By', readonly=True, default=lambda self: self.env.user)
-    line_ids = fields.One2many('delivery.schedule.entry.line', 'parent_id', string="Products", readonly=True,states={'draft': [('readonly', False)]})
+    line_ids = fields.One2many('delivery.schedules.line', 'parent_id', string="Products", readonly=True,states={'draft': [('readonly', False)]})
     notes = fields.Text()
     state = fields.Selection([
         ('draft', "Draft"),
@@ -23,9 +23,9 @@ class DeliveryScheduleEntry(models.Model):
 
     @api.model
     def create(self, vals):
-        seq = self.env['ir.sequence'].next_by_code('delivery.schedule.entry') or '/'
+        seq = self.env['ir.sequence'].next_by_code('delivery.schedules') or '/'
         vals['name'] = seq
-        return super(DeliveryScheduleEntry, self).create(vals)
+        return super(DeliverySchedules, self).create(vals)
 
 
     @api.multi
@@ -43,7 +43,7 @@ class DeliveryScheduleEntry(models.Model):
             if entry.state != 'draft':
                 raise UserError(_('After confirmation You can not delete this.'))
             entry.line_ids.unlink()
-        return super(DeliveryScheduleEntry, self).unlink()
+        return super(DeliverySchedules, self).unlink()
 
     @api.constrains('name')
     def _check_unique_constraint(self):
@@ -59,7 +59,7 @@ class DeliveryScheduleEntry(models.Model):
         self.ensure_one()
         ir_model_data = self.env['ir.model.data']
         try:
-            template_id = ir_model_data.get_object_reference('delivery_schedule_entry', 'template_schedule_letter')[1]
+            template_id = ir_model_data.get_object_reference('delivery_schedules', 'template_schedule_letter')[1]
         except ValueError:
             template_id = False
         try:
@@ -68,13 +68,13 @@ class DeliveryScheduleEntry(models.Model):
             compose_form_id = False
         ctx = dict()
         ctx.update({
-            'default_model': 'delivery.schedule.entry',
+            'default_model': 'delivery.schedules',
             'default_res_id': self.ids[0],
             'default_use_template': bool(template_id),
             'default_template_id': template_id,
             'default_composition_mode': 'comment',
             'mark_so_as_sent': True,
-            'custom_layout': "delivery_schedule_entry.template_schedule_letter"
+            'custom_layout': "delivery_schedules.template_schedule_letter"
         })
         return {
             'type': 'ir.actions.act_window',

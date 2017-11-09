@@ -4,9 +4,9 @@
 
         <!--Email template -->
         <record id="template_schedule_letter" model="mail.template">
-            <field name="name">Delivery Schedule Entry Letter</field>
+            <field name="name">Delivery Schedule Email Template</field>
             <field name="subject">${object.name}</field>
-            <field name="model_id" ref="delivery_schedule_entry.model_delivery_schedule_entry"/>
+            <field name="model_id" ref="delivery_schedules.model_delivery_schedules"/>
             <field name="auto_delete" eval="True"/>
             <field name="report_template" ref="custome_report_ds_entry"/>
             <field name="report_name">${(object.name or '').replace('/','_')}${object.state == 'approved' and '_approved' or ''}</field>

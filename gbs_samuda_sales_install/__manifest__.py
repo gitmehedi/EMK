@@ -19,7 +19,7 @@
         'samuda_so_type',
         'letter_of_credit',
         'gbs_pi_creation',
-        'delivery_schedule_entry',
+        'delivery_schedules',
         'gbs_application_group'
         #'sale_revision_history'
     ],
