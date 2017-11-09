@@ -8,7 +8,7 @@
                     <t t-call="report.external_layout">
                         <div class="page">
                             <h2 style="padding: 15px 0px; text-align: center;">
-                                Delivery Schedule Entry Report
+                                Delivery Schedules Report
                             </h2>
                             <div style="text-align:left;">
                                 <p><b>Description: </b><span t-field="o.name"/></p>

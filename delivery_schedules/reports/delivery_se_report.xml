@@ -3,7 +3,7 @@
     <data>
         <report 
             id="custome_report_ds_entry"
-            string="Delivery Schedule Entry"
+            string="Delivery Schedules"
             model="delivery.schedules"
             report_type="qweb-pdf"
             file="delivery_schedules.report_ds_entry"
