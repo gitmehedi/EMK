@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+   <record id="group_delivery_schedule_manager" model="res.groups">
+        <field name="name">Delivery Schedule Manager</field>
+        <field name="category_id" />
+   </record>
+
+
+</odoo>
