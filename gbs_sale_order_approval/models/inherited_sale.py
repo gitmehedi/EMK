@@ -210,7 +210,7 @@ class SaleOrder(models.Model):
 class InheritedSaleOrderLine(models.Model):
     _inherit='sale.order.line'
 
-    #da_qty = fields.Float(string='DA Qty.', default=3)
+    da_qty = fields.Float(string='DA Qty.', default=3)
 
     @api.constrains('product_uom_qty','commission_rate')
     def _check_order_line_inputs(self):

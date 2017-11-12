@@ -90,6 +90,10 @@
                              help="If the sale is locked, you can not modify it anymore. However, you will still be able to invoice or deliver."/>
                     </xpath>
 
+                    <xpath expr="//field[@name='order_line']/tree/field[@name='price_unit']" position="after">
+                        <field name="da_qty"/>
+                    </xpath>
+
                     <xpath expr="//field[@name='state']" position="replace">
                         <field name="state" widget="statusbar" statusbar_visible="draft,sent,sale"/>
                     </xpath>
