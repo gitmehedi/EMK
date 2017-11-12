@@ -8,14 +8,14 @@
 			<field name="model">product.sale.history.line</field>
 			<field name="type">form</field>
 			<field name="arch" type="xml">
-				<form string="Change Products Sale Price" create="false" edit="false">
+				<form string="Change Products Sale Price" options="{'no_open':True,'no_create_edit': True}">
 					<sheet>
 						<group>
 							<field name="product_id"/>
 							<field name="list_price"/>
 							<field name="new_price"/>
 							<field name="currency_id"/>
-							<field name="approve_price_date"/>
+                            <field name="effective_price_date"/>
 						</group>
 	                </sheet>
 				</form>
@@ -32,7 +32,6 @@
                     <field name="list_price"/>
                     <field name="new_price"/>
                     <field name="currency_id"/>
-                    <field name="approve_price_date"/>
                     <field name="effective_price_date"/>
                 </tree>
             </field>
@@ -46,9 +45,9 @@
         </record>
 
         <menuitem id="variant_wise_price_history_menu"
-                  name="Variants Price History" sequence="11"
+                  name="Variants History" sequence="11"
                   parent="custom_menu_products"
-                  groups="account.group_account_user,gbs_application_group.group_sales_customer_manager,gbs_application_group.group_sales_product_manager,sales_team.group_sale_salesman_all_leads,gbs_application_group.group_head_sale,gbs_application_group.group_head_account,gbs_application_group.group_cxo"
+                  groups="sales_team.group_sale_salesman_all_leads"
                   action="action_product_variants_sale_price_history_tree_view"/>
 
     </data>

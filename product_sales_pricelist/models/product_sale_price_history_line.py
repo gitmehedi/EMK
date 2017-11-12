@@ -43,10 +43,9 @@ class ProductSalePriceHistiryLine(models.Model):
                 vals['list_price'] = price_pool.list_price
                 vals['new_price'] = price_pool.new_price
                 vals['sale_price_history_id'] = price_pool.id
-                # vals['approve_price_date'] = datetime.datetime.now()
                 vals['effective_price_date'] = price_pool.effective_date
                 vals['currency_id'] = price_pool.currency_id.id
-                vals['product_package_mode '] = price_pool.product_package_mode
+                vals['product_package_mode '] = price_pool.product_package_mode.id
                 vals['uom_id'] = price_pool.uom_id.id
 
 
