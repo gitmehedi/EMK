@@ -9,7 +9,7 @@
     ],
 
     'data': [
-        'data/mail_template_data.xml',
+        #'data/mail_template_data.xml',
         'reports/delivery_se_report.xml',
         'reports/delivery_se_report_templates.xml',
         'security/security.xml',
