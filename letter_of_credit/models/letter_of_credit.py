@@ -97,6 +97,9 @@ class LetterOfCredit(models.Model):
             if str(lc.state) != 'draft' and str(lc.state) != 'open':
                 raise UserError('You can not delete this.')
             else:
+                query = """ delete from ir_attachment where res_id=%s"""
+                for att in self.attachment_ids:
+                    self._cr.execute(query, tuple([att.res_id]))
                 return super(LetterOfCredit, self).unlink()
 
 

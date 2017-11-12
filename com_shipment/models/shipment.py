@@ -2,8 +2,6 @@ from odoo import api, fields, models, _
 
 from openerp.addons.commercial.models.utility import Status, UtilityNumber
 
-
-
 class Shipment(models.Model):
 
     _name = 'purchase.shipment'
@@ -15,8 +13,7 @@ class Shipment(models.Model):
     comments = fields.Text(string='Comments')
 
     etd_date = fields.Date('ETD Date', help="Estimated Time of Departure")
-
-    eta_date = fields.Date('ETD Date', help="Estimated Time of Arrival")
+    eta_date = fields.Date('ETA Date', help="Estimated Time of Arrival")
     arrival_date = fields.Date('Arrival Date')
 
     state = fields.Selection(
@@ -31,8 +28,15 @@ class Shipment(models.Model):
          ('done', "Done")], default='draft')
 
     lc_id = fields.Many2one("letter.credit", string='LC Number', ondelete='cascade', default=lambda self: self.env.context.get('lc_id'))
-    bill_of_landin_id = fields.Many2one('bill.of.landing', string='Bill of Landing',ondelete="cascade")
-    # packing_list_id = fields.Many2one('packing.list', string='Packing List', ondelete="cascade")
+    shipment_attachment_ids = fields.One2many('ir.attachment', 'res_id', string='Shipment Attachments')
+
+    # Bill Of Lading
+    bill_of_lading_number = fields.Char(string='BoL Number', required=True, index=True, help="Bill Of Lading Number")
+    shipment_date = fields.Date('Ship on Board', required=True)
+
+    # Packing List
+    gross_weight = fields.Float('Gross Weight', required=True)
+    net_weight = fields.Float('Net Weight', required=True)
 
     @api.model
     def create(self, vals):

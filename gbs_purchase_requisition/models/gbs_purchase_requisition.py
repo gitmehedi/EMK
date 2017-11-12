@@ -78,8 +78,11 @@ class PurchaseRequisition(models.Model):
         for indent in self:
             if indent.state != 'draft':
                 raise ValidationError(_('You cannot delete in this state'))
-
-        return super(PurchaseRequisition, self).unlink()
+            else:
+                query = """ delete from ir_attachment where res_id=%s"""
+                for att in self.attachment_ids:
+                    self._cr.execute(query, tuple([att.res_id]))
+                return super(PurchaseRequisition, self).unlink()
 
 
 class PurchaseRequisitionLine(models.Model):
