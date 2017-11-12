@@ -30,7 +30,3 @@ class InheritProductTemplate(models.Model):
             name = self.search(filters)
             if len(name) > 1:
                 raise Warning('[Unique Error] Name must be unique!')
-
-    # _sql_constraints = [
-    #     ('name_uniq', 'unique(name)', 'This Name is already in use'),
-    # ]

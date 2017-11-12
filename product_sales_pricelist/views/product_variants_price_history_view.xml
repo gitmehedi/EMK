@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+    <!-- Form View -->
+		<record id="Variant_wise_price_list_form_view" model="ir.ui.view">
+			<field name="name">Variant_wise_price_list_form</field>
+			<field name="model">product.sale.history.line</field>
+			<field name="type">form</field>
+			<field name="arch" type="xml">
+				<form string="Change Products Sale Price" create="false" edit="false">
+					<sheet>
+						<group>
+							<field name="product_id"/>
+							<field name="list_price"/>
+							<field name="new_price"/>
+							<field name="currency_id"/>
+							<field name="approve_price_date"/>
+						</group>
+	                </sheet>
+				</form>
+			</field>
+		</record>
+
+
+        <record id="product_sale_price_history_variant_wise_tree" model="ir.ui.view">
+            <field name="name">Variant_wise_price_list_tree</field>
+            <field name="model">product.sale.history.line</field>
+            <field name="arch" type="xml">
+                <tree string="Product Sale Price History">
+                    <field name="product_id"/>
+                    <field name="list_price"/>
+                    <field name="new_price"/>
+                    <field name="currency_id"/>
+                    <field name="approve_price_date"/>
+                    <field name="effective_price_date"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="action_product_variants_sale_price_history_tree_view" model="ir.actions.act_window">
+            <field name="name">Products Variants Price History</field>
+            <field name="res_model">product.sale.history.line</field>
+            <field name="view_mode">form,tree</field>
+            <field name="view_id" ref="product_sale_price_history_variant_wise_tree"/>
+        </record>
+
+        <menuitem id="variant_wise_price_history_menu"
+                  name="Variants Price History" sequence="11"
+                  parent="custom_menu_products"
+                  groups="account.group_account_user,gbs_application_group.group_sales_customer_manager,gbs_application_group.group_sales_product_manager,sales_team.group_sale_salesman_all_leads,gbs_application_group.group_head_sale,gbs_application_group.group_head_account,gbs_application_group.group_cxo"
+                  action="action_product_variants_sale_price_history_tree_view"/>
+
+    </data>
+</odoo>
