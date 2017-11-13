@@ -2,7 +2,7 @@
 <!--Custom report.-->
 <odoo>
     <data>
-        <template id="report_ds_entry">
+        <template id="report_delivery_schedules">
             <t t-call="report.html_container">
                 <t t-foreach="docs" t-as="o">
                     <t t-call="report.external_layout">
@@ -48,12 +48,12 @@
                 </t>
             </t>
         </template>
-        <template id="report_del_schedules">
-            <t t-call="report.html_container">
-                <t t-foreach="docs" t-as="doc">
-                    <t t-call="delivery_schedules.report_ds_entry" t-lang="doc.partner_id.lang"/>
-                </t>
-            </t>
-        </template>
+        <!--<template id="report_del_schedules">-->
+            <!--<t t-call="report.html_container">-->
+                <!--<t t-foreach="docs" t-as="doc">-->
+                    <!--<t t-call="delivery_schedules.report_ds_entry" t-lang="doc.partner_id.lang"/>-->
+                <!--</t>-->
+            <!--</t>-->
+        <!--</template>-->
     </data>
 </odoo>
