@@ -21,11 +21,11 @@
                             <group string="Shipment Details" colspan="4">
                                 <group>
                                     <field name="name"/>
-                                    <field name="lc_id" invisible="1"/>
                                     <field name="etd_date"/>
+                                    <field name="eta_date"/>
                                 </group>
                                 <group>
-                                   <field name="eta_date"/>
+                                    <field name="lc_id" options="{'no_open':True,'no_quick_create':True,'no_create_edit':True}"/>
                                     <field name="arrival_date"/>
                                 </group>
                             </group>
@@ -71,6 +71,7 @@
             <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Shipment">
+                    <field name="lc_id"/>
                     <field name="name"/>
                     <field name="etd_date"/>
                     <field name="shipment_date"/>
