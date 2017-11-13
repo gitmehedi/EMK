@@ -12,7 +12,7 @@ class DOProductLine(models.Model):
     price_unit = fields.Float(string="Price Unit", readonly=True)
     commission_rate = fields.Float(string="Com. (%)", readonly=True)
     price_subtotal = fields.Float(string="Subtotal", readonly=True)
-
+    tax_id = fields.Many2one('account.tax',string='Tax',readonly=True)
 
     """ Relational Fields """
     parent_id = fields.Many2one('delivery.order', ondelete='cascade')
@@ -38,6 +38,9 @@ class DOProductLine(models.Model):
     def onchange_quantity(self):
         if self.quantity:
             self.price_subtotal = self.price_unit * self.quantity
+            self.parent_id.amount_untaxed = self.price_subtotal
+            self.parent_id.tax_value = self.price_subtotal * (self.tax_id.amount/100)
+            self.parent_id.total_amount = self.parent_id.tax_value + self.price_subtotal
 
 
     @api.onchange('product_id')

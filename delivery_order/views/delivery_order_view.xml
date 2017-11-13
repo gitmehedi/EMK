@@ -77,6 +77,7 @@
                                             <field name="pack_type"/>
                                             <field name="deli_mode" invisible="1"/>
                                             <field name="commission_rate"/>
+                                            <field name="tax_id"/>
                                             <field name="price_unit"/>
                                             <field name="price_subtotal"/>
 
@@ -152,7 +153,15 @@
                                     </field>
                                 </page>
                             </notebook>
+                            <group class="oe_subtotal_footer oe_right" colspan="2" name="sale_total">
+                                <field name="amount_untaxed" widget='monetary' options="{'currency_field': 'currency_id'}"/>
+                                <field name="tax_value" widget='monetary' options="{'currency_field': 'currency_id'}"/>
+                                <field name="total_amount" class="oe_subtotal_footer_separator" widget='monetary' options="{'currency_field': 'currency_id'}"/>
+                         </group>
                         </group>
+
+
+
                     </sheet>
 
                     <div class="oe_chatter">

@@ -60,12 +60,12 @@ class DeliveryOrder(models.Model):
     lc_no = fields.Many2one('letter.credit',string='LC Ref. No.', readonly=True, states={'draft': [('readonly', False)]})
 
     """ Payment information"""
+    amount_untaxed = fields.Float(string='Untaxed Amount', readonly=True)
+    tax_value = fields.Float(string='Taxes',readonly=True)
+    total_amount = fields.Float(string='Total',readonly=True)
 
 
     """ All functions """
-
-
-    #domain = [('da_button_show', '=', 'True')]
 
     @api.model
     def create(self, vals):
@@ -130,13 +130,9 @@ class DeliveryOrder(models.Model):
 
 
             for line in self.line_ids:
-
                 list[line.product_id.product_tmpl_id.id] = list[line.product_id.product_tmpl_id.id] + line.quantity
 
             for rec in list:
-                #pro_tmpl = self.env['product.template'].search([('id','=',rec)])
-
-
 
                 ordered_qty_pool = self.env['ordered.qty'].search([('lc_no','=',False),
                                                                    ('product_id','=', rec)])
@@ -152,7 +148,6 @@ class DeliveryOrder(models.Model):
                         self.write({'state': 'approve'}) # Second Approval
                     else:
                         self.write({'state': 'close'}) # Final Approval
-                        print '------------ final'
 
                 elif ordered_qty_pool and not ordered_qty_pool.lc_no:
                     for order in ordered_qty_pool:
@@ -268,7 +263,7 @@ class DeliveryOrder(models.Model):
 
     @api.onchange('quantity')
     def onchange_quantity(self):
-        if self.quantity < 0 or self.quantity == 0:
+        if self.quantity < 0 or self.quantity == 0.00:
             raise UserError("Qty can not be Zero or Negative value")
 
     @api.onchange('sale_order_id')
@@ -323,8 +318,12 @@ class DeliveryOrder(models.Model):
                                        'uom_id': record.product_uom.id,
                                        'commission_rate': record.commission_rate,
                                        'price_unit': record.price_unit,
-                                       'price_subtotal': record.price_subtotal
+                                       'price_subtotal': record.price_subtotal,
+                                       'tax_id': record.tax_id.id
                                        }))
+                self.amount_untaxed = sale_order_obj.amount_untaxed
+                self.tax_value = sale_order_obj.amount_tax
+                self.total_amount = sale_order_obj.amount_total
 
             self.line_ids = val
 
