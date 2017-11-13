@@ -34,15 +34,23 @@ class SaleOrder(models.Model):
     pi_no = fields.Many2one('proforma.invoice', string='PI Ref. No.')
     lc_no = fields.Many2one('letter.credit', string='LC Ref. No.')
 
-    # @api.multi
-    # def _DA_button_show_hide(self):
-    #     for sale_line in self.order_line:
-    #         if sale_line.product_uom_qty == sale_line.da_qty:
-    #             return False
-    #         else:
-    #             return True
-    #
-    # da_button_show = fields.Boolean('DA Button show hide', compute="_DA_button_show_hide")
+
+    # @api.depends('product_uom_qty')
+    # def _compute_amount_value(self):
+    #     for record in self:
+    #         sum_val = sum([s.da_qty for s in record.order_line])
+    #         record.due = record.product_uom_qty - sum_val
+
+    @api.multi
+    def _Da_button_show_hide(self):
+        for sale_line in self.order_line:
+            if sale_line.da_qty == 0.00:
+                self.da_btn_show_hide = True
+            else:
+                self.da_btn_show_hide = False
+                break;
+
+    da_btn_show_hide = fields.Boolean(string="Due", compute="_Da_button_show_hide")
 
     @api.multi
     def amount_to_word(self, number):
