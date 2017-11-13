@@ -18,6 +18,7 @@
         'amount_to_word_bd',
         'letter_of_credit',
         'gbs_pi_creation',
+        'account',
     ],
 
     'data': [

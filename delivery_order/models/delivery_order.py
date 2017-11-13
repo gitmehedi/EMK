@@ -12,6 +12,12 @@ class DeliveryOrder(models.Model):
 
 
     name = fields.Char(string='Name', index=True, readonly=True)
+    sale_order_id = fields.Many2one('sale.order',
+                                    string='Sale Order',
+                                    required=True,
+                                    readonly=True,
+                                    states={'draft': [('readonly', False)]})
+
     so_date = fields.Datetime('Order Date', readonly=True, states={'draft': [('readonly', False)]})
     sequence_id = fields.Char('Sequence', readonly=True)
     deli_address = fields.Char('Delivery Address', readonly=True,states={'draft': [('readonly', False)]})
@@ -53,14 +59,12 @@ class DeliveryOrder(models.Model):
     pi_no = fields.Many2one('proforma.invoice', string='PI Ref. No.', readonly=True, states={'draft': [('readonly', False)]})
     lc_no = fields.Many2one('letter.credit',string='LC Ref. No.', readonly=True, states={'draft': [('readonly', False)]})
 
+    """ Payment information"""
+
 
     """ All functions """
 
-    sale_order_id = fields.Many2one('sale.order',
-                                    string='Sale Order',
-                                    required=True,
-                                    readonly=True,
-                                    states={'draft': [('readonly', False)]})
+
     #domain = [('da_button_show', '=', 'True')]
 
     @api.model
@@ -89,7 +93,7 @@ class DeliveryOrder(models.Model):
             self.payment_information_check()
 
             #check if payment is same as the subtotal amount
-            self.check_cash_amount_with_subtotal()
+            #self.check_cash_amount_with_subtotal()
             return self.create_delivery_order()
 
         elif self.so_type == 'lc_sales':
@@ -130,7 +134,7 @@ class DeliveryOrder(models.Model):
                 list[line.product_id.product_tmpl_id.id] = list[line.product_id.product_tmpl_id.id] + line.quantity
 
             for rec in list:
-                pro_tmpl = self.env['product.template'].search([('id','=',rec)])
+                #pro_tmpl = self.env['product.template'].search([('id','=',rec)])
 
 
 
@@ -146,7 +150,6 @@ class DeliveryOrder(models.Model):
 
                     if list[rec] > 100:
                         self.write({'state': 'approve'}) # Second Approval
-                        print 'second --------------------'
                     else:
                         self.write({'state': 'close'}) # Final Approval
                         print '------------ final'
@@ -240,6 +243,10 @@ class DeliveryOrder(models.Model):
     @api.one
     def action_validate(self):
         self.state = 'validate'
+        if self.so_type == 'cash':
+            self.check_cash_amount_with_subtotal()
+
+
         self.line_ids.write({'state':'validate'})
 
 

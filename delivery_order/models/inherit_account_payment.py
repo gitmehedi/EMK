@@ -20,3 +20,22 @@ class InheritAccountPayment(models.Model):
         ('transfer','Internal Transfer')
     ], string='Payment Type', default='inbound')
 
+    @api.onchange('partner_id')
+    def _onchange_partner_id(self):
+
+        if (self.partner_type == 'customer'):
+            so_pool = self.env['sale.order'].search([('partner_id','=',self.partner_id.id)])
+
+            for order in so_pool:
+                self.sale_order_id = order.id
+
+
+
+
+
+
+
+        # # Set partner_id domain
+        # if self.partner_type:
+        #     return {'domain': {'partner_id': [(self.partner_type, '=', True)]}}
+
