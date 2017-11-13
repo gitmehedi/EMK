@@ -32,7 +32,7 @@ class StockTransferRequestReport(models.AbstractModel):
             count = count + 1
             rec['sn'] = count
             rec['barcode'] = record.product_id.default_code
-            rec['name'] = record.product_id.display_name
+            rec['name'] = record.product_id.name
             rec['uom'] = record.product_id.uom_id.name
             rec['quantity'] = record.quantity
             receive = record.receive_quantity if record.receive_quantity else None
