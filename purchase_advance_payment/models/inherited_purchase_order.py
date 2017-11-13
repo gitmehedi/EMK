@@ -1,10 +1,21 @@
 from openerp.osv import osv
-from openerp import models, fields
+from openerp import models, fields, api
 from openerp.tools.translate import _
 
 
 class InheritedPuchaseOrder(models.Model):
     _inherit = 'purchase.order'
+
+    invoice_status = fields.Boolean(string='Payment Complate', default=False, compute='compute_invoice_status')
+
+    @api.multi
+    def compute_invoice_status(self):
+        for record in self:
+            if not record.invoice_status:
+                inv_sum = sum([invoice.amount_total for invoice in record.invoice_ids])
+                if inv_sum == record.amount_total:
+                    record.invoice_status = True
+                    # record.write({'invoice_status': True})
 
     def manual_invoice(self, cr, uid, ids, context=None):
         """ create invoices for the given sales orders (ids), and open the form

@@ -7,8 +7,10 @@
             <field name="inherit_id" ref="purchase.purchase_order_form"/>
             <field name="arch" type="xml">
                 <xpath expr="//button[@name='action_cancel']" position="before">
+                    <field name="invoice_status" invisible="1"/>
                     <button name="%(action_view_purchase_advance_payment_inv)d" string="Create Invoice"
-                            type="action" states="approved" class="oe_highlight" groups="base.group_user"/>
+                            attrs="{'invisible': ['|',('invoice_status', '=', True),('state', '!=', 'approved')]}"
+                            type="action" class="oe_highlight" groups="base.group_user"/>
                 </xpath>
             </field>
         </record>

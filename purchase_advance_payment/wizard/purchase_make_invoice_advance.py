@@ -18,7 +18,7 @@
 #
 ##############################################################################
 
-from openerp.osv import  osv
+from openerp.osv import osv
 from openerp import fields
 from openerp.tools.translate import _
 import openerp.addons.decimal_precision as dp
@@ -29,9 +29,9 @@ class PurchaseAdvancePaymentInv(osv.osv_memory):
     _description = "PUrchase Advance Payment Invoice"
 
     advance_payment_method = fields.Selection([
-        ('all', 'Invoice the whole sales order'),
-        ('fixed', 'Fixed price (deposit)')
-    ], string='Payment Method', default='all', required=True)
+        ('fixed', 'Fixed price (deposit)'),
+        ('all', 'Invoice the whole sales order')
+    ], string='Payment Method', default='fixed', required=True)
     qty = fields.Float(string='Quantity', digits=(16, 2), required=True, default=1.0)
     amount = fields.Float('Advance Amount', help="The amount to be invoiced in advance.")
     product_id = fields.Many2one('product.product')
