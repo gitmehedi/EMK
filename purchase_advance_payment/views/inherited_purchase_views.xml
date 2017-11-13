@@ -18,5 +18,18 @@
                 </xpath>
             </field>
         </record>
+        report_purchaseorder_document
+        <template id="inherited_report_purchaseorder_document" name="report assets"
+                  inherit_id="purchase.report_purchaseorder_document">
+            <xpath expr="//div/div/div/table/tr[2]" position="after">
+                <tr>
+                    <td>Total Paid Amount:</td>
+                    <td class="text-right">
+                        <span t-field="o.payment_amount"
+                              t-field-options='{"widget": "monetary", "display_currency": "o.currency_id"}'/>
+                    </td>
+                </tr>
+            </xpath>
+        </template>
     </data>
 </openerp>
