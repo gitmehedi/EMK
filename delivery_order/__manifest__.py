@@ -12,6 +12,7 @@
         'letter_of_credit',
         'gbs_pi_creation',
         'letter_of_credit',
+        'gbs_sales_commission_so'
     ],
 
     'data': [

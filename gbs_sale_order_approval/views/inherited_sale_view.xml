@@ -33,12 +33,18 @@
 
                         <button name="action_create_delivery_order"
                                 type="object"
-                                states="done"
+                                attrs="{'invisible':['|',('da_btn_show_hide','=',True),('state','!=',('done'))]}"
                                 groups="account.group_account_user,gbs_application_group.group_head_account,gbs_application_group.group_cxo"
                                 class="btn-primary"
-                                string="Delivery Authorization"/>
+                                string="Delivery Authorization"
+                               />
+                        <!--states="done"-->
 
                     </header>
+
+                    <xpath expr="//field[@name='payment_term_id']" position="after">
+                        <field name="da_btn_show_hide" invisible="1"/>
+                    </xpath>
 
                     <!-- Conform Sale 1 -->
                     <xpath expr="//button[@name='action_confirm' and @states='draft']" position="replace">
@@ -102,6 +108,7 @@
                         <field name="credit_sales_or_lc"
                                attrs="{'readonly':[('state','in',('draft','sent','validate','done','cancel','sale'))]}"/>
                     </xpath>
+
 
                     <xpath expr="//group/group/field[@name='payment_term_id']" position="before">
                         <field name="double_validation" invisible="1"/>
