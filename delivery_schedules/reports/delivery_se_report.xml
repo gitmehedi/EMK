@@ -2,12 +2,12 @@
 <odoo>
     <data>
         <report 
-            id="custome_report_ds_entry"
+            id="delivery_schedules_report"
             string="Delivery Schedules"
             model="delivery.schedules"
             report_type="qweb-pdf"
-            file="delivery_schedules.report_ds_entry"
-            name="delivery_schedules.report_ds_entry"
+            file="delivery_schedules.report_delivery_schedules"
+            name="delivery_schedules.report_delivery_schedules"
         />
     </data>
 </odoo>

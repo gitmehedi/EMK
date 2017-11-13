@@ -59,7 +59,7 @@ class DeliverySchedules(models.Model):
         self.ensure_one()
         ir_model_data = self.env['ir.model.data']
         try:
-            template_id = ir_model_data.get_object_reference('delivery_schedules', 'template_schedule_letter')[1]
+            template_id = ir_model_data.get_object_reference('delivery_schedules', 'schedule_email_template')[1]
         except ValueError:
             template_id = False
         try:
@@ -74,7 +74,7 @@ class DeliverySchedules(models.Model):
             'default_template_id': template_id,
             'default_composition_mode': 'comment',
             'mark_so_as_sent': True,
-            'custom_layout': "delivery_schedules.template_schedule_letter"
+            'custom_layout': "delivery_schedules.schedule_email_template"
         })
         return {
             'type': 'ir.actions.act_window',
