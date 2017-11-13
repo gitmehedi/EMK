@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<openerp>
+    <data>
+        <record id="inherited_customer_information_view" model="ir.ui.view">
+            <field name="name">Inherited Customer Information Views</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_partner_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//form/sheet/group/group/label" position="before">
+                    <field name="membership_card" />
+                </xpath>
+            </field>
+        </record>
+    </data>
+</openerp>
