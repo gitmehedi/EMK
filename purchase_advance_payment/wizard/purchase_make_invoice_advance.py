@@ -30,7 +30,7 @@ class PurchaseAdvancePaymentInv(osv.osv_memory):
 
     advance_payment_method = fields.Selection([
         ('fixed', 'Fixed price (deposit)'),
-        ('all', 'Invoice the whole sales order')
+        ('all', 'Invoice the whole purchase order')
     ], string='Payment Method', default='fixed', required=True)
     qty = fields.Float(string='Quantity', digits=(16, 2), required=True, default=1.0)
     amount = fields.Float('Advance Amount', help="The amount to be invoiced in advance.")

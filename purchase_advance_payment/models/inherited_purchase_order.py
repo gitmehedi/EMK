@@ -1,12 +1,15 @@
 from openerp.osv import osv
 from openerp import models, fields, api
 from openerp.tools.translate import _
+import openerp.addons.decimal_precision as dp
 
 
 class InheritedPuchaseOrder(models.Model):
     _inherit = 'purchase.order'
 
     invoice_status = fields.Boolean(string='Payment Complate', default=False, compute='compute_invoice_status')
+    payment_amount = fields.Float(string='Total Paid Amount', default=0.00,compute='compute_payment_amount')
+
 
     @api.multi
     def compute_invoice_status(self):
@@ -15,7 +18,11 @@ class InheritedPuchaseOrder(models.Model):
                 inv_sum = sum([invoice.amount_total for invoice in record.invoice_ids])
                 if inv_sum == record.amount_total:
                     record.invoice_status = True
-                    # record.write({'invoice_status': True})
+
+    @api.multi
+    def compute_payment_amount(self):
+        for record in self:
+            record.payment_amount = sum([invoice.amount_total for invoice in record.invoice_ids])
 
     def manual_invoice(self, cr, uid, ids, context=None):
         """ create invoices for the given sales orders (ids), and open the form
