@@ -81,7 +81,7 @@ class SaleOrder(models.Model):
                 if orders.lc_no and orders.pi_no:
                     for lines in orders.order_line:
                         product_pool = orders.env['product.product'].search([('id', '=', lines.product_id.ids)])
-                        if (lines.price_unit < product_pool.list_price):
+                        if (lines.price_unit != product_pool.list_price):
                             return True  # Go to two level approval process
 
                     return False  # One level approval process
@@ -92,7 +92,7 @@ class SaleOrder(models.Model):
 
         for lines in self.order_line:
             product_pool = self.env['product.product'].search([('id', '=', lines.product_id.ids)])
-            if (lines.price_unit < product_pool.list_price):
+            if (lines.price_unit != product_pool.list_price):
                 return True # Go to two level approval process
             else:
                 return False # One level approval process
@@ -121,8 +121,8 @@ class SaleOrder(models.Model):
                     customer_credit_limit = credit_limit_pool.credit_limit
 
                     if (abs(customer_total_credit) > customer_credit_limit
-                        or lines.commission_rate < cust_commission_pool.commission_rate
-                        or lines.price_unit < price_change_pool.new_price):
+                        or lines.commission_rate != cust_commission_pool.commission_rate
+                        or lines.price_unit != price_change_pool.new_price):
 
                             is_double_validation = True
                             break;
@@ -149,14 +149,14 @@ class SaleOrder(models.Model):
     def second_approval_business_logics(self, cust_commission_pool, lines, price_change_pool):
         for coms in cust_commission_pool:
             if price_change_pool.currency_id.id == lines.currency_id.id:
-                if (lines.commission_rate < coms.commission_rate
-                    or lines.price_unit < price_change_pool.new_price):
+                if (lines.commission_rate != coms.commission_rate
+                    or lines.price_unit != price_change_pool.new_price):
                     return True
                     break;
                 else:
                     return False
             else:
-                if (lines.commission_rate < coms.commission_rate):
+                if (lines.commission_rate != coms.commission_rate):
                     return True
                     break;
                 else:
