@@ -51,7 +51,7 @@ class IndentIndent(models.Model):
     approve_date = fields.Datetime('Approve Date', readonly=True)
     indent_date = fields.Datetime('Indent Date', required=True, readonly=True,
                                   default=datetime.datetime.today())
-    required_date = fields.Date('Required Date', required=True,
+    required_date = fields.Date('Required Date', required=True,readonly=True,states={'draft': [('readonly', False)]},
                                 default=lambda self: self._get_required_date())
     indentor_id = fields.Many2one('res.users', string='Indentor', required=True, readonly=True,
                                   default=lambda self: self.env.user,
@@ -384,7 +384,7 @@ class IndentIndent(models.Model):
         self._cr.execute(query, tuple([purchase_req[0].id,self.id]))
         return result
 
-    @api.one
+    @api.multi
     def _create_purchase_req(self):
         pur_req_obj = self.env['purchase.requisition']
 
@@ -399,19 +399,21 @@ class IndentIndent(models.Model):
 
         return pur_req_obj.create(values)
 
+    @api.multi
     def _create_purchase_req_line(self,req_id):
         pur_line_obj = self.env['purchase.requisition.line']
 
-        values = {
-            'requisition_id': req_id,
-            'product_id': self.product_lines.product_id.id,
-            'name': self.product_lines.name or False,
-            'product_qty': self.product_lines.qty_available or False,
-            'product_uom_id': self.product_lines.product_uom.id or False,
-            'product_ordered_qty': self.product_lines.product_uom_qty or False,
-            'schedule_date': self.required_date or False,
-        }
-        return pur_line_obj.create(values)
+        for product_line in self.product_lines:
+            values = {
+                'requisition_id': req_id,
+                'product_id': product_line.product_id.id,
+                'name': product_line.name or False,
+                'product_qty': product_line.qty_available or False,
+                'product_uom_id': product_line.product_uom.id or False,
+                'product_ordered_qty': product_line.product_uom_qty or False,
+                'schedule_date': self.required_date or False,
+            }
+            pur_line_obj.create(values)
 
     ####################################################
     # ORM Overrides methods

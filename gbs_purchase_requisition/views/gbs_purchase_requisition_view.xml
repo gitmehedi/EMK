@@ -8,7 +8,7 @@
                   web_icon="purchase,static/description/icon.png"
                   sequence="25"/>
         <!-- Inherited tree view-->
-        <record id="indent_pr_view_tree" model="ir.ui.view">
+        <record id="inherit_pr_view_tree" model="ir.ui.view">
             <field name="name">purchase.requisition.view.tree</field>
             <field name="model">purchase.requisition</field>
             <field name="inherit_id" ref="purchase_requisition.view_purchase_requisition_tree"/>
@@ -20,9 +20,9 @@
                     <xpath expr="//field[@name='date_end']" position="attributes">
                         <attribute name="invisible">1</attribute>
                     </xpath>
-                    <xpath expr="//field[@name='ordering_date']" position="replace">
-                        <field name="requisition_date"/>
-                    </xpath>
+                    <!--<xpath expr="//field[@name='ordering_date']" position="replace">-->
+                    <!--<field name="requisition_date"/>-->
+                    <!--</xpath>-->
                     <xpath expr="//field[@name='origin']" position="attributes">
                         <attribute name="invisible">1</attribute>
                     </xpath>
@@ -30,18 +30,22 @@
             </field>
         </record>
         <!-- Inherited Form view-->
-        <record id="indent_pr_view_form" model="ir.ui.view">
+        <record id="inherit_pr_view_form" model="ir.ui.view">
             <field name="name">purchase.requisition.view.form</field>
             <field name="model">purchase.requisition</field>
             <field name="inherit_id" ref="purchase_requisition.view_purchase_requisition_form"/>
             <field name="arch" type="xml">
                 <data>
                     <header>
+                        <button name="%(purchase_requisition.action_purchase_requisition_to_so)d" type="action"
+                                string="New Quotation" class="btn-primary"
+                                attrs="{'invisible': [('state', 'not in', ['approve_head_procurement','done'])]}"/>
                         <button name="action_approve" groups="gbs_purchase_requisition.group_purchase_requisition_approver"
                                 states="approve_head_procurement" string="Approve" type="object" class="btn-primary"/>
                         <button name="action_cancel" groups="gbs_purchase_requisition.group_purchase_requisition_validator,gbs_purchase_requisition.group_purchase_requisition_approver"
                                 states="review_plant_incharge,approve_head_procurement" string="Cancel" type="object"/>
                     </header>
+
                     <xpath expr="//button[@name='action_open']" position="replace">
                         <button name="action_open" groups="gbs_purchase_requisition.group_purchase_requisition_validator"
                                 states="in_progress" string="Validate" type="object" class="btn-primary"/>
@@ -98,32 +102,29 @@
                     </xpath>
                     <xpath expr="//field[@name='product_qty']" position="attributes" type="object">
                         <attribute name="string">In Stock</attribute>
+                        <attribute name="readonly">1</attribute>
                     </xpath>
                     <xpath expr="//field[@name='qty_ordered']" position="replace" type="object">
-                    <field name="product_ordered_qty"/>
+                        <field name="product_ordered_qty"/>
+                    </xpath>
+                    <xpath expr="//field[@name='price_unit']" position="attributes" type="object">
+                        <attribute name="readonly">1</attribute>
                     </xpath>
                     <xpath expr="//field[@name='price_unit']" position="after" type="object">
-                        <field name="last_purchse_date"/>
-                        <field name="last_qty"/>
-                        <field name="last_product_uom_id"/>
-                        <field name="last_price_unit"/>
+                        <field name="last_purchse_date" readonly="1"/>
+                        <field name="last_qty" readonly="1"/>
+                        <field name="last_product_uom_id" readonly="1"/>
+                        <field name="last_price_unit" readonly="1"/>
                         <field name="remark"/>
                     </xpath>
 
-                    <xpath expr="//page[1]" position="after">
+                    <xpath expr="//notebook/page[1]" position="after">
                         <page string="Attachments">
                             <field name="attachment_ids" widget="one2many" >
                                 <tree string="Attachments" editable="top">
                                     <field name="name" string="Title"/>
                                     <field name="datas_fname" invisible="1"/>
-                                    <field name="db_datas" filename="datas_fname"/>
-                                    <!--<field name="res_name"/>-->
-                                    <!--<field name="res_model"/>-->
-                                    <!--<field name="res_field"/>-->
-                                    <!--<field name="res_id"/>-->
-                                    <!--<field name="create_uid"/>-->
-                                    <!--<field name="create_date"/>-->
-                                    <!--<field name="company_id"/>-->
+                                    <field name="db_datas" filename="datas_fname" string="File"/>
                                 </tree>
                             </field>
                         </page>

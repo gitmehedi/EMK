@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Inherited Form view-->
+        <record id="inherit_purchase_order_form" model="ir.ui.view">
+            <field name="name">inherit.purchase.order.view.form</field>
+            <field name="model">purchase.order</field>
+            <field name="inherit_id" ref="purchase.purchase_order_form"/>
+            <field name="arch" type="xml">
+                <data>
+                    <xpath expr="//field[@name='company_id']" position="after">
+                        <field name="operating_unit_id" groups="operating_unit.group_multi_operating_unit"
+                               options='{"no_open": True,"no_create": 1, "no_create_edit":1}'/>
+                    </xpath>
+                </data>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="purchase_req_order_form_inherit">
+            <field name="name">purchase.req.order.form.inherit</field>
+            <field name="model">purchase.order</field>
+            <field name="inherit_id" ref="purchase_requisition.purchase_order_form_inherit"/>
+            <field name="arch" type="xml">
+                <data>
+                    <xpath expr="//page[1]" position="after">
+                        <page string="Attachments">
+                            <field name="attachment_ids" widget="one2many" >
+                                <tree string="Attachments" editable="top">
+                                    <field name="name" string="Title"/>
+                                    <field name="datas_fname" invisible="1"/>
+                                    <field name="db_datas" filename="datas_fname" string="File"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </xpath>
+                </data>
+            </field>
+        </record>
+    </data>
+</odoo>

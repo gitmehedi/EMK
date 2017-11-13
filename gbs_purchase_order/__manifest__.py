@@ -3,33 +3,24 @@
     'name': "GBS Purchase Order",
 
     'summary': """
-        Short (1 phrase/line) summary of the module's purpose, used as
-        subtitle on modules listing or apps.openerp.com""",
+        Custom Purchase Order""",
 
     'description': """
-        Long description of module's purpose
+        To manage the purchase order,quotation and revision . 
     """,
 
-    'author': "My Company",
-    'website': "http://www.yourcompany.com",
+    'author': "Genweb2 Limited",
+    'website': "https://www.genweb2.com",
 
-    # Categories can be used to filter modules in modules listing
-    # Check https://github.com/odoo/odoo/blob/master/odoo/addons/base/module/module_data.xml
-    # for the full list
     'category': 'Uncategorized',
-    'version': '0.1',
-
-    # any module necessary for this one to work correctly
-    'depends': ['base'],
-
-    # always loaded
+    'version': '10.0.1',
+    'depends': [
+        'purchase_requisition',
+        'purchase_order_revision',
+        'gbs_purchase_requisition',
+    ],
     'data': [
         # 'security/ir.model.access.csv',
-        'views/views.xml',
-        'views/templates.xml',
-    ],
-    # only loaded in demonstration mode
-    'demo': [
-        'demo/demo.xml',
+        'views/gbs_purchase_order_views.xml',
     ],
 }

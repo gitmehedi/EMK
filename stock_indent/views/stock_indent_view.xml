@@ -8,11 +8,11 @@
 				  web_icon="stock,static/description/icon.png"/>
 		<!-- Inventory Root Menu-->
 		<menuitem
-            action="stock.stock_picking_type_action"
-            id="stock.stock_picking_type_menu"
-            parent="stock.menu_stock_root" sequence="0"
-			groups="stock.group_stock_manager,stock.group_stock_user"
-            name="Dashboard"/>
+				action="stock.stock_picking_type_action"
+				id="stock.stock_picking_type_menu"
+				parent="stock.menu_stock_root" sequence="0"
+				groups="stock.group_stock_manager,stock.group_stock_user"
+				name="Dashboard"/>
 		<!-- Inventory Control Menu-->
 		<menuitem id="stock.menu_stock_inventory_control"
 				  name="Inventory Control"
@@ -96,10 +96,10 @@
 								<!--<field name="amount_total" widget="monetary"-->
 								<!--class="oe_subtotal_footer_separator" options="{'currency_field': 'currency_id'}" />-->
 								<!--</group>-->
-								<!--<div class="oe_clear">-->
-								<!--<label for="description" />-->
-								<!--</div>-->
-								<!--<field name="description" class="oe_inline" placeholder="Additional note..." />-->
+								<div class="oe_clear">
+									<label for="description" />
+								</div>
+								<field name="description" class="oe_inline" placeholder="Additional note..." />
 
 							</page>
 							<page string="Others">
