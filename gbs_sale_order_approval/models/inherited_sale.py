@@ -2,6 +2,8 @@ from odoo import api, fields, models
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools import amount_to_text_en
 
+import time
+
 
 class SaleOrder(models.Model):
     _inherit = "sale.order"
@@ -231,20 +233,18 @@ class InheritedSaleOrderLine(models.Model):
     def _get_product_sales_price(self, product):
 
         if product:
-            price_change_pool = self.env['product.sales.pricelist'].search(
+            price_change_pool = self.env['product.sale.history.line'].search(
                 [('product_id', '=', product.id),
                  ('currency_id', '=', self.order_id.currency_id.id),
                  ('product_package_mode', '=', self.order_id.pack_type.id),
-                 ('uom_id', '=', self.product_uom.id)],
-                order='approver2_date desc', limit=1)
+                 ('uom_id', '=', self.product_uom.id)])
 
             if not price_change_pool:
-                price_change_pool = self.env['product.sales.pricelist'].search(
+                price_change_pool = self.env['product.sale.history.line'].search(
                     [('product_id', '=', product.id),
                      ('currency_id', '=', self.order_id.currency_id.id),
                      ('product_package_mode', '=', self.order_id.pack_type.id),
-                     ('category_id', '=', self.product_uom.category_id.id)],
-                    order='approver2_date desc', limit=1)
+                     ('category_id', '=', self.product_uom.category_id.id)])
 
                 if price_change_pool:
                     if not price_change_pool.uom_id.uom_type == "reference":

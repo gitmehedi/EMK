@@ -141,18 +141,18 @@ class SalePriceChange(models.Model):
 
     @api.multi
     def action_approve(self):
-        sale_price_obj = self.env['product.sales.pricelist'].browse(self.id)
-        vals = {}
-
-        vals['product_id'] = self.product_id.id
-        vals['list_price'] = self.list_price
-        vals['new_price'] = self.new_price
-        vals['sale_price_history_id'] = sale_price_obj.id
-        vals['approve_price_date'] = datetime.datetime.now()
-        vals['effective_price_date'] = self.effective_date
-        vals['currency_id'] = self.currency_id.id
-        vals['product_package_mode '] = self.product_package_mode
-        vals['uom_id'] = self.uom_id.id
+        # sale_price_obj = self.env['product.sales.pricelist'].browse(self.id)
+        # vals = {}
+        #
+        # vals['product_id'] = self.product_id.id
+        # vals['list_price'] = self.list_price
+        # vals['new_price'] = self.new_price
+        # vals['sale_price_history_id'] = sale_price_obj.id
+        # vals['approve_price_date'] = datetime.datetime.now()
+        # vals['effective_price_date'] = self.effective_date
+        # vals['currency_id'] = self.currency_id.id
+        # vals['product_package_mode '] = self.product_package_mode
+        # vals['uom_id'] = self.uom_id.id
 
         ## Update it using a scheduler, so commenting out below code block,
         # this feauture is done on:
