@@ -89,6 +89,8 @@ class IndentIndent(models.Model):
                                  states={'draft': [('readonly', False)], 'cancel': [('readonly', True)]},
                                  help="It specifies goods to be deliver partially or all at once")
 
+    check_pr_issued = fields.Boolean('Check PR Issued', default=True)
+
     product_id = fields.Many2one(
         'product.product', 'Products',
         readonly="1", related='product_lines.product_id',
@@ -382,6 +384,7 @@ class IndentIndent(models.Model):
         }
         query = """ INSERT INTO pr_indent_rel (pr_id,indent_id)VALUES (%s, %s) """
         self._cr.execute(query, tuple([purchase_req[0].id,self.id]))
+        self.check_pr_issued = False
         return result
 
     @api.multi

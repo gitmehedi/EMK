@@ -53,7 +53,8 @@
 						<button name="action_view_picking" string="Issue Product(s)" type="object"
 								states="inprogress" class="oe_highlight" groups="stock_indent.group_stock_indent_issuer"/>
 						<button name="action_view_purchase_requisition" string="Issue PR" type="object"
-								states="inprogress" class="oe_highlight" groups="stock_indent.group_stock_indent_issuer"/>
+								groups="stock_indent.group_stock_indent_issuer"
+								attrs="{'invisible': ['|',('state','!=','inprogress'),('check_pr_issued','!=', True)]}"/>
 						<field name="state" widget="statusbar"
 							   statusbar_visible="draft,waiting_approval,inprogress,received"
 							   statusbar_colors='{"reject":"red"}' />
@@ -74,9 +75,9 @@
 									   placeholder="Please Select"/>
 							</group>
 						</group>
-						<group>
-							<field name="material_required_for" placeholder="The material is required for..." />
-						</group>
+						<!--<group>-->
+							<!--<field name="material_required_for" placeholder="The material is required for..." />-->
+						<!--</group>-->
 						<notebook>
 							<page string="Products">
 								<field name="product_lines">
@@ -97,9 +98,9 @@
 								<!--class="oe_subtotal_footer_separator" options="{'currency_field': 'currency_id'}" />-->
 								<!--</group>-->
 								<div class="oe_clear">
-									<label for="description" />
+									<label for="material_required_for" />
 								</div>
-								<field name="description" class="oe_inline" placeholder="Additional note..." />
+								<field name="material_required_for" class="oe_inline" placeholder="The material is required for..." />
 
 							</page>
 							<page string="Others">
@@ -109,6 +110,7 @@
 											   options="{'no_create': True,'no_open':True}"/>
 										<field name="move_type" />
 										<field name="approver_id" invisible="1" />
+										<field name="check_pr_issued" invisible="1"/>
 									</group>
 									<group>
 										<!--<field name="manager_id" readonly="1" />-->
