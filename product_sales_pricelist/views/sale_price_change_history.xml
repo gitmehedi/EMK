@@ -32,6 +32,7 @@
 							<field name="new_price"/>
 							<field name="currency_id"/>
 							<field name="approve_price_date"/>
+							<field name="category_id" invisible="1"/>
 						</group>
 	                </sheet>
 				</form>

@@ -1,5 +1,4 @@
 from odoo import api, fields, models
-from datetime import date
 import time
 
 
@@ -16,6 +15,7 @@ class ProductSalePriceHistiryLine(models.Model):
     effective_price_date = fields.Date(string='Effective Date',readonly=True)
     currency_id = fields.Many2one('res.currency', string="Currency", readonly=True)
     product_package_mode = fields.Many2one('product.packaging.mode', string= 'Packaging Mode', readonly=True)
+    category_id = fields.Many2one(string='UoM Category',related="uom_id.category_id",store=True)
     uom_id = fields.Many2one('product.uom', string="UoM", readonly=True)
 
     @api.model
@@ -29,12 +29,10 @@ class ProductSalePriceHistiryLine(models.Model):
             [('state', '=', 'validate'), ('effective_date', '=', current_date)])
 
         for price_pool in price_list_pool:
-            price_history_pool = self.env['product.sale.history.line'].search(
-                ([('product_id', '=', price_pool.product_id.ids),
-                  ('currency_id', '=', price_pool.currency_id.id),
-                 # ('product_package_mode', '=', price_pool.product_package_mode.id),
-                  ('uom_id', '=', price_pool.uom_id.id)
-                ]))
+            price_history_pool = self.env['product.sale.history.line'].search([('product_id', '=', price_pool.product_id.ids),
+                                                                               ('currency_id', '=', price_pool.currency_id.id),
+                                                                               ('product_package_mode', '=', price_pool.product_package_mode.id),
+                                                                               ('uom_id', '=', price_pool.uom_id.id)])
 
 
 
@@ -45,11 +43,15 @@ class ProductSalePriceHistiryLine(models.Model):
                 vals['sale_price_history_id'] = price_pool.id
                 vals['effective_price_date'] = price_pool.effective_date
                 vals['currency_id'] = price_pool.currency_id.id
-                vals['product_package_mode '] = price_pool.product_package_mode.id
+                vals['product_package_mode'] = price_pool.product_package_mode.id
                 vals['uom_id'] = price_pool.uom_id.id
-
+                vals['category_id'] = price_pool.uom_id.category_id.id
 
                 price_history_pool.create(vals)
             else:
                 price_history_pool.write({'product_id':price_pool.product_id.id,
                                           'new_price':price_pool.new_price})
+
+            product_pool = self.env['product.product'].search([('id', '=', price_pool.product_id.ids)])
+
+            product_pool.write({'list_price': price_pool.new_price})

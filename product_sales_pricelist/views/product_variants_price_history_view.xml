@@ -2,24 +2,21 @@
 <odoo>
     <data>
 
-    <!-- Form View -->
-		<!--<record id="Variant_wise_price_list_form_view" model="ir.ui.view">-->
-			<!--<field name="name">Variant_wise_price_list_form</field>-->
-			<!--<field name="model">product.sale.history.line</field>-->
-			<!--<field name="type">form</field>-->
-			<!--<field name="arch" type="xml">-->
-				<!--<form string="Change Products Sale Price" options="{'no_open':True,'no_create_edit': True}">-->
-					<!--<sheet>-->
-						<!--<group>-->
-							<!--<field name="product_id"/>-->
-							<!--<field name="new_price"/>-->
-							<!--<field name="currency_id"/>-->
-                            <!--<field name="effective_price_date"/>-->
-						<!--</group>-->
-	                <!--</sheet>-->
-				<!--</form>-->
-			<!--</field>-->
-		<!--</record>-->
+
+		<record id="Variant_wise_price_list_form_view" model="ir.ui.view">
+			<field name="name">Variant_wise_price_list_form</field>
+			<field name="model">product.sale.history.line</field>
+			<field name="type">form</field>
+			<field name="arch" type="xml">
+				<form string="Change Products Sale Price" options="{'no_open':True,'no_create_edit': True}">
+					<sheet>
+						<group>
+                        <field name="category_id" invisible="1"/>
+						</group>
+	                </sheet>
+				</form>
+			</field>
+		</record>
 
 
         <record id="product_sale_price_history_variant_wise_tree" model="ir.ui.view">
@@ -28,7 +25,8 @@
             <field name="arch" type="xml">
                 <tree string="Product Sale Price History">
                     <field name="product_id"/>
-                    <field name="list_price"/>
+                    <field name="product_package_mode"/>
+                    <!--<field name="list_price"/>-->
                     <field name="new_price"/>
                     <field name="currency_id"/>
                     <field name="effective_price_date"/>

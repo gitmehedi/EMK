@@ -55,6 +55,9 @@ class PurchaseRequisition(models.Model):
             'nodestroy': True,
             'target': 'new',
         }
+        po_pool_obj = self.env['purchase.order'].search([('requisition_id','=',self.id)])
+        if po_pool_obj:
+            po_pool_obj.write({'check_po_action_button': True})
         return result
 
     @api.onchange('indent_ids')
