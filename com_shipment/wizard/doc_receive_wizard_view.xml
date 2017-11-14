@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <data>
+        <record id="doc_receive_wizard" model="ir.ui.view">
+            <field name="name">doc.receive.wizard</field>
+            <field name="model">doc.receive.wizard</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml" >
+                <form string="Please Enter Receive Document After Shipment" create="false" edit="false">
+                    <group>
+                        <group string="Bill Of Lading">
+                            <field name="bill_of_lading_number" />
+                            <field name="shipment_date" />
+                        </group>
+                        <group string="Packing List">
+                            <field name="gross_weight" />
+                            <field name="net_weight" />
+                        </group>
+                    </group>
+                    <footer>
+                        <button string="Save" name="save_doc_receive" type="object" class="oe_highlight"  />
+                        <button special="cancel" string="Close" type="object"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+    </data>
+</odoo>
