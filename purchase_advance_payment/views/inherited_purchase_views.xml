@@ -9,7 +9,7 @@
                 <xpath expr="//button[@name='action_cancel']" position="before">
                     <field name="invoice_status" invisible="1"/>
                     <button name="%(action_view_purchase_advance_payment_inv)d" string="Create Invoice"
-                            attrs="{'invisible': ['|',('invoice_status', '=', True)]}"
+                            attrs="{'invisible': ['|',('invoice_status', '=', True),('state', 'in', ['draft','sent','cancel'])]}"
                             type="action" class="oe_highlight" groups="base.group_user"/>
                 </xpath>
                 <xpath expr="//field[@name='amount_tax']" position="after">
