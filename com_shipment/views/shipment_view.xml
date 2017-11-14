@@ -7,7 +7,7 @@
             <field name="model">purchase.shipment</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Shipment" delete="false" copy='1' create="false">
+                <form string="Shipment" delete="false" copy='0' create="false">
                     <link rel="stylesheet" href="/com_shipment/static/src/css/lc_style.css"></link>
                     <header>
 
