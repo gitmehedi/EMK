@@ -31,8 +31,14 @@ class DOProductLine(models.Model):
 
     @api.constrains('quantity')
     def check_quantity(self):
+
         if self.quantity < 0.00:
             raise ValidationError('Quantity can not be negative')
+
+            for sale_line in self.parent_id.sale_order_id.order_line:
+                if self.quantity > sale_line.da_qty:
+                    raise ValidationError('You can order another {0} {1}'.format((sale_line.da_qty),(sale_line.product_uom.name)))
+
 
     @api.onchange('quantity')
     def onchange_quantity(self):
@@ -41,6 +47,10 @@ class DOProductLine(models.Model):
             self.parent_id.amount_untaxed = self.price_subtotal
             self.parent_id.tax_value = self.price_subtotal * (self.tax_id.amount/100)
             self.parent_id.total_amount = self.parent_id.tax_value + self.price_subtotal
+
+        for sale_line in self.parent_id.sale_order_id.order_line:
+            if self.quantity > sale_line.da_qty:
+                raise ValidationError('You can order another {0} {1}'.format((sale_line.da_qty),(sale_line.product_uom.name)))
 
 
     @api.onchange('product_id')

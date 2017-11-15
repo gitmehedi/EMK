@@ -2,8 +2,6 @@ from odoo import api, fields, models
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools import amount_to_text_en
 
-import time
-
 
 class SaleOrder(models.Model):
     _inherit = "sale.order"
@@ -20,16 +18,18 @@ class SaleOrder(models.Model):
     state = fields.Selection([
         ('to_submit', 'Submit'),
         ('draft', 'Quotation'),
-        ('submit_quotation','Confirmed'),
-        ('validate', 'Second Approval'),
+        ('submit_quotation','Validate'),
+        ('validate', 'Accounts Approval'),
         ('sent', 'Quotation Sent'),
         ('sale', 'Sales Order'),
-        ('done', 'Locked'),
-        ('cancel', 'Cancelled'),
-        ('da', 'Delivery Authorzation'),
+        ('done', 'Done'),
+        ('cancel', 'Cancelled')
     ], string='Status', readonly=True, copy=False, index=True, track_visibility='onchange', default='to_submit')
 
-    pack_type = fields.Many2one('product.packaging.mode',string='Packing Mode', required=True)
+    def _get_pack_type(self):
+        return self.env['product.packaging.mode'].search([], limit=1)
+
+    pack_type = fields.Many2one('product.packaging.mode',string='Packing Mode', default=_get_pack_type, required=True)
     currency_id = fields.Many2one("res.currency", related='', string="Currency", required=True)
 
     """ PI and LC """
@@ -153,7 +153,7 @@ class SaleOrder(models.Model):
             if is_double_validation:
                 order.write({'state': 'validate'}) #Go to two level approval process
             else:
-                order.write({'state': 'sale'}) # One level approval process
+                order.write({'state': 'done'}) # One level approval process
 
 
     def second_approval_business_logics(self, cust_commission_pool, lines, price_change_pool):
@@ -220,14 +220,14 @@ class SaleOrder(models.Model):
 class InheritedSaleOrderLine(models.Model):
     _inherit='sale.order.line'
 
-    da_qty = fields.Float(string='DA Qty.', default=3)
+    da_qty = fields.Float(string='DA Qty.')
+
 
     @api.constrains('product_uom_qty','commission_rate')
     def _check_order_line_inputs(self):
         if self.product_uom_qty or self.commission_rate:
             if self.product_uom_qty < 0 or self.commission_rate < 0 or self.price_unit < 0:
                 raise ValidationError('Price Unit, Ordered Qty. & Commission Rate can not be Negative value')
-
 
 
     def _get_product_sales_price(self, product):
@@ -277,6 +277,7 @@ class InheritedSaleOrderLine(models.Model):
     @api.onchange('product_uom', 'product_uom_qty')
     def product_uom_change(self):
         res = super(InheritedSaleOrderLine, self).product_uom_change()
+        self.da_qty = self.product_uom_qty
 
         vals = {}
         if self.product_id:
