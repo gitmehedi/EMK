@@ -10,33 +10,33 @@ class Shipment(models.Model):
     _order = "id desc"
 
     name = fields.Char(string='Number', required=True, readonly=True, index=True, default=lambda self: self.env.context.get('shipment_number'))
-    comments = fields.Text(string='Comments')
+    comments = fields.Text(string='Comments', track_visibility='onchange')
 
-    etd_date = fields.Date('ETD Date', help="Estimated Time of Departure")
-    eta_date = fields.Date('ETA Date', help="Estimated Time of Arrival")
-    arrival_date = fields.Date('Arrival Date')
+    etd_date = fields.Date('ETD Date', readonly=True, help="Estimated Time of Departure")
+    eta_date = fields.Date('ETA Date', readonly=True, help="Estimated Time of Arrival")
+    arrival_date = fields.Date('Arrival Date', readonly=True)
 
     state = fields.Selection(
         [('draft', "Draft"),
          ('on_board', "Shipment On Board"),
-         ('receive_doc', "Receive Document"),
+         ('receive_doc', "Receive Doc"),
          ('eta', "ETA"),
          ('cnf_quotation', "C&F Quotation"),
-         ('approve_cnf_quotation', "Approve C&F Quotation"),
+         ('approve_cnf_quotation', "Approve"),
          ('cnf_clear', "C&F Clear"),
          ('gate_in', "Gate In"),
-         ('done', "Done")], default='draft')
+         ('done', "Done")], default='draft', track_visibility='onchange')
 
     lc_id = fields.Many2one("letter.credit", string='LC Number', ondelete='cascade', default=lambda self: self.env.context.get('lc_id'))
     shipment_attachment_ids = fields.One2many('ir.attachment', 'res_id', string='Shipment Attachments')
 
     # Bill Of Lading
-    bill_of_lading_number = fields.Char(string='BoL Number', required=True, index=True, help="Bill Of Lading Number")
-    shipment_date = fields.Date('Ship on Board', required=True)
+    bill_of_lading_number = fields.Char(string='BoL Number', readonly=True, index=True, help="Bill Of Lading Number")
+    shipment_date = fields.Date('Ship on Board', readonly=True)
 
     # Packing List
-    gross_weight = fields.Float('Gross Weight', required=True)
-    net_weight = fields.Float('Net Weight', required=True)
+    gross_weight = fields.Float('Gross Weight', readonly=True)
+    net_weight = fields.Float('Net Weight', readonly=True)
 
     @api.model
     def create(self, vals):
@@ -79,6 +79,132 @@ class Shipment(models.Model):
 
         return result
 
+
+    # State Change Actions
+
+    @api.multi
+    def action_on_board(self):
+        res = self.env.ref('com_shipment.on_board_wizard')
+        result = {
+            'name': _('Please Enter The Shipment On Board Info'),
+            'view_type': 'form',
+            'view_mode': 'form',
+            'view_id': res and res.id or False,
+            'res_model': 'on.board.wizard',
+            'type': 'ir.actions.act_window',
+            'nodestroy': True,
+            'target': 'new',
+        }
+        return result
+
+    @api.multi
+    def action_doc_receive(self):
+        res = self.env.ref('com_shipment.doc_receive_wizard')
+        result = {
+            'name': _('Please Enter Receive Document After Shipment'),
+            'view_type': 'form',
+            'view_mode': 'form',
+            'view_id': res and res.id or False,
+            'res_model': 'doc.receive.wizard',
+            'type': 'ir.actions.act_window',
+            'nodestroy': True,
+            'target': 'new',
+        }
+        return result
+
+    @api.multi
+    def action_eta(self):
+        res = self.env.ref('com_shipment.eta_wizard')
+        result = {
+            'name': _('Please Enter The Information'),
+            'view_type': 'form',
+            'view_mode': 'form',
+            'view_id': res and res.id or False,
+            'res_model': 'eta.wizard',
+            'type': 'ir.actions.act_window',
+            'nodestroy': True,
+            'target': 'new',
+        }
+        return result
+
+    @api.multi
+    def action_quotation(self):
+        res = self.env.ref('com_shipment.cnf_quotation_wizard')
+        result = {
+            'name': _('Please Enter The Information'),
+            'view_type': 'form',
+            'view_mode': 'form',
+            'view_id': res and res.id or False,
+            'res_model': 'cnf.quotation.wizard',
+            'type': 'ir.actions.act_window',
+            'nodestroy': True,
+            'target': 'new',
+        }
+        return result
+
+    @api.multi
+    def action_approve_quotation(self):
+        res = self.env.ref('com_shipment.cnf_approve_quotation_wizard')
+        result = {
+            'name': _('Please Enter The Information'),
+            'view_type': 'form',
+            'view_mode': 'form',
+            'view_id': res and res.id or False,
+            'res_model': 'cnf.approve.quotation.wizard',
+            'type': 'ir.actions.act_window',
+            'nodestroy': True,
+            'target': 'new',
+        }
+        return result
+
+    @api.multi
+    def action_cnf_clear(self):
+        res = self.env.ref('com_shipment.cnf_clear_wizard')
+        result = {
+            'name': _('Please Enter The Information'),
+            'view_type': 'form',
+            'view_mode': 'form',
+            'view_id': res and res.id or False,
+            'res_model': 'cnf.clear.wizard',
+            'type': 'ir.actions.act_window',
+            'nodestroy': True,
+            'target': 'new',
+        }
+        return result
+
+    @api.multi
+    def action_gate_in(self):
+        res = self.env.ref('com_shipment.gate_in_wizard')
+        result = {
+            'name': _('Please Enter The Information'),
+            'view_type': 'form',
+            'view_mode': 'form',
+            'view_id': res and res.id or False,
+            'res_model': 'gate.in.wizard',
+            'type': 'ir.actions.act_window',
+            'nodestroy': True,
+            'target': 'new',
+        }
+        return result
+
+    @api.multi
+    def action_gate_in(self):
+        res = self.env.ref('com_shipment.gate_in_wizard')
+        result = {
+            'name': _('Please Enter The Information'),
+            'view_type': 'form',
+            'view_mode': 'form',
+            'view_id': res and res.id or False,
+            'res_model': 'gate.in.wizard',
+            'type': 'ir.actions.act_window',
+            'nodestroy': True,
+            'target': 'new',
+        }
+        return result
+
+    @api.multi
+    def action_draft(self):
+        self.write({'state': 'draft'})
 
 class LetterOfCredit(models.Model):
 

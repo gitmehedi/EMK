@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <odoo>
     <data>
-        <record id="purchase_requisition_type_wizard" model="ir.ui.view">
-            <field name="name">purchase.requisition.type.wizard</field>
-            <field name="model">purchase.requisition.type.wizard</field>
+        <record id="purchase_order_type_wizard" model="ir.ui.view">
+            <field name="name">purchase.order.type.wizard</field>
+            <field name="model">purchase.order.type.wizard</field>
             <field name="type">form</field>
             <field name="arch" type="xml" >
                 <form string="Please Select LC Region Type and Purchase By before approve" create="false" edit="false">

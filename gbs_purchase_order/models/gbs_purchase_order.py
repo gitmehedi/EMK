@@ -7,8 +7,12 @@ class PurchaseOrder(models.Model):
 
     operating_unit_id = fields.Many2one('operating.unit', 'Operating Unit', required=True,
                                         default=lambda self: self.env.user.default_operating_unit_id)
-
+    region_type = fields.Selection([('local', 'Local'), ('foreign', 'Foreign')], string="LC Region Type",
+                                   help="Local: Local LC.\n""Foreign: Foreign LC.")
+    purchase_by = fields.Selection([('cash', 'Cash'), ('credit', 'Credit'), ('lc', 'LC'), ('tt', 'TT')],
+                                   string="Purchase By")
     attachment_ids = fields.One2many('ir.attachment', 'res_id', string='Attachments')
+    check_po_action_button = fields.Boolean('Check PO Action Button', default=False)
 
     @api.onchange('requisition_id')
     def _onchange_requisition_id(self):
@@ -89,29 +93,65 @@ class PurchaseOrder(models.Model):
                 'account_analytic_id': line.account_analytic_id.id,
             }))
         self.order_line = order_lines
-        self.attachment_ids = requisition.attachment_ids
+        if requisition.attachment_ids:
+            attachments_lines = []
+            for attachment_line in requisition.attachment_ids:
+                attachments_lines.append((0,0,{
+                'name' : attachment_line.name,
+                'datas_fname':attachment_line.datas_fname,
+                'db_datas':attachment_line.db_datas,
+            }))
+            self.attachment_ids = attachments_lines
+        if requisition.region_type:
+            self.region_type = requisition.region_type
+        if requisition.purchase_by:
+            self.purchase_by = requisition.purchase_by
+        if requisition.state == 'done':
+            self.check_po_action_button = True
+
+    @api.multi
+    def button_confirm(self):
+        # result = {}
+        if self.region_type == '' and self.currency_id == '':
+            res_view = self.env.ref('gbs_purchase_order.purchase_order_type_wizard')
+            result = {
+                'name': _('Please Select LC Region Type and Purchase By before approve'),
+                'view_type': 'form',
+                'view_mode': 'form',
+                'view_id': res_view and res_view.id or False,
+                'res_model': 'purchase.order.type.wizard',
+                'type': 'ir.actions.act_window',
+                'nodestroy': True,
+                'target': 'new',
+            }
+        else:
+            result = super(PurchaseOrder, self).button_confirm()
+        for po in self:
+            if po.requisition_id.type_id.exclusive == 'exclusive':
+                others_po = po.requisition_id.mapped('purchase_ids').filtered(lambda r: r.id != po.id)
+                others_po.button_cancel()
+                po.requisition_id.action_done()
+
+            for element in po.order_line:
+                if element.product_id == po.requisition_id.procurement_id.product_id:
+                    element.move_ids.write({
+                        'procurement_id': po.requisition_id.procurement_id.id,
+                        'move_dest_id': po.requisition_id.procurement_id.move_dest_id.id,
+                    })
+            po.check_po_action_button = False
+        return result
+
+    @api.multi
+    def button_cancel(self):
+        res = super(PurchaseOrder, self).button_cancel()
+        self.check_po_action_button = False
+        return res
 
     @api.multi
     def new_revision(self):
-        self.ensure_one()
-        old_name = self.name
-        revno = self.revision_number
-        self.write({'name': '%s-%02d' % (self.unrevisioned_name,
-                                         revno + 1),
-                    'revision_number': revno + 1})
-        defaults = {'name': old_name,
-                    'revision_number': revno,
-                    'active': False,
-                    'state': 'cancel',
-                    'current_revision_id': self.id,
-                    'unrevisioned_name': self.unrevisioned_name,
-                    }
-        old_revision = super(PurchaseOrder, self).copy(default=defaults)
-        self.button_draft()
-        msg = _('New revision created: %s') % self.name
-        self.message_post(body=msg)
-        old_revision.message_post(body=msg)
-        return True
+        res = super(PurchaseOrder, self).new_revision()
+        self.check_po_action_button = True
+        return res
 
     ####################################################
     # ORM Overrides methods
