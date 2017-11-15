@@ -415,6 +415,7 @@ class IndentIndent(models.Model):
                 'product_uom_id': product_line.product_uom.id or False,
                 'product_ordered_qty': product_line.product_uom_qty or False,
                 'schedule_date': self.required_date or False,
+                'remark': product_line.remarks or False,
             }
             pur_line_obj.create(values)
 

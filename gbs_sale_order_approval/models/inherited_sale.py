@@ -6,8 +6,27 @@ from odoo.tools import amount_to_text_en
 class SaleOrder(models.Model):
     _inherit = "sale.order"
 
-    order_line = fields.One2many('sale.order.line', 'order_id', string='Order Lines', readonly=True,
-                                  copy=True)
+    def _get_order_type(self):
+        return self.env['sale.order.type'].search([], limit=1)
+
+    @api.model
+    def _get_default_team(self):
+        return self.env['crm.team']._get_default_team_id()
+
+    type_id = fields.Many2one(
+        comodel_name='sale.order.type', string='Type', default=_get_order_type, readonly=True,
+                    states={'to_submit':[('readonly',False)]})
+
+    order_line = fields.One2many('sale.order.line', 'order_id', string='Order Lines', readonly=True,copy=True)
+    incoterm = fields.Many2one('stock.incoterms', 'Incoterms', readonly=True,
+                               help="International Commercial Terms are a series of predefined commercial terms used in international transactions.",
+                               states={'to_submit': [('readonly', False)]})
+    client_order_ref = fields.Char(string='Customer Reference', copy=False,readonly=True,states={'to_submit': [('readonly', False)]})
+    team_id = fields.Many2one('crm.team', 'Sales Team', change_default=True,readonly=True, default=_get_default_team, oldname='section_id',states={'to_submit': [('readonly', False)]})
+    user_id = fields.Many2one('res.users', string='Salesperson', index=True, track_visibility='onchange', default=lambda self: self.env.user,readonly=True,states={'to_submit': [('readonly', False)]})
+    fiscal_position_id = fields.Many2one('account.fiscal.position', oldname='fiscal_position', string='Fiscal Position',readonly=True,states={'to_submit': [('readonly', False)]})
+    origin = fields.Char(string='Source Document', help="Reference of the document that generated this sales order request.",readonly=True,states={'to_submit': [('readonly', False)]})
+
 
     credit_sales_or_lc = fields.Selection([
         ('cash', 'Cash'),
