@@ -41,7 +41,7 @@ class ProductSalePriceHistiryLine(models.Model):
                 vals['list_price'] = price_pool.list_price
                 vals['new_price'] = price_pool.new_price
                 vals['sale_price_history_id'] = price_pool.id
-                vals['effective_price_date'] = price_pool.effective_date
+                vals['approve_price_date'] = price_pool.effective_date
                 vals['currency_id'] = price_pool.currency_id.id
                 vals['product_package_mode'] = price_pool.product_package_mode.id
                 vals['uom_id'] = price_pool.uom_id.id
@@ -52,6 +52,7 @@ class ProductSalePriceHistiryLine(models.Model):
                 price_history_pool.write({'product_id':price_pool.product_id.id,
                                           'new_price':price_pool.new_price})
 
+            #Update Products Sales Price also
             product_pool = self.env['product.product'].search([('id', '=', price_pool.product_id.ids)])
 
             product_pool.write({'list_price': price_pool.new_price})
