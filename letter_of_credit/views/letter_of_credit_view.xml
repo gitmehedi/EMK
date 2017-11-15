@@ -42,7 +42,9 @@
                             <group>
                                 <separator string="Beneficiary" colspan="2" attrs="{'invisible': [('type', '=', 'export')]}"/>
                                 <separator string="Applicant" colspan="2" attrs="{'invisible': [('type', '=', 'import')]}"/>
-                                <field name="second_party"/>
+                                <field name="second_party_applicant" attrs="{'invisible': [('type', '=', 'import')], 'required': [('type', '=', 'export')]}"/>
+                                <field name="second_party_beneficiary" attrs="{'invisible': [('type', '=', 'export')], 'required': [('type', '=', 'import')]}"/>
+
                                 <field name="second_party_bank"/>
                             </group>
 
@@ -150,11 +152,11 @@
             <field name="arch" type="xml">
                 <tree string="Letter of Credit">
                     <field name="name"/>
-                    <field name="second_party" string="Applicant Name"/>
+                    <field name="second_party_applicant" string="Applicant Name"/>
+                    <field name="second_party_bank" string="Applicant Bank"/>
                     <field name="issue_date"/>
                     <field name="expiry_date"/>
                     <field name="shipment_date"/>
-                    <field name="second_party_bank" string="Applicant Bank"/>
                     <field name="state"/>
                 </tree>
             </field>
@@ -167,11 +169,11 @@
             <field name="arch" type="xml">
                 <tree string="Letter of Credit">
                     <field name="name"/>
-                    <field name="second_party" string="Beneficiary Name"/>
+                    <field name="second_party_beneficiary" string="Beneficiary Name"/>
+                    <field name="second_party_bank" string="Beneficiary Bank"/>
                     <field name="issue_date"/>
                     <field name="expiry_date"/>
                     <field name="shipment_date"/>
-                    <field name="second_party_bank" string="Beneficiary Bank"/>
                     <field name="state"/>
                 </tree>
             </field>
