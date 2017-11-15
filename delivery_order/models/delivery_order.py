@@ -12,11 +12,6 @@ class DeliveryOrder(models.Model):
 
 
     name = fields.Char(string='Name', index=True, readonly=True)
-    sale_order_id = fields.Many2one('sale.order',
-                                    string='Sale Order',
-                                    required=True,
-                                    readonly=True,
-                                    states={'draft': [('readonly', False)]})
 
     so_date = fields.Datetime('Order Date', readonly=True, states={'draft': [('readonly', False)]})
     sequence_id = fields.Char('Sequence', readonly=True)
@@ -64,6 +59,11 @@ class DeliveryOrder(models.Model):
     tax_value = fields.Float(string='Taxes',readonly=True)
     total_amount = fields.Float(string='Total',readonly=True)
 
+    sale_order_id = fields.Many2one('sale.order',
+                                    string='Sale Order',
+                                    required=True,
+                                    domain=[('da_btn_show_hide','=',True)],
+                                    )
 
     """ All functions """
 
@@ -255,15 +255,27 @@ class DeliveryOrder(models.Model):
              ('partner_id', '=', self.parent_id.id)])
         account_payment_pool.write({'is_this_payment_checked': True})
 
-        # for sale_line in self.sale_order_id.order_line:
-        #     for da_line in self.line_ids:
-        #         sale_line.write({'da_qty': da_line.quantity})
+        self.update_sale_order_da_qty()
 
         return self.write({'state': 'close', 'confirmed_date': time.strftime('%Y-%m-%d %H:%M:%S')})
 
+    def update_sale_order_da_qty(self):
+        for da_line in self.line_ids:
+            for sale_line in self.sale_order_id.order_line:
+                # if self.quantity > sale_line.da_qty:
+                #     raise ValidationError('You can order another {0} {1}'.format((sale_line.da_qty), (sale_line.product_uom.name)))
+
+                update_da_qty = sale_line.da_qty - da_line.quantity
+                sale_line.write({'da_qty': update_da_qty})
+
+                # if update_da_qty == 0.00:
+                #     break;
+
+
+
     @api.onchange('quantity')
     def onchange_quantity(self):
-        if self.quantity < 0 or self.quantity == 0.00:
+        if self.line_ids.quantity < 0 or self.line_ids.quantity == 0.00:
             raise UserError("Qty can not be Zero or Negative value")
 
     @api.onchange('sale_order_id')
