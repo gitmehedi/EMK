@@ -112,7 +112,9 @@ class PurchaseOrder(models.Model):
     @api.multi
     def button_confirm(self):
         # result = {}
-        if self.region_type == '' and self.currency_id == '':
+        if self.region_type and self.currency_id:
+            result = super(PurchaseOrder, self).button_confirm()
+        else:
             res_view = self.env.ref('gbs_purchase_order.purchase_order_type_wizard')
             result = {
                 'name': _('Please Select LC Region Type and Purchase By before approve'),
@@ -124,8 +126,6 @@ class PurchaseOrder(models.Model):
                 'nodestroy': True,
                 'target': 'new',
             }
-        else:
-            result = super(PurchaseOrder, self).button_confirm()
         for po in self:
             if po.requisition_id.type_id.exclusive == 'exclusive':
                 others_po = po.requisition_id.mapped('purchase_ids').filtered(lambda r: r.id != po.id)
@@ -150,7 +150,7 @@ class PurchaseOrder(models.Model):
     @api.multi
     def new_revision(self):
         res = super(PurchaseOrder, self).new_revision()
-        self.check_po_action_button = True
+        self.check_po_action_button = False
         return res
 
     ####################################################
