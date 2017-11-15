@@ -93,7 +93,15 @@ class PurchaseOrder(models.Model):
                 'account_analytic_id': line.account_analytic_id.id,
             }))
         self.order_line = order_lines
-        self.attachment_ids = requisition.attachment_ids
+        if requisition.attachment_ids:
+            attachments_lines = []
+            for attachment_line in requisition.attachment_ids:
+                attachments_lines.append((0,0,{
+                'name' : attachment_line.name,
+                'datas_fname':attachment_line.datas_fname,
+                'db_datas':attachment_line.db_datas,
+            }))
+            self.attachment_ids = attachments_lines
         if requisition.region_type:
             self.region_type = requisition.region_type
         if requisition.purchase_by:
