@@ -2,6 +2,7 @@ import datetime
 
 from openerp import api, models, fields, exceptions
 from openerp.tools.translate import _
+from openerp.exceptions import ValidationError
 
 
 class StockTransferRequest(models.Model):
@@ -9,7 +10,7 @@ class StockTransferRequest(models.Model):
     Send product to other shop
     """
     _name = 'stock.transfer.request'
-    _rec_name = "transfer_shop_id"
+    _rec_name = "name"
     _order = "id desc"
 
     @api.model
@@ -116,28 +117,42 @@ class StockTransferRequest(models.Model):
         self.approve_date = self.get_current_date()
         self.approve_user_id = self.get_login_user()
 
+    def get_picking(self, source_loc, dest_loc):
+        picking_type = self.env['stock.picking.type'].search([('default_location_src_id', '=', source_loc),
+                                                              ('default_location_dest_id', '=', dest_loc)],
+                                                             order='id asc', limit=1)
+        if not picking_type:
+            raise ValidationError(_('Please Create a Picking Type, Otherwise your operation will not continue.'))
+
+        picking_val = {
+            'picking_type_id': picking_type.id,
+            'priority': '1',
+            'move_type': 'direct',
+            'company_id': self.env.user['company_id'].id,
+            'dest_operating_unit_id': self.transfer_shop_id.id,
+            'stock_transfer_id': self.id,
+            'state': 'done',
+            'invoice_state': 'none',
+        }
+        picking = self.env['stock.picking'].create(picking_val)
+        picking.action_done()
+
+        return picking
+
     @api.one
     def action_transfer(self):
+        if self.state != 'approve':
+            raise ValidationError(_('Please transfer product in validate state.'))
 
         move_obj = self.env['stock.move']
         transit_location = self.env['stock.location'].search([('name', 'ilike', 'Inter Company Transit')])
         shop_location = self.get_location(self.my_shop_id.id)
-        picking_id = self.env['stock.picking.type'].search([('default_location_src_id', '=', shop_location)])
-
-        pic_val = {
-            'picking_type_id': 1,
-            'priority': '1',
-            'move_type': 'direct',
-            'company_id': self.env.user['company_id'].id,
-            'state': 'done',
-            'invoice_state': 'none',
-        }
-        picking = self.env['stock.picking'].create(pic_val)
-        picking.action_done()
+        picking = self.get_picking(source_loc=shop_location, dest_loc=transit_location.id)
 
         for val in self.product_line_ids:
             if val:
                 move = {}
+                move['picking_id'] = picking.id
                 move['product_id'] = val.product_id.id
                 move['product_uom'] = val.product_id.uom_id.id
                 move['product_uos_qty'] = val.quantity
@@ -147,7 +162,7 @@ class StockTransferRequest(models.Model):
                 move['price_unit'] = val.product_id.price
                 move['invoice_state'] = 'invoiced'
                 move['date_expected'] = '{0}'.format(datetime.date.today())
-                move['location_id'] = self.get_location(self.my_shop_id.id)
+                move['location_id'] = shop_location
                 move['location_dest_id'] = transit_location.id
                 move['procure_method'] = "make_to_stock"
                 move_done = move_obj.create(move)
@@ -160,23 +175,18 @@ class StockTransferRequest(models.Model):
 
     @api.one
     def action_receive(self):
+        if self.state != 'transfer':
+            raise ValidationError(_('Please transfer product in validate state.'))
+
         move_obj = self.env['stock.move']
         transit_location = self.env['stock.location'].search([('name', 'ilike', 'Inter Company Transit')])
-
-        pic_val = {
-            'picking_type_id': 1,
-            'priority': '1',
-            'move_type': 'direct',
-            'company_id': self.env.user['company_id'].id,
-            'state': 'done',
-            'invoice_state': 'none',
-        }
-        picking = self.env['stock.picking'].create(pic_val)
-        picking.action_done()
+        shop_location = self.get_location(self.transfer_shop_id.id)
+        picking = self.get_picking(source_loc=transit_location.id, dest_loc=shop_location)
 
         for val in self.product_line_ids:
             if val:
                 move = {}
+                move['picking_id'] = picking.id
                 move['product_id'] = val.product_id.id
                 move['product_uom'] = val.product_id.uom_id.id
                 move['product_uos_qty'] = val.quantity
@@ -187,7 +197,7 @@ class StockTransferRequest(models.Model):
                 move['invoice_state'] = 'invoiced'
                 move['date_expected'] = '{0}'.format(datetime.date.today())
                 move['location_id'] = transit_location.id
-                move['location_dest_id'] = self.get_location(self.transfer_shop_id.id)
+                move['location_dest_id'] = shop_location
                 move['procure_method'] = "make_to_stock"
                 move_done = move_obj.create(move)
                 move_done.action_done()
@@ -224,3 +234,9 @@ class StockTransferRequest(models.Model):
     @api.model
     def get_current_date(self):
         return datetime.datetime.today()
+
+
+class InheriteStockPicking(models.Model):
+    _inherit = 'stock.picking'
+
+    stock_transfer_id = fields.Many2one('stock.transfer.request', string='Stock Transfer')

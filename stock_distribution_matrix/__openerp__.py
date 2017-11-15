@@ -24,6 +24,7 @@
         'views/inherited_stock_inventory.xml',
         'views/inherited_pos_config_view.xml',
         'views/inherited_purchase_order_view.xml',
+        'views/stock_view.xml',
         'views/warehouse_to_shop_distribution.xml',
         'reports/stock_distribution_to_shop_views.xml',
         'reports/purchase_order_quantity_menu.xml',
