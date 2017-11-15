@@ -13,8 +13,8 @@
     'data': [
         'data/pr_sequence.xml',
         'security/security.xml',
-        'security/ir_rule.xml',
-        'security/ir.model.access.csv',
+        # 'security/ir_rule.xml',
+        # 'security/ir.model.access.csv',
         'wizard/pr_wizard_view.xml',
         'views/gbs_purchase_requisition_view.xml',
         'views/pr_commercial_menu_views.xml',

@@ -52,6 +52,9 @@
                         <button name="action_open" groups="gbs_purchase_requisition.group_purchase_requisition_validator"
                                 states="in_progress" string="Validate" type="object" class="btn-primary"/>
                     </xpath>
+                    <xpath expr="//field[@name='order_count']" position="attributes">
+                        <attribute name="string">Quotations</attribute>
+                    </xpath>
                     <xpath expr="//field[@name='state']" position="replace">
                         <field name="state" widget="statusbar" statusbar_visible="draft,in_progress,approve_head_procurement,done"/>
                     </xpath>
@@ -117,6 +120,9 @@
                     </xpath>
                     <xpath expr="//field[@name='price_unit']" position="attributes" type="object">
                         <attribute name="readonly">1</attribute>
+                    </xpath>
+                    <xpath expr="//notebook/page/field/tree/field[@name='schedule_date']" position="attributes" type="object">
+                        <attribute name="invisible">1</attribute>
                     </xpath>
                     <xpath expr="//field[@name='price_unit']" position="after" type="object">
                         <field name="last_purchse_date" readonly="1"/>
