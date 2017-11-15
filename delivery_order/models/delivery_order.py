@@ -61,9 +61,9 @@ class DeliveryOrder(models.Model):
 
     sale_order_id = fields.Many2one('sale.order',
                                     string='Sale Order',
-                                    required=True,
+                                    required=True,readonly=True,
                                     domain=[('da_btn_show_hide','=',True)],
-                                    )
+                                    states={'draft': [('readonly', False)]})
 
     """ All functions """
 
