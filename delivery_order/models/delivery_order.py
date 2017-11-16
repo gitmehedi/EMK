@@ -87,28 +87,39 @@ class DeliveryOrder(models.Model):
         self.state = 'close'
         self.line_ids.write({'state':'close'})
 
+    """ Action for Validate Button"""
     @api.one
     def action_approve(self):
-        if self.so_type == 'cash':
-            #self.payment_information_check()
+        self.state = 'validate'
 
-            #check if payment is same as the subtotal amount
-            #self.check_cash_amount_with_subtotal()
-            self.create_delivery_order()
-            self.state = 'close'
+
+    """ Action for Approve Button"""
+    @api.one
+    def action_close(self):
+
+        self.approver1_id = self.env.user
+        account_payment_pool = self.env['account.payment'].search(
+            [('is_this_payment_checked', '=', False), ('sale_order_id', '=', self.sale_order_id.id),
+             ('partner_id', '=', self.parent_id.id)])
+        account_payment_pool.write({'is_this_payment_checked': True})
+
+        self.create_delivery_order()
+        self.update_sale_order_da_qty()
+        return self.write({'state': 'close', 'confirmed_date': time.strftime('%Y-%m-%d %H:%M:%S')})
+
+
+
+    """ Action for Confirm button"""
+    @api.one
+    def action_validate(self):
+        if self.so_type == 'cash':
+            self.payment_information_check()
+            cash_check = self.check_cash_amount_with_subtotal()
+            return cash_check
 
         elif self.so_type == 'lc_sales':
             return self.lc_sales_business_logics()
-            #return self.create_delivery_order()
 
-
-        self.state = 'approve'
-        self.line_ids.write({'state': 'approve'})
-        self.approver2_id = self.env.user
-
-        self.create_delivery_order()
-
-        return self.write({'state': 'approve', 'approved_date': time.strftime('%Y-%m-%d %H:%M:%S')})
 
 
     def lc_sales_business_logics(self):
@@ -198,20 +209,18 @@ class DeliveryOrder(models.Model):
             cash_line_total_amount = cash_line_total_amount + do_cash_line.amount
 
         if not cash_line_total_amount or cash_line_total_amount == 0:
-            #account_payment_pool.write({'is_this_payment_checked': True})
+            account_payment_pool.write({'is_this_payment_checked': True})
             return self.write({'state': 'approve'})  # Only Second level approval
 
 
         if cash_line_total_amount >= product_line_subtotal:
-            #account_payment_pool.write({'is_this_payment_checked': True})
+            account_payment_pool.write({'is_this_payment_checked': True})
             return self.write({'state': 'close'})  # directly go to final approval level
         else:
-            #account_payment_pool.write({'is_this_payment_checked': True})
+            account_payment_pool.write({'is_this_payment_checked': True})
             return self.write({'state': 'approve'})  # Only Second level approval
 
 
-
-    @api.one
     def create_delivery_order(self):
         for order in self.sale_order_id:
             order.state = 'sale'
@@ -237,31 +246,6 @@ class DeliveryOrder(models.Model):
                 raise UserError("Payment Information entered is already in use: %s" % (cash_line.account_payment_id.display_name))
                 break;
 
-
-    @api.one
-    def action_validate(self):
-        self.state = 'validate'
-        if self.so_type == 'cash':
-            self.payment_information_check()
-            cash_check = self.check_cash_amount_with_subtotal()
-            return cash_check
-
-        return self.line_ids.write({'state':'validate'})
-
-
-    @api.one
-    def action_close(self):
-        self.state = 'close'
-        self.line_ids.write({'state':'close'})
-        self.approver1_id = self.env.user
-        account_payment_pool = self.env['account.payment'].search(
-            [('is_this_payment_checked', '=', False), ('sale_order_id', '=', self.sale_order_id.id),
-             ('partner_id', '=', self.parent_id.id)])
-        account_payment_pool.write({'is_this_payment_checked': True})
-
-        self.update_sale_order_da_qty()
-
-        return self.write({'state': 'close', 'confirmed_date': time.strftime('%Y-%m-%d %H:%M:%S')})
 
     def update_sale_order_da_qty(self):
         for da_line in self.line_ids:
@@ -395,11 +379,3 @@ class OrderedQty(models.Model):
     available_qty = fields.Float(string='Allowed Qty', default=0.00) ## available_qty = max_qty - ordered_qty
     lc_no = fields.Many2one('letter.credit', string='LC No')
     delivery_auth_no = fields.Many2one('delivery.order', string='Delivery Authrozation ref')
-
-
-
-
-
-
-
-

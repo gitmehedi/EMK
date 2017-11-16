@@ -13,8 +13,7 @@ class SaleOrder(models.Model):
     def _get_default_team(self):
         return self.env['crm.team']._get_default_team_id()
 
-    type_id = fields.Many2one(
-        comodel_name='sale.order.type', string='Type', default=_get_order_type, readonly=True,
+    type_id = fields.Many2one(comodel_name='sale.order.type', string='Type', default=_get_order_type, readonly=True,
                     states={'to_submit':[('readonly',False)]})
 
     order_line = fields.One2many('sale.order.line', 'order_id', string='Order Lines', readonly=True,copy=True)
@@ -26,7 +25,6 @@ class SaleOrder(models.Model):
     user_id = fields.Many2one('res.users', string='Salesperson', index=True, track_visibility='onchange', default=lambda self: self.env.user,readonly=True,states={'to_submit': [('readonly', False)]})
     fiscal_position_id = fields.Many2one('account.fiscal.position', oldname='fiscal_position', string='Fiscal Position',readonly=True,states={'to_submit': [('readonly', False)]})
     origin = fields.Char(string='Source Document', help="Reference of the document that generated this sales order request.",readonly=True,states={'to_submit': [('readonly', False)]})
-
 
     credit_sales_or_lc = fields.Selection([
         ('cash', 'Cash'),
@@ -55,12 +53,6 @@ class SaleOrder(models.Model):
     pi_no = fields.Many2one('proforma.invoice', string='PI Ref. No.')
     lc_no = fields.Many2one('letter.credit', string='LC Ref. No.')
 
-
-    # @api.depends('product_uom_qty')
-    # def _compute_amount_value(self):
-    #     for record in self:
-    #         sum_val = sum([s.da_qty for s in record.order_line])
-    #         record.due = record.product_uom_qty - sum_val
 
     @api.multi
     def _Da_button_show_hide(self):
@@ -138,8 +130,6 @@ class SaleOrder(models.Model):
             for lines in order.order_line:
                 cust_commission_pool = order.env['customer.commission'].search([('customer_id', '=', order.partner_id.id),('product_id', '=', lines.product_id.ids)])
                 credit_limit_pool = order.env['res.partner'].search([('id', '=', order.partner_id.id)])
-                #price_change_pool = order.env['product.sales.pricelist'].search([('product_id', '=',
-                # order.product_id.id),('currency_id', '=', order.currency_id.id)],order='approver2_date desc', limit=1)
 
                 price_change_pool = self.env['product.sale.history.line'].search(
                     [('product_id', '=', order.product_id.id),
@@ -211,7 +201,6 @@ class SaleOrder(models.Model):
     @api.multi
     def action_create_delivery_order(self):
 
-           # self.state = 'da'
             view = self.env.ref('delivery_order.delivery_order_form')
 
             return {
@@ -222,7 +211,6 @@ class SaleOrder(models.Model):
                 'view_id': [view.id],
                 'type': 'ir.actions.act_window',
                 'context': {'default_sale_order_id': self.id},
-               # 'state': 'DA'
             }
 
     @api.multi
