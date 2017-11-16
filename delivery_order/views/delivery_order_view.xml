@@ -20,7 +20,7 @@
                                 string="Validate" class="oe_highlight"
                                 groups="gbs_application_group.group_cxo,gbs_application_group.group_head_account"/>
 
-                        <button name="action_close" type="object" states="approve"
+                        <button name="action_close" type="object" states="close"
                                 string="Approve" class="oe_highlight"
                                 groups="gbs_application_group.group_cxo"/>
 
@@ -159,16 +159,11 @@
                                 <field name="total_amount" class="oe_subtotal_footer_separator" widget='monetary' options="{'currency_field': 'currency_id'}"/>
                          </group>
                         </group>
-
-
-
                     </sheet>
-
                     <div class="oe_chatter">
                         <field name="message_follower_ids" widget="mail_followers"/>
                         <field name="message_ids" widget="mail_thread"/>
                     </div>
-
                 </form>
             </field>
         </record>
@@ -180,9 +175,9 @@
             <field name="arch" type="xml">
                 <tree string="Delivery Order">
                     <field name="sale_order_id"/>
-                    <!--<field name="type_id"/>-->
                     <field name="name" string="Delivery Authorization"/>
                     <field name="state"/>
+                    <field name="approved_date"/>
                 </tree>
             </field>
         </record>

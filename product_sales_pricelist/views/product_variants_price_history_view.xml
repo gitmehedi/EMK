@@ -8,7 +8,7 @@
 			<field name="model">product.sale.history.line</field>
 			<field name="type">form</field>
 			<field name="arch" type="xml">
-				<form string="Change Products Sale Price" options="{'no_open':True,'no_create_edit': True}">
+				<form string="Change Products Sale Price" create="false" edit="false" options="{'no_open':True,'no_create_edit': True}">
 					<sheet>
 						<group>
                         <field name="category_id" invisible="1"/>
@@ -23,7 +23,7 @@
             <field name="name">Variant_wise_price_list_tree</field>
             <field name="model">product.sale.history.line</field>
             <field name="arch" type="xml">
-                <tree string="Product Sale Price History">
+                <tree string="Product Sale Price History" create="false" edit="false">
                     <field name="product_id"/>
                     <field name="product_package_mode"/>
                     <!--<field name="list_price"/>-->

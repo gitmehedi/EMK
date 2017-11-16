@@ -9,9 +9,26 @@
         </record>
 
         <menuitem id="menu_pr_commercial" parent="commercial.menu_commercial_root"
-            sequence="0" name="Purchase" />
+            sequence="0" name="Purchase Requisition" />
 
-        <menuitem id="submenu_pr_commercial" name="Approved PR" parent="menu_pr_commercial"
+        <menuitem id="submenu_pr_commercial" name="Approved PR(Local)" parent="menu_pr_commercial"
                 sequence="1" action="action_commercial_pr"/>
+
+        <menuitem id="submenu_commercial_pr_fo" name="Approved PR(Foreign)" parent="menu_pr_commercial"
+                sequence="2" action="action_commercial_pr"/>
+
+        <menuitem id="submenu_commercial_pq" name="Purchase Quotation(PQ)" parent="menu_pr_commercial"
+                sequence="3" />
+
+        <menuitem id="submenu_commercial_po" name="Purchase Order(PO)" parent="menu_pr_commercial"
+                sequence="4" />
+
+        <menuitem id="submenu_commercial_pi" name="Proforma Information(PI)" parent="menu_pr_commercial"
+                sequence="5"/>
+
+
+        <menuitem id="menu_commercial_configuration" parent="commercial.menu_commercial_root"
+            sequence="100" name="Configuration" />
+
     </data>
 </odoo>
