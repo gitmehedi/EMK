@@ -235,6 +235,41 @@ class StockTransferRequest(models.Model):
     def get_current_date(self):
         return datetime.datetime.today()
 
+    @api.one
+    def action_send_loss_inventory(self):
+        if self.state != 'reject':
+            raise ValidationError(_('Please transfer product in validate state.'))
+
+        move_obj = self.env['stock.move']
+        src_loc = self.get_location(self.transfer_shop_id.id)
+        dest_loc = self.env['stock.location'].search([('name', 'ilike', 'Inventory loss')])
+
+        picking = self.get_picking(source_loc=src_loc, dest_loc=dest_loc.id)
+
+        for val in self.product_line_ids:
+            if val:
+                move = {}
+                move['picking_id'] = picking.id
+                move['product_id'] = val.product_id.id
+                move['product_uom'] = val.product_id.uom_id.id
+                move['product_uos_qty'] = val.quantity
+                move['picking_id'] = picking.id
+                move['product_uom_qty'] = val.quantity
+                move['name'] = val.product_id.name
+                move['price_unit'] = val.product_id.price
+                move['invoice_state'] = 'invoiced'
+                move['date_expected'] = '{0}'.format(datetime.date.today())
+                move['location_id'] = src_loc
+                move['location_dest_id'] = dest_loc.id
+                move['procure_method'] = "make_to_stock"
+                move_done = move_obj.create(move)
+                move_done.action_done()
+
+        self.state = 'receive'
+        self.receive_date = self.get_current_date()
+        self.receive_user_id = self.get_login_user()
+        self.is_receive = True
+
 
 class InheriteStockPicking(models.Model):
     _inherit = 'stock.picking'

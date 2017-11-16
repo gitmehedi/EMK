@@ -9,8 +9,8 @@
                     <header>
                         <button name="action_receive" type="object" states="transfer"
                                 string="Receive" class="oe_highlight"/>
-                        <button name="action_reject" type="object" states="transfer"
-                                string="Reject"/>
+                        <button name="action_reject" type="object" states="receive"
+                                string="Send To Loss Inventory"/>
 
                         <field name="state" widget="statusbar"/>
                     </header>
@@ -107,6 +107,22 @@
             <field name="view_mode">form</field>
             <field name="view_id" ref="stock_transfer_receive_form_view"/>
             <field name="act_window_id" ref="stock_transfer_receive_action"/>
+        </record>
+
+        <record id="action_send_to_loss_inventory" model="ir.actions.server">
+            <field name="name">Send To Loss Inventory</field>
+            <field name="model_id" ref="model_stock_transfer_request"/>
+            <field name="state">code</field>
+            <field name="condition">True</field>
+            <field name="code">if object: self.browse(cr,uid,context.get('active_ids', [])).action_send_loss_inventory()
+            </field>
+        </record>
+        <record id="action_send_to_loss" model="ir.values">
+            <field name="name">name</field>
+            <field name="model">stock.transfer.request</field>
+            <field name="key">action</field>
+            <field name="key2">client_action_multi</field>
+            <field name="value" eval="'ir.actions.server,%d'%action_send_to_loss_inventory"/>
         </record>
 
         <menuitem id="stock_transfer_receive_menu" name="Receive"
