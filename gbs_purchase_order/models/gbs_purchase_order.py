@@ -127,10 +127,10 @@ class PurchaseOrder(models.Model):
                 'target': 'new',
             }
         for po in self:
-            if po.requisition_id.type_id.exclusive == 'exclusive':
-                others_po = po.requisition_id.mapped('purchase_ids').filtered(lambda r: r.id != po.id)
-                others_po.button_cancel()
-                po.requisition_id.action_done()
+            # if po.requisition_id.type_id.exclusive == 'exclusive':
+            others_po = po.requisition_id.mapped('purchase_ids').filtered(lambda r: r.id != po.id)
+            others_po.button_cancel()
+            po.requisition_id.action_done()
 
             for element in po.order_line:
                 if element.product_id == po.requisition_id.procurement_id.product_id:
@@ -144,13 +144,17 @@ class PurchaseOrder(models.Model):
     @api.multi
     def button_cancel(self):
         res = super(PurchaseOrder, self).button_cancel()
-        self.check_po_action_button = False
+        for i in self:
+            i.check_po_action_button = False
         return res
 
     @api.multi
     def new_revision(self):
         res = super(PurchaseOrder, self).new_revision()
-        self.check_po_action_button = False
+        if self.requisition_id.state == 'done':
+            self.check_po_action_button = True
+        else:
+            self.check_po_action_button = False
         return res
 
     ####################################################

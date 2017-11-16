@@ -1,0 +1,2 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_gbs_purchase_cnf_quotation_gbs_purchase_cnf_quotation,gbs_purchase_cnf_quotation.gbs_purchase_cnf_quotation,model_gbs_purchase_cnf_quotation_gbs_purchase_cnf_quotation,,1,0,0,0
