@@ -10,5 +10,18 @@
                  </xpath>
             </field>
         </record>
+
+        <record model="ir.ui.view" id="product_view_barcode">
+            <field name="name">product.price.form</field>
+            <field name="model">product.product</field>
+            <field name="inherit_id" ref="product.product_normal_form_view"/>
+            <field name="arch" type="xml">
+                 <xpath expr="//field[@name='lst_price']" position="replace">
+                    <field name="list_price">
+                        <attribute name="name">lst_price</attribute>
+                    </field>
+                 </xpath>
+            </field>
+        </record>
     </data>
 </odoo>
