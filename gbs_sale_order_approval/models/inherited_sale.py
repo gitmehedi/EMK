@@ -64,7 +64,7 @@ class SaleOrder(models.Model):
                     sale_orders.da_btn_show_hide = False
                     break;
 
-    da_btn_show_hide = fields.Boolean(string="Due", compute="_Da_button_show_hide")
+    da_btn_show_hide = fields.Boolean(string="Is DA btn visible", compute="_Da_button_show_hide", store=True)
 
     @api.multi
     def amount_to_word(self, number):
@@ -135,8 +135,7 @@ class SaleOrder(models.Model):
                     [('product_id', '=', order.product_id.id),
                      ('currency_id', '=', order.currency_id.id),
                      ('product_package_mode', '=', order.pack_type.id),
-                     ('uom_id','=',lines.product_uom.id)
-                     ])
+                     ('uom_id','=',lines.product_uom.id)])
 
 
                 if (order.credit_sales_or_lc == 'cash'):
@@ -178,18 +177,14 @@ class SaleOrder(models.Model):
     def second_approval_business_logics(self, cust_commission_pool, lines, price_change_pool):
         for coms in cust_commission_pool:
             if price_change_pool.currency_id.id == lines.currency_id.id:
-                if (lines.commission_rate != coms.commission_rate
-                    or lines.price_unit != price_change_pool.new_price):
-                    return True
-                    break;
-                else:
-                    return False
-            else:
-                if (lines.commission_rate != coms.commission_rate):
-                    return True
-                    break;
-                else:
-                    return False
+                for hsitry in price_change_pool:
+                    if (lines.commission_rate != coms.commission_rate
+                        or lines.price_unit != hsitry.new_price):
+                        return True
+                        break;
+                    else:
+                        return False
+
 
     def products_price_sum(self):
         product_line_subtotal = 0

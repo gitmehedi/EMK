@@ -20,8 +20,6 @@ class ProductSalePriceHistiryLine(models.Model):
 
     @api.model
     def pull_automation(self):
-        print "-------------------Updating Product variants price automatically rabbi--------------------------"
-
         current_date = time.strftime("%m/%d/%Y")
         vals = {}
 
@@ -33,7 +31,6 @@ class ProductSalePriceHistiryLine(models.Model):
                                                                                ('currency_id', '=', price_pool.currency_id.id),
                                                                                ('product_package_mode', '=', price_pool.product_package_mode.id),
                                                                                ('uom_id', '=', price_pool.uom_id.id)])
-
 
 
             if not price_history_pool:

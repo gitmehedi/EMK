@@ -1,31 +1,39 @@
 from odoo import api, fields, models
 from odoo.exceptions import UserError, ValidationError, Warning
-import time,datetime
+import time, datetime
 
 
 class DeliveryOrder(models.Model):
     _name = 'delivery.order'
     _description = 'Delivery Order'
     _inherit = ['mail.thread']
-    _rec_name='name'
+    _rec_name = 'name'
     _order = "approved_date desc,name desc"
-
 
     name = fields.Char(string='Name', index=True, readonly=True)
 
     so_date = fields.Datetime('Order Date', readonly=True, states={'draft': [('readonly', False)]})
     sequence_id = fields.Char('Sequence', readonly=True)
-    deli_address = fields.Char('Delivery Address', readonly=True,states={'draft': [('readonly', False)]})
+    deli_address = fields.Char('Delivery Address', readonly=True, states={'draft': [('readonly', False)]})
 
-    parent_id = fields.Many2one('res.partner', 'Customer', ondelete='cascade', readonly=True,related='sale_order_id.partner_id')
-    payment_term_id = fields.Many2one('account.payment.term', string='Payment Terms', readonly=True,related='sale_order_id.payment_term_id')
-    warehouse_id = fields.Many2one('stock.warehouse', string='Warehouse', readonly=True, states={'draft': [('readonly', False)]})
-    line_ids = fields.One2many('delivery.order.line', 'parent_id', string="Products", readonly=True,states={'draft': [('readonly', False)]})
-    cash_ids = fields.One2many('cash.payment.line', 'pay_cash_id', string="Cash", readonly=True, invisible =True,states={'draft': [('readonly', False)]})
-    cheque_ids=  fields.One2many('cheque.payment.line', 'pay_cash_id', string="Cheque", readonly=True,states={'draft': [('readonly', False)]})
-    tt_ids = fields.One2many('tt.payment.line', 'pay_tt_id', string="T.T", readonly=True,states={'draft': [('readonly', False)]})
-    lc_ids = fields.One2many('lc.payment.line', 'pay_lc_id', string="L/C", readonly=True,states={'draft': [('readonly', False)]})
-    requested_by = fields.Many2one('res.users', string='Requested By', readonly=True, default=lambda self: self.env.user)
+    parent_id = fields.Many2one('res.partner', 'Customer', ondelete='cascade', readonly=True,
+                                related='sale_order_id.partner_id')
+    payment_term_id = fields.Many2one('account.payment.term', string='Payment Terms', readonly=True,
+                                      related='sale_order_id.payment_term_id')
+    warehouse_id = fields.Many2one('stock.warehouse', string='Warehouse', readonly=True,
+                                   states={'draft': [('readonly', False)]})
+    line_ids = fields.One2many('delivery.order.line', 'parent_id', string="Products", readonly=True,
+                               states={'draft': [('readonly', False)]})
+    cash_ids = fields.One2many('cash.payment.line', 'pay_cash_id', string="Cash", readonly=True, invisible=True,
+                               states={'draft': [('readonly', False)]})
+    cheque_ids = fields.One2many('cheque.payment.line', 'pay_cash_id', string="Cheque", readonly=True,
+                                 states={'draft': [('readonly', False)]})
+    tt_ids = fields.One2many('tt.payment.line', 'pay_tt_id', string="T.T", readonly=True,
+                             states={'draft': [('readonly', False)]})
+    lc_ids = fields.One2many('lc.payment.line', 'pay_lc_id', string="L/C", readonly=True,
+                             states={'draft': [('readonly', False)]})
+    requested_by = fields.Many2one('res.users', string='Requested By', readonly=True,
+                                   default=lambda self: self.env.user)
     approver1_id = fields.Many2one('res.users', string="First Approval", readonly=True)
     approver2_id = fields.Many2one('res.users', string="Final Approval", readonly=True)
     requested_date = fields.Date(string="Requested Date", default=datetime.date.today(), readonly=True)
@@ -39,7 +47,7 @@ class DeliveryOrder(models.Model):
         ('cash', 'Cash'),
         ('credit_sales', 'Credit'),
         ('lc_sales', 'L/C'),
-    ], string='Sales Type', readonly=True,states={'draft': [('readonly', False)]})
+    ], string='Sales Type', readonly=True, states={'draft': [('readonly', False)]})
 
     state = fields.Selection([
         ('draft', "Submit"),
@@ -48,21 +56,24 @@ class DeliveryOrder(models.Model):
         ('close', "Approved")
     ], default='draft')
 
-    company_id = fields.Many2one('res.company', string='Company', readonly=True, default=lambda self: self.env.user.company_id)
+    company_id = fields.Many2one('res.company', string='Company', readonly=True,
+                                 default=lambda self: self.env.user.company_id)
 
     """ PI and LC """
-    pi_no = fields.Many2one('proforma.invoice', string='PI Ref. No.', readonly=True, states={'draft': [('readonly', False)]})
-    lc_no = fields.Many2one('letter.credit',string='LC Ref. No.', readonly=True, states={'draft': [('readonly', False)]})
+    pi_no = fields.Many2one('proforma.invoice', string='PI Ref. No.', readonly=True,
+                            states={'draft': [('readonly', False)]})
+    lc_no = fields.Many2one('letter.credit', string='LC Ref. No.', readonly=True,
+                            states={'draft': [('readonly', False)]})
 
     """ Payment information"""
     amount_untaxed = fields.Float(string='Untaxed Amount', readonly=True)
-    tax_value = fields.Float(string='Taxes',readonly=True)
-    total_amount = fields.Float(string='Total',readonly=True)
+    tax_value = fields.Float(string='Taxes', readonly=True)
+    total_amount = fields.Float(string='Total', readonly=True)
 
     sale_order_id = fields.Many2one('sale.order',
                                     string='Sale Order',
-                                    required=True,readonly=True,
-                                    domain=[('da_btn_show_hide','=',True)],
+                                    required=True, readonly=True,
+                                    domain=[('da_btn_show_hide', '=', False)],
                                     states={'draft': [('readonly', False)]})
 
     """ All functions """
@@ -72,7 +83,6 @@ class DeliveryOrder(models.Model):
         seq = self.env['ir.sequence'].next_by_code('delivery.order') or '/'
         vals['name'] = seq
         return super(DeliveryOrder, self).create(vals)
-
 
     @api.multi
     def unlink(self):
@@ -85,15 +95,16 @@ class DeliveryOrder(models.Model):
     @api.one
     def action_draft(self):
         self.state = 'close'
-        self.line_ids.write({'state':'close'})
+        self.line_ids.write({'state': 'close'})
 
     """ Action for Validate Button"""
+
     @api.one
     def action_approve(self):
         self.state = 'validate'
 
-
     """ Action for Approve Button"""
+
     @api.one
     def action_close(self):
 
@@ -107,9 +118,8 @@ class DeliveryOrder(models.Model):
         self.update_sale_order_da_qty()
         return self.write({'state': 'close', 'confirmed_date': time.strftime('%Y-%m-%d %H:%M:%S')})
 
-
-
     """ Action for Confirm button"""
+
     @api.one
     def action_validate(self):
         if self.so_type == 'cash':
@@ -120,12 +130,13 @@ class DeliveryOrder(models.Model):
         elif self.so_type == 'lc_sales':
             return self.lc_sales_business_logics()
 
-
-
     def lc_sales_business_logics(self):
 
-        # If LC and PI ref is present, go to the Final Approval
-        # Else  ## go to Second level approval
+        #######################################################
+        #  If LC and PI ref is present, go to the Final Approval
+        # Else go to Second level approval
+        #######################################################
+
         if self.lc_no and self.pi_no:
             if self.lc_no.lc_value == self.products_price_sum() \
                     or self.lc_no.lc_value > self.products_price_sum():
@@ -134,26 +145,21 @@ class DeliveryOrder(models.Model):
             else:
                 return self.write({'state': 'approve'})
 
+        #########################################################
         # 1. Has PI & no LC then go to second level approval
         # 2. Check 100MT checking for this product, company wise
+        ##########################################################
         if self.pi_no and not self.lc_no:
             res = {}
-            list = dict.fromkeys(set([val.product_id.product_tmpl_id.id for val in self.line_ids]),0)
-
+            list = dict.fromkeys(set([val.product_id.product_tmpl_id.id for val in self.line_ids]), 0)
 
             for line in self.line_ids:
                 list[line.product_id.product_tmpl_id.id] = list[line.product_id.product_tmpl_id.id] + line.quantity
-                product_temp_pool = self.env['product.template'].search([('id', '=',line.product_id.id)])
-
 
             for rec in list:
-
-
-                ordered_qty_pool = self.env['ordered.qty'].search([('lc_no','=',False),
-                                                                   ('company_id','=',self.company_id.id),
-                                                                   ('product_id','=', rec)])
-
-                product_temp_pool = self.env['product.template'].search([('id', '=',rec)])
+                ordered_qty_pool = self.env['ordered.qty'].search([('lc_no', '=', False),
+                                                                   ('company_id', '=', self.company_id.id),
+                                                                   ('product_id', '=', rec)])
 
                 res['product_id'] = rec
                 res['ordered_qty'] = list[rec]
@@ -164,10 +170,9 @@ class DeliveryOrder(models.Model):
                     self.env['ordered.qty'].create(res)
 
                     if list[rec] > 100:
-                        self.write({'state': 'approve'}) # Second Approval
+                        self.write({'state': 'approve'})  # Second Approval
                     else:
-                        self.write({'state': 'close'}) # Final Approval
-
+                        self.write({'state': 'close'})  # Final Approval
                 elif ordered_qty_pool and not ordered_qty_pool.lc_no:
                     for order in ordered_qty_pool:
                         if list[rec] > order.available_qty:
@@ -180,14 +185,29 @@ class DeliveryOrder(models.Model):
                             order.write(res)
 
 
-                    # if list[rec] > 100:
-                    #     # self.write({'state': 'approve'}) # second level
-                    #     warningstr = warningstr + 'Product {0} has order quantity is {1} which is more than 100\n'.format(
-                    #         pro_tmpl.name, list[rec])
-                    #
-                    # print warningstr
-                    #raise Warning(warningstr)
+                            # if list[rec] > 100:
+                            #     # self.write({'state': 'approve'}) # second level
+                            #     warningstr = warningstr + 'Product {0} has order quantity is {1} which is more than 100\n'.format(
+                            #         pro_tmpl.name, list[rec])
+                            #
+                            # print warningstr
+                            # raise Warning(warningstr)
 
+    @api.one
+    def action_wizard_custom_user_msg_lc(self):
+
+        res1 = self.env.ref('delivery_order.view_max_order_qty_wizard')
+        return {
+            'name': ('Custom Message to User'),
+            'view_type': 'form',
+            'view_mode': 'form',
+            'view_id': res1 and res1.id or False,
+            'res_model': 'max.order.wizard',
+            'type': 'ir.actions.act_window',
+            'nodestroy': True,
+            'target': 'new',
+
+        }
 
     def products_price_sum(self):
         product_line_subtotal = 0
@@ -196,12 +216,11 @@ class DeliveryOrder(models.Model):
 
         return product_line_subtotal
 
-
-    #@todo Need to refactor below method -- rabbi
+    # @todo Need to refactor below method -- rabbi
     @api.one
     def check_cash_amount_with_subtotal(self):
         account_payment_pool = self.env['account.payment'].search(
-                [('is_this_payment_checked', '=', False), ('sale_order_id', '=', self.sale_order_id.id),
+            [('is_this_payment_checked', '=', False), ('sale_order_id', '=', self.sale_order_id.id),
              ('partner_id', '=', self.parent_id.id)])
 
         if not self.line_ids:
@@ -219,14 +238,12 @@ class DeliveryOrder(models.Model):
             account_payment_pool.write({'is_this_payment_checked': True})
             return self.write({'state': 'approve'})  # Only Second level approval
 
-
         if cash_line_total_amount >= product_line_subtotal:
             account_payment_pool.write({'is_this_payment_checked': True})
             return self.write({'state': 'close'})  # directly go to final approval level
         else:
             account_payment_pool.write({'is_this_payment_checked': True})
             return self.write({'state': 'approve'})  # Only Second level approval
-
 
     def create_delivery_order(self):
         for order in self.sale_order_id:
@@ -246,15 +263,17 @@ class DeliveryOrder(models.Model):
         for cash_line in self.cash_ids:
 
             if cash_line.account_payment_id.sale_order_id.id != self.sale_order_id.id:
-                raise UserError("%s Payment Information is of a different Sale Order!" % (cash_line.account_payment_id.display_name))
+                raise UserError("%s Payment Information is of a different Sale Order!" % (
+                    cash_line.account_payment_id.display_name))
                 break;
 
             if cash_line.account_payment_id.is_this_payment_checked == True:
-                raise UserError("Payment Information entered is already in use: %s" % (cash_line.account_payment_id.display_name))
+                raise UserError(
+                    "Payment Information entered is already in use: %s" % (cash_line.account_payment_id.display_name))
                 break;
 
-
     def update_sale_order_da_qty(self):
+        #update_da_qty = None
         for da_line in self.line_ids:
             for sale_line in self.sale_order_id.order_line:
                 # if self.quantity > sale_line.da_qty:
@@ -265,8 +284,6 @@ class DeliveryOrder(models.Model):
 
                 # if update_da_qty == 0.00:
                 #     break;
-
-
 
     @api.onchange('quantity')
     def onchange_quantity(self):
@@ -298,11 +315,10 @@ class DeliveryOrder(models.Model):
                                         'bank': payments.deposited_bank,
                                         'branch': payments.bank_branch,
                                         'payment_date': payments.payment_date,
-                                        'number':payments.cheque_no,
+                                        'number': payments.cheque_no,
                                         }))
 
                 self.cheque_ids = vals
-
 
     @api.one
     def set_products_info_automatically(self):
@@ -344,13 +360,12 @@ class DeliveryOrder(models.Model):
                     if payments.sale_order_id and not payments.is_this_payment_checked:
                         vals.append((0, 0, {'account_payment_id': payments.id,
                                             'amount': payments.amount,
-                                            'dep_bank':payments.deposited_bank,
-                                            'branch':payments.bank_branch,
+                                            'dep_bank': payments.deposited_bank,
+                                            'branch': payments.bank_branch,
                                             'payment_date': payments.payment_date,
                                             }))
 
                         self.cash_ids = vals
-
 
     @api.one
     def action_process_unattached_payments(self):
@@ -375,15 +390,16 @@ class DeliveryOrder(models.Model):
             self.cash_ids = vals
 
 
-
 class OrderedQty(models.Model):
-    _name='ordered.qty'
-    _description='Store Product wise ordered qty to track max qty value'
-   # _order = "delivery_auth_no,desc"
+    _name = 'ordered.qty'
+    _description = 'Store Product wise ordered qty to track max qty value'
+    # _order = "delivery_auth_no,desc"
 
     product_id = fields.Many2one('product.product', string='Product')
     ordered_qty = fields.Float(string='Ordered Qty')
-    available_qty = fields.Float(string='Allowed Qty', default=0.00) ## available_qty = max_qty - ordered_qty
+    available_qty = fields.Float(string='Allowed Qty', default=0.00)  ## available_qty = max_qty - ordered_qty
     lc_no = fields.Many2one('letter.credit', string='LC No')
     delivery_auth_no = fields.Many2one('delivery.order', string='Delivery Authrozation ref')
-    company_id = fields.Many2one('res.company','Company',default=lambda self: self.env['res.company']._company_default_get('product_sales_pricelist'), required=True)
+    company_id = fields.Many2one('res.company', 'Company',
+                                 default=lambda self: self.env['res.company']._company_default_get(
+                                     'product_sales_pricelist'), required=True)

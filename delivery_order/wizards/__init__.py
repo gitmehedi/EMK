@@ -1,2 +1,2 @@
 import letter_of_credits_wizard
-import max_order_qty_info_wizard
+#import max_order_qty_info_wizard
