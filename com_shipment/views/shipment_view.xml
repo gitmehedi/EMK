@@ -95,7 +95,7 @@
 			<field name="inherit_id" ref="letter_of_credit.view_local_credit_form"/>
 			<field name="arch" type="xml">
 				<data>
-					<xpath expr="//page[6]" position="after">
+					<xpath expr="//page[5]" position="after">
 						<page string="Shipment">
                             <field name="shipment_ids">
                                 <tree create="false">

@@ -5,10 +5,12 @@ class PurchaseRequisitionTypeWizard(models.TransientModel):
     _name = 'purchase.order.type.wizard'
 
     region_type = fields.Selection([('local', 'Local'), ('foreign', 'Foreign')],
-                                   string="LC Region Type",required=True)
+                                   string="LC Region Type",required=True,
+                                   default=lambda self: self.env.context.get('region_type'))
 
     purchase_by = fields.Selection([('cash', 'Cash'), ('credit', 'Credit'), ('lc', 'LC'), ('tt', 'TT')],
-                                   string="Purchase By",required=True)
+                                   string="Purchase By",required=True,
+                                   default=lambda self: self.env.context.get('purchase_by'))
 
     @api.multi
     def save_type(self):
