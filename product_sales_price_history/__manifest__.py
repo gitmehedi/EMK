@@ -9,7 +9,7 @@
     'depends': ['product'],
 
     'data': [
-
+        "views/product_sales_price_history_view.xml",
     ],
 
     'installable': True,
