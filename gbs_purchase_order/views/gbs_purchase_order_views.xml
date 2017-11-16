@@ -44,8 +44,8 @@
                         <field name="check_po_action_button" invisible="1"/>
                     </xpath>
                     <xpath expr="//field[@name='currency_id']" position="after">
-                        <field name="region_type" attrs="{'readonly': [('state','!=','draft')],'invisible': [('state','!=','purchase')]}"/>
-                        <field name="purchase_by" attrs="{'readonly': [('state','!=','draft')],'invisible': [('state','!=','purchase')]}"/>
+                        <field name="region_type" attrs="{'readonly': [('state','=','purchase')],'invisible': [('state','!=','purchase')]}"/>
+                        <field name="purchase_by" attrs="{'readonly': [('state','=','purchase')],'invisible': [('state','!=','purchase')]}"/>
                     </xpath>
                     <xpath expr="//field[@name='partner_id']" position="attributes">
                         <attribute name="string">Supplier</attribute>

@@ -63,6 +63,7 @@ class PurchaseRequisition(models.Model):
     @api.onchange('indent_ids')
     def indent_product_line(self):
         vals = []
+        self.required_date = self.indent_ids.required_date
         for indent_id in self.indent_ids:
             indent_product_line_obj = self.env['indent.product.lines'].search([('indent_id','=',indent_id.id)])
             for indent_product_line in indent_product_line_obj:

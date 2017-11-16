@@ -6,10 +6,10 @@
     'author': 'Genweb2 Limited',
     'website': 'www.genweb2.com',
     'summary': """ This is the base module for managing Sales and pricelists. """,
-    'depends': ['base','decimal_precision'],
+    'depends': ['product'],
 
     'data': [
-
+        "views/product_sales_price_history_view.xml",
     ],
 
     'installable': True,
