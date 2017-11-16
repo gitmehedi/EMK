@@ -8,7 +8,7 @@ class DeliveryOrder(models.Model):
     _description = 'Delivery Order'
     _inherit = ['mail.thread']
     _rec_name='name'
-    _order = "approved_date desc"
+    _order = "approved_date desc,name desc"
 
 
     name = fields.Char(string='Name', index=True, readonly=True)
@@ -29,12 +29,12 @@ class DeliveryOrder(models.Model):
     approver1_id = fields.Many2one('res.users', string="First Approval", readonly=True)
     approver2_id = fields.Many2one('res.users', string="Final Approval", readonly=True)
     requested_date = fields.Date(string="Requested Date", default=datetime.date.today(), readonly=True)
-    approved_date = fields.Date(string='Final Approval Date',
+    approved_date = fields.Date(string='Approval Date',
                                 states={'draft': [('invisible', True)],
                                         'validate': [('invisible', True)],
                                         'close': [('invisible', False), ('readonly', True)],
                                         'approve': [('invisible', False), ('readonly', True)]})
-    confirmed_date = fields.Date(string="First Approval Date", _defaults=lambda *a: time.strftime('%Y-%m-%d'), readonly=True)
+    confirmed_date = fields.Date(string="Approval Date", _defaults=lambda *a: time.strftime('%Y-%m-%d'), readonly=True)
     so_type = fields.Selection([
         ('cash', 'Cash'),
         ('credit_sales', 'Credit'),
@@ -388,6 +388,7 @@ class DeliveryOrder(models.Model):
 class OrderedQty(models.Model):
     _name='ordered.qty'
     _description='Store Product wise ordered qty to track max qty value'
+    _order = "delivery_auth_no,desc"
 
     product_id = fields.Many2one('product.product', string='Product')
     ordered_qty = fields.Float(string='Ordered Qty')
