@@ -372,7 +372,7 @@ class DeliveryOrder(models.Model):
 class OrderedQty(models.Model):
     _name='ordered.qty'
     _description='Store Product wise ordered qty to track max qty value'
-    _order = "delivery_auth_no,desc"
+   # _order = "delivery_auth_no,desc"
 
     product_id = fields.Many2one('product.product', string='Product')
     ordered_qty = fields.Float(string='Ordered Qty')
