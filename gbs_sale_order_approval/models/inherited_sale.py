@@ -135,7 +135,7 @@ class SaleOrder(models.Model):
                     [('product_id', '=', order.product_id.id),
                      ('currency_id', '=', order.currency_id.id),
                      ('product_package_mode', '=', order.pack_type.id),
-                     ('uom_id','=',order.order_line.product_uom.id)
+                     ('uom_id','=',lines.product_uom.id)
                      ])
 
 

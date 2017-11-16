@@ -143,11 +143,18 @@ class DeliveryOrder(models.Model):
 
             for line in self.line_ids:
                 list[line.product_id.product_tmpl_id.id] = list[line.product_id.product_tmpl_id.id] + line.quantity
+                product_temp_pool = self.env['product.template'].search([('id', '=',line.product_id.id)])
+
 
             for rec in list:
 
+
                 ordered_qty_pool = self.env['ordered.qty'].search([('lc_no','=',False),
+                                                                   ('company_id','=',self.company_id.id),
                                                                    ('product_id','=', rec)])
+
+                product_temp_pool = self.env['product.template'].search([('id', '=',rec)])
+
                 res['product_id'] = rec
                 res['ordered_qty'] = list[rec]
                 res['delivery_auth_no'] = self.id
@@ -379,3 +386,4 @@ class OrderedQty(models.Model):
     available_qty = fields.Float(string='Allowed Qty', default=0.00) ## available_qty = max_qty - ordered_qty
     lc_no = fields.Many2one('letter.credit', string='LC No')
     delivery_auth_no = fields.Many2one('delivery.order', string='Delivery Authrozation ref')
+    company_id = fields.Many2one('res.company','Company',default=lambda self: self.env['res.company']._company_default_get('product_sales_pricelist'), required=True)
