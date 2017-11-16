@@ -76,32 +76,25 @@
                                 </group>
                             </group>
                             <notebook colspan="4">
-                                <page string="Port Info">
+                                <page string="Additional Info">
                                     <group>
-                                        <group>
+                                        <group string="Port Info">
                                             <field name="landing_port"/>
                                             <field name="discharge_port"/>
                                             <field name="cnf_agent"/>
                                         </group>
-                                    </group>
-                                </page>
-                                <page string="Lien Bank">
-                                    <group>
-                                        <group>
+                                        <group string="Lien Bank">
                                             <field name="require_lien"/>
                                             <field name="lien_bank" attrs="{'invisible': [('require_lien','=',False)]}"/>
                                             <field name="lien_date" attrs="{'invisible': [('require_lien','=',False)]}"/>
                                         </group>
-                                    </group>
-                                </page>
-                                <page string="Insurance">
-                                    <group>
-                                        <group>
+                                        <group string="Insurance">
                                             <field name="insurance_company_name"/>
                                             <field name="insurance_number"/>
                                             <field name="insurance_bill"/>
                                         </group>
                                     </group>
+
                                 </page>
                                 <page string="Terms &amp; Condition">
                                     <field name="terms_condition" widget="html" options="{'style-inline': true}"/>
