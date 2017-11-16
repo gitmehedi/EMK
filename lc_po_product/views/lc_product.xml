@@ -11,13 +11,14 @@
 					<xpath expr="//page[1]" position="after">
 						<page string="Products">
                             <field name="product_lines">
-                                 <tree string="Purchase Order Lines" create="false">
-                                    <field name="product_id"/>
-                                    <field name="name"/>
-                                    <field name="date_planned"/>
-                                    <field name="product_qty"/>
-                                    <field name="product_uom"/>
-                                    <field name="price_unit"/>
+                                 <tree string="Purchase Order Lines" create="false" delete="false">
+                                    <field name="product_id" readonly='1'/>
+                                    <field name="name" readonly='1'/>
+                                    <field name="date_planned" readonly='1'/>
+                                    <field name="product_qty" readonly='1'/>
+                                    <field name="product_uom" readonly='1'/>
+                                     <field name="product_received_qty" readonly='1'/>
+                                    <field name="price_unit" readonly='1'/>
 
                                 </tree>
 

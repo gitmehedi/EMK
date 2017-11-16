@@ -11,13 +11,12 @@ class LCProduct(models.Model):
     product_id = fields.Many2one('product.product', string='Product', domain=[('purchase_ok', '=', True)],
                                  change_default=True, required=True)
 
-    product_qty = fields.Float(string='Quantity', required=True)
-    price_unit = fields.Float(string='Unit Price', required=True)
-    currency_id = fields.Many2one('res.currency', 'Currency', readonly=True)
-    taxes_id = fields.Many2many('account.tax', string='Taxes',
-                                domain=['|', ('active', '=', False), ('active', '=', True)])
-    date_planned = fields.Datetime(string='Scheduled Date', required=True, index=True)
-    product_uom = fields.Many2one('product.uom', string='Product Unit of Measure', required=True)
+    product_qty = fields.Float(string='Quantity')
+    product_received_qty = fields.Float(string='Received Quantity')
+    price_unit = fields.Float(string='Unit Price')
+    currency_id = fields.Many2one('res.currency', 'Currency')
+    date_planned = fields.Datetime(string='Scheduled Date', index=True)
+    product_uom = fields.Many2one('product.uom', string='Product Unit of Measure')
 
     lc_id = fields.Many2one('letter.credit', string='LC')
 
@@ -38,7 +37,6 @@ class LCPO(models.Model):
                                     'product_qty': obj.product_qty,
                                     'price_unit': obj.price_unit,
                                     'currency_id': obj.currency_id,
-                                    'taxes_id': obj.taxes_id,
                                     'date_planned': obj.date_planned,
                                     'product_uom':obj.product_uom
                                     }))
