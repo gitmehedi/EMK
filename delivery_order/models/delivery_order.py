@@ -84,17 +84,18 @@ class DeliveryOrder(models.Model):
 
     @api.one
     def action_draft(self):
-        self.state = 'draft'
-        self.line_ids.write({'state':'draft'})
+        self.state = 'close'
+        self.line_ids.write({'state':'close'})
 
-    @api.multi
+    @api.one
     def action_approve(self):
         if self.so_type == 'cash':
-            self.payment_information_check()
+            #self.payment_information_check()
 
             #check if payment is same as the subtotal amount
             #self.check_cash_amount_with_subtotal()
-            return self.create_delivery_order()
+            self.create_delivery_order()
+            self.state = 'close'
 
         elif self.so_type == 'lc_sales':
             return self.lc_sales_business_logics()
@@ -197,15 +198,17 @@ class DeliveryOrder(models.Model):
             cash_line_total_amount = cash_line_total_amount + do_cash_line.amount
 
         if not cash_line_total_amount or cash_line_total_amount == 0:
-            account_payment_pool.write({'is_this_payment_checked': True})
+            #account_payment_pool.write({'is_this_payment_checked': True})
             return self.write({'state': 'approve'})  # Only Second level approval
 
+
         if cash_line_total_amount >= product_line_subtotal:
-            account_payment_pool.write({'is_this_payment_checked': True})
+            #account_payment_pool.write({'is_this_payment_checked': True})
             return self.write({'state': 'close'})  # directly go to final approval level
         else:
-            account_payment_pool.write({'is_this_payment_checked': True})
+            #account_payment_pool.write({'is_this_payment_checked': True})
             return self.write({'state': 'approve'})  # Only Second level approval
+
 
 
     @api.one
@@ -239,10 +242,11 @@ class DeliveryOrder(models.Model):
     def action_validate(self):
         self.state = 'validate'
         if self.so_type == 'cash':
-            self.check_cash_amount_with_subtotal()
+            self.payment_information_check()
+            cash_check = self.check_cash_amount_with_subtotal()
+            return cash_check
 
-
-        self.line_ids.write({'state':'validate'})
+        return self.line_ids.write({'state':'validate'})
 
 
     @api.one

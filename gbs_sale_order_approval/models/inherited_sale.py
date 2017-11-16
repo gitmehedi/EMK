@@ -137,7 +137,16 @@ class SaleOrder(models.Model):
             for lines in order.order_line:
                 cust_commission_pool = order.env['customer.commission'].search([('customer_id', '=', order.partner_id.id),('product_id', '=', lines.product_id.ids)])
                 credit_limit_pool = order.env['res.partner'].search([('id', '=', order.partner_id.id)])
-                price_change_pool = order.env['product.sales.pricelist'].search([('product_id', '=', order.product_id.id),('currency_id', '=', order.currency_id.id)],order='approver2_date desc', limit=1)
+                #price_change_pool = order.env['product.sales.pricelist'].search([('product_id', '=',
+                # order.product_id.id),('currency_id', '=', order.currency_id.id)],order='approver2_date desc', limit=1)
+
+                price_change_pool = self.env['product.sale.history.line'].search(
+                    [('product_id', '=', order.product_id.id),
+                     ('currency_id', '=', order.currency_id.id),
+                     ('product_package_mode', '=', order.pack_type.id),
+                     ('uom_id','=',order.order_line.product_uom.id)
+                     ])
+
 
                 if (order.credit_sales_or_lc == 'cash'):
                     is_double_validation = order.second_approval_business_logics(cust_commission_pool,lines, price_change_pool)
