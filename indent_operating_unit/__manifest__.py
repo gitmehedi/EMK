@@ -1,5 +1,5 @@
 {
-    'name': 'Indent Oparating Unit',
+    'name': 'Indent Operating Unit',
     'version': '1',
     'author': 'Genweb2 Limited',
     'category': 'Oparating Unit',
