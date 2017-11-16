@@ -64,12 +64,13 @@ class SaleOrder(models.Model):
 
     @api.multi
     def _Da_button_show_hide(self):
-        for sale_line in self.order_line:
-            if sale_line.da_qty == 0.00:
-                self.da_btn_show_hide = True
-            else:
-                self.da_btn_show_hide = False
-                break;
+        for sale_orders in self:
+            for sale_line in sale_orders.order_line:
+                if sale_line.da_qty == 0.00:
+                    sale_orders.da_btn_show_hide = True
+                else:
+                    sale_orders.da_btn_show_hide = False
+                    break;
 
     da_btn_show_hide = fields.Boolean(string="Due", compute="_Da_button_show_hide")
 
