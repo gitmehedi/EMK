@@ -20,7 +20,7 @@
                                 string="Validate" class="oe_highlight"
                                 groups="gbs_application_group.group_cxo,gbs_application_group.group_head_account"/>
 
-                        <button name="action_close" type="object" states="close"
+                        <button name="action_close" type="object" states="validate"
                                 string="Approve" class="oe_highlight"
                                 groups="gbs_application_group.group_cxo"/>
 
