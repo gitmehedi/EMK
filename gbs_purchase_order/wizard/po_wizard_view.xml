@@ -9,10 +9,10 @@
                 <form string="Please Select LC Region Type and Purchase By before approve" create="false" edit="false">
                     <group>
                         <group>
-                            <field name="region_type" placeholder="Please Select"/>
+                            <field name="region_type"/>
                         </group>
                         <group>
-                            <field name="purchase_by" placeholder="Please Select"/>
+                            <field name="purchase_by"/>
                         </group>
                     </group>
                     <footer>

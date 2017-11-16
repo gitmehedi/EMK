@@ -2,6 +2,7 @@
 from odoo import models, fields, api, _
 from odoo.exceptions import ValidationError
 
+
 class PurchaseOrder(models.Model):
     _inherit = 'purchase.order'
 
@@ -96,11 +97,11 @@ class PurchaseOrder(models.Model):
         if requisition.attachment_ids:
             attachments_lines = []
             for attachment_line in requisition.attachment_ids:
-                attachments_lines.append((0,0,{
-                'name' : attachment_line.name,
-                'datas_fname':attachment_line.datas_fname,
-                'db_datas':attachment_line.db_datas,
-            }))
+                attachments_lines.append((0, 0, {
+                    'name': attachment_line.name,
+                    'datas_fname': attachment_line.datas_fname,
+                    'db_datas': attachment_line.db_datas,
+                }))
             self.attachment_ids = attachments_lines
         if requisition.region_type:
             self.region_type = requisition.region_type
@@ -111,21 +112,20 @@ class PurchaseOrder(models.Model):
 
     @api.multi
     def button_confirm(self):
-        # result = {}
-        if self.region_type and self.currency_id:
-            result = super(PurchaseOrder, self).button_confirm()
-        else:
-            res_view = self.env.ref('gbs_purchase_order.purchase_order_type_wizard')
-            result = {
-                'name': _('Please Select LC Region Type and Purchase By before approve'),
-                'view_type': 'form',
-                'view_mode': 'form',
-                'view_id': res_view and res_view.id or False,
-                'res_model': 'purchase.order.type.wizard',
-                'type': 'ir.actions.act_window',
-                'nodestroy': True,
-                'target': 'new',
-            }
+        # res = {}
+        res_wizard_view = self.env.ref('gbs_purchase_order.purchase_order_type_wizard')
+        res = {
+            'name': _('Please Select LC Region Type and Purchase By before approve'),
+            'view_type': 'form',
+            'view_mode': 'form',
+            'view_id': res_wizard_view and res_wizard_view.id or False,
+            'res_model': 'purchase.order.type.wizard',
+            'type': 'ir.actions.act_window',
+            'nodestroy': True,
+            'context': {'region_type': self.region_type or False,
+                        'purchase_by': self.purchase_by or False},
+            'target': 'new',
+        }
         for po in self:
             # if po.requisition_id.type_id.exclusive == 'exclusive':
             others_po = po.requisition_id.mapped('purchase_ids').filtered(lambda r: r.id != po.id)
@@ -138,7 +138,8 @@ class PurchaseOrder(models.Model):
                         'move_dest_id': po.requisition_id.procurement_id.move_dest_id.id,
                     })
             po.check_po_action_button = False
-        return result
+        # res['return_original_method'] = super(PurchaseOrder, self).button_confirm()
+        return res
 
     @api.multi
     def button_cancel(self):
