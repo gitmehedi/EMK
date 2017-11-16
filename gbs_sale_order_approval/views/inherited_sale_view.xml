@@ -215,6 +215,16 @@
                                 string="Print" type="object" states="done"/>
                     </xpath>
 
+                    <!--for second level workflow -->
+                    <xpath expr="//button[@name='print_quotation']" position="replace">
+                        <button name="print_quotation" string="Print" type="object" states="done"/>
+                    </xpath>
+
+                    <xpath expr="//button[@name='action_quotation_send']" position="replace">
+                        <button name="action_quotation_send" string="Send by Email" type="object" states="done"/>
+                    </xpath>
+                    <!--for second level workflow -->
+
                     <!-- Cancel-->
                     <xpath expr="//button[@name='action_cancel']" position="replace">
                         <button name="action_cancel" states="validate,sent,sale,sent" type="object" string="Cancel"/>
