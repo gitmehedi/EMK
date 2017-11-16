@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>
-        <record id="purchase_quotation_cnf_tree_view" model="ir.ui.view">
+        <record id="view_purchase_quotation_cnf_tree1" model="ir.ui.view">
             <field name="name">purchase.quotation.cnf.tree</field>
             <field name="model">purchase.order</field>
             <field name="arch" type="xml">
@@ -11,7 +11,7 @@
             </field>
         </record>
 
-        <record id="purchase_quotation_cnf_form_view" model="ir.ui.view">
+        <record id="view_purchase_quotation_cnf_form" model="ir.ui.view">
             <field name="name">purchase.quotation.cnf.form</field>
             <field name="model">purchase.order</field>
             <field name="arch" type="xml">
@@ -24,17 +24,19 @@
                 </form>
             </field>
         </record>
-        <record model="ir.actions.act_window" id="action_purchase_quotation_cnf">
+        <record model="ir.actions.act_window" id="action_quotation_cnf">
             <field name="name">CNF Quotation</field>
             <field name="res_model">purchase.order</field>
             <field name="view_mode">tree,form</field>
-            <field name="view_id" ref="purchase_quotation_cnf_tree_view"/>
+            <field name="view_type">form</field>
+            <field name="view_type">form</field>
+            <field name="view_id" ref="view_purchase_quotation_cnf_tree1"/>
         </record>
 
-        <!--<menuitem id="menu_cnf_quatation" parent="commercial.menu_commercial_root"-->
-            <!--sequence="6" name="CNF Quotation" />-->
+        <menuitem id="menu_cnf_quatation" parent="commercial.menu_commercial_root"
+            sequence="6" name="CNF Quotation" />
 
-        <!--<menuitem id="submenu_cnf_quatation" name="CNF Quotation" parent="menu_cnf_quatation"-->
-                  <!--sequence="1" action="action_purchase_quotation_cnf"/>-->
+        <menuitem id="submenu_cnf_quatation" name="CNF Quotation" parent="menu_cnf_quatation"
+                  sequence="1" action="action_quotation_cnf"/>
     </data>
 </odoo>
