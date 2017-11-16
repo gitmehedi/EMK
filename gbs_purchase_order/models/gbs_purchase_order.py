@@ -130,7 +130,6 @@ class PurchaseOrder(models.Model):
             # if po.requisition_id.type_id.exclusive == 'exclusive':
             others_po = po.requisition_id.mapped('purchase_ids').filtered(lambda r: r.id != po.id)
             others_po.button_cancel()
-            po.requisition_id.action_done()
 
             for element in po.order_line:
                 if element.product_id == po.requisition_id.procurement_id.product_id:
