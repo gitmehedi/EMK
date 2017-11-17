@@ -15,7 +15,7 @@ class WarehouseToShopDistribution(models.Model):
 
     @api.model
     def default_warehouse(self):
-        return [('id', '=', self.env.ref('stock.warehouse0').id)]
+        return self.env['stock.warehouse'].search([], order='id asc', limit=1)
 
     name = fields.Char('Distribution', readonly=True)
     distribute_date = fields.Date(string='Distribute Date', default=fields.Date.today, required=True, readonly=True,

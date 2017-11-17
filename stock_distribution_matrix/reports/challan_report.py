@@ -4,6 +4,19 @@ from openerp import models, fields, api
 class ChallanReport(models.AbstractModel):
     _name = 'report.stock_distribution_matrix.challan_report'
 
+    def format_product(self, product_name):
+        attr = product_name.attribute_value_ids
+        name = ''
+        if attr:
+            name = "{0}({1},{2})".format(product_name.name, attr[0].name, attr[1].name)
+        else:
+            name =  product_name.name
+
+        if product_name.product_tmpl_id.product_brand_id:
+            return "{0}({1})".format(name,product_name.product_tmpl_id.product_brand_id.name)
+
+        return name
+
     @api.multi
     def render_html(self, data=None):
         report_obj = self.env['report']
@@ -29,7 +42,7 @@ class ChallanReport(models.AbstractModel):
             count = count + 1
             rec['sn'] = count
             rec['barcode'] = record.product_id.default_code
-            rec['name'] = record.product_id.name
+            rec['name'] = self.format_product(record.product_id)
             rec['uom'] = record.product_uom_id.name
             rec['transfer_qty'] = record.transfer_qty
             receive = record.receive_qty if record.receive_qty else None
