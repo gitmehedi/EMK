@@ -86,7 +86,7 @@ class DeliveryOrder(models.Model):
 
     sale_order_id = fields.Many2one('sale.order',
                                     string='Sale Order',
-                                    required=True, readonly=True,
+                                    readonly=True,
                                     domain=[('da_btn_show_hide', '=', False)],
                                     states={'draft': [('readonly', False)]})
 
@@ -157,9 +157,11 @@ class DeliveryOrder(models.Model):
             self.payment_information_check()
             cash_check = self.check_cash_amount_with_subtotal()
             return cash_check
-
         elif self.so_type == 'lc_sales':
             return self.lc_sales_business_logics()
+        elif self.so_type == 'credit_sales':
+            self.state = 'close'
+
 
     def lc_sales_business_logics(self):
 
