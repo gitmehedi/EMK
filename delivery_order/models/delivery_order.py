@@ -58,6 +58,20 @@ class DeliveryOrder(models.Model):
 
     company_id = fields.Many2one('res.company', string='Company', readonly=True,
                                  default=lambda self: self.env.user.company_id)
+    picking_ids = fields.Many2many('stock.picking', compute='_compute_picking_ids',
+                                   string='Picking associated to this sale')
+    delivery_count = fields.Integer(string='Delivery Orders', compute='_compute_picking_ids')
+    procurement_group_id = fields.Many2one('procurement.group', 'Procurement Group', copy=False)
+
+
+    @api.multi
+    @api.depends('procurement_group_id')
+    def _compute_picking_ids(self):
+        sale_order_obj = self.env['sale.order'].search([('id', '=', self.sale_order_id.id)])
+        for order in self:
+            order.picking_ids = self.env['stock.picking'].search(
+                [('group_id', '=', order.procurement_group_id.id)]) if order.procurement_group_id else []
+            order.delivery_count = len(sale_order_obj.picking_ids)
 
     """ PI and LC """
     pi_no = fields.Many2one('proforma.invoice', string='PI Ref. No.', readonly=True,
@@ -98,6 +112,23 @@ class DeliveryOrder(models.Model):
         self.line_ids.write({'state': 'close'})
 
     """ Action for Validate Button"""
+
+    @api.multi
+    def action_view_delivery(self):
+        '''
+        This function returns an action that display existing delivery orders
+        of given sales order ids. It can either be a in a list or in a form
+        view, if there is only one delivery order to show.
+        '''
+        action = self.env.ref('stock.action_picking_tree_all').read()[0]
+
+        pickings = self.mapped('picking_ids')
+        if len(pickings) > 1:
+            action['domain'] = [('id', 'in', pickings.ids)]
+        elif pickings:
+            action['views'] = [(self.env.ref('stock.view_picking_form').id, 'form')]
+            action['res_id'] = pickings.id
+        return action
 
     @api.one
     def action_approve(self):

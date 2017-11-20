@@ -6,6 +6,7 @@
     'version':'10.1.1.1',
     'depends': [
         'sale',
+        'mrp',
         'product_sales_pricelist',
         'account',
         'sale_order_type',

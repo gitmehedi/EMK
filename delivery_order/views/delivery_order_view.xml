@@ -47,6 +47,33 @@
                             </button>
                          </div>
 
+                         <div class="oe_button_box oe_right" name="button_box">
+                            <!--<button type="object" string="Delivery"-->
+                                    <!--name=""-->
+                                    <!--groups="account.group_account_user,gbs_application_group.group_head_account,gbs_application_group.group_cxo"-->
+                                    <!--class="oe_stat_button"-->
+                                    <!--attrs="{'invisible':[('state','!=','close')]}"-->
+                                    <!--icon="fa-truck">-->
+                            <!--</button>-->
+                            <field name="picking_ids" invisible="1"/>
+                            <button type="object"
+                                name="action_view_delivery"
+                                class="oe_stat_button"
+                                icon="fa-truck"
+                                attrs="{'invisible': [('state','!=','close')]}"
+                                groups="account.group_account_user,gbs_application_group.group_head_account,gbs_application_group.group_cxo">
+                                <field name="delivery_count" widget="statinfo" string="Delivery"/>
+                            </button>
+                         </div>
+
+
+                       <!--<button type="object"-->
+                           <!--name="action_view_delivery"-->
+                           <!--class="oe_stat_button"-->
+                           <!--icon="fa-truck"-->
+                           <!--attrs="{'invisible': [('delivery_count', '=', 0)]}" groups="base.group_user">-->
+                           <!--<field name="delivery_count" widget="statinfo" string="Delivery"/>-->
+                       <!--</button>-->
 	                    <h1>
 	                        <field name="name"/>
                             <!--<field name="da_button_show" invisible="1"/>-->
