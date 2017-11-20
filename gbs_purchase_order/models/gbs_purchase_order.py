@@ -126,18 +126,7 @@ class PurchaseOrder(models.Model):
                         'purchase_by': self.purchase_by or False},
             'target': 'new',
         }
-        for po in self:
-            # if po.requisition_id.type_id.exclusive == 'exclusive':
-            others_po = po.requisition_id.mapped('purchase_ids').filtered(lambda r: r.id != po.id)
-            others_po.button_cancel()
 
-            for element in po.order_line:
-                if element.product_id == po.requisition_id.procurement_id.product_id:
-                    element.move_ids.write({
-                        'procurement_id': po.requisition_id.procurement_id.id,
-                        'move_dest_id': po.requisition_id.procurement_id.move_dest_id.id,
-                    })
-            po.check_po_action_button = False
         # res['return_original_method'] = super(PurchaseOrder, self).button_confirm()
         return res
 

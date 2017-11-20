@@ -12,25 +12,25 @@
             <field eval="False" name="company_id"/>
         </record>
 
-        <record id="sequence_stock_indent_SCCL_HO" model="ir.sequence">
-            <field name="name">Indent</field>
-            <field name="code">stock.indent</field>
-            <field name="prefix">Indent-OU-%(year)s-</field>
-            <field eval="6" name="padding"/>
-            <field eval="1" name="number_next"/>
-            <field eval="1" name="number_increment"/>
-            <field eval="False" name="company_id"/>
-        </record>
+        <!--<record id="sequence_stock_indent_SCCL_HO" model="ir.sequence">-->
+            <!--<field name="name">Indent</field>-->
+            <!--<field name="code">stock.indent</field>-->
+            <!--<field name="prefix">Indent-OU-%(year)s-</field>-->
+            <!--<field eval="6" name="padding"/>-->
+            <!--<field eval="1" name="number_next"/>-->
+            <!--<field eval="1" name="number_increment"/>-->
+            <!--<field eval="False" name="company_id"/>-->
+        <!--</record>-->
 
-        <record id="sequence_stock_indent_SCCL_DF" model="ir.sequence">
-            <field name="name">Indent</field>
-            <field name="code">stock.indent</field>
-            <field name="prefix">Indent-OU-%(year)s-</field>
-            <field eval="6" name="padding"/>
-            <field eval="1" name="number_next"/>
-            <field eval="1" name="number_increment"/>
-            <field eval="False" name="company_id"/>
-        </record>
+        <!--<record id="sequence_stock_indent_SCCL_DF" model="ir.sequence">-->
+            <!--<field name="name">Indent</field>-->
+            <!--<field name="code">stock.indent</field>-->
+            <!--<field name="prefix">Indent-OU-%(year)s-</field>-->
+            <!--<field eval="6" name="padding"/>-->
+            <!--<field eval="1" name="number_next"/>-->
+            <!--<field eval="1" name="number_increment"/>-->
+            <!--<field eval="False" name="company_id"/>-->
+        <!--</record>-->
 
         <!--<record id="sequence_stock_indent" model="ir.sequence">-->
             <!--<field name="name">Indent</field>-->

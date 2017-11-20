@@ -55,22 +55,24 @@ class PurchaseRequisition(models.Model):
             'nodestroy': True,
             'target': 'new',
         }
-        po_pool_obj = self.env['purchase.order'].search([('requisition_id','=',self.id)])
-        if po_pool_obj:
-            po_pool_obj.write({'check_po_action_button': True})
+        # po_pool_obj = self.env['purchase.order'].search([('requisition_id','=',self.id)])
+        # if po_pool_obj:
+        #     po_pool_obj.write({'check_po_action_button': True,
+        #                        'region_type': self.region_type or False,
+        #                        'purchase_by':self.purchase_by or False})
         return result
 
     @api.onchange('indent_ids')
     def indent_product_line(self):
         vals = []
-        self.required_date = self.indent_ids.required_date
+        # self.required_date = self.indent_ids.required_date
         for indent_id in self.indent_ids:
             indent_product_line_obj = self.env['indent.product.lines'].search([('indent_id','=',indent_id.id)])
             for indent_product_line in indent_product_line_obj:
                 vals.append((0, 0, {'product_id': indent_product_line.product_id,
                                 'name': indent_product_line.name,
                                 'product_uom_id': indent_product_line.product_uom,
-                                'product_qty': indent_product_line.product_uom_qty,
+                                'product_ordered_qty': indent_product_line.product_uom_qty,
                           }))
                 self.line_ids = vals
 
