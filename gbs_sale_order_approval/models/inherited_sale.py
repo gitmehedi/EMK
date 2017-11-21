@@ -185,14 +185,6 @@ class SaleOrder(models.Model):
                     else:
                         return False
 
-
-    def products_price_sum(self):
-        product_line_subtotal = 0
-        for do_product_line in self.line_ids:
-            product_line_subtotal = product_line_subtotal + do_product_line.price_subtotal
-
-        return product_line_subtotal
-
     @api.multi
     def action_create_delivery_order(self):
 

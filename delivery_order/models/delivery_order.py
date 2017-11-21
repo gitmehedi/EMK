@@ -56,22 +56,18 @@ class DeliveryOrder(models.Model):
         ('close', "Approved")
     ], default='draft')
 
-    company_id = fields.Many2one('res.company', string='Company', readonly=True,
-                                 default=lambda self: self.env.user.company_id)
-    picking_ids = fields.Many2many('stock.picking', compute='_compute_picking_ids',
-                                   string='Picking associated to this sale')
+    company_id = fields.Many2one('res.company', string='Company', readonly=True, default=lambda self: self.env.user.company_id)
+    picking_ids = fields.Many2many('stock.picking', compute='_compute_picking_ids',string='Picking associated to this sale')
     delivery_count = fields.Integer(string='Delivery Orders', compute='_compute_picking_ids')
-    procurement_group_id = fields.Many2one('procurement.group', 'Procurement Group', copy=False)
-
 
     @api.multi
-    @api.depends('procurement_group_id')
+    @api.depends('sale_order_id.procurement_group_id')
     def _compute_picking_ids(self):
-        sale_order_obj = self.env['sale.order'].search([('id', '=', self.sale_order_id.id)])
-        for order in self:
+        for order in self.sale_order_id:
             order.picking_ids = self.env['stock.picking'].search(
                 [('group_id', '=', order.procurement_group_id.id)]) if order.procurement_group_id else []
-            order.delivery_count = len(sale_order_obj.picking_ids)
+            order.delivery_count = len(order.picking_ids)
+
 
     """ PI and LC """
     pi_no = fields.Many2one('proforma.invoice', string='PI Ref. No.', readonly=True,
@@ -111,8 +107,7 @@ class DeliveryOrder(models.Model):
         self.state = 'close'
         self.line_ids.write({'state': 'close'})
 
-    """ Action for Validate Button"""
-
+    """ DO button box action """
     @api.multi
     def action_view_delivery(self):
         '''
@@ -122,7 +117,7 @@ class DeliveryOrder(models.Model):
         '''
         action = self.env.ref('stock.action_picking_tree_all').read()[0]
 
-        pickings = self.mapped('picking_ids')
+        pickings = self.sale_order_id.mapped('picking_ids')
         if len(pickings) > 1:
             action['domain'] = [('id', 'in', pickings.ids)]
         elif pickings:
@@ -130,6 +125,8 @@ class DeliveryOrder(models.Model):
             action['res_id'] = pickings.id
         return action
 
+
+    """ Action for Validate Button"""
     @api.one
     def action_approve(self):
         self.state = 'validate'
