@@ -155,7 +155,7 @@ class DeliveryOrder(models.Model):
     def action_validate(self):
         if self.so_type == 'cash':
             self.payment_information_check()
-            cash_check = self.check_cash_amount_with_subtotal()
+            cash_check = self.payments_amount_checking_with_products_subtotal()
             return cash_check
         elif self.so_type == 'lc_sales':
             return self.lc_sales_business_logics()
@@ -171,8 +171,8 @@ class DeliveryOrder(models.Model):
         #######################################################
 
         if self.lc_no and self.pi_no:
-            if self.lc_no.lc_value == self.products_price_sum() \
-                    or self.lc_no.lc_value > self.products_price_sum():
+            if self.lc_no.lc_value == self.total_amount() \
+                    or self.lc_no.lc_value > self.total_amount:
 
                 return self.write({'state': 'close'})
             else:
@@ -242,16 +242,10 @@ class DeliveryOrder(models.Model):
 
         }
 
-    def products_price_sum(self):
-        product_line_subtotal = 0
-        for do_product_line in self.line_ids:
-            product_line_subtotal = product_line_subtotal + do_product_line.price_subtotal
 
-        return product_line_subtotal
-
-    # @todo Need to refactor below method -- rabbi
     @api.one
-    def check_cash_amount_with_subtotal(self):
+    def payments_amount_checking_with_products_subtotal(self):
+
         account_payment_pool = self.env['account.payment'].search(
             [('is_this_payment_checked', '=', False), ('sale_order_id', '=', self.sale_order_id.id),
              ('partner_id', '=', self.parent_id.id)])
@@ -259,24 +253,30 @@ class DeliveryOrder(models.Model):
         if not self.line_ids:
             return self.write({'state': 'approve'})  # Only Second level approval
 
-        product_line_subtotal = 0
-        for do_product_line in self.line_ids:
-            product_line_subtotal = product_line_subtotal + do_product_line.price_subtotal
-
+        ## Sum of cash amount
         cash_line_total_amount = 0
         for do_cash_line in self.cash_ids:
             cash_line_total_amount = cash_line_total_amount + do_cash_line.amount
 
-        if not cash_line_total_amount or cash_line_total_amount == 0:
+        ## Sum of cheques amount
+        cheque_line_total_amount = 0
+        for do_cheque_line in self.cheque_ids:
+            cheque_line_total_amount = cheque_line_total_amount + do_cheque_line.amount
+
+        total_cash_cheque_amount = cash_line_total_amount + cheque_line_total_amount
+
+        if not total_cash_cheque_amount or total_cash_cheque_amount == 0:
             account_payment_pool.write({'is_this_payment_checked': True})
             return self.write({'state': 'approve'})  # Only Second level approval
 
-        if cash_line_total_amount >= product_line_subtotal:
+        if total_cash_cheque_amount >= self.total_amount:
             account_payment_pool.write({'is_this_payment_checked': True})
             return self.write({'state': 'close'})  # directly go to final approval level
         else:
             account_payment_pool.write({'is_this_payment_checked': True})
             return self.write({'state': 'approve'})  # Only Second level approval
+
+
 
     def create_delivery_order(self):
         for order in self.sale_order_id:
