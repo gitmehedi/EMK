@@ -90,8 +90,10 @@ class CustomerCommissionConfiguration(models.Model):
                 else:
                     rec.old_value = 0
 
-
-
+    @api.multi
+    def action_cancel(self):
+        for coms in self:
+            coms.state = 'draft'
 
 
     @api.onchange('commission_type')
