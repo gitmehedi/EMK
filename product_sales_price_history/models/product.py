@@ -25,9 +25,9 @@ class ProductSalesPriceHistory(models.Model):
 class ProductProduct(models.Model):
     _inherit = "product.product"
 
-    lst_price = fields.Float(
-        'Sale Price', digits=dp.get_precision('Product Price'), inverse='_set_product_lst_price',
-        help="The sale price is managed from the product template. Click on the 'Variant Prices' button to set the extra attribute prices.")
+    lst_price = fields.Float('Sale Price', digits=dp.get_precision('Product Price'),
+                             compute='_get_product_lst_price',
+                             help="The sale price is managed from the product template. Click on the 'Variant Prices' button to set the extra attribute prices.")
 
     @api.model
     def create(self, vals):
@@ -36,6 +36,36 @@ class ProductProduct(models.Model):
         if not (self.env.context.get('create_from_tmpl') and len(product.product_tmpl_id.product_variant_ids) == 1):
             product._set_lst_price(vals.get('list_price') or 0.0)
         return product
+
+    @api.multi
+    def write(self, values):
+        ''' Store the standard price change in order to be able to retrieve the cost of a product for a given date'''
+        res = super(ProductProduct, self).write(values)
+        if 'list_price' in values:
+            self._set_lst_price(values['list_price'] or 0.0)
+        return res
+
+    @api.multi
+    def _get_product_lst_price(self):
+        # select
+        # h.product_id, h.lst_price
+        # from product_sales_price_history h
+        # join(select
+        # product_id, max(datetime) as datetime
+        # from product_sales_price_history
+        #     where
+        # product_id in (12, 10)
+        # group
+        # by
+        # product_id) t
+        # on
+        # h.product_id = t.product_id
+        # and h.datetime = t.datetime
+        history = self.env['product.sales.price.history'].search([
+            ('company_id', '=', self.env.user.company_id.id),
+            ('product_id', 'in', self.ids),
+            ('datetime', '<=', fields.Datetime.now())], order='datetime desc,id desc', limit=1)
+        return history.lst_price or 0.0
 
     @api.multi
     def _set_lst_price(self, value):

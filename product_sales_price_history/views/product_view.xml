@@ -1,7 +1,7 @@
 <odoo>
     <data>
-        <record model="ir.ui.view" id="product_view_barcode">
-            <field name="name">product.price</field>
+        <record model="ir.ui.view" id="product_view_product_price">
+            <field name="name">product.product.price.form</field>
             <field name="model">product.product</field>
             <field name="inherit_id" ref="product.product_variant_easy_edit_view"/>
             <field name="arch" type="xml">
@@ -11,17 +11,18 @@
             </field>
         </record>
 
-        <record model="ir.ui.view" id="product_view_barcode">
-            <field name="name">product.price.form</field>
+        <record model="ir.ui.view" id="product_view_price">
+            <field name="name">product.product.form</field>
             <field name="model">product.product</field>
             <field name="inherit_id" ref="product.product_normal_form_view"/>
             <field name="arch" type="xml">
                  <xpath expr="//field[@name='lst_price']" position="replace">
-                    <field name="list_price">
-                        <attribute name="name">lst_price</attribute>
-                    </field>
+                        <field name="lst_price" widget='monetary'
+                               options="{'currency_field': 'currency_id'}"/>
                  </xpath>
             </field>
         </record>
+
+
     </data>
 </odoo>
