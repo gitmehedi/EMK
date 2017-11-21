@@ -3,37 +3,77 @@
     <data>
         <record id="view_cnf_quotation_tree" model="ir.ui.view">
             <field name="name">view.cnf.quotation.tree</field>
-            <field name="model">purchase.order</field>
+            <field name="model">cnf.quotation</field>
             <field name="arch" type="xml">
                 <tree string="CNF Quotation">
                     <field name="shipment_id"/>
+                    <field name="lc_id"/>
                 </tree>
             </field>
         </record>
 
         <record id="view_cnf_quotation_form" model="ir.ui.view">
             <field name="name">view.cnf.quotation.form</field>
-            <field name="model">purchase.order</field>
+            <field name="model">cnf.quotation</field>
             <field name="arch" type="xml">
                 <form string="CNF Quotation">
+                    <header>
+						<button name="action_confirm" string="Confirm" type="object"
+								states="draft" class="oe_highlight"/>
+						<field name="state" widget="statusbar"
+							   statusbar_visible="draft,confirm"/>
+					</header>
                     <sheet>
+                        <div class="oe_title">
+                            <label string="CNF Quotation"/>
+                            <h1>
+                                <field name="name" readonly="1"/>
+                            </h1>
+                        </div>
                         <group>
-                            <field name="shipment_id"/>
+                            <group>
+                                <field name="shipment_id"/>
+                                <field name="partner_id"/>
+                                <field name="currency_id"/>
+                                <field name="picking_type_id"/>
+                            </group>
+                            <group>
+                                <field name="lc_id"/>
+                            </group>
+
                         </group>
+                        <notebook colspan="4">
+                            <page string="Services">
+                                <field name="cnf_product_line" widget="one2many">
+                                    <tree string="Services" editable="bottom">
+                                        <field name="product_id"/>
+                                        <field name="amount"/>
+                                        <field name="remarks"/>
+                                    </tree>
+                                </field>
+                            </page>
+                        </notebook>
+                        <div class="oe_clear" colspan="4">
+                            <label for="description" />
+                        </div>
+                        <field name="description" class="oe_inline" placeholder="Description" />
                     </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers" />
+                        <field name="message_ids" widget="mail_thread" />
+                    </div>
                 </form>
             </field>
         </record>
         <record model="ir.actions.act_window" id="action_cnf_quotation">
             <field name="name">CNF Quotation</field>
-            <field name="res_model">purchase.order</field>
+            <field name="res_model">cnf.quotation</field>
             <field name="view_mode">tree,form</field>
             <field name="view_type">form</field>
-            <field name="view_id" ref="view_cnf_quotation_tree"/>
         </record>
 
         <menuitem id="menu_cnf_quatation" parent="commercial.menu_commercial_root"
-            sequence="6" name="CNF Quotation" />
+                  sequence="6" name="CNF Quotation" />
 
         <menuitem id="submenu_cnf_quatation" name="CNF Quotation" parent="menu_cnf_quatation"
                   sequence="1" action="action_cnf_quotation"/>
