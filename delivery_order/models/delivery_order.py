@@ -57,7 +57,6 @@ class DeliveryOrder(models.Model):
     ], default='draft')
 
     company_id = fields.Many2one('res.company', string='Company', readonly=True, default=lambda self: self.env.user.company_id)
-    picking_ids = fields.Many2many('stock.picking', compute='_compute_picking_ids',string='Picking associated to this sale')
     delivery_count = fields.Integer(string='Delivery Orders', compute='_compute_picking_ids')
 
     @api.multi
@@ -66,7 +65,7 @@ class DeliveryOrder(models.Model):
         for order in self.sale_order_id:
             order.picking_ids = self.env['stock.picking'].search(
                 [('group_id', '=', order.procurement_group_id.id)]) if order.procurement_group_id else []
-            order.delivery_count = len(order.picking_ids)
+            self.delivery_count = len(order.picking_ids)
 
 
     """ PI and LC """
