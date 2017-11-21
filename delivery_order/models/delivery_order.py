@@ -330,11 +330,9 @@ class DeliveryOrder(models.Model):
         account_payment_pool = self.env['account.payment'].search([('sale_order_id', '=', self.sale_order_id.id)])
 
         for payments in account_payment_pool:
-            if payments.cheque_no:
+            if payments.journal_id.type == 'bank':
                 self.set_cheque_info_automatically(account_payment_pool)
-                break;
-
-            else:
+            elif payments.journal_id.type == 'cash':
                 self.set_payment_info_automatically(account_payment_pool)
 
     @api.one
@@ -352,6 +350,25 @@ class DeliveryOrder(models.Model):
                                         }))
 
                 self.cheque_ids = vals
+
+
+    @api.one
+    def set_payment_info_automatically(self, account_payment_pool):
+
+        if account_payment_pool:
+            vals = []
+            for payments in account_payment_pool:
+                if payments.journal_id.type == 'cash':
+                    if payments.sale_order_id and not payments.is_this_payment_checked:
+                        vals.append((0, 0, {'account_payment_id': payments.id,
+                                            'amount': payments.amount,
+                                            'dep_bank': payments.deposited_bank,
+                                            'branch': payments.bank_branch,
+                                            'payment_date': payments.payment_date,
+                                            }))
+
+                        self.cash_ids = vals
+
 
     @api.one
     def set_products_info_automatically(self):
@@ -383,22 +400,7 @@ class DeliveryOrder(models.Model):
 
             self.line_ids = val
 
-    @api.one
-    def set_payment_info_automatically(self, account_payment_pool):
 
-        if account_payment_pool:
-            vals = []
-            for payments in account_payment_pool:
-                if not payments.cheque_no:
-                    if payments.sale_order_id and not payments.is_this_payment_checked:
-                        vals.append((0, 0, {'account_payment_id': payments.id,
-                                            'amount': payments.amount,
-                                            'dep_bank': payments.deposited_bank,
-                                            'branch': payments.bank_branch,
-                                            'payment_date': payments.payment_date,
-                                            }))
-
-                        self.cash_ids = vals
 
     @api.one
     def action_process_unattached_payments(self):
