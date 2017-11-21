@@ -48,7 +48,6 @@
                          </div>
 
                          <div class="oe_button_box oe_right" name="button_box">
-                            <field name="picking_ids" invisible="1"/>
                             <button type="object"
                                 name="action_view_delivery"
                                 class="oe_stat_button"
