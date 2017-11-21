@@ -17,7 +17,7 @@
                     </group>
                     <footer>
                         <button string="Save" name="save_type" type="object" class="oe_highlight"  />
-                        <button string="Close" name="cancel_window" type="object"/>
+                        <button string="Close" type="object" special="cancel"/>
                     </footer>
                 </form>
             </field>

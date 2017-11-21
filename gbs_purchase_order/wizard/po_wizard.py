@@ -18,29 +18,27 @@ class PurchaseRequisitionTypeWizard(models.TransientModel):
         order = self.env['purchase.order'].search([('id', '=', form_id)])
         order._add_supplier_to_product()
         # Deal with double validation process
+
         if order.company_id.po_double_validation == 'one_step'\
                 or (order.company_id.po_double_validation == 'two_step'\
                     and order.amount_total < self.env.user.company_id.currency_id.compute(order.company_id.po_double_validation_amount, order.currency_id))\
                 or order.user_has_groups('purchase.group_purchase_manager'):
+            order.write({'region_type': self.region_type, 'purchase_by': self.purchase_by})
             order.button_approve()
-        else:
-            order.write({'region_type': self.region_type,'purchase_by': self.purchase_by,'state': 'to approve'})
-        return {'type': 'ir.actions.act_window_close'}
+        for po in order:
+            # if po.requisition_id.type_id.exclusive == 'exclusive':
+            others_po = po.requisition_id.mapped('purchase_ids').filtered(lambda r: r.id != po.id)
+            others_po.button_cancel()
 
-    @api.multi
-    def cancel_window(self):
-        form_id = self.env.context.get('active_id')
-        order = self.env['purchase.order'].search([('id', '=', form_id)])
-        order._add_supplier_to_product()
-        # Deal with double validation process
-        if order.company_id.po_double_validation == 'one_step' \
-                or (order.company_id.po_double_validation == 'two_step' \
-                            and order.amount_total < self.env.user.company_id.currency_id.compute(
-                        order.company_id.po_double_validation_amount, order.currency_id)) \
-                or order.user_has_groups('purchase.group_purchase_manager'):
-            order.button_approve()
+            for element in po.order_line:
+                if element.product_id == po.requisition_id.procurement_id.product_id:
+                    element.move_ids.write({
+                        'procurement_id': po.requisition_id.procurement_id.id,
+                        'move_dest_id': po.requisition_id.procurement_id.move_dest_id.id,
+                    })
+            po.check_po_action_button = False
         else:
-            order.write({'state': 'to approve'})
+            order.write({'region_type': self.region_type, 'purchase_by': self.purchase_by, 'state': 'to approve'})
         return {'type': 'ir.actions.act_window_close'}
 
 
