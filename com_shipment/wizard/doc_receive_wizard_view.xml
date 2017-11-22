@@ -11,12 +11,24 @@
                         <group string="Bill Of Lading">
                             <field name="bill_of_lading_number" />
                             <field name="shipment_date" />
+                            <field name="shipment_id" />
                         </group>
                         <group string="Packing List">
                             <field name="gross_weight" />
                             <field name="net_weight" />
                         </group>
                     </group>
+                    <field name="product_lines">
+                        <tree string="Purchase Order Lines" create="false" delete="false" editable="bottom">
+                            <field name="product_id" readonly='1'/>
+                            <field name="name" readonly='1'/>
+                            <field name="date_planned" readonly='1'/>
+                            <field name="product_qty"/>
+                            <field name="product_uom" readonly='1'/>
+                            <field name="lc_pro_line_id" invisible='1'/>
+                            <field name="shipment_pro_line_id" invisible='1'/>
+                        </tree>
+                    </field>
                     <footer>
                         <button string="Save" name="save_doc_receive" type="object" class="oe_highlight"  />
                         <button special="cancel" string="Close" type="object"/>

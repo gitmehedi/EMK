@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
     <data>
-
+<!--states="receive_doc"-->
         <record id="view_purchase_shipment_inherit" model="ir.ui.view">
             <field name="name">view_purchase_shipment_inherit</field>
             <field name="model">purchase.shipment</field>
@@ -9,17 +9,18 @@
             <field name="arch" type="xml">
                 <data>
                     <xpath expr="//page[1]" position="before">
-                        <page string="Products">
+                        <page string="Products" >
                             <field name="shipment_product_lines">
-                                <tree string="Purchase Order Lines" create="false" delete="false">
+                                <tree string="Purchase Order Lines" create="false" delete="false" editable="false">
                                     <field name="product_id" readonly='1'/>
                                     <field name="name" readonly='1'/>
                                     <field name="date_planned" readonly='1'/>
                                     <field name="product_qty" readonly='1'/>
                                     <field name="product_uom" readonly='1'/>
-                                    <field name="product_received_qty" readonly='1'/>
-                                    <field name="price_unit" readonly='1'/>
-
+                                    <field name="product_received_qty" readonly='1' invisible='1'/>
+                                    <field name="lc_product_qty" readonly='1' invisible='1'/>
+                                    <field name="lc_pro_line_id" invisible='1'/>
+                                    <!--<field name="price_unit" readonly='1'/>-->
                                 </tree>
 
                             </field>

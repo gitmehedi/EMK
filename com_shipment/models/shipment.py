@@ -129,16 +129,17 @@ class Shipment(models.Model):
 
     @api.multi
     def action_quotation(self):
-        res = self.env.ref('com_shipment.cnf_quotation_wizard')
+        res = self.env.ref('gbs_purchase_quotation_cnf.view_cnf_quotation_form')
         result = {
             'name': _('Please Enter The Information'),
             'view_type': 'form',
             'view_mode': 'form',
             'view_id': res and res.id or False,
-            'res_model': 'cnf.quotation.wizard',
+            'res_model': 'cnf.quotation',
             'type': 'ir.actions.act_window',
             'nodestroy': True,
-            'target': 'new',
+            'target': 'current',
+            'context': {'shipment_id': self.id or False},
         }
         return result
 

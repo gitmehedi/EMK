@@ -8,6 +8,7 @@
                 <tree string="CNF Quotation">
                     <field name="shipment_id"/>
                     <field name="lc_id"/>
+                    <field name="state"/>
                 </tree>
             </field>
         </record>
@@ -20,25 +21,27 @@
                     <header>
 						<button name="action_confirm" string="Confirm" type="object"
 								states="draft" class="oe_highlight"/>
+                        <button name="action_approve" string="Approve" type="object"
+								states="confirm" class="oe_highlight"/>
 						<field name="state" widget="statusbar"
-							   statusbar_visible="draft,confirm"/>
+							   statusbar_visible="draft,confirm,approved"/>
 					</header>
                     <sheet>
                         <div class="oe_title">
                             <label string="CNF Quotation"/>
                             <h1>
-                                <field name="name" readonly="1"/>
+                                <field name="name" readonly="1" attrs="{'invisible': [('state','=','draft')]}"/>
                             </h1>
                         </div>
                         <group>
                             <group>
                                 <field name="shipment_id"/>
-                                <field name="partner_id"/>
-                                <field name="currency_id"/>
+                                <field name="partner_id" string='Supplier' context="{'search_default_supplier':1, 'default_supplier':1, 'default_customer':0}" domain="[('supplier','=',True)]"/>
                                 <field name="picking_type_id"/>
                             </group>
                             <group>
                                 <field name="lc_id"/>
+                                <field name="currency_id"/>
                             </group>
 
                         </group>
