@@ -15,11 +15,11 @@ class ShipmentProductLine(models.Model):
     date_planned = fields.Datetime(string='Scheduled Date', index=True)
     product_uom = fields.Many2one('product.uom', string='Product Unit of Measure')
     product_received_qty = fields.Float(string='Received Quantity')
-    product_qty = fields.Float(string='Quantity',compute = '_compute_quantity')
+    product_qty = fields.Float(string='Quantity',compute = '_compute_quantity',store=True)
     # price_unit = fields.Float(string='Unit Price')
     shipment_id = fields.Many2one('purchase.shipment', string='Purchase Shipment')
 
-
+    @api.multi
     def _compute_quantity(self):
         for shipment in self:
             shipment.product_qty = shipment.lc_product_qty - shipment.product_received_qty

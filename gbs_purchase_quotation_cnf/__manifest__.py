@@ -18,7 +18,7 @@
     'depends': [
         'purchase',
         'letter_of_credit',
-        'com_shipment',
+        # 'com_shipment',
         'ir_sequence_operating_unit',
     ],
 

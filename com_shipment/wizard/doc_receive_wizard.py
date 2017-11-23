@@ -8,11 +8,14 @@ class DocReceiveWizard(models.TransientModel):
     bill_of_lading_number = fields.Char(string='BoL Number', required=True, help="Bill Of Lading Number")
     shipment_date = fields.Date('Ship on Board', required=True)
 
+    invoice_number = fields.Char(string='Invoice Number',required=True)
+    invoice_value = fields.Float(string='Invoice Value',required=True)
+
     # Packing List
     gross_weight = fields.Float('Gross Weight', required=True)
     net_weight = fields.Float('Net Weight', required=True)
 
-    product_lines = fields.One2many('shipment.product.line.wizard', 'shipment_id', string='Product(s)')
+    product_lines = fields.One2many('shipment.product.line.wizard', 'doc_shipment_id', string='Product(s)')
     shipment_id = fields.Many2one('purchase.shipment', string='Purchase Shipment',
                                   default=lambda self: self.env.context.get('active_id'))
 
@@ -47,11 +50,11 @@ class DocReceiveWizard(models.TransientModel):
         for pro_line in self.product_lines:
 
             pro_line_pool = self.env['shipment.product.line'].search([('id','=',pro_line.shipment_pro_line_id)])
-            print pro_line.product_qty , pro_line_pool.product_qty
+            res_pro_quty = pro_line.product_qty
             if pro_line.product_qty>pro_line_pool.product_qty:
                 raise ValidationError(_("Receive Quantity Must be less then Actual Quantity."))
             else:
-                pro_line_pool.write({'product_qty': pro_line.product_qty})
+                pro_line_pool.write({'product_qty': res_pro_quty})
 
             pro_lc_line_pool = self.env['lc.product.line'].search([('id', '=', pro_line.lc_pro_line_id)])
             res_received_qty = pro_lc_line_pool.product_received_qty+pro_line.product_qty
@@ -62,24 +65,37 @@ class DocReceiveWizard(models.TransientModel):
 
         return {'type': 'ir.actions.act_window_close'}
 
-class ShipmentProductLineWizard(models.Model):
+    # @api.multi
+    # def action_del_pro_line(self):
+    #     for line in self:
+    #         line.product_lines.unlink()
+
+
+class ShipmentProductLineWizard(models.TransientModel):
     _name = 'shipment.product.line.wizard'
     _description = 'Product'
     _order = "date_planned desc"
 
     name = fields.Text(string='Description', required=True)
-    product_id = fields.Many2one('product.product', string='Product', domain=[('purchase_ok', '=', True)],
+    product_id = fields.Many2one('product.product', string='Product',
                                  change_default=True, required=True)
-
     product_qty = fields.Float(string='Quantity')
     currency_id = fields.Many2one('res.currency', 'Currency')
     date_planned = fields.Datetime(string='Scheduled Date', index=True)
     product_uom = fields.Many2one('product.uom', string='Product Unit of Measure')
 
-    shipment_id = fields.Many2one('purchase.shipment', string='Purchase Shipment')
+    doc_shipment_id = fields.Many2one('doc.receive.wizard', string='Purchase Shipment', ondelete='cascade')
 
     lc_pro_line_id = fields.Integer(string='LC Line ID')
     shipment_pro_line_id = fields.Integer(string='Shipment Line ID')
+
+    @api.multi
+    def unlink(self):
+        for line in self:
+            pro_line_pool = self.env['shipment.product.line'].search([('id', '=', line.shipment_pro_line_id)])
+            pro_line_pool.unlink()
+        return super(ShipmentProductLineWizard, self).unlink()
+
 
 
 

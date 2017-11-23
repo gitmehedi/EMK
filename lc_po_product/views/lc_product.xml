@@ -11,7 +11,8 @@
 					<xpath expr="//page[1]" position="after">
 						<page string="Products">
                             <field name="product_lines">
-                                 <tree string="Purchase Order Lines" create="false" delete="false">
+                                 <tree string="Purchase Order Lines" create="false" delete="false"
+                                       colors="grey: product_received_qty==product_qty;green: product_received_qty!=product_qty;">
                                     <field name="product_id" readonly='1'/>
                                     <field name="name" readonly='1'/>
                                     <field name="date_planned" readonly='1'/>
@@ -28,7 +29,8 @@
 					</xpath>
 				</data>
                 <xpath expr="//field[@name='name']" position="after">
-                    <field name="po_ids" widget="many2many_tags"/>
+                    <field name="po_ids" widget="many2many_tags" domain="[('state','=','purchase')]"
+                           options='{"no_open": True,"no_create": 1, "no_create_edit":1}'/>
                 </xpath>
 			</field>
 		</record>

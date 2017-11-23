@@ -5,14 +5,14 @@
             <field name="name">Purchase Requisition</field>
             <field name="res_model">purchase.requisition</field>
             <field name="view_mode">tree,form</field>
-            <field name="domain">[('region_type','in',('local', False))]</field>
+            <field name="domain">[('region_type','in',('local', False)),('state','=','done')]</field>
         </record>
 
         <record model="ir.actions.act_window" id="action_commercial_pr_foreign">
             <field name="name">Purchase Requisition</field>
             <field name="res_model">purchase.requisition</field>
             <field name="view_mode">tree,form</field>
-            <field name="domain">[('region_type','in',('foreign',False))]</field>
+            <field name="domain">[('region_type','in',('foreign',False)),('state','=','done')]</field>
         </record>
 
         <menuitem id="menu_pr_commercial" parent="commercial.menu_commercial_root"

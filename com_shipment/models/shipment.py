@@ -27,7 +27,8 @@ class Shipment(models.Model):
          ('gate_in', "Gate In"),
          ('done', "Done")], default='draft', track_visibility='onchange')
 
-    lc_id = fields.Many2one("letter.credit", string='LC Number', ondelete='cascade', default=lambda self: self.env.context.get('lc_id'))
+    lc_id = fields.Many2one("letter.credit", string='LC Number', ondelete='cascade',readonly=True,
+                            default=lambda self: self.env.context.get('lc_id'))
     shipment_attachment_ids = fields.One2many('ir.attachment', 'res_id', string='Shipment Attachments')
 
     # Bill Of Lading
@@ -37,6 +38,10 @@ class Shipment(models.Model):
     # Packing List
     gross_weight = fields.Float('Gross Weight', readonly=True)
     net_weight = fields.Float('Net Weight', readonly=True)
+
+    # Invoice
+    invoice_number = fields.Char(string='Invoice Number', readonly=True)
+    invoice_value = fields.Float(string='Invoice Value', readonly=True)
 
     @api.model
     def create(self, vals):
@@ -139,24 +144,16 @@ class Shipment(models.Model):
             'type': 'ir.actions.act_window',
             'nodestroy': True,
             'target': 'current',
-            'context': {'shipment_id': self.id or False},
+            'context': {'shipment_id': self.id or False,'lc_id': self.lc_id.id or False},
         }
+        self.state = 'cnf_quotation'
         return result
 
     @api.multi
     def action_approve_quotation(self):
-        res = self.env.ref('com_shipment.cnf_approve_quotation_wizard')
-        result = {
-            'name': _('Please Enter The Information'),
-            'view_type': 'form',
-            'view_mode': 'form',
-            'view_id': res and res.id or False,
-            'res_model': 'cnf.approve.quotation.wizard',
-            'type': 'ir.actions.act_window',
-            'nodestroy': True,
-            'target': 'new',
-        }
-        return result
+        cnf_pool_obj = self.env['cnf.quotation'].search([('shipment_id','=',self.id)])
+        cnf_pool_obj.write({'state':'approved'})
+        self.state = 'approve_cnf_quotation'
 
     @api.multi
     def action_cnf_clear(self):

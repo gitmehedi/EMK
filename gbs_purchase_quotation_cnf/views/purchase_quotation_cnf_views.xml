@@ -5,7 +5,8 @@
             <field name="name">view.cnf.quotation.tree</field>
             <field name="model">cnf.quotation</field>
             <field name="arch" type="xml">
-                <tree string="CNF Quotation">
+                <tree string="CNF Quotation" create="0" edit="0">
+                    <field name="name" attrs="{'invisible': [('state','=','draft')]}"/>
                     <field name="shipment_id"/>
                     <field name="lc_id"/>
                     <field name="state"/>
@@ -17,7 +18,7 @@
             <field name="name">view.cnf.quotation.form</field>
             <field name="model">cnf.quotation</field>
             <field name="arch" type="xml">
-                <form string="CNF Quotation">
+                <form string="CNF Quotation" create="0" edit="0">
                     <header>
 						<button name="action_confirm" string="Confirm" type="object"
 								states="draft" class="oe_highlight"/>
@@ -35,12 +36,12 @@
                         </div>
                         <group>
                             <group>
-                                <field name="shipment_id"/>
+                                <field name="lc_id"/>
                                 <field name="partner_id" string='Supplier' context="{'search_default_supplier':1, 'default_supplier':1, 'default_customer':0}" domain="[('supplier','=',True)]"/>
                                 <field name="picking_type_id"/>
                             </group>
                             <group>
-                                <field name="lc_id"/>
+                                <field name="shipment_id"/>
                                 <field name="currency_id"/>
                             </group>
 
@@ -50,7 +51,7 @@
                                 <field name="cnf_product_line" widget="one2many">
                                     <tree string="Services" editable="bottom">
                                         <field name="product_id"/>
-                                        <field name="amount"/>
+                                        <field name="amount" sum="Total"/>
                                         <field name="remarks"/>
                                     </tree>
                                 </field>
