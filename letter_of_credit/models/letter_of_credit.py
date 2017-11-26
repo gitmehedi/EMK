@@ -40,7 +40,7 @@ class LetterOfCredit(models.Model):
     lien_bank = fields.Text(string='LC Lien Bank')
     lien_date = fields.Date('LC Lien Date')
 
-    lc_value = fields.Integer(string='LC Value', readonly=False, states={'approved': [('readonly', True)]}, track_visibility='onchange', required=True)
+    lc_value = fields.Float(string='LC Value', readonly=False, states={'approved': [('readonly', True)]}, track_visibility='onchange', required=True)
     currency_id = fields.Many2one('res.currency', string='Currency', track_visibility='onchange')
 
     insurance_company_name = fields.Char(string='Insurance Company Name')
