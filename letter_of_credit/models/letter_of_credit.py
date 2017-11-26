@@ -91,24 +91,6 @@ class LetterOfCredit(models.Model):
 
     last_note = fields.Char(string='Step', track_visibility='onchange')
 
-    @api.onchange('po_ids')
-    def po_product_line(self):
-        self.po_line_ids = []
-        vals = []
-        for po_id in self.po_ids:
-            for obj in po_id.order_line:
-                # vals.append((0, 0, {'product_id': obj.product_id,
-                #                     'name': obj.name,
-                #                     'product_uom_id': obj.product_uom,
-                #                     'product_qty': obj.product_uom_qty,
-                #                     }))
-                vals.append((0, 0, {'product_id': obj.product_id,
-                                    'name': obj.name
-                                    }))
-        self.po_line_ids = vals
-        print (self.po_line_ids)
-
-
     @api.multi
     def unlink(self):
         for lc in self:

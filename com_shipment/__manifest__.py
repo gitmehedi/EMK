@@ -7,6 +7,7 @@
     'depends': [
         'commercial',
         'letter_of_credit',
+        'gbs_purchase_quotation_cnf',
     ],
 
     'data': [
