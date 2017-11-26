@@ -24,12 +24,13 @@ class DocReceiveWizard(models.TransientModel):
     def po_product_line(self):
         self.product_lines = []
         vals = []
-        for obj in self.shipment_id.shipment_product_lines:
+        pro_lc_line_pool = self.env['lc.product.line'].search([('lc_id', '=', self.shipment_id.lc_id.id)])
+        for obj in pro_lc_line_pool:
+            product_qty = obj.product_qty - obj.product_received_qty
             vals.append((0, 0, {'product_id': obj.product_id,
-                                'lc_pro_line_id': obj.lc_pro_line_id,
-                                'shipment_pro_line_id': obj.id,
+                                'lc_pro_line_id': obj.id,
                                 'name': obj.name,
-                                'product_qty': obj.product_qty,
+                                'product_qty': product_qty,
                                 'currency_id': obj.currency_id,
                                 'date_planned': obj.date_planned,
                                 'product_uom': obj.product_uom
@@ -47,15 +48,15 @@ class DocReceiveWizard(models.TransientModel):
                             'gross_weight': self.gross_weight,
                             'net_weight': self.net_weight,
                             'state': 'receive_doc'})
+        vals = []
         for pro_line in self.product_lines:
-
-            pro_line_pool = self.env['shipment.product.line'].search([('id','=',pro_line.shipment_pro_line_id)])
-            res_pro_quty = pro_line.product_qty
-            if pro_line.product_qty>pro_line_pool.product_qty:
-                raise ValidationError(_("Receive Quantity Must be less then Actual Quantity."))
-            else:
-                pro_line_pool.write({'product_qty': res_pro_quty})
-
+            vals.append((0, 0, {'product_id': pro_line.product_id,
+                            'name': pro_line.name,
+                            'product_qty': pro_line.product_qty,
+                            'currency_id': pro_line.currency_id,
+                            'date_planned': pro_line.date_planned,
+                            'product_uom':pro_line.product_uom,
+                            }))
             pro_lc_line_pool = self.env['lc.product.line'].search([('id', '=', pro_line.lc_pro_line_id)])
             res_received_qty = pro_lc_line_pool.product_received_qty+pro_line.product_qty
             if pro_line.product_qty>pro_lc_line_pool.product_qty:
@@ -63,12 +64,9 @@ class DocReceiveWizard(models.TransientModel):
             else:
                 pro_lc_line_pool.write({'product_received_qty': res_received_qty})
 
-        return {'type': 'ir.actions.act_window_close'}
+        self.shipment_id.shipment_product_lines = vals
 
-    # @api.multi
-    # def action_del_pro_line(self):
-    #     for line in self:
-    #         line.product_lines.unlink()
+        return {'type': 'ir.actions.act_window_close'}
 
 
 class ShipmentProductLineWizard(models.TransientModel):
@@ -89,12 +87,6 @@ class ShipmentProductLineWizard(models.TransientModel):
     lc_pro_line_id = fields.Integer(string='LC Line ID')
     shipment_pro_line_id = fields.Integer(string='Shipment Line ID')
 
-    @api.multi
-    def unlink(self):
-        for line in self:
-            pro_line_pool = self.env['shipment.product.line'].search([('id', '=', line.shipment_pro_line_id)])
-            pro_line_pool.unlink()
-        return super(ShipmentProductLineWizard, self).unlink()
 
 
 

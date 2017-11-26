@@ -28,8 +28,6 @@
                             <field name="product_qty"/>
                             <field name="product_uom" readonly='1'/>
                             <field name="lc_pro_line_id" invisible='1'/>
-                            <field name="shipment_pro_line_id" invisible='1'/>
-                            <!--<button name="action_del_pro_line" string="Delete" type="object" icon="fa-trash-o" />-->
                         </tree>
                     </field>
                     <footer>
