@@ -405,27 +405,46 @@ class DeliveryOrder(models.Model):
 
             self.line_ids = val
 
-    @api.one
+
     def action_process_unattached_payments(self):
         account_payment_pool = self.env['account.payment'].search(
             [('is_this_payment_checked', '=', False), ('sale_order_id', '=', self.sale_order_id.id)])
 
-        val = []
-        for cash_line in self.cash_ids:
-            val.append(cash_line.account_payment_id.id)
+        for acc in account_payment_pool:
+            if acc.journal_id.type == 'cash':
+                val = []
+                for cash_line in self.cash_ids:
+                    val.append(cash_line.account_payment_id.id)
 
-        vals = []
-        if account_payment_pool:
-            for payments in account_payment_pool:
-                if payments.id not in val:
-                    vals.append((0, 0, {'account_payment_id': payments.id,
-                                        'amount': payments.amount,
-                                        'dep_bank': payments.deposited_bank,
-                                        'branch': payments.bank_branch,
-                                        'payment_date': payments.payment_date,
-                                        }))
+                vals = []
+                for payments in acc:
+                    if payments.id not in val:
+                        vals.append((0, 0, {'account_payment_id': payments.id,
+                                            'amount': payments.amount,
+                                            'dep_bank': payments.deposited_bank,
+                                            'branch': payments.bank_branch,
+                                            'payment_date': payments.payment_date,
+                                            }))
 
-            self.cash_ids = vals
+                self.cash_ids = vals
+
+            elif acc.journal_id.type == 'bank':
+                val_bank = []
+                for bank_line in self.cheque_ids:
+                    val_bank.append(bank_line.account_payment_id.id)
+
+                vals_bank = []
+
+                for bank_payments in acc:
+                    if bank_payments.id not in val_bank:
+                        vals_bank.append((0, 0, {'account_payment_id': bank_payments.id,
+                                                'amount': bank_payments.amount,
+                                                'bank': bank_payments.deposited_bank,
+                                                'branch': bank_payments.bank_branch,
+                                                'payment_date': bank_payments.payment_date,
+                                                }))
+
+                self.cheque_ids = vals_bank
 
 
 class OrderedQty(models.Model):
