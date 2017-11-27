@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+        <!-- CNF Sequences -->
+        <record id="sequence_cnf" model="ir.sequence">
+            <field name="name">CNF Quotation</field>
+            <field name="code">cnf.quotation</field>
+            <field name="prefix">CNF-OU-%(year)s-</field>
+            <field eval="6" name="padding"/>
+            <field eval="1" name="number_next"/>
+            <field eval="1" name="number_increment"/>
+            <field eval="False" name="company_id"/>
+        </record>
+
+</odoo>

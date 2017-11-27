@@ -132,13 +132,13 @@ class SaleOrder(models.Model):
                 credit_limit_pool = order.env['res.partner'].search([('id', '=', order.partner_id.id)])
 
                 price_change_pool = self.env['product.sale.history.line'].search(
-                    [('product_id', '=', order.product_id.id),
-                     ('currency_id', '=', order.currency_id.id),
+                    [('product_id', '=', lines.product_id.id),
+                     ('currency_id', '=', lines.currency_id.id),
                      ('product_package_mode', '=', order.pack_type.id),
                      ('uom_id','=',lines.product_uom.id)])
 
 
-                if (order.credit_sales_or_lc == 'cash'):
+                if (order.credit_sales_or_lc == 'cash' or order.credit_sales_or_lc == 'lc_sales'):
                     is_double_validation = order.second_approval_business_logics(cust_commission_pool,lines, price_change_pool)
 
                 elif (order.credit_sales_or_lc == 'credit_sales'):
@@ -157,17 +157,6 @@ class SaleOrder(models.Model):
                     else:
                         is_double_validation = False
 
-                elif order.credit_sales_or_lc == 'lc_sales':
-                    # If LC and PI ref is present, go to the Final Approval, else go to Second level approval
-                    if order.lc_no and order.pi_no:
-                        is_double_validation = order.second_approval_business_logics(cust_commission_pool, lines, price_change_pool)
-                    else:
-                        is_double_validation = True
-
-                    if order.pi_no and not order.lc_no:
-                        is_double_validation = True
-
-
             if is_double_validation:
                 order.write({'state': 'validate'}) #Go to two level approval process
             else:
@@ -184,6 +173,7 @@ class SaleOrder(models.Model):
                         break;
                     else:
                         return False
+
 
     @api.multi
     def action_create_delivery_order(self):
