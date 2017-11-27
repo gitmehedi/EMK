@@ -3,8 +3,26 @@ from odoo import api, fields, models
 
 class InheritProductTemplate(models.Model):
     _inherit = 'product.template'
-    max_ordering_qty = fields.Float(string='Max Ordering Qty.', readonly=True, default=100, required=True)
+
+    max_ordering_qty = fields.Float(string='Max Ordering Qty', readonly=True, default=100, required=True)
     purchase_ok = fields.Boolean(string='Can be Purchased',default=False)
+    available_qty = fields.Float(string='Available Qty', compute='_calculate_available_qty')
+
+    @api.multi
+    def _calculate_available_qty(self):
+        for prod in self:
+            ordered_qty_pool = self.env['ordered.qty'].search([('lc_no', '=', False),
+                                                               ('company_id', '=', prod.company_id.id),
+                                                               ('product_id', '=', prod.id)])
+            if not ordered_qty_pool:
+                prod.available_qty = 100
+                return;
+
+            for ord_qty in ordered_qty_pool:
+                if not ord_qty.lc_no:
+                    prod.available_qty = ord_qty.available_qty
+                else:
+                    prod.available_qty = 100
 
 
     @api.multi
