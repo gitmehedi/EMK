@@ -336,7 +336,7 @@
                     </xpath>
 
                     <xpath expr="//field[@name='pi_no']" position="after">
-                        <field name="da_btn_show_hide" invisible="1"/>
+                        <field name="da_btn_show_hide" invisible="0"/>
                     </xpath>
 
                 </data>

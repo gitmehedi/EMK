@@ -146,6 +146,10 @@ class SalePriceChange(models.Model):
 
         if (time.strftime('%Y-%m-%d') > self.effective_date):
             raise ValidationError('Effective date must be after final approval date')
+
+        ## Execute below function immedietly to update on Variants History
+        #self.env['product.sale.history.line'].pull_automation()
+
         return self.write({'state': 'validate','approver2_date': time.strftime('%Y-%m-%d %H:%M:%S')})
 
     @api.multi

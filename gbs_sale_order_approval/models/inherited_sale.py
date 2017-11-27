@@ -140,6 +140,8 @@ class SaleOrder(models.Model):
 
                 if (order.credit_sales_or_lc == 'cash' or order.credit_sales_or_lc == 'lc_sales'):
                     is_double_validation = order.second_approval_business_logics(cust_commission_pool,lines, price_change_pool)
+                    if is_double_validation == True:
+                        break;
 
                 elif (order.credit_sales_or_lc == 'credit_sales'):
                     account_receivable = credit_limit_pool.credit

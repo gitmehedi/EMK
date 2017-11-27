@@ -200,7 +200,7 @@ class DeliveryOrder(models.Model):
 
                 if not ordered_qty_pool:
                     res['available_qty'] = 100 - list[rec]
-                    if res['available_qty'] > 100:
+                    if list[rec] > 100:
                         res['available_qty'] = 0
 
                     self.env['ordered.qty'].create(res)

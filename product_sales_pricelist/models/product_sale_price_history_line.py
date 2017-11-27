@@ -46,7 +46,7 @@ class ProductSalePriceHistiryLine(models.Model):
 
                 price_history_pool.create(vals)
             else:
-                price_history_pool.write({'product_id':price_pool.product_id.id,
+                price_history_pool.write({'product_id':price_pool.product_id.id, 'approve_price_date':price_pool.effective_date,
                                           'new_price':price_pool.new_price})
 
             #Update Products Sales Price also
