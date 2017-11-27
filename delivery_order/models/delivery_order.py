@@ -213,6 +213,9 @@ class DeliveryOrder(models.Model):
                                 orders.create(res)
                             else:
                                 res['available_qty'] = orders.available_qty - list[rec]
+                                if res['available_qty'] > 100:
+                                    res['available_qty'] = 0
+
                                 self.write({'state': 'close'})  # Final Approval
                                 orders.create(res)
 
