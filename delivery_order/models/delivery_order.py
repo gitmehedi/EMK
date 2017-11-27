@@ -219,84 +219,14 @@ class DeliveryOrder(models.Model):
                                 self.write({'state': 'close'})  # Final Approval
                                 orders.create(res)
 
-                    #for order in ordered_qty_pool:
-                    # if list[rec] > order.available_qty:
-                    #                     res['available_qty'] = order.available_qty - list[rec]
-                    #                     self.write({'state': 'approve'})  # Second Approval
-                    #                     order.write(res)
-                    #                 else:
-                    #                     res['available_qty'] = order.available_qty - list[rec]
-                    #                     self.write({'state': 'close'})  # Final Approval
-                    #                     order.write(res)
 
-                # if list[rec] > 100:
-                #     self.write({'state': 'approve'})  # Second Approval
-                # else:
-                #     self.write({'state': 'close'})  # Final Approval
-
-
-        #######################################################
-        #  If LC and PI ref is present, go to the Final Approval
-        # Else go to Second level approval
-        #######################################################
-
-        # if self.lc_no and self.pi_no:
-        #     if self.lc_no.lc_value == self.total_amount() \
-        #             or self.lc_no.lc_value > self.total_amount:
-        #
-        #         return self.write({'state': 'close'})
-        #     else:
-        #         return self.write({'state': 'approve'})
-        #
-
-        # #########################################################
-        # # 1. Has PI & no LC then go to second level approval
-        # # 2. Check 100MT checking for this product, company wise
-        # ##########################################################
-
-        # if self.pi_no and not self.lc_no:
-        #     res = {}
-        #     list = dict.fromkeys(set([val.product_id.product_tmpl_id.id for val in self.line_ids]), 0)
-        #
-        #     for line in self.line_ids:
-        #         list[line.product_id.product_tmpl_id.id] = list[line.product_id.product_tmpl_id.id] + line.quantity
-        #
-        #     for rec in list:
-        #         ordered_qty_pool = self.env['ordered.qty'].search([('lc_no', '=', False),
-        #                                                            ('company_id', '=', self.company_id.id),
-        #                                                            ('product_id', '=', rec)])
-        #
-        #         res['product_id'] = rec
-        #         res['ordered_qty'] = list[rec]
-        #         res['delivery_auth_no'] = self.id
-        #
-        #         if not ordered_qty_pool:
-        #             res['available_qty'] = 100 - list[rec]
-        #             self.env['ordered.qty'].create(res)
-        #
-        #             if list[rec] > 100:
-        #                 self.write({'state': 'approve'})  # Second Approval
-        #             else:
-        #                 self.write({'state': 'close'})  # Final Approval
-        #         elif ordered_qty_pool and not ordered_qty_pool.lc_no:
-        #             for order in ordered_qty_pool:
-        #                 if list[rec] > order.available_qty:
-        #                     res['available_qty'] = order.available_qty - list[rec]
-        #                     self.write({'state': 'approve'})  # Second Approval
-        #                     order.write(res)
-        #                 else:
-        #                     res['available_qty'] = order.available_qty - list[rec]
-        #                     self.write({'state': 'close'})  # Final Approval
-        #                     order.write(res)
-
-
-        # if list[rec] > 100:
-        #     # self.write({'state': 'approve'}) # second level
-        #     warningstr = warningstr + 'Product {0} has order quantity is {1} which is more than 100\n'.format(
-        #         pro_tmpl.name, list[rec])
-        #
-        # print warningstr
-        # raise Warning(warningstr)
+            # if list[rec] > 100:
+            #     # self.write({'state': 'approve'}) # second level
+            #     warningstr = warningstr + 'Product {0} has order quantity is {1} which is more than 100\n'.format(
+            #         pro_tmpl.name, list[rec])
+            #
+            # print warningstr
+            # raise Warning(warningstr)
 
     def total_sub_total_amount(self):
         total_amt = 0

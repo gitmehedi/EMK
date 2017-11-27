@@ -29,7 +29,7 @@
                                 groups="gbs_application_group.group_head_account,gbs_application_group.group_cxo"/>
 
                         <button string="Tag LC" name="%(action_view_lc_wizard)d" type="action"
-                                attrs="{'invisible':['|', ('so_type','!=','lc_sales'), ('lc_no', '!=', False)]}"
+                                attrs="{'invisible':['|','|', ('pi_no', '=', False), ('state','!=','close'), ('lc_no', '!=', False)]}"
                                 groups="account.group_account_user,gbs_application_group.group_head_account,gbs_application_group.group_cxo"
                                 class="oe_highlight"/>
 
