@@ -53,9 +53,8 @@ class SaleOrder(models.Model):
     pi_no = fields.Many2one('proforma.invoice', string='PI Ref. No.')
     lc_no = fields.Many2one('letter.credit', string='LC Ref. No.')
 
-
-    @api.multi
-    def _Da_button_show_hide(self):
+    @api.depends('order_line.da_qty')
+    def _da_button_show_hide(self):
         for sale_orders in self:
             for sale_line in sale_orders.order_line:
                 if sale_line.da_qty == 0.00:
@@ -64,7 +63,7 @@ class SaleOrder(models.Model):
                     sale_orders.da_btn_show_hide = False
                     break;
 
-    da_btn_show_hide = fields.Boolean(string="Is DA btn visible", compute="_Da_button_show_hide", store=True)
+    da_btn_show_hide = fields.Boolean(string="Is DA btn visible", compute="_da_button_show_hide", store=True)
 
     @api.multi
     def amount_to_word(self, number):
