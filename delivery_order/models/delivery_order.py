@@ -82,7 +82,7 @@ class DeliveryOrder(models.Model):
     sale_order_id = fields.Many2one('sale.order',
                                     string='Sale Order',
                                     readonly=True,
-                                    domain=[('da_btn_show_hide', '=', False)],
+                                    domain=[('da_btn_show_hide', '=', False),('state','=','done')],
                                     states={'draft': [('readonly', False)]})
 
     """ All functions """
@@ -156,10 +156,18 @@ class DeliveryOrder(models.Model):
         elif self.so_type == 'lc_sales':
             return self.lc_sales_business_logics()
         elif self.so_type == 'credit_sales':
+            self.create_delivery_order()
+            self.update_sale_order_da_qty()
             self.state = 'close'
 
 
     def lc_sales_business_logics(self):
+
+        if self.pi_no:
+            pi_pool = self.env['proforma.invoice'].search([('sale_order_id', '=', self.sale_order_id.id)])
+            if not pi_pool:
+                raise UserError('PI is of a different Sale Order')
+
 
         ##############################################
         # If PI but no LC and then 100MT Qty
@@ -173,6 +181,8 @@ class DeliveryOrder(models.Model):
         ############################################################################
         if self.lc_no and self.pi_no:
             if self.lc_no.lc_value >= self.total_sub_total_amount():
+                self.create_delivery_order()
+                self.update_sale_order_da_qty()
                 self.write({'state': 'close'}) # Final Approval
             else:
                 self.write({'state': 'approve'}) #Second approval
@@ -215,6 +225,9 @@ class DeliveryOrder(models.Model):
                                 res['available_qty'] = orders.available_qty - list[rec]
                                 if res['available_qty'] > 100:
                                     res['available_qty'] = 0
+
+                                self.create_delivery_order()
+                                self.update_sale_order_da_qty()
 
                                 self.write({'state': 'close'})  # Final Approval
                                 orders.create(res)
@@ -280,6 +293,8 @@ class DeliveryOrder(models.Model):
 
         if total_cash_cheque_amount >= self.total_amount:
             account_payment_pool.write({'is_this_payment_checked': True})
+            self.create_delivery_order()
+            self.update_sale_order_da_qty()
             return self.write({'state': 'close'})  # directly go to final approval level
         else:
             account_payment_pool.write({'is_this_payment_checked': True})
@@ -452,11 +467,11 @@ class OrderedQty(models.Model):
     _description = 'Store Product wise ordered qty to track max qty value'
     # _order = "delivery_auth_no,desc"
 
-    product_id = fields.Many2one('product.product', string='Product')
+    product_id = fields.Many2one('product.template', string='Product')
     ordered_qty = fields.Float(string='Ordered Qty')
     available_qty = fields.Float(string='Allowed Qty', default=0.00)  ## available_qty = max_qty - ordered_qty
     lc_no = fields.Many2one('letter.credit', string='LC No')
     delivery_auth_no = fields.Many2one('delivery.order', string='Delivery Authrozation ref')
     company_id = fields.Many2one('res.company', 'Company',
                                  default=lambda self: self.env['res.company']._company_default_get(
-                                     'product_sales_pricelist'), required=True)
+                                     'product_sales_pricelist'))

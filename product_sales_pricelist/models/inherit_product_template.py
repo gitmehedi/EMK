@@ -4,9 +4,8 @@ from odoo import api, fields, models
 class InheritProductTemplate(models.Model):
     _inherit = 'product.template'
 
-    max_ordering_qty = fields.Float(string='Max Ordering Qty', readonly=True, default=100, required=True)
+    max_ordering_qty = fields.Float(string='Max Ordering Qty', readonly=True, default=100)
     purchase_ok = fields.Boolean(string='Can be Purchased',default=False)
-    available_qty = fields.Float(string='Available Qty', compute='_calculate_available_qty')
 
     @api.multi
     def _calculate_available_qty(self):
@@ -16,7 +15,7 @@ class InheritProductTemplate(models.Model):
                                                                ('product_id', '=', prod.id)])
             if not ordered_qty_pool:
                 prod.available_qty = 100
-                return;
+                #return;
 
             for ord_qty in ordered_qty_pool:
                 if not ord_qty.lc_no:
@@ -24,6 +23,7 @@ class InheritProductTemplate(models.Model):
                 else:
                     prod.available_qty = 100
 
+    available_qty = fields.Float(string='Available Qty', compute='_calculate_available_qty')
 
     @api.multi
     def action_view_pricing_history(self):

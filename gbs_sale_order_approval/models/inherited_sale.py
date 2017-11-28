@@ -80,11 +80,11 @@ class SaleOrder(models.Model):
 
     @api.multi
     def action_to_submit(self):
-        if self.validity_date and self.validity_date <= self.date_order:
-            raise UserError('Expiration Date can not be less than Order Date')
+        for orders in self:
+            if orders.validity_date and orders.validity_date <= orders.date_order:
+                raise UserError('Expiration Date can not be less than Order Date')
 
-        self.state = 'draft'
-
+            orders.state = 'draft'
 
     @api.onchange('type_id')
     def onchange_type(self):
