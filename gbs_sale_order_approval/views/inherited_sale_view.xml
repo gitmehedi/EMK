@@ -239,7 +239,7 @@
                     </xpath>
 
                     <xpath expr="//field[@name='order_line']/tree/field[@name='price_unit']" position="after">
-                        <field name="da_qty"/>
+                        <field name="da_qty" invisible="1"/>
                     </xpath>
 
                     <xpath expr="//field[@name='state']" position="replace">
