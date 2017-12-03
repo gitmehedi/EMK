@@ -56,7 +56,8 @@ class DeliveryOrder(models.Model):
         ('close', "Approved")
     ], default='draft')
 
-    company_id = fields.Many2one('res.company', string='Company', readonly=True, default=lambda self: self.env.user.company_id)
+    company_id = fields.Many2one('res.company', string='Company', readonly=True,
+                                 default=lambda self: self.env.user.company_id)
     delivery_count = fields.Integer(string='Delivery Orders', compute='_compute_picking_ids')
 
     @api.multi
@@ -66,7 +67,6 @@ class DeliveryOrder(models.Model):
             order.picking_ids = self.env['stock.picking'].search(
                 [('group_id', '=', order.procurement_group_id.id)]) if order.procurement_group_id else []
             self.delivery_count = len(order.picking_ids)
-
 
     """ PI and LC """
     pi_no = fields.Many2one('proforma.invoice', string='PI Ref. No.', readonly=True,
@@ -82,7 +82,7 @@ class DeliveryOrder(models.Model):
     sale_order_id = fields.Many2one('sale.order',
                                     string='Sale Order',
                                     readonly=True,
-                                    domain=[('da_btn_show_hide', '=', False),('state','=','done')],
+                                    domain=[('da_btn_show_hide', '=', False), ('state', '=', 'done')],
                                     states={'draft': [('readonly', False)]})
 
     """ All functions """
@@ -107,6 +107,7 @@ class DeliveryOrder(models.Model):
         self.line_ids.write({'state': 'close'})
 
     """ DO button box action """
+
     @api.multi
     def action_view_delivery(self):
         '''
@@ -124,8 +125,8 @@ class DeliveryOrder(models.Model):
             action['res_id'] = pickings.id
         return action
 
-
     """ Action for Validate Button"""
+
     @api.one
     def action_approve(self):
         self.state = 'validate'
@@ -160,14 +161,12 @@ class DeliveryOrder(models.Model):
             self.update_sale_order_da_qty()
             self.state = 'close'
 
-
     def lc_sales_business_logics(self):
 
         if self.pi_no:
             pi_pool = self.env['proforma.invoice'].search([('sale_order_id', '=', self.sale_order_id.id)])
             if not pi_pool:
                 raise UserError('PI is of a different Sale Order')
-
 
         ##############################################
         # If PI but no LC and then 100MT Qty
@@ -183,12 +182,11 @@ class DeliveryOrder(models.Model):
             if self.lc_no.lc_value >= self.total_sub_total_amount():
                 self.create_delivery_order()
                 self.update_sale_order_da_qty()
-                self.write({'state': 'close'}) # Final Approval
+                self.write({'state': 'close'})  # Final Approval
             else:
-                self.write({'state': 'approve'}) #Second approval
+                self.write({'state': 'approve'})  # Second approval
         else:
             self.write({'state': 'approve'})  # Second Approval
-
 
         ##################################################################
         # Has PI & no LC then if 100MT is over then go to second approval
@@ -201,8 +199,8 @@ class DeliveryOrder(models.Model):
 
             for rec in list:
                 ordered_qty_pool = self.env['ordered.qty'].search([('lc_no', '=', False),
-                                                                ('company_id', '=', self.company_id.id),
-                                                                ('product_id', '=', rec)])
+                                                                   ('company_id', '=', self.company_id.id),
+                                                                   ('product_id', '=', rec)])
 
                 res['product_id'] = rec
                 res['ordered_qty'] = list[rec]
@@ -233,13 +231,13 @@ class DeliveryOrder(models.Model):
                                 orders.create(res)
 
 
-            # if list[rec] > 100:
-            #     # self.write({'state': 'approve'}) # second level
-            #     warningstr = warningstr + 'Product {0} has order quantity is {1} which is more than 100\n'.format(
-            #         pro_tmpl.name, list[rec])
-            #
-            # print warningstr
-            # raise Warning(warningstr)
+                                # if list[rec] > 100:
+                                #     # self.write({'state': 'approve'}) # second level
+                                #     warningstr = warningstr + 'Product {0} has order quantity is {1} which is more than 100\n'.format(
+                                #         pro_tmpl.name, list[rec])
+                                #
+                                # print warningstr
+                                # raise Warning(warningstr)
 
     def total_sub_total_amount(self):
         total_amt = 0
@@ -328,17 +326,11 @@ class DeliveryOrder(models.Model):
                 break;
 
     def update_sale_order_da_qty(self):
-        #update_da_qty = None
         for da_line in self.line_ids:
             for sale_line in self.sale_order_id.order_line:
-                # if self.quantity > sale_line.da_qty:
-                #     raise ValidationError('You can order another {0} {1}'.format((sale_line.da_qty), (sale_line.product_uom.name)))
-
-                update_da_qty = sale_line.da_qty - da_line.quantity
-                sale_line.write({'da_qty': update_da_qty})
-
-                # if update_da_qty == 0.00:
-                #     break;
+                if da_line.product_id.id == sale_line.product_id.id:
+                    vals = sale_line.da_qty - da_line.quantity
+                    sale_line.write({'da_qty': vals})
 
     @api.onchange('quantity')
     def onchange_quantity(self):
@@ -420,7 +412,6 @@ class DeliveryOrder(models.Model):
 
             self.line_ids = val
 
-
     def action_process_unattached_payments(self):
         account_payment_pool = self.env['account.payment'].search(
             [('is_this_payment_checked', '=', False), ('sale_order_id', '=', self.sale_order_id.id)])
@@ -453,11 +444,11 @@ class DeliveryOrder(models.Model):
                 for bank_payments in acc:
                     if bank_payments.id not in val_bank:
                         vals_bank.append((0, 0, {'account_payment_id': bank_payments.id,
-                                                'amount': bank_payments.amount,
-                                                'bank': bank_payments.deposited_bank,
-                                                'branch': bank_payments.bank_branch,
-                                                'payment_date': bank_payments.payment_date,
-                                                }))
+                                                 'amount': bank_payments.amount,
+                                                 'bank': bank_payments.deposited_bank,
+                                                 'branch': bank_payments.bank_branch,
+                                                 'payment_date': bank_payments.payment_date,
+                                                 }))
 
                 self.cheque_ids = vals_bank
 

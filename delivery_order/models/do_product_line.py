@@ -1,18 +1,19 @@
 from odoo import api, fields, models
 from odoo.exceptions import UserError, ValidationError
 
+
 class DOProductLine(models.Model):
     _name = 'delivery.order.line'
     _description = 'Sales Delivery Order line'
 
     product_id = fields.Many2one('product.product', string="Product", readonly=True, ondelete='cascade')
-    uom_id = fields.Many2one('product.uom', string="UoM",ondelete='cascade',readonly=True)
-    pack_type = fields.Many2one('product.packaging.mode', string="Packing",ondelete='cascade',readonly=True)
-    quantity = fields.Float(string="Ordered Qty", required=True, default= 1)
+    uom_id = fields.Many2one('product.uom', string="UoM", ondelete='cascade', readonly=True)
+    pack_type = fields.Many2one('product.packaging.mode', string="Packing", ondelete='cascade', readonly=True)
+    quantity = fields.Float(string="Ordered Qty", required=True, default=1)
     price_unit = fields.Float(string="Price Unit", readonly=True)
     commission_rate = fields.Float(string="Com. (%)", readonly=True)
     price_subtotal = fields.Float(string="Subtotal", readonly=True)
-    tax_id = fields.Many2one('account.tax',string='Tax',readonly=True)
+    tax_id = fields.Many2one('account.tax', string='Tax', readonly=True)
 
     """ Relational Fields """
     parent_id = fields.Many2one('delivery.order', ondelete='cascade')
@@ -29,18 +30,23 @@ class DOProductLine(models.Model):
         ('vat', 'VAT'),
     ], string='Delivery Mode')
 
+    @api.multi
     @api.constrains('quantity')
     def check_quantity(self):
+        for da in self:
+            for sale_line in da.parent_id.sale_order_id.order_line:
+                if da.product_id.id == sale_line.product_id.id:
+                    if da.quantity > sale_line.da_qty:
+                        raise ValidationError('You can Deliver another {0} {1} for {2}'.format((sale_line.da_qty), (sale_line.product_uom.name), (sale_line.product_id.display_name)))
 
-        if self.quantity < 0.00:
+        if da.quantity < 0.00:
             raise ValidationError('Quantity can not be negative')
 
-        self.set_da_amounts_automatically()
+        for so_line in da.parent_id.sale_order_id.order_line:
+            if da.quantity > so_line.product_uom_qty:
+                raise ValidationError('Delivery Qty can not be greater than Ordered Qty')
 
-        # for sale_line in self.parent_id.sale_order_id.order_line:
-        #     if self.quantity > sale_line.da_qty:
-        #         raise ValidationError('You can order another {0} {1}'.format((sale_line.da_qty),(sale_line.product_uom.name)))
-
+        da.set_da_amounts_automatically()
 
     @api.onchange('quantity')
     def onchange_quantity(self):

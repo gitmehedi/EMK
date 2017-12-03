@@ -203,7 +203,7 @@
 
 
         <record model="ir.actions.act_window" id="delivery_order_action">
-            <field name="name">Delivery Order</field>
+            <field name="name">Delivery Authorization</field>
             <field name="res_model">delivery.order</field>
             <field name="view_mode">tree,form</field>
         </record>
