@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+
+        <record model="ir.actions.act_window" id="rnd_creation_action">
+            <field name="name">LC Shipment</field>
+            <field name="res_model">rnd.rostering</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <menuitem id="rnd_shipment_creation_menu" parent="commercial.menu_commercial_root"
+            sequence="3" name="RnD" />
+
+        <menuitem id="rnd_creation_submenu" name="LC Shipment" parent="rnd_shipment_creation_menu"
+                  sequence="3" action="rnd_creation_action"/>
+    </data>
+</odoo>
