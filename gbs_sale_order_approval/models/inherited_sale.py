@@ -14,17 +14,24 @@ class SaleOrder(models.Model):
         return self.env['crm.team']._get_default_team_id()
 
     type_id = fields.Many2one(comodel_name='sale.order.type', string='Type', default=_get_order_type, readonly=True,
-                    states={'to_submit':[('readonly',False)]})
+                              states={'to_submit': [('readonly', False)]})
 
-    order_line = fields.One2many('sale.order.line', 'order_id', string='Order Lines', readonly=True,copy=True)
+    order_line = fields.One2many('sale.order.line', 'order_id', string='Order Lines', readonly=True, copy=True)
     incoterm = fields.Many2one('stock.incoterms', 'Incoterms', readonly=True,
                                help="International Commercial Terms are a series of predefined commercial terms used in international transactions.",
                                states={'to_submit': [('readonly', False)]})
-    client_order_ref = fields.Char(string='Customer Reference', copy=False,readonly=True,states={'to_submit': [('readonly', False)]})
-    team_id = fields.Many2one('crm.team', 'Sales Team', change_default=True,readonly=True, default=_get_default_team, oldname='section_id',states={'to_submit': [('readonly', False)]})
-    user_id = fields.Many2one('res.users', string='Salesperson', index=True, track_visibility='onchange', default=lambda self: self.env.user,readonly=True,states={'to_submit': [('readonly', False)]})
-    fiscal_position_id = fields.Many2one('account.fiscal.position', oldname='fiscal_position', string='Fiscal Position',readonly=True,states={'to_submit': [('readonly', False)]})
-    origin = fields.Char(string='Source Document', help="Reference of the document that generated this sales order request.",readonly=True,states={'to_submit': [('readonly', False)]})
+    client_order_ref = fields.Char(string='Customer Reference', copy=False, readonly=True,
+                                   states={'to_submit': [('readonly', False)]})
+    team_id = fields.Many2one('crm.team', 'Sales Team', change_default=True, readonly=True, default=_get_default_team,
+                              oldname='section_id', states={'to_submit': [('readonly', False)]})
+    user_id = fields.Many2one('res.users', string='Salesperson', index=True, track_visibility='onchange',
+                              default=lambda self: self.env.user, readonly=True,
+                              states={'to_submit': [('readonly', False)]})
+    fiscal_position_id = fields.Many2one('account.fiscal.position', oldname='fiscal_position', string='Fiscal Position',
+                                         readonly=True, states={'to_submit': [('readonly', False)]})
+    origin = fields.Char(string='Source Document',
+                         help="Reference of the document that generated this sales order request.", readonly=True,
+                         states={'to_submit': [('readonly', False)]})
 
     credit_sales_or_lc = fields.Selection([
         ('cash', 'Cash'),
@@ -35,7 +42,7 @@ class SaleOrder(models.Model):
     state = fields.Selection([
         ('to_submit', 'Submit'),
         ('draft', 'Quotation'),
-        ('submit_quotation','Validate'),
+        ('submit_quotation', 'Validate'),
         ('validate', 'Accounts Approval'),
         ('sent', 'Quotation Sent'),
         ('sale', 'Sales Order'),
@@ -46,7 +53,7 @@ class SaleOrder(models.Model):
     def _get_pack_type(self):
         return self.env['product.packaging.mode'].search([], limit=1)
 
-    pack_type = fields.Many2one('product.packaging.mode',string='Packing Mode', default=_get_pack_type, required=True)
+    pack_type = fields.Many2one('product.packaging.mode', string='Packing Mode', default=_get_pack_type, required=True)
     currency_id = fields.Many2one("res.currency", related='', string="Currency", required=True)
 
     """ PI and LC """
@@ -67,12 +74,11 @@ class SaleOrder(models.Model):
 
     @api.multi
     def amount_to_word(self, number):
-        if(self.currency_id.name.encode('ascii','ignore')=='BDT'):
+        if (self.currency_id.name.encode('ascii', 'ignore') == 'BDT'):
             return self.env['res.currency'].amount_to_word(float(number))
         else:
-            currency=self.currency_id.name.encode('ascii', 'ignore')
+            currency = self.currency_id.name.encode('ascii', 'ignore')
             return amount_to_text_en.amount_to_text(number, 'en', currency)
-
 
     @api.multi
     def action_validate(self):
@@ -92,7 +98,6 @@ class SaleOrder(models.Model):
         if self.type_id:
             self.credit_sales_or_lc = sale_type_pool.sale_order_type
             self.currency_id = sale_type_pool.currency_id.id
-
 
     @api.multi
     def _is_double_validation_applicable(self):
@@ -114,9 +119,9 @@ class SaleOrder(models.Model):
         for lines in self.order_line:
             product_pool = self.env['product.product'].search([('id', '=', lines.product_id.ids)])
             if (lines.price_unit != product_pool.list_price):
-                return True # Go to two level approval process
+                return True  # Go to two level approval process
             else:
-                return False # One level approval process
+                return False  # One level approval process
 
     double_validation = fields.Boolean('Apply Double Validation', compute="_is_double_validation_applicable")
 
@@ -127,24 +132,25 @@ class SaleOrder(models.Model):
 
         for order in self:
             for lines in order.order_line:
-                cust_commission_pool = order.env['customer.commission'].search([('customer_id', '=', order.partner_id.id),('product_id', '=', lines.product_id.ids)])
+                cust_commission_pool = order.env['customer.commission'].search(
+                    [('customer_id', '=', order.partner_id.id), ('product_id', '=', lines.product_id.ids)])
                 credit_limit_pool = order.env['res.partner'].search([('id', '=', order.partner_id.id)])
 
                 price_change_pool = self.env['product.sale.history.line'].search(
                     [('product_id', '=', lines.product_id.id),
                      ('currency_id', '=', lines.currency_id.id),
                      ('product_package_mode', '=', order.pack_type.id),
-                     ('uom_id','=',lines.product_uom.id)])
-
+                     ('uom_id', '=', lines.product_uom.id)])
 
                 if (order.credit_sales_or_lc == 'cash' or order.credit_sales_or_lc == 'lc_sales'):
-                    is_double_validation = order.second_approval_business_logics(cust_commission_pool,lines, price_change_pool)
+                    is_double_validation = order.second_approval_business_logics(cust_commission_pool, lines,
+                                                                                 price_change_pool)
                     if is_double_validation == True:
                         break;
 
                 elif (order.credit_sales_or_lc == 'credit_sales'):
                     account_receivable = credit_limit_pool.credit
-                    sales_order_amount_total = -order.amount_total #actually it should be minus value
+                    sales_order_amount_total = -order.amount_total  # actually it should be minus value
 
                     customer_total_credit = account_receivable + sales_order_amount_total
                     customer_credit_limit = credit_limit_pool.credit_limit
@@ -153,16 +159,15 @@ class SaleOrder(models.Model):
                         or lines.commission_rate != cust_commission_pool.commission_rate
                         or lines.price_unit != price_change_pool.new_price):
 
-                            is_double_validation = True
-                            break;
+                        is_double_validation = True
+                        break;
                     else:
                         is_double_validation = False
 
             if is_double_validation:
-                order.write({'state': 'validate'}) #Go to two level approval process
+                order.write({'state': 'validate'})  # Go to two level approval process
             else:
-                order.write({'state': 'done'}) # One level approval process
-
+                order.write({'state': 'done'})  # One level approval process
 
     def second_approval_business_logics(self, cust_commission_pool, lines, price_change_pool):
         for coms in cust_commission_pool:
@@ -175,33 +180,30 @@ class SaleOrder(models.Model):
                     else:
                         return False
 
-
     @api.multi
     def action_create_delivery_order(self):
 
-            view = self.env.ref('delivery_order.delivery_order_form')
+        view = self.env.ref('delivery_order.delivery_order_form')
 
-            return {
-                'name': ('Delivery Authorization'),
-                'view_type': 'form',
-                'view_mode': 'form',
-                'res_model': 'delivery.order',
-                'view_id': [view.id],
-                'type': 'ir.actions.act_window',
-                'context': {'default_sale_order_id': self.id},
-            }
+        return {
+            'name': ('Delivery Authorization'),
+            'view_type': 'form',
+            'view_mode': 'form',
+            'res_model': 'delivery.order',
+            'view_id': [view.id],
+            'type': 'ir.actions.act_window',
+            'context': {'default_sale_order_id': self.id},
+        }
 
     @api.multi
     @api.onchange('currency_id')
     def currency_id_onchange(self):
         self._get_changed_price()
 
-
     @api.multi
     @api.onchange('pack_type')
     def pack_type_onchange(self):
         self._get_changed_price()
-
 
     def _get_changed_price(self):
         for order in self:
@@ -213,17 +215,19 @@ class SaleOrder(models.Model):
 
 
 class InheritedSaleOrderLine(models.Model):
-    _inherit='sale.order.line'
+    _inherit = 'sale.order.line'
 
     da_qty = fields.Float(string='DA Qty.', default=0)
 
-
-    @api.constrains('product_uom_qty','commission_rate')
+    @api.one
+    @api.constrains('product_uom_qty', 'commission_rate')
     def _check_order_line_inputs(self):
-        if self.product_uom_qty or self.commission_rate:
+        if self.product_uom_qty or self.commission_rate or self.price_unit:
             if self.product_uom_qty < 0 or self.commission_rate < 0 or self.price_unit < 0:
-                raise ValidationError('Price Unit, Ordered Qty. & Commission Rate can not be Negative value')
+                raise ValidationError('Price Unit, Ordered Qty & Commission Rate can not be Negative value')
 
+            if self.commission_rate > 100:
+                raise ValidationError('Commission Rate can not be greater than 100')
 
     def _get_product_sales_price(self, product):
 
