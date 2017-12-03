@@ -53,7 +53,8 @@ class DeliveryOrder(models.Model):
         ('draft', "Submit"),
         ('validate', "Validate"),
         ('approve', "Second Approval"),
-        ('close', "Approved")
+        ('close', "Approved"),
+        ('refused','Refused'),
     ], default='draft')
 
     company_id = fields.Many2one('res.company', string='Company', readonly=True,
@@ -102,9 +103,13 @@ class DeliveryOrder(models.Model):
         return super(DeliveryOrder, self).unlink()
 
     @api.one
+    def action_refuse(self):
+        self.state = 'refused'
+        #self.line_ids.write({'state': 'close'})
+
+    @api.one
     def action_draft(self):
-        self.state = 'close'
-        self.line_ids.write({'state': 'close'})
+        self.state = 'draft'
 
     """ DO button box action """
 
