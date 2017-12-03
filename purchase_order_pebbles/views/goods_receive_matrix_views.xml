@@ -65,8 +65,8 @@
                     <group name="product_variant_matrix" string="Goods Receive Matrix"
                            attrs="{'invisible':[('readonly_check','=',False)]}">
                         <div>
-                            <field name="matrix_line_ids" widget="goods_receive_matrix" field_x_axis="size_variant_id"
-                                   field_y_axis="color_variant_id" field_value="product_qty" attrs="{'readonly':
+                            <field name="matrix_line_ids" widget="goods_receive_matrix" field_x_axis="color_variant_id"
+                                   field_y_axis="size_variant_id" field_value="product_qty" attrs="{'readonly':
 									['|','|',('state','=','approved'),('state','=','received'),('state','=','cancelled')
 									],'invisible':[('readonly_check','=',False)]}"/>
                         </div>
