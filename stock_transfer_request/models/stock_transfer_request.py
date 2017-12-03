@@ -265,11 +265,6 @@ class StockTransferRequest(models.Model):
                 move_done = move_obj.create(move)
                 move_done.action_done()
 
-        self.state = 'receive'
-        self.receive_date = self.get_current_date()
-        self.receive_user_id = self.get_login_user()
-        self.is_receive = True
-
 
 class InheriteStockPicking(models.Model):
     _inherit = 'stock.picking'
