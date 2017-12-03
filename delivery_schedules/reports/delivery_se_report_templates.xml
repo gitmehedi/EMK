@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--Custom report.-->
 <odoo>
     <data>
         <template id="report_delivery_schedules">
@@ -11,8 +10,14 @@
                                 Delivery Schedules Report
                             </h2>
                             <div style="text-align:left;">
-                                <p><b>Description: </b><span t-field="o.name"/></p>
-                                <p><b>Requested Date:</b><span t-field="o.requested_date"/></p>
+                                <p>
+                                    <b>Description:</b>
+                                    <span t-field="o.name"/>
+                                </p>
+                                <p>
+                                    <b>Requested Date:</b>
+                                    <span t-field="o.requested_date"/>
+                                </p>
                             </div>
 
                             <table class="table table-bordered" style="padding: 15px 0px;">
@@ -30,30 +35,36 @@
                                 <tbody>
                                     <t t-foreach="o.line_ids" t-as="l">
                                         <tr>
-                                            <td><span t-esc="l.partner_id.name"/></td>
-                                            <td><span t-esc="l.product_id.name"/></td>
-                                            <td><span t-esc="l.quantity"/></td>
-                                            <td><span t-esc="l.uom_id.name"/></td>
-                                            <td><span t-esc="l.pack_type.id"/></td>
-                                            <td><span t-esc="l.deli_address"/></td>
-                                            <td><span t-esc="l.remarks"/></td>
+                                            <td>
+                                                <span t-esc="l.partner_id.name"/>
+                                            </td>
+                                            <td>
+                                                <span t-esc="l.product_id.name"/>
+                                            </td>
+                                            <td>
+                                                <span t-esc="l.quantity"/>
+                                            </td>
+                                            <td>
+                                                <span t-esc="l.uom_id.name"/>
+                                            </td>
+                                            <td>
+                                                <span t-esc="l.pack_type.id"/>
+                                            </td>
+                                            <td>
+                                                <span t-esc="l.deli_address"/>
+                                            </td>
+                                            <td>
+                                                <span t-esc="l.remarks"/>
+                                            </td>
                                         </tr>
-                	                 </t>
+                                    </t>
 
                                 </tbody>
                             </table>
-                            <!--<p><span t-field="o.notes"/></p>-->
                         </div>
                     </t>
                 </t>
             </t>
         </template>
-        <!--<template id="report_del_schedules">-->
-            <!--<t t-call="report.html_container">-->
-                <!--<t t-foreach="docs" t-as="doc">-->
-                    <!--<t t-call="delivery_schedules.report_ds_entry" t-lang="doc.partner_id.lang"/>-->
-                <!--</t>-->
-            <!--</t>-->
-        <!--</template>-->
     </data>
 </odoo>
