@@ -461,7 +461,7 @@ class IndentProductLines(models.Model):
                               help="Price computed based on the last purchase order approved.")
     price_subtotal = fields.Float(string='Subtotal', compute='_amount_subtotal', digits=dp.get_precision('Account'),
                                   store=True)
-    qty_available = fields.Float('In Stock')
+    qty_available = fields.Float('In Stock', compute='_getProductQuentity',store=True)
     virtual_available = fields.Float('Forecasted Qty')
     delay = fields.Float('Lead Time', required=True, default=0.0)
     name = fields.Text('Specification',store=True)
@@ -491,6 +491,7 @@ class IndentProductLines(models.Model):
     @api.onchange('product_id')
     def onchange_product_id(self):
         # result = {}
+
         if not self.product_id:
             return {'value': {'product_uom_qty': 1.0,
                               'product_uom': False,
@@ -515,7 +516,7 @@ class IndentProductLines(models.Model):
         self.name = product_name
         self.product_uom = product.uom_id.id
         self.price_unit = product.standard_price
-        self.qty_available = product.qty_available
+        # self.qty_available = self.getProductQuentity(product.id, self.indent_id)
         self.virtual_available = product.virtual_available
 
         if product.type == 'service':
@@ -530,3 +531,19 @@ class IndentProductLines(models.Model):
             # raise osv.except_osv(_("Warning !"), _("You must define at least one supplier for this product"))
         else:
             self.delay = product.seller_ids[0].delay
+
+    @api.depends('product_id')
+    @api.multi
+    def _getProductQuentity(self):
+
+        for productLine in self:
+
+            if productLine.product_id.id:
+                location_id = productLine.indent_id.stock_location_id.id
+
+                product_quant = self.env['stock.quant'].search(
+                        ['&', ('product_id', '=',productLine.product_id.id), ('location_id', '=', location_id)],
+                        limit=1)
+
+                if product_quant:
+                    productLine.qty_available = product_quant.qty
