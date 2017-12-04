@@ -24,7 +24,7 @@
                                 string="Approve" class="oe_highlight"
                                 groups="gbs_application_group.group_cxo"/>
 
-                        <button name="action_draft" type="object" states="approve,validate"
+                        <button name="action_refuse" type="object" states="approve,validate"
                                 string="Refuse"
                                 groups="gbs_application_group.group_head_account,gbs_application_group.group_cxo"/>
 
@@ -33,7 +33,7 @@
                                 groups="account.group_account_user,gbs_application_group.group_head_account,gbs_application_group.group_cxo"
                                 class="oe_highlight"/>
 
-                        <field name="state" statusbar_visible="draft,validate,close" widget="statusbar"/>
+                        <field name="state" statusbar_visible="draft,validate,close, refused" widget="statusbar"/>
 
                     </header>
                     <sheet>

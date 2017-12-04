@@ -51,7 +51,8 @@ class CustomerCommissionConfiguration(models.Model):
         ('validate', "To Approve"),
         # ('confirm', "Confirm"),
         ('approve', "Second Approval"),
-        ('close', "Approved")
+        ('close', "Approved"),
+        ('refused','Refused')
     ], readonly=True, track_visibility='onchange', copy=False, default='draft')
 
     """ All functions """
@@ -93,7 +94,8 @@ class CustomerCommissionConfiguration(models.Model):
     @api.multi
     def action_cancel(self):
         for coms in self:
-            coms.state = 'draft'
+            coms.state = 'refused'
+            coms.status = False
 
 
     @api.onchange('commission_type')

@@ -15,6 +15,6 @@ class InheritedSaleOrderType(models.Model):
 
     @api.constrains('name')
     def _check_unique_name(self):
-        name = self.env['sale.order.type'].search([('name', '=', self.name)])
+        name = self.env['sale.order.type'].search([('name', '=', self.name), ('operating_unit','=',self.operating_unit.id)])
         if len(name) > 1:
-            raise ValidationError('Customer already exists.')
+            raise ValidationError('Sale Order Type for this Name & Operating Unit already exists')

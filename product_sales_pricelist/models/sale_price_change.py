@@ -45,7 +45,7 @@ class SalePriceChange(models.Model):
     @api.constrains('new_price')
     def check_new_price(self):
         if (self.new_price < 0.00):
-            raise ValidationError('Money can not be negative')
+            raise ValidationError('New Price can not be Negetive')
 
 
     @api.constrains('effective_date')

@@ -15,12 +15,11 @@
         'reports/delivery_se_report.xml',
         'reports/delivery_se_report_templates.xml',
         'data/mail_template_data.xml',
-
     ],
 
     'summary': 'Sales Delivery Schedules',
     'description':
     """Create Sales Delivery Schedules based on specific Sales Order""",
     'installable': True,
-    'application': True,
+    'application': False,
 }
