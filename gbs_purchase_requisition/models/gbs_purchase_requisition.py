@@ -73,6 +73,7 @@ class PurchaseRequisition(models.Model):
                                 'name': indent_product_line.name,
                                 'product_uom_id': indent_product_line.product_uom,
                                 'product_ordered_qty': indent_product_line.product_uom_qty,
+                                'product_qty': indent_product_line.qty_available,
                           }))
                 self.line_ids = vals
 
@@ -103,6 +104,9 @@ class PurchaseRequisitionLine(models.Model):
     last_price_unit = fields.Float(string='Last Unit Price')
     remark = fields.Char(string='Remarks')
 
+    product_qty = fields.Float(string='Quantity', digits=dp.get_precision('Product Unit of Measure'),
+                               compute='_getProductQuentity')
+
     @api.onchange('product_id')
     def onchange_product_id(self):
         if not self.product_id:
@@ -120,12 +124,51 @@ class PurchaseRequisitionLine(models.Model):
             product_name = product.name_get()[0][1]
             self.name = product_name
             self.product_uom = product.uom_id.id
-            self.product_qty = product.qty_available
+            self.product_qty = self.getProductQuentity(self.product_id.id, self.requisition_id.picking_type_id.id)
         if not self.account_analytic_id:
             self.account_analytic_id = self.requisition_id.account_analytic_id
         if not self.schedule_date:
             self.schedule_date = self.requisition_id.schedule_date
 
         # /////////////////////////////////////////
+
+
+
+    def getProductQuentity(self, productId, pickingTypeId):
+
+        locationId = 0
+
+        pickingType = self.env['stock.picking.type'].search([('id', '=', pickingTypeId)])
+        if pickingType:
+            locationId = pickingType.default_location_src_id.id
+
+        product_quant = self.env['stock.quant'].search(
+            ['&', ('product_id', '=', productId), ('location_id', '=', locationId)],
+            limit=1)
+
+        if product_quant:
+            return product_quant.qty
+
+    @api.depends('product_id')
+    @api.multi
+    def _getProductQuentity(self):
+
+        for productLine in self:
+
+            if productLine.product_id.id:
+
+                locationId = 0
+                pickingTypeId = productLine.requisition_id.picking_type_id.id
+                pickingType = self.env['stock.picking.type'].search([('id', '=', pickingTypeId)])
+                if pickingType:
+                    locationId = pickingType.default_location_src_id.id
+                    product_quant = self.env['stock.quant'].search(
+                        ['&', ('product_id', '=', productLine.product_id.id), ('location_id', '=', locationId)],
+                        limit=1)
+
+                    if product_quant:
+                        productLine.product_qty = product_quant.qty
+
+
 
 
