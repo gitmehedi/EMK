@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+        <!-- Main template -->
+        <template id="report_category_wise_product_report_qweb">
+            <t t-call="report.html_container">
+                <t t-call="report.external_layout">
+                    <div class="page">
+                        <div class="row mb32">
+                            <div class="col-xs-12">
+                                <h2 class="text-center">Category Wise Product</h2>
+                            </div>
+                        </div>
+
+
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr style="background-color: #EFECEB;">
+                                    <th class="text-center">S.N</th>
+                                    <th class="text-center">Barcode</th>
+                                    <th class="text-center">Product Name</th>
+                                    <th class="text-center">UoM</th>
+                                    <th class="text-center">Cost P.</th>
+                                    <th class="text-center">Sale P.</th>
+                                    <th class="text-center">Qty</th>
+                                    <th class="text-center">Value</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <t t-foreach="lines" t-as="data">
+                                    <t t-if="data_value">
+
+                                        <tr style="background-color: #ebebe0; text-align:center;">
+                                            <td colspan="9">
+                                                <strong><t t-esc="data"/></strong>
+                                            </td>
+                                        </tr>
+                                        <t t-foreach="data_value" t-as="line">
+                                            <tr>
+                                                <td>
+                                                    <t t-esc="line_index+1"/>
+                                                </td>
+                                                <td>
+                                                    <t t-esc="line['barcode']"/>
+                                                </td>
+                                                <td>
+                                                    <t t-esc="line['product_name']"/>
+                                                </td>
+                                                <td>
+                                                    <t t-esc="line['uom']"/>
+                                                </td>
+                                                <td>
+                                                    <t t-esc="line['cost_price']"/>
+                                                </td>
+                                                <td>
+                                                    <t t-esc="line['sale_price']"/>
+                                                </td>
+                                                <td style="text-align: right;">
+                                                    <t t-esc="line['quantity']"/>
+                                                </td>
+                                                <td style="text-align: right;">
+                                                    <t t-esc="line['total_value']"/>
+                                                </td>
+                                            </tr>
+                                        </t>
+                                    </t>
+                                </t>
+                                <t t-if="lines">
+                                    <tr style="background-color: #EFECEB;">
+                                        <td colspan="6" style="text-align: right;">
+                                            <strong>Total</strong>
+                                        </td>
+                                        <td style="text-align: right;">
+                                            <strong>
+                                                <t t-esc="total"/>
+                                            </strong>
+                                        </td>
+                                    </tr>
+                                </t>
+                            </tbody>
+                        </table>
+                        <t t-call="custom_report.report_signing"></t>
+                    </div>
+                </t>
+            </t>
+        </template>
+
+        <report id="report_category_wise_product_summary"
+                model="stock.move"
+                string="Warehouse To Stock Distribution Report"
+                name="pos_summary_report.report_category_wise_product_report_qweb"
+                file="pos_summary_report.report_category_wise_product_report_qweb"
+                multi="True"
+                report_type="qweb-pdf"/>
+
+        <record id="paperformat_Landscape" model="report.paperformat">
+            <field name="name">Landscape Report</field>
+            <field name="orientation">Landscape</field>
+            <field name="format">A4</field>
+            <field name="header_line"/>
+        </record>
+    </data>
+</openerp>
