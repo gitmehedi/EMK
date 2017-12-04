@@ -22,7 +22,7 @@ class AccountMoveLine(models.Model):
             if move.operating_unit_id:
                 vals['operating_unit_id'] = move.operating_unit_id.id
         _super = super(AccountMoveLine, self)
-        return _super.create(vals, apply_taxes=apply_taxes)
+        return _super.create(vals)
 
     @api.model
     def _query_get(self, domain=None):
