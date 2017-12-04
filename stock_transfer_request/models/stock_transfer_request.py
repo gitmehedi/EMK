@@ -50,7 +50,7 @@ class StockTransferRequest(models.Model):
 
     """ States Fields """
     state = fields.Selection([('draft', "Draft"), ('submit', "Submit"), ('approve', "Approved"),
-                              ('transfer', "Transfer"), ('receive', "Received"), ('reject', "Reject")], default='draft')
+                              ('transfer', "Transfer"), ('receive', "Received"), ('reject', "Rejected")], default='draft')
 
     @api.onchange('barcode')
     def _onchange_barcode(self):
@@ -237,7 +237,7 @@ class StockTransferRequest(models.Model):
 
     @api.one
     def action_send_loss_inventory(self):
-        if self.state != 'reject':
+        if self.state != 'receive':
             raise ValidationError(_('Please transfer product in validate state.'))
 
         move_obj = self.env['stock.move']
@@ -264,6 +264,10 @@ class StockTransferRequest(models.Model):
                 move['procure_method'] = "make_to_stock"
                 move_done = move_obj.create(move)
                 move_done.action_done()
+
+        self.state = 'reject'
+        self.receive_date = self.get_current_date()
+        self.receive_user_id = self.get_login_user()
 
 
 class InheriteStockPicking(models.Model):
