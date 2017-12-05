@@ -89,7 +89,7 @@ class IndentIndent(models.Model):
                                  states={'draft': [('readonly', False)], 'cancel': [('readonly', True)]},
                                  help="It specifies goods to be deliver partially or all at once")
 
-    check_pr_issued = fields.Boolean('Check PR Issued', default=True)
+    check_pr_issued = fields.Boolean(compute = '_compute_pr_issued',string = 'Check PR Issued')
 
     product_id = fields.Many2one(
         'product.product', 'Products',
@@ -108,6 +108,27 @@ class IndentIndent(models.Model):
     ####################################################
     # Business methods
     ####################################################
+
+    @api.multi
+    def _compute_pr_issued(self):
+        for indent in self:
+            pool_pr_obj = self.env['purchase.requisition'].search([('indent_ids', '=', indent.id)])
+            if pool_pr_obj:
+                query = """SELECT 
+                                product_id,sum(product_ordered_qty) as ordered_qty  
+                           FROM 
+                                purchase_requisition_line 
+                           WHERE requisition_id IN %s 
+                           GROUP BY product_id;"""
+                self._cr.execute(query, tuple([tuple(pool_pr_obj.ids)]))
+                for (product_id, ordered_qty) in self.env.cr.fetchall():
+                    pool_indent_pro_obj = indent.product_lines.search([('product_id','=',product_id),('indent_id','=',self.id)])
+                    if ordered_qty >= pool_indent_pro_obj.product_uom_qty:
+                        indent.check_pr_issued = False
+                    else:
+                        indent.check_pr_issued = True
+            else:
+                indent.check_pr_issued = True
 
     @api.model
     def _default_stock_location(self):
@@ -384,7 +405,6 @@ class IndentIndent(models.Model):
         }
         query = """ INSERT INTO pr_indent_rel (pr_id,indent_id)VALUES (%s, %s) """
         self._cr.execute(query, tuple([purchase_req[0].id,self.id]))
-        self.check_pr_issued = False
         return result
 
     @api.multi
