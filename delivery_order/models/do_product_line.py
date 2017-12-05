@@ -42,9 +42,9 @@ class DOProductLine(models.Model):
         if da.quantity < 0.00:
             raise ValidationError('Quantity can not be negative')
 
-        for so_line in da.parent_id.sale_order_id.order_line:
-            if da.quantity > so_line.product_uom_qty:
-                raise ValidationError('Delivery Qty can not be greater than Ordered Qty')
+        # for so_line in da.parent_id.sale_order_id.order_line:
+        #     if da.quantity > so_line.product_uom_qty:
+        #         raise ValidationError('Delivery Qty can not be greater than Ordered Qty')
 
         da.set_da_amounts_automatically()
 

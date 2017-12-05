@@ -93,7 +93,7 @@ class PurchaseRequisitionLine(models.Model):
     product_ordered_qty = fields.Float('Ordered Quantities', digits=dp.get_precision('Product UoS'),
                                        default=1)
     name = fields.Text(string='Description')
-    last_purchse_date = fields.Date(string='Last Purchase Date')
+    last_purchase_date = fields.Date(string='Last Purchase Date')
     last_qty = fields.Float(string='Last Purchase Qnty')
     last_product_uom_id = fields.Many2one('product.uom', string='Last Purchase Unit')
     last_price_unit = fields.Float(string='Last Unit Price')
@@ -101,6 +101,9 @@ class PurchaseRequisitionLine(models.Model):
 
     product_qty = fields.Float(string='Quantity', digits=dp.get_precision('Product Unit of Measure'),
                                compute='_getProductQuentity')
+
+
+    # last_supplier_id = fields.Many2one(comodel_name='res.partner', string='Last Supplier', compute='_get_last_purchase')
 
     @api.onchange('product_id')
     def onchange_product_id(self):
@@ -160,3 +163,14 @@ class PurchaseRequisitionLine(models.Model):
 
                     if product_quant:
                         productLine.product_qty = product_quant.qty
+
+    @api.one
+    def _get_last_purchase(self):
+        """ Get last purchase price, last purchase date and last supplier """
+        lines = self.env['purchase.order.line'].search(
+            [('product_id', '=', self.product_id.id),
+             ('state', 'in', ['confirmed', 'purchase'])]).sorted(
+            key=lambda l: l.order_id.date_order, reverse=True)
+        self.last_purchase_date = lines[:1].order_id.date_order
+        self.last_price_unit = lines[:1].price_unit
+        self.last_supplier_id = lines[:1].order_id.partner_id

@@ -7,7 +7,7 @@
     "category": "Human Resources",
     "summary": "Notify Employee Manager for Holiday Activity",
     "depends": [
-        "hr_holidays_multi_levels_approval","operating_unit","gbs_application_group",
+        "hr_holidays_multi_levels_approval",
     ],
     "data": [
         'security/ir_rule.xml'
