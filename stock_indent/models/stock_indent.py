@@ -91,6 +91,8 @@ class IndentIndent(models.Model):
 
     check_pr_issued = fields.Boolean(compute = '_compute_pr_issued',string = 'Check PR Issued')
 
+    pr_indent_check = fields.Boolean(string = 'Indent List Check',default = True)
+
     product_id = fields.Many2one(
         'product.product', 'Products',
         readonly="1", related='product_lines.product_id',
@@ -127,6 +129,9 @@ class IndentIndent(models.Model):
                         indent.check_pr_issued = False
                     else:
                         indent.check_pr_issued = True
+                        break
+                if indent.check_pr_issued == False:
+                    indent.write({'pr_indent_check':False})
             else:
                 indent.check_pr_issued = True
 
