@@ -1,2 +1,2 @@
 import letter_of_credits_wizard
-import error_exception
+import do_max_order_qty_without_lc

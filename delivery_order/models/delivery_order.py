@@ -215,13 +215,13 @@ class DeliveryOrder(models.Model):
                                     orders.create(res)
 
                     if list[rec] > 100:
-                        wizard_form = self.env.ref('delivery_order.error_exception_wizard_view', False)
-                        view_id = self.env['error.exception.wizard']
+                        wizard_form = self.env.ref('delivery_order.max_do_without_lc_view', False)
+                        view_id = self.env['max.delivery.without.lc.wizard']
 
                         return {
-                            'name': _('Confirmation Pop Up'),
+                            'name': _('Max Ordering Confirm'),
                             'type': 'ir.actions.act_window',
-                            'res_model': 'error.exception.wizard',
+                            'res_model': 'max.delivery.without.lc.wizard',
                             'res_id': view_id.id,
                             'view_id': wizard_form.id,
                             'view_type': 'form',
