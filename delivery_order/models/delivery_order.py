@@ -215,7 +215,6 @@ class DeliveryOrder(models.Model):
                                     orders.create(res)
 
                     if list[rec] > 100:
-
                         product_pool = self.env['product.product'].search([('id','=',rec)])
 
                         wizard_form = self.env.ref('delivery_order.max_do_without_lc_view', False)
@@ -230,7 +229,7 @@ class DeliveryOrder(models.Model):
                             'view_type': 'form',
                             'view_mode': 'form',
                             'target': 'new',
-                            'context': {'delivery_order_id': self.id,'product_name':product_pool.display_name}
+                            'context': {'delivery_order_id': self.id, 'product_name': product_pool.display_name}
                         }
             else:
                 self.state = 'approve'  # second
