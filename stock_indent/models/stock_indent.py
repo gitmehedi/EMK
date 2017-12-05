@@ -113,12 +113,22 @@ class IndentIndent(models.Model):
     def _compute_pr_issued(self):
         for indent in self:
             pool_pr_obj = self.env['purchase.requisition'].search([('indent_ids', '=', indent.id)])
-            for i in pool_pr_obj:
-                for pr_line_id in i.line_ids:
-                    if pr_line_id.product_ordered_qty < indent.product_lines.product_uom_qty:
-                        indent.check_pr_issued = True
-                    else:
+            if pool_pr_obj:
+                query = """SELECT 
+                                product_id,sum(product_ordered_qty) as ordered_qty  
+                           FROM 
+                                purchase_requisition_line 
+                           WHERE requisition_id IN %s 
+                           GROUP BY product_id;"""
+                self._cr.execute(query, tuple([tuple(pool_pr_obj.ids)]))
+                for (product_id, ordered_qty) in self.env.cr.fetchall():
+                    pool_indent_pro_obj = indent.product_lines.search([('product_id','=',product_id),('indent_id','=',self.id)])
+                    if ordered_qty >= pool_indent_pro_obj.product_uom_qty:
                         indent.check_pr_issued = False
+                    else:
+                        indent.check_pr_issued = True
+            else:
+                indent.check_pr_issued = True
 
     @api.model
     def _default_stock_location(self):
