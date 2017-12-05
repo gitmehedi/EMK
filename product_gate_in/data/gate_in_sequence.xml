@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <!-- Indent Sequences -->
+        <record id="sequence_stock_indent" model="ir.sequence">
+            <field name="name">Gate In</field>
+            <field name="code">product.gate.in</field>
+            <field name="prefix">GIN-OU-%(year)s-</field>
+            <field eval="6" name="padding"/>
+            <field eval="1" name="number_next"/>
+            <field eval="1" name="number_increment"/>
+            <field eval="False" name="company_id"/>
+        </record>
+
+    </data>
+</odoo>
