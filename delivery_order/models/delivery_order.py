@@ -215,6 +215,9 @@ class DeliveryOrder(models.Model):
                                     orders.create(res)
 
                     if list[rec] > 100:
+
+                        product_pool = self.env['product.product'].search([('id','=',rec)])
+
                         wizard_form = self.env.ref('delivery_order.max_do_without_lc_view', False)
                         view_id = self.env['max.delivery.without.lc.wizard']
 
@@ -227,7 +230,7 @@ class DeliveryOrder(models.Model):
                             'view_type': 'form',
                             'view_mode': 'form',
                             'target': 'new',
-                            'context': {'delivery_order_id': self.id}
+                            'context': {'delivery_order_id': self.id,'product_name':product_pool.display_name}
                         }
             else:
                 self.state = 'approve'  # second
@@ -454,7 +457,6 @@ class DeliveryOrder(models.Model):
 class OrderedQty(models.Model):
     _name = 'ordered.qty'
     _description = 'Store Product wise ordered qty to track max qty value'
-    # _order = "delivery_auth_no,desc"
 
     product_id = fields.Many2one('product.template', string='Product')
     ordered_qty = fields.Float(string='Ordered Qty')
