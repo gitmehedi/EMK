@@ -8,12 +8,11 @@
                 <form>
                     <group>
                         <group>
-                            <field name="start_date"/>
-                            <field name="end_date"/>
-                        </group>
-                        <group>
                             <field name="shop_id"
                                    options="{'no_quick_create': True, 'no_create_edit': True, 'no_open': True}"/>
+
+                        </group>
+                        <group>
                             <field name="category_id"
                                    options="{'no_quick_create': True, 'no_create_edit': True, 'no_open': True}"/>
                         </group>

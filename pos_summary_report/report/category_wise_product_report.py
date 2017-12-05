@@ -14,21 +14,12 @@ class CategoryWiseProductReport(models.AbstractModel):
             'pos_summary_report.report_category_wise_product_report_qweb')
 
         domain = []
-        # if data['source_location_id']:
-        #     domain.append(('location_id', '=', data['source_location_id']))
-        # if data['destination_location_id']:
-        #     domain.append(('location_dest_id', '=', data['destination_location_id']))
-        # if data['start_date']:
-        #     domain.append(('date', '>=', data['start_date']))
-        # if data['end_date']:
-        #     domain.append(('date', '<=', data['end_date']))
-        # if data['product_id']:
-        #     domain.append(('product_id', '=', data['product_id']))
-        location = self.env['stock.location'].search([('operating_unit_id','=',data['shop_id'])])
-        quant = self.env['stock.quant'].search([('location_id', '=', location.id)])
-        lines = {rec.name:[] for rec in self.env['product.category'].search([])}
-        # record.product_id.product_tmpl_id.categ_id.name
+        if data['shop_id']:
+            domain.append(('shop_id', '=', data['shop_id']))
 
+        location = self.env['stock.location'].search([('operating_unit_id', '=', data['shop_id'])])
+        quant = self.env['stock.quant'].search([('location_id', '=', location.id)])
+        lines = {rec.name: [] for rec in self.env['product.category'].search([])}
 
         for record in quant:
             rec = {}
@@ -40,12 +31,11 @@ class CategoryWiseProductReport(models.AbstractModel):
             rec['total_value'] = record.inventory_value
             rec['quantity'] = record.qty
             lines[record.product_id.product_tmpl_id.categ_id.name].append(rec)
-            # lines.append(rec)
 
         # total = sum([val['quantity'] for vals in lines for val in vals])
 
-        # op_unit = self.env['operating.unit'].search([('id', '=', data['operating_unit_id'])])
-        # data['shop_name'] = op_unit.name
+        op_unit = self.env['operating.unit'].search([('id', '=', data['shop_id'])])
+        data['shop_name'] = op_unit.name
 
         docargs = {
             'doc_ids': self._ids,
