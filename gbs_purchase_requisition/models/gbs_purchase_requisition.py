@@ -73,6 +73,7 @@ class PurchaseRequisition(models.Model):
                                 'name': indent_product_line.name,
                                 'product_uom_id': indent_product_line.product_uom,
                                 'product_ordered_qty': indent_product_line.product_uom_qty,
+                                'product_qty': indent_product_line.qty_available,
                           }))
                 self.line_ids = vals
 
@@ -97,11 +98,17 @@ class PurchaseRequisitionLine(models.Model):
     product_ordered_qty = fields.Float('Ordered Quantities', digits=dp.get_precision('Product UoS'),
                                        default=1)
     name = fields.Text(string='Description')
-    last_purchse_date = fields.Date(string='Last Purchase Date')
+    last_purchase_date = fields.Date(string='Last Purchase Date')
     last_qty = fields.Float(string='Last Purchase Qnty')
     last_product_uom_id = fields.Many2one('product.uom', string='Last Purchase Unit')
     last_price_unit = fields.Float(string='Last Unit Price')
     remark = fields.Char(string='Remarks')
+
+    product_qty = fields.Float(string='Quantity', digits=dp.get_precision('Product Unit of Measure'),
+                               compute='_getProductQuentity')
+
+
+    # last_supplier_id = fields.Many2one(comodel_name='res.partner', string='Last Supplier', compute='_get_last_purchase')
 
     @api.onchange('product_id')
     def onchange_product_id(self):
@@ -120,12 +127,62 @@ class PurchaseRequisitionLine(models.Model):
             product_name = product.name_get()[0][1]
             self.name = product_name
             self.product_uom = product.uom_id.id
-            self.product_qty = product.qty_available
+            self.product_qty = self.getProductQuentity(self.product_id.id, self.requisition_id.picking_type_id.id)
         if not self.account_analytic_id:
             self.account_analytic_id = self.requisition_id.account_analytic_id
         if not self.schedule_date:
             self.schedule_date = self.requisition_id.schedule_date
 
         # /////////////////////////////////////////
+
+
+
+    def getProductQuentity(self, productId, pickingTypeId):
+
+        locationId = 0
+
+        pickingType = self.env['stock.picking.type'].search([('id', '=', pickingTypeId)])
+        if pickingType:
+            locationId = pickingType.default_location_src_id.id
+
+        product_quant = self.env['stock.quant'].search(
+            ['&', ('product_id', '=', productId), ('location_id', '=', locationId)],
+            limit=1)
+
+        if product_quant:
+            return product_quant.qty
+
+    @api.depends('product_id')
+    @api.multi
+    def _getProductQuentity(self):
+
+        for productLine in self:
+
+            if productLine.product_id.id:
+
+                locationId = 0
+                pickingTypeId = productLine.requisition_id.picking_type_id.id
+                pickingType = self.env['stock.picking.type'].search([('id', '=', pickingTypeId)])
+                if pickingType:
+                    locationId = pickingType.default_location_src_id.id
+                    product_quant = self.env['stock.quant'].search(
+                        ['&', ('product_id', '=', productLine.product_id.id), ('location_id', '=', locationId)],
+                        limit=1)
+
+                    if product_quant:
+                        productLine.product_qty = product_quant.qty
+
+    @api.one
+    def _get_last_purchase(self):
+        """ Get last purchase price, last purchase date and last supplier """
+        lines = self.env['purchase.order.line'].search(
+            [('product_id', '=', self.product_id.id),
+             ('state', 'in', ['confirmed', 'purchase'])]).sorted(
+            key=lambda l: l.order_id.date_order, reverse=True)
+        self.last_purchase_date = lines[:1].order_id.date_order
+        self.last_price_unit = lines[:1].price_unit
+        self.last_supplier_id = lines[:1].order_id.partner_id
+
+
 
 

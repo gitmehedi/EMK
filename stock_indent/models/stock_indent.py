@@ -89,7 +89,7 @@ class IndentIndent(models.Model):
                                  states={'draft': [('readonly', False)], 'cancel': [('readonly', True)]},
                                  help="It specifies goods to be deliver partially or all at once")
 
-    check_pr_issued = fields.Boolean('Check PR Issued', default=True)
+    check_pr_issued = fields.Boolean(compute = '_compute_pr_issued',string = 'Check PR Issued')
 
     product_id = fields.Many2one(
         'product.product', 'Products',
@@ -108,6 +108,27 @@ class IndentIndent(models.Model):
     ####################################################
     # Business methods
     ####################################################
+
+    @api.multi
+    def _compute_pr_issued(self):
+        for indent in self:
+            pool_pr_obj = self.env['purchase.requisition'].search([('indent_ids', '=', indent.id)])
+            if pool_pr_obj:
+                query = """SELECT 
+                                product_id,sum(product_ordered_qty) as ordered_qty  
+                           FROM 
+                                purchase_requisition_line 
+                           WHERE requisition_id IN %s 
+                           GROUP BY product_id;"""
+                self._cr.execute(query, tuple([tuple(pool_pr_obj.ids)]))
+                for (product_id, ordered_qty) in self.env.cr.fetchall():
+                    pool_indent_pro_obj = indent.product_lines.search([('product_id','=',product_id),('indent_id','=',self.id)])
+                    if ordered_qty >= pool_indent_pro_obj.product_uom_qty:
+                        indent.check_pr_issued = False
+                    else:
+                        indent.check_pr_issued = True
+            else:
+                indent.check_pr_issued = True
 
     @api.model
     def _default_stock_location(self):
@@ -384,7 +405,6 @@ class IndentIndent(models.Model):
         }
         query = """ INSERT INTO pr_indent_rel (pr_id,indent_id)VALUES (%s, %s) """
         self._cr.execute(query, tuple([purchase_req[0].id,self.id]))
-        self.check_pr_issued = False
         return result
 
     @api.multi
@@ -461,7 +481,7 @@ class IndentProductLines(models.Model):
                               help="Price computed based on the last purchase order approved.")
     price_subtotal = fields.Float(string='Subtotal', compute='_amount_subtotal', digits=dp.get_precision('Account'),
                                   store=True)
-    qty_available = fields.Float('In Stock')
+    qty_available = fields.Float('In Stock', compute='_getProductQuentity',store=True)
     virtual_available = fields.Float('Forecasted Qty')
     delay = fields.Float('Lead Time', required=True, default=0.0)
     name = fields.Text('Specification',store=True)
@@ -491,6 +511,7 @@ class IndentProductLines(models.Model):
     @api.onchange('product_id')
     def onchange_product_id(self):
         # result = {}
+
         if not self.product_id:
             return {'value': {'product_uom_qty': 1.0,
                               'product_uom': False,
@@ -515,7 +536,7 @@ class IndentProductLines(models.Model):
         self.name = product_name
         self.product_uom = product.uom_id.id
         self.price_unit = product.standard_price
-        self.qty_available = product.qty_available
+        # self.qty_available = self.getProductQuentity(product.id, self.indent_id)
         self.virtual_available = product.virtual_available
 
         if product.type == 'service':
@@ -530,3 +551,19 @@ class IndentProductLines(models.Model):
             # raise osv.except_osv(_("Warning !"), _("You must define at least one supplier for this product"))
         else:
             self.delay = product.seller_ids[0].delay
+
+    @api.depends('product_id')
+    @api.multi
+    def _getProductQuentity(self):
+
+        for productLine in self:
+
+            if productLine.product_id.id:
+                location_id = productLine.indent_id.stock_location_id.id
+
+                product_quant = self.env['stock.quant'].search(
+                        ['&', ('product_id', '=',productLine.product_id.id), ('location_id', '=', location_id)],
+                        limit=1)
+
+                if product_quant:
+                    productLine.qty_available = product_quant.qty
