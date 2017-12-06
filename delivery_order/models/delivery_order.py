@@ -215,7 +215,7 @@ class DeliveryOrder(models.Model):
                                     orders.create(res)
 
                     if list[rec] > 100:
-                        product_pool = self.env['product.product'].search([('id','=',rec)])
+                        product_pool = self.env['product.product'].search([('id', '=', rec)])
 
                         wizard_form = self.env.ref('delivery_order.max_do_without_lc_view', False)
                         view_id = self.env['max.delivery.without.lc.wizard']
@@ -376,6 +376,13 @@ class DeliveryOrder(models.Model):
                 self.lc_no = sale_order_obj.lc_no.id
 
                 for record in sale_order_obj.order_line:
+                    if record.da_qty != record.product_uom_qty \
+                            and record.da_qty != 0:
+
+                        record.product_uom_qty = record.da_qty
+
+
+
                     val.append((0, 0, {'product_id': record.product_id.id,
                                        'quantity': record.product_uom_qty,
                                        'pack_type': sale_order_obj.pack_type.id,
