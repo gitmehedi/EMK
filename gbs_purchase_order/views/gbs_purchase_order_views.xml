@@ -46,6 +46,7 @@
                     <xpath expr="//field[@name='currency_id']" position="after">
                         <field name="region_type" attrs="{'readonly': [('state','=','purchase')],'invisible': [('state','!=','purchase')]}"/>
                         <field name="purchase_by" attrs="{'readonly': [('state','=','purchase')],'invisible': [('state','!=','purchase')]}"/>
+                        <field name="disable_new_revision_button" invisible="1" />
                     </xpath>
                     <xpath expr="//field[@name='partner_id']" position="attributes">
                         <attribute name="string">Supplier</attribute>
@@ -82,6 +83,17 @@
                         </page>
                     </xpath>
                 </data>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="purchase_order_revision_form_inherit">
+            <field name="name">purchase.order.revision.form.inherit</field>
+            <field name="model">purchase.order</field>
+            <field name="inherit_id" ref="purchase_order_revision.purchase_order_form"/>
+            <field name="arch" type="xml">
+                <button name="new_revision" position="replace" >
+                    <button name="new_revision" string="New revision" type="object" attrs="{'invisible': ['|','|',('state', '!=', 'cancel'),('current_revision_id','!=', False),('disable_new_revision_button','=', True)]}"/>
+                </button>
             </field>
         </record>
     </data>

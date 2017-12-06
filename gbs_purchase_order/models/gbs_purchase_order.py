@@ -6,6 +6,7 @@ from odoo.exceptions import ValidationError
 class PurchaseOrder(models.Model):
     _inherit = 'purchase.order'
 
+    name = fields.Char('Order Reference', required=True, index=True, copy=False, default='New')
     operating_unit_id = fields.Many2one('operating.unit', 'Operating Unit', required=True,
                                         default=lambda self: self.env.user.default_operating_unit_id)
     region_type = fields.Selection([('local', 'Local'), ('foreign', 'Foreign')], string="LC Region Type",
@@ -14,6 +15,7 @@ class PurchaseOrder(models.Model):
                                    string="Purchase By")
     attachment_ids = fields.One2many('ir.attachment', 'res_id', string='Attachments')
     check_po_action_button = fields.Boolean('Check PO Action Button', default=False)
+    disable_new_revision_button = fields.Boolean('Disable New Revision Button', default=False)
 
     @api.onchange('requisition_id')
     def _onchange_requisition_id(self):
@@ -135,6 +137,7 @@ class PurchaseOrder(models.Model):
         res = super(PurchaseOrder, self).button_cancel()
         for i in self:
             i.check_po_action_button = False
+            i.disable_new_revision_button = True
         return res
 
     @api.multi
@@ -149,6 +152,12 @@ class PurchaseOrder(models.Model):
     ####################################################
     # ORM Overrides methods
     ####################################################
+
+    @api.model
+    def create(self, vals):
+        if vals.get('name', 'New') == 'New':
+            vals['name'] = self.env['ir.sequence'].next_by_code('purchase.quotation') or '/'
+        return super(PurchaseOrder, self).create(vals)
 
     def unlink(self):
         for indent in self:
