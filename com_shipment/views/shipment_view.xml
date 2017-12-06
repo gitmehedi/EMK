@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <record model="ir.actions.act_window" id="action_cnf_list">
+            <field name="name">C&amp;F Quotations</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">cnf.quotation</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('shipment_id','=',active_id)]</field>
+        </record>
+
+        <record id="view_shipment_form" model="ir.ui.view">
+            <field name="name">purchase.shipment.form</field>
+            <field name="model">purchase.shipment</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Shipment" delete="false" copy='0' create="false">
+                    <link rel="stylesheet" href="/com_shipment/static/src/css/lc_style.css"></link>
+                    <header>
+
+                        <button string="Reset to Draft" name="action_draft" type="object" attrs="{'invisible': [('state', 'in', ('draft'))]}"/>
+
+                        <button string="On Board" name="action_on_board" states="draft" type="object" class="oe_highlight"/>
+                        <button string="Receive Doc" name="action_doc_receive" states="on_board" type="object" class="oe_highlight"/>
+                        <button string="ETA" name="action_eta" states="receive_doc" type="object" class="oe_highlight"/>
+                        <button string="C&amp;F Quotation" name="action_quotation" states="eta" type="object" class="oe_highlight"/>
+                        <button string="Approve" name="action_approve_quotation" states="cnf_quotation" type="object" class="oe_highlight"/>
+                        <button string="C&amp;F Clear" name="action_cnf_clear" states="approve_cnf_quotation" type="object" class="oe_highlight"/>
+                        <button string="Gate In" name="action_gate_in" states="cnf_clear" type="object" class="oe_highlight"/>
+
+                        <field name="state" widget="statusbar"/>
+                    </header>
+                    <sheet>
+                        <div class="oe_button_box" name="button_box">
+                            <button name="%(action_cnf_list)d" type="action" class="oe_stat_button" icon="fa-list-alt"
+                                    attrs="{'invisible': [('state', 'in', ('draft','on_board','receive_doc'))]}">
+                                <label string="C&amp;F Quotation"/>
+                            </button>
+                        </div>
+                        <group>
+                            <group string="Shipment Details" colspan="4">
+                                <group>
+                                    <field name="name"/>
+                                    <field name="etd_date"/>
+                                    <field name="eta_date"/>
+                                </group>
+                                <group>
+                                    <field name="lc_id" options="{'no_open':True,'no_quick_create':True,'no_create_edit':True}"/>
+                                    <field name="arrival_date"/>
+                                </group>
+                            </group>
+                            <group string="Invoice" colspan="4">
+                                <group>
+                                    <field name="invoice_number"/>
+                                </group>
+                                <group>
+                                    <field name="invoice_value"/>
+                                </group>
+                            </group>
+                            <group string="Bill Of Lading">
+                                <field name="bill_of_lading_number"/>
+                                <field name="shipment_date"/>
+                            </group>
+                            <group string="Packing List">
+                                <field name="net_weight"/>
+                                <field name="gross_weight"/>
+                            </group>
+
+                            <notebook colspan="4">
+                                <page string="Attachments">
+                                    <field name="shipment_attachment_ids" widget="one2many" class="lc_attachment">
+                                        <tree string="Attachments" editable="top">
+                                            <field name="name" string="Title"/>
+                                            <field name="datas_fname" invisible="1"/>
+                                            <field name="db_datas" filename="datas_fname"/>
+                                        </tree>
+                                    </field>
+                                </page>
+                                <page string="Remarks">
+                                    <field name="comments" widget="html" options="{'style-inline': true}"/>
+                                </page>
+
+                            </notebook>
+                        </group>
+                    </sheet>
+
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
+
+                </form>
+            </field>
+        </record>
+
+        <record id="shipment_tree_view" model="ir.ui.view">
+            <field name="name">purchase.shipment.tree</field>
+            <field name="model">purchase.shipment</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Shipment">
+                    <field name="lc_id"/>
+                    <field name="name"/>
+                    <field name="etd_date"/>
+                    <field name="shipment_date"/>
+                    <field name="eta_date"/>
+                    <field name="arrival_date"/>
+                    <field name="state"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="lc_shipment_history" model="ir.ui.view">
+            <field name="name">view_local_credit_form_inherit</field>
+            <field name="model">letter.credit</field>
+            <field name="inherit_id" ref="letter_of_credit.view_local_credit_form"/>
+            <field name="arch" type="xml">
+                <data>
+                    <xpath expr="//page[5]" position="after">
+                        <page string="Shipment">
+                            <field name="shipment_ids" widget="one2many">
+                                <tree create="false" delete="false" editable="bottom"
+                                      colors="black:state=='receive_doc';blue:state=='eta';blue:state=='cnf_quotation';blue:state=='approve_cnf_quotation';green:state=='cnf_clear';gray:state=='done';">
+                                    <field name="name"/>
+                                    <field name="etd_date"/>
+                                    <field name="shipment_date"/>
+                                    <field name="eta_date"/>
+                                    <field name="arrival_date"/>
+                                    <field name="state"/>
+                                    <button name="action_view_shipment" string="View" type="object" icon="fa-search-plus" />
+                                    <button name="action_edit_shipment" string="Edit" type="object" icon="fa-pencil-square-o" />
+                                </tree>
+                            </field>
+                        </page>
+                    </xpath>
+                </data>
+                <xpath expr="//button[@name='action_revision']" position="after">
+                    <button string="Shipment" name="action_shipment" type="object" attrs="{'invisible': [('state', 'in', ('draft', 'open', 'done'))]}" class="oe_highlight oe_read_only"/>
+
+                </xpath>
+            </field>
+        </record>
+
+    </data>
+</odoo>

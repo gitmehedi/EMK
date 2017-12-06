@@ -14,7 +14,11 @@
         'gbs_sales_commission_so',
         'delivery_order',
         'samuda_so_type',
-        'operating_unit'
+        'operating_unit',
+        'amount_to_word_bd',
+        'letter_of_credit',
+        'gbs_pi_creation',
+        'account',
     ],
 
     'data': [
@@ -24,5 +28,5 @@
         'report/inherit_sale_order_report.xml',
     ],
     'installable': True,
-    'application': True,
+    'application': False,
 }

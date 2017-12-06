@@ -34,26 +34,16 @@
         <field name="groups" eval="[(4,ref('gbs_application_group.group_cxo'))]"/>
     </record>
 
-    <!--<record id="sale_price_change_permission_sales_product_manager" model="ir.rule">-->
-        <!--<field name="name">Product Sales Price Permission For Sales Product Manager</field>-->
-        <!--<field name="model_id" ref="model_product_sales_pricelist"/>-->
-        <!--<field name="domain_force">[(1,'=',1)]</field>-->
-        <!--<field name="perm_read" eval="True" />-->
-        <!--<field name="perm_create" eval="False"/>-->
-        <!--<field name="perm_write" eval="False"/>-->
-        <!--<field name="perm_unlink" eval="False"/>-->
-        <!--<field name="groups" eval="[(4,ref('gbs_application_group.group_sales_product_manager'))]"/>-->
-    <!--</record>-->
+      <record id="sale_price_change_permission_sales_product_manager" model="ir.rule">
+        <field name="name">Product Sales Price Permission For Sales Product Manager</field>
+        <field name="model_id" ref="model_product_sales_pricelist"/>
+        <!--<field name="domain_force">[('sale_ok','=',1)]</field>-->
+        <field name="perm_read" eval="True" />
+        <field name="perm_create" eval="False"/>
+        <field name="perm_write" eval="False"/>
+        <field name="perm_unlink" eval="False"/>
+        <field name="groups" eval="[(4,ref('gbs_application_group.group_sales_product_manager'))]"/>
+      </record>
 
-    <!--<record id="sale_price_change_permission_sales_product_manager" model="ir.rule">-->
-        <!--<field name="name">Product Sales Price Permission For Sales Product Manager</field>-->
-        <!--<field name="model_id" ref="product.model_product_template"/>-->
-        <!--<field name="domain_force">[(1,'=',1)]</field>-->
-        <!--<field name="perm_read" eval="True" />-->
-        <!--<field name="perm_create" eval="True"/>-->
-        <!--<field name="perm_write" eval="True"/>-->
-        <!--<field name="perm_unlink" eval="False"/>-->
-        <!--<field name="groups" eval="[(4,ref('gbs_application_group.group_sales_product_manager'))]"/>-->
-    <!--</record>-->
 
 </odoo>

@@ -1,0 +1,3 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_bd_district_public,access_bd_district_public,gbs_bd_district.model_bd_district,base.group_public,1,0,0,0
+access_bd_district_user,access_bd_district_user,gbs_bd_district.model_bd_district,base.group_user,1,1,1,1

@@ -1,5 +1,5 @@
-from odoo import fields, models
-
+from odoo import fields, models,api
+from odoo.exceptions import UserError, ValidationError
 
 class InheritedSaleOrderType(models.Model):
     _inherit = 'sale.order.type'
@@ -12,3 +12,9 @@ class InheritedSaleOrderType(models.Model):
     ], string='Sale Order Type', required=True)
 
     currency_id = fields.Many2one('res.currency', string="Currency", required=True)
+
+    @api.constrains('name')
+    def _check_unique_name(self):
+        name = self.env['sale.order.type'].search([('name', '=', self.name), ('operating_unit','=',self.operating_unit.id)])
+        if len(name) > 1:
+            raise ValidationError('Sale Order Type for this Name & Operating Unit already exists')

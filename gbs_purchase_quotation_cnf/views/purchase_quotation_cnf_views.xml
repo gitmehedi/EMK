@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_cnf_quotation_tree" model="ir.ui.view">
+            <field name="name">view.cnf.quotation.tree</field>
+            <field name="model">cnf.quotation</field>
+            <field name="arch" type="xml">
+                <tree string="CNF Quotation" create="0" edit="0">
+                    <field name="name" attrs="{'invisible': [('state','=','draft')]}"/>
+                    <field name="shipment_id"/>
+                    <field name="lc_id"/>
+                    <field name="state"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_cnf_quotation_form" model="ir.ui.view">
+            <field name="name">view.cnf.quotation.form</field>
+            <field name="model">cnf.quotation</field>
+            <field name="arch" type="xml">
+                <form string="CNF Quotation" create="0" edit="0">
+                    <header>
+						<button name="action_confirm" string="Confirm" type="object"
+								states="draft" class="oe_highlight"/>
+                        <button name="action_approve" string="Approve" type="object"
+								states="confirm" class="oe_highlight"/>
+						<field name="state" widget="statusbar"
+							   statusbar_visible="draft,confirm,approved"/>
+					</header>
+                    <sheet>
+                        <div class="oe_title">
+                            <label string="CNF Quotation"/>
+                            <h1>
+                                <field name="name" readonly="1" attrs="{'invisible': [('state','=','draft')]}"/>
+                            </h1>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="lc_id"/>
+                                <field name="partner_id" string='Supplier' context="{'search_default_supplier':1, 'default_supplier':1, 'default_customer':0}" domain="[('supplier','=',True)]"/>
+                                <field name="picking_type_id"/>
+                            </group>
+                            <group>
+                                <field name="shipment_id"/>
+                                <field name="currency_id"/>
+                            </group>
+
+                        </group>
+                        <notebook colspan="4">
+                            <page string="Services">
+                                <field name="cnf_product_line" widget="one2many">
+                                    <tree string="Services" editable="bottom">
+                                        <field name="product_id"/>
+                                        <field name="amount" sum="Total"/>
+                                        <field name="remarks"/>
+                                    </tree>
+                                </field>
+                            </page>
+                        </notebook>
+                        <div class="oe_clear" colspan="4">
+                            <label for="description" />
+                        </div>
+                        <field name="description" class="oe_inline" placeholder="Description" />
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers" />
+                        <field name="message_ids" widget="mail_thread" />
+                    </div>
+                </form>
+            </field>
+        </record>
+        <record model="ir.actions.act_window" id="action_cnf_quotation">
+            <field name="name">CNF Quotation</field>
+            <field name="res_model">cnf.quotation</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_type">form</field>
+        </record>
+
+        <menuitem id="menu_cnf_quatation" parent="commercial.menu_commercial_root"
+                  sequence="6" name="CNF Quotation" />
+
+        <menuitem id="submenu_cnf_quatation" name="CNF Quotation" parent="menu_cnf_quatation"
+                  sequence="1" action="action_cnf_quotation"/>
+    </data>
+</odoo>

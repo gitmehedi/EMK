@@ -9,6 +9,7 @@ class CustomerCommissionConfiguration(models.Model):
     _inherit = ['mail.thread']
     _order = 'confirmed_date desc'
 
+    name = fields.Char(string='Name', index=True, readonly=True)
     requested_date = fields.Date(string="Requested Date", default=datetime.date.today(),readonly=True)
     approved_date = fields.Date('Approved Date',
                    states = {'draft': [('invisible', True)],
@@ -50,10 +51,17 @@ class CustomerCommissionConfiguration(models.Model):
         ('validate', "To Approve"),
         # ('confirm', "Confirm"),
         ('approve', "Second Approval"),
-        ('close', "Approved")
+        ('close', "Approved"),
+        ('refused','Refused')
     ], readonly=True, track_visibility='onchange', copy=False, default='draft')
 
     """ All functions """
+
+    @api.model
+    def create(self, vals):
+        seq = self.env['ir.sequence'].next_by_code('customer.commission.configuration') or '/'
+        vals['name'] = seq
+        return super(CustomerCommissionConfiguration, self).create(vals)
 
     @api.onchange('product_id')
     def onchange_product_id(self):
@@ -83,8 +91,11 @@ class CustomerCommissionConfiguration(models.Model):
                 else:
                     rec.old_value = 0
 
-
-
+    @api.multi
+    def action_cancel(self):
+        for coms in self:
+            coms.state = 'refused'
+            coms.status = False
 
 
     @api.onchange('commission_type')

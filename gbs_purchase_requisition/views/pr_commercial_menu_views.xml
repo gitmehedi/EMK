@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <record model="ir.actions.act_window" id="action_commercial_pr_local">
+            <field name="name">Purchase Requisition</field>
+            <field name="res_model">purchase.requisition</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('region_type','in',('local', False)),('state','=','done')]</field>
+        </record>
+
+        <record model="ir.actions.act_window" id="action_commercial_pr_foreign">
+            <field name="name">Purchase Requisition</field>
+            <field name="res_model">purchase.requisition</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('region_type','in',('foreign',False)),('state','=','done')]</field>
+        </record>
+
+        <menuitem id="menu_pr_commercial" parent="commercial.menu_commercial_root"
+            sequence="0" name="Purchase Requisition" />
+
+        <menuitem id="submenu_commercial_pr_local" name="Approved PR(Local)" parent="menu_pr_commercial"
+                sequence="1" action="action_commercial_pr_local"/>
+
+        <menuitem id="submenu_commercial_pr_foreign" name="Approved PR(Foreign)" parent="menu_pr_commercial"
+                sequence="2" action="action_commercial_pr_foreign"/>
+
+        <menuitem id="menu_commercial_pq" parent="commercial.menu_commercial_root"
+            sequence="2" name="Purchase Quotation" />
+
+        <menuitem id="submenu_commercial_pq" name="Purchase Quotation" parent="menu_commercial_pq"
+                sequence="1" action="purchase.purchase_rfq"/>
+
+        <menuitem id="menu_commercial_po" parent="commercial.menu_commercial_root"
+            sequence="3" name="Purchase Order" />
+
+        <menuitem id="submenu_commercial_po" name="Purchase Order" parent="menu_commercial_po"
+                sequence="1" action="purchase.purchase_form_action"/>
+
+        <menuitem id="submenu_commercial_pi" name="Proforma Information(PI)" parent="menu_pr_commercial"
+                sequence="5"/>
+
+
+        <menuitem id="menu_commercial_configuration" parent="commercial.menu_commercial_root"
+            sequence="100" name="Configuration" />
+
+        <menuitem id="submenu_commercial_customer" name="Customers/Suppliers" parent="menu_commercial_configuration"
+                sequence="1" action="base.action_partner_customer_form"/>
+
+        <menuitem id="submenu_commercial_products" name="Products" parent="menu_commercial_configuration"
+                sequence="2" action="product.product_template_action"/>
+
+    </data>
+</odoo>

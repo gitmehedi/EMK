@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <!--Email template -->
+        <record id="schedule_email_template" model="mail.template">
+            <field name="name">Delivery Schedule Email Template</field>
+            <field name="subject">${object.name}</field>
+            <field name="model_id" ref="delivery_schedules.model_delivery_schedules"/>
+            <field name="auto_delete" eval="True"/>
+            <field name="report_template" ref="delivery_schedules_report"/>
+            <field name="report_name">${(object.name or '').replace('/','_')}${object.state == 'approved' and '_approved' or ''}</field>
+            <field name="lang">${object.line_ids.partner_id.lang}</field>
+            <field name="body_html"><![CDATA[
+<p>Dear ${object.line_ids.partner_name}</p>
+
+]]></field>
+        </record>
+
+
+    </data>
+</odoo>

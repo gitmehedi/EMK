@@ -3,33 +3,16 @@
     <data>
         <template id="report_quotation_inherit_add_property" inherit_id="sale.report_saleorder_document">
 
-            <xpath expr="//table[@class='table table-condensed']" position="before">
-                <div style="background-color:#C8C8C8; margin:20px 0px">
-                    <div>
-                        <div style="display:inline;padding-left:5px">
-                            <strong>Operating Unit:</strong>
-                            <span t-field="doc.type_id.operating_unit"/>
-                        </div>
-                        <div style="display:inline; padding:20px">
-                            <strong>Type:</strong>
-                            <span t-field="doc.type_id"/>
-                        </div>
-                        <div style="display:inline; padding:20px">
-                            <strong>Packing Mode:</strong>
-                            <span t-field="doc.pack_type"/>
-                        </div>
-                        <div style="display:inline; padding:20px">
-                            <strong>Sales type:</strong>
-                            <span t-field="doc.credit_sales_or_lc"/>
-                        </div>
-                        <div style="display:inline; padding:20px">
-                            <strong>Currency:</strong>
-                            <span t-field="doc.currency_id"/>
-                        </div>
-                    </div>
+            <xpath expr="//div/div/div[@class='col-xs-3'][3]" position="after">
+                <div t-if="doc.date_order" class="col-xs-3">
+                    <strong>Packing Mode:</strong>
+                    <p t-field="doc.pack_type"/>
+                </div>
+                <div t-if="doc.date_order" class="col-xs-3">
+                    <strong>Currency:</strong>
+                    <p t-field="doc.currency_id"/>
                 </div>
             </xpath>
-
 
             <xpath expr="//th[@class='text-right'][2]" position="after">
                 <th class="text-right">Commission Rate(%)</th>
@@ -91,7 +74,19 @@
                 </tr>
             </xpath>
 
+            <xpath expr="//div/div[@name='total']" position="after">
+                <div style="text-align:right">
+                    <strong>Amount in words:</strong>
+                    <span t-esc="doc.amount_to_word(doc.amount_total)"/>
+                </div>
+            </xpath>
 
+        </template>
+
+        <template id="report_quotation_footer" inherit_id="report.external_layout_footer">
+            <xpath expr="//div/div/ul[@class='list-inline'][1]" position="before">
+                <p>This is a computer generated report. No signature is required.</p>
+            </xpath>
         </template>
     </data>
 </odoo>
