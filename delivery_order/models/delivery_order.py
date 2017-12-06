@@ -248,22 +248,6 @@ class DeliveryOrder(models.Model):
         return total_amt
 
     @api.one
-    def action_wizard_custom_user_msg_lc(self):
-
-        res1 = self.env.ref('delivery_order.view_max_order_qty_wizard')
-        return {
-            'name': ('Custom Message to User'),
-            'view_type': 'form',
-            'view_mode': 'form',
-            'view_id': res1 and res1.id or False,
-            'res_model': 'max.order.wizard',
-            'type': 'ir.actions.act_window',
-            'nodestroy': True,
-            'target': 'new',
-
-        }
-
-    @api.one
     def payments_amount_checking_with_products_subtotal(self):
 
         account_payment_pool = self.env['account.payment'].search(
@@ -331,11 +315,6 @@ class DeliveryOrder(models.Model):
                 if da_line.product_id.id == sale_line.product_id.id:
                     vals = sale_line.da_qty - da_line.quantity
                     sale_line.write({'da_qty': vals})
-
-    @api.onchange('quantity')
-    def onchange_quantity(self):
-        if self.line_ids.quantity < 0 or self.line_ids.quantity == 0.00:
-            raise UserError("Qty can not be Zero or Negative value")
 
     @api.onchange('sale_order_id')
     def onchange_sale_order_id(self):
