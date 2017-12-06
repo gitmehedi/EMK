@@ -13,7 +13,9 @@
               "Odoo Community Association (OCA)",
     "license": "LGPL-3",
     "website": "http://www.eficent.com",
-    "depends": ["stock", "account_operating_unit"],
+    "depends": ["stock",
+                # "account_operating_unit"
+                ],
     "data": [
         # "security/stock_security.xml",
         # "data/stock_data.xml",
