@@ -37,6 +37,10 @@ class PurchaseRequisitionTypeWizard(models.TransientModel):
                         'move_dest_id': po.requisition_id.procurement_id.move_dest_id.id,
                     })
             po.check_po_action_button = False
+
+            new_seq = self.env['ir.sequence'].next_by_code('purchase.order')
+            if new_seq:
+                po.write({'name':new_seq})
         else:
             order.write({'region_type': self.region_type, 'purchase_by': self.purchase_by, 'state': 'to approve'})
         return {'type': 'ir.actions.act_window_close'}

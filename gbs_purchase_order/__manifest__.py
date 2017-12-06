@@ -21,6 +21,7 @@
     ],
     'data': [
         # 'security/ir.model.access.csv',
+        'data/sequence_po.xml',
         'wizard/po_wizard_view.xml',
         'views/gbs_purchase_order_views.xml',
     ],
