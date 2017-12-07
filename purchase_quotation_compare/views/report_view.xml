@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+
+    <report id="report_purchase_quatation_compare"
+            model="purchase.requisition"
+            string="Comparative Bid Analysis"
+            name="purchase_quotation_compare.template_purchaserequisitions_doc"
+            file="purchase_quotation_compare.template_purchaserequisitions_doc"
+            report_type="qweb-pdf"/>
+
+    <record id="paperformat_bid_selection" model="report.paperformat">
+        <field name="name">Bid selection</field>
+        <field name="orientation">Landscape</field>
+        <field name="margin_top">30</field>
+        <field name="margin_bottom">15</field>
+        <field name="header_spacing">20</field>
+        <field name="dpi">90</field>
+    </record>
+
+    <record id="report_purchase_quatation_compare" model="ir.actions.report.xml">
+        <field name="paperformat_id" ref="paperformat_bid_selection"/>
+    </record>
+
+</odoo>
