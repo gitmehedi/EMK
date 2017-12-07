@@ -96,5 +96,18 @@
                 </button>
             </field>
         </record>
+
+        <menuitem id="menu_commercial_pq" parent="commercial.menu_commercial_root"
+            sequence="2" name="Purchase Quotation"/>
+
+        <menuitem id="submenu_commercial_pq" name="Purchase Quotation" parent="menu_commercial_pq"
+                sequence="1" action="purchase.purchase_rfq"/>
+
+        <menuitem id="menu_commercial_po" parent="commercial.menu_commercial_root"
+            sequence="3" name="Purchase Order"/>
+
+        <menuitem id="submenu_commercial_po" name="Purchase Order" parent="menu_commercial_po"
+                sequence="1" action="purchase.purchase_form_action"/>
+
     </data>
 </odoo>

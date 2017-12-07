@@ -18,6 +18,7 @@
         'purchase_requisition',
         'purchase_order_revision',
         'gbs_purchase_requisition',
+        'commercial',
     ],
     'data': [
         # 'security/ir.model.access.csv',
