@@ -55,11 +55,6 @@ class PurchaseRequisition(models.Model):
             'nodestroy': True,
             'target': 'new',
         }
-        # po_pool_obj = self.env['purchase.order'].search([('requisition_id','=',self.id)])
-        # if po_pool_obj:
-        #     po_pool_obj.write({'check_po_action_button': True,
-        #                        'region_type': self.region_type or False,
-        #                        'purchase_by':self.purchase_by or False})
         return result
 
     @api.onchange('indent_ids')
@@ -155,11 +150,8 @@ class PurchaseRequisitionLine(models.Model):
     @api.depends('product_id')
     @api.multi
     def _getProductQuentity(self):
-
         for productLine in self:
-
             if productLine.product_id.id:
-
                 locationId = 0
                 pickingTypeId = productLine.requisition_id.picking_type_id.id
                 pickingType = self.env['stock.picking.type'].search([('id', '=', pickingTypeId)])
@@ -182,7 +174,3 @@ class PurchaseRequisitionLine(models.Model):
         self.last_purchase_date = lines[:1].order_id.date_order
         self.last_price_unit = lines[:1].price_unit
         self.last_supplier_id = lines[:1].order_id.partner_id
-
-
-
-

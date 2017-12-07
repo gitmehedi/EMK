@@ -21,9 +21,9 @@
         'report/delivery_order_report.xml',
         'report/delivery_order_report_template.xml',
         'wizards/letter_of_credits_view.xml',
+        'wizards/do_max_order_qty_without_lc_views.xml',
         'views/delivery_order_view.xml',
         'views/inherited_account_payment_view.xml',
-
     ],
 
     'summary': 'Delivery Authorization',

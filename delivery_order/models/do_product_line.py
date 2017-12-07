@@ -9,7 +9,7 @@ class DOProductLine(models.Model):
     product_id = fields.Many2one('product.product', string="Product", readonly=True, ondelete='cascade')
     uom_id = fields.Many2one('product.uom', string="UoM", ondelete='cascade', readonly=True)
     pack_type = fields.Many2one('product.packaging.mode', string="Packing", ondelete='cascade', readonly=True)
-    quantity = fields.Float(string="Ordered Qty", required=True, default=1)
+    quantity = fields.Float(string="Delivery Qty", required=True, default=1)
     price_unit = fields.Float(string="Price Unit", readonly=True)
     commission_rate = fields.Float(string="Com. (%)", readonly=True)
     price_subtotal = fields.Float(string="Subtotal", readonly=True)
@@ -34,27 +34,22 @@ class DOProductLine(models.Model):
     @api.constrains('quantity')
     def check_quantity(self):
         for da in self:
+            if da.quantity < 0.00:
+                raise ValidationError('Quantity can not be negative')
+
             for sale_line in da.parent_id.sale_order_id.order_line:
                 if da.product_id.id == sale_line.product_id.id:
+                    if da.quantity > sale_line.product_uom_qty:
+                        raise ValidationError('Delivery Qty can not be greater than Ordered Qty')
+
                     if da.quantity > sale_line.da_qty:
-                        raise ValidationError('You can Deliver another {0} {1} for {2}'.format((sale_line.da_qty), (sale_line.product_uom.name), (sale_line.product_id.display_name)))
+                        raise ValidationError('You can Deliver {0} {1} for {2}'.format((sale_line.da_qty), (sale_line.product_uom.name), (sale_line.product_id.display_name)))
 
-        if da.quantity < 0.00:
-            raise ValidationError('Quantity can not be negative')
-
-        for so_line in da.parent_id.sale_order_id.order_line:
-            if da.quantity > so_line.product_uom_qty:
-                raise ValidationError('Delivery Qty can not be greater than Ordered Qty')
-
-        da.set_da_amounts_automatically()
+            da.set_da_amounts_automatically()
 
     @api.onchange('quantity')
     def onchange_quantity(self):
         self.set_da_amounts_automatically()
-
-        # for sale_line in self.parent_id.sale_order_id.order_line:
-        #     if self.quantity > sale_line.da_qty:
-        #         raise ValidationError('You can order another {0} {1}'.format((sale_line.da_qty),(sale_line.product_uom.name)))
 
     @api.one
     def set_da_amounts_automatically(self):

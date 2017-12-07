@@ -1,4 +1,4 @@
-from odoo import api, fields, models
+from odoo import api, fields, models, _
 from odoo.exceptions import UserError, ValidationError, Warning
 import time, datetime
 
@@ -54,7 +54,7 @@ class DeliveryOrder(models.Model):
         ('validate', "Validate"),
         ('approve', "Second Approval"),
         ('close', "Approved"),
-        ('refused','Refused'),
+        ('refused', 'Refused'),
     ], default='draft')
 
     company_id = fields.Many2one('res.company', string='Company', readonly=True,
@@ -105,7 +105,7 @@ class DeliveryOrder(models.Model):
     @api.one
     def action_refuse(self):
         self.state = 'refused'
-        #self.line_ids.write({'state': 'close'})
+        # self.line_ids.write({'state': 'close'})
 
     @api.one
     def action_draft(self):
@@ -153,96 +153,100 @@ class DeliveryOrder(models.Model):
 
     """ Action for Confirm button"""
 
-    @api.one
+    @api.multi
     def action_validate(self):
+
         if self.so_type == 'cash':
             self.payment_information_check()
             cash_check = self.payments_amount_checking_with_products_subtotal()
             return cash_check
+
         elif self.so_type == 'lc_sales':
-            return self.lc_sales_business_logics()
+
+            if self.pi_no:
+                pi_pool = self.env['proforma.invoice'].search([('sale_order_id', '=', self.sale_order_id.id)])
+                if not pi_pool:
+                    raise UserError('PI is of a different Sale Order')
+
+            if self.lc_no and self.pi_no:
+                if self.lc_no.lc_value >= self.total_sub_total_amount():
+                    self.create_delivery_order()
+                    self.update_sale_order_da_qty()
+                    self.write({'state': 'close'})  # Final Approval
+                else:
+                    self.write({'state': 'approve'})  # Second approval
+
+            elif self.pi_no and not self.lc_no:
+                res = {}
+                list = dict.fromkeys(set([val.product_id.product_tmpl_id.id for val in self.line_ids]), 0)
+                for line in self.line_ids:
+                    list[line.product_id.product_tmpl_id.id] = list[line.product_id.product_tmpl_id.id] + line.quantity
+
+                for rec in list:
+                    ordered_qty_pool = self.env['ordered.qty'].search([('lc_no', '=', False),
+                                                                       ('company_id', '=', self.company_id.id),
+                                                                       ('product_id', '=', rec)])
+
+                    res['product_id'] = rec
+                    res['ordered_qty'] = list[rec]
+                    res['delivery_auth_no'] = self.id
+
+                    if not ordered_qty_pool:
+                        res['available_qty'] = 100 - list[rec]
+                        if list[rec] > 100:
+                            res['available_qty'] = 0
+
+                        self.env['ordered.qty'].create(res)
+
+                        self.create_delivery_order()
+                        self.update_sale_order_da_qty()
+
+                        self.write({'state': 'close'})  # Final Approval
+                    else:
+                        for orders in ordered_qty_pool:
+                            if not orders.lc_no:
+                                if list[rec] > orders.available_qty:
+                                    res['available_qty'] = 0
+                                    orders.create(res)
+                                    #self.write({'state': 'close'})  # Final Approval
+                                else:
+                                    res['available_qty'] = orders.available_qty - list[rec]
+                                    if res['available_qty'] > 100:
+                                        res['available_qty'] = 0
+
+                                    self.create_delivery_order()
+                                    self.update_sale_order_da_qty()
+
+                                    self.write({'state': 'close'})  # Final Approval
+                                    orders.create(res)
+
+                    if list[rec] > 100:
+                        product_pool = self.env['product.product'].search([('id', '=', rec)])
+
+                        wizard_form = self.env.ref('delivery_order.max_do_without_lc_view', False)
+                        view_id = self.env['max.delivery.without.lc.wizard']
+
+                        return {
+                            'name': _('Max Ordering Confirm'),
+                            'type': 'ir.actions.act_window',
+                            'res_model': 'max.delivery.without.lc.wizard',
+                            'res_id': view_id.id,
+                            'view_id': wizard_form.id,
+                            'view_type': 'form',
+                            'view_mode': 'form',
+                            'target': 'new',
+                            'context': {'delivery_order_id': self.id, 'product_name': product_pool.display_name}
+                        }
+            else:
+                self.create_delivery_order()
+                self.update_sale_order_da_qty()
+
+                self.state = 'approve'  # second
+
         elif self.so_type == 'credit_sales':
             self.create_delivery_order()
             self.update_sale_order_da_qty()
             self.state = 'close'
-
-    def lc_sales_business_logics(self):
-
-        if self.pi_no:
-            pi_pool = self.env['proforma.invoice'].search([('sale_order_id', '=', self.sale_order_id.id)])
-            if not pi_pool:
-                raise UserError('PI is of a different Sale Order')
-
-        ##############################################
-        # If PI but no LC and then 100MT Qty
-        # is over then go to Second Level
-        ##############################################
-
-        ##########################################################################
-        # 1. If both PI & LC is present then check LC amount is greater than or
-        #    equal to total amount go to the Final approval. else go to second level
-        # 2. If no LC and PI then go Second approval
-        ############################################################################
-        if self.lc_no and self.pi_no:
-            if self.lc_no.lc_value >= self.total_sub_total_amount():
-                self.create_delivery_order()
-                self.update_sale_order_da_qty()
-                self.write({'state': 'close'})  # Final Approval
-            else:
-                self.write({'state': 'approve'})  # Second approval
-        else:
-            self.write({'state': 'approve'})  # Second Approval
-
-        ##################################################################
-        # Has PI & no LC then if 100MT is over then go to second approval
-        ##################################################################
-        if self.pi_no and not self.lc_no:
-            res = {}
-            list = dict.fromkeys(set([val.product_id.product_tmpl_id.id for val in self.line_ids]), 0)
-            for line in self.line_ids:
-                list[line.product_id.product_tmpl_id.id] = list[line.product_id.product_tmpl_id.id] + line.quantity
-
-            for rec in list:
-                ordered_qty_pool = self.env['ordered.qty'].search([('lc_no', '=', False),
-                                                                   ('company_id', '=', self.company_id.id),
-                                                                   ('product_id', '=', rec)])
-
-                res['product_id'] = rec
-                res['ordered_qty'] = list[rec]
-                res['delivery_auth_no'] = self.id
-
-                if not ordered_qty_pool:
-                    res['available_qty'] = 100 - list[rec]
-                    if list[rec] > 100:
-                        res['available_qty'] = 0
-
-                    self.env['ordered.qty'].create(res)
-                else:
-                    for orders in ordered_qty_pool:
-                        if not orders.lc_no:
-                            if list[rec] > orders.available_qty:
-                                res['available_qty'] = 0
-                                self.write({'state': 'approve'})  # Second Approval
-                                orders.create(res)
-                            else:
-                                res['available_qty'] = orders.available_qty - list[rec]
-                                if res['available_qty'] > 100:
-                                    res['available_qty'] = 0
-
-                                self.create_delivery_order()
-                                self.update_sale_order_da_qty()
-
-                                self.write({'state': 'close'})  # Final Approval
-                                orders.create(res)
-
-
-                                # if list[rec] > 100:
-                                #     # self.write({'state': 'approve'}) # second level
-                                #     warningstr = warningstr + 'Product {0} has order quantity is {1} which is more than 100\n'.format(
-                                #         pro_tmpl.name, list[rec])
-                                #
-                                # print warningstr
-                                # raise Warning(warningstr)
 
     def total_sub_total_amount(self):
         total_amt = 0
@@ -251,22 +255,6 @@ class DeliveryOrder(models.Model):
                 total_amt = total_amt + do_line.price_subtotal
 
         return total_amt
-
-    @api.one
-    def action_wizard_custom_user_msg_lc(self):
-
-        res1 = self.env.ref('delivery_order.view_max_order_qty_wizard')
-        return {
-            'name': ('Custom Message to User'),
-            'view_type': 'form',
-            'view_mode': 'form',
-            'view_id': res1 and res1.id or False,
-            'res_model': 'max.order.wizard',
-            'type': 'ir.actions.act_window',
-            'nodestroy': True,
-            'target': 'new',
-
-        }
 
     @api.one
     def payments_amount_checking_with_products_subtotal(self):
@@ -337,11 +325,6 @@ class DeliveryOrder(models.Model):
                     vals = sale_line.da_qty - da_line.quantity
                     sale_line.write({'da_qty': vals})
 
-    @api.onchange('quantity')
-    def onchange_quantity(self):
-        if self.line_ids.quantity < 0 or self.line_ids.quantity == 0.00:
-            raise UserError("Qty can not be Zero or Negative value")
-
     @api.onchange('sale_order_id')
     def onchange_sale_order_id(self):
         self.set_products_info_automatically()
@@ -402,6 +385,13 @@ class DeliveryOrder(models.Model):
                 self.lc_no = sale_order_obj.lc_no.id
 
                 for record in sale_order_obj.order_line:
+                    if record.da_qty != record.product_uom_qty \
+                            and record.da_qty != 0:
+
+                        record.product_uom_qty = record.da_qty
+
+
+
                     val.append((0, 0, {'product_id': record.product_id.id,
                                        'quantity': record.product_uom_qty,
                                        'pack_type': sale_order_obj.pack_type.id,
@@ -461,7 +451,6 @@ class DeliveryOrder(models.Model):
 class OrderedQty(models.Model):
     _name = 'ordered.qty'
     _description = 'Store Product wise ordered qty to track max qty value'
-    # _order = "delivery_auth_no,desc"
 
     product_id = fields.Many2one('product.template', string='Product')
     ordered_qty = fields.Float(string='Ordered Qty')
