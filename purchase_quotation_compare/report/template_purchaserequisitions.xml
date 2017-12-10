@@ -59,7 +59,7 @@
                                                 <thead>
                                                     <tr>
                                                         <t t-foreach="bid_batch" t-as="bid">
-                                                            <t>
+                                                            <t t-if="bid_first">
                                                                 <th colspan="2" class="col-xs-3 info text-center col-separator">
                                                                     Informations
                                                                 </th>
@@ -74,13 +74,19 @@
                                                                     <span t-field="bid.partner_id"/> of bid <span t-field="bid.name"/>
                                                                 </th>
                                                             </t>
+                                                            <t t-if="bid_last">
+                                                                <th colspan="2" class="col-xs-3 info text-center col-separator">
+                                                                    Approved
+                                                                </th>
+                                                            </t>
                                                         </t>
+
                                                     </tr>
                                                 </thead>
                                                 <tbody>
                                                     <tr>
                                                         <t t-foreach="bid_batch" t-as="bid">
-                                                            <t>
+                                                            <t t-if="bid_first">
                                                                 <td colspan="2" class="col-xs-3 col-separator">
                                                                     Quotations reference and date
                                                                 </td>
@@ -88,11 +94,15 @@
                                                             <td colspan="5" class="text-center col-separator">
                                                                 Bid <span t-field="bid.name"/> / Quotation Date :<span t-field="bid.date_order"/>
                                                             </td>
+                                                            <t t-if="bid_last">
+                                                                <th colspan="2" class="col-xs-3 info text-center col-separator">
+                                                                </th>
+                                                            </t>
                                                         </t>
                                                     </tr>
                                                     <tr>
                                                         <t t-foreach="bid_batch" t-as="bid">
-                                                            <t>
+                                                            <t t-if="bid_first">
                                                                 <td colspan="2" class="col-xs-3 col-separator">
                                                                     Source Document
                                                                 </td>
@@ -100,25 +110,39 @@
                                                             <td colspan="5" class="text-center col-separator">
                                                                 <span t-field="bid.origin"/>
                                                             </td>
+                                                            <t t-if="bid_last">
+                                                                <th colspan="2" class="col-xs-3 info text-center col-separator">
+                                                                </th>
+                                                            </t>
                                                         </t>
                                                     </tr>
-                                                    <!--done-->
                                                     <tr>
                                                         <t t-foreach="bid_batch" t-as="bid">
-                                                            <t>
+                                                            <t t-if="bid_first">
                                                                 <th class="info">Description of item</th>
                                                                 <th class="info text-center col-separator">Quantity</th>
                                                             </t>
-                                                            <t t-if="any(l.state == 'confirmed' for l in bid.order_line)">
-                                                                <td class="bg-primary text-center">Selected</td>
+                                                            <t t-if="any(l.state in ['confirmed','purchase'] for l in bid.order_line)">
+                                                                <td class="bg-primary text-center">Quantity</td>
                                                             </t>
-                                                            <t t-if="not any(l.state == 'confirmed' for l in bid.order_line)">
-                                                                <td class="info text-center">Selected</td>
+                                                            <t t-if="not any(l.state in ['confirmed','purchase'] for l in bid.order_line)">
+                                                                <td class="info text-center">Quantity</td>
                                                             </t>
-                                                            <td class="info text-center">Unit Price</td>
+                                                            <t t-if="any(l.state in ['confirmed','purchase'] for l in bid.order_line)">
+                                                                <td class="bg-primary text-center">Unit Price</td>
+                                                            </t>
+                                                            <t t-if="not any(l.state in ['confirmed','purchase'] for l in bid.order_line)">
+                                                                <td class="info text-center">Unit Price</td>
+                                                            </t>
+                                                            <!--<td class="info text-center">Unit Price</td>-->
                                                             <th class="info text-center">TOTAL</th>
                                                             <th class="info text-center"> <span t-field="o.company_id.currency_id"/> Unit price </th>
                                                             <th class="info text-center col-separator"> <span t-field="o.company_id.currency_id"/> Total </th>
+
+                                                            <t t-if="bid_last">
+                                                                <th class="info text-center">Unit Price</th>
+                                                                <th class="info text-center">Total</th>
+                                                            </t>
                                                         </t>
                                                     </tr>
                                                     <t t-foreach="o.line_ids" t-as="req_line">
@@ -127,7 +151,7 @@
                                                             <tr>
                                                                 <t t-foreach="bid_batch" t-as="bid">
                                                                     <t t-set="bid_conversion_rate" t-value="bid.currency_id._get_conversion_rate(bid.currency_id, bid.partner_id.currency_id)"/>
-                                                                    <t>
+                                                                    <t t-if="bid_first">
                                                                         <td><span t-field="req_line.product_id"/></td>
                                                                         <td class="text-right col-separator"><span t-esc="'{:,.2f}'.format(req_line.product_ordered_qty)"/></td>
                                                                     </t>
@@ -142,13 +166,20 @@
                                                                         </t>
                                                                         <t t-if="bid_line.state not in ['confirmed','purchase']">
                                                                             <td class="text-right">
-                                                                                -
+                                                                                <span t-esc="'{:,.2f}'.format(bid_line.product_qty)"/>
                                                                             </td>
                                                                         </t>
-                                                                        <td class="text-right">
-                                                                            <!--Unit Price-->
-                                                                            <span t-field="bid_line.price_unit"/>
-                                                                        </td>
+                                                                        <!--Unit Price-->
+                                                                        <t t-if="bid_line.state in ['confirmed','purchase']">
+                                                                            <td class="text-right bg-success">
+                                                                                <span t-esc="'{:,.2f}'.format(bid_line.price_unit)"/>
+                                                                            </td>
+                                                                        </t>
+                                                                        <t t-if="bid_line.state not in ['confirmed','purchase']">
+                                                                            <td class="text-right">
+                                                                                <span t-esc="'{:,.2f}'.format(bid_line.price_unit)"/>
+                                                                            </td>
+                                                                        </t>
                                                                         <td class="text-right">
                                                                             <!--TOTAL-->
                                                                             <span t-field="bid_line.price_subtotal"/>
@@ -161,6 +192,23 @@
                                                                             <!--Company Currency total-->
                                                                             <span t-esc="'{:,.2f}'.format(bid_line.price_subtotal * bid_conversion_rate)"/>
                                                                         </td>
+                                                                    </t>
+                                                                    <t t-if="bid_last">
+                                                                        <t t-foreach="bid_batch" t-as="last_bid">
+                                                                            <t t-set="last_bid_line" t-value="[l for l in last_bid.order_line if l.product_id == req_line.product_id]"/>
+                                                                            <t t-if="last_bid_line">
+                                                                                <t t-foreach="last_bid_line" t-as="last_bid_pro">
+                                                                                    <t t-if="last_bid_pro.state in ['confirmed','purchase']">
+                                                                                        <td class="text-right bg-success">
+                                                                                            <span t-esc="'{:,.2f}'.format(last_bid_pro.price_unit)"/>
+                                                                                        </td>
+                                                                                        <td class="text-right bg-success">
+                                                                                            <span t-esc="'{:,.2f}'.format(last_bid_pro.price_subtotal)"/>
+                                                                                        </td>
+                                                                                    </t>
+                                                                                </t>
+                                                                            </t>
+                                                                        </t>
                                                                     </t>
                                                                     <t t-if="not bid_line">
                                                                         <td colspan="5" class="col-separator"/>
@@ -234,19 +282,6 @@
                                                     <!--<td class="text-right col-separator">-->
                                                     <!--<t t-esc="'{:,.2f}'.format(sum(l.price_subtotal for l in bid.order_line if l.product_id.type != 'service') * bid_conversion_rate)"/>-->
                                                     <!--</td>-->
-                                                    <!--</t>-->
-                                                    <!--</tr>-->
-                                                    <!--<tr>-->
-                                                    <!--<t t-foreach="bid_batch" t-as="bid">-->
-                                                    <!--<t t-if="bid_first">-->
-                                                    <!--<th colspan="1">-->
-                                                    <!--Incoterm (2010)-->
-                                                    <!--</th>-->
-                                                    <!--<td colspan="1" class="col-separator">-->
-                                                    <!--<span t-field="o.req_incoterm_id.code"/>-->
-                                                    <!--</td>-->
-                                                    <!--</t>-->
-                                                    <!--<td colspan="5" class="col-separator"/>-->
                                                     <!--</t>-->
                                                     <!--</tr>-->
                                                     <!--<t t-set="service_products" t-value="set(l.product_id for bid in bid_batch for l in bid.order_line if l.product_id.type == 'service')"/>-->
@@ -325,18 +360,23 @@
                                                             <td class="text-right col-separator">
                                                                 <span t-esc="'{:,.2f}'.format(sum(l.price_subtotal for l in bid.order_line) * bid_conversion_rate)"/>
                                                             </td>
+                                                            <t t-if="bid_last">
+                                                                <th colspan="2" class="col-xs-3 col-separator">
+                                                                </th>
+                                                            </t>
                                                         </t>
                                                     </tr>
-                                                    <tr>
-                                                        <td t-att-colspan="2 + 5 * len(bid_batch)"/>
-                                                    </tr>
+                                                    <!--<tr>-->
+                                                        <!--<td t-att-colspan="2 + 5 * len(bid_batch)"/>-->
+                                                    <!--</tr>-->
+                                                    <!--done-->
                                                     <!--<tr>-->
                                                     <!--<t t-foreach="bid_batch" t-as="bid">-->
                                                     <!--<t t-if="bid_first">-->
                                                     <!--<td colspan="2" class="col-separator">Country of origin</td>-->
                                                     <!--</t>-->
                                                     <!--<td colspan="5" class="col-separator">-->
-                                                    <!--<span t-field="bid.country_of_origin"/>-->
+                                                    <!--<span t-field="bid.partner_id.country_id"/>-->
                                                     <!--</td>-->
                                                     <!--</t>-->
                                                     <!--</tr>-->
