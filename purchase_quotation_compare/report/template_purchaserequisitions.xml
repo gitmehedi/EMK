@@ -208,6 +208,10 @@
                                                                                     </t>
                                                                                 </t>
                                                                             </t>
+                                                                            <t t-if="not last_bid_line">
+                                                                                <td>-</td>
+                                                                                <td>-</td>
+                                                                            </t>
                                                                         </t>
                                                                     </t>
                                                                     <t t-if="not bid_line">
