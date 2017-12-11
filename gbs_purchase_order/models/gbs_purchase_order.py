@@ -137,7 +137,6 @@ class PurchaseOrder(models.Model):
         res = super(PurchaseOrder, self).button_cancel()
         for i in self:
             i.check_po_action_button = False
-            i.disable_new_revision_button = True
         return res
 
     @api.multi
