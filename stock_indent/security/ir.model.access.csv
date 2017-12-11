@@ -19,3 +19,4 @@ access_stock_move_user,access_stock_move_user,stock.model_stock_move,base.group_
 access_stock_quant_user,access_stock_quant_user,stock.model_stock_quant,base.group_user,1,0,0,0
 access_stock_location_user,access_stock_location_user,stock.model_stock_location,base.group_user,1,0,0,0
 access_stock_picking_type_user,access_stock_picking_type_user,stock.model_stock_picking_type,base.group_user,1,0,0,0
+access_purchase_requisition_user,access_purchase_requisition_user,purchase_requisition.model_purchase_requisition,base.group_user,1,0,0,0
