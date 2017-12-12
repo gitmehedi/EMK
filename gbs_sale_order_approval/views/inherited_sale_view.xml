@@ -11,14 +11,14 @@
                     <xpath expr="//page[1]" position="replace">
                         <page string="Order Lines">
                             <field name="order_line" mode="tree,kanban"
-                                attrs="{'readonly': [('state', 'not in', ('to_submit'))]}">
+                                   attrs="{'readonly': [('state', 'not in', ('to_submit'))]}">
                                 <form string="Sales Order Lines">
                                     <group>
                                         <group>
                                             <field name="product_id"
-                                                context="{'partner_id':parent.partner_id, 'quantity':product_uom_qty, 'pricelist':parent.pricelist_id, 'uom':product_uom, 'company_id': parent.company_id}"
-                                                attrs="{'readonly': ['|', ('qty_invoiced', '&gt;', 0), ('procurement_ids', '!=', [])]}"
-                                               />
+                                                   context="{'partner_id':parent.partner_id, 'quantity':product_uom_qty, 'pricelist':parent.pricelist_id, 'uom':product_uom, 'company_id': parent.company_id}"
+                                                   attrs="{'readonly': ['|', ('qty_invoiced', '&gt;', 0), ('procurement_ids', '!=', [])]}"
+                                            />
                                             <field name="layout_category_id" groups="sale.group_sale_layout"/>
                                             <field name="invoice_status" invisible="1"/>
                                             <field name="qty_to_invoice" invisible="1"/>
@@ -28,35 +28,43 @@
                                             <label for="product_uom_qty" string="Ordered Quantity"/>
                                             <div>
                                                 <field
-                                                    context="{'partner_id':parent.partner_id, 'quantity':product_uom_qty, 'pricelist':parent.pricelist_id, 'uom':product_uom, 'uom_qty_change':True, 'company_id': parent.company_id}"
-                                                    name="product_uom_qty" class="oe_inline"/>
-                                                <field name="product_uom" groups="product.group_uom" class="oe_inline oe_no_button"
-                                                    attrs="{'readonly': [('state', 'in', ('sale','done', 'cancel'))]}"/>
+                                                        context="{'partner_id':parent.partner_id, 'quantity':product_uom_qty, 'pricelist':parent.pricelist_id, 'uom':product_uom, 'uom_qty_change':True, 'company_id': parent.company_id}"
+                                                        name="product_uom_qty" class="oe_inline"/>
+                                                <field name="product_uom" groups="product.group_uom"
+                                                       class="oe_inline oe_no_button"
+                                                       attrs="{'readonly': [('state', 'in', ('sale','done', 'cancel'))]}"/>
                                             </div>
-                                            <label for="qty_delivered" string="Delivered Quantity" invisible="context.get('hide_sale')"/>
+                                            <label for="qty_delivered" string="Delivered Quantity"
+                                                   invisible="context.get('hide_sale')"/>
                                             <div invisible="context.get('hide_sale')">
-                                                <field name="qty_delivered" attrs="{'readonly': [('qty_delivered_updateable', '=', False)]}"/>
+                                                <field name="qty_delivered"
+                                                       attrs="{'readonly': [('qty_delivered_updateable', '=', False)]}"/>
                                             </div>
-                                            <label for="qty_invoiced" string="Invoiced Quantity" invisible="context.get('hide_sale')"/>
+                                            <label for="qty_invoiced" string="Invoiced Quantity"
+                                                   invisible="context.get('hide_sale')"/>
                                             <div invisible="context.get('hide_sale')">
                                                 <field name="qty_invoiced" invisible="context.get('hide_sale')"/>
                                             </div>
                                             <field name="price_unit"/>
                                             <label for="discount" groups="sale.group_discount_per_so_line"/>
                                             <div name="discount" groups="sale.group_discount_per_so_line">
-                                                <field name="discount" class="oe_inline"/> %%
+                                                <field name="discount" class="oe_inline"/>
+                                                %%
                                             </div>
                                         </group>
                                         <group>
-                                            <field name="tax_id" widget="many2many_tags" domain="[('type_tax_use','=','sale'),('company_id','=',parent.company_id)]"
-                                                attrs="{'readonly': [('qty_invoiced', '&gt;', 0)]}"/>
+                                            <field name="tax_id" widget="many2many_tags"
+                                                   domain="[('type_tax_use','=','sale'),('company_id','=',parent.company_id)]"
+                                                   attrs="{'readonly': [('qty_invoiced', '&gt;', 0)]}"/>
                                             <label for="customer_lead"/>
                                             <div>
-                                                <field name="customer_lead" class="oe_inline"/> days
+                                                <field name="customer_lead" class="oe_inline"/>
+                                                days
                                             </div>
                                             <label for="analytic_tag_ids" groups="analytic.group_analytic_accounting"/>
                                             <div>
-                                                <field name="analytic_tag_ids" widget="many2many_tags" groups="analytic.group_analytic_accounting"/>
+                                                <field name="analytic_tag_ids" widget="many2many_tags"
+                                                       groups="analytic.group_analytic_accounting"/>
                                             </div>
                                         </group>
                                     </group>
@@ -68,34 +76,38 @@
                                     </div>
                                     <field name="state" invisible="1"/>
                                 </form>
-                                <tree string="Sales Order Lines" editable="bottom" decoration-info="invoice_status=='to invoice'">
+                                <tree string="Sales Order Lines" editable="bottom"
+                                      decoration-info="invoice_status=='to invoice'">
                                     <field name="sequence" widget="handle"/>
                                     <field name="product_id"
-                                        attrs="{'readonly': ['|', ('qty_invoiced', '&gt;', 0), ('procurement_ids', '!=', [])]}"
-                                        context="{'partner_id':parent.partner_id, 'quantity':product_uom_qty, 'pricelist':parent.pricelist_id, 'uom':product_uom, 'company_id': parent.company_id}"
-                                       />
+                                           attrs="{'readonly': ['|', ('qty_invoiced', '&gt;', 0), ('procurement_ids', '!=', [])]}"
+                                           context="{'partner_id':parent.partner_id, 'quantity':product_uom_qty, 'pricelist':parent.pricelist_id, 'uom':product_uom, 'company_id': parent.company_id}"
+                                    />
                                     <field name="layout_category_id" groups="sale.group_sale_layout"/>
                                     <field name="name"/>
                                     <field name="product_uom_qty"
-                                        string="Ordered Qty"
-                                        context="{'partner_id':parent.partner_id, 'quantity':product_uom_qty, 'pricelist':parent.pricelist_id, 'uom':product_uom, 'company_id': parent.company_id}"
+                                           string="Ordered Qty"
+                                           context="{'partner_id':parent.partner_id, 'quantity':product_uom_qty, 'pricelist':parent.pricelist_id, 'uom':product_uom, 'company_id': parent.company_id}"
                                     />
                                     <field name="qty_delivered" invisible="context.get('hide_sale')"
-                                        attrs="{'readonly': [('qty_delivered_updateable', '=', False)]}"/>
+                                           attrs="{'readonly': [('qty_delivered_updateable', '=', False)]}"/>
                                     <field name="qty_invoiced"
-                                        invisible="context.get('hide_sale')"/>
+                                           invisible="context.get('hide_sale')"/>
                                     <field name="qty_to_invoice" invisible="1"/>
                                     <field name="product_uom"
-                                        attrs="{'readonly': [('state', 'in', ('sale','done', 'cancel'))]}"
-                                        context="{'company_id': parent.company_id}"
-                                        groups="product.group_uom" options='{"no_open": True}'/>
-                                    <field name="analytic_tag_ids" groups="analytic.group_analytic_accounting" widget="many2many_tags"/>
+                                           attrs="{'readonly': [('state', 'in', ('sale','done', 'cancel'))]}"
+                                           context="{'company_id': parent.company_id}"
+                                           groups="product.group_uom" options='{"no_open": True}'/>
+                                    <field name="analytic_tag_ids" groups="analytic.group_analytic_accounting"
+                                           widget="many2many_tags"/>
                                     <field name="price_unit"
-                                        attrs="{'readonly': [('qty_invoiced', '&gt;', 0)]}"/>
-                                    <field name="tax_id" widget="many2many_tags" domain="[('type_tax_use','=','sale'),('company_id','=',parent.company_id)]"
-                                        attrs="{'readonly': [('qty_invoiced', '&gt;', 0)]}"/>
+                                           attrs="{'readonly': [('qty_invoiced', '&gt;', 0)]}"/>
+                                    <field name="tax_id" widget="many2many_tags"
+                                           domain="[('type_tax_use','=','sale'),('company_id','=',parent.company_id)]"
+                                           attrs="{'readonly': [('qty_invoiced', '&gt;', 0)]}"/>
                                     <field name="discount" groups="sale.group_discount_per_so_line"/>
-                                    <field name="price_subtotal" widget="monetary" groups="sale.group_show_price_subtotal"/>
+                                    <field name="price_subtotal" widget="monetary"
+                                           groups="sale.group_show_price_subtotal"/>
                                     <field name="price_total" widget="monetary" groups="sale.group_show_price_total"/>
                                     <field name="qty_delivered_updateable" invisible="1"/>
                                     <field name="procurement_ids" invisible="1"/>
@@ -114,15 +126,24 @@
                                             <div t-attf-class="oe_kanban_card oe_kanban_global_click">
                                                 <div class="row">
                                                     <div class="col-xs-12">
-                                                        <strong><span><t t-esc="record.product_id.value"/></span></strong>
+                                                        <strong>
+                                                            <span>
+                                                                <t t-esc="record.product_id.value"/>
+                                                            </span>
+                                                        </strong>
                                                     </div>
                                                 </div>
                                                 <div class="row">
                                                     <div class="col-xs-8 text-muted">
-                                                        <span><t t-esc="record.product_uom_qty.value"/> <t t-esc="record.product_uom.value"/></span>
+                                                        <span>
+                                                            <t t-esc="record.product_uom_qty.value"/>
+                                                            <t t-esc="record.product_uom.value"/>
+                                                        </span>
                                                     </div>
                                                     <div class="col-xs-4 text-muted">
-                                                        <span class="pull-right text-right"><t t-esc="record.price_subtotal.value"/></span>
+                                                        <span class="pull-right text-right">
+                                                            <t t-esc="record.price_subtotal.value"/>
+                                                        </span>
                                                     </div>
                                                 </div>
                                             </div>
@@ -131,16 +152,20 @@
                                 </kanban>
                             </field>
                             <group class="oe_subtotal_footer oe_right" colspan="2" name="sale_total">
-                                <field name="amount_untaxed" widget='monetary' options="{'currency_field': 'currency_id'}"/>
+                                <field name="amount_untaxed" widget='monetary'
+                                       options="{'currency_field': 'currency_id'}"/>
                                 <field name="amount_tax" widget='monetary' options="{'currency_field': 'currency_id'}"/>
                                 <div class="oe_subtotal_footer_separator oe_inline o_td_label">
-                                    <label for="amount_total" />
+                                    <label for="amount_total"/>
                                     <button name="button_dummy"
-                                        states="draft,sent" string="(update)" type="object" class="oe_edit_only oe_link"/>
+                                            states="draft,sent" string="(update)" type="object"
+                                            class="oe_edit_only oe_link"/>
                                 </div>
-                                <field name="amount_total" nolabel="1" class="oe_subtotal_footer_separator" widget='monetary' options="{'currency_field': 'currency_id'}"/>
+                                <field name="amount_total" nolabel="1" class="oe_subtotal_footer_separator"
+                                       widget='monetary' options="{'currency_field': 'currency_id'}"/>
                             </group>
-                            <field name="note" class="oe_inline" placeholder="Setup default terms and conditions in your company settings."/>
+                            <field name="note" class="oe_inline"
+                                   placeholder="Setup default terms and conditions in your company settings."/>
                             <div class="oe_clear"/>
                         </page>
                     </xpath>
@@ -173,7 +198,7 @@
                                 groups="account.group_account_user,gbs_application_group.group_head_account,gbs_application_group.group_cxo"
                                 class="btn-primary"
                                 string="Delivery Authorization"
-                               />
+                        />
                         <!--states="done"-->
 
                     </header>
@@ -196,6 +221,18 @@
                                 class="btn-primary o_sale_confirm"
                                 type="object"/>
                     </xpath>
+
+                    <!-- Custom business logic to show Create Invoice Button after Sale Order is in state done-->
+
+                    <xpath expr="//button[@name='%(sale.action_view_sale_advance_payment_inv)d']" position="replace">
+                        <button name="%(sale.action_view_sale_advance_payment_inv)d" string="Create Invoice"
+                                attrs="{'invisible':[('state','in',('to_submit','submit_quotation','validate', 'draft','sent','sale','cancel'))]}"
+                                type="action"/>
+                    </xpath>
+
+
+
+                    <!-- End of Create Invoice Button showing based on custom business logic-->
 
                     <!--Send by email-->
                     <xpath expr="//button[@name='action_quotation_send' and @states='draft']" position="replace">
@@ -234,8 +271,8 @@
                     <!--Lock-->
                     <xpath expr="//button[@name='action_done']" position="replace">
                         <button name="action_done" type="object" string="Lock" states="sale" class="btn-primary"
-                             groups="gbs_application_group.group_head_sale,gbs_application_group.group_cxo"
-                             help="If the sale is locked, you can not modify it anymore. However, you will still be able to invoice or deliver."/>
+                                groups="gbs_application_group.group_head_sale,gbs_application_group.group_cxo"
+                                help="If the sale is locked, you can not modify it anymore. However, you will still be able to invoice or deliver."/>
                     </xpath>
 
                     <xpath expr="//field[@name='order_line']/tree/field[@name='price_unit']" position="after">
@@ -257,7 +294,8 @@
                     </xpath>
 
                     <xpath expr="//group/group/field[@name='payment_term_id']" position="before">
-                        <field name="pack_type" options="{'no_open': True, 'no_create': False}" attrs="{'readonly':[('state','in',('draft','sent','validate','done','cancel','sale'))]}"/>
+                        <field name="pack_type" options="{'no_open': True, 'no_create': False}"
+                               attrs="{'readonly':[('state','in',('draft','sent','validate','done','cancel','sale'))]}"/>
                     </xpath>
 
                     <xpath expr="//field[@name='payment_term_id']" position="replace">
@@ -328,11 +366,13 @@
                     </xpath>
 
                     <xpath expr="//field[@name='pack_type']" position="after">
-                        <field name="pi_no" attrs="{'invisible':[('credit_sales_or_lc', '!=', 'lc_sales')]}" options="{'no_quick_create':True,'no_create_edit':True,'no_open':True}"/>
+                        <field name="pi_no" attrs="{'invisible':[('credit_sales_or_lc', '!=', 'lc_sales')]}"
+                               options="{'no_quick_create':True,'no_create_edit':True,'no_open':True}"/>
                     </xpath>
 
                     <xpath expr="//field[@name='pi_no']" position="after">
-                        <field name="lc_no" attrs="{'invisible':[('credit_sales_or_lc', '!=', 'lc_sales')]}" options="{'no_quick_create':True,'no_create_edit':True,'no_open':True}"/>
+                        <field name="lc_no" attrs="{'invisible':[('credit_sales_or_lc', '!=', 'lc_sales')]}"
+                               options="{'no_quick_create':True,'no_create_edit':True,'no_open':True}"/>
                     </xpath>
 
                     <xpath expr="//field[@name='pi_no']" position="after">
