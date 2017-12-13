@@ -1,3 +1,4 @@
+import done_wizard
 import on_board_wizard
 import gate_in_wizard
 import eta_wizard

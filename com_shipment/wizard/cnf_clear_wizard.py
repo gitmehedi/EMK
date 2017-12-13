@@ -5,6 +5,9 @@ class CnfQuotationWizard(models.TransientModel):
     _name = 'cnf.clear.wizard'
 
     arrival_date = fields.Date('Arrival Date', required=True)
+    transport_by = fields.Char('Transport By', required=True)
+    vehical_no = fields.Char('Vehical No', required=True)
+    employee_ids = fields.Many2many('hr.employee', string='''Employee's''')
 
     @api.multi
     def save_cnf_clear(self):
@@ -12,12 +15,12 @@ class CnfQuotationWizard(models.TransientModel):
         form_id = self.env.context.get('active_id')
         shipment_pool = self.env['purchase.shipment']
         shipment_obj = shipment_pool.search([('id', '=', form_id)])
-        shipment_obj.write({'arrival_date': self.arrival_date, 'state': 'cnf_clear'})
-        return {'type': 'ir.actions.act_window_close'}
-
-
-
-
+        if shipment_obj:
+            shipment_obj.write({'arrival_date': self.arrival_date,
+                                'transport_by': self.transport_by,
+                                'vehical_no': self.vehical_no,
+                                'state': 'cnf_clear'})
+            return {'type': 'ir.actions.act_window_close'}
 
 
 

@@ -14,6 +14,7 @@
             'views/shipment_view.xml',
             'views/shipment_menu.xml',
             'wizard/on_board_wizard_view.xml',
+            'wizard/done_wizard_view.xml',
             'wizard/gate_in_wizard_view.xml',
             'wizard/eta_wizard_view.xml',
             'wizard/doc_receive_wizard_view.xml',

@@ -11,10 +11,16 @@ class Shipment(models.Model):
 
     name = fields.Char(string='Number', required=True, readonly=True, index=True, default=lambda self: self.env.context.get('shipment_number'))
     comments = fields.Text(string='Comments', track_visibility='onchange')
-
     etd_date = fields.Date('ETD Date', readonly=True, help="Estimated Time of Departure")
     eta_date = fields.Date('ETA Date', readonly=True, help="Estimated Time of Arrival")
     arrival_date = fields.Date('Arrival Date', readonly=True)
+    comment = fields.Text('Comment', readonly=True)
+    transport_by = fields.Char('Transport By', readonly=True,)
+    vehical_no = fields.Char('Vehical No', readonly=True,)
+    employee_ids = fields.Many2many('hr.employee', string='''Employee's''')
+
+    # employee_ids = fields.Many2many('hr.employee',
+    #                                 'employee_id', readonly=True,string='Employees')
 
     state = fields.Selection(
         [('draft', "Draft"),
@@ -84,7 +90,21 @@ class Shipment(models.Model):
 
         return result
 
-
+    #For done_wizard
+    @api.multi
+    def action_done(self):
+        res = self.env.ref('com_shipment.done_wizard')
+        result = {
+            'name': _('Do you want to done this shipment?'),
+            'view_type': 'form',
+            'view_mode': 'form',
+            'view_id': res and res.id or False,
+            'res_model': 'done.wizard',
+            'type': 'ir.actions.act_window',
+            'nodestroy': True,
+            'target': 'new',
+        }
+        return result
     # State Change Actions
 
     @api.multi

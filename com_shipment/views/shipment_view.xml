@@ -27,7 +27,9 @@
                         <button string="C&amp;F Quotation" name="action_quotation" states="eta" type="object" class="oe_highlight"/>
                         <button string="Approve" name="action_approve_quotation" states="cnf_quotation" type="object" class="oe_highlight"/>
                         <button string="C&amp;F Clear" name="action_cnf_clear" states="approve_cnf_quotation" type="object" class="oe_highlight"/>
-                        <button string="Gate In" name="action_gate_in" states="cnf_clear" type="object" class="oe_highlight"/>
+                        <!--<button string="Gate In" name="action_gate_in" states="cnf_clear" type="object" class="oe_highlight"/>-->
+                        <button string="Done" name="action_done" states="cnf_clear" type="object" class="oe_highlight"/>
+
 
                         <field name="state" widget="statusbar"/>
                     </header>
@@ -48,15 +50,20 @@
                                 <group>
                                     <field name="lc_id" options="{'no_open':True,'no_quick_create':True,'no_create_edit':True}"/>
                                     <field name="arrival_date"/>
+                                    <!--<field name="comment"/>-->
                                 </group>
+                                <separator string="Comments"/>
+                                <field name="comment" nolabel="1"/>
                             </group>
-                            <group string="Invoice" colspan="4">
-                                <group>
-                                    <field name="invoice_number"/>
-                                </group>
-                                <group>
-                                    <field name="invoice_value"/>
-                                </group>
+
+                            <group string="Invoice">
+                                <field name="invoice_number"/>
+                                <field name="invoice_value"/>
+                            </group>
+                            <group string="Transport Information">
+                                <field name="transport_by"/>
+                                <field name="vehical_no"/>
+                                <!--<field name="employee_ids" widget="many2many_tags"/>-->
                             </group>
                             <group string="Bill Of Lading">
                                 <field name="bill_of_lading_number"/>
