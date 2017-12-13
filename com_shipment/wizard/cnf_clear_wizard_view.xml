@@ -22,6 +22,9 @@
                         <group string="Employee's">
                            <field name="employee_ids" widget="many2many_tags" nolabel="1" />
                         </group>
+                        <group string="Notes">
+                           <field name="notes" nolabel="1" />
+                        </group>
                     </sheet>
                     <!--<group>-->
                         <!--<group>-->

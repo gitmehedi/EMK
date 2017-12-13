@@ -8,6 +8,7 @@ class CnfQuotationWizard(models.TransientModel):
     transport_by = fields.Char('Transport By', required=True)
     vehical_no = fields.Char('Vehical No', required=True)
     employee_ids = fields.Many2many('hr.employee', string='''Employee's''')
+    notes = fields.Text('Notes')
 
     @api.multi
     def save_cnf_clear(self):
