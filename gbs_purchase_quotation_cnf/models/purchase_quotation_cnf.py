@@ -3,8 +3,7 @@ from odoo import models, fields, api,_
 from odoo.exceptions import UserError
 
 class PurchaseCNFQuotation(models.Model):
-    _name = 'cnf.quotation'
-    _inherit = ['purchase.order','mail.thread', 'ir.needaction_mixin']
+    _inherit = 'purchase.order'
 
     quotation_type = fields.Char(string='Type')
     shipment_id = fields.Many2one('purchase.shipment',string='Shipment', ondelete='cascade',readonly=True,
