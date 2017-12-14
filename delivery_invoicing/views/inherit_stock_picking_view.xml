@@ -1,29 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
     <data>
-
-        <record id="delivery_order_form" model="ir.ui.view">
-            <field name="name">delivery.order.form</field>
-            <field name="model">delivery.order</field>
-            <field name="type">form</field>
+    <record model="ir.ui.view" id="inherit_payment_view">
+            <field name="name">Stock.picking.form.view</field>
+            <field name="model">stock.picking</field>
+            <field name="inherit_id" ref="stock.view_picking_form"/>
             <field name="arch" type="xml">
-                <form string="Delivery Order" delete="false" copy='0'>
-
-                </form>
-            </field>
-        </record>
-
-        <record id="delivery_order_tree" model="ir.ui.view">
-            <field name="name">delivery.order.tree</field>
-            <field name="model">delivery.order</field>
-            <field name="type">tree</field>
-            <field name="arch" type="xml">
-                <tree string="Delivery Order">
-                    <field name="sale_order_id"/>
-                    <field name="name" string="Delivery Authorization"/>
-                    <field name="state"/>
-                    <field name="approved_date"/>
-                </tree>
+                <xpath expr="//field[@name='backorder_id']" position="after">
+                    <field name="delivery_address"/>
+                </xpath>
             </field>
         </record>
 

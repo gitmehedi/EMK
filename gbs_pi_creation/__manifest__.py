@@ -5,10 +5,13 @@
     'category': 'pi',
     'version':'1.0.0',
     'depends': [
-        'stock'
+        'stock',
+        'gbs_application_group',
+        'sales_team',
     ],
 
     'data': [
+        'security/ir.model.access.csv',
         'views/proforma_invoice_view.xml',
     ],
 
