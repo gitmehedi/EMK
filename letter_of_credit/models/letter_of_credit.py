@@ -102,10 +102,16 @@ class LetterOfCredit(models.Model):
                     self._cr.execute(query, tuple([att.res_id]))
                 return super(LetterOfCredit, self).unlink()
 
+    @api.constrains('tolerance')
+    def _check_qty(self):
+        if self.tolerance > 10 :
+            raise Warning('You should set "Tolerance" upto 10 !')
 
     @api.multi
     def action_open(self):
         self.write({'state': 'open','last_note': Status.OPEN.value})
+        if self.tolerance > 10 :
+            raise Warning('You should set "Tolerance" upto 10 !')
 
     @api.multi
     def action_confirm(self):
