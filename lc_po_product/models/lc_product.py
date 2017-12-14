@@ -11,7 +11,7 @@ class LCProduct(models.Model):
     product_id = fields.Many2one('product.product', string='Product', domain=[('purchase_ok', '=', True)],
                                  change_default=True, required=True)
 
-    product_qty = fields.Float(string='Quantity')
+    product_qty = fields.Float(string='LC Quantity')
     product_received_qty = fields.Float(string='Received Quantity')
     price_unit = fields.Float(string='Unit Price')
     currency_id = fields.Many2one('res.currency', 'Currency')

@@ -5,8 +5,8 @@ class CnfQuotationWizard(models.TransientModel):
     _name = 'cnf.clear.wizard'
 
     arrival_date = fields.Date('Arrival Date', required=True)
-    transport_by = fields.Char('Transport By', required=True)
-    vehical_no = fields.Char('Vehical No', required=True)
+    transport_by = fields.Char('Transport By')
+    vehical_no = fields.Char('Vehical No')
     employee_ids = fields.Many2many('hr.employee', string='''Employee's''')
     notes = fields.Text('Notes')
 

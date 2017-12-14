@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
     <data>
-        <record model="ir.actions.act_window" id="action_cnf_list">
-            <field name="name">C&amp;F Quotations</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="res_model">cnf.quotation</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
-            <field name="domain">[('shipment_id','=',active_id)]</field>
-        </record>
+        <!--<record model="ir.actions.act_window" id="action_cnf_list">-->
+            <!--<field name="name">C&amp;F Quotations</field>-->
+            <!--<field name="type">ir.actions.act_window</field>-->
+            <!--<field name="res_model">cnf.quotation</field>-->
+            <!--<field name="view_type">form</field>-->
+            <!--<field name="view_mode">tree,form</field>-->
+            <!--<field name="domain">[('shipment_id','=',active_id)]</field>-->
+        <!--</record>-->
 
         <record id="view_shipment_form" model="ir.ui.view">
             <field name="name">purchase.shipment.form</field>
@@ -34,12 +34,7 @@
                         <field name="state" widget="statusbar"/>
                     </header>
                     <sheet>
-                        <div class="oe_button_box" name="button_box">
-                            <button name="%(action_cnf_list)d" type="action" class="oe_stat_button" icon="fa-list-alt"
-                                    attrs="{'invisible': [('state', 'in', ('draft','on_board','receive_doc'))]}">
-                                <label string="C&amp;F Quotation"/>
-                            </button>
-                        </div>
+
                         <group>
                             <group string="Shipment Details" colspan="4">
                                 <group>

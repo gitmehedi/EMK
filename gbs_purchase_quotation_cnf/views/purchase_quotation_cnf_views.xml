@@ -3,30 +3,38 @@
     <data>
         <record id="view_cnf_quotation_tree" model="ir.ui.view">
             <field name="name">view.cnf.quotation.tree</field>
-            <field name="model">cnf.quotation</field>
+            <field name="model">purchase.order</field>
+            <field name="inherit_id" ref="purchase.purchase_order_tree"/>
             <field name="arch" type="xml">
-                <tree string="CNF Quotation" create="0" edit="0">
-                    <field name="name" attrs="{'invisible': [('state','=','draft')]}"/>
-                    <field name="shipment_id"/>
-                    <field name="lc_id"/>
-                    <field name="state"/>
-                </tree>
+                <data>
+                    <xpath expr="//tree" position="replace">
+                        <field name="name" attrs="{'invisible': [('state','=','draft')]}"/>
+                        <field name="shipment_id"/>
+                        <field name="lc_id"/>
+                        <field name="state"/>
+                    </xpath>
+                </data>
             </field>
         </record>
 
+
         <record id="view_cnf_quotation_form" model="ir.ui.view">
             <field name="name">view.cnf.quotation.form</field>
-            <field name="model">cnf.quotation</field>
+            <field name="model">purchase.order</field>
+            <field name="inherit_id" ref="purchase.purchase_order_form"/>
             <field name="arch" type="xml">
-                <form string="CNF Quotation" create="0" edit="0">
+
+                <xpath expr="//header" position="replace">
                     <header>
-						<button name="action_confirm" string="Confirm" type="object"
-								states="draft" class="oe_highlight"/>
+                        <button name="action_confirm" string="Confirm" type="object"
+                                states="draft" class="oe_highlight"/>
                         <button name="action_approve" string="Approve" type="object"
-								states="confirm" class="oe_highlight"/>
-						<field name="state" widget="statusbar"
-							   statusbar_visible="draft,confirm,approved"/>
-					</header>
+                                states="confirm" class="oe_highlight"/>
+                        <field name="state" widget="statusbar"
+                               statusbar_visible="draft,confirm,approved"/>
+                    </header>
+                </xpath>
+                <xpath expr="//sheet" position="replace">
                     <sheet>
                         <div class="oe_title">
                             <label string="CNF Quotation"/>
@@ -37,7 +45,7 @@
                         <group>
                             <group>
                                 <field name="lc_id"/>
-                                <field name="partner_id" string='Supplier' context="{'search_default_supplier':1, 'default_supplier':1, 'default_customer':0}" domain="[('supplier','=',True)]"/>
+                                <field name="partner_id" string='CNF Agent' context="{'search_default_supplier':1, 'default_supplier':1, 'default_customer':0}" domain="[('supplier','=',True)]"/>
                                 <field name="picking_type_id"/>
                             </group>
                             <group>
@@ -62,18 +70,22 @@
                         </div>
                         <field name="description" class="oe_inline" placeholder="Description" />
                     </sheet>
-                    <div class="oe_chatter">
-                        <field name="message_follower_ids" widget="mail_followers" />
-                        <field name="message_ids" widget="mail_thread" />
-                    </div>
-                </form>
+                </xpath>
+
             </field>
         </record>
         <record model="ir.actions.act_window" id="action_cnf_quotation">
             <field name="name">CNF Quotation</field>
-            <field name="res_model">cnf.quotation</field>
+            <field name="res_model">purchase.order</field>
             <field name="view_mode">tree,form</field>
             <field name="view_type">form</field>
+            <field name="view_id" ref="view_cnf_quotation_tree"/>
+            <field name="form_view_id" ref="view_cnf_quotation_form"/>
+            <field name="help" type="html">
+                <p>
+                    Here you can see C&amp;F  quotation list.
+                </p>
+            </field>
         </record>
 
         <menuitem id="menu_cnf_quatation" parent="commercial.menu_commercial_root"
