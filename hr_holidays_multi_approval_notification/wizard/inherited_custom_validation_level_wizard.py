@@ -1,7 +1,14 @@
 from odoo import api, fields, models, _
+from odoo.exceptions import ValidationError
 
 class CustomValidationLevelWizard(models.TransientModel):
     _inherit = 'custom.validation.level.wizard'
+
+    @api.constrains('validation_level')
+    def _check_validation_level(self):
+        for lev in self:
+            if lev.validation_level == 0:
+                raise ValidationError(_('Chain level can not be zero !'))
 
     @api.multi
     def save_record(self):
