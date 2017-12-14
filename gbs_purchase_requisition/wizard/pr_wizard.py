@@ -5,7 +5,7 @@ class PurchaseRequisitionTypeWizard(models.TransientModel):
     _name = 'purchase.requisition.type.wizard'
 
     region_type = fields.Selection([('local', 'Local'), ('foreign', 'Foreign')],
-                                   string="LC Region Type")
+                                   string="Region Type")
 
     purchase_by = fields.Selection([('cash', 'Cash'), ('credit', 'Credit'), ('lc', 'LC'), ('tt', 'TT')],
                                    string="Purchase By")

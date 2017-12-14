@@ -24,7 +24,7 @@ class LetterOfCredit(models.Model):
     region_type = fields.Selection([
         ('local', 'Local'),
         ('foreign', 'Foreign'),
-    ], string="LC Region Type",readonly=True,
+    ], string="Region Type",readonly=True,
         help="Local: Local LC.\n"
              "Foreign: Foreign LC.")
 
