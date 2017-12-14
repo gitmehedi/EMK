@@ -12,7 +12,7 @@ class LetterOfCredit(models.Model):
     # Import -> Applicant(Samuda)
 
     name = fields.Char(string='LC Number', index=True,readonly=True)
-    title = fields.Text(string='LC Head', required=True)
+    title = fields.Text(string='Discription', required=True)
 
     type = fields.Selection([
         ('export', 'Export'),
@@ -24,7 +24,7 @@ class LetterOfCredit(models.Model):
     region_type = fields.Selection([
         ('local', 'Local'),
         ('foreign', 'Foreign'),
-    ], string="LC Region Type",readonly=True,
+    ], string="Region Type",readonly=True,
         help="Local: Local LC.\n"
              "Foreign: Foreign LC.")
 
@@ -102,10 +102,16 @@ class LetterOfCredit(models.Model):
                     self._cr.execute(query, tuple([att.res_id]))
                 return super(LetterOfCredit, self).unlink()
 
+    @api.constrains('tolerance')
+    def _check_qty(self):
+        if self.tolerance > 10 :
+            raise Warning('You should set "Tolerance" upto 10 !')
 
     @api.multi
     def action_open(self):
         self.write({'state': 'open','last_note': Status.OPEN.value})
+        if self.tolerance > 10 :
+            raise Warning('You should set "Tolerance" upto 10 !')
 
     @api.multi
     def action_confirm(self):

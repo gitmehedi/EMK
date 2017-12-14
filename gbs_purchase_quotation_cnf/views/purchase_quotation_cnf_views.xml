@@ -45,7 +45,7 @@
                         <group>
                             <group>
                                 <field name="lc_id"/>
-                                <field name="partner_id" string='Supplier' context="{'search_default_supplier':1, 'default_supplier':1, 'default_customer':0}" domain="[('supplier','=',True)]"/>
+                                <field name="partner_id" string='CNF Agent' context="{'search_default_supplier':1, 'default_supplier':1, 'default_customer':0}" domain="[('supplier','=',True)]"/>
                                 <field name="picking_type_id"/>
                             </group>
                             <group>

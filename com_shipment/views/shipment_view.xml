@@ -28,7 +28,7 @@
                         <button string="Approve" name="action_approve_quotation" states="cnf_quotation" type="object" class="oe_highlight"/>
                         <button string="C&amp;F Clear" name="action_cnf_clear" states="approve_cnf_quotation" type="object" class="oe_highlight"/>
                         <!--<button string="Gate In" name="action_gate_in" states="cnf_clear" type="object" class="oe_highlight"/>-->
-                        <button string="Done" name="action_done" states="cnf_clear" type="object" class="oe_highlight"/>
+                        <button string="Done" name="action_done" states="gate_in" type="object" class="oe_highlight"/>
 
 
                         <field name="state" widget="statusbar"/>
