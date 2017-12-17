@@ -10,7 +10,7 @@
     ],
 
     'data': [
-        #'views/inherit_stock_picking_view.xml',
+        'views/inherit_stock_picking_view.xml',
     ],
 
     'summary': 'Delivery Invoicing',
