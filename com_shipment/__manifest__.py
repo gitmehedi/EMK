@@ -17,6 +17,7 @@
             'wizard/done_wizard_view.xml',
             'wizard/gate_in_wizard_view.xml',
             'wizard/eta_wizard_view.xml',
+            'wizard/send_to_cnf_wizard_view.xml',
             'wizard/doc_receive_wizard_view.xml',
             'wizard/cnf_quotation_wizard_view.xml',
             'wizard/cnf_clear_wizard_view.xml',

@@ -14,6 +14,8 @@ class Shipment(models.Model):
     etd_date = fields.Date('ETD Date', readonly=True, help="Estimated Time of Departure")
     eta_date = fields.Date('ETA Date', readonly=True, help="Estimated Time of Arrival")
     arrival_date = fields.Date('Arrival Date', readonly=True)
+    cnf_received_date = fields.Date('C&F Received Date')
+    cnf_id = fields.Many2one('res.partner', "Supplier")
     comment = fields.Text('Comment', readonly=True)
     transport_by = fields.Char('Transport By', readonly=True,)
     vehical_no = fields.Char('Vehical No', readonly=True,)
@@ -26,12 +28,14 @@ class Shipment(models.Model):
         [('draft', "Draft"),
          ('on_board', "Shipment On Board"),
          ('receive_doc', "Receive Doc"),
+         ('send_to_cnf', "Send TO C&F"),
          ('eta', "ETA"),
          ('cnf_quotation', "C&F Quotation"),
          ('approve_cnf_quotation', "Approve"),
          ('cnf_clear', "C&F Clear"),
          ('gate_in', "Gate In"),
-         ('done', "Done")], default='draft', track_visibility='onchange')
+         ('done', "Done"),
+         ('cancel', "Cancel")], default='draft', track_visibility='onchange')
 
     lc_id = fields.Many2one("letter.credit", string='LC Number', ondelete='cascade',readonly=True,
                             default=lambda self: self.env.context.get('lc_id'))
@@ -56,6 +60,10 @@ class Shipment(models.Model):
             {'last_note': "Initiate " + self.env.context.get('shipment_number')})
 
         return super(Shipment, self).create(vals)
+
+    @api.multi
+    def action_cancel(self):
+        self.state = "cancel"
 
     @api.multi
     def action_view_shipment(self):
@@ -116,6 +124,21 @@ class Shipment(models.Model):
             'view_mode': 'form',
             'view_id': res and res.id or False,
             'res_model': 'on.board.wizard',
+            'type': 'ir.actions.act_window',
+            'nodestroy': True,
+            'target': 'new',
+        }
+        return result
+
+    api.multi
+    def action_send_to_cnf(self):
+        res = self.env.ref('com_shipment.send_to_cnf_wizard')
+        result = {
+            'name': _('Please Enter The Information'),
+            'view_type': 'form',
+            'view_mode': 'form',
+            'view_id': res and res.id or False,
+            'res_model': 'send.to.cnf.wizard',
             'type': 'ir.actions.act_window',
             'nodestroy': True,
             'target': 'new',

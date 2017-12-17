@@ -86,10 +86,15 @@ class LetterOfCredit(models.Model):
         ('confirmed', "Confirmed"),
         ('amendment', "Amendment"),
         ('progress', "In Progress"),
-        ('done', "Done")
+        ('done', "Done"),
+        ('cancel', "Cancel")
     ], default='draft')
 
     last_note = fields.Char(string='Step', track_visibility='onchange')
+
+    @api.multi
+    def action_cancel(self):
+        self.state = "cancel"
 
     @api.multi
     def unlink(self):
