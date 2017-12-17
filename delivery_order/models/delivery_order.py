@@ -220,7 +220,7 @@ class DeliveryOrder(models.Model):
                                     self.write({'state': 'close'})  # Final Approval
                                     orders.create(res)
 
-                    if list[rec] > 100:
+                    if list[rec] > 100 or res['available_qty'] == 0:
                         product_pool = self.env['product.product'].search([('id', '=', rec)])
 
                         wizard_form = self.env.ref('delivery_order.max_do_without_lc_view', False)
