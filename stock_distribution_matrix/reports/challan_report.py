@@ -7,7 +7,7 @@ class ChallanReport(models.AbstractModel):
     def format_product(self, product_name):
         attr = product_name.attribute_value_ids
         name = ''
-        if attr:
+        if len(attr) == 2:
             name = "{0}({1},{2})".format(product_name.name, attr[0].name, attr[1].name)
         else:
             name =  product_name.name
