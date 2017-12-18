@@ -1,29 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>
-        <record id="view_cnf_quotation_tree" model="ir.ui.view">
-            <field name="name">view.cnf.quotation.tree</field>
-            <field name="model">purchase.order</field>
-            <field name="inherit_id" ref="purchase.purchase_order_tree"/>
-            <field name="arch" type="xml">
-                <data>
-                    <xpath expr="//tree" position="replace">
-                        <field name="name" attrs="{'invisible': [('state','=','draft')]}"/>
-                        <field name="shipment_id"/>
-                        <field name="lc_id"/>
-                        <field name="state"/>
-                    </xpath>
-                </data>
-            </field>
-        </record>
-
 
         <record id="view_cnf_quotation_form" model="ir.ui.view">
             <field name="name">view.cnf.quotation.form</field>
             <field name="model">purchase.order</field>
             <field name="inherit_id" ref="purchase.purchase_order_form"/>
             <field name="arch" type="xml">
-
+                <!--<xpath expr="/form/header" position="attributes">-->
+                <!--<attribute name="invisible">not context.get('is_order', False)</attribute>-->
+                <!--</xpath>-->
+                <!--<xpath expr="/form/header" position="after">-->
                 <xpath expr="//header" position="replace">
                     <header>
                         <button name="action_confirm" string="Confirm" type="object"
@@ -34,53 +21,57 @@
                                statusbar_visible="draft,confirm,approved"/>
                     </header>
                 </xpath>
-                <xpath expr="//sheet" position="replace">
-                    <sheet>
-                        <div class="oe_title">
-                            <label string="CNF Quotation"/>
-                            <h1>
-                                <field name="name" readonly="1" attrs="{'invisible': [('state','=','draft')]}"/>
-                            </h1>
-                        </div>
-                        <group>
-                            <group>
-                                <field name="lc_id"/>
-                                <field name="partner_id" string='CNF Agent' context="{'search_default_supplier':1, 'default_supplier':1, 'default_customer':0}" domain="[('supplier','=',True)]"/>
-                                <field name="picking_type_id"/>
-                            </group>
-                            <group>
-                                <field name="shipment_id"/>
-                                <field name="currency_id"/>
-                            </group>
-
-                        </group>
-                        <notebook colspan="4">
-                            <page string="Services">
-                                <field name="cnf_product_line" widget="one2many">
-                                    <tree string="Services" editable="bottom">
-                                        <field name="product_id"/>
-                                        <field name="amount" sum="Total"/>
-                                        <field name="remarks"/>
-                                    </tree>
-                                </field>
-                            </page>
-                        </notebook>
-                        <div class="oe_clear" colspan="4">
-                            <label for="description" />
-                        </div>
-                        <field name="description" class="oe_inline" placeholder="Description" />
-                    </sheet>
+                <xpath expr="//field[@name='partner_id']" position="attributes">
+                    <attribute name="string">C&amp;F Agent</attribute>
+                </xpath>
+                <xpath expr="//field[@name='partner_id']" position="after">
+                    <field name="cnf_quotation" />
+                    <field name="lc_id" attrs="{'invisible': [('cnf_quotation', '!=', True)]}"/>
+                    <field name="shipment_id" attrs="{'invisible': [('cnf_quotation', '!=', True)]}"/>
                 </xpath>
 
+                <!--<notebook colspan="4" attrs="{'invisible': [('cnf_quotation', '!=', True)]}">-->
+                <!--<page string="Services">-->
+                <!--<field name="cnf_product_line" widget="one2many">-->
+                <!--<tree string="Services" editable="bottom">-->
+                <!--<field name="product_id"/>-->
+                <!--<field name="amount" sum="Total"/>-->
+                <!--<field name="remarks"/>-->
+                <!--</tree>-->
+                <!--</field>-->
+                <!--</page>-->
+                <!--</notebook>-->
+            </field>
+        </record>
+        <!--<record id="inherit_purchase_order_form2" model="ir.ui.view">-->
+            <!--<field name="name">inherit.purchase.order.view.form2</field>-->
+            <!--<field name="model">purchase.order</field>-->
+            <!--<field name="inherit_id" ref="gbs_purchase_order.inherit_purchase_order_form"/>-->
+            <!--<field name="arch" type="xml">-->
+                <!--<data>-->
+                    <!--<field name="operating_unit_id"  position="replace">-->
+                        <!--<field name="operating_unit_id" attrs="{'invisible': [('cnf_quotation', '=', True)]}"/>-->
+                    <!--</field>-->
+                <!--</data>-->
+            <!--</field>-->
+        <!--</record>-->
+        <record id="view_cnf_quotation_filter" model="ir.ui.view">
+            <field name="name">C&amp;F Quotation Search</field>
+            <field name="model">purchase.order</field>
+            <field name="arch" type="xml">
+                <search string="C&amp;F">
+                    <filter name="cnf_quotation" string="C&amp;F" domain="[('cnf_quotation', '=', True)]"/>
+                </search>
             </field>
         </record>
         <record model="ir.actions.act_window" id="action_cnf_quotation">
-            <field name="name">CNF Quotation</field>
+            <field name="name">C&amp;F Quotation</field>
             <field name="res_model">purchase.order</field>
             <field name="view_mode">tree,form</field>
             <field name="view_type">form</field>
-            <field name="view_id" ref="view_cnf_quotation_tree"/>
+            <!--<field name="view_id" ref="view_cnf_quotation_tree"/>-->
             <field name="form_view_id" ref="view_cnf_quotation_form"/>
+            <field name="context">{'default_cnf_quotation':True,'search_default_cnf_quotation': 1}</field>
             <field name="help" type="html">
                 <p>
                     Here you can see C&amp;F  quotation list.
@@ -89,9 +80,9 @@
         </record>
 
         <menuitem id="menu_cnf_quatation" parent="commercial.menu_commercial_root"
-                  sequence="6" name="CNF Quotation" />
+                  sequence="6" name="C&amp;F Quotation" />
 
-        <menuitem id="submenu_cnf_quatation" name="CNF Quotation" parent="menu_cnf_quatation"
+        <menuitem id="submenu_cnf_quatation" name="C&amp;F Quotation" parent="menu_cnf_quatation"
                   sequence="1" action="action_cnf_quotation"/>
     </data>
 </odoo>

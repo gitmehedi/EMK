@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <act_window name="Set Approver Level Chain"
+                res_model="emp.sub.action.wizard"
+                src_model="hr.employee"
+                key2="client_action_multi"
+                view_mode="form" target="new"
+                view_type="form"
+                id="act_custome_approver_level_chain" />
+</odoo>
