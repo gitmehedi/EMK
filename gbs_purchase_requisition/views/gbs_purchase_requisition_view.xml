@@ -64,10 +64,16 @@
                     <xpath expr="//field[@name='name']" position="attributes">
                         <attribute name="readonly">1</attribute>
                     </xpath>
+
+                    <!-- suplier invisible -->
                     <xpath expr="//field[@name='vendor_id']" position="attributes">
-                        <attribute name="string">Supplier</attribute>
+                        <!--<attribute name="string">Supplier</attribute>-->
+                        <attribute name="invisible">1</attribute>
                     </xpath>
+                    <!-- suplier invisible -->
+
                     <xpath expr="//field[@name='type_id']" position="attributes">
+
                         <attribute name="invisible">1</attribute>
                     </xpath>
                     <xpath expr="//field[@name='schedule_date']" position="attributes">
@@ -88,19 +94,19 @@
                     <xpath expr="//field[@name='user_id']" position="after" type="object">
                         <field name="department_id" attrs="{'readonly': [('state','!=','draft')]}"
                                options='{"no_open": True,"no_create": 1, "no_create_edit":1}'/>
-                        <field name="operating_unit_id" groups="operating_unit.group_multi_operating_unit"
-                               options='{"no_open": True,"no_create": 1, "no_create_edit":1}' attrs="{'readonly': [('state','!=','draft')]}"/>
+                        <!--<field name="operating_unit_id" groups="operating_unit.group_multi_operating_unit"-->
+                               <!--options='{"no_open": True,"no_create": 1, "no_create_edit":1}' attrs="{'readonly': [('state','!=','draft')]}"/>-->
                     </xpath>
-                    <xpath expr="//field[@name='vendor_id']" position="attributes">
-                        <attribute name="attrs">{'readonly': [('state','in',('done'))]}</attribute>
-                    </xpath>
+                    <!--<xpath expr="//field[@name='vendor_id']" position="attributes">-->
+                        <!--<attribute name="attrs">{'readonly': [('state','in',('done'))]}</attribute>-->
+                    <!--</xpath>-->
                     <xpath expr="//field[@name='vendor_id']" position="after">
                         <field name="indent_ids" widget="many2many_tags" domain="[('operating_unit_id','=',operating_unit_id),('state','=','inprogress'),('pr_indent_check','=',True)]"
                                attrs="{'readonly': [('state','!=','draft')]}" options='{"no_open": True,"no_create": 1, "no_create_edit":1}'/>
                     </xpath>
                     <xpath expr="//field[@name='company_id']" position="replace">
                         <field name="company_id" groups="base.group_multi_company" attrs="{'readonly': [('state','!=','draft')]}"
-                               options='{"no_open": True,"no_create": 1, "no_create_edit":1}'/>
+                            invisible="1" options='{"no_open": True,"no_create": 1, "no_create_edit":1}'/>
                     </xpath>
                     <xpath expr="//field[@name='company_id']" position="after">
                         <field name="region_type" widget="selection" readonly="1"
@@ -141,6 +147,17 @@
                                     <field name="db_datas" filename="datas_fname" string="File"/>
                                 </tree>
                             </field>
+                        </page>
+                        <!-- add supplier, company, operating unit -->
+                        <page string="Other">
+                            <group>
+                                <group>
+                                    <field name="vendor_id" string='Supplier' attrs="{'readonly': [('state','in',('done'))]}" context="{'search_default_supplier':1, 'default_supplier':1, 'default_customer':0}" domain="[('supplier','=',True)]"/>
+                                    <field name="company_id" groups="base.group_multi_company" attrs="{'readonly': [('state','!=','draft')]}" options='{"no_open": True,"no_create": 1, "no_create_edit":1}'/>
+                                    <field name="operating_unit_id" groups="operating_unit.group_multi_operating_unit"
+                                        options='{"no_open": True,"no_create": 1, "no_create_edit":1}' attrs="{'readonly': [('state','!=','draft')]}"/>
+                                </group>
+                            </group>
                         </page>
                     </xpath>
 
@@ -188,6 +205,8 @@
             </p>
             </field>
         </record>
+
+
 
         <menuitem
                 id="purchase_requisition.menu_purchase_requisition_pro_mgt"
