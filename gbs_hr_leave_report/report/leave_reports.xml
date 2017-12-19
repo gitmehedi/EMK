@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<odoo>
+    <data>
+
+
+        <!--<record id="report_leave_summary" model="ir.actions.report.xml">-->
+            <!--<field name="paperformat_id" ref="hr_holidays.paperformat_hrsummary"/>-->
+        <!--</record>-->
+    </data>
+</odoo>
