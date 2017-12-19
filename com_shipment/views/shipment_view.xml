@@ -30,7 +30,9 @@
                         <field name="state" widget="statusbar" statusbar_visible="draft,on_board,receive_doc,send_to_cnf,eta,cnf_quotation,approve_cnf_quotation,cnf_clear,gate_in,done"/>
                     </header>
                     <sheet>
+                        <div class="oe_button_box" name="button_box">
 
+                        </div>
                         <group>
                             <group string="Shipment Details" colspan="4">
                                 <group>
