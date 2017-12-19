@@ -31,9 +31,10 @@ class EmpSubActionWizard(models.TransientModel):
                     if holiday_officer_group and holiday_officer_group.users:
                         pool_emp_obj = self.env['hr.employee'].search([('user_id', 'in', holiday_officer_group.users.ids),('operating_unit_id','=',emp_form_pool.operating_unit_id.id)])
                         if pool_emp_obj:
-                            emp_approver = (pool_emp_obj - emp_form_pool)[0]
-                            pool_emp_approver_objs.create(
-                                {'employee': emp_form_pool.id, 'approver': emp_approver.id, 'sequence': sequence})
+                            emp_approver = (pool_emp_obj - emp_form_pool)
+                            if emp_approver:
+                                pool_emp_approver_objs.create(
+                                    {'employee': emp_form_pool.id, 'approver': emp_approver[0].id, 'sequence': sequence})
                     sequence = sequence + 1
                 elif approver:
                     pool_emp_approver_objs.create(
