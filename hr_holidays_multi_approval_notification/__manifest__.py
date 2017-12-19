@@ -10,7 +10,9 @@
         "hr_holidays_multi_levels_approval","operating_unit"
     ],
     "data": [
+        'wizard/act_holidays_approved_wizard_views.xml',
         'security/ir_rule.xml',
+        'security/ir.model.access.csv',
         'views/hr_holidays_view.xml'
     ],
     'installable': True,

@@ -72,6 +72,16 @@
             </field>
         </record>
 
+        <!--Action To SET the approver issue-->
+
+        <act_window name="Set Approver"
+                res_model="act.holidays.approved.wizard"
+                src_model="hr.holidays"
+                key2="client_action_multi"
+                view_mode="form" target="new"
+                view_type="form"
+                id="act_fix_holiday_approver"/>
+
 
 	</data>
 </odoo>
