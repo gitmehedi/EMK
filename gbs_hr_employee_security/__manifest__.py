@@ -16,7 +16,9 @@
     'depends': ['hr'],
 
     'data': [
+        'wizard/emp_sub_action_wizard_view.xml',
         'security/ir_rule.xml',
+        'views/hr_employee_views.xml',
     ],
 
 }

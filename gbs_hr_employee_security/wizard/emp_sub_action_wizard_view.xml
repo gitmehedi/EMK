@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <data>
+        <record id="emp_sub_action_wizard_view" model="ir.ui.view">
+            <field name="name">emp.sub.action.wizard</field>
+            <field name="model">emp.sub.action.wizard</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml" >
+                <form string="Approver Chain Level" create="false" edit="false">
+                    <div>
+                        <h3>To set the approvers chain based on default management hierarchy please press the button</h3>
+                        <button string="Set Default Chain" name="set_default_validation_chain" type="object"
+                                class="oe_highlight" help="Generate approvers chain based on management hierarchy"/>
+                        <br></br>
+                        <hr></hr>
+                        <br></br>
+                        <h3>To set the approvers chain based on custom level hierarchy please press the button</h3>
+                        <div class="row">
+                            <div class="col-md-2">
+                                <button string="Set Custom Chain Level" name="save_record" type="object"
+                                        class="btn btn-info" help="Generate approvers chain based on custom level hierarchy"/>
+                            </div>
+                            <div class="col-md-2">
+                                <field name="validation_level" nolabel="1" />
+                            </div>
+                        </div>
+                    </div>
+                    <footer>
+                        <button special="cancel" string="Cancel" type="object"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+    </data>
+</odoo>

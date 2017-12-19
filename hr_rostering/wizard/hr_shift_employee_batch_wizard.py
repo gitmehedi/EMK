@@ -17,10 +17,6 @@ class HrShiftBatchEmployees(models.TransientModel):
         pool_shift_emp = self.env['hr.shifting.history']
         [data] = self.read()
         active_id = self.env.context.get('active_id')
-        # if active_id:
-        #     [run_data] = self.env['hr.shift.employee.batch'].browse(active_id).read(['effective_from', 'effective_end', 'shift_id'])
-        # effective_from = run_data.get('effective_from')
-        # effective_end = run_data.get('effective_end')
 
         effective_from = self.effective_from
         effective_end = self.effective_end
@@ -28,7 +24,6 @@ class HrShiftBatchEmployees(models.TransientModel):
         if not data['employee_ids']:
             raise UserError(_("You must select employee(s) to generate this process."))
         for employee in self.env['hr.employee'].browse(data['employee_ids']):
-            # history_data = self.env['hr.shifting.history'].onchange_employee_id(shift_id,effective_from, effective_end, employee.id, contract_id=False)
             res = {
                 'employee_id': employee.id,
                 'shift_id': shift_id.id,
