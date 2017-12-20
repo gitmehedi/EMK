@@ -38,12 +38,13 @@ class InheritedEmployeeIouPayslip(models.Model):
                                                                ('state','=','confirm')])
 
             for iou_data in emp_iou_pool:
-                other_line_ids += other_line_ids.new({
-                        'name': 'Employee IOU',
-                        'code': "IOU",
-                        'amount': iou_data.due,
-                        'contract_id': self.contract_id.id,
-                        'ref': iou_data.id,
-                })
+                if iou_data.due > 0.0:
+                    other_line_ids += other_line_ids.new({
+                            'name': 'Employee IOU',
+                            'code': "IOU",
+                            'amount': iou_data.due,
+                            'contract_id': self.contract_id.id,
+                            'ref': iou_data.id,
+                    })
 
             self.input_line_ids = other_line_ids

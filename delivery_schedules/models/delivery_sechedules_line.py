@@ -19,15 +19,15 @@ class DeliveryScheduleLine(models.Model):
         ('approve', "Confirm"),
     ], default='draft')
 
-    @api.one
+
     @api.onchange('product_id')
     def onchange_product_id(self):
         if self.product_id:
-            product_obj = self.env['product.template'].search([('id', '=', self.product_id.id)])
+            product_obj = self.env['product.product'].search([('id', '=', self.product_id.id)])
             if product_obj:
                 self.uom_id = product_obj.uom_id.id
 
-    @api.one
+
     @api.onchange('partner_id')
     def onchange_partner_id(self):
         if self.parent_id:

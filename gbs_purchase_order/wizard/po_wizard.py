@@ -5,7 +5,7 @@ class PurchaseRequisitionTypeWizard(models.TransientModel):
     _name = 'purchase.order.type.wizard'
 
     region_type = fields.Selection([('local', 'Local'), ('foreign', 'Foreign')],
-                                   string="LC Region Type",required=True,
+                                   string="Region Type",required=True,
                                    default=lambda self: self.env.context.get('region_type'))
 
     purchase_by = fields.Selection([('cash', 'Cash'), ('credit', 'Credit'), ('lc', 'LC'), ('tt', 'TT')],
@@ -28,6 +28,8 @@ class PurchaseRequisitionTypeWizard(models.TransientModel):
         for po in order:
             # if po.requisition_id.type_id.exclusive == 'exclusive':
             others_po = po.requisition_id.mapped('purchase_ids').filtered(lambda r: r.id != po.id)
+            for other_po in others_po:
+                other_po.disable_new_revision_button = True
             others_po.button_cancel()
 
             for element in po.order_line:

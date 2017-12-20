@@ -7,10 +7,13 @@
     "category": "Human Resources",
     "summary": "Notify Employee Manager for Holiday Activity",
     "depends": [
-        "hr_holidays_multi_levels_approval",
+        "hr_holidays_multi_levels_approval","operating_unit"
     ],
     "data": [
-        'security/ir_rule.xml'
+        'wizard/act_holidays_approved_wizard_views.xml',
+        'security/ir_rule.xml',
+        'views/hr_holidays_view.xml',
+        'views/hr_employee_view.xml',
     ],
     'installable': True,
     'application': False,

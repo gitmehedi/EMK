@@ -12,7 +12,7 @@ class LetterOfCredit(models.Model):
     # Import -> Applicant(Samuda)
 
     name = fields.Char(string='LC Number', index=True,readonly=True)
-    title = fields.Text(string='LC Head', required=True)
+    title = fields.Text(string='Discription', required=True)
 
     type = fields.Selection([
         ('export', 'Export'),
@@ -24,9 +24,9 @@ class LetterOfCredit(models.Model):
     region_type = fields.Selection([
         ('local', 'Local'),
         ('foreign', 'Foreign'),
-    ], string="LC Region Type",
+    ], string="Region Type",readonly=True,
         help="Local: Local LC.\n"
-             "Foreign: Foreign LC.", default="foreign")
+             "Foreign: Foreign LC.")
 
     first_party = fields.Many2one('res.company', string='Candidate', required=True)
     first_party_bank = fields.Many2one('res.bank', string='Bank', required=True)
@@ -86,10 +86,15 @@ class LetterOfCredit(models.Model):
         ('confirmed', "Confirmed"),
         ('amendment', "Amendment"),
         ('progress', "In Progress"),
-        ('done', "Done")
+        ('done', "Done"),
+        ('cancel', "Cancel")
     ], default='draft')
 
     last_note = fields.Char(string='Step', track_visibility='onchange')
+
+    @api.multi
+    def action_cancel(self):
+        self.state = "cancel"
 
     @api.multi
     def unlink(self):
@@ -102,10 +107,16 @@ class LetterOfCredit(models.Model):
                     self._cr.execute(query, tuple([att.res_id]))
                 return super(LetterOfCredit, self).unlink()
 
+    @api.constrains('tolerance')
+    def _check_qty(self):
+        if self.tolerance > 10 :
+            raise Warning('You should set "Tolerance" upto 10 !')
 
     @api.multi
     def action_open(self):
         self.write({'state': 'open','last_note': Status.OPEN.value})
+        if self.tolerance > 10 :
+            raise Warning('You should set "Tolerance" upto 10 !')
 
     @api.multi
     def action_confirm(self):

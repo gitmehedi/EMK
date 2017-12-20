@@ -9,7 +9,7 @@ class PurchaseOrder(models.Model):
     name = fields.Char('Order Reference', required=True, index=True, copy=False, default='New')
     operating_unit_id = fields.Many2one('operating.unit', 'Operating Unit', required=True,
                                         default=lambda self: self.env.user.default_operating_unit_id)
-    region_type = fields.Selection([('local', 'Local'), ('foreign', 'Foreign')], string="LC Region Type",
+    region_type = fields.Selection([('local', 'Local'), ('foreign', 'Foreign')], string="Region Type",
                                    help="Local: Local LC.\n""Foreign: Foreign LC.")
     purchase_by = fields.Selection([('cash', 'Cash'), ('credit', 'Credit'), ('lc', 'LC'), ('tt', 'TT')],
                                    string="Purchase By")
@@ -137,7 +137,6 @@ class PurchaseOrder(models.Model):
         res = super(PurchaseOrder, self).button_cancel()
         for i in self:
             i.check_po_action_button = False
-            i.disable_new_revision_button = True
         return res
 
     @api.multi

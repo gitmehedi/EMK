@@ -9,8 +9,8 @@ class productGateIn(models.Model):
     create_by = fields.Char('Carried By', readonly=True, states={'draft': [('readonly', False)]})
     received = fields.Char('To Whom Received', readonly=True, states={'draft': [('readonly', False)]})
 
-    challan_bill_no = fields.Integer('Challan Bill No', readonly=True, states={'draft': [('readonly', False)]})
-    truck_no = fields.Integer('Track/Vehical No', readonly=True, states={'draft': [('readonly', False)]})
+    challan_bill_no = fields.Char('Challan Bill No', readonly=True, states={'draft': [('readonly', False)]})
+    truck_no = fields.Char('Track/Vehical No', readonly=True, states={'draft': [('readonly', False)]})
 
     shipping_line_ids = fields.One2many('product.gate.line','parent_id')
     operating_unit_id = fields.Many2one('operating.unit', 'Operating Unit', required=True,

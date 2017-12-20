@@ -197,12 +197,18 @@ class DeliveryOrder(models.Model):
                             res['available_qty'] = 0
 
                         self.env['ordered.qty'].create(res)
+
+                        self.create_delivery_order()
+                        self.update_sale_order_da_qty()
+
+                        self.write({'state': 'close'})  # Final Approval
                     else:
                         for orders in ordered_qty_pool:
                             if not orders.lc_no:
                                 if list[rec] > orders.available_qty:
                                     res['available_qty'] = 0
                                     orders.create(res)
+                                    #self.write({'state': 'close'})  # Final Approval
                                 else:
                                     res['available_qty'] = orders.available_qty - list[rec]
                                     if res['available_qty'] > 100:
@@ -214,7 +220,7 @@ class DeliveryOrder(models.Model):
                                     self.write({'state': 'close'})  # Final Approval
                                     orders.create(res)
 
-                    if list[rec] > 100:
+                    if list[rec] > 100 or res['available_qty'] == 0:
                         product_pool = self.env['product.product'].search([('id', '=', rec)])
 
                         wizard_form = self.env.ref('delivery_order.max_do_without_lc_view', False)
@@ -232,6 +238,9 @@ class DeliveryOrder(models.Model):
                             'context': {'delivery_order_id': self.id, 'product_name': product_pool.display_name}
                         }
             else:
+                self.create_delivery_order()
+                self.update_sale_order_da_qty()
+
                 self.state = 'approve'  # second
 
         elif self.so_type == 'credit_sales':

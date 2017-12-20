@@ -21,6 +21,7 @@
         'gbs_pi_creation',
         'delivery_schedules',
         'gbs_application_group'
+        'delivery_invoicing',
         #'sale_revision_history'
     ],
 
