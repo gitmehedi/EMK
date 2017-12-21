@@ -51,8 +51,8 @@ class StockInventoryReport(models.AbstractModel):
                            code,
                            uom_name,
                            category, 
+                           cost_val AS rate_dk,
                            Sum(product_qty_in - product_qty_out)                AS qty_dk, 
-                           cost_val, 
                            ( cost_val * Sum(product_qty_in - product_qty_out) ) AS val_dk 
                     FROM   (SELECT sm.product_id, 
                                    pt.name, 
@@ -186,6 +186,7 @@ class StockInventoryReport(models.AbstractModel):
                            code,
                            uom_name, 
                            category,
+                           cost_val AS rate_in,
                            Sum(qty_in_tk) AS qty_in_tk, 
                            Sum(val_in_tk) AS val_in_tk 
                     FROM   (SELECT sm.product_id, 
@@ -194,7 +195,8 @@ class StockInventoryReport(models.AbstractModel):
                                    pu.name                                  AS uom_name, 
                                    pc.name                                  AS category, 
                                    sm.product_qty                           AS qty_in_tk, 
-                                   sm.product_qty * COALESCE(price_unit, 0) AS val_in_tk 
+                                   sm.product_qty * COALESCE(price_unit, 0) AS val_in_tk,
+                                   COALESCE(price_unit, 0) AS cost_val
                             FROM   stock_picking sp 
                                    LEFT JOIN stock_move sm 
                                           ON sm.picking_id = sp.id 
@@ -220,7 +222,8 @@ class StockInventoryReport(models.AbstractModel):
                               NAME, 
                               code,
                               uom_name,
-                              category 
+                              category,
+                              cost_val 
                 ''' % (date_start, date_end, location_outsource, location_outsource, category_param)
 
         sql_out_tk = '''
@@ -229,14 +232,16 @@ class StockInventoryReport(models.AbstractModel):
                            code,
                            uom_name,
                            category, 
+                           list_price AS rate_out,
                            Sum(qty_out_tk)              AS qty_out_tk, 
-                           Sum(qty_out_tk) * val_out_tk AS val_out_tk 
+                           Sum(qty_out_tk) * list_price AS val_out_tk
                     FROM   (SELECT sm.product_id, 
                                    pt.name, 
                                    pp.default_code         AS code,
                                    pu.name                 AS uom_name,
                                    pc.name                 AS category, 
-                                   sm.product_qty          AS qty_out_tk, 
+                                   sm.product_qty          AS qty_out_tk,
+                                   pt.list_price,  
                                    Coalesce((SELECT ph.cost 
                                              FROM   product_price_history ph 
                                              WHERE  Date_trunc('day', ph.datetime) <= '%s' 
@@ -269,6 +274,7 @@ class StockInventoryReport(models.AbstractModel):
                               code, 
                               uom_name,
                               category,
+                              list_price,
                               val_out_tk 
                 ''' % (date_end, date_start, date_end, location_outsource, location_outsource, category_param)
 
@@ -278,6 +284,7 @@ class StockInventoryReport(models.AbstractModel):
            code,
            uom_name,
            category, 
+           cost_val AS rate_ck,
            Sum(product_qty_in - product_qty_out)                AS qty_ck, 
            ( cost_val * Sum(product_qty_in - product_qty_out) ) AS val_ck 
     FROM   (SELECT sm.product_id, 
@@ -406,20 +413,14 @@ class StockInventoryReport(models.AbstractModel):
                                    date_end, date_end, location_outsource, location_outsource, category_param,
                                    date_end, date_end, location_outsource, location_outsource, category_param)
 
-        sql_uom = '''SELECT pu.name as uom_name, 
-                           pp.default_code, 
-                           pp.id AS product_id 
-                    FROM   product_template pt 
-                           LEFT JOIN product_product pp 
-                                  ON( pp.product_tmpl_id = pt.id ) 
-                           LEFT JOIN product_uom pu 
-                                  ON( pu.id = pt.uom_id )'''
-
-
         sql = '''
                     SELECT ROW_NUMBER() OVER(ORDER BY table_ck.code DESC) AS id ,
                             table_ck.product_id, table_ck.name, table_ck.uom_name, table_ck.code,
-                            table_ck.category,
+                            table_ck.category, 
+                            COALESCE(table_dk.rate_dk,0) as rate_dk,
+                            COALESCE(table_in_tk.rate_in,0) as rate_in,
+                            COALESCE(table_out_tk.rate_out,0) as rate_out,
+                            COALESCE(table_ck.rate_ck,0) as rate_ck,
                             COALESCE(sum(qty_dk),0) as qty_dk,
                             COALESCE(sum(qty_in_tk),0) as qty_in_tk,
                             COALESCE(sum(qty_out_tk),0) as qty_out_tk,
@@ -433,7 +434,7 @@ class StockInventoryReport(models.AbstractModel):
                         LEFT JOIN (%s) table_out_tk on table_ck.product_id = table_out_tk.product_id
                         LEFT JOIN (%s) table_dk on table_ck.product_id = table_dk.product_id
                         GROUP BY table_ck.product_id, table_ck.name, table_ck.code,table_ck.category,
-                        table_ck.uom_name
+                        table_ck.uom_name,table_dk.rate_dk,table_in_tk.rate_in,table_out_tk.rate_out,table_ck.rate_ck
                         
                 ''' % (sql_ck, sql_in_tk, sql_out_tk, sql_dk)
 

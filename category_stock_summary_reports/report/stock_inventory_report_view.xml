@@ -10,6 +10,8 @@
                             <div class="col-xs-12">
                                 <h2 class="text-center">Stock Summary (Groupwise)</h2>
                                 <p class="text-center">
+                                    <strong>Shop Name: <span t-esc="record['shop_name']"/></strong>
+                                    <br/>
                                     <span t-esc="record['date_from']"/>
                                     <strong>To</strong>
                                     <span t-esc="record['date_to']"/>
@@ -19,7 +21,7 @@
 
                         <table class="table table-bordered">
                             <thead>
-                                <tr style="background-color: #EFECEB;">
+                                <tr style="background-color: #EFECEB;" >
                                     <th colspan="3" class="text-center">Particulars and Alias</th>
                                     <th colspan="3" class="text-center">Opening</th>
                                     <th colspan="3" class="text-center">Inward</th>
@@ -70,37 +72,37 @@
                                                     <t t-esc="line['qty_dk']"/>
                                                 </td>
                                                 <td>
-                                                    <t t-esc="line['val_dk']"/>
+                                                    <t t-esc="line['rate_dk']"/>
                                                 </td>
                                                 <td>
-                                                    <t t-esc="line['qty_dk']*line['val_dk']"/>
+                                                    <t t-esc="line['val_dk']"/>
                                                 </td>
                                                 <td>
                                                     <t t-esc="line['qty_in_tk']"/>
                                                 </td>
                                                 <td>
-                                                    <t t-esc="line['val_in_tk']"/>
+                                                    <t t-esc="line['rate_in']"/>
                                                 </td>
                                                 <td>
-                                                    <t t-esc="line['qty_in_tk']*line['val_in_tk']"/>
+                                                    <t t-esc="line['val_in_tk']"/>
                                                 </td>
                                                 <td>
                                                     <t t-esc="line['qty_out_tk']"/>
                                                 </td>
                                                 <td>
-                                                    <t t-esc="line['val_out_tk']"/>
+                                                    <t t-esc="line['rate_out']"/>
                                                 </td>
                                                 <td>
-                                                    <t t-esc="line['qty_out_tk']*line['val_out_tk']"/>
+                                                    <t t-esc="line['val_out_tk']"/>
                                                 </td>
                                                 <td>
                                                     <t t-esc="line['qty_ck']"/>
                                                 </td>
                                                 <td>
-                                                    <t t-esc="line['val_ck']"/>
+                                                    <t t-esc="line['rate_ck']"/>
                                                 </td>
                                                 <td>
-                                                    <t t-esc="line['qty_ck']*line['val_ck']"/>
+                                                    <t t-esc="line['val_ck']"/>
                                                 </td>
                                             </tr>
                                         </t>
@@ -114,13 +116,32 @@
             </t>
         </template>
 
-        <report id="report_stock_inventory_summary_121"
+        <report id="report_stock_inventory_summary"
                 model="stock.move"
                 string="Stock Inventory"
                 name="category_stock_summary_reports.stock_inventory_report_qweb"
                 file="category_stock_summary_reports.stock_inventory_report_qweb"
                 multi="True"
                 report_type="qweb-pdf"/>
+
+
+        <record id="report_stock_inventory_summary" model="report.paperformat">
+            <field name="name">Stock Inventory Landscape</field>
+            <field name="default" eval="True"/>
+            <field name="format">custom</field>
+            <field name="page_height">297</field>
+            <field name="page_width">213</field>
+            <field name="orientation">Portrait</field>
+            <field name="margin_top">11</field>
+            <field name="margin_bottom">1</field>
+            <field name="margin_left">0</field>
+            <field name="margin_right">0</field>
+            <field name="header_line" eval="False"/>
+            <field name="header_spacing">0</field>
+            <field name="dpi">250</field>
+        </record>
+
+
 
 
     </data>
