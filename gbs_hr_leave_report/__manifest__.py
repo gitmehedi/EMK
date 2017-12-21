@@ -7,7 +7,7 @@
        'wizard/hr_holidays_summary_department_views.xml',
        'report/gbs_hr_leave_report.xml',
        'report/gbs_hr_leave_report_templates.xml',
-       'report/leave_templates.xml',
+       'report/leave_summary_report.xml',
     ],
     'depends': [
        'hr_holidays',

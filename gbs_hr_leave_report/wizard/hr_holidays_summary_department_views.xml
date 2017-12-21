@@ -7,10 +7,15 @@
             <field name="arch" type="xml">
                 <form string="Leaves Report">
                     <group>
-                        <field name="from_date" />
-                        <field name="to_date" />
-                        <field name="operating_unit_id"/>
-                        <!--<field name="depts"/>-->
+                        <group>
+                            <field name="from_date"/>
+                            <field name="operating_unit_id"
+                                   options="{'no_open':1,'no_create_edit':1,'no_create':1}"/>
+                        </group>
+                        <group>
+                            <field name="to_date"/>
+                            <!--<field name="depts"/>-->
+                        </group>
                     </group>
                     <footer>
                         <button name="process_report" string="Print" type="object" class="btn-primary"/>
@@ -30,9 +35,9 @@
         </record>
 
         <menuitem
-            name="Leaves Summery Report"
-            parent="hr_holidays.menu_hr_holidays_report"
-            action="action_leave_summary_report_wizard"
-            id="menu_hr_leave_summary"/>
+                name="Leaves Summery Report"
+                parent="hr_holidays.menu_hr_holidays_report"
+                action="action_leave_summary_report_wizard"
+                id="menu_hr_leave_summary"/>
     </data>
 </odoo>
