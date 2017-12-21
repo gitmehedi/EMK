@@ -40,7 +40,7 @@
     """,
     'data': [
         'security/ir.model.access.csv',
-        'security/security.xml',
+        # 'security/security.xml',
         'wizard/print_report_view.xml',
         'views/inherited_product_template_views.xml',
         'views/inherited_product_category_view.xml',
