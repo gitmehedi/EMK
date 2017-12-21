@@ -19,7 +19,9 @@ class Holidays(models.Model):
 
     @api.multi
     def write(self, values):
-        self.pending_approver = self.env['hr.employee'].browse(values['employee_id']).holidays_approvers[0].approver.id
+        employee_id = values.get('employee_id', False)
+        if employee_id:
+            self.pending_approver = self.env['hr.employee'].search([('id','=',employee_id)]).holidays_approvers[0].approver.id
         res = super(Holidays, self).write(values)
         return res
 
