@@ -413,6 +413,8 @@ class StockInventoryReport(models.AbstractModel):
                                    date_end, date_end, location_outsource, location_outsource, category_param,
                                    date_end, date_end, location_outsource, location_outsource, category_param)
 
+
+
         sql = '''
                     SELECT ROW_NUMBER() OVER(ORDER BY table_ck.code DESC) AS id ,
                             table_ck.product_id, table_ck.name, table_ck.uom_name, table_ck.code,

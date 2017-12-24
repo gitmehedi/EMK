@@ -27,7 +27,10 @@
     'website': 'www.genweb2.com',
     'category': 'Warehouse Management',
     'depends': [
+        'base',
+        'report',
         'stock',
+        'custom_report',
     ],
     'description': """
     
@@ -42,8 +45,10 @@
         'security/ir.model.access.csv',
         # 'security/security.xml',
         'wizard/print_report_view.xml',
+        'views/inherite_layout.xml',
         'views/inherited_product_template_views.xml',
         'views/inherited_product_category_view.xml',
+        'views/report_type_selection_view.xml',
         'report/stock_inventory_report_view.xml',
 
     ],

@@ -1,0 +1,8 @@
+.rtable {
+    border-collapse: collapse;
+    border: 1px solid black;
+}
+
+.rtable td {
+    border: 1px solid black;
+}
