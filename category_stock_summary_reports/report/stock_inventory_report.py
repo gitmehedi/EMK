@@ -22,7 +22,6 @@ class StockInventoryReport(models.AbstractModel):
             'total': 0,
             'lines': get_data
 
-
         }
         return report_obj.render('category_stock_summary_reports.stock_inventory_report_qweb', docargs)
 
@@ -35,16 +34,19 @@ class StockInventoryReport(models.AbstractModel):
 
         if category_id:
             categories = cat_pool.get_categories(category_id)
-            category = {val.name: [] for val in cat_pool.search([('id','=',data['category_id'])])}
+            category = {val.name: [] for val in cat_pool.search([('id', 'in', categories)])}
         else:
-            categories = cat_pool.search([],order='name ASC')
-            category = {val.name: [] for val in categories}
-
+            cat_lists = cat_pool.search([], order='name ASC')
+            category = {val.name: [] for val in cat_lists}
+            if cat_lists:
+                categories = cat_lists.ids
+            else:
+                categories = cat_lists
 
         if len(categories) == 1:
             category_param = "(" + str(data['category_id']) + ")"
         else:
-            category_param = str(tuple(categories.ids))
+            category_param = str(tuple(categories))
 
         sql_dk = '''SELECT product_id, 
                            name, 
@@ -177,8 +179,8 @@ class StockInventoryReport(models.AbstractModel):
                               uom_name,
                               category 
               ''' % (date_start, date_start, location_outsource, location_outsource, category_param,
-                                       date_start, date_start, location_outsource, location_outsource, category_param,
-                                       date_start, date_start, location_outsource, location_outsource, category_param)
+                     date_start, date_start, location_outsource, location_outsource, category_param,
+                     date_start, date_start, location_outsource, location_outsource, category_param)
 
         sql_in_tk = '''
                     SELECT product_id, 
@@ -410,10 +412,8 @@ class StockInventoryReport(models.AbstractModel):
               category, 
               cost_val  
                 ''' % (date_end, date_end, location_outsource, location_outsource, category_param,
-                                   date_end, date_end, location_outsource, location_outsource, category_param,
-                                   date_end, date_end, location_outsource, location_outsource, category_param)
-
-
+                       date_end, date_end, location_outsource, location_outsource, category_param,
+                       date_end, date_end, location_outsource, location_outsource, category_param)
 
         sql = '''
                     SELECT ROW_NUMBER() OVER(ORDER BY table_ck.code DESC) AS id ,
@@ -442,7 +442,7 @@ class StockInventoryReport(models.AbstractModel):
 
         self.env.cr.execute(sql)
         for vals in self.env.cr.dictfetchall():
-            category[vals['category']].append(vals)
+            if vals:
+                category[vals['category']].append(vals)
 
         return category
-

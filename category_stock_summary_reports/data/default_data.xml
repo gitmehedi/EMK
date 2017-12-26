@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<openerp>
+    <data>
+        <record id="report_type_selection_1" model="report.type.selection">
+            <field name="name">Opening Stock</field>
+            <field name="code">OS</field>
+            <field name="status">1</field>
+        </record>
+        <record id="report_type_selection_2" model="report.type.selection">
+            <field name="name">Inward Stock</field>
+            <field name="code">IWS</field>
+            <field name="status">1</field>
+        </record>
+        <record id="report_type_selection_3" model="report.type.selection">
+            <field name="name">Outward Stock</field>
+            <field name="code">OWS</field>
+            <field name="status">1</field>
+        </record>
+        <record id="report_type_selection_4" model="report.type.selection">
+            <field name="name">Closing Stock</field>
+            <field name="code">CS</field>
+            <field name="status">1</field>
+        </record>
+    </data>
+</openerp>

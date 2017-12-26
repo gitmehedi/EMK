@@ -18,8 +18,6 @@
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>
 #
-##############################################################################
-
 {
     'name': 'Category Wise Stock Summary Reports',
     'version': '0.1',
@@ -44,15 +42,17 @@
     'data': [
         'security/ir.model.access.csv',
         # 'security/security.xml',
+        'data/default_data.xml',
         'wizard/print_report_view.xml',
         'views/inherite_layout.xml',
         'views/inherited_product_template_views.xml',
         'views/inherited_product_category_view.xml',
-        'views/report_type_selection_view.xml',
         'report/stock_inventory_report_view.xml',
 
     ],
     'installable': True,
     'application': True,
 }
+##############################################################################
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
