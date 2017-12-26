@@ -12,7 +12,7 @@
     "data": [
         'wizard/act_holidays_approved_wizard_views.xml',
         'security/ir_rule.xml',
-        'views/hr_holidays_view.xml'
+        'views/hr_holidays_view.xml',
     ],
     'installable': True,
     'application': False,

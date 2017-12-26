@@ -2,7 +2,7 @@ from odoo import api, models, SUPERUSER_ID, _
 from odoo.exceptions import ValidationError,UserError
 
 
-class HrHolidays(models.Model):
+class Holidays(models.Model):
     _inherit = 'hr.holidays'
 
     @api.one
@@ -13,9 +13,18 @@ class HrHolidays(models.Model):
 
     @api.model
     def create(self, vals):
-        res = super(HrHolidays, self).create(vals)
+        res = super(Holidays, self).create(vals)
         res._notify_approvers()
         return res
+
+    @api.multi
+    def write(self, values):
+        employee_id = values.get('employee_id', False)
+        if employee_id:
+            self.pending_approver = self.env['hr.employee'].search([('id','=',employee_id)]).holidays_approvers[0].approver.id
+        res = super(Holidays, self).write(values)
+        return res
+
 
     @api.multi
     def _notify_approvers(self):
