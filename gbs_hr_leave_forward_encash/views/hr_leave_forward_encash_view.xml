@@ -7,8 +7,12 @@
 			<field name="arch" type="xml">
 				<tree string="Leave Carry Forward">
 					<field name="name" />
+					<field name="exe_leave_year" />
 					<field name="carry_forward_year" />
 					<field name="leave_type" />
+					<field name="company_id" />
+					<field name="operating_unit_id" />
+					<field name="state" />
 				</tree>
 			</field>
 		</record>
@@ -22,7 +26,8 @@
 				<form string="Leave Carry Forward" delete="false" copy='0'>
 					<header>
 						<button string="Approve" name="action_approved" type="object" attrs="{'invisible': [('state', 'in', ('draft','approved'))]}"/>
-						<button name="%(hr_leave_carry_forward_wizard_action_view)d" type="action" attrs="{'invisible': [('state', 'in', ('approved'))]}" string="Generate" />
+						<button name="%(hr_leave_carry_forward_wizard_action_view)d" type="action" class="oe_highlight"
+								attrs="{'invisible': [('state', 'in', ('approved'))]}" string="Generate" context="{'operating_unit_id': operating_unit_id}"/>
 						<field name="state" widget="statusbar"/>
 					</header>
 					<sheet>
@@ -43,7 +48,7 @@
 						<notebook colspan="4">
 							<page string="Carry Forward &amp; Encashment">
 								<field name="line_ids">
-									<tree string="List" editable="bottom">
+									<tree string="List" editable="bottom" nolabel="1" create='false'>
 										<field name="emp_name"/>
 										<field name="department_name"/>
 										<field name="designation_name"/>

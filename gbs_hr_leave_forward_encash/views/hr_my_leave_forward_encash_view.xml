@@ -73,6 +73,7 @@
 		<record id="my_leave_forward_encash" model="ir.actions.act_window">
 			<field name="name">Leave Carry Forward</field>
 			<field name="res_model">hr.leave.forward.encash.line</field>
+			<field name="domain">[('employee_id.user_id', '=', uid)]</field>
 			<field name="view_mode">tree,form</field>
 		</record>
 

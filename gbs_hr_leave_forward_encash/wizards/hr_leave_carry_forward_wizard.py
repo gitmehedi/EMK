@@ -4,7 +4,7 @@ from odoo import models, fields, api
 class HrLeaveCarryForwardWizard(models.TransientModel):
     _name = 'hr.leave.forward.encash.wizard'
 
-    employee_ids = fields.Many2many('hr.employee', string='Employees')
+    employee_ids = fields.Many2many('hr.employee', string='Employees', domain="[('operating_unit_id','=',operating_unit_id)]")
 
     query_string = """SELECT
                             employee_id,

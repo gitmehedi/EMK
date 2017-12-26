@@ -10,17 +10,7 @@
             <field name="perm_create" eval="True"/>
             <field name="perm_write" eval="True"/>
             <field name="perm_unlink" eval="True"/>
-    </record>
-
-    <record id="property_rule_my_leave_forward_encash" model="ir.rule">
-            <field name="name">My Leave Forward Encash</field>
-            <field name="model_id" ref="model_hr_leave_forward_encash_line"/>
-            <field name="domain_force">[('employee_id.user_id','=',user.id)]</field>
-            <field name="perm_read" eval="True" />
-            <field name="perm_create" eval="False"/>
-            <field name="perm_write" eval="True"/>
-            <field name="perm_unlink" eval="False"/>
-            <field name="groups" eval="[(4,ref('base.group_user'))]"/>
+            <field name="groups" eval="[(4,ref('hr_attendance.group_hr_attendance_user'))]"/>
     </record>
 
 </odoo>
