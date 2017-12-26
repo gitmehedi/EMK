@@ -1,2 +1,4 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
 
+access_report_type_selection_manager,report.type.selection.manager,model_report_type_selection,pebbles_transfer_user.group_requisition_transfer_approval_manager,1,1,1,1
+

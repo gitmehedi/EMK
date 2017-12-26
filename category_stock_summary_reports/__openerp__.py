@@ -29,6 +29,7 @@
         'report',
         'stock',
         'custom_report',
+        'pebbles_transfer_user',
     ],
     'description': """
     
