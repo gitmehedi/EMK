@@ -1,6 +1,5 @@
 from openerp import api
 from openerp import models, fields,_,SUPERUSER_ID
-import datetime
 from openerp.exceptions import UserError, ValidationError
 
 

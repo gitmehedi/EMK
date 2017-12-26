@@ -1,13 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 	<data>
-		<record id="inherited_edit_holiday_new" model="ir.ui.view">
-			<field name="name">Leave Request (hr_holidays_working_time)</field>
+		<record id="inherited_view_holiday_simple" model="ir.ui.view">
+			<field name="name">inherited_view_holiday_simple</field>
+			<field name="model">hr.holidays</field>
+			<field name="inherit_id" ref="hr_holidays.view_holiday_simple" />
+			<field name="arch" type="xml">
+				<xpath expr="//tree/field[@name='employee_id']" position="after">
+                    <field name="current_fiscal_year"/>
+                </xpath>
+			</field>
+		</record>
+        <record id="inherited_edit_holiday_new" model="ir.ui.view">
+			<field name="name">inherited_edit_holiday_new</field>
 			<field name="model">hr.holidays</field>
 			<field name="inherit_id" ref="hr_holidays.edit_holiday_new" />
 			<field name="arch" type="xml">
 				<xpath expr="//form/sheet/group/group/field[@name='holiday_status_id']" position="after">
                     <field name="leave_year_id" attrs="{'invisible': [('type', '=', 'remove')]}" options="{'no_quick_create':True,'no_create_edit':True,'no_open': True}"/>
+                </xpath>
+			</field>
+		</record>
+        <record id="inherited_view_hr_holidays_filter" model="ir.ui.view">
+			<field name="name">inherited_view_hr_holidays_filter</field>
+			<field name="model">hr.holidays</field>
+			<field name="inherit_id" ref="hr_holidays.view_hr_holidays_filter" />
+			<field name="arch" type="xml">
+				<xpath expr="//filter[@name='year']" position="replace">
+                    <field name="current_fiscal_year" invisible="1"/>
+					<filter name="year" string="Current Year"
+                        domain="[('current_fiscal_year', '=', True)]" help="Active Leaves and Allocations"/>
+                    <field name="leave_year_id" string="Year" filter_domain="[('leave_year_id', 'ilike', self)]"/>
                 </xpath>
 			</field>
 		</record>
