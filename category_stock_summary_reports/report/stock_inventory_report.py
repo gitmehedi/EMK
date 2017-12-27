@@ -404,6 +404,43 @@ class StockInventoryReport(models.AbstractModel):
                       pp.default_code, 
                       pt.id,
                       pc.name,
+                      pu.name
+            UNION ALL 
+            SELECT sm.product_id, 
+                   pt.name, 
+                   pp.default_code                  AS code,
+                   pu.name                          AS uom_name,
+                   pc.name                          AS category, 
+                   0                                AS product_qty_in, 
+                   Coalesce((SELECT ph.cost 
+                             FROM   product_price_history ph 
+                             WHERE  Date_trunc('day', ph.datetime) <= '%s' 
+                                    AND pt.id = ph.product_template_id 
+                             ORDER  BY ph.datetime DESC 
+                             LIMIT  1), 0)          AS cost_val, 
+                   Coalesce(Sum(sm.product_qty), 0) AS product_qty_out  
+            FROM   stock_move sm 
+                   LEFT JOIN product_product pp 
+                          ON sm.product_id = pp.id 
+                   LEFT JOIN product_template pt 
+                          ON pp.product_tmpl_id = pt.id 
+                   LEFT JOIN stock_location sl 
+                          ON sm.location_id = sl.id 
+                   LEFT JOIN product_category pc 
+                          ON pt.categ_id = pc.id
+                   LEFT JOIN product_uom pu 
+                          ON( pu.id = pt.uom_id )   
+            WHERE  Date_trunc('day', sm.date) <= '%s' 
+                   AND sm.state = 'done' 
+                   AND sm.location_id = %s
+                   AND sm.location_dest_id <> %s
+                   AND pc.id IN %s 
+                   AND sm.picking_id IS NULL 
+            GROUP  BY sm.product_id, 
+                      pt.name, 
+                      pp.default_code, 
+                      pt.id,
+                      pc.name,
                       pu.name) table_ck 
     GROUP  BY product_id, 
               name, 
@@ -412,6 +449,7 @@ class StockInventoryReport(models.AbstractModel):
               category, 
               cost_val  
                 ''' % (date_end, date_end, location_outsource, location_outsource, category_param,
+                       date_end, date_end, location_outsource, location_outsource, category_param,
                        date_end, date_end, location_outsource, location_outsource, category_param,
                        date_end, date_end, location_outsource, location_outsource, category_param)
 
