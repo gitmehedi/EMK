@@ -1,5 +1,6 @@
-from odoo import models, fields
+from odoo import models, fields, _
 from odoo import api
+from odoo.exceptions import ValidationError
 
 
 class HrEarnedLeave(models.Model):
@@ -82,3 +83,14 @@ class LeaveForwardEncash(models.Model):
             name = self.search(filters)
             if len(name) > 1:
                 raise Warning('[Unique Error] Name must be unique!')
+
+    ####################################################
+    # ORM Overrides methods
+    ####################################################
+
+    def unlink(self):
+        for indent in self:
+            if indent.state == 'approved':
+                raise ValidationError(_('You cannot delete this indent'))
+
+        return super(LeaveForwardEncash, self).unlink()

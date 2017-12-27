@@ -32,34 +32,45 @@
 					</header>
 					<sheet>
 						<group col="2">
-							<field name="name" />
-							<field name="exe_leave_year" options='{"no_open": True,"no_create": 1, "no_create_edit":1}'/>
+							<field name="name"
+                                   attrs="{'readonly': [('state', 'in', ('approved'))]}"/>
+							<field name="exe_leave_year"
+                                   options='{"no_open": True,"no_create": 1, "no_create_edit":1}'
+                                   attrs="{'readonly': [('state', 'in', ('approved'))]}"/>
 						</group>
 						<group col="2">
 							<group>
-								<field name="carry_forward_year" options='{"no_open": True,"no_create": 1, "no_create_edit":1}'/>
-								<field name="leave_type" options='{"no_open": True,"no_create": 1, "no_create_edit":1}'/>
+								<field name="carry_forward_year"
+									   options='{"no_open": True,"no_create": 1, "no_create_edit":1}'
+                                       attrs="{'readonly': [('state', 'in', ('approved'))]}"/>
+								<field name="leave_type"
+                                       options='{"no_open": True,"no_create": 1, "no_create_edit":1}'
+                                       attrs="{'readonly': [('state', 'in', ('approved'))]}"/>
 							</group>
 							<group>
-								<field name="company_id" groups="base.group_multi_company" options='{"no_open": True,"no_create": 1, "no_create_edit":1}'/>
-								<field name="operating_unit_id" groups="operating_unit.group_multi_operating_unit" options='{"no_open": True,"no_create": 1, "no_create_edit":1}' />
+								<field name="company_id" groups="base.group_multi_company"
+                                       options='{"no_open": True,"no_create": 1, "no_create_edit":1}'
+                                       attrs="{'readonly': [('state', 'in', ('approved'))]}"/>
+								<field name="operating_unit_id" groups="operating_unit.group_multi_operating_unit"
+                                       options='{"no_open": True,"no_create": 1, "no_create_edit":1}'
+                                       attrs="{'readonly': [('state', 'in', ('approved'))]}"/>
 							</group>
 						</group>
 						<notebook colspan="4">
 							<page string="Carry Forward &amp; Encashment">
-								<field name="line_ids">
+								<field name="line_ids" attrs="{'readonly': [('state', 'in', ('approved'))]}">
 									<tree string="List" editable="bottom" nolabel="1" create='false'>
 										<field name="emp_name"/>
 										<field name="department_name"/>
 										<field name="designation_name"/>
 										<field name="acc_no"/>
 										<field name="date_of_join"/>
-										<field  name="authorized_leave"/>
-										<field  name="availed_leave"/>
-										<field  name="balance_leave"/>
-										<field  name="encashment_leave"/>
-										<field  name="carried_leave"/>
-										<field  name="state"/>
+										<field name="authorized_leave"/>
+										<field name="availed_leave"/>
+										<field name="balance_leave"/>
+										<field name="encashment_leave"/>
+										<field name="carried_leave"/>
+										<field name="state"/>
 									</tree>
 								</field>
 							</page>
