@@ -34,7 +34,7 @@
 
 
         <record id="action_wizard_stock_inventory_report" model="ir.actions.act_window">
-            <field name="name">Stock Inventory Report</field>
+            <field name="name">Inventory Summary</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">stock.inventory.wizard</field>
             <field name="view_type">form</field>

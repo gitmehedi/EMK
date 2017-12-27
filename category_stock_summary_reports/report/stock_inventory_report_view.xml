@@ -76,7 +76,7 @@
                             </thead>
                             <tbody>
                                 <t t-foreach="lines" t-as="data">
-                                    <t t-if="data_value">
+                                    <t t-if="data_value['product']">
 
                                         <tr style="background-color: #ebebe0; text-align:center;">
                                             <td colspan="15" style="padding: 0px;">
@@ -85,7 +85,7 @@
                                                 </strong>
                                             </td>
                                         </tr>
-                                        <t t-foreach="data_value" t-as="line">
+                                        <t t-foreach="data_value['product']" t-as="line">
                                             <tr>
                                                 <td>
                                                     <t t-esc="line['code']"/>
@@ -97,7 +97,7 @@
                                                     <t t-esc="line['uom_name']"/>
                                                 </td>
                                                 <t t-if="'OS' in record['report_type']">
-                                                    <td  class="text-right">
+                                                    <td class="text-right">
                                                         <t t-esc="line['qty_dk']"/>
                                                     </td>
                                                     <td class="text-right">
@@ -142,7 +142,51 @@
                                                 </t>
                                             </tr>
                                         </t>
+                                        <t t-if="data_value['product']">
+                                            <tr style="font-weight: bold; background-color: #E4E4E4; border-bottom: 1px solid black;">
+                                                <td colspan="3" class="text-center">
+                                                    <t t-esc="data_value['sub-total']['title']"/>
+                                                </td>
+                                                <t t-if="'OS' in record['report_type']">
+                                                    <td class="text-right">
+                                                        <t t-esc="data_value['sub-total']['total_dk_qty']"/>
+                                                    </td>
+                                                    <td></td>
+                                                    <td class="text-right">
+                                                        <t t-esc="data_value['sub-total']['total_dk_val']"/>
+                                                    </td>
+                                                </t>
+                                                <t t-if="'IWS' in record['report_type']">
+                                                    <td class="text-right">
+                                                        <t t-esc="data_value['sub-total']['total_in_qty']"/>
+                                                    </td>
+                                                    <td></td>
+                                                    <td class="text-right">
+                                                        <t t-esc="data_value['sub-total']['total_in_val']"/>
+                                                    </td>
+                                                </t>
+                                                <t t-if="'OWS' in record['report_type']">
+                                                    <td class="text-right">
+                                                        <t t-esc="data_value['sub-total']['total_out_qty']"/>
+                                                    </td>
+                                                    <td></td>
+                                                    <td class="text-right">
+                                                        <t t-esc="data_value['sub-total']['total_out_val']"/>
+                                                    </td>
+                                                </t>
+                                                <t t-if="'CS' in record['report_type']">
+                                                    <td class="text-right">
+                                                        <t t-esc="data_value['sub-total']['total_ck_qty']"/>
+                                                    </td>
+                                                    <td></td>
+                                                    <td class="text-right">
+                                                        <t t-esc="data_value['sub-total']['total_ck_val']"/>
+                                                    </td>
+                                                </t>
+                                            </tr>
+                                        </t>
                                     </t>
+
                                 </t>
                             </tbody>
                         </table>

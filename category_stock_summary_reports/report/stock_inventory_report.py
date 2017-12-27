@@ -32,12 +32,54 @@ class StockInventoryReport(models.AbstractModel):
         category_id = data['category_id']
         cat_pool = self.env['product.category']
 
+        sub_list = {
+            'product': [],
+            'sub-total': {
+                'title': 'Sub Total',
+                'total_dk_qty': 0,
+                'total_dk_val': 0,
+                'total_in_qty': 0,
+                'total_in_val': 0,
+                'total_out_qty': 0,
+                'total_out_val': 0,
+                'total_ck_qty': 0,
+                'total_ck_val': 0,
+            }
+        }
+
         if category_id:
             categories = cat_pool.get_categories(category_id)
-            category = {val.name: [] for val in cat_pool.search([('id', 'in', categories)])}
+            category = {val.name: {
+                'product': [],
+                'sub-total': {
+                    'title': 'SUB TOTAL',
+                    'total_dk_qty': 0.0,
+                    'total_dk_val': 0.0,
+                    'total_in_qty': 0.0,
+                    'total_in_val': 0.0,
+                    'total_out_qty': 0.0,
+                    'total_out_val': 0.0,
+                    'total_ck_qty': 0.0,
+                    'total_ck_val': 0.0,
+                }
+            } for val in cat_pool.search([('id', 'in', categories)])}
         else:
             cat_lists = cat_pool.search([], order='name ASC')
-            category = {val.name: [] for val in cat_lists}
+            category = {val.name: {
+                'product': [],
+                'sub-total': {
+                    'title': 'SUB TOTAL',
+                    'total_dk_qty': 0.0,
+                    'total_dk_val': 0.0,
+                    'total_in_qty': 0.0,
+                    'total_in_val': 0.0,
+                    'total_out_qty': 0.0,
+                    'total_out_val': 0.0,
+                    'total_ck_qty': 0.0,
+                    'total_ck_val': 0.0,
+                }
+            } for val in cat_lists}
+
             if cat_lists:
                 categories = cat_lists.ids
             else:
@@ -481,6 +523,17 @@ class StockInventoryReport(models.AbstractModel):
         self.env.cr.execute(sql)
         for vals in self.env.cr.dictfetchall():
             if vals:
-                category[vals['category']].append(vals)
+                category[vals['category']]['product'].append(vals)
+
+                total = category[vals['category']]['sub-total']
+                total['total_dk_qty'] = total['total_dk_qty'] + vals['qty_dk']
+                total['total_dk_val'] = total['total_dk_val'] + vals['val_dk']
+                total['total_in_qty'] = total['total_in_qty'] + vals['qty_in_tk']
+                total['total_in_val'] = total['total_in_val'] + vals['val_in_tk']
+                total['total_out_qty'] = total['total_out_qty'] + vals['qty_out_tk']
+                total['total_out_val'] = total['total_out_val'] + vals['val_out_tk']
+                total['total_ck_qty'] = total['total_ck_qty'] + vals['qty_ck']
+                total['total_ck_val'] = total['total_ck_val'] + vals['val_ck']
+
 
         return category
