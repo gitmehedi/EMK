@@ -15,7 +15,14 @@ class HrHolidays(models.Model):
 
     leave_year_id = fields.Many2one('hr.leave.fiscal.year', string="Leave Year",default=_default_leave_year)
 
-    current_fiscal_year = fields.Boolean('Current Fiscal Year',compute='_compute_current_fiscal_year',store=True)
+    # current_fiscal_year = fields.Boolean('Current Fiscal Year',compute='_compute_current_fiscal_year',store=True)
+
+    curr_leave_year_id = fields.Integer(default=lambda self: self.get_year())
+
+    @api.model
+    def _compute_curr_leave_year_id(self):
+        print (">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>",self.get_year())
+        return self.get_year()
 
     # @api.depends('date_from')
     # def set_leave_year(self):
@@ -25,17 +32,19 @@ class HrHolidays(models.Model):
     #                                              ('date_stop', '>=', self.date_from)])
     #         self.leave_year_id = leave_years[0].id
 
-    @api.multi
-    @api.depends('leave_year_id')
-    def _compute_current_fiscal_year(self):
-        year_id = self.get_year()
-        for holiday in self:
-            if holiday.leave_year_id.id == year_id and holiday.holiday_status_id.active == True:
-                holiday.current_fiscal_year = True
-            else:
-                holiday.current_fiscal_year = False
+    # @api.multi
+    # @api.depends('leave_year_id')
+    # def _compute_current_fiscal_year(self):
+    #     year_id = self.get_year()
+    #     for holiday in self:
+    #         if holiday.leave_year_id.id == year_id and holiday.holiday_status_id.active == True:
+    #             holiday.current_fiscal_year = True
+    #         else:
+    #             holiday.current_fiscal_year = False
+    #
 
     def get_year(self):
+        print (">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
         year_id = 0
         curr_date = datetime.date.today().strftime('%Y-%m-%d')
         self.env.cr.execute(

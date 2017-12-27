@@ -91,6 +91,6 @@ class LeaveForwardEncash(models.Model):
     def unlink(self):
         for indent in self:
             if indent.state == 'approved':
-                raise ValidationError(_('You cannot delete this indent'))
+                raise ValidationError(_('You cannot delete in this state'))
 
         return super(LeaveForwardEncash, self).unlink()
