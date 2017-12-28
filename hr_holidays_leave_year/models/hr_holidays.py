@@ -4,26 +4,50 @@
 import datetime
 
 from odoo import models, fields, api, _
+from odoo.exceptions import ValidationError
 
 
 class HrHolidays(models.Model):
     _inherit = 'hr.holidays'
 
-    @api.model
-    def _default_leave_year(self):
-        return self.get_year()
+    leave_year_id = fields.Many2one('hr.leave.fiscal.year', string="Leave Year")
 
-    leave_year_id = fields.Many2one('hr.leave.fiscal.year', string="Leave Year",default=_default_leave_year)
+    @api.constrains('date_from', 'date_to')
+    def _check_date(self):
+        for holiday in self:
+            domain = [
+                ('date_from', '<=', holiday.date_to),
+                ('date_to', '>=', holiday.date_from),
+                ('employee_id', '=', holiday.employee_id.id),
+                ('id', '!=', holiday.id),
+                ('type', '=', holiday.type),
+                ('state', 'not in', ['cancel', 'refuse']),
+            ]
+            nholidays = self.search_count(domain)
+            if nholidays:
+                raise ValidationError(_('You can not have 2 leaves that overlaps on same day!'))
+            elif holiday.type == 'remove':
+                if holiday.date_from >= holiday.leave_year_id.date_start and holiday.date_to <= holiday.leave_year_id.date_stop:
+                    pass
+                else:
+                    raise ValidationError(_('Leave duration starting date and ending date should be same year!!'))
 
-    def get_year(self):
+    @api.onchange('date_from')
+    def onchange_date_from(self):
         year_id = 0
-        curr_date = datetime.date.today().strftime('%Y-%m-%d')
+        if self.date_from:
+            res_date = self.date_from
+        else:
+            res_date = datetime.date.today().strftime('%Y-%m-%d')
+
         self.env.cr.execute(
-            "SELECT * FROM hr_leave_fiscal_year  WHERE '{}' between date_start and date_stop".format(curr_date))
+            "SELECT * FROM hr_leave_fiscal_year  WHERE '{}' between date_start and date_stop".format(res_date))
         years = self.env.cr.dictfetchone()
         if years:
             year_id = years['id']
-        return year_id
+
+        self.leave_year_id = year_id
+
 
 
 class HrHolidaysStatus(models.Model):
