@@ -15,15 +15,16 @@ class HRLeaveSummary(models.TransientModel):
     @api.multi
     def process_report(self):
         data = {}
-        data['department_id'] = self.department_id.id
-        data['department_name'] = self.department_id.name
         data['year_id'] = self.year_id.id
         data['year_name'] = self.year_id.name
         data['operating_unit_id'] = self.operating_unit_id.id
+        data['operating_unit_name'] = self.operating_unit_id.name
 
-        if self.operating_unit_id.name == 'All':
-            data['operating_unit_name'] = False
+        if self.department_id:
+            data['department_id'] = self.department_id.id
+            data['department_name'] = self.department_id.name
         else:
-            data['operating_unit_name'] = self.operating_unit_id.name
+            data['department_id'] = None
+            data['department_name'] = None
 
         return self.env['report'].get_action(self, 'gbs_hr_leave_report.report_emp_leave_summary', data=data)

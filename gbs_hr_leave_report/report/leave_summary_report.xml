@@ -69,7 +69,7 @@
                                 <t t-foreach="holiday_objs" t-as="list">
                                     <tr>
                                         <td class="text-center">
-                                            <span t-esc="index"/>
+                                            <span t-esc="list_index+1"/>
                                         </td>
                                         <td>
                                             <span t-esc="list_value['name']"/>

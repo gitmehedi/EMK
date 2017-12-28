@@ -13,12 +13,7 @@ class HrLeaveSummaryReport(models.AbstractModel):
     @api.multi
     def render_html(self, docids, data=None):
         report_obj = self.env['report']
-        emp_pool = self.env['hr.employee']
-        leave_pool = self.env['hr.holidays']
         if data['operating_unit_id']:
-            operating_unit_id = data['operating_unit_id']
-            holiday_objs = self.env['hr.holidays'].search([('employee_id.operating_unit_id', '=', operating_unit_id)])
-
             header = {}
             header[0] = 'SI'
             header[1] = 'Name'
@@ -33,13 +28,14 @@ class HrLeaveSummaryReport(models.AbstractModel):
         docargs = {
             'data': data,
             'holiday_objs': lists,
-            'operating_unit': data['operating_unit_id'],
             'header': header
         }
         return report_obj.render('gbs_hr_leave_report.report_emp_leave_summary', docargs)
 
     @api.model
     def get_data(self, data, header):
+        department = '={0} '.format(data['department_id']) if data['department_id'] else 'IS NOT NULL '.format(data['department_id'])
+
         self._cr.execute('''
             SELECT he.id, 
                    he.name_related AS name, 
@@ -52,8 +48,9 @@ class HrLeaveSummaryReport(models.AbstractModel):
                           ON ( hd.id = he.department_id )
                    LEFT JOIN operating_unit ou 
                               ON ( ou.id = he.operating_unit_id )
-            WHERE  he.department_id=%s AND ou.id=%s
-        ''' % (data['department_id'],data['operating_unit_id']))
+            WHERE ou.id=%s 
+                  AND he.department_id %s
+        ''' % (data['operating_unit_id'],department))
 
         leaves = {val[0]: {
             'name': val[1],
@@ -77,12 +74,14 @@ class HrLeaveSummaryReport(models.AbstractModel):
                               ON ( he.id = hhl.employee_id )
                        LEFT JOIN operating_unit ou 
                               ON ( ou.id = he.operating_unit_id )
-                WHERE  he.department_id=%s AND ou.id=%s
+                WHERE  ou.id=%s  
+                       AND he.department_id   %s
+                       AND hhl.leave_year_id=%s
                 GROUP  BY he.name_related, 
                           he.id, 
                           hhls.id,
                           hhl.type
-                ''' % (data['department_id'],data['operating_unit_id'])
+                ''' % (data['operating_unit_id'],department,data['year_id'])
 
         self._cr.execute(sql)
         for record in self._cr.fetchall():

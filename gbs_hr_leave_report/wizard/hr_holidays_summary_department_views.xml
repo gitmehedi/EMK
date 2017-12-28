@@ -10,11 +10,11 @@
                         <group>
                             <field name="department_id"
                                    options="{'no_open':1,'no_create_edit':1,'no_create':1}"/>
-                            <field name="year_id"
+                            <field name="operating_unit_id"
                                    options="{'no_open':1,'no_create_edit':1,'no_create':1}"/>
                         </group>
                         <group>
-                            <field name="operating_unit_id"
+                            <field name="year_id"
                                    options="{'no_open':1,'no_create_edit':1,'no_create':1}"/>
                         </group>
                     </group>
