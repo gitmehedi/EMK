@@ -20,7 +20,11 @@
                             <div class="col-xs-6">
                                 <div>
                                     <strong>Department:</strong>
+                                    <t t-if="not data['department_name']">
+                                        <span>All</span>
+                                    </t>
                                     <span t-esc="data['department_name']"/>
+
                                 </div>
                                 <div>
                                     <strong>Leave Year:</strong>

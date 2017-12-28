@@ -43,8 +43,11 @@ class HrHolidays(models.Model):
         self.env.cr.execute(
             "SELECT * FROM hr_leave_fiscal_year  WHERE '{}' between date_start and date_stop".format(res_date))
         years = self.env.cr.dictfetchone()
-        if years:
-            year_id = years['id']
+
+        if not years:
+            raise ValidationError(_('Unable to apply leave request. Please contract your administrator.'))
+
+        year_id = years['id']
 
         self.leave_year_id = year_id
 

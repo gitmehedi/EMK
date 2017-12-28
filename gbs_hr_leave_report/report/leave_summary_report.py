@@ -87,8 +87,8 @@ class HrLeaveSummaryReport(models.AbstractModel):
         for record in self._cr.fetchall():
             rec = leaves[record[0]]['leave'][record[2]]
 
-            rec['avail'] = rec['avail'] + record[4]
+            rec['balance'] = rec['balance'] + record[4]
             if record[1] == 'remove':
-                rec['balance'] = rec['balance'] + abs(record[4])
+                rec['avail'] = rec['avail'] + abs(record[4])
 
         return leaves

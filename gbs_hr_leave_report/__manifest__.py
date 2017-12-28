@@ -5,6 +5,7 @@
     'version':'1.0',
     'data': [       
        'wizard/hr_holidays_summary_department_views.xml',
+       'report/report_paperformat.xml',
        'report/gbs_hr_leave_report.xml',
        'report/gbs_hr_leave_report_templates.xml',
        'report/leave_summary_report.xml',

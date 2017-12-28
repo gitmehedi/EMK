@@ -8,10 +8,11 @@
                 <form string="Leaves Report">
                     <group>
                         <group>
-                            <field name="department_id"
-                                   options="{'no_open':1,'no_create_edit':1,'no_create':1}"/>
                             <field name="operating_unit_id"
                                    options="{'no_open':1,'no_create_edit':1,'no_create':1}"/>
+                            <field name="department_id"
+                                   options="{'no_open':1,'no_create_edit':1,'no_create':1}"
+                                   placeholder="All"/>
                         </group>
                         <group>
                             <field name="year_id"
