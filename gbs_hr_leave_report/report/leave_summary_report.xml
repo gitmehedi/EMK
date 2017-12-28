@@ -10,36 +10,28 @@
                         <div class="row">
                             <div class="col-xs-12" style="text-align:center;">
                                 <h2>
-                                    <strong>Employee Leave Summary Report</strong>
+                                    <strong>Leave Summary</strong>
                                 </h2>
-                                <hr/>
                             </div>
+                            <br/><br/>
                         </div>
-                        <div style=" background-color:#85C1E9; font-size:15px">
-                            <div class="row">
-                                <div class="col-xs-9">
-                                    <div class="col-xs-10" style="text-align:left;padding-top: 10px;">
-                                        <strong>Operating Unit :</strong>
-                                        <span t-esc="operating_unit"/>
-                                    </div>
-                                </div>
-                                <div class="col-xs-3">
-                                    <div class="row">
-                                        <div style="padding-left: 30px;">
-                                            <strong>Date From :</strong>
-                                            <span t-esc="form_date"/>
-                                        </div>
-                                        <div style="padding-left: 30px;">
-                                            <strong>Date To :</strong>
-                                            <span t-esc="to_date"/>
-                                        </div>
-                                    </div>
-                                </div>
+                        <div class="row">
+                            <div class="col-xs-6">
+                                <strong>Department:</strong>
+                                <span t-esc="data['department_name']"/>
+                                <strong>Leave Year:</strong>
+                                <span t-esc="data['year_name']"/>
                             </div>
+                            <div class="col-xs-6 text-right">
+                                <strong>Operating Unit:</strong>
+                                <span t-esc="data['operating_unit_name']"/>
+                            </div>
+
                         </div>
+
                         <br/>
 
-                        <table class="table table-bordered" style="width:100%">
+                        <table class="table table-bordered">
                             <thead>
                                 <tr style="background-color:#CACFD2;">
                                     <t t-foreach="header" t-as="head">
@@ -62,33 +54,37 @@
                                         <th style="text-align: center;">
                                             Avail
                                         </th>
-                                        <th style="text-align: center;" >
+                                        <th style="text-align: center;">
                                             Balance
                                         </th>
                                     </t>
                                 </tr>
                             </thead>
                             <tbody>
-                                <t t-foreach="holiday_objs" t-as="holiday">
+                                <t t-foreach="holiday_objs" t-as="list">
                                     <tr>
-                                        <td>
-                                            <span t-esc="holiday_index+1"/>
+                                        <td class="text-center">
+                                            <span t-esc="index"/>
                                         </td>
                                         <td>
-                                            <span t-esc="holiday.employee_id.name"></span>
+                                            <span t-esc="list_value['name']"/>
                                         </td>
-                                        <td>
-                                            <span t-esc="holiday.employee_id.job_id.name"></span>
+                                        <td class="text-center">
+                                            <span t-esc="list_value['designation']"/>
                                         </td>
-                                        <td>
-                                            <span t-esc="holiday.department_id.name"></span>
+                                        <td class="text-center">
+                                            <span t-esc="list_value['department']"/>
                                         </td>
-                                        <!--<td><span t-esc="type_all.number_of_days_temp"></span></td>-->
-                                        <!--<td><span t-esc="emp['dept']"></span></td>-->
-                                        <!--<td><span t-esc="emp['designation']"></span></td>-->
-                                        <!--<t t-foreach="dynamic_col_list" t-as="c">-->
-                                        <!--<td class="text-right"><span t-esc="emp[c]"></span></td>-->
-                                        <!--</t>-->
+
+                                        <t t-foreach="list_value['leave']" t-as="val">
+                                            <td class="text-center">
+                                                <span t-esc="val_value['avail']"/>
+                                            </td>
+                                            <td class="text-center">
+                                                <span t-esc="val_value['balance']"/>
+                                            </td>
+                                        </t>
+
                                     </tr>
                                 </t>
                             </tbody>

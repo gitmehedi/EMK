@@ -8,13 +8,14 @@
                 <form string="Leaves Report">
                     <group>
                         <group>
-                            <field name="from_date"/>
-                            <field name="operating_unit_id"
+                            <field name="department_id"
+                                   options="{'no_open':1,'no_create_edit':1,'no_create':1}"/>
+                            <field name="year_id"
                                    options="{'no_open':1,'no_create_edit':1,'no_create':1}"/>
                         </group>
                         <group>
-                            <field name="to_date"/>
-                            <!--<field name="depts"/>-->
+                            <field name="operating_unit_id"
+                                   options="{'no_open':1,'no_create_edit':1,'no_create':1}"/>
                         </group>
                     </group>
                     <footer>
@@ -26,7 +27,7 @@
         </record>
 
         <record id="action_leave_summary_report_wizard" model="ir.actions.act_window">
-            <field name="name">Leaves Summery Report</field>
+            <field name="name">Leaves Summary</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">hr.leave.summary.wizard</field>
             <field name="view_type">form</field>
@@ -35,7 +36,7 @@
         </record>
 
         <menuitem
-                name="Leaves Summery Report"
+                name="Leaves Summary"
                 parent="hr_holidays.menu_hr_holidays_report"
                 action="action_leave_summary_report_wizard"
                 id="menu_hr_leave_summary"/>
