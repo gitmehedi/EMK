@@ -13,14 +13,19 @@
                                     <strong>Leave Summary</strong>
                                 </h2>
                             </div>
-                            <br/><br/>
+                            <br/>
+                            <br/>
                         </div>
                         <div class="row">
                             <div class="col-xs-6">
-                                <strong>Department:</strong>
-                                <span t-esc="data['department_name']"/>
-                                <strong>Leave Year:</strong>
-                                <span t-esc="data['year_name']"/>
+                                <div>
+                                    <strong>Department:</strong>
+                                    <span t-esc="data['department_name']"/>
+                                </div>
+                                <div>
+                                    <strong>Leave Year:</strong>
+                                    <span t-esc="data['year_name']"/>
+                                </div>
                             </div>
                             <div class="col-xs-6 text-right">
                                 <strong>Operating Unit:</strong>

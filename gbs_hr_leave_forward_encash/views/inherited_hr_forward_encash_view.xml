@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <data>
+    	<!-- Extend HR Holidays Public view -->
+        <record id="edit_holiday_status_form_view" model="ir.ui.view">
+        <field name="name">hr_holidays_status_form</field>
+            <field name="model">hr.holidays.status</field>
+            <field name="inherit_id" ref="hr_holidays.edit_holiday_status_form" />
+            <field name="arch" type="xml">
+                <data>
+                    <xpath expr="//form/group/group/field[@name='limit']" position="after">
+                        <field name="leave_carry_forward" />
+                    </xpath> 
+                </data>
+            </field>
+        </record>
+    </data>
+</odoo>

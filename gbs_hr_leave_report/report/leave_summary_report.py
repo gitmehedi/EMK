@@ -17,11 +17,7 @@ class HrLeaveSummaryReport(models.AbstractModel):
         leave_pool = self.env['hr.holidays']
         if data['operating_unit_id']:
             operating_unit_id = data['operating_unit_id']
-            from_date = data['from_date']
-            to_date = data['to_date']
-            holiday_objs = self.env['hr.holidays'].search([('employee_id.operating_unit_id', '=', operating_unit_id),
-                                                           ('date_from', '>=', from_date),
-                                                           ('date_to', '<=', to_date)])
+            holiday_objs = self.env['hr.holidays'].search([('employee_id.operating_unit_id', '=', operating_unit_id)])
 
             header = {}
             header[0] = 'SI'
@@ -54,8 +50,10 @@ class HrLeaveSummaryReport(models.AbstractModel):
                           ON ( hj.id = he.job_id ) 
                    LEFT JOIN hr_department hd 
                           ON ( hd.id = he.department_id )
-            WHERE  he.department_id=%s 
-        ''' % (data['department_id']))
+                   LEFT JOIN operating_unit ou 
+                              ON ( ou.id = he.operating_unit_id )
+            WHERE  he.department_id=%s AND ou.id=%s
+        ''' % (data['department_id'],data['operating_unit_id']))
 
         leaves = {val[0]: {
             'name': val[1],
@@ -77,12 +75,14 @@ class HrLeaveSummaryReport(models.AbstractModel):
                               ON ( hhls.id = hhl.holiday_status_id ) 
                        LEFT JOIN hr_employee he 
                               ON ( he.id = hhl.employee_id )
-                WHERE  he.department_id=%s
+                       LEFT JOIN operating_unit ou 
+                              ON ( ou.id = he.operating_unit_id )
+                WHERE  he.department_id=%s AND ou.id=%s
                 GROUP  BY he.name_related, 
                           he.id, 
                           hhls.id,
-                          hhl.type 
-                ''' % (data['department_id'])
+                          hhl.type
+                ''' % (data['department_id'],data['operating_unit_id'])
 
         self._cr.execute(sql)
         for record in self._cr.fetchall():
