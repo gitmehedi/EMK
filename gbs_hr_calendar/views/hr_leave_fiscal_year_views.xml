@@ -8,11 +8,13 @@
             <field name="arch" type="xml">
                 <form string="Fiscal year">
                     <header>
+                        <button name="action_close" states="draft" type="object"
+                                string="Close"/>
                         <button name="create_period1" states="draft" type="object"
                                 string="Create Monthly Periods" class="oe_highlight"/>
                         <button name="create_period3" states="draft"
                                 string="Create 3 Months Periods" type="object" class="oe_highlight"/>
-                        <field name="state" widget="statusbar" nolabel="1"/>
+                        <field name="state" widget="statusbar" nolabel="1" clickable="True"/>
                     </header>
                     <group>
                         <group>
