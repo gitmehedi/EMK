@@ -1,7 +1,7 @@
 # [gbs]
 ## Genweb2 ERP Based Business Solution
 
-### Repositiory which is need to run Samdua ERP
+### Repositiory which are need to run Samdua ERP
 
 1. Clone odoo version 10.0
 <br/>``` git clone -b 10.0 --single-branch https://www.github.com/odoo/odoo.git ```<br/>
@@ -31,8 +31,5 @@
 <br/>``` git clone -b 10.0 --single-branch https://github.com/OCA/purchase-workflow.git ```<br/>
 
 10. Clone custom repository for Partner Contact version 10.0
-<br/>``` git clone -b 10.0 --single-branch https://github.com/OCA/partner-contact.git ```<br/>
-
-11. Clone custom repository for Partner Contact version 10.0
 <br/>``` git clone -b 10.0 --single-branch https://github.com/OCA/partner-contact.git ```<br/>
 
