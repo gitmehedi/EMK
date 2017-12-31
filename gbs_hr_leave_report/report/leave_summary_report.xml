@@ -6,43 +6,34 @@
             <t t-call="report.html_container">
                 <t t-call="report.external_layout">
                     <!--<t t-foreach="docs" t-as="o">-->
-                    <div class="page" style="page-break-inside: auto">
-                        <div class="row">
-                            <div class="col-xs-12" style="text-align:center;">
-                                <h2>
-                                    <strong>Leave Summary</strong>
-                                </h2>
-                            </div>
-                            <br/>
-                            <br/>
-                        </div>
-                        <div class="row">
-                            <div class="col-xs-6">
-                                <div>
-                                    <strong>Department:</strong>
-                                    <t t-if="not data['department_name']">
-                                        <span>All</span>
-                                    </t>
+                    <style>
+                        .table th {
+                        padding: 2px !important;
+                        }
+                        .table td {
+                        padding: 2px !important;
+                        font-size: 12px !important;
+                        }
+                    </style>
+                    <div class="page">
+                        <div class="row mb32">
+                            <div class="col-xs-12">
+                                <h2 class="text-center">Leave Summary</h2>
+                                <p class="text-center">
+                                    <strong>Shop Name:
+                                        <span t-esc="data['department_name']"/>
+                                    </strong>
+                                    <br/>
                                     <span t-esc="data['department_name']"/>
-
-                                </div>
-                                <div>
-                                    <strong>Leave Year:</strong>
-                                    <span t-esc="data['year_name']"/>
-                                </div>
+                                    <strong>To</strong>
+                                    <span t-esc="data['department_name']"/>
+                                </p>
                             </div>
-                            <div class="col-xs-6 text-right">
-                                <strong>Operating Unit:</strong>
-                                <span t-esc="data['operating_unit_name']"/>
-                            </div>
-
                         </div>
 
-                        <br/>
-
-                        <table class="table table-bordered">
+                        <table class="table table-bordered" style="padding: 0px;">
                             <thead>
-                                <tr style="background-color:#CACFD2;">
+                                <tr style="background-color:#EFECEB;">
                                     <t t-foreach="header" t-as="head">
                                         <t t-if="len(head_value)>1">
                                             <th rowspan="2" style="text-align: center;">
@@ -58,7 +49,7 @@
                                         </t>
                                     </t>
                                 </tr>
-                                <tr style="background-color:#CACFD2;">
+                                <tr style="background-color:#EFECEB;">
                                     <t t-foreach="range(0,len(header)-4)" t-as="tas">
                                         <th style="text-align: center;">
                                             Avail
@@ -115,8 +106,9 @@
                 name="gbs_hr_leave_report.report_emp_leave_summary"
                 file="gbs_hr_leave_report.report_emp_leave_summary"
                 menu="False"
-        />
+                paperformat="custom_report.paperformat_backend_landscape"
 
+        />
 
     </data>
 </odoo>

@@ -9,8 +9,6 @@
             file="gbs_hr_leave_payroll_report.report_hr_leave" 
             name="gbs_hr_leave_payroll_report.report_hr_leave" 
         />
-        <record id="report_leave_summary" model="ir.actions.report.xml">
-            <field name="paperformat_id" ref="gbs_hr_leave_report.paperformat_leavesummary"/>
-        </record>
+
     </data>
 </odoo>
