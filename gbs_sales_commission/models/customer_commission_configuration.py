@@ -1,7 +1,7 @@
 import datetime
 import time
 from openerp.exceptions import UserError, ValidationError
-from odoo import api, fields, models,_
+from odoo import api, fields, models, _
 
 
 class CustomerCommissionConfiguration(models.Model):
@@ -10,13 +10,13 @@ class CustomerCommissionConfiguration(models.Model):
     _order = 'confirmed_date desc'
 
     name = fields.Char(string='Name', index=True, readonly=True)
-    requested_date = fields.Date(string="Requested Date", default=datetime.date.today(),readonly=True)
+    requested_date = fields.Date(string="Requested Date", default=datetime.date.today(), readonly=True)
     approved_date = fields.Date('Approved Date',
-                   states = {'draft': [('invisible', True)],
-                             'validate': [('invisible', True)],
-                             'close': [('invisible',False),('readonly',True)],
-                             'approve': [('invisible',False),('readonly',True)]})
-    confirmed_date = fields.Date(string="Confirmed Date", _defaults=lambda *a: time.strftime('%Y-%m-%d'),readonly=True)
+                                states={'draft': [('invisible', True)],
+                                        'validate': [('invisible', True)],
+                                        'close': [('invisible', False), ('readonly', True)],
+                                        'approve': [('invisible', False), ('readonly', True)]})
+    confirmed_date = fields.Date(string="Confirmed Date", _defaults=lambda *a: time.strftime('%Y-%m-%d'), readonly=True)
 
     status = fields.Boolean(string='Status', default=True, required=True)
 
@@ -33,11 +33,11 @@ class CustomerCommissionConfiguration(models.Model):
 
     customer_id = fields.Many2one('res.partner', string="Customer", domain="([('customer','=','True')])",
                                   readonly=True, states={'draft': [('readonly', False)]})
-    requested_by = fields.Many2one('res.users', string="Requested By", default=lambda self: self.env.user, readonly=True)
+    requested_by = fields.Many2one('res.users', string="Requested By", default=lambda self: self.env.user,
+                                   readonly=True)
 
     approver1_id = fields.Many2one('res.users', string="Approved By", readonly=True)
-    approver2_id = fields.Many2one('res.users', string="Confirmed By",readonly=True)
-
+    approver2_id = fields.Many2one('res.users', string="Confirmed By", readonly=True)
 
     config_product_ids = fields.One2many('customer.commission.configuration.product', 'config_parent_id',
                                          readonly=True, states={'draft': [('readonly', False)]})
@@ -47,12 +47,10 @@ class CustomerCommissionConfiguration(models.Model):
     """ State fields for containing various states """
     state = fields.Selection([
         ('draft', "To Submit"),
-        # ('request', "Request"),
         ('validate', "To Approve"),
-        # ('confirm', "Confirm"),
         ('approve', "Second Approval"),
         ('close', "Approved"),
-        ('refused','Refused')
+        ('refused', 'Refused')
     ], readonly=True, track_visibility='onchange', copy=False, default='draft')
 
     """ All functions """
@@ -65,17 +63,37 @@ class CustomerCommissionConfiguration(models.Model):
 
     @api.onchange('product_id')
     def onchange_product_id(self):
-         for rec in self.config_customer_ids:
-             if rec.customer_id:
-                 commission=self.env['customer.commission'].search(
-                     [('product_id', '=', self.product_id.id),
-                      ('customer_id', '=',rec.customer_id.id),
-                      ('status', '=', True)])
-                 if commission:
-                     for coms in commission:
-                         rec.old_value = coms.commission_rate
-                 else:
-                     rec.old_value = 0
+
+        if self.product_id:
+            if self.commission_type == 'by_product':
+                prod_pool = self.env['product.template'].search([('id', '=', self.product_id.id)])
+
+                if prod_pool.commission_type == 'fixed':
+                    for rec in self.config_customer_ids:
+                        if rec.customer_id:
+                            commission = self.env['customer.commission'].search(
+                                [('product_id', '=', self.product_id.id),
+                                 ('customer_id', '=', rec.customer_id.id),
+                                 ('coms_type', '=', 'fixed'),
+                                 ('status', '=', True)])
+                            if commission:
+                                for coms in commission:
+                                    rec.old_value = coms.commission_rate
+                            else:
+                                rec.old_value = 0
+
+            for rec in self.config_customer_ids:
+                if rec.customer_id:
+                    commission = self.env['customer.commission'].search(
+                        [('product_id', '=', self.product_id.id),
+                         ('customer_id', '=', rec.customer_id.id),
+                         ('coms_type', '=', 'percentage'),
+                         ('status', '=', True)])
+                    if commission:
+                        for coms in commission:
+                            rec.old_value = coms.commission_rate
+                    else:
+                        rec.old_value = 0
 
     @api.onchange('customer_id')
     def onchange_customer_id(self):
@@ -97,14 +115,13 @@ class CustomerCommissionConfiguration(models.Model):
             coms.state = 'refused'
             coms.status = False
 
-
-    @api.onchange('commission_type')
-    def onchange_commission_type(self):
-        if self.commission_type:
-            self.product_id = 0
-            self.customer_id = 0
-            self.config_product_ids = []
-            self.config_customer_ids = []
+    # @api.onchange('commission_type')
+    # def onchange_commission_type(self):
+    #     if self.commission_type:
+    #         self.product_id = 0
+    #         self.customer_id = 0
+    #         self.config_product_ids = []
+    #         self.config_customer_ids = []
 
     @api.multi
     def name_get(self):
@@ -138,6 +155,7 @@ class CustomerCommissionConfiguration(models.Model):
         cusCom = self.env['customer.commission']
         cusComLine = self.env['customer.commission.line']
         customer_obj = self.env['res.partner']
+
         if self.commission_type == 'by_customer':
             customer = customer_obj.search([('id', '=', self.customer_id.id)])
             for rec in self.config_product_ids:
@@ -164,10 +182,11 @@ class CustomerCommissionConfiguration(models.Model):
                     vals['customer_id'] = rec.customer_id.id
                     vals['product_id'] = self.product_id.id
                     vals['commission_rate'] = rec.new_value
+
                     commission = customer.commission_ids.create(vals)
                 else:
                     for cust in find_cust:
-                        cust.write({'commission_rate': rec.new_value})
+                        cust.write({'commission_rate': rec.new_value, 'coms_type': self.product_id.commission_type})
 
                 update = cusComLine.search(
                     [('customer_id', '=', rec.customer_id.id), ('product_id', '=', self.product_id.id)])
@@ -181,6 +200,7 @@ class CustomerCommissionConfiguration(models.Model):
                 if find_cust:
                     for custs in find_cust:
                         val_line['commission_id'] = custs.id
+                        val_line['coms_type'] = self.product_id.commission_type
                 else:
                     val_line['commission_id'] = commission.id
 
@@ -198,4 +218,3 @@ class CustomerCommissionConfiguration(models.Model):
             com.config_customer_ids.unlink()
             com.config_product_ids.unlink()
         return super(CustomerCommissionConfiguration, self).unlink()
-

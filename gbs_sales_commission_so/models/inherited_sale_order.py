@@ -3,7 +3,7 @@ from odoo import fields, api, models
 class InheritedSaleOrderLine(models.Model):
     _inherit = 'sale.order.line'
 
-    commission_rate = fields.Float(digits=(16,2),string="Com. (%)")
+    commission_rate = fields.Float(digits=(16,2),string="Commission")
     commission_sub_total = fields.Float(string="Total Com.", compute='calculate_commission_subtotal')
 
     @api.depends('commission_rate','product_uom_qty','price_subtotal')

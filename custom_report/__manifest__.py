@@ -4,10 +4,11 @@
     'summary': 'Add custom header and footer',
     'author': 'Md. Mehedi Hasan',
     'website': 'https://github.com/gitmehedi',
-    'depends': ['web', 'point_of_sale'],
+    'depends': ['web','report'],
     'data': [
-        'views/inherite_layout.xml',
         'data/paperformat.xml',
+        'views/inherite_layout.xml',
+        'views/templates.xml',
     ],
     'installable': True,
     'auto_install': False,
