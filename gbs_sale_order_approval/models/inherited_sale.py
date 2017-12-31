@@ -226,8 +226,9 @@ class InheritedSaleOrderLine(models.Model):
             if self.product_uom_qty < 0 or self.commission_rate < 0 or self.price_unit < 0:
                 raise ValidationError('Price Unit, Ordered Qty & Commission Rate can not be Negative value')
 
-            if self.commission_rate > 100:
-                raise ValidationError('Commission Rate can not be greater than 100')
+            if self.order_id.product_id.commission_type == 'percentage':
+                if self.commission_rate > 100:
+                    raise ValidationError('Commission Rate can not be greater than 100')
 
     def _get_product_sales_price(self, product):
 
