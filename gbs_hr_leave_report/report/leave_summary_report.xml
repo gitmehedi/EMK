@@ -1,37 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>
-
         <template id="report_emp_leave_summary">
             <t t-call="report.html_container">
                 <t t-call="report.external_layout">
                     <!--<t t-foreach="docs" t-as="o">-->
-                    <style>
-                        .table th {
-                        padding: 2px !important;
-                        }
-                        .table td {
-                        padding: 2px !important;
-                        font-size: 12px !important;
-                        }
-                    </style>
-                    <div class="page">
-                        <div class="row mb32">
+                    <div class="page" style="page-break-inside: auto">
+                        <div class="row">
                             <div class="col-xs-12">
                                 <h2 class="text-center">Leave Summary</h2>
-                                <p class="text-center">
-                                    <strong>Shop Name:
+                            </div>
+                            <br></br>
+                            <br></br>
+                            <div class="row">
+                                <div class="col-xs-6">
+                                    <div>
+                                        <strong>Department:</strong>
+                                        <t t-if="not data['department_name']">
+                                            <span>All</span>
+                                        </t>
                                         <span t-esc="data['department_name']"/>
-                                    </strong>
-                                    <br/>
-                                    <span t-esc="data['department_name']"/>
-                                    <strong>To</strong>
-                                    <span t-esc="data['department_name']"/>
-                                </p>
+
+                                    </div>
+                                    <div>
+                                        <strong>Leave Year:</strong>
+                                        <span t-esc="data['year_name']"/>
+                                    </div>
+                                </div>
+                                <div class="col-xs-6 text-right">
+                                    <strong>Operating Unit:</strong>
+                                    <span t-esc="data['operating_unit_name']"/>
+                                </div>
+
                             </div>
                         </div>
 
-                        <table class="table table-bordered" style="padding: 0px;">
+                        <div class="row">
+                            <table class="table table-bordered" style="padding: 0px;">
                             <thead>
                                 <tr style="background-color:#EFECEB;">
                                     <t t-foreach="header" t-as="head">
@@ -69,26 +74,26 @@
                                         <td>
                                             <span t-esc="list_value['name']"/>
                                         </td>
-                                        <td class="text-center">
+                                        <td class="text-left">
                                             <span t-esc="list_value['designation']"/>
                                         </td>
-                                        <td class="text-center">
+                                        <td class="text-left">
                                             <span t-esc="list_value['department']"/>
                                         </td>
-
                                         <t t-foreach="list_value['leave']" t-as="val">
                                             <td class="text-center">
-                                                <span t-esc="val_value['avail']"/>
+                                                <span t-esc="int(val_value['avail'])"/>
                                             </td>
                                             <td class="text-center">
-                                                <span t-esc="val_value['balance']"/>
+                                                <span t-esc="int(val_value['balance'])"/>
                                             </td>
                                         </t>
-
                                     </tr>
                                 </t>
                             </tbody>
                         </table>
+                        </div>
+
                         <!--<footer>-->
                         <!--<p><b>Submitted by:</b> <span t-field="o.requested_by"/></p>-->
                         <!--<p><b>First Approval by:</b> <span t-field="o.approver1_id"/></p>-->
@@ -98,7 +103,6 @@
                 </t>
             </t>
         </template>
-
         <report id="report_leave_summary"
                 string="Leaves Summary"
                 model="hr.holidays"
@@ -106,9 +110,10 @@
                 name="gbs_hr_leave_report.report_emp_leave_summary"
                 file="gbs_hr_leave_report.report_emp_leave_summary"
                 menu="False"
-                paperformat="custom_report.paperformat_backend_landscape"
-
         />
-
+        <!--paperformat="custom_report.paperformat_backend_landscape"-->
+        <record id="report_leave_summary" model="ir.actions.report.xml">
+            <field name="paperformat_id" ref="gbs_hr_leave_report.paperformat_leavesummary"/>
+        </record>
     </data>
 </odoo>

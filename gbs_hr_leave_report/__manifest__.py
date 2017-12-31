@@ -18,7 +18,6 @@
         'hr_employee_operating_unit',
         'base',
         'report',
-        'custom_report',
     ],
 
     'description': """This module enables HR Manager to generate leave related reports in PDF format""",
