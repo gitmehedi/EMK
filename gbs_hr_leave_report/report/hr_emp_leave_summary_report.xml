@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <template id="report_hr_emp_leave_report">
+            <t t-call="report.html_container">
+                <t t-call="report.external_layout">
+                    <div class="page" style="page-break-inside: auto">
+                        <div class="row">
+                            <div class="col-xs-12" style="text-align:center;">
+                                <h2>
+                                    <strong>Employee's Leave Report</strong>
+                                </h2>
+                            </div>
+                            <br/>
+                            <br/>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-6">
+                                <div>
+                                    <strong>Department:</strong>
+                                    <t t-if="not data['department_name']">
+                                        <span>All</span>
+                                    </t>
+                                    <span t-esc="data['department_name']"/>
+                                </div>
+                                <div>
+                                    <strong>From:</strong>
+                                    <span t-esc="data['from_date']"/>
+                                </div>
+                                <div>
+                                    <strong>To:</strong>
+                                    <span t-esc="data['to_date']"/>
+                                </div>
+                            </div>
+                            <div class="col-xs-6 text-right">
+                                <div>
+                                    <strong>Operating Unit:</strong>
+                                    <span t-esc="data['operating_unit_name']"/>
+                                </div>
+                                <div>
+                                    <strong>Employee:</strong>
+                                    <span t-esc="data['emp_name']"/>
+                                </div>
+                            </div>
+                        </div>
+                        <br/>
+                    </div>
+                </t>
+            </t>
+        </template>
+
+        <report id="report_hr_emp_leave_report"
+                string="Employee Leaves Report"
+                model="hr.holidays"
+                report_type="qweb-pdf"
+                name="gbs_hr_leave_report.report_hr_emp_leave_report"
+                file="gbs_hr_leave_report.report_hr_emp_leave_report"
+                menu="False"
+        />
+
+
+    </data>
+</odoo>
