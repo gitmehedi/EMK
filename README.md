@@ -41,6 +41,7 @@
 ```$ curl https://packages.microsoft.com/config/ubuntu/16.04/prod.list > /etc/apt/sources.list.d/mssql.list```<br />
 ```$ exit```<br />
 ```$ sudo apt-get update```<br />
+```$ sudo apt-get python-dev```<br />
 ```$ sudo apt-get install msodbcsql mssql-tools unixodbc-dev```<br />
 ```$ sudo pip install pyodbc```<br />
 
