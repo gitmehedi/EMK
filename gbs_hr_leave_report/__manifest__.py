@@ -1,7 +1,7 @@
 {
     'name': 'HR Leave Reports',
     'author': 'Genweb2 Limited',
-    'website': 'www.genweb2.com',    
+    'website': 'www.genweb2.com',
     'version':'1.0',
     'data': [       
        'wizard/hr_holidays_summary_department_views.xml',
@@ -11,7 +11,7 @@
        'report/gbs_hr_leave_report_templates.xml',
        'report/leave_summary_report.xml',
        # 'report/hr_emp_leave_summary_report.xml',
-
+    ],
     'website': 'www.genweb2.com',
     'version': '1.0',
     'data': [
