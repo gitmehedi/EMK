@@ -4,14 +4,21 @@
         <template id="report_emp_leave_summary">
             <t t-call="report.html_container">
                 <t t-call="report.external_layout">
-                    <!--<t t-foreach="docs" t-as="o">-->
+                    <style>
+                        .table th {
+                        padding: 2px !important;
+                        }
+                        .table td {
+                        padding: 2px !important;
+                        font-size: 12px !important;
+                        }
+                    </style>
                     <div class="page" style="page-break-inside: auto">
                         <div class="row">
                             <div class="col-xs-12">
                                 <h2 class="text-center">Leave Summary</h2>
                             </div>
-                            <br></br>
-                            <br></br>
+                            <br/>
                             <div class="row">
                                 <div class="col-xs-6">
                                     <div>
@@ -20,7 +27,6 @@
                                             <span>All</span>
                                         </t>
                                         <span t-esc="data['department_name']"/>
-
                                     </div>
                                     <div>
                                         <strong>Leave Year:</strong>
@@ -31,74 +37,70 @@
                                     <strong>Operating Unit:</strong>
                                     <span t-esc="data['operating_unit_name']"/>
                                 </div>
-
                             </div>
                         </div>
+                        <br/>
 
                         <div class="row">
                             <table class="table table-bordered" style="padding: 0px;">
-                            <thead>
-                                <tr style="background-color:#EFECEB;">
-                                    <t t-foreach="header" t-as="head">
-                                        <t t-if="len(head_value)>1">
-                                            <th rowspan="2" style="text-align: center;">
-                                                <t t-esc="head_value"/>
-                                            </th>
-                                        </t>
-                                        <t t-if="len(head_value)==1">
-                                            <t t-foreach="head_value" t-as="dynamic">
-                                                <th colspan="2" style="text-align: center;">
-                                                    <t t-esc="dynamic"/>
+                                <thead>
+                                    <tr style="background-color:#EFECEB;">
+                                        <t t-foreach="header" t-as="head">
+                                            <t t-if="len(head_value)>1">
+                                                <th rowspan="2" style="text-align: center;">
+                                                    <t t-esc="head_value"/>
                                                 </th>
                                             </t>
-                                        </t>
-                                    </t>
-                                </tr>
-                                <tr style="background-color:#EFECEB;">
-                                    <t t-foreach="range(0,len(header)-4)" t-as="tas">
-                                        <th style="text-align: center;">
-                                            Avail
-                                        </th>
-                                        <th style="text-align: center;">
-                                            Balance
-                                        </th>
-                                    </t>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <t t-foreach="holiday_objs" t-as="list">
-                                    <tr>
-                                        <td class="text-center">
-                                            <span t-esc="list_index+1"/>
-                                        </td>
-                                        <td>
-                                            <span t-esc="list_value['name']"/>
-                                        </td>
-                                        <td class="text-left">
-                                            <span t-esc="list_value['designation']"/>
-                                        </td>
-                                        <td class="text-left">
-                                            <span t-esc="list_value['department']"/>
-                                        </td>
-                                        <t t-foreach="list_value['leave']" t-as="val">
-                                            <td class="text-center">
-                                                <span t-esc="int(val_value['avail'])"/>
-                                            </td>
-                                            <td class="text-center">
-                                                <span t-esc="int(val_value['balance'])"/>
-                                            </td>
+                                            <t t-if="len(head_value)==1">
+                                                <t t-foreach="head_value" t-as="dynamic">
+                                                    <th colspan="2" style="text-align: center;">
+                                                        <t t-esc="dynamic"/>
+                                                    </th>
+                                                </t>
+                                            </t>
                                         </t>
                                     </tr>
-                                </t>
-                            </tbody>
-                        </table>
+                                    <tr style="background-color:#EFECEB;">
+                                        <t t-foreach="range(0,len(header)-4)" t-as="tas">
+                                            <th style="text-align: center;">
+                                                Avail
+                                            </th>
+                                            <th style="text-align: center;">
+                                                Balance
+                                            </th>
+                                        </t>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <t t-foreach="holiday_objs" t-as="list">
+                                        <tr>
+                                            <td class="text-center">
+                                                <span t-esc="list_index+1"/>
+                                            </td>
+                                            <td>
+                                                <span t-esc="list_value['name']"/>
+                                            </td>
+                                            <td class="text-left">
+                                                <span t-esc="list_value['designation']"/>
+                                            </td>
+                                            <td class="text-left">
+                                                <span t-esc="list_value['department']"/>
+                                            </td>
+                                            <t t-foreach="list_value['leave']" t-as="val">
+                                                <td class="text-center">
+                                                    <span t-esc="int(val_value['avail'])"/>
+                                                </td>
+                                                <td class="text-center">
+                                                    <span t-esc="int(val_value['balance'])"/>
+                                                </td>
+                                            </t>
+                                        </tr>
+                                    </t>
+                                </tbody>
+                            </table>
                         </div>
 
-                        <!--<footer>-->
-                        <!--<p><b>Submitted by:</b> <span t-field="o.requested_by"/></p>-->
-                        <!--<p><b>First Approval by:</b> <span t-field="o.approver1_id"/></p>-->
-                        <!--<p><b>Final Approval by: </b><span t-field="o.approver2_id"/></p>-->
-                        <!--</footer>-->
+                        <t t-call="custom_report.report_signing"></t>
                     </div>
                 </t>
             </t>
@@ -110,10 +112,7 @@
                 name="gbs_hr_leave_report.report_emp_leave_summary"
                 file="gbs_hr_leave_report.report_emp_leave_summary"
                 menu="False"
+                paperformat="custom_report.paperformat_backend_landscape"
         />
-        <!--paperformat="custom_report.paperformat_backend_landscape"-->
-        <record id="report_leave_summary" model="ir.actions.report.xml">
-            <field name="paperformat_id" ref="gbs_hr_leave_report.paperformat_leavesummary"/>
-        </record>
     </data>
 </odoo>
