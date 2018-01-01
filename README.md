@@ -35,13 +35,17 @@
 
 ### Install software which are needed for device configuation
 
-
 ```$ sudo su```<br />
 ```$ curl https://packages.microsoft.com/keys/microsoft.asc | apt-key add -```<br />
 ```$ curl https://packages.microsoft.com/config/ubuntu/16.04/prod.list > /etc/apt/sources.list.d/mssql.list```<br />
 ```$ exit```<br />
 ```$ sudo apt-get update```<br />
+```$ sudo apt-get python-dev```<br />
 ```$ sudo apt-get install msodbcsql mssql-tools unixodbc-dev```<br />
 ```$ sudo pip install pyodbc```<br />
 
 <strong>Note:</strong> https://docs.microsoft.com/en-us/azure/sql-database/sql-database-connect-query-python
+
+### Install python package for reporting
+
+```$sudo pip install xlsxwriter```<br />
