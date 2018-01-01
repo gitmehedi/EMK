@@ -22,7 +22,7 @@
                         </group>
                     </group>
                     <footer>
-                        <button name="process_report" string="Print" type="object" class="btn-primary"/>
+                        <!--<button name="process_report" string="Print" type="object" class="btn-primary"/>-->
                         <button string="Cancel" special="cancel" class="btn-default"/>
                     </footer>
                 </form>

@@ -1,10 +1,4 @@
-# -*- coding: utf-8 -*-
-# Part of Odoo. See LICENSE file for full copyright and licensing details.
-
-from datetime import timedelta
-from dateutil.relativedelta import relativedelta
 from odoo import api, fields, models, _
-from odoo.exceptions import UserError
 
 
 class HrLeaveSummaryReport(models.AbstractModel):
@@ -34,7 +28,8 @@ class HrLeaveSummaryReport(models.AbstractModel):
 
     @api.model
     def get_data(self, data, header):
-        department = '={0} '.format(data['department_id']) if data['department_id'] else 'IS NOT NULL '.format(data['department_id'])
+        department = '={0} '.format(data['department_id']) if data['department_id'] else 'IS NOT NULL '.format(
+            data['department_id'])
 
         self._cr.execute('''
             SELECT he.id, 
@@ -50,7 +45,7 @@ class HrLeaveSummaryReport(models.AbstractModel):
                               ON ( ou.id = he.operating_unit_id )
             WHERE ou.id=%s 
                   AND he.department_id %s
-        ''' % (data['operating_unit_id'],department))
+        ''' % (data['operating_unit_id'], department))
 
         leaves = {val[0]: {
             'name': val[1],
@@ -81,7 +76,7 @@ class HrLeaveSummaryReport(models.AbstractModel):
                           he.id, 
                           hhls.id,
                           hhl.type
-                ''' % (data['operating_unit_id'],department,data['year_id'])
+                ''' % (data['operating_unit_id'], department, data['year_id'])
 
         self._cr.execute(sql)
         for record in self._cr.fetchall():
