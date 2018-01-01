@@ -39,7 +39,7 @@
                      style="border-top: 1px solid #6E6E6E; padding-top: 2px; font-size: 10px; color: ash;">
 
                     <div t-if="not company.custom_footer" class="pull-left">
-                        <ul t-if="not company.custom_footer" class="list">
+                        <ul t-if="not company.custom_footer" style="list-style:none;">
                             <t t-set="company" t-value="company.sudo()"/>
                             <li t-if="company.phone">Phone:
                                 <span t-field="company.phone"/>
@@ -50,7 +50,6 @@
                                 <span t-field="company.fax"/>
                             </li>
 
-                            <li t-if="company.email and company.fax or company.email and company.phone">&amp;bull;</li>
                             <li t-if="company.email">Email:
                                 <span t-field="company.email"/>
                             </li>
