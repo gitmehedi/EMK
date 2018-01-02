@@ -10,15 +10,10 @@
                         <group>
                             <field name="operating_unit_id"
                                    options="{'no_open':1,'no_create_edit':1,'no_create':1}"/>
-                            <field name="department_id"
-                                   options="{'no_open':1,'no_create_edit':1,'no_create':1}"
-                                   placeholder="All"/>
                         </group>
                         <group>
                             <field name="emp_id"
                                    options="{'no_open':1,'no_create_edit':1,'no_create':1}"/>
-                            <field name="from_date"/>
-                            <field name="to_date"/>
                         </group>
                     </group>
                     <footer>

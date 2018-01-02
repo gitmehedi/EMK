@@ -24,14 +24,11 @@
                             <div class="col-xs-6 text-right">
                                 <div>
                                     <strong>Designation:</strong>
-                                    <span t-esc="data['department_name']"/>
+                                    <span t-esc="data['designation']"/>
                                 </div>
                                 <div>
                                     <strong>Department:</strong>
-                                    <t t-if="not data['department_name']">
-                                        <span>All</span>
-                                    </t>
-                                    <span t-esc="data['department_name']"/>
+                                    <span t-esc="data['department']"/>
                                 </div>
                             </div>
 
@@ -74,19 +71,28 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <t t-foreach="list_value['detail']" t-as="rec">
+                                    <t t-if="list_value['detail']">
+                                        <t t-foreach="list_value['detail']" t-as="rec">
+                                            <tr>
+                                                <td class="text-center">
+                                                    <t t-esc="rec"/>
+                                                </td>
+                                                <td class="text-center">
+                                                    <t t-esc="rec_value['to_date']"/>
+                                                </td>
+                                                <td class="text-center">
+                                                    <t t-esc="rec_value['days']"/>
+                                                </td>
+                                                <td class="text-center">
+                                                    <t t-esc="rec_value['type']"/>
+                                                </td>
+                                            </tr>
+                                        </t>
+                                    </t>
+                                    <t t-else="">
                                         <tr>
-                                            <td class="text-center">
-                                                <t t-esc="rec"/>
-                                            </td>
-                                            <td class="text-center">
-                                                <t t-esc="rec_value['to_date']"/>
-                                            </td>
-                                            <td class="text-center">
-                                                <t t-esc="rec_value['days']"/>
-                                            </td>
-                                            <td class="text-center">
-                                                <t t-esc="rec_value['type']"/>
+                                            <td colspan="4">
+                                                In information available
                                             </td>
                                         </tr>
                                     </t>

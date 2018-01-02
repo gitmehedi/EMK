@@ -8,29 +8,32 @@ class HrEmpLeaveReport(models.AbstractModel):
     def render_html(self, docids, data=None):
         report_obj = self.env['report']
         if data['operating_unit_id']:
-            header = {}
-            header['employee_id'] = ''
-            header['employee_name'] = ''
-            header['designation'] = ''
-            header['Department'] = ''
             record = self.env['hr.holidays.status'].search([], order='id ASC')
-            lists = {rec.id: {'name': rec.name, 'init_bal': 0, 'avail': 0, 'cur_bal': 0, 'detail': {}} for rec in record}
+            lists = {rec.id: {'name': rec.name, 'init_bal': 0, 'avail': 0, 'cur_bal': 0, 'detail': {}} for rec in
+                     record}
 
         sql = self.get_query(data)
 
         self._cr.execute(sql)
         for record in self._cr.fetchall():
             rec = {}
-            rec['from_date']=record[4]
+            line = lists[record[7]]
+            rec['from_date'] = record[4]
             rec['to_date'] = record[5]
             rec['days'] = record[9]
             rec['type'] = record[8]
-            lists[record[7]]['detail'][record[4]]=rec
+            if record[6] == 'add':
+                line['init_bal'] = record[9]
+            else:
+                line['avail'] = record[9]
+                line['detail'][record[4]] = rec
+
+            line['cur_bal'] = line['init_bal'] - line['avail']
+
 
         docargs = {
             'data': data,
-            'lists': lists,
-            'header': header
+            'lists': lists
         }
         return report_obj.render('gbs_hr_leave_report.hr_emp_leave_report', docargs)
 
@@ -63,7 +66,8 @@ class HrEmpLeaveReport(models.AbstractModel):
                        LEFT JOIN operating_unit ou 
                           ON ( ou.id = he.operating_unit_id )
                 WHERE  ou.id=%s  
+                       AND he.id=%s
                        AND he.department_id   %s
-                ''' % (data['operating_unit_id'], department)
+                ''' % (data['operating_unit_id'], data['emp_id'], department)
 
         return sql
