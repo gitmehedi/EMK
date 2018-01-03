@@ -7,6 +7,7 @@ class CustomerCommission(models.Model):
 
     commission_rate = fields.Float(string='Commission Rate', digits=(16,2), required=True)
     status = fields.Boolean(string='Status',default=True, required=True)
+    coms_type = fields.Char(string='Commission Type')
 
     """ Relational Fields """
 

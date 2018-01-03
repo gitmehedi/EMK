@@ -1,7 +1,4 @@
-import time
 from odoo import api, fields, models, _
-from odoo.exceptions import UserError
-
 
 class HRLeaveSummary(models.TransientModel):
     _name = 'hr.leave.summary.wizard'
