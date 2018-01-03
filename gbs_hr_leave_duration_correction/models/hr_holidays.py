@@ -21,7 +21,7 @@ class HRHolidays(models.Model):
     date_to = fields.Date('End Date', readonly=True, copy=False,
         states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]})
 
-    number_of_days_temp = fields.Float('Allocation', readonly=True, copy=False,
+    number_of_days_temp = fields.Integer('Allocation', readonly=True, copy=False,
                         states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]})
 
     number_of_days = fields.Float('Number of Days', compute='_compute_number_of_days', store=True)
@@ -77,16 +77,16 @@ class HRHolidays(models.Model):
         from_dt = fields.Datetime.from_string(date_from)
         to_dt = fields.Datetime.from_string(date_to)
 
-        if employee_id:
-            employee = self.env['hr.employee'].browse(employee_id)
-            resource = employee.resource_id.sudo()
-            if resource and resource.calendar_id:
-                hours = resource.calendar_id.get_working_hours(from_dt, to_dt, resource_id=resource.id,
-                                                               compute_leaves=True)
-                uom_hour = resource.calendar_id.uom_id
-                uom_day = self.env.ref('product.product_uom_day')
-                if uom_hour and uom_day:
-                    return uom_hour._compute_quantity(hours, uom_day)
+        # if employee_id:
+        #     employee = self.env['hr.employee'].browse(employee_id)
+        #     resource = employee.resource_id.sudo()
+        #     if resource and resource.calendar_id:
+        #         hours = resource.calendar_id.get_working_hours(from_dt, to_dt, resource_id=resource.id,
+        #                                                        compute_leaves=True)
+        #         uom_hour = resource.calendar_id.uom_id
+        #         uom_day = self.env.ref('product.product_uom_day')
+        #         if uom_hour and uom_day:
+        #             return uom_hour._compute_quantity(hours, uom_day)
 
         time_delta = (to_dt - from_dt) + timedelta(hours=24)
         return math.ceil(time_delta.days + float(time_delta.seconds) / 86400)
