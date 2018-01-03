@@ -1,4 +1,4 @@
-from odoo import api, models, SUPERUSER_ID, _
+from odoo import api, fields,models, SUPERUSER_ID, _
 from odoo.exceptions import ValidationError,UserError
 
 
