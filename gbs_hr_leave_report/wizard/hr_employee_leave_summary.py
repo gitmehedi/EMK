@@ -1,4 +1,6 @@
 from odoo import api, fields, models, _
+from odoo.exceptions import UserError, ValidationError
+
 
 
 class HREmpLeaveSummary(models.TransientModel):
@@ -38,3 +40,17 @@ class HREmpLeaveSummary(models.TransientModel):
                 'emp_id': [('id', 'in', unit_obj.ids)]
             }
             }
+
+    @api.constrains('to_date','from_date')
+    def _check_date(self):
+        if self.to_date and self.from_date:
+            if self.from_date >= self.to_date:
+                raise Warning("[Error] To Date must be greater than From Date!")
+
+    @api.constrains('to_date','from_date','year_id')
+    def _check_year(self):
+        if self.to_date and self.from_date:
+            if self.from_date >= self.year_id.date_start and self.to_date <= self.year_id.date_stop:
+                pass
+            else:
+                raise ValidationError(_('Leave duration starting date and ending date should be same year!!'))
