@@ -8,41 +8,49 @@
                         <div class="row">
                             <div class="col-xs-12">
                                 <h2 class="text-center">Employee's Leave Summary</h2>
+                                <hr/>
                             </div>
-                            <br/>
+                            <br/><br/><br/><br/>
 
-                            <div class="col-xs-6">
-                                <div>
-                                    <strong>Employee ID:</strong>
-                                    <span t-esc="data['emp_id']"/>
+                            <div class="col-xs-12" style="background-color:#EFECEB; padding:10px;">
+                                <div class="col-xs-6 text-left">
+                                    <div>
+                                        <strong>Employee ID:</strong>
+                                        <span t-esc="data['emp_id']"/>
+                                    </div>
+                                    <div>
+                                        <strong>Employee Name:</strong>
+                                        <span t-esc="data['emp_name']"/>
+                                    </div>
+                                    <div>
+                                        <strong>Year:</strong>
+                                        <span t-esc="data['year_name']"/>
+                                    </div>
                                 </div>
-                                <div>
-                                    <strong>Employee Name:</strong>
-                                    <span t-esc="data['emp_name']"/>
+                                <div class="col-xs-6 text-right">
+                                    <div>
+                                        <strong>Designation:</strong>
+                                        <span t-esc="data['designation']"/>
+                                    </div>
+                                    <div>
+                                        <strong>Department:</strong>
+                                        <span t-esc="data['department']"/>
+                                    </div>
                                 </div>
                             </div>
-                            <div class="col-xs-6 text-right">
-                                <div>
-                                    <strong>Designation:</strong>
-                                    <span t-esc="data['designation']"/>
-                                </div>
-                                <div>
-                                    <strong>Department:</strong>
-                                    <span t-esc="data['department']"/>
-                                </div>
-                            </div>
-
                         </div>
+
                         <br/>
                         <t t-foreach="lists" t-as="list">
                             <div class="row">
                                 <div class="col-xs-12 text-center">
                                     <h3>
                                         <t t-esc="list_value['name']"/>
+                                        <hr/>
                                     </h3>
                                 </div>
                                 <div class="col-xs-4">
-                                    <div class="text-center">
+                                    <div class="text-left">
                                         <strong>Initial Balance:</strong>
                                         <span t-esc="list_value['init_bal']"/>
                                     </div>
@@ -54,7 +62,7 @@
                                     </div>
                                 </div>
                                 <div class="col-xs-4">
-                                    <div class="text-center">
+                                    <div class="text-right">
                                         <strong>Current Balance:</strong>
                                         <span t-esc="list_value['cur_bal']"/>
                                     </div>
@@ -75,7 +83,7 @@
                                         <t t-foreach="list_value['detail']" t-as="rec">
                                             <tr>
                                                 <td class="text-center">
-                                                    <t t-esc="rec"/>
+                                                    <t t-esc="rec_value['from_date']"/>
                                                 </td>
                                                 <td class="text-center">
                                                     <t t-esc="rec_value['to_date']"/>

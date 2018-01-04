@@ -18,18 +18,21 @@ class HrEmpLeaveReport(models.AbstractModel):
         for record in self._cr.fetchall():
             rec = {}
             line = lists[record[7]]
-            rec['from_date'] = record[4]
-            rec['to_date'] = record[5]
-            rec['days'] = record[9]
+            rec['from_date'] = record[4][:10] if record[4] else record[4]
+            rec['to_date'] = record[5][:10] if record[5] else record[5]
+            rec['days'] = abs(record[9])
             rec['type'] = record[8]
             if record[6] == 'add':
-                line['init_bal'] = record[9]
+                line['init_bal'] = record[9] if record[9] else 0
             else:
-                line['avail'] = record[9]
-                line['detail'][record[4]] = rec
-
+                if data['from_date'] and data['to_date']:
+                    if record[4] >= data['from_date'] and record[5] <= data['to_date']:
+                        line['avail'] = abs(record[9] if record[9] else 0)
+                        line['detail'][record[4]] = rec
+                else:
+                    line['avail'] = abs(record[9] if record[9] else 0)
+                    line['detail'][record[4]] = rec
             line['cur_bal'] = line['init_bal'] - line['avail']
-
 
         docargs = {
             'data': data,
@@ -51,8 +54,7 @@ class HrEmpLeaveReport(models.AbstractModel):
                        hhl.date_to,
                        hhl.type, 
                        hhls.id         AS holiday_type,
-                       hhls.name         AS holiday_name, 
-                       hhl.number_of_days_temp AS temp_days,
+                       hhls.name         AS holiday_name,
                        hhl.number_of_days AS days 
                 FROM   hr_holidays hhl 
                        LEFT JOIN hr_holidays_status hhls 
@@ -68,6 +70,8 @@ class HrEmpLeaveReport(models.AbstractModel):
                 WHERE  ou.id=%s  
                        AND he.id=%s
                        AND he.department_id   %s
-                ''' % (data['operating_unit_id'], data['emp_id'], department)
+                       AND leave_year_id = %s
+                       AND hhl.state='validate'
+                ''' % (data['operating_unit_id'], data['emp_id'], department, data['year_id'])
 
         return sql

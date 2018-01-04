@@ -16,8 +16,6 @@ class HREmpLeaveSummary(models.TransientModel):
     @api.multi
     def process_report(self):
         data = {}
-        data['from_date'] = self.from_date
-        data['to_date'] = self.to_date
         data['emp_id'] = self.emp_id.id
         data['emp_name'] = self.emp_id.name
         data['designation'] = self.emp_id.job_id.name
@@ -25,6 +23,10 @@ class HREmpLeaveSummary(models.TransientModel):
         data['operating_unit_id'] = self.operating_unit_id.id
         data['operating_unit_name'] = self.operating_unit_id.name
         data['department_id'] = self.emp_id.department_id.id
+        data['year_id'] = self.year_id.id
+        data['year_name'] = self.year_id.name
+        data['from_date'] = self.from_date
+        data['to_date'] = self.to_date
 
         return self.env['report'].get_action(self, 'gbs_hr_leave_report.hr_emp_leave_report', data=data)
 
