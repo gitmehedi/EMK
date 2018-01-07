@@ -19,7 +19,8 @@
         'views/inherited_products_template_view.xml',
         'views/sales_commission_generate_views.xml',
         'report/commission_report.xml',
-        ],
+        'views/inherited_account_invoice_view.xml',
+    ],
 
     'description': 'GBS Sales Commission',
     'installable': True,
