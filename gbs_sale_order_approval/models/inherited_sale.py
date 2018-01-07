@@ -60,6 +60,19 @@ class SaleOrder(models.Model):
     pi_no = fields.Many2one('proforma.invoice', string='PI Ref. No.')
     lc_no = fields.Many2one('letter.credit', string='LC Ref. No.')
 
+
+    """ Update is_commission_generated flag to False """
+    @api.multi
+    def action_invoice_create(self, grouped=False, final=False):
+        res = super(SaleOrder, self).action_invoice_create()
+
+        #acc_inv_pool = self.env['account.invoice']
+        self.invoice_ids.write({'is_commission_generated':False})
+
+        return res
+
+
+
     @api.depends('order_line.da_qty')
     def _da_button_show_hide(self):
         for sale_orders in self:

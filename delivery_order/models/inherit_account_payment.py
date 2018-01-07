@@ -31,12 +31,3 @@ class InheritAccountPayment(models.Model):
             for order in so_pool:
                 self.sale_order_id = order.id
 
-
-
-
-
-
-
-                # # Set partner_id domain
-                # if self.partner_type:
-                #     return {'domain': {'partner_id': [(self.partner_type, '=', True)]}}
