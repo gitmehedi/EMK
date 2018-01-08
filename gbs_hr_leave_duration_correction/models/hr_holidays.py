@@ -21,7 +21,7 @@ class HRHolidays(models.Model):
     date_to = fields.Date('End Date', readonly=True, copy=False,
         states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]})
 
-    number_of_days_temp = fields.Integer('Allocation', readonly=True, copy=False,
+    number_of_days_temp = fields.Float('Allocation', readonly=True, copy=False,
                         states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]})
 
     number_of_days = fields.Float('Number of Days', compute='_compute_number_of_days', store=True)
