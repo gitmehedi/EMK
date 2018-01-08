@@ -32,4 +32,4 @@ class InheritAccountInvoice(models.Model):
                         commission_per_qty = commission_percentage_amt / sale_line.product_uom_qty
                         commission = commission_per_qty * inv.invoice_line_ids.quantity
 
-                        inv.generated_commission_amount = commission
+                inv.generated_commission_amount = commission
