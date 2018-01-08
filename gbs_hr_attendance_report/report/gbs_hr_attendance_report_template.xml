@@ -22,27 +22,27 @@
 
 									</thead>
 
-									  <tbody>
-										  <t t-foreach="all_val_list" t-as="emp">
-											  <tr>
-												  <td>
-													  <span t-esc="emp['emp_name']"></span>
-												  </td>
-												  <td>
-													  <span t-esc="emp['dept']"></span>
-												  </td>
-												  <td>
-												  	  <span t-esc="emp['designation']"></span>
-												  </td>
+									<tbody>
+										<t t-foreach="all_val_list" t-as="emp">
+											<tr>
+												<td>
+													<span t-esc="emp['emp_name']"></span>
+												</td>
+												<td>
+													<span t-esc="emp['dept']"></span>
+												</td>
+												<td>
+													<span t-esc="emp['designation']"></span>
+												</td>
 
-												  <t t-foreach="dynamic_col_list" t-as="c">
-													  <td class="text-right">
-														  <span t-esc="emp[c]"></span>
-													  </td>
-												  </t>
+												<t t-foreach="dynamic_col_list" t-as="c">
+													<td class="text-right">
+														<span t-esc="emp[c]"></span>
+													</td>
+												</t>
 
-											  </tr>
-											</t>
+											</tr>
+										</t>
 									</tbody>
 								</table>
 							</div>

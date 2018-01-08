@@ -10,10 +10,11 @@ class GbsHeAttendanceReport(models.AbstractModel):
     ##
     def process_checkin_data_emp_dept_wise(self, str_date, employee_id):
         if(employee_id is not None):
-            query = """SELECT min(check_in) FROM hr_attendance
-                                         WHERE employee_id=%s
-                                         AND check_in > %s
-                                         GROUP BY employee_id"""
+            query = """SELECT 
+                          MIN(check_in + interval '6h') 
+                       FROM hr_attendance
+                       WHERE employee_id = %s
+                       AND date(check_in + interval '6h') = %s """
             self._cr.execute(query, tuple([employee_id, str_date]))
             result = self._cr.fetchall()
 
@@ -27,10 +28,11 @@ class GbsHeAttendanceReport(models.AbstractModel):
     ##
     def process_checkout_data_emp_dept_wise(self, str_date, employee_id):
         if (employee_id is not None):
-            query = """SELECT max(check_out) FROM hr_attendance
-                                            WHERE employee_id=%s
-                                            AND check_out > %s
-                                            GROUP BY employee_id"""
+            query = """SELECT 
+                          MAX(check_out + interval '6h') 
+                       FROM hr_attendance
+                       WHERE employee_id = %s
+                       AND date(check_out + interval '6h') = %s"""
             self._cr.execute(query, tuple([employee_id, str_date]))
             result = self._cr.fetchall()
 
@@ -113,10 +115,10 @@ class GbsHeAttendanceReport(models.AbstractModel):
         return self.env['report'].render('gbs_hr_attendance_report.report_individual_payslip2', docargs)
 
     def datetime_manipulation(self, dyc, res, result):
-        if (result == ''):
+        if result == '':
             res[dyc] = result
+        elif result == '(None,)':
+            res[dyc] = ''
         else:
-            remove_spcl_chrs = result[2:21]
-            result_datetime = datetime.strptime(remove_spcl_chrs, "%Y-%m-%d %H:%M:%S")
-            result_datetime += timedelta(hours=6)
-            res[dyc] = str(result_datetime)[11:16]
+            result_datetime = result[13:21]
+            res[dyc] = str(result_datetime)
