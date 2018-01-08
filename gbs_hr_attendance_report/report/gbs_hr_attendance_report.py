@@ -3,7 +3,7 @@ from datetime import date, datetime
 from datetime import timedelta
 
 class GbsHeAttendanceReport(models.AbstractModel):
-    _name = 'report.gbs_hr_attendance_report.report_individual_payslip2'
+    _name = 'report.gbs_hr_attendance_report.report_attendance_doc'
 
     ###
     # Process Check In data
@@ -24,7 +24,7 @@ class GbsHeAttendanceReport(models.AbstractModel):
                 return ''
 
     ##
-    #Process Check Out data
+    # Process Check Out data
     ##
     def process_checkout_data_emp_dept_wise(self, str_date, employee_id):
         if (employee_id is not None):
@@ -112,7 +112,7 @@ class GbsHeAttendanceReport(models.AbstractModel):
             'check_type_friendly_str': check_type_friendly_str,
         }
 
-        return self.env['report'].render('gbs_hr_attendance_report.report_individual_payslip2', docargs)
+        return self.env['report'].render('gbs_hr_attendance_report.report_attendance_doc', docargs)
 
     def datetime_manipulation(self, dyc, res, result):
         if result == '':
