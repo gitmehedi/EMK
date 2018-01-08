@@ -33,6 +33,7 @@ class SalesCommissionGenerate(models.Model):
                     vals['invoiced_amount'] = acc_inv.amount_total
                     vals['amount_due'] = acc_inv.residual
                     vals['invoice_id'] = acc_inv.number
+                    vals['commission_amount'] = acc_inv.generated_commission_amount
                     vals['sale_commission_id'] = comisn.id
 
                     comisn.line_ids.create(vals)
