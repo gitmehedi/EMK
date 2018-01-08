@@ -5,6 +5,8 @@ import datetime
 class SalesCommissionGenerate(models.Model):
     _name = 'sales.commission.generate'
     _inherit = ['mail.thread']
+    _rec_name = 'name'
+
 
     name = fields.Char(string='Name')
     till_date = fields.Date(string='Till Date', required=True)
