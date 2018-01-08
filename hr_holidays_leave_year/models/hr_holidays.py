@@ -11,40 +11,11 @@ class HrHolidays(models.Model):
 
     @api.model
     def _default_leave_year(self):
-        return self.env['hr.leave.fiscal.year'].search([], limit=1)
+        return self.get_year()
 
     leave_year_id = fields.Many2one('hr.leave.fiscal.year', string="Leave Year",default=_default_leave_year)
 
-    # current_fiscal_year = fields.Boolean('Current Fiscal Year',compute='_compute_current_fiscal_year',store=True)
-
-    curr_leave_year_id = fields.Integer(default=lambda self: self.get_year())
-
-    @api.model
-    def _compute_curr_leave_year_id(self):
-        print (">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>",self.get_year())
-        return self.get_year()
-
-    # @api.depends('date_from')
-    # def set_leave_year(self):
-    #     if self.date_from:
-    #         leave_year_pool = self.env['hr.leave.fiscal.year']
-    #         leave_years = leave_year_pool.search([('date_start', '<=', self.date_from),
-    #                                              ('date_stop', '>=', self.date_from)])
-    #         self.leave_year_id = leave_years[0].id
-
-    # @api.multi
-    # @api.depends('leave_year_id')
-    # def _compute_current_fiscal_year(self):
-    #     year_id = self.get_year()
-    #     for holiday in self:
-    #         if holiday.leave_year_id.id == year_id and holiday.holiday_status_id.active == True:
-    #             holiday.current_fiscal_year = True
-    #         else:
-    #             holiday.current_fiscal_year = False
-    #
-
     def get_year(self):
-        print (">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
         year_id = 0
         curr_date = datetime.date.today().strftime('%Y-%m-%d')
         self.env.cr.execute(
@@ -68,7 +39,6 @@ class HrHolidaysStatus(models.Model):
             ('state', 'in', ['confirm', 'validate1', 'validate']),
             ('holiday_status_id', 'in', self.ids)
         ])
-        # year_id =1
 
         for holiday in holidays:
             status_dict = result[holiday.holiday_status_id.id]
