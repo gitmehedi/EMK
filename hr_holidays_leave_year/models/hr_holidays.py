@@ -51,6 +51,24 @@ class HrHolidays(models.Model):
 
         self.leave_year_id = year_id
 
+    @api.multi
+    def _prepare_create_by_category(self, employee):
+        self.ensure_one()
+        values = {
+            'name': self.name,
+            'type': self.type,
+            'holiday_type': 'employee',
+            'holiday_status_id': self.holiday_status_id.id,
+            'date_from': self.date_from,
+            'date_to': self.date_to,
+            'notes': self.notes,
+            'number_of_days_temp': self.number_of_days_temp,
+            'parent_id': self.id,
+            'employee_id': employee.id,
+            'leave_year_id': self.leave_year_id.id
+        }
+        return values
+
 
 
 class HrHolidaysStatus(models.Model):
