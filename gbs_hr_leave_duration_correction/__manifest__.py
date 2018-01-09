@@ -9,7 +9,6 @@
     'description':"Complete HR Leave Days Duration Correction Program",
     'depends': [
         'hr_holidays',
-        'gbs_hr_package',
     ],
     'data': [
         'security/hr_holidays_security.xml',

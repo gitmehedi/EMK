@@ -29,4 +29,4 @@ class HrAttendanceReportWizard(models.TransientModel):
         data['from_date'] = self.from_date
         data['to_date'] = self.to_date
 
-        return self.env['report'].get_action(self, 'gbs_hr_attendance_report.report_individual_payslip2', data=data)
+        return self.env['report'].get_action(self, 'gbs_hr_attendance_report.report_attendance_doc', data=data)

@@ -5,6 +5,8 @@ import datetime
 class SalesCommissionGenerate(models.Model):
     _name = 'sales.commission.generate'
     _inherit = ['mail.thread']
+    _rec_name = 'name'
+
 
     name = fields.Char(string='Name')
     till_date = fields.Date(string='Till Date', required=True)
@@ -33,6 +35,7 @@ class SalesCommissionGenerate(models.Model):
                     vals['invoiced_amount'] = acc_inv.amount_total
                     vals['amount_due'] = acc_inv.residual
                     vals['invoice_id'] = acc_inv.number
+                    vals['commission_amount'] = acc_inv.generated_commission_amount
                     vals['sale_commission_id'] = comisn.id
 
                     comisn.line_ids.create(vals)

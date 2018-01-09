@@ -51,11 +51,16 @@ class HrHolidays(models.Model):
 
         self.leave_year_id = year_id
 
+    @api.multi
+    def _prepare_create_by_category(self):
+        values = super(HrHolidays, self)._prepare_create_by_category()
+        values['leave_year_id'] = self.leave_year_id.id
+        return values
 
 
 class HrHolidaysStatus(models.Model):
     _inherit = 'hr.holidays.status'
-    
+
     @api.multi
     def get_days(self, employee_id):
         year_id = self.get_year()
