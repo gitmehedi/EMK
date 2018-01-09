@@ -9,7 +9,8 @@
                 <header>
                     <button name="action_generate_sales_commission" string="Generate" type="object" states="draft"
                             class="oe_highlight"/>
-                    <button name="action_approve_sales_commission" states = "validate" string="Approve" type="object" class="oe_highlight"/>
+                    <button name="action_approve_sales_commission" states="validate" string="Approve" type="object"
+                            class="oe_highlight"/>
                     <field name="state" widget="statusbar"/>
                 </header>
                 <sheet>
@@ -26,7 +27,7 @@
                         <page string="Generated Commissions">
                             <field name="line_ids">
                                 <tree>
-                                    <field name="customer_id"/>
+                                    <field name="partner_id"/>
                                     <field name="invoice_id"/>
                                     <field name="invoiced_amount"/>
                                     <field name="amount_due"/>
