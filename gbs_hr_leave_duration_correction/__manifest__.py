@@ -11,7 +11,6 @@
         'hr_holidays',
     ],
     'data': [
-        'security/hr_holidays_security.xml',
         'views/hr_holidays_view.xml',
     ],
     'installable': True,

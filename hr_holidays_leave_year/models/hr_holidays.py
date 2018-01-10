@@ -52,8 +52,8 @@ class HrHolidays(models.Model):
         self.leave_year_id = year_id
 
     @api.multi
-    def _prepare_create_by_category(self):
-        values = super(HrHolidays, self)._prepare_create_by_category()
+    def _prepare_create_by_category(self,employee):
+        values = super(HrHolidays, self)._prepare_create_by_category(employee)
         values['leave_year_id'] = self.leave_year_id.id
         return values
 
