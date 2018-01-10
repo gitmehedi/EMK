@@ -1,5 +1,6 @@
-from odoo import api, fields, models
 import datetime
+
+from odoo import api, fields, models
 
 
 class SalesCommissionGenerate(models.Model):
@@ -23,43 +24,32 @@ class SalesCommissionGenerate(models.Model):
 
     @api.multi
     def action_generate_sales_commission(self):
-        for comisn in self:
-            account_invoice_pool = comisn.env['account.invoice'].search(
-                [('date_invoice', '<=', comisn.till_date), ('is_commission_generated', '=', False)])
+        vals = {}
+        for comm in self:
+            invoices = comm.env['account.invoice'].search(
+                [('date_invoice', '<=', comm.till_date), ('is_commission_generated', '=', False)])
 
+            rec = {record.partner_id.id: [] for record in invoices}
 
+            for vals in invoices:
+                val = {}
+                val['invoiced_amount'] = vals.amount_total
+                val['commission_amount'] = vals.generated_commission_amount
+                val['invoice_id'] = vals.id
+                rec[vals.partner_id.id].append(val)
 
-            list1 = []
-            list2 = []
+            for record in rec:
+                res = comm.line_ids.create({'partner_id': record,'sale_commission_id':comm.id})
+                for list in rec[record]:
+                    value = {}
+                    value['invoiced_amount'] = list['invoiced_amount']
+                    value['commission_amount'] = list['commission_amount']
+                    value['invoice_id'] = list['invoice_id']
+                    value['commission_line_id'] = res.id
 
-            if account_invoice_pool:
-                for acc_inv in account_invoice_pool:
-                    vals = {}
-                    vals['partner_id'] = acc_inv.partner_id.id
-                    vals['invoiced_amount'] = acc_inv.amount_total
-                    vals['amount_due'] = acc_inv.residual
-                    vals['invoice_id'] = acc_inv.id
-                    vals['commission_amount'] = acc_inv.generated_commission_amount
-                    vals['sale_commission_id'] = comisn.id
+                    res.invoice_line_ids.create(value)
 
-                    list1.append(vals)
-
-            for recs in list1:
-                comisn.line_ids.create(recs)
-
-            for lines in comisn.line_ids:
-                vals2 = {}
-
-                vals2['line2_ids'] = lines.id
-                vals2['invoice_id'] = lines.invoice_id.id
-                vals2['partner_id'] = lines.partner_id.id
-
-                list2.append(vals2)
-
-            for re in list2:
-                comisn.env['sales.customer.commission.line2'].create(re)
-
-            comisn.state = 'validate'
+            comm.state = 'validate'
 
     @api.multi
     def action_approve_sales_commission(self):

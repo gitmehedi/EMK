@@ -23,16 +23,16 @@
                         </group>
                     </group>
 
-                    <notebook colspan="4">
-                        <page string="Generated Commissions">
+                    <notebook>
+                        <page string="Commissions">
                             <field name="line_ids">
                                 <tree>
                                     <field name="partner_id"/>
-                                    <field name="invoice_id"/>
-                                    <field name="invoiced_amount"/>
-                                    <field name="amount_due"/>
-                                    <field name="commission_amount"/>
+                                    <field name="total_com_amount"/>
                                 </tree>
+                                <form>
+                                    <field name="invoice_line_ids"/>
+                                </form>
                             </field>
                         </page>
                     </notebook>
