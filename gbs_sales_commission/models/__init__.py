@@ -8,4 +8,3 @@ import inherited_product_template
 import sales_commission_generate
 import sales_customer_commission_line
 import inherit_account_invoice
-import sales_customer_commission_line2

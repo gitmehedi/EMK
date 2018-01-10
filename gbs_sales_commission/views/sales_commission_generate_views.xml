@@ -31,7 +31,24 @@
                                     <field name="total_com_amount"/>
                                 </tree>
                                 <form>
-                                    <field name="invoice_line_ids"/>
+                                    <field name="invoice_line_ids">
+                                        <tree>
+                                            <field name="invoice_id"/>
+                                            <field name="commission_amount"/>
+                                        </tree>
+                                        <form>
+                                            <group>
+                                                <group>
+                                                    <field name="invoice_id"/>
+                                                    <field name="commission_amount"/>
+                                                </group>
+                                                <group>
+                                                    <field name="invoiced_amount"/>
+                                                </group>
+                                            </group>
+                                        </form>
+                                    </field>
+
                                 </form>
                             </field>
                         </page>

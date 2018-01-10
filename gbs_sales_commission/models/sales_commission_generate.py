@@ -1,5 +1,4 @@
 import datetime
-
 from odoo import api, fields, models
 
 
@@ -8,7 +7,7 @@ class SalesCommissionGenerate(models.Model):
     _inherit = ['mail.thread']
     _rec_name = 'name'
 
-    name = fields.Char(string='Name')
+    name = fields.Char(string='Name', required=True)
     till_date = fields.Date(string='Till Date', required=True)
 
     state = fields.Selection([
@@ -39,7 +38,7 @@ class SalesCommissionGenerate(models.Model):
                 rec[vals.partner_id.id].append(val)
 
             for record in rec:
-                res = comm.line_ids.create({'partner_id': record,'sale_commission_id':comm.id})
+                res = comm.line_ids.create({'partner_id': record, 'sale_commission_id': comm.id})
                 for list in rec[record]:
                     value = {}
                     value['invoiced_amount'] = list['invoiced_amount']
@@ -51,15 +50,13 @@ class SalesCommissionGenerate(models.Model):
 
             comm.state = 'validate'
 
+
     @api.multi
     def action_approve_sales_commission(self):
-
         for inv in self:
             for inv_line in inv.line_ids:
-                account_invoice_pool = inv.env['account.invoice'].search(
-                    [('move_name', '=', inv_line.invoice_id)])
-
-                for acc_inv in account_invoice_pool:
-                    acc_inv.write({'is_commission_generated': True})
+                for cust_invoice in inv_line.invoice_line_ids:
+                    account_invoice_pool = inv.env['account.invoice'].search([('id', '=', cust_invoice.invoice_id.id)])
+                    account_invoice_pool.write({'is_commission_generated': True})
 
         inv.state = 'approved'
