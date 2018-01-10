@@ -6,6 +6,7 @@ class SalesCustomerCommissionLine(models.Model):
     _rec_name = 'partner_id'
 
     total_com_amount = fields.Float(string='Total Commission Amount', compute='_compute_commission_amount')
+    total_invoiced_amount = fields.Float(string='Total Invoiced Amount', compute='_compute_total_invoiced_amount')
 
     """Relational Fields"""
     partner_id = fields.Many2one('res.partner', string='Customer')
@@ -16,6 +17,11 @@ class SalesCustomerCommissionLine(models.Model):
     def _compute_commission_amount(self):
         for inv in self:
             inv.total_com_amount = sum([v.commission_amount for v in inv.invoice_line_ids])
+
+    @api.multi
+    def _compute_total_invoiced_amount(self):
+        for inv in self:
+            inv.total_invoiced_amount = sum([v.invoiced_amount for v in inv.invoice_line_ids])
 
 
 class SalesCustomerCommissionInvoiceLine(models.Model):
