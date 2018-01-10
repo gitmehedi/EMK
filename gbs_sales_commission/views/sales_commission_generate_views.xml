@@ -9,7 +9,8 @@
                 <header>
                     <button name="action_generate_sales_commission" string="Generate" type="object" states="draft"
                             class="oe_highlight"/>
-                    <button name="action_approve_sales_commission" states = "validate" string="Approve" type="object" class="oe_highlight"/>
+                    <button name="action_approve_sales_commission" states="validate" string="Approve" type="object"
+                            class="oe_highlight"/>
                     <field name="state" widget="statusbar"/>
                 </header>
                 <sheet>
@@ -22,16 +23,36 @@
                         </group>
                     </group>
 
-                    <notebook colspan="4">
-                        <page string="Generated Commissions">
+                    <notebook>
+                        <page string="Commissions">
                             <field name="line_ids">
                                 <tree>
-                                    <field name="customer_id"/>
-                                    <field name="invoice_id"/>
-                                    <field name="invoiced_amount"/>
-                                    <field name="amount_due"/>
-                                    <field name="commission_amount"/>
+                                    <field name="partner_id"/>
+                                    <field name="total_com_amount"/>
+                                    <field name="total_invoiced_amount"/>
                                 </tree>
+                                <form>
+                                    <field name="invoice_line_ids">
+                                        <tree>
+                                            <field name="invoice_id"/>
+                                            <field name="commission_amount"/>
+                                            <field name="invoiced_amount"/>
+
+                                        </tree>
+                                        <form>
+                                            <group>
+                                                <group>
+                                                    <field name="invoice_id"/>
+                                                    <field name="commission_amount"/>
+                                                </group>
+                                                <group>
+                                                    <field name="invoiced_amount"/>
+                                                </group>
+                                            </group>
+                                        </form>
+                                    </field>
+
+                                </form>
                             </field>
                         </page>
                     </notebook>
