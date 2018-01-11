@@ -17,7 +17,7 @@ class SalesCommissionGenerate(models.Model):
     ], readonly=True, track_visibility='onchange', copy=False, default='draft')
 
     """ Relational Fields"""
-    line_ids = fields.One2many('sales.customer.commission.line', 'sale_commission_id')
+    line_ids = fields.One2many('sales.customer.commission.line', 'sale_commission_id', string='Invoices')
 
     """ Related Methods """
 

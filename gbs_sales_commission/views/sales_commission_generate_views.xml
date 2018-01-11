@@ -78,13 +78,16 @@
         </field>
     </record>
 
+
     <record model="ir.actions.act_window" id="action_sales_commission_generate">
         <field name="name">Generate Commission</field>
         <field name="res_model">sales.commission.generate</field>
         <field name="view_mode">tree,form</field>
     </record>
 
+
     <menuitem id="sales_commission_generate_menu"
               parent="sales_team.menu_sales" sequence="12"
+              groups="gbs_application_group.group_head_account,gbs_application_group.group_cxo"
               action="action_sales_commission_generate"/>
 </odoo>
