@@ -11,7 +11,7 @@ class DOProductLine(models.Model):
     pack_type = fields.Many2one('product.packaging.mode', string="Packing", ondelete='cascade', readonly=True)
     quantity = fields.Float(string="Delivery Qty", required=True, default=1)
     price_unit = fields.Float(string="Price Unit", readonly=True)
-    commission_rate = fields.Float(string="Com. (%)", readonly=True)
+    commission_rate = fields.Float(string="Commission", readonly=True)
     price_subtotal = fields.Float(string="Subtotal", readonly=True)
     tax_id = fields.Many2one('account.tax', string='Tax', readonly=True)
 

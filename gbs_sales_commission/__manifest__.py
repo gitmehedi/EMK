@@ -8,15 +8,20 @@
         'gbs_application_group',
         'sale',
         'sales_team',
-        'report'
+        'report',
+        'account',
     ],
+
     'data': [
         'security/ir.model.access.csv',
         'views/inherited_res_partner_views.xml',
         'views/customer_commission_configuration_views.xml',
         'views/inherited_products_template_view.xml',
+        'views/sales_commission_generate_views.xml',
         'report/commission_report.xml',
-        ],
+        'views/inherited_account_invoice_view.xml',
+    ],
+
     'description': 'GBS Sales Commission',
     'installable': True,
     'application': False,

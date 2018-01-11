@@ -1,56 +1,50 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <openerp>
 	<data>
-		<template id="report_individual_payslip2">
-			<t t-call="report.internal_layout">
-				<t t-call="report.html_container">
-					<t t-name="report.external_layout">
-						<div class="page">
-							<div class="row">
-								<h3>Attendance Report for  <span t-esc="check_type_friendly_str "></span> </h3>
-								<table class="table table-bordered">
-									<thead>
-										<th>Name</th>
-										<th>Department</th>
-										<th>Designation</th>
+		<template id="report_attendance_doc">
+			<t t-call="report.html_container">
+				<t t-call="report.external_layout">
+					<div class="page">
+						<div class="row" style="page-break-inside: auto">
+							<h3>Attendance Report for  <span t-esc="check_type_friendly_str "></span> </h3>
+							<table class="table table-bordered">
+								<thead>
+									<th>Name</th>
+									<th>Department</th>
+									<th>Designation</th>
+									<t t-foreach="dynamic_col_list" t-as="c">
+										<th>
+											<span t-esc="c"></span>
+										</th>
+									</t>
+								</thead>
+								<tbody>
+									<t t-foreach="all_val_list" t-as="emp">
+										<tr>
+											<td>
+												<span t-esc="emp['emp_name']"></span>
+											</td>
+											<td>
+												<span t-esc="emp['dept']"></span>
+											</td>
+											<td>
+												<span t-esc="emp['designation']"></span>
+											</td>
 
-										<t t-foreach="dynamic_col_list" t-as="c">
-											<th>
-												<span t-esc="c"></span>
-											</th>
-										</t>
-
-									</thead>
-
-									  <tbody>
-										  <t t-foreach="all_val_list" t-as="emp">
-											  <tr>
-												  <td>
-													  <span t-esc="emp['emp_name']"></span>
-												  </td>
-												  <td>
-													  <span t-esc="emp['dept']"></span>
-												  </td>
-												  <td>
-												  	  <span t-esc="emp['designation']"></span>
-												  </td>
-
-												  <t t-foreach="dynamic_col_list" t-as="c">
-													  <td class="text-right">
-														  <span t-esc="emp[c]"></span>
-													  </td>
-												  </t>
-
-											  </tr>
+											<t t-foreach="dynamic_col_list" t-as="c">
+												<td class="text-right">
+													<span t-esc="emp[c]"></span>
+												</td>
 											</t>
-									</tbody>
-								</table>
-							</div>
+
+										</tr>
+									</t>
+								</tbody>
+							</table>
 						</div>
-					</t>
+					</div>
 				</t>
 			</t>
-
 		</template>
 	</data>
 </openerp>
