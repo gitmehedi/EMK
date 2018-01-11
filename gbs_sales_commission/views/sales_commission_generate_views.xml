@@ -8,9 +8,9 @@
             <form>
                 <header>
                     <button name="action_generate_sales_commission" string="Generate" type="object" states="draft"
-                            class="oe_highlight"/>
-                    <button name="action_approve_sales_commission" states="validate" string="Approve" type="object"
-                            class="oe_highlight"/>
+                            class="oe_highlight" attrs="{'invisible': [('state','=','approved')]}"/>
+                    <button name="action_approve_sales_commission" states="draft" string="Approve"
+                            attrs="{'invisible': [('state','=','approved')]}" type="object"/>
                     <field name="state" widget="statusbar"/>
                 </header>
                 <sheet>
