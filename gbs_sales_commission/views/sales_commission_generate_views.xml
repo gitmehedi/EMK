@@ -8,9 +8,9 @@
             <form>
                 <header>
                     <button name="action_generate_sales_commission" string="Generate" type="object" states="draft"
-                            class="oe_highlight"/>
-                    <button name="action_approve_sales_commission" states="validate" string="Approve" type="object"
-                            class="oe_highlight"/>
+                            class="oe_highlight" attrs="{'invisible': [('state','=','approved')]}"/>
+                    <button name="action_approve_sales_commission" states="draft" string="Approve"
+                            attrs="{'invisible': [('state','=','approved')]}" type="object"/>
                     <field name="state" widget="statusbar"/>
                 </header>
                 <sheet>
@@ -78,13 +78,16 @@
         </field>
     </record>
 
+
     <record model="ir.actions.act_window" id="action_sales_commission_generate">
         <field name="name">Generate Commission</field>
         <field name="res_model">sales.commission.generate</field>
         <field name="view_mode">tree,form</field>
     </record>
 
+
     <menuitem id="sales_commission_generate_menu"
               parent="sales_team.menu_sales" sequence="12"
+              groups="gbs_application_group.group_head_account,gbs_application_group.group_cxo"
               action="action_sales_commission_generate"/>
 </odoo>
