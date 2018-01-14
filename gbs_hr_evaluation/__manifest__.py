@@ -21,10 +21,7 @@ Manages several types of evaluations: bottom-up, top-down, self-evaluations and 
         'hr_holidays',
         'hr_attendance',
         'gbs_application_group',
-        'gbs_hr_attendance',
-        'gbs_hr_holidays',
-        'hr_employee_operating_unit',
-        'hr_holiday_notification',
+        'operating_unit',
     ],
     'data': [
         'wizard/hr_evaluation_employee_list_wizard_view.xml',

@@ -21,8 +21,7 @@ class HREmployeeRequisition(models.Model):
                     res.append(data[0])
             return [('id', 'in', res)]
         elif user.has_group('gbs_application_group.group_dept_manager'):
-            emp_id = self.env['hr.employee'].search([('active', '=', self.env.uid)], limit=1).id
-            return [('manager_id', '=', emp_id)]
+            return [('manager_id', '=', user.employee_ids.id)]
 
 
     name=fields.Char(string="Manpower Requisition Ref", store=True,default = lambda self: _('New'),required = True)
