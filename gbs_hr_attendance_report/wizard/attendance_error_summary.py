@@ -26,14 +26,16 @@ class AttErrorSummary(models.TransientModel):
     @api.multi
     def process_report(self):
         data = {}
-        data['type'] = self.type.id
+        data['type'] = self.type
         data['operating_unit_id'] = self.operating_unit_id.id
+        data['operating_unit_name'] = self.operating_unit_id.name
         data['department_id'] = self.emp_id.department_id.id
+        data['department_name'] = self.emp_id.department_id.name
         data['emp_id'] = self.emp_id.id
         data['from_date'] = self.from_date
         data['to_date'] = self.to_date
 
-        return self.env['report'].get_action(self, 'attendance_error_summary_report.attendance_error_summary_report', data=data)
+        return self.env['report'].get_action(self, 'gbs_hr_attendance_report.report_att_error_summary', data=data)
 
     # @api.onchange('operating_unit_id')
     # def _onchange_operating_unit_id(self):
