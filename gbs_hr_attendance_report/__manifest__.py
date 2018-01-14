@@ -27,7 +27,9 @@
         'wizard/hr_attendance_report_wizard_views.xml',
         #'wizard/daily_attendance_report_wizard_view.xml',
         'wizard/hr_daily_attendance_report_wizard_views.xml',
+        'wizard/attendance_error_summary.xml',
         'report/gbs_hr_attendance_report_template.xml',
+        'report/attendance_error_summary_report.xml',
     ],
 
     'summary': 'Generates check in and check out related report of employee(s)',
