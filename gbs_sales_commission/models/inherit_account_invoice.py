@@ -34,18 +34,19 @@ class InheritAccountInvoice(models.Model):
                 commission_type = sale_line.product_id.product_tmpl_id.commission_type
 
                 if commission_type == 'fixed':
-                    if sale_line.product_uom_qty == inv.invoice_line_ids.quantity:
-                        commission = sale_line.commission_rate * sale_line.product_uom_qty
-                    else:
-                        commission = sale_line.commission_rate * inv.invoice_line_ids.quantity
+                    for invoice_line in inv.invoice_line_ids:
+                        if sale_line.product_uom_qty == invoice_line.quantity:
+                            commission = sale_line.commission_rate * sale_line.product_uom_qty
+                        else:
+                            commission = sale_line.commission_rate * invoice_line.quantity
 
                 elif commission_type == 'percentage':
                     commission_percentage_amt = (sale_line.commission_rate * sale_line.price_subtotal) / 100
-
-                    if sale_line.product_uom_qty == inv.invoice_line_ids.quantity:
-                        commission = commission_percentage_amt * sale_line.product_uom_qty
-                    else:
-                        commission_per_qty = commission_percentage_amt / sale_line.product_uom_qty
-                        commission = commission_per_qty * inv.invoice_line_ids.quantity
+                    for invoice_line in inv.invoice_line_ids:
+                        if sale_line.product_uom_qty == invoice_line.quantity:
+                            commission = commission_percentage_amt * sale_line.product_uom_qty
+                        else:
+                            commission_per_qty = commission_percentage_amt / sale_line.product_uom_qty
+                            commission = commission_per_qty * invoice_line.quantity
 
                 inv.generated_commission_amount = commission
