@@ -57,6 +57,7 @@ class SalesCommissionGenerate(models.Model):
                     if not account_invoice_pool.is_commission_generated:
                         account_invoice_pool.write({'is_commission_generated': True})
                     else:
-                        raise UserError('Commission line is already approved. Please ReGenerate commission line')
+                        raise UserError("Commission line is already approved. Please delete customer '%s' from line and then Generate again." %(account_invoice_pool.partner_id.name))
+
 
         inv.state = 'approved'
