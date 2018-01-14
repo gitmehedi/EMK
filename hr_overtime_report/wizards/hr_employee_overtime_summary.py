@@ -24,8 +24,6 @@ class AttErrorSummary(models.TransientModel):
     @api.multi
     def process_report(self):
         data = {}
-        #data['type'] = self.type.id
-        #data['operating_unit_id'] = self.operating_unit_id.id
         data['department_id'] = self.emp_id.department_id.id
         data['department_name'] = self.emp_id.department_id.name
         data['emp_id'] = self.emp_id.id

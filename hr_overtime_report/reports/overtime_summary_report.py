@@ -1,8 +1,4 @@
 from odoo import api, fields, models, _
-import datetime
-from dateutil.parser import parse
-from odoo.exceptions import UserError
-
 
 class HrAttendanceErrorSummaryReport(models.AbstractModel):
     _name = 'report.hr_overtime_report.overtime_summary_report'
