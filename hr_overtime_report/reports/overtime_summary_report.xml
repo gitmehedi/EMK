@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <template id="overtime_summary_report">
+            <t t-call="report.html_container">
+                <t t-call="report.external_layout">
+                    <div class="page" style="page-break-inside: auto">
+                        <div class="row">
+                            <div class="col-xs-12">
+                                <h2 class="text-center">Employee's Overtime Summary</h2>
+                            </div>
+                            <br/>
+                        </div>
+                        <br/>
+                        <div class="row">
+                            <table class="table table-bordered" style="padding: 0px;">
+                                <thead>
+                                    <tr style="background-color:#EFECEB;">
+                                        <th class="text-center">Emp Name</th>
+                                        <th class="text-center">Acc no.</th>
+                                        <th class="text-center">Designation</th>
+                                        <th class="text-center">Date</th>
+                                        <th class="text-center">From</th>
+                                        <th class="text-center">To</th>
+                                        <th class="text-center">Schedule</th>
+                                        <th class="text-center">Actual</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <t>
+                                        <tr>
+                                            <td>
+                                                <span t-esc="data['emp_name']"/>
+                                            </td>
+                                            <td>
+                                                <span t-esc="data['device']"/>
+                                            </td>
+                                            <td>
+                                                <span t-esc="data['emp_desig_name']"/>
+                                            </td>
+                                            <td>
+                                                <span t-esc="data['department_name']"/>
+                                            </td>
+                                            <td>
+                                                <span t-esc="data['from_date']"/>
+                                            </td>
+                                            <td>
+                                                <span t-esc="data['to_date']"/>
+                                            </td>
+                                            <td>
+                                                <span t-esc="data['schedule']"/>
+                                            </td>
+                                            <td>
+                                                <span t-esc="data['actual']"/>
+                                            </td>
+                                        </tr>
+                                    </t>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <t t-call="custom_report.report_signing"></t>
+                    </div>
+                </t>
+            </t>
+        </template>
+        <report id="action_overtime_summary_report"
+                string="Overtime Summary"
+                model="report.hr_overtime_report.overtime_summary_report"
+                report_type="qweb-pdf"
+                name="hr_overtime_report.overtime_summary_report"
+                file="hr_overtime_report.overtime_summary_report"
+                menu="False"
+        />
+    </data>
+</odoo>
