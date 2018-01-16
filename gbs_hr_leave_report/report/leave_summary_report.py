@@ -72,6 +72,7 @@ class HrLeaveSummaryReport(models.AbstractModel):
                 WHERE  ou.id=%s  
                        AND he.department_id   %s
                        AND hhl.leave_year_id=%s
+                       AND hhl.state='validate'
                 GROUP  BY he.name_related, 
                           he.id, 
                           hhls.id,
