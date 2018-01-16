@@ -92,7 +92,8 @@ class EvaluationJudgement(models.TransientModel):
 
     @api.model
     def _load_judgement(self):
-        evalution = self.env['hr.performance.evaluation'].search([('id', '=', self.env.context['active_id'])])
+        form_id = self.env.context.get('active_id')
+        evalution = self.env['hr.performance.evaluation'].search([('id', '=', form_id)])
         evalution_ids = self.criteria_line_ids
         for record in evalution.criteria_line_ids:
             evalution_ids += evalution_ids.new({
@@ -102,7 +103,7 @@ class EvaluationJudgement(models.TransientModel):
                 'marks': record.marks,
                 'obtain_marks': record.obtain_marks,
             })
-        return  evalution_ids
+        return evalution_ids
 
     judgment_promotion = fields.Boolean(string='Promotion',default=lambda self: self.env.context.get('judgment_promotion'))
     judgment_observation = fields.Boolean(string='Place Under Observation',default=lambda self: self.env.context.get('judgment_observation'))

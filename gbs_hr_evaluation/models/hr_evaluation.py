@@ -1,5 +1,5 @@
 from odoo import fields, models, api,_
-from odoo.exceptions import UserError
+from odoo.exceptions import UserError,ValidationError
 
 class HRPerformanceEvaluation(models.Model):
     _name='hr.performance.evaluation'
@@ -97,7 +97,6 @@ class HRPerformanceEvaluation(models.Model):
         user_manager = self.env['res.users'].search([('id', '=', current_user_emp_id.parent_id.sudo().user_id.id)])
         if user_manager.has_group('gbs_application_group.group_general_manager') or user_manager.has_group('gbs_application_group.group_head_of_plant'):
             self.state = 'gm_approve'
-
         else:
             self.state = 'hr_approve'
 
@@ -317,6 +316,6 @@ class HREvaluationCriteriaLine(models.Model):
 
     @api.constrains('obtain_marks')
     def _check_obtain_marks(self):
-        for x in self:
-            if x.obtain_marks>x.marks:
+        for criteria_line in self:
+            if criteria_line.obtain_marks>criteria_line.marks:
                 raise ValidationError(_("Obtain marks can not be greater then total marks"))

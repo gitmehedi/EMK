@@ -46,6 +46,7 @@
                                             <th>SN</th>
                                             <th>Employee</th>
                                             <th>Acc No</th>
+                                            <th>Emp. Type</th>
                                             <th>Designation</th>
                                             <th style="min-width:90px">Check_in</th>
                                             <th style="min-width:90px">Check_out</th>
@@ -72,6 +73,9 @@
                                                     </td>
                                                     <td class="text-left">
                                                         <span t-esc="o['acc_no']"/>
+                                                    </td>
+                                                     <td class="text-left">
+                                                        <span t-esc="o['is_executive']"/>
                                                     </td>
                                                     <td class="text-left">
                                                         <span t-esc="o['designation']"/>
