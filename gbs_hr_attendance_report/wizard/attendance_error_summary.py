@@ -29,8 +29,8 @@ class AttErrorSummary(models.TransientModel):
         data['type'] = self.type
         data['operating_unit_id'] = self.operating_unit_id.id
         data['operating_unit_name'] = self.operating_unit_id.name
-        data['department_id'] = self.emp_id.department_id.id
-        data['department_name'] = self.emp_id.department_id.name
+        data['department_id'] = self.department_id.id
+        data['department_name'] = self.department_id.name
         data['emp_id'] = self.emp_id.id
         data['from_date'] = self.from_date
         data['to_date'] = self.to_date
