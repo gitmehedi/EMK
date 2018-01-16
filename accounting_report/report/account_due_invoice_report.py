@@ -10,23 +10,23 @@ class AccountDueInvoiceReport(models.Model):
     _auto = False
     _rec_name = 'date'
 
-    @api.multi
-    @api.depends('currency_id', 'date', 'price_total', 'price_average', 'residual')
-    def _compute_amounts_in_user_currency(self):
-        """Compute the amounts in the currency of the user
-        """
-        context = dict(self._context or {})
-        user_currency_id = self.env.user.company_id.currency_id
-        currency_rate_id = self.env['res.currency.rate'].search([
-            ('rate', '=', 1),
-            '|', ('company_id', '=', self.env.user.company_id.id), ('company_id', '=', False)], limit=1)
-        base_currency_id = currency_rate_id.currency_id
-        ctx = context.copy()
-        for record in self:
-            ctx['date'] = record.date
-            record.user_currency_price_total = base_currency_id.with_context(ctx).compute(record.price_total, user_currency_id)
-            record.user_currency_price_average = base_currency_id.with_context(ctx).compute(record.price_average, user_currency_id)
-            record.user_currency_residual = base_currency_id.with_context(ctx).compute(record.residual, user_currency_id)
+    # @api.multi
+    # @api.depends('currency_id', 'date', 'price_total', 'price_average', 'residual')
+    # def _compute_amounts_in_user_currency(self):
+    #     """Compute the amounts in the currency of the user
+    #     """
+    #     context = dict(self._context or {})
+    #     user_currency_id = self.env.user.company_id.currency_id
+    #     currency_rate_id = self.env['res.currency.rate'].search([
+    #         ('rate', '=', 1),
+    #         '|', ('company_id', '=', self.env.user.company_id.id), ('company_id', '=', False)], limit=1)
+    #     base_currency_id = currency_rate_id.currency_id
+    #     ctx = context.copy()
+    #     for record in self:
+    #         ctx['date'] = record.date
+    #         record.user_currency_price_total = base_currency_id.with_context(ctx).compute(record.price_total, user_currency_id)
+    #         record.user_currency_price_average = base_currency_id.with_context(ctx).compute(record.price_average, user_currency_id)
+    #         record.user_currency_residual = base_currency_id.with_context(ctx).compute(record.residual, user_currency_id)
 
     date = fields.Date(readonly=True)
     product_id = fields.Many2one('product.product', string='Product', readonly=True)
@@ -41,8 +41,8 @@ class AccountDueInvoiceReport(models.Model):
     commercial_partner_id = fields.Many2one('res.partner', string='Partner Company', help="Commercial Entity")
     company_id = fields.Many2one('res.company', string='Company', readonly=True)
     user_id = fields.Many2one('res.users', string='Salesperson', readonly=True)
-    price_total = fields.Float(string='Total Without Tax', readonly=True)
-    user_currency_price_total = fields.Float(string="Total Without Tax", compute='_compute_amounts_in_user_currency', digits=0)
+    # price_total = fields.Float(string='Total Without Tax', readonly=True)
+    # user_currency_price_total = fields.Float(string="Total Without Tax", compute='_compute_amounts_in_user_currency', digits=0)
     price_average = fields.Float(string='Average Price', readonly=True, group_operator="avg")
     user_currency_price_average = fields.Float(string="Average Price", compute='_compute_amounts_in_user_currency', digits=0)
     currency_rate = fields.Float(string='Currency Rate', readonly=True, group_operator="avg")
