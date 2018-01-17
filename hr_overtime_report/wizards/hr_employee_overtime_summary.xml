@@ -8,27 +8,16 @@
                 <form string="Overtime Summary Report">
                     <group>
                         <group>
-                            <label for="type"/>
-                            <div>
-                                <field name="type" class="oe_inline" placeholder="Please Select"/>
-                            </div>
-                            <label for="operating_unit_id" attrs="{'invisible':[('type', '!=', 'unit_type')]}"/>
+                            <label for="operating_unit_id" groups="operating_unit.group_multi_operating_unit"/>
                             <div>
                                 <field name="operating_unit_id" class="oe_inline" placeholder="Please Select"
-                                       options="{'no_quick_create': True, 'no_create_edit': True, 'no_open': True}"
-                                       attrs="{'invisible':[('type', '!=', 'unit_type')]}"/>
+                                       groups="operating_unit.group_multi_operating_unit"
+                                       options="{'no_quick_create': True, 'no_create_edit': True, 'no_open': True}"/>
                             </div>
-                            <label for="department_id" attrs="{'invisible': [('type', '!=', 'department_type')]}"/>
-                            <div>
-                                <field name="department_id" class="oe_inline" placeholder="Please Select"
-                                       options="{'no_quick_create': True, 'no_create_edit': True, 'no_open': True}"
-                                       attrs="{'invisible': [('type', '!=', 'department_type')]}"/>
-                            </div>
-                            <label for="emp_id" attrs="{'invisible': [('type', '!=', 'employee_type')]}"/>
+                            <label for="emp_id"/>
                             <div>
                                 <field name="emp_id" class="oe_inline" placeholder="Please Select"
-                                       options="{'no_create_edit': True, 'no_open': True}"
-                                       attrs="{'invisible': [('type', '!=', 'employee_type')]}"/>
+                                       options="{'no_create_edit': True, 'no_open': True}"/>
                             </div>
                         </group>
                         <group>

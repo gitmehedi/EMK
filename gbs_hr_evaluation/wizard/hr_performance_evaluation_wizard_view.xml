@@ -97,7 +97,7 @@
             <field name="model">evaluating.judgement.wizard</field>
             <field name="type">form</field>
             <field name="arch" type="xml" >
-                <form string="HR Evaluation" create="false" edit="false">
+                <form string="HR Evaluation">
                     <group colspan="4">
                         <separator string="Evaluation Criteria" colspan="4"/>
                         <newline/>
