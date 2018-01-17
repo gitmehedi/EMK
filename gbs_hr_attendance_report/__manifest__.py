@@ -15,8 +15,8 @@
         'gbs_hr_device_config',
     ],
     'data': [
-        # 'security/ir.model.access.csv',
-        # 'security/ir_rule.xml',
+        'security/ir.model.access.csv',
+        #'security/ir_rule.xml',
         'report/report_paperformat.xml',
         'report/gbs_hr_attendance_report.xml',
         'wizard/hr_attendance_duration_wizard_views.xml',
