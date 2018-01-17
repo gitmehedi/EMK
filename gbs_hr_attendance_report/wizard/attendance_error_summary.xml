@@ -16,19 +16,19 @@
                             <div>
                                 <field name="operating_unit_id" class="oe_inline" placeholder="Please Select"
                                        options="{'no_quick_create': True, 'no_create_edit': True, 'no_open': True}"
-                                       attrs="{'invisible':[('type', '!=', 'unit_type')]}"/>
+                                       attrs="{'invisible':[('type', '!=', 'unit_type')],'required':[('type', '==', 'unit_type')]}"/>
                             </div>
                             <label for="department_id" attrs="{'invisible': [('type', '!=', 'department_type')]}"/>
                             <div>
                                 <field name="department_id" class="oe_inline" placeholder="Please Select"
                                        options="{'no_quick_create': True, 'no_create_edit': True, 'no_open': True}"
-                                       attrs="{'invisible': [('type', '!=', 'department_type')]}"/>
+                                       attrs="{'invisible': [('type', '!=', 'department_type')],'required': [('type','==', 'department_type')]}"/>
                             </div>
                             <label for="emp_id" attrs="{'invisible': [('type', '!=', 'employee_type')]}"/>
                             <div>
                                 <field name="emp_id" class="oe_inline" placeholder="Please Select"
                                        options="{'no_create_edit': True, 'no_open': True}"
-                                       attrs="{'invisible': [('type', '!=', 'employee_type')]}"/>
+                                       attrs="{'invisible': [('type', '!=', 'employee_type')],'required': [('type','=','employee_type')]}"/>
                             </div>
                         </group>
                         <group>

@@ -21,16 +21,33 @@
                             <br/>
                             <div class="row">
                                 <div class="col-xs-6">
-                                    <strong>Operating Unit:</strong>
-                                    <span t-esc="data['operating_unit_name']"/>
+                                    <div>
+                                        <t t-if="data['operating_unit_name']">
+                                            <strong>Operating Unit:</strong>
+                                            <span t-esc="data['operating_unit_name']"/>
+                                        </t>
+                                    </div>
+                                    <div>
+                                        <t t-if="data['department_name']">
+                                            <strong>Department:</strong>
+                                            <span t-esc="data['department_name']"/>
+                                        </t>
+                                    </div>
+                                    <div>
+                                        <t t-if="data['emp_name']">
+                                            <strong>Employee Name:</strong>
+                                            <span t-esc="data['emp_name']"/>
+                                        </t>
+                                    </div>
                                 </div>
                                 <div class="col-xs-6 text-right">
                                     <div>
-                                        <strong>Department:</strong>
-                                        <t t-if="not data['department_name']">
-                                            <span>All</span>
-                                        </t>
-                                        <span t-esc="data['department_name']"/>
+                                        <strong>From:</strong>
+                                        <span t-esc="data['from_date']"/>
+                                    </div>
+                                    <div>
+                                        <strong>To:</strong>
+                                        <span t-esc="data['to_date']"/>
                                     </div>
                                 </div>
                             </div>

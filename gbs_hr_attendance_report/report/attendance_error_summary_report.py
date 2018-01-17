@@ -48,6 +48,8 @@ class HrAttendanceErrorSummaryReport(models.AbstractModel):
 
         if data['type'] == "unit_type":
 
+            data['department_name'] = "All"
+
             self._cr.execute(self.get_dept_query, tuple([data['operating_unit_id']]))
             deptList = self._cr.fetchall()
 
