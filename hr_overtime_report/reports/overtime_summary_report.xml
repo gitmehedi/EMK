@@ -45,7 +45,7 @@
                                         <span t-esc="data['emp_name']"/>
                                     </t>
                                 </div>
-                                <div class="col-xs-6 text-left">
+                                <div class="col-xs-6 text-right">
                                     <t t-if="data['device_no']">
                                         <strong>ID Number:</strong>
                                         <span t-esc="data['device_no']"/>
@@ -59,7 +59,7 @@
                                         <span t-esc="data['emp_department_name']"/>
                                     </t>
                                 </div>
-                                <div class="col-xs-6 text-left">
+                                <div class="col-xs-6 text-right">
                                     <t t-if="data['emp_job_name']">
                                         <strong>Designation:</strong>
                                         <span t-esc="data['emp_job_name']"/>
