@@ -15,6 +15,7 @@
         'gbs_hr_device_config',
     ],
     'data': [
+        'security/ir.model.access.csv',
         'wizards/hr_employee_overtime_summary.xml',
         'reports/overtime_summary_report.xml',
     ],

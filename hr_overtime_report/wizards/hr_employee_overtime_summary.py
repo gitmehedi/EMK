@@ -10,8 +10,8 @@ class AttErrorSummary(models.TransientModel):
 
     emp_id = fields.Many2one('hr.employee', string='Employee Name', required=True)
 
-    from_date = fields.Date('From')
-    to_date = fields.Date('To')
+    from_date = fields.Date('From', required=True)
+    to_date = fields.Date('To', required=True)
 
     @api.onchange('operating_unit_id')
     def onchange_operating_unit_id(self):

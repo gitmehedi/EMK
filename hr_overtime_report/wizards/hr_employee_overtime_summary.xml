@@ -53,6 +53,7 @@
                 parent="hr_attendance.menu_hr_attendance_report"
 				sequence="29"
                 action="action_hr_overtime_summary_wizard"
-                id="menu_hr_overtime_summary"/>
+                id="menu_hr_overtime_summary"
+                groups="hr_attendance.group_hr_attendance_user"/>
     </data>
 </odoo>

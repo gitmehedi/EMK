@@ -64,10 +64,10 @@ class HrAttendanceErrorSummaryReport(models.AbstractModel):
         get_query_extra_ot = self._cr.fetchall()
         if get_query_extra_ot:
             for get_ot in get_query_extra_ot:
-                data_list.append(self.buildOt(get_ot[0], att_utility_pool.getDateTimeFromStr(get_ot[1]),
+                data_list.append(self.buildOt(att_utility_pool.getDateFromStr(get_ot[0]), att_utility_pool.getDateTimeFromStr(get_ot[1]),
                                               att_utility_pool.getDateTimeFromStr(get_ot[2]), "Extra OT"))
 
-        # data_list = sorted(data_list, key=lambda k: k['from_date'])
+        data_list = sorted(data_list, key=lambda k: k['from_date'])
 
         docargs = {
             'data': data,

@@ -45,7 +45,7 @@
                                         <span t-esc="data['emp_name']"/>
                                     </t>
                                 </div>
-                                <div class="col-xs-6 text-right">
+                                <div class="col-xs-6 text-left">
                                     <t t-if="data['device_no']">
                                         <strong>ID Number:</strong>
                                         <span t-esc="data['device_no']"/>
@@ -59,7 +59,7 @@
                                         <span t-esc="data['emp_department_name']"/>
                                     </t>
                                 </div>
-                                <div class="col-xs-6 text-right">
+                                <div class="col-xs-6 text-left">
                                     <t t-if="data['emp_job_name']">
                                         <strong>Designation:</strong>
                                         <span t-esc="data['emp_job_name']"/>
@@ -82,8 +82,8 @@
                                 <tbody>
                                     <t t-foreach="data_list" t-as="o">
                                         <tr>
-                                            <td class="text-center">
-                                                <span t-esc="o['date']"/>
+                                            <td>
+                                                <span t-esc="o['date'].strftime('%Y-%m-%d')"/>
                                             </td>
                                             <td>
                                                 <span t-esc="o['from_date']"/>
@@ -91,9 +91,9 @@
                                             <td>
                                                 <span t-esc="o['to_date']"/>
                                             </td>
-
                                             <td>
-                                                <span t-esc="o['hours']"/>
+                                                <!--<span t-esc="'%02d:%02d' % (int(o['hours']), o['hours'] % 1 * 60)" />-->
+                                                <span t-esc="o['hours']" t-options="{'widget': 'float_time'}"/>
                                             </td>
                                             <td>
                                                 <span t-esc="o['note']"/>
