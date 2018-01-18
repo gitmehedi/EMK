@@ -22,17 +22,21 @@ class SaleCommissionDueReport(models.Model):
         ctx = context.copy()
         for record in self:
             ctx['date'] = record.date
-            record.user_currency_price_total = base_currency_id.with_context(ctx).compute(record.price_total, user_currency_id)
-            record.user_currency_price_average = base_currency_id.with_context(ctx).compute(record.price_average, user_currency_id)
-            record.user_currency_residual = base_currency_id.with_context(ctx).compute(record.residual, user_currency_id)
-
+            record.user_currency_price_total = base_currency_id.with_context(ctx).compute(record.price_total,
+                                                                                          user_currency_id)
+            record.user_currency_price_average = base_currency_id.with_context(ctx).compute(record.price_average,
+                                                                                            user_currency_id)
+            record.user_currency_residual = base_currency_id.with_context(ctx).compute(record.residual,
+                                                                                       user_currency_id)
 
     date = fields.Date(readonly=True)
     product_id = fields.Many2one('product.product', string='Product', readonly=True)
     product_qty = fields.Float(string='Product Quantity', readonly=True)
     uom_name = fields.Char(string='Reference Unit of Measure', readonly=True)
-    payment_term_id = fields.Many2one('account.payment.term', string='Payment Terms', oldname='payment_term', readonly=True)
-    fiscal_position_id = fields.Many2one('account.fiscal.position', oldname='fiscal_position', string='Fiscal Position', readonly=True)
+    payment_term_id = fields.Many2one('account.payment.term', string='Payment Terms', oldname='payment_term',
+                                      readonly=True)
+    fiscal_position_id = fields.Many2one('account.fiscal.position', oldname='fiscal_position', string='Fiscal Position',
+                                         readonly=True)
     currency_id = fields.Many2one('res.currency', string='Currency', readonly=True)
     categ_id = fields.Many2one('product.category', string='Product Category', readonly=True)
     journal_id = fields.Many2one('account.journal', string='Journal', readonly=True)
@@ -41,25 +45,28 @@ class SaleCommissionDueReport(models.Model):
     company_id = fields.Many2one('res.company', string='Company', readonly=True)
     user_id = fields.Many2one('res.users', string='Salesperson', readonly=True)
     price_average = fields.Float(string='Average Price', readonly=True, group_operator="avg")
-    user_currency_price_average = fields.Float(string="Average Price", compute='_compute_amounts_in_user_currency', digits=0)
+    user_currency_price_average = fields.Float(string="Average Price", compute='_compute_amounts_in_user_currency',
+                                               digits=0)
     currency_rate = fields.Float(string='Currency Rate', readonly=True, group_operator="avg")
     nbr = fields.Integer(string='# of Lines', readonly=True)
 
     price_total = fields.Float(string='Total Invoice Amount Without Tax', readonly=True)
-    user_currency_price_total = fields.Float(string="Total Invoice Amount Without Tax", compute='_compute_amounts_in_user_currency', digits=0)
+    user_currency_price_total = fields.Float(string="Total Invoice Amount Without Tax",
+                                             compute='_compute_amounts_in_user_currency', digits=0)
 
     date_due = fields.Date(string='Due Date', readonly=True)
-    account_id = fields.Many2one('account.account', string='Account', readonly=True, domain=[('deprecated', '=', False)])
-    account_line_id = fields.Many2one('account.account', string='Account Line', readonly=True, domain=[('deprecated', '=', False)])
+    account_id = fields.Many2one('account.account', string='Account', readonly=True,
+                                 domain=[('deprecated', '=', False)])
+    account_line_id = fields.Many2one('account.account', string='Account Line', readonly=True,
+                                      domain=[('deprecated', '=', False)])
     partner_bank_id = fields.Many2one('res.partner.bank', string='Bank Account', readonly=True)
     residual = fields.Float(string='Total Due Amount', readonly=True)
-    user_currency_residual = fields.Float(string="Total Residual", compute='_compute_amounts_in_user_currency', digits=0)
+    user_currency_residual = fields.Float(string="Total Residual", compute='_compute_amounts_in_user_currency',
+                                          digits=0)
     country_id = fields.Many2one('res.country', string='Country of the Partner Company')
     weight = fields.Float(string='Gross Weight', readonly=True)
     volume = fields.Float(string='Volume', readonly=True)
-
-    commission = fields.Float(string='Commission', readonly=True)
-
+    commission = fields.Float(string='Total Commission', readonly=True)
     type = fields.Selection([
         ('out_invoice', 'Customer Invoice'),
         ('in_invoice', 'Vendor Bill'),
@@ -76,7 +83,6 @@ class SaleCommissionDueReport(models.Model):
         ('cancel', 'Cancelled')
     ], string='Invoice Status', readonly=True)
 
-
     _order = 'date desc'
 
     _depends = {
@@ -84,7 +90,7 @@ class SaleCommissionDueReport(models.Model):
             'account_id', 'amount_total_company_signed', 'commercial_partner_id', 'company_id',
             'currency_id', 'date_due', 'date_invoice', 'fiscal_position_id',
             'journal_id', 'partner_bank_id', 'partner_id', 'payment_term_id',
-            'residual', 'state', 'type', 'user_id','generated_commission_amount',
+            'residual', 'state', 'type', 'user_id', 'generated_commission_amount',
         ],
         'account.invoice.line': [
             'account_id', 'invoice_id', 'price_subtotal', 'product_id',
@@ -118,11 +124,8 @@ class SaleCommissionDueReport(models.Model):
                     ai.currency_id, ai.journal_id, ai.fiscal_position_id, ai.user_id, ai.company_id,
                     1 AS nbr,
                     ai.type, ai.state, pt.categ_id, ai.date_due, ai.account_id, ail.account_id AS account_line_id,                    
-                    ai.partner_bank_id,  
-                    
+                    ai.partner_bank_id,                      
                     ai.generated_commission_amount,
-                    
-                    
                     SUM ((invoice_type.sign * ail.quantity) / u.factor * u2.factor) AS product_qty,
                     SUM(ail.price_subtotal_signed * invoice_type.sign) AS price_total,
                     SUM(ABS(ail.price_subtotal_signed)) / CASE
@@ -186,7 +189,7 @@ class SaleCommissionDueReport(models.Model):
                  cr.date_start <= COALESCE(sub.date, NOW()) AND
                  (cr.date_end IS NULL OR cr.date_end > COALESCE(sub.date, NOW())))
         )""" % (
-                    self._table, self.env['res.currency']._select_companies_rates(),
-                    self._select(), self._sub_select(), self._from(), self._group_by())
+            self._table, self.env['res.currency']._select_companies_rates(),
+            self._select(), self._sub_select(), self._from(), self._group_by())
 
         self.env.cr.execute(sql)
