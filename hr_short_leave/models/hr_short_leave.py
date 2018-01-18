@@ -1,15 +1,6 @@
 from odoo import models, fields, api,SUPERUSER_ID
-import datetime
-from datetime import datetime
-from datetime import timedelta
-
 import logging
-import math
-from datetime import timedelta
-from werkzeug import url_encode
-
 from odoo.exceptions import UserError, AccessError, ValidationError
-from openerp.tools import float_compare
 from odoo.tools.translate import _
 
 _logger = logging.getLogger(__name__)

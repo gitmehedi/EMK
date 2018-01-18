@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_hr_attendance_error_summary_wizard_form" model="ir.ui.view">
+            <field name="name">hr.attendance.error.summary.wizard.form</field>
+            <field name="model">hr.attendance.error.summary.wizard</field>
+            <field name="arch" type="xml">
+                <form string="Error Attendance Summary Report">
+                    <group>
+                        <group>
+                            <label for="type"/>
+                            <div>
+                                <field name="type" class="oe_inline" placeholder="Please Select"/>
+                            </div>
+                            <label for="operating_unit_id" attrs="{'invisible':[('type', '!=', 'unit_type')]}"/>
+                            <div>
+                                <field name="operating_unit_id" class="oe_inline" placeholder="Please Select"
+                                       options="{'no_quick_create': True, 'no_create_edit': True, 'no_open': True}"
+                                       attrs="{'invisible':[('type', '!=', 'unit_type')],'required':[('type', '==', 'unit_type')]}"/>
+                            </div>
+                            <label for="department_id" attrs="{'invisible': [('type', '!=', 'department_type')]}"/>
+                            <div>
+                                <field name="department_id" class="oe_inline" placeholder="Please Select"
+                                       options="{'no_quick_create': True, 'no_create_edit': True, 'no_open': True}"
+                                       attrs="{'invisible': [('type', '!=', 'department_type')],'required': [('type','==', 'department_type')]}"/>
+                            </div>
+                            <label for="emp_id" attrs="{'invisible': [('type', '!=', 'employee_type')]}"/>
+                            <div>
+                                <field name="emp_id" class="oe_inline" placeholder="Please Select"
+                                       options="{'no_create_edit': True, 'no_open': True}"
+                                       attrs="{'invisible': [('type', '!=', 'employee_type')],'required': [('type','=','employee_type')]}"/>
+                            </div>
+                        </group>
+                        <group>
+                            <label for="from_date"/>
+                            <div>
+                                <field name="from_date" class="oe_inline"/>
+                            </div>
+                            <label for="to_date"/>
+                            <div>
+                                <field name="to_date" class="oe_inline"/>
+                            </div>
+                        </group>
+                    </group>
+                    <footer>
+                        <button name="process_report" string="Print" type="object" class="btn-primary"/>
+                        <button string="Cancel" special="cancel" class="btn-default"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_hr_attendance_error_summary_wizard" model="ir.actions.act_window">
+            <field name="name">Error Attendance Summary Report</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">hr.attendance.error.summary.wizard</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+
+        <menuitem
+                name="Error Attendance Summary"
+                parent="hr_attendance.menu_hr_attendance_report"
+				sequence="28"
+                action="action_hr_attendance_error_summary_wizard"
+                id="menu_hr_attendance_error_summary"
+                groups="hr_attendance.group_hr_attendance_user,hr.group_hr_manager,hr.group_hr_user"/>
+
+    </data>
+</odoo>

@@ -156,15 +156,6 @@
         </field>
     </record>
 
-    <!-- Sequence Records -->
-    <!--<record id="seq_loan_request" model="ir.sequence">-->
-    <!--<field name="name">Loan Sequence</field>-->
-    <!--<field name="code">emp_code_id</field>-->
-    <!--<field name="prefix">EMPC/</field>-->
-    <!--<field name="padding">10</field>-->
-    <!--</record>-->
-
-
     <record model="ir.actions.act_window" id="sale_customer_commission_configuration_action">
         <field name="name">Customer Commission</field>
         <field name="res_model">customer.commission.configuration</field>

@@ -21,7 +21,7 @@ class HRHolidays(models.Model):
     date_to = fields.Date('End Date', readonly=True, copy=False,
         states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]})
 
-    number_of_days_temp = fields.Integer('Allocation', readonly=True, copy=False,
+    number_of_days_temp = fields.Float('Allocation', readonly=True, copy=False,
                         states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]})
 
     number_of_days = fields.Float('Number of Days', compute='_compute_number_of_days', store=True)
@@ -143,8 +143,7 @@ class HRHolidays(models.Model):
 
     @api.multi
     def action_validate(self):
-        if not (self.env.user.has_group('hr_holidays.group_hr_holidays_user')
-                or self.env.user.has_group('gbs_application_group.group_dept_manager')):
+        if not (self.env.user.has_group('hr_holidays.group_hr_holidays_user')):
             raise UserError(('Only an HR Officer or Manager or Department Manager can approve leave requests.'))
 
         manager = self.env['hr.employee'].search([('user_id', '=', self.env.uid)], limit=1)
@@ -193,7 +192,6 @@ class HRHolidays(models.Model):
         return True
 
     def _check_state_access_right(self, vals):
-        if vals.get('state') and vals['state'] not in ['draft', 'confirm', 'cancel'] and not (self.env['res.users'].has_group('hr_holidays.group_hr_holidays_user')
-                                                                                              or self.env['res.users'].has_group('gbs_application_group.group_dept_manager')):
+        if vals.get('state') and vals['state'] not in ['draft', 'confirm', 'cancel'] and not (self.env['res.users'].has_group('hr_holidays.group_hr_holidays_user')):
             return False
         return True
