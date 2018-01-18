@@ -61,7 +61,7 @@ class HrEmployeeExceptionHolidaysBatch(models.Model):
     @api.multi
     def action_approve(self):
         com_pool = self.env['hr.exception.compensatory.leave'].search([('rel_exception_leave_id', '=', self.id)])
-        holiday_status_pool=self.env['hr.holidays.status'].search([('name', '=', 'Compensatory Days')])
+        holiday_status_pool=self.env['hr.holidays.status'].search([('name', '=', 'Comp. Leave')])
         if com_pool:
             for i in com_pool:
                 holidays_create_pool= self.env['hr.holidays'].create({
