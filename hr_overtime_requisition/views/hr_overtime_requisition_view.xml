@@ -13,7 +13,7 @@
 								type="object" class="oe_highlight" groups="base.group_user"/>
 						<field name="current_user_is_approver" invisible="True" />
 						<button string="Approve" name="action_approve" type="object" class="oe_highlight"
-								attrs="{'invisible': ['|', ('current_user_is_approver', '!=', True),('state', '!=', 'to_approve')]}"
+								attrs="{'invisible': ['|',('current_user_is_approver', '!=', True),('state', '!=', 'to_approve')]}"
 								groups="gbs_application_group.group_dept_manager,hr_attendance.group_hr_attendance_user"/>
 						<button string="Refuse" name="action_refuse" states="to_approve,approved" type="object" groups="gbs_application_group.group_dept_manager,hr_attendance.group_hr_attendance_user"/>
 						<button string="Reset to Draft" name="action_reset" states="to_approve" type="object"/>
