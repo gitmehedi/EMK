@@ -12,6 +12,7 @@ This application allows you to easily keep track of jobs, manpower requisition, 
 """,
     'depends': [
         'hr',
+        'base',
         'hr_recruitment',
         'gbs_hr_recruitment_access_rights',
         'gbs_hr_job_extend',

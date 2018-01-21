@@ -61,6 +61,7 @@ class GbsHeAttendanceReport(models.AbstractModel):
         employee_id = data['employee_id']
         from_date = data['from_date']
         to_date = data['to_date']
+        operating_unit_id = data['operating_unit_id']
 
         date_format = "%Y-%m-%d"
         start_date = datetime.strptime(from_date, date_format)
@@ -79,6 +80,8 @@ class GbsHeAttendanceReport(models.AbstractModel):
             emp = self.env['hr.employee'].search([('id','=',employee_id)])
         elif (type == 'department_type'):
             emp = self.env['hr.employee'].search([('department_id', '=', department_id)])
+        elif (type == 'op_type'):
+            emp = self.env['hr.employee'].search([('operating_unit_id', '=', operating_unit_id)])
 
         dynamic_col_list = self.dynamic_col_list(dates_in_range_list, start_date, end_date)
         emp_sort_list = ''

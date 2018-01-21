@@ -4,10 +4,8 @@ from odoo import api, fields, models
 class InheritAccountInvoice(models.Model):
     _inherit = 'account.invoice'
 
-    is_commission_generated = fields.Boolean(string='Commission Generated', default=False)
-    generated_commission_amount = fields.Float(string='Commission Amount', compute="_calculate_commission_amount")
-
     @api.multi
+    @api.depends('invoice_line_ids','invoice_line_ids.quantity')
     def _calculate_commission_amount(self):
         for inv in self:
             sale_order_pool = inv.env['sale.order'].search([('name', '=', inv.origin)])
@@ -17,31 +15,29 @@ class InheritAccountInvoice(models.Model):
                 commission_type = sale_line.product_id.product_tmpl_id.commission_type
 
                 if commission_type == 'fixed':
-                    if sale_line.product_uom_qty == inv.invoice_line_ids.quantity:
-                        commission = sale_line.commission_rate
-                    else:
-                        commission_amount_per_qty = sale_line.commission_rate / sale_line.product_uom_qty
-                        commission = commission_amount_per_qty * inv.invoice_line_ids.quantity
+                    for invoice_line in inv.invoice_line_ids:
+                        if sale_line.product_uom_qty == invoice_line.quantity:
+                            commission = sale_line.commission_rate * sale_line.product_uom_qty
+                        else:
+                            commission = sale_line.commission_rate * invoice_line.quantity
 
                 elif commission_type == 'percentage':
                     commission_percentage_amt = (sale_line.commission_rate * sale_line.price_subtotal) / 100
-
-                    if sale_line.product_uom_qty == inv.invoice_line_ids.quantity:
-                        commission = commission_percentage_amt
-                    else:
-                        commission_per_qty = commission_percentage_amt / sale_line.product_uom_qty
-                        commission = commission_per_qty * inv.invoice_line_ids.quantity
+                    for invoice_line in inv.invoice_line_ids:
+                        if sale_line.product_uom_qty == invoice_line.quantity:
+                            commission = commission_percentage_amt * sale_line.product_uom_qty
+                        else:
+                            commission_per_qty = commission_percentage_amt / sale_line.product_uom_qty
+                            commission = commission_per_qty * invoice_line.quantity
 
                 inv.generated_commission_amount = commission
 
-
-class AccInvoiceLine(models.Model):
-    _inherit = 'account.invoice.line'
-
+    is_commission_generated = fields.Boolean(string='Commission Generated', default=False)
+    generated_commission_amount = fields.Float(string='Commission Amount', store = True, compute='_calculate_commission_amount',)
 
     @api.multi
-    @api.onchange('price_unit')
-    def _on_change_price_unit(self):
+    @api.onchange('invoice_line_ids')
+    def _on_change_price_unit1(self):
         for inv in self:
             sale_order_pool = inv.env['sale.order'].search([('name', '=', inv.origin)])
 
@@ -50,9 +46,8 @@ class AccInvoiceLine(models.Model):
                 commission_type = sale_line.product_id.product_tmpl_id.commission_type
 
                 if commission_type == 'percentage':
-                    commission_percentage_amt = (sale_line.commission_rate * inv.price_subtotal) / 100
-
+                    commission_percentage_amt = (sale_line.commission_rate * inv.invoice_line_ids.price_subtotal) / 100
                     commission_per_qty = commission_percentage_amt / sale_line.product_uom_qty
-                    commission = commission_per_qty * inv.quantity
+                    commission = commission_per_qty * inv.invoice_line_ids.quantity
 
-                inv.invoice_id.generated_commission_amount = commission
+                    inv.generated_commission_amount = commission

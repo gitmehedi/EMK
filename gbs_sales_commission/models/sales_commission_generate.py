@@ -1,5 +1,6 @@
 import datetime
 from odoo import api, fields, models
+from odoo.exceptions import UserError
 
 
 class SalesCommissionGenerate(models.Model):
@@ -12,12 +13,11 @@ class SalesCommissionGenerate(models.Model):
 
     state = fields.Selection([
         ('draft', "To Submit"),
-        ('validate', "Validate"),
         ('approved', "Approved"),
     ], readonly=True, track_visibility='onchange', copy=False, default='draft')
 
     """ Relational Fields"""
-    line_ids = fields.One2many('sales.customer.commission.line', 'sale_commission_id')
+    line_ids = fields.One2many('sales.customer.commission.line', 'sale_commission_id', string='Invoices')
 
     """ Related Methods """
 
@@ -48,15 +48,16 @@ class SalesCommissionGenerate(models.Model):
 
                     res.invoice_line_ids.create(value)
 
-            comm.state = 'validate'
-
-
     @api.multi
     def action_approve_sales_commission(self):
         for inv in self:
             for inv_line in inv.line_ids:
                 for cust_invoice in inv_line.invoice_line_ids:
                     account_invoice_pool = inv.env['account.invoice'].search([('id', '=', cust_invoice.invoice_id.id)])
-                    account_invoice_pool.write({'is_commission_generated': True})
+                    if not account_invoice_pool.is_commission_generated:
+                        account_invoice_pool.write({'is_commission_generated': True})
+                    else:
+                        raise UserError("Commission line is already approved. Please delete customer '%s' from line and then Generate again." %(account_invoice_pool.partner_id.name))
+
 
         inv.state = 'approved'

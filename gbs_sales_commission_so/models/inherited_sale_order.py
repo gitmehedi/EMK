@@ -22,10 +22,7 @@ class InheritedSaleOrderLine(models.Model):
 
             if commission:
                 for coms in commission:
-                    if self.order_id.product_id.product_tmpl_id.commission_type == 'fixed':
-                        self.commission_rate = coms.commission_rate * self.order_id.order_line.product_uom_qty
-                    else:
-                        self.commission_rate = coms.commission_rate
+                    self.commission_rate = coms.commission_rate
             else:
                 self.commission_rate = 0
 
@@ -39,9 +36,6 @@ class InheritedSaleOrderLine(models.Model):
 
             if commission:
                 for coms in commission:
-                    if self.order_id.product_id.product_tmpl_id.commission_type == 'fixed':
-                        self.commission_rate = coms.commission_rate * self.order_id.order_line.product_uom_qty
-                    else:
-                        self.commission_rate = coms.commission_rate
+                    self.commission_rate = coms.commission_rate
             else:
                 self.commission_rate = 0
