@@ -144,7 +144,7 @@ class HREmployeeRequisition(models.Model):
     @api.multi
     def unlink(self):
         for excep in self:
-            if excep.state == 'approved':
+            if excep.state != 'draft':
                 raise UserError(_('You can not delete in this state!!'))
             else:
                 return super(HREmployeeRequisition, self).unlink()
