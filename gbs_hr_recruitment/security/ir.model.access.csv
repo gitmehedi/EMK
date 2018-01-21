@@ -12,3 +12,5 @@ access_hr_candidate_details_for_cxo,access_hr_candidate_details_cxo,model_hr_can
 
 access_hr_applicant_for_gm,access_hr_applicant_for_gm,model_hr_applicant,gbs_application_group.group_general_manager,1,1,1,0
 access_hr_applicant_cxo,access_hr_applicant_cxo,model_hr_applicant,gbs_application_group.group_cxo,1,1,1,1
+access_hr_applicant_officer,access_hr_applicant_officer,model_hr_applicant,hr.group_hr_user,1,1,1,1
+access_hr_applicant_manager,access_hr_applicant_manager,model_hr_applicant,hr.group_hr_manager,1,1,1,1
