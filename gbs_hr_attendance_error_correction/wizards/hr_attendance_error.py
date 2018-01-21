@@ -32,14 +32,12 @@ class AttendanceErrorCorrection(models.TransientModel):
         elif (self.type == 'op_type'):
             emp_ids = employee_pool.search([('operating_unit_id', '=', self.operating_unit_id.id),('is_monitor_attendance', '=', True)])
 
-
         att_ids = attendance_pool.search(['&',
                                           '&',('has_error', '=', True), ('employee_id', 'in', emp_ids.ids),
                                           '|', '&', ('check_in', '>=', self.from_date),
                                           ('check_in', '<=', self.to_date),
                                           '&', ('check_out', '>=', self.from_date),
                                           ('check_out', '<=', self.to_date)])
-
         return {
             'name': ('Error Data'),
             'view_type': 'form',
