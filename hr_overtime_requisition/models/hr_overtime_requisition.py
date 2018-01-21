@@ -60,7 +60,7 @@ class HROTRequisition(models.Model):
 
     @api.one
     def _compute_current_user_is_approver(self):
-        if self.pending_approver.user_id.id == self.env.user.id or self.pending_approver.transfer_holidays_approvals_to_user.id == self.env.user.id or :
+        if self.pending_approver.user_id.id == self.env.user.id or self.pending_approver.transfer_holidays_approvals_to_user.id == self.env.user.id:
             self.current_user_is_approver = True
         else:
             self.current_user_is_approver = False
