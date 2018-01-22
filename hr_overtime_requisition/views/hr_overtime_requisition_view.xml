@@ -13,8 +13,7 @@
 								type="object" class="oe_highlight" groups="base.group_user"/>
 						<field name="current_user_is_approver" invisible="True" />
 						<button string="Approve" name="action_approve" type="object" class="oe_highlight"
-								attrs="{'invisible': ['|',('current_user_is_approver', '!=', True),('state', '!=', 'to_approve')]}"
-								groups="gbs_application_group.group_dept_manager,hr_attendance.group_hr_attendance_user"/>
+								attrs="{'invisible': ['|',('current_user_is_approver', '!=', True),('state', '!=', 'to_approve')]}"/>
 						<button string="Refuse" name="action_refuse" states="to_approve,approved" type="object" groups="gbs_application_group.group_dept_manager,hr_attendance.group_hr_attendance_user"/>
 						<button string="Reset to Draft" name="action_reset" states="to_approve" type="object"/>
 						<field name="state" widget="statusbar" statusbar_visible="to_submit,to_approve,approved"/>
@@ -61,7 +60,7 @@
 			<field name="name">hr_ot_requisition_tree</field>
 			<field name="model">hr.ot.requisition</field>
 			<field name="arch" type="xml">
-				<tree string="OT Requisition" decoration-danger="state == 'refuse'" decoration-info="state == 'to_submit'" decoration-success="state == 'approved'"
+				<tree string="OT Requisition" decoration-danger="state == 'refuse'" decoration-info="state == 'to_approve'" decoration-success="state == 'approved'"
 					  decoration-bf="message_needaction == True">
 					<field name="employee_id" />
 					<field name="department_id" />
