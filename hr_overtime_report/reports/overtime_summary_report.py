@@ -81,6 +81,6 @@ class HrAttendanceErrorSummaryReport(models.AbstractModel):
         row_obj['date'] = dt
         row_obj['from_date'] = from_date
         row_obj['to_date'] = to_date
-        row_obj['hours'] = to_date - from_date
+        row_obj['hours'] = (to_date - from_date).total_seconds() / 3600
         row_obj['note'] = note
         return row_obj
