@@ -23,14 +23,14 @@ class HrEmpLeaveReport(models.AbstractModel):
             rec['days'] = abs(record[9])
             rec['type'] = record[8]
             if record[6] == 'add':
-                line['init_bal'] = record[9] if record[9] else 0
+                line['init_bal'] = line['init_bal'] + record[9] if record[9] else 0
             else:
                 if data['from_date'] and data['to_date']:
                     if record[4] >= data['from_date'] and record[5] <= data['to_date']:
-                        line['avail'] = abs(record[9] if record[9] else 0)
+                        line['avail'] = line['avail'] + abs(record[9] if record[9] else 0)
                         line['detail'][record[4]] = rec
                 else:
-                    line['avail'] = abs(record[9] if record[9] else 0)
+                    line['avail'] = line['avail'] + abs(record[9] if record[9] else 0)
                     line['detail'][record[4]] = rec
             line['cur_bal'] = line['init_bal'] - line['avail']
 
