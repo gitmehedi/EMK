@@ -64,8 +64,7 @@ class HROTRequisition(models.Model):
 
     @api.one
     def _compute_current_user_is_approver(self):
-        if self.pending_approver.user_id.id == self.env.user.id or self.pending_approver.transfer_holidays_approvals_to_user.id == self.env.user.id \
-                or self.env['res.users'].has_group('hr_attendance.group_hr_attendance_user'):
+        if self.pending_approver.user_id.id == self.env.user.id:
             self.current_user_is_approver = True
         else:
             self.current_user_is_approver = False
@@ -126,7 +125,7 @@ class HROTRequisition(models.Model):
                     else:
                         next_approver = ot.employee_id.holidays_approvers[sequence].approver
             if is_last_approbation:
-                ot.write({'state': 'approved'})
+                ot.action_validate()
             else:
                 vals = {'state': 'to_approve'}
                 if next_approver and next_approver.id:
@@ -134,6 +133,10 @@ class HROTRequisition(models.Model):
                 ot.write(vals)
                 self.env['hr.employee.ot.approbation'].create({'ot_ids': ot.id, 'approver': self.env.uid, 'sequence': sequence, 'date': fields.Datetime.now()})
 
+    @api.multi
+    def action_validate(self):
+        for ot in self:
+            ot.write({'state': 'approved'})
     @api.multi
     def action_refuse(self):
         self.write({'state': 'refuse'})
