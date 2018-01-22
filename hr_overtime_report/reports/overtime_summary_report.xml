@@ -75,7 +75,7 @@
                                         <th class="text-center">Date</th>
                                         <th class="text-center">From</th>
                                         <th class="text-center">To</th>
-                                        <th class="text-center">Schedule OT Hours</th>
+                                        <th class="text-center">Hours</th>
                                         <th class="text-center">Reason for overtime</th>
                                     </tr>
                                 </thead>
@@ -86,10 +86,10 @@
                                                 <span t-esc="o['date'].strftime('%Y-%m-%d')"/>
                                             </td>
                                             <td>
-                                                <span t-esc="o['from_date']"/>
+                                                <span t-esc="o['from_date'].strftime('%Y-%m-%d %H:%M')"/>
                                             </td>
                                             <td>
-                                                <span t-esc="o['to_date']"/>
+                                                <span t-esc="o['to_date'].strftime('%Y-%m-%d %H:%M')"/>
                                             </td>
                                             <td>
                                                 <!--<span t-esc="'%02d:%02d' % (int(o['hours']), o['hours'] % 1 * 60)" />-->

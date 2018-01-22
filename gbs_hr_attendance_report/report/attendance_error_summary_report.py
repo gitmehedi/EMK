@@ -60,7 +60,8 @@ class HrAttendanceErrorSummaryReport(models.AbstractModel):
                 dpt_wise_emp['seq'] = dept[2]
                 dpt_wise_emp['val'] = []
 
-                empList = self.env['hr.employee'].search([('department_id', '=', dept[0])], order='employee_sequence asc')
+                empList = self.env['hr.employee'].search(['&',('department_id', '=', dept[0]),
+                                                          ('operating_unit_id', '=', data['operating_unit_id'])], order='employee_sequence asc')
                 for emp in empList:
                     attendance_list_by_emp = self.getErrorAtt(emp, from_date, to_date, att_utility_pool)
                     if len(attendance_list_by_emp) > 0:
@@ -74,7 +75,6 @@ class HrAttendanceErrorSummaryReport(models.AbstractModel):
             dpt_wise_emp['name'] = data['department_name']
             dpt_wise_emp['seq'] = 0
             dpt_wise_emp['val'] = []
-
             empList = self.env['hr.employee'].search([('department_id', '=', data['department_id'])],
                                                      order='employee_sequence asc')
             for emp in empList:
