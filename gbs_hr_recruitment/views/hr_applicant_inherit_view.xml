@@ -30,5 +30,10 @@
                 </xpath>
             </field>
 		</record>
+        <menuitem
+            name="Applications"
+            parent="hr_recruitment.menu_hr_recruitment_root"
+            id="hr_recruitment.menu_crm_case_categ0_act_job" action="hr_recruitment.crm_case_categ0_act_job" sequence="2" groups="base.group_no_one,hr.group_hr_user,hr.group_hr_manager"/>
+
     </data>
 </openerp>

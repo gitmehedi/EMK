@@ -34,7 +34,7 @@
 			<field name="model">hr.employee.requisition</field>
 			<field name="type">form</field>
 			<field name="arch" type="xml">
-				<form string="Manpower Requisition">
+				<form string="Manpower Requisition" copy="0" delete="0">
 					<header>
                         <button string="Confirm" name="action_confirm"
 								states="draft" type="object" class="oe_highlight"
@@ -90,7 +90,7 @@
 								<field name="current_no_of_emp" />
 								<field name="factory_or_head_office" attrs="{'readonly':[('state','!=','draft')]}"/>
 								<field name="replaced_or_new" widget="radio" options="{'horizontal': true}" attrs="{'readonly':[('state','!=','draft')]}"/>
-								<field name="replace_of_whom_emp_id" attrs="{'invisible': [('replaced_or_new', '!=','replaced')],'required':[('replaced_or_new', '=','replaced')]}"
+								<field name="replace_of_whom_emp_id" attrs="{'invisible': [('replaced_or_new', '!=','replaced')],'required':[('replaced_or_new', '=','replaced')],'readonly':[('state','!=','draft')]}"
 									   options='{"no_open": True,"no_create": 1, "no_create_edit":1}' domain="['|',('department_id','=',department_id),('active','=',False)]"/>
 								<field name="replace_of_whom_designation" attrs="{'invisible': [('replaced_or_new', '!=','replaced')]}"/>
 								<field name="reson_or_justification" attrs="{'invisible': [('replaced_or_new', '!=','new')],'required':[('replaced_or_new', '=','new')]}"/>
