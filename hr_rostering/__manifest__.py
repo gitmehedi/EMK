@@ -16,10 +16,10 @@
     ],
     'depends': [
         'hr',
-        'hr_payroll',
         'resource',
-        'hr_employee_operating_unit',
+        'operating_unit',
         'gbs_hr_package',
+        'hr_holidays_multi_levels_approval',
     ],    
     
     'description': 

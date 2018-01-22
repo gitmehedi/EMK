@@ -51,6 +51,10 @@ class HROTRequisition(models.Model):
         ('refuse', 'Refused'),
     ], default='to_submit',track_visibility='onchange')
 
+    ####################################################
+    # Business methods
+    ####################################################
+
     @api.onchange('employee_id')
     def _onchange_employee(self):
         if self.employee_id and self.employee_id.holidays_approvers:
@@ -72,48 +76,12 @@ class HROTRequisition(models.Model):
         if employee.user_id:
             self.message_subscribe_users(user_ids=employee.user_id.ids)
 
-    @api.model
-    def create(self, vals):
-        if vals.get('employee_id', False):
-            employee = self.env['hr.employee'].browse(vals['employee_id'])
-            if employee and employee.holidays_approvers and employee.holidays_approvers[0]:
-                vals['pending_approver'] = employee.holidays_approvers[0].approver.id
-        res = super(HROTRequisition, self).create(vals)
-        res._notify_approvers()
-        return res
-
-    @api.multi
-    def write(self, values):
-        employee_id = values.get('employee_id', False)
-        if employee_id:
-            self.pending_approver = self.env['hr.employee'].search([('id', '=', employee_id)]).holidays_approvers[0].approver.id
-        res = super(HROTRequisition, self).write(values)
-        return res
-
-
-    ### mail notification
-    @api.multi
-    def _notify_approvers(self):
-        """Input: res.user"""
-        self.ensure_one()
-        approvers = self.employee_id._get_employee_manager()
-        if not approvers:
-            return True
-        for approver in approvers:
-            self.sudo(SUPERUSER_ID).add_follower(approver.id)
-            if approver.sudo(SUPERUSER_ID).user_id:
-                self.sudo(SUPERUSER_ID)._message_auto_subscribe_notify(
-                    [approver.sudo(SUPERUSER_ID).user_id.partner_id.id])
-        return True
-
-
     @api.constrains('from_datetime','to_datetime')
     def _check_to_datetime_validation(self):
 
         for ot in self:
             if ot.to_datetime < ot.from_datetime:
                 raise ValidationError(_("End Time can not less then Start Time!!"))
-
         domain = [
             ('from_datetime', '<=', ot.to_datetime),
             ('to_datetime', '>=', ot.from_datetime),
@@ -174,6 +142,29 @@ class HROTRequisition(models.Model):
     def action_reset(self):
         self.write({'state': 'to_submit'})
 
+    ####################################################
+    # Override methods
+    ####################################################
+
+    @api.model
+    def create(self, vals):
+        if vals.get('employee_id', False):
+            employee = self.env['hr.employee'].browse(vals['employee_id'])
+            if employee and employee.holidays_approvers and employee.holidays_approvers[0]:
+                vals['pending_approver'] = employee.holidays_approvers[0].approver.id
+        res = super(HROTRequisition, self).create(vals)
+        res._notify_approvers()
+        return res
+
+    @api.multi
+    def write(self, values):
+        employee_id = values.get('employee_id', False)
+        if employee_id:
+            self.pending_approver = self.env['hr.employee'].search([('id', '=', employee_id)]).holidays_approvers[
+                0].approver.id
+        res = super(HROTRequisition, self).write(values)
+        return res
+
     @api.multi
     def unlink(self):
         for a in self:
@@ -185,3 +176,16 @@ class HROTRequisition(models.Model):
     @api.model
     def _needaction_domain_get(self):
         return [('state', 'in', ['to_approve'])]
+
+    ### mail notification
+    @api.multi
+    def _notify_approvers(self):
+        approvers = self.employee_id._get_employee_manager()
+        if not approvers:
+            return True
+        for approver in approvers:
+            self.sudo(SUPERUSER_ID).add_follower(approver.id)
+            if approver.sudo(SUPERUSER_ID).user_id:
+                self.sudo(SUPERUSER_ID)._message_auto_subscribe_notify(
+                    [approver.sudo(SUPERUSER_ID).user_id.partner_id.id])
+        return True
