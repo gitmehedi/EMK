@@ -4,54 +4,99 @@
         <template id="overtime_summary_report">
             <t t-call="report.html_container">
                 <t t-call="report.external_layout">
+                    <style>
+                        .table th {
+                        padding: 2px !important;
+                        }
+                        .table td {
+                        padding: 2px !important;
+                        font-size: 12px !important;
+                        }
+                    </style>
                     <div class="page" style="page-break-inside: auto">
                         <div class="row">
                             <div class="col-xs-12">
-                                <h2 class="text-center">Employee's Overtime Summary</h2>
+                                <h3 class="text-center">Overtime Summary</h3>
                             </div>
+                            <hr></hr>
                             <br/>
+                            <div class="row">
+                                <div class="col-xs-6">
+                                    <t t-if="data['from_date']">
+                                        <strong>Date:</strong>
+                                        <span t-esc="data['from_date']"/>
+                                    </t>
+                                    <t t-if="data['to_date']">
+                                        <strong>To:</strong>
+                                        <span t-esc="data['to_date']"/>
+                                    </t>
+                                </div>
+                                <div class="col-xs-6 text-right">
+                                    <t t-if="data['operating_unit_name']">
+                                        <strong>Operating Unit:</strong>
+                                        <span t-esc="data['operating_unit_name']"/>
+                                    </t>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-xs-6">
+                                    <t t-if="data['emp_name']">
+                                        <strong>Employee Name:</strong>
+                                        <span t-esc="data['emp_name']"/>
+                                    </t>
+                                </div>
+                                <div class="col-xs-6 text-right">
+                                    <t t-if="data['device_no']">
+                                        <strong>ID Number:</strong>
+                                        <span t-esc="data['device_no']"/>
+                                    </t>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-xs-6">
+                                    <t t-if="data['emp_department_name']">
+                                        <strong>Department:</strong>
+                                        <span t-esc="data['emp_department_name']"/>
+                                    </t>
+                                </div>
+                                <div class="col-xs-6 text-right">
+                                    <t t-if="data['emp_job_name']">
+                                        <strong>Designation:</strong>
+                                        <span t-esc="data['emp_job_name']"/>
+                                    </t>
+                                </div>
+                            </div>
                         </div>
                         <br/>
                         <div class="row">
                             <table class="table table-bordered" style="padding: 0px;">
                                 <thead>
                                     <tr style="background-color:#EFECEB;">
-                                        <th class="text-center">Emp Name</th>
-                                        <th class="text-center">Acc no.</th>
-                                        <th class="text-center">Designation</th>
                                         <th class="text-center">Date</th>
                                         <th class="text-center">From</th>
                                         <th class="text-center">To</th>
-                                        <th class="text-center">Schedule</th>
-                                        <th class="text-center">Actual</th>
+                                        <th class="text-center">Hours</th>
+                                        <th class="text-center">Reason for overtime</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <t>
+                                    <t t-foreach="data_list" t-as="o">
                                         <tr>
                                             <td>
-                                                <span t-esc="data['emp_name']"/>
+                                                <span t-esc="o['date'].strftime('%Y-%m-%d')"/>
                                             </td>
                                             <td>
-                                                <span t-esc="data['device']"/>
+                                                <span t-esc="o['from_date'].strftime('%Y-%m-%d %H:%M')"/>
                                             </td>
                                             <td>
-                                                <span t-esc="data['emp_desig_name']"/>
+                                                <span t-esc="o['to_date'].strftime('%Y-%m-%d %H:%M')"/>
                                             </td>
                                             <td>
-                                                <span t-esc="data['department_name']"/>
+                                                <!--<span t-esc="'%02d:%02d' % (int(o['hours']), o['hours'] % 1 * 60)" />-->
+                                                <span t-esc="o['hours']" t-options="{'widget': 'float_time'}"/>
                                             </td>
                                             <td>
-                                                <span t-esc="data['from_date']"/>
-                                            </td>
-                                            <td>
-                                                <span t-esc="data['to_date']"/>
-                                            </td>
-                                            <td>
-                                                <span t-esc="data['schedule']"/>
-                                            </td>
-                                            <td>
-                                                <span t-esc="data['actual']"/>
+                                                <span t-esc="o['note']"/>
                                             </td>
                                         </tr>
                                     </t>

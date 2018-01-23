@@ -4,7 +4,7 @@
     <record id="rule_manual_attendance_employee" model="ir.rule">
         <field name="name">Manual Attendance(General Employee)</field>
         <field name="model_id" ref="model_hr_manual_attendance"/>
-        <field name="domain_force">[('employee_id.user_id','=',user.id)]</field>
+        <field name="domain_force">['|',('employee_id.user_id','=',user.id),('employee_id','child_of',[e.id for e in user.employee_ids])]</field>
         <field name="perm_read" eval="True" />
         <field name="perm_create" eval="True" />
         <field name="perm_write" eval="True" />
@@ -16,7 +16,7 @@
         <field name="name">Manual Attendance Permission for Department Manager</field>
         <field name="model_id" ref="model_hr_manual_attendance"/>
         <field name="domain_force">['|',('employee_id.parent_id','in',[e.id for e in user.employee_ids]),
-            ('employee_id.department_id.manager_id','in',[e.id for e in user.employee_ids])]</field>
+            ('employee_id','child_of',[e.id for e in user.employee_ids])]</field>
         <field name="perm_read" eval="True" />
         <field name="perm_create" eval="True"/>
         <field name="perm_write" eval="True"/>

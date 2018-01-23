@@ -20,8 +20,8 @@ class AttErrorSummary(models.TransientModel):
 
     emp_id = fields.Many2one('hr.employee', string='Employee Name', required=False)
 
-    from_date = fields.Date('From')
-    to_date = fields.Date('To')
+    from_date = fields.Date('From', required=True)
+    to_date = fields.Date('To', required=True)
 
     @api.multi
     def process_report(self):
@@ -29,22 +29,20 @@ class AttErrorSummary(models.TransientModel):
         data['type'] = self.type
         data['operating_unit_id'] = self.operating_unit_id.id
         data['operating_unit_name'] = self.operating_unit_id.name
-        data['department_id'] = self.emp_id.department_id.id
-        data['department_name'] = self.emp_id.department_id.name
+        data['department_id'] = self.department_id.id
+        data['department_name'] = self.department_id.name
         data['emp_id'] = self.emp_id.id
+        data['emp_name'] = self.emp_id.name
         data['from_date'] = self.from_date
         data['to_date'] = self.to_date
 
         return self.env['report'].get_action(self, 'gbs_hr_attendance_report.report_att_error_summary', data=data)
 
-    # @api.onchange('operating_unit_id')
-    # def _onchange_operating_unit_id(self):
-    #     if self.operating_unit_id:
-    #         unit_obj = self.env['hr.employee'].search([('operating_unit_id', '=', self.operating_unit_id.id)])
-    #         return {'domain': {
-    #             'emp_id': [('id', 'in', unit_obj.ids)]
-    #         }
-    #         }
+    @api.onchange('type')
+    def _onchange_type(self):
+        self.operating_unit_id = None
+        self.department_id = None
+        self.emp_id = None
 
     @api.constrains('to_date','from_date')
     def _check_date(self):

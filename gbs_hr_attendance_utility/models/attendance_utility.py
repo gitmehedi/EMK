@@ -25,6 +25,23 @@ class AttendanceUtility(models.TransientModel):
                                   WHERE (check_in BETWEEN %s AND %s) AND (check_out BETWEEN %s AND %s) AND employee_id = %s
                                   ORDER BY check_in ASC"""
 
+    error_attendance_for_management_emp = """SELECT 
+                                                (check_in + interval '6h') AS check_in, 
+                                                (check_out + interval '6h') AS check_out
+                                              FROM hr_attendance
+                                              WHERE 	
+                                                employee_id = %s AND
+                                                ((
+                                                (check_out = NULL AND DATE(check_in + interval '6h') = DATE(%s)) OR
+                                                (DATE(check_out + interval '6h') = DATE(%s))
+                                                ) OR (
+                                                (check_in = NULL AND DATE(check_out + interval '6h') = DATE(%s)) OR
+                                                (DATE(check_in + interval '6h') = DATE(%s))
+                                                ))
+                                               ORDER BY CASE 
+                                                WHEN(check_in IS NOT NULL) THEN check_in 
+                                                WHEN(check_out IS NOT NULL) THEN check_out END ASC"""
+
 
     def getDutyTimeByEmployeeId(self, employeeId, preStartDate, postEndDate):
         # Getting Shift Ids for an employee
@@ -148,6 +165,17 @@ class AttendanceUtility(models.TransientModel):
         for i, attendance in enumerate(attendance_line):
                 duration = (self.getDateTimeFromStr(attendance[1]) - self.getDateTimeFromStr(attendance[0])).total_seconds() / 60 / 60
                 attendanceDayList.append(TempLateTime(attendance[0], attendance[1], duration))
+        return attendanceDayList
+
+    def getErrorAttendanceListByDay(self, employeeId, currDate, day, dutyTimeMap):
+
+        previousDayDutyTime = self.getPreviousDutyTime(currDate - day, dutyTimeMap)
+        nextDayDutyTime = self.getNextDutyTime(currDate + day, dutyTimeMap)
+
+        self._cr.execute(self.error_attendance_for_management_emp,
+                         tuple([employeeId, currDate, currDate, currDate, currDate]))
+
+        attendanceDayList = self._cr.fetchall()
         return attendanceDayList
 
     def getAttendanceListByDay(self, attendance_data, currDate, currentDaydutyTime, day, dutyTimeMap):

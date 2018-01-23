@@ -17,6 +17,7 @@
         'hr',
         'hr_holidays',
         'gbs_hr_attendance',
+        'hr_holidays_multi_levels_approval',
     ],    
     
     'description': 
