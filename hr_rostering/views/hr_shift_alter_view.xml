@@ -99,7 +99,6 @@
 		<menuitem id="menu_hr_my_alter" name="My Alter Rostering" parent="menu_hr_alter"
 					 sequence="5" action="hr_my_shift_alter" groups="base.group_user"/>
 		<menuitem id="menu_hr_sh_alter" name="Alter Rostering" parent="menu_hr_alter"
-					 sequence="10" action="hr_shift_alter_action"
-				  groups="gbs_application_group.group_dept_manager,hr_attendance.group_hr_attendance_user"/>
+					 sequence="10" action="hr_shift_alter_action" groups="base.group_user"/>
 	</data>
 </openerp>
