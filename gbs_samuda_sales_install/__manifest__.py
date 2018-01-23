@@ -23,6 +23,7 @@
         'gbs_application_group',
         'delivery_invoicing',
         #'sale_revision_history'
+        'accounting_report',
     ],
 
     'data': [ ],
