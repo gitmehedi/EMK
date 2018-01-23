@@ -15,6 +15,7 @@
         'product',
         'report',
         'gbs_application_group',
+        'hr_holidays_multi_levels_approval',
     ],
 
     'data': [
