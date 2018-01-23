@@ -14,6 +14,8 @@
 						<field name="current_user_is_approver" invisible="True" />
 						<button string="Approve" name="action_approve" type="object" class="oe_highlight"
 								attrs="{'invisible': ['|',('current_user_is_approver', '!=', True),('state', '!=', 'to_approve')]}"/>
+						<button string="Validate" name="action_validate" states="to_approve" class="oe_highlight" type="object"
+								groups="hr_attendance.group_hr_attendance_user"/>
 						<button string="Refuse" name="action_refuse" states="to_approve,approved" type="object" groups="gbs_application_group.group_dept_manager,hr_attendance.group_hr_attendance_user"/>
 						<button string="Reset to Draft" name="action_reset" states="to_approve" type="object"/>
 						<field name="state" widget="statusbar" statusbar_visible="to_submit,to_approve,approved"/>
@@ -106,7 +108,7 @@
 				  sequence="1" action="action_hr_ot_requisition" groups="base.group_user"/>
 
 		<menuitem id="menu_hr_ot_requisition_pending" name="Pending Request" parent="main_menu_hr_ot_requisition"
-				  sequence="2" action="action_hr_ot_requisition_pending" groups="gbs_application_group.group_dept_manager,hr_attendance.group_hr_attendance_user"/>
+				  sequence="2" action="action_hr_ot_requisition_pending" groups="base.group_user"/>
 
 		<menuitem id="menu_hr_ot_requisition_approved" name="Approved" parent="main_menu_hr_ot_requisition"
 				  sequence="3" action="action_hr_ot_requisition_approved" groups="hr_attendance.group_hr_attendance_user"/>
