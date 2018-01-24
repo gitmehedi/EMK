@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 {
-    'name': "GBS HR Employee Security",
+    'name': "Employee Security",
 
     'summary': """
         Manage customize security of Employee Records""",
@@ -11,7 +11,7 @@
     'website': "www.genweb2.com",
 
     'category': 'HR',
-    'version': '10.0.1',
+    'version': '10.0.1.0.0',
 
     'depends': ['hr'],
 
