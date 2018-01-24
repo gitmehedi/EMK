@@ -10,7 +10,7 @@
 
     'data': [
         'security/ir.model.access.csv',
-        'security/ir_rule.xml',
+        #'security/ir_rule.xml',
         'wizard/hr_employee_iou_wizard_views.xml',
         'views/hr_employee_iou_view.xml',
     ],
