@@ -37,7 +37,7 @@ class AccountDueInvoiceReport(models.Model):
     currency_id = fields.Many2one('res.currency', string='Currency', readonly=True)
     categ_id = fields.Many2one('product.category', string='Product Category', readonly=True)
     journal_id = fields.Many2one('account.journal', string='Journal', readonly=True)
-    partner_id = fields.Many2one('res.partner', string='Partner', readonly=True)
+    partner_id = fields.Many2one('res.partner', string='Customer', readonly=True)
     commercial_partner_id = fields.Many2one('res.partner', string='Partner Company', help="Commercial Entity")
     company_id = fields.Many2one('res.company', string='Company', readonly=True)
     user_id = fields.Many2one('res.users', string='Salesperson', readonly=True)
