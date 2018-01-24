@@ -275,7 +275,7 @@
                                 help="If the sale is locked, you can not modify it anymore. However, you will still be able to invoice or deliver."/>
                     </xpath>
 
-                    <xpath expr="//field[@name='order_line']/tree/field[@name='price_unit']" position="after">
+                    <xpath expr="//field[@name='order_line']/tree/field[@name='product_uom_qty']" position="after">
                         <field name="da_qty"/>
                     </xpath>
 
