@@ -29,6 +29,6 @@ class HrMealBillLine(models.Model):
     @api.onchange('bill_amount')
     def _onchange_bill(self):
         if self.bill_amount < 0:
-            raise UserError(_('Amount naver take negative value!'))
+            raise UserError(_('Amount never take negative value!'))
 
 
