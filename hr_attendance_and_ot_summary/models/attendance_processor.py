@@ -407,9 +407,9 @@ class AttendanceProcessor(models.Model):
         deduction_rule_value = self._cr.fetchone()
 
         if not deduction_rule_value:
-            deduction_rule_value = 0
+            return 0
 
-        return deduction_rule_value
+        return deduction_rule_value[0]
 
 
     def getAccountPeriodDate(self,summaryId):

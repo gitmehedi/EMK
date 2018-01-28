@@ -296,7 +296,7 @@ class AttendanceUtility(models.TransientModel):
                     att_summary["holidays"].append(Employee(employee))
                 elif self.checkOnPersonalLeave(employeeId, currDate) is True:
                     att_summary["leave"].append(Employee(employee))
-                elif self.checkShortLeave(self.convertDateTime(currentDaydutyTime.startDutyTime)) is True:
+                elif self.checkShortLeave(employeeId, self.convertDateTime(currentDaydutyTime.startDutyTime)) is True:
                     att_summary["short_leave"].append(Employee(employee))
                 elif isLate == True:
                     att_summary["late"].append(Employee(employee, check_in))
@@ -309,7 +309,7 @@ class AttendanceUtility(models.TransientModel):
                 att_summary["holidays"].append(Employee(employee))
             elif self.checkOnPersonalLeave(employeeId, currDate) is True:
                 att_summary["leave"].append(Employee(employee))
-            elif self.checkShortLeave(self.convertDateTime(currentDaydutyTime.startDutyTime)) is True:
+            elif self.checkShortLeave(employeeId, self.convertDateTime(currentDaydutyTime.startDutyTime)) is True:
                 att_summary["short_leave"].append(Employee(employee))
             else:
                 att_summary["absent"].append(Employee(employee))
@@ -372,9 +372,10 @@ class AttendanceUtility(models.TransientModel):
         return date.strftime('%Y-%m-%d %H:%M:%S')
 
             ### Short Leave Check Method
-    def checkShortLeave(self,datetime_sl):
+    def checkShortLeave(self, employeeId, datetime_sl):
         leave_pool=self.env['hr.short.leave'].search([('date_from', '<=', self.getStrFromDateTime(datetime_sl)),
-                                                 ('date_to', '>=',self.getStrFromDateTime(datetime_sl))])
+                                                 ('date_to', '>=',self.getStrFromDateTime(datetime_sl)),
+                                                 ('employee_id', '=', employeeId)])
         if leave_pool:
             return True
         else:
