@@ -59,6 +59,6 @@ class HrMobileBillLimits(models.Model):
     def unlink(self):
         for bill in self:
             if bill.state != 'draft':
-                raise UserError(_('You can not delete this.'))
+                raise UserError(_('After Approval you can not delete this record.'))
             bill.line_ids.unlink()
         return super(HrMobileBillLimits, self).unlink()

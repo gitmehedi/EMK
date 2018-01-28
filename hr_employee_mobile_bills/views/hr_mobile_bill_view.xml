@@ -28,7 +28,7 @@
 
 	                            </group>
 		                        <notebook colspan="4">
-									<page string="Bills">
+									<page string="Mobile Bills">
 										<field name="line_ids">
 											<tree string="List" editable="bottom">
 												<field  name="emp_mobile_phone" />											

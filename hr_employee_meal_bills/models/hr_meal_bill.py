@@ -44,10 +44,16 @@ class HrEmployeeMealBill(models.Model):
     def unlink(self):
         for bill in self:
             if bill.state != 'draft':
-                raise UserError(_('You can not delete this.'))
+                raise UserError(_('After Approval You can not delete this record.'))
             bill.line_ids.unlink()
         return super(HrEmployeeMealBill, self).unlink()
 
-
+    @api.constrains('name')
+    def _check_unique_constraint(self):
+        if self.name:
+            filters = [['name', '=ilike', self.name]]
+            name = self.search(filters)
+            if len(name) > 1:
+                raise Warning('[Unique Error] Name must be unique!')
         
 

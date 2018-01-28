@@ -33,4 +33,4 @@ class HrEmployeeMobileBillLimit(models.Model):
     @api.onchange('limit')
     def _onchange_bill(self):
         if self.limit < 0:
-            raise UserError(_('Mobile Bill Limit naver take negative value!'))
+            raise UserError(_('Mobile Bill Limit never take negative value!'))

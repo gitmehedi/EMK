@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
     <data>
-        <record id="hr_payroll_arrear_form" model="ir.ui.view">
-            <field name="name">hr.payroll.arrear.form</field>
-            <field name="model">hr.payroll.arrear</field>
+        <record id="hr_other_allowance_form" model="ir.ui.view">
+            <field name="name">hr.other.allowance.form</field>
+            <field name="model">hr.other.allowance</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Employee Arear Details" delete="false">
+                <form string="Employee Other Allowance Details" delete="false">
                     <header>
                         <button name="action_confirm" type="object"
                                 string="Apply" states="draft"
@@ -26,11 +26,11 @@
                                 <field name="company_id" groups="base.group_multi_company" options="{'no_quick_create':True,'no_create_edit':True,'no_open': True}"/>
                             </group>
                             <notebook colspan="4">
-                                <page string="Arrear Details">
+                                <page string="Other Allowance Details">
                                     <field name="line_ids">
                                         <tree string="List" editable="bottom">
                                             <field name="employee_id" options="{'no_quick_create':True,'no_create_edit':True}"/>
-                                            <field name="arear_amount"/>
+                                            <field name="other_allowance_amount"/>
                                         </tree>
                                     </field>
                                 </page>
@@ -40,26 +40,26 @@
                 </form>
             </field>
         </record>
-        <record id="hr_payroll_tree" model="ir.ui.view">
-            <field name="name">hr.payroll.arrear.tree</field>
-            <field name="model">hr.payroll.arrear</field>
+        <record id="hr_other_allowance_tree" model="ir.ui.view">
+            <field name="name">hr.other.allowance.tree</field>
+            <field name="model">hr.other.allowance</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree string="Employee Arrear Information">
+                <tree string="Employee Other Allowance Information">
                     <field name="name"/>
                     <field name="state"/>
                 </tree>
             </field>
         </record>
 
-        <record model="ir.actions.act_window" id="hr_arrear_action">
-            <field name="name">Arrear</field>
-            <field name="res_model">hr.payroll.arrear</field>
+        <record model="ir.actions.act_window" id="hr_other_allowance_action">
+            <field name="name">Other Allowance</field>
+            <field name="res_model">hr.other.allowance</field>
             <field name="view_mode">tree,form</field>
         </record>
 
-        <menuitem id="hr_arrear_menu" name="Arrear" parent="hr.menu_hr_root" groups="hr.group_hr_user" sequence="96"/>
-        <menuitem id="hr_arrear_submenu" name="Arrear" parent="hr_arrear_menu" groups="hr.group_hr_user"
-                  action="hr_arrear_action"/>
+        <menuitem id="hr_other_allowance_menu" name="Other Allowance" parent="hr.menu_hr_root" groups="hr.group_hr_user" sequence="97"/>
+        <menuitem id="hr_other_allowance_submenu" name="Other Allowance" parent="hr_other_allowance_menu" groups="hr.group_hr_user"
+                  action="hr_other_allowance_action"/>
     </data>
 </odoo>
