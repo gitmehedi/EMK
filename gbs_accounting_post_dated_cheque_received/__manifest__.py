@@ -4,7 +4,11 @@
     'website': 'www.genweb2.com',
     'category': 'Accounting',
     'version':'10.1.1.1',
+
     'depends': [
+        'gbs_application_group',
+        'sale',
+        'account',
     ],
 
     'data': [
