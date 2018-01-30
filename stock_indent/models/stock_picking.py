@@ -57,8 +57,9 @@ class StockPicking(models.Model):
 
             # TDE FIXME: do_only_split does not seem used anymore
             if todo_moves and not self.env.context.get('do_only_split'):
-                self.env['indent.indent'].search([('id','=',todo_moves.indent_id.id)]).write({'state': 'received'})
-                todo_moves.action_done()
+                for move_indent in todo_moves:
+                    self.env['indent.indent'].search([('id','=',move_indent.indent_id.id)]).write({'state': 'received'})
+                    move_indent.action_done()
             elif self.env.context.get('do_only_split'):
                 picking = picking.with_context(split=todo_moves.ids)
 

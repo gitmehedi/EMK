@@ -60,18 +60,16 @@ class SaleOrder(models.Model):
     pi_no = fields.Many2one('proforma.invoice', string='PI Ref. No.')
     lc_no = fields.Many2one('letter.credit', string='LC Ref. No.')
 
-
     """ Update is_commission_generated flag to False """
+
     @api.multi
     def action_invoice_create(self, grouped=False, final=False):
         res = super(SaleOrder, self).action_invoice_create()
 
-        #acc_inv_pool = self.env['account.invoice']
-        self.invoice_ids.write({'is_commission_generated':False})
+        # acc_inv_pool = self.env['account.invoice']
+        self.invoice_ids.write({'is_commission_generated': False})
 
         return res
-
-
 
     @api.depends('order_line.da_qty')
     def _da_button_show_hide(self):
@@ -128,6 +126,35 @@ class SaleOrder(models.Model):
                     return True  # Go to two level approval process
                 else:
                     return False  # Go to two level approval process
+
+            elif orders.credit_sales_or_lc == 'credit_sales':
+
+                for lines in orders.order_line:
+
+                    cust_commission_pool = orders.env['customer.commission'].search(
+                        [('customer_id', '=', orders.partner_id.id), ('product_id', '=', lines.product_id.ids)])
+                    credit_limit_pool = orders.env['res.partner'].search([('id', '=', orders.partner_id.id)])
+
+                    price_change_pool = self.env['product.sale.history.line'].search(
+                        [('product_id', '=', lines.product_id.id),
+                         ('currency_id', '=', lines.currency_id.id),
+                         ('product_package_mode', '=', orders.pack_type.id),
+                         ('uom_id', '=', lines.product_uom.id)])
+
+                    account_receivable = credit_limit_pool.credit
+                    sales_order_amount_total = -orders.amount_total  # actually it should be minus value
+
+                    customer_total_credit = account_receivable + sales_order_amount_total
+                    customer_credit_limit = credit_limit_pool.credit_limit
+
+                    if (abs(customer_total_credit) > customer_credit_limit
+                        or lines.commission_rate != cust_commission_pool.commission_rate
+                        or lines.price_unit != price_change_pool.new_price):
+
+                        return True
+                        break;
+                    else:
+                        return False
 
         for lines in self.order_line:
             product_pool = self.env['product.product'].search([('id', '=', lines.product_id.ids)])
