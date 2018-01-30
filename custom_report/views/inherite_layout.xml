@@ -9,25 +9,28 @@
     <template id="report_quotation_header" inherit_id="report.external_layout_header">
         <xpath expr="//div[@class='header']" position="replace">
             <div class="header">
-                <div class="row" style=" padding-top:10px;">
-                    <div class="col-xs-3">
-                        <img t-if="company.logo" t-att-src="'data:image/png;base64,%s' % company.logo"
-                             style="max-height: 80px;"/>
+                <style type="text/css">
+                    .header-content { position: relative; padding:10px; }
+                    .company-logo { position: absolute; top: 35%; transform: translateY(-35%); }
+                    .com-logo-img { max-height:120px; max-width: 160px }
+                    .company-info { text-align:center; padding:0 250px; }
+                </style>
+                <div class="header-content">
+                    <div class="company-logo">
+                        <img class="com-logo-img" t-if="company.logo" t-att-src="'data:image/png;base64,%s' % company.logo" />
                     </div>
                     <!--<div class="col-xs-9 text-right" style="margin-top:20px;" t-field="company.rml_header1"/>-->
-                    <div class="col-xs-6" style="text-align:center; font-size: 16px;">
-                        <strong>
-                            <div t-field="company.partner_id"
+                    <div class="company-info">
+                       <h3 t-field="company.partner_id"
                                  t-field-options='{"widget": "contact", "fields": ["name"], "no_marker": true}'/>
-                        </strong>
-                    </div>
-                    <div class="col-xs-3" style="text-align:right;" name="company_address">
-                        <div t-field="company.partner_id"
-                             t-field-options='{"widget": "contact", "fields": ["address"], "no_marker": true}'/>
+
+                        <div name="company_address">
+                            <p t-field="company.partner_id"
+                                 t-field-options='{"widget": "contact", "fields": ["address"], "no_marker": true}'/>
+                        </div>
                     </div>
                 </div>
             </div>
-            <div style="clear: both;"></div>
         </xpath>
     </template>
 
