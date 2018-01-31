@@ -9,7 +9,8 @@ class PayrollReportPivotal(models.AbstractModel):
     def render_html(self, docids, data=None):
         payslip_run_pool = self.env['hr.payslip.run']
         docs = payslip_run_pool.browse(docids[0])
-        
+        data = {}
+        data['name'] = docs.name
         rule_list = []
         for slip in docs.slip_ids:
             for line in slip.line_ids:
@@ -113,6 +114,7 @@ class PayrollReportPivotal(models.AbstractModel):
             'rules': rule_list,
             'total_sum': thousand_separated_total_sum,
             'amt_to_word': amt_to_word,
+            'data': data,
         }
         
         return self.env['report'].render('gbs_hr_payroll.report_individual_payslip', docargs)
