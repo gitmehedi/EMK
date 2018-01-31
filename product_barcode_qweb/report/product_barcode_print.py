@@ -19,8 +19,8 @@
 #
 ##############################################################################
 
-#from barcode.writer import ImageWriter
-#from barcode import generate
+# from barcode.writer import ImageWriter
+# from barcode import generate
 from Code128 import Code128
 import base64
 from StringIO import StringIO
@@ -34,30 +34,41 @@ from openerp.tools import config
 
 
 class product_barcode_print(report_sxw.rml_parse):
+    def prepare_attr(self, ids):
+        attrs = self.pool.get('product.attribute.value').read(self.cr, self.uid, ids, ['name', 'attribute_id'])
+
+        name = ""
+        for attr in attrs:
+            if attr['attribute_id'][1] == 'Size':
+                name = name + ", " + attr['name'] if len(name) > 0 else  name + attr['name']
+
+        return "({0})".format(name) if len(name) > 0 else name
 
     def _getLabelRows(self, form):
-        
+
         product_obj = self.pool.get('product.product')
         data = []
         result = {}
-        product_ids = form['product_ids']
+        product_ids = [int(key) for key, val in form['product_ids'].iteritems()]
         if not product_ids:
             return {}
-        
-        products_data = product_obj.read(self.cr, self.uid, product_ids, ['name','default_code','list_price'])
+
+        products_data = product_obj.read(self.cr, self.uid, product_ids,
+                                         ['name', 'default_code', 'attribute_value_ids', 'list_price'])
         for product in products_data:
-           for product_row in range(int(math.ceil(float(form['qty'])/5))):
-                label_row=[]
-                for row in [1,2,3,4,5]:
+            for product_row in range(int(math.ceil(float(form['product_ids'].get(str(product['id']))) / 5))):
+                label_row = []
+                for row in [1, 2, 3, 4, 5]:
+                    attr = self.prepare_attr(product['attribute_value_ids'])
                     label_data = {
-                        'name': product['name'][:30],
+                        'name': product['name'][:26] + attr,
                         'company_name': self.company_name,
                         'default_code': product['default_code'],
                         'price': product['list_price'],
                     }
                     label_row.append(label_data)
                 data.append(label_row)
-            
+
         if data:
             return data
         else:
@@ -70,24 +81,24 @@ class product_barcode_print(report_sxw.rml_parse):
             os.makedirs(my_data_directory)
         return my_data_directory
 
-    def _generateBarcode(self, barcode_string):  #, height, width):
+    def _generateBarcode(self, barcode_string):  # , height, width):
         fp = StringIO()
-        #generate('CODE39', barcode_string, writer=ImageWriter(), add_checksum=False, output=fp)
-        #barcode_data = base64.b64encode(fp.getvalue())
-        #return '<img style="width: 25mm;height: 7mm;" src="data:image/png;base64,%s" />'%(barcode_data)
-        #return barcode_data
+        # generate('CODE39', barcode_string, writer=ImageWriter(), add_checksum=False, output=fp)
+        # barcode_data = base64.b64encode(fp.getvalue())
+        # return '<img style="width: 25mm;height: 7mm;" src="data:image/png;base64,%s" />'%(barcode_data)
+        # return barcode_data
         my_data_directory = self.get_custom_data_dir()
-        Code128().getImage(barcode_string, path=my_data_directory).save(fp,"PNG")
+        Code128().getImage(barcode_string, path=my_data_directory).save(fp, "PNG")
         barcode_data = base64.b64encode(fp.getvalue())
         return barcode_data
 
     def __init__(self, cr, uid, name, context):
         super(product_barcode_print, self).__init__(cr, uid, name, context=context)
-        
+
         user_pool = self.pool.get('res.users')
         user = user_pool.browse(cr, uid, [self.uid], context)
         self.company_name = user.company_id.name
-        
+
         self.total = 0.0
         self.qty = 0.0
         self.total_invoiced = 0.0
@@ -95,8 +106,8 @@ class product_barcode_print(report_sxw.rml_parse):
         self.total_discount = 0.0
         self.localcontext.update({
             'time': time,
-            'getLabelRows':self._getLabelRows,
-            'generateBarcode':self._generateBarcode,
+            'getLabelRows': self._getLabelRows,
+            'generateBarcode': self._generateBarcode,
         })
 
 

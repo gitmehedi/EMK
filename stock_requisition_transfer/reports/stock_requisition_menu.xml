@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<openerp>
+    <data>
+        <report id="action_report_stock_requisition_transfer"
+                string="Stock Requisition Report"
+                model="stock.requisition.transfer"
+                report_type="qweb-pdf"
+                name="stock_requisition_transfer.stock_requisition"
+                file="stock_requisition_transfer.stock_requisition"/>
+
+        <record id="paperformat_requisition" model="report.paperformat">
+            <field name="name">Shop to Shop Transfer</field>
+            <field name="default" eval="True"/>
+            <field name="format">custom</field>
+            <field name="page_height">297</field>
+            <field name="page_width">213</field>
+            <field name="orientation">Portrait</field>
+            <field name="margin_top">11</field>
+            <field name="margin_bottom">1</field>
+            <field name="margin_left">0</field>
+            <field name="margin_right">0</field>
+            <field name="header_line" eval="False"/>
+            <field name="header_spacing">0</field>
+            <field name="dpi">250</field>
+        </record>
+
+        <record id="action_report_stock_requisition_transfer" model="ir.actions.report.xml">
+            <field name="paperformat_id" ref="paperformat_requisition"/>
+        </record>
+    </data>
+</openerp>

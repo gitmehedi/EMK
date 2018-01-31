@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<openerp>
+    <data>
+        <template id="report_signing">
+            <div class="row mb32" style="margin-top: 30mm;">
+                <div class="col-xs-3 text-center">
+                    <strong style="border-top: 1px solid black; padding-top:5px;">Prepared By</strong>
+                </div>
+                <div class="col-xs-3 text-center">
+                    <strong style="border-top: 1px solid black; padding-top:5px;">Checked By</strong>
+                </div>
+                <div class="col-xs-3 text-center">
+                    <strong style="border-top: 1px solid black; padding-top:5px;">Received By</strong>
+                </div>
+                <div class="col-xs-3 text-center">
+                    <strong style="border-top: 1px solid black; padding-top:5px;">Authorized By</strong>
+                </div>
+            </div>
+        </template>
+    </data>
+</openerp>

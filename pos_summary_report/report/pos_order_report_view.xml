@@ -3,28 +3,46 @@
     <data>
         <!-- Main template -->
         <template id="report_pos_summary_qweb">
-            <t t-call="report.html_container">
-                <t t-call="report.internal_layout">
-                    <div class="page">
+            <style>
 
+                .table th {
+                padding: 2px !important;
+                }
+                .table td {
+                padding: 2px !important;
+                font-size: 12px !important;
+                }
+            </style>
+            <t t-call="report.html_container">
+                <t t-call="report.external_layout">
+                    <div class="page">
                         <div class="row mb32">
                             <div class="col-xs-12 text-center">
                                 <h3>
-                                    <strong>PEBBLES</strong>
+                                    Shop Name:
+                                    <span t-raw="address['name']"></span>
                                 </h3>
+                                <t t-if="address['street']">
+                                    <p>
+                                        <span t-raw="address['street']"></span>,
+                                    </p>
+                                </t>
                                 <p>
-                                    <span t-raw="address['street']"></span>,
+                                    <t t-if="address['street2']">
+                                        <span t-raw="address['street2']"></span>,
+                                    </t>
+                                    <t t-if="address['city']">
+                                        <span t-raw="address['city']"></span>,
+                                    </t>
+                                    <t t-if="address['contact_no']">
+                                        Tel-
+                                        <span t-esc="address['contact_no']"></span>
+                                    </t>
                                 </p>
+
                                 <p>
-                                    <span t-raw="address['street2']"></span>,
-                                    <span t-raw="address['city']"></span>,
-                                    Tel-
-                                    <span t-esc="address['contact_no']"></span>
-                                </p>
-                                <p>
-                                    <strong>
-                                        Operator Wise Sales(<span t-esc="address['name']"/>)
-                                    </strong>
+                                    <h4>Operator Wise Sales(<span t-esc="address['name']"/>)
+                                    </h4>
                                 </p>
                                 <br/>
                                 <span t-esc="data['start_date']"/>
@@ -32,10 +50,9 @@
                                 <span t-esc="data['end_date']"/>
                             </div>
                         </div>
-
                         <table class="table table-bordered">
                             <thead>
-                                <tr style="background-color: #CECBCB;">
+                                <tr style="background-color: #EFECEB;">
                                     <th class="text-center">Date</th>
                                     <th class="text-center">Invoice No</th>
                                     <th class="text-center">Sales Value</th>
@@ -129,9 +146,25 @@
                                 </t>
                             </tbody>
                         </table>
+
+                        <t t-call="custom_report.report_signing"></t>
                     </div>
                 </t>
             </t>
         </template>
+        <report id="report_pos_order_summary"
+                model="pos.order"
+                string="Order Wise Sales"
+                name="pos_summary_report.report_pos_summary_qweb"
+                file="pos_summary_report.report_pos_summary_qweb"
+
+                report_type="qweb-pdf"/>
+
+        <record id="paperformat_Landscape" model="report.paperformat">
+            <field name="name">Landscape Report</field>
+            <field name="orientation">Landscape</field>
+            <field name="format">A4</field>
+            <field name="header_line" eval="False"/>
+        </record>
     </data>
 </openerp>

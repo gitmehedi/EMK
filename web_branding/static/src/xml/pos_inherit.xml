@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<templates id="pos_logo" inherit_id="point_of_sale.template">
+    <t t-extend='PosWidget'>
+        <t t-jquery=".pos-branding" t-operation='replace'>
+            <img style="height: 50px; background-color: #7f82ac;" src="/web/binary/company_logo"/>
+        </t>
+    </t>
+</templates>

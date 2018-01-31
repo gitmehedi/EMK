@@ -5,7 +5,7 @@
             <field name="name">Stock Requisition Approval Form View</field>
             <field name="model">stock.requisition.transfer</field>
             <field name="arch" type="xml">
-                <form string="Stock Requisition Transfer Form">
+                <form string="Stock Requisition Transfer Form" create="false" edit="false">
                     <header>
                         <button name="action_approve" type="object" states="submit"
                                 string="Approve" class="oe_highlight"/>
@@ -27,7 +27,7 @@
                                 <field name="product_id" readonly="1"
                                        options="{'no_quick_create': True, 'no_create_edit': True, 'no_open': True}"/>
                                 <field name="store_qty" readonly="1"/>
-                                <field name="quantity" readonly="1"/>
+                                <field name="quantity" sum="quantity" readonly="1"/>
                             </tree>
                         </field>
                     </sheet>
@@ -39,11 +39,13 @@
             <field name="name">Stock Requisition Approval Tree View</field>
             <field name="model">stock.requisition.transfer</field>
             <field name="arch" type="xml">
-                <tree string="Stock Requisition Transfer Tree" decoration-info="state=='draft'"
-                      decoration-success="state=='approve'" decoration-danger="state=='confirm'"
-                      decoration-muted="state in ('reject')">
+                <tree string="Stock Requisition Transfer Tree" create="false" edit="false"
+                      colors="blue:state == 'draft';red:state == 'submit';gray:state in ('receive','reject');green:state in ('approve','transfer');black:state in ('transfer')">
                     <field name="to_shop_id"/>
                     <field name="requested_id"/>
+                    <field name="approve_date"/>
+                    <field name="transfer_date"/>
+                    <field name="receive_date"/>
                     <field name="state"/>
                 </tree>
             </field>
@@ -57,6 +59,9 @@
                 <search string="Stock Requisition Transfer Search">
                     <field name="to_shop_id"/>
                     <field name="requested_id"/>
+                    <field name="approve_date"/>
+                    <field name="transfer_date"/>
+                    <field name="receive_date"/>
                 </search>
             </field>
         </record>
@@ -83,9 +88,9 @@
             <field name="act_window_id" ref="stock_requisition_approval_action"/>
         </record>
 
-        <menuitem id="stock_requisition_approval_menu" name="Requisition Approval"
+        <menuitem id="stock_requisition_approval_menu" name="Approval"
                   sequence="10" action="stock_requisition_approval_action" parent="menu_stock_transfer_root"
                   groups="pebbles_transfer_user.group_requisition_transfer_approval_manager"
-                />
+        />
     </data>
 </openerp>

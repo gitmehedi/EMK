@@ -1,1 +1,3 @@
 import pos_order_report
+import warehouse_to_shop_distribution_report
+import category_wise_product_report

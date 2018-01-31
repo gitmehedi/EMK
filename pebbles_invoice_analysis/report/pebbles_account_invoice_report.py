@@ -69,7 +69,7 @@ class account_invoice_report(osv.osv):
         'period_id': fields.many2one('account.period', 'Force Period', domain=[('state','<>','done')], readonly=True),
         'fiscal_position': fields.many2one('account.fiscal.position', 'Fiscal Position', readonly=True),
         'currency_id': fields.many2one('res.currency', 'Currency', readonly=True),
-        'categ_id': fields.many2one('product.category','Category of Product', readonly=True),
+        'categ_id': fields.many2one('product.category','Category of Product'),
         'journal_id': fields.many2one('account.journal', 'Journal', readonly=True),
         'partner_id': fields.many2one('res.partner', 'Partner', readonly=True),
         'partner_name': fields.char('Partner Name', size=128, readonly=True),

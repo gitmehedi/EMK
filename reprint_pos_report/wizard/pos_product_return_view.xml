@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <record id="view_pos_product_return" model="ir.ui.view">
+            <field name="name">PoS Product Return</field>
+            <field name="model">pos.product.return</field>
+            <field name="arch" type="xml">
+            <form string="Pay Order">
+                <group>
+                    <field name="product_ids" nolabel="1"/>
+                </group>
+                <footer>
+                    <button name="return_products" string="Exchange Products" type="object" class="oe_highlight"/>
+                    or 
+                    <button special="cancel" string="Cancel" class="oe_link"/>
+                </footer>
+            </form>
+            </field>
+        </record>
+        <record id="action_pos_proudct_return" model="ir.actions.act_window">
+            <field name="name">Product Return</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">pos.product.return</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+    </data>
+</openerp>
+

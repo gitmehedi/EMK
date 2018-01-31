@@ -1,0 +1,136 @@
+<openerp>
+    <data>
+        <record model="ir.ui.view" id="warehouse_to_shop_distribution_tree_view">
+            <field name="name">warehouse.to.shop.distribution.tree</field>
+            <field name="model">warehouse.to.shop.distribution</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Warehouse To Shop Distribution Tree" colors="blue:state == 'waiting'">
+                    <field name="name"/>
+                    <field name="warehouse_id"/>
+                    <field name="shop_id"/>
+                    <field name="distribute_date"/>
+                    <field name="receive_date"/>
+                    <field name="state"/>
+                </tree>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="warehouse_to_shop_distribution_form_view">
+            <field name="name">warehouse.to.shop.distribution.form</field>
+            <field name="model">warehouse.to.shop.distribution</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Warehouse To Shop Distribution Form" duplicate="false" copy="false">
+                    <header>
+                        <button string="Generate" name="generate_confirm_product" type="object"
+                                class="oe_highlight"
+                                states="draft"/>
+                        <button string="Transfer" name="action_transfer" type="object" class="oe_highlight"
+                                states="waiting"/>
+                        <button string="Receive" name="action_receive" type="object" class="oe_highlight"
+                                states="transfer"/>
+                        <field name="state" widget="statusbar" statusbar_visible="waiting,transfer,received"/>
+                    </header>
+                    <sheet>
+                        <div class="oe_title">
+                            <h1>
+                                <label string="Challan No: "/>
+                                <field name="name" class="oe_inline" readonly="1"/>
+                            </h1>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="warehouse_id"
+                                       options="{'no_open': 1,'no_create': 1, 'no_create_edit': 1}"/>
+                                <field name="shop_id"
+                                       options="{'no_open': 1,'no_create': 1, 'no_create_edit': 1}"/>
+                            </group>
+                            <group>
+                                <field name="distribute_date"/>
+                                <field name="receive_date"/>
+                            </group>
+                        </group>
+
+                        <group string="Product Distribution">
+                            <field name="stock_distribution_lines_ids" nolabel="1">
+                                <tree editable="bottom">
+                                    <field name="is_transfer" invisible="1"/>
+                                    <field name="is_receive" invisible="1"/>
+                                    <field name="product_id"
+                                           options="{'no_open': 1,'no_create': 1, 'no_create_edit': 1}"/>
+                                    <field name="product_uom_id"
+                                           options="{'no_open': 1,'no_create': 1, 'no_create_edit': 1}"/>
+                                    <field name="transfer_qty"
+                                           attrs="{'readonly':[('is_transfer','=',True)]}" sum="transfer_qty"/>
+                                    <field name="receive_qty"
+                                           attrs="{'readonly':[('is_transfer','=',True),('is_receive','=',True)],
+                                          'invisible':[('is_transfer','=',False)],
+                                          'required':[('is_transfer','=',True)]}" sum="receive_qty"/>
+                                </tree>
+                            </field>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="warehouse_to_shop_distribution_search_view" model="ir.ui.view">
+            <field name="name">warehouse.to.shop.distribution.search</field>
+            <field name="model">warehouse.to.shop.distribution</field>
+            <field name="arch" type="xml">
+                <search string="Warehouse To Shop Distribution Search">
+                    <field name="name" string="Ref#" filter_domain="[('name','ilike',self)]"/>
+                    <separator/>
+                    <field name="receive_date" string="Receive Date"
+                           filter_domain="[('receive_date','ilike',self)]"/>
+                    <separator/>
+                    <field name="state" filter_domain="[('state','ilike',self)]"/>
+                    <separator/>
+
+                    <filter string="Distribute Soon" name="distribute_soon"
+                            domain="[('notification_date','&lt;=',context_today().strftime('%Y-%m-%d') )]"/>
+
+                    <filter string="Waiting" domain="[('state','=','draft')]"
+                            icon="terp-camera_test"/>
+                    <filter string="Generate" domain="[('state','=','generate')]"
+                            icon="terp-camera_test"/>
+                    <filter string="Confirm" domain="[('state','=','confirm')]"
+                            icon="terp-camera_test"/>
+                    <filter string="Closed" domain="[('state','=','transfer')]"
+                            icon="terp-dialog-close"/>
+                    <group string="Group By">
+                        <filter name="state" string="State" context="{'group_by': 'state'}"/>
+                    </group>
+
+                </search>
+            </field>
+        </record>
+
+        <record id="seq_type_warehouse_to_shop_distribution" model="ir.sequence.type">
+            <field name="name">Warehouse To Shop Distribution</field>
+            <field name="code">warehouse_to_shop_distribution</field>
+        </record>
+        <record id="seq_warehouse_to_shop_distribution" model="ir.sequence">
+            <field name="name">Stock Distribution</field>
+            <field name="code">warehouse_to_shop_distribution</field>
+            <field name="prefix">CHN-</field>
+            <field name="padding">10</field>
+        </record>
+
+        <record model="ir.actions.act_window" id="action_warehouse_to_shop_distribution">
+            <field name="name">Warehouse To Shop Distribution</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">warehouse.to.shop.distribution</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="context">{'search_default_state':1}</field>
+            <field name="view_id" ref="warehouse_to_shop_distribution_tree_view"/>
+        </record>
+
+        <menuitem name="Warehouse To Shop Distribution" id="menu_warehouse_to_shop_distribution"
+                  parent="stock.menu_stock_warehouse_mgmt" action="action_warehouse_to_shop_distribution"
+                  sequence="253"
+                  groups='stock.group_stock_manager,pebbles_transfer_user.group_requisition_transfer_approval_manager'/>
+    </data>
+</openerp>

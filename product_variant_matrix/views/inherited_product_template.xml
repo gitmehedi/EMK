@@ -1,50 +1,58 @@
 <openerp>
-	<data>
-		<record id="inherited_product_template_form_view_extend" model="ir.ui.view">
-			<field name="name">product.template.product.form.extend.inharit
-			</field>
-			<field name="model">product.template</field>
-			<field name="inherit_id" ref="product.product_template_only_form_view" />
-			<field name="arch" type="xml">
-				<data>
-					<xpath expr="//field[@name='attribute_line_ids']" position="replace">
-                        <group>
-                            <field name="product_variant_check" />
-                        </group>
+    <data>
+        <record id="inherited_product_template_form_view_extend" model="ir.ui.view">
+            <field name="name">product.template.product.form.extend.inharit
+            </field>
+            <field name="model">product.template</field>
+            <field name="inherit_id" ref="product.product_template_only_form_view"/>
+            <field name="arch" type="xml">
+                <data>
+                    <xpath expr="//p[@class='oe_grey']" position="replace">
+                        <h2 style="color: red;">Warning</h2>
+                        <p style="color: red;">
+                            Adding or deleting attributes will delete and recreate existing variants and lead
+                            to the loss of their possible customizations.
+                        </p>
+                        <h4 style="color: red;">Variant Creating Instruction</h4>
+                        <ul style="color: red;">
+                            <li>
+                                <strong>Color:</strong>
+                                Black,Red,Yellow
+                            </li>
+                            <li>
+                                <strong>Size:</strong>
+                                S,M,L
+                            </li>
+                        </ul>
+                    </xpath>
+                    <xpath expr="//field[@name='attribute_line_ids']" position="replace">
+                        <field name="attribute_line_ids" widget="one2many_list"
+                               context="{'show_attribute': False}">
+                            <tree string="Variants" editable="bottom">
+                                <field name="attribute_id"
+                                       options="{'no_create': True, 'no_create_edit': True, 'no_open': True}"/>
+                                <field name="value_ids" widget="many2many_tags" options="{'no_create_edit': True}"
+                                       domain="[('attribute_id', '=', attribute_id)]" required="True"
+                                       context="{'default_attribute_id': attribute_id}"/>
+                            </tree>
+                        </field>
+                    </xpath>
+                </data>
+            </field>
+        </record>
+        <record id="inherited_product_template_form_view_extend_2" model="ir.ui.view">
+            <field name="name">product.template.form.inherit.2</field>
+            <field name="model">product.template</field>
+            <field name="inherit_id" ref="account.product_template_form_view"/>
+            <field name="arch" type="xml">
+                <data>
+                    <xpath expr="//field[@name='categ_id']" position="replace">
+                        <field name="id" invisible="1"/>
+                        <field name="categ_id"/>
+                    </xpath>
+                </data>
+            </field>
+        </record>
 
-						<field name="attribute_line_ids" widget="one2many_list"
-							context="{'show_attribute': False}" attrs="{'invisible':[('product_variant_check','=',True)]}">
-							<tree string="Variants" editable="bottom">
-								<field name="attribute_id" />
-								<field name="value_ids" widget="many2many_tags" options="{'no_create_edit': True}"
-									domain="[('attribute_id', '=', attribute_id)]" context="{'default_attribute_id': attribute_id}" />
-							</tree>
-						</field>
-                        <group name="product_variant_matrix" string="Product Variant Matrix"
-                               attrs="{'invisible':[('product_variant_check','=',False)]}">
-							<div>
-								<field name="attribute_line_extend_ids" widget="x2many_2d_matrix_checkbox"
-									field_x_axis="size_value_id" field_y_axis="color_value_id"
-									field_value="is_active" />
-							</div>
-						</group>
-					</xpath>
-				</data>
-			</field>
-		</record>
-		<record id="inherited_product_template_form_view_extend_2" model="ir.ui.view">
-			<field name="name">product.template.form.inherit.2</field>
-			<field name="model">product.template</field>
-			<field name="inherit_id" ref="account.product_template_form_view" />
-			<field name="arch" type="xml">
-				<data>
-					<xpath expr="//field[@name='categ_id']" position="replace">
-						<field name="id" invisible="1" />
-						<field name="categ_id" attrs="{'readonly': [('id', '!=', False)]}" />
-					</xpath>
-				</data>
-			</field>
-		</record>
-
-	</data>
+    </data>
 </openerp>

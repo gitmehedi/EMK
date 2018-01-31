@@ -20,6 +20,7 @@
 ##############################################################################
 
 import product_barcode_print
+import product_barcode_single_print
 import Code128
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

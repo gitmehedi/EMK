@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+        <record id="warehouse_to_shop_distribution_report_wizard_view" model="ir.ui.view">
+            <field name="name">Warehouse To Transit Distribution</field>
+            <field name="model">warehouse.to.shop.distribution.report.wizard</field>
+            <field name="arch" type="xml">
+                <form>
+                    <group>
+                        <group>
+                            <field name="start_date"/>
+                            <field name="end_date"/>
+                        </group>
+                        <group>
+                            <field name="warehouse_id" required="True"
+                                   options="{'no_quick_create': True, 'no_create_edit': True, 'no_open': True}"/>
+                            <field name="product_id"
+                                   options="{'no_quick_create': True, 'no_create_edit': True, 'no_open': True}"/>
+                            <field name="operating_unit_id" invisible="True"
+                                   options="{'no_quick_create': True, 'no_create_edit': True, 'no_open': True}"/>
+                            <field name="point_of_sale_id" invisible="True"
+                                   options="{'no_quick_create': True, 'no_create_edit': True, 'no_open': True}"/>
+                        </group>
+                    </group>
+                    <footer>
+                        <button name="pos_order_report" string="Print Report" type="object" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="transit_to_shop_distribution_report_wizard_view" model="ir.ui.view">
+            <field name="name">Transit To Shop Distribution</field>
+            <field name="model">warehouse.to.shop.distribution.report.wizard</field>
+            <field name="arch" type="xml">
+                <form>
+                    <group>
+                        <group>
+                            <field name="start_date"/>
+                            <field name="end_date"/>
+                        </group>
+                        <group>
+                            <field name="warehouse_id" invisible="True"
+                                   options="{'no_quick_create': True, 'no_create_edit': True, 'no_open': True}"/>
+                            <field name="operating_unit_id" required="True"
+                                   options="{'no_quick_create': True, 'no_create_edit': True, 'no_open': True}"/>
+                            <field name="product_id"
+                                   options="{'no_quick_create': True, 'no_create_edit': True, 'no_open': True}"/>
+                            <field name="point_of_sale_id" invisible="True"
+                                   options="{'no_quick_create': True, 'no_create_edit': True, 'no_open': True}"/>
+                        </group>
+                    </group>
+                    <footer>
+                        <button name="pos_order_report" string="Print Report" type="object" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_warehouse_to_shop_distribution_report_wizard" model="ir.actions.act_window">
+            <field name="name">Transit To Shop</field>
+            <field name="res_model">warehouse.to.shop.distribution.report.wizard</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="transit_to_shop_distribution_report_wizard_view"/>
+            <field name="target">new</field>
+        </record>
+
+        <record id="action_warehouse_to_transit_distribution_report_wizard" model="ir.actions.act_window">
+            <field name="name">Warehouse To Transit</field>
+            <field name="res_model">warehouse.to.shop.distribution.report.wizard</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="warehouse_to_shop_distribution_report_wizard_view"/>
+            <field name="target">new</field>
+        </record>
+
+        <menuitem name="Warehouse Distribution" id="product_to_shop_distribution"
+                  parent="base.menu_reporting" sequence="100" groups="stock.group_stock_manager"/>
+
+        <menuitem name="Warehouse To Transit" id="warehouse_to_transit_report" sequence="1"
+                  action="action_warehouse_to_transit_distribution_report_wizard"
+                  parent="product_to_shop_distribution" groups="stock.group_stock_manager"/>
+
+        <menuitem name="Transit To Shop" id="warehouse_to_shop_distribution_report"
+                  action="action_warehouse_to_shop_distribution_report_wizard" sequence="2"
+                  parent="product_to_shop_distribution" groups="stock.group_stock_manager"/>
+    </data>
+</openerp>

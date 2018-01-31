@@ -8,12 +8,17 @@
             <field name="model">product.barcode.print</field>
             <field name="arch" type="xml">
                 <form string="Product barcode print">
-                    <group col="4" string="Quantity">
-                        <field name="qty"/>
-                    </group>
-                    <field name="product_ids"/>
+                    <field name="product_barcode_ids">
+                        <tree editable="True">
+                            <field name="product_id"
+                                   options="{'no_quick_create': True, 'no_create_edit': True, 'no_open': True}"/>
+                            <field name="qty"/>
+                        </tree>
+                    </field>
                     <footer>
-                        <button name="print_report" type="object" string="Print Report" class="oe_highlight"/>
+                        <button name="print_report" type="object" string="Batch Print" class="oe_highlight"/>
+                        or
+                        <button name="print_single_report" type="object" string="Single Print"/>
                         or
                         <button string="Cancel" class="oe_link" special="cancel"/>
                     </footer>

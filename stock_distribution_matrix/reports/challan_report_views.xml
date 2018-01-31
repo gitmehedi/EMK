@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<openerp>
+    <data>
+        <template id="challan_report">
+            <t t-call="report.html_container">
+                <t t-call="report.external_layout">
+                    <div class="page">
+                        <div class="row">
+                            <div class="col-xs-12">
+                                <h3 class="text-center">Delivery Challan</h3>
+                            </div>
+                        </div>
+                        <div class="row mb32" style="margin: 10mm 10mm 30mm 10mm;">
+                            <div class="col-xs-12">
+                                <strong>Challan No:</strong>
+                                <span t-esc="record['chalan_no']"/>
+                            </div>
+                            <div class="col-xs-6">
+                                <p>
+                                    <strong>Warehouse Name:</strong>
+                                    <span t-esc="record['warehoue_id']"/>
+                                    <br/>
+                                    <strong>Transfer Date:</strong>
+                                    <span t-esc="record['distribute_date']"/>
+                                </p>
+                            </div>
+                            <div class="col-xs-5 col-xs-offset-1">
+                                <p>
+                                    <strong>Receive Shop Name:</strong>
+                                    <span t-esc="record['shop_id']"/>
+                                    <br/>
+                                    <strong>Receive Date:</strong>
+                                    <span t-esc="record['receive_date']"/>
+                                </p>
+                            </div>
+                        </div>
+                        <!-- Report Body -->
+
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr colspan="4" style="background-color: #EFECEB;">
+                                    <th class="text-center">S.N</th>
+                                    <th class="text-center">Barcode</th>
+                                    <th class="text-center">Product Name</th>
+                                    <th class="text-center">UoM</th>
+                                    <th class="text-center">Transfer Qty</th>
+                                    <th class="text-center">Receive Qty</th>
+                                    <th class="text-center">Note</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <t t-foreach="data" t-as="o">
+                                    <tr>
+                                        <td class="text-center">
+                                            <t t-esc="o['sn']"/>
+                                        </td>
+                                        <td>
+                                            <t t-esc="o['barcode']"/>
+                                        </td>
+                                        <td>
+                                            <t t-esc="o['name']"/>
+                                        </td>
+                                        <td>
+                                            <t t-esc="o['uom']"/>
+                                        </td>
+                                        <td class="text-right">
+                                            <t t-esc="o['transfer_qty']"/>
+                                        </td>
+                                        <td class="text-right">
+                                            <t t-esc="o['receive_qty']"/>
+                                        </td>
+                                        <td></td>
+                                    </tr>
+                                </t>
+                                <t t-if="data">
+                                    <tr style="background-color: #EFECEB;">
+                                        <td colspan="4" class="text-right">
+                                            <strong>Total</strong>
+                                        </td>
+                                        <td class="text-right">
+                                            <strong>
+                                                <t t-esc="total['transfer']"/>
+                                            </strong>
+                                        </td>
+                                        <td class="text-right">
+                                            <t t-if="total['receive']">
+                                                <strong>
+                                                    <t t-esc="total['receive']"/>
+                                                </strong>
+                                            </t>
+
+                                        </td>
+                                        <td></td>
+                                    </tr>
+                                </t>
+                            </tbody>
+
+                        </table>
+                        <!-- End Report Body -->
+
+                        <t t-call="custom_report.report_signing"></t>
+                    </div>
+                </t>
+            </t>
+        </template>
+
+
+        <report id="action_report_challan_report_request"
+                string="Delivery Challan"
+                model="warehouse.to.shop.distribution"
+                report_type="qweb-pdf"
+                name="stock_distribution_matrix.challan_report"
+                file="stock_distribution_matrix.challan_report"/>
+
+        <record id="action_report_challan_report_request" model="ir.actions.report.xml">
+            <field name="paperformat_id" ref="custom_report.paperformat_pebbles_backend"/>
+        </record>
+
+    </data>
+</openerp>

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding='utf-8' ?>
+<openerp>
+    <data>
+        <record id="inherited_advance_payment_purchase_order_form" model="ir.ui.view">
+            <field name="name">inherited.purchase.order.form</field>
+            <field name="model">purchase.order</field>
+            <field name="inherit_id" ref="purchase.purchase_order_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//button[@name='action_cancel']" position="before">
+                    <field name="invoice_status" invisible="1"/>
+                    <button name="%(action_view_purchase_advance_payment_inv)d" string="Create Invoice"
+                            attrs="{'invisible': ['|',('invoice_status', '=', True),('state', 'in', ['draft','sent','cancel'])]}"
+                            type="action" class="oe_highlight" groups="base.group_user"/>
+                </xpath>
+                <xpath expr="//field[@name='amount_tax']" position="after">
+                    <field name="payment_amount" widget="monetary"
+                           options="{'currency_field': 'currency_id'}"/>
+                </xpath>
+            </field>
+        </record>
+        report_purchaseorder_document
+        <template id="inherited_report_purchaseorder_document" name="report assets"
+                  inherit_id="purchase.report_purchaseorder_document">
+            <xpath expr="//div/div/div/table/tr[2]" position="after">
+                <tr>
+                    <td>Total Paid Amount:</td>
+                    <td class="text-right">
+                        <span t-field="o.payment_amount"
+                              t-field-options='{"widget": "monetary", "display_currency": "o.currency_id"}'/>
+                    </td>
+                </tr>
+            </xpath>
+        </template>
+    </data>
+</openerp>

@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<openerp>
+    <data>
+        <template id="purchase_order">
+            <t t-call="report.html_container">
+                <t t-call="report.external_layout">
+                    <div class="page">
+                        <div class="row mb32">
+                            <div class="col-xs-12">
+                                <h2 class="text-center">Purchase Order Quantity</h2>
+                            </div>
+                        </div>
+
+                        <!-- Report Body -->
+                        <t t-if="data">
+
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th class="text-center">Style</th>
+                                        <th class="text-center">Color</th>
+                                        <th class="text-center" colspan="20">Size Wise Quantity</th>
+                                    </tr>
+                                    <tr style="background-color: #fff;">
+                                        <td colspan="2"></td>
+                                        <t t-foreach="sizes" t-as="size">
+                                            <td>
+                                                <t t-esc="size"/>
+                                            </td>
+                                        </t>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <t t-foreach="data" t-as="order">
+                                        <tr>
+                                            <td rowspan="4">
+                                                <t t-esc="order"/>
+                                            </td>
+                                        </tr>
+                                        <t t-foreach="order_value['color']" t-as="colors">
+                                            <t t-if="colors_value">
+                                                <tr>
+                                                    <td>
+                                                        <t t-esc="colors"/>
+                                                    </td>
+                                                    <t t-foreach="colors_value" t-as="quantity">
+                                                        <td>
+                                                            <t t-if="len(quantity_value)>0">
+                                                                <strong>
+                                                                    <t t-esc="quantity_value['code']"/>
+                                                                </strong>
+                                                                (<t t-esc="int(quantity_value['qty'])"/>)
+                                                            </t>
+                                                        </td>
+                                                    </t>
+                                                </tr>
+                                            </t>
+                                        </t>
+                                    </t>
+                                </tbody>
+                            </table>
+                        </t>
+                        <!-- End Report Body -->
+                        <t t-call="custom_report.report_signing"></t>
+                    </div>
+                </t>
+            </t>
+        </template>
+
+    </data>
+</openerp>

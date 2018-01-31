@@ -1,11 +1,13 @@
 from openerp import api, fields, models
 from lxml import etree
 from openerp.tools.translate import _
+from openerp.exceptions import ValidationError
 
 
 class InventoryDistributionToShop(models.Model):
     _name = 'stock.distribution.to.shop'
     _rec_name = 'product_tmp_id'
+    _order = 'id desc'
 
     @api.model
     def _Filter_DefaultWareHouse(self):
@@ -19,7 +21,7 @@ class InventoryDistributionToShop(models.Model):
     received_qty = fields.Float(string='Received Qty')
     distribute_qty = fields.Float(string='Distribute Qty', readonly=True)
     remain_qty = fields.Float(string='Remain Qty', compute='_get_remain_quntity', store=True)
-    name = fields.Char('Distribution Reference', readonly=True)
+    name = fields.Char('Reference', readonly=True)
     receive_date = fields.Date(string='Received Date', default=fields.Date.today, required=True, readonly=True)
     notification_date = fields.Date(string='Notification Date', default=fields.Date.today, required=True, readonly=True)
 
@@ -29,6 +31,7 @@ class InventoryDistributionToShop(models.Model):
     stock_distribution_lines_ids = fields.One2many('stock.distribution.to.shop.line', 'stock_distributions_id',
                                                    states={'confirm': [('readonly', True)]})
     warehoue_id = fields.Many2one('stock.warehouse', string='Warehouse', default=_Default_WareHouse_Id, required=True)
+    product_image = fields.Binary(related='product_tmp_id.image', store=True, readonly=True)
 
     state = fields.Selection([
         ('draft', 'Waiting'),
@@ -86,32 +89,17 @@ class InventoryDistributionToShop(models.Model):
     def write(self, vals):
         return super(InventoryDistributionToShop, self).write(vals)
 
+    @api.multi
+    def unlink(self):
+        for record in self:
+            raise ValidationError(_("You cann't delete a stock distribution."))
+
     @api.one
     def action_confirm(self):
         self.state = 'confirm'
+        for record in self.stock_distribution_lines_ids:
+            record.write({'state': 'confirm'})
 
     @api.one
     def action_transfer(self):
-        self.state = 'transfer'
-        move_new_obj = self.env['stock.move']
-
-        stock_picking_hrd = {}
-        stock_picking_hrd['origin'] = self.name
-        stock_picking_hrd['picking_type_id'] = 1
-        picking = self.env['stock.picking'].create(stock_picking_hrd)
-        picking.action_done()
-        for distribute_line in self.stock_distribution_lines_ids:
-            if distribute_line.distribute_qty > 0:
-                record = {}
-                record['picking_id'] = picking.id
-                record['product_id'] = distribute_line.product_id.id
-                record['product_uom'] = distribute_line.product_id.uom_id.id
-                record['name'] = distribute_line.product_id.name
-                record['product_uom_qty'] = distribute_line.distribute_qty
-                record['location_id'] = distribute_line.source_location_id.id
-                record['location_dest_id'] = distribute_line.target_location_id.id
-                record['procure_method'] = "make_to_stock"
-                record['state'] = 'draft'
-                move_insert = move_new_obj.create(record)
-                print "move id --- ", move_insert.id
-                move_insert.action_done()
+        return True

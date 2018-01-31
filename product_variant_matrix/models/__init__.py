@@ -1,2 +1,0 @@
-import inherited_product_category
-import inherited_product_template

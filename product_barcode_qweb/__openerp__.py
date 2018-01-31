@@ -36,7 +36,9 @@ Print Barcode label for products
         'wizard/product_barcode_print.xml',
         'views/report_paperformat.xml',
         'product_barcode_qweb_report.xml',
+        'views/product_barcode_print.xml',
         'views/report_product_barcode.xml',
+        'views/report_product_single_barcode.xml',
     ],
     'demo': [
     ],
@@ -44,7 +46,7 @@ Print Barcode label for products
     ],
     'installable': True,
     'application': True,
-    #'qweb': ['static/src/xml/pos.xml'],
+    # 'qweb': ['static/src/xml/pos.xml'],
     'website': 'https://www.cysfuturo.com',
     'auto_install': False,
 }

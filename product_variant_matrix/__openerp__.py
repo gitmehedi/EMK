@@ -5,14 +5,13 @@
     'website': "http://www.genweb2.com",
     'category': 'Product',
     'version': '0.1',
-    'summary': """ Product Variant Matrix module allow you to create product with matrix input """,
-
+    'summary': """ 
+        Product Variant Matrix module allow you to 
+        create product with matrix input 
+        """,
     'description': """ This module allows to manager product variant. """,
     'data': [
-        'security/ir.model.access.csv',
-        'views/root_menu.xml',
         'default_data/product_extend_data.xml',
-        'views/inherited_product_category_view.xml',
         'views/inherited_product_template.xml',
     ],
     'depends': ['product',
