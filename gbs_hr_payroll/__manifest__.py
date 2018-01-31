@@ -13,6 +13,7 @@
         'gbs_hr_calendar',
         'gbs_hr_employee_sequence',
         'hr_employee_loan_payroll',
+        'custom_report'
     ],
     'data': [
         'wizard/inherited_hr_payroll_payslips_by_employees_views.xml',
