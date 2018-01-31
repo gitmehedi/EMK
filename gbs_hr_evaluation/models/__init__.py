@@ -1,2 +1,3 @@
 import hr_evaluation
 import hr_evaluation_plan
+import hr_evaluation_criteria
