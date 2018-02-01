@@ -1,14 +1,14 @@
-from odoo import api, fields, models, _
+from openerp import api, fields, models, _
 
 
 class HrLeaveSummaryReport(models.AbstractModel):
     _name = 'report.work_order_report.report_product_work_order'
 
     @api.multi
-    def render_html(self, docids, data=None):
+    def render_html(self, data=None):
         report_obj = self.env['report']
-        header, attr, lists = {}, {}, []
-        purchase = self.env['purchase.order'].search([('id', 'in', docids)])
+        data, header, attr, lists = {}, {}, {}, []
+        purchase = self.env['purchase.order'].search([('id', 'in', self._ids)])
 
         for record in purchase.order_line:
             for rec in record.product_id.product_tmpl_id.attribute_line_ids:
@@ -42,10 +42,7 @@ class HrLeaveSummaryReport(models.AbstractModel):
             prod['value'] = {val: None for val in attr}
             for val in list.product_id.attribute_value_ids:
                 prod['value'][val.attribute_id.name] = val.name
-            prod['schedule_date'] = list.price_total
             prod['qty'] = "{0:.2f}".format(list.product_qty)
-            prod['rec_qty'] = "{0:.2f}".format(list.qty_received)
-            prod['bill_qty'] = "{0:.2f}".format(list.qty_invoiced)
             prod['price_unit'] = list.price_unit
             prod['tax_amount'] = "Tax {0:.2f}%".format(list.taxes_id.amount)
             prod['price_total'] = list.price_subtotal
@@ -56,6 +53,6 @@ class HrLeaveSummaryReport(models.AbstractModel):
             'data': data,
             'holiday_objs': lists,
             'header': header,
-            'purchase':purchase
+            'purchase': purchase
         }
         return report_obj.render('work_order_report.report_product_work_order', docargs)
