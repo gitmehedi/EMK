@@ -54,7 +54,7 @@
                             </group>
                         </group>
                         <separator string="Employees" colspan="2"/>
-                        <field name="evaluation_form_ids" attrs="{'readonly':[('state','=','confirm')]}">
+                        <field name="job_form_ids" attrs="{'readonly':[('state','=','confirm')]}">
                             <tree string="Employees" create='false' editable='false' delete='true'>
                                 <field name='employee_id'/>
                             </tree>

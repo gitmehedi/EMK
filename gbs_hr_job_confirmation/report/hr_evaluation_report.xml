@@ -125,7 +125,7 @@
                                 <thead></thead>
                                 <tbody>
                                     <tr>
-                                        <td style="font-weight: bold;" colspan="8">8. Judgement of evaluating person</td>
+                                        <td style="font-weight: bold;" colspan="8">8. Judgement of job confirming person</td>
                                     </tr>
                                     <tr>
                                         <td colspan="2">promotion:<input type="checkbox" name="promotion" style="margin-left:15px" /></td>

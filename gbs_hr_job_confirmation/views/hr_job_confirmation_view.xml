@@ -97,21 +97,21 @@
                                 <field name="disciplinary_action"/>
                             </group>
                         </group>
-                        <group>
-                            <separator string="Attendance" colspan="2"/>
-                            <group>
-                                <field name="total_available_days" readonly="1"/>
-                                <field name="late_attended_days" readonly="1"/>
-                                <field name="casual_leave_days" readonly="1"/>
-                                <field name="sick_leave_days" readonly="1"/>
-                            </group>
-                            <group>
-                                <field name="on_time_attended_days" readonly="1"/>
-                                <field name="absent_days" readonly="1"/>
-                                <field name="earned_leave_days" readonly="1"/>
-                                <field name="extra_purpose_leave_days" readonly="1"/>
-                            </group>
-                        </group>
+                        <!--<group>-->
+                            <!--<separator string="Attendance" colspan="2"/>-->
+                            <!--<group>-->
+                                <!--<field name="total_available_days" readonly="1"/>-->
+                                <!--<field name="late_attended_days" readonly="1"/>-->
+                                <!--<field name="casual_leave_days" readonly="1"/>-->
+                                <!--<field name="sick_leave_days" readonly="1"/>-->
+                            <!--</group>-->
+                            <!--<group>-->
+                                <!--<field name="on_time_attended_days" readonly="1"/>-->
+                                <!--<field name="absent_days" readonly="1"/>-->
+                                <!--<field name="earned_leave_days" readonly="1"/>-->
+                                <!--<field name="extra_purpose_leave_days" readonly="1"/>-->
+                            <!--</group>-->
+                        <!--</group>-->
                         <div colspan="1">
                             <field name="manager_id" invisible="1"/>
                             <separator string="Comment by Employee"/>
@@ -131,7 +131,7 @@
                                     </tree>
                                 </field>
                             </group>
-                            <separator string="Judgement of evaluating person"/>
+                            <separator string="Judgement of job confirming person"/>
                             <group colspan="4">
                                 <group>
                                     <field name="judgment_promotion"/>
@@ -143,7 +143,7 @@
                                 </group>
                             </group>
                             <div colspan="1">
-                                <separator string="Comment by Evaluating Person"/>
+                                <separator string="Comment by Job Confirming Person"/>
                                 <field name="supervisor_comment" attrs="{'invisible':[('state','!=','supervisor')]}"/>
                                 <field name="hod_comment" attrs="{'invisible':[('state','!=','hod_approve')]}"/>
                                 <field name="plant_incharge_comment" attrs="{'invisible':[('state','!=','gm_approve')]}"/>

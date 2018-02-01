@@ -17,7 +17,7 @@ class HRJobConfirmationPlan(models.Model):
                                         default=lambda self: self.env['res.users'].
                                         operating_unit_default_get(self._uid)
                                         )
-    evaluation_form_ids = fields.One2many('hr.job.confirmation','rel_plan_id')
+    job_form_ids = fields.One2many('hr.job.confirmation','rel_plan_id')
     state = fields.Selection([
         ('draft', 'Draft'),
         ('confirm', 'Confirmed'),
@@ -40,16 +40,16 @@ class HRJobConfirmationPlan(models.Model):
 
     @api.multi
     def action_confirm(self):
-        pool_criteria_emp = self.env['hr.evaluation.criteria.line']
-        for i in self.evaluation_form_ids:
-            for criteria in self.env['hr.evaluation.criteria'].search([('is_active','=',True)]):
+        pool_criteria_emp = self.env['hr.job.confirmation.criteria.line']
+        for i in self.job_form_ids:
+            for criteria in self.env['hr.evaluation.criteria'].search([('is_active','=',True),('type','=','jobconf')]):
                 criteria_res = {
                     'seq': criteria.seq,
                     'name': criteria.name,
                     'marks': criteria.marks,
-                    'rel_evaluation_id': i.id,
+                    'rel_job_id': i.id,
                 }
-                pool_criteria_emp += self.env['hr.evaluation.criteria.line'].create(criteria_res)
+                pool_criteria_emp += self.env['hr.job.confirmation.criteria.line'].create(criteria_res)
         self.state = 'confirm'
 
     ####################################################

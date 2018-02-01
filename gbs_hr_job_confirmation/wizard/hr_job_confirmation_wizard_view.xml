@@ -38,7 +38,7 @@
             </field>
         </record>
 
-        <record id="evaluating_hr_manager_comment_wizard" model="ir.ui.view">
+        <record id="job_confirmation_hr_manager_comment_wizard" model="ir.ui.view">
             <field name="name">hr.manager.comment.wizard</field>
             <field name="model">job.confirmation.persons.comment.wizard</field>
             <field name="type">form</field>
@@ -75,7 +75,7 @@
         </record>
 
         <record id="job_confirmation_supervisor_comment_wizard" model="ir.ui.view">
-            <field name="name">evaluating.supervisor.comment.wizard</field>
+            <field name="name">confirming.supervisor.comment.wizard</field>
             <field name="model">job.confirmation.persons.comment.wizard</field>
             <field name="type">form</field>
             <field name="arch" type="xml" >
@@ -110,7 +110,7 @@
                             </tree>
                         </field>
                     </group>
-                    <separator string="Judgement of evaluating person"/>
+                    <separator string="Judgement of job confirming person"/>
                     <group colspan="4">
                         <group>
                             <field name="judgment_promotion"/>
@@ -130,7 +130,7 @@
         </record>
 
         <record id="job_confirmation_supervisor_comment_wizard" model="ir.ui.view">
-            <field name="name">evaluating.supervisor.comment.wizard</field>
+            <field name="name">confirming.supervisor.comment.wizard</field>
             <field name="model">job.confirmation.persons.comment.wizard</field>
             <field name="type">form</field>
             <field name="arch" type="xml" >

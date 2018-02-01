@@ -4,14 +4,14 @@
     'category': 'Human Resources',
     'summary': 'This module maintain employees Job Confirmation',
     'description': """
-Periodical Employees evaluation and appraisals
+Periodical Employees Job Confirmation
 ==============================================
 
-By using this application you can maintain the motivational process by doing periodical evaluations of your employees' performance. The regular assessment of human resources can benefit your people as well your organization.
+By using this application you can maintain the motivational process by doing periodical job confirmations of your employees' performance. The regular assessment of human resources can benefit your people as well your organization.
 
-An job confirmation plan can be assigned to each employee. These plans define the frequency and the way you manage your periodic personal evaluations. You will be able to define steps and attach interview forms to each step.
+An job confirmation plan can be assigned to each employee. These plans define the frequency and the way you manage your periodic personal job confirmations. You will be able to define steps and attach interview forms to each step.
 
-Manages several types of evaluations: bottom-up, top-down, self-evaluations and the final evaluation by the manager.
+Manages several types of job confirmations: bottom-up, top-down and the final job confirmation by the manager.
 
     """,
     'author': "Genweb2",
@@ -24,8 +24,8 @@ Manages several types of evaluations: bottom-up, top-down, self-evaluations and 
         'operating_unit',
     ],
     'data': [
-        #'security/ir.model.access.csv',
-        #'security/ir_rule.xml',
+        'security/ir.model.access.csv',
+        'security/ir_rule.xml',
         'wizard/hr_job_confirmation_employee_list_wizard_view.xml',
         'wizard/hr_job_confirmation_wizard_view.xml',
         'views/hr_job_confirmation_plan_view.xml',

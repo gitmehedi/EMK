@@ -32,7 +32,7 @@ class ConfirmationHRComments(models.TransientModel):
         return {'type': 'ir.actions.act_window_close'}
 
 
-class EvaluatingPersonsComments(models.TransientModel):
+class ConfirmingPersonsComments(models.TransientModel):
     _name = 'job.confirmation.persons.comment.wizard'
 
     supervisor_comment = fields.Text(string='Supervisor Comments',
@@ -116,7 +116,7 @@ class ConfirmationJudgement(models.TransientModel):
     @api.multi
     def save_evaluating_judgement(self):
         for wizard_line in self.criteria_line_ids:
-            evaluating_line_form_pool = self.env['hr.evaluation.criteria.line'].search(
+            evaluating_line_form_pool = self.env['hr.job.confirmation.criteria.line'].search(
                 [('id', '=', wizard_line.parent_id)])
             evaluating_line_form_pool.write({
                 'obtain_marks': wizard_line.obtain_marks,

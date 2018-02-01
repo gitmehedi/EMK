@@ -57,7 +57,7 @@ class HRJobConfirmation(models.Model):
 
     ### Relational Fields ###
     rel_plan_id = fields.Many2one('hr.job.confirmation.plan')
-    criteria_line_ids = fields.One2many('hr.evaluation.criteria.line','rel_evaluation_id')
+    criteria_line_ids = fields.One2many('hr.job.confirmation.criteria.line','rel_job_id')
 
     ####################################################
     # Business methods
@@ -157,7 +157,7 @@ class HRJobConfirmation(models.Model):
 
     @api.multi
     def action_hr_manager_comment(self):
-        res = self.env.ref('gbs_hr_job_confirmation.job_confirmation_employee_comment_wizard')
+        res = self.env.ref('gbs_hr_job_confirmation.job_confirmation_hr_manager_comment_wizard')
         result = {
             'name': _('HR Manager Comments'),
             'view_type': 'form',
@@ -304,11 +304,11 @@ class HRJobConfirmation(models.Model):
 
 
 class HREvaluationCriteriaLine(models.Model):
-    _name='hr.evaluation.criteria.line'
+    _name='hr.job.confirmation.criteria.line'
     _description = 'Evaluation Criteria lines'
     _order = "seq asc"
 
-    rel_evaluation_id = fields.Many2one('hr.job.confirmation')
+    rel_job_id = fields.Many2one('hr.job.confirmation')
     seq = fields.Integer(string = 'Sequence')
     name = fields.Char(string = 'Criteria Name')
     marks = fields.Float(string = 'Total Marks')
