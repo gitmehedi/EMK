@@ -44,7 +44,7 @@
                                 attrs="{'invisible':['|',('check_access','=',False),('state','not in',['supervisor'])]}"
 								groups="base.group_user"/>
                         <button string="HOD Feedback" name="action_hod_comment"
-								attrs="{'invisible':['|',('','=',False),('state','not in',['hod_approve'])]}" type="object" class="oe_highlight"
+								attrs="{'invisible':['|',('check_access','=',False),('state','not in',['hod_approve'])]}" type="object" class="oe_highlight"
 								groups="gbs_application_group.group_dept_manager"/>
                         <button string="GM Feedback" name="action_plant_incharge_comment"
 								states="gm_approve" type="object" class="oe_highlight"
