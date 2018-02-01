@@ -42,7 +42,6 @@
                     <field name="employee_id"
                            options="{'no_quick_create': True, 'no_create_edit': True, 'no_open': True}"
                            attrs="{'required':[('holiday_type','=','employee')],'invisible':[('holiday_type','=','category')]}"
-                           domain="[('id','child_of',employee_id)]"
                            groups="hr_holidays.group_hr_holidays_user,base.group_user"/>
                 </xpath>
 
