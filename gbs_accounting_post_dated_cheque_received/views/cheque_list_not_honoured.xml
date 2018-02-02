@@ -1,21 +1,23 @@
 <?xml version="1.0"?>
 <odoo>
 
-    <record id="accounting_cheque_received_form" model="ir.ui.view">
+    <record id="cheque_list_not_honoured_form" model="ir.ui.view">
         <field name="name">accounting.cheque.received.form</field>
         <field name="model">accounting.cheque.received</field>
         <field name="arch" type="xml">
             <form string="Cheque Received Form">
                 <header>
-                    <button name="action_received" type="object" states="draft" string="Received" class="oe_highlight"/>
-                    <button name="action_deposited" type="object" states="received" string="Deposited" class="oe_highlight"/>
-                    <button name="action_honoured" type="object" states="deposited" string="Honoured" class="oe_highlight"/>
-                    <button name="action_dishonoured" type="object" states="deposited" string="Dishonoured"/>
-                    <button name="action_deposited" type="object" states="dishonoured" string="Deposited" class="oe_highlight"/>
-                    <button name="action_returned_to_customer" type="object" states="dishonoured" string="Returned to Customer"/>
 
+                    <button name="action_pending" type="object" states="draft" string="Pending" class="oe_highlight"/>
+                    <button name="action_honoured" type="object" states="draft" string="Honoured" class="oe_highlight"/>
+                    <button name="action_dishonoured" type="object" states="draft" string="Disnonoured"
+                            class="oe_highlight"/>
+                    <button name="action_amount_deposit" type="object" states="draft" string="Amount Deposit"
+                            class="oe_highlight"/>
+                    <button name="action_approve" type="object" states="draft" string="Approve" class="oe_highlight"/>
 
-                    <field name="state" widget="statusbar" statusbar_visible="draft,received,deposited"/>
+                    <field name="state" widget="statusbar"/>
+
                 </header>
                 <sheet>
                     <h1>
@@ -42,7 +44,7 @@
         </field>
     </record>
 
-    <record id="accounting_cheque_recieved_tree" model="ir.ui.view">
+    <record id="cheque_list_not_honoured_tree" model="ir.ui.view">
         <field name="name">accounting.cheque.received.tree.view</field>
         <field name="model">accounting.cheque.received</field>
         <field name="type">tree</field>
@@ -52,13 +54,15 @@
                 <field name="bank_name"/>
                 <field name="cheque_amount"/>
                 <field name="sale_order_id"/>
+                <field name="state"/>
             </tree>
         </field>
     </record>
 
-    <record model="ir.actions.act_window" id="accounting_cheque_received_action">
-        <field name="name">Cheque Received</field>
+    <record model="ir.actions.act_window" id="action_cheque_list_not_honoured">
+        <field name="name">Cheque List Not Honoured</field>
         <field name="res_model">accounting.cheque.received</field>
+        <field name="domain">[('state','!=','honoured')]</field>
         <field name="view_mode">tree,form</field>
     </record>
 
@@ -69,9 +73,9 @@
               parent="account.menu_finance"
               sequence="2"/>
 
-    <menuitem action="accounting_cheque_received_action"
-              id="menu_accounting_cheque_received"
+    <menuitem action="action_cheque_list_not_honoured"
+              id="cheque_list_not_honoured_id"
               parent="account.menu_finance_receivables"
-              name="Cheque Received"
-              sequence="17"/>
+              name="Cheque List Not Honoured"
+    />
 </odoo>

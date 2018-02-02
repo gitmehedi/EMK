@@ -2,8 +2,8 @@
 <openerp>
     <data>
         <record id="hr_performance_evaluation_dept_manager" model="ir.rule">
-            <field name="name">HR Performance Evaluation Department Manager</field>
-            <field name="model_id" ref="model_hr_performance_evaluation"/>
+            <field name="name">HR Job Confirmation Department Manager</field>
+            <field name="model_id" ref="model_hr_job_confirmation"/>
             <field name="domain_force">['|',('employee_id.parent_id','in',[e.id for e in user.employee_ids]),
                 ('employee_id','child_of',[e.id for e in user.employee_ids])]</field>
             <field name="perm_read" eval="True" />
@@ -14,8 +14,8 @@
         </record>
 
         <record id="hr_performance_evaluation_manager" model="ir.rule">
-            <field name="name">HR Performance Evaluation(HR Manager and CXO)</field>
-            <field name="model_id" ref="model_hr_performance_evaluation"/>
+            <field name="name">HR Job Confirmation(HR Manager and CXO)</field>
+            <field name="model_id" ref="model_hr_job_confirmation"/>
             <field name="domain_force">[(1, '=', 1)]</field>
             <field name="perm_read" eval="True" />
             <field name="perm_create" eval="True" />
@@ -25,8 +25,8 @@
         </record>
 
         <record id="hr_performance_evaluation_officer" model="ir.rule">
-            <field name="name">HR Performance Evaluation(Unit HR)</field>
-            <field name="model_id" ref="model_hr_performance_evaluation"/>
+            <field name="name">HR Job Confirmation(Unit HR)</field>
+            <field name="model_id" ref="model_hr_job_confirmation"/>
             <field name="domain_force">[('employee_id.operating_unit_id.id','in',user.operating_unit_ids.ids)]</field>
             <field name="perm_read" eval="True" />
             <field name="perm_create" eval="True"/>
@@ -36,8 +36,8 @@
         </record>
 
         <record id="hr_performance_evaluation_emp" model="ir.rule">
-            <field name="name">HR Performance Evaluation(Employee)</field>
-            <field name="model_id" ref="model_hr_performance_evaluation"/>
+            <field name="name">HR Job Confirmation(Employee)</field>
+            <field name="model_id" ref="model_hr_job_confirmation"/>
             <field name="domain_force">['|',('employee_id','in',user.employee_ids.ids),('employee_id.parent_id','in',user.employee_ids.ids)]</field>
             <field name="perm_read" eval="True" />
             <field name="perm_create" eval="True"/>

@@ -1,9 +1,23 @@
+from datetime import datetime
 from odoo import api, fields, models
 from odoo.tools.float_utils import float_compare
+from odoo.exceptions import ValidationError
+
 
 class StockPicking(models.Model):
 
     _inherit = 'stock.picking'
+
+    date_done = fields.Datetime('Date of Transfer', copy=False, readonly=False,
+                                help="Completion Date of Transfer")
+
+    @api.constrains('date_done')
+    def _check_date_done(self):
+        for stock_picking in self:
+            if datetime.strptime(stock_picking.date_done, "%Y-%m-%d %H:%M:%S")>datetime.now():
+                raise ValidationError('Transfer Date can not be greater then present date!!')
+
+
 
     @api.multi
     def do_transfer(self):
@@ -35,6 +49,7 @@ class StockPicking(models.Model):
 
             # split move lines if needed
             for move in picking.move_lines:
+
                 rounding = move.product_id.uom_id.rounding
                 remaining_qty = move.remaining_qty
                 if move.state in ('done', 'cancel'):
@@ -45,9 +60,9 @@ class StockPicking(models.Model):
                 if float_compare(remaining_qty, 0, precision_rounding=rounding) == 0:
                     if move.state in ('draft', 'assigned', 'confirmed'):
                         todo_moves |= move
-                elif float_compare(remaining_qty, 0, precision_rounding=rounding) > 0 and float_compare(remaining_qty,
-                                                                                                        move.product_qty,
-                                                                                                        precision_rounding=rounding) < 0:
+                        # self.env['indent.indent'].search([('id', '=', move.indent_id.id)]).write(
+                        #     {'state': 'received'})
+                elif float_compare(remaining_qty, 0, precision_rounding=rounding) > 0 and float_compare(remaining_qty,move.product_qty,precision_rounding=rounding) < 0:
                     # TDE FIXME: shoudl probably return a move - check for no track key, by the way
                     new_move_id = move.split(remaining_qty)
                     new_move = self.env['stock.move'].with_context(mail_notrack=True).browse(new_move_id)
@@ -57,9 +72,10 @@ class StockPicking(models.Model):
 
             # TDE FIXME: do_only_split does not seem used anymore
             if todo_moves and not self.env.context.get('do_only_split'):
-                for move_indent in todo_moves:
-                    self.env['indent.indent'].search([('id','=',move_indent.indent_id.id)]).write({'state': 'received'})
-                    move_indent.action_done()
+                todo_moves.action_done()
+                for move in todo_moves:
+                    if self.date_done:
+                        move.write({'date': self.date_done})
             elif self.env.context.get('do_only_split'):
                 picking = picking.with_context(split=todo_moves.ids)
 

@@ -13,6 +13,7 @@
 
     'data': [
         'views/cheque_received_view.xml',
+        'views/cheque_list_not_honoured.xml',
     ],
 
     'summary': 'Post Dated Cheque Received',

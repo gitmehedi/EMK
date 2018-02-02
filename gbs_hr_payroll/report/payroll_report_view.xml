@@ -3,8 +3,7 @@
 	<data>
 		<template id="report_individual_payslip">
 			<t t-call="report.html_container">
-				<t t-call="report.external_layout">
-					<t t-name="report.external_layout">
+				<t t-call="custom_report.gbs_internal_layout">
 					<div class="page" style="page-break-inside:auto">
 						<div class="row">
 							<style type="text/css">
@@ -29,7 +28,7 @@
 
 							</style>
 							<h1 style="float:right;">
-								<b>Salary Sheet<br/>
+								<b>Monthly Salary Sheet<br/>
 								<span t-esc="data['name']"/></b>
 							</h1>
 							<table class="table table-bordered table-condensed table-striped">
@@ -101,8 +100,8 @@
 						</div>
 						<b>In Words: </b><span t-esc="amt_to_word"></span>
 
+						<t t-call="custom_report.report_signing"></t>
 					</div>
-					</t>
 				</t>
 			</t>
 
