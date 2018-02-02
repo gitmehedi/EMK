@@ -25,12 +25,25 @@
 									{ background-color: #731D09; color:#fff; }
 								.odo-bg-gray, .odo-bg-gray > td
 									{ background-color: #f5f5f5; }
+								.report-title { text-align:center; }
 
 							</style>
-							<h1 style="float:right;">
-								<b>Monthly Salary Sheet<br/>
-								<span t-esc="data['name']"/></b>
-							</h1>
+
+							<h2 class="report-title">Monthly Salary Sheet</h2>
+
+							<div class="row">
+									<div class="col-xs-6"><h4><label>Title : </label><span t-esc="data['name']"/></h4></div>
+							</div>
+
+							<!--<div class="row">-->
+									<!--<div class="col-xs-6"><label>title</label> <span t-esc="data['name']"/></div>-->
+									<!--<div class="col-xs-6 text-right"><label>title</label> <span t-esc="data['name']"/></div>-->
+							<!--</div>-->
+							<!--<div class="row">-->
+									<!--<div class="col-xs-6"><label>title</label> <span t-esc="data['name']"/></div>-->
+									<!--<div class="col-xs-6 text-right"><label>title</label> <span t-esc="data['name']"/></div>-->
+							<!--</div>-->
+
 							<table class="table table-bordered table-condensed table-striped">
 								<thead>
 									<tr class="odo-bg-gray">
@@ -66,10 +79,10 @@
 													<td>
 														<span t-esc="o['designation']"></span>
 													</td>
-													<td class="bg-info">
+													<td>
 														<span t-esc="o['doj']"></span>
 													</td>
-													<td class="bg-warning">
+													<td class="bg-info">
 														<span t-esc="o['loan_balance']"></span>
 													</td>
 
@@ -88,9 +101,9 @@
 												border-bottom: 1px solid #030303; color:#000000;"
 										t-att-colspan="docs_len">
 
-										<h5 style="float:right;">
+										<h4 style="float:right;">
 											<b> Total: <span t-esc="total_sum"></span></b>
-										</h5>
+										</h4>
 
 									</td>
 
@@ -98,8 +111,9 @@
 
 							</table>
 						</div>
-						<b>In Words: </b><span t-esc="amt_to_word"></span>
-
+						<h4>
+							<b>In Words: </b><strong t-esc="amt_to_word"></strong>
+						</h4>
 						<t t-call="custom_report.report_signing"></t>
 					</div>
 				</t>

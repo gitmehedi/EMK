@@ -27,8 +27,14 @@
                 <style type="text/css">
                     .header-content { position: relative; padding:10px; }
                     .company-info { text-align:center; padding:0 250px; }
+                    .company-logo { position: absolute; top: 35%; transform: translateY(-35%); }
+                    .com-logo-img { max-height:120px; max-width: 160px }
                 </style>
                 <div class="header-content">
+                    <div class="company-logo">
+                        <img class="com-logo-img" t-if="company.logo" t-att-src="'data:image/png;base64,%s' % company.logo" />
+                    </div>
+
                     <div class="company-info">
                        <h3 t-field="company.partner_id"
                                  t-field-options='{"widget": "contact", "fields": ["name"], "no_marker": true}'/>

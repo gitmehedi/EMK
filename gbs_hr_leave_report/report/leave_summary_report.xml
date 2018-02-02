@@ -3,48 +3,35 @@
     <data>
         <template id="report_emp_leave_summary">
             <t t-call="report.html_container">
-                <t t-call="report.external_layout">
-                    <style>
-                        .table th {
-                        padding: 2px !important;
-                        }
-                        .table td {
-                        padding: 2px !important;
-                        font-size: 12px !important;
-                        }
-                    </style>
+                <t t-call="custom_report.gbs_internal_layout">
                     <div class="page" style="page-break-inside: auto">
                         <div class="row">
-                            <div class="col-xs-12">
-                                <h2 class="text-center">Leave Summary</h2>
-                            </div>
-                            <br/>
+                            <style>
+                                .report-title { text-align:center; }
+                            </style>
+
+                            <h3 class="report-title">Leave Summary</h3>
                             <div class="row">
                                 <div class="col-xs-6">
-                                    <div>
-                                        <strong>Department:</strong>
-                                        <t t-if="not data['department_name']">
-                                            <span>All</span>
-                                        </t>
-                                        <span t-esc="data['department_name']"/>
-                                    </div>
-                                    <div>
-                                        <strong>Leave Year:</strong>
-                                        <span t-esc="data['year_name']"/>
-                                    </div>
+                                    <label>Department : </label>
+                                    <t t-if="not data['department_name']">All</t>
+                                    <span t-esc="data['department_name']"/>
                                 </div>
                                 <div class="col-xs-6 text-right">
-                                    <strong>Operating Unit:</strong>
-                                    <span t-esc="data['operating_unit_name']"/>
+                                    <label>Leave Year:</label><span t-esc="data['year_name']"/>
                                 </div>
                             </div>
-                        </div>
-                        <br/>
+                            <div class="row">
+                                <div class="col-xs-6">
+                                    <label>Operating Unit: </label>
+                                    <span t-esc="data['operating_unit_name']"/>
+                                </div>
+							</div>
 
-                        <div class="row">
-                            <table class="table table-bordered" style="padding: 0px;">
+
+                            <table class="table table-bordered table-condensed table-striped" style="padding: 0px;">
                                 <thead>
-                                    <tr style="background-color:#EFECEB;">
+                                    <tr class="odo-bg-gray">
                                         <t t-foreach="header" t-as="head">
                                             <t t-if="len(head_value)>1">
                                                 <th rowspan="2" style="text-align: center;">
@@ -60,7 +47,7 @@
                                             </t>
                                         </t>
                                     </tr>
-                                    <tr style="background-color:#EFECEB;">
+                                    <tr class="odo-bg-gray">
                                         <t t-foreach="range(0,len(header)-4)" t-as="tas">
                                             <th style="text-align: center;">
                                                 Avail
