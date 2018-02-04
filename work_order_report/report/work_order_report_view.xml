@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <template id="report_product_work_order">
+            <t t-call="report.html_container">
+                <t t-call="report.external_layout">
+                    <t t-set="o" t-value="purchase.with_context({'lang':purchase.partner_id.lang})"/>
+                    <style>
+                        .table th {
+                        padding: 2px !important;
+                        }
+                        .table td {
+                        padding: 2px !important;
+                        font-size: 12px !important;
+                        }
+                    </style>
+                    <div class="page" style="page-break-inside: auto">
+                        <div class="row">
+                            <div class="col-xs-12">
+                                <h2 class="text-center">Work Order</h2>
+                            </div>
+                            <br/>
+                            <div class="row">
+                                <div class="col-xs-6">
+                                    <div>
+                                        <strong>Purchase Order:</strong>
+                                        <t t-if="not data['name']">
+                                            <span>All</span>
+                                        </t>
+                                        <span t-esc="data['name']"/>
+                                    </div>
+                                    <div>
+                                        <strong>Order Date:</strong>
+                                        <span t-esc="data['order_date']"/>
+                                    </div>
+                                </div>
+                                <div class="col-xs-3 col-xs-offset-3">
+                                    <div t-field="o.partner_id"
+                                         t-field-options='{"widget": "contact", "fields": ["address", "name", "phone", "fax"], "no_marker": true}'/>
+                                </div>
+                            </div>
+                        </div>
+                        <br/>
+                        <table class="table table-condensed" style="padding: 0px;">
+                            <thead>
+                                <tr>
+                                    <t t-foreach="header" t-as="head">
+                                        <t t-if="len(head_value)==2">
+                                            <th t-att-colspan="len(head_value['value'])"
+                                                style="text-align: center;">
+                                                <t t-esc="head_value['name']"/>
+                                            </th>
+                                        </t>
+                                        <t t-else="len(head_value)>1">
+                                            <th rowspan="2" style="text-align: center;">
+                                                <t t-esc="head_value"/>
+                                            </th>
+                                        </t>
+                                    </t>
+                                </tr>
+
+                            </thead>
+                            <tbody>
+                                <t t-foreach="holiday_objs" t-as="list">
+                                    <tr>
+                                        <td class="text-center">
+                                            <span t-esc="list_index+1"/>
+                                        </td>
+                                        <td>
+                                            <span t-esc="list_value['name']"/>
+                                        </td>
+                                        <t t-foreach="list_value['value']" t-as="val">
+                                            <td class="text-center">
+                                                <span t-esc="val_value"/>
+                                            </td>
+                                        </t>
+                                        <td class="text-left">
+                                            <span t-esc="list_value['uom']"/>
+                                        </td>
+                                        <td class="text-right">
+                                            <span t-esc="list_value['qty']"/>
+                                        </td>
+                                        <td class="text-right">
+                                            <span t-esc="list_value['price_unit']"
+                                                  t-esc-options='{"widget": "monetary", "display_currency": "o.currency_id"}'/>
+                                        </td>
+                                        <td class="text-right">
+                                            <span t-esc="list_value['tax_amount']"/>
+                                        </td>
+                                        <td class="text-right">
+                                            <span t-esc="list_value['price_total']"
+                                                  t-esc-options='{"widget": "monetary", "display_currency": "o.currency_id"}'/>
+                                        </td>
+                                    </tr>
+                                </t>
+                            </tbody>
+                        </table>
+                        <div class="row">
+                            <div class="col-xs-4 pull-right">
+                                <table class="table table-condensed">
+                                    <tr class="border-black">
+                                        <td>
+                                            <strong>Total Without Taxes</strong>
+                                        </td>
+                                        <td class="text-right">
+                                            <span t-esc="data['amount_untaxed']"
+                                                  t-esc-options='{"widget": "monetary", "display_currency": "o.currency_id"}'/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Taxes</td>
+                                        <td class="text-right">
+                                            <span t-esc="data['amount_tax']"
+                                                  t-esc-options='{"widget": "monetary", "display_currency": "o.currency_id"}'/>
+                                        </td>
+                                    </tr>
+                                    <tr class="border-black">
+                                        <td>
+                                            <strong>Total</strong>
+                                        </td>
+                                        <td class="text-right">
+                                            <span t-esc="data['amount_total']"
+                                                  t-esc-options='{"widget": "monetary", "display_currency": "o.currency_id"}'/>
+                                        </td>
+                                    </tr>
+
+
+                                </table>
+
+                            </div>
+                            <div class="col-xs-8 pull-right">
+                                <table class="table table-condensed">
+                                    <tr>
+                                        <td style="padding-top: 65px;" colspan="2">
+                                            <strong>In Words:</strong>
+                                            <strong>
+                                                <t t-esc="data['amount_to_word']"/>
+                                            </strong>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                        <p t-field="purchase.notes"/>
+                    </div>
+                </t>
+            </t>
+        </template>
+        <report id="report_work_order"
+                string="Work Order"
+                model="purchase.order"
+                report_type="qweb-pdf"
+                name="work_order_report.report_product_work_order"
+                file="work_order_report.report_product_work_order"
+        />
+    </data>
+</openerp>
