@@ -35,10 +35,8 @@
                                     </div>
                                 </div>
                                 <div class="col-xs-3 col-xs-offset-3">
-
-                                    <div t-esc="data['partner_name']"
-                                         t-options='{"widget": "contact", "fields": ["address", "name", "phone", "fax"], "no_marker": True, "phone_icons": True}'/>
-
+                                    <div t-field="o.partner_id"
+                                         t-field-options='{"widget": "contact", "fields": ["address", "name", "phone", "fax"], "no_marker": true}'/>
                                 </div>
                             </div>
                         </div>
@@ -84,14 +82,14 @@
                                         </td>
                                         <td class="text-right">
                                             <span t-esc="list_value['price_unit']"
-                                                  t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
+                                                  t-esc-options='{"widget": "monetary", "display_currency": "o.currency_id"}'/>
                                         </td>
                                         <td class="text-right">
                                             <span t-esc="list_value['tax_amount']"/>
                                         </td>
                                         <td class="text-right">
                                             <span t-esc="list_value['price_total']"
-                                                  t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
+                                                  t-esc-options='{"widget": "monetary", "display_currency": "o.currency_id"}'/>
                                         </td>
                                     </tr>
                                 </t>
@@ -106,14 +104,14 @@
                                         </td>
                                         <td class="text-right">
                                             <span t-esc="data['amount_untaxed']"
-                                                  t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
+                                                  t-esc-options='{"widget": "monetary", "display_currency": "o.currency_id"}'/>
                                         </td>
                                     </tr>
                                     <tr>
                                         <td>Taxes</td>
                                         <td class="text-right">
                                             <span t-esc="data['amount_tax']"
-                                                  t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
+                                                  t-esc-options='{"widget": "monetary", "display_currency": "o.currency_id"}'/>
                                         </td>
                                     </tr>
                                     <tr class="border-black">
@@ -122,7 +120,7 @@
                                         </td>
                                         <td class="text-right">
                                             <span t-esc="data['amount_total']"
-                                                  t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
+                                                  t-esc-options='{"widget": "monetary", "display_currency": "o.currency_id"}'/>
                                         </td>
                                     </tr>
 
