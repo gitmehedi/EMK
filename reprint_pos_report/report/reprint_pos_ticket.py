@@ -37,9 +37,9 @@ class ReprintSalePosTicket(models.AbstractModel):
                 rec = {}
                 rec['product_name'] = line.product_id.name
                 rec['discount'] = line.discount
-                rec['quantity'] = line.qty
-                rec['rate'] = line.price_unit
-                rec['vat'] = line.price_subtotal_incl - line.price_subtotal
+                rec['quantity'] = "{0:.2f} {1}".format(line.qty,line.product_id.uom_id.name)
+                rec['rate'] = int(line.price_unit)
+                rec['vat'] = "{0:.2f}".format(line.price_subtotal_incl - line.price_subtotal)
                 rec['total_amount'] = line.price_subtotal
                 total_discount = total_discount + line.price_unit * line.qty - line.price_subtotal
                 total_quantity = total_quantity + line.qty
@@ -48,7 +48,7 @@ class ReprintSalePosTicket(models.AbstractModel):
             total_value = {
                 'total': pos_order.amount_total - pos_order.amount_tax,
                 'discount': total_discount,
-                'quantity': total_quantity,
+                'quantity': int(total_quantity),
                 'vat': pos_order.amount_tax,
                 'net_amount': pos_order.amount_total
             }

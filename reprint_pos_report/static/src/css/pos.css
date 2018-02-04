@@ -1045,7 +1045,7 @@
 
 .pos .pos-sale-ticket {
     text-align: left;
-    width: 300px;
+    width: 500px;
     background-color: white;
     margin: 20px;
     padding: 15px;
@@ -1129,7 +1129,7 @@
         margin-right: auto !important;
         border: none !important;
         font-size: 13px !important;
-        width: 266px !important;
+        width: 566px !important;
     }
 }
 

@@ -2,11 +2,24 @@
 <openerp>
     <data>
         <template id="reprint_sale_ticket">
+            <style>
+                .page .page-sale-ticket {
+                text-align: left;
+                width: 100%;
+                background-color: white;
+                margin: 5px;
+                padding: 5px;
+                font-size: 17.5px;
+                font-family: "Inconsolata";
+                overflow: hidden;
+                line-height: normal;
+                }
+            </style>
             <t t-call="report.html_container">
                 <div class="page">
                     <t t-foreach="docs" t-as="o">
-                        <div style="font-family: Arial, Helvetica, sans-serif;">
-                            <div class="pos-center-align" style="text-align: center;">
+                        <div class="page-sale-ticket">
+                            <div class="page-center-align" style="text-align: center;">
                                 <strong>
                                     <t t-esc="main_header['company_name']"/>
                                 </strong>
@@ -74,11 +87,11 @@
                                     <th style="text-align: right;">Amount</th>
                                 </tr>
                                 <tr>
-                                    <th>---------------</th>
-                                    <th style="text-align: right;">-----</th>
-                                    <th style="text-align: right;">-----</th>
-                                    <th style="text-align: right;">-----</th>
-                                    <th style="text-align: right;">----------</th>
+                                    <th>-------</th>
+                                    <th style="text-align: right;">---</th>
+                                    <th style="text-align: right;">----</th>
+                                    <th style="text-align: right;">---</th>
+                                    <th style="text-align: right;">------</th>
                                 </tr>
                                 <tr t-foreach="orderlines" t-as="orderline">
                                     <td>
@@ -94,7 +107,8 @@
                                         <t t-esc="orderline['vat']"/>
                                     </td>
                                     <td style="text-align: right;">
-                                        <t t-esc="orderline['total_amount']"/>
+                                        <t t-esc="orderline['total_amount']"
+                                           t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/>
                                     </td>
                                 </tr>
                                 <tr>
@@ -112,21 +126,24 @@
                                     </td>
                                     <td style="text-align: right;">
                                         <strong>
-                                            <t t-esc="total_value['total']"/>
+                                            <t t-esc="total_value['total']"
+                                               t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/>
                                         </strong>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td colspan="4">Discount:</td>
                                     <td style="text-align: right;">
-                                        <t t-esc="total_value['discount']"/>
+                                        <t t-esc="total_value['discount']"
+                                           t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/>
                                     </td>
                                 </tr>
 
                                 <tr>
                                     <td colspan="4">VAT</td>
                                     <td style="text-align: right;">
-                                        <t t-esc="total_value['vat']"/>
+                                        <t t-esc="total_value['vat']"
+                                           t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/>
                                     </td>
                                 </tr>
                                 <tr>
@@ -135,7 +152,8 @@
                                     </td>
                                     <td style="text-align: right;">
                                         <strong>
-                                            <t t-esc="total_value['net_amount']"/>
+                                            <t t-esc="total_value['net_amount']"
+                                               t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/>
                                         </strong>
                                     </td>
                                 </tr>
@@ -144,7 +162,8 @@
                                         <t t-esc="line['name']"/>
                                     </td>
                                     <td style="text-align: right;">
-                                        <t t-esc="line['amount']"/>
+                                        <t t-esc="line['amount']"
+                                           t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/>
                                     </td>
                                 </tr>
                             </table>
@@ -161,5 +180,34 @@
                 </div>
             </t>
         </template>
+
+
+        <report
+                id="action_report_pos_sale_ticket"
+                string="Receipt New"
+                model="pos.order"
+                report_type="qweb-pdf"
+                name="reprint_pos_report.reprint_sale_ticket"
+                file="reprint_pos_report.reprint_sale_ticket"/>
+
+        <record id="paperformat_for_reprint" model="report.paperformat">
+            <field name="name">Point Of Sale Receipt</field>
+            <field name="default" eval="True"/>
+            <field name="format">custom</field>
+            <field name="page_height">150</field>
+            <field name="page_width">74</field>
+            <field name="orientation">Portrait</field>
+            <field name="margin_top">3</field>
+            <field name="margin_bottom">2</field>
+            <field name="margin_left">2</field>
+            <field name="margin_right">2</field>
+            <field name="header_line" eval="False"/>
+            <field name="header_spacing">3</field>
+            <field name="dpi">130</field>
+        </record>
+
+        <record id="action_report_pos_sale_ticket" model="ir.actions.report.xml">
+            <field name="paperformat_id" ref="reprint_pos_report.paperformat_for_reprint"/>
+        </record>
     </data>
 </openerp>
