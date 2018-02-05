@@ -1,43 +1,6 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <odoo>
     <data>
-        <record id="job_confirmation_hr_comment_wizard" model="ir.ui.view">
-            <field name="name">job.confirmation.hr.comment.wizard</field>
-            <field name="model">job.confirmation.hr.comment.wizard</field>
-            <field name="type">form</field>
-            <field name="arch" type="xml" >
-                <form string="HR Confirmation" create="false" edit="false">
-                    <div>
-                        <group>
-                            <field name="given_reward"/>
-                            <field name="disciplinary_action"/>
-                        </group>
-                    </div>
-                    <footer>
-                        <button string="Save" name="save_record" type="object" class="oe_highlight"  />
-                        <button special="cancel" string="Close" type="object"/>
-                    </footer>
-                </form>
-            </field>
-        </record>
-        <record id="job_confirmation_employee_comment_wizard" model="ir.ui.view">
-            <field name="name">job.confirmation.employee.comment.wizard</field>
-            <field name="model">job.confirmation.employee.comment.wizard</field>
-            <field name="type">form</field>
-            <field name="arch" type="xml" >
-                <form string="Employee Comment" create="false" edit="false">
-                    <div colspan="1">
-                        <separator string="Comment by Employee"/>
-                        <field name="emp_comment" placeholder="I do hereby acknowledge that i have reviewed the above information about me which is correct. "/>
-                    </div>
-                    <footer>
-                        <button string="Save" name="save_record" type="object" class="oe_highlight"  />
-                        <button special="cancel" string="Close" type="object"/>
-                    </footer>
-                </form>
-            </field>
-        </record>
-
         <record id="job_confirmation_hr_manager_comment_wizard" model="ir.ui.view">
             <field name="name">hr.manager.comment.wizard</field>
             <field name="model">job.confirmation.persons.comment.wizard</field>
@@ -110,17 +73,6 @@
                             </tree>
                         </field>
                     </group>
-                    <separator string="Judgement of job confirming person"/>
-                    <group colspan="4">
-                        <group>
-                            <field name="judgment_promotion"/>
-                            <field name="judgment_observation"/>
-                        </group>
-                        <group>
-                            <field name="judgment_increment"/>
-                            <field name="judgment_training_requirement"/>
-                        </group>
-                    </group>
                     <footer>
                         <button string="Save" name="save_evaluating_judgement" type="object" class="oe_highlight"  />
                         <button special="cancel" string="Close" type="object"/>
@@ -182,14 +134,5 @@
                 </form>
             </field>
         </record>
-
-        <!--<record id="action_performance_evaluation_wizard" model="ir.actions.act_window">-->
-        <!--<field name="name">Performance Evaluation</field>-->
-        <!--<field name="res_model">hr.performance.evaluation</field>-->
-        <!--<field name="view_type">form</field>-->
-        <!--<field name="view_mode">tree,form</field>-->
-        <!--<field name="view_id" ref="hr_performance_evaluation_wizard"/>-->
-        <!--<field name="target">new</field>-->
-        <!--</record>-->
     </data>
 </odoo>

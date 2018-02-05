@@ -12,11 +12,8 @@ class HRJobConfirmation(models.Model):
     emp_department = fields.Many2one('hr.department',string = 'Department Name',requiered=True)
     emp_designation = fields.Many2one('hr.job',string = 'Designation',requiered=True)
     joining_date = fields.Date(string = 'Joining Date')
-    academic_qualification = fields.Date(string = 'Academic Qualification')
-    joining_designation = fields.Date(string = 'Designation On Joining')
-
-    given_reward = fields.Text(string = 'Reward Given')
-    disciplinary_action = fields.Text(string = 'Disciplinary Action')
+    joining_designation = fields.Date(string = 'Confirmation Due On')
+    probation_period = fields.Date(string = 'Probation Period')
 
     total_available_days = fields.Integer(string = 'Total Available Days')
     on_time_attended_days = fields.Integer(string='On Time Attended Days')
@@ -122,38 +119,6 @@ class HRJobConfirmation(models.Model):
     def action_reset(self):
         self.state = 'draft'
 
-    @api.multi
-    def action_hr_comment_wizard(self):
-        res = self.env.ref('gbs_hr_job_confirmation.job_confirmation_hr_comment_wizard')
-        result = {
-            'name': _('HR Comments'),
-            'view_type': 'form',
-            'view_mode': 'form',
-            'view_id': res and res.id or False,
-            'res_model': 'job.confirmation.hr.comment.wizard',
-            'type': 'ir.actions.act_window',
-            'nodestroy': True,
-            'target': 'new',
-            'context': {'given_reward': self.given_reward or False, 'disciplinary_action': self.disciplinary_action or False},
-
-        }
-        return result
-
-    @api.multi
-    def action_employee_comment_wizard(self):
-        res = self.env.ref('gbs_hr_job_confirmation.job_confirmation_employee_comment_wizard')
-        result = {
-            'name': _('Employee Comments'),
-            'view_type': 'form',
-            'view_mode': 'form',
-            'view_id': res and res.id or False,
-            'res_model': 'job.confirmation.employee.comment.wizard',
-            'type': 'ir.actions.act_window',
-            'nodestroy': True,
-            'target': 'new',
-            'context': {'emp_comment': self.emp_comment or False},
-        }
-        return result
 
     @api.multi
     def action_hr_manager_comment(self):
@@ -305,7 +270,7 @@ class HRJobConfirmation(models.Model):
 
 class HREvaluationCriteriaLine(models.Model):
     _name='hr.job.confirmation.criteria.line'
-    _description = 'Evaluation Criteria lines'
+    _description = 'Job Confirmation Criteria lines'
     _order = "seq asc"
 
     rel_job_id = fields.Many2one('hr.job.confirmation')

@@ -16,21 +16,6 @@ class ConfirmationEmpComments(models.TransientModel):
         return {'type': 'ir.actions.act_window_close'}
 
 
-class ConfirmationHRComments(models.TransientModel):
-    _name = 'job.confirmation.hr.comment.wizard'
-
-    given_reward = fields.Text(string='Reward Given', default=lambda self: self.env.context.get('given_reward'))
-    disciplinary_action = fields.Text(string='Disciplinary Action',
-                                      default=lambda self: self.env.context.get('disciplinary_action'))
-
-    @api.multi
-    def save_record(self):
-        form_id = self.env.context.get('active_id')
-        evaluation_form_pool = self.env['hr.job.confirmation'].search([('id', '=', form_id)])
-        evaluation_form_pool.write(
-            {'given_reward': self.given_reward, 'disciplinary_action': self.disciplinary_action})
-        return {'type': 'ir.actions.act_window_close'}
-
 
 class ConfirmingPersonsComments(models.TransientModel):
     _name = 'job.confirmation.persons.comment.wizard'
