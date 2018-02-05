@@ -30,6 +30,7 @@ Manages several types of evaluations: bottom-up, top-down, self-evaluations and 
         'wizard/hr_performance_evaluation_wizard_view.xml',
         'views/hr_evaluation_plan_view.xml',
         'views/hr_evaluation_view.xml',
+        'views/hr_evaluation_criteria.xml',
         'report/report_paperformat.xml',
         'report/hr_evaluation_report.xml',
     ],

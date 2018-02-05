@@ -2,17 +2,17 @@
 <odoo>
     <data>
         <menuitem
-				name="HR Evaluation"
+				name="HR Job Confirmation"
                 parent="hr.menu_hr_root"
-				id="hr_evaluation_main_menu"
+				id="hr_job_confirmation_main_menu"
 				sequence="93"
         />
-        <!--evaluation plan view-->
-        <record id="view_hr_evaluation_plan_tree" model="ir.ui.view">
-			<field name="name">hr_evaluation_plan_tree</field>
-			<field name="model">hr.evaluation.plan</field>
+        <!--Job confirmation plan view-->
+        <record id="view_hr_job_confirmation_plan_tree" model="ir.ui.view">
+			<field name="name">hr_job_confirmation_plan_tree</field>
+			<field name="model">hr.job.confirmation.plan</field>
 			<field name="arch" type="xml">
-				<tree string="HR Evaluation Plan">
+				<tree string="HR Job Confirmation Plan">
 					<field name="name" />
 					<field name="company_id" />
 					<field name="operating_unit_id" />
@@ -21,14 +21,14 @@
 			</field>
 		</record>
 
-        <record id="view_hr_evaluation_plan_form" model="ir.ui.view">
-			<field name="name">hr_evaluation_plan_form</field>
-			<field name="model">hr.evaluation.plan</field>
+        <record id="view_hr_job_confirmation_plan_form" model="ir.ui.view">
+			<field name="name">hr_job_confirmation_plan_form</field>
+			<field name="model">hr.job.confirmation.plan</field>
 			<field name="type">form</field>
 			<field name="arch" type="xml">
-                <form string="HR Evaluation Plan">
+                <form string="HR Job Confirmation Plan">
                     <header>
-                        <button name="%(action_hr_evaluation_employees)d" type="action"
+                        <button name="%(action_hr_job_confirmation_employees)d" type="action"
                                 string="Assign Employee"  attrs="{'invisible':[('state','=','confirm')]}"
                                 class="oe_highlight" context="{'operating_unit_id': operating_unit_id}"/>
                         <button string="Confirm" name="action_confirm"
@@ -39,7 +39,7 @@
                     <sheet>
                         <div class="oe_button_box"></div>
                         <div class="oe_title">
-                            <h2><field name="name" placeholder="Evaluation plan" attrs="{'readonly':[('state','=','confirm')]}"/></h2>
+                            <h2><field name="name" placeholder="Job Confirmation plan" attrs="{'readonly':[('state','=','confirm')]}"/></h2>
                         </div>
                         <group>
                             <group>
@@ -54,7 +54,7 @@
                             </group>
                         </group>
                         <separator string="Employees" colspan="2"/>
-                        <field name="evaluation_form_ids" attrs="{'readonly':[('state','=','confirm')]}">
+                        <field name="job_form_ids" attrs="{'readonly':[('state','=','confirm')]}">
                             <tree string="Employees" create='false' editable='false' delete='true'>
                                 <field name='employee_id'/>
                             </tree>
@@ -68,18 +68,18 @@
             </field>
         </record>
 
-        <record id="action_hr_evaluation_plan" model="ir.actions.act_window">
-			<field name="name">HR Evaluation Plan</field>
-			<field name="res_model">hr.evaluation.plan</field>
+        <record id="action_hr_job_confirmation_plan" model="ir.actions.act_window">
+			<field name="name">HR Job Confirmation Plan</field>
+			<field name="res_model">hr.job.confirmation.plan</field>
 			<field name="view_mode">tree,form</field>
 		</record>
 
 		<menuitem
-				name="HR Evaluation Plan"
-                parent="hr_evaluation_main_menu"
-				id="hr_evaluation_plan_menu"
+				name="HR Job Confirmation Plan"
+                parent="hr_job_confirmation_main_menu"
+				id="hr_job_confirmation_plan_menu"
 				sequence="10"
-                action="action_hr_evaluation_plan"
+                action="action_hr_job_confirmation_plan"
         />
 
     </data>
