@@ -42,7 +42,7 @@ class HREvaluationPlan(models.Model):
     def action_confirm(self):
         pool_criteria_emp = self.env['hr.evaluation.criteria.line']
         for i in self.evaluation_form_ids:
-            for criteria in self.env['hr.evaluation.criteria'].search([('is_active','=',True),('type','=','pfevaluation')]):
+            for criteria in self.env['hr.employee.criteria'].search([('is_active','=',True),('type','=','pfevaluation')]):
                 criteria_res = {
                     'seq': criteria.seq,
                     'name': criteria.name,

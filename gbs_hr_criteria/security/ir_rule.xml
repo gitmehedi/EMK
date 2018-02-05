@@ -4,7 +4,7 @@
 
         <record id="hr_performance_evaluation_manager" model="ir.rule">
             <field name="name">HR Criteria(HR Manager and CXO)</field>
-            <field name="model_id" ref="model_hr_evaluation_criteria"/>
+            <field name="model_id" ref="model_hr_employee_criteria"/>
             <field name="domain_force">[(1, '=', 1)]</field>
             <field name="perm_read" eval="True" />
             <field name="perm_create" eval="True" />

@@ -1,1 +1,1 @@
-import hr_evaluation_criteria
+import hr_employee_criteria

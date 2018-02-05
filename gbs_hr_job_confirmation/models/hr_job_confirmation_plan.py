@@ -40,7 +40,7 @@ class HRJobConfirmationPlan(models.Model):
     def action_confirm(self):
         pool_criteria_emp = self.env['hr.job.confirmation.criteria.line']
         for i in self.job_form_ids:
-            for criteria in self.env['hr.evaluation.criteria'].search([('is_active','=',True),('type','=','jobconf')]):
+            for criteria in self.env['hr.employee.criteria'].search([('is_active','=',True),('type','=','jobconf')]):
                 criteria_res = {
                     'seq': criteria.seq,
                     'name': criteria.name,
