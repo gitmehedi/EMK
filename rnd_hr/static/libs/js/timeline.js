@@ -2113,7 +2113,8 @@ links.Timeline.prototype.repaintCustomTime = function() {
         dom.customTime = customTime;
 
         // initialize parameter
-        this.customTime = new Date();
+        this.customTime = new Date(2018,0,15);
+        alert(this.customTime);
     }
 
     var x = this.timeToScreen(this.customTime),

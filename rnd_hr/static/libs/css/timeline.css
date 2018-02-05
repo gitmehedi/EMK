@@ -9,7 +9,7 @@ div.timeline-frame {
 div.timeline-content {
     overflow: hidden;
     position: relative;
-    height: 350px !important;
+    /*height: 350px !important;*/
 }
 
 div.timeline-axis {
@@ -54,6 +54,7 @@ div.timeline-event {
     box-sizing: border-box;
     color: #1a1a1a;
     display: inline-block;
+    border-radius: 0 !important;
 }
 
 div.timeline-event-selected {
@@ -112,7 +113,11 @@ div.timeline-event-line {
 }
 
 div.timeline-event-content {
-    margin: 5px;
+    /*margin: 5px;*/
+    margin:0 !important;
+    padding:0 !important;
+    text-align: center;
+    color: #fff;
     overflow: hidden;
     white-space: nowrap;
 }

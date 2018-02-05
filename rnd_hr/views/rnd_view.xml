@@ -69,6 +69,13 @@
                     background-color: #FFA500 !important; /* orange */
                     border-color: #cc8100 !important;     /* orange */
                 }
+
+                /* @Override */
+
+                .o_form_sheet {
+                   max-width: none !important;
+                   margin: 0 15px !important;
+                }
             </style>
                     </header>
 
