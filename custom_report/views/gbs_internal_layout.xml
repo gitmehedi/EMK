@@ -25,10 +25,10 @@
     <template id="gbs_internal_layout_header">
         <div class="header">
                 <style type="text/css">
-                    .header-content { position: relative; padding:10px; }
-                    .company-info { text-align:center; padding:0 250px; }
-                    .company-logo { position: absolute; top: 35%; transform: translateY(-35%); }
-                    .com-logo-img { max-height:120px; max-width: 160px }
+                    .header-content { position: relative;}
+                    .company-info { text-align:center;padding-top:8px;}
+                    .company-logo { position: absolute; top: 23%; transform: translateY(-35%) }
+                    .com-logo-img { max-height:120px; max-width: 160px;}
                 </style>
                 <div class="header-content">
                     <div class="company-logo">
