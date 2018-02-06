@@ -80,4 +80,14 @@ class StockPicking(models.Model):
                 picking = picking.with_context(split=todo_moves.ids)
 
             picking._create_backorder()
+
+        indent_obj = self.env['indent.indent']
+        indent_ids = indent_obj.search([('name', '=', picking.origin)])
+        flag = True
+        for picking in self:
+            if picking.state not in ('done', 'cancel'):
+                flag = False
+            if flag:
+                indent_ids.write({'state': 'received'})
+
         return True
