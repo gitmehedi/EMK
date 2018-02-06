@@ -8,7 +8,7 @@ class PayrollReportBankAc(models.AbstractModel):
     @api.model
     def render_html(self, docids, data=None):
 
-        payslip_run_pool = self.env['hr.payslip.run']
+        #payslip_run_pool = self.env['hr.payslip.run']
         slip_pool = self.env['hr.payslip']
         slip_ids = slip_pool.search([('payslip_run_id','=',data['active_id']),
                                      ('employee_id.bank_account_id.bank_id','=',data['bank_id'])])
@@ -39,11 +39,11 @@ class PayrollReportBankAc(models.AbstractModel):
             payslip['acc_no'] = slip.employee_id.bank_account_id.acc_number
             payslip['emp_seq'] = slip.employee_id.employee_sequence
 
-            payslip['NET'] = 0
+            payslip['BNET'] = 0
             for line in slip.line_ids:
-                if line.code == 'NET':
+                if line.code == 'BNET':
                     total_amt = line.total
-                    payslip['NET'] = math.ceil(total_amt)
+                    payslip['BNET'] = math.ceil(total_amt)
                     total_sum.append(math.ceil(total_amt))
                     break;
 
