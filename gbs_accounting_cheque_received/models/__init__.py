@@ -1,2 +1,3 @@
 import cheque_received
 import money_receipt_sequence
+import inherit_account_config_settings

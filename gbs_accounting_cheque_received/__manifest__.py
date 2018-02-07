@@ -15,6 +15,7 @@
         'views/cheque_received_view.xml',
         'views/cheque_list_not_honoured.xml',
         'views/money_receipt_sequence_view.xml',
+        'views/inherit_accounts_config_settings_view.xml',
     ],
 
     'summary': 'Cheque Received',
