@@ -8,10 +8,15 @@ class MoneyReceiptSequence(models.Model):
     name = fields.Char(string='Name', readonly=True)
     sequence_id = fields.Many2one('ir.sequence', string='Entry Sequence', copy=False)
 
+   # company_id = lambda self: self.env['res.company'].browse(self.env['res.company']._company_default_get('gbs_accounting_cheque_received'))
+
+
     @api.model
     def create(self, vals):
-        if vals.get('name', '/') == '/' and vals.get('id'):
-            sale_type = self.env['account.money.receipt'].browse(vals['id'])
-            if sale_type.sequence_id:
-                vals['name'] = sale_type.sequence_id.next_by_id()
+
+        #print self.company_id
+
+        seq = self.sequence_id.next_by_code('account.money.receipt') or '/'
+        vals['name'] = seq
+
         return super(MoneyReceiptSequence, self).create(vals)
