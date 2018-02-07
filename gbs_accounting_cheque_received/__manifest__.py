@@ -1,5 +1,5 @@
 {
-    'name': 'Post Dated Cheque Received',
+    'name': 'Cheque Received',
     'author': 'Genweb2 Limited',
     'website': 'www.genweb2.com',
     'category': 'Accounting',
@@ -14,9 +14,11 @@
     'data': [
         'views/cheque_received_view.xml',
         'views/cheque_list_not_honoured.xml',
+        'views/money_receipt_sequence_view.xml',
+        'views/inherit_accounts_config_settings_view.xml',
     ],
 
-    'summary': 'Post Dated Cheque Received',
+    'summary': 'Cheque Received',
     'installable': True,
     'application': False,
 }
