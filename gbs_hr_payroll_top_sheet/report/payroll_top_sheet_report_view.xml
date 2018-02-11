@@ -17,7 +17,11 @@
 									<tr class="odo-bg-gray">
 										<th>SN</th>
 										<th>Department</th>
-										<th>Employee Count</th>
+										<th>Total Employee</th>
+										<th>Total Salary</th>
+										<th>Total TDS</th>
+										<th>Total PF</th>
+										<th>Total Mess</th>
 
 									</tr>
 								</thead>
@@ -37,8 +41,17 @@
 													<td>
 														<span t-esc="o['count_emp']"></span>
 													</td>
-													<td class="text-right">
+													<td>
 														<span t-esc="o['total_net']"/>
+													</td>
+													<td>
+														<span t-esc="o['tds']"/>
+													</td>
+													<td>
+														<span t-esc="o['epmf']"/>
+													</td>
+													<td>
+														<span t-esc="o['mess']"/>
 													</td>
 												</t>
 											</t>

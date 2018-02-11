@@ -23,7 +23,7 @@ class PayrollReportPivotal(models.AbstractModel):
                     if rule not in rule_list:
                         rule_list.append(rule)
 
-        rule_list = sorted(rule_list, key=lambda k: k['seq'])
+        #rule_list = sorted(rule_list, key=lambda k: k['seq'])
 
         dept = self.env['hr.department'].search([])
 
@@ -33,7 +33,6 @@ class PayrollReportPivotal(models.AbstractModel):
             dpt_payslips = {}
             dpt_payslips['name'] = d.name
             dpt_payslips['val'] = []
-            total_sum = 0
             count = 0
             payslip = {}
             for slip in docs.slip_ids:
@@ -44,20 +43,34 @@ class PayrollReportPivotal(models.AbstractModel):
                 continue;
 
             total_sum = []
-            # payslip = {}
+            tds_sum = []
+            pf_sum = []
+            mess_sum = []
             for slip in docs.slip_ids:
                 if d.id == slip.employee_id.department_id.id:
                     payslip['NET'] = 0
                     for line in slip.line_ids:
                         if line.code == 'NET':
                             total_amt = line.total
-                            payslip['NET'] = math.ceil(total_amt)
+                            #payslip['NET'] = math.ceil(total_amt)
                             total_sum.append(math.ceil(total_amt))
-                            break;
+                        elif line.code == 'TDS':
+                            total_tds = line.total
+                            #payslip['TDS'] = math.ceil(total_tds)
+                            tds_sum.append(math.ceil(total_tds))
+                        elif line.code == 'EPMF':
+                            total_epmf = line.total
+                            pf_sum.append(math.ceil(total_epmf))
 
+                        elif line.code == 'MESS':
+                            total_mess = line.total
+                            mess_sum.append(math.ceil(total_mess))
 
-
-            payslip['total_net'] = sum(total_sum)
+            payslip['total_net'] = int(sum(total_sum))
+            payslip['tds'] = int(abs(sum(tds_sum)))
+            payslip['epmf'] = int(abs(sum(pf_sum)))
+            payslip['mess'] = int(abs(sum(mess_sum)))
+            
             dpt_payslips['val'].append(payslip)
             dpt_payslips_list.append(dpt_payslips)
 
