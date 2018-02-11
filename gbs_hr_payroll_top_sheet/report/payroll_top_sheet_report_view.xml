@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+	<data>
+		<template id="report_top_sheet">
+			<t t-call="report.html_container">
+				<t t-call="custom_report.gbs_internal_layout">
+					<div class="page" style="page-break-inside:auto">
+						<div class="row">
+							<p><span t-esc="context_timestamp(datetime.datetime.now()).strftime('%m-%d-%Y')"/></p>
+							<p>Initiated by : Human Resources</p>
+							<p>To : Managing Director</p><br/>
+
+							<h4 class="report-title"><b>Money Requisition for Disbursement of Officers’s Salary : <span t-esc="data['name']"/></b></h4>
+
+							<table class="table table-bordered table-condensed table-striped">
+								<thead>
+									<tr class="odo-bg-gray">
+										<th>SN</th>
+										<th>Department</th>
+										<th>Employee Count</th>
+
+									</tr>
+								</thead>
+								<tbody>
+									<t t-set="i" t-value="1" />
+									<t t-foreach="docs" t-as="k">
+										<tr style="page-break-inside: avoid">
+											<t t-if="k['val']">
+												<td>
+													<span t-esc="i"/>
+													<t t-set="i" t-value="i+1"/>
+												</td>
+												<td>
+													<span t-esc="k['name']"></span>
+												</td>
+												<t t-foreach="k['val']" t-as="o">
+													<td>
+														<span t-esc="o['count_emp']"></span>
+													</td>
+													<td class="text-right">
+														<span t-esc="o['total_net']"/>
+													</td>
+												</t>
+											</t>
+
+										</tr>
+									</t>
+
+								</tbody>
+
+							</table>
+						</div>
+						<h4>
+							<b>In Words: </b><strong t-esc="amt_to_word"></strong>
+						</h4>
+						<t t-call="custom_report.report_signing"></t>
+					</div>
+				</t>
+			</t>
+
+		</template>
+	</data>
+</odoo>
