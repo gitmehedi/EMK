@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <template id="report_delivery_order_doc">
+            <t t-call="report.html_container">
+                <t t-call="custom_report.gbs_internal_layout">
+                    <t t-foreach="docs" t-as="o">
+                        <div class="page" style="page-break-inside: auto">
+                            <div class="row">
+                                <div class="col-xs-12" style="text-align:center;">
+                                    <h2><strong>Money Receipt</strong></h2>
+                                    <hr/>
+                                </div>
+                            </div>
+                            <div class="row" style=" background-color:#a9a9a9; font-size:12px">
+                                <div class="row">
+                                    <div class="col-xs-8">
+                                        <div class="col-xs-12"><strong>SL No: </strong><span t-field="o.mr_sl_no"/></div>
+                                    </div>
+
+                                    <div class="col-xs-8">
+                                        <div class="col-xs-12"><strong>Sale Order Ref: </strong><span t-field="o.sale_order_id"/></div>
+                                    </div>
+
+                                    <div class="col-xs-8">
+                                        <div class="col-xs-12"><strong>Received From: </strong><span t-field="o.partner_id"/></div>
+                                    </div>
+
+                                    <div class="col-xs-8">
+                                        <div class="col-xs-12"><strong>the sum of Taka: </strong><span t-field="o.cheque_amount"/></div>
+                                    </div>
+
+                                    <div class="col-xs-8">
+                                        <div class="col-xs-12"><strong>In Cheque </strong><span t-field="o.is_cheque_payment"/></div>
+                                    </div>
+
+                                    <div class="col-xs-8">
+                                        <div class="col-xs-12"><strong>Date: </strong><span t-field="o.date_on_cheque"/></div>
+                                    </div>
+
+                                    <div class="col-xs-8">
+                                        <div class="col-xs-12"><strong>Bank Name: </strong><span t-field="o.bank_name"/></div>
+                                    </div>
+
+                                    <div class="col-xs-8">
+                                        <div class="col-xs-12"><strong>Branch Name: </strong><span t-field="o.branch_name"/></div>
+                                    </div>
+
+                                    <div class="col-xs-8">
+                                        <div class="col-xs-12"><strong>Taka </strong><span t-field="o.cheque_amount"/></div>
+                                    </div>
+
+                                    <div class="col-xs-8">
+                                         <br/><br/><br/>
+                                        <div class="col-xs-12"><strong>For Samuda Chemical Complex Ltd. </strong></div>
+                                        <br/><br/><br/>
+                                        --------------------------------------------------
+                                        <br/>
+                                        Authorized Signature
+
+
+                                    </div>
+
+
+
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </t>
+            </t>
+        </template>
+    </data>
+</odoo>

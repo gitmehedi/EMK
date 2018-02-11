@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <data>
+        <report
+                id="custom_report_of_delivery_order"
+                model="accounting.cheque.received"
+                string="Money Receipt"
+                report_type="qweb-pdf"
+                name="gbs_accounting_cheque_received.report_delivery_order_doc"
+                file="gbs_accounting_cheque_received.report_delivery_order_doc"
+        />
+    </data>
+</odoo>

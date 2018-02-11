@@ -43,7 +43,7 @@
 													<td><span t-esc="o['acc_no']"/></td>
 
 													<td class="text-right">
-														<span t-esc="'%.2f'% o['NET']"/>
+														<span t-esc="'%.2f'% o['BNET']"/>
 													</td>
 												</tr>
 											</t>
@@ -56,13 +56,13 @@
 									</td>
 								</tbody>
 							</table>
-							<p>(Taka <span t-esc="amount_to_text_bdt"/>)</p>
+							<p>(<span t-esc="amount_to_text_bdt"/>)</p>
 							<p>Your cooperation in this regard would be highly appreciated.</p>
 							<br/>
 							<br/><br/>
 							<div>
 								<p>For <span t-esc="company"/></p>
-								<br/><br/>
+								<br/><br/><br/><br/>
 								<p><b>Chairperson / Managing Director</b></p>
 							</div>
 
