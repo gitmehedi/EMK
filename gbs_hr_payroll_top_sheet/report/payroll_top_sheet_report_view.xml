@@ -86,21 +86,21 @@
 										<span t-esc="'%.2f'% tot_mess"/>
 									</td>
 									<td class="text-right">
-										<span t-esc="'%.2f'%tot_net"/>
+										<span t-esc="tot_net"/>
 									</td>
 								</tbody>
 							</table>
 						</div>
 						<h5>
-							<b>Bank Credit : </b><span t-esc="'%.2f'% tot_bank"></span>
+							<b>Bank Credit : </b><span t-esc="tot_bank"></span>
 							(<span t-esc="amt_to_word_bank"/>)
 						</h5>
 						<h5>
-							<b>Cash payment : </b><span t-esc="'%.2f'% tot_cash"></span>
+							<b>Cash payment : </b><span t-esc="tot_cash"></span>
 							(<span t-esc="amt_to_word_cash"/>)
 						</h5>
 						<h5>
-							<b>Total Fund Required : </b><span t-esc=" '%.2f'% tot_net"></span>
+							<b>Total Fund Required : </b><span t-esc="tot_net"></span>
 							(<span t-esc="amt_to_word_net"/>)
 						</h5>
 						<t t-call="custom_report.report_signing"></t>

@@ -100,6 +100,7 @@ class PayrollReportPivotal(models.AbstractModel):
             # for j in dpt_payslips_list:
             #     sum1.append(j[payslip['mess']])
             # print sum1
+
             all_total_net = sum(tot_net)
             all_total_bank = sum(tot_bank)
             all_total_cash = (sum(tot_net))-(sum(tot_bank))
@@ -107,6 +108,11 @@ class PayrollReportPivotal(models.AbstractModel):
             amt_to_word_net = self.env['res.currency'].amount_to_word(all_total_net)
             amt_to_word_bank = self.env['res.currency'].amount_to_word(all_total_bank)
             amt_to_word_cash = self.env['res.currency'].amount_to_word(all_total_cash)
+
+            locale.setlocale(locale.LC_ALL, 'bn_BD.UTF-8')
+            thousand_separated_all_total_bank = locale.currency(all_total_bank, grouping=True)
+            thousand_separated_all_total_net = locale.currency(all_total_net, grouping=True)
+            thousand_separated_all_total_cash = locale.currency(all_total_cash, grouping=True)
 
         docargs = {
             'doc_ids': self.ids,
@@ -119,9 +125,9 @@ class PayrollReportPivotal(models.AbstractModel):
             'tot_tds' : sum(tot_tds),
             'tot_mess' : sum(tot_mess),
             'tot_epmf' : sum(tot_epmf),
-            'tot_net' : all_total_net,
-            'tot_bank' : all_total_bank,
-            'tot_cash' : all_total_cash,
+            'tot_net' : thousand_separated_all_total_net,
+            'tot_bank' : thousand_separated_all_total_bank,
+            'tot_cash' : thousand_separated_all_total_cash,
             'amt_to_word_net' : amt_to_word_net,
             'amt_to_word_bank' : amt_to_word_bank,
             'amt_to_word_cash' : amt_to_word_cash,
