@@ -23,12 +23,14 @@ class emp_roster(http.Controller):
         fromDate = self.getDateFromStr(from_date)
         toDate = self.getDateFromStr(to_date)
 
-        if (type == 'employee_type'):
-            emp_list = employee_pool.search([('id', '=', employee_id), ('active', '=', True)])
-        elif (type == 'department_type'):
-            emp_list = employee_pool.search([('department_id', '=', department_id), ('active', '=', True)])
-        elif (type == 'op_type'):
-            emp_list = employee_pool.search([('operating_unit_id', '=', operating_unit_id), ('active', '=', True)])
+        # if (type == 'employee_type'):
+        #     emp_list = employee_pool.search([('id', '=', employee_id), ('active', '=', True)])
+        # elif (type == 'department_type'):
+        #     emp_list = employee_pool.search([('department_id', '=', department_id), ('active', '=', True)])
+        # elif (type == 'op_type'):
+        #     emp_list = employee_pool.search([('operating_unit_id', '=', operating_unit_id), ('active', '=', True)])
+
+        emp_list = employee_pool.search([('operating_unit_id', '=', operating_unit_id), ('active', '=', True)])
 
         data_list = []
         day = datetime.timedelta(days=1)

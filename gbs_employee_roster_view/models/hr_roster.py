@@ -31,8 +31,8 @@ class EmpRoster(models.TransientModel):
         def onchange_department_id(self):
                 if self.department_id:
                         self.employee_id = []
-                        query = """SELECT  id FROM hr_employee WHERE department_id = %s """
-                        self._cr.execute(query, (self.department_id.id,))
+                        query = """SELECT  id FROM hr_employee WHERE department_id = %s AND operating_unit_id = %s"""
+                        self._cr.execute(query, (self.department_id.id,self.operating_unit_id))
                         res = []
                         for data in self._cr.fetchall():
                                 if data[0] != res:

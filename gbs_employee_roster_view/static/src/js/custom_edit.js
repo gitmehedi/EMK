@@ -22,9 +22,11 @@ odoo.define('rnd_hr.custom_timeline', function (require) {
 
         onClick: function(self){
 
+            debugger;
+            // 'type': $('[name="type"]').val().replace(/\"/g, ''),
+
             var fromDate = $('[name="from_date"]').val()
             ajax.jsonRpc("/employee/roster", 'call', {
-                'type': $('[name="type"]').val().replace(/\"/g, ''),
                 'operating_unit_id': 2,
                 'department_id': 1,
                 'employee_id': 1,
