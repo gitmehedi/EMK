@@ -10,6 +10,8 @@
     'depends': [
         'base',
         'base_setup',
+        'hr',
+        'hr_rostering',
     ],
     'data': [
         'views/hr_attendance_settings_views.xml',
