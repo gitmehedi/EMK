@@ -13,7 +13,7 @@
 							<h4 class="report-title"><b>Money Requisition for Disbursement of Officers’s Salary : <span t-esc="data['name']"/></b></h4>
 
 							<table class="table table-bordered table-condensed table-striped">
-								<thead>
+								<thead style="border-style:none;">
 									<tr class="odo-bg-gray">
 										<th>SN</th>
 										<th>Department</th>
@@ -22,6 +22,7 @@
 										<th>Total TDS</th>
 										<th>Total PF</th>
 										<th>Total Mess</th>
+										<th>Total Payable</th>
 
 									</tr>
 								</thead>
@@ -42,7 +43,7 @@
 														<span t-esc="o['count_emp']"></span>
 													</td>
 													<td>
-														<span t-esc="o['total_net']"/>
+														<span t-esc="o['gross']"/>
 													</td>
 													<td>
 														<span t-esc="o['tds']"/>
@@ -53,14 +54,41 @@
 													<td>
 														<span t-esc="o['mess']"/>
 													</td>
+													<td>
+														<span t-esc="o['total_net']"/>
+													</td>
 												</t>
 											</t>
 
 										</tr>
 									</t>
+									<td>
 
+									</td>
+									<td>
+										<h5 style="float:left;border-style:none;">
+											<b> Total</b>
+										</h5>
+									</td>
+									<td>
+										<span t-esc="tot_emp"/>
+									</td>
+									<td>
+										<span t-esc="tot_gross"/>
+									</td>
+									<td>
+										<span t-esc="tot_tds"/>
+									</td>
+									<td>
+										<span t-esc="tot_epmf"/>
+									</td>
+									<td>
+										<span t-esc="tot_mess"/>
+									</td>
+									<td>
+										<span t-esc="tot_net"/>
+									</td>
 								</tbody>
-
 							</table>
 						</div>
 						<h4>
