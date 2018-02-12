@@ -42,19 +42,19 @@
 													<td>
 														<span t-esc="o['count_emp']"></span>
 													</td>
-													<td>
+													<td class="text-right">
 														<span t-esc="'%.2f'% o['gross']"/>
 													</td>
-													<td>
+													<td class="text-right">
 														<span t-esc=" '%.2f'% o['tds']"/>
 													</td>
-													<td>
+													<td class="text-right">
 														<span t-esc="'%.2f'% o['epmf']"/>
 													</td>
-													<td>
+													<td class="text-right">
 														<span t-esc=" '%.2f'% o['mess']"/>
 													</td>
-													<td>
+													<td class="text-right">
 														<span t-esc=" '%.2f'% o['total_net']"/>
 													</td>
 												</t>
@@ -73,33 +73,36 @@
 									<td>
 										<span t-esc="tot_emp"/>
 									</td>
-									<td>
+									<td class="text-right">
 										<span t-esc="'%.2f'% tot_gross"/>
 									</td>
-									<td>
+									<td class="text-right">
 										<span t-esc="'%.2f'% tot_tds"/>
 									</td>
-									<td>
+									<td class="text-right">
 										<span t-esc=" '%.2f'% tot_epmf"/>
 									</td>
-									<td>
+									<td class="text-right">
 										<span t-esc="'%.2f'% tot_mess"/>
 									</td>
-									<td>
+									<td class="text-right">
 										<span t-esc="'%.2f'%tot_net"/>
 									</td>
 								</tbody>
 							</table>
 						</div>
-						<h4>
-							<b>Bank Credit : </b><strong t-esc="'%.2f'% tot_bank"></strong>
-						</h4>
-						<h4>
-							<b>Cash payment : </b><strong t-esc="'%.2f'% tot_cash"></strong>
-						</h4>
-						<h4>
-							<b>Total Fund Required : </b><strong t-esc=" '%.2f'% tot_net"></strong>
-						</h4>
+						<h5>
+							<b>Bank Credit : </b><span t-esc="'%.2f'% tot_bank"></span>
+							(<span t-esc="amt_to_word_bank"/>)
+						</h5>
+						<h5>
+							<b>Cash payment : </b><span t-esc="'%.2f'% tot_cash"></span>
+							(<span t-esc="amt_to_word_cash"/>)
+						</h5>
+						<h5>
+							<b>Total Fund Required : </b><span t-esc=" '%.2f'% tot_net"></span>
+							(<span t-esc="amt_to_word_net"/>)
+						</h5>
 						<t t-call="custom_report.report_signing"></t>
 					</div>
 				</t>

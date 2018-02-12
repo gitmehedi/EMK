@@ -13,7 +13,8 @@
         'gbs_hr_calendar',
         'gbs_hr_employee_sequence',
         'hr_employee_loan_payroll',
-        'custom_report'
+        'custom_report',
+        'amount_to_word_bd',
     ],
     'data': [
         #'report/report_paperformat.xml',

@@ -100,6 +100,13 @@ class PayrollReportPivotal(models.AbstractModel):
             # for j in dpt_payslips_list:
             #     sum1.append(j[payslip['mess']])
             # print sum1
+            all_total_net = sum(tot_net)
+            all_total_bank = sum(tot_bank)
+            all_total_cash = (sum(tot_net))-(sum(tot_bank))
+
+            amt_to_word_net = self.env['res.currency'].amount_to_word(all_total_net)
+            amt_to_word_bank = self.env['res.currency'].amount_to_word(all_total_bank)
+            amt_to_word_cash = self.env['res.currency'].amount_to_word(all_total_cash)
 
         docargs = {
             'doc_ids': self.ids,
@@ -107,14 +114,17 @@ class PayrollReportPivotal(models.AbstractModel):
             'docs': dpt_payslips_list,
             #'all_mess': all_mess,
             'data': data,
+            'tot_emp': sum(tot_emp),
             'tot_gross' : sum(tot_gross),
             'tot_tds' : sum(tot_tds),
             'tot_mess' : sum(tot_mess),
             'tot_epmf' : sum(tot_epmf),
-            'tot_net' : sum(tot_net),
-            'tot_bank' : sum(tot_bank),
-            'tot_cash' : (sum(tot_net))-(sum(tot_bank)),
-            'tot_emp' : sum(tot_emp),
+            'tot_net' : all_total_net,
+            'tot_bank' : all_total_bank,
+            'tot_cash' : all_total_cash,
+            'amt_to_word_net' : amt_to_word_net,
+            'amt_to_word_bank' : amt_to_word_bank,
+            'amt_to_word_cash' : amt_to_word_cash,
         }
         
         return self.env['report'].render('gbs_hr_payroll_top_sheet.report_top_sheet', docargs)
