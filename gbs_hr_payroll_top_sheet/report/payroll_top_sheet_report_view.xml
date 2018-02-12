@@ -10,7 +10,7 @@
 							<p>Initiated by : Human Resources</p>
 							<p>To : Managing Director</p><br/>
 
-							<h4 class="report-title"><b>Money Requisition for Disbursement of Officers’s Salary : <span t-esc="data['name']"/></b></h4>
+							<h4 class="report-title"><b>Money Requisition for Disbursement of Salary : <span t-esc="data['name']"/></b></h4>
 
 							<table class="table table-bordered table-condensed table-striped">
 								<thead style="border-style:none;">
@@ -43,19 +43,19 @@
 														<span t-esc="o['count_emp']"></span>
 													</td>
 													<td>
-														<span t-esc="o['gross']"/>
+														<span t-esc="'%.2f'% o['gross']"/>
 													</td>
 													<td>
-														<span t-esc="o['tds']"/>
+														<span t-esc=" '%.2f'% o['tds']"/>
 													</td>
 													<td>
-														<span t-esc="o['epmf']"/>
+														<span t-esc="'%.2f'% o['epmf']"/>
 													</td>
 													<td>
-														<span t-esc="o['mess']"/>
+														<span t-esc=" '%.2f'% o['mess']"/>
 													</td>
 													<td>
-														<span t-esc="o['total_net']"/>
+														<span t-esc=" '%.2f'% o['total_net']"/>
 													</td>
 												</t>
 											</t>
@@ -67,38 +67,38 @@
 									</td>
 									<td>
 										<h5 style="float:left;border-style:none;">
-											<b> Total</b>
+											<b>Total</b>
 										</h5>
 									</td>
 									<td>
 										<span t-esc="tot_emp"/>
 									</td>
 									<td>
-										<span t-esc="tot_gross"/>
+										<span t-esc="'%.2f'% tot_gross"/>
 									</td>
 									<td>
-										<span t-esc="tot_tds"/>
+										<span t-esc="'%.2f'% tot_tds"/>
 									</td>
 									<td>
-										<span t-esc="tot_epmf"/>
+										<span t-esc=" '%.2f'% tot_epmf"/>
 									</td>
 									<td>
-										<span t-esc="tot_mess"/>
+										<span t-esc="'%.2f'% tot_mess"/>
 									</td>
 									<td>
-										<span t-esc="tot_net"/>
+										<span t-esc="'%.2f'%tot_net"/>
 									</td>
 								</tbody>
 							</table>
 						</div>
 						<h4>
-							<b>Bank Credit : </b><strong t-esc="tot_bank"></strong>
+							<b>Bank Credit : </b><strong t-esc="'%.2f'% tot_bank"></strong>
 						</h4>
 						<h4>
-							<b>Cash payment : </b><strong t-esc="tot_cash"></strong>
+							<b>Cash payment : </b><strong t-esc="'%.2f'% tot_cash"></strong>
 						</h4>
 						<h4>
-							<b>Total Fund Required : </b><strong t-esc="tot_net"></strong>
+							<b>Total Fund Required : </b><strong t-esc=" '%.2f'% tot_net"></strong>
 						</h4>
 						<t t-call="custom_report.report_signing"></t>
 					</div>

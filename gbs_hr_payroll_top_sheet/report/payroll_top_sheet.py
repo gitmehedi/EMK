@@ -77,23 +77,23 @@ class PayrollReportPivotal(models.AbstractModel):
                                 gross_total = line.total
                                 gross_sum.append(math.ceil(gross_total))
 
-            payslip['gross'] = int(sum(gross_sum))
-            payslip['total_net'] = int(sum(total_sum))
-            payslip['total_bank'] = int(sum(total_bank))
-            payslip['tds'] = int(abs(sum(tds_sum)))
-            payslip['epmf'] = int(abs(sum(pf_sum)))
-            payslip['mess'] = int(abs(sum(mess_sum)))
+            payslip['gross'] = (sum(gross_sum))
+            payslip['total_net'] = (sum(total_sum))
+            payslip['total_bank'] = (sum(total_bank))
+            payslip['tds'] = (abs(sum(tds_sum)))
+            payslip['epmf'] = (abs(sum(pf_sum)))
+            payslip['mess'] = (abs(sum(mess_sum)))
 
             dpt_payslips['val'].append(payslip)
             dpt_payslips_list.append(dpt_payslips)
 
 
-            tot_gross.append(int(abs(sum(gross_sum))))
-            tot_tds.append(int(abs(sum(tds_sum))))
-            tot_mess.append(int(abs(sum(mess_sum))))
-            tot_epmf.append(int(abs(sum(pf_sum))))
-            tot_net.append(int(abs(sum(total_sum))))
-            tot_bank.append(int(abs(sum(total_bank))))
+            tot_gross.append(abs(sum(gross_sum)))
+            tot_tds.append(abs(sum(tds_sum)))
+            tot_mess.append(abs(sum(mess_sum)))
+            tot_epmf.append(abs(sum(pf_sum)))
+            tot_net.append(abs(sum(total_sum)))
+            tot_bank.append(abs(sum(total_bank)))
             tot_emp.append(count)
 
             # sum1= []
