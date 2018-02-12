@@ -22,6 +22,16 @@ class ChequeReceived(models.Model):
     date_on_cheque = fields.Date('Date On Cheque', )
     cheque_amount = fields.Float(string='Amount', required=True,default='150')
     sale_order_id = fields.Many2one('sale.order', string='Sale Order',)
+    is_cheque_payment = fields.Boolean(string='Cheque Payment', default=True)
+    mr_sl_no = fields.Integer(string='SL No.')
+
+
+    """ Compute Money Receipt Unique Serial no """
+    @api.multi
+    def _compute_money_receipt_sl(self):
+        
+        return {}
+
 
     """ Methods """
     @api.multi
