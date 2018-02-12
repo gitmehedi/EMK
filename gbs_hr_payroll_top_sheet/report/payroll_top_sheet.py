@@ -31,6 +31,7 @@ class PayrollReportPivotal(models.AbstractModel):
         tot_epmf = []
         tot_mess = []
         tot_net = []
+        tot_bank = []
         tot_emp = []
 
         for d in dept:
@@ -46,6 +47,7 @@ class PayrollReportPivotal(models.AbstractModel):
             if payslip['count_emp'] == 0:
                 continue;
 
+            total_bank = []
             total_sum = []
             tds_sum = []
             pf_sum = []
@@ -58,6 +60,9 @@ class PayrollReportPivotal(models.AbstractModel):
                         if line.code == 'NET':
                             total_amt = line.total
                             total_sum.append(math.ceil(total_amt))
+                        elif line.code == 'BNET':
+                            total_bamt = line.total
+                            total_bank.append(math.ceil(total_bamt))
                         elif line.code == 'TDS':
                             total_tds = line.total
                             tds_sum.append(math.ceil(total_tds))
@@ -74,17 +79,21 @@ class PayrollReportPivotal(models.AbstractModel):
 
             payslip['gross'] = int(sum(gross_sum))
             payslip['total_net'] = int(sum(total_sum))
+            payslip['total_bank'] = int(sum(total_bank))
             payslip['tds'] = int(abs(sum(tds_sum)))
             payslip['epmf'] = int(abs(sum(pf_sum)))
             payslip['mess'] = int(abs(sum(mess_sum)))
 
             dpt_payslips['val'].append(payslip)
             dpt_payslips_list.append(dpt_payslips)
+
+
             tot_gross.append(int(abs(sum(gross_sum))))
             tot_tds.append(int(abs(sum(tds_sum))))
             tot_mess.append(int(abs(sum(mess_sum))))
             tot_epmf.append(int(abs(sum(pf_sum))))
             tot_net.append(int(abs(sum(total_sum))))
+            tot_bank.append(int(abs(sum(total_bank))))
             tot_emp.append(count)
 
             # sum1= []
@@ -103,6 +112,8 @@ class PayrollReportPivotal(models.AbstractModel):
             'tot_mess' : sum(tot_mess),
             'tot_epmf' : sum(tot_epmf),
             'tot_net' : sum(tot_net),
+            'tot_bank' : sum(tot_bank),
+            'tot_cash' : (sum(tot_net))-(sum(tot_bank)),
             'tot_emp' : sum(tot_emp),
         }
         

@@ -92,7 +92,13 @@
 							</table>
 						</div>
 						<h4>
-							<b>In Words: </b><strong t-esc="amt_to_word"></strong>
+							<b>Bank Credit : </b><strong t-esc="tot_bank"></strong>
+						</h4>
+						<h4>
+							<b>Cash payment : </b><strong t-esc="tot_cash"></strong>
+						</h4>
+						<h4>
+							<b>Total Fund Required : </b><strong t-esc="tot_net"></strong>
 						</h4>
 						<t t-call="custom_report.report_signing"></t>
 					</div>
