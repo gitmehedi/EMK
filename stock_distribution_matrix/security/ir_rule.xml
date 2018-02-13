@@ -4,7 +4,7 @@
         <record id="rule_warehouse_to_shop_distribution_by_manager" model="ir.rule">
             <field name="name">Warehouse to Shop Distribution by Manager</field>
             <field name="model_id" ref="model_warehouse_to_shop_distribution"/>
-            <field name="groups" eval="[(4,ref('pebbles_transfer_user.group_requisition_transfer_approval_manager'))]"/>
+            <field name="groups" eval="[(4,ref('pebbles_transfer_user.group_requisition_transfer_user'))]"/>
             <field name="perm_read" eval="1"/>
             <field name="perm_write" eval="1"/>
             <field name="perm_create" eval="0"/>
@@ -15,7 +15,7 @@
         <record id="rule_warehouse_to_shop_distribution_by_manager_line" model="ir.rule">
             <field name="name">Warehouse to Shop Distribution Line by Manager</field>
             <field name="model_id" ref="model_warehouse_to_shop_distribution_line"/>
-            <field name="groups" eval="[(4,ref('pebbles_transfer_user.group_requisition_transfer_approval_manager'))]"/>
+            <field name="groups" eval="[(4,ref('pebbles_transfer_user.group_requisition_transfer_user'))]"/>
             <field name="domain_force">[(1,'=',1)]</field>
         </record>
 

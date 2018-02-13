@@ -131,6 +131,6 @@
         <menuitem name="Warehouse To Shop Distribution" id="menu_warehouse_to_shop_distribution"
                   parent="stock.menu_stock_warehouse_mgmt" action="action_warehouse_to_shop_distribution"
                   sequence="253"
-                  groups='stock.group_stock_manager,pebbles_transfer_user.group_requisition_transfer_approval_manager'/>
+                  groups='stock.group_stock_user,pebbles_transfer_user.group_requisition_transfer_user'/>
     </data>
 </openerp>

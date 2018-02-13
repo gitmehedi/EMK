@@ -7,8 +7,9 @@
     'depends': ['web', 'point_of_sale'],
     'data': [
         'data/paperformat.xml',
-        'views/inherite_layout.xml',
         'views/templates.xml',
+        'views/inherite_layout.xml',
+
     ],
     'installable': True,
     'auto_install': False,

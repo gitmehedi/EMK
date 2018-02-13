@@ -157,14 +157,11 @@
                 string="Order Wise Sales"
                 name="pos_summary_report.report_pos_summary_qweb"
                 file="pos_summary_report.report_pos_summary_qweb"
-
                 report_type="qweb-pdf"/>
 
-        <record id="paperformat_Landscape" model="report.paperformat">
-            <field name="name">Landscape Report</field>
-            <field name="orientation">Landscape</field>
-            <field name="format">A4</field>
-            <field name="header_line" eval="False"/>
+        <record id="report_pos_order_summary" model="ir.actions.report.xml">
+            <field name="paperformat_id" ref="custom_report.paperformat_pebbles_backend"/>
         </record>
+
     </data>
 </openerp>

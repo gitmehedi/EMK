@@ -3,7 +3,7 @@
     <data>
         <record id="stock.menu_stock_warehouse_mgmt" model="ir.ui.menu">
             <field name="groups_id"
-                   eval="[(4,ref('pebbles_transfer_user.group_requisition_transfer_approval_manager'))]"/>
+                   eval="[(4,ref('pebbles_transfer_user.group_requisition_transfer_user'))]"/>
         </record>
     </data>
 </openerp>

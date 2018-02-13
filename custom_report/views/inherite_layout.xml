@@ -23,7 +23,7 @@
             <xpath expr="//div[@class='header']" position="replace">
                 <div class="header">
 
-                    <div class="row" style=" padding-top:10px;">
+                    <div class="row" style=" padding-top:2px;">
                         <div class="col-xs-3">
                             <img t-if="company.logo" t-att-src="'data:image/png;base64,%s' % company.logo"
                                  style="max-height: 80px;"/>
