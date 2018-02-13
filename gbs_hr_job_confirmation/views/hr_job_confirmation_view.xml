@@ -21,13 +21,6 @@
                 <form string="HR Job Confirmation" create="false" edit="false">
                     <header>
                         <field name="check_access" invisible="1"/>
-                        <!--wizard button-->
-                        <button string="Remark" name="action_hr_comment_wizard"
-								states="draft" type="object" class="oe_highlight"
-								groups="hr.group_hr_user"/>
-                        <button string="Employee Comments" name="action_employee_comment_wizard"
-								states="draft" type="object" class="oe_highlight"
-								groups="base.group_user"/>
                         <button string="Judgement" name="action_judge_incharge" attrs="{'invisible':['|',('check_access','=',False),('state','not in',['supervisor'])]}"
 								type="object" class="oe_highlight"
 								groups="base.group_user"/>
@@ -86,37 +79,16 @@
                                 <separator string="Personal Information" colspan="2"/>
                                 <field name="employee_id" readonly="1"/>
                                 <field name="emp_department" readonly="1"/>
-                                <field name="academic_qualification" readonly="1"/>
-                                <field name="given_reward"/>
+                                <field name="probation_period" readonly="1"/>
                             </group>
                             <group>
                                 <separator string="Job History" colspan="2"/>
                                 <field name="joining_date" readonly="1"/>
                                 <field name="emp_designation" readonly="1"/>
                                 <field name="joining_designation" readonly="1"/>
-                                <field name="disciplinary_action"/>
+
                             </group>
                         </group>
-                        <!--<group>-->
-                            <!--<separator string="Attendance" colspan="2"/>-->
-                            <!--<group>-->
-                                <!--<field name="total_available_days" readonly="1"/>-->
-                                <!--<field name="late_attended_days" readonly="1"/>-->
-                                <!--<field name="casual_leave_days" readonly="1"/>-->
-                                <!--<field name="sick_leave_days" readonly="1"/>-->
-                            <!--</group>-->
-                            <!--<group>-->
-                                <!--<field name="on_time_attended_days" readonly="1"/>-->
-                                <!--<field name="absent_days" readonly="1"/>-->
-                                <!--<field name="earned_leave_days" readonly="1"/>-->
-                                <!--<field name="extra_purpose_leave_days" readonly="1"/>-->
-                            <!--</group>-->
-                        <!--</group>-->
-                        <div colspan="1">
-                            <field name="manager_id" invisible="1"/>
-                            <separator string="Comment by Employee"/>
-                            <field name="emp_comment" placeholder="I do hereby acknowledge that i have reviewed the above information about me which is correct. "/>
-                        </div>
                         <!--management view part-->
                         <div>
                             <group colspan="4">
@@ -130,17 +102,6 @@
                                         <field name="obtain_marks" sum="Total"/>
                                     </tree>
                                 </field>
-                            </group>
-                            <separator string="Judgement of job confirming person"/>
-                            <group colspan="4">
-                                <group>
-                                    <field name="judgment_promotion"/>
-                                    <field name="judgment_observation"/>
-                                </group>
-                                <group>
-                                    <field name="judgment_increment"/>
-                                    <field name="judgment_training_requirement"/>
-                                </group>
                             </group>
                             <div colspan="1">
                                 <separator string="Comment by Job Confirming Person"/>

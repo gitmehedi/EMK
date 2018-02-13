@@ -6,10 +6,8 @@ class HRJobConfirmationPlan(models.Model):
     _name='hr.job.confirmation.plan'
     _inherit = ['mail.thread']
     _description = 'Employee Job Confirmation Plan'
-    _order = "plan_year desc"
 
     name = fields.Char(string='Name', required=True)
-    plan_year = fields.Many2one('hr.leave.fiscal.year', string="Plan Year", required=True)
     company_id = fields.Many2one('res.company', string='Company', required='True',
                                  default=lambda self: self.env['res.company']._company_default_get())
     operating_unit_id = fields.Many2one('operating.unit', string='Operating Unit',
@@ -42,7 +40,7 @@ class HRJobConfirmationPlan(models.Model):
     def action_confirm(self):
         pool_criteria_emp = self.env['hr.job.confirmation.criteria.line']
         for i in self.job_form_ids:
-            for criteria in self.env['hr.evaluation.criteria'].search([('is_active','=',True),('type','=','jobconf')]):
+            for criteria in self.env['hr.employee.criteria'].search([('is_active','=',True),('type','=','jobconf')]):
                 criteria_res = {
                     'seq': criteria.seq,
                     'name': criteria.name,

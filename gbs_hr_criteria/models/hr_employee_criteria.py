@@ -3,8 +3,8 @@ from odoo.exceptions import UserError
 
 
 class HREvaluationCriteria(models.Model):
-    _name='hr.evaluation.criteria'
-    _description = 'Evaluation Criteria'
+    _name='hr.employee.criteria'
+    _description = 'Employee Criteria'
     _order = "seq asc"
 
     seq = fields.Integer(string = 'Sequence',required=True)

@@ -55,16 +55,11 @@
                                         <td colspan="4">Designation (On joining period) : <span t-field="o.emp_designation"/></td>
                                     </tr>
                                     <tr>
-                                        <td colspan="4">Academic Qualification : <span t-field="o.academic_qualification"/></td>
                                         <td colspan="4">Present Designation : <span t-field="o.emp_designation"/></td>
                                     </tr>
                                     <tr style="font-weight: bold;">
                                         <td colspan="4">Reward given (Between evaluating year):</td>
                                         <td colspan="4">Disciplinary action (Between evaluating year):</td>
-                                    </tr>
-                                    <tr>
-                                        <td colspan="4"><span t-field="o.given_reward"/></td>
-                                        <td colspan="4"><span t-field="o.disciplinary_action"/></td>
                                     </tr>
                                     <tr >
                                         <td style="font-weight: bold;" colspan="8">5. Attendance (For the year 20.....)</td>
@@ -124,15 +119,15 @@
                             <table>
                                 <thead></thead>
                                 <tbody>
-                                    <tr>
-                                        <td style="font-weight: bold;" colspan="8">8. Judgement of job confirming person</td>
-                                    </tr>
-                                    <tr>
-                                        <td colspan="2">promotion:<input type="checkbox" name="promotion" style="margin-left:15px" /></td>
-                                        <td colspan="3">place under observation:<input type="checkbox" name="observation" style="margin-left:15px" /></td>
-                                        <td colspan="1">Increment:<input type="checkbox" name="Increment" style="margin-left:15px" /></td>
-                                        <td colspan="2">Training requirement:<input type="checkbox" name="Training" style="margin-left:15px" /></td>
-                                    </tr>
+                                    <!--<tr>-->
+                                        <!--<td style="font-weight: bold;" colspan="8">8. Judgement of job confirming person</td>-->
+                                    <!--</tr>-->
+                                    <!--<tr>-->
+                                        <!--<td colspan="2">promotion:<input type="checkbox" name="promotion" style="margin-left:15px" /></td>-->
+                                        <!--<td colspan="3">place under observation:<input type="checkbox" name="observation" style="margin-left:15px" /></td>-->
+                                        <!--<td colspan="1">Increment:<input type="checkbox" name="Increment" style="margin-left:15px" /></td>-->
+                                        <!--<td colspan="2">Training requirement:<input type="checkbox" name="Training" style="margin-left:15px" /></td>-->
+                                    <!--</tr>-->
                                     <tr>
                                         <td style="font-weight: bold;" colspan="8">9. Evaluating person:</td>
                                     </tr>

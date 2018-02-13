@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <report
+        	id="report_top_sheets"
+            string="Top Sheet"
+            model="hr.payslip.run" 
+            report_type="qweb-pdf"
+            file="gbs_hr_payroll_top_sheet.report_top_sheet"
+            name="gbs_hr_payroll_top_sheet.report_top_sheet"
+        />
+        <!--<record id="report_top_sheets" model="ir.actions.report.xml">-->
+            <!--<field name="paperformat_id" ref="gbs_hr_payroll_top_sheet.paperformat_hrsummary"/>-->
+        <!--</record>-->
+        
+    </data>
+</odoo>

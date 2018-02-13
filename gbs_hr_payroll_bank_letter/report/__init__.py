@@ -1,1 +1,2 @@
 import payroll_report_bank_ac
+import inherit_res_partner_bank

@@ -5,7 +5,7 @@ class HrBankSelectionWizard(models.TransientModel):
     _name = 'hr.bank.selection.wizard'
 
     bank_names = fields.Many2one('res.partner.bank', string="Select A Bank Account", required=True,
-                                 domain=[('partner_id', '!=', False)])
+                                 domain=[('is_payroll_account', '=', True)])
 
     @api.multi
     def process_print(self):
