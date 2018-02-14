@@ -3,7 +3,7 @@
     <data>
         <template id="overtime_summary_report">
             <t t-call="report.html_container">
-                <t t-call="report.external_layout">
+                <t t-call="custom_report.gbs_internal_layout">
                     <style>
                         .table th {
                         padding: 2px !important;
@@ -23,17 +23,17 @@
                             <div class="row">
                                 <div class="col-xs-6">
                                     <t t-if="data['from_date']">
-                                        <strong>Date:</strong>
+                                        <strong>Date : </strong>
                                         <span t-esc="data['from_date']"/>
                                     </t>
                                     <t t-if="data['to_date']">
-                                        <strong>To:</strong>
+                                        <strong>To : </strong>
                                         <span t-esc="data['to_date']"/>
                                     </t>
                                 </div>
                                 <div class="col-xs-6 text-right">
                                     <t t-if="data['operating_unit_name']">
-                                        <strong>Operating Unit:</strong>
+                                        <strong>Operating Unit : </strong>
                                         <span t-esc="data['operating_unit_name']"/>
                                     </t>
                                 </div>
@@ -41,13 +41,13 @@
                             <div class="row">
                                 <div class="col-xs-6">
                                     <t t-if="data['emp_name']">
-                                        <strong>Employee Name:</strong>
+                                        <strong>Employee Name : </strong>
                                         <span t-esc="data['emp_name']"/>
                                     </t>
                                 </div>
                                 <div class="col-xs-6 text-right">
                                     <t t-if="data['device_no']">
-                                        <strong>ID Number:</strong>
+                                        <strong>ID Number : </strong>
                                         <span t-esc="data['device_no']"/>
                                     </t>
                                 </div>
@@ -55,13 +55,13 @@
                             <div class="row">
                                 <div class="col-xs-6">
                                     <t t-if="data['emp_department_name']">
-                                        <strong>Department:</strong>
+                                        <strong>Department : </strong>
                                         <span t-esc="data['emp_department_name']"/>
                                     </t>
                                 </div>
                                 <div class="col-xs-6 text-right">
                                     <t t-if="data['emp_job_name']">
-                                        <strong>Designation:</strong>
+                                        <strong>Designation : </strong>
                                         <span t-esc="data['emp_job_name']"/>
                                     </t>
                                 </div>
@@ -71,7 +71,7 @@
                         <div class="row">
                             <table class="table table-bordered" style="padding: 0px;">
                                 <thead>
-                                    <tr style="background-color:#EFECEB;">
+                                    <tr style="background-color:#f5f5f5;">
                                         <th class="text-center">Date</th>
                                         <th class="text-center">From</th>
                                         <th class="text-center">To</th>
