@@ -8,6 +8,8 @@ class InheritAccountPayment(models.Model):
                                     domain=[('state', '=', 'done'), ('credit_sales_or_lc','!=','credit_sales')], )
     is_this_payment_checked = fields.Boolean(string='Is This Payment checked with SO', default=False)
     my_menu_check = fields.Boolean(string='Check')
+    is_cash_payment = fields.Boolean(string='Cash Payment', default=True)
+
 
     ## if cash
     deposited_bank = fields.Char(string='Deposited Bank')
