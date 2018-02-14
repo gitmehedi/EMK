@@ -20,6 +20,7 @@
         'letter_of_credit',
         # 'com_shipment',
         'ir_sequence_operating_unit',
+        'purchase_order_revision',
     ],
 
     'data': [
