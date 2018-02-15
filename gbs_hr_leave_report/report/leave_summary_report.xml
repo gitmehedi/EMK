@@ -103,7 +103,7 @@
                 name="gbs_hr_leave_report.report_emp_leave_summary"
                 file="gbs_hr_leave_report.report_emp_leave_summary"
                 menu="False"
-                paperformat="custom_report.paperformat_hrsummary"
+                paperformat="custom_report.paperformat_backend_landscape"
         />
     </data>
 </odoo>

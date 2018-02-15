@@ -116,6 +116,7 @@
                 name="hr_overtime_report.overtime_summary_report"
                 file="hr_overtime_report.overtime_summary_report"
                 menu="False"
+                paperformat="custom_report.paperformat_backend_portrait"
         />
     </data>
 </odoo>

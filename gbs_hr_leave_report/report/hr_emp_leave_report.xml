@@ -107,21 +107,9 @@
                                     </t>
                                 </tbody>
                             </table>
+                            <br/>
                         </t>
-                        <div class="row mb32" style="margin-top: 30mm;">
-                            <div class="col-xs-3 text-center">
-                                <strong style="border-top: 1px solid black; padding-top:5px;">Prepared By</strong>
-                            </div>
-                            <div class="col-xs-3 text-center">
-                                <strong style="border-top: 1px solid black; padding-top:5px;">Checked By</strong>
-                            </div>
-                            <div class="col-xs-3 text-center">
-                                <strong style="border-top: 1px solid black; padding-top:5px;">Recommended By</strong>
-                            </div>
-                            <div class="col-xs-3 text-center">
-                                <strong style="border-top: 1px solid black; padding-top:5px;">Authorized By</strong>
-                            </div>
-                        </div>
+                        <t t-call="custom_report.report_signing"></t>
                     </div>
                 </t>
             </t>
@@ -133,6 +121,7 @@
                 name="gbs_hr_leave_report.hr_emp_leave_report"
                 file="gbs_hr_leave_report.hr_emp_leave_report"
                 menu="False"
+                paperformat="custom_report.paperformat_backend_portrait"
         />
     </data>
 </odoo>

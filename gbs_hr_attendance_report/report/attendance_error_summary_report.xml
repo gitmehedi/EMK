@@ -121,7 +121,8 @@
                 name="gbs_hr_attendance_report.report_att_error_summary"
                 file="gbs_hr_attendance_report.report_att_error_summary"
                 menu="False"
-                paperformat="custom_report.paperformat_backend_landscape"
+                paperformat="custom_report.paperformat_backend_portrait"
         />
     </data>
 </odoo>
+

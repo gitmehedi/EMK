@@ -2,9 +2,18 @@
 <!--Custom report.-->
 <openerp>
     <data>
+        <report
+                id="custom_report_of_daily_attendance"
+                model="daily.attendance.report.wizard"
+                string="Daily Attendance Report"
+                report_type="qweb-pdf"
+                name="gbs_hr_attendance_report.report_daily_att_doc"
+                file="gbs_hr_attendance_report.report_daily_att_doc"
+                paperformat="custom_report.paperformat_backend_portrait"
+        />
         <template id="report_daily_att_doc">
             <t t-call="report.html_container">
-                <t t-call="report.external_layout">
+                <t t-call="custom_report.gbs_internal_layout">
                     <!--<t t-foreach="docs" t-as="o">-->
                     <div class="page" style="page-break-inside: auto">
                         <div class="row">
@@ -242,6 +251,7 @@
                             </t>
                             <br/>
                         </t>
+                        <t t-call="custom_report.report_signing"></t>
                     </div>
                 </t>
             </t>
