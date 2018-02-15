@@ -19,7 +19,7 @@
         'security/ir.model.access.csv',
         #'security/ir_rule.xml',
         'report/report_paperformat.xml',
-        'report/gbs_hr_attendance_report.xml',
+        #'report/gbs_hr_attendance_report.xml',
         'wizard/hr_attendance_duration_wizard_views.xml',
         'report/gbs_hr_attendance_duration_report.xml',
         #'report/daily_attendance_report.xml',
