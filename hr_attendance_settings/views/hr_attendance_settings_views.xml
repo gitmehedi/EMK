@@ -21,8 +21,8 @@
 
                         <label for="id" string="Attendance Duration Rule"/>
                         <div>
-                            <p><strong> Get first one within
-                            <field name="get_att_duration" class="oe_inline" nolable="1" style="width: 30px !important"/>
+                            <p><strong> Time duration between consucative Check In or Check Out
+                            <field name="time_duration" class="oe_inline" nolable="1" style="width: 30px !important"/>
                             seconds.</strong></p>
                         </div>
                     </group>
