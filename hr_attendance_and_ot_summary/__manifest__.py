@@ -5,7 +5,7 @@
     'category': 'HR Attendance',
     'version':'1.0',
     'data': [
-        'report/report_paperformat.xml',
+        #'report/report_paperformat.xml',
         'security/ir.model.access.csv',
         'security/security.xml',
         'views/attendance_summary_view.xml',
@@ -27,6 +27,7 @@
         'hr_overtime_requisition',
         'gbs_hr_employee_seniority',
         'hr_attendance_settings',
+        'custom_report'
     ],
     
     'description': 
