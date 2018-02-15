@@ -3,6 +3,7 @@ import time
 from openerp import models, fields, api
 from openerp.tools.translate import _
 from openerp.osv import osv
+from openerp.exceptions import Warning
 
 
 class InheritedPosOrder(models.Model):
@@ -11,7 +12,16 @@ class InheritedPosOrder(models.Model):
     return_pos_ref = fields.Char(string="PoS Reference", required=False)
     order_id = fields.Many2one('pos.order', required=False)
 
-    def refund(self, cr, uid, ids,  context=None):
+    @api.model
+    def action_pos_order_delete(self):
+        if 'Point of Sale Admin' not in [val.name for val in self.env.user.groups_id]:
+            raise Warning(_('Only Point of Sale Admin can delete Point of Sale Order. Please contact with Admin.'))
+
+        self.state = 'cancel'
+        if self.state == 'cancel':
+            self.unlink()
+
+    def refund(self, cr, uid, ids, context=None):
         """Create a copy of order  for refund order"""
         clone_list = []
         line_obj = self.pool.get('pos.order.line')
@@ -49,7 +59,8 @@ class InheritedPosOrderLine(models.Model):
 
         record = self.browse(cr, uid, ids, context=context)
         if record.qty < 0:
-            order = self.pool.get('pos.order.line').search(cr, uid,[('product_id','=',record.product_id.id),('order_id','=',record.order_id.order_id.id)])
+            order = self.pool.get('pos.order.line').search(cr, uid, [('product_id', '=', record.product_id.id),
+                                                                     ('order_id', '=', record.order_id.order_id.id)])
             if not order:
                 return False
         return True

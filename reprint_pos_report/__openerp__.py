@@ -12,6 +12,7 @@
     """,
     'depends': ['point_of_sale'],
     'data': [
+        'security/security.xml',
         'views/assets.xml',
         'report/reprint_sale_ticket_view.xml',
         'wizard/pos_product_return_view.xml',

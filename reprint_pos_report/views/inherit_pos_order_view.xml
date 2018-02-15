@@ -6,15 +6,36 @@
             <field name="model">pos.order</field>
             <field name="inherit_id" ref="point_of_sale.view_pos_pos_form"/>
             <field name="arch" type="xml">
+                <xpath expr="//form" position="attributes">
+                    <attribute name="create">false</attribute>
+                    <attribute name="delete">false</attribute>
+                </xpath>
                 <xpath expr="//button[@string='Reprint']" position="replace">
                     <button name="%(action_report_pos_sale_ticket)d" string="Reprint" type="action"
                             states="paid,done,invoiced"/>
                 </xpath>
                 <xpath expr="//button[@string='Return Products']" position="replace">
-                     <button name="%(action_pos_proudct_return)d" string="Exchange Products" type="action"
-                             attrs="{'invisible':[('state','=','draft')]}"/>
+                    <button name="%(action_pos_proudct_return)d" string="Exchange Products" type="action"
+                            attrs="{'invisible':[('state','=','draft')]}"/>
                 </xpath>
             </field>
+        </record>
+
+        <record id="action_pos_order_delete_action" model="ir.actions.server">
+            <field name="name">Delete</field>
+            <field name="model_id" ref="model_pos_order"/>
+            <field name="state">code</field>
+            <field name="condition">True</field>
+            <field name="code">if object: self.browse(cr,uid,context.get('active_ids', [])).action_pos_order_delete()
+            </field>
+            <field name="groups" eval="[(4, ref('reprint_pos_report.group_pos_order_admin'))]"/>
+        </record>
+        <record id="action_pos_order_delete" model="ir.values">
+            <field name="name">name</field>
+            <field name="model">pos.order</field>
+            <field name="key">action</field>
+            <field name="key2">client_action_multi</field>
+            <field name="value" eval="'ir.actions.server,%d'%action_pos_order_delete_action"/>
         </record>
     </data>
 </openerp>
