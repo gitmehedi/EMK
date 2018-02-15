@@ -16,6 +16,6 @@ class HREvaluationCriteria(models.Model):
     ],required=True)
     is_active = fields.Boolean(string = 'Active')
 
-    _sql_constraints = [
-        ('name_uniq', 'unique (name,seq)', 'The name and sequence of the criteria must be unique!')
-    ]
+    # _sql_constraints = [
+    #     ('name_uniq', 'unique (name,seq)', 'The name and sequence of the criteria must be unique!')
+    # ]

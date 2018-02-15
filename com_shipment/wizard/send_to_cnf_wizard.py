@@ -13,5 +13,6 @@ class SendCnfWizard(models.TransientModel):
         form_id = self.env.context.get('active_id')
         shipment_pool = self.env['purchase.shipment']
         shipment_obj = shipment_pool.search([('id', '=', form_id)])
-        shipment_obj.write({'cnf_received_date': self.cnf_received_date, 'cnf_id': self.cnf_id.id})
+        shipment_obj.write({'cnf_received_date': self.cnf_received_date, 'cnf_id': self.cnf_id.id,'state':'send_to_cnf'})
         return {'type': 'ir.actions.act_window_close'}
+
