@@ -15,6 +15,16 @@ class HRAttendanceConfigSettings(models.Model):
 
     late_salary_deduction_rule = fields.Integer(size=2,default=_get_default)
 
+
+    def _get_att_duration(self):
+        query = """select get_att_duration from hr_attendance_config_settings order by id desc limit 1"""
+        self._cr.execute(query, tuple([]))
+        deduction_rule_value = self._cr.fetchone()
+        if deduction_rule_value:
+            return deduction_rule_value[0]
+
+    get_att_duration = fields.Integer(size=2,default=_get_att_duration)
+
     @api.model
     def create(self,vals):
         config_id = super(HRAttendanceConfigSettings, self).create( vals)
