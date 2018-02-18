@@ -33,48 +33,56 @@ class ChequeReceived(models.Model):
 
     @api.multi
     def action_honoured(self):
-        for cr in self:
-            acc_move_line_pool = cr.env['account.move.line']
-            account_move = cr.env['account.move']
+        for cash_rcv in self:
+            acc_move_line_pool = cash_rcv.env['account.move.line']
+            account_move = cash_rcv.env['account.move']
 
             move_vals = {}
-            move_vals['name'] = 'test' #@todo: Need this in a shape like this: "BNK1/2018/0008"
-            move_vals['date'] = cr.date_on_cheque
-            move_vals['company_id'] = cr.company_id.id
-            move_vals['journal_id'] = cr.company_id.bank_journal_ids.id
-            move_vals['partner_id'] = cr.partner_id.id
+            move_vals['date'] = cash_rcv.date_on_cheque
+            move_vals['company_id'] = cash_rcv.company_id.id
+            move_vals['journal_id'] = cash_rcv.company_id.bank_journal_ids.id
+            move_vals['partner_id'] = cash_rcv.partner_id.id
             move_vals['state'] = 'posted'
-            #move_vals['payment_id'] = cr.id
-
-            account_move.create(move_vals)
+            move_vals['amount'] = cash_rcv.cheque_amount
+            move = account_move.create(move_vals)
 
             move_line_vals = {}
-            move_line_vals['partner_id'] = cr.partner_id.id
-
-            # move_line_vals['payment_id'] =
-            move_line_vals['invoice_id'] = False
-            # move_line_vals['currency_id'] = False
-            move_line_vals['credit'] = cr.cheque_amount
-            move_line_vals['debit'] = cr.cheque_amount
-            # move_line_vals['operating_unit_id'] =
-            # move_line_vals['amount_currency'] =
-            move_line_vals['move_id'] = cr.id
-            move_line_vals['date_maturity'] = cr.date_on_cheque
-            move_line_vals['name'] = 'test2' #@todo: Need to change it
+            move_line_vals['partner_id'] = cash_rcv.partner_id.id
+            move_line_vals['debit'] = cash_rcv.cheque_amount
+            move_line_vals['credit'] = cash_rcv.cheque_amount
+            move_line_vals['move_id'] = move.id
+            move_line_vals['date_maturity'] = cash_rcv.date_on_cheque
+            move_line_vals['currency_id'] = 3
 
             if move_line_vals['credit']:
-                move_line_vals['account_id'] = cr.company_id.bank_journal_ids.default_debit_account_id.id
-                move_line_vals['debit'] = 0.00
+                move_line_vals['account_id'] = cash_rcv.company_id.bank_journal_ids.default_debit_account_id.id
+                move_line_vals['credit'] = cash_rcv.cheque_amount
+                move_line_vals['credit_cash_basis'] = cash_rcv.cheque_amount
+                move_line_vals['dedit_cash_basis'] = 0
+                move_line_vals['balance_cash_basis'] = -cash_rcv.cheque_amount
+                move_line_vals['debit'] = 0
+                move_line_vals['name'] = "rabbi Customer Payment"
+                move_line_vals['balance'] = -cash_rcv.cheque_amount
+                move_line_vals['amount_currency'] = -cash_rcv.cheque_amount
 
-                acc_move_line_pool.create(move_line_vals)
+                res = acc_move_line_pool.create(move_line_vals)
 
-            if move_vals['debit']:
-                move_line_vals['account_id'] = cr.partner_id.property_account_receivable_id.id
-                move_line_vals['credit'] = 0.00
+            if move_line_vals['debit']:
+                move_line_vals['account_id'] = cash_rcv.partner_id.property_account_receivable_id.id
+                move_line_vals['debit'] = cash_rcv.cheque_amount
+                move_line_vals['credit'] = 0
+                move_line_vals['credit_cash_basis'] = 0
+                move_line_vals['dedit_cash_basis'] = cash_rcv.cheque_amount
+                move_line_vals['balance_cash_basis'] = cash_rcv.cheque_amount
+                move_line_vals['name'] = "rabbi CUST.IN/2018/0014"
+                move_line_vals['balance'] = cash_rcv.cheque_amount
+                move_line_vals['amount_currency'] = 0
 
-                acc_move_line_pool.create(move_line_vals)
+                res2 = acc_move_line_pool.create(move_line_vals)
 
-            cr.state = 'honoured'
+
+            cash_rcv.state = 'honoured'
+
 
 
     @api.model
