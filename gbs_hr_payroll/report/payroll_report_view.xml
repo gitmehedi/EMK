@@ -84,7 +84,7 @@
 													<td>
 														<span t-esc="o['doj']"></span>
 													</td>
-													<td class="bg-info">
+													<td>
 														<span t-esc="o['loan_balance']"></span>
 													</td>
 

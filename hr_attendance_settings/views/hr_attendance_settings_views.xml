@@ -10,16 +10,25 @@
                     <button string="Cancel" type="object" name="cancel" class="oe_link" special="cancel"/>
                 </header>
                 <separator string="Settings"/>
-                <group>
-                    <label for="id" string="Monthly Attendance Rule"/>
-                    <div>
+                <sheet>
+                    <group colspan="4">
+                        <label for="id" string="Monthly Attendance Rule"/>
                         <div>
-                            <p><strong> One Day salary will deduct for each
-                                <field name="late_salary_deduction_rule" class="oe_inline" nolable="1" style="width: 30px !important"/>
-                                day's late.</strong></p>
+                            <p><b>One Day salary will deduct for each
+                            <field name="late_salary_deduction_rule" class="oe_inline" nolable="1" style="width: 30px !important"/>
+                                day's late.</b></p>
                         </div>
-                    </div>
-                </group>
+
+                        <label for="id" string="Attendance Device In/Out Rule"/>
+                        <div>
+                            <p><strong>From the Attendance device if consecutive multiple Check In or Check Out
+                                are occur within
+                                <field name="time_duration" class="oe_inline" nolable="1" style="width: 30px !important"/>
+                                seconds, then system will consider only first Check In/Check Out.
+                                </strong></p>
+                        </div>
+                    </group>
+                </sheet>
             </form>
         </field>
     </record>
