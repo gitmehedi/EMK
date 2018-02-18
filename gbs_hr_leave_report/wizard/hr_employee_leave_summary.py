@@ -20,6 +20,7 @@ class HREmpLeaveSummary(models.TransientModel):
         data = {}
         data['emp_id'] = self.emp_id.id
         data['emp_name'] = self.emp_id.name
+        data['emp_acc'] = self.emp_id.device_employee_acc
         data['designation'] = self.emp_id.job_id.name
         data['department'] = self.emp_id.department_id.name
         data['operating_unit_id'] = self.operating_unit_id.id
