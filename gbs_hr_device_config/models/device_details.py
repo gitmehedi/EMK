@@ -166,13 +166,10 @@ class DeviceDetail(models.Model):
     def processData(self, maxId, attDevice, conn, cursor):
 
         deviceInOutCode = {}  # Where key is code and value is "IN" OR OUT
-        # for line in attDevice.device_lines:
-        #     if line.in_code:
-        #         deviceInOutCode[str(line.in_code)] = IN_CODE
-        #     if line.out_code:
-        #         deviceInOutCode[str(line.out_code)] = OUT_CODE
 
-        tolerableSecond = 60
+        tolerableSecond = self.getAttDeviceRulesRule()
+        if tolerableSecond == 0:
+            tolerableSecond = 300
 
         for line_detail in attDevice.device_line_details:
             if line_detail.type_code == IN_CODE:
@@ -368,3 +365,19 @@ class DeviceDetail(models.Model):
     def convertDateTime(self, dateStr):
         if dateStr:
             return dateStr + timedelta(hours=-6)
+
+    def getAttDeviceRulesRule(self):
+
+        query = """SELECT 
+                         time_duration
+                    FROM
+                         hr_attendance_config_settings 
+                    order by id desc limit 1"""
+
+        self._cr.execute(query, (tuple([])))
+        deduction_rule_value = self._cr.fetchone()
+
+        if not deduction_rule_value:
+            return 0
+
+        return deduction_rule_value[0]

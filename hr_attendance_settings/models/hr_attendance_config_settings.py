@@ -13,7 +13,7 @@ class HRAttendanceConfigSettings(models.Model):
             return deduction_rule_value[0]
 
 
-    late_salary_deduction_rule = fields.Integer(size=2, default=_get_default)
+    late_salary_deduction_rule = fields.Integer(size= 4, default=_get_default)
 
 
     def _get_time_duration(self):
@@ -23,7 +23,7 @@ class HRAttendanceConfigSettings(models.Model):
         if param_value:
             return param_value[0]
 
-    time_duration = fields.Integer(size=3, default=_get_time_duration)
+    time_duration = fields.Integer(size= 5, default=_get_time_duration)
 
     @api.model
     def create(self,vals):
