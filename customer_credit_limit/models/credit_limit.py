@@ -98,7 +98,7 @@ class ResPartner(models.Model):
     _inherit = 'res.partner'
 
     limit_ids = fields.One2many('res.partner.credit.limit', 'partner_id', 'Limits', domain=[('state', '=', 'approve')])
-    credit_limit = fields.Float(compute='_current_limit', string='Credit Limit')
+    credit_limit = fields.Float(compute='_current_limit', string='Credit Limit',)
     remaining_credit_limit = fields.Float(string='Remaining Credit Limit')
 
     """ All functions """
@@ -153,10 +153,10 @@ class res_partner_credit_limit(models.Model):
     #     'assign_date': lambda *a: time.strftime('%Y-%m-%d')
     # }
 
-    @api.constrains('value')
-    def check_credit_limit(self):
-        if self.value <= 0.00:
-            raise ValidationError('Limit can not be zero or negative')
+    # @api.constrains('value')
+    # def check_credit_limit(self):
+    #     if self.value <= 0.00:
+    #         raise ValidationError('Limit can not be zero or negative')
 
     # @api.constrains('assign_id','partner_id')
     # def check_partner_id(self):

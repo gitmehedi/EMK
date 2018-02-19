@@ -1,6 +1,7 @@
 from odoo import api, fields, models
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools import amount_to_text_en
+import time
 
 
 class SaleOrder(models.Model):
@@ -59,6 +60,8 @@ class SaleOrder(models.Model):
     """ PI and LC """
     pi_no = fields.Many2one('proforma.invoice', string='PI Ref. No.')
     lc_no = fields.Many2one('letter.credit', string='LC Ref. No.')
+
+    remaining_credit_limit = fields.Float(string='Customers Remaining Credit Limit', track_visibility='onchange')
 
     """ Update is_commission_generated flag to False """
 
@@ -172,36 +175,36 @@ class SaleOrder(models.Model):
 
         for order in self:
             for lines in order.order_line:
+
                 cust_commission_pool = order.env['customer.commission'].search(
                     [('customer_id', '=', order.partner_id.id), ('product_id', '=', lines.product_id.ids)])
+
                 credit_limit_pool = order.env['res.partner'].search([('id', '=', order.partner_id.id)])
 
-                price_change_pool = self.env['product.sale.history.line'].search(
+                date = time.strftime('%Y-%m-%d')
+
+                res_partner_cred_lim = order.env['res.partner.credit.limit'].search(
+                    [('partner_id', '=', order.partner_id.id), ('assign_date', '=', date),
+                     ('state', '=', 'approve')], order='assign_date DESC', limit=1)
+
+                price_change_pool = order.env['product.sale.history.line'].search(
                     [('product_id', '=', lines.product_id.id),
                      ('currency_id', '=', lines.currency_id.id),
                      ('product_package_mode', '=', order.pack_type.id),
                      ('uom_id', '=', lines.product_uom.id)])
 
-                if (order.credit_sales_or_lc == 'cash' or order.credit_sales_or_lc == 'lc_sales'):
+                if order.credit_sales_or_lc == 'cash' or order.credit_sales_or_lc == 'lc_sales':
                     is_double_validation = order.second_approval_business_logics(cust_commission_pool, lines,
                                                                                  price_change_pool)
                     if is_double_validation == True:
                         break;
 
-                elif (order.credit_sales_or_lc == 'credit_sales'):
+                elif order.credit_sales_or_lc == 'credit_sales':
                     account_receivable = credit_limit_pool.credit
                     sales_order_amount_total = -order.amount_total  # actually it should be minus value
 
                     customer_total_credit = account_receivable + sales_order_amount_total
                     customer_credit_limit = credit_limit_pool.credit_limit
-
-                    # Update Customer Credit Limit; Actually decrease credit limit value.
-                    # customer_credit_limit is minus value
-                    if abs(customer_total_credit) < customer_credit_limit:
-                        remaining_limit = customer_credit_limit - abs(customer_total_credit)
-                        credit_limit_pool.write({'remaining_credit_limit': remaining_limit})
-                    else:
-                         credit_limit_pool.write({'remaining_credit_limit': 0})
 
                     if (abs(customer_total_credit) > customer_credit_limit
                         or lines.commission_rate != cust_commission_pool.commission_rate
@@ -210,12 +213,53 @@ class SaleOrder(models.Model):
                         is_double_validation = True
                         break;
                     else:
+                        # Update Credit Limit and print log message
+                        if abs(customer_total_credit) < res_partner_cred_lim.value:
+                            remaining_limit = res_partner_cred_lim.value - abs(customer_total_credit)
+                            res_partner_cred_lim.write({'value': remaining_limit})
+                            order.write({'remaining_credit_limit': remaining_limit})
+                        else:
+                            res_partner_cred_lim.write({'value': 0})
+                            order.write({'remaining_credit_limit': 0})
+
                         is_double_validation = False
 
-            if is_double_validation:
-                order.write({'state': 'validate'})  # Go to two level approval process
-            else:
-                order.write({'state': 'done'})  # One level approval process
+        if is_double_validation:
+            order.write({'state': 'validate'})  # Go to two level approval process
+        else:
+            order.write({'state': 'done'})  # One level approval process
+
+
+    @api.multi
+    def action_confirm(self):
+        res = super(SaleOrder, self).action_confirm()
+
+        for order in self:
+            credit_limit_pool = order.env['res.partner'].search([('id', '=', order.partner_id.id)])
+
+            date = time.strftime('%Y-%m-%d')
+
+            res_partner_cred_lim = order.env['res.partner.credit.limit'].search(
+                [('partner_id', '=', order.partner_id.id), ('assign_date', '=', date),
+                 ('state', '=', 'approve')], order='assign_date DESC', limit=1)
+
+            if order.credit_sales_or_lc == 'credit_sales':
+                account_receivable = credit_limit_pool.credit
+                sales_order_amount_total = -order.amount_total  # actually it should be minus value
+
+                customer_total_credit = account_receivable + sales_order_amount_total
+
+                # Update Customer Credit Limit and print a log message based on that
+                if abs(customer_total_credit) < res_partner_cred_lim.value:
+                    remaining_limit = res_partner_cred_lim.value - abs(customer_total_credit)
+                    res_partner_cred_lim.write({'value': remaining_limit})
+                    order.write({'remaining_credit_limit': remaining_limit})
+                else:
+                    res_partner_cred_lim.write({'value': 0})
+                    order.write({'remaining_credit_limit': 0})
+
+        return res
+
 
     def second_approval_business_logics(self, cust_commission_pool, lines, price_change_pool):
         for coms in cust_commission_pool:
@@ -227,9 +271,9 @@ class SaleOrder(models.Model):
                     else:
                         return False
 
+
     @api.multi
     def action_create_delivery_order(self):
-
         view = self.env.ref('delivery_order.delivery_order_form')
 
         return {
@@ -242,15 +286,18 @@ class SaleOrder(models.Model):
             'context': {'default_sale_order_id': self.id},
         }
 
+
     @api.multi
     @api.onchange('currency_id')
     def currency_id_onchange(self):
         self._get_changed_price()
 
+
     @api.multi
     @api.onchange('pack_type')
     def pack_type_onchange(self):
         self._get_changed_price()
+
 
     def _get_changed_price(self):
         for order in self:
