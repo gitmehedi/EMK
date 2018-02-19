@@ -99,6 +99,7 @@ class ResPartner(models.Model):
 
     limit_ids = fields.One2many('res.partner.credit.limit', 'partner_id', 'Limits', domain=[('state', '=', 'approve')])
     credit_limit = fields.Float(compute='_current_limit', string='Credit Limit')
+    remaining_credit_limit = fields.Float(string='Remaining Credit Limit')
 
     """ All functions """
 

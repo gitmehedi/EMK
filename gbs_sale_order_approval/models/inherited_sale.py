@@ -195,6 +195,14 @@ class SaleOrder(models.Model):
                     customer_total_credit = account_receivable + sales_order_amount_total
                     customer_credit_limit = credit_limit_pool.credit_limit
 
+                    # Update Customer Credit Limit; Actually decrease credit limit value.
+                    # customer_credit_limit is minus value
+                    if abs(customer_total_credit) < customer_credit_limit:
+                        remaining_limit = customer_credit_limit - abs(customer_total_credit)
+                        credit_limit_pool.write({'remaining_credit_limit': remaining_limit})
+                    else:
+                         credit_limit_pool.write({'remaining_credit_limit': 0})
+
                     if (abs(customer_total_credit) > customer_credit_limit
                         or lines.commission_rate != cust_commission_pool.commission_rate
                         or lines.price_unit != price_change_pool.new_price):
@@ -213,8 +221,7 @@ class SaleOrder(models.Model):
         for coms in cust_commission_pool:
             if price_change_pool.currency_id.id == lines.currency_id.id:
                 for hsitry in price_change_pool:
-                    if (lines.commission_rate != coms.commission_rate
-                        or lines.price_unit != hsitry.new_price):
+                    if lines.commission_rate != coms.commission_rate or lines.price_unit != hsitry.new_price:
                         return True
                         break;
                     else:
