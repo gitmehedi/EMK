@@ -61,7 +61,7 @@ class SaleOrder(models.Model):
     pi_no = fields.Many2one('proforma.invoice', string='PI Ref. No.')
     lc_no = fields.Many2one('letter.credit', string='LC Ref. No.')
 
-    remaining_credit_limit = fields.Float(string='Customers Remaining Credit Limit', track_visibility='onchange')
+    remaining_credit_limit = fields.Float(string="Customer's Remaining Credit Limit", track_visibility='onchange')
 
     """ Update is_commission_generated flag to False """
 
