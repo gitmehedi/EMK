@@ -181,8 +181,6 @@ class SaleOrder(models.Model):
 
                 credit_limit_pool = order.env['res.partner'].search([('id', '=', order.partner_id.id)])
 
-                #date = time.strftime('%Y-%m-%d')
-
                 res_partner_cred_lim = order.env['res.partner.credit.limit'].search(
                     [('partner_id', '=', order.partner_id.id),
                      ('state', '=', 'approve')], order='assign_id DESC', limit=1)

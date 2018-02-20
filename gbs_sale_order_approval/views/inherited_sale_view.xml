@@ -231,7 +231,6 @@
                     </xpath>
 
 
-
                     <!-- End of Create Invoice Button showing based on custom business logic-->
 
                     <!--Send by email-->
@@ -404,9 +403,30 @@
             </field>
         </record>
 
+
+        <!-- Group By of Customer's whose Credit Limit is crossed -->
+        <record id="sale_default_seach_vieww111" model="ir.ui.view">
+            <field name="name">sale_default_seach_vieww211</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.view_sales_order_filter"/>
+            <field name="arch" type="xml">
+                <search string="Search Sales Order">
+                    <field name="partner_id"/>
+
+                    <group expand="0" string="Group By">
+                        <filter name="customer" string="Credit Limit Crossed" domain="[('remaining_credit_limit','=','0')]"
+                                context="{'group_by':'partner_id'}"/>
+                    </group>
+
+                </search>
+            </field>
+        </record>
+
+
         <menuitem id="delivery_order_pendding" name="Pending DA" parent="delivery_order.delivery_order_menu"
                   groups="account.group_account_user,gbs_application_group.group_head_account,gbs_application_group.group_cxo"
                   action="gbs_sale_order_action_pendding_orders" sequence="14"/>
+
 
         <record id="sale.menu_sale_order" model="ir.ui.menu">
             <field name="groups_id"
