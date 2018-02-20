@@ -57,7 +57,9 @@ class HrManualAttendance(models.Model):
                                             readonly=True)
     current_user_is_approver = fields.Boolean(string='Current user is approver',
                                               compute='_compute_current_user_is_approver')
-    approbations = fields.One2many('hr.employee.manual.att.approbation', 'manual_att_ids', string='Approvals', readonly=True)
+    approbations_ids = fields.One2many('hr.employee.manual.att.approbation', 'manual_attandance_id', string='Approvals', readonly=True)
+
+    parent_id = fields.Many2one('hr.manual.attendance.batches',ondelete="cascade")
 
     state = fields.Selection([
         ('draft', 'Draft'),
@@ -217,7 +219,7 @@ class HrManualAttendance(models.Model):
                     vals['pending_approver'] = next_approver.id
                 manual_attendance.write(vals)
                 self.env['hr.employee.manual.att.approbation'].create(
-                    {'manual_att_ids': manual_attendance.id, 'approver': self.env.uid, 'sequence': sequence,
+                    {'manual_attandance_id': manual_attendance.id, 'approver': self.env.uid, 'sequence': sequence,
                      'date': fields.Datetime.now()})
     
     @api.multi
@@ -232,11 +234,14 @@ class HrManualAttendance(models.Model):
             vals1['employee_id'] = manual_attendance.employee_id.id
             vals1['operating_unit_id'] = manual_attendance.employee_id.operating_unit_id.id
             vals1['manual_attendance_request'] = True
-            if manual_attendance.sign_type == 'both':
-                vals1['check_in'] = manual_attendance.check_in
-                vals1['check_out'] = manual_attendance.check_out
-                attendance_obj.create(vals1)
-            elif manual_attendance.sign_type == 'sign_in':
+
+            # if manual_attendance.sign_type == 'both':
+            #     vals1['check_in'] = manual_attendance.check_in
+            #     vals1['check_out'] = manual_attendance.check_out
+            #     attendance_obj.create(vals1)
+            # el
+
+            if manual_attendance.sign_type == 'sign_in':
                 vals1['check_in'] = manual_attendance.check_in
                 hr_att_pool = self.env['hr.attendance']
                 preAttData = hr_att_pool.search([('employee_id', '=', manual_attendance.employee_id.id),
@@ -325,3 +330,32 @@ class HrManualAttendance(models.Model):
                 self.sudo(SUPERUSER_ID)._message_auto_subscribe_notify(
                     [approver.sudo(SUPERUSER_ID).user_id.partner_id.id])
         return True
+
+
+
+    @api.depends('employee_id')
+    @api.onchange('employee_id')
+    def onchange_employee(self):
+        for recode in self:
+            if recode.parent_id.employee_id:
+                recode.employee_id = recode.parent_id.employee_id.id
+                recode.department_id = recode.parent_id.department_id.id
+
+    @api.constrains('check_in', 'check_out')
+    def _check_value(self):
+        if self.sign_type == "both":
+            deff = (self.getDateTimeFromStr(self.check_out) - self.getDateTimeFromStr(
+                self.check_in)).total_seconds() / 60 / 60
+            if self.check_in >= self.check_out:
+                raise UserError(_("Check out time must be greater than check in time!"))
+            elif self.check_in > datetime.datetime.now().strftime("%Y-%m-%d %H-%M-%S"):
+                raise UserError(_("Check in time must be less than current time!"))
+            elif deff > 9:
+                raise UserError(_("Difference between check in time and check out time duration must be upto 9 hours!"))
+        elif self.sign_type == "sign_in":
+            if self.check_in > datetime.datetime.now().strftime("%Y-%m-%d %H-%M-%S"):
+                raise UserError(_("Check in time must be less than current time!"))
+
+        elif self.sign_type == "sign_out":
+           if self.check_out > datetime.datetime.now().strftime("%Y-%m-%d %H-%M-%S"):
+                raise UserError(_("Check out time must be less than current time!"))
