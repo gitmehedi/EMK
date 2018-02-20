@@ -21,9 +21,9 @@ You can manage:
         'base_setup',
     ],
     'data': [
-        # 'security/hr_attendance_settings_security.xml',
         'security/ir.model.access.csv',
         'views/hr_attendance_settings_views.xml',
+        'data/settings_data.xml',
     ],
     'installable': True,
     'application': True,

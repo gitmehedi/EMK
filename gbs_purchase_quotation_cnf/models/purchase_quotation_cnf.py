@@ -20,5 +20,3 @@ class PurchaseCNFQuotation(models.Model):
                 super(PurchaseCNFQuotation, self).button_approve()
             else:
                 super(PurchaseCNFQuotation, self).button_approve()
-# default=lambda self: self.env.context.get('shipment_id')
-# default=lambda self: self.env.context.get('lc_id')

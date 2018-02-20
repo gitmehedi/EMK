@@ -166,11 +166,10 @@ class DeviceDetail(models.Model):
     def processData(self, maxId, attDevice, conn, cursor):
 
         deviceInOutCode = {}  # Where key is code and value is "IN" OR OUT
-        # for line in attDevice.device_lines:
-        #     if line.in_code:
-        #         deviceInOutCode[str(line.in_code)] = IN_CODE
-        #     if line.out_code:
-        #         deviceInOutCode[str(line.out_code)] = OUT_CODE
+
+        tolerableSecond = self.getAttDeviceRulesRule()
+        if tolerableSecond == 0:
+            tolerableSecond = 300
 
         for line_detail in attDevice.device_line_details:
             if line_detail.type_code == IN_CODE:
@@ -203,13 +202,15 @@ class DeviceDetail(models.Model):
         _logger.debug("Attendance Date pull from " + attDevice.server + " : at " + str(datetime.datetime.now()) + " : " + str(att_rows))
 
         try:
-
+            previousRow = {}
             for row in att_rows:
                 reason = self.isValidData(row, deviceInOutCode, employeeIdMap)
                 if reason != VALID_DATA:
                     self.saveAsError(row, employeeIdMap, deviceInOutCode, attDevice.operating_unit_id, reason)
                 else:
-                    self.storeData(row, deviceInOutCode, employeeIdMap, attDevice.operating_unit_id)
+                    if self.isValidByDuration(row, previousRow, deviceInOutCode, tolerableSecond) == True:
+                        self.storeData(row, deviceInOutCode, employeeIdMap, attDevice.operating_unit_id)
+                    previousRow = row
 
             # Store all attendance data to application database.
             # Now Update on SQL Server Database(External)
@@ -221,6 +222,45 @@ class DeviceDetail(models.Model):
                   str(datetime.datetime.now()) + ": \n Attendance Data: " + str(row) + "  \n Error Message : " + str(e[0])
             _logger.error(msg)
             print (msg)
+
+
+    def isValidByDuration(self, currentRow, previousRow, deviceInOutCode, tolerableSecond):
+
+        # usr.BADGENUMBER, att.VERIFYCODE, att.CHECKTIME, att.SENSORID
+
+        if len(previousRow) == 0:
+            return True
+
+        # Check same Employee or not
+        if currentRow[0] != previousRow[0]:
+            return True
+
+        currentType = ""
+        previousType = ""
+
+        # Get same attendance type or not
+
+        if (deviceInOutCode.get(str(currentRow[1])) == IN_CODE or deviceInOutCode.get(str(currentRow[1])) == RFID_IN_CODE):
+            currentType = IN_CODE
+        elif deviceInOutCode.get(str(currentRow[1])) == OUT_CODE:
+            currentType = OUT_CODE
+
+        if (deviceInOutCode.get(str(previousRow[1])) == IN_CODE or deviceInOutCode.get(str(previousRow[1])) == RFID_IN_CODE):
+            previousType = IN_CODE
+        elif deviceInOutCode.get(str(previousRow[1])) == OUT_CODE:
+            previousType = OUT_CODE
+
+        # Check same attendance type or not
+        if currentType != previousType:
+            return True
+
+        # Check tolerable duration
+        durationInSecond = (currentRow[2] - previousRow[2]).total_seconds()
+        if durationInSecond > tolerableSecond:
+            return True
+        else:
+            return False
+
 
 
 
@@ -325,3 +365,19 @@ class DeviceDetail(models.Model):
     def convertDateTime(self, dateStr):
         if dateStr:
             return dateStr + timedelta(hours=-6)
+
+    def getAttDeviceRulesRule(self):
+
+        query = """SELECT 
+                         time_duration
+                    FROM
+                         hr_attendance_config_settings 
+                    order by id desc limit 1"""
+
+        self._cr.execute(query, (tuple([])))
+        deduction_rule_value = self._cr.fetchone()
+
+        if not deduction_rule_value:
+            return 0
+
+        return deduction_rule_value[0]

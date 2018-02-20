@@ -181,20 +181,20 @@ class HrShortLeave(models.Model):
 
     @api.multi
     def action_validate(self):
-        attendance_obj = self.env['hr.attendance']
+        # attendance_obj = self.env['hr.attendance']
         for holiday in self:
             if holiday.state not in ['confirm']:
                 raise UserError(_('Leave request must be confirmed in order to approve it.'))
-            vals1 = {}
-            vals1['employee_id'] = holiday.employee_id.id
-            vals1['operating_unit_id'] = holiday.employee_id.operating_unit_id.id
-            vals1['manual_attendance_request'] = False
-            vals1['is_system_generated'] = False
-            vals1['has_error'] = False
-            vals1['is_short_leave'] = True
-            vals1['check_in'] = holiday.date_from
-            vals1['check_out'] = holiday.date_to
-            attendance_obj.create(vals1)
+            # vals1 = {}
+            # vals1['employee_id'] = holiday.employee_id.id
+            # vals1['operating_unit_id'] = holiday.employee_id.operating_unit_id.id
+            # vals1['manual_attendance_request'] = False
+            # vals1['is_system_generated'] = False
+            # vals1['has_error'] = False
+            # vals1['is_short_leave'] = True
+            # vals1['check_in'] = holiday.date_from
+            # vals1['check_out'] = holiday.date_to
+            # attendance_obj.create(vals1)
             holiday.write({'state': 'validate'})
             return True
 
@@ -273,8 +273,8 @@ class HrShortLeave(models.Model):
     #     raise AccessError(
     #         _('You cannot set a leave request as \'%s\'. Contact a human resource manager.') % values.get('state'))
 
-
-class HrEmployee(models.Model):
-    _inherit = "hr.attendance"
-
-    is_short_leave = fields.Boolean(string='Is Short Leave', default=False)
+#
+# class HrEmployee(models.Model):
+#     _inherit = "hr.attendance"
+#
+#     is_short_leave = fields.Boolean(string='Is Short Leave', default=False)

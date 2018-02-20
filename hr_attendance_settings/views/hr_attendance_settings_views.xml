@@ -19,11 +19,13 @@
                                 day's late.</b></p>
                         </div>
 
-                        <label for="id" string="Attendance Duration Rule"/>
+                        <label for="id" string="Attendance Device In/Out Rule"/>
                         <div>
-                            <p><strong> Time duration between consucative Check In or Check Out
-                            <field name="time_duration" class="oe_inline" nolable="1" style="width: 30px !important"/>
-                            seconds.</strong></p>
+                            <p><strong>From the Attendance device if consecutive multiple Check In or Check Out
+                                are occur within
+                                <field name="time_duration" class="oe_inline" nolable="1" style="width: 30px !important"/>
+                                seconds, then system will consider only first Check In/Check Out.
+                                </strong></p>
                         </div>
                     </group>
                 </sheet>

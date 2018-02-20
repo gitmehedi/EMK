@@ -18,7 +18,7 @@
                                 <div class="col-xs-6 text-left">
                                     <div>
                                         <strong>Employee ID:</strong>
-                                        <span t-esc="data['emp_id']"/>
+                                        <span t-esc="data['emp_acc']"/>
                                     </div>
                                     <div>
                                         <strong>Employee Name:</strong>

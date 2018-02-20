@@ -48,38 +48,50 @@ class ChequeReceived(models.Model):
 
             move_line_vals = {}
             move_line_vals['partner_id'] = cash_rcv.partner_id.id
+            move_line_vals['name'] = "rabbi Customer Payment"
             move_line_vals['debit'] = cash_rcv.cheque_amount
-            move_line_vals['credit'] = cash_rcv.cheque_amount
+            move_line_vals['credit'] = -cash_rcv.cheque_amount
             move_line_vals['move_id'] = move.id
             move_line_vals['date_maturity'] = cash_rcv.date_on_cheque
             move_line_vals['currency_id'] = 3
+            move_line_vals['account_id'] = cash_rcv.company_id.bank_journal_ids.default_debit_account_id.id
+            res = acc_move_line_pool.create(move_line_vals)
 
-            if move_line_vals['credit']:
-                move_line_vals['account_id'] = cash_rcv.company_id.bank_journal_ids.default_debit_account_id.id
-                move_line_vals['credit'] = cash_rcv.cheque_amount
-                move_line_vals['credit_cash_basis'] = cash_rcv.cheque_amount
-                move_line_vals['dedit_cash_basis'] = 0
-                move_line_vals['balance_cash_basis'] = -cash_rcv.cheque_amount
-                move_line_vals['debit'] = 0
-                move_line_vals['name'] = "rabbi Customer Payment"
-                move_line_vals['balance'] = -cash_rcv.cheque_amount
-                move_line_vals['amount_currency'] = -cash_rcv.cheque_amount
+            # if move_line_vals['credit']:
+            #     move_line_vals['account_id'] = cash_rcv.company_id.bank_journal_ids.default_debit_account_id.id
+            #     move_line_vals['credit'] = cash_rcv.cheque_amount
+            #     move_line_vals['credit_cash_basis'] = cash_rcv.cheque_amount
+            #     move_line_vals['dedit_cash_basis'] = 0
+            #     move_line_vals['balance_cash_basis'] = -cash_rcv.cheque_amount
+            #     move_line_vals['debit'] = 0
+            #     move_line_vals['name'] = "rabbi Customer Payment"
+            #     move_line_vals['balance'] = -cash_rcv.cheque_amount
+            #     move_line_vals['amount_currency'] = -cash_rcv.cheque_amount
 
-                res = acc_move_line_pool.create(move_line_vals)
+            #     res = acc_move_line_pool.create(move_line_vals)
 
-            if move_line_vals['debit']:
-                move_line_vals['account_id'] = cash_rcv.partner_id.property_account_receivable_id.id
-                move_line_vals['debit'] = cash_rcv.cheque_amount
-                move_line_vals['credit'] = 0
-                move_line_vals['credit_cash_basis'] = 0
-                move_line_vals['dedit_cash_basis'] = cash_rcv.cheque_amount
-                move_line_vals['balance_cash_basis'] = cash_rcv.cheque_amount
-                move_line_vals['name'] = "rabbi CUST.IN/2018/0014"
-                move_line_vals['balance'] = cash_rcv.cheque_amount
-                move_line_vals['amount_currency'] = 0
-
-                res2 = acc_move_line_pool.create(move_line_vals)
-
+            # if move_line_vals['debit']:
+            #     move_line_vals['account_id'] = cash_rcv.partner_id.property_account_receivable_id.id
+            #     move_line_vals['debit'] = cash_rcv.cheque_amount
+            #     move_line_vals['credit'] = 0
+            #     move_line_vals['credit_cash_basis'] = 0
+            #     move_line_vals['dedit_cash_basis'] = cash_rcv.cheque_amount
+            #     move_line_vals['balance_cash_basis'] = cash_rcv.cheque_amount
+            #     move_line_vals['name'] = "rabbi CUST.IN/2018/0014"
+            #     move_line_vals['balance'] = cash_rcv.cheque_amount
+            #     move_line_vals['amount_currency'] = 0
+            #
+            #     res2 = acc_move_line_pool.create(move_line_vals)
+            move_line_vals2 = {}
+            move_line_vals2['partner_id'] = cash_rcv.partner_id.id
+            move_line_vals2['name'] = "rabbi CUST.IN/2018/0014"
+            move_line_vals2['debit'] = 0
+            move_line_vals2['credit'] = -cash_rcv.cheque_amount
+            move_line_vals2['move_id'] = move.id
+            move_line_vals2['date_maturity'] = cash_rcv.date_on_cheque
+            move_line_vals2['currency_id'] = 3
+            move_line_vals2['account_id'] = cash_rcv.partner_id.property_account_receivable_id.id
+            #res2 = acc_move_line_pool.create(move_line_vals2)
 
             cash_rcv.state = 'honoured'
 

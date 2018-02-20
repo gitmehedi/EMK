@@ -16,6 +16,7 @@
         "operating_unit",
         "gbs_hr_attendance_utility",
         "gbs_hr_attendance",
+        "hr_attendance_settings",
     ],
     'description': 
     """This module will connect to attendance devices""",
