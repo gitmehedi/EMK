@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<openerp>
+<odoo>
 	<data>
 
 		<menuitem id="hr_attendance.menu_hr_attendance_root" name="Attendances" sequence="90" groups="hr.group_hr_attendance,base.group_user" web_icon="hr_attendance,static/description/icon.png"/>
@@ -10,13 +10,13 @@
 		<!-- Tree View -->
 		<record id="hr_manual_attendance_tree" model="ir.ui.view">
 			<field name="name">hr_manual_attendance_tree</field>
-			<field name="model">hr.manual.attendance</field>
+			<field name="model">hr.manual.attendance.batches</field>
 			<field name="arch" type="xml">
-				<tree string="HR Manual Attendance" create="false">
-					<field name= "employee_id" />
+				<tree string="HR Manual Attendance">
+					<field name="employee_id" />
 					<field name="department_id" />
-					<field name="check_in" />
-					<field name="check_out" />
+					<!--<field name="check_in" />-->
+					<!--<field name="check_out" />-->
 					<field name="state" />
 				</tree>
 			</field>
@@ -25,10 +25,10 @@
 		<!-- Form View -->
 		<record id="hr_manual_attendance_form" model="ir.ui.view">
 			<field name="name">hr_manual_attendance_form</field>
-			<field name="model">hr.manual.attendance</field>
+			<field name="model">hr.manual.attendance.batches</field>
 			<field name="type">form</field>
 			<field name="arch" type="xml">
-				<form string="HR Manual Attendance" delete ="0" create="false">
+				<form string="HR Manual Attendance" delete ="0" create = "0">
 					<header>
 						<button string="Confirm" name="action_confirm" states="draft" type="object" class="oe_highlight" />
 						<field name="current_user_is_approver" invisible="True" />
@@ -50,24 +50,27 @@
 								<field name="department_id" attrs="{'readonly':['|', ('state','=','validate'),('state','=','confirm'),('state','=','draft')]}" readonly="1" />
 							</group>
 							<group>
-								<field name="sign_type" attrs="{'readonly':['|', ('state','=','validate'),('state','=','confirm')]}"/>
-								<field name="check_in"  attrs="{'readonly':['|', ('state','=','validate'),('state','=','confirm')] ,
-																'invisible': [('sign_type', '=','sign_out')],'required': [('sign_type', '!=', 'sign_out')]}"/>}"/>
-								<field name="check_out" attrs="{'readonly':['|', ('state','=','validate'),('state','=','confirm')] ,
-																'invisible': [('sign_type', '=','sign_in')],
-																'required': [('sign_type', '!=', 'sign_in')]}"/>
-
-								<field name="is_it_official" attrs="{'readonly':['|', ('state','=','validate'),('state','=','confirm')]}"/>
-								<field name="my_menu_check" invisible="1"/>
 								<field name="pending_approver" groups="hr.group_hr_user"/>
+								<field name="my_menu_check" invisible="1"/>
 							</group>
-							<field name="reason" nolabel="1" colspan="4" placeholder="Add a reason..."
-								   attrs="{'readonly':['|', ('state','=','validate'),('state','=','confirm')]}"/>
 						</group>
-						<notebook>
+						<notebook colspan="4">
+							<page string="Manual Attendance">
+								<field name="line_ids" attrs="{'readonly':['|', ('state','=','validate'),('state','=','confirm')]}">
+									<tree editable="bottom">
+                                        <field name="employee_id" options="{'no_quick_create':True,'no_create_edit':True,'no_open': True}"/>
+                                        <field name="department_id" readonly="1" />
+										<field name="sign_type"/>
+										<field name="check_in" attrs="{'invisible': [('sign_type', '=','sign_out')],'required': [('sign_type', '!=', 'sign_out')]}"/>
+										<field name="check_out" attrs="{'invisible': [('sign_type', '=','sign_in')],'required': [('sign_type', '!=', 'sign_in')]}"/>
+										<field name="is_it_official" />
+										<field name="reason" nolabel="1" colspan="4" placeholder="Add a reason..."/>
+									</tree>
+								</field>
+							</page>
 							<page string="Approbations" groups="hr.group_hr_user">
 								<field name="approbations_ids" groups="hr.group_hr_user">
-									<tree>
+									<tree editable="bottom">
 										<field name="approver" />
 										<field name="date" />
 									</tree>
@@ -87,22 +90,21 @@
 
 		<record id="hr_manual_attendance" model="ir.actions.act_window">
 			<field name="name">Manual Attendances</field>
-			<field name="res_model">hr.manual.attendance</field>
+			<field name="res_model">hr.manual.attendance.batches</field>
 			<field name="view_mode">tree,form</field>
 		</record>
 
 		<record id="hr_my_attendance" model="ir.actions.act_window">
 			<field name="name">My Attendances</field>
-			<field name="res_model">hr.manual.attendance</field>
+			<field name="res_model">hr.manual.attendance.batches</field>
 			<field name="domain">[('employee_id.user_id', '=', uid)]</field>
 			<field name="context">{'default_my_menu_check': True}</field>
-			<field name="create">false</field>
 			<field name="view_mode">tree,form</field>
 		</record>
 
 		<record id="hr_pandding_attendance" model="ir.actions.act_window">
 			<field name="name">Pending Attendances</field>
-			<field name="res_model">hr.manual.attendance</field>
+			<field name="res_model">hr.manual.attendance.batches</field>
 			<field name="domain">[('state','in',['confirm'])]</field>
 			<field name="view_mode">tree,form</field>
 		</record>
@@ -116,5 +118,42 @@
 				  sequence="10" action="hr_pandding_attendance" groups="base.group_user"/>
 		<menuitem id="menu_manual_attendance" name="Manual Attendances" parent="menu_hr_manual_attendance"
 				  sequence="15" action="hr_manual_attendance" groups="gbs_application_group.group_dept_manager" />
-	</data>
-</openerp>
+
+
+        <!--<record id="hr_manual_attendance_form_view" model="ir.ui.view">-->
+			<!--<field name="name">hr_manual_attendance_form_view</field>-->
+			<!--<field name="model">hr.manual.attendance</field>-->
+			<!--<field name="type">form</field>-->
+			<!--<field name="arch" type="xml">-->
+				<!--<form string="HR Manual Attendance" delete ="0" create = "0">-->
+					<!--<sheet>-->
+						<!--<group>-->
+							<!--<group>-->
+								<!--<field name="employee_id"   attrs="{'readonly':['|', ('state','!=','draft'),('my_menu_check','=',True)]}" options="{'no_quick_create':True,'no_create_edit':True,'no_open': True}"/>-->
+								<!--<field name="department_id" attrs="{'readonly':['|', ('state','=','validate'),('state','=','confirm'),('state','=','draft')]}" readonly="1" />-->
+							<!--</group>-->
+							<!--<group>-->
+								<!--<field name="sign_type" attrs="{'readonly':['|', ('state','=','validate'),('state','=','confirm')]}"/>-->
+								<!--<field name="check_in"  attrs="{'readonly':['|', ('state','=','validate'),('state','=','confirm')] ,-->
+																<!--'invisible': [('sign_type', '=','sign_out')],'required': [('sign_type', '!=', 'sign_out')]}"/>}"/>-->
+								<!--<field name="check_out" attrs="{'readonly':['|', ('state','=','validate'),('state','=','confirm')] ,-->
+																<!--'invisible': [('sign_type', '=','sign_in')],-->
+																<!--'required': [('sign_type', '!=', 'sign_in')]}"/>-->
+
+								<!--<field name="is_it_official" attrs="{'readonly':['|', ('state','=','validate'),('state','=','confirm')]}"/>-->
+							<!--</group>-->
+							<!--<field name="reason" nolabel="1" colspan="4" placeholder="Add a reason..."-->
+								   <!--attrs="{'readonly':['|', ('state','=','validate'),('state','=','confirm')]}"/>-->
+						<!--</group>-->
+					<!--</sheet>-->
+                <!--</form>-->
+            <!--</field>-->
+        <!--</record>-->
+
+
+
+
+
+
+    </data>
+</odoo>
