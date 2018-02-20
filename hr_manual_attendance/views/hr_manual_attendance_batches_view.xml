@@ -88,7 +88,7 @@
 			<field name="name">hr_manual_attendance_batches_tree</field>
 			<field name="model">hr.manual.attendance.batches</field>
 			<field name="arch" type="xml">
-				<tree string="HR Manual Attendance" create="false">
+				<tree string="HR Manual Attendance" create="false" edit ="false">
 					<field name="employee_id" />
 					<field name="department_id" />
 					<field name="state" />
@@ -101,7 +101,7 @@
 			<field name="model">hr.manual.attendance.batches</field>
 			<field name="type">form</field>
 			<field name="arch" type="xml">
-				<form string="HR Manual Attendance" delete ="0" create="false">
+				<form string="HR Manual Attendance" delete ="0" create="false" edit ="false">
 					<header>
 						<button string="Confirm" name="action_confirm" states="draft" type="object" class="oe_highlight" />
 						<field name="current_user_is_approver" invisible="True" />

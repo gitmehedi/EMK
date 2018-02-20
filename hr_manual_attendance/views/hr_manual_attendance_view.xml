@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<openerp>
+<odoo>
 	<data>
 
 		<menuitem id="hr_attendance.menu_hr_attendance_root" name="Attendances" sequence="90" groups="hr.group_hr_attendance,base.group_user" web_icon="hr_attendance,static/description/icon.png"/>
@@ -12,7 +12,7 @@
 			<field name="name">hr_manual_attendance_tree</field>
 			<field name="model">hr.manual.attendance</field>
 			<field name="arch" type="xml">
-				<tree string="HR Manual Attendance" create="false">
+				<tree string="HR Manual Attendance" create="false" edit="false">
 					<field name= "employee_id" />
 					<field name="department_id" />
 					<field name="check_in" />
@@ -28,7 +28,7 @@
 			<field name="model">hr.manual.attendance</field>
 			<field name="type">form</field>
 			<field name="arch" type="xml">
-				<form string="HR Manual Attendance" delete ="0" create="false">
+				<form string="HR Manual Attendance" delete ="0" create="false" edit ="false">
 					<header>
 						<button string="Confirm" name="action_confirm" states="draft" type="object" class="oe_highlight" />
 						<field name="current_user_is_approver" invisible="True" />
@@ -117,4 +117,4 @@
 		<menuitem id="menu_manual_attendance" name="Manual Attendances" parent="menu_hr_manual_attendance"
 				  sequence="15" action="hr_manual_attendance" groups="gbs_application_group.group_dept_manager" />
 	</data>
-</openerp>
+</odoo>
