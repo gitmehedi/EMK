@@ -9,7 +9,8 @@
         'security/hr_manual_attendance_security.xml',
         'views/hr_manual_attendance_view.xml',
         'views/manual_attendance_min_days_restriction_view.xml',
-       
+        'views/hr_manual_attendance_batches_view.xml',
+
     ],
     
     'depends': [
