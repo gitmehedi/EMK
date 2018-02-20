@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+	<data>
+
+		<!-- Tree View -->
+		<record id="hr_manual_attendance_batches_tree" model="ir.ui.view">
+			<field name="name">hr_manual_attendance_tree</field>
+			<field name="model">hr.manual.attendance.batches</field>
+			<field name="arch" type="xml">
+				<tree string="HR Manual Attendance">
+					<field name="employee_id" />
+					<field name="department_id" />
+					<!--<field name="check_in" />-->
+					<!--<field name="check_out" />-->
+					<field name="state" />
+				</tree>
+			</field>
+		</record>
+
+		<!-- Form View -->
+		<record id="hr_manual_attendance_batches_form" model="ir.ui.view">
+			<field name="name">hr_manual_attendance_form</field>
+			<field name="model">hr.manual.attendance.batches</field>
+			<field name="type">form</field>
+			<field name="arch" type="xml">
+				<form string="HR Manual Attendance" delete ="0" create = "0">
+					<header>
+						<button string="Confirm" name="action_confirm" states="draft" type="object" class="oe_highlight" />
+						<field name="current_user_is_approver" invisible="True" />
+						<button string="Approve" name="action_approve" type="object" class="oe_highlight"
+								attrs="{'invisible': ['|',('current_user_is_approver', '!=', True),('state', '!=', 'confirm')]}"/>
+						<button string="Validate" name="action_validate" states="confirm" class="oe_highlight" type="object"
+								groups="hr_attendance.group_hr_attendance_user"/>
+						<button string="Refuse" name="action_refuse" type="object"
+								attrs="{'invisible': ['|',('current_user_is_approver', '!=', True),('state', '!=', 'confirm')]}"/>
+						<button string="Reset to Draft" name="action_draft" type="object" states="confirm"
+								groups="gbs_application_group.group_dept_manager,hr_attendance.group_hr_attendance_user"/>
+						<field name="state" widget="statusbar" statusbar_visible="draft,confirm,validate"/>
+					</header>
+
+					<sheet>
+						<group>
+							<group>
+								<field name="employee_id"   attrs="{'readonly':['|', ('state','!=','draft'),('my_menu_check','=',True)]}" options="{'no_quick_create':True,'no_create_edit':True,'no_open': True}"/>
+								<field name="department_id" attrs="{'readonly':['|', ('state','=','validate'),('state','=','confirm'),('state','=','draft')]}" readonly="1" />
+							</group>
+							<group>
+								<field name="pending_approver" groups="hr.group_hr_user"/>
+								<field name="my_menu_check" invisible="1"/>
+							</group>
+						</group>
+						<notebook>
+							<page string="Manual Attendance">
+								<field name="line_ids" attrs="{'readonly':['|', ('state','=','validate'),('state','=','confirm')]}">
+									<tree editable="bottom" colspan="4">
+                                        <field name="employee_id" invisible="1"/>
+                                        <field name="department_id" invisible="1" />
+										<field name="sign_type"/>
+										<field name="check_in" attrs="{'invisible': [('sign_type', '=','sign_out')],'required': [('sign_type', '!=', 'sign_out')]}"/>
+										<field name="check_out" attrs="{'invisible': [('sign_type', '=','sign_in')],'required': [('sign_type', '!=', 'sign_in')]}"/>
+										<field name="is_it_official"  size='2' />
+										<field name="reason" nolabel="1" colspan="4"  placeholder="Add a reason..."/>
+									</tree>
+								</field>
+							</page>
+							<page string="Approbations" groups="hr.group_hr_user">
+								<field name="approbations_ids" groups="hr.group_hr_user">
+									<tree editable="bottom">
+										<field name="approver" />
+										<field name="date" />
+									</tree>
+								</field>
+							</page>
+						</notebook>
+					</sheet>
+
+					<div class="oe_chatter">
+						<field name="message_follower_ids" widget="mail_followers"/>
+						<field name="message_ids" widget="mail_thread"/>
+					</div>
+
+				</form>
+			</field>
+		</record>
+
+		<record id="hr_manual_attendance_batches" model="ir.actions.act_window">
+			<field name="name">Manual Attendances</field>
+			<field name="res_model">hr.manual.attendance.batches</field>
+			<field name="view_mode">tree,form</field>
+		</record>
+
+
+		<menuitem id="menu_manual_attendance_batches" name="Manual Attendances Batches" parent="menu_hr_manual_attendance"
+				  sequence="15" action="hr_manual_attendance_batches" groups="base.group_user"/>
+
+
+    </data>
+</odoo>

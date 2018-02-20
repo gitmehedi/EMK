@@ -66,7 +66,7 @@
 						</group>
 						<notebook>
 							<page string="Approbations" groups="hr.group_hr_user">
-								<field name="approbations" groups="hr.group_hr_user">
+								<field name="approbations_ids" groups="hr.group_hr_user">
 									<tree>
 										<field name="approver" />
 										<field name="date" />
