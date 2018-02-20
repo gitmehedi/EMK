@@ -44,7 +44,7 @@ class HrManualAttendance(models.Model):
                                             readonly=True)
     current_user_is_approver = fields.Boolean(string='Current user is approver',
                                               compute='_compute_current_user_is_approver')
-    approbations_ids = fields.One2many('hr.employee.manual.att.approbation', 'manual_attandance_id', string='Approvals',
+    approbations_ids = fields.One2many('hr.employee.manual.att.approbation', 'manual_attandance_batches_id', string='Approvals',
                         readonly=True)
     line_ids = fields.One2many('hr.manual.attendance', 'parent_id', string='Manual Attendance')
 
@@ -122,14 +122,15 @@ class HrManualAttendance(models.Model):
                     vals['pending_approver'] = next_approver.id
                 manual_attendance.write(vals)
                 self.env['hr.employee.manual.att.approbation'].create(
-                    {'manual_attendance_ids': manual_attendance.id, 'approver': self.env.uid, 'sequence': sequence,
+                    {'manual_attandance_batches_id': manual_attendance.id, 'approver': self.env.uid, 'sequence': sequence,
                      'date': fields.Datetime.now()})
 
 
     @api.multi
     def action_validate(self):
             self.write({'state': 'validate'})
-            self.line_ids.action_validate()
+            for rec in self.line_ids:
+                rec.action_validate()
 
     @api.multi
     def action_refuse(self):

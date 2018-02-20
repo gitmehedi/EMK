@@ -234,11 +234,14 @@ class HrManualAttendance(models.Model):
             vals1['employee_id'] = manual_attendance.employee_id.id
             vals1['operating_unit_id'] = manual_attendance.employee_id.operating_unit_id.id
             vals1['manual_attendance_request'] = True
-            if manual_attendance.sign_type == 'both':
-                vals1['check_in'] = manual_attendance.check_in
-                vals1['check_out'] = manual_attendance.check_out
-                attendance_obj.create(vals1)
-            elif manual_attendance.sign_type == 'sign_in':
+
+            # if manual_attendance.sign_type == 'both':
+            #     vals1['check_in'] = manual_attendance.check_in
+            #     vals1['check_out'] = manual_attendance.check_out
+            #     attendance_obj.create(vals1)
+            # el
+
+            if manual_attendance.sign_type == 'sign_in':
                 vals1['check_in'] = manual_attendance.check_in
                 hr_att_pool = self.env['hr.attendance']
                 preAttData = hr_att_pool.search([('employee_id', '=', manual_attendance.employee_id.id),
