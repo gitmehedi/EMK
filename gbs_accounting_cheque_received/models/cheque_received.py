@@ -97,11 +97,9 @@ class ChequeReceived(models.Model):
 
     @api.model
     def create(self, vals):
-        # acc_conf_setting_pool = self.env['account.config.settings'].search([], order='id desc', limit=1)
         seq = self.env['ir.sequence'].next_by_code('accounting.cheque.received') or '/'
         vals['name'] = seq
         return super(ChequeReceived, self).create(vals)
-
 
 
     """ Methods """

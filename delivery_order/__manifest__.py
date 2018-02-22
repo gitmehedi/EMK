@@ -25,6 +25,8 @@
         'wizards/do_max_order_qty_without_lc_views.xml',
         'views/delivery_order_view.xml',
         'views/inherited_account_payment_view.xml',
+        'report/cash_received_report.xml',
+        'report/cash_received_report_view.xml',
     ],
 
     'summary': 'Delivery Authorization',
