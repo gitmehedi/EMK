@@ -107,6 +107,7 @@ class HrAttendanceErrorSummaryReport(models.AbstractModel):
 
         return self.env['report'].render('gbs_hr_attendance_report.report_att_error_summary', docargs)
 
+
     def getErrorAtt(self, emp, fromDate, toDate, att_utility_pool):
 
         day = datetime.timedelta(days=1)
@@ -118,32 +119,55 @@ class HrAttendanceErrorSummaryReport(models.AbstractModel):
         if emp.is_monitor_attendance == False:
             return attendance_list
 
-        if emp.is_executive == False:
-            # For non-management employee
-            self._cr.execute(self.get_non_management_emp_att_query, tuple([emp.id, fdt, tdt, fdt, tdt,
-                                                                           fdt, tdt, fdt, tdt]))
-            attList = self._cr.fetchall()
+        self._cr.execute(self.get_non_management_emp_att_query, tuple([emp.id, fdt, tdt, fdt, tdt,
+                                                                       fdt, tdt, fdt, tdt]))
+        attList = self._cr.fetchall()
 
-            for attendance in attList:
-                attendance_list.append(self.buildNonManagementEmployee(emp,attendance))
-
-        elif emp.is_executive == True:
-
-            # For management employee
-            dutyTimeMap = att_utility_pool.getDutyTimeByEmployeeId(emp.id, fdt, tdt)
-            currDate = fromDate
-
-            while currDate <= toDate:
-
-                if dutyTimeMap.get(att_utility_pool.getStrFromDate(currDate)):
-                    attendanceList = att_utility_pool.getErrorAttendanceListByDay(emp.id, currDate, day, dutyTimeMap)
-                    outcome = self.buildManagementEmployee(emp, attendanceList)
-                    if len(outcome) > 0:
-                        attendance_list.append(outcome)
-
-                currDate = currDate + day
+        for attendance in attList:
+            attendance_list.append(self.buildNonManagementEmployee(emp, attendance))
 
         return attendance_list
+
+
+
+    #
+    # def getErrorAtt(self, emp, fromDate, toDate, att_utility_pool):
+    #
+    #     day = datetime.timedelta(days=1)
+    #
+    #     fdt = fromDate - day
+    #     tdt = toDate + day
+    #
+    #     attendance_list = []
+    #     if emp.is_monitor_attendance == False:
+    #         return attendance_list
+    #
+    #     if emp.is_executive == False:
+    #         # For non-management employee
+    #         self._cr.execute(self.get_non_management_emp_att_query, tuple([emp.id, fdt, tdt, fdt, tdt,
+    #                                                                        fdt, tdt, fdt, tdt]))
+    #         attList = self._cr.fetchall()
+    #
+    #         for attendance in attList:
+    #             attendance_list.append(self.buildNonManagementEmployee(emp,attendance))
+    #
+    #     elif emp.is_executive == True:
+    #
+    #         # For management employee
+    #         dutyTimeMap = att_utility_pool.getDutyTimeByEmployeeId(emp.id, fdt, tdt)
+    #         currDate = fromDate
+    #
+    #         while currDate <= toDate:
+    #
+    #             if dutyTimeMap.get(att_utility_pool.getStrFromDate(currDate)):
+    #                 attendanceList = att_utility_pool.getErrorAttendanceListByDay(emp.id, currDate, day, dutyTimeMap)
+    #                 outcome = self.buildManagementEmployee(emp, attendanceList)
+    #                 if len(outcome) > 0:
+    #                     attendance_list.append(outcome)
+    #
+    #             currDate = currDate + day
+    #
+    #     return attendance_list
 
 
 
