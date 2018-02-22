@@ -21,7 +21,7 @@ class ChequeReceived(models.Model):
     branch_name = fields.Char(string='Branch Name', required=True, )
     date_on_cheque = fields.Date('Date On Cheque', required=True)
     cheque_amount = fields.Float(string='Amount', required=True, )
-    sale_order_id = fields.Many2one('sale.order', string='Sale Order', )
+    sale_order_id = fields.Many2one('sale.order', string='Sale Order', domain=[('credit_sales_or_lc','=','credit_sales')] )
     is_cheque_payment = fields.Boolean(string='Cheque Payment', default=True)
     mr_sl_no = fields.Char(string='SL No.', )
 
@@ -29,71 +29,63 @@ class ChequeReceived(models.Model):
         'res.company', 'Company',
         default=lambda self: self.env['res.company']._company_default_get('gbs_accounting_cheque_received'))
 
-    """ Money receipt Q-Web report printing with unique serial no. """
+
+    #Update customer's Credit Limit. Basically plus cheque amount with Customer Credit Limit
+    @api.multi
+    def updateCustomersCreditLimit(self):
+        for cust in self:
+            res_partner_credit_limit = cust.env['res.partner.credit.limit'].search(
+                [('partner_id', '=', cust.partner_id.id),
+                 ('state', '=', 'approve')], order='assign_id DESC', limit=1)
+
+            if cust.sale_order_id.credit_sales_or_lc == 'credit_sales' \
+                    and cust.sale_order_id.partner_id.id == cust.partner_id.id:
+
+                update_cust_credits = res_partner_credit_limit.value + cust.cheque_amount
+                res_partner_credit_limit.write({'value': update_cust_credits})
+
 
     @api.multi
     def action_honoured(self):
         for cash_rcv in self:
-            acc_move_line_pool = cash_rcv.env['account.move.line']
-            account_move = cash_rcv.env['account.move']
-
-            move_vals = {}
-            move_vals['date'] = cash_rcv.date_on_cheque
-            move_vals['company_id'] = cash_rcv.company_id.id
-            move_vals['journal_id'] = cash_rcv.company_id.bank_journal_ids.id
-            move_vals['partner_id'] = cash_rcv.partner_id.id
-            move_vals['state'] = 'posted'
-            move_vals['amount'] = cash_rcv.cheque_amount
-            move = account_move.create(move_vals)
-
-            move_line_vals = {}
-            move_line_vals['partner_id'] = cash_rcv.partner_id.id
-            move_line_vals['name'] = "rabbi Customer Payment"
-            move_line_vals['debit'] = cash_rcv.cheque_amount
-            move_line_vals['credit'] = -cash_rcv.cheque_amount
-            move_line_vals['move_id'] = move.id
-            move_line_vals['date_maturity'] = cash_rcv.date_on_cheque
-            move_line_vals['currency_id'] = 3
-            move_line_vals['account_id'] = cash_rcv.company_id.bank_journal_ids.default_debit_account_id.id
-            res = acc_move_line_pool.create(move_line_vals)
-
-            # if move_line_vals['credit']:
-            #     move_line_vals['account_id'] = cash_rcv.company_id.bank_journal_ids.default_debit_account_id.id
-            #     move_line_vals['credit'] = cash_rcv.cheque_amount
-            #     move_line_vals['credit_cash_basis'] = cash_rcv.cheque_amount
-            #     move_line_vals['dedit_cash_basis'] = 0
-            #     move_line_vals['balance_cash_basis'] = -cash_rcv.cheque_amount
-            #     move_line_vals['debit'] = 0
-            #     move_line_vals['name'] = "rabbi Customer Payment"
-            #     move_line_vals['balance'] = -cash_rcv.cheque_amount
-            #     move_line_vals['amount_currency'] = -cash_rcv.cheque_amount
-
-            #     res = acc_move_line_pool.create(move_line_vals)
-
-            # if move_line_vals['debit']:
-            #     move_line_vals['account_id'] = cash_rcv.partner_id.property_account_receivable_id.id
-            #     move_line_vals['debit'] = cash_rcv.cheque_amount
-            #     move_line_vals['credit'] = 0
-            #     move_line_vals['credit_cash_basis'] = 0
-            #     move_line_vals['dedit_cash_basis'] = cash_rcv.cheque_amount
-            #     move_line_vals['balance_cash_basis'] = cash_rcv.cheque_amount
-            #     move_line_vals['name'] = "rabbi CUST.IN/2018/0014"
-            #     move_line_vals['balance'] = cash_rcv.cheque_amount
-            #     move_line_vals['amount_currency'] = 0
+            # acc_move_line_pool = cash_rcv.env['account.move.line']
+            # account_move = cash_rcv.env['account.move']
             #
-            #     res2 = acc_move_line_pool.create(move_line_vals)
-            move_line_vals2 = {}
-            move_line_vals2['partner_id'] = cash_rcv.partner_id.id
-            move_line_vals2['name'] = "rabbi CUST.IN/2018/0014"
-            move_line_vals2['debit'] = 0
-            move_line_vals2['credit'] = -cash_rcv.cheque_amount
-            move_line_vals2['move_id'] = move.id
-            move_line_vals2['date_maturity'] = cash_rcv.date_on_cheque
-            move_line_vals2['currency_id'] = 3
-            move_line_vals2['account_id'] = cash_rcv.partner_id.property_account_receivable_id.id
-            #res2 = acc_move_line_pool.create(move_line_vals2)
+            # move_vals = {}
+            # move_vals['date'] = cash_rcv.date_on_cheque
+            # move_vals['company_id'] = cash_rcv.company_id.id
+            # move_vals['journal_id'] = cash_rcv.company_id.bank_journal_ids.id
+            # move_vals['partner_id'] = cash_rcv.partner_id.id
+            # move_vals['state'] = 'posted'
+            # move_vals['amount'] = cash_rcv.cheque_amount
+            # move = account_move.create(move_vals)
+            #
+            # move_line_vals = {}
+            # move_line_vals['partner_id'] = cash_rcv.partner_id.id
+            # move_line_vals['name'] = "rabbi Customer Payment"
+            # move_line_vals['debit'] = cash_rcv.cheque_amount
+            # move_line_vals['credit'] = -cash_rcv.cheque_amount
+            # move_line_vals['move_id'] = move.id
+            # move_line_vals['date_maturity'] = cash_rcv.date_on_cheque
+            # move_line_vals['currency_id'] = 3
+            # move_line_vals['account_id'] = cash_rcv.company_id.bank_journal_ids.default_debit_account_id.id
+            # res = acc_move_line_pool.create(move_line_vals)
+            #
+            # move_line_vals2 = {}
+            # move_line_vals2['partner_id'] = cash_rcv.partner_id.id
+            # move_line_vals2['name'] = "rabbi CUST.IN/2018/0014"
+            # move_line_vals2['debit'] = 0
+            # move_line_vals2['credit'] = -cash_rcv.cheque_amount
+            # move_line_vals2['move_id'] = move.id
+            # move_line_vals2['date_maturity'] = cash_rcv.date_on_cheque
+            # move_line_vals2['currency_id'] = 3
+            # move_line_vals2['account_id'] = cash_rcv.partner_id.property_account_receivable_id.id
+
+
+            cash_rcv.updateCustomersCreditLimit()
 
             cash_rcv.state = 'honoured'
+
 
     @api.model
     def create(self, vals):

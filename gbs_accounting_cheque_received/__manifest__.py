@@ -10,6 +10,7 @@
         'sale',
         'account',
         'custom_report',
+        'gbs_sale_order_approval',
     ],
 
     'data': [
