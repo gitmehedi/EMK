@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+	<data>
+		<template id="report_individual_payslip">
+			<t t-call="report.html_container">
+				<t t-call="custom_report.gbs_internal_layout">
+					<div class="page" style="page-break-inside:auto">
+						<div class="row">
+							<style type="text/css">
+								.cell-bg-primary { background-color: #428bca; color:#fff; }
+								.cell-bg-success { background-color: #5cb85c; color:#fff; }
+								.cell-bg-info { background-color: #5bc0de; color:#fff; }
+								.cell-bg-warning { background-color: #f0ad4e; color:#fff; }
+								.cell-bg-danger { background-color: #d9534f; color:#fff; }
+
+								.odo-bg-primary, .odo-bg-primary > td
+									{ background-color: #5653A6; color:#fff; }
+								.odo-bg-success, .odo-bg-success > td
+									{ background-color: #A65698; color:#fff; }
+								.odo-bg-info, .odo-bg-info > td
+									{ background-color: #96A6D9; color:#fff; }
+								.odo-bg-warning, .odo-bg-warning > td
+									{ background-color: #f0ad4e; color:#fff; }
+								.odo-bg-danger, .odo-bg-danger > td
+									{ background-color: #731D09; color:#fff; }
+								.odo-bg-gray, .odo-bg-gray > td
+									{ background-color: #f5f5f5; }
+								.report-title { text-align:center;}
+
+							</style>
+
+							<h2 class="report-title">Money Receipt</h2>
+
+							<div class="row">
+								<div class="col-xs-6">
+                                    <h4><label>SL No. </label> : <span t-esc="data['mr_sl_no']"/></h4>
+									<h4><label>Sale Order Ref. </label> : <span t-esc="data['sale_order_id']"/></h4>
+									<h4><label>Customer</label> : <span t-esc="data['partner_id']"/></h4>
+                                    <h4><label>Amount</label> : <span t-esc="data['cheque_amount']"/></h4>
+									<h4><label>Cheque Payment? </label> : Yes</h4>
+									<h4><label>Date on Cheque</label> : <span t-esc="data['date_on_cheque']"/></h4>
+									<h4><label>Bank Name</label> : <span t-esc="data['bank_name']"/></h4>
+									<h4><label>Description</label> : <span t-esc="data['branch_name']"/></h4>
+
+								</div>
+							</div>
+
+						</div>
+					</div>
+				</t>
+			</t>
+
+		</template>
+	</data>
+</odoo>
