@@ -20,7 +20,7 @@
                                 attrs="{'invisible': ['|',('current_user_is_approver', '!=', True),('state', '!=', 'confirm')]}"/>
                         <button string="Reset to Draft" name="action_draft" type="object"
                                 attrs="{'invisible': ['|', ('can_reset', '=', False), ('state', 'not in', ['confirm', 'refuse'])]}"/>
-                        <button string="Reset tooo Draft" name="action_draft" states="validate" type="object" groups="base.group_erp_manager"/>
+                        <button string="Reset to Draft" name="action_draft" states="validate" type="object" groups="base.group_erp_manager"/>
 
                         <field name="state" widget="statusbar" statusbar_visible="draft,confirm,validate"/>
                     </header>
