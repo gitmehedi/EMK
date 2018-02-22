@@ -58,12 +58,13 @@
     </record>
 
     <!-- Generate automated sequence -->
-    <record id="seq_hr_employee" model="ir.sequence">
-        <field name="name">Cheque Receive Seq</field>
+    <record id="cheque_rcv_seq" model="ir.sequence">
+        <field name="name">cheque_rcv_seqs</field>
         <field name="code">accounting.cheque.received</field>
         <field name="prefix">CUST.IN/%(year)s/</field>
         <field name="padding">4</field>
     </record>
+
 
     <record model="ir.actions.act_window" id="accounting_cheque_received_action">
         <field name="name">Cheque Received</field>
