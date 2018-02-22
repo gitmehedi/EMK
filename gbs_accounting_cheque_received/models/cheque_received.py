@@ -56,10 +56,6 @@ class ChequeReceived(models.Model):
             if cust.sale_order_id.credit_sales_or_lc == 'credit_sales' \
                     and cust.sale_order_id.partner_id.id == cust.partner_id.id:
 
-                #@todo Need to Talk with Matiar bhai what will happen if Receivable amount is zero. --Rabbi
-                if res_partner_pool.credit == 0:
-                    continue;
-
                 # Customer's Receivable amount is actually minus value
                 update_cust_receivable_amount = res_partner_pool.credit + cust.cheque_amount
                 res_partner_pool.property_account_payable_id.write({'credit': update_cust_receivable_amount})
