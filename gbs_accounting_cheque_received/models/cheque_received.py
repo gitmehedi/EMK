@@ -21,7 +21,8 @@ class ChequeReceived(models.Model):
     branch_name = fields.Char(string='Branch Name', required=True, )
     date_on_cheque = fields.Date('Date On Cheque', required=True)
     cheque_amount = fields.Float(string='Amount', required=True, )
-    sale_order_id = fields.Many2one('sale.order', string='Sale Order', domain=[('credit_sales_or_lc','=','credit_sales')] )
+    sale_order_id = fields.Many2one('sale.order', string='Sale Order',
+                                    domain=[('credit_sales_or_lc', '=', 'credit_sales')])
     is_cheque_payment = fields.Boolean(string='Cheque Payment', default=True)
     mr_sl_no = fields.Char(string='SL No.', )
 
@@ -29,8 +30,7 @@ class ChequeReceived(models.Model):
         'res.company', 'Company',
         default=lambda self: self.env['res.company']._company_default_get('gbs_accounting_cheque_received'))
 
-
-    #Update customer's Credit Limit. Basically plus cheque amount with Customer Credit Limit
+    # Update customer's Credit Limit. Basically plus cheque amount with Customer Credit Limit
     @api.multi
     def updateCustomersCreditLimit(self):
         for cust in self:
@@ -38,11 +38,32 @@ class ChequeReceived(models.Model):
                 [('partner_id', '=', cust.partner_id.id),
                  ('state', '=', 'approve')], order='assign_id DESC', limit=1)
 
+            #@todo: When adding cheque amount with Credit limit of customer; it should not exceed customer's original Credit Limit.
             if cust.sale_order_id.credit_sales_or_lc == 'credit_sales' \
                     and cust.sale_order_id.partner_id.id == cust.partner_id.id:
 
                 update_cust_credits = res_partner_credit_limit.value + cust.cheque_amount
                 res_partner_credit_limit.write({'value': update_cust_credits})
+
+
+    # Decrese Customers Receivable amount when cheque is honored
+    #@todo below method has some bugs, fix it
+    @api.multi
+    def updateCustomersReceivableAmount(self):
+        for cust in self:
+            res_partner_pool = cust.env['res.partner'].search([('id', '=', cust.partner_id.id)])
+
+            if cust.sale_order_id.credit_sales_or_lc == 'credit_sales' \
+                    and cust.sale_order_id.partner_id.id == cust.partner_id.id:
+
+                #@todo Need to Talk with Matiar bhai what will happen if Receivable amount is zero. --Rabbi
+                if res_partner_pool.credit == 0:
+                    continue;
+
+                # Customer's Receivable amount is actually minus value
+                update_cust_receivable_amount = res_partner_pool.credit + cust.cheque_amount
+                res_partner_pool.property_account_payable_id.write({'credit': update_cust_receivable_amount})
+
 
 
     @api.multi
@@ -81,18 +102,16 @@ class ChequeReceived(models.Model):
             # move_line_vals2['currency_id'] = 3
             # move_line_vals2['account_id'] = cash_rcv.partner_id.property_account_receivable_id.id
 
-
             cash_rcv.updateCustomersCreditLimit()
+            cash_rcv.updateCustomersReceivableAmount()
 
             cash_rcv.state = 'honoured'
-
 
     @api.model
     def create(self, vals):
         seq = self.env['ir.sequence'].next_by_code('accounting.cheque.received') or '/'
         vals['name'] = seq
         return super(ChequeReceived, self).create(vals)
-
 
     """ Methods """
 
