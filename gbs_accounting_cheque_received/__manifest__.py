@@ -10,6 +10,7 @@
         'sale',
         'account',
         'custom_report',
+        'gbs_sale_order_approval',
     ],
 
     'data': [
@@ -17,11 +18,8 @@
         'views/cheque_list_not_honoured.xml',
         'views/money_receipt_sequence_view.xml',
         'views/inherit_accounts_config_settings_view.xml',
-        #'report/money_receipt_template.xml',
-        #'report/money_receipt_template_report.xml',
         'report/gbs_hr_payroll_report.xml',
         'report/payroll_report_view.xml',
-
     ],
 
     'summary': 'Cheque Received',

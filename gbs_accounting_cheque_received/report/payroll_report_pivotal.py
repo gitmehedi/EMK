@@ -15,7 +15,6 @@ class PayrollReportPivotal(models.AbstractModel):
 
         seq = account_conf_pool.money_receipt_seq_id.next_by_code('account.money.receipt') or '/'
 
-        data['name'] = co
         data['sale_order_id'] = docs.sale_order_id.name
         data['partner_id'] = docs.partner_id.name
         data['cheque_amount'] = docs.cheque_amount
