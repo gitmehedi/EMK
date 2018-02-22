@@ -32,12 +32,12 @@
                                     <h4><label>Customer</label> : <span t-esc="data['partner_id']"/></h4>
                                 </div>
 								<div class="col-xs-6 text-right">
-                                    <h4><label>Amount</label> : <span t-esc="'%.2f'% data['cheque_amount']"/></h4>
+                                    <h4><label>Amount</label> : <span t-esc="thousand_separated_total_sum"/></h4>
                                 </div>
 							</div>
 							<div class="row">
 								<div class="col-xs-6">
-                                    <h4><label>Cheque Payment? </label> : Yes</h4>
+                                    <h4><label>Cheque Payment</label> : Yes</h4>
                                 </div>
 								<div class="col-xs-6 text-right">
                                     <h4><label>Date on Cheque</label> : <span t-esc="data['date_on_cheque']"/></h4>
@@ -56,12 +56,12 @@
 
 								</div>
 								<div class="col-xs-6 text-right">
-									<h4><b><label>For,</label><span t-esc="data['company_id']"/></b></h4>
+									<h4><b><label>For </label><span t-esc="data['company_id']"/></b></h4>
 								</div>
 							</div>
 							<div class="row">
 								<div class="col-xs-6" style="margin-top: 10mm;">
-                                    <h4><label>Taka</label> : <span t-esc="'%.2f'% data['cheque_amount']"/></h4>
+                                    <h4><label>In Words </label>: (<span t-esc="amount_to_words"/>)</h4>
                                 </div>
 								<div class="col-xs-6 text-right" style="margin-top: 15mm;">
                                     <strong style="border-top: 1px solid black; padding-top:5px;">Authorized Signature</strong>
@@ -72,18 +72,7 @@
 									<strong>CREDIT OF CHEQUE WILL BE VALID SUBJECT TO ENCASHMENT</strong>
 								</div>
 							</div>
-							<!--<div class="row">-->
-								<!--<div class="col-xs-6">-->
-									<!--<h4><label>Sale Order Ref. </label> : <span t-esc="data['sale_order_id']"/></h4>-->
-									<!--<h4><label>Customer</label> : <span t-esc="data['partner_id']"/></h4>-->
-                                    <!--<h4><label>Amount</label> : <span t-esc="data['cheque_amount']"/></h4>-->
-									<!--<h4><label>Cheque Payment? </label> : Yes</h4>-->
-									<!--<h4><label>Date on Cheque</label> : <span t-esc="data['date_on_cheque']"/></h4>-->
-									<!--<h4><label>Bank Name</label> : <span t-esc="data['bank_name']"/></h4>-->
-									<!--<h4><label>Branch Name</label> : <span t-esc="data['branch_name']"/></h4>-->
 
-								<!--</div>-->
-							<!--</div>-->
 						</div>
 					</div>
 				</t>

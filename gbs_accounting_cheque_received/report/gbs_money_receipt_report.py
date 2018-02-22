@@ -26,9 +26,14 @@ class PayrollReportPivotal(models.AbstractModel):
         data['date_on_cheque'] = docs.date_on_cheque
         data['mr_sl_no'] = seq
 
+        locale.setlocale(locale.LC_ALL, 'bn_BD.UTF-8')
+        thousand_separated_total_sum = locale.currency(docs.cheque_amount, grouping=True)
+
         docargs = {
             'doc_ids': self.ids,
             'doc_model': 'accounting.cheque.received',
+            'amount_to_words': self.env['res.currency'].amount_to_word(float(docs.cheque_amount)),
+            'thousand_separated_total_sum': thousand_separated_total_sum,
             'data': data,
         }
         

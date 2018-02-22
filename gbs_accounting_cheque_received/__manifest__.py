@@ -11,6 +11,7 @@
         'account',
         'report',
         'gbs_sale_order_approval',
+        'amount_to_word_bd',
     ],
 
     'data': [
