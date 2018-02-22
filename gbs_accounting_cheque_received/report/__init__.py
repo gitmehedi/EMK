@@ -1,1 +1,1 @@
-import payroll_report_pivotal
+import gbs_money_receipt_report

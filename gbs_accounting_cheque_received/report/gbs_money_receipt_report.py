@@ -3,7 +3,7 @@ import operator, math
 import locale
 
 class PayrollReportPivotal(models.AbstractModel):
-    _name = 'report.gbs_accounting_cheque_received.report_individual_payslip'
+    _name = 'report.gbs_accounting_cheque_received.report_money_receipt'
     
     @api.model
     def render_html(self, docids, data=None):
@@ -22,6 +22,7 @@ class PayrollReportPivotal(models.AbstractModel):
         data['date_on_cheque'] = docs.date_on_cheque
         data['bank_name'] = docs.bank_name.name
         data['branch_name'] = docs.branch_name
+        data['company_id'] = docs.company_id.name
         data['date_on_cheque'] = docs.date_on_cheque
         data['mr_sl_no'] = seq
 
@@ -31,5 +32,5 @@ class PayrollReportPivotal(models.AbstractModel):
             'data': data,
         }
         
-        return self.env['report'].render('gbs_accounting_cheque_received.report_individual_payslip', docargs)
+        return self.env['report'].render('gbs_accounting_cheque_received.report_money_receipt', docargs)
     
