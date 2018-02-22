@@ -11,8 +11,11 @@
                     <sheet>
                         <group>
                             <field name="product_id"/>
+                            <field name="uom_id"/>
+                            <field name="product_tmpl_id"/>
+                        </group>
+                        <group>
                             <field name="value"/>
-                            <field name="product_unit_id"/>
                             <field name="effective_datetime"/>
                         </group>
                     </sheet>
@@ -26,8 +29,9 @@
             <field name="arch" type="xml">
                 <tree string="Product Purchase History" create="false" edit="false">
                     <field name="product_id"/>
+                    <field name="uom_id"/>
+                    <field name="product_tmpl_id"/>
                     <field name="value"/>
-                    <field name="product_unit_id"/>
                     <field name="effective_datetime"/>
                 </tree>
             </field>
@@ -40,7 +44,7 @@
         </record>
 
         <menuitem id="menu_product_variant_history"
-                  name="Product Varient History" sequence="3"
+                  name="Product Variant History" sequence="3"
                   parent="stock.menu_stock_inventory_control"
                   action="action_product_variant_history"/>
 
