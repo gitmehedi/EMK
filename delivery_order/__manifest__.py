@@ -15,6 +15,8 @@
         'letter_of_credit',
         'gbs_sales_commission_so',
         'stock',
+        'amount_to_word_bd',
+        'custom_report',
     ],
 
     'data': [
@@ -25,8 +27,10 @@
         'wizards/do_max_order_qty_without_lc_views.xml',
         'views/delivery_order_view.xml',
         'views/inherited_account_payment_view.xml',
+        'report/money_receipt_paperformat.xml',
         'report/cash_received_report.xml',
         'report/cash_received_report_view.xml',
+
     ],
 
     'summary': 'Delivery Authorization',
