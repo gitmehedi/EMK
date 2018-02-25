@@ -36,9 +36,9 @@ class HrShortLeave(models.Model):
 
     report_note = fields.Text('HR Comments')
     user_id = fields.Many2one('res.users', string='User', related='employee_id.user_id', related_sudo=True, store=True, default=lambda self: self.env.uid, readonly=True)
-    date_from = fields.Datetime('Start Time', readonly=True, index=True, copy=False,required=True,
+    date_from = fields.Datetime('Start Time', readonly=True, index=True, copy=False,required=True,track_visibility='onchange',
                                 states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]})
-    date_to = fields.Datetime('End Time', readonly=True, copy=False,required=True,
+    date_to = fields.Datetime('End Time', readonly=True, copy=False,required=True,track_visibility='onchange',
                               states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]})
     employee_id = fields.Many2one('hr.employee', string='Employee', index=True, readonly=True,required=True,
                                   states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]}, default=_default_employee)

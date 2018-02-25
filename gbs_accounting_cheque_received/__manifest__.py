@@ -9,6 +9,9 @@
         'gbs_application_group',
         'sale',
         'account',
+        'report',
+        'gbs_sale_order_approval',
+        'amount_to_word_bd',
         'custom_report',
     ],
 
@@ -17,8 +20,8 @@
         'views/cheque_list_not_honoured.xml',
         'views/money_receipt_sequence_view.xml',
         'views/inherit_accounts_config_settings_view.xml',
-        'report/money_receipt_template.xml',
-        'report/money_receipt_template_report.xml',
+        'report/gbs_money_receipt_paperformat.xml',
+        'report/gbs_money_receipt_report_view.xml',
     ],
 
     'summary': 'Cheque Received',
