@@ -288,16 +288,31 @@ class HrManualAttendance(models.Model):
            if self.check_out > datetime.datetime.now().strftime("%Y-%m-%d %H-%M-%S"):
                 raise UserError(_("Check out time must be less than current time!"))
 
-    @api.constrains('check_in','check_out')
+    # @api.constrains('check_in','check_out')
+    # def _check_time(self):
+    #     for h in self:
+    #         domain = [
+    #             ('check_in', '<=', h.check_out),
+    #             ('check_out', '>=', h.check_in),
+    #             ('employee_id', '=', h.employee_id.id),
+    #             ('id', '!=', h.id),
+    #             ('state', 'not in', ['cancel', 'refuse']),
+    #         ]
+    #         nholidays = self.search_count(domain)
+    #         if nholidays:
+    #             raise ValidationError(_('You can not have 2 leaves that overlaps on same day!'))
+
+    @api.constrains('check_in', 'check_out')
     def _check_time(self):
+        sl_pool = self.env["hr.short.leave"]
         for h in self:
             domain = [
-                ('check_in', '<=', h.check_out),
-                ('check_out', '>=', h.check_in),
+                ('date_from', '<=', h.check_out),
+                ('date_to', '>=', h.check_in),
                 ('employee_id', '=', h.employee_id.id),
                 ('id', '!=', h.id),
                 ('state', 'not in', ['cancel', 'refuse']),
             ]
-            nholidays = self.search_count(domain)
+            nholidays = sl_pool.search_count(domain)
             if nholidays:
                 raise ValidationError(_('You can not have 2 leaves that overlaps on same day!'))
