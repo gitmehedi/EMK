@@ -73,78 +73,6 @@ class HrManualAttendance(models.Model):
              "\nThe status is 'Refused', when manual attendance request is refused by manager." +
              "\nThe status is 'Approved', when manual attendance request is approved by manager.")
 
-    """
-        This method does below things: 
-        1. Check in/out date can not be a future date
-        2. min day restriction of applying manual request
-        **************************************************
-        Basic functionality done, method has some known bugs. After 
-        fixing it will be open to the application.
-        
-    """
-    
-    """
-    @api.constrains('check_in_time_full_day', 'check_out_time_full_day', 'check_in_time_sign_in', 'check_in_time_sign_out')
-    def _validity_check_in_check_out_manual_attendances(self):
-       
-        curr_date = datetime.date.today().strftime('%Y-%m-%d')
-        
-        if self.check_in_time_full_day > curr_date or self.check_in_time_sign_in > curr_date or self.check_in_time_sign_in > curr_date: 
-            raise ValidationError(('"Check In" time cannot be future date'))       
-        if self.check_out_time_full_day > curr_date:
-            raise ValidationError(('"Check Out" time cannot be future date'))
-        
-        if self.check_in_time_full_day > self.check_out_time_full_day:
-             raise ValidationError(('"Check In" cannot be greater than Check Out date'))
-        
-    
-       
-      #  Minimum days restriction apply
-
-
-        min_days_obj = self.env['hr.manual.attendance.min.days'].search([('min_days_restriction', '=', 3)])
-
-        ### Check in time full day min days restriction
-        ck_sign_in_full = datetime.datetime.strptime(self.check_in_time_full_day, '%Y-%m-%d')
-        current_date = datetime.datetime.strptime(curr_date, '%Y-%m-%d')
-        start_date_check_in_full_day = date(ck_sign_in_full.year, ck_sign_in_full.month, ck_sign_in_full.day)
-        end_date_check_in_full_day = date(current_date.year, current_date.month, current_date.day)
-        delta = end_date_check_in_full_day - start_date_check_in_full_day
-
-        if delta.days > min_days_obj.id:
-            raise ValidationError(('You can not enter signin date of {} days ago'.format(delta)))
-
-        ### Check in time full day min days restriction
-        ck_sign_out_full = datetime.datetime.strptime(self.check_out_time_full_day, '%Y-%m-%d')
-        current_date1 = datetime.datetime.strptime(curr_date, '%Y-%m-%d')
-        start_date_check_in_full_day1 = date(ck_sign_out_full.year, ck_sign_out_full.month, ck_sign_out_full.day)
-        end_date_check_in_full_day1 = date(current_date1.year, current_date1.month, current_date1.day)
-        delta1 = end_date_check_in_full_day1 - start_date_check_in_full_day1
-
-        if delta1.days > min_days_obj.id:
-            raise ValidationError(('You can not enter signout date of {} days ago'.format(delta1)))
-
-        ### Check in time full day min days restriction
-        ck_sign_in = datetime.datetime.strptime(self.check_in_time_sign_in, '%Y-%m-%d')
-        current_date2 = datetime.datetime.strptime(curr_date, '%Y-%m-%d')
-        start_date_check_in_full_day2 = date(ck_sign_in.year, ck_sign_in.month, ck_sign_in.day)
-        end_date_check_in_full_day2 = date(current_date2.year, current_date2.month, current_date2.day)
-        delta2 = end_date_check_in_full_day2 - start_date_check_in_full_day2
-
-        if delta2.days > min_days_obj.id:
-            raise ValidationError(('You can not enter signin date of {} days ago'.format(delta2)))
-
-        ### Check in time full day min days restriction
-        ck_sign_in1 = datetime.datetime.strptime(self.check_in_time_sign_out, '%Y-%m-%d')
-        current_date3 = datetime.datetime.strptime(curr_date, '%Y-%m-%d')
-        start_date_check_in_full_day3 = date(ck_sign_in1.year, ck_sign_in1.month, ck_sign_in1.day)
-        end_date_check_in_full_day3 = date(current_date3.year, current_date3.month, current_date3.day)
-        delta3 = end_date_check_in_full_day3 - start_date_check_in_full_day3
-
-        if delta3.days > min_days_obj.id:
-            raise ValidationError(('You can not enter signout date of {} days ago'.format(delta3)))
-
-    """
 
     ####################################################
     # Business methods
@@ -180,7 +108,7 @@ class HrManualAttendance(models.Model):
             self.current_user_is_approver = True
         else:
             self.current_user_is_approver = False
-                  
+
     @api.multi
     def _compute_can_reset(self):
         """ User can reset a leave request if it is its own leave request or if he is a Manager."""
@@ -189,13 +117,13 @@ class HrManualAttendance(models.Model):
         for att in self:
             if group_hr_manager in user.groups_id or att.employee_id and att.employee_id.user_id == user:
                 att.can_reset = True
-    
+
     @api.multi
     def action_confirm(self):
         if self.filtered(lambda manual_attendance: manual_attendance.state != 'draft'):
             raise UserError(_('Manual Attendance request must be in Draft state ("To Submit") in order to confirm it.'))
         return self.write({'state': 'confirm'})
-    
+
     @api.multi
     def action_approve(self):
         for manual_attendance in self:
@@ -221,7 +149,7 @@ class HrManualAttendance(models.Model):
                 self.env['hr.employee.manual.att.approbation'].create(
                     {'manual_attandance_id': manual_attendance.id, 'approver': self.env.uid, 'sequence': sequence,
                      'date': fields.Datetime.now()})
-    
+
     @api.multi
     def action_validate(self):
         ### Here Only Both Type is Implemented as other type not implemented properly;
@@ -280,7 +208,7 @@ class HrManualAttendance(models.Model):
                 raise UserError(_('Manual Attendance request must be confirmed or validated in order to refuse it.'))
             manual_attendance.write({'state': 'refuse'})
         return True
-    
+
     @api.multi
     def action_draft(self):
         for att in self:
@@ -359,3 +287,17 @@ class HrManualAttendance(models.Model):
         elif self.sign_type == "sign_out":
            if self.check_out > datetime.datetime.now().strftime("%Y-%m-%d %H-%M-%S"):
                 raise UserError(_("Check out time must be less than current time!"))
+
+    @api.constrains('check_in','check_out')
+    def _check_time(self):
+        for h in self:
+            domain = [
+                ('check_in', '<=', h.check_out),
+                ('check_out', '>=', h.check_in),
+                ('employee_id', '=', h.employee_id.id),
+                ('id', '!=', h.id),
+                ('state', 'not in', ['cancel', 'refuse']),
+            ]
+            nholidays = self.search_count(domain)
+            if nholidays:
+                raise ValidationError(_('You can not have 2 leaves that overlaps on same day!'))

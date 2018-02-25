@@ -1,4 +1,6 @@
-from odoo import api, exceptions, fields, models
+from odoo import api, fields, models
+import locale
+
 
 class CashReceivedReport(models.AbstractModel):
     _name = 'report.delivery_order.report_individual_payslip'
@@ -21,11 +23,17 @@ class CashReceivedReport(models.AbstractModel):
         data['sale_order_id'] = docs.sale_order_id.name
         data['payment_date'] = docs.payment_date
         data['mr_sl_no'] = seq
+        data['company_id'] = docs.company_id.name
+
+
+        locale.setlocale(locale.LC_ALL, 'bn_BD.UTF-8')
+        thousand_separated_total_sum = locale.currency(docs.amount, grouping=True)
 
         docargs = {
             'doc_model': 'account.payment',
+            'thousand_separated_total_sum': thousand_separated_total_sum,
+            'amount_to_words': self.env['res.currency'].amount_to_word(float(docs.amount)),
             'data': data,
         }
         
         return self.env['report'].render('delivery_order.report_individual_payslip', docargs)
-    

@@ -2,7 +2,7 @@
 <odoo>
     <data>
         <record id="paperformat_money_receipt_portrait" model="report.paperformat">
-            <field name="name">Money Receipt Reports</field>
+            <field name="name">Money Receipt Reports cash</field>
             <field name="default" eval="True"/>
             <field name="format">custom</field>
             <field name="page_height">250</field>

@@ -1,5 +1,4 @@
 from odoo import api, exceptions, fields, models
-import operator, math
 import locale
 
 class PayrollReportPivotal(models.AbstractModel):
