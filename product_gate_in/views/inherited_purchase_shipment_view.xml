@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+	<data>
+
+		<record id="purchase_shipment_view" model="ir.ui.view">
+            <field name="name">purchase.shipment</field>
+            <field name="model">purchase.shipment</field>
+            <field name="inherit_id" ref="com_shipment.view_shipment_form"/>
+            <field name="arch" type="xml">
+                <!-- Gate In button for show gate in form view -->
+                <xpath expr="//button[@name='action_draft']" position="after">
+                   <button string="Gate In"
+                           name="action_create_gate_in_button" states="cnf_clear,gate_in" type="object" class="oe_highlight"/>
+                </xpath>
+
+                <!-- Gate In button for show gate in list view -->
+                    <xpath expr="//sheet/div[@name='button_box']" position="inside">
+                        <!--<div class="oe_button_box" name="button_box" display="inline-block">-->
+                        <field name="gate_in_ids" invisible="True" />
+                        <button name="%(product_gate_in_action_window1)d" type="action"
+                                class="oe_stat_button" icon="fa-share" context="{'ship_id': id}"
+                        attrs="{'invisible':[('gate_in_ids','=',[])]}">
+                            <label string="Gate IN"/>
+                        </button>
+                    <!--</div>-->
+                </xpath>
+
+            </field>
+        </record>
+
+    </data>
+</odoo>
+

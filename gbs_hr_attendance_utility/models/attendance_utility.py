@@ -11,7 +11,8 @@ class AttendanceUtility(models.TransientModel):
     employee_shift_history_query = """SELECT effective_from, shift_id
                                     FROM hr_shifting_history
                                     WHERE employee_id = %s AND (%s BETWEEN effective_from AND effective_end
-                                    OR %s BETWEEN effective_from AND effective_end)
+                                    OR %s BETWEEN effective_from AND effective_end
+                                    OR (%s <= effective_from AND effective_end <= %s))
                                     ORDER BY effective_from ASC"""
 
     daily_attendance_query = """SELECT (check_in + interval '6h') AS check_in, (check_out + interval '6h') AS check_out, worked_hours
@@ -19,24 +20,57 @@ class AttendanceUtility(models.TransientModel):
                                       WHERE employee_id = %s AND check_in between %s and %s AND (check_out IS NULL OR check_out > %s)
                                       ORDER BY check_in ASC LIMIT 1"""
 
-    alter_attendance_query = """SELECT (check_in + interval '6h') AS check_in, (check_out + interval '6h') AS check_out, worked_hours
+    alter_attendance_query = """SELECT (check_in + interval '6h') AS check_in, 
+                                    (check_out + interval '6h') AS check_out, 
+                                    worked_hours, 1 AS att_type
                                     FROM hr_attendance
-                                  WHERE (check_in BETWEEN %s AND %s) AND (check_out BETWEEN %s AND %s) AND employee_id = %s
-                                  ORDER BY check_in ASC"""
+                                WHERE (check_in BETWEEN %s AND %s) AND (check_out BETWEEN %s AND %s) AND employee_id = %s
+                                UNION
+                                SELECT (check_in + interval '6h') AS check_in, 
+                                   (check_out + interval '6h') AS check_out, 
+                                   0 AS worked_hours, 2 AS att_type
+                                FROM hr_manual_attendance 
+                                WHERE state = 'validate' AND sign_type = 'both' AND 
+                                      (check_in BETWEEN %s AND %s) AND (check_out BETWEEN %s AND %s) AND employee_id = %s
+                                UNION
+                                SELECT (date_from + interval '6h') AS check_in, 
+                                   (date_to + interval '6h') AS check_out, 
+                                   0 AS worked_hours, 3 AS att_type      
+                                FROM hr_short_leave 
+                                WHERE state = 'validate' AND 
+                                (date_from BETWEEN %s AND %s) AND (date_to BETWEEN %s AND %s) AND employee_id = %s
+                                ORDER BY check_in, att_type ASC"""
+
+    error_attendance_for_management_emp = """SELECT 
+                                                (check_in + interval '6h') AS check_in, 
+                                                (check_out + interval '6h') AS check_out
+                                              FROM hr_attendance
+                                              WHERE 	
+                                                employee_id = %s AND
+                                                ((
+                                                (check_out = NULL AND DATE(check_in + interval '6h') = DATE(%s)) OR
+                                                (DATE(check_out + interval '6h') = DATE(%s))
+                                                ) OR (
+                                                (check_in = NULL AND DATE(check_out + interval '6h') = DATE(%s)) OR
+                                                (DATE(check_in + interval '6h') = DATE(%s))
+                                                ))
+                                               ORDER BY CASE 
+                                                WHEN(check_in IS NOT NULL) THEN check_in 
+                                                WHEN(check_out IS NOT NULL) THEN check_out END ASC"""
 
 
     def getDutyTimeByEmployeeId(self, employeeId, preStartDate, postEndDate):
         # Getting Shift Ids for an employee
-        self._cr.execute(self.employee_shift_history_query, (employeeId, preStartDate, postEndDate))
+        self._cr.execute(self.employee_shift_history_query, (employeeId, preStartDate, postEndDate, preStartDate, postEndDate))
         calendarList = self._cr.fetchall()
         shiftList = self.getShiftList(calendarList, postEndDate)
         dutyTimeMap = self.buildDutyTime(preStartDate, postEndDate, shiftList)
-        self.printDutyTime(preStartDate, postEndDate, dutyTimeMap)
+        # self.printDutyTime(preStartDate, postEndDate, dutyTimeMap)
         return dutyTimeMap
 
     def isSetRosterByEmployeeId(self, employeeId, preStartDate, postEndDate):
         # Getting Shift Ids for an employee
-        self._cr.execute(self.employee_shift_history_query, (employeeId, preStartDate, postEndDate))
+        self._cr.execute(self.employee_shift_history_query, (employeeId, preStartDate, postEndDate, preStartDate, postEndDate))
         calendarList = self._cr.fetchall()
         if calendarList:
             return True
@@ -65,9 +99,10 @@ class AttendanceUtility(models.TransientModel):
         return alterTimeMap
 
     def getDailyAttByDateAndUnit(self, requestedDate, operating_unit_id):
-        att_query = """SELECT employee_id, MIN(check_in) + interval '6h' AS check_in FROM hr_attendance
-                       WHERE duty_date = %s AND operating_unit_id = %s
-                       GROUP BY employee_id ORDER BY employee_id"""
+        att_query = """SELECT employee_id, MIN(check_in) + interval '6h' AS check_in FROM hr_attendance att
+                        JOIN hr_employee emp ON emp.id = att.employee_id
+                        WHERE duty_date = %s AND emp.operating_unit_id = %s
+                        GROUP BY employee_id ORDER BY employee_id"""
         self._cr.execute(att_query, (requestedDate, operating_unit_id))
         attLines = self._cr.fetchall()
         employeeAttMap = {}
@@ -136,16 +171,91 @@ class AttendanceUtility(models.TransientModel):
         previousDayDutyTime = self.getPreviousDutyTime(alterDayDutyTime.startDutyTime - day, dutyTimeMap)
         nextDayDutyTime = self.getNextDutyTime(alterDayDutyTime.startDutyTime + day, dutyTimeMap)
 
-        self._cr.execute(self.alter_attendance_query, (self.convertDateTime(previousDayDutyTime.endActualDutyTime),
-                                                       self.convertDateTime(alterDayDutyTime.endActualDutyTime),
-                                                       self.convertDateTime(alterDayDutyTime.startDutyTime),
-                                                       self.convertDateTime(nextDayDutyTime.startDutyTime),
-                                                       employeeId))
+        preEndActualDutyTime = self.convertDateTime(previousDayDutyTime.endActualDutyTime)
+        endActualDuty = self.convertDateTime(alterDayDutyTime.endActualDutyTime)
+        startDutyTime = self.convertDateTime(alterDayDutyTime.startDutyTime)
+        nextStartDutyTime = self.convertDateTime(nextDayDutyTime.startDutyTime)
+
+        self._cr.execute(self.alter_attendance_query, (preEndActualDutyTime, endActualDuty, startDutyTime, nextStartDutyTime,employeeId,
+                                                       preEndActualDutyTime, endActualDuty, startDutyTime, nextStartDutyTime, employeeId,
+                                                       preEndActualDutyTime, endActualDuty, startDutyTime, nextStartDutyTime, employeeId))
         attendance_line = self._cr.fetchall()
 
         for i, attendance in enumerate(attendance_line):
-                duration = (self.getDateTimeFromStr(attendance[1]) - self.getDateTimeFromStr(attendance[0])).total_seconds() / 60 / 60
-                attendanceDayList.append(TempLateTime(attendance[0], attendance[1], duration))
+            att_check_in = attendance[0]
+            att_check_out = attendance[1]
+
+            chk_in = self.getDateTimeFromStr(att_check_in)
+            chk_out = self.getDateTimeFromStr(att_check_out)
+
+            # Adjust Check_in Check_out time within atutomated, manual and short leave
+            if i > 0 and attendance[3] > 1:
+                pre_chk_out = self.getDateTimeFromStr(attendance_line[i - 1][1])
+                if pre_chk_out > chk_in:
+                    chk_in = pre_chk_out
+                    att_check_in = attendance_line[i - 1][1]
+
+            if i < (len(attendance_line) - 1) and attendance[3] > 1:
+                next_chk_in = self.getDateTimeFromStr(attendance_line[i + 1][0])
+                if next_chk_in < chk_out:
+                    chk_out = next_chk_in
+                    att_check_out = attendance_line[i + 1][0]
+
+            duration = (chk_out - chk_in).total_seconds() / 60 / 60
+            attendanceDayList.append(TempLateTime(att_check_in, att_check_out, duration))
+        return attendanceDayList
+
+    def getErrorAttendanceListByDay(self, employeeId, currDate, day, dutyTimeMap):
+
+        previousDayDutyTime = self.getPreviousDutyTime(currDate - day, dutyTimeMap)
+        nextDayDutyTime = self.getNextDutyTime(currDate + day, dutyTimeMap)
+
+        self._cr.execute(self.error_attendance_for_management_emp,
+                         tuple([employeeId, currDate, currDate, currDate, currDate]))
+
+        attendanceDayList = self._cr.fetchall()
+        return attendanceDayList
+
+    def getAttendanceListByDay(self, attendance_data, currDate, currentDaydutyTime, day, dutyTimeMap):
+
+        attendanceDayList = []
+        previousDayDutyTime = self.getPreviousDutyTime(currDate - day, dutyTimeMap)
+        nextDayDutyTime = self.getNextDutyTime(currDate + day, dutyTimeMap)
+
+        temp_attendance_data = list(attendance_data)
+
+        for i, attendance in enumerate(attendance_data):
+
+            att_check_in = attendance[0]
+            att_check_out = attendance[1]
+
+            chk_in = self.getDateTimeFromStr(att_check_in)
+            chk_out = self.getDateTimeFromStr(att_check_out)
+
+            #Adjust Check_in Check_out time within atutomated, manual and short leave
+            if i > 0 and attendance[3] > 1:
+                pre_chk_out = self.getDateTimeFromStr(attendance_data[i-1][1])
+                if pre_chk_out > chk_in:
+                    chk_in = pre_chk_out
+                    att_check_in = attendance_data[i-1][1]
+
+            if i < (len(attendance_data) -1) and attendance[3] > 1:
+                next_chk_in = self.getDateTimeFromStr(attendance_data[i+1][0])
+                if next_chk_in < chk_out:
+                    chk_out = next_chk_in
+                    att_check_out = attendance_data[i+1][0]
+
+
+            if previousDayDutyTime.endActualDutyTime < chk_in < currentDaydutyTime.endActualDutyTime and \
+                                    currentDaydutyTime.startDutyTime < chk_out < nextDayDutyTime.startDutyTime:
+                duration = (chk_out - chk_in).total_seconds() / 60 / 60
+                attendanceDayList.append(TempLateTime(att_check_in, att_check_out, duration))
+                temp_attendance_data.remove(attendance)
+            # If attendance data is greater then 48 hours from current date (startDate) then call break.
+            # Means rest of the attendance date are not illegible for current date. Break condition apply for better optimization
+            elif (chk_in - currDate).total_seconds() / 60 / 60 > 48:
+                break
+        attendance_data = temp_attendance_data
         return attendanceDayList
 
     def getShiftList(self, calendarList, postEndDate):
@@ -227,7 +337,8 @@ class AttendanceUtility(models.TransientModel):
             preStartDate = preStartDate + day
         return dutyTimeMap
 
-    def makeDecisionForADays(self, att_summary, employeeAttMap, currDate, currentDaydutyTime, employee, graceTime):
+    def makeDecisionForADays(self, att_summary, employeeAttMap, currDate, currentDaydutyTime, employee, graceTime,
+                             todayIsHoliday, compensatoryLeaveMap, oTMap):
 
         employeeId = employee.id
         check_in = employeeAttMap.get(employeeId)
@@ -238,11 +349,11 @@ class AttendanceUtility(models.TransientModel):
 
             if isLate is True:  # Check Absent OR Late
                 # Check this day is holiday or personal leave
-                if self.checkOnHolidays(currDate) is True:
+                if self.checkOnHolidays(employeeId, todayIsHoliday, compensatoryLeaveMap, oTMap) is True:
                     att_summary["holidays"].append(Employee(employee))
                 elif self.checkOnPersonalLeave(employeeId, currDate) is True:
                     att_summary["leave"].append(Employee(employee))
-                elif self.checkShortLeave(self.convertDateTime(currentDaydutyTime.startDutyTime)) is True:
+                elif self.checkShortLeave(employeeId, self.convertDateTime(currentDaydutyTime.startDutyTime)) is True:
                     att_summary["short_leave"].append(Employee(employee))
                 elif isLate == True:
                     att_summary["late"].append(Employee(employee, check_in))
@@ -251,11 +362,11 @@ class AttendanceUtility(models.TransientModel):
                 att_summary["on_time_present"].append(Employee(employee, check_in))
 
         else:
-            if self.checkOnHolidays(currDate) is True:
+            if self.checkOnHolidays(employeeId, todayIsHoliday, compensatoryLeaveMap, oTMap) is True:
                 att_summary["holidays"].append(Employee(employee))
             elif self.checkOnPersonalLeave(employeeId, currDate) is True:
                 att_summary["leave"].append(Employee(employee))
-            elif self.checkShortLeave(self.convertDateTime(currentDaydutyTime.startDutyTime)) is True:
+            elif self.checkShortLeave(employeeId, self.convertDateTime(currentDaydutyTime.startDutyTime)) is True:
                 att_summary["short_leave"].append(Employee(employee))
             else:
                 att_summary["absent"].append(Employee(employee))
@@ -269,7 +380,7 @@ class AttendanceUtility(models.TransientModel):
         if previousDayDutyTime:
             return previousDayDutyTime
         else:
-            previousDayDutyTime = DutyTime(date + timedelta(hours=22), date + timedelta(hours=23), False, 0, 0, 0)
+            previousDayDutyTime = DutyTime(date.replace(hour=22, minute=00), date.replace(hour=23, minute=00), False, 0, 0, 0)
             return previousDayDutyTime
 
     # Get next duty time. If previous duty time is null that means this day was weekend.
@@ -311,13 +422,17 @@ class AttendanceUtility(models.TransientModel):
     def getStrFromDate(self, date):
         return date.strftime('%Y.%m.%d')
 
+    def getStrFromDate2(self, date):
+        return date.strftime('%Y-%m-%d')
+
     def getStrFromDateTime(self, date):
         return date.strftime('%Y-%m-%d %H:%M:%S')
 
             ### Short Leave Check Method
-    def checkShortLeave(self,datetime_sl):
+    def checkShortLeave(self, employeeId, datetime_sl):
         leave_pool=self.env['hr.short.leave'].search([('date_from', '<=', self.getStrFromDateTime(datetime_sl)),
-                                                 ('date_to', '>=',self.getStrFromDateTime(datetime_sl))])
+                                                 ('date_to', '>=',self.getStrFromDateTime(datetime_sl)),
+                                                 ('employee_id', '=', employeeId)])
         if leave_pool:
             return True
         else:
@@ -335,6 +450,8 @@ class AttendanceUtility(models.TransientModel):
             return mins
 
     def isLateByInTime(self, check_in, currentDayDutyTime, graceTime):
+
+
 
         if check_in > currentDayDutyTime.startDutyTime:
             lateMinutes = (check_in - currentDayDutyTime.startDutyTime).total_seconds() / 60
@@ -356,22 +473,22 @@ class AttendanceUtility(models.TransientModel):
         else:
             return 15.0
 
-    def checkOnHolidays(self, startDate):
+    def checkOnHolidays(self, employeeId, todayIsHoliday, compensatoryLeaveMap, oTMap):
 
-        query_str = """SELECT COUNT(id) FROM hr_holidays_public_line
-                       WHERE date = %s AND status = true"""
-
-        self._cr.execute(query_str, (startDate,))
-        count = self._cr.fetchall()
-        if count[0][0] > 0:
-            return True
-        else:
+        if todayIsHoliday == False:
             return False
+
+        if compensatoryLeaveMap.get(employeeId):
+            return False
+        elif oTMap.get(employeeId):
+            return False
+        else:
+            return True
 
     def checkOnPersonalLeave(self, employeeId, startDate):
 
         query_str = """SELECT COUNT(id) FROM hr_holidays
-                           WHERE employee_id = %s AND type='remove' AND state = 'validate' AND
+                           WHERE employee_id = %s AND type='remove' AND state IN ('validate1','validate') AND
                            %s BETWEEN date_from::DATE AND date_to::DATE"""
 
         self._cr.execute(query_str, (employeeId, startDate))
@@ -380,3 +497,57 @@ class AttendanceUtility(models.TransientModel):
             return True
         else:
             return False
+
+    def getHolidaysByUnit(self, unitId, requested_date):
+        holidays_query = """select t1.id,t1.date from hr_holidays_public_line as t1
+                            join hr_holidays_public as t2 on t2.id=t1.public_type_id
+                            join public_holiday_operating_unit_rel as t3 on t3.public_holiday_id=t2.id
+                            join hr_leave_fiscal_year as t4 on t4.id=t2.year_id
+                            where t3.operating_unit_id=%s and %s between t4.date_start and t4.date_stop"""
+        # key date value id from
+        self._cr.execute(holidays_query, (unitId,requested_date))
+        holidaysLines = self._cr.fetchall()
+        holidaysMap={}
+        for i, line in enumerate(holidaysLines):
+            holidaysMap[line[1]] = line[0]
+
+        return holidaysMap
+
+    def getHolidaysByUnitDateRange(self, unitId, from_date, to_date):
+        holidays_query = """select t1.id,t1.date from hr_holidays_public_line as t1
+                            join hr_holidays_public as t2 on t2.id=t1.public_type_id
+                            join public_holiday_operating_unit_rel as t3 on t3.public_holiday_id=t2.id
+                            join hr_leave_fiscal_year as t4 on t4.id=t2.year_id
+                            where t3.operating_unit_id=%s and %s >= t4.date_start and %s <= t4.date_stop"""
+
+        self._cr.execute(holidays_query, (unitId, from_date, to_date))
+        holidaysLines = self._cr.fetchall()
+        holidaysMap = {}
+        for i, line in enumerate(holidaysLines):
+            holidaysMap[line[1]] = line[0]
+
+        return holidaysMap
+
+    def getCompensatoryLeaveEmpByHolidayLineId(self, lineId):
+        holidays_query = """select t1.employee_id from hr_exception_compensatory_leave as t1
+                            join hr_holidays_exception_employee_batch as t2 on t1.rel_exception_leave_id=t2.id
+                            where t2.public_holidays_line=%s and t2.state='approved'"""
+        self._cr.execute(holidays_query, (lineId,))
+        holidaysLines = self._cr.fetchall()
+        compensatoryLeaveMap={}
+        for i, line in enumerate(holidaysLines):
+            compensatoryLeaveMap["employee_id"] = ""
+
+        return compensatoryLeaveMap
+
+    def getOTEmpByHolidayLineId(self, lineId):
+        ot_query = """select t1.employee_id from hr_exception_overtime_duty as t1
+                            join hr_holidays_exception_employee_batch as t2 on t1.rel_exception_ot_id=t2.id
+                            where t2.public_holidays_line=%s and t2.state='approved'"""
+        self._cr.execute(ot_query, (lineId,))
+        otLines = self._cr.fetchall()
+        oTMap={}
+        for i, line in enumerate(otLines):
+            oTMap["employee_id"] = ""
+
+        return oTMap

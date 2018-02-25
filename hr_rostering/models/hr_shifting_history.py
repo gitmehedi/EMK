@@ -1,6 +1,6 @@
 from openerp import fields,api,models,_
 from odoo.exceptions import UserError, ValidationError
-from datetime import date,datetime, timedelta
+from datetime import datetime, timedelta
 
 
 class HrShiftingHistory(models.Model):

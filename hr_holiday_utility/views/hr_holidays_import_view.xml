@@ -38,6 +38,7 @@
 							<page string="Raw Input">
 								<field name="import_temp">
 									<tree string="List" editable="bottom">
+										<field name="name"/>
 										<field name="employee_id"/>
 										<field name="holiday_status_id"/>
 										<field name="number_of_days"/>
@@ -48,6 +49,7 @@
 							<page string="Error Data">
 								<field name="import_error_lines">
 									<tree string="List" editable="bottom">
+										<field name="name"/>
 										<field name="employee_id"/>
 										<field name="holiday_status_id"/>
 										<field name="number_of_days"/>
@@ -58,6 +60,7 @@
 							<page string="Ready to Import">
 								<field name="lines">
 									<tree string="List" editable="bottom">
+										<field name="name"/>
 										<field name="employee_id"/>
 										<field name="holiday_status_id"/>
 										<field name="number_of_days"/>
@@ -79,11 +82,13 @@
 
     <!-- Menu Item -->
 	  <menuitem id="menu_holidays_data_import" name="Leave Data Import"
-			parent="hr_holidays.menu_hr_holidays_root" sequence="7"/>
+			parent="hr_holidays.menu_hr_holidays_root" groups="base_technical_features.group_technical_features" sequence="7"/>
 
 		<menuitem id="menu_hr_holidays_sub" name="Leave Data Import"
 			parent="menu_holidays_data_import"
-			action="hr_holidays_import_action"/>
+			action="hr_holidays_import_action"
+		    groups="base_technical_features.group_technical_features"
+		/>
 
   </data>
 </odoo>

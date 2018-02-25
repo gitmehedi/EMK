@@ -1,6 +1,5 @@
 from datetime import date
 from odoo import api, models, fields
-from odoo.exceptions import UserError, ValidationError
 
 class HrHolidaysImport(models.Model):
     _name = 'hr.holidays.import'
@@ -28,10 +27,12 @@ class HrHolidaysImport(models.Model):
         vals = {}
 
         for line in holidays_import_line_pool:
+            vals['name'] = line.name
             vals['holiday_status_id'] = line.holiday_status_id
             vals['employee_id'] = int(line.employee_id)
             vals['holiday_type'] = 'employee'
             vals['type'] = line.type
+            #vals['state'] = 'validate'
             vals['number_of_days_temp'] = line.number_of_days
 
             if (line.type == 'add'):
@@ -49,12 +50,3 @@ class HrHolidaysImport(models.Model):
     @api.multi    
     def action_confirm(self):
         self.state = 'confirmed'
-
-    # Show a msg for applied & approved state should not be delete
-    # @api.multi
-    # def unlink(self):
-    #     for imp in self:
-    #         if imp.state != 'draft':
-    #             raise UserError('You can not delete this.')
-    #         imp.lines.unlink()
-    #     return super(HrHolidaysImport, self).unlink()

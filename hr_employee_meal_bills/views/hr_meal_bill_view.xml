@@ -12,10 +12,10 @@
                                 string="Apply" states="draft"
                                 class="oe_highlight"/>
                         <button name="action_done" type="object"
-                                string="Approve" states="applied"
+                                string="Approve" states="applied" groups="hr.group_hr_manager"
                                 class="oe_highlight"/>
                         <button name="action_draft" type="object"
-                                string="Reject"
+                                string="Reject" groups="hr.group_hr_manager"
                                 states="applied"/>
                         <field name="state" widget="statusbar"/>
                     </header>
@@ -37,6 +37,10 @@
                             </notebook>
                         </group>
                     </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
                 </form>
             </field>
         </record>
@@ -58,9 +62,9 @@
             <field name="view_mode">tree,form</field>
         </record>
 
-        <menuitem id="hr_meal_bill_menu" name="Meal Bills" parent="hr.menu_hr_root" sequence="95"
+        <menuitem id="hr_meal_bill_menu" name="Meal Bills" parent="hr.menu_hr_root" sequence="95" groups="hr.group_hr_user"
                   action="hr_meal_bill_action"/>
-        <menuitem id="hr_meal_bill" name="Meal Bills" parent="hr_meal_bill_menu"
+        <menuitem id="hr_meal_bill" name="Meal Bills" parent="hr_meal_bill_menu" groups="hr.group_hr_user"
                   action="hr_meal_bill_action"/>
     </data>
 </odoo>

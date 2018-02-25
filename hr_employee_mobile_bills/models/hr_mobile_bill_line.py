@@ -1,6 +1,6 @@
-from openerp import models, fields,_
-from openerp import api
-from openerp.exceptions import UserError, ValidationError
+from odoo import models, fields,_
+from odoo import api
+from odoo.exceptions import UserError, ValidationError
 
 
 
@@ -56,4 +56,4 @@ class HrEmpMobileBillLine(models.Model):
     @api.onchange('bill_amount','amount')
     def _onchange_bill(self):
         if self.bill_amount < 0 or self.amount < 0:
-            raise UserError(_('Amount or Exceed Amount naver take negative value!'))
+            raise UserError(_('Amount or Exceed Amount never take negative value!'))

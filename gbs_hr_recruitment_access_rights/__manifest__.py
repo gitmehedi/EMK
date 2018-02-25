@@ -1,7 +1,7 @@
 {
     'name': 'GBS HR Recruitment Access Rights',
     'author': 'Genweb2',
-    'version': '1.0',
+    'version': '10.0.1.0.0',
     'category': 'Human Resources',
     'summary': 'Recruitment Process',
     'description': """
@@ -12,6 +12,7 @@ This application allows you to easily maintain access rights of recruitment proc
 """,
     'depends': [
         'gbs_application_group',
+        'hr_employee_operating_unit',
         # 'gbs_hr_recruitment',
     ],
     'data': [

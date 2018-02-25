@@ -1,4 +1,4 @@
-from odoo import api, fields, models,_
+from odoo import api, fields, models, _
 from odoo.exceptions import UserError, ValidationError
 
 
@@ -6,8 +6,8 @@ class CustomerCommissionConfigurationCustomer(models.Model):
     _name = "customer.commission.configuration.customer"
     _order = 'id desc'
 
-    old_value = fields.Float(string="Old Value", compute='store_old_value', readonly = False,store=True)
-    new_value = fields.Float(string="New Value",required=True)
+    old_value = fields.Float(string="Old Value", compute='store_old_value', readonly=True, store=True)
+    new_value = fields.Float(string="New Value", required=True)
     status = fields.Boolean(string='Status', default=True, required=True)
 
     """ Relational Fields """
@@ -22,7 +22,11 @@ class CustomerCommissionConfigurationCustomer(models.Model):
                 [('customer_id', '=', self.customer_id.id), ('product_id', '=', self.config_parent_id.product_id.id),
                  ('status', '=', True)])
 
-            self.old_value = commission.commission_rate if commission else 0
+            if commission:
+                for coms in commission:
+                    self.old_value = coms.commission_rate
+            else:
+                self.old_value = 0
 
     @api.depends('customer_id')
     def store_old_value(self):
@@ -32,17 +36,23 @@ class CustomerCommissionConfigurationCustomer(models.Model):
                     [('customer_id', '=', rec.customer_id.id), ('product_id', '=', rec.config_parent_id.product_id.id),
                      ('status', '=', True)])
 
-                rec.old_value = commission.commission_rate if commission else 0
+                if commission:
+                    for coms in commission:
+                        rec.old_value = coms.commission_rate
+                else:
+                    rec.old_value = 0
 
     # show a warning when input data
     @api.onchange('new_value')
     def _onchange_new_value(self):
-        if self.new_value > 100:
-            raise UserError(_("[Error] 'New Value' must be between 0 to 100 !"))
+        if self.config_parent_id.product_id.commission_type == 'percentage':
+            if self.new_value > 100:
+                raise UserError(_("[Error] 'New Value' must be between 0 to 100 !"))
 
-    #show a warning when click save burtton
+    # show a warning when click save burtton
     @api.constrains('new_value')
     def _check_value(self):
+        if self.config_parent_id.product_id.commission_type == 'percentage':
             if self.new_value > 100:
                 raise Warning("[Error] 'New Value' must be between 0 to 100 !")
 

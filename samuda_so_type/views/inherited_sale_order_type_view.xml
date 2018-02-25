@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="inherited_sale_order_type_view" model="ir.ui.view">
+            <field name="name">sale.order.form</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale_order_type.sot_view_order_form"/>
+            <field name="arch" type="xml">
+                <field name="type_id" position="replace">
+                    <field name="type_id" options="{'no_open': True, 'no_create': True}" required="1"/>
+                </field>
+            </field>
+        </record>
+
+
+        <record id="inherited_so_type" model="ir.ui.view">
+            <field name="name">inherited.sale.order.type.form</field>
+            <field name="model">sale.order.type</field>
+            <field name="inherit_id" ref="sale_order_type.sot_sale_order_type_form_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='sequence_id']" position="after">
+                    <field name="operating_unit"/>
+                </xpath>
+                 <xpath expr="//field[@name='operating_unit']" position="after">
+                    <field name="sale_order_type"/>
+                </xpath>
+                <xpath expr="//field[@name='sale_order_type']" position="after">
+                    <field name="currency_id"/>
+                </xpath>
+
+            </field>
+
+        </record>
+    </data>
+</odoo>

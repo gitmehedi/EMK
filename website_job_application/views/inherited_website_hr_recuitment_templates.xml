@@ -1,0 +1,867 @@
+<?xml version="1.0"?>
+<odoo>
+    <data>
+
+        <template id="website_hr_recuitment_tests" name="Website HR Recruitment Tests" inherit_id="web.assets_common">
+            <xpath expr="." position="inside">
+                <script type="text/javascript" src="/website_job_application/static/src/js/custom.js"></script>
+                <link rel="stylesheet" href="/website_job_application/static/src/css/design_profile_pic.css"/>
+            </xpath>
+        </template>
+
+        <template id="website_job_description" inherit_id="website_hr_recruitment.detail"
+                  name="Job description on Portal">
+            <xpath expr="//div[hasclass('container')]" position="after">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-8">
+                            <h3 class="text-primary">Job Description / চাকরির বিবরণ</h3>
+                            <div t-field="job.description"/>
+                        </div>
+                    </div>
+                </div>
+            </xpath>
+            <xpath expr="//section/div/div/a[hasclass('pull-right')]" position="replace">
+                <div></div>
+            </xpath>
+            <xpath expr="//section[hasclass('o_job_bottom_bar')]" position="replace">
+                <section class="o_job_bottom_bar mt32 mb32">
+                    <div class="text-center">
+                        <a t-attf-href="/jobs/apply/#{job.id}" class="btn btn-info">Apply Now / আবেদন করুন</a>
+                    </div>
+                </section>
+
+            </xpath>
+        </template>
+        <template id="inherited_website_job_apply" inherit_id="website_hr_recruitment.apply"
+                  name="Job description on Portal">
+            <xpath expr="//form" position="replace">
+                <form action="/website_form/" method="post" class="s_website_form container-fluid mt32"
+                      enctype="multipart/form-data" data-model_name="hr.applicant"
+                      data-success_page="/page/website_hr_recruitment.thankyou"
+                      t-att-data-form_field_department_id="job and job.department_id.id or False"
+                      t-att-data-form_field_job_id="job and job.id or False" style="font-size: 12px;">
+
+                    <div class="col-md-12" style="margin-bottom:10px">
+                        <div class="img__wrap" id="img_wrap">
+                            <input id="profile-image-upload" class="hidden" type="file" required="True">
+                                <img id="uploaded_image"/>
+                            </input>
+                            <div class="img__description_layer">
+                                <p class="img__description">Click here to upload image.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="panel panel-success">
+                            <div class="panel-heading"><h3 class="panel-title">Basic Information / প্রাথমিক তথ্য</h3></div>
+                            <div class="panel-body">
+                                <div class="clearfix margin-top-10">
+                                    <div class="form-group col-md-6 form-field o_website_form_required_custom">
+                                        <label class="control-label">Name(English in Capital Letter) / প্রার্থীর নাম(ইংরেজিতে)
+                                        </label>
+                                        <input type="text" class="form-control o_website_form_input input-sm"
+                                               name="partner_name" required=""/>
+                                    </div>
+                                    <div class="form-group col-md-6 form-field o_website_form_required_custom ">
+                                        <label class="control-label">Name(Bangla) / প্রার্থীর নাম(বাংলায়)</label>
+                                        <input type="text" class="form-control o_website_form_input input-sm"
+                                               name="partner_name_bangla" required=""/>
+                                    </div>
+                                    <div class="form-group col-md-6 form-field o_website_form_required_custom">
+                                        <label class="control-label">National ID / জাতীয় পরিচয় নম্বর</label>
+                                        <input type="text" class="form-control o_website_form_input input-sm"
+                                               name="national_id" required=""/>
+                                    </div>
+                                    <div class="form-group col-md-6 form-field o_website_form_required_custom  ">
+                                        <label class="control-label">Birth Registration Number / জন্ম নিবন্ধন নম্বর</label>
+                                        <input type="text" class="form-control o_website_form_input input-sm"
+                                               name="birth_registration_no" required=""/>
+                                    </div>
+                                    <div class="form-group col-md-6 form-field o_website_form_required_custom ">
+                                        <label class="control-label">Father Name / পিতার নাম</label>
+                                        <input type="text" class="form-control o_website_form_input input-sm"
+                                               name="father_name" required=""/>
+                                    </div>
+                                    <div class="form-group col-md-6 form-field o_website_form_required_custom ">
+                                        <label class="control-label">Birth Date / জন্মতারিখ</label>
+                                        <input type="text" class="form-control o_website_form_input input-sm" id="datepicker"
+                                               name="birth_date" required=""/>
+                                    </div>
+
+
+                                    <div class="form-group col-md-6 form-field o_website_form_required_custom">
+                                        <label class="control-label">Mother Name / মাতার নাম</label>
+                                        <input type="text" class="form-control o_website_form_input input-sm"
+                                               name="mother_name" required=""/>
+                                    </div>
+                                    <div class="form-group col-md-6 form-field o_website_form_required_custom  ">
+                                        <label class="control-label">Birth Location / জন্মস্থান</label>
+                                        <select class="form-control o_website_form_input input-sm" name="birth_city"
+                                                required="">
+                                            <option value="">--Please Select--</option>
+                                            <t t-foreach='districts' t-as='label'>
+                                                <option t-att-value="label">
+                                                    <t t-esc="label_value"/>
+                                                </option>
+                                            </t>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <!--<div class="col-md-12"><hr class="hr text-primary" title="Address"/></div>-->
+
+                                <div class="clearfix">
+                                    <div class="form-group col-md-6 form-field o_website_form_required_custom">
+                                        <label class="control-label">Mobile / মোবাইল</label>
+                                        <input type="text" class="form-control o_website_form_input input-sm"
+                                               name="partner_phone" required=""/>
+                                    </div>
+                                    <div class="form-group col-md-6 form-field ">
+                                        <label class="control-label">Email / ইমেইল</label>
+                                        <input type="email" class="form-control input-sm"
+                                               name="email_from" required=""
+                                               placeholder="johnodh@gmail.com"/>
+                                    </div>
+                                    <div class="form-group col-md-6 form-field o_website_form_required_custom">
+                                        <label class="control-label">Nationality / জাতীয়তা</label>
+                                        <input type="text" class="form-control o_website_form_input input-sm"
+                                               name="nationality" required=""/>
+                                    </div>
+
+                                    <div class="form-group col-md-6 form-field o_website_form_required_custom  ">
+                                        <label class="control-label">Gender / জেন্ডার</label>
+                                        <select class="form-control o_website_form_input input-sm" name="gender" required="">
+                                            <option value="male">Male / পুরুষ</option>
+                                            <option value="female">Female / নারী</option>
+                                            <option value="other">Other / অন্যান্য</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group col-md-6 form-field o_website_form_required_custom">
+                                        <label class="control-label">Religion / ধর্ম</label>
+                                        <input type="text" class="form-control o_website_form_input input-sm"
+                                               name="religion" required=""/>
+                                    </div>
+                                    <div class="form-group col-md-6 form-field ">
+                                        <label class="control-label">Occupation / পেশা</label>
+                                        <input type="text" class="form-control o_website_form_input input-sm "
+                                               name="occupation"/>
+                                    </div>
+                                    <t t-if="authorize_districts">
+                                        <div class="form-group col-md-6 form-field o_website_form_required_custom">
+                                            <label class="control-label">Authorize District</label>
+                                            <select class="form-control o_website_form_input input-sm" name="authorize_district"
+                                                    required="">
+                                                <option value="">--Please Select--</option>
+                                                <t t-foreach='authorize_districts' t-as='label'>
+                                                    <option t-att-value="label['name']">
+                                                        <t t-esc="label['name']"/>
+                                                    </option>
+                                                </t>
+                                            </select>
+                                        </div>
+                                    </t>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="panel panel-success">
+                            <div class="panel-heading"><h3 class="panel-title">Present Address and Permanent Address / বর্তমান ঠিকানা ও স্থায়ী
+                                ঠিকানা</h3>
+                            </div>
+                            <div class="panel-body">
+                                <div class="clearfix margin-top-10">
+                                    <div class="col-md-6">
+                                        <div class="form-group form-field o_website_form_required_custom">
+                                            <label class="control-label">Present House and Road(Name/No) / বর্তমান বাসা ও
+                                                সড়ক(নাম ও নম্বর)
+                                            </label>
+                                            <input id="pre_address_1" name="pre_address_1" type="text"
+                                                   class="form-control o_website_form_input input-sm" required="required"/>
+                                        </div>
+                                        <div class="form-group form-field o_website_form_required_custom">
+                                            <label class="control-label">Present Village/Para/Moholla/ (বর্তমান
+                                                গ্রাম/পাড়া/মহল্লা)
+                                            </label>
+                                            <input id="pre_address_2" name="pre_address_2" type="text"
+                                                   class="form-control o_website_form_input input-sm" required="required"/>
+                                        </div>
+                                        <div class="row">
+                                            <div class="form-group form-field col-md-6  o_website_form_required_custom">
+                                                <label class="control-label">Union/Ward/ (বর্তমান ইউনিয়ন/ওয়ার্ড)</label>
+                                                <input id="pre_city_town" name="pre_city_town" type="text"
+                                                       class="form-control o_website_form_input input-sm" required="required"/>
+                                            </div>
+                                            <div class="form-group form-field col-md-6  o_website_form_required_custom">
+                                                <label class="control-label">Postal Code/পোস্ট কোড নম্বর</label>
+                                                <input id="pre_zip_postal" name="pre_zip_postal" type="text"
+                                                       class="form-control o_website_form_input input-sm" required="required"/>
+                                            </div>
+                                            <div class="form-group form-field col-md-6  o_website_form_required_custom">
+                                                <label class="control-label">Sub-District / উপজেলা</label>
+                                                <input name="pre_state_province" class="form-control o_website_form_input input-sm"
+                                                       required="required"/>
+                                            </div>
+                                            <div class="form-group form-field col-md-6  o_website_form_required_custom">
+                                                <label class="control-label">Districts / জেলা</label>
+                                                <select class="form-control o_website_form_input input-sm" name="pre_zip_postal"
+                                                        required="required">
+                                                    <option value="">--Please Select--</option>
+                                                    <t t-foreach='districts' t-as='label'>
+                                                        <option t-att-value="label">
+                                                            <t t-esc="label_value"/>
+                                                        </option>
+                                                    </t>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group form-field o_website_form_required_custom ">
+                                            <label class="control-label">Permanent House and Road(Name/No) / বর্তমান বাসা ও
+                                                সড়ক(নাম ও নম্বর)
+                                            </label>
+                                            <input id="per_address_1" name="per_address_1" type="text"
+                                                   class="form-control o_website_form_input input-sm" required="required"/>
+                                        </div>
+                                        <div class="form-group form-field o_website_form_required_custom">
+                                            <label class="control-label">Permanent Village/Para/Moholla / (বর্তমান
+                                                গ্রাম/পাড়া/মহল্লা)
+                                            </label>
+                                            <input id="per_address_2" name="per_address_2" type="text"
+                                                   class="form-control o_website_form_input input-sm" required="required"/>
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="form-group form-field col-md-6  o_website_form_required_custom">
+                                                <label class="control-label">Union/Ward (বর্তমান ইউনিয়ন/ওয়ার্ড)</label>
+                                                <input id="per_city_town" name="per_city_town" type="text"
+                                                       class="form-control o_website_form_input input-sm" required="required"/>
+                                            </div>
+                                            <div class="form-group form-field col-md-6  o_website_form_required_custom">
+                                                <label class="control-label">Postal Code/পোস্ট কোড নম্বর</label>
+                                                <input id="pre_zip_postal" name="per_zip_postal" type="text"
+                                                       class="form-control o_website_form_input input-sm" required="required"/>
+                                            </div>
+                                            <div class="form-group form-field col-md-6  o_website_form_required_custom">
+                                                <label class="control-label">Sub-District / উপজেলা</label>
+                                                <input name="per_state_province"
+                                                       class="form-control o_website_form_input input-sm" required="required"/>
+                                            </div>
+                                            <div class="form-group form-field col-md-6  o_website_form_required_custom">
+                                                <label class="control-label">Districts / জেলা</label>
+                                                <select class="form-control o_website_form_input input-sm" name="per_district"
+                                                        required="">
+                                                    <option value="">--Please Select--</option>
+                                                    <t t-foreach='districts' t-as='label'>
+                                                        <option t-att-value="label">
+                                                            <t t-esc="label_value"/>
+                                                        </option>
+                                                    </t>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="panel panel-success">
+                            <div class="panel-heading"><h3 class="panel-title">Educational Qualification / শিক্ষাগত যোগ্যতা</h3></div>
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>Examination Name</th>
+                                        <th>Subject</th>
+                                        <th>Institute</th>
+                                        <th>Passing Year</th>
+                                        <th>Board/University</th>
+                                        <th>Grade/Class/Division</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+
+                                        <td>
+                                            <select class="form-control o_website_form_input input-sm" name="exm_ssc">
+                                                <option value="">--Please Select--</option>
+                                                <t t-foreach='degree' t-as='label'>
+                                                    <option t-att-value="label['name']">
+                                                        <t t-esc="label['name']"/>
+                                                    </option>
+                                                </t>
+                                            </select>
+
+                                        </td>
+                                        <td>
+                                            <input type="text"
+                                                   class="form-control o_website_form_input input-sm"
+                                                   name="exm_ssc_subject"/>
+                                        </td>
+                                        <td>
+                                            <input type="text"
+                                                   class="form-control o_website_form_input input-sm"
+                                                   name="exm_ssc_institute"/>
+                                        </td>
+                                        <td>
+                                            <input type="text"
+                                                   class="form-control o_website_form_input input-sm"
+                                                   name="exm_ssc_passing_year"/>
+                                        </td>
+                                        <td>
+                                            <input type="text"
+                                                   class="form-control o_website_form_input input-sm"
+                                                   name="exm_ssc_board"/>
+                                        </td>
+                                        <td>
+                                            <input type="text"
+                                                   class="form-control o_website_form_input input-sm"
+                                                   name="exm_ssc_class"/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <select class="form-control o_website_form_input input-sm" name="exm_hsc">
+                                                <option value="">--Please Select--</option>
+                                                <t t-foreach='degree' t-as='label'>
+                                                    <option t-att-value="label['name']">
+                                                        <t t-esc="label['name']"/>
+                                                    </option>
+                                                </t>
+                                            </select>
+                                        </td>
+                                        <td>
+                                            <input type="text"
+                                                   class="form-control o_website_form_input input-sm"
+                                                   name="exm_hsc_subject"/>
+                                        </td>
+                                        <td>
+                                            <input type="text"
+                                                   class="form-control o_website_form_input input-sm"
+                                                   name="exm_hsc_institute"/>
+                                        </td>
+                                        <td>
+                                            <input type="text"
+                                                   class="form-control o_website_form_input input-sm"
+                                                   name="exm_hsc_passing_year"/>
+                                        </td>
+                                        <td>
+                                            <input type="text"
+                                                   class="form-control o_website_form_input input-sm"
+                                                   name="exm_hsc_board"/>
+                                        </td>
+                                        <td>
+                                            <input type="text"
+                                                   class="form-control o_website_form_input input-sm"
+                                                   name="exm_hsc_class"/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <select class="form-control o_website_form_input input-sm" name="exm_bsc">
+                                                <option value="">--Please Select--</option>
+                                                <t t-foreach='degree' t-as='label'>
+                                                    <option t-att-value="label['name']">
+                                                        <t t-esc="label['name']"/>
+                                                    </option>
+                                                </t>
+                                            </select>
+                                            <!--<input type="text"-->
+                                            <!--class="form-control o_website_form_input input-sm"-->
+                                            <!--name="exm_bsc"/>-->
+                                        </td>
+                                        <td>
+                                            <input type="text"
+                                                   class="form-control o_website_form_input input-sm"
+                                                   name="exm_bsc_subject"/>
+                                        </td>
+                                        <td>
+                                            <input type="text"
+                                                   class="form-control o_website_form_input input-sm"
+                                                   name="exm_bsc_institute"/>
+                                        </td>
+                                        <td>
+                                            <input type="text"
+                                                   class="form-control o_website_form_input input-sm"
+                                                   name="exm_bsc_passing_year"/>
+                                        </td>
+                                        <td>
+                                            <input type="text"
+                                                   class="form-control o_website_form_input input-sm"
+                                                   name="exm_bsc_board"/>
+                                        </td>
+                                        <td>
+                                            <input type="text"
+                                                   class="form-control o_website_form_input input-sm"
+                                                   name="exm_bsc_class"/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <select class="form-control o_website_form_input input-sm" name="exm_msc">
+                                                <option value="">--Please Select--</option>
+                                                <t t-foreach='degree' t-as='label'>
+                                                    <option t-att-value="label['name']">
+                                                        <t t-esc="label['name']"/>
+                                                    </option>
+                                                </t>
+                                            </select>
+                                        </td>
+                                        <td>
+                                            <input type="text"
+                                                   class="form-control o_website_form_input input-sm"
+                                                   name="exm_msc_subject"/>
+                                        </td>
+                                        <td>
+                                            <input type="text"
+                                                   class="form-control o_website_form_input input-sm"
+                                                   name="exm_msc_institute"/>
+                                        </td>
+                                        <td>
+                                            <input type="text"
+                                                   class="form-control o_website_form_input input-sm"
+                                                   name="exm_msc_passing_year"/>
+                                        </td>
+                                        <td>
+                                            <input type="text"
+                                                   class="form-control o_website_form_input input-sm"
+                                                   name="exm_msc_board"/>
+                                        </td>
+                                        <td>
+                                            <input type="text"
+                                                   class="form-control o_website_form_input input-sm"
+                                                   name="exm_msc_class"/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <input type="text"
+                                                   class="form-control o_website_form_input input-sm"
+                                                   name="exm_other" placeholder="other"/>
+                                        </td>
+                                        <td>
+                                            <input type="text"
+                                                   class="form-control o_website_form_input input-sm"
+                                                   name="exm_other_subject"/>
+                                        </td>
+                                        <td>
+                                            <input type="text"
+                                                   class="form-control o_website_form_input input-sm"
+                                                   name="exm_other_institute"/>
+                                        </td>
+                                        <td>
+                                            <input type="text"
+                                                   class="form-control o_website_form_input input-sm"
+                                                   name="exm_other_passing_year"/>
+                                        </td>
+                                        <td>
+                                            <input type="text"
+                                                   class="form-control o_website_form_input input-sm"
+                                                   name="exm_other_board"/>
+                                        </td>
+                                        <td>
+                                            <input type="text"
+                                                   class="form-control o_website_form_input input-sm"
+                                                   name="exm_other_class"/>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="panel panel-success">
+                            <div class="panel-heading"><h3 class="panel-title">Additional Information / অতিরিক্ত তথ্য</h3></div>
+                            <div class="panel-body">
+                                <div class="clearfix margin-top-10">
+                                    <div class="form-group form-field col-md-6 o_website_form_required_custom">
+                                        <label class="control-label" for="description">Extra Curriculum Activities / অতিরিক্ত
+                                            যোগ্যতা
+                                        </label>
+                                        <textarea class="form-control o_website_form_input"
+                                                  name="curriculam_activities" required="required"></textarea>
+                                    </div>
+                                    <div class="form-group form-field col-md-6 o_website_form_required_custom ">
+                                        <label class="control-label" for="description">Experience Remarks / অভিজ্ঞতার বিবরণী
+                                        </label>
+                                        <textarea class="form-control o_website_form_input"
+                                                  name="experience_remarks" required="required"></textarea>
+                                    </div>
+                                    <div class="form-group form-field col-md-12 o_website_form_required_custom"
+                                         style="width:100%; padding:0; margin:0">
+                                        <div class="form-group form-field col-md-6 o_website_form_required_custom">
+                                            <label class="control-label">Quota / কোটা</label>
+                                            <select class="form-control input-sm  o_website_form_input" name="quota"
+                                                    required="required" id="quota">
+                                                <t t-foreach='quota' t-as='label'>
+                                                    <option t-att-value="label">
+                                                        <t t-esc="label_value"/>
+                                                    </option>
+                                                </t>
+                                            </select>
+                                        </div>
+                                        <div style="display: none;" id="quota_table">
+                                            <div class="col-md-12">
+                                                <div class="table-quota">
+                                                    <table class="table table-default table-bordered table-condensed">
+                                                        <thead>
+                                                            <tr>
+                                                                <th rowspan="2" colspan="1">ক্রমিক নং</th>
+                                                                <th style="text-align:center" rowspan="2" colspan="5">মুক্তিযোদ্ধার
+                                                                    নাম
+                                                                </th>
+                                                                <th style="text-align:center" rowspan="2" colspan="3">পিতার নাম</th>
+                                                                <th style="text-align:center" colspan="3">ঠিকানা</th>
+
+                                                            </tr>
+                                                            <tr>
+                                                                <th style="text-align:center" colspan="3">গ্রাম/ডাকঘর/ওয়ার্ড
+                                                                    নং/উপজেলা/জেলা/ অন্যান্য
+                                                                </th>
+                                                            </tr>
+
+                                                        </thead>
+                                                        <tbody>
+                                                            <!--<tr>-->
+                                                            <!--<td rowspan="2" colspan="1">ক্রমিক নং</td>-->
+                                                            <!--<td style="text-align:center" rowspan="2" colspan="5">মুক্তিযোদ্ধার-->
+                                                            <!--নাম-->
+                                                            <!--</td>-->
+                                                            <!--<td style="text-align:center" rowspan="2" colspan="3">পিতার নাম</td>-->
+                                                            <!--<td style="text-align:center" colspan="3">ঠিকানা</td>-->
+                                                            <!--</tr>-->
+                                                            <!--<tr>-->
+                                                            <!--<td style="text-align:center" colspan="3">গ্রাম/ডাকঘর/ওয়ার্ড-->
+                                                            <!--নং/উপজেলা/জেলা/ অন্যান্য-->
+                                                            <!--</td>-->
+                                                            <!--</tr>-->
+                                                            <tr>
+                                                                <td colspan="1">১.</td>
+                                                                <td colspan="2">সাময়িক সনদ</td>
+                                                                <td colspan="3">
+                                                                    <input class="form-control o_website_form_input input-sm"
+                                                                           type="text"/>
+                                                                </td>
+                                                                <td colspan="3">
+                                                                    <input class="form-control o_website_form_input input-sm"
+                                                                           type="text"/>
+                                                                </td>
+                                                                <td colspan="3">
+                                                                    <input class="form-control o_website_form_input input-sm"
+                                                                           type="text"/>
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td colspan="1">২.</td>
+                                                                <td colspan="2">গেজেট</td>
+                                                                <td colspan="3">
+                                                                    <input class="form-control o_website_form_input input-sm"
+                                                                           type="text"/>
+                                                                </td>
+                                                                <td colspan="3">
+                                                                    <input class="form-control o_website_form_input input-sm"
+                                                                           type="text"/>
+                                                                </td>
+                                                                <td colspan="3">
+                                                                    <input class="form-control o_website_form_input input-sm"
+                                                                           type="text"/>
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td colspan="1">৩.</td>
+                                                                <td colspan="2">লাল মুক্তিবার্তা</td>
+                                                                <td colspan="3">
+                                                                    <input class="form-control o_website_form_input input-sm"
+                                                                           type="text"/>
+                                                                </td>
+                                                                <td colspan="3">
+                                                                    <input class="form-control o_website_form_input input-sm"
+                                                                           type="text"/>
+                                                                </td>
+                                                                <td colspan="3">
+                                                                    <input class="form-control o_website_form_input input-sm"
+                                                                           type="text"/>
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td colspan="1">৪.</td>
+                                                                <td colspan="2">বামুস সনদ</td>
+                                                                <td colspan="3">
+                                                                    <input class="form-control o_website_form_input input-sm"
+                                                                           type="text"/>
+                                                                </td>
+                                                                <td colspan="3">
+                                                                    <input class="form-control o_website_form_input input-sm"
+                                                                           type="text"/>
+                                                                </td>
+                                                                <td colspan="3">
+                                                                    <input class="form-control o_website_form_input input-sm"
+                                                                           type="text"/>
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td colspan="1">৫.</td>
+                                                                <td colspan="2">ভারতীয় তালিকা</td>
+                                                                <td colspan="3">
+                                                                    <input class="form-control o_website_form_input input-sm"
+                                                                           type="text"/>
+                                                                </td>
+                                                                <td colspan="3">
+                                                                    <input class="form-control o_website_form_input input-sm"
+                                                                           type="text"/>
+                                                                </td>
+                                                                <td colspan="3">
+                                                                    <input class="form-control o_website_form_input input-sm"
+                                                                           type="text"/>
+                                                                </td>
+                                                            </tr>
+                                                            <!--<tr>-->
+                                                                <!--<td colspan="1"></td>-->
+                                                                <!--<td colspan="2"></td>-->
+                                                                <!--<td colspan="3">-->
+                                                                    <!--<input class="form-control o_website_form_input input-sm"-->
+                                                                           <!--type="text"/>-->
+                                                                <!--</td>-->
+                                                                <!--<td colspan="3">-->
+                                                                    <!--<input class="form-control o_website_form_input input-sm"-->
+                                                                           <!--type="text"/>-->
+                                                                <!--</td>-->
+                                                                <!--<td colspan="3">-->
+                                                                    <!--<input class="form-control o_website_form_input input-sm"-->
+                                                                           <!--type="text"/>-->
+                                                                <!--</td>-->
+                                                            <!--</tr>-->
+                                                        </tbody>
+                                                    </table>
+                                                    <table class="table table-default table-bordered table-condensed margin-0">
+
+                                                        <thead>
+                                                            <tr>
+                                                                <th rowspan="2" colspan="1">ক্রমিক নং</th>
+                                                                <th rowspan="2" colspan="3">সাময়িক সনদ/মুক্তিবার্তা/গেজেট/বামুস
+                                                                    সনদ/কল্যাণ ট্রাস্ট নম্বর ও তারিখ
+                                                                </th>
+                                                                <th style="text-align:center" colspan="6">জন্মতারিখ</th>
+                                                                <th colspan="2"></th>
+                                                            </tr>
+                                                            <tr>
+                                                                <th style="text-align:center" colspan="2">জন্মসনদ</th>
+                                                                <th style="text-align:center" colspan="2">এসওএসসি</th>
+                                                                <th style="text-align:center" colspan="2">এনআইডি</th>
+                                                                <th style="text-align:center" colspan="2">মন্তব্য</th>
+                                                            </tr>
+
+                                                        </thead>
+                                                        <tbody>
+                                                            <!--<tr>-->
+                                                            <!--<td rowspan="2" colspan="1">ক্রমিক নং</td>-->
+                                                            <!--<td rowspan="2" colspan="3">সাময়িক সনদ/মুক্তিবার্তা/গেজেট/বামুস-->
+                                                            <!--সনদ/কল্যাণ ট্রাস্ট নম্বর ও তারিখ-->
+                                                            <!--</td>-->
+                                                            <!--<td style="text-align:center" colspan="6">জন্মতারিখ</td>-->
+                                                            <!--<td colspan="2"></td>-->
+                                                            <!--</tr>-->
+                                                            <!--<tr>-->
+                                                            <!--<td style="text-align:center" colspan="2">জন্মসনদ</td>-->
+                                                            <!--<td style="text-align:center" colspan="2">এসওএসসি</td>-->
+                                                            <!--<td style="text-align:center" colspan="2">এনআইডি</td>-->
+                                                            <!--<td style="text-align:center" colspan="2">মন্তব্য</td>-->
+                                                            <!--</tr>-->
+                                                            <tr>
+                                                                <td colspan="1">১.</td>
+                                                                <td colspan="1">সাময়িক সনদ</td>
+                                                                <td colspan="2">
+                                                                    <input class="form-control o_website_form_input input-sm"
+                                                                           type="text"/>
+                                                                </td>
+                                                                <td colspan="2">
+                                                                    <input class="form-control o_website_form_input input-sm"
+                                                                           type="text"/>
+                                                                </td>
+                                                                <td colspan="2">
+                                                                    <input class="form-control o_website_form_input input-sm"
+                                                                           type="text"/>
+                                                                </td>
+                                                                <td colspan="2">
+                                                                    <input class="form-control o_website_form_input input-sm"
+                                                                           type="text"/>
+                                                                </td>
+                                                                <td colspan="2">
+                                                                    <input class="form-control o_website_form_input input-sm"
+                                                                           type="text"/>
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td colspan="1">২.</td>
+                                                                <td colspan="1">গেজেট</td>
+                                                                <td colspan="2">
+                                                                    <input class="form-control o_website_form_input input-sm"
+                                                                           type="text"/>
+                                                                </td>
+                                                                <td colspan="2">
+                                                                    <input class="form-control o_website_form_input input-sm"
+                                                                           type="text"/>
+                                                                </td>
+                                                                <td colspan="2">
+                                                                    <input class="form-control o_website_form_input input-sm"
+                                                                           type="text"/>
+                                                                </td>
+                                                                <td colspan="2">
+                                                                    <input class="form-control o_website_form_input input-sm"
+                                                                           type="text"/>
+                                                                </td>
+                                                                <td colspan="2">
+                                                                    <input class="form-control o_website_form_input input-sm"
+                                                                           type="text"/>
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td colspan="1">৩.</td>
+                                                                <td colspan="1">লাল মুক্তিবার্তা</td>
+                                                                <td colspan="2">
+                                                                    <input class="form-control o_website_form_input input-sm"
+                                                                           type="text"/>
+                                                                </td>
+                                                                <td colspan="2">
+                                                                    <input class="form-control o_website_form_input input-sm"
+                                                                           type="text"/>
+                                                                </td>
+                                                                <td colspan="2">
+                                                                    <input class="form-control o_website_form_input input-sm"
+                                                                           type="text"/>
+                                                                </td>
+                                                                <td colspan="2">
+                                                                    <input class="form-control o_website_form_input input-sm"
+                                                                           type="text"/>
+                                                                </td>
+                                                                <td colspan="2">
+                                                                    <input class="form-control o_website_form_input input-sm"
+                                                                           type="text"/>
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td colspan="1">৪.</td>
+                                                                <td colspan="1">বামুস সনদ</td>
+                                                                <td colspan="2">
+                                                                    <input class="form-control o_website_form_input input-sm"
+                                                                           type="text"/>
+                                                                </td>
+                                                                <td colspan="2">
+                                                                    <input class="form-control o_website_form_input input-sm"
+                                                                           type="text"/>
+                                                                </td>
+                                                                <td colspan="2">
+                                                                    <input class="form-control o_website_form_input input-sm"
+                                                                           type="text"/>
+                                                                </td>
+                                                                <td colspan="2">
+                                                                    <input class="form-control o_website_form_input input-sm"
+                                                                           type="text"/>
+                                                                </td>
+                                                                <td colspan="2">
+                                                                    <input class="form-control o_website_form_input input-sm"
+                                                                           type="text"/>
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td colspan="1">৫.</td>
+                                                                <td colspan="1">ভারতীয় তালিকা</td>
+                                                                <td colspan="2">
+                                                                    <input class="form-control o_website_form_input input-sm"
+                                                                           type="text"/>
+                                                                </td>
+                                                                <td colspan="2">
+                                                                    <input class="form-control o_website_form_input input-sm"
+                                                                           type="text"/>
+                                                                </td>
+                                                                <td colspan="2">
+                                                                    <input class="form-control o_website_form_input input-sm"
+                                                                           type="text"/>
+                                                                </td>
+                                                                <td colspan="2">
+                                                                    <input class="form-control o_website_form_input input-sm"
+                                                                           type="text"/>
+                                                                </td>
+                                                                <td colspan="2">
+                                                                    <input class="form-control o_website_form_input input-sm"
+                                                                           type="text"/>
+                                                                </td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="clearfix">
+                                        <div class="form-group form-field col-md-6 o_website_form_required_custom ">
+                                            <label class="control-label" for="description">Treasury Challan / ট্রেজারি চালান নম্বর
+                                            </label>
+                                            <input type="text" class="form-control input-sm o_website_form_input"
+                                                   name="treasury_challan" required="required"></input>
+                                        </div>
+
+                                        <div class="form-group form-field col-md-6 o_website_form_required_custom ">
+                                            <label class="control-label">Ex-Service Personnel / প্রাক্তন সেবা কর্মী</label>
+                                            <select class="form-control input-sm" name="ex_service_personnel" required="required">
+                                                <option value="no">No</option>
+                                                <option value="yes">Yes</option>
+                                            </select>
+                                        </div>
+
+                                        <div class="form-group form-field col-md-6 o_website_form_required_custom ">
+                                            <label class="control-label" for="description">Date / তারিখ</label>
+
+                                            <input type="text" class="form-control o_website_form_input input-sm"
+                                                   id="datepicker_challan"
+                                                   name="treasury_date"></input>
+                                        </div>
+
+                                        <div class="form-group form-field col-md-6 o_website_form_required_custom ">
+                                            <label for="sel1">Is Divisional Candidate / বিভাগীয় প্রার্থী কিনা</label>
+                                            <select class="form-control input-sm" name="divisional_candiate" required="required">
+                                                <option value="no">No</option>
+                                                <option value="yes">Yes</option>
+                                            </select>
+                                        </div>
+
+                                        <div class="form-group form-field col-md-6 o_website_form_required_custom ">
+                                            <label class="control-label" for="description">Bank and Branch Name / ব্যাংক ও শাখার
+                                                নাম
+                                            </label>
+                                            <input type="text" class="form-control input-sm o_website_form_input"
+                                                   name="bank_branch_name" required="required"></input>
+                                        </div>
+
+                                        <div class="form-group form-field col-md-12 o_website_form_required_custom"
+                                             style="width:100%; padding:0; margin:0">
+                                            <div class="form-group col-md-6 form-field o_website_form_required_custom">
+                                                <label class="control-label" for="exampleInputFile">Resume / জীবনবৃত্তান্ত
+                                                </label>
+                                                <input type="file" name="Resume" required="required"/>
+                                                <p class="help-block">Upload resume in any format.</p>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="row"><hr/></div>
+
+                                    <div class="form-group col-md-4 col-md-offset-4 form-field o_website_form_required_custom">
+                                        <div class="text-center">
+                                            <span class="btn btn-success btn-lg btn-block o_website_form_send">Submit</span>
+                                            <span id="o_website_form_result"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+
+            </xpath>
+        </template>
+    </data>
+</odoo>

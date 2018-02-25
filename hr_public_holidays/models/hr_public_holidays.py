@@ -14,32 +14,43 @@ class HrPublicHolidays(models.Model):
     _rec_name = 'name'
     _order = "id"
 
-    display_name = fields.Char("Name",compute="_compute_display_name", readonly=True, store=True)
+    display_name = fields.Char("Name", compute="_compute_display_name", readonly=True, store=True)
     year = fields.Integer("Calendar Year", default=date.today().year)
-    country_id = fields.Many2one('res.country','Country')
-    
+    country_id = fields.Many2one('res.country', 'Country')
+
     name = fields.Char(size=100, string="Title", required="True")
     status = fields.Boolean(string='Status', default=True)
 
-    """ many2one fields """ 
+    """ many2one fields """
     year_id = fields.Many2one('hr.leave.fiscal.year', string="Leave Year")
 
     """ one2many fields """
     public_details_ids = fields.One2many('hr.holidays.public.line', 'public_type_id', string="Public Details")
     weekly_details_ids = fields.One2many('hr.holidays.public.line', 'weekly_type_id', string="Weekly Details")
-    
-    
+    """ many2many fields """
+    operating_unit_ids = fields.Many2many('operating.unit', 'public_holiday_operating_unit_rel', 'public_holiday_id',
+                                          'operating_unit_id', string="Operating Unit")
+
     """ Custom activity """
+
+    @api.onchange('year_id')
+    def onchange_year_id(self):
+        if self.year_id:
+            for record in self.public_details_ids:
+                rec = record.date.split("-")
+                if len(rec) > 2:
+                    rec[0] = self.year_id.name
+                    record.date = '-'.join(rec)
 
     @api.multi
     def geneare_yearly_calendar(self):
         vals = {}
         chd_obj = self.env["calendar.holiday"]
-        data = chd_obj.search([('year_id','=',self.year_id.id)])
-        
+        data = chd_obj.search([('year_id', '=', self.year_id.id)])
+
         if data:
             data.unlink()
-        
+
         for val in self.public_details_ids:
             vals['name'] = val.name
             vals['type'] = "public"
@@ -64,10 +75,12 @@ class HrPublicHolidays(models.Model):
             start_date = self.year_id.date_start.split('-')
             end_date = self.year_id.date_stop.split('-')
 
-            days = datetime.datetime(int(end_date[0]), int(end_date[1]), int(end_date[2]))-datetime.datetime(int(start_date[0]), int(start_date[1]), int(start_date[2]))
+            days = datetime.datetime(int(end_date[0]), int(end_date[1]), int(end_date[2])) - datetime.datetime(
+                int(start_date[0]), int(start_date[1]), int(start_date[2]))
 
             noOfDays = days.days + 1
-            curTime = time.mktime(datetime.datetime(int(start_date[0]), int(start_date[1]), int(start_date[2])).timetuple())
+            curTime = time.mktime(
+                datetime.datetime(int(start_date[0]), int(start_date[1]), int(start_date[2])).timetuple())
 
             for i in range(noOfDays):
                 searchTime = (i * 86400 + curTime)
@@ -77,22 +90,22 @@ class HrPublicHolidays(models.Model):
                     chd_obj.create(vals)
 
         return True
-    
-    @api.one
-    @api.constrains('year_id', 'country_id')
-    def _check_year(self):
-        if self.country_id:
-            domain = [('year_id', '=', self.year_id.id),
-                      ('country_id', '=', self.country_id.id),
-                      ('id', '!=', self.id)]
-        else:
-            domain = [('year_id', '=', self.year_id.id),
-                      ('country_id', '=', False),
-                      ('id', '!=', self.id)]
-        if self.search_count(domain):
-            raise UserError('You can\'t create duplicate public holiday '
-                            'per year')
-        return True
+
+    # @api.one
+    # @api.constrains('year_id', 'country_id')
+    # def _check_year(self):
+    #     if self.country_id:
+    #         domain = [('year_id', '=', self.year_id.id),
+    #                   ('country_id', '=', self.country_id.id),
+    #                   ('id', '!=', self.id)]
+    #     else:
+    #         domain = [('year_id', '=', self.year_id.id),
+    #                   ('country_id', '=', False),
+    #                   ('id', '!=', self.id)]
+    #     if self.search_count(domain):
+    #         raise UserError('You can\'t create duplicate public holiday '
+    #                         'per year')
+    #     return True
 
     @api.one
     @api.depends('year', 'name')
@@ -150,5 +163,3 @@ class HrPublicHolidays(models.Model):
                 lambda r: r.date == fields.Date.to_string(selected_date))):
             return True
         return False
-    
-    

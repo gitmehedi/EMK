@@ -14,10 +14,10 @@
                         <button name="action_done" type="object"
                                 string="Approve" states="applied"
                                 class="oe_highlight"/>
-                        <button name="action_draft" type="object"
-                                string="Reject"
+                        <button name="action_refuse" type="object"
+                                string="Refuse"
                                 states="applied"/>
-                        <field name="state" widget="statusbar"/>
+                        <field name="state" widget="statusbar" statusbar_visible="draft,applied,approved"/>
                     </header>
                     <sheet>
                         <group>
@@ -59,9 +59,7 @@
             <field name="view_mode">tree,form</field>
         </record>
 
-        <menuitem id="mrp_daily_production_menu" name="Daily Production Entry" parent="sales_team.menu_base_partner"
-            sequence="11" action="mrp_daily_action"/>
-        <menuitem id="mrp_daily_production_submenu" name="Daily Production Entry" parent="mrp_daily_production_menu"
+        <menuitem id="mrp_daily_production_submenu" sequence="15" name="Daily Production Entry" parent="product_sales_pricelist.custom_menu_products"
                   action="mrp_daily_action"/>
     </data>
 </odoo>

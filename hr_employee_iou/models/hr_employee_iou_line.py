@@ -1,4 +1,4 @@
-from openerp import api, fields, models
+from odoo import api, fields, models
 
 class HrEmployeeIouLine(models.Model):
     _name='hr.employee.iou.line'
@@ -7,7 +7,7 @@ class HrEmployeeIouLine(models.Model):
     repay_amount = fields.Float(string="Repay Amount")
 
     # Relational fields
-    repay_id = fields.Many2one('hr.employee.iou', 'id', ondelete='cascade')
+    iou_id = fields.Many2one('hr.employee.iou', 'id', ondelete='cascade')
 
     state = fields.Selection([
         ('draft', 'Draft'),

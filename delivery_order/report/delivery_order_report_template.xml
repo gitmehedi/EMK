@@ -1,0 +1,242 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--Custom report.-->
+<odoo>
+    <data>
+        <template id="report_delivery_order_doc">
+            <t t-call="report.html_container">
+                <t t-call="report.external_layout">
+                    <t t-foreach="docs" t-as="o">
+                        <div class="page" style="page-break-inside: auto">
+                            <div class="row">
+                                <div class="col-xs-12" style="text-align:center;">
+                                    <h2><strong>Delivery Order Summary Report</strong></h2>
+                                    <hr/>
+                                </div>
+                            </div>
+                            <div class="row" style=" background-color:#a9a9a9; font-size:12px">
+                                <div class="row">
+                                    <div class="col-xs-8">
+                                        <div class="col-xs-12"><strong>Sale Order : </strong><span t-field="o.sale_order_id"/></div>
+                                    </div>
+                                    <div class="col-xs-4">
+                                        <div class="row">
+                                            <div class="col-xs-12"><strong>Requested On : </strong><span t-field="o.requested_date"/></div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-xs-12"><strong>Requested By : </strong><span t-field="o.requested_by"/></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <br/>
+                            <div class="row" style="background-color:#F5F5F5">
+                                <div class="row">
+                                    <div class="col-xs-6">
+                                        <div class="row">
+                                            <div class="col-xs-12"><strong>Customer: </strong><span t-field="o.parent_id"/></div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-xs-12"><strong>Warehouse: </strong><span t-field="o.warehouse_id"/></div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-xs-12"><strong>Sales Order Date: </strong><span t-field="o.so_date"/></div>
+                                        </div>
+                                    </div>
+                                    <div class="col-xs-6">
+                                        <div class="row">
+                                            <div class="col-xs-12"><strong>Sale Order Type : </strong><span t-field="o.so_type"/></div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-xs-12"><strong>Payment Terms : </strong><span t-field="o.payment_term_id"/></div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-xs-12"><strong>Delivery Address : </strong><span t-field="o.deli_address"/></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <br/>
+                            <div class="row">
+                                <div class="row">
+                                    <div class="col-xs-12" style="text-align:center;">
+                                        <h4><strong>Product Details</strong></h4>
+                                    </div>
+                                </div>
+                                <table class="table table-bordered" style="font-size:12px">
+                                    <thead style=" background-color:#a9a9a9;">
+                                        <tr>
+                                            <th>Sl</th>
+                                            <th>Product</th>
+                                            <th>Quantity</th>
+                                            <th>Packing</th>
+                                            <th>Deli mode</th>
+                                            <th>UoM</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <t t-foreach="o.line_ids" t-as="l">
+                                            <tr style="page-break-inside: avoid">
+                                                <td><span t-esc="l_index+1"/></td>
+                                                <td><span t-esc="l.product_id.name"/></td>
+                                                <td><span t-esc="l.quantity"/></td>
+                                                <td><span t-esc="l.pack_type.display_name"/></td>
+                                                <td><span t-esc="l.deli_mode"/></td>
+                                                <td><span t-esc="l.uom_id.name"></span></td>
+                                            </tr>
+                                        </t>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <br/>
+                            <t t-if="o.so_type=='cash'">
+                                <div class="row">
+                                    <div class="row">
+                                        <div class="col-xs-12" style="text-align:center;">
+                                            <h4><strong>Cash Details</strong></h4>
+                                        </div>
+                                    </div>
+                                    <table class="table table-bordered" style="font-size:12px">
+                                        <thead style=" background-color:#a9a9a9;">
+                                            <tr>
+                                                <th>Sl</th>
+                                                <th>Payment Information</th>
+                                                <th>Amount</th>
+                                                <th>Deposited Bank</th>
+                                                <th>Branch</th>
+                                                <th>Validity(Days)</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <t t-foreach="o.cash_ids" t-as="l">
+                                                <tr style="page-break-inside: avoid">
+                                                    <td><span t-esc="l_index+1"/></td>
+                                                    <td><span t-esc="l.account_payment_id.name"/></td>
+                                                    <td><span t-esc="l.amount"/></td>
+                                                    <td><span t-esc="l.dep_bank"/></td>
+                                                    <td><span t-esc="l.branch"/></td>
+                                                    <td><span t-esc="l.validity"/></td>
+                                                </tr>
+                                            </t>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </t>
+                            <br/>
+                            <t t-if="o.so_type=='credit_sales'">
+                                <div class="row">
+                                    <div class="row">
+                                        <div class="col-xs-12" style="text-align:center;">
+                                            <h4><strong>Credit Details</strong></h4>
+                                        </div>
+                                    </div>
+                                    <table class="table table-bordered" style="font-size:12px">
+                                        <thead style=" background-color:#a9a9a9;">
+                                            <tr>
+                                                <th>Sl</th>
+                                                <th>Number</th>
+                                                <th>Bank</th>
+                                                <th>Branch</th>
+                                                <th>Amount</th>
+                                                <th>Date</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <t t-foreach="o.cheque_ids" t-as="l">
+                                                <tr style="page-break-inside: avoid">
+                                                    <td><span t-esc="l_index+1"/></td>
+                                                    <td><span t-esc="l.number"/></td>
+                                                    <td><span t-esc="l.bank"/></td>
+                                                    <td><span t-esc="l.branch"/></td>
+                                                    <td><span t-esc="l.amount"/></td>
+                                                    <td><span t-esc="l.date"/></td>
+                                                </tr>
+                                            </t>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </t>
+                            <br/>
+                            <t t-if="o.so_type=='cash'">
+                                <div class="row">
+                                    <div class="row">
+                                        <div class="col-xs-12" style="text-align:center;">
+                                            <h4><strong>TT Details</strong></h4>
+                                        </div>
+                                    </div>
+                                    <table class="table table-bordered" style="font-size:12px">
+                                        <thead style=" background-color:#a9a9a9;">
+                                            <tr>
+                                                <th>Sl</th>
+                                                <th>Ref.No</th>
+                                                <th>Bank</th>
+                                                <th>Branch</th>
+                                                <th>Amount</th>
+                                                <th>Date</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <t t-foreach="o.tt_ids" t-as="l">
+                                                <tr style="page-break-inside: avoid">
+                                                    <td><span t-esc="l_index+1"/></td>
+                                                    <td><span t-esc="l.ref_num"/></td>
+                                                    <td><span t-esc="l.bank"/></td>
+                                                    <td><span t-esc="l.branch"/></td>
+                                                    <td><span t-esc="l.amount"/></td>
+                                                    <td><span t-esc="l.date"/></td>
+                                                </tr>
+                                            </t>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </t>
+                            <br/>
+                            <t t-if="o.so_type=='lc_sales'">
+                                <div class="row">
+                                    <div class="row">
+                                        <div class="col-xs-12" style="text-align:center;">
+                                            <h4><strong>L/C Details</strong></h4>
+                                        </div>
+                                    </div>
+                                    <table class="table table-bordered" style="font-size:12px">
+                                        <thead style=" background-color:#a9a9a9;">
+                                            <tr>
+                                                <th>Sl</th>
+                                                <th>L/C.No</th>
+                                                <th>Bank</th>
+                                                <th>Branch</th>
+                                                <th>Amount</th>
+                                                <th>Date</th>
+                                                <th>PI No</th>
+                                                <th>L/C Type</th>
+                                                <th>Transportation</th>
+                                                <th>Tenure</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <t t-foreach="o.lc_ids" t-as="l">
+                                                <tr style="page-break-inside: avoid">
+                                                    <td><span t-esc="l_index+1"/></td>
+                                                    <td><span t-esc="l.number"/></td>
+                                                    <td><span t-esc="l.bank"/></td>
+                                                    <td><span t-esc="l.branch"/></td>
+                                                    <td><span t-esc="l.amount"/></td>
+                                                    <td><span t-esc="l.date"/></td>
+                                                    <td><span t-esc="l.pi_no"/></td>
+                                                    <td><span t-esc="l.lc_type"/></td>
+                                                    <td><span t-esc="l.transportation"/></td>
+                                                    <td><span t-esc="l.tenure"/></td>
+                                                </tr>
+                                            </t>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </t>
+                            <br/>
+
+                        </div>
+                    </t>
+                </t>
+            </t>
+        </template>
+    </data>
+</odoo>

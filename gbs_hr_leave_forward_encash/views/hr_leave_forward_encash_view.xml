@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+	<data>
+		<record id="leave_carry_forward_tree" model="ir.ui.view">
+			<field name="name">hr.leave.forward.encash.tree</field>
+			<field name="model">hr.leave.forward.encash</field>
+			<field name="arch" type="xml">
+				<tree string="Leave Carry Forward">
+					<field name="name" />
+					<field name="exe_leave_year" />
+					<field name="carry_forward_year" />
+					<field name="leave_type" />
+					<field name="company_id" />
+					<field name="operating_unit_id" />
+					<field name="state" />
+				</tree>
+			</field>
+		</record>
+		
+	
+		<record id="leave_carry_forward_form" model="ir.ui.view">
+			<field name="name">hr.leave.forward.encash.form</field>
+			<field name="model">hr.leave.forward.encash</field>
+			<field name="type">form</field>
+			<field name="arch" type="xml">
+				<form string="Leave Carry Forward" delete="false" copy='0'>
+					<header>
+						<button string="Approve" name="action_approved" type="object" attrs="{'invisible': [('state', 'in', ('draft','approved'))]}"/>
+						<button name="%(hr_leave_carry_forward_wizard_action_view)d" type="action" class="oe_highlight"
+								attrs="{'invisible': [('state', 'in', ('approved'))]}" string="Generate" context="{'operating_unit_id': operating_unit_id}"/>
+						<field name="state" widget="statusbar"/>
+					</header>
+					<sheet>
+						<group col="2">
+							<field name="name"
+                                   attrs="{'readonly': [('state', 'in', ('approved'))]}"/>
+							<field name="exe_leave_year"
+                                   options='{"no_open": True,"no_create": 1, "no_create_edit":1}'
+                                   attrs="{'readonly': [('state', 'in', ('approved'))]}"/>
+						</group>
+						<group col="2">
+							<group>
+								<field name="carry_forward_year"
+									   options='{"no_open": True,"no_create": 1, "no_create_edit":1}'
+                                       attrs="{'readonly': [('state', 'in', ('approved'))]}"/>
+								<field name="leave_type"
+                                       options='{"no_open": True,"no_create": 1, "no_create_edit":1}'
+                                       attrs="{'readonly': [('state', 'in', ('approved'))]}"/>
+							</group>
+							<group>
+								<field name="company_id" groups="base.group_multi_company"
+                                       options='{"no_open": True,"no_create": 1, "no_create_edit":1}'
+                                       attrs="{'readonly': [('state', 'in', ('approved'))]}"/>
+								<field name="operating_unit_id" groups="operating_unit.group_multi_operating_unit"
+                                       options='{"no_open": True,"no_create": 1, "no_create_edit":1}'
+                                       attrs="{'readonly': [('state', 'in', ('approved'))]}"/>
+							</group>
+						</group>
+						<notebook colspan="4">
+							<page string="Carry Forward &amp; Encashment">
+								<field name="line_ids" attrs="{'readonly': [('state', 'in', ('approved'))]}">
+									<tree string="List" editable="bottom" nolabel="1" create='false'>
+										<field name="emp_name"/>
+										<field name="department_name"/>
+										<field name="designation_name"/>
+										<field name="acc_no"/>
+										<field name="date_of_join"/>
+										<field name="authorized_leave"/>
+										<field name="availed_leave"/>
+										<field name="balance_leave"/>
+										<field name="encashment_leave"/>
+										<field name="carried_leave"/>
+										<field name="state"/>
+									</tree>
+								</field>
+							</page>
+						</notebook>
+					</sheet>
+					<div class="oe_chatter">
+						<field name="message_ids" widget="mail_thread"/>
+					</div>
+				</form>
+			</field>
+		</record>
+	
+		<record id="hr_leave_forward_encash" model="ir.actions.act_window">
+			<field name="name">Leave Carry Forward</field>
+			<field name="res_model">hr.leave.forward.encash</field>
+			<field name="view_mode">tree,form</field>
+		</record>
+
+		<menuitem id="menu_hr_leave_carry_forward" name="Earn Leave"
+			parent="hr_holidays.menu_hr_holidays_root" sequence="6"
+			action="hr_leave_forward_encash" groups="hr_attendance.group_hr_attendance_user,base.group_user"/>
+		<menuitem id="hr_leave_carry_forward" name="Earn Leave Encashment"
+			parent="menu_hr_leave_carry_forward"
+			action="hr_leave_forward_encash" groups="hr_attendance.group_hr_attendance_user"/>
+	</data>
+</odoo>

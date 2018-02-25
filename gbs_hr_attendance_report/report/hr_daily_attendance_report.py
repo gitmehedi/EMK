@@ -17,8 +17,8 @@ class GetDailyAttendanceReport(models.AbstractModel):
 
 
         requested_date = data['required_date']
-        current_time =  datetime.datetime.now()
-        updated_curr_time = current_time + timedelta(hours=6)
+        curr_time_gmt =  datetime.datetime.now()
+        current_time = curr_time_gmt + timedelta(hours=6)
         graceTime = att_utility_pool.getGraceTime(requested_date)
 
         companyName = ""
@@ -42,7 +42,7 @@ class GetDailyAttendanceReport(models.AbstractModel):
 
         docargs = {
             'required_date': data['required_date'],
-            'created_on': current_time,
+            'created_on': curr_time_gmt,
             'company_name': companyName,
             'att_summary_list': att_summary_list,
             'operating_unit':data['operating_unit_id']
@@ -63,16 +63,37 @@ class GetDailyAttendanceReport(models.AbstractModel):
                        "holidays": [], "alter_roster": []}
 
         employeeList = emp_pool.search([('operating_unit_id', '=', operating_unit_id),
-                                        ('active', '=', True), ('is_monitor_attendance', '=', True)
-                                        ], order='department_id,employee_sequence desc')
+                                        ('active', '=', True)],
+                                       order='department_id,employee_sequence desc')
 
         employeeAttMap = att_utility_pool.getDailyAttByDateAndUnit(requestedDate, operating_unit_id)
+
+        # Getting data for holidays
+
+        compensatoryLeaveMap = {}
+        oTMap = {}
+        todayIsHoliday = False
+        holidayMap = att_utility_pool.getHolidaysByUnit(operating_unit_id, requested_date)
+        if holidayMap.get(requested_date):
+            lineId = holidayMap.get(requested_date)
+            todayIsHoliday = True
+            compensatoryLeaveMap = att_utility_pool.getCompensatoryLeaveEmpByHolidayLineId(lineId)
+            oTMap = att_utility_pool.getOTEmpByHolidayLineId(lineId)
+
+        # End Getting data for holidays
 
         att_summary["total_emp"] = len(employeeList)
 
         for employee in employeeList:
 
             employeeId = employee.id
+
+            if employee.is_monitor_attendance == False:
+                if todayIsHoliday == True:
+                    att_summary["holidays"].append(Employee(employee))
+                else:
+                    att_summary["on_time_present"].append(Employee(employee))
+                continue
 
             alterTimeMap = att_utility_pool.buildAlterDutyTime(requestedDate, requestedDate, employeeId)
             if alterTimeMap:
@@ -91,7 +112,9 @@ class GetDailyAttendanceReport(models.AbstractModel):
             else:
                 currentDaydutyTime = dutyTimeMap.get(att_utility_pool.getStrFromDate(requestedDate))
                 if currentDaydutyTime.startDutyTime < current_time:
-                    att_summary = att_utility_pool.makeDecisionForADays(att_summary, employeeAttMap, requested_date, currentDaydutyTime, employee, graceTime)
+                    att_summary = att_utility_pool.makeDecisionForADays(att_summary, employeeAttMap, requested_date,
+                                                                        currentDaydutyTime, employee, graceTime,
+                                                                        todayIsHoliday, compensatoryLeaveMap, oTMap)
                 else:
                     att_summary["unworkable"].append(Employee(employee))
 

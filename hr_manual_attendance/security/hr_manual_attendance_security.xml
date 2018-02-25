@@ -4,10 +4,10 @@
     <record id="rule_manual_attendance_employee" model="ir.rule">
         <field name="name">Manual Attendance(General Employee)</field>
         <field name="model_id" ref="model_hr_manual_attendance"/>
-        <field name="domain_force">[('employee_id.user_id','=',user.id)]</field>
+        <field name="domain_force">['|',('employee_id.user_id','=',user.id),('employee_id','child_of',[e.id for e in user.employee_ids])]</field>
         <field name="perm_read" eval="True" />
-        <field name="perm_create" eval="True" />
-        <field name="perm_write" eval="True" />
+        <field name="perm_create" eval="False" />
+        <field name="perm_write" eval="False" />
         <field name="perm_unlink" eval="True" />
         <field name="groups" eval="[(4,ref('base.group_user'))]"/>
     </record>
@@ -16,12 +16,12 @@
         <field name="name">Manual Attendance Permission for Department Manager</field>
         <field name="model_id" ref="model_hr_manual_attendance"/>
         <field name="domain_force">['|',('employee_id.parent_id','in',[e.id for e in user.employee_ids]),
-            ('employee_id.department_id.manager_id','in',[e.id for e in user.employee_ids])]</field>
+            ('employee_id','child_of',[e.id for e in user.employee_ids])]</field>
         <field name="perm_read" eval="True" />
-        <field name="perm_create" eval="True"/>
-        <field name="perm_write" eval="True"/>
+        <field name="perm_create" eval="False"/>
+        <field name="perm_write" eval="False"/>
         <field name="perm_unlink" eval="True"/>
-        <field name="groups" eval="[(4,ref('gbs_base_package.group_dept_manager'))]"/>
+        <field name="groups" eval="[(4,ref('gbs_application_group.group_dept_manager'))]"/>
     </record>
 
      <record id="rule_manual_attendance_manager" model="ir.rule">
@@ -35,41 +35,57 @@
         <field name="groups" eval="[(4,ref('hr_attendance.group_hr_attendance_manager'))]"/>
     </record>
 
-     <!--<record id="rule_manual_attendance_dept_manager" model="ir.rule">-->
-        <!--<field name="name">Manual Attendance(Department Manager)</field>-->
-        <!--<field name="model_id" ref="model_hr_manual_attendance"/>-->
-        <!--<field name="domain_force">[('department_id.manager_id.user_id','=',user.id)]</field>-->
-        <!--<field name="perm_read" eval="True" />-->
-        <!--<field name="perm_create" eval="True"/>-->
-        <!--<field name="perm_write" eval="True"/>-->
-        <!--<field name="perm_unlink" eval="True"/>-->
-        <!--<field name="groups" eval="[(4,ref('gbs_base_package.group_dept_manager'))]"/>-->
-    <!--</record>-->
-
-    <!--<record id="attendance_rule_dept_manager" model="ir.rule">-->
-        <!--<field name="name">Attendance Permission for Department Manager</field>-->
-        <!--<field name="model_id" ref="model_hr_attendance"/>-->
-        <!--<field name="domain_force">[('department_id.manager_id.user_id','=',user.id)]</field>-->
-        <!--<field name="perm_read" eval="True" />-->
-        <!--<field name="perm_create" eval="True"/>-->
-        <!--<field name="perm_write" eval="False"/>-->
-        <!--<field name="perm_unlink" eval="False"/>-->
-        <!--<field name="groups" eval="[(4,ref('gbs_base_package.group_dept_manager'))]"/>-->
-    <!--</record>-->
-
-    <!--<record id="rule_manual_attendance_unit" model="ir.rule">-->
-        <!--<field name="name">Manual Attendance(Unit Wise)</field>-->
-        <!--<field name="model_id" ref="model_hr_manual_attendance"/>-->
-        <!--<field name="domain_force">[('employee_id.operating_unit_id.id','in',user.operating_unit_ids.ids)]</field>-->
-        <!--<field name="perm_read" eval="True" />-->
-        <!--<field name="perm_create" eval="True"/>-->
-        <!--<field name="perm_write" eval="True"/>-->
-        <!--<field name="perm_unlink" eval="True"/>-->
-    <!--</record>-->
-
     <record id="hr_manual_attendance_holidays_officer" model="ir.rule">
         <field name="name">Manual Attendance(Multi Operating Unit)</field>
         <field name="model_id" ref="model_hr_manual_attendance"/>
+        <field name="domain_force">[('employee_id.operating_unit_id.id','in',user.operating_unit_ids.ids)]</field>
+        <field name="perm_read" eval="True" />
+        <field name="perm_create" eval="False"/>
+        <field name="perm_write" eval="False"/>
+        <field name="perm_unlink" eval="False"/>
+        <field name="groups" eval="[(4,ref('hr_attendance.group_hr_attendance_user'))]"/>
+    </record>
+
+
+
+
+    <record id="rule_manual_attendance_batches_employee" model="ir.rule">
+        <field name="name">Manual Attendance(General Employee)</field>
+        <field name="model_id" ref="model_hr_manual_attendance_batches"/>
+        <field name="domain_force">['|',('employee_id.user_id','=',user.id),('employee_id','child_of',[e.id for e in user.employee_ids])]</field>
+        <field name="perm_read" eval="True" />
+        <field name="perm_create" eval="True" />
+        <field name="perm_write" eval="True" />
+        <field name="perm_unlink" eval="True" />
+        <field name="groups" eval="[(4,ref('base.group_user'))]"/>
+    </record>
+
+    <record id="hr_manual_attendance_batches_for_dept_manager" model="ir.rule">
+        <field name="name">Manual Attendance Permission for Department Manager</field>
+        <field name="model_id" ref="model_hr_manual_attendance_batches"/>
+        <field name="domain_force">['|',('employee_id.parent_id','in',[e.id for e in user.employee_ids]),
+            ('employee_id','child_of',[e.id for e in user.employee_ids])]</field>
+        <field name="perm_read" eval="True" />
+        <field name="perm_create" eval="True"/>
+        <field name="perm_write" eval="True"/>
+        <field name="perm_unlink" eval="True"/>
+        <field name="groups" eval="[(4,ref('gbs_application_group.group_dept_manager'))]"/>
+    </record>
+
+     <record id="rule_manual_attendance_batches_manager" model="ir.rule">
+        <field name="name">Manual Attendance(HR Manager)</field>
+        <field name="model_id" ref="model_hr_manual_attendance_batches"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="perm_read" eval="True" />
+        <field name="perm_create" eval="True" />
+        <field name="perm_write" eval="True"/>
+        <field name="perm_unlink" eval="True"/>
+        <field name="groups" eval="[(4,ref('hr_attendance.group_hr_attendance_manager'))]"/>
+    </record>
+
+    <record id="hr_manual_attendance_batches_officer" model="ir.rule">
+        <field name="name">Manual Attendance(Multi Operating Unit)</field>
+        <field name="model_id" ref="model_hr_manual_attendance_batches"/>
         <field name="domain_force">[('employee_id.operating_unit_id.id','in',user.operating_unit_ids.ids)]</field>
         <field name="perm_read" eval="True" />
         <field name="perm_create" eval="True"/>

@@ -1,4 +1,4 @@
-from openerp import api, fields, models
+from odoo import api, fields, models
 
 class HrEmployeeIou(models.Model):
     _name='hr.employee.iou'
@@ -17,7 +17,7 @@ class HrEmployeeIou(models.Model):
     due = fields.Float(string="Due", compute='_compute_amount_value')
 
     # Relational fields
-    line_ids = fields.One2many('hr.employee.iou.line','repay_id', string="Line Ids")
+    line_ids = fields.One2many('hr.employee.iou.line','iou_id', string="Line Ids")
 
     @api.depends('amount')
     def _compute_amount_value(self):

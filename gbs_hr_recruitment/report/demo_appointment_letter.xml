@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--Custom report.-->
+<odoo>
+    <data>
+        <report
+                id = "appointment_report_letter"
+                string = "appointment letter"
+                model = "hr.applicant"
+                report_type = "qweb-pdf"
+                menu="False"
+                file ="gbs_hr_recruitment.report_letter"
+                name ="gbs_hr_recruitment.report_letter"
+        />
+
+        <template id="report_letter">
+            <t t-call="report.html_container">
+                <t t-foreach="docs" t-as="o">
+                    <t t-call="report.external_layout">
+                        <div class="page">
+                            <div class="oe_structure"/>
+                            <div class="row">
+                                <br></br>
+                                <br></br>
+                                <br></br>
+                                <div class="col-xs-6" style="text-align:left">
+                                    <p><span t-field="o.name" /></p>
+                                    <p><span t-field="o.company_id.name" /></p>
+                                    <p>S/O: MD Abdul Momin Talukder</p>
+                                    <p>Vill: Dhanbandhi J.C Road,Sirajgoanj Sadar,Narayanganj</p>
+                                </div>
+                            </div>
+                        </div>
+
+                    </t>
+                </t>
+            </t>
+        </template>
+    </data>
+</odoo>
+
+

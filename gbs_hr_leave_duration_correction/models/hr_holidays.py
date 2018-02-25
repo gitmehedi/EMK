@@ -77,16 +77,16 @@ class HRHolidays(models.Model):
         from_dt = fields.Datetime.from_string(date_from)
         to_dt = fields.Datetime.from_string(date_to)
 
-        if employee_id:
-            employee = self.env['hr.employee'].browse(employee_id)
-            resource = employee.resource_id.sudo()
-            if resource and resource.calendar_id:
-                hours = resource.calendar_id.get_working_hours(from_dt, to_dt, resource_id=resource.id,
-                                                               compute_leaves=True)
-                uom_hour = resource.calendar_id.uom_id
-                uom_day = self.env.ref('product.product_uom_day')
-                if uom_hour and uom_day:
-                    return uom_hour._compute_quantity(hours, uom_day)
+        # if employee_id:
+        #     employee = self.env['hr.employee'].browse(employee_id)
+        #     resource = employee.resource_id.sudo()
+        #     if resource and resource.calendar_id:
+        #         hours = resource.calendar_id.get_working_hours(from_dt, to_dt, resource_id=resource.id,
+        #                                                        compute_leaves=True)
+        #         uom_hour = resource.calendar_id.uom_id
+        #         uom_day = self.env.ref('product.product_uom_day')
+        #         if uom_hour and uom_day:
+        #             return uom_hour._compute_quantity(hours, uom_day)
 
         time_delta = (to_dt - from_dt) + timedelta(hours=24)
         return math.ceil(time_delta.days + float(time_delta.seconds) / 86400)
@@ -128,7 +128,7 @@ class HRHolidays(models.Model):
         # if double_validation: this method is the first approval approval
         # if not double_validation: this method calls action_validate() below
         if not (self.env.user.has_group('hr_holidays.group_hr_holidays_user')
-                or self.env.user.has_group('gbs_base_package.group_dept_manager')):
+                or self.env.user.has_group('gbs_application_group.group_dept_manager')):
             raise ValidationError(('Only an HR Officer or Manager or Department Manager can approve leave requests.'))
 
         manager = self.env['hr.employee'].search([('user_id', '=', self.env.uid)], limit=1)
@@ -143,8 +143,7 @@ class HRHolidays(models.Model):
 
     @api.multi
     def action_validate(self):
-        if not (self.env.user.has_group('hr_holidays.group_hr_holidays_user')
-                or self.env.user.has_group('gbs_base_package.group_dept_manager')):
+        if not (self.env.user.has_group('hr_holidays.group_hr_holidays_user')):
             raise UserError(('Only an HR Officer or Manager or Department Manager can approve leave requests.'))
 
         manager = self.env['hr.employee'].search([('user_id', '=', self.env.uid)], limit=1)
@@ -152,7 +151,7 @@ class HRHolidays(models.Model):
             if holiday.state not in ['confirm', 'validate1']:
                 raise ValidationError(('Leave request must be confirmed in order to approve it.'))
             if holiday.state == 'validate1' and not ((holiday.env.user.has_group('hr_holidays.group_hr_holidays_user')
-                                                     or holiday.env.user.has_group('gbs_base_package.group_dept_manager'))):
+                                                     or holiday.env.user.has_group('gbs_application_group.group_dept_manager'))):
                 raise ValidationError(('Only an HR Manager can apply the second approval on leave requests.'))
 
             holiday.write({'state': 'validate'})
@@ -193,7 +192,6 @@ class HRHolidays(models.Model):
         return True
 
     def _check_state_access_right(self, vals):
-        if vals.get('state') and vals['state'] not in ['draft', 'confirm', 'cancel'] and not (self.env['res.users'].has_group('hr_holidays.group_hr_holidays_user')
-                                                                                              or self.env['res.users'].has_group('gbs_base_package.group_dept_manager')):
+        if vals.get('state') and vals['state'] not in ['draft', 'confirm', 'cancel'] and not (self.env['res.users'].has_group('hr_holidays.group_hr_holidays_user')):
             return False
         return True

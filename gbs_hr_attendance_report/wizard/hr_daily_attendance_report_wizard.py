@@ -9,6 +9,7 @@ class daily_attendance_report(orm.TransientModel):
     def _get_current_date(self):
         return date.today()
 
+
     required_date = fields.Date('Attendance Date',required='True',default=_get_current_date)
 
     company_id = fields.Many2one('res.company', 'Company',required=True,
@@ -21,7 +22,7 @@ class daily_attendance_report(orm.TransientModel):
     def onchange_company_id(self):
         if self.env.user.has_group('operating_unit.group_multi_operating_unit'):
             self.operating_unit_id= []
-        return {'domain': {'operating_unit_id': ['|',('company_id','=', self.company_id.id),('active','=', False)]}}
+        return {'domain': {'operating_unit_id': ['|',('active','=', False),('company_id','=', self.company_id.id)]}}
 
 
     @api.multi

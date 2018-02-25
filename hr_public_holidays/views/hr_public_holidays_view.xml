@@ -31,6 +31,7 @@
 								<field name="name" />
 								<field name="year_id" required="1" 
 									options='{"no_open": True,"no_create": 1, "no_create_edit": 1}' />
+								<!--<field name="operating_unit_ids" widget="many2many_tags"/>-->
 							</group>
 						</group>
 						<notebook colspan="4">
@@ -48,6 +49,13 @@
 								<field name="weekly_details_ids">
 									<tree string="List" editable="bottom">
 										<field name="weekly_type" required="1"/>
+									</tree>
+								</field>
+							</page>
+							<page string="Operating Unit">
+								<field name="operating_unit_ids" widget="many2many" options="{'no_create': True}">
+									<tree string="Operating Units" editable="bottom">
+										<field name="name"/>
 									</tree>
 								</field>
 							</page>

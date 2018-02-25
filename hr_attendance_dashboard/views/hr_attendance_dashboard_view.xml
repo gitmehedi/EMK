@@ -1,20 +1,25 @@
 <odoo>
     <record model="ir.ui.view" id="view_attendance_dashboard_kanban">
         <field name="name">hr.attendance.dashboard.kanban</field>
-        <field name="model">hr.attendance.dashboard</field>
+        <field name="model">operating.unit</field>
         <field name="arch" type="xml">
-            <kanban class="oe_background_grey o_kanban_dashboard o_stock_kanban" create="0" >
+            <kanban default_order="operating_unit_sequence" class="oe_background_grey o_kanban_dashboard o_stock_kanban" create="0" >
                 <!--<field name="name"/>default_group_by="operating_unit_id"-->
                 <field name="color"/>
+                <field name="kanban_dashboard"/>
+                <field name="kanban_dashboard_graph"/>
+                <!--<field name="operating_unit_id"/>-->
                 <templates>
                     <t t-name="kanban-box">
-                        <div t-if="record.operating_unit_name.value">
-                            <div t-attf-class="#{kanban_color(record.color.raw_value)} ">
+                        <div>
+                            <div t-attf-class="#{kanban_color(record.color.raw_value)}">
+                                <t t-value="JSON.parse(record.kanban_dashboard.raw_value)" t-set="dashboard"/>
+                                <!--<t t-value="record.type.raw_value" t-set="journal_type"/>-->
                                 <div class="o_project_kanban_manage">
                                     <div class="o_kanban_card_header">
                                         <div class="o_kanban_card_header_title">
                                             <div class="o_primary">
-                                                <field name="operating_unit_name"/>
+                                                <field name="name"/>
                                             </div>
                                             <!--<div class="o_secondary"><field class="o_secondary" name="operating_unit_id"/></div>-->
                                         </div>
@@ -28,18 +33,27 @@
                                         <div class="col-xs-6 o_kanban_primary_left" >
                                             <div>
                                                 <center>
-                                                    <button class="btn btn-primary" type="object" name="dashboard_absent_employee_action_id" >Absent</button>
-                                                    <button class="btn btn-primary" type="object" name="dashboard_late_employee_action_id" >Late</button>
+                                                    <button class="btn btn-primary" type="object" name="dashboard_absent_employee_action_id">Absent</button>
+                                                    <button class="btn btn-primary" type="object" name="dashboard_late_employee_action_id">Late</button>
                                                 </center>
+                                                <!---->
                                             </div>
                                         </div>
                                         <div class="col-xs-6 o_kanban_primary_right">
                                             <div class="row">
                                                 <div class="col-xs-9">
-                                                    <a>Present</a>
+                                                    <a>Total Employee</a>
                                                 </div>
                                                 <div class="col-xs-3">
-                                                    <field name="present_count"/>
+                                                    <t t-esc="dashboard.total_emp"/>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-xs-9">
+                                                    <a>On Time Present</a>
+                                                </div>
+                                                <div class="col-xs-3">
+                                                    <t t-esc="dashboard.on_time_present"/>
                                                 </div>
                                             </div>
                                             <div class="row">
@@ -47,7 +61,7 @@
                                                     <a>Late</a>
                                                 </div>
                                                 <div class="col-xs-3">
-                                                    <field name="late_count"/>
+                                                    <t t-esc="dashboard.late"/>
                                                 </div>
                                             </div>
                                             <div class="row">
@@ -55,7 +69,7 @@
                                                     <a>Absent</a>
                                                 </div>
                                                 <div class="col-xs-3">
-                                                    <field name="absent_count"/>
+                                                    <t t-esc="dashboard.absent"/>
                                                 </div>
                                             </div>
                                         </div>
@@ -71,12 +85,15 @@
                                         <div class="col-xs-8">
                                             <ul class="oe_kanban_colorpicker" data-field="color"/>
                                         </div>
-                                        <div class="col-xs-4 text-right">
-                                            <a type="edit">Settings</a>
-                                        </div>
+                                        <!--<div class="col-xs-4 text-right">-->
+                                            <!--<a type="edit">Settings</a>-->
+                                        <!--</div>-->
                                     </div>
 
                                 </div>
+                                <!--<div class="o_kanban_graph_section">-->
+                                    <!--<field name="kanban_dashboard_graph" t-att-graph_type="bar" widget="dashboard_graph"/>-->
+                                <!--</div>-->
                             </div>
                         </div>
                     </t>
@@ -86,9 +103,23 @@
         </field>
     </record>
 
+    <record id="view_attendance_dashboard_filter" model="ir.ui.view">
+        <field name="name">hr.attendance.dashboard.filter</field>
+        <field name="model">operating.unit</field>
+        <field name="arch" type="xml">
+            <search string="Search">
+                <group>
+                    <separator/>
+                    <!--<field name="operating_unit_name"/>-->
+                </group>
+
+           </search>
+        </field>
+    </record>
+
     <record id="custom_sales_dashboard_action" model="ir.actions.act_window">
         <field name="name">Today's Attendance Dashboard</field>
-        <field name="res_model">hr.attendance.dashboard</field>
+        <field name="res_model">operating.unit</field>
         <field name="type">ir.actions.act_window</field>
         <field name="view_type">form</field>
         <field name="context">{}</field>
@@ -105,6 +136,6 @@
                sequence="0"
                name="Dashboard"
                action="custom_sales_dashboard_action"
-               groups="hr_attendance.group_hr_attendance_user"
+               groups="hr_attendance.group_hr_attendance_user,gbs_application_group.group_head_of_plant,gbs_application_group.group_cxo"
     />
 </odoo>

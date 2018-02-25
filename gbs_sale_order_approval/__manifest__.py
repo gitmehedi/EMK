@@ -1,6 +1,6 @@
 {
-    'name': 'GBS Sale Order Approval Process',
-    'version': '1.0',
+    'name': 'Order to Cash Process',
+    'version': '10.1.0.1',
     'category': 'sales',
     'author': 'Genweb2 Limited',
     'website': 'www.genweb2.com',
@@ -13,13 +13,20 @@
         'gbs_sales_commission',
         'gbs_sales_commission_so',
         'delivery_order',
-
+        'samuda_so_type',
+        'operating_unit',
+        'amount_to_word_bd',
+        'letter_of_credit',
+        'gbs_pi_creation',
+        'account',
     ],
+
     'data': [
         'security/ir.model.access.csv',
         'security/sale_order_approval_security.xml',
         'views/inherited_sale_view.xml',
+        'report/inherit_sale_order_report.xml',
     ],
     'installable': True,
-    'application': True,
+    'application': False,
 }

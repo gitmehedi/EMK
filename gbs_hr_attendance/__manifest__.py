@@ -9,6 +9,7 @@
     'depends': ['hr',
                 'hr_attendance',
                 'gbs_hr_package',
+                'gbs_application_group',
                 ],
     'data': [
         'views/hr_attendance_view.xml',

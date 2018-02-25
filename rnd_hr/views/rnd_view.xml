@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+
+        <record id="view_shipment_form" model="ir.ui.view">
+            <field name="name">rnd.rostering.form</field>
+            <field name="model">rnd.rostering</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Shipment" delete="false" copy='0' create="false">
+                    <header>
+                       <button string="Click" custom="click" />
+                       <style type="text/css">
+                #new {
+                    position: absolute;
+                    left: 25px;
+                    top: 8px;
+
+                    text-transform: uppercase;
+                    color: white;
+                    font-weight: bold;
+                    font-size: 40px;
+                    text-decoration: none;
+                }
+
+                    /* Custom styles for the Timeline */
+                div.timeline-frame {
+                    border-color: #5D99C3;
+
+                    border-radius: 5px;
+                     -moz-border-radius: 5px; /* For Firefox 3.6 and older */
+                }
+                div.timeline-axis {
+                    border-color: #5D99C3;
+
+                    background-color: #5D99C3;
+                    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#5D99C3', endColorstr='#3A6DA0'); /* for IE */
+                    background: -webkit-gradient(linear, left top, left bottom, from(#5D99C3), to(#3A6DA0)); /* for webkit browsers */
+                    background: -moz-linear-gradient(top,  #5D99C3,  #3A6DA0); /* for firefox 3.6+ */
+                }
+                div.timeline-axis-grid {
+                }
+                div.timeline-groups-axis {
+                    border-color: #5D99C3;
+                }
+                div.timeline-axis-text {
+                    color: white;
+                }
+                div.timeline-groups-text {
+                    color: #4D4D4D;
+                }
+                div.timeline-event {
+                    color: white;
+                    border-radius: 5px;
+                }
+                div.timeline-event-content {
+                    padding: 5px;
+                }
+
+                div.unavailable {
+                    background-color: #F03030 !important; /* red */
+                    border-color: #bd2828 !important;     /* red */
+                }
+                div.available {
+                    background-color: #1AA11A !important; /* green */
+                    border-color: #136e13 !important;     /* green */
+                }
+                div.maybe {
+                    background-color: #FFA500 !important; /* orange */
+                    border-color: #cc8100 !important;     /* orange */
+                }
+
+                /* @Override */
+
+                .o_form_sheet {
+                   max-width: none !important;
+                   margin: 0 15px !important;
+                }
+            </style>
+                    </header>
+
+                    <sheet>
+                        <group>
+                            <group string="Details" colspan="4">
+                                <group>
+                                    <field name="name"/>
+                                </group>
+                            </group>
+                        </group>
+                    </sheet>
+
+                </form>
+            </field>
+        </record>
+
+        <record id="shipment_tree_view" model="ir.ui.view">
+            <field name="name">rnd.rostering.tree</field>
+            <field name="model">rnd.rostering</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+				<data>
+					<field name="name"/>
+				</data>
+			</field>
+        </record>
+
+    </data>
+</odoo>

@@ -1,6 +1,6 @@
 {
     'name': 'HR Leave Days Duration Correction',
-    'version': '1.0',
+    'version': '10.0.1.0.0',
     'category': 'leave',
     'sequence': 30,
     'author': 'Genweb2 Limited',
@@ -9,10 +9,8 @@
     'description':"Complete HR Leave Days Duration Correction Program",
     'depends': [
         'hr_holidays',
-        'gbs_hr_package',
     ],
     'data': [
-        'security/hr_holidays_security.xml',
         'views/hr_holidays_view.xml',
     ],
     'installable': True,

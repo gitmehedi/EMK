@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <data>
+        <menuitem
+				name="HR Evaluation"
+                parent="hr.menu_hr_root"
+				id="hr_evaluation_main_menu"
+				sequence="93"
+        />
+        <!--evaluation plan view-->
+        <record id="view_hr_evaluation_plan_tree" model="ir.ui.view">
+			<field name="name">hr_evaluation_plan_tree</field>
+			<field name="model">hr.evaluation.plan</field>
+			<field name="arch" type="xml">
+				<tree string="HR Evaluation Plan">
+					<field name="name" />
+					<field name="company_id" />
+					<field name="operating_unit_id" />
+					<field name="plan_year" />
+				</tree>
+			</field>
+		</record>
+
+        <record id="view_hr_evaluation_plan_form" model="ir.ui.view">
+			<field name="name">hr_evaluation_plan_form</field>
+			<field name="model">hr.evaluation.plan</field>
+			<field name="type">form</field>
+			<field name="arch" type="xml">
+                <form string="HR Evaluation Plan">
+                    <header>
+                        <button name="%(action_hr_evaluation_employees)d" type="action"
+                                string="Assign Employee"  attrs="{'invisible':[('state','=','confirm')]}"
+                                class="oe_highlight" context="{'operating_unit_id': operating_unit_id}"/>
+                        <button string="Confirm" name="action_confirm"
+								states="draft" type="object" class="oe_highlight"
+								groups="hr.group_hr_user"/>
+                        <field name="state" widget="statusbar" statusbar_visible="draft,confirm"/>
+                    </header>
+                    <sheet>
+                        <div class="oe_button_box"></div>
+                        <div class="oe_title">
+                            <h2><field name="name" placeholder="Evaluation plan" attrs="{'readonly':[('state','=','confirm')]}"/></h2>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="company_id" attrs="{'readonly':[('state','=','confirm')]}"
+                                       options='{"no_open": True,"no_create": 1, "no_create_edit":1}'/>
+                                <field name="plan_year" attrs="{'readonly':[('state','=','confirm')]}"
+                                       options='{"no_open": True,"no_create": 1, "no_create_edit":1}'/>
+                            </group>
+                            <group>
+                                <field name="operating_unit_id" attrs="{'readonly':[('state','=','confirm')]}"
+                                       options='{"no_open": True,"no_create": 1, "no_create_edit":1}'/>
+                            </group>
+                        </group>
+                        <separator string="Employees" colspan="2"/>
+                        <field name="evaluation_form_ids" attrs="{'readonly':[('state','=','confirm')]}">
+                            <tree string="Employees" create='false' editable='false' delete='true'>
+                                <field name='employee_id'/>
+                            </tree>
+                        </field>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_hr_evaluation_plan" model="ir.actions.act_window">
+			<field name="name">HR Evaluation Plan</field>
+			<field name="res_model">hr.evaluation.plan</field>
+			<field name="view_mode">tree,form</field>
+		</record>
+
+		<menuitem
+				name="HR Evaluation Plan"
+                parent="hr_evaluation_main_menu"
+				id="hr_evaluation_plan_menu"
+				sequence="10"
+                action="action_hr_evaluation_plan"
+        />
+
+    </data>
+</odoo>

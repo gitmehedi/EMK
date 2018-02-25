@@ -418,6 +418,7 @@ class HrAttendanceImportWizard(models.TransientModel):
         
         for line in reader:
             temp_vals = {}
+            temp_vals['name'] = line['name']
             temp_vals['employee_id'] = line['employee_id']
             temp_vals['holiday_status_id'] = line['holiday_status_id']
             temp_vals['number_of_days'] = line['number_of_days']
@@ -429,6 +430,7 @@ class HrAttendanceImportWizard(models.TransientModel):
              
             """ search employee model with employee ID """
             vals = {}
+            vals['name'] = line['name']
             vals['holiday_status_id'] = line['holiday_status_id']
             vals['number_of_days'] = line['number_of_days']
             vals['type'] = line['type']
@@ -444,6 +446,7 @@ class HrAttendanceImportWizard(models.TransientModel):
             else:
 
                 error_vals = {}
+                error_vals['name'] = line['name']
                 error_vals['holiday_status_id'] = line['holiday_status_id']
                 error_vals['number_of_days'] = line['number_of_days']
                 error_vals['type'] = line['type']

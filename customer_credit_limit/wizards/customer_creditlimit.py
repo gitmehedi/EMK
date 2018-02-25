@@ -1,6 +1,6 @@
-from openerp import models, fields, api
+from odoo import models, fields, api
 import time
-from openerp.tools.translate import _
+from odoo.tools.translate import _
 from odoo.exceptions import UserError, ValidationError
 
 

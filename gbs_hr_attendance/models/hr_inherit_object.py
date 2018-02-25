@@ -15,7 +15,7 @@ class HrAttendance(models.Model):
     operating_unit_id = fields.Integer(string='Operating Unit Id', required=False)
 
     duty_date = fields.Date(string='Duty Date', required=False)
-    attempt_set_duty_date = fields.Integer(string='Duty Date', required=False,default=0)
+    attempt_set_duty_date = fields.Integer(string='Attempt to set Duty Date', required=False,default=0)
     check_in = fields.Datetime(string="Check In", required=False)
 
     @api.depends('check_in', 'check_out')
@@ -65,4 +65,10 @@ class HrEmployee(models.Model):
 
     device_employee_acc = fields.Integer(string='AC No.')
     is_monitor_attendance=fields.Boolean(string='Monitor Attendance',default=True)
+    is_executive = fields.Boolean(string='Executive',default=False)
+
+    _sql_constraints = [
+        ('device_employee_acc_uniq', 'unique(device_employee_acc, operating_unit_id)',
+         'The Account Number must be unique per Unit!'),
+    ]
 

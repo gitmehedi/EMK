@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Inherited Tree view-->
+        <record id="inherit_purchase_order_tree_view" model="ir.ui.view">
+            <field name="name">inherit.purchase.order.view.tree</field>
+            <field name="model">purchase.order</field>
+            <field name="inherit_id" ref="purchase.purchase_order_tree"/>
+            <field name="arch" type="xml">
+                <data>
+                    <xpath expr="//field[@name='amount_untaxed']" position="replace">
+                        <field name="amount_untaxed" string="Untaxed" widget="monetary"/>
+                    </xpath>
+                    <xpath expr="//field[@name='amount_total']" position="replace">
+                        <field name="amount_total" widget="monetary"/>
+                    </xpath>
+                </data>
+            </field>
+        </record>
+        <!-- Inherited Form view-->
+        <record id="inherit_purchase_order_form" model="ir.ui.view">
+            <field name="name">inherit.purchase.order.view.form</field>
+            <field name="model">purchase.order</field>
+            <field name="inherit_id" ref="purchase.purchase_order_form"/>
+            <field name="arch" type="xml">
+                <data>
+                    <xpath expr="//button[@name='action_rfq_send']" position="replace">
+                        <button name="action_rfq_send" string="Send RFQ by Email" type="object" class="btn-primary"
+                                attrs="{'invisible': [('check_po_action_button','=',False)]}"/>
+                    </xpath>
+                    <xpath expr="//button[@name='print_quotation']" position="replace">
+                        <button name="print_quotation" string="Print RFQ" type="object" class="btn-primary"
+                                attrs="{'invisible': [('check_po_action_button','=',False)]}"/>
+                    </xpath>
+                    <xpath expr="//button[@name='button_confirm']" position="replace">
+                        <button name="button_confirm" string="Confirm Order" type="object"
+                                attrs="{'invisible': [('check_po_action_button','=',False)]}"/>
+                    </xpath>
+                    <xpath expr="//field[@name='company_id']" position="after">
+                        <field name="operating_unit_id" groups="operating_unit.group_multi_operating_unit"
+                               options='{"no_open": True,"no_create": 1, "no_create_edit":1}'/>
+                    </xpath>
+                    <xpath expr="//field[@name='company_id']" position="after">
+                        <field name="check_po_action_button" invisible="1"/>
+                    </xpath>
+                    <xpath expr="//field[@name='currency_id']" position="after">
+                        <field name="region_type" attrs="{'readonly': [('state','=','purchase')],'invisible': [('state','!=','purchase')]}"/>
+                        <field name="purchase_by" attrs="{'readonly': [('state','=','purchase')],'invisible': [('state','!=','purchase')]}"/>
+                        <field name="disable_new_revision_button" invisible="1" />
+                    </xpath>
+                    <xpath expr="//field[@name='partner_id']" position="attributes">
+                        <attribute name="string">Supplier</attribute>
+                    </xpath>
+                    <xpath expr="//field[@name='partner_ref']" position="attributes">
+                        <attribute name="string">Supplier Reference</attribute>
+                    </xpath>
+
+                    <xpath expr="//notebook/page/field/tree/field[@name='company_id']" position="attributes">
+                        <attribute name="invisible">1</attribute>
+                    </xpath>
+
+                </data>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="purchase_req_order_form_inherit">
+            <field name="name">purchase.req.order.form.inherit</field>
+            <field name="model">purchase.order</field>
+            <field name="inherit_id" ref="purchase_requisition.purchase_order_form_inherit"/>
+            <field name="arch" type="xml">
+                <data>
+                    <xpath expr="//field[@name='requisition_id']" position="attributes">
+                        <attribute name="string">Purchase Requisition</attribute>
+                    </xpath>
+                    <xpath expr="//page[1]" position="after">
+                        <page string="Attachments">
+                            <field name="attachment_ids" widget="one2many" >
+                                <tree string="Attachments" editable="top">
+                                    <field name="name" string="Title"/>
+                                    <field name="datas_fname" invisible="1"/>
+                                    <field name="db_datas" filename="datas_fname" string="File"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </xpath>
+                </data>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="purchase_order_revision_form_inherit">
+            <field name="name">purchase.order.revision.form.inherit</field>
+            <field name="model">purchase.order</field>
+            <field name="inherit_id" ref="purchase_order_revision.purchase_order_form"/>
+            <field name="arch" type="xml">
+                <button name="new_revision" position="replace" >
+                    <button name="new_revision" string="New revision" type="object" attrs="{'invisible': ['|','|',('state', '!=', 'cancel'),('current_revision_id','!=', False),('disable_new_revision_button','=', True)]}"/>
+                </button>
+            </field>
+        </record>
+
+        <menuitem id="menu_commercial_pq" parent="commercial.menu_commercial_root"
+            sequence="2" name="Purchase Quotation"/>
+
+        <menuitem id="submenu_commercial_pq" name="Purchase Quotation" parent="menu_commercial_pq"
+                sequence="1" action="purchase.purchase_rfq"/>
+
+        <menuitem id="menu_commercial_po" parent="commercial.menu_commercial_root"
+            sequence="3" name="Purchase Order"/>
+
+        <menuitem id="submenu_commercial_po" name="Purchase Order" parent="menu_commercial_po"
+                sequence="1" action="purchase.purchase_form_action"/>
+
+    </data>
+</odoo>

@@ -1,0 +1,13 @@
+.sign-top {
+    border-top: 1px solid black;
+    padding-top: 1px;
+}
+
+.page .table th {
+    padding: 2px !important;
+}
+
+.page .table td {
+    padding: 2px !important;
+    font-size: 12px !important;
+}

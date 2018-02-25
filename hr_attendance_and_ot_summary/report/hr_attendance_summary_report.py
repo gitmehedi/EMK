@@ -1,4 +1,5 @@
 from openerp import api, fields, models
+import math
 
 class HrAttendanceSummaryReport(models.AbstractModel):
     _name = 'report.hr_attendance_and_ot_summary.report_att_summary'
@@ -32,9 +33,12 @@ class HrAttendanceSummaryReport(models.AbstractModel):
                     att_summary['weekend_days_count'] = att_sum.weekend_days_count
                     att_summary['holidays_days'] = att_sum.holidays_days
                     att_summary['deduction_days'] = att_sum.deduction_days
-                    att_summary['late_hrs'] = att_sum.late_hrs
-                    att_summary['schedule_ot_hrs'] = att_sum.schedule_ot_hrs
-                    att_summary['cal_ot_hrs'] = att_sum.cal_ot_hrs
+                    # att_summary['late_hrs'] = att_sum.late_hrs
+                    # att_summary['schedule_ot_hrs'] = att_sum.schedule_ot_hrs
+                    # att_summary['cal_ot_hrs'] = att_sum.cal_ot_hrs
+                    att_summary['late_hrs'] = self.convertFloatToTime(att_sum.late_hrs)
+                    att_summary['schedule_ot_hrs'] = self.convertFloatToTime(att_sum.schedule_ot_hrs)
+                    att_summary['cal_ot_hrs'] = self.convertFloatToTime(att_sum.cal_ot_hrs)
 
                     dpt_att_summary['val'].append(att_summary)
                     
@@ -55,11 +59,18 @@ class HrAttendanceSummaryReport(models.AbstractModel):
             'doc_model': 'hr.attendance.summary',
             'docs': dpt_att_summary_list,
             'doc_name': docs.name,
-            'period_to': pool_period.date_start,
-            'period_from': pool_period.date_stop,
+            'period_from': pool_period.date_start,
+            'period_to': pool_period.date_stop,
             'docs_len': 20,
             'state': docs.state,
         }
 
         return self.env['report'].render('hr_attendance_and_ot_summary.report_att_summary', docargs)
+
+    ####################################################
+    # Utility methods
+    ####################################################
+
+    def convertFloatToTime(self, float_value):
+        return "%02d:%02d" % (float_value,math.modf(float_value)[0]*60)
     

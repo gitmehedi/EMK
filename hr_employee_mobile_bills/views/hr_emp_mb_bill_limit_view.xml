@@ -37,6 +37,10 @@
 							</tree>
 						</field>
 					</sheet>
+					<div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
 				</form>
 			</field>
 		</record>
@@ -60,6 +64,6 @@
         </record>
 
         <menuitem id="hr_mobile_bill_limits_menu" name="Mobile Bill Limits" parent="hr_mobile_bill_menu"
-                  action="hr_mobile_bill_limit_action" groups="base.group_user"/>
+                  action="hr_mobile_bill_limit_action" groups="hr.group_hr_user"/>
     </data>
 </odoo>

@@ -1,0 +1,3 @@
+import hr_payroll_arrear
+import hr_payroll_arrear_line
+import inherited_hr_payslip

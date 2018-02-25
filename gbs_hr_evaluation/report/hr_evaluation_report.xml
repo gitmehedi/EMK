@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--Custom report.-->
+<odoo>
+    <data>
+        <report
+                id = "evaluation_report"
+                string = "Evaluation Report"
+                model = "hr.performance.evaluation"
+                report_type = "qweb-pdf"
+                file ="gbs_hr_evaluation.evaluation_report_template"
+                name ="gbs_hr_evaluation.evaluation_report_template"/>
+
+        <!--<record id="custom_report_hr_evaluation" model="ir.actions.report.xml">-->
+            <!--<field name="paperformat_id" ref="gbs_hr_evaluation.paperformat_hr_evaluation"/>-->
+        <!--</record>-->
+
+        <template id="evaluation_report_template">
+            <t t-call="report.html_container">
+                <t t-foreach="docs" t-as="o">
+                    <t t-call="report.external_layout">
+                        <div class="page" style="height: 200mm">
+                            <div>
+                                <p style="font-size:12px;display:inline;">Form # ADM FRM 09</p>
+                                <p style="font-size:12px;margin-left:250px;display:inline">Revision #00</p>
+                                <p style="font-size:12px;margin-left:220px;display:inline">Date of Issue: 01-11-2015</p>
+                            </div>
+                            <div>
+                                <h3 style="font-size:25px;text-align:center;">Samuda Chemical Complex Ltd</h3>
+                                <h6 style="font-size:15px;text-align:center;">Head Office/Dhaka Plant</h6>
+                            </div>
+                            <div>
+                                <u>
+                                    <h4 style="font-size:20px;text-align:center;font-weight: bold;">Performance Evaluation Form</h4>
+                                </u>
+                            </div>
+                            <div>
+                                <p style="font-size:15px;font-weight: bold;">Year 20...</p>
+                            </div>
+
+                            <table class="table table-bordered" >
+                                <thead>
+
+                                </thead>
+                                <tbody >
+                                    <tr>
+                                        <th colspan="4">1. Personal Information</th>
+                                        <th colspan="4">2. Job History</th>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="4">Name : <span t-field="o.employee_id.name"/></td>
+                                        <td colspan="4">Date of Joining : <span t-field="o.joining_date"/></td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="4">Department/Section : <span t-field="o.emp_department"/></td>
+                                        <td colspan="4">Designation (On joining period) : <span t-field="o.emp_designation"/></td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="4">Academic Qualification : <span t-field="o.academic_qualification"/></td>
+                                        <td colspan="4">Present Designation : <span t-field="o.emp_designation"/></td>
+                                    </tr>
+                                    <tr style="font-weight: bold;">
+                                        <td colspan="4">Reward given (Between evaluating year):</td>
+                                        <td colspan="4">Disciplinary action (Between evaluating year):</td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="4"><span t-field="o.given_reward"/></td>
+                                        <td colspan="4"><span t-field="o.disciplinary_action"/></td>
+                                    </tr>
+                                    <tr >
+                                        <td style="font-weight: bold;" colspan="8">5. Attendance (For the year 20.....)</td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="2">Total Available Days</td>
+                                        <td colspan="2"></td>
+                                        <td colspan="2">Days Attended on time</td>
+                                        <td colspan="2"></td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="2">Days Late in attendance</td>
+                                        <td colspan="2"></td>
+                                        <td colspan="2">Days Absence</td>
+                                        <td colspan="2"></td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="2">Casual leave days</td>
+                                        <td colspan="2"></td>
+                                        <td colspan="2">Sick leave days</td>
+                                        <td colspan="2"></td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="2">Earned leave days</td>
+                                        <td colspan="2">                    </td>
+                                        <td colspan="2">Extraordinary leave days</td>
+                                        <td colspan="2">                    </td>
+
+                                    </tr>
+                                    <tr >
+                                        <td style="font-weight: bold;" colspan="8">6. To be filled by the Employee</td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="8">I do hereby acknowledge that the above information about me which is correct.<br/><br/><br/>Signature</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="font-weight: bold;" colspan="8">7.Comments(Please initial signature)</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <table class="table table-bordered">
+                                <thead>
+                                    <td>SL#</td>
+                                    <td>Areas</td>
+                                    <td>Total Marks</td>
+                                    <td>Obtained Marks</td>
+                                </thead>
+                                <tbody>
+                                    <tr t-foreach="o.criteria_line_ids" t-as="l">
+                                        <td><span t-field="l.seq"/></td>
+                                        <td><span t-field="l.name"/></td>
+                                        <td><span t-field="l.marks"/></td>
+                                        <td><span t-field="l.obtain_marks"/></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <table>
+                                <thead></thead>
+                                <tbody>
+                                    <tr>
+                                        <td style="font-weight: bold;" colspan="8">8. Judgement of evaluating person</td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="2">promotion:<input type="checkbox" name="promotion" style="margin-left:15px" /></td>
+                                        <td colspan="3">place under observation:<input type="checkbox" name="observation" style="margin-left:15px" /></td>
+                                        <td colspan="1">Increment:<input type="checkbox" name="Increment" style="margin-left:15px" /></td>
+                                        <td colspan="2">Training requirement:<input type="checkbox" name="Training" style="margin-left:15px" /></td>
+                                    </tr>
+                                    <tr>
+                                        <td style="font-weight: bold;" colspan="8">9. Evaluating person:</td>
+                                    </tr>
+                                    <tr>
+                                        <td  colspan="5">comments:</td>
+                                        <td  colspan="3">Name &amp; sign: __________________
+                                            <p style="margin-left:90px">Immediate Supervisor</p>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td  colspan="5">comments:</td>
+                                        <td  colspan="3">Name &amp; sign: __________________
+                                            <p style="margin-left:100px">Head of Department</p>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="font-weight: bold;"  colspan="8">10. Recommending person:</td>
+                                    </tr>
+                                    <tr>
+                                        <td  colspan="5">comments:</td>
+                                        <td  colspan="3">Name &amp; sign: __________________
+                                            <p style="margin-left:100px">Plant in charge/GM</p>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="font-weight: bold;" colspan="8">11. Forwarded by:</td>
+                                    </tr>
+                                    <tr>
+                                        <td  colspan="5">comments:</td>
+                                        <td  colspan="3">Name &amp; sign: __________________
+                                            <p style="margin-left:110px">HR &amp; Admin</p>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="font-weight: bold;"  colspan="8">12. Approval:</td>
+                                    </tr>
+                                    <tr>
+                                        <td  colspan="5">Approved/Not approved:</td>
+                                        <td  colspan="3">Sig &amp; date: _________________
+                                            <p style="margin-left:100px">COO/MOD</p>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                        </div>
+                    </t>
+                </t>
+            </t>
+        </template>
+    </data>
+</odoo>

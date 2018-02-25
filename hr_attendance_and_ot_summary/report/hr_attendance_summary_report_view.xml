@@ -2,114 +2,122 @@
 <openerp>
 	<data>
 		<template id="report_att_summary">
-			<t t-call="report.external_layout">
+			<t t-call="custom_report.gbs_internal_layout">
 				<t t-call="report.html_container">
-					<t t-name="external_layout_header">
-						<div class="header">
-							<div class="row">
-								<div class="col-xs-4 col-xs-offset-8">
-									<h5>Attendance Summary Report</h5>
-								</div>
+					<div class="page">
+						<h3 class="text-center" style="margin-bottom:20px">Attendance Summary Report</h3>
+						<div class="row">
+							<div class="col-xs-6 text-left">
+								<label>Title : </label>
+								<span t-esc="doc_name"></span>
+							</div>
+							<div class="col-xs-6 text-right">
+								<label>Period From : </label>
+								<span t-esc="period_from"></span>
+
 							</div>
 						</div>
-					</t>
-					<t t-name="report.external_layout">
-						<div class="page">
+						<div class="row">
+							<div class="col-xs-6 text-left">
+								<label>State : </label>
+								<span t-esc="state"></span>
+							</div>
+							<div class="col-xs-6 text-right">
+								<label>To : </label>
+								<span t-esc="period_to"></span>
 
-							<h4><b>Title: </b><span t-esc="doc_name"></span><br/></h4>
-							<h4><b>Period From : </b><span t-esc="period_from"></span>, <b>To :</b> <span t-esc="period_to"></span></h4>
-							<h4><b>State: </b><span t-esc="state"></span></h4>
+							</div>
+						</div>
+						<div class="row">
+							<table class="table table-bordered">
+								<thead>
+									<tr
+										style="background-color:#f5f5f5;
+											border-bottom: 1px solid #030303;">
+										<th>SN</th>
+										<th>Employee</th>
+										<th>Designation</th>
+										<th>Salary Days</th>
+										<th>Present Days</th>
+										<th>Absent Days</th>
+										<th>Late Days</th>
+										<th>Deduction Day(s)</th>
+										<th>Leave Days</th>
+										<th>Weekend</th>
+										<th>Holidays</th>
+										<th>Off Duty Hrs</th>
+										<th>Schedule OT Hours</th>
+										<th>OT Hours Calculation</th>
+									</tr>
+								</thead>
+								<tbody>
 
-							<div class="row">
-								<table class="table table-bordered">
-									<thead>
-										<tr
-											style="background-color:#C0C0C0;
-												border-bottom: 1px solid #030303;">
-											<th>SN</th>
-											<th>Employee</th>
-											<th>Designation</th>
-											<th>Salary Days</th>
-											<th>Present Days</th>
-											<th>Absent Days</th>
-											<th>Late Days</th>
-											<th>Late Days Overwrite</th>
-											<th>Leave Days</th>
-											<th>Weekend</th>
-											<th>Holidays</th>
-											<th>Late Hours</th>
-											<th>Schedule OT Hours</th>
-											<th>OT Hours Calculation</th>
-										</tr>
-									</thead>
-									<tbody>
+									<t t-foreach="docs" t-as="k">
+										<t t-if="k['val']">
+											<td
+												style="background-color:#DDDBDB;
+													   text-align:center;
+													   border-bottom: 1px solid #030303;
+													   color:#000000;"
+													t-att-colspan="docs_len">
+												<strong t-esc="k['name']"></strong>
+											</td>
 
-										<t t-foreach="docs" t-as="k">
-											<t t-if="k['val']">
-												<td
-													style="background-color:#DDDBDB;
-														   text-align:center;
-														   border-bottom: 1px solid #030303;
-														   color:#000000;"
-														t-att-colspan="docs_len">
-													<strong t-esc="k['name']"></strong>
-												</td>
+											<t t-foreach="k['val']" t-as="o">
+												<tr>
+													<td>
+														<span t-esc="o['sn']"></span>
+													</td>
+													<td>
+														<span t-esc="o['emp_name']"></span>
+													</td>
+													<td>
+														<span t-esc="o['designation']"></span>
+													</td>
+													<td>
+														<span t-esc="o['salary_days']"></span>
+													</td>
+													<td>
+														<span t-esc="o['present_days']"></span>
+													</td>
+													<td>
+														<span t-esc="o['absent_days_count']"></span>
+													</td>
+													<td>
+														<span t-esc="o['late_days_count']"></span>
+													</td>
+													<td>
+														<span t-esc="o['deduction_days']"></span>
+													</td>
+													<td>
+														<span t-esc="o['leave_days']"></span>
+													</td>
+													<td>
+														<span t-esc="o['weekend_days_count']"></span>
+													</td>
+													<td>
+														<span t-esc="o['holidays_days']"></span>
+													</td>
 
-												<t t-foreach="k['val']" t-as="o">
-													<tr>
-														<td>
-															<span t-esc="o['sn']"></span>
-														</td>
-														<td>
-															<span t-esc="o['emp_name']"></span>
-														</td>
-														<td>
-															<span t-esc="o['designation']"></span>
-														</td>
-														<td>
-															<span t-esc="o['salary_days']"></span>
-														</td>
-														<td>
-															<span t-esc="o['present_days']"></span>
-														</td>
-														<td>
-															<span t-esc="o['absent_days_count']"></span>
-														</td>
-														<td>
-															<span t-esc="o['late_days_count']"></span>
-														</td>
-														<td>
-															<span t-esc="o['deduction_days']"></span>
-														</td>
-														<td>
-															<span t-esc="o['leave_days']"></span>
-														</td>
-														<td>
-															<span t-esc="o['weekend_days_count']"></span>
-														</td>
-														<td>
-															<span t-esc="o['holidays_days']"></span>
-														</td>
+													<td>
+														<span t-esc="o['late_hrs']"></span>
+													</td>
+													<td>
+														<span t-esc="o['schedule_ot_hrs']"></span>
+													</td>
+													<td>
+														<span t-esc="o['cal_ot_hrs']"></span>
+													</td>
 
-														<td>
-															<span t-esc="'%.2f'% o['late_hrs']"></span>
-														</td>
-														<td>
-															<span t-esc="o['schedule_ot_hrs']"></span>
-														</td>
-														<td>
-															<span t-esc="'%.2f'% o['cal_ot_hrs']"></span>
-														</td>
-
-													</tr>
-												</t>
+												</tr>
 											</t>
 										</t>
-									</tbody>
-								</table>										
-							</div>
+									</t>
+								</tbody>
+							</table>
 						</div>
-					</t>
+						<t t-call="custom_report.report_signing"></t>
+					</div>
 				</t>
 			</t>
 

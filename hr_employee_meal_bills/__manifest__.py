@@ -7,6 +7,7 @@
     'depends': ['hr'],
     'data': [
         'security/ir.model.access.csv',
+        #'security/ir_rule.xml',
         'views/hr_meal_bill_view.xml',
         'report/gbs_hr_meal_report.xml',
         'report/gbs_hr_meal_report_templates.xml',

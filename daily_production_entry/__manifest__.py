@@ -6,6 +6,7 @@
     'version':'1.0',
     'depends': [
         'sale',
+        'product_sales_pricelist'
     ],
     'data': [
         'views/mrp_daily_production_view.xml',

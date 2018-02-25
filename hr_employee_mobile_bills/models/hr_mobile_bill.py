@@ -1,10 +1,11 @@
-from openerp import models, fields,_
-from openerp.exceptions import UserError, ValidationError
-from openerp import api
+from odoo import models, fields,_
+from odoo.exceptions import UserError, ValidationError
+from odoo import api
 
 
 class HrMobileBill(models.Model):
     _name = 'hr.mobile.bill'
+    _inherit = ['mail.thread']
     _order = 'name desc'
 
     name = fields.Char(size=100, string="Name", required=True,states={'draft': [('invisible', False)],
@@ -56,6 +57,6 @@ class HrMobileBill(models.Model):
     def unlink(self):
         for bill in self:
             if bill.state != 'draft':
-                raise UserError(_('You can not delete this.'))
+                raise UserError(_('After Approval you can not delete this record.'))
             bill.line_ids.unlink()
         return super(HrMobileBill, self).unlink()

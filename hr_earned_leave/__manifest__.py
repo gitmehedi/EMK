@@ -6,7 +6,7 @@
     'version':'1.0.0',
     'data': [
         'views/hr_earned_leave_view.xml',
-        'views/inherited_hr_holidays_status_data.xml',
+        # 'views/inherited_hr_holidays_status_data.xml',
     ],
     'depends': [
         'hr',
