@@ -21,10 +21,33 @@ class AttendanceProcessor(models.Model):
                        WHERE ac.id = %s LIMIT 1"""
 
 
-    attendance_query = """SELECT (check_in + interval '6h') AS check_in, (check_out + interval '6h') AS check_out, worked_hours
+    # attendance_query = """SELECT (check_in + interval '6h') AS check_in, (check_out + interval '6h') AS check_out, worked_hours
+    #                         FROM hr_attendance
+    #                       WHERE check_out > %s AND check_in < %s AND employee_id = %s AND has_error = False
+    #                       ORDER BY check_in ASC"""
+
+
+    attendance_query = """SELECT (check_in + interval '6h') AS check_in, 
+                                   (check_out + interval '6h') AS check_out, 
+                                   worked_hours, 1 AS att_type
                             FROM hr_attendance
-                          WHERE check_out > %s AND check_in < %s AND employee_id = %s AND has_error = False
-                          ORDER BY check_in ASC"""
+                            WHERE employee_id = %s AND check_out > %s AND check_in < %s AND
+                                  has_error = False
+                            UNION
+                            SELECT (check_in + interval '6h') AS check_in, 
+                                   (check_out + interval '6h') AS check_out, 
+                                   0 AS worked_hours, 2 AS att_type
+                            FROM hr_manual_attendance 
+                            WHERE employee_id = %s AND state = 'validate' AND sign_type = 'both' AND 
+                                  check_out > %s AND check_in < %s
+                            UNION
+                            SELECT (date_from + interval '6h') AS check_in, 
+                                   (date_to + interval '6h') AS check_out, 
+                                   0 AS worked_hours, 3 AS att_type      
+                            FROM hr_short_leave 
+                            WHERE employee_id = %s AND state = 'validate' AND 
+                                date_to > %s AND date_from < %s
+                            ORDER BY check_in, att_type ASC"""
 
     getExtraOTQuery = """SELECT 
                             SUM(total_hours)
@@ -242,7 +265,9 @@ class AttendanceProcessor(models.Model):
         else:
             att_time_end = postEndDate + timedelta(hours=1)
         # att_time_end = dutyTimeMap.get(self.getStrFromDate(postEndDate)).startDutyTime
-        self._cr.execute(self.attendance_query, (att_time_start, att_time_end, employeeId))
+        self._cr.execute(self.attendance_query, (employeeId, att_time_start, att_time_end,
+                                                 employeeId, att_time_start, att_time_end,
+                                                 employeeId, att_time_start, att_time_end))
         attendance_data = self._cr.fetchall()
 
         return attendance_data

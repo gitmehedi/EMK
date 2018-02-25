@@ -20,10 +20,26 @@ class AttendanceUtility(models.TransientModel):
                                       WHERE employee_id = %s AND check_in between %s and %s AND (check_out IS NULL OR check_out > %s)
                                       ORDER BY check_in ASC LIMIT 1"""
 
-    alter_attendance_query = """SELECT (check_in + interval '6h') AS check_in, (check_out + interval '6h') AS check_out, worked_hours
+    alter_attendance_query = """SELECT (check_in + interval '6h') AS check_in, 
+                                    (check_out + interval '6h') AS check_out, 
+                                    worked_hours, 1 AS att_type
                                     FROM hr_attendance
-                                  WHERE (check_in BETWEEN %s AND %s) AND (check_out BETWEEN %s AND %s) AND employee_id = %s
-                                  ORDER BY check_in ASC"""
+                                WHERE (check_in BETWEEN %s AND %s) AND (check_out BETWEEN %s AND %s) AND employee_id = %s
+                                UNION
+                                SELECT (check_in + interval '6h') AS check_in, 
+                                   (check_out + interval '6h') AS check_out, 
+                                   0 AS worked_hours, 2 AS att_type
+                                FROM hr_manual_attendance 
+                                WHERE state = 'validate' AND sign_type = 'both' AND 
+                                      (check_in BETWEEN %s AND %s) AND (check_out BETWEEN %s AND %s) AND employee_id = %s
+                                UNION
+                                SELECT (date_from + interval '6h') AS check_in, 
+                                   (date_to + interval '6h') AS check_out, 
+                                   0 AS worked_hours, 3 AS att_type      
+                                FROM hr_short_leave 
+                                WHERE state = 'validate' AND 
+                                (date_from BETWEEN %s AND %s) AND (date_to BETWEEN %s AND %s) AND employee_id = %s
+                                ORDER BY check_in, att_type ASC"""
 
     error_attendance_for_management_emp = """SELECT 
                                                 (check_in + interval '6h') AS check_in, 
@@ -155,16 +171,38 @@ class AttendanceUtility(models.TransientModel):
         previousDayDutyTime = self.getPreviousDutyTime(alterDayDutyTime.startDutyTime - day, dutyTimeMap)
         nextDayDutyTime = self.getNextDutyTime(alterDayDutyTime.startDutyTime + day, dutyTimeMap)
 
-        self._cr.execute(self.alter_attendance_query, (self.convertDateTime(previousDayDutyTime.endActualDutyTime),
-                                                       self.convertDateTime(alterDayDutyTime.endActualDutyTime),
-                                                       self.convertDateTime(alterDayDutyTime.startDutyTime),
-                                                       self.convertDateTime(nextDayDutyTime.startDutyTime),
-                                                       employeeId))
+        preEndActualDutyTime = self.convertDateTime(previousDayDutyTime.endActualDutyTime)
+        endActualDuty = self.convertDateTime(alterDayDutyTime.endActualDutyTime)
+        startDutyTime = self.convertDateTime(alterDayDutyTime.startDutyTime)
+        nextStartDutyTime = self.convertDateTime(nextDayDutyTime.startDutyTime)
+
+        self._cr.execute(self.alter_attendance_query, (preEndActualDutyTime, endActualDuty, startDutyTime, nextStartDutyTime,employeeId,
+                                                       preEndActualDutyTime, endActualDuty, startDutyTime, nextStartDutyTime, employeeId,
+                                                       preEndActualDutyTime, endActualDuty, startDutyTime, nextStartDutyTime, employeeId))
         attendance_line = self._cr.fetchall()
 
         for i, attendance in enumerate(attendance_line):
-                duration = (self.getDateTimeFromStr(attendance[1]) - self.getDateTimeFromStr(attendance[0])).total_seconds() / 60 / 60
-                attendanceDayList.append(TempLateTime(attendance[0], attendance[1], duration))
+            att_check_in = attendance[0]
+            att_check_out = attendance[1]
+
+            chk_in = self.getDateTimeFromStr(att_check_in)
+            chk_out = self.getDateTimeFromStr(att_check_out)
+
+            # Adjust Check_in Check_out time within atutomated, manual and short leave
+            if i > 0 and attendance[3] > 1:
+                pre_chk_out = self.getDateTimeFromStr(attendance_line[i - 1][1])
+                if pre_chk_out > chk_in:
+                    chk_in = pre_chk_out
+                    att_check_in = attendance_line[i - 1][1]
+
+            if i < (len(attendance_line) - 1) and attendance[3] > 1:
+                next_chk_in = self.getDateTimeFromStr(attendance_line[i + 1][0])
+                if next_chk_in < chk_out:
+                    chk_out = next_chk_in
+                    att_check_out = attendance_line[i + 1][0]
+
+            duration = (chk_out - chk_in).total_seconds() / 60 / 60
+            attendanceDayList.append(TempLateTime(att_check_in, att_check_out, duration))
         return attendanceDayList
 
     def getErrorAttendanceListByDay(self, employeeId, currDate, day, dutyTimeMap):
@@ -185,18 +223,37 @@ class AttendanceUtility(models.TransientModel):
         nextDayDutyTime = self.getNextDutyTime(currDate + day, dutyTimeMap)
 
         temp_attendance_data = list(attendance_data)
+
         for i, attendance in enumerate(attendance_data):
-            if previousDayDutyTime.endActualDutyTime < self.getDateTimeFromStr(
-                    attendance[0]) < currentDaydutyTime.endActualDutyTime and \
-                                    currentDaydutyTime.startDutyTime < self.getDateTimeFromStr(
-                                attendance[1]) < nextDayDutyTime.startDutyTime:
-                duration = (self.getDateTimeFromStr(attendance[1]) - self.getDateTimeFromStr(
-                    attendance[0])).total_seconds() / 60 / 60
-                attendanceDayList.append(TempLateTime(attendance[0], attendance[1], duration))
+
+            att_check_in = attendance[0]
+            att_check_out = attendance[1]
+
+            chk_in = self.getDateTimeFromStr(att_check_in)
+            chk_out = self.getDateTimeFromStr(att_check_out)
+
+            #Adjust Check_in Check_out time within atutomated, manual and short leave
+            if i > 0 and attendance[3] > 1:
+                pre_chk_out = self.getDateTimeFromStr(attendance_data[i-1][1])
+                if pre_chk_out > chk_in:
+                    chk_in = pre_chk_out
+                    att_check_in = attendance_data[i-1][1]
+
+            if i < (len(attendance_data) -1) and attendance[3] > 1:
+                next_chk_in = self.getDateTimeFromStr(attendance_data[i+1][0])
+                if next_chk_in < chk_out:
+                    chk_out = next_chk_in
+                    att_check_out = attendance_data[i+1][0]
+
+
+            if previousDayDutyTime.endActualDutyTime < chk_in < currentDaydutyTime.endActualDutyTime and \
+                                    currentDaydutyTime.startDutyTime < chk_out < nextDayDutyTime.startDutyTime:
+                duration = (chk_out - chk_in).total_seconds() / 60 / 60
+                attendanceDayList.append(TempLateTime(att_check_in, att_check_out, duration))
                 temp_attendance_data.remove(attendance)
             # If attendance data is greater then 48 hours from current date (startDate) then call break.
             # Means rest of the attendance date are not illegible for current date. Break condition apply for better optimization
-            elif (self.getDateTimeFromStr(attendance[0]) - currDate).total_seconds() / 60 / 60 > 48:
+            elif (chk_in - currDate).total_seconds() / 60 / 60 > 48:
                 break
         attendance_data = temp_attendance_data
         return attendanceDayList
