@@ -8,11 +8,15 @@
             <form string="Cheque Received Form">
                 <header>
                     <button name="action_received" type="object" states="draft" string="Received" class="oe_highlight"/>
-                    <button name="action_deposited" type="object" states="received" string="Deposited" class="oe_highlight"/>
-                    <button name="action_honoured" type="object" states="deposited" string="Honoured" class="oe_highlight"/>
+                    <button name="action_deposited" type="object" states="received" string="Deposited"
+                            class="oe_highlight"/>
+                    <button name="action_honoured" type="object" states="deposited" string="Honoured"
+                            class="oe_highlight"/>
                     <button name="action_dishonoured" type="object" states="deposited" string="Dishonoured"/>
-                    <button name="action_deposited" type="object" states="dishonoured" string="Deposited" class="oe_highlight"/>
-                    <button name="action_returned_to_customer" type="object" states="dishonoured" string="Returned to Customer"/>
+                    <button name="action_deposited" type="object" states="dishonoured" string="Deposited"
+                            class="oe_highlight"/>
+                    <button name="action_returned_to_customer" type="object" states="dishonoured"
+                            string="Returned to Customer"/>
 
 
                     <field name="state" widget="statusbar" statusbar_visible="draft,received,deposited"/>
@@ -38,7 +42,10 @@
                     </group>
 
                 </sheet>
-
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers"/>
+                    <field name="message_ids" widget="mail_thread"/>
+                </div>
             </form>
         </field>
     </record>
@@ -65,6 +72,13 @@
         <field name="padding">4</field>
     </record>
 
+    <!-- Generate automated sequence -->
+    <record id="account_move_seqs" model="ir.sequence">
+        <field name="name">account.move</field>
+        <field name="code">account.move</field>
+        <field name="prefix">BNK1/%(range_year)s/</field>
+        <field name="padding">4</field>
+    </record>
 
     <record model="ir.actions.act_window" id="accounting_cheque_received_action">
         <field name="name">Cheque Received</field>
