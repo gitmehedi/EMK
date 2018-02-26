@@ -13,13 +13,14 @@
                         <page string="Credit Limit" attrs="{'invisible': [('customer', '=', False)]}">
                             <group>
                                 <field name="credit_limit"/>
-                                <field name="remaining_credit_limit" invisible="1"/>
+                                <field name="remaining_credit_limit" invisible="0"/>
                             </group>
 
                             <field name="limit_ids">
                                 <tree string="List" editable="bottom">
                                     <field name="assign_date"/>
                                     <field name="value"/>
+                                    <field name="remaining_credit_limit"/>
                                     <field name="day_num"/>
                                 </tree>
                             </field>

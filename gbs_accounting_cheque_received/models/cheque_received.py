@@ -55,8 +55,7 @@ class ChequeReceived(models.Model):
         for cust in self:
             res_partner_pool = cust.env['res.partner'].search([('id', '=', cust.partner_id.id)])
 
-            if cust.sale_order_id.credit_sales_or_lc == 'credit_sales' \
-                    and cust.sale_order_id.partner_id.id == cust.partner_id.id:
+            if cust.sale_order_id.credit_sales_or_lc == 'credit_sales':
 
                 # Customer's Receivable amount is actually minus value
                 update_cust_receivable_amount = res_partner_pool.credit + cust.cheque_amount
