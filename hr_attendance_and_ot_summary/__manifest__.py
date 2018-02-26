@@ -25,7 +25,7 @@
         'gbs_hr_attendance_error_correction',
         'hr_employee_operating_unit',
         'hr_overtime_requisition',
-        'gbs_hr_employee_seniority',
+        # 'gbs_hr_employee_seniority',
         'hr_attendance_settings',
         'custom_report'
     ],
