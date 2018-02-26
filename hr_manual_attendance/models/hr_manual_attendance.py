@@ -288,31 +288,42 @@ class HrManualAttendance(models.Model):
            if self.check_out > datetime.datetime.now().strftime("%Y-%m-%d %H-%M-%S"):
                 raise UserError(_("Check out time must be less than current time!"))
 
-    # @api.constrains('check_in','check_out')
-    # def _check_time(self):
-    #     for h in self:
-    #         domain = [
-    #             ('check_in', '<=', h.check_out),
-    #             ('check_out', '>=', h.check_in),
-    #             ('employee_id', '=', h.employee_id.id),
-    #             ('id', '!=', h.id),
-    #             ('state', 'not in', ['cancel', 'refuse']),
-    #         ]
-    #         nholidays = self.search_count(domain)
-    #         if nholidays:
-    #             raise ValidationError(_('You can not have 2 leaves that overlaps on same day!'))
-
     @api.constrains('check_in', 'check_out')
     def _check_time(self):
         sl_pool = self.env["hr.short.leave"]
+        att_pool = self.env["hr.attendance"]
         for h in self:
             domain = [
+                ('check_in', '<=', h.check_out),
+                ('check_out', '>=', h.check_in),
+                ('employee_id', '=', h.employee_id.id),
+                ('id', '!=', h.id),
+                ('state', 'not in', ['cancel', 'refuse']),
+            ]
+            sl_domain = [
                 ('date_from', '<=', h.check_out),
                 ('date_to', '>=', h.check_in),
                 ('employee_id', '=', h.employee_id.id),
                 ('id', '!=', h.id),
                 ('state', 'not in', ['cancel', 'refuse']),
             ]
-            nholidays = sl_pool.search_count(domain)
-            if nholidays:
-                raise ValidationError(_('You can not have 2 leaves that overlaps on same day!'))
+            att_domain =[
+                ('check_in', '<=', h.check_out),
+                ('check_out', '>=', h.check_in),
+                ('employee_id', '=', h.employee_id.id),
+                ('id', '!=', h.id),
+            ]
+            check_manual_att = self.search_count(domain)
+            if check_manual_att:
+                raise ValidationError(_('You are trying to overlap with manual attendance.'
+                                        'Please check your existing manual attendance!'))
+
+            check_sl = sl_pool.search_count(sl_domain)
+            if check_sl:
+                raise ValidationError(_('You are trying to overlap with short leave.'
+                                        'Please check your existing short leave!'))
+
+            check_att = att_pool.search_count(att_domain)
+            if check_att:
+                raise ValidationError(_('You are trying to overlap with attendance device.'
+                                        'Please check your existing attendance!'))
