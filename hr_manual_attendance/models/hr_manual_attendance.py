@@ -279,7 +279,7 @@ class HrManualAttendance(models.Model):
             elif self.check_in > datetime.datetime.now().strftime("%Y-%m-%d %H-%M-%S"):
                 raise UserError(_("Check in time must be less than current time!"))
             elif deff > 9:
-                raise UserError(_("Difference between check in time and check out time duration must be upto 9 hours!"))
+                raise UserError(_("Difference between check in time and check out time duration must be upto 13 hours!"))
         elif self.sign_type == "sign_in":
             if self.check_in > datetime.datetime.now().strftime("%Y-%m-%d %H-%M-%S"):
                 raise UserError(_("Check in time must be less than current time!"))
