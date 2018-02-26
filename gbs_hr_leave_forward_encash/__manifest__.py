@@ -19,7 +19,8 @@
         'hr_holidays',
         'hr_holidays_leave_year',
         'hr_attendance',
-        'gbs_hr_attendance'
+        'gbs_hr_attendance',
+        'hr_employee_seniority',
         ],
     'summary': 'Leave carry forward process is calculated ',
     'description': 
