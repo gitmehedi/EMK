@@ -28,7 +28,8 @@
                 'gbs_hr_department_sequence',
                 'gbs_application_group',
                 'gbs_hr_employee_documents',
-                'gbs_hr_employee_seniority'],
+                # 'gbs_hr_employee_seniority'
+    ],
 
     # always loaded
     'data': ['security/ir.model.access.csv',
