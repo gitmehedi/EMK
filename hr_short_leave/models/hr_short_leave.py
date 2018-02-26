@@ -97,6 +97,8 @@ class HrShortLeave(models.Model):
 
     @api.constrains('date_from', 'date_to')
     def _check_date(self):
+        manual_att_pool = self.env["hr.manual.attendance"]
+        att_pool = self.env["hr.attendance"]
         for holiday in self:
             if (holiday.date_from[:10] != holiday.date_to[:10]):
                 raise ValidationError('Start Date and End Date should be same')
@@ -108,9 +110,34 @@ class HrShortLeave(models.Model):
                 ('id', '!=', holiday.id),
                 ('state', 'not in', ['cancel', 'refuse']),
             ]
+            manual_att_domain = [
+                ('check_in', '<=', holiday.date_to),
+                ('check_out', '>=', holiday.date_from),
+                ('employee_id', '=', holiday.employee_id.id),
+                ('id', '!=', holiday.id),
+                ('state', 'not in', ['cancel', 'refuse']),
+            ]
+            att_domain = [
+                ('check_in', '<=', holiday.date_to),
+                ('check_out', '>=', holiday.date_from),
+                ('employee_id', '=', holiday.employee_id.id),
+                ('id', '!=', holiday.id),
+            ]
+
             nholidays = self.search_count(domain)
             if nholidays:
-                raise ValidationError(_('You can not have 2 leaves that overlaps on same day!'))
+                raise ValidationError(_('You are trying to overlap with short leave.'
+                                        'Please check your existing short leave!'))
+
+            check_manual_att = manual_att_pool.search_count(manual_att_domain)
+            if check_manual_att:
+                raise ValidationError(_('You are trying to overlap with manual attendance.'
+                                        'Please check your existing manual attendance!'))
+
+            check_att = att_pool.search_count(att_domain)
+            if check_att:
+                raise ValidationError(_('You are trying to overlap with attendance device.'
+                                        'Please check your existing attendance!'))
 
     @api.onchange('employee_id')
     def _onchange_employee(self):
