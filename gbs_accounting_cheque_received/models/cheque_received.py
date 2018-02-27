@@ -3,7 +3,7 @@ import datetime
 
 
 class ChequeReceived(models.Model):
-    _inherit = ['account.payment','mail.thread', 'ir.needaction_mixin']
+    _inherit = 'account.payment'
     _name = 'accounting.cheque.received'
     #_inherit = ['mail.thread', 'ir.needaction_mixin']
     _rec_name = 'name'
@@ -18,10 +18,13 @@ class ChequeReceived(models.Model):
         ('returned', 'Returned to Customer'),
     ], readonly=True, track_visibility='onchange', copy=False, default='draft')
 
+    partner_type = fields.Selection([('customer', 'Customer'), ('supplier', 'Vendor')], default='customer')
+    payment_type = fields.Selection([('inbound', 'Inbound'), ('outbound', 'Outbound')], required=True, default = 'inbound')
 
     @api.multi
     def _get_name(self):
-        self.name =  "Customer Payment"
+        for n in self:
+            n.name = 'Customer Payments1'
 
     name = fields.Char(string='Name', compute='_get_name')
     partner_id = fields.Many2one('res.partner', string="Customer", required=True)
@@ -31,17 +34,25 @@ class ChequeReceived(models.Model):
     cheque_amount = fields.Float(string='Amount', required=True, )
     sale_order_id = fields.Many2one('sale.order', string='Sale Order')
     is_cheque_payment = fields.Boolean(string='Cheque Payment', default=True)
+    company_id = fields.Many2one('res.company', string='Company', ondelete='cascade',
+                                 default=lambda self: self.env.user.company_id, readonly='True')
+
+    payment_date = fields.Date(string='Payment Date', default=fields.Date.context_today, required=True, copy=False)
+
+    # @api.multi
+    # def _get_payment_method(self):
+    #     self.payment_method_id.id = 1
+
+    #payment_method_id = fields.Many2one('account.payment.method', string='Payment Method Type', compute='_get_payment_method')
+    currency_id = fields.Many2one('res.currency', string='Currency',)
 
 
     @api.multi
     def _compute_journal(self):
-        self.journal_id = self.company_id.bank_journal_ids.id
+        for jour in self:
+            jour.journal_id = jour.env.user.company_id.bank_journal_ids.id
 
     journal_id = fields.Many2one('account.journal',compute='_compute_journal')
-
-    company_id = fields.Many2one(
-        'res.company', 'Company',
-        default=lambda self: self.env['res.company']._company_default_get('gbs_accounting_cheque_received'))
 
     # Update customer's Credit Limit. Basically plus cheque amount with Customer Credit Limit
     @api.multi
@@ -72,13 +83,10 @@ class ChequeReceived(models.Model):
                 update_cust_receivable_amount = res_partner_pool.credit + cust.cheque_amount
                 res_partner_pool.property_account_payable_id.write({'credit': update_cust_receivable_amount})
 
-
     @api.multi
     def action_honoured(self):
         for cash_rcv in self:
-
             cash_rcv._create_payment_entry(cash_rcv.cheque_amount)
-
 
             # acc_move_line_pool = cash_rcv.env['account.move.line']
             # account_move = cash_rcv.env['account.move']
