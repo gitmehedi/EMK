@@ -15,7 +15,7 @@
                         <button string="Approve" name="action_approve" type="object" class="oe_highlight"
                                 attrs="{'invisible': ['|',('current_user_is_approver', '!=', True),('state', '!=', 'confirm')]}"/>
                         <button string="Validate" name="action_validate" states="confirm" class="oe_highlight" type="object"
-								groups="hr_holidays.group_hr_holidays_user"/>
+                                groups="hr_holidays.group_hr_holidays_user"/>
                         <button string="Refuse" name="action_refuse" type="object"
                                 attrs="{'invisible': ['|',('current_user_is_approver', '!=', True),('state', '!=', 'confirm')]}"/>
                         <button string="Reset to Draft" name="action_draft" type="object"
@@ -93,10 +93,32 @@
             </field>
         </record>
 
+        <record id="view_hr_short_leave_filter" model="ir.ui.view">
+            <field name="name">hr.short.leave.filter</field>
+            <field name="model">hr.short.leave</field>
+            <field name="arch" type="xml">
+                <search string="Search Short Leave">
+                    <field name="employee_id"/>
+                    <field name="department_id"/>
+                </search>
+            </field>
+        </record>
+
         <record model="ir.actions.act_window" id="hr_short_leave_action">
             <field name="name">Short Leaves</field>
             <field name="res_model">hr.short.leave</field>
             <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Click to create a new Short leave request.
+                </p><p>
+                Once you have recorded your Short leave request, it will be sent
+                to a manager for validation. Be sure to set the right leave
+                type (recuperation, legal holidays, sickness) and the exact
+                number of open days related to your leave.
+            </p>
+            </field>
+            <field name="search_view_id" ref="view_hr_short_leave_filter"/>
         </record>
 
         <menuitem id="short_leave_menu" name="Short Leaves" parent="hr_holidays.menu_hr_holidays_root"
