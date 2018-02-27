@@ -294,22 +294,22 @@ class HrManualAttendance(models.Model):
         att_pool = self.env["hr.attendance"]
         for h in self:
             domain = [
-                ('check_in', '<=', h.check_out),
-                ('check_out', '>=', h.check_in),
+                ('check_in', '<', h.check_out),
+                ('check_out', '>', h.check_in),
                 ('employee_id', '=', h.employee_id.id),
                 ('id', '!=', h.id),
                 ('state', 'not in', ['cancel', 'refuse']),
             ]
             sl_domain = [
-                ('date_from', '<=', h.check_out),
-                ('date_to', '>=', h.check_in),
+                ('date_from', '<', h.check_out),
+                ('date_to', '>', h.check_in),
                 ('employee_id', '=', h.employee_id.id),
                 ('id', '!=', h.id),
                 ('state', 'not in', ['cancel', 'refuse']),
             ]
             att_domain =[
-                ('check_in', '<=', h.check_out),
-                ('check_out', '>=', h.check_in),
+                ('check_in', '<', h.check_out),
+                ('check_out', '>', h.check_in),
                 ('employee_id', '=', h.employee_id.id),
                 ('id', '!=', h.id),
             ]
