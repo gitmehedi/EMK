@@ -3,8 +3,9 @@ import datetime
 
 
 class ChequeReceived(models.Model):
+    _inherit = ['account.payment','mail.thread', 'ir.needaction_mixin']
     _name = 'accounting.cheque.received'
-    _inherit = ['mail.thread', 'ir.needaction_mixin']
+    #_inherit = ['mail.thread', 'ir.needaction_mixin']
     _rec_name = 'name'
 
 
@@ -17,16 +18,26 @@ class ChequeReceived(models.Model):
         ('returned', 'Returned to Customer'),
     ], readonly=True, track_visibility='onchange', copy=False, default='draft')
 
-    name = fields.Char(string='Name', readonly=True)
+
+    @api.multi
+    def _get_name(self):
+        self.name =  "Customer Payment"
+
+    name = fields.Char(string='Name', compute='_get_name')
     partner_id = fields.Many2one('res.partner', string="Customer", required=True)
     bank_name = fields.Many2one('res.bank', string='Bank', required=True)
     branch_name = fields.Char(string='Branch Name', required=True, )
     date_on_cheque = fields.Date('Date On Cheque', required=True)
     cheque_amount = fields.Float(string='Amount', required=True, )
-    sale_order_id = fields.Many2one('sale.order', string='Sale Order',
-                                    domain=[('credit_sales_or_lc', '=', 'credit_sales')])
+    sale_order_id = fields.Many2one('sale.order', string='Sale Order')
     is_cheque_payment = fields.Boolean(string='Cheque Payment', default=True)
-    mr_sl_no = fields.Char(string='SL No.', )
+
+
+    @api.multi
+    def _compute_journal(self):
+        self.journal_id = self.company_id.bank_journal_ids.id
+
+    journal_id = fields.Many2one('account.journal',compute='_compute_journal')
 
     company_id = fields.Many2one(
         'res.company', 'Company',
@@ -62,55 +73,58 @@ class ChequeReceived(models.Model):
                 res_partner_pool.property_account_payable_id.write({'credit': update_cust_receivable_amount})
 
 
-
     @api.multi
     def action_honoured(self):
         for cash_rcv in self:
-            acc_move_line_pool = cash_rcv.env['account.move.line']
-            account_move = cash_rcv.env['account.move']
 
-            seq = cash_rcv.env['ir.sequence'].next_by_code('account.move') or '/'
+            cash_rcv._create_payment_entry(cash_rcv.cheque_amount)
 
-            move_vals = {}
-            move_vals['date'] = cash_rcv.date_on_cheque
-            move_vals['company_id'] = cash_rcv.company_id.id
-            move_vals['journal_id'] = cash_rcv.company_id.bank_journal_ids.id
-            move_vals['partner_id'] = cash_rcv.partner_id.id
-            move_vals['ref'] = ''
-            move_vals['matched_percentage'] = 0
-            move_vals['state'] = 'posted'
-            move_vals['amount'] = cash_rcv.cheque_amount
-            move_vals['name'] = seq
-            move = account_move.create(move_vals)
 
-            move_line_vals = {}
-            move_line_vals['partner_id'] = cash_rcv.partner_id.id
-            move_line_vals['name'] = "Customer Payment"
-            move_line_vals['debit'] = 0
-            move_line_vals['credit'] = move.amount
-            move_line_vals['move_id'] = move.id
-            move_line_vals['date_maturity'] = cash_rcv.date_on_cheque
-            move_line_vals['journal_id'] = move.journal_id.id
-            move_line_vals['state'] = 'posted'
-            move_line_vals['account_id'] = cash_rcv.company_id.bank_journal_ids.default_debit_account_id.id
-            res = acc_move_line_pool.create(move_line_vals)
-
-            move_line_vals2 = {}
-            move_line_vals2['partner_id'] = cash_rcv.partner_id.id
-            move_line_vals2['name'] = cash_rcv.name
-            move_line_vals2['debit'] = move.amount
-            move_line_vals2['credit'] = 0
-            move_line_vals2['move_id'] = move.id
-            move_line_vals2['date_maturity'] = cash_rcv.date_on_cheque
-            move_line_vals2['journal_id'] = move.journal_id.id
-            move_line_vals2['account_id'] = cash_rcv.partner_id.property_account_receivable_id.id
-            move_line_vals2['state'] = 'posted'
-
-            res2 = acc_move_line_pool.create(move_line_vals2)
-
-            # Update Customer's Credit Limit & Receilable Amount
-            cash_rcv.updateCustomersCreditLimit()
-            cash_rcv.updateCustomersReceivableAmount()
+            # acc_move_line_pool = cash_rcv.env['account.move.line']
+            # account_move = cash_rcv.env['account.move']
+            #
+            # seq = cash_rcv.env['ir.sequence'].next_by_code('account.move') or '/'
+            #
+            # move_vals = {}
+            # move_vals['date'] = cash_rcv.date_on_cheque
+            # move_vals['company_id'] = cash_rcv.company_id.id
+            # move_vals['journal_id'] = cash_rcv.company_id.bank_journal_ids.id
+            # move_vals['partner_id'] = cash_rcv.partner_id.id
+            # move_vals['ref'] = ''
+            # move_vals['matched_percentage'] = 0
+            # move_vals['state'] = 'posted'
+            # move_vals['amount'] = cash_rcv.cheque_amount
+            # move_vals['name'] = seq
+            # move = account_move.create(move_vals)
+            #
+            # move_line_vals = {}
+            # move_line_vals['partner_id'] = cash_rcv.partner_id.id
+            # move_line_vals['name'] = "Customer Payment"
+            # move_line_vals['debit'] = 0
+            # move_line_vals['credit'] = move.amount
+            # move_line_vals['move_id'] = move.id
+            # move_line_vals['date_maturity'] = cash_rcv.date_on_cheque
+            # move_line_vals['journal_id'] = move.journal_id.id
+            # move_line_vals['state'] = 'posted'
+            # move_line_vals['account_id'] = cash_rcv.company_id.bank_journal_ids.default_debit_account_id.id
+            # res = acc_move_line_pool.create(move_line_vals)
+            #
+            # move_line_vals2 = {}
+            # move_line_vals2['partner_id'] = cash_rcv.partner_id.id
+            # move_line_vals2['name'] = cash_rcv.name
+            # move_line_vals2['debit'] = move.amount
+            # move_line_vals2['credit'] = 0
+            # move_line_vals2['move_id'] = move.id
+            # move_line_vals2['date_maturity'] = cash_rcv.date_on_cheque
+            # move_line_vals2['journal_id'] = move.journal_id.id
+            # move_line_vals2['account_id'] = cash_rcv.partner_id.property_account_receivable_id.id
+            # move_line_vals2['state'] = 'posted'
+            #
+            # res2 = acc_move_line_pool.create(move_line_vals2)
+            #
+            # # Update Customer's Credit Limit & Receilable Amount
+            # cash_rcv.updateCustomersCreditLimit()
+            # cash_rcv.updateCustomersReceivableAmount()
 
             cash_rcv.state = 'honoured'
 
@@ -121,8 +135,6 @@ class ChequeReceived(models.Model):
         seq = self.env['ir.sequence'].next_by_code('accounting.cheque.received') or '/'
         vals['name'] = seq
         return super(ChequeReceived, self).create(vals)
-
-    """ Methods """
 
     @api.multi
     def action_received(self):
