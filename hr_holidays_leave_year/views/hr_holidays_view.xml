@@ -27,12 +27,28 @@
 			<field name="inherit_id" ref="hr_holidays.view_hr_holidays_filter" />
 			<field name="arch" type="xml">
 				<xpath expr="//filter[@name='year']" position="replace">
-                    <filter name="year" string="Current Year"
-                            domain="[('leave_year_id.state','=','draft')]"/>
+                    <filter name="year" string="Current Year" domain="[('leave_year_id.state','=','draft')]"/>
                     <field name="leave_year_id" string="Year" filter_domain="[('leave_year_id', 'ilike', self)]"/>
+                </xpath>
+                <xpath expr="//filter[@name='year']" position="after">
+                    <separator/>
+                    <filter name="my_approval" string="My Approval" domain="[('pending_approver.user_id','=',uid)]"/>
+                    <field name="pending_approver" string="My Approval" filter_domain="[('pending_approver', 'ilike', self)]"/>
                 </xpath>
 			</field>
 		</record>
+
+        <!--<record id="view_hr_holidays_filter2" model="ir.ui.view">-->
+			<!--<field name="name">view_hr_holidays_filter2</field>-->
+			<!--<field name="model">hr.holidays</field>-->
+			<!--<field name="inherit_id" ref="hr_holidays.view_hr_holidays_filter" />-->
+			<!--<field name="arch" type="xml">-->
+				<!--<xpath expr="//filter[@name='leaves']" position="after">-->
+                    <!--<filter name="my_approval" string="My Approval"-->
+                            <!--domain="[('pending_approver.id','=',uid)]"/>-->
+                <!--</xpath>-->
+			<!--</field>-->
+		<!--</record>-->
 
 		<record id="hr_holidays.open_company_allocation" model="ir.actions.act_window">
             <field name="name">Leaves Summary</field>
@@ -117,7 +133,12 @@
             <field name="res_model">hr.holidays</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,calendar</field>
-            <field name="context">{'search_default_year': 1,'search_default_department':1, 'search_default_approve':1}</field>
+            <field name="context">{
+                'search_default_year': 1,
+                'search_default_department':1,
+                'search_default_approve':1,
+                'search_default_my_approval': 1,}
+            </field>
             <field name="help" type="html">
                 <p class="oe_view_nocontent_create">
                     Click here to create a new leave request.
