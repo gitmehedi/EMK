@@ -168,13 +168,11 @@ class AttendanceUtility(models.TransientModel):
 
     def getAttendanceListByAlterDay(self, alterDayDutyTime, day, dutyTimeMap, employeeId):
         attendanceDayList = []
-        previousDayDutyTime = self.getPreviousDutyTime(alterDayDutyTime.startDutyTime - day, dutyTimeMap)
-        nextDayDutyTime = self.getNextDutyTime(alterDayDutyTime.startDutyTime + day, dutyTimeMap)
 
-        preEndActualDutyTime = self.convertDateTime(previousDayDutyTime.endActualDutyTime)
+        preEndActualDutyTime = self.convertDateTime(alterDayDutyTime.startDutyTime - timedelta(hours=4))
         endActualDuty = self.convertDateTime(alterDayDutyTime.endActualDutyTime)
         startDutyTime = self.convertDateTime(alterDayDutyTime.startDutyTime)
-        nextStartDutyTime = self.convertDateTime(nextDayDutyTime.startDutyTime)
+        nextStartDutyTime = self.convertDateTime(alterDayDutyTime.endActualDutyTime + timedelta(hours=4))
 
         self._cr.execute(self.alter_attendance_query, (preEndActualDutyTime, endActualDuty, startDutyTime, nextStartDutyTime,employeeId,
                                                        preEndActualDutyTime, endActualDuty, startDutyTime, nextStartDutyTime, employeeId,
