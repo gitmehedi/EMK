@@ -12,7 +12,7 @@
                 <style type="text/css">
                     .header-content { position: relative; padding:10px; }
                     .company-logo { position: absolute; top: 35%; transform: translateY(-35%); }
-                    .com-logo-img { max-height:120px; max-width: 160px }
+                    .com-logo-img { max-height:81px; max-width: 189px }
                     .company-info { text-align:center; padding:0 250px; }
                 </style>
                 <div class="header-content">

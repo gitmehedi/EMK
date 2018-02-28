@@ -118,7 +118,7 @@ links.Timeline = function(container, options) {
         // this call was probably only for inheritance, no constructor-code is required
         return;
     }
-
+    // debugger;
     // create variables and set default values
     this.dom = {};
     this.conversion = {};
@@ -1723,7 +1723,7 @@ links.Timeline.prototype.repaintItems = function() {
     if (!dom.items) {
         dom.items = {};
     }
-
+    debugger;
     // draw the frame containing the items
     var frame = dom.items.frame;
     if (!frame) {
@@ -1843,6 +1843,7 @@ links.Timeline.prototype.reflowGroups = function() {
  * Redraw the group labels
  */
 links.Timeline.prototype.repaintGroups = function() {
+    // debugger;
     var dom = this.dom,
         timeline = this,
         options = this.options,
@@ -3785,13 +3786,13 @@ links.Timeline.ItemBox.prototype.unselect = function () {
  * @return {Element | undefined}
  * @override
  */
+// background box
 links.Timeline.ItemBox.prototype.createDOM = function () {
-    // background box
     var divBox = document.createElement("DIV");
     divBox.style.position = "absolute";
     divBox.style.left = this.left + "px";
     divBox.style.top = this.top + "px";
-
+    // debugger;
     // contents box (inside the background box). used for making margins
     var divContent = document.createElement("DIV");
     divContent.className = "timeline-event-content";
@@ -3911,6 +3912,7 @@ links.Timeline.ItemBox.prototype.updateDOM = function () {
  * @override
  */
 links.Timeline.ItemBox.prototype.updatePosition = function (timeline) {
+    // debugger;
     var dom = this.dom;
     if (dom) {
         var left = timeline.timeToScreen(this.start),
@@ -4072,7 +4074,7 @@ links.Timeline.ItemRange.prototype.createDOM = function () {
     // background box
     var divBox = document.createElement("DIV");
     divBox.style.position = "absolute";
-
+    // debugger;
     // contents box
     var divContent = document.createElement("DIV");
     divContent.className = "timeline-event-content";
@@ -4157,6 +4159,7 @@ links.Timeline.ItemRange.prototype.updateDOM = function () {
  * @override
  */
 links.Timeline.ItemRange.prototype.updatePosition = function (timeline) {
+    // debugger;
     var dom = this.dom;
     if (dom) {
         var contentWidth = timeline.size.contentWidth,
@@ -4286,7 +4289,7 @@ links.Timeline.ItemFloatingRange.prototype.createDOM = function () {
     // background box
     var divBox = document.createElement("DIV");
     divBox.style.position = "absolute";
-
+    // debugger;
     // contents box
     var divContent = document.createElement("DIV");
     divContent.className = "timeline-event-content";
@@ -4371,6 +4374,7 @@ links.Timeline.ItemFloatingRange.prototype.updateDOM = function () {
  * @override
  */
 links.Timeline.ItemFloatingRange.prototype.updatePosition = function (timeline) {
+    // debugger;
     var dom = this.dom;
     if (dom) {
         var contentWidth = timeline.size.contentWidth,
@@ -4540,7 +4544,7 @@ links.Timeline.ItemDot.prototype.createDOM = function () {
     // background box
     var divBox = document.createElement("DIV");
     divBox.style.position = "absolute";
-
+    // debugger;
     // contents box, right from the dot
     var divContent = document.createElement("DIV");
     divContent.className = "timeline-event-content";
@@ -4639,6 +4643,7 @@ links.Timeline.ItemDot.prototype.updateDOM = function () {
  * @override
  */
 links.Timeline.ItemDot.prototype.updatePosition = function (timeline) {
+    // debugger;
     var dom = this.dom;
     if (dom) {
         var left = timeline.timeToScreen(this.start);
