@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
     <data>
-
-
         <record id="view_shipment_form" model="ir.ui.view">
             <field name="name">purchase.shipment.form</field>
             <field name="model">purchase.shipment</field>
@@ -20,8 +18,8 @@
                         <button string="Send To C&amp;F" name="action_send_to_cnf" states="receive_doc" type="object" class="oe_highlight"/>
 
                         <button string="ETA" name="action_eta" states="send_to_cnf" type="object" class="oe_highlight"/>
-                        <button string="C&amp;F Quotation" name="action_quotation" states="eta" type="object" class="oe_highlight"/>
-                        <button string="Approve" name="action_approve_quotation" states="cnf_quotation" type="object" class="oe_highlight"/>
+                        <!--<button string="C&amp;F Quotation" name="action_quotation" states="eta" type="object" class="oe_highlight"/>-->
+                        <!--<button string="Approve" name="action_approve_quotation" states="cnf_quotation" type="object" class="oe_highlight"/>-->
                         <button string="C&amp;F Clear" name="action_cnf_clear" states="approve_cnf_quotation" type="object" class="oe_highlight"/>
                         <!--<button string="Gate In" name="action_gate_in" states="cnf_clear" type="object" class="oe_highlight"/>-->
                         <button string="Done" name="action_done" states="gate_in" type="object" class="oe_highlight"/>
@@ -30,10 +28,8 @@
                         <field name="state" widget="statusbar" statusbar_visible="draft,on_board,receive_doc,send_to_cnf,eta,cnf_quotation,approve_cnf_quotation,cnf_clear,gate_in,done" clickable="True"/>
                     </header>
                     <sheet>
-                        <div class="oe_button_box" name="button_box">
-
-                        </div>
-                        <group>
+                        <div class="oe_button_box" name="button_box"></div>
+                        <group name="details">
                             <group string="Shipment Details" colspan="4">
                                 <group>
                                     <field name="name"/>

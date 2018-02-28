@@ -18,15 +18,17 @@
     'depends': [
         'purchase',
         'letter_of_credit',
-        # 'com_shipment',
         'ir_sequence_operating_unit',
+        'com_shipment',
         'purchase_order_revision',
+        'gbs_purchase_order',
     ],
 
     'data': [
         # 'security/ir.model.access.csv',
         'data/cnf_sequence.xml',
         'views/purchase_quotation_cnf_views.xml',
+        'views/inherited_shipment.xml',
     ],
 
 }

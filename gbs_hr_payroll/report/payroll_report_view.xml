@@ -25,26 +25,14 @@
 									{ background-color: #731D09; color:#fff; }
 								.odo-bg-gray, .odo-bg-gray > td
 									{ background-color: #f5f5f5; }
-								.report-title { text-align:center;}
-
+								.report-title { text-align:center; }
 							</style>
 
-							<h2 class="report-title">Monthly Salary Sheet</h2>
 
-							<div class="row">
-								<div class="col-xs-6">
-									<h4><label>Description</label> : <span t-esc="data['name']"/></h4>
-								</div>
+							<div class="clearfix">
+								<h3 class="report-title">Monthly Salary Sheet</h3>
+								<h4><label>Description</label> : <span t-esc="data['name']"/></h4>
 							</div>
-
-							<!--<div class="row">-->
-									<!--<div class="col-xs-6"><label>title</label> <span t-esc="data['name']"/></div>-->
-									<!--<div class="col-xs-6 text-right"><label>title</label> <span t-esc="data['name']"/></div>-->
-							<!--</div>-->
-							<!--<div class="row">-->
-									<!--<div class="col-xs-6"><label>title</label> <span t-esc="data['name']"/></div>-->
-									<!--<div class="col-xs-6 text-right"><label>title</label> <span t-esc="data['name']"/></div>-->
-							<!--</div>-->
 
 							<table class="table table-bordered table-condensed table-striped">
 								<thead>

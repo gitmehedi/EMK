@@ -16,13 +16,21 @@
                 <t t-call="custom_report.gbs_internal_layout">
                     <!--<t t-foreach="docs" t-as="o">-->
                     <div class="page" style="page-break-inside: auto">
+                        <style>
+                            .unit-title {
+                                position: relative;
+                                border-bottom:1px solid #ededed;
+                                padding-bottom:10px;
+                            }
+
+                        </style>
                         <div class="row">
-                            <div class="col-xs-12" style="text-align:center;">
-                                <h2><strong>Daily Attendance Summary Report</strong></h2>
+                            <div class="col-xs-12">
+                                <h4 class="text-center">Daily Attendance Summary Report</h4>
                                 <hr/>
                             </div>
                         </div>
-                        <div style=" background-color:  #CD853F; font-size:12px">
+                        <div>
                             <div class="row">
                                 <div class="col-xs-8">
                                     <div class="col-xs-8"><strong>Report Date : </strong><span t-esc="required_date"/></div>
@@ -40,14 +48,14 @@
                                 </div>
                             </div>
                         </div>
-                        <br/>
                         <t t-if="not operating_unit">
-                            <div class="col-xs-12">
-                                <div class="row" style=" background-color: #D2B48C ;font-size:13px">
-                                    <div class="col-xs-8"><strong>Company Name : </strong><span t-esc="company_name"/></div>
-                                    <!--<div class="col-xs-6"><span t-esc="company_name"/></div>-->
-                                </div>
-                                <div class="row" style="font-size:12px">
+                            <div class="clearfix">
+                                <hr/>
+                                <h4 class="text-primary">
+                                    <strong>Company Name :</strong> <span t-esc="company_name"/>
+                                </h4>
+                                <!--<div class="col-xs-6"><span t-esc="company_name"/></div>-->
+                                <div class="row">
                                     <div class="col-xs-4">
                                         <div class="row">
                                             <div class="col-xs-9"><strong>Total Employee:</strong></div>
@@ -97,16 +105,15 @@
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                            <br/>
+                            </div><br/>
                         </t>
                         <t t-foreach="att_summary_list" t-as="att_summary">
-                            <div class="col-xs-12">
-                                <div class="row" style="background-color:  #FFEBCD;font-size:13px">
-                                    <div class="col-xs-8"><strong>Operating Unit : </strong><span t-esc="att_summary['unit_name']"/></div>
-                                    <!--<div class="col-xs-3"><span t-esc="att_summary['unit_name']"/></div>-->
-                                </div>
-                                <div class="row" style="font-size:12px">
+                            <div class="clearfix">
+                                <h4 class="text-primary unit-title">
+                                    <span>Operating Unit :</span> <span t-esc="att_summary['unit_name']"/>
+                                </h4>
+                                <!--<div class="col-xs-3"><span t-esc="att_summary['unit_name']"/></div>-->
+                                <div class="row">
                                     <div class="col-xs-4">
                                         <div class="row">
                                             <div class="col-xs-9"><strong>Total Employee:</strong></div>
@@ -157,16 +164,14 @@
                                     </div>
                                 </div>
                             </div>
-                            <br/>
+
                             <t t-if="att_summary['late']">
                                 <div>
-                                    <div class="row">
-                                        <div class="col-xs-12" style="text-align:center;">
-                                            <h4><strong>Late Employee List</strong></h4>
-                                        </div>
+                                    <div style="margin:15px 0 5px 0">
+                                        <h4 class="text-center">Late Employee List</h4>
                                     </div>
-                                    <table class="table table-bordered" style="font-size:12px">
-                                        <thead style=" background-color:  #FFEBCD;">
+                                    <table class="table table-bordered table-striped table-condensed">
+                                        <thead>
                                             <tr>
                                                 <th>Sl</th>
                                                 <th>Name</th>
@@ -189,16 +194,14 @@
                                     </table>
                                 </div>
                             </t>
-                            <br/>
+
                             <t t-if="att_summary['absent']">
-                                <div>
-                                    <div class="row">
-                                        <div class="col-xs-12" style="text-align:center;">
-                                            <h4><strong>Absent Employee List</strong></h4>
-                                        </div>
+                                <div class="clearfix">
+                                    <div style="margin:15px 0 5px 0">
+                                        <h4 class="text-center">Absent Employee List</h4>
                                     </div>
-                                    <table class="table table-bordered" style="font-size:12px">
-                                        <thead style=" background-color:  #FFEBCD;">
+                                    <table class="table table-bordered table-striped table-condensed">
+                                        <thead>
                                             <tr>
                                                 <th>Sl</th>
                                                 <th>Name</th>
@@ -219,16 +222,16 @@
                                     </table>
                                 </div>
                             </t>
-                            <br/>
+
                             <t t-if="att_summary['roster_obligation']">
-                                <div>
+                                <div class="clearfix">
                                     <div class="row">
-                                        <div class="col-xs-12" style="text-align:center;">
-                                            <h4><strong>Roster Not Mapped</strong></h4>
+                                        <div class="col-xs-12">
+                                            <h4 class="text-primary">Roster Not Mapped</h4>
                                         </div>
                                     </div>
-                                    <table class="table table-bordered" style="font-size:12px">
-                                        <thead style=" background-color:  #FFEBCD;">
+                                    <table class="table table-bordered table-striped table-condensed">
+                                        <thead>
                                             <tr>
                                                 <th>Sl</th>
                                                 <th>Name</th>
