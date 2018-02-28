@@ -23,6 +23,7 @@ Manages several types of job confirmations: bottom-up, top-down and the final jo
         'gbs_application_group',
         'operating_unit',
         'gbs_hr_criteria',
+        'hr_employee_seniority',
     ],
     'data': [
         'security/ir.model.access.csv',

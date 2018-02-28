@@ -8,7 +8,7 @@
         'hr',
         'hr_payroll', 
         'l10n_in_hr_payroll',
-        # 'gbs_hr_employee_seniority',
+        'hr_employee_seniority',
         'gbs_hr_department_sequence',
         'gbs_hr_calendar',
         'gbs_hr_employee_sequence',

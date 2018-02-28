@@ -279,7 +279,7 @@ class HrManualAttendance(models.Model):
             elif self.check_in > datetime.datetime.now().strftime("%Y-%m-%d %H-%M-%S"):
                 raise UserError(_("Check in time must be less than current time!"))
             elif deff > 9:
-                raise UserError(_("Difference between check in time and check out time duration must be upto 9 hours!"))
+                raise UserError(_("Difference between check in time and check out time duration must be upto 13 hours!"))
         elif self.sign_type == "sign_in":
             if self.check_in > datetime.datetime.now().strftime("%Y-%m-%d %H-%M-%S"):
                 raise UserError(_("Check in time must be less than current time!"))
@@ -294,22 +294,22 @@ class HrManualAttendance(models.Model):
         att_pool = self.env["hr.attendance"]
         for h in self:
             domain = [
-                ('check_in', '<=', h.check_out),
-                ('check_out', '>=', h.check_in),
+                ('check_in', '<', h.check_out),
+                ('check_out', '>', h.check_in),
                 ('employee_id', '=', h.employee_id.id),
                 ('id', '!=', h.id),
                 ('state', 'not in', ['cancel', 'refuse']),
             ]
             sl_domain = [
-                ('date_from', '<=', h.check_out),
-                ('date_to', '>=', h.check_in),
+                ('date_from', '<', h.check_out),
+                ('date_to', '>', h.check_in),
                 ('employee_id', '=', h.employee_id.id),
                 ('id', '!=', h.id),
                 ('state', 'not in', ['cancel', 'refuse']),
             ]
             att_domain =[
-                ('check_in', '<=', h.check_out),
-                ('check_out', '>=', h.check_in),
+                ('check_in', '<', h.check_out),
+                ('check_out', '>', h.check_in),
                 ('employee_id', '=', h.employee_id.id),
                 ('id', '!=', h.id),
             ]

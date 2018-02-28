@@ -8,6 +8,7 @@
                 'gbs_operating_unit',
                 'hr_employee_operating_unit',
                 'gbs_hr_attendance_error_correction',
+                'gbs_hr_employee_sequence',
                 'gbs_application_group'],
     'data': [
         'views/hr_attendance_dashboard_view.xml',

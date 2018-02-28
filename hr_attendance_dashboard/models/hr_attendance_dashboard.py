@@ -2,8 +2,7 @@ import json
 import datetime
 from odoo import api, fields, models,tools
 from datetime import date,timedelta
-from openerp.addons.gbs_hr_attendance_utility.models.utility_class import Employee
-from openerp.addons.gbs_hr_attendance_report.report.hr_daily_attendance_report import GetDailyAttendanceReport
+from odoo.addons.gbs_hr_attendance_utility.models.utility_class import Employee
 
 
 class HrAttendanceDashboard(models.Model):

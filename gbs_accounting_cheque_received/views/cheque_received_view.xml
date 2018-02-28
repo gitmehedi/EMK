@@ -31,6 +31,9 @@
                             <field name="bank_name" options="{'no_open': True, 'no_create': True}"/>
                             <field name="branch_name"/>
                             <field name="is_cheque_payment" invisible="1"/>
+                            <field name="currency_id"/>
+                            <field name="payment_date" invisible="1"/>
+                            <field name="payment_method_id" invisible="1"/>
                         </group>
 
                         <group>
@@ -42,10 +45,10 @@
                     </group>
 
                 </sheet>
-                <div class="oe_chatter">
-                    <field name="message_follower_ids" widget="mail_followers"/>
-                    <field name="message_ids" widget="mail_thread"/>
-                </div>
+                <!--<div class="oe_chatter">-->
+                    <!--<field name="message_follower_ids" widget="mail_followers"/>-->
+                    <!--<field name="message_ids" widget="mail_thread"/>-->
+                <!--</div>-->
             </form>
         </field>
     </record>
