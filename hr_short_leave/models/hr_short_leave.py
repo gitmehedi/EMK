@@ -104,22 +104,22 @@ class HrShortLeave(models.Model):
                 raise ValidationError('Start Date and End Date should be same')
 
             domain = [
-                ('date_from', '<=', holiday.date_to),
-                ('date_to', '>=', holiday.date_from),
+                ('date_from', '<', holiday.date_to),
+                ('date_to', '>', holiday.date_from),
                 ('employee_id', '=', holiday.employee_id.id),
                 ('id', '!=', holiday.id),
                 ('state', 'not in', ['cancel', 'refuse']),
             ]
             manual_att_domain = [
-                ('check_in', '<=', holiday.date_to),
-                ('check_out', '>=', holiday.date_from),
+                ('check_in', '<', holiday.date_to),
+                ('check_out', '>', holiday.date_from),
                 ('employee_id', '=', holiday.employee_id.id),
                 ('id', '!=', holiday.id),
                 ('state', 'not in', ['cancel', 'refuse']),
             ]
             att_domain = [
-                ('check_in', '<=', holiday.date_to),
-                ('check_out', '>=', holiday.date_from),
+                ('check_in', '<', holiday.date_to),
+                ('check_out', '>', holiday.date_from),
                 ('employee_id', '=', holiday.employee_id.id),
                 ('id', '!=', holiday.id),
             ]

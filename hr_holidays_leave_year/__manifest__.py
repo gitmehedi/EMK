@@ -9,7 +9,7 @@
                'considering rest days and public holidays',
     'depends': ['hr',  
                 'hr_holidays', 
-                # 'hr_public_holidays'
+                'hr_holidays_multi_levels_approval',
                 ],
     'data': [
 #         'views/hr_holidays_status.xml',

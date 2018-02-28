@@ -211,10 +211,10 @@ class SaleOrder(models.Model):
                         # Update Credit Limit and print log message
                         if abs(customer_total_credit) < res_partner_cred_lim.value:
                             remaining_limit = res_partner_cred_lim.value - abs(customer_total_credit)
-                            res_partner_cred_lim.write({'value': remaining_limit})
+                            res_partner_cred_lim.write({'remaining_credit_limit': remaining_limit})
                             order.write({'remaining_credit_limit': remaining_limit})
                         else:
-                            res_partner_cred_lim.write({'value': '0'})
+                            res_partner_cred_lim.write({'remaining_credit_limit': '0'})
                             order.write({'remaining_credit_limit': '0'})
 
                         is_double_validation = True
@@ -223,10 +223,10 @@ class SaleOrder(models.Model):
                         # Update Credit Limit and print log message
                         if abs(customer_total_credit) < res_partner_cred_lim.value:
                             remaining_limit = res_partner_cred_lim.value - abs(customer_total_credit)
-                            res_partner_cred_lim.write({'value': remaining_limit})
+                            res_partner_cred_lim.write({'remaining_credit_limit': remaining_limit})
                             order.write({'remaining_credit_limit': remaining_limit})
                         else:
-                            res_partner_cred_lim.write({'value': '0'})
+                            res_partner_cred_lim.write({'remaining_credit_limit': '0'})
                             order.write({'remaining_credit_limit': '0'})
 
                         is_double_validation = False
@@ -235,35 +235,6 @@ class SaleOrder(models.Model):
             order.write({'state': 'validate'})  # Go to two level approval process
         else:
             order.write({'state': 'done'})  # One level approval process
-
-
-    # @api.multi
-    # def action_confirm(self):
-    #     res = super(SaleOrder, self).action_confirm()
-    #
-    #     for order in self:
-    #         credit_limit_pool = order.env['res.partner'].search([('id', '=', order.partner_id.id)])
-    #
-    #         res_partner_cred_lim = order.env['res.partner.credit.limit'].search(
-    #             [('partner_id', '=', order.partner_id.id),
-    #              ('state', '=', 'approve')], order='assign_id DESC', limit=1)
-    #
-    #         if order.credit_sales_or_lc == 'credit_sales':
-    #             account_receivable = credit_limit_pool.credit
-    #             sales_order_amount_total = -order.amount_total  # actually it should be minus value
-    #
-    #             customer_total_credit = account_receivable + sales_order_amount_total
-    #
-    #             # Update Customer Credit Limit and print a log message based on that
-    #             if abs(customer_total_credit) < res_partner_cred_lim.value:
-    #                 remaining_limit = res_partner_cred_lim.value - abs(customer_total_credit)
-    #                 res_partner_cred_lim.write({'value': remaining_limit})
-    #                 order.write({'remaining_credit_limit': remaining_limit})
-    #             else:
-    #                 res_partner_cred_lim.write({'value': 0.00})
-    #                 order.write({'remaining_credit_limit': 0.00})
-    #
-    #     return res
 
 
     def second_approval_business_logics(self, cust_commission_pool, lines, price_change_pool):

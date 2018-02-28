@@ -7,7 +7,7 @@ class AttendanceSummaryLine(models.Model):
 
     salary_days = fields.Integer(string='Salary Days', required=True)
     present_days = fields.Integer(string='Present Days', required=True)
-    deduction_days = fields.Integer(string='Deduction Day(s)')
+    deduction_days = fields.Integer(string='Late Deduction Day(s)')
     leave_days = fields.Integer(string='Leave Days')
     holidays_days = fields.Integer(string='Holidays Days')
     late_hrs = fields.Float(string='Off Duty Hrs')
