@@ -314,9 +314,9 @@ class AttendanceProcessor(models.Model):
         deductionRule = self.getLateSalaryDeductionRule()
 
         if deductionRule == 0:
-            deduction_days = len(attSummaryLine.absent_days)
+            deduction_days = 0
         else:
-            deduction_days = int(len(attSummaryLine.late_days) / deductionRule) + len(attSummaryLine.absent_days)
+            deduction_days = int(len(attSummaryLine.late_days) / deductionRule)
 
         vals = {'employee_id':      employeeId,
                 'att_summary_id':   summaryId,
