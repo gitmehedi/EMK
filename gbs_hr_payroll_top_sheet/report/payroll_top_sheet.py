@@ -60,7 +60,7 @@ class PayrollReportPivotal(models.AbstractModel):
                         if line.code == 'NET':
                             total_amt = line.total
                             total_sum.append(math.ceil(total_amt))
-                        elif line.code == 'BNET':
+                        elif line.code == 'BNET' and slip.employee_id.bank_account_id:
                             total_bamt = line.total
                             total_bank.append(math.ceil(total_bamt))
                         elif line.code == 'TDS':
@@ -134,4 +134,3 @@ class PayrollReportPivotal(models.AbstractModel):
         }
         
         return self.env['report'].render('gbs_hr_payroll_top_sheet.report_top_sheet', docargs)
-    
