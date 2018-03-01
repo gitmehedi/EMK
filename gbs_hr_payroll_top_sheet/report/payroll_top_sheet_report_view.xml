@@ -56,7 +56,7 @@
                                                         <span t-esc=" '%.2f'% o['tds']"/>
                                                     </td>
                                                     <td class="text-right">
-                                                        <span t-esc="'%.2f'% o['epmf']"/>
+                                                        <span t-esc="'%.2f'% o['epmf']" widget="monetary"/>
                                                     </td>
                                                     <td class="text-right">
                                                         <span t-esc=" '%.2f'% o['mess']"/>
