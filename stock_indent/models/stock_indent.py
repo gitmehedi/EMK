@@ -34,7 +34,7 @@ class IndentIndent(models.Model):
     def _get_default_warehouse(self):
         warehouse_obj = self.env['stock.warehouse']
         company_id = self.env.user.company_id.id
-        warehouse_ids = warehouse_obj.sudo().search([('company_id', '=', company_id)])
+        warehouse_ids = warehouse_obj.sudo().search([('company_id', '=', company_id),('operating_unit_id', 'in', self.env.user.operating_unit_ids.ids)])
         warehouse_id = warehouse_ids and warehouse_ids[0] or False
         return warehouse_id
 

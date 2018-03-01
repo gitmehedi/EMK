@@ -16,7 +16,7 @@
                         <button name="action_rfq_send" states="purchase" string="Send PO by Email" type="object" context="{'send_rfq':False}"/>
                         <button name="button_draft" states="cancel" string="Set to Draft" type="object" />
                         <button name="button_cancel" states="draft,to approve,sent" string="Cancel" type="object" />
-                        <field name="state" widget="statusbar" statusbar_visible="draft,sent,purchase" clickable="1"/>
+                        <field name="state" widget="statusbar" statusbar_visible="draft,sent,purchase"/>
                     </header>
                     <sheet>
                         <group>
@@ -24,7 +24,7 @@
                                 <field name="shipment_id" attrs="{'required':[('cnf_quotation','=',True)]}"
                                        options="{'no_create': True,'no_create_edit': True,'no_open': True}"/>
                                 <field name="lc_id" attrs="{'required':[('cnf_quotation','=',True)]}"/>
-                                <field name="partner_id" string="C&amp;F Vendor"/>
+                                <field name="partner_id"/>
                                 <field name="currency_id" groups="base.group_multi_currency"/>
                             </group>
                             <group>
@@ -32,6 +32,7 @@
                                 <field name="company_id" groups="base.group_multi_company" options="{'no_create': True,'no_create_edit': True,'no_open': True}"/>
                                 <field name="cnf_quotation" invisible="1"/>
                                 <field name="is_shipped" invisible="1"/>
+                                <field name="disable_new_revision_button" invisible="1"/>
                             </group>
                         </group>
                         <notebook>

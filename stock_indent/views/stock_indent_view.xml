@@ -115,11 +115,10 @@
 									</group>
 									<group>
 										<!--<field name="manager_id" readonly="1" />-->
-										<field name="warehouse_id" options="{'no_create': True,'no_open':True}"
-											   groups="stock.group_stock_manager"/>
-										<field name="stock_location_id" options="{'no_create': True,'no_open':True}"
-											   groups="stock.group_stock_manager"/>
+										<field name="warehouse_id" options="{'no_create': True,'no_open':True}"/>
+										<field name="stock_location_id" options="{'no_create': True,'no_open':True}"/>
 										<field name="picking_type_id"/>
+										<!--groups="stock.group_stock_manager"-->
 									</group>
 								</group>
 							</page>
