@@ -39,8 +39,7 @@ class product_barcode_print(report_sxw.rml_parse):
 
         name = ""
         for attr in attrs:
-            if attr['attribute_id'][1] == 'Size':
-                name = name + ", " + attr['name'] if len(name) > 0 else  name + attr['name']
+            name = name + ", " + attr['name'] if len(name) > 0 else name + attr['name']
 
         return "({0})".format(name) if len(name) > 0 else name
 
@@ -61,7 +60,7 @@ class product_barcode_print(report_sxw.rml_parse):
                 for row in [1, 2, 3, 4, 5]:
                     attr = self.prepare_attr(product['attribute_value_ids'])
                     label_data = {
-                        'name': product['name'][:26] + attr,
+                        'name': product['name'][:20] + attr,
                         'company_name': self.company_name,
                         'default_code': product['default_code'],
                         'price': product['list_price'],
