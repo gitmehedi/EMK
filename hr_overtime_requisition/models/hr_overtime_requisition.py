@@ -25,12 +25,12 @@ class HROTRequisition(models.Model):
         return default_approver
 
     employee_id = fields.Many2one('hr.employee', string='Employee', index=True, readonly=True,
-                                  default=_default_employee,required=True)
+                                  default=_default_employee,required=True, track_visibility='onchange')
     department_id = fields.Many2one('hr.department', related='employee_id.department_id', string='Department',
                                     readonly=True, store=True)
-    from_datetime = fields.Datetime('Start Date', readonly=True, index=True, copy=False,required=True)
-    to_datetime = fields.Datetime('End Date', readonly=True, copy=False,required=True)
-    total_hours = fields.Float(string='Total hours', compute='_compute_total_hours', store=True,digits=(15, 2),readonly=True)
+    from_datetime = fields.Datetime('Start Date', readonly=True, index=True, copy=False,required=True, track_visibility='onchange')
+    to_datetime = fields.Datetime('End Date', readonly=True, copy=False,required=True, track_visibility='onchange')
+    total_hours = fields.Float(string='Total hours', compute='_compute_total_hours', store=True,digits=(15, 2),readonly=True, track_visibility='onchange')
     ot_reason = fields.Text(string='Reason for OT')
     user_id = fields.Many2one('res.users', string='User', related='employee_id.user_id', related_sudo=True, store=True,
                               default=lambda self: self.env.uid, readonly=True)

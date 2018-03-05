@@ -39,6 +39,8 @@
                                 attrs="{'invisible': ['|',('current_user_is_approver', '!=', True),('state', '!=', 'confirmed')]}"/>
                     	<button string="Reset to Draft" name="action_draft" type="object" states="confirmed"
                                 groups="hr_attendance.group_hr_attendance_user"/>
+						<button string="Reset to Draft" name="action_draft" type="object" states="approved"
+                                groups="base.group_erp_manager"/>
                     	<field name="state" widget="statusbar" statusbar_visible="draft,confirmed,approved"/>
                 	</header>	
 					<sheet>
