@@ -14,11 +14,19 @@ class PurchaseCNFQuotation(models.Model):
                                  default=lambda self: self.env.context.get('partner_id') or False)
 
     @api.multi
-    def button_approve(self):
+    def cnf_button_confirm(self):
         for cnf in self:
             if cnf.cnf_quotation:
                 if self.state != 'draft':
                     self.shipment_id.write({'state': 'approve_cnf_quotation'})
-                super(PurchaseCNFQuotation, self).button_approve()
-            else:
-                super(PurchaseCNFQuotation, self).button_approve()
+                return super(PurchaseCNFQuotation, self).button_confirm()
+
+    # @api.multi
+    # def button_approve(self):
+    #     for cnf in self:
+    #         if cnf.cnf_quotation:
+    #             if self.state != 'draft':
+    #                 self.shipment_id.write({'state': 'approve_cnf_quotation'})
+    #             super(PurchaseCNFQuotation, self).button_approve()
+    #         else:
+    #             super(PurchaseCNFQuotation, self).button_approve()
