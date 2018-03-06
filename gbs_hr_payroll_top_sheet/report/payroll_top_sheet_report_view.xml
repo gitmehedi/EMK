@@ -132,5 +132,15 @@
             </t>
 
         </template>
+
+        <report
+        	id="report_top_sheets"
+            string="Top Sheet"
+            model="hr.payslip.run"
+            report_type="qweb-pdf"
+            file="gbs_hr_payroll_top_sheet.report_top_sheet"
+            name="gbs_hr_payroll_top_sheet.report_top_sheet"
+        />
+
     </data>
 </odoo>
