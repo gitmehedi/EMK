@@ -248,8 +248,6 @@ class IndentIndent(models.Model):
                 'state': 'waiting_approval'
             }
             new_seq = self.env['ir.sequence'].next_by_code('stock.indent')
-
-            # name_seq = ("Indent-%s-%s") % (self.operating_unit_id.code, new_seq)
             if new_seq:
                 res['name'] = new_seq
 
