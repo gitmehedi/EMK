@@ -66,12 +66,16 @@ class ChequeReceived(models.Model):
                 [('partner_id', '=', cust.partner_id.id),
                  ('state', '=', 'approve')], order='assign_id DESC', limit=1)
 
-            #@todo: When adding cheque amount with Credit limit of customer; it should not exceed customer's original Credit Limit.
+            #Cheque Amount with Credit limit of customer; it should not exceed customer's original Credit Limit.
             if cust.sale_order_id.credit_sales_or_lc == 'credit_sales' \
                     and cust.sale_order_id.partner_id.id == cust.partner_id.id:
 
-                update_cust_credits = res_partner_credit_limit.value + cust.cheque_amount
-                res_partner_credit_limit.write({'value': update_cust_credits})
+                update_cust_credits = res_partner_credit_limit.remaining_credit_limit + cust.cheque_amount
+
+                if update_cust_credits > res_partner_credit_limit.value:
+                    res_partner_credit_limit.write({'remaining_credit_limit': res_partner_credit_limit.value})
+                else:
+                    res_partner_credit_limit.write({'remaining_credit_limit': update_cust_credits})
 
 
     # Decrese Customers Receivable amount when cheque is honored
@@ -90,7 +94,7 @@ class ChequeReceived(models.Model):
     @api.multi
     def action_honoured(self):
         for cash_rcv in self:
-            cash_rcv._create_payment_entry(cash_rcv.cheque_amount)
+            #cash_rcv._create_payment_entry(cash_rcv.cheque_amount)
 
             # acc_move_line_pool = cash_rcv.env['account.move.line']
             # account_move = cash_rcv.env['account.move']
