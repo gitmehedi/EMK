@@ -24,7 +24,7 @@ class ChequeReceived(models.Model):
     @api.multi
     def _get_name(self):
         for n in self:
-            n.name = 'Customer Payments1'
+            n.name = 'Customer Payments'
 
     name = fields.Char(string='Name', compute='_get_name')
     partner_id = fields.Many2one('res.partner', string="Customer", required=True)
@@ -90,6 +90,7 @@ class ChequeReceived(models.Model):
                 # Customer's Receivable amount is actually minus value
                 update_cust_receivable_amount = res_partner_pool.credit + cust.cheque_amount
                 res_partner_pool.property_account_payable_id.write({'credit': update_cust_receivable_amount})
+
 
     @api.multi
     def action_honoured(self):
