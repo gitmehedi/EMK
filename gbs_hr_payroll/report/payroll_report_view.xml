@@ -95,23 +95,24 @@
 												border-bottom: 1px solid #030303; color:#000000;"
                                             t-att-colspan="docs_len">
 
-                                            <span t-esc="gross_total_sum"></span>
-                                            <span t-esc="salary_deduc_total_sum"></span>
-                                            <span t-esc="mess_deduc_sum"></span>
-                                            <span t-esc="loan_deduc_sum"></span>
-                                            <span t-esc="arrears_tot_sum"></span>
-                                            <span t-esc="other_allo_sum"></span>
-                                            <span t-esc="mob_allw_sum"></span>
-                                            <span t-esc="vehicle_allw_sum"></span>
-                                            <span t-esc="spec_allw_sum"></span>
-                                            <span t-esc="pf_tot_sum"></span>
-                                            <span t-esc="tax_deduc_sum"></span>
-                                            <span t-esc="total_sum"></span>
-                                            
+                                            <!--<span t-esc="gross_total_sum"></span>-->
+                                            <!--<span t-esc="salary_deduc_total_sum"></span>-->
+                                            <!--<span t-esc="mess_deduc_sum"></span>-->
+                                            <!--<span t-esc="loan_deduc_sum"></span>-->
+                                            <!--<span t-esc="arrears_tot_sum"></span>-->
+                                            <!--<span t-esc="other_allo_sum"></span>-->
+                                            <!--<span t-esc="mob_allw_sum"></span>-->
+                                            <!--<span t-esc="vehicle_allw_sum"></span>-->
+                                            <!--<span t-esc="spec_allw_sum"></span>-->
+                                            <!--<span t-esc="pf_tot_sum"></span>-->
+                                            <!--<span t-esc="tax_deduc_sum"></span>-->
+                                            <!--<span t-esc="total_sum"></span>-->
+                                            <h4 style="float:right;">
+            									<b> Total: <span t-esc="total_sum"></span></b>
+            								</h4>
+
                                         </td>
                                     </tr>
-
-
                                 </tbody>
 
                             </table>
