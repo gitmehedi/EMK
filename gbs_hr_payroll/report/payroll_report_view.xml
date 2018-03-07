@@ -34,7 +34,7 @@
 								<h4><label>Description</label> : <span t-esc="data['name']"/></h4>
 							</div>
 
-							<table class="table table-bordered table-condensed table-striped">
+							<table class="table table-bordered table-report-xs table-striped">
 								<thead>
 									<tr class="odo-bg-gray">
 										<th>SN</th>
@@ -64,10 +64,10 @@
 														<span t-esc="o['sn']"></span>
 													</td>
 													<td>
-														<span t-esc="o['emp_name']"></span>
+														<span class="text-nowrap" t-esc="o['emp_name']"></span>
 													</td>
 													<td>
-														<span t-esc="o['designation']"></span>
+														<span class="text-nowrap" t-esc="o['designation']"></span>
 													</td>
 													<td>
 														<span t-esc="o['doj']"></span>

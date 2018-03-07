@@ -1723,7 +1723,7 @@ links.Timeline.prototype.repaintItems = function() {
     if (!dom.items) {
         dom.items = {};
     }
-    debugger;
+    // debugger;
     // draw the frame containing the items
     var frame = dom.items.frame;
     if (!frame) {

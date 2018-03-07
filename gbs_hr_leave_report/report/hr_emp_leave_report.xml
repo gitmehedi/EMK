@@ -5,16 +5,42 @@
             <t t-call="report.html_container">
                 <t t-call="custom_report.gbs_internal_layout">
                     <div class="page" style="page-break-inside: auto">
-                        <div class="row">
-                            <div class="col-xs-12">
-                                <h2 class="text-center">Employee's Leave Summary</h2>
-                            </div>
-                            <br/>
-                            <br/>
-                            <br/>
-                            <br/>
+                        <style>
+                            .leave-type-title {
+                                border-bottom:1px solid #ddd;
+                                padding: 0px 0 10px;
+                            }
 
-                            <div class="col-xs-12">
+                            .table-condensed>tbody>tr>td,
+                            .table-condensed>tbody>tr>th,
+                            .table-condensed>thead>tr>td,
+                            .table-condensed>thead>tr>th {
+                                font-size: 13px;
+                                padding: 4px;
+                                line-height: 1em;
+                            }
+                            .table>thead>tr>th {
+                                border-bottom: 1px solid #ddd !important;
+                            }
+                            .hr-2, .hr-1 {
+                                border-color: #ddd;
+                            }
+                            .hr-1 {
+                                margin-bottom: 15px;
+                            }
+                            .hr-2 {
+                                margin: 15px 0 0;
+                            }
+                            .data-legend {
+                                margin: 0 0 5px;
+                            }
+                        </style>
+                        <div class="clearfix">
+                            <div class="">
+                                <h3 class="text-center">Employee's Leave Summary</h3>
+                            </div>
+                            <hr class="hr-1"/>
+                            <div class="row">
                                 <div class="col-xs-6 text-left">
                                     <div>
                                         <strong>Employee ID:</strong>
@@ -40,39 +66,37 @@
                                     </div>
                                 </div>
                             </div>
+                            <hr class="hr-2"/>
                         </div>
 
-                        <br/>
                         <t t-foreach="lists" t-as="list">
+                            <div class="text-center">
+                                <h4 class="leave-type-title text-primary"><t t-esc="list_value['name']"/></h4>
+                            </div>
                             <div class="row">
-                                <div class="col-xs-12 text-center">
-                                    <h3>
-                                        <t t-esc="list_value['name']"/>
-                                    </h3>
-                                </div>
                                 <div class="col-xs-4">
-                                    <div class="text-left">
+                                    <p class="text-left data-legend">
                                         <strong>Initial Balance:</strong>
                                         <span t-esc="list_value['init_bal']"/>
-                                    </div>
+                                    </p>
                                 </div>
                                 <div class="col-xs-4">
-                                    <div class="text-center">
+                                    <p class="text-center data-legend">
                                         <strong>Avail:</strong>
                                         <span t-esc="list_value['avail']"/>
-                                    </div>
+                                    </p>
                                 </div>
                                 <div class="col-xs-4">
-                                    <div class="text-right">
+                                    <p class="text-right data-legend">
                                         <strong>Current Balance:</strong>
                                         <span t-esc="list_value['cur_bal']"/>
-                                    </div>
+                                    </p>
                                 </div>
                             </div>
-                            <br/>
-                            <table class="table table-bordered">
+
+                            <table class="table table-bordered table-report-xs table-striped">
                                 <thead>
-                                    <tr style="background-color:#f5f5f5;">
+                                    <tr>
                                         <th class="text-center">From Date</th>
                                         <th class="text-center">To Date</th>
                                         <th class="text-center">Day(s)</th>
@@ -107,7 +131,6 @@
                                     </t>
                                 </tbody>
                             </table>
-                            <br/>
                         </t>
                         <t t-call="custom_report.report_signing"></t>
                     </div>
