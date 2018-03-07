@@ -1,0 +1,39 @@
+/*/
+// Table
+// -------------------------------------------------- */
+
+.table-report > thead > tr > th,
+.table-report > tbody > tr > th,
+.table-report > tfoot > tr > th,
+.table-report > thead > tr > td,
+.table-report > tbody > tr > td,
+.table-report > tfoot > tr > td {
+    padding: 2px 3px !important;
+    font-size: 12px !important;
+}
+
+.table-report-sm > thead > tr > th,
+.table-report-sm > tbody > tr > th,
+.table-report-sm > tfoot > tr > th,
+.table-report-sm > thead > tr > td,
+.table-report-sm > tbody > tr > td,
+.table-report-sm > tfoot > tr > td {
+    padding: 1px 3px !important;
+    font-size: 11px !important;
+}
+
+.table-report-xs > thead > tr > th,
+.table-report-xs > tbody > tr > th,
+.table-report-xs > tfoot > tr > th,
+.table-report-xs > thead > tr > td,
+.table-report-xs > tbody > tr > td,
+.table-report-xs > tfoot > tr > td {
+    padding: 1px 3px !important;
+    font-size: 10px !important;
+}
+
+.table-report > thead > tr > th,
+.table-report-sm > thead > tr > th,
+.table-report-xs > thead > tr > th {
+    border-bottom: 1px solid #ddd !important;
+}

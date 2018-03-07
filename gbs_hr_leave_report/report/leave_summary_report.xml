@@ -32,7 +32,7 @@
                             </div>
 
 
-                            <table class="table table-bordered table-striped table-condensed" style="padding: 0px;">
+                            <table class="table table-report-xs table-bordered table-striped">
                                 <thead>
                                     <tr class="odo-bg-gray">
                                         <t t-foreach="header" t-as="head">
@@ -68,13 +68,13 @@
                                                 <span t-esc="list_index+1"/>
                                             </td>
                                             <td>
-                                                <span t-esc="list_value['name']"/>
+                                                <span class="text-nowrap" t-esc="list_value['name']"/>
                                             </td>
                                             <td class="text-left">
-                                                <span t-esc="list_value['designation']"/>
+                                                <span class="text-nowrap" t-esc="list_value['designation']"/>
                                             </td>
                                             <td class="text-left">
-                                                <span t-esc="list_value['department']"/>
+                                                <span class="text-nowrap" t-esc="list_value['department']"/>
                                             </td>
                                             <t t-foreach="list_value['leave']" t-as="val">
                                                 <td class="text-center">

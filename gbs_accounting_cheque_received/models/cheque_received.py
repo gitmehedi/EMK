@@ -39,13 +39,13 @@ class ChequeReceived(models.Model):
 
     payment_date = fields.Date(string='Payment Date', default=fields.Date.context_today, required=True, copy=False)
 
-    @api.multi
-    def _get_payment_method(self):
-        for pay in self:
-            pay.payment_method_id = 2
+    # @api.multi
+    # def _get_payment_method(self):
+    #     for pay in self:
+    #         pay.payment_method_id = 2
 
 
-    payment_method_id = fields.Many2one('account.payment.method', string='Payment Method Type', compute='_get_payment_method')
+    #payment_method_id = fields.Many2one('account.payment.method', string='Payment Method Type', compute='_get_payment_method')
     currency_id = fields.Many2one('res.currency', string='Currency',)
 
     payment_type = fields.Selection([('outbound', 'Send Money'), ('inbound', 'Receive Money')],

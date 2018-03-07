@@ -19,7 +19,8 @@
                                 </b>
                             </h4>
 
-                            <table class="table table-bordered table-condensed table-striped">
+
+                            <table class="table table-bordered table-report-sm table-striped">
                                 <thead style="border-style:none;">
                                     <tr class="odo-bg-gray">
                                         <th>SN</th>
@@ -43,7 +44,7 @@
                                                     <t t-set="i" t-value="i+1"/>
                                                 </td>
                                                 <td>
-                                                    <span t-esc="k['name']"></span>
+                                                    <span class="text-nowrap" t-esc="k['name']"></span>
                                                 </td>
                                                 <t t-foreach="k['val']" t-as="o">
                                                     <td>
@@ -66,7 +67,6 @@
                                                     </td>
                                                 </t>
                                             </t>
-
                                         </tr>
                                     </t>
                                     <td>
