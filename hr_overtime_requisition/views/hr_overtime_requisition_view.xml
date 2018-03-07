@@ -18,6 +18,7 @@
 								groups="hr_attendance.group_hr_attendance_user"/>
 						<button string="Refuse" name="action_refuse" states="to_approve,approved" type="object" groups="gbs_application_group.group_dept_manager,hr_attendance.group_hr_attendance_user"/>
 						<button string="Reset to Draft" name="action_reset" states="to_approve" type="object"/>
+						<button string="Reset to Draft" name="action_reset" states="approved" type="object" groups="base_technical_features.group_technical_features"/>
 						<field name="state" widget="statusbar" statusbar_visible="to_submit,to_approve,approved"/>
 					</header>
 					<sheet>

@@ -47,7 +47,8 @@ class customer_creditlimit_assign(models.Model):
 
     @api.multi
     def approve_creditlimit_run(self):
-        self.limit_ids.write({'state': 'approve', 'assign_date': time.strftime('%Y-%m-%d')})
+
+        self.limit_ids.write({'remaining_credit_limit': self.credit_limit, 'state': 'approve', 'assign_date': time.strftime('%Y-%m-%d')})
         self.approver2_id = self.env.user
         return self.write({'state': 'approve', 'approve_date': time.strftime('%Y-%m-%d %H:%M:%S')})
 

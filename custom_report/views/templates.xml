@@ -11,10 +11,10 @@
                     <strong style="border-top: 1px solid black; padding-top:5px;">Checked By</strong>
                 </div>
                 <div class="col-xs-3 text-center">
-                    <strong style="border-top: 1px solid black; padding-top:5px;">Received By</strong>
+                    <strong style="border-top: 1px solid black; padding-top:5px;">Authorized By</strong>
                 </div>
                 <div class="col-xs-3 text-center">
-                    <strong style="border-top: 1px solid black; padding-top:5px;">Authorized By</strong>
+                    <strong style="border-top: 1px solid black; padding-top:5px;">Approved By</strong>
                 </div>
             </div>
         </template>

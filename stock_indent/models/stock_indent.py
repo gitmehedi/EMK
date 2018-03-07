@@ -34,7 +34,7 @@ class IndentIndent(models.Model):
     def _get_default_warehouse(self):
         warehouse_obj = self.env['stock.warehouse']
         company_id = self.env.user.company_id.id
-        warehouse_ids = warehouse_obj.sudo().search([('company_id', '=', company_id)])
+        warehouse_ids = warehouse_obj.sudo().search([('company_id', '=', company_id),('operating_unit_id', 'in', self.env.user.operating_unit_ids.ids)])
         warehouse_id = warehouse_ids and warehouse_ids[0] or False
         return warehouse_id
 
@@ -248,8 +248,6 @@ class IndentIndent(models.Model):
                 'state': 'waiting_approval'
             }
             new_seq = self.env['ir.sequence'].next_by_code('stock.indent')
-
-            # name_seq = ("Indent-%s-%s") % (self.operating_unit_id.code, new_seq)
             if new_seq:
                 res['name'] = new_seq
 
@@ -504,7 +502,7 @@ class IndentProductLines(models.Model):
 
     def _check_stock_available(self):
         for move in self:
-            if move.type == 'make_to_stock' and move.product_uom_qty > move.qty_available:
+            if move.product_uom_qty > move.qty_available:
                 return False
         return True
 
@@ -512,6 +510,12 @@ class IndentProductLines(models.Model):
         (_check_stock_available, 'You can not procure more quantity form stock then the available !.',
          ['Quantity Required']),
     ]
+
+    @api.one
+    @api.constrains('product_uom_qty')
+    def _check_product_uom_qty(self):
+        if self.product_uom_qty < 0:
+            raise UserError('You can\'t give negative value!!!')
 
     @api.onchange('product_id')
     def onchange_product_id(self):

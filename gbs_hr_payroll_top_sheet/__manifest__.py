@@ -10,7 +10,6 @@
         'gbs_hr_payroll',
     ],
     'data': [
-        'report/gbs_hr_payroll_top_sheet_report.xml',
         'report/payroll_top_sheet_report_view.xml',
 
     ],
