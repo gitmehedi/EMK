@@ -6,6 +6,12 @@
         </xpath>
     </template>
 
+    <template id="assets_pdf" inherit_id="report.assets_pdf">
+        <link position="before">
+            <link href="/custom_report/static/lib/bootstrap/css/theme.css" rel="stylesheet"/>
+        </link>
+    </template>
+
     <template id="report_quotation_header" inherit_id="report.external_layout_header">
         <xpath expr="//div[@class='header']" position="replace">
             <div class="header">
