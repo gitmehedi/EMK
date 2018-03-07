@@ -170,9 +170,9 @@
                                     <div style="margin:15px 0 5px 0">
                                         <h4 class="text-center">Late Employee List</h4>
                                     </div>
-                                    <table class="table table-bordered table-striped table-condensed">
+                                    <table class="table table-report table-bordered table-striped">
                                         <thead>
-                                            <tr>
+                                            <tr class="odo-bg-gray">
                                                 <th>Sl</th>
                                                 <th>Name</th>
                                                 <th>Department</th>
@@ -200,9 +200,9 @@
                                     <div style="margin:15px 0 5px 0">
                                         <h4 class="text-center">Absent Employee List</h4>
                                     </div>
-                                    <table class="table table-bordered table-striped table-condensed">
+                                    <table class="table table-report table-bordered table-striped">
                                         <thead>
-                                            <tr>
+                                            <tr class="odo-bg-gray">
                                                 <th>Sl</th>
                                                 <th>Name</th>
                                                 <th>Department</th>
@@ -230,9 +230,9 @@
                                             <h4 class="text-primary">Roster Not Mapped</h4>
                                         </div>
                                     </div>
-                                    <table class="table table-bordered table-striped table-condensed">
+                                    <table class="table table-report table-bordered table-striped">
                                         <thead>
-                                            <tr>
+                                            <tr class="odo-bg-gray">
                                                 <th>Sl</th>
                                                 <th>Name</th>
                                                 <th>Department</th>
