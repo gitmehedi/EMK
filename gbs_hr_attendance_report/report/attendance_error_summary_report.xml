@@ -47,10 +47,10 @@
                         <br/>
 
                         <div class="row">
-                            <table class="table table-bordered table-condensed table-striped">
+                            <table class="table table-report table-bordered table-striped">
                                 <thead>
                                     <thead>
-                                        <tr>
+                                        <tr class="odo-bg-gray">
                                             <th>SN</th>
                                             <th>Employee</th>
                                             <th>Acc No</th>
@@ -64,7 +64,7 @@
                                 <tbody>
                                     <t t-foreach="data_list" t-as="k">
                                         <t t-if="k['val']">
-                                            <td class="bg-primary text-center"
+                                            <td class="odo-bg-info"
                                                     t-att-colspan="data_list_len">
                                                 <strong t-esc="k['name']"></strong>
                                             </td>
