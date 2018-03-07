@@ -1,126 +1,108 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-	<data>
-		<template id="report_individual_payslip">
-			<t t-call="report.html_container">
-				<t t-call="custom_report.gbs_internal_layout">
-					<div class="page" style="page-break-inside:auto">
-						<div class="row">
-							<style type="text/css">
-								.cell-bg-primary { background-color: #428bca; color:#fff; }
-								.cell-bg-success { background-color: #5cb85c; color:#fff; }
-								.cell-bg-info { background-color: #5bc0de; color:#fff; }
-								.cell-bg-warning { background-color: #f0ad4e; color:#fff; }
-								.cell-bg-danger { background-color: #d9534f; color:#fff; }
+    <data>
+        <template id="report_individual_payslip">
+            <t t-call="report.html_container">
+                <t t-call="custom_report.gbs_internal_layout">
+                    <div class="page" style="page-break-inside:auto">
+                        <div class="row">
+                            <div class="clearfix">
+                                <h3 class="report-title">Monthly Salary Sheet</h3>
+                                <h4>
+                                    <label>Description</label>
+                                    :
+                                    <span t-esc="data['name']"/>
+                                </h4>
+                            </div>
 
-								.odo-bg-primary, .odo-bg-primary > td
-									{ background-color: #5653A6; color:#fff; }
-								.odo-bg-success, .odo-bg-success > td
-									{ background-color: #A65698; color:#fff; }
-								.odo-bg-info, .odo-bg-info > td
-									{ background-color: #96A6D9; color:#fff; }
-								.odo-bg-warning, .odo-bg-warning > td
-									{ background-color: #f0ad4e; color:#fff; }
-								.odo-bg-danger, .odo-bg-danger > td
-									{ background-color: #731D09; color:#fff; }
-								.odo-bg-gray, .odo-bg-gray > td
-									{ background-color: #f5f5f5; }
-								.report-title { text-align:center;}
 
-							</style>
+                            <table class="table table-bordered table-report-xs table-striped" style="margin-bottom: 10px;">
+                                <thead>
+                                    <tr class="odo-bg-gray">
+                                        <th>SN</th>
+                                        <th>Employee</th>
+                                        <th>Designation</th>
+                                        <th style="min-width:90px">D.O.J</th>
+                                        <th style="min-width:90px">Loan Balance</th>
+                                        <t t-foreach="rules" t-as="r">
+                                            <th>
+                                                <span t-esc="r['name']"></span>
+                                            </th>
+                                        </t>
+                                    </tr>
+                                </thead>
+                                <tbody>
 
-							<h2 class="report-title">Monthly Salary Sheet</h2>
+                                    <t t-foreach="docs" t-as="k">
+                                        <t t-if="k['val']">
+                                            <td class="odo-bg-info" t-att-colspan="docs_len" style="padding-left:15px">
+                                                <strong t-esc="k['name']"></strong>
+                                            </td>
 
-							<div class="row">
-								<div class="col-xs-6">
-									<h4><label>Description</label> : <span t-esc="data['name']"/></h4>
-								</div>
-							</div>
+                                            <t t-foreach="k['val']" t-as="o">
+                                                <tr>
+                                                    <td>
+                                                        <span t-esc="o['sn']"></span>
+                                                    </td>
+                                                    <td>
+                                                        <span class="text-nowrap" t-esc="o['emp_name']"></span>
+                                                    </td>
+                                                    <td>
+                                                        <span class="text-nowrap" t-esc="o['designation']"></span>
+                                                    </td>
+                                                    <td>
+                                                        <span t-esc="o['doj']"></span>
+                                                    </td>
+                                                    <td>
+                                                        <span t-esc="o['loan_balance']"></span>
+                                                    </td>
+                                                    <t t-foreach="rules" t-as="r">
+                                                        <td class="text-right">
+                                                            <span t-esc="'%.2f'% o[r['code']]"></span>
+                                                        </td>
+                                                    </t>
+                                                </tr>
+                                            </t>
+                                        </t>
+                                    </t>
 
-							<!--<div class="row">-->
-									<!--<div class="col-xs-6"><label>title</label> <span t-esc="data['name']"/></div>-->
-									<!--<div class="col-xs-6 text-right"><label>title</label> <span t-esc="data['name']"/></div>-->
-							<!--</div>-->
-							<!--<div class="row">-->
-									<!--<div class="col-xs-6"><label>title</label> <span t-esc="data['name']"/></div>-->
-									<!--<div class="col-xs-6 text-right"><label>title</label> <span t-esc="data['name']"/></div>-->
-							<!--</div>-->
+                                    <tr>
+                                        <td t-att-colspan="docs_len">
 
-							<table class="table table-bordered table-condensed table-striped">
-								<thead>
-									<tr class="odo-bg-gray">
-										<th>SN</th>
-										<th>Employee</th>
-										<th>Designation</th>
-										<th style="min-width:90px">D.O.J</th>
-										<th style="min-width:90px">Loan Balance</th>
-										<t t-foreach="rules" t-as="r">
-											<th>
-												<span t-esc="r['name']"></span>
-											</th>
-										</t>
-
-									</tr>
-								</thead>
-								<tbody>
-
-									<t t-foreach="docs" t-as="k">
-										<t t-if="k['val']">
-											<td class="odo-bg-info" t-att-colspan="docs_len" style="padding-left:15px">
-												<strong t-esc="k['name']"></strong>
-											</td>
-
-											<t t-foreach="k['val']" t-as="o">
-												<tr>
-													<td>
-														<span t-esc="o['sn']"></span>
-													</td>
-													<td>
-														<span t-esc="o['emp_name']"></span>
-													</td>
-													<td>
-														<span t-esc="o['designation']"></span>
-													</td>
-													<td>
-														<span t-esc="o['doj']"></span>
-													</td>
-													<td>
-														<span t-esc="o['loan_balance']"></span>
-													</td>
-
-													<t t-foreach="rules" t-as="r">
-														<td class="text-right">
-															<span t-esc="'%.2f'% o[r['code']]"></span>
-														</td>
-													</t>
-
-												</tr>
-											</t>
-										</t>
-									</t>
-
-									<td style="background-color:#DDDBDB; text-align:center;
-												border-bottom: 1px solid #030303; color:#000000;"
-										t-att-colspan="docs_len">
-
-										<h4 style="float:right;">
-											<b> Total: <span t-esc="total_sum"></span></b>
-										</h4>
-
-									</td>
-
-								</tbody>
-
-							</table>
-						</div>
-						<h4>
-							<b>In Words: </b><strong t-esc="amt_to_word"></strong>
-						</h4>
-						<t t-call="custom_report.report_signing"></t>
-					</div>
-				</t>
-			</t>
-
-		</template>
-	</data>
+                                            <!--<span t-esc="gross_total_sum"></span>-->
+                                            <!--<span t-esc="salary_deduc_total_sum"></span>-->
+                                            <!--<span t-esc="mess_deduc_sum"></span>-->
+                                            <!--<span t-esc="loan_deduc_sum"></span>-->
+                                            <!--<span t-esc="arrears_tot_sum"></span>-->
+                                            <!--<span t-esc="other_allo_sum"></span>-->
+                                            <!--<span t-esc="mob_allw_sum"></span>-->
+                                            <!--<span t-esc="vehicle_allw_sum"></span>-->
+                                            <!--<span t-esc="spec_allw_sum"></span>-->
+                                            <!--<span t-esc="pf_tot_sum"></span>-->
+                                            <!--<span t-esc="tax_deduc_sum"></span>-->
+                                            <!--<span t-esc="total_sum"></span>-->
+                                            <h4 class="text-right pr-5"><strong> Total: <span t-esc="total_sum"></span> </strong></h4>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <p class="text-right">In Words: <strong t-esc="amt_to_word"></strong></p>
+                        </div>
+                        <t t-call="custom_report.report_signing"></t>
+                    </div>
+                </t>
+            </t>
+        </template>
+        <report
+        	id="report_individual_paslips"
+            string="Payslip Summary"
+            model="hr.payslip.run"
+            report_type="qweb-pdf"
+            file="gbs_hr_payroll.report_individual_payslip"
+            name="gbs_hr_payroll.report_individual_payslip"
+        />
+        <record id="report_individual_paslips" model="ir.actions.report.xml">
+            <field name="paperformat_id" ref="custom_report.paperformat_backend_landscape"/>
+        </record>
+    </data>
 </odoo>

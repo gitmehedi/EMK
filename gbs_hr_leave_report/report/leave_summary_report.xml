@@ -8,32 +8,31 @@
                         <div class="row">
                             <style type="text/css">
 								.report-title { text-align:center; }
-								.odo-bg-gray, .odo-bg-gray > td
-									{ background-color: #f5f5f5; }
-								.report-title { text-align:center;}
-
+								.odo-bg-gray, .odo-bg-gray > td { background-color: #f5f5f5; }
 							</style>
 
                             <h3 class="report-title">Leave Summary</h3>
                             <div class="row">
                                 <div class="col-xs-6">
-                                    <label>Department : </label>
-                                    <t t-if="not data['department_name']">All</t>
-                                    <span t-esc="data['department_name']"/>
+                                    <ul class="list-inline">
+                                        <li>
+                                            <label>Operating Unit : </label>
+                                            <span t-esc="data['operating_unit_name']"/>
+                                        </li>
+                                        <li>
+                                            <label>Department : </label>
+                                            <t t-if="not data['department_name']">All</t>
+                                            <span t-esc="data['department_name']"/>
+                                        </li>
+                                    </ul>
                                 </div>
                                 <div class="col-xs-6 text-right">
                                     <label>Leave Year</label><label> : </label><span t-esc="data['year_name']"/>
                                 </div>
                             </div>
-                            <div class="row">
-                                <div class="col-xs-6">
-                                    <label>Operating Unit : </label>
-                                    <span t-esc="data['operating_unit_name']"/>
-                                </div>
-							</div>
 
 
-                            <table class="table table-bordered table-striped" style="padding: 0px;">
+                            <table class="table table-report-xs table-bordered table-striped">
                                 <thead>
                                     <tr class="odo-bg-gray">
                                         <t t-foreach="header" t-as="head">
@@ -69,13 +68,13 @@
                                                 <span t-esc="list_index+1"/>
                                             </td>
                                             <td>
-                                                <span t-esc="list_value['name']"/>
+                                                <span class="text-nowrap" t-esc="list_value['name']"/>
                                             </td>
                                             <td class="text-left">
-                                                <span t-esc="list_value['designation']"/>
+                                                <span class="text-nowrap" t-esc="list_value['designation']"/>
                                             </td>
                                             <td class="text-left">
-                                                <span t-esc="list_value['department']"/>
+                                                <span class="text-nowrap" t-esc="list_value['department']"/>
                                             </td>
                                             <t t-foreach="list_value['leave']" t-as="val">
                                                 <td class="text-center">

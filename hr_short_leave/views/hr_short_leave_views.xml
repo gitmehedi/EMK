@@ -20,7 +20,7 @@
                                 attrs="{'invisible': ['|',('current_user_is_approver', '!=', True),('state', '!=', 'confirm')]}"/>
                         <button string="Reset to Draft" name="action_draft" type="object"
                                 attrs="{'invisible': ['|', ('can_reset', '=', False), ('state', 'not in', ['confirm', 'refuse'])]}"/>
-                        <button string="Reset to Draft" name="action_draft" states="validate" type="object" groups="base.group_erp_manager"/>
+                        <button string="Reset to Draft" name="action_draft" states="validate" type="object" groups="base_technical_features.group_technical_features"/>
 
                         <field name="state" widget="statusbar" statusbar_visible="draft,confirm,validate"/>
                     </header>
@@ -100,6 +100,7 @@
                 <search string="Search Short Leave">
                     <field name="employee_id"/>
                     <field name="department_id"/>
+                    <filter name="my_approval" string="My Approval" domain="[('pending_approver.user_id','=',uid)]"/>
                 </search>
             </field>
         </record>
@@ -118,6 +119,7 @@
                 number of open days related to your leave.
             </p>
             </field>
+            <field name="context" eval="{'search_default_my_approval': 1}"/>
             <field name="search_view_id" ref="view_hr_short_leave_filter"/>
         </record>
 

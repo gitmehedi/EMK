@@ -24,16 +24,16 @@ class HRShiftAlter(models.Model):
                 default_approver = employee.sudo().holidays_approvers[0].approver.id
         return default_approver
 
-    employee_id = fields.Many2one('hr.employee', string="Employee", required=True,default=_default_employee,ondelete="cascade")
+    employee_id = fields.Many2one('hr.employee', string="Employee", required=True,default=_default_employee,ondelete="cascade",track_visibility='onchange')
     department_id = fields.Many2one('hr.department', related='employee_id.department_id', string='Department', store=True,ondelete="cascade")
-    alter_date = fields.Date(string='Alter Date')
-    duty_start = fields.Datetime(string='Duty Start',required=True)
-    duty_end = fields.Datetime(string='Duty End',required=True)
-    is_included_ot = fields.Boolean(string='Is OT')
+    alter_date = fields.Date(string='Alter Date', required=True, track_visibility='onchange')
+    duty_start = fields.Datetime(string='Duty Start',required=True, track_visibility='onchange')
+    duty_end = fields.Datetime(string='Duty End',required=True, track_visibility='onchange')
+    is_included_ot = fields.Boolean(string='Is OT', track_visibility='onchange')
     my_menu_check = fields.Boolean(string='Check',readonly=True)
-    ot_start = fields.Datetime(string='OT Start')
-    ot_end = fields.Datetime(string='OT End')
-    grace_time = fields.Float(string='Grace Time', default='1.5')
+    ot_start = fields.Datetime(string='OT Start', track_visibility='onchange')
+    ot_end = fields.Datetime(string='OT End', track_visibility='onchange')
+    grace_time = fields.Float(string='Grace Time', default='1.5', track_visibility='onchange')
     user_id = fields.Many2one('res.users', string='User', related='employee_id.user_id', related_sudo=True, store=True,
                               default=lambda self: self.env.uid, readonly=True,ondelete="cascade")
 

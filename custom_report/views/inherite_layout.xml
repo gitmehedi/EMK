@@ -6,13 +6,19 @@
         </xpath>
     </template>
 
+    <template id="assets_pdf" inherit_id="report.assets_pdf">
+        <link position="before">
+            <link href="/custom_report/static/lib/bootstrap/css/theme.css" rel="stylesheet"/>
+        </link>
+    </template>
+
     <template id="report_quotation_header" inherit_id="report.external_layout_header">
         <xpath expr="//div[@class='header']" position="replace">
             <div class="header">
                 <style type="text/css">
                     .header-content { position: relative; padding:10px; }
                     .company-logo { position: absolute; top: 35%; transform: translateY(-35%); }
-                    .com-logo-img { max-height:120px; max-width: 160px }
+                    .com-logo-img { max-height:81px; max-width: 189px }
                     .company-info { text-align:center; padding:0 250px; }
                 </style>
                 <div class="header-content">

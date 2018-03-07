@@ -13,7 +13,7 @@
                         <page string="Credit Limit" attrs="{'invisible': [('customer', '=', False)]}">
                             <group>
                                 <field name="credit_limit"/>
-                                <field name="remaining_credit_limit" invisible="0"/>
+                                <!--<field name="remaining_credit_limit" invisible="1"/>-->
                             </group>
 
                             <field name="limit_ids">

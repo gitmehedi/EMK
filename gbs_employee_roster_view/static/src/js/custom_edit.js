@@ -22,7 +22,7 @@ odoo.define('rnd_hr.custom_timeline', function (require) {
 
         onClick: function(self){
 
-            debugger;
+            // debugger;
             // 'type': $('[name="type"]').val().replace(/\"/g, ''),
 
             var fromDate = $('[name="from_date"]').val()

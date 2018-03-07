@@ -22,20 +22,3 @@ class ShipmentProduct(models.Model):
     _inherit = 'purchase.shipment'
 
     shipment_product_lines = fields.One2many('shipment.product.line', 'shipment_id', string='Product(s)')
-
-    # @api.onchange('lc_id')
-    # def po_product_line(self):
-    #     self.shipment_product_lines = []
-    #     vals = []
-    #     for obj in self.lc_id.product_lines:
-    #         if obj.product_received_qty<obj.product_qty:
-    #             vals.append((0, 0, {'product_id': obj.product_id,
-    #                             'lc_pro_line_id': obj.id,
-    #                             'name': obj.name,
-    #                             'lc_product_qty': obj.product_qty,
-    #                             'currency_id': obj.currency_id,
-    #                             'date_planned': obj.date_planned,
-    #                             'product_uom':obj.product_uom,
-    #                             'product_received_qty':obj.product_received_qty
-    #                             }))
-    #     self.shipment_product_lines = vals

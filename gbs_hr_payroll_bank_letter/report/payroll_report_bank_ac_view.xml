@@ -18,10 +18,10 @@
 							<p><b><u>Subject: Disbursement of <span t-esc="payslip_report_name"/> to the following employees Bank Account.</u></b></p>
 							<br/>
 							<p>Dear Sir,</p>
-							<p>You are requested to disburse BDT <span t-esc="total_net"/> (Taka <span t-esc="amount_to_text_bdt"/>) to the following employee's bank account by debating our
+							<p>You are requested to disburse BDT <span t-esc="total_net"/> (<span t-esc="amount_to_text_bdt"/>) to the following employee's bank account by debating our
 								<b>Account number <span t-esc="mother_bank_ac"/></b> under advice to us.
 							</p>
-							<table class="table table-bordered">
+							<table class="table table-report-sm table-bordered table-striped">
 								<thead>
 									<tr
 											style="background-color:#B4FDF0;
