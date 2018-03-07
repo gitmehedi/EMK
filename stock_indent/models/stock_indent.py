@@ -502,7 +502,7 @@ class IndentProductLines(models.Model):
 
     def _check_stock_available(self):
         for move in self:
-            if move.type == 'make_to_stock' and move.product_uom_qty > move.qty_available:
+            if move.product_uom_qty > move.qty_available:
                 return False
         return True
 
@@ -510,6 +510,12 @@ class IndentProductLines(models.Model):
         (_check_stock_available, 'You can not procure more quantity form stock then the available !.',
          ['Quantity Required']),
     ]
+
+    @api.one
+    @api.constrains('product_uom_qty')
+    def _check_product_uom_qty(self):
+        if self.product_uom_qty < 0:
+            raise UserError('You can\'t give negative value!!!')
 
     @api.onchange('product_id')
     def onchange_product_id(self):
