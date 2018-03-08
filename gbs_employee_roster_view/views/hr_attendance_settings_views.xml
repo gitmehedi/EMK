@@ -71,10 +71,15 @@
                             max-width: none !important;
                             <!--margin: 0 15px !important;-->
                         }
+                        .roster-filters label {
+                            display: inline-block;
+                            width: 135px;
+                            text-align: right;
+                        }
                     </style>
                 </header>
                 <separator string="Settings"/>
-                <div class="row">
+                <div class="row roster-filters">
                     <div class="col-sm-4" groups="operating_unit.group_multi_operating_unit">
                         <label for="operating_unit_id"/>
                         <field name="operating_unit_id" id="operating_unit_id" class="oe_inline bappy"
@@ -90,18 +95,15 @@
                         <field name="employee_id" placeholder="All" class="oe_inline"
                                    options="{'no_create_edit': True, 'no_open': True}"/>
                     </div>
-                </div>
-                <div class="row">
-                    <div class="col-sm-3">
+
+                    <div class="col-sm-4">
                         <label for="from_date" />
                         <field name="from_date" class="oe_inline"/>
                     </div>
-                    <div class="col-sm-3">
+                    <div class="col-sm-4">
                         <label for="to_date" />
                         <field name="to_date" class="oe_inline" />
                     </div>
-
-
                 </div>
                 <div class="o_form_sheet"></div>
             </form>

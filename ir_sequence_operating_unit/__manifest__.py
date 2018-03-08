@@ -10,7 +10,7 @@
     ],
 
     'data': [
-        'views/ir_sequence_view.xml'
+        'views/ir_sequence_view.xml',
     ],
     'summary': 'This module handles custom ir sequence',
     'description':"Complete Solution for operating unit wise sequence",

@@ -47,6 +47,7 @@ class HrManualAttendance(models.Model):
     approver_id = fields.Many2one('res.users', string='Approvar', readonly=True, copy=False,
                                   help='This field is automatically filled by the user who validate the manual attendance request')
     my_menu_check = fields.Boolean(string='Check',readonly=True)
+    # check_error = fields.Boolean(string='Check Error',readonly=True, default=False )
     can_reset = fields.Boolean('Can reset', compute='_compute_can_reset')
     user_id = fields.Many2one('res.users', string='User', related='employee_id.user_id', related_sudo=True, store=True,
                               default=lambda self: self.env.uid, readonly=True)
@@ -299,6 +300,7 @@ class HrManualAttendance(models.Model):
                 ('employee_id', '=', h.employee_id.id),
                 ('id', '!=', h.id),
                 ('state', 'not in', ['cancel', 'refuse']),
+                #('check_error', '=', h.write({'check_error': True})),
             ]
             sl_domain = [
                 ('date_from', '<', h.check_out),
@@ -315,15 +317,25 @@ class HrManualAttendance(models.Model):
             ]
             check_manual_att = self.search_count(domain)
             if check_manual_att:
-                raise ValidationError(_('You are trying to overlap with manual attendance.'
-                                        'Please check your existing manual attendance!'))
+                #self.write({'check_error': True})
+                # datetime.datetime.strptime(dateStr, "%Y-%m-%d")
+                date_time_check_in =  datetime.datetime.strptime(h.check_in, "%Y-%m-%d %H:%M:%S") + datetime.timedelta(hours=6)
+                date_time_check_out =  datetime.datetime.strptime(h.check_out, "%Y-%m-%d %H:%M:%S") + datetime.timedelta(hours=6)
+                raise ValidationError(_(" The duration of the period  (%s)  and  (%s)  are overlapping with existing Manual Attendance ." %(date_time_check_in,date_time_check_out)
+                                        ))
+
 
             check_sl = sl_pool.search_count(sl_domain)
             if check_sl:
-                raise ValidationError(_('You are trying to overlap with short leave.'
-                                        'Please check your existing short leave!'))
+                date_time_check_in = datetime.datetime.strptime(h.check_in, "%Y-%m-%d %H:%M:%S") + datetime.timedelta(hours=6)
+                date_time_check_out = datetime.datetime.strptime(h.check_out, "%Y-%m-%d %H:%M:%S") + datetime.timedelta(hours=6)
+                raise ValidationError(_(" The duration of the period  (%s)  and  (%s)  are overlapping with existing Short Leave ." %(date_time_check_in,date_time_check_out)
+                                        ))
 
             check_att = att_pool.search_count(att_domain)
             if check_att:
-                raise ValidationError(_('You are trying to overlap with attendance device.'
-                                        'Please check your existing attendance!'))
+                date_time_check_in = datetime.datetime.strptime(h.check_in, "%Y-%m-%d %H:%M:%S") + datetime.timedelta(hours=6)
+                date_time_check_out = datetime.datetime.strptime(h.check_out, "%Y-%m-%d %H:%M:%S") + datetime.timedelta(hours=6)
+                raise ValidationError(_("The duration of the period  (%s)  and  (%s)  are overlapping with existing Attendance ." %(date_time_check_in,date_time_check_out)
+                                        ))
+

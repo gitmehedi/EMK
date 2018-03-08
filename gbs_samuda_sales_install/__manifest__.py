@@ -1,4 +1,3 @@
-
 {
     'name': 'GBS Samuda Sales Installation',
     'version': '10.0.1.0.0',
@@ -24,6 +23,7 @@
         'delivery_invoicing',
         #'sale_revision_history'
         'accounting_report',
+        'gbs_accounting_cheque_received',
     ],
 
     'data': [ ],

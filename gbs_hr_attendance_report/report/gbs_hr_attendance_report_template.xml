@@ -16,8 +16,8 @@
 				<t t-call="custom_report.gbs_internal_layout">
 					<div class="page">
 						<div class="row" style="page-break-inside: auto">
-							<h3 class="text-center" style="margin-bottom:30px">Attendance Report for  <span t-esc="check_type_friendly_str "></span> </h3>
-							<table class="table table-bordered">
+							<h3>Attendance Report for  <span t-esc="check_type_friendly_str "></span> </h3>
+							<table class="table table-report-xs table-bordered table-striped">
 								<thead>
 									<tr style="background-color:#f5f5f5;">
 										<th>Name</th>
@@ -34,13 +34,13 @@
 									<t t-foreach="all_val_list" t-as="emp">
 										<tr>
 											<td>
-												<span t-esc="emp['emp_name']"></span>
+												<span class="text-nowrap" t-esc="emp['emp_name']"></span>
 											</td>
 											<td>
-												<span t-esc="emp['dept']"></span>
+												<span class="text-nowrap" t-esc="emp['dept']"></span>
 											</td>
 											<td>
-												<span t-esc="emp['designation']"></span>
+												<span class="text-nowrap" t-esc="emp['designation']"></span>
 											</td>
 
 											<t t-foreach="dynamic_col_list" t-as="c">

@@ -1,10 +1,11 @@
 from odoo import api, exceptions, fields, models
-import operator, math
+import math
 import locale
+
 
 class PayrollReportPivotal(models.AbstractModel):
     _name = 'report.gbs_hr_payroll.report_individual_payslip'
-    
+
     @api.model
     def render_html(self, docids, data=None):
         payslip_run_pool = self.env['hr.payslip.run']
@@ -22,27 +23,28 @@ class PayrollReportPivotal(models.AbstractModel):
 
                     if rule not in rule_list:
                         rule_list.append(rule)
-                    
+
         rule_list = sorted(rule_list, key=lambda k: k['seq'])
-            
+
         dept = self.env['hr.department'].search([])
-        
+
         dpt_payslips_list = []
-        total_sum = []        
+        total_sum = []
+
         sn = 1
 
-        for d in dept:            
+        for d in dept:
             dpt_payslips = {}
             dpt_payslips['name'] = d.name
             dpt_payslips['seq'] = d.sequence
             dpt_payslips['val'] = []
-            
+
             for slip in docs.slip_ids:
                 payslip = {}
                 if d.id == slip.employee_id.department_id.id:
-                    payslip['emp_name'] = slip.employee_id.name        
+                    payslip['emp_name'] = slip.employee_id.name
                     payslip['designation'] = slip.employee_id.job_id.name
-                    payslip['doj'] = slip.employee_id.initial_employment_date                    
+                    payslip['doj'] = slip.employee_id.initial_employment_date
                     payslip['emp_seq'] = slip.employee_id.employee_sequence
                     loan_remain = slip.remaining_loan or 0.00
                     payslip['loan_balance'] = format(loan_remain, '.2f') if loan_remain else None
@@ -53,53 +55,51 @@ class PayrollReportPivotal(models.AbstractModel):
                             if line.code == rule['code']:
                                 total_amount = math.ceil(line.total)
                                 payslip[rule['code']] = total_amount
-                                                                
+
                                 if line.code == "NET":
                                     total_sum.append(math.ceil(total_amount))
-                                                                         
-                                break;                        
+
+                                break;
 
                     dpt_payslips['val'].append(payslip)
-                    
-            emp_sort_list  = dpt_payslips['val']
+
+            emp_sort_list = dpt_payslips['val']
             emp_sort_list = sorted(emp_sort_list, key=lambda k: k['emp_seq'])
-            
+
             for ps in emp_sort_list:
                 ps['sn'] = sn
                 sn += 1
-            
+
             dpt_payslips['val'] = emp_sort_list
             dpt_payslips_list.append(dpt_payslips)
-        
+
         for other_slip in docs.slip_ids:
             if not other_slip.employee_id.department_id.id:
-                dpt_payslips = {} 
+                dpt_payslips = {}
                 dpt_payslips['val'] = []
 
                 payslip = {}
                 payslip['sn'] = sn
-                payslip['emp_name'] = other_slip.employee_id.name    
+                payslip['emp_name'] = other_slip.employee_id.name
                 payslip['designation'] = other_slip.employee_id.job_id.name
                 payslip['doj'] = other_slip.employee_id.initial_employment_date
-
-
-
 
                 for rule in rule_list:
                     payslip[rule['code']] = 0
                     for line in other_slip.line_ids:
                         if line.code == rule['code']:
                             payslip[rule['code']] = math.ceil(line.total)
-                            
+
                             if line.code == "NET":
                                 total_sum.append(math.ceil(line.total))
-                                                                    
-                            break; 
-                
+
+                            break;
+
                 dpt_payslips['name'] = "Other"
-                dpt_payslips['val'].append(payslip)   
+                dpt_payslips['val'].append(payslip)
 
         all_total = sum(total_sum)
+
         dpt_payslips_list.append(dpt_payslips)
         amt_to_word = self.env['res.currency'].amount_to_word(float(all_total))
 
@@ -110,12 +110,11 @@ class PayrollReportPivotal(models.AbstractModel):
             'doc_ids': self.ids,
             'doc_model': 'hr.payslip.run',
             'docs': dpt_payslips_list,
-            'docs_len': len(rule_list)+8,
+            'docs_len': len(rule_list) + 8,
             'rules': rule_list,
             'total_sum': thousand_separated_total_sum,
             'amt_to_word': amt_to_word,
             'data': data,
         }
-        
+
         return self.env['report'].render('gbs_hr_payroll.report_individual_payslip', docargs)
-    

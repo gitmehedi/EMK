@@ -17,13 +17,12 @@
     ],
     'data': [
         'wizard/inherited_hr_payroll_payslips_by_employees_views.xml',
-        'report/report_paperformat.xml',
-        'report/gbs_hr_payroll_report.xml',
         'report/payroll_report_view.xml',
         'views/hr_contract_view.xml',
         'views/inherited_hr_payslip_run_views.xml',
         'views/hr_payslip.xml',
         "views/hr_emp_tin_view.xml",
+        "views/inherit_res_partner_bank_view.xml",
     ],
     'summary': 'Shows job titles and payslip reports',
     'description':
