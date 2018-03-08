@@ -8,32 +8,21 @@
                         <style>
                             .leave-type-title {
                                 border-bottom:1px solid #ddd;
-                                padding: 0px 0 10px;
+                                padding: 5px 5px;
+                                margin: 0;
+                                text-align: left;
+                                background: #e5e5e5;
+                                font-size: 14px;
+                                font-weight: bold;
                             }
 
-                            .table-condensed>tbody>tr>td,
-                            .table-condensed>tbody>tr>th,
-                            .table-condensed>thead>tr>td,
-                            .table-condensed>thead>tr>th {
-                                font-size: 13px;
-                                padding: 4px;
-                                line-height: 1em;
-                            }
-                            .table>thead>tr>th {
-                                border-bottom: 1px solid #ddd !important;
-                            }
-                            .hr-2, .hr-1 {
-                                border-color: #ddd;
-                            }
-                            .hr-1 {
-                                margin-bottom: 15px;
-                            }
-                            .hr-2 {
-                                margin: 15px 0 0;
-                            }
-                            .data-legend {
-                                margin: 0 0 5px;
-                            }
+                            .emp-leave-header { border: 1px solid #ddd; border-bottom: none; }
+                            .data-legend { margin: 3px 0 2px; padding: 0 5px; font-size: 12px; }
+
+                            .hr-2, .hr-1 { border-color: #ddd; }
+                            .hr-1 { margin: 15px 0 10px; }
+                            .hr-2 { margin: 10px 0 0; }
+
                         </style>
                         <div class="clearfix">
                             <div class="">
@@ -70,33 +59,35 @@
                         </div>
 
                         <t t-foreach="lists" t-as="list">
-                            <div class="text-center">
-                                <h4 class="leave-type-title text-primary"><t t-esc="list_value['name']"/></h4>
-                            </div>
-                            <div class="row">
-                                <div class="col-xs-4">
-                                    <p class="text-left data-legend">
-                                        <strong>Initial Balance:</strong>
-                                        <span t-esc="list_value['init_bal']"/>
-                                    </p>
+                            <header class="emp-leave-header">
+                                <h4 class="leave-type-title text-primary">
+                                    <t t-esc="list_value['name']"/>
+                                </h4>
+                                <div class="row">
+                                    <div class="col-xs-4">
+                                        <p class="text-left data-legend">
+                                            <strong>Initial Balance:</strong>
+                                            <span t-esc="list_value['init_bal']"/>
+                                        </p>
+                                    </div>
+                                    <div class="col-xs-4">
+                                        <p class="text-center data-legend">
+                                            <strong>Avail:</strong>
+                                            <span t-esc="list_value['avail']"/>
+                                        </p>
+                                    </div>
+                                    <div class="col-xs-4">
+                                        <p class="text-right data-legend">
+                                            <strong>Current Balance:</strong>
+                                            <span t-esc="list_value['cur_bal']"/>
+                                        </p>
+                                    </div>
                                 </div>
-                                <div class="col-xs-4">
-                                    <p class="text-center data-legend">
-                                        <strong>Avail:</strong>
-                                        <span t-esc="list_value['avail']"/>
-                                    </p>
-                                </div>
-                                <div class="col-xs-4">
-                                    <p class="text-right data-legend">
-                                        <strong>Current Balance:</strong>
-                                        <span t-esc="list_value['cur_bal']"/>
-                                    </p>
-                                </div>
-                            </div>
+                            </header>
 
                             <table class="table table-bordered table-report-xs table-striped">
                                 <thead>
-                                    <tr>
+                                    <tr class="odo-bg-gray">
                                         <th class="text-center">From Date</th>
                                         <th class="text-center">To Date</th>
                                         <th class="text-center">Day(s)</th>
