@@ -19,7 +19,8 @@ class ItemLoanLending(models.Model):
                                   states={'draft': [('readonly', False)]})
     company_id = fields.Many2one('res.company', 'Company', readonly=True, states={'draft': [('readonly', False)]},
                                  default=lambda self: self.env.user.company_id, required=True)
-    operating_unit_id = fields.Many2one('operating.unit', 'Operating Unit', required=True,
+    operating_unit_id = fields.Many2one('operating.unit', 'Operating Unit', required=True,readonly=True,
+                                        states={'draft': [('readonly', False)]},
                                         default=lambda self: self.env.user.default_operating_unit_id)
     description = fields.Text('Description', readonly=True, states={'draft': [('readonly', False)]})
     item_lines = fields.One2many('item.loan.lending.line', 'item_loan_lending_id', 'Items', readonly=True,
@@ -43,7 +44,7 @@ class ItemLoanLending(models.Model):
             res = {
                 'state': 'waiting_approval',
             }
-            new_seq = self.env['ir.sequence'].next_by_code('stock.indent')
+            new_seq = self.env['ir.sequence'].next_by_code('item.loan.lending')
             if new_seq:
                 res['name'] = new_seq
             loan.write(res)
@@ -61,6 +62,7 @@ class ItemLoanLending(models.Model):
             'state': 'reject',
         }
         self.write(res)
+
     ####################################################
     # Override methods
     ####################################################

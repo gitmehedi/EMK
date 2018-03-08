@@ -19,7 +19,7 @@ the loan to other company. System will handle the both case mentioned above.
     'category': 'Inventory',
     'version': '10.0.0.1',
 
-    'depends': ['base','mail','product'],
+    'depends': ['base','mail','product','gbs_application_group'],
 
     'data': [
         'security/ir.model.access.csv',

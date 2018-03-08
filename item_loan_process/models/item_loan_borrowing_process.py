@@ -1,6 +1,7 @@
 from odoo import api, fields, models, _
 from odoo.addons import decimal_precision as dp
 import datetime
+from odoo.exceptions import UserError, ValidationError
 
 class ItemBorrowing(models.Model):
     _name = 'item.borrowing'
@@ -10,19 +11,20 @@ class ItemBorrowing(models.Model):
 
     name = fields.Char('Issue #', size=30, readonly=True, default="/")
     issue_date = fields.Datetime('Issue Date', required=True, readonly=True,
-                                  default=datetime.datetime.today())
+                                 default=datetime.datetime.today())
     issuer_id = fields.Many2one('res.users', string='Issuer', required=True, readonly=True,
-                                  default=lambda self: self.env.user,
-                                  states={'draft': [('readonly', False)]})
+                                default=lambda self: self.env.user,
+                                states={'draft': [('readonly', False)]})
     partner_id = fields.Many2one('res.partner', string="Partner Company" ,readonly=True, required=True,
                                  states={'draft': [('readonly', False)]})
     company_id = fields.Many2one('res.company', 'Company', readonly=True, states={'draft': [('readonly', False)]},
                                  default=lambda self: self.env.user.company_id, required=True)
-    operating_unit_id = fields.Many2one('operating.unit', 'Operating Unit', required=True,
+    operating_unit_id = fields.Many2one('operating.unit', 'Operating Unit', required=True,readonly=True,
+                                        states={'draft': [('readonly', False)]},
                                         default=lambda self: self.env.user.default_operating_unit_id)
     description = fields.Text('Description', readonly=True, states={'draft': [('readonly', False)]})
     item_lines = fields.One2many('item.borrowing.line', 'item_borrowing_id', 'Items', readonly=True,
-                                    states={'draft': [('readonly', False)]})
+                                 states={'draft': [('readonly', False)]})
     state = fields.Selection([
         ('draft', 'Draft'),
         ('confirm', 'Confirm'),
@@ -34,6 +36,32 @@ class ItemBorrowing(models.Model):
     ####################################################
     # Business methods
     ####################################################
+    @api.multi
+    def button_confirm(self):
+        for loan in self:
+            if not loan.item_lines:
+                raise UserError(_('You cannot confirm %s which has no line.' % (loan.name)))
+            res = {
+                'state': 'waiting_approval',
+            }
+            new_seq = self.env['ir.sequence'].next_by_code('item.borrowing')
+            if new_seq:
+                res['name'] = new_seq
+            loan.write(res)
+
+    @api.multi
+    def button_approve(self):
+        res = {
+            'state': 'approved',
+        }
+        self.write(res)
+
+    @api.multi
+    def button_reject(self):
+        res = {
+            'state': 'reject',
+        }
+        self.write(res)
 
     ####################################################
     # Override methods
@@ -77,6 +105,6 @@ class ItemBorrowingLines(models.Model):
         self.price_unit = product.standard_price
 
 
-    ####################################################
-    # Override methods
-    ####################################################
+        ####################################################
+        # Override methods
+        ####################################################
