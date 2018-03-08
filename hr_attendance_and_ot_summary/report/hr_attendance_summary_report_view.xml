@@ -5,35 +5,40 @@
 			<t t-call="custom_report.gbs_internal_layout">
 				<t t-call="report.html_container">
 					<div class="page">
-						<h3 class="text-center" style="margin-bottom:20px">Attendance Summary Report</h3>
 						<div class="row">
-							<div class="col-xs-6 text-left">
-								<label>Title : </label>
-								<span t-esc="doc_name"></span>
-							</div>
-							<div class="col-xs-6 text-right">
-								<label>Period From : </label>
-								<span t-esc="period_from"></span>
+							<h3 class="text-center" style="margin-bottom:20px">Attendance Summary Report</h3>
+							<div class="row">
+								<div class="col-xs-6 text-left">
+									<ul class="list-inline mb-5">
+										<li>
+											<label>Title : </label>
+											<span t-esc="doc_name"></span>
+										</li>
+										<li>
+											<label>State : </label>
+											<span t-esc="state"></span>
+										</li>
+									</ul>
+								</div>
 
+								<div class="col-xs-6 text-right">
+									<ul class="list-inline mb-5">
+										<li>
+											<label>Period From : </label>
+											<span t-esc="period_from"></span>
+										</li>
+										<li>
+											<label>To : </label>
+											<span t-esc="period_to"></span>
+										</li>
+									</ul>
+								</div>
 							</div>
 						</div>
 						<div class="row">
-							<div class="col-xs-6 text-left">
-								<label>State : </label>
-								<span t-esc="state"></span>
-							</div>
-							<div class="col-xs-6 text-right">
-								<label>To : </label>
-								<span t-esc="period_to"></span>
-
-							</div>
-						</div>
-						<div class="row">
-							<table class="table table-bordered">
+							<table class="table table-report-xs table-bordered table-striped">
 								<thead>
-									<tr
-										style="background-color:#f5f5f5;
-											border-bottom: 1px solid #030303;">
+									<tr class="odo-bg-gray">
 										<th>SN</th>
 										<th>Employee</th>
 										<th>Designation</th>
@@ -54,12 +59,7 @@
 
 									<t t-foreach="docs" t-as="k">
 										<t t-if="k['val']">
-											<td
-												style="background-color:#DDDBDB;
-													   text-align:center;
-													   border-bottom: 1px solid #030303;
-													   color:#000000;"
-													t-att-colspan="docs_len">
+											<td class="odo-bg-info" t-att-colspan="docs_len">
 												<strong t-esc="k['name']"></strong>
 											</td>
 
@@ -69,10 +69,10 @@
 														<span t-esc="o['sn']"></span>
 													</td>
 													<td>
-														<span t-esc="o['emp_name']"></span>
+														<span class="text-nowrap" t-esc="o['emp_name']"></span>
 													</td>
 													<td>
-														<span t-esc="o['designation']"></span>
+														<span class="text-nowrap" t-esc="o['designation']"></span>
 													</td>
 													<td>
 														<span t-esc="o['salary_days']"></span>

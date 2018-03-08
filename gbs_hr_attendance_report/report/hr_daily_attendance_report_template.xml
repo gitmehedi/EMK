@@ -17,44 +17,35 @@
                     <!--<t t-foreach="docs" t-as="o">-->
                     <div class="page" style="page-break-inside: auto">
                         <style>
-                            .unit-title {
-                                position: relative;
-                                border-bottom:1px solid #ededed;
-                                padding-bottom:10px;
+                            .table-caption {
+                                border: 1px solid #ddd;
+                                border-bottom: none;
+                                font-size: 14px;
+                                font-weight: bold;
+                                margin: 0;
+                                padding: 5px 5px;
                             }
-
                         </style>
                         <div class="row">
-                            <div class="col-xs-12">
-                                <h4 class="text-center">Daily Attendance Summary Report</h4>
-                                <hr/>
-                            </div>
-                        </div>
-                        <div>
+                            <h4 class="text-center">Daily Attendance Summary Report</h4>
+                            <hr class="hr-sm mb-0"/>
                             <div class="row">
                                 <div class="col-xs-8">
-                                    <div class="col-xs-8"><strong>Report Date : </strong><span t-esc="required_date"/></div>
-                                    <!--<div class="col-xs-5"><span t-esc="required_date"/></div>-->
+                                    <strong>Report Date : </strong><span t-esc="required_date"/>
                                 </div>
                                 <div class="col-xs-4">
-                                    <div class="row">
-                                        <div class="col-xs-12"><strong>Printing Time : </strong><span t-esc="context_timestamp(datetime.datetime.now()).strftime('%Y-%m-%d %H:%M')"/></div>
-                                        <!--<div class="col-xs-5"><span t-esc="context_timestamp(datetime.datetime.now()).strftime('%Y-%m-%d %H:%M')"/></div>-->
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-xs-12"><strong>Printed By : </strong><span t-esc="user.name"/></div>
-                                        <!--<div class="col-xs-5"><span t-esc="user.name"/></div>-->
-                                    </div>
+                                    <div><strong>Printing Time : </strong><span t-esc="context_timestamp(datetime.datetime.now()).strftime('%Y-%m-%d %H:%M')"/></div>
+                                    <div><strong>Printed By : </strong><span t-esc="user.name"/></div>
                                 </div>
                             </div>
+                            <hr class="hr-xs"/>
                         </div>
+
                         <t t-if="not operating_unit">
-                            <div class="clearfix">
-                                <hr/>
-                                <h4 class="text-primary">
+                            <div class="row mb-15">
+                                <h4 class="text-primary mt-0">
                                     <strong>Company Name :</strong> <span t-esc="company_name"/>
                                 </h4>
-                                <!--<div class="col-xs-6"><span t-esc="company_name"/></div>-->
                                 <div class="row">
                                     <div class="col-xs-4">
                                         <div class="row">
@@ -105,15 +96,15 @@
                                         </div>
                                     </div>
                                 </div>
-                            </div><br/>
+                            </div>
                         </t>
                         <t t-foreach="att_summary_list" t-as="att_summary">
-                            <div class="clearfix">
-                                <h4 class="text-primary unit-title">
-                                    <span>Operating Unit :</span> <span t-esc="att_summary['unit_name']"/>
+                            <div class="row unit-header">
+                                <h4 class="text-primary m-0 pl-5 pt-5">
+                                    <strong>Operating Unit :</strong> <span t-esc="att_summary['unit_name']"/>
                                 </h4>
-                                <!--<div class="col-xs-3"><span t-esc="att_summary['unit_name']"/></div>-->
-                                <div class="row">
+                                <hr class="hr-xxs mb-0"/>
+                                <div class="row pl-5 pr-5 pb-5">
                                     <div class="col-xs-4">
                                         <div class="row">
                                             <div class="col-xs-9"><strong>Total Employee:</strong></div>
@@ -166,10 +157,8 @@
                             </div>
 
                             <t t-if="att_summary['late']">
-                                <div>
-                                    <div style="margin:15px 0 5px 0">
-                                        <h4 class="text-center">Late Employee List</h4>
-                                    </div>
+                                <div class="row">
+                                    <h4 class="table-caption">Late Employee List</h4>
                                     <table class="table table-report table-bordered table-striped">
                                         <thead>
                                             <tr class="odo-bg-gray">
@@ -196,10 +185,8 @@
                             </t>
 
                             <t t-if="att_summary['absent']">
-                                <div class="clearfix">
-                                    <div style="margin:15px 0 5px 0">
-                                        <h4 class="text-center">Absent Employee List</h4>
-                                    </div>
+                                <div class="row">
+                                    <h4 class="table-caption">Absent Employee List</h4>
                                     <table class="table table-report table-bordered table-striped">
                                         <thead>
                                             <tr class="odo-bg-gray">
@@ -224,12 +211,8 @@
                             </t>
 
                             <t t-if="att_summary['roster_obligation']">
-                                <div class="clearfix">
-                                    <div class="row">
-                                        <div class="col-xs-12">
-                                            <h4 class="text-primary">Roster Not Mapped</h4>
-                                        </div>
-                                    </div>
+                                <div class="row">
+                                    <h4 class="table-caption">Roster Not Mapped</h4>
                                     <table class="table table-report table-bordered table-striped">
                                         <thead>
                                             <tr class="odo-bg-gray">
@@ -252,7 +235,6 @@
                                     </table>
                                 </div>
                             </t>
-                            <br/>
                         </t>
                         <t t-call="custom_report.report_signing"></t>
                     </div>
