@@ -12,6 +12,9 @@
                 <xpath expr="//label[@for='name']" position="replace">
                     <label for="name" string="Description" class="oe_edit_only"/>
                 </xpath>
+                <xpath expr="//field[@name='bank_id']" position="after">
+                    <label for="name" string="Description" class="oe_edit_only"/>
+                </xpath>
             </field>
         </record>
     </data>
