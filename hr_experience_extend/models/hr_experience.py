@@ -4,13 +4,6 @@
 
 from odoo import models, fields
 
-#
-# class HrExperience(models.Model):
-#     _inherit = 'hr.experience'
-#     _inherit = 'hr.curriculum'
-#
-#     passing_yr = fields.Char('Passing Year')
-
 class HrAcademic(models.Model):
     _inherit = 'hr.academic'
 
