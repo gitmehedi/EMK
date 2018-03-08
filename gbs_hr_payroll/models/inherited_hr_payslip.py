@@ -1,8 +1,18 @@
 from odoo import api, fields, models, tools, _
-#from datetime import date
-#from datetime import datetime
 import datetime
 from odoo.exceptions import UserError
+
+class InheritResPartnerBank(models.Model):
+    _inherit = 'res.partner.bank'
+
+    is_payroll_account = fields.Boolean(string='Payroll A/C', default=False)
+
+
+class HrPayrollAdvice(models.Model):
+
+    _inherit = 'hr.payroll.advice'
+
+    bank_acc_id = fields.Many2one('res.partner.bank', "Bank Account")
 
 
 class HrPayslipEmployees(models.TransientModel):
@@ -53,12 +63,21 @@ class HrPayslipRun(models.Model):
 
             ### Create Payment Advice
             for bank in banks:
+                ### Set Bank Account
+                bank_accs = self.env['res.partner.bank'].search([('bank_id','=',bank),
+                                                                ('is_payroll_account','=',True)])
+                if not bank_accs:
+                    raise UserError(_('Please define payroll bank account.'))
+                else:
+                    bank_acc_id = bank_accs[0].id
+                #################################
                 advice = self.env['hr.payroll.advice'].create({
                     'batch_id': run.id,
                     'company_id': company.id,
                     'name': run.name,
                     'date': run.date_end,
-                    'bank_id': bank
+                    'bank_id': bank,
+                    'bank_acc_id': bank_acc_id
                 })
 
                 ### Create Advice Line
