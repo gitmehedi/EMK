@@ -1,5 +1,5 @@
 from odoo import api, exceptions, fields, models
-import operator, math
+import math
 import locale
 
 
@@ -30,17 +30,6 @@ class PayrollReportPivotal(models.AbstractModel):
 
         dpt_payslips_list = []
         total_sum = []
-        gross_total_sum = []
-        salary_deduction_sum = []
-        mess_deduction_sum = []
-        loan_deduction_sum = []
-        arrear_allowance_sum = []
-        other_allowance_sum = []
-        mobile_allowance_sum = []
-        vehicle_allowance_sum = []
-        special_allowance = []
-        pf_contribution_sum = []
-        tax_deduc_source = []
 
         sn = 1
 
@@ -66,39 +55,6 @@ class PayrollReportPivotal(models.AbstractModel):
                             if line.code == rule['code']:
                                 total_amount = math.ceil(line.total)
                                 payslip[rule['code']] = total_amount
-
-                                if line.code == 'GROSS':
-                                    gross_total_sum.append(math.ceil(total_amount))
-
-                                if line.code == 'ABS':  # Salary Deduction
-                                    salary_deduction_sum.append(math.ceil(total_amount))
-
-                                if line.code == 'MESS':
-                                    mess_deduction_sum.append(math.ceil(total_amount))
-
-                                if line.code == 'LOAN':
-                                    loan_deduction_sum.append(math.ceil(total_amount))
-
-                                if line.code == 'ARS':  #Arrear Allowance
-                                    arrear_allowance_sum.append(math.ceil(total_amount))
-
-                                if line.code == 'OAS':  # Other Allowance
-                                    other_allowance_sum.append(math.ceil(total_amount))
-
-                                if line.code == 'MOBILE':  # MOBILE Allowance
-                                    mobile_allowance_sum.append(math.ceil(total_amount))
-
-                                if line.code == 'TPA':#vehicle allowance
-                                    vehicle_allowance_sum.append(math.ceil(total_amount))
-
-                                if line.code == 'SA':  # Special Allowance
-                                    special_allowance.append(math.ceil(total_amount))
-
-                                if line.code == 'EPMF':  # PF Contribution
-                                    pf_contribution_sum.append(math.ceil(total_amount))
-
-                                if line.code == 'TDS':
-                                    tax_deduc_source.append(math.ceil(total_amount))
 
                                 if line.code == "NET":
                                     total_sum.append(math.ceil(total_amount))
@@ -144,32 +100,6 @@ class PayrollReportPivotal(models.AbstractModel):
 
         all_total = sum(total_sum)
 
-        gross_total_sum = sum(gross_total_sum)
-        salary_deduc_total_sum = sum(salary_deduction_sum)
-        mess_deduc_sum = sum(mess_deduction_sum)
-        loan_deduc_sum = sum(loan_deduction_sum)
-        arrears_tot_sum = sum(arrear_allowance_sum)
-        other_allo_sum = sum(other_allowance_sum)
-        mob_allw_sum = sum(mobile_allowance_sum)
-        vehicle_allw_sum = sum(vehicle_allowance_sum)
-        spec_allw_sum = sum(special_allowance)
-        pf_tot_sum = sum(pf_contribution_sum)
-        tax_deduc_sum = sum(tax_deduc_source)
-
-        print '------------ Total Gross Amount: ', gross_total_sum
-        print '------------ Salary Deduction : ', salary_deduc_total_sum
-        print '------------ Mess Deduction : ', mess_deduc_sum
-        print '------------ Loan Deduction : ', loan_deduc_sum
-        print '------------ Arrears : ', arrears_tot_sum
-        print '------------ Others: ', other_allo_sum
-        print '------------ Mob: ', mob_allw_sum
-        print '------------ Vehicle Allowance: ',vehicle_allw_sum
-        print '------------ Special Allowance: ', spec_allw_sum
-        print '------------ PF: ', pf_tot_sum
-        print '------------ Tax Deduc Source: ',tax_deduc_sum
-        print '------------ Net: ', all_total
-
-
         dpt_payslips_list.append(dpt_payslips)
         amt_to_word = self.env['res.currency'].amount_to_word(float(all_total))
 
@@ -184,18 +114,6 @@ class PayrollReportPivotal(models.AbstractModel):
             'rules': rule_list,
             'total_sum': thousand_separated_total_sum,
             'amt_to_word': amt_to_word,
-            'gross_total_sum': gross_total_sum,
-            'salary_deduc_total_sum': abs(salary_deduc_total_sum),
-            'mess_deduc_sum': abs(mess_deduc_sum),
-            'loan_deduc_sum': abs(loan_deduc_sum),
-            'vehicle_allowance_sum': abs(vehicle_allw_sum),
-            'arrears_tot_sum': arrears_tot_sum,
-            'other_allo_sum': other_allo_sum,
-            'mob_allw_sum': mob_allw_sum,
-            'tax_deduc_sum': abs(tax_deduc_sum),
-            'vehicle_allw_sum': vehicle_allw_sum,
-            'spec_allw_sum':spec_allw_sum,
-            'pf_tot_sum': abs(pf_tot_sum),
             'data': data,
         }
 
