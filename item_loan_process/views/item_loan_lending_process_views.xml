@@ -26,16 +26,17 @@
                 <form string="Item Loan Lending">
                     <header>
                         <button name="button_confirm" string="Confirm" states="draft"
-                        class="oe_highlight" type="object"/>
+                                class="oe_highlight" type="object" groups="base.group_user"/>
                         <button name="button_approve" string="Approve" states="waiting_approval" type="object"
-                        class="oe_highlight"/>
-                        <button name="button_reject" string="Reject" states="waiting_approval" type="object"/>
+                                class="oe_highlight" groups="gbs_application_group.group_head_of_plant"/>
+                        <button name="button_reject" string="Reject" states="waiting_approval" type="object"
+                                groups="gbs_application_group.group_head_of_plant"/>
                         <field name="state" widget="statusbar"
                                statusbar_visible="draft,waiting_approval,approved"
                                statusbar_colors='{"reject":"red"}' />
                     </header>
                     <sheet>
-                        <group>
+                        <group col="2">
                             <group>
                                 <field name="issuer_id" readonly="1" />
                                 <field name="issue_date" />

@@ -25,17 +25,12 @@
             <field name="arch" type="xml">
                 <form string="Item Borrowing">
                     <header>
-                        <!--<button name="indent_confirm" string="Confirm" states="draft"-->
-                        <!--class="oe_highlight" type="object"/>-->
-                        <!--<button name="approve_indent" string="Approve" states="waiting_approval" type="object"-->
-                        <!--class="oe_highlight" groups="stock_indent.group_stock_indent_approver"/>-->
-                        <!--<button name="reject_indent" string="Reject" states="waiting_approval"-->
-                        <!--groups="stock_indent.group_stock_indent_approver" type="object"/>-->
-                        <!--<button name="action_view_picking" string="Issue Product(s)" type="object"-->
-                        <!--states="inprogress" class="oe_highlight" groups="stock_indent.group_stock_indent_issuer"/>-->
-                        <!--<button name="action_view_purchase_requisition" string="Issue PR" type="object"-->
-                        <!--groups="stock_indent.group_stock_indent_issuer"-->
-                        <!--attrs="{'invisible': ['|',('state','!=','inprogress'),('check_pr_issued','!=', True)]}"/>-->
+                        <button name="button_confirm" string="Confirm" states="draft"
+                                class="oe_highlight" type="object" groups="base.group_user"/>
+                        <button name="button_approve" string="Approve" states="waiting_approval" type="object"
+                                class="oe_highlight" groups="gbs_application_group.group_head_of_plant"/>
+                        <button name="button_reject" string="Reject" states="waiting_approval" type="object"
+                                groups="gbs_application_group.group_head_of_plant"/>
                         <field name="state" widget="statusbar"
                                statusbar_visible="draft,waiting_approval,approved"
                                statusbar_colors='{"reject":"red"}' />
