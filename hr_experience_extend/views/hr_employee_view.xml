@@ -2,18 +2,18 @@
 <odoo>
 
     <!-- inheritEmployee -->
-    <record model="ir.ui.view" id="view_employee_form_inherit">
-        <field name="name">hr.experience.employee.form</field>
-        <field name="model">hr.employee</field>
-        <field name="inherit_id" ref="hr_experience.view_employee_form_inherit"/>
-        <field name="arch" type="xml">
-            <xpath expr="//field[@name='academic_ids']/tree/field[@name='start_date']" position="before">
-                <field name="passing_yr"/>
-            </xpath>
-            <xpath expr="//field[@name='academic_ids']/form/field[@name='start_date']" position="before">
-                <field name="passing_yr"/>
-            </xpath>
-        </field>
-    </record>
+    <!--<record model="ir.ui.view" id="view_employee_form_inherit">-->
+        <!--<field name="name">hr.experience.employee.form</field>-->
+        <!--<field name="model">hr.employee</field>-->
+        <!--<field name="inherit_id" ref="hr_experience.view_employee_form_inherit"/>-->
+        <!--<field name="arch" type="xml">-->
+            <!--&lt;!&ndash;<xpath expr="//field[@name='academic_ids']/tree/field[@name='start_date']" position="before">&ndash;&gt;-->
+                <!--&lt;!&ndash;<field name="passing_yr"/>&ndash;&gt;-->
+            <!--&lt;!&ndash;</xpath>&ndash;&gt;-->
+            <!--<xpath expr="//notebook/page/field[@name='academic_ids']/form/field[@name='start_date']" position="before">-->
+                <!--<field name="passing_yr"/>-->
+            <!--</xpath>-->
+        <!--</field>-->
+    <!--</record>-->
 
 </odoo>
