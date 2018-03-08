@@ -53,8 +53,30 @@ class ItemBorrowingLines(models.Model):
     product_uos = fields.Many2one('product.uom', 'Product UoS')
     price_unit = fields.Float('Price', digits=dp.get_precision('Product Price'),
                               help="Price computed based on the last purchase order approved.")
-    price_subtotal = fields.Float(string='Subtotal', compute='_amount_subtotal', digits=dp.get_precision('Account'),
-                                  store=True)
-    qty_available = fields.Float('In Stock', compute='_getProductQuentity', store=True)
     name = fields.Text('Specification', store=True)
     sequence = fields.Integer('Sequence')
+
+    ####################################################
+    # Business methods
+    ####################################################
+    @api.onchange('product_id')
+    def onchange_product_id(self):
+        if not self.product_id:
+            return {'value': {'product_uom_qty': 1.0,
+                              'product_uom': False,
+                              'price_unit': 0.0,
+                              'name': '',
+                              }
+                    }
+        product_obj = self.env['product.product']
+        product = product_obj.search([('id', '=', self.product_id.id)])
+
+        product_name = product.name_get()[0][1]
+        self.name = product_name
+        self.product_uom = product.uom_id.id
+        self.price_unit = product.standard_price
+
+
+    ####################################################
+    # Override methods
+    ####################################################

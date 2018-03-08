@@ -1,6 +1,7 @@
 from odoo import api, fields, models, _
 from odoo.addons import decimal_precision as dp
 import datetime
+from odoo.exceptions import UserError, ValidationError
 
 class ItemLoanLending(models.Model):
     _name = 'item.loan.lending'
@@ -34,7 +35,32 @@ class ItemLoanLending(models.Model):
     ####################################################
     # Business methods
     ####################################################
+    @api.multi
+    def button_confirm(self):
+        for loan in self:
+            if not loan.item_lines:
+                raise UserError(_('You cannot confirm %s which has no line.' % (loan.name)))
+            res = {
+                'state': 'waiting_approval',
+            }
+            new_seq = self.env['ir.sequence'].next_by_code('stock.indent')
+            if new_seq:
+                res['name'] = new_seq
+            loan.write(res)
 
+    @api.multi
+    def button_approve(self):
+        res = {
+            'state': 'approved',
+        }
+        self.write(res)
+
+    @api.multi
+    def button_reject(self):
+        res = {
+            'state': 'reject',
+        }
+        self.write(res)
     ####################################################
     # Override methods
     ####################################################
@@ -55,6 +81,27 @@ class ItemLoanLendingLines(models.Model):
                               help="Price computed based on the last purchase order approved.")
     price_subtotal = fields.Float(string='Subtotal', compute='_amount_subtotal', digits=dp.get_precision('Account'),
                                   store=True)
-    qty_available = fields.Float('In Stock', compute='_getProductQuentity', store=True)
     name = fields.Text('Specification', store=True)
     sequence = fields.Integer('Sequence')
+    ####################################################
+    # Business methods
+    ####################################################
+    @api.onchange('product_id')
+    def onchange_product_id(self):
+        if not self.product_id:
+            return {'value': {'product_uom_qty': 1.0,
+                              'product_uom': False,
+                              'price_unit': 0.0,
+                              'name': '',
+                              }
+                    }
+        product_obj = self.env['product.product']
+        product = product_obj.search([('id', '=', self.product_id.id)])
+
+        product_name = product.name_get()[0][1]
+        self.name = product_name
+        self.product_uom = product.uom_id.id
+        self.price_unit = product.list_price
+    ####################################################
+    # Override methods
+    ####################################################
