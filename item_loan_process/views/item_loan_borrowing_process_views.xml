@@ -61,9 +61,9 @@
                                         <field name="sequence" widget="handle"/>
                                         <field name="product_id"/>
                                         <field name="name"/>
-                                        <field name="qty_available" readonly="1"/>
                                         <field name="product_uom" string="UOM"/>
                                         <field name="product_uom_qty" sum="Total Qty"/>
+                                        <field name="price_unit" sum="Total Unit Price"/>
                                     </tree>
                                 </field>
                                 <div class="oe_clear">

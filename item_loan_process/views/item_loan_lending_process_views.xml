@@ -25,17 +25,11 @@
             <field name="arch" type="xml">
                 <form string="Item Loan Lending">
                     <header>
-                        <!--<button name="indent_confirm" string="Confirm" states="draft"-->
-                        <!--class="oe_highlight" type="object"/>-->
-                        <!--<button name="approve_indent" string="Approve" states="waiting_approval" type="object"-->
-                        <!--class="oe_highlight" groups="stock_indent.group_stock_indent_approver"/>-->
-                        <!--<button name="reject_indent" string="Reject" states="waiting_approval"-->
-                        <!--groups="stock_indent.group_stock_indent_approver" type="object"/>-->
-                        <!--<button name="action_view_picking" string="Issue Product(s)" type="object"-->
-                        <!--states="inprogress" class="oe_highlight" groups="stock_indent.group_stock_indent_issuer"/>-->
-                        <!--<button name="action_view_purchase_requisition" string="Issue PR" type="object"-->
-                        <!--groups="stock_indent.group_stock_indent_issuer"-->
-                        <!--attrs="{'invisible': ['|',('state','!=','inprogress'),('check_pr_issued','!=', True)]}"/>-->
+                        <button name="button_confirm" string="Confirm" states="draft"
+                        class="oe_highlight" type="object"/>
+                        <button name="button_approve" string="Approve" states="waiting_approval" type="object"
+                        class="oe_highlight"/>
+                        <button name="button_reject" string="Reject" states="waiting_approval" type="object"/>
                         <field name="state" widget="statusbar"
                                statusbar_visible="draft,waiting_approval,approved"
                                statusbar_colors='{"reject":"red"}' />
@@ -61,9 +55,9 @@
                                         <field name="sequence" widget="handle"/>
                                         <field name="product_id"/>
                                         <field name="name"/>
-                                        <field name="qty_available" readonly="1"/>
                                         <field name="product_uom" string="UOM"/>
                                         <field name="product_uom_qty" sum="Total Qty"/>
+                                        <field name="price_unit" sum="Total Unit Price"/>
                                     </tree>
                                 </field>
                                 <div class="oe_clear">
