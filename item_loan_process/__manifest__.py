@@ -19,10 +19,10 @@ the loan to other company. System will handle the both case mentioned above.
     'category': 'Inventory',
     'version': '10.0.0.1',
 
-    'depends': ['base'],
+    'depends': ['base','mail','product','gbs_application_group'],
 
     'data': [
-        # 'security/ir.model.access.csv',
+        'security/ir.model.access.csv',
         'views/item_loan_borrowing_process_views.xml',
         'views/item_loan_lending_process_views.xml',
     ],
