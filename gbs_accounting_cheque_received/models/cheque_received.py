@@ -5,9 +5,8 @@ import datetime
 class ChequeReceived(models.Model):
     _inherit = 'account.payment'
     _name = 'accounting.cheque.received'
-    #_inherit = ['mail.thread', 'ir.needaction_mixin']
+    # _inherit = ['mail.thread', 'ir.needaction_mixin']
     _rec_name = 'name'
-
 
     state = fields.Selection([
         ('draft', 'Cheque Entry'),
@@ -19,7 +18,8 @@ class ChequeReceived(models.Model):
     ], readonly=True, track_visibility='onchange', copy=False, default='draft')
 
     partner_type = fields.Selection([('customer', 'Customer'), ('supplier', 'Vendor')], default='customer')
-    payment_type = fields.Selection([('inbound', 'Inbound'), ('outbound', 'Outbound')], required=True, default = 'inbound')
+    payment_type = fields.Selection([('inbound', 'Inbound'), ('outbound', 'Outbound')], required=True,
+                                    default='inbound')
 
     @api.multi
     def _get_name(self):
@@ -39,14 +39,16 @@ class ChequeReceived(models.Model):
 
     payment_date = fields.Date(string='Payment Date', default=fields.Date.context_today, required=True, copy=False)
 
-    # @api.multi
-    # def _get_payment_method(self):
-    #     for pay in self:
-    #         pay.payment_method_id = 2
+    @api.multi
+    def _get_payment_method(self):
+        for pay in self:
+            pay_method_pool = pay.env['account.payment.method'].search([('payment_type', '=', 'inbound')], limit=1)
+            pay.payment_method_id = pay_method_pool.id
 
 
-    #payment_method_id = fields.Many2one('account.payment.method', string='Payment Method Type', compute='_get_payment_method')
-    currency_id = fields.Many2one('res.currency', string='Currency',)
+    payment_method_id = fields.Many2one('account.payment.method', string='Payment Method Type',
+                                        compute='_get_payment_method')
+    currency_id = fields.Many2one('res.currency', string='Currency', )
 
     payment_type = fields.Selection([('outbound', 'Send Money'), ('inbound', 'Receive Money')],
                                     string='Payment Type', required=True, default='inbound')
@@ -56,7 +58,7 @@ class ChequeReceived(models.Model):
         for jour in self:
             jour.journal_id = jour.env.user.company_id.bank_journal_ids.id
 
-    journal_id = fields.Many2one('account.journal',compute='_compute_journal')
+    journal_id = fields.Many2one('account.journal', compute='_compute_journal')
 
     # Update customer's Credit Limit. Basically plus cheque amount with Customer Credit Limit
     @api.multi
@@ -66,7 +68,7 @@ class ChequeReceived(models.Model):
                 [('partner_id', '=', cust.partner_id.id),
                  ('state', '=', 'approve')], order='assign_id DESC', limit=1)
 
-            #Cheque Amount with Credit limit of customer; it should not exceed customer's original Credit Limit.
+            # Cheque Amount with Credit limit of customer; it should not exceed customer's original Credit Limit.
             if cust.sale_order_id.credit_sales_or_lc == 'credit_sales' \
                     and cust.sale_order_id.partner_id.id == cust.partner_id.id:
 
@@ -77,25 +79,22 @@ class ChequeReceived(models.Model):
                 else:
                     res_partner_credit_limit.write({'remaining_credit_limit': update_cust_credits})
 
-
     # Decrese Customers Receivable amount when cheque is honored
-    #@todo below method has some bugs, fix it
+    # @todo below method has some bugs, fix it
     @api.multi
     def updateCustomersReceivableAmount(self):
         for cust in self:
             res_partner_pool = cust.env['res.partner'].search([('id', '=', cust.partner_id.id)])
 
             if cust.sale_order_id.credit_sales_or_lc == 'credit_sales':
-
                 # Customer's Receivable amount is actually minus value
                 update_cust_receivable_amount = res_partner_pool.credit + cust.cheque_amount
                 res_partner_pool.property_account_payable_id.write({'credit': update_cust_receivable_amount})
 
-
     @api.multi
     def action_honoured(self):
         for cash_rcv in self:
-           # cash_rcv.cheque_amount = 0 # Test val
+            # cash_rcv.cheque_amount = 0 # Test val
             cash_rcv._create_payment_entry(cash_rcv.cheque_amount)
 
             # Update Customer's Credit Limit & Receilable Amount
@@ -103,8 +102,6 @@ class ChequeReceived(models.Model):
             cash_rcv.updateCustomersReceivableAmount()
 
             cash_rcv.state = 'honoured'
-
-
 
     @api.model
     def create(self, vals):

@@ -1,2 +1,11 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-access_item_loan_process_item_loan_process,item_loan_process.item_loan_process,model_item_loan_process_item_loan_process,,1,0,0,0
+access_item_borrowing_user,access_item_borrowing_user,model_item_borrowing,base.group_user,1,0,0,0
+access_item_borrowing_line_user,access_item_borrowing_line_user,model_item_borrowing_line,base.group_user,1,0,0,0
+access_item_loan_lending_user,access_item_loan_lending_user,model_item_loan_lending,base.group_user,1,0,0,0
+access_item_loan_lending_line_user,access_item_loan_lending_line_user,model_item_loan_lending_line,base.group_user,1,0,0,0
+
+
+access_loan_product_user,access_loan_product_user,product.model_product_product,base.group_user,1,0,0,0
+access_loan_product_category_user,access_loan_product_category_user,product.model_product_category,base.group_user,1,0,0,0
+access_loan_product_uom_user,access_loan_product_uom_user,product.model_product_uom,base.group_user,1,0,0,0
+
