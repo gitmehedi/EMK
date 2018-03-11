@@ -54,7 +54,8 @@
 								<field name="department_id" readonly='1'/>
 								<field name="salary_days" readonly='1'/>
 								<field name="present_days" readonly='1'/>
-								<field name="absent_days_count" readonly='1'/>
+								<field name="absent_days_count" invisible='1'/>
+								<field name="absent_count" readonly='0'/>
 								<field name="late_days_count" readonly='1'/>
 								<field name="leave_days" readonly='1'/>
 								<field name="weekend_days_count" readonly='1'/>
