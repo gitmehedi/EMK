@@ -1,4 +1,6 @@
 from odoo import models, fields, api
+from odoo.exceptions import UserError, ValidationError
+
 import datetime
 
 
@@ -47,18 +49,27 @@ class ChequeReceived(models.Model):
 
 
     payment_method_id = fields.Many2one('account.payment.method', string='Payment Method Type',
-                                        compute='_get_payment_method')
+                                    compute='_get_payment_method')
     currency_id = fields.Many2one('res.currency', string='Currency', )
 
     payment_type = fields.Selection([('outbound', 'Send Money'), ('inbound', 'Receive Money')],
-                                    string='Payment Type', required=True, default='inbound')
+                                string='Payment Type', required=True, default='inbound')
+
 
     @api.multi
     def _compute_journal(self):
         for jour in self:
             jour.journal_id = jour.env.user.company_id.bank_journal_ids.id
 
+
     journal_id = fields.Many2one('account.journal', compute='_compute_journal')
+
+
+    @api.constrains('cheque_amount')
+    def _check_negative_amount_value(self):
+        if not self.amount < 0.0:
+            raise ValidationError('The payment amount must be strictly positive.')
+
 
     # Update customer's Credit Limit. Basically plus cheque amount with Customer Credit Limit
     @api.multi
@@ -79,6 +90,7 @@ class ChequeReceived(models.Model):
                 else:
                     res_partner_credit_limit.write({'remaining_credit_limit': update_cust_credits})
 
+
     # Decrese Customers Receivable amount when cheque is honored
     # @todo below method has some bugs, fix it
     @api.multi
@@ -90,6 +102,7 @@ class ChequeReceived(models.Model):
                 # Customer's Receivable amount is actually minus value
                 update_cust_receivable_amount = res_partner_pool.credit + cust.cheque_amount
                 res_partner_pool.property_account_payable_id.write({'credit': update_cust_receivable_amount})
+
 
     @api.multi
     def action_honoured(self):
@@ -103,6 +116,7 @@ class ChequeReceived(models.Model):
 
             cash_rcv.state = 'honoured'
 
+
     @api.model
     def create(self, vals):
         seq = self.env['ir.sequence'].next_by_code('accounting.cheque.received') or '/'
@@ -110,20 +124,24 @@ class ChequeReceived(models.Model):
         vals['amount'] = 12
         return super(ChequeReceived, self).create(vals)
 
+
     @api.multi
     def action_received(self):
         for cr in self:
             cr.state = 'received'
+
 
     @api.multi
     def action_deposited(self):
         for cr in self:
             cr.state = 'deposited'
 
+
     @api.multi
     def action_dishonoured(self):
         for cr in self:
             cr.state = 'dishonoured'
+
 
     @api.multi
     def action_returned_to_customer(self):
