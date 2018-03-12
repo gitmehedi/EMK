@@ -22,7 +22,7 @@ Manages several types of job confirmations: bottom-up, top-down and the final jo
         'hr_attendance',
         'gbs_application_group',
         'operating_unit',
-        'gbs_hr_criteria',
+        'question_set',
         'hr_employee_seniority',
     ],
     'data': [
