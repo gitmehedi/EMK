@@ -35,7 +35,7 @@
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td><p><b><u>Subject: Disbursement of <span t-esc="o.name"/> from A/C no. <span t-field="o.bank_acc_id" /> to the following employees Bank Account.</u></b></p></td>
+                                    <td><p><b>Subject: Disbursement of <span t-esc="o.name"/> from A/C no. <span t-field="o.bank_acc_id" /> to the following employees Bank Account.</b></p></td>
                                 </tr>
                                 <tr>
                                     <td><p><span>Dear Sir/Madam,</span></p></td>
