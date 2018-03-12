@@ -23,6 +23,7 @@ class AttendanceSummaryLine(models.Model):
 
     absent_days = fields.One2many('hr.attendance.absent.day', 'att_summary_line_id', string='Absent Days')
     absent_days_count = fields.Integer(string="Absent Days", compute="_set_absent_days_count")
+    absent_count = fields.Integer(string="Absent Days", compute="_set_absent_days_count", store = True)
 
     late_days = fields.One2many('hr.attendance.late.day', 'att_summary_line_id', string='Late Days')
     late_days_count = fields.Integer(string="Late Days", compute="_set_late_days_count")
@@ -31,13 +32,16 @@ class AttendanceSummaryLine(models.Model):
     weekend_days_count = fields.Integer(string="Weekend Days", compute="_set_weekend_days_count")
     is_entered_rostering = fields.Integer(default=1, required=True)
 
+
     @api.depends('absent_days')
     def _set_absent_days_count(self):
         for line in self:
             if line.absent_days:
                 line.absent_days_count = len(line.absent_days)
+                line.absent_count = len(line.absent_days)
             else:
                 line.absent_days_count = 0
+                line.absent_count = 0
 
     @api.depends('late_days')
     def _set_late_days_count(self):
@@ -75,6 +79,12 @@ class AttendanceSummaryLine(models.Model):
             'target': 'current'
         }
 
+    @api.depends('absent_days')
+    @api.onchange('absent_days_count')
+    def onchange_absent_days_count(self):
+        if self.absent_days_count:
+            self.absent_count = self.absent_days_count
+
 
 class TempAttendanceSummaryLine(object):
 
@@ -105,3 +115,4 @@ class TempAttendanceSummaryLine(object):
             self.weekend_days = []
         else:
             self.weekend_days = weekend_days
+
