@@ -6,6 +6,7 @@ class InheritedHrAttendancePayslip(models.Model):
     Inherit HR Payslip models and add onchange functionality on 
     employee_id
     """
+
     _inherit = "hr.payslip"
 
     @api.multi
@@ -78,8 +79,7 @@ class InheritedHrAttendancePayslip(models.Model):
                 })
             self.worked_days_line_ids = worked_days_lines
 
-
-
+        return res
 
 
 
