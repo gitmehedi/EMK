@@ -9,6 +9,9 @@
                 <field name="partner_id" position="after">
                     <field name="linkedin" widget="url"/>
                 </field>
+                <field name="partner_name" position="after">
+                    <field name="emp_size"/>
+                </field>
             </field>
         </record>
         <record model="ir.ui.view" id="view_form_opportunity_linkedin">
@@ -18,6 +21,7 @@
             <field name="priority">100</field>
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='partner_name']" position="after">
+                    <field name="emp_size"/>
                     <field name="linkedin" widget="url"/>
                 </xpath>
             </field>
