@@ -6,8 +6,8 @@
     'category': 'Human Resources',
     'author': 'Genweb2 Limited',
     'website': 'www.genweb2.com',
-    'summary': 'Computes the actual leave days '
-               'considering rest days and public holidays',
+    'summary': """Computes the actual leave days 
+               considering rest days and public holidays""",
     'depends': ['hr',
                 'hr_contract',
                 'hr_holidays',
