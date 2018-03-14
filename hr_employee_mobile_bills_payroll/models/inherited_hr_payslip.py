@@ -25,17 +25,12 @@ class InheritedHrMobilePayslip(models.Model):
 
         return res
 
-    @api.multi
-    def onchange_employee_id(self, date_from, date_to, employee_id=False, contract_id=False):
-
-        res = super(InheritedHrMobilePayslip, self).onchange_employee_id(date_from,
-                                                                 date_to,
-                                                                 employee_id,
-                                                                 contract_id)
+    @api.onchange('employee_id', 'date_from', 'date_to')
+    def onchange_employee(self):
 
         if self.employee_id:
             self.input_line_ids = 0
-            #super(InheritedHrMobilePayslip, self).onchange_employee()
+            super(InheritedHrMobilePayslip, self).onchange_employee()
 
             """
             Incorporate other payroll data
@@ -56,6 +51,6 @@ class InheritedHrMobilePayslip(models.Model):
                     'ref': mobile_data.id,
             })
             self.input_line_ids = other_line_ids
-        return res
+
 
 
