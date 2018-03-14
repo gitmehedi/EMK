@@ -26,12 +26,17 @@ class InheritedEmployeeIouPayslip(models.Model):
 
         return res
 
-    @api.onchange('employee_id', 'date_from', 'date_to')
-    def onchange_employee(self):
+    @api.multi
+    def onchange_employee_id(self, date_from, date_to, employee_id=False, contract_id=False):
+
+        res = super(InheritedEmployeeIouPayslip, self).onchange_employee_id(date_from,
+                                                                         date_to,
+                                                                         employee_id,
+                                                                         contract_id)
 
         if self.employee_id:
             self.input_line_ids = 0
-            super(InheritedEmployeeIouPayslip, self).onchange_employee()
+            #super(InheritedEmployeeIouPayslip, self).onchange_employee()
 
             other_line_ids = self.input_line_ids
             emp_iou_pool = self.env['hr.employee.iou'].search([('employee_id', '=', self.employee_id.id),
@@ -48,3 +53,4 @@ class InheritedEmployeeIouPayslip(models.Model):
                     })
 
             self.input_line_ids = other_line_ids
+        return res
