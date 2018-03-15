@@ -23,14 +23,11 @@
 				<form string="Attendance and Over Time Summary" delete="false" create="0">
 					<header>
 						<button name="hr_attendance_and_ot_summary.attendance_summary_wizard_action_view"
-							type="action" string="Select Employee" states="draft" context="{'operating_unit_id': operating_unit_id}"/>
+							type="action" string="Generated" states="draft" context="{'operating_unit_id': operating_unit_id}"/>
 						<button name="hr_attendance_and_ot_summary.attendance_summary_wizard_action_view" context="{'operating_unit_id': operating_unit_id}"
-							 type="action" string="Re Generate" states="generated"/>
-						<!--<button name="get_summary_data" type="object" string="Get Summary" />-->
-
-  						<button name="action_draft" type="object" string="Reject" states="confirmed,approved"/>
-  						<button name="action_generated" type="object" string="Generated" states="draft" class="oe_highlight"/>
-                        <button name="action_confirm" type="object" string="Confirm" states="generated" class="oe_highlight"/>
+							 type="action" string="Re Generate" states="confirmed"/>
+  						<button name="action_draft" type="object" string="Set to Draft" states="confirmed,approved"/>
+                        <button name="action_confirm" type="object" string="Confirm" states="draft" class="oe_highlight"/>
                         <button name="action_done" type="object" string="Approve" states="confirmed" class="oe_highlight"/>
 						<field name="state" widget="statusbar"/>
 					</header>
@@ -54,7 +51,8 @@
 								<field name="department_id" readonly='1'/>
 								<field name="salary_days" readonly='1'/>
 								<field name="present_days" readonly='1'/>
-								<field name="absent_days_count" readonly='1'/>
+								<field name="absent_days_count" invisible='1'/>
+								<field name="absent_count" readonly='0'/>
 								<field name="late_days_count" readonly='1'/>
 								<field name="leave_days" readonly='1'/>
 								<field name="weekend_days_count" readonly='1'/>

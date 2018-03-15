@@ -19,6 +19,7 @@ You can manage:
     'depends': [
         'base',
         'base_setup',
+        'hr_attendance',
     ],
     'data': [
         'security/ir.model.access.csv',

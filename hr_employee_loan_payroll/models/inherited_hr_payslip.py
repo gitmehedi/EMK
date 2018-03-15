@@ -12,7 +12,6 @@ class InheritedHrMobilePayslip(models.Model):
 
     @api.onchange('employee_id', 'date_from', 'date_to')
     def onchange_employee(self):
-
         if self.employee_id:
 
             emp_loan=self.env['hr.employee.loan'].search([('employee_id.id','=',self.employee_id.id),
