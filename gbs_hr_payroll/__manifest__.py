@@ -12,7 +12,7 @@
         'gbs_hr_department_sequence',
         'gbs_hr_calendar',
         'gbs_hr_employee_sequence',
-        'hr_employee_loan_payroll',
+        #'hr_employee_loan_payroll',
         'custom_report'
     ],
     'data': [
@@ -22,12 +22,11 @@
         'views/hr_contract_view.xml',
         'views/inherited_hr_payslip_run_views.xml',
         'views/hr_payslip.xml',
-        "views/hr_emp_tin_view.xml",
         "views/inherit_res_partner_bank_view.xml",
     ],
-    'summary': 'Shows job titles and payslip reports',
+    'summary': 'Shows payslip reports',
     'description':
-        "This module shows job titles when searching employee name, also enables HR Manager to print individual payslip PDF report ",
+        "This module shows HR Manager to print individual payslip PDF report ",
     'installable': True,
     'application': True,
 }

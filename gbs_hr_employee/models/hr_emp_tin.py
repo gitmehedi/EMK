@@ -1,4 +1,4 @@
-from openerp import fields, models
+from odoo import api, fields, models, tools, _
 
 class HrEmployee(models.Model):
 
