@@ -6,7 +6,6 @@
         <field name="arch" type="xml">
             <form string="Employee Roster View" class="oe_form_configuration">
                 <header>
-                    <button string="Generate" class="oe_highlight" custom="click"/>
                     <style type="text/css">
                         #new {
                             position: absolute;
@@ -76,6 +75,9 @@
                             width: 135px;
                             text-align: right;
                         }
+                        .roster-filters .o_form_input {
+                            width: 166px;
+                        }
                     </style>
                 </header>
                 <separator string="Settings"/>
@@ -104,7 +106,11 @@
                         <label for="to_date" />
                         <field name="to_date" class="oe_inline" />
                     </div>
+                    <div class="col-sm-4">
+                        <button string="Generate" class="oe_highlight mr16 pull-right" custom="click"/>
+                    </div>
                 </div>
+                <hr class=""/>
                 <div class="o_form_sheet"></div>
             </form>
         </field>

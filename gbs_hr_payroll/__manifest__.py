@@ -12,7 +12,7 @@
         'gbs_hr_department_sequence',
         'gbs_hr_calendar',
         'gbs_hr_employee_sequence',
-        #'hr_employee_loan_payroll',
+        'hr_employee_loan_payroll',
         'custom_report'
     ],
     'data': [

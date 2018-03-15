@@ -303,6 +303,7 @@ links.Timeline.prototype.draw = function(data, options) {
     this.setData(data);
 
     if (this.firstDraw) {
+        debugger;
         this.setVisibleChartRangeAuto();
     }
 
@@ -857,6 +858,7 @@ links.Timeline.prototype.getDataRange = function (withMargin) {
  *                                                        as default value
  */
 links.Timeline.prototype.render = function(options) {
+    // debugger;
     var frameResized = this.reflowFrame();
     var axisResized = this.reflowAxis();
     var groupsResized = this.reflowGroups();
@@ -900,6 +902,7 @@ links.Timeline.prototype.render = function(options) {
  *                                 a reflow is needed.
  */
 links.Timeline.prototype.repaint = function() {
+    // debugger;
     var frameNeedsReflow = this.repaintFrame();
     var axisNeedsReflow  = this.repaintAxis();
     var groupsNeedsReflow  = this.repaintGroups();
@@ -939,6 +942,7 @@ links.Timeline.prototype.reflowFrame = function() {
  *                                 a reflow is needed.
  */
 links.Timeline.prototype.repaintFrame = function() {
+    // debugger;
     var needsReflow = false,
         dom = this.dom,
         options = this.options,
