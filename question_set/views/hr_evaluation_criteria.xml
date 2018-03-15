@@ -24,10 +24,9 @@
                 <form string="HR Employee Criteria">
                     <sheet>
                         <div class="oe_button_box"></div>
-                        <div class="oe_title">
-                            <label for="name"/>
-                            <h2><field name="name"/></h2>
-                        </div>
+                        <group>
+                            <field name="name"/>
+                        </group>
                         <group>
                             <group>
                                 <field name="seq"/>
@@ -50,17 +49,18 @@
 		</record>
 
         <menuitem
-				name="HR Employee Criteria"
-                parent="hr.menu_hr_root"
+				name="Question Set"
+                parent="hr.menu_human_resources_configuration"
 				id="hr_criteria_main_menu"
-				sequence="94"
+                action="action_hr_employee_criteria"
+				sequence="7"
                 groups="hr.group_hr_user,hr.group_hr_manager"
         />
-		<menuitem
-				name="HR Employee Criteria"
-                parent="hr_criteria_main_menu"
-				id="hr_evaluation_criteria_menu"
-				sequence="30"
+        <menuitem
+				name="Question Set"
+                parent="gbs_purchase_requisition.menu_commercial_configuration"
+                sequence="3"
+				id="hr_criteria_main_me"
                 action="action_hr_employee_criteria"
                 groups="hr.group_hr_user,hr.group_hr_manager"
         />

@@ -67,7 +67,7 @@ class ChequeReceived(models.Model):
 
     @api.constrains('cheque_amount')
     def _check_negative_amount_value(self):
-        if not self.amount < 0.0:
+        if self.cheque_amount < 0:
             raise ValidationError('The payment amount must be strictly positive.')
 
 

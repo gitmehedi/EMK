@@ -13,6 +13,7 @@ Periodical Employees Criteria
     'depends': [
         'hr',
         'gbs_application_group',
+        'gbs_purchase_requisition',
     ],
     'data': [
         'security/ir.model.access.csv',

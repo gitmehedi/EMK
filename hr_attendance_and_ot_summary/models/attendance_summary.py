@@ -18,7 +18,6 @@ class AttendanceSummary(models.Model):
                                         )
     state = fields.Selection([
         ('draft', "Draft"),
-        ('generated', "Generated"),
         ('confirmed', "Confirmed"),
         ('approved', "Approved"),
     ], default='draft')

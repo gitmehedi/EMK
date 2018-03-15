@@ -22,7 +22,7 @@ Manages several types of evaluations: bottom-up, top-down, self-evaluations and 
         'hr_attendance',
         'gbs_application_group',
         'operating_unit',
-        'gbs_hr_criteria',
+        'question_set',
         'hr_employee_seniority',
     ],
     'data': [
