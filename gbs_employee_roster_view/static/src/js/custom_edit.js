@@ -3,7 +3,9 @@ odoo.define('rnd_hr.custom_timeline', function (require) {
    "use strict";
    var form_widget = require('web.form_widgets');
    var ajax = require('web.ajax');
-   var Dialog = require('web.Dialog');
+   // var Dialog = require('web.Dialog');
+   var core = require('web.core');
+   var _t = core._t;
 
    google.load("visualization", "1");
 
@@ -48,7 +50,8 @@ odoo.define('rnd_hr.custom_timeline', function (require) {
                     google.setOnLoadCallback(self.drawVisualization(params['from_date'], dataList));
                 });
             }else{
-                alert('Please Select Input Field Correctly.');
+                this.do_warn(_t("The following fields are invalid :"),'Please Select Input Field Correctly.');
+                // this.do_warn(_t("Please Select Input Field Correctly"))
             }
         },
 
