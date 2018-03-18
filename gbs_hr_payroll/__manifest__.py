@@ -5,15 +5,16 @@
     'category': 'payroll',
     'version': '10.0.1.0.0',
     'depends': [
-        'hr',
         'hr_payroll', 
         'l10n_in_hr_payroll',
         'hr_employee_seniority',
         'gbs_hr_department_sequence',
-        'gbs_hr_calendar',
+        # 'gbs_hr_calendar',
+        'gbs_hr_employee',
         'gbs_hr_employee_sequence',
         'hr_employee_loan_payroll',
-        'custom_report'
+        'custom_report',
+        'amount_to_word_bd'
     ],
     'data': [
         'wizard/inherited_hr_payroll_payslips_by_employees_views.xml',

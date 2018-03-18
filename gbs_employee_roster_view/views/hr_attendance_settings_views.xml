@@ -49,6 +49,7 @@
                         }
                         div.timeline-event-content {
                             padding: 5px;
+                            font-size: 0.85em !important;
                         }
 
                         div.unavailable {
@@ -80,7 +81,7 @@
                         }
                     </style>
                 </header>
-                <separator string="Settings"/>
+                <separator string="Roster View"/>
                 <div class="row roster-filters">
                     <div class="col-sm-4" groups="operating_unit.group_multi_operating_unit">
                         <label for="operating_unit_id"/>
