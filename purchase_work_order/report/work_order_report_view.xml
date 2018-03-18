@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <template id="report_product_work_order">
+            <t t-call="report.html_container">
+                <t t-call="report.external_layout">
+                    <t t-set="o" t-value="purchase.with_context({'lang':purchase.partner_id.lang})"/>
+                    <style>
+                        .table th {
+                        padding: 2px !important;
+                        }
+                        .table td {
+                        padding: 2px !important;
+                        font-size: 12px !important;
+                        }
+                    </style>
+                    <div class="page" style="page-break-inside: auto">
+                        <div class="row">
+                            <div class="row">
+                                <div class="col-xs-6">
+                                    <div>
+                                        <strong>Ref:</strong>
+                                        <span t-esc="data['name']"/>
+                                    </div>
+                                    <div>
+                                        <strong>Date:</strong>
+                                        <span t-esc="data['order_date']"/>
+                                    </div>
+                                </div>
+                                <div class="col-xs-3 col-xs-offset-3">
+                                    <strong>To</strong>
+                                    <br/>
+                                    <div t-field="o.partner_id"
+                                         t-field-options='{"widget": "contact", "fields": ["address", "name", "phone", "fax"], "no_marker": true}'/>
+                                </div>
+
+                            </div>
+                            <div class="row">
+                                <div class="col-xs-12">
+                                    <strong>Sub: Work order for production and delivery of PEBBLES brand items.</strong>
+                                    <p>On behalf of MARISHIPA OUTFITTERS(PEBBLES), I am providing you the work order to supply
+                                    Pebbles products according to following details.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <br/>
+                        <table class="table table-bordered" style="padding: 0px;">
+                            <thead>
+                                <tr>
+                                    <t t-foreach="header" t-as="head">
+                                        <th rowspan="2" style="text-align: center;">
+                                            <t t-esc="head_value"/>
+                                        </th>
+
+                                    </t>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <t t-foreach="holiday_objs" t-as="list">
+                                    <tr>
+                                        <td class="text-center">
+                                            <span t-esc="list_index+1"/>
+                                        </td>
+                                        <td>
+                                            <span t-esc="list_value['name']"/>
+                                        </td>
+                                        <td>
+                                            <span t-esc="list_value['uom']"/>
+                                        </td>
+                                        <td>
+                                            <span t-esc="list_value['qty']"/>
+                                        </td>
+                                        <td>
+                                            <span t-esc="list_value['production_terms']"/>
+                                        </td>
+                                        <td class="text-left">
+                                            <span t-esc="list_value['date_planned']"/>
+                                        </td>
+                                        <td class="text-right">
+                                            <span t-esc="list_value['price_unit']"
+                                                  t-esc-options='{"widget": "monetary", "display_currency": "o.currency_id"}'/>
+                                        </td>
+                                        <td class="text-right">
+                                            <span t-esc="list_value['price_total']"
+                                                  t-esc-options='{"widget": "monetary", "display_currency": "o.currency_id"}'/>
+                                        </td>
+                                        <td class="text-right">
+                                            <span t-esc="list_value['remarks']"/>
+                                        </td>
+                                    </tr>
+                                </t>
+                            </tbody>
+                        </table>
+                        <div class="row">
+                            <div class="col-xs-4 pull-right">
+                                <table class="table table-condensed">
+                                    <tr class="border-black">
+                                        <td>
+                                            <strong>Total Without Taxes</strong>
+                                        </td>
+                                        <td class="text-right">
+                                            <span t-esc="data['amount_untaxed']"
+                                                  t-esc-options='{"widget": "monetary", "display_currency": "o.currency_id"}'/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Taxes</td>
+                                        <td class="text-right">
+                                            <span t-esc="data['amount_tax']"
+                                                  t-esc-options='{"widget": "monetary", "display_currency": "o.currency_id"}'/>
+                                        </td>
+                                    </tr>
+                                    <tr class="border-black">
+                                        <td>
+                                            <strong>Total</strong>
+                                        </td>
+                                        <td class="text-right">
+                                            <span t-esc="data['amount_total']"
+                                                  t-esc-options='{"widget": "monetary", "display_currency": "o.currency_id"}'/>
+                                        </td>
+                                    </tr>
+
+
+                                </table>
+
+                            </div>
+                            <div class="col-xs-8 pull-right">
+                                <table class="table table-condensed">
+                                    <tr>
+                                        <td style="padding-top: 65px;" colspan="2">
+                                            <strong>In Words:</strong>
+                                            <strong>
+                                                <t t-esc="data['amount_to_word']"/>
+                                            </strong>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                        <p t-field="purchase.notes"/>
+                    </div>
+                </t>
+            </t>
+        </template>
+        <report id="report_work_order"
+                string="Work Orders"
+                model="purchase.order"
+                report_type="qweb-pdf"
+                name="purchase_work_order.report_product_work_order"
+                file="purchase_work_order.report_product_work_order"
+        />
+    </data>
+</openerp>
