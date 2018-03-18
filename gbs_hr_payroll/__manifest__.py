@@ -5,15 +5,16 @@
     'category': 'payroll',
     'version': '10.0.1.0.0',
     'depends': [
-        'hr',
         'hr_payroll', 
         'l10n_in_hr_payroll',
         'hr_employee_seniority',
         'gbs_hr_department_sequence',
-        'gbs_hr_calendar',
+        # 'gbs_hr_calendar',
+        'gbs_hr_employee',
         'gbs_hr_employee_sequence',
         'hr_employee_loan_payroll',
-        'custom_report'
+        'custom_report',
+        'amount_to_word_bd'
     ],
     'data': [
         'wizard/inherited_hr_payroll_payslips_by_employees_views.xml',
@@ -22,12 +23,11 @@
         'views/hr_contract_view.xml',
         'views/inherited_hr_payslip_run_views.xml',
         'views/hr_payslip.xml',
-        "views/hr_emp_tin_view.xml",
         "views/inherit_res_partner_bank_view.xml",
     ],
-    'summary': 'Shows job titles and payslip reports',
+    'summary': 'Shows payslip reports',
     'description':
-        "This module shows job titles when searching employee name, also enables HR Manager to print individual payslip PDF report ",
+        "This module shows HR Manager to print individual payslip PDF report ",
     'installable': True,
     'application': True,
 }
