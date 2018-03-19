@@ -303,7 +303,7 @@ links.Timeline.prototype.draw = function(data, options) {
     this.setData(data);
 
     if (this.firstDraw) {
-        debugger;
+        // debugger;
         this.setVisibleChartRangeAuto();
     }
 
@@ -1775,6 +1775,7 @@ links.Timeline.prototype.repaintItems = function() {
 
     // reposition all visible items
     renderedItems.forEach(function (item) {
+        debugger;
         item.updatePosition(timeline);
     });
 
@@ -4178,7 +4179,7 @@ links.Timeline.ItemRange.prototype.updatePosition = function (timeline) {
             right = 2 * contentWidth;
         }
 
-        dom.style.top = this.top + "px";
+        dom.style.top = this.group.top + "px";
         dom.style.left = left + "px";
         //dom.style.width = Math.max(right - left - 2 * this.borderWidth, 1) + "px"; // TODO: borderWidth
         dom.style.width = Math.max(right - left, 1) + "px";

@@ -71,6 +71,11 @@
                             max-width: none !important;
                             <!--margin: 0 15px !important;-->
                         }
+                        .roster-filters {
+                            border-bottom: 1px solid #a8a8a8;
+                            padding-bottom: 15px;
+                            margin-bottom: 15px;
+                        }
                         .roster-filters label {
                             display: inline-block;
                             width: 135px;
@@ -78,6 +83,9 @@
                         }
                         .roster-filters .o_form_input {
                             width: 166px;
+                        }
+                        .o_form_view {
+                            background-color: #f0eeee;
                         }
                     </style>
                 </header>
@@ -111,7 +119,6 @@
                         <button string="Generate" class="oe_highlight mr16 pull-right" custom="click"/>
                     </div>
                 </div>
-                <hr class=""/>
                 <div class="o_form_sheet"></div>
             </form>
         </field>
