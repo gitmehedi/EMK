@@ -36,6 +36,7 @@ class GBSStockScrap(models.Model):
                                       compute='_computePickingType',store=True)
     lot_id = fields.Many2one('stock.production.lot', 'Lot')
     package_id = fields.Many2one('stock.quant.package', 'Package')
+    move_id = fields.Many2one('stock.move', 'Scrap Move', readonly=True)
     product_lines = fields.One2many('gbs.stock.scrap.line', 'stock_scrap_id', 'Products', readonly=True,
                                     states={'draft': [('readonly', False)]})
     state = fields.Selection([
@@ -128,6 +129,7 @@ class GBSStockScrap(models.Model):
                         'You cannot scrap a move without having available stock for %s. You can correct it with an inventory adjustment.') % line.product_id.name)
                 self.env['stock.quant'].quants_reserve(quants, move)
                 move.action_done()
+                self.write({'move_id': move.id})
                 moves.recalculate_move_state()
         return picking_id
 
@@ -191,6 +193,18 @@ class GBSStockScrap(models.Model):
             'approved_date': time.strftime('%Y-%m-%d %H:%M:%S')
         }
         self.write(res)
+
+    @api.multi
+    def action_get_stock_picking(self):
+        action = self.env.ref('stock.action_picking_tree_all').read([])[0]
+        action['domain'] = [('id', '=', self.picking_id.id)]
+        return action
+
+    @api.multi
+    def action_get_stock_move(self):
+        action = self.env.ref('stock.stock_move_action').read([])[0]
+        action['domain'] = [('id', '=', self.move_id.id)]
+        return action
 
     ####################################################
     # ORM Overrides methods

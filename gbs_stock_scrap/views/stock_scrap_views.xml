@@ -6,13 +6,13 @@
             <field name="name">view.stock.scrap.tree</field>
             <field name="model">gbs.stock.scrap</field>
             <field name="arch" type="xml">
-                <tree string="Stock Scrap" ecoration-bf="message_needaction == True"
-                      colors="gray:state=='received';green:state=='waiting_approval';red:state=='reject';">
+                <tree string="Scrap" ecoration-bf="message_needaction == True"
+                      colors="gray:state=='approved';green:state=='waiting_approval';red:state=='reject';">
                     <field name="name" />
                     <field name="request_by" />
                     <field name="requested_date" />
                     <field name="location_id" />
-                    <field name="reason" />
+                    <field name="reason" invisible="1"/>
                     <field name="state" />
                     <field name="message_needaction" invisible="1"/>
                 </tree>
@@ -23,10 +23,10 @@
             <field name="name">view.stock.scrap.form</field>
             <field name="model">gbs.stock.scrap</field>
             <field name="arch" type="xml">
-                <form string="Indents">
+                <form string="Scrap">
                     <header>
                         <button name="scrap_confirm" string="Confirm" states="draft"
-								class="oe_highlight" type="object" groups="stock.group_stock_user"/>
+                                class="oe_highlight" type="object" groups="stock.group_stock_user"/>
                         <button name="scrap_approve" string="Approve" states="waiting_approval" type="object"
                                 class="oe_highlight" groups="stock.group_stock_manager"/>
                         <button name="scrap_reject" string="Reject" states="waiting_approval"
@@ -36,12 +36,22 @@
                                statusbar_colors='{"reject":"red"}' />
                     </header>
                     <sheet>
+                        <div class="oe_button_box" name="button_box">
+                            <button class="oe_stat_button" name="action_get_stock_picking"
+                                    string="Stock Operation" type="object"
+                                    attrs="{'invisible':[('picking_id','=',False)]}" icon="fa-cogs"/>
+                            <field name="picking_id" invisible="1"/>
+                            <button class="oe_stat_button" name="action_get_stock_move"
+                                    string="Inventory Move" type="object"
+                                    attrs="{'invisible':[('move_id','=',False)]}" icon="fa-arrows-v"/>
+                            <field name="move_id" invisible="1"/>
+                        </div>
                         <group>
                             <group>
                                 <field name="request_by"/>
                                 <field name="requested_date"/>
-                                <field name="approved_date"/>
-                                <field name="approver_id"/>
+                                <field name="approved_date" attrs="{'invisible': [('state','!=','approved')]}"/>
+                                <field name="approver_id" attrs="{'invisible': [('state','!=','approved')]}"/>
                             </group>
                             <group>
                                 <field name="company_id" groups="base.group_multi_company"
@@ -49,8 +59,9 @@
                                 <field name="operating_unit_id" options="{'no_create': True,'no_open':True}"
                                        groups="operating_unit.group_multi_operating_unit" />
                                 <field name="location_id" options="{'no_create': True,'no_open':True}"/>
-                                <field name="picking_id" />
-                                <field name="picking_type_id" />
+                                <field name="picking_type_id" invisible="1"/>
+                                <field name="lot_id" invisible="1"/>
+                                <field name="package_id" invisible="1"/>
                             </group>
                         </group>
                         <notebook>
@@ -68,7 +79,7 @@
                                 <div class="oe_clear">
                                     <label for="reason" />
                                 </div>
-                                <field name="reason" class="oe_inline" placeholder="The material is scraping for..." />
+                                <field name="reason" colspan="4" placeholder="The material is scraping for..." />
                             </page>
                         </notebook>
                     </sheet>
@@ -82,13 +93,16 @@
 
         <!-- Indent Window Action -->
         <record id='action_gbs_stock_scrap' model='ir.actions.act_window'>
-            <field name="name">Stock Scrap</field>
+            <field name="name">Scrap</field>
             <field name="res_model">gbs.stock.scrap</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="help" type="html">
                 <p class="oe_view_nocontent_create">
-                    Click to create a new indent.
+                    Click to scrap products.
+                </p>
+                <p>
+                    Products you scrap will be removed from the stock and moved to a specific scrap location, for reporting purposes.
                 </p>
             </field>
         </record>
@@ -98,6 +112,7 @@
                 name="Scrap"
                 parent="stock.menu_stock_inventory_control"
                 action="action_gbs_stock_scrap"
+                groups="stock.group_stock_manager,stock.group_stock_user"
                 sequence="99"/>
     </data>
 </odoo>
