@@ -11,7 +11,7 @@
     'depends': ['hr',
                 'hr_contract',
                 'hr_holidays',
-                'hr_public_holidays'
+                'gbs_hr_public_holidays'
                 ],
     'data': [
         'views/hr_holidays_status.xml',

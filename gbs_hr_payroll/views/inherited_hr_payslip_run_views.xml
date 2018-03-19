@@ -19,8 +19,18 @@
             <field name="model">hr.payroll.advice</field>
             <field name="inherit_id" ref="l10n_in_hr_payroll.view_hr_bank_advice_form"/>
             <field name="arch" type="xml">
-                <xpath expr="//field[@name='bank_id']" position="after">
-                    <field name="bank_acc_id"/>
+                <xpath expr="//group[1]" position="replace">
+                    <group>
+                        <group>
+                            <field name="name" string="Name"/>
+                            <field name="date" string="Date"/>
+                        </group>
+                        <group>
+                            <field name="bank_id" options="{'no_quick_create':True,'no_create_edit':True,'no_open': True}"/>
+                            <field name="bank_acc_id" options="{'no_quick_create':True,'no_create_edit':True,'no_open': True}"/>
+                            <field name="number"/>
+                        </group>
+                    </group>
                 </xpath>
             </field>
         </record>

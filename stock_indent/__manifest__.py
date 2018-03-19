@@ -4,7 +4,6 @@
     'category': 'Warehouse Management',
     'depends': ['stock',
                 'account',
-                'purchase_requisition',
                 'ir_sequence_operating_unit',
                 'indent_type',
                 'gbs_res_users'],

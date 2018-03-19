@@ -52,9 +52,6 @@
 								groups="stock_indent.group_stock_indent_approver" type="object"/>
 						<button name="action_view_picking" string="Issue Product(s)" type="object"
 								states="inprogress" class="oe_highlight" groups="stock_indent.group_stock_indent_issuer"/>
-						<button name="action_view_purchase_requisition" string="Issue PR" type="object"
-								groups="stock_indent.group_stock_indent_issuer"
-								attrs="{'invisible': ['|',('state','!=','inprogress'),('check_pr_issued','!=', True)]}"/>
 						<field name="state" widget="statusbar"
 							   statusbar_visible="draft,waiting_approval,inprogress,received"
 							   statusbar_colors='{"reject":"red"}' />
@@ -110,7 +107,6 @@
 											   options="{'no_create': True,'no_open':True}"/>
 										<field name="move_type" />
 										<field name="approver_id" invisible="1"/>
-										<field name="check_pr_issued" invisible="1"/>
 										<field name="pr_indent_check" invisible="1"/>
 									</group>
 									<group>
