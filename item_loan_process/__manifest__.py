@@ -22,6 +22,7 @@ the loan to other company. System will handle the both case mentioned above.
     'depends': ['base','mail','product','gbs_application_group'],
 
     'data': [
+        'data/sequence.xml',
         'security/ir.model.access.csv',
         'views/item_loan_borrowing_process_views.xml',
         'views/item_loan_lending_process_views.xml',

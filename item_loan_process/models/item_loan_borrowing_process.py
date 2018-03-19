@@ -44,7 +44,14 @@ class ItemBorrowing(models.Model):
             res = {
                 'state': 'waiting_approval',
             }
-            new_seq = self.env['ir.sequence'].next_by_code('item.borrowing')
+            seq = self.env['ir.sequence']
+            seq_search = seq.search([('name','=','Item Loan Lending Test')])
+            seq_search.sudo().write({'prefix':'Loan'+'/'+self.operating_unit_id.code+'/',
+                              'code':self.operating_unit_id.name,
+                              'operating_unit_id':self.operating_unit_id.id})
+
+            new_seq = self.env['ir.sequence'].next_by_code_new(self.operating_unit_id.name)
+
             if new_seq:
                 res['name'] = new_seq
             loan.write(res)

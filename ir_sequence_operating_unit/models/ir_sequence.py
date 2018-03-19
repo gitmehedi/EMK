@@ -35,16 +35,17 @@ class IrSequenceOperatingUnit(models.Model):
                 "No ir.sequence has been found for code '%s'. Please make sure a sequence is set for current company." % sequence_code)
             return False
 
+        new_seq_ids = []
         if len(seq_ids) > 1 and self.env.user.default_operating_unit_id:
             new_seq_ids = self.search([('code', '=', sequence_code),
                                        ('company_id', 'in', [force_company, False]),
                                        ('operating_unit_id','=', self.env.user.default_operating_unit_id.id)],
                                       order='company_id')
-
-            if not new_seq_ids:
-                seq_ids = new_seq_ids
-
-        seq_id = seq_ids[0]
+        if new_seq_ids:
+            seq_id = new_seq_ids[0]
+        else:
+            seq_id = seq_ids[0]
+                
         res = seq_id._next()
         res_val = res.replace('OU', self.env.user.default_operating_unit_id.code)
         return res_val
