@@ -52,7 +52,7 @@
                                         <tr style="background-color:#C0C0C0;">
                                             <th>SL</th>
                                             <th>Item Name</th>
-                                            <th>Specification</th>
+                                            <!--<th>Specification</th>-->
                                             <th>Qty</th>
                                             <th>Remarks</th>
                                         </tr>
@@ -62,7 +62,7 @@
                                             <tr style="page-break-inside: avoid">
                                                 <td><span t-esc="p_index+1"/></td>
                                                 <td><span t-esc="p.product_id.name"/></td>
-                                                <td><span t-esc="p.specification"/></td>
+                                                <!--<td><span t-esc="p.specification"/></td>-->
                                                 <td><span t-esc="p.product_uom_qty"/></td>
                                                 <td><span t-esc="p.remarks"/></td>
                                             </tr>

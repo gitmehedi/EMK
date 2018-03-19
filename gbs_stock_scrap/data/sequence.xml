@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="sequence_stock_scrap_SCCL_HO" model="ir.sequence">
+            <field name="name">Scrap SCCL HO</field>
+            <field name="code">stock.scraping</field>
+            <field name="prefix">Scrap-OU-%(year)s-</field>
+            <field eval="6" name="padding"/>
+            <field eval="1" name="number_increment"/>
+            <field eval="False" name="company_id"/>
+        </record>
+
+        <record id="sequence_stock_scrap_SCCL_DF" model="ir.sequence">
+            <field name="name">Scrap SCCL DF</field>
+            <field name="code">stock.scraping</field>
+            <field name="prefix">Scrap-OU-%(year)s-</field>
+            <field eval="6" name="padding"/>
+            <field eval="1" name="number_increment"/>
+            <field eval="False" name="company_id"/>
+        </record>
+
+        <record id="sequence_stock_scrap_SCCL_CTG" model="ir.sequence">
+            <field name="name">Scrap SCCL CTG</field>
+            <field name="code">stock.scraping</field>
+            <field name="prefix">Scrap-OU-%(year)s-</field>
+            <field eval="6" name="padding"/>
+            <field eval="1" name="number_increment"/>
+            <field eval="False" name="company_id"/>
+        </record>
+
+        <record id="sequence_stock_scrap_SPL_HO" model="ir.sequence">
+            <field name="name">Scrap SPL HO</field>
+            <field name="code">stock.scraping</field>
+            <field name="prefix">Scrap-OU-%(year)s-</field>
+            <field eval="6" name="padding"/>
+            <field eval="1" name="number_increment"/>
+            <field eval="False" name="company_id"/>
+        </record>
+
+        <record id="sequence_stock_scrap_SPL_DF" model="ir.sequence">
+            <field name="name">Scrap SPL DF</field>
+            <field name="code">stock.scraping</field>
+            <field name="prefix">Scrap-OU-%(year)s-</field>
+            <field eval="6" name="padding"/>
+            <field eval="1" name="number_increment"/>
+            <field eval="False" name="company_id"/>
+        </record>
+
+        <record id="sequence_stock_scrap_SPL_CTG" model="ir.sequence">
+            <field name="name">Scrap SPL CTG</field>
+            <field name="code">stock.scraping</field>
+            <field name="prefix">Scrap-OU-%(year)s-</field>
+            <field eval="6" name="padding"/>
+            <field eval="1" name="number_increment"/>
+            <field eval="False" name="company_id"/>
+        </record>
+
+        <record id="sequence_stock_scrap_SSCL_HO" model="ir.sequence">
+            <field name="name">Scrap SSCL_HO</field>
+            <field name="code">stock.scraping</field>
+            <field name="prefix">Scrap-OU-%(year)s-</field>
+            <field eval="6" name="padding"/>
+            <field eval="1" name="number_increment"/>
+            <field eval="False" name="company_id"/>
+        </record>
+
+        <record id="sequence_stock_scrap_SSCL_CTG" model="ir.sequence">
+            <field name="name">Scrap SSCL CTG</field>
+            <field name="code">stock.scraping</field>
+            <field name="prefix">Scrap-OU-%(year)s-</field>
+            <field eval="6" name="padding"/>
+            <field eval="1" name="number_increment"/>
+            <field eval="False" name="company_id"/>
+        </record>
+
+        <record id="sequence_stock_scrap_SPPL_HO" model="ir.sequence">
+            <field name="name">Scrap SPPL HO</field>
+            <field name="code">stock.scraping</field>
+            <field name="prefix">Scrap-OU-%(year)s-</field>
+            <field eval="6" name="padding"/>
+            <field eval="1" name="number_increment"/>
+            <field eval="False" name="company_id"/>
+        </record>
+
+        <record id="sequence_stock_scrap_SPPL_CTG" model="ir.sequence">
+            <field name="name">Scrap SPPL CTG</field>
+            <field name="code">stock.scraping</field>
+            <field name="prefix">Scrap-OU-%(year)s-</field>
+            <field eval="6" name="padding"/>
+            <field eval="1" name="number_increment"/>
+            <field eval="False" name="company_id"/>
+        </record>
+    </data>
+</odoo>
