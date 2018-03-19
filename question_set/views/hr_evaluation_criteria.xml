@@ -24,10 +24,9 @@
                 <form string="HR Employee Criteria">
                     <sheet>
                         <div class="oe_button_box"></div>
-                        <div class="oe_title">
-                            <label for="name"/>
-                            <h2><field name="name"/></h2>
-                        </div>
+                        <group>
+                            <field name="name"/>
+                        </group>
                         <group>
                             <group>
                                 <field name="seq"/>
@@ -44,25 +43,33 @@
         </record>
 
         <record id="action_hr_employee_criteria" model="ir.actions.act_window">
-			<field name="name">HR Employee Criteria</field>
+			<field name="name">Employee Performance Evaluation/Job Confirmation Criteria</field>
 			<field name="res_model">hr.employee.criteria</field>
 			<field name="view_mode">tree,form</field>
+            <field name="domain">[('type','in', ['pfevaluation', 'jobconf'])]</field>
+		</record>
+
+        <record id="action_lc_criteria" model="ir.actions.act_window">
+			<field name="name">LC Evaluation Criteria</field>
+			<field name="res_model">hr.employee.criteria</field>
+			<field name="view_mode">tree,form</field>
+            <field name="domain">[('type','in', ['lc_evaluation'])]</field>
 		</record>
 
         <menuitem
-				name="HR Employee Criteria"
-                parent="hr.menu_hr_root"
+				name="Question Set"
+                parent="hr.menu_human_resources_configuration"
 				id="hr_criteria_main_menu"
-				sequence="94"
+                action="action_hr_employee_criteria"
+				sequence="7"
                 groups="hr.group_hr_user,hr.group_hr_manager"
         />
-		<menuitem
-				name="HR Employee Criteria"
-                parent="hr_criteria_main_menu"
-				id="hr_evaluation_criteria_menu"
-				sequence="30"
-                action="action_hr_employee_criteria"
-                groups="hr.group_hr_user,hr.group_hr_manager"
+        <menuitem
+				name="Question Set"
+                parent="gbs_purchase_requisition.menu_commercial_configuration"
+                sequence="3"
+				id="hr_criteria_main_me"
+                action="action_lc_criteria"
         />
     </data>
 </odoo>

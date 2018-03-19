@@ -3,6 +3,9 @@ odoo.define('rnd_hr.custom_timeline', function (require) {
    "use strict";
    var form_widget = require('web.form_widgets');
    var ajax = require('web.ajax');
+   // var Dialog = require('web.Dialog');
+   var core = require('web.core');
+   var _t = core._t;
 
    google.load("visualization", "1");
 
@@ -22,29 +25,37 @@ odoo.define('rnd_hr.custom_timeline', function (require) {
 
         onClick: function(self){
 
-            // debugger;
-            // 'type': $('[name="type"]').val().replace(/\"/g, ''),
+            var operating_unit_id = self.field_manager.get_field_value('operating_unit_id');
+            var department_id = self.field_manager.get_field_value('department_id');
+            var employee_id = self.field_manager.get_field_value('employee_id');
 
-            var fromDate = $('[name="from_date"]').val()
-            ajax.jsonRpc("/employee/roster", 'call', {
-                'operating_unit_id': 2,
-                'department_id': 1,
-                'employee_id': 1,
+            var params = {
+                'operating_unit': operating_unit_id == false ?'':operating_unit_id,
+                'department': department_id == false ?'-1':department_id,
+                'employee': employee_id == false ? '-1': employee_id,
                 'from_date': $('[name="from_date"]').val(),
-                'to_date': $('[name="to_date"]').val()
-            }).then(function (data) {
+                'to_date': $('[name="to_date"]').val(),
+            };
 
-                var dataList = $.parseJSON(data);
-
-                // Set callback to run when API is loaded
-                google.setOnLoadCallback(self.drawVisualization(fromDate, dataList));
-
-            });
-            return false;
+            if (params['operating_unit'] && params['from_date'] && params['to_date']){
+                ajax.jsonRpc("/employee/roster", 'call', {
+                    'operating_unit_id': params['operating_unit'],
+                    'department_id': params['department'],
+                    'employee_id': params['employee'],
+                    'from_date': params['from_date'],
+                    'to_date': params['to_date']
+                }).then(function (data) {
+                    var dataList = $.parseJSON(data);
+                    // Set callback to run when API is loaded
+                    google.setOnLoadCallback(self.drawVisualization(params['from_date'], dataList));
+                });
+            }else{
+                this.do_warn(_t("The following fields are invalid :"),'Please Select Input Field Correctly.');
+                // this.do_warn(_t("Please Select Input Field Correctly"))
+            }
         },
 
         drawVisualization: function (fromDate, dataList) {
-
             var dateArray = fromDate.split('/');
             var startDate = new Date(dateArray[2], dateArray[0] - 1, dateArray[1]);
 
@@ -57,7 +68,7 @@ odoo.define('rnd_hr.custom_timeline', function (require) {
             data.addColumn('string', 'content');
             data.addColumn('string', 'group');
             data.addColumn('string', 'className');
-
+            debugger;
             // Populate Data
             for (var n = 0, len = dataList.length; n < len; n++) {
 
@@ -81,10 +92,10 @@ odoo.define('rnd_hr.custom_timeline', function (require) {
 
                 if (obj.otDutyTime > 0){
                     var otStartDutyTime = new Date(obj.otStartDutyTime)
-                    var otStartDutyTime = new Date((new Date(obj.otStartDutyTime)).getTime() + 1000 * 60)
+                    //var otStartDutyTime = new Date((new Date(obj.otStartDutyTime)).getTime() + 1000 * 60)
                     var otEndDutyTime = new Date(obj.otEndDutyTime);
                     group = "maybe";
-                    content = obj.dutyTime.toString() + " Hrs OT";
+                    content = obj.otDutyTime.toString() + " Hrs OT";
                     data.addRow([otStartDutyTime, otEndDutyTime, content, name, group]);
                 }
 
@@ -116,10 +127,14 @@ odoo.define('rnd_hr.custom_timeline', function (require) {
             google.visualization.events.addListener(timeline, 'edit', this.onEdit);
 
             // Draw our timeline with the created data and options
+            // console.log(options);
+            // console.log(timeline);
+            // console.log(data);
+            // debugger;
             timeline.draw(data);
 
             // Set a customized visible range
-            var endDate = new Date(startDate.getTime() + 20 * 24 * 60 * 60 * 1000);
+            var endDate = new Date(startDate.getTime() + 10 * 24 * 60 * 60 * 1000);
 
             timeline.setVisibleChartRange(startDate, endDate);
         },

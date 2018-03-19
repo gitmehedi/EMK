@@ -27,20 +27,18 @@
                                     <td><strong><span>The Manager,</span></strong></td>
                                 </tr>
                                 <tr>
-                                    <td><strong><span t-esc="o.bank_id.name" />Bank</strong></td>
-                                </tr>
-                                <tr>
-                                    <td><p><b><u>Subject: Disbursement of <span t-esc="o.name"/> to the following employees Bank Account.</u></b></p></td>
-                                </tr>
-                                <tr>
-                                    <td><p><span>Dear Sir/Madam,</span></p></td>
+                                    <td><strong><span t-esc="o.bank_id.name" /> Bank</strong></td>
                                 </tr>
                                 <tr>
                                     <td>
-                                        <p class="text-center">
-                                            <strong>Payment Advice from <span t-esc="o.name"/> A/C no. <span t-esc="o.company_id.partner_id.bank_ids and o.company_id.partner_id.bank_ids[0].acc_number"/> form period  <span t-esc="get_month(o.date)['from_name']"/> to <span t-esc="get_month(o.date)['to_name']"/></strong>
-                                        </p>
+                                        <p></p>
                                     </td>
+                                </tr>
+                                <tr>
+                                    <td><p><b>Subject: Disbursement of <span t-esc="o.name"/> from A/C no. <span t-field="o.bank_acc_id" /> to the following employees Bank Account.</b></p></td>
+                                </tr>
+                                <tr>
+                                    <td><p><span>Dear Sir/Madam,</span></p></td>
                                 </tr>
                                 <tr>
                                     <td><p><span t-esc="o.note" /></p></td>
@@ -94,6 +92,7 @@
                                     </tr>
                                 </tbody>
                             </table>
+                            <p>(<span t-esc="amount_to_text_bdt()"/>)</p>
                             <p>Yours Sincerely</p>
                             <p>For <span t-esc="o.company_id.name"/></p>
                             <p class="mt32">Chairperson / Managing Director</p>
@@ -101,63 +100,11 @@
                     </t>
                 </t>
             </xpath>
-
-            <xpath expr="//div/table/tr/td/p[@class='text-center'][1]" position="replace">
-                <p class="text-center">
-                    <strong>Payment Advice from <span t-esc="o.name"/> A/C no. <span t-field="o.bank_acc_id" /> form period  <span t-esc="get_month(o.date)['from_name']"/> to <span t-esc="get_month(o.date)['to_name']"/></strong>
-                </p>
-            </xpath>
-            <!--<xpath expr="//div/table[@class='table table-condensed']" position="replace">-->
-                <!--<table class="table table-report-sm table-bordered table-striped">-->
-                    <!--<thead>-->
-                        <!--<tr style="background-color:#B4FDF0;-->
-												<!--border-bottom: 1px solid #030303;">-->
-                            <!--<th>SI No.</th>-->
-                            <!--<th>Name Of Employee</th>-->
-                            <!--<th>Bank Account No.</th>-->
-                            <!--<th t-if="o.neft != True">IFSC Code</th>-->
-                            <!--<th>By salary</th>-->
-                            <!--<th>C/D</th>-->
-                        <!--</tr>-->
-                    <!--</thead>-->
-                    <!--<tbody>-->
-                        <!--<tr t-foreach="get_detail(o.line_ids)" t-as="l">-->
-                            <!--<td>-->
-                                <!--<span t-esc="l_index+1">.</span>-->
-                            <!--</td>-->
-                            <!--<td>-->
-                              <!--<span t-esc="l['name']"/>-->
-                            <!--</td>-->
-                            <!--<td>-->
-                                 <!--<span t-esc="l['acc_no']"/>-->
-                            <!--</td>-->
-                            <!--<td t-if="o.neft != True">-->
-                                <!--<span t-esc="l['ifsc_code']"/>-->
-                            <!--</td>-->
-                            <!--<td>-->
-                                <!--<span t-esc="l['bysal']" t-options="{'widget': 'monetary', 'display_currency': o.company_id.currency_id}"/>-->
-                            <!--</td>-->
-                             <!--<td>-->
-                                <!--<span t-esc="l['debit_credit']"/>-->
-                            <!--</td>-->
-                        <!--</tr>-->
-                        <!--<tr class="border-black" style="border-bottom: 1px solid black">-->
-                            <!--<td colspan="2"/>-->
-                            <!--<td t-if="o.neft == True">-->
-                                <!--<strong >Total :</strong>-->
-                            <!--</td>-->
-                            <!--<td t-if="o.neft != True" colspan="2">-->
-                                <!--<strong >Total :</strong>-->
-                            <!--</td>-->
-                            <!--<td colspan="2">-->
-                                <!--<strong><span t-esc="get_bysal_total()" t-options="{'widget': 'monetary', 'display_currency': o.company_id.currency_id}"/></strong>-->
-                            <!--</td>-->
-                        <!--</tr>-->
-                    <!--</tbody>-->
-                <!--</table>-->
+            <!--<xpath expr="//div/table/tr/td/p[@class='text-center'][1]" position="replace">-->
+                <!--<p class="text-center">-->
+                    <!--<strong>Payment Advice from <span t-esc="o.name"/> A/C no. <span t-field="o.bank_acc_id" /> form period  <span t-esc="get_month(o.date)['from_name']"/> to <span t-esc="get_month(o.date)['to_name']"/></strong>-->
+                <!--</p>-->
             <!--</xpath>-->
-
-
         </template>
     </data>
 </odoo>

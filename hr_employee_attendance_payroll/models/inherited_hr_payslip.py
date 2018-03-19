@@ -6,17 +6,15 @@ class InheritedHrAttendancePayslip(models.Model):
     Inherit HR Payslip models and add onchange functionality on 
     employee_id
     """
+
     _inherit = "hr.payslip"
 
-    @api.multi
     @api.onchange('employee_id', 'date_from', 'date_to')
     def onchange_employee(self):
 
         if self.employee_id:
-
             self.worked_days_line_ids = 0
             super(InheritedHrAttendancePayslip, self).onchange_employee()
-
             """
             Insert attendance data
             """
@@ -75,7 +73,6 @@ class InheritedHrAttendancePayslip(models.Model):
                     'name': 'ABS Deduction Day(s)',
                 })
             self.worked_days_line_ids = worked_days_lines
-
 
 
 

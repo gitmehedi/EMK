@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Scrap Tree View -->
+        <record id='view_stock_scrap_tree' model='ir.ui.view'>
+            <field name="name">view.stock.scrap.tree</field>
+            <field name="model">gbs.stock.scrap</field>
+            <field name="arch" type="xml">
+                <tree string="Scrap" ecoration-bf="message_needaction == True"
+                      colors="gray:state=='approved';green:state=='waiting_approval';red:state=='reject';">
+                    <field name="name" />
+                    <field name="request_by" />
+                    <field name="requested_date" />
+                    <field name="location_id" />
+                    <field name="reason" invisible="1"/>
+                    <field name="state" />
+                    <field name="message_needaction" invisible="1"/>
+                </tree>
+            </field>
+        </record>
+        <!-- Scrap Form View -->
+        <record id='view_stock_scrap_form' model='ir.ui.view'>
+            <field name="name">view.stock.scrap.form</field>
+            <field name="model">gbs.stock.scrap</field>
+            <field name="arch" type="xml">
+                <form string="Scrap">
+                    <header>
+                        <button name="scrap_confirm" string="Confirm" states="draft"
+                                class="oe_highlight" type="object" groups="stock.group_stock_user"/>
+                        <button name="scrap_approve" string="Approve" states="waiting_approval" type="object"
+                                class="oe_highlight" groups="stock.group_stock_manager"/>
+                        <button name="scrap_reject" string="Reject" states="waiting_approval"
+                                groups="stock.group_stock_manager" type="object"/>
+                        <field name="state" widget="statusbar"
+                               statusbar_visible="draft,waiting_approval,approved"
+                               statusbar_colors='{"reject":"red"}' />
+                    </header>
+                    <sheet>
+                        <div class="oe_button_box" name="button_box">
+                            <button class="oe_stat_button" name="action_get_stock_picking"
+                                    string="Stock Operation" type="object"
+                                    attrs="{'invisible':[('picking_id','=',False)]}" icon="fa-cogs"/>
+                            <field name="picking_id" invisible="1"/>
+                            <button class="oe_stat_button" name="action_get_stock_move"
+                                    string="Inventory Move" type="object"
+                                    attrs="{'invisible':[('move_id','=',False)]}" icon="fa-arrows-v"/>
+                            <field name="move_id" invisible="1"/>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="request_by"/>
+                                <field name="requested_date"/>
+                                <field name="approved_date" attrs="{'invisible': [('state','!=','approved')]}"/>
+                                <field name="approver_id" attrs="{'invisible': [('state','!=','approved')]}"/>
+                            </group>
+                            <group>
+                                <field name="company_id" groups="base.group_multi_company"
+                                       options="{'no_create': True,'no_open':True}"/>
+                                <field name="operating_unit_id" options="{'no_create': True,'no_open':True}"
+                                       groups="operating_unit.group_multi_operating_unit" />
+                                <field name="location_id" options="{'no_create': True,'no_open':True}"/>
+                                <field name="scrap_location_id" invisible="1"/>
+                                <field name="picking_type_id" invisible="1"/>
+                                <field name="lot_id" invisible="1"/>
+                                <field name="package_id" invisible="1"/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="Products">
+                                <field name="product_lines">
+                                    <tree string="Products" editable="bottom">
+                                        <field name="sequence" widget="handle"/>
+                                        <field name="product_id" options="{'no_create': True,'no_open':True}"/>
+                                        <field name="name" readonly="1"/>
+                                        <field name="qty_available" readonly="1"/>
+                                        <field name="product_uom" string="UOM"/>
+                                        <field name="product_uom_qty" sum="Total Qty"/>
+                                    </tree>
+                                </field>
+                                <div class="oe_clear">
+                                    <label for="reason" />
+                                </div>
+                                <field name="reason" colspan="4" placeholder="The material is scraping for..." />
+                            </page>
+                        </notebook>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers" />
+                        <field name="message_ids" widget="mail_thread" />
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <!-- Indent Window Action -->
+        <record id='action_gbs_stock_scrap' model='ir.actions.act_window'>
+            <field name="name">Scrap</field>
+            <field name="res_model">gbs.stock.scrap</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Click to scrap products.
+                </p>
+                <p>
+                    Products you scrap will be removed from the stock and moved to a specific scrap location, for reporting purposes.
+                </p>
+            </field>
+        </record>
+        <!-- Scrap Menu -->
+        <menuitem
+                id="stock.menu_stock_scrap"
+                name="Scrap"
+                parent="stock.menu_stock_inventory_control"
+                action="action_gbs_stock_scrap"
+                groups="stock.group_stock_manager,stock.group_stock_user"
+                sequence="99"/>
+    </data>
+</odoo>
+
