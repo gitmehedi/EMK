@@ -92,7 +92,7 @@ odoo.define('rnd_hr.custom_timeline', function (require) {
 
                 if (obj.otDutyTime > 0){
                     var otStartDutyTime = new Date(obj.otStartDutyTime)
-                    var otStartDutyTime = new Date((new Date(obj.otStartDutyTime)).getTime() + 1000 * 60)
+                    //var otStartDutyTime = new Date((new Date(obj.otStartDutyTime)).getTime() + 1000 * 60)
                     var otEndDutyTime = new Date(obj.otEndDutyTime);
                     group = "maybe";
                     content = obj.otDutyTime.toString() + " Hrs OT";
