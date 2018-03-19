@@ -10,14 +10,8 @@ class InheritedHrMobilePayslip(models.Model):
 
     remaining_loan = fields.Float(string='Remaining Loan', default=0.00, required=True)
 
-    @api.multi
-    def onchange_employee_id(self, date_from, date_to, employee_id=False, contract_id=False):
-
-        res = super(InheritedHrMobilePayslip, self).onchange_employee_id(date_from,
-                                                                      date_to,
-                                                                      employee_id,
-                                                                      contract_id)
-
+    @api.onchange('employee_id', 'date_from', 'date_to')
+    def onchange_employee(self):
         if self.employee_id:
 
             emp_loan=self.env['hr.employee.loan'].search([('employee_id.id','=',self.employee_id.id),
@@ -26,7 +20,7 @@ class InheritedHrMobilePayslip(models.Model):
                 self.remaining_loan = emp_loan.remaining_loan_amount or 0.00
 
             self.input_line_ids = 0
-            #super(InheritedHrMobilePayslip, self).onchange_employee()
+            super(InheritedHrMobilePayslip, self).onchange_employee()
 
             """
             Incorporate other payroll data
@@ -48,7 +42,7 @@ class InheritedHrMobilePayslip(models.Model):
                     'contract_id': self.contract_id.id,
                 })
                 self.input_line_ids = other_line_ids
-        return res
+
     @api.multi
     def action_payslip_done(self):
         res = super(InheritedHrMobilePayslip, self).action_payslip_done()
