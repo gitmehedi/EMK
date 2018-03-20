@@ -8,10 +8,13 @@
                 <xpath expr="//button[@name='action_cancel']" position="before">
                     <button string="Done" name="action_lc_eva_in_button" class="oe_read_only" type="object" states="progress"/>
                 </xpath>
-                <!--<xpath expr="//button[@name='action_draft']" position="after">-->
-                   <!--<button string="Gate In"-->
-                           <!--name="action_create_gate_in_button" states="cnf_clear,gate_in" type="object" class="oe_highlight"/>-->
-                <!--</xpath>-->
+                <xpath expr="//sheet/div[@name='button_box']" position="inside">
+                    <button name="%(lc_done_action_window1)d" type="action"
+                            context="{'rel_job_id': id}"
+                            class="oe_stat_button" icon="fa-usd" >
+                        <label string="LC Evaluation"/>
+                    </button>
+                </xpath>
             </field>
         </record>
         <!-- Form views on models -->
@@ -32,6 +35,15 @@
             <field name="name">LC Evaluation</field>
             <field name="res_model">lc.confirmation.line</field>
             <field name="view_mode">tree</field>
+        </record>
+
+        <!-- actions views for gate in button box -->
+        <record model="ir.actions.act_window" id="lc_done_action_window1">
+            <field name="name">LC Evaluation</field>
+            <field name="res_model">lc.confirmation.line</field>
+            <!--<field name="context">{'search_default_rel_job_id': rel_job_id}</field>-->
+            <field name="domain">[('rel_job_id','=', rel_job_id)]</field>
+            <field name="view_mode">tree,form</field>
         </record>
           <!-- menu categories -->
         <menuitem name="LC EVA" id="lc_done_menu"

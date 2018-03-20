@@ -23,7 +23,6 @@ class LetterOfCreditInherit(models.Model):
 
     @api.multi
     def action_confirm(self):
-        active_id = self.env.context.get('active_id')
         res = super(LetterOfCreditInherit, self).action_confirm()
         pool_criteria_emp = self.env['lc.confirmation.line']
         for criteria in self.env['hr.employee.criteria'].search(
@@ -35,18 +34,3 @@ class LetterOfCreditInherit(models.Model):
             }
             pool_criteria_emp += self.env['lc.confirmation.line'].create(criteria_res)
         return res
-
-    # @api.multi
-    # def action_confirm(self):
-    #     pool_criteria_emp = self.env['hr.job.confirmation.criteria.line']
-    #     for i in self.job_form_ids:
-    #         for criteria in self.env['hr.employee.criteria'].search(
-    #                 [('is_active', '=', True), ('type', '=', 'jobconf')]):
-    #             criteria_res = {
-    #                 'seq': criteria.seq,
-    #                 'name': criteria.name,
-    #                 'marks': criteria.marks,
-    #                 'rel_job_id': i.id,
-    #             }
-    #             pool_criteria_emp += self.env['hr.job.confirmation.criteria.line'].create(criteria_res)
-    #     self.state = 'confirm'

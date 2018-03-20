@@ -1,18 +1,6 @@
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError,ValidationError
 
-
-# class ConfirmationJudgement(models.Model):
-#     _name = 'lc.confirmation'
-#
-#
-#     name = fields.Char(string='Criteria Name')
-#     comment = fields.Text(string='Comment')
-#     marks = fields.Float(string='Total Marks')
-#     obtain_marks = fields.Float(string='Obtain Marks')
-#     ship_id = fields.Many2one('letter.credit', string='LC')
-
-
 class LCEvaluationLine(models.Model):
     _name='lc.confirmation.line'
     _description = 'LC Confirmation Criteria lines'
