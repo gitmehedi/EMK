@@ -12,6 +12,12 @@ class GBSStockScrap(models.Model):
     _inherit = ['mail.thread', 'ir.needaction_mixin']
     _order = 'id desc'
 
+    def _get_default_scrap_location_id(self):
+        return self.env['stock.location'].search([('scrap_location', '=', True)], limit=1).id
+
+    def _get_default_location_id(self):
+        return self.env['stock.location'].search([('operating_unit_id', '=', self.env.user.default_operating_unit_id.id)], limit=1).id
+
     name = fields.Char('Reference',  default=lambda self: _('New'),copy=False,
                        readonly=True, required=True,
                        states={'draft': [('readonly', False)]})
@@ -23,9 +29,11 @@ class GBSStockScrap(models.Model):
     approved_date = fields.Datetime('Approved Date', readonly=True)
     approver_id = fields.Many2one('res.users', string='Authority', readonly=True,
                                   help="who have approve or reject.")
-    location_id = fields.Many2one('stock.location', 'Location',
+    location_id = fields.Many2one('stock.location', 'Location',default=_get_default_location_id,
                                   domain="[('usage', '=', 'internal'),('operating_unit_id', '=',operating_unit_id)]",required=True,
                                   states={'draft': [('readonly', False)]})
+    scrap_location_id = fields.Many2one('stock.location', 'Scrap Location', default=_get_default_scrap_location_id,
+                                        domain="[('scrap_location', '=', True)]", readonly=True)
     company_id = fields.Many2one('res.company', 'Company', readonly=True, states={'draft': [('readonly', False)]},
                                  default=lambda self: self.env.user.company_id, required=True)
     operating_unit_id = fields.Many2one('operating.unit', 'Operating Unit', required=True,
@@ -36,6 +44,7 @@ class GBSStockScrap(models.Model):
                                       compute='_computePickingType',store=True)
     lot_id = fields.Many2one('stock.production.lot', 'Lot')
     package_id = fields.Many2one('stock.quant.package', 'Package')
+    move_id = fields.Many2one('stock.move', 'Scrap Move', readonly=True)
     product_lines = fields.One2many('gbs.stock.scrap.line', 'stock_scrap_id', 'Products', readonly=True,
                                     states={'draft': [('readonly', False)]})
     state = fields.Selection([
@@ -55,8 +64,7 @@ class GBSStockScrap(models.Model):
         for scrap in self:
             picking_type_obj = scrap.env['stock.picking.type']
             picking_type_ids = picking_type_obj.search(
-                ['|','&',('default_location_src_id', '=', scrap.location_id.id),
-                 ('default_location_dest_id', '=', scrap.location_id.id),
+                ['&',('default_location_src_id', '=', scrap.location_id.id),
                  ('code', '=', 'internal')])
             picking_type_id = picking_type_ids and picking_type_ids[0] or False
             scrap.picking_type_id = picking_type_id
@@ -128,6 +136,7 @@ class GBSStockScrap(models.Model):
                         'You cannot scrap a move without having available stock for %s. You can correct it with an inventory adjustment.') % line.product_id.name)
                 self.env['stock.quant'].quants_reserve(quants, move)
                 move.action_done()
+                self.write({'move_id': move.id})
                 moves.recalculate_move_state()
         return picking_id
 
@@ -141,7 +150,7 @@ class GBSStockScrap(models.Model):
             'date': self.requested_date,
             'partner_id': self.request_by.partner_id.id or False,
             'location_id': self.location_id.id,
-            'location_dest_id': self.location_id.id,
+            'location_dest_id': self.scrap_location_id.id,
             'operating_unit_id': self.operating_unit_id.id,
             # 'priority': self.requirement,
             # 'type': 'internal',
@@ -159,7 +168,7 @@ class GBSStockScrap(models.Model):
             'origin': self.name or self.picking_id.name,
             'location_id': location_id,
             'scrapped': True,
-            'location_dest_id': location_id,
+            'location_dest_id': self.scrap_location_id.id,
             'picking_id': picking_id or False,
             'product_id': line.product_id.id,
             'product_uom_qty': line.product_uom_qty,
@@ -191,6 +200,18 @@ class GBSStockScrap(models.Model):
             'approved_date': time.strftime('%Y-%m-%d %H:%M:%S')
         }
         self.write(res)
+
+    @api.multi
+    def action_get_stock_picking(self):
+        action = self.env.ref('stock.action_picking_tree_all').read([])[0]
+        action['domain'] = [('id', '=', self.picking_id.id)]
+        return action
+
+    @api.multi
+    def action_get_stock_move(self):
+        action = self.env.ref('stock.stock_move_action').read([])[0]
+        action['domain'] = [('id', '=', self.move_id.id)]
+        return action
 
     ####################################################
     # ORM Overrides methods
@@ -233,15 +254,15 @@ class GBSStockScrapLines(models.Model):
         product_name = product.name_get()[0][1]
         self.name = product_name
         self.product_uom = product.uom_id.id
-        # self.qty_available = self._computeProductQuentity()
 
     @api.depends('product_id')
     @api.multi
     def _computeProductQuentity(self):
         for productLine in self:
             if productLine.product_id.id:
-                # location_id = productLine.stock_scrap_id.location_id.id
-                product_quant = self.env['stock.quant'].search([('product_id', '=', productLine.product_id.id)],limit=1)
+                location_id = productLine.stock_scrap_id.location_id.id
+                product_quant = self.env['stock.quant'].search(['&',('product_id', '=', productLine.product_id.id),
+                                                                ('location_id', '=', location_id)],limit=1)
                 if product_quant:
                     productLine.qty_available = product_quant.qty
 
