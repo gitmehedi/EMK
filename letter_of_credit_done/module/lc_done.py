@@ -1,0 +1,32 @@
+from odoo import api, fields, models, _
+from odoo.exceptions import UserError,ValidationError
+
+
+# class ConfirmationJudgement(models.Model):
+#     _name = 'lc.confirmation'
+#
+#
+#     name = fields.Char(string='Criteria Name')
+#     comment = fields.Text(string='Comment')
+#     marks = fields.Float(string='Total Marks')
+#     obtain_marks = fields.Float(string='Obtain Marks')
+#     ship_id = fields.Many2one('letter.credit', string='LC')
+
+
+class LCEvaluationLine(models.Model):
+    _name='lc.confirmation.line'
+    _description = 'LC Confirmation Criteria lines'
+    _order = "seq asc"
+
+    rel_job_id = fields.Many2one('letter.credit')
+    seq = fields.Integer(string = 'Sequence')
+    name = fields.Char(string = 'Criteria Name')
+    marks = fields.Float(string = 'Total Marks')
+    obtain_marks = fields.Float(string = 'Obtain Marks')
+
+    @api.constrains('obtain_marks')
+    def _check_obtain_marks(self):
+        for criteria_line in self:
+            if criteria_line.obtain_marks>criteria_line.marks:
+                raise ValidationError(_("Obtain marks can not be greater then total marks"))
+
