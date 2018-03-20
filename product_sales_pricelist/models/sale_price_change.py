@@ -44,13 +44,13 @@ class SalePriceChange(models.Model):
 
     @api.constrains('new_price')
     def check_new_price(self):
-        if (self.new_price < 0.00):
+        if self.new_price < 0.00:
             raise ValidationError('New Price can not be Negetive')
 
 
     @api.constrains('effective_date')
     def check_effective_date(self):
-        if (self.request_date > self.effective_date):
+        if self.request_date > self.effective_date:
             raise ValidationError('Effective date must be after request date')
 
 
@@ -144,7 +144,7 @@ class SalePriceChange(models.Model):
 
         self.approver2_id = self.env.user
 
-        if (time.strftime('%Y-%m-%d') > self.effective_date):
+        if time.strftime('%Y-%m-%d') > self.effective_date:
             raise ValidationError('Effective date must be after final approval date')
 
         ## Execute below function immedietly to update on Variants History
@@ -155,7 +155,7 @@ class SalePriceChange(models.Model):
     @api.multi
     def action_validate(self):
         self.approver1_id = self.env.user
-        if (time.strftime('%Y-%m-%d') > self.effective_date):
+        if time.strftime('%Y-%m-%d') > self.effective_date:
             raise ValidationError('Effective date must be after first approval date')
         return self.write({'state': 'validate1','approver1_date': time.strftime('%Y-%m-%d %H:%M:%S')})
 

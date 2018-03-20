@@ -1,4 +1,5 @@
 from odoo import api, fields, models
+from odoo.exceptions import ValidationError
 
 
 class InheritProductTemplate(models.Model):
@@ -48,3 +49,8 @@ class InheritProductTemplate(models.Model):
             name = self.search(filters)
             if len(name) > 1:
                 raise Warning('[Unique Error] Name must be unique!')
+
+    @api.constrains('sale_delay')
+    def _check_negative_value_sale_delay(self):
+        if self.sale_delay < 0.00:
+            raise ValidationError('Customer Lead Time can not be negative')
