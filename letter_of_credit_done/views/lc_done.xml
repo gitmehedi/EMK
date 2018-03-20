@@ -46,8 +46,8 @@
             <field name="view_mode">tree,form</field>
         </record>
           <!-- menu categories -->
-        <menuitem name="LC EVA" id="lc_done_menu"
-                  parent="gbs_purchase_requisition.menu_commercial_configuration" sequence="5" action="lc_done_action_window"/>
+        <!--<menuitem name="LC EVA" id="lc_done_menu"-->
+                  <!--parent="gbs_purchase_requisition.menu_commercial_configuration" sequence="5" action="lc_done_action_window"/>-->
 
     </data>
 </odoo>
