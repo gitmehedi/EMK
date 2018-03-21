@@ -26,7 +26,7 @@ class HrLeaveSummaryReport(models.AbstractModel):
             data['notes'] = purchase.notes
 
             header[0] = 'S.N'
-            header[1] = 'Name of Product'
+            header[len(header)] = 'Name of Product'
             header[len(header)] = 'UoM'
             header[len(header)] = 'Order Qty'
             header[len(header)] = 'Production Terms'

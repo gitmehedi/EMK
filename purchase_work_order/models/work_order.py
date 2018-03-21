@@ -14,11 +14,12 @@ class WorkOrder(models.Model):
     payment_terms = fields.Text(string='Payment Terms')
 
     def create(self, cr, uid, vals, context=None):
-        if vals.get('name', '/') == '/':
-            vals['name'] = self.pool.get('ir.sequence').get(cr, uid, 'wcode', context=context) or '/'
+        if 'purchase_type' in vals:
+            if vals.get('name', '/') == '/':
+                vals['name'] = self.pool.get('ir.sequence').get(cr, uid, 'wcode', context=context) or '/'
 
-        vals['purchase_type'] = 'workorder'
-        context = dict(context or {}, mail_create_nolog=True)
+
+            context = dict(context or {}, mail_create_nolog=True)
         return super(WorkOrder, self).create(cr, uid, vals, context=context)
 
 
@@ -27,4 +28,3 @@ class WorkOrderLine(models.Model):
 
     production_term_id = fields.Many2one('purchase.production.terms', string="Production Term")
     remarks = fields.Text(string='Remarks')
-
