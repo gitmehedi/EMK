@@ -254,6 +254,23 @@
             <field name="res_model">purchase.requisition</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
+            <field name="domain">[('purchase_from','=','ho')]</field>
+            <field name="context">{
+                'search_default_my_approval_wait_for_done':1,
+                'search_default_user_id':uid,
+                }
+            </field>
+            <field name="search_view_id" ref="purchase_requisition.view_purchase_requisition_filter"/>
+        </record>
+
+
+        <record model="ir.actions.act_window" id="purchase_requisition.action_purchase_requisition_approval_cash">
+            <field name="name">Purchase Requisition</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">purchase.requisition</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('purchase_from','=','own')]</field>
             <field name="context">{
                 'search_default_my_approval_wait_for_done':1,
                 'search_default_user_id':uid,
@@ -287,5 +304,13 @@
                 parent="purchase.menu_procurement_management"
                 action="purchase_requisition.action_purchase_requisition_approval"
                 groups="gbs_purchase_requisition.group_purchase_requisition_approver"/>
+
+        <menuitem
+                id="purchase_requisition.menu_purchase_requisition_pending_approval_cash"
+                sequence="13"
+                name="PR By Cash(To Approve)"
+                parent="purchase.menu_procurement_management"
+                action="purchase_requisition.action_purchase_requisition_approval_cash"
+                groups="gbs_purchase_requisition.group_purchase_requisition_validator"/>
     </data>
 </odoo>
