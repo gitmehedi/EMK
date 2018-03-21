@@ -31,6 +31,7 @@
                     <field name="name" readonly="1"/>
                     <field name="marks" readonly="1" sum="Total"/>
                     <field name="obtain_marks" sum="Total"/>
+                    <field name="comment" readonly="1"/>
                </tree>
             </field>
         </record>
