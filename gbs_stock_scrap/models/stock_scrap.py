@@ -77,9 +77,9 @@ class GBSStockScrap(models.Model):
             res = {
                 'state': 'waiting_approval'
             }
-            new_seq = self.env['ir.sequence'].next_by_code('stock.scraping')
-            if new_seq:
-                res['name'] = new_seq
+            # new_seq = self.env['ir.sequence'].next_by_code('stock.scraping')
+            # if new_seq:
+            #     res['name'] = new_seq
 
             scrap.write(res)
 
