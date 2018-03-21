@@ -1,5 +1,5 @@
 from odoo import api, fields, models
-from odoo.exceptions import UserError, ValidationError
+from odoo.exceptions import UserError, ValidationError, Warning
 from odoo.tools import amount_to_text_en
 import time
 
@@ -381,3 +381,13 @@ class InheritedSaleOrderLine(models.Model):
             self.update(vals)
 
         return res
+
+    @api.constrains('da_qty')
+    def check_da_qty_val(self):
+        if self.da_qty < 0.00:
+            raise ValidationError('DA Qty can not be negative')
+
+        if self.da_qty > self.product_uom_qty:
+            raise ValidationError('DA Qty can not be greater than Ordered Qty')
+
+
