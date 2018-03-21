@@ -3,7 +3,7 @@ from odoo.exceptions import UserError,ValidationError
 
 class LCEvaluationLine(models.Model):
     _name='lc.confirmation.line'
-    _description = 'LC Confirmation Criteria lines'
+    _description = 'LC Done Criteria lines'
     _order = "seq asc"
 
     rel_job_id = fields.Many2one('letter.credit')

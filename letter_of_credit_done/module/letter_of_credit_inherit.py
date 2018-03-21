@@ -1,4 +1,6 @@
 from odoo import api, fields, models,_
+from odoo.exceptions import UserError,ValidationError
+
 
 
 class LetterOfCreditInherit(models.Model):
@@ -8,9 +10,12 @@ class LetterOfCreditInherit(models.Model):
 
     @api.multi
     def action_lc_eva_in_button(self):
+        if self.lc_value > 0.0:
+            raise ValidationError(_("Your shipment is not done!"))
+
         res = self.env.ref('letter_of_credit_done.lc_confirmation_wizard')
         result = {
-            'name': _('LC Confirmation'),
+            'name': _('LC Done'),
             'view_type': 'form',
             'view_mode': 'form',
             'view_id': res and res.id or False,
