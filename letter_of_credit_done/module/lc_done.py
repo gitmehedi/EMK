@@ -11,6 +11,7 @@ class LCEvaluationLine(models.Model):
     name = fields.Char(string = 'Criteria Name')
     marks = fields.Float(string = 'Total Marks')
     obtain_marks = fields.Float(string = 'Obtain Marks')
+    comment = fields.Text(string='Comments')
 
     @api.constrains('obtain_marks')
     def _check_obtain_marks(self):

@@ -18,6 +18,7 @@ class ConfirmationJudgement(models.TransientModel):
                 'name': record.name,
                 'marks': record.marks,
                 'obtain_marks': record.obtain_marks,
+                'comment' : record.comment,
             })
         return evalution_ids
 
@@ -25,12 +26,18 @@ class ConfirmationJudgement(models.TransientModel):
 
     @api.multi
     def save_evaluating(self):
+        # form_id = self.env.context.get('active_id')
+        # evaluation_form_pool = self.env['letter.credit'].search([('id', '=', form_id)])
+        # evaluation_form_pool.write(
+        #     {'comment': self.comment})
         for wizard_line in self.criteria_line_ids:
             evaluating_line_form_pool = self.env['lc.confirmation.line'].search(
                 [('id', '=', wizard_line.parent_id)])
             evaluating_line_form_pool.write({
                 'obtain_marks': wizard_line.obtain_marks,
+                'comment' : wizard_line.comment,
             })
+
 
 class ConfirmationJudgementLine(models.TransientModel):
     _name = 'lc.confirmation.wizard.line'
@@ -40,6 +47,7 @@ class ConfirmationJudgementLine(models.TransientModel):
     marks = fields.Float(string='Total Marks')
     obtain_marks = fields.Float(string='Obtain Marks')
     parent_id = fields.Integer(string='Parent Id')
+    comment = fields.Text(string='Comments')
 
 
     @api.constrains('obtain_marks')
