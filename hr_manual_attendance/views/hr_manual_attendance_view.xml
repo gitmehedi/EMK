@@ -85,6 +85,16 @@
 				</form>
 			</field>
 		</record>
+		<!--search view-->
+		<record id="view_hr_manual_attendance_filter" model="ir.ui.view">
+            <field name="name">hr.manual.attendance.filter</field>
+            <field name="model">hr.manual.attendance</field>
+			<field name="arch" type="xml">
+				<search string="Search Pending Manual Attendances">
+					<filter name ='my_approval' string="My Approval" domain="[('pending_approver.user_id','=',uid)]"/>
+				</search>
+            </field>
+        </record>
 
 		<record id="hr_manual_attendance" model="ir.actions.act_window">
 			<field name="name">Manual Attendances</field>
@@ -102,10 +112,12 @@
 		</record>
 
 		<record id="hr_pandding_attendance" model="ir.actions.act_window">
-			<field name="name">Pending Attendances</field>
+			<field name="name">Pending Manual Attendances</field>
 			<field name="res_model">hr.manual.attendance</field>
 			<field name="domain">[('state','in',['confirm'])]</field>
 			<field name="view_mode">tree,form</field>
+			<field name="context" eval="{'search_default_my_approval':1}"/>
+            <field name="search_view_id" ref="view_hr_manual_attendance_filter" />
 		</record>
 
 		<!-- Menu Item -->
