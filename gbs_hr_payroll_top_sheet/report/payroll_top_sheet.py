@@ -4,6 +4,8 @@ import locale
 
 class PayrollReportPivotal(models.AbstractModel):
     _name = 'report.gbs_hr_payroll_top_sheet.report_top_sheet'
+
+
     
     @api.model
     def render_html(self, docids, data=None):

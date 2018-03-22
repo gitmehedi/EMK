@@ -41,6 +41,8 @@
                                 <field name="issuer_id" readonly="1" />
                                 <field name="issue_date" />
                                 <field name="borrower_id"/>
+                                <field name="approved_date"/>
+                                <field name="approver_id"/>
                             </group>
                             <group>
                                 <field name="company_id" groups="base.group_multi_company"
@@ -56,15 +58,15 @@
                                         <field name="sequence" widget="handle"/>
                                         <field name="product_id"/>
                                         <field name="name"/>
+                                        <field name="qty_available" readonly="1"/>
                                         <field name="product_uom" string="UOM"/>
                                         <field name="product_uom_qty" sum="Total Qty"/>
-                                        <field name="price_unit" sum="Total Unit Price"/>
                                     </tree>
                                 </field>
                                 <div class="oe_clear">
                                     <label for="description" />
                                 </div>
-                                <field name="description" class="oe_inline" placeholder="The material ..." />
+                                <field name="description" placeholder="The material ..." />
                             </page>
                         </notebook>
                     </sheet>

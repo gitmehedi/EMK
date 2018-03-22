@@ -4,8 +4,8 @@ import datetime
 import time
 
 from datetime import date
-from openerp import fields, models, api
-from openerp.exceptions import Warning as UserError
+from odoo import fields, models, api
+from odoo import exceptions
 
 
 class HrPublicHolidays(models.Model):

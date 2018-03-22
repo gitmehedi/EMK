@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <data>
+    <data noupdate="1">
         <record id="sequence_item_borrowing" model="ir.sequence">
             <field name="name">Item Borrowing</field>
             <field name="code">item.borrowing</field>
@@ -19,12 +19,5 @@
             <field eval="False" name="company_id"/>
         </record>
 
-
-        <record id="sequence_item_loan_lending" model="ir.sequence">
-            <field name="name">Item Loan Lending Test</field>
-            <field eval="6" name="padding"/>
-            <field eval="1" name="number_increment"/>
-            <field eval="False" name="company_id"/>
-        </record>
     </data>
 </odoo>
