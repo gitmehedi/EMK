@@ -10,7 +10,7 @@
     ],
 
     'data': [
-            'wizards/lc_confirmation_wizard_view.xml',
+            'wizards/lc_evaluation_wizard_view.xml',
             'views/lc_done.xml',
     ],
     'images': [

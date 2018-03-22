@@ -2,7 +2,7 @@ from odoo import api, fields, models, _
 from odoo.exceptions import UserError,ValidationError
 
 class LCEvaluationLine(models.Model):
-    _name='lc.confirmation.line'
+    _name='lc.evaluation.line'
     _description = 'LC Done Criteria lines'
     _order = "seq asc"
 
