@@ -97,11 +97,9 @@ class GBSStockScrap(models.Model):
 
     @api.one
     def action_picking_create(self):
-        move_obj = self.env['stock.move']
         picking_id = False
         if self.product_lines:
             picking_id = self._create_pickings_and_procurements()
-        move_ids = move_obj.search([('picking_id', '=', picking_id)])
         self.write({'picking_id': picking_id,})
 
     def _get_origin_moves(self):
@@ -111,7 +109,6 @@ class GBSStockScrap(models.Model):
     def _create_pickings_and_procurements(self):
         move_obj = self.env['stock.move']
         picking_obj = self.env['stock.picking']
-        need_purchase_req = False
         picking_id = False
         for line in self.product_lines:
             date_planned = datetime.datetime.strptime(self.requested_date, DEFAULT_SERVER_DATETIME_FORMAT)
@@ -131,7 +128,6 @@ class GBSStockScrap(models.Model):
                         ('lot_id', '=', self.lot_id.id),
                         ('package_id', '=', self.package_id.id)])
                 if any([not x[0] for x in quants]):
-                    # if line.product_uom_qty > line.qty_available:
                     raise UserError(_(
                         'You cannot scrap a move without having available stock for %s. You can correct it with an inventory adjustment.') % line.product_id.name)
                 self.env['stock.quant'].quants_reserve(quants, move)
@@ -261,8 +257,9 @@ class GBSStockScrapLines(models.Model):
         for productLine in self:
             if productLine.product_id.id:
                 location_id = productLine.stock_scrap_id.location_id.id
-                product_quant = self.env['stock.quant'].search(['&',('product_id', '=', productLine.product_id.id),
+                product_quant = self.env['stock.quant'].search([('product_id', '=', productLine.product_id.id),
                                                                 ('location_id', '=', location_id)],limit=1)
+                #need sum of product quantities,limit will remove from query.
                 if product_quant:
                     productLine.qty_available = product_quant.qty
 
