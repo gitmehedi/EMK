@@ -6,7 +6,6 @@
     'version':'10.0.1.0.0',
     'depends': [
         'letter_of_credit',
-        'gbs_purchase_requisition',
         'question_set',
     ],
 

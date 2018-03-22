@@ -9,7 +9,7 @@
                     <button string="Done" name="action_lc_eva_in_button" class="oe_read_only" type="object" states="progress" confirm="Are you sure you want to continue?"/>
                 </xpath>
                 <xpath expr="//sheet/div[@name='button_box']" position="inside">
-                    <button name="%(lc_done_action_window1)d" type="action"
+                    <button name="lc_done_action_window1" type="object"
                             class="oe_stat_button" icon="fa-usd"
                             context="{'rel_job_id': id}"
                             attrs="{'invisible':[('state', '!=', 'progress')]}"
@@ -31,7 +31,6 @@
                     <field name="name" readonly="1"/>
                     <field name="marks" readonly="1" sum="Total"/>
                     <field name="obtain_marks" sum="Total"/>
-                    <field name="comment" readonly="1"/>
                </tree>
             </field>
         </record>
@@ -41,18 +40,6 @@
             <field name="res_model">lc.confirmation.line</field>
             <field name="view_mode">tree</field>
         </record>
-
-        <!-- actions views for gate in button box -->
-        <record model="ir.actions.act_window" id="lc_done_action_window1">
-            <field name="name">LC Evaluation</field>
-            <field name="res_model">lc.confirmation.line</field>
-            <!--<field name="context">{'search_default_rel_job_id': rel_job_id}</field>-->
-            <field name="domain">[('rel_job_id','=', rel_job_id)]</field>
-            <field name="view_mode">tree,form</field>
-        </record>
-          <!-- menu categories -->
-        <!--<menuitem name="LC EVA" id="lc_done_menu"-->
-                  <!--parent="gbs_purchase_requisition.menu_commercial_configuration" sequence="5" action="lc_done_action_window"/>-->
 
     </data>
 </odoo>

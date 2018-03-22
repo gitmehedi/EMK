@@ -7,6 +7,7 @@ class LetterOfCreditInherit(models.Model):
     _inherit = 'letter.credit'
 
     gate_in_ids = fields.One2many('lc.confirmation.line', 'rel_job_id', string='')
+    comment = fields.Text(string='Comments')
 
     @api.multi
     def action_lc_eva_in_button(self):
@@ -23,6 +24,24 @@ class LetterOfCreditInherit(models.Model):
             'type': 'ir.actions.act_window',
             'target': 'new',
 
+        }
+        return result
+
+    @api.multi
+    def lc_done_action_window1(self):
+        domain = [('rel_job_id', '=', self.id)]
+        res = self.env.ref('letter_of_credit_done.lc_confirmation_wizard')
+        result = {
+            'name': _('LC Done'),
+            'view_type': 'form',
+            'view_mode': 'form',
+            'view_id': res and res.id or False,
+            'res_model': 'lc.confirmation.wizard',
+            'type': 'ir.actions.act_window',
+            'target': 'new',
+            'domain': domain,
+            'context': {'comment': self.comment or False},
+            'readonly': True,
         }
         return result
 
