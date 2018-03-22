@@ -1,8 +1,8 @@
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError, ValidationError
 
-class ConfirmationJudgement(models.TransientModel):
-    _name = 'lc.confirmation.wizard'
+class EvaluationJudgement(models.TransientModel):
+    _name = 'lc.evaluation.wizard'
 
     def _default_comment(self):
         form_id = self.env.context.get('active_id')
@@ -24,7 +24,7 @@ class ConfirmationJudgement(models.TransientModel):
         return evalution_ids
 
     comment = fields.Text(string='Comments',default=_default_comment)
-    criteria_line_ids = fields.One2many('lc.confirmation.wizard.line', 'rel_lc_id',default=_load_judgement)
+    criteria_line_ids = fields.One2many('lc.evaluation.wizard.line', 'rel_lc_id',default=_load_judgement)
 
     @api.multi
     def save_evaluating(self):
@@ -34,7 +34,7 @@ class ConfirmationJudgement(models.TransientModel):
             {'comment': self.comment})
 
         for wizard_line in self.criteria_line_ids:
-            evaluating_line_form_pool = self.env['lc.confirmation.line'].search(
+            evaluating_line_form_pool = self.env['lc.evaluation.line'].search(
                 [('id', '=', wizard_line.parent_id)])
             evaluating_line_form_pool.write({
                 'obtain_marks': wizard_line.obtain_marks,
@@ -42,10 +42,10 @@ class ConfirmationJudgement(models.TransientModel):
         return {'type': 'ir.actions.act_window_close'}
 
 
-class ConfirmationJudgementLine(models.TransientModel):
-    _name = 'lc.confirmation.wizard.line'
+class EvaluationJudgementLine(models.TransientModel):
+    _name = 'lc.evaluation.wizard.line'
 
-    rel_lc_id = fields.Many2one('lc.confirmation.wizard')
+    rel_lc_id = fields.Many2one('lc.evaluation.wizard')
     name = fields.Char(string='Criteria Name')
     marks = fields.Float(string='Total Marks')
     obtain_marks = fields.Float(string='Obtain Marks')

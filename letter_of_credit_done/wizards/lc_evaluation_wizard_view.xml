@@ -1,8 +1,8 @@
 <odoo>
     <data>
-        <record id="lc_confirmation_wizard" model="ir.ui.view">
-            <field name="name">lc.confirmation.wizard</field>
-            <field name="model">lc.confirmation.wizard</field>
+        <record id="lc_evaluation_wizard" model="ir.ui.view">
+            <field name="name">lc.evaluation.wizard</field>
+            <field name="model">lc.evaluation.wizard</field>
             <field name="type">form</field>
             <field name="arch" type="xml" >
                 <form string="LC Done">
