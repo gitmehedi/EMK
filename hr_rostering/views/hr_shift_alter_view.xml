@@ -87,6 +87,7 @@
             <field name="model">hr.shift.alter</field>
             <field name="arch" type="xml">
                 <search string="Search Alter Rostering">
+					<field name="employee_id"/>
                     <filter name="my_approval" string="My Approval" domain="[('pending_approver.user_id','=',uid)]"/>
                 </search>
             </field>
