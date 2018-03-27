@@ -16,19 +16,9 @@
             <field name="name">Letter of Credit: Export</field>
             <field name="res_model">letter.credit</field>
             <field name="view_mode">tree,form</field>
-            <field name="domain">[('type','=','export')]</field>
+            <field name="domain">[('type','=','export'),('region_type','=','foreign')]</field>
             <field name="context">{'default_type': 'export','default_region_type': 'foreign','search_default_active':1}</field>
             <field name="view_id" ref="export_letter_credit_tree_view"/>
-            <field name="search_view_id" ref="view_letter_credit_filter"/>
-        </record>
-
-        <record model="ir.actions.act_window" id="lc_import_foreign_creation_action">
-            <field name="name">Letter of Credit: Import</field>
-            <field name="res_model">letter.credit</field>
-            <field name="view_mode">tree,form</field>
-            <field name="domain">[('type','=','import')]</field>
-            <field name="context">{'default_type': 'import','default_region_type': 'foreign','search_default_active':1}</field>
-            <field name="view_id" ref="import_letter_credit_tree_view"/>
             <field name="search_view_id" ref="view_letter_credit_filter"/>
         </record>
 
@@ -36,7 +26,7 @@
             <field name="name">Letter of Credit: Export</field>
             <field name="res_model">letter.credit</field>
             <field name="view_mode">tree,form</field>
-            <field name="domain">[('type','=','export')]</field>
+            <field name="domain">[('type','=','export'),('region_type','=','local')]</field>
             <field name="context">{'default_type': 'export','default_region_type': 'local','search_default_active':1}</field>
             <field name="view_id" ref="export_letter_credit_tree_view"/>
             <field name="search_view_id" ref="view_letter_credit_filter"/>
@@ -46,8 +36,18 @@
             <field name="name">Letter of Credit: Import</field>
             <field name="res_model">letter.credit</field>
             <field name="view_mode">tree,form</field>
-            <field name="domain">[('type','=','import')]</field>
+            <field name="domain">[('type','=','import'),('region_type','=','local')]</field>
             <field name="context">{'default_type': 'import','default_region_type': 'local','search_default_active':1}</field>
+            <field name="view_id" ref="import_letter_credit_tree_view"/>
+            <field name="search_view_id" ref="view_letter_credit_filter"/>
+        </record>
+
+        <record model="ir.actions.act_window" id="lc_import_foreign_creation_action">
+            <field name="name">Letter of Credit: Import</field>
+            <field name="res_model">letter.credit</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('type','=','import'),('region_type','=','foreign')]</field>
+            <field name="context">{'default_type': 'import','default_region_type': 'foreign','search_default_active':1}</field>
             <field name="view_id" ref="import_letter_credit_tree_view"/>
             <field name="search_view_id" ref="view_letter_credit_filter"/>
         </record>
