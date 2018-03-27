@@ -48,7 +48,7 @@
                                 context="{'send_rfq':False}"/>
                         <button name="view_picking" string="Receive Products" type="object"
                                 attrs="{'invisible': ['|', ('shipped','=',True), ('state','!=', 'approved')]}"
-                                class="oe_highlight"/>
+                                class="oe_highlight" invisible="True"/>
                         <button name="view_invoice" string="Receive Invoice" type="object"
                                 attrs="{'invisible': ['|', ('invoice_method','in', ['picking', 'manual']), '|', ('state','!=', 'approved'), ('invoiced','=',True) ]}"
                                 class="oe_highlight"/>
@@ -114,7 +114,7 @@
                                                domain="[('type','not in',('view','template'))]"/>
                                         <field name="product_qty"
                                                on_change="onchange_product_id(parent.pricelist_id,product_id,product_qty,product_uom,parent.partner_id,parent.date_order,parent.fiscal_position,date_planned,name,False,parent.state,context)"/>
-                                        <field name="receive_qty"/>
+                                        <field name="receive_qty" class="oe_read_only" string="Received Qty"/>
                                         <field name="production_term_id"
                                                options="{'no_create_edit':True,'no_create':True,'no_open':True}"/>
                                         <field name="product_uom" groups="product.group_uom"
@@ -143,15 +143,14 @@
                                            widget="monetary" options="{'currency_field': 'currency_id'}"/>
                                 </group>
                                 <div class="oe_clear"/>
-                                <field name="notes" class="oe_inline" widget="html"
-                                       placeholder="Terms and conditions..."/>
+
                             </page>
                             <page string="Terms and Conditions">
-                                <group>
-                                    <group>
-                                        <field name="payment_terms" widget="html" placeholder="Payment Terms..."/>
-                                    </group>
-                                </group>
+                                <separator string="Payment Terms"/>
+                                <field name="payment_terms" widget="html" nolabel="True"
+                                       placeholder="Payment Terms..."/>
+                                <separator string="Terms and Conditions"/>
+                                <field name="notes" widget="html" placeholder="Terms and conditions..."/>
                             </page>
                             <page string="RFQ &amp; Bid">
                                 <group>

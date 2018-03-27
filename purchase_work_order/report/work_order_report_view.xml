@@ -16,84 +16,79 @@
                     </style>
                     <div class="page" style="page-break-inside: auto">
                         <div class="row">
-                            <div class="row">
-                                <div class="col-xs-6">
-                                    <div>
-                                        <strong>Ref:</strong>
-                                        <span t-esc="data['name']"/>
-                                    </div>
-                                    <div>
-                                        <strong>Date:</strong>
-                                        <span t-esc="data['order_date']"/>
-                                    </div>
+                            <div class="col-xs-6">
+                                <div>
+                                    <strong>Ref:</strong>
+                                    <span t-esc="data['name']"/>
                                 </div>
-                                <div class="col-xs-3 col-xs-offset-3">
-                                    <strong>To</strong>
-                                    <br/>
-                                    <div t-field="o.partner_id"
-                                         t-field-options='{"widget": "contact", "fields": ["address", "name", "phone", "fax"], "no_marker": true}'/>
-                                </div>
-
-                            </div>
-                            <div class="row">
-                                <div class="col-xs-12">
-                                    <strong>Sub: Work order for production and delivery of PEBBLES brand items.</strong>
-                                    <p>On behalf of MARISHIPA OUTFITTERS(PEBBLES), I am providing you the work order to
-                                        supply
-                                        Pebbles products according to following details.
-                                    </p>
+                                <div>
+                                    <strong>Date:</strong>
+                                    <span t-esc="data['order_date']"/>
                                 </div>
                             </div>
-                        </div>
-                        <br/>
-                        <table class="table table-bordered" style="padding: 0px;">
-                            <thead>
-                                <tr>
-                                    <t t-foreach="header" t-as="head">
-                                        <th rowspan="2" style="text-align: center;">
-                                            <t t-esc="head_value"/>
-                                        </th>
+                            <div class="col-xs-3 col-xs-offset-3">
+                                <strong>To</strong>
+                                <br/>
+                                <div t-field="o.partner_id"
+                                     t-field-options='{"widget": "contact", "fields": ["address", "name", "phone", "fax"], "no_marker": true}'/>
+                            </div>
+                            <div class="col-xs-12">
+                                <strong>Sub: Work order for production and delivery of PEBBLES brand items.</strong>
+                                <p style="margin-top: 10px;">
+                                    On behalf of MARISHIPA OUTFITTERS(PEBBLES), I am providing you the work order to
+                                    supply Pebbles products according to following details.
+                                </p>
+                            </div>
 
-                                    </t>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <t t-foreach="holiday_objs" t-as="list">
-                                    <tr>
-                                        <td class="text-center">
-                                            <span t-esc="list_index+1"/>
-                                        </td>
-                                        <td>
-                                            <span t-esc="list_value['name']"/>
-                                        </td>
-                                        <td>
-                                            <span t-esc="list_value['uom']"/>
-                                        </td>
-                                        <td>
-                                            <span t-esc="list_value['qty']"/>
-                                        </td>
-                                        <td>
-                                            <span t-esc="list_value['production_terms']"/>
-                                        </td>
-                                        <td class="text-left">
-                                            <span t-esc="list_value['date_planned']"/>
-                                        </td>
-                                        <td class="text-right">
-                                            <span t-esc="list_value['price_unit']"
-                                                  t-esc-options='{"widget": "monetary", "display_currency": "o.currency_id"}'/>
-                                        </td>
-                                        <td class="text-right">
-                                            <span t-esc="list_value['price_total']"
-                                                  t-esc-options='{"widget": "monetary", "display_currency": "o.currency_id"}'/>
-                                        </td>
-                                        <td class="text-right">
-                                            <span t-esc="list_value['remarks']"/>
-                                        </td>
-                                    </tr>
-                                </t>
-                            </tbody>
-                        </table>
-                        <div class="row">
+                            <div class="col-xs-12" style="margin-top: 10px;">
+                                <table class="table table-bordered col-sm-12" style="padding: 0px;">
+                                    <thead>
+                                        <tr>
+                                            <t t-foreach="header" t-as="head">
+                                                <th rowspan="2" style="text-align: center;">
+                                                    <t t-esc="head_value"/>
+                                                </th>
+
+                                            </t>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <t t-foreach="holiday_objs" t-as="list">
+                                            <tr>
+                                                <td class="text-center">
+                                                    <span t-esc="list_index+1"/>
+                                                </td>
+                                                <td>
+                                                    <span t-esc="list_value['name']"/>
+                                                </td>
+                                                <td>
+                                                    <span t-esc="list_value['uom']"/>
+                                                </td>
+                                                <td>
+                                                    <span t-esc="list_value['qty']"/>
+                                                </td>
+                                                <td>
+                                                    <span t-esc="list_value['production_terms']"/>
+                                                </td>
+                                                <td class="text-left">
+                                                    <span t-esc="list_value['date_planned']"/>
+                                                </td>
+                                                <td class="text-right">
+                                                    <span t-esc="list_value['price_unit']"
+                                                          t-esc-options='{"widget": "monetary", "display_currency": "o.currency_id"}'/>
+                                                </td>
+                                                <td class="text-right">
+                                                    <span t-esc="list_value['price_total']"
+                                                          t-esc-options='{"widget": "monetary", "display_currency": "o.currency_id"}'/>
+                                                </td>
+                                                <td class="text-right">
+                                                    <span t-esc="list_value['remarks']"/>
+                                                </td>
+                                            </tr>
+                                        </t>
+                                    </tbody>
+                                </table>
+                            </div>
                             <div class="col-xs-4 pull-right">
                                 <table class="table table-condensed">
                                     <tr class="border-black">
@@ -139,13 +134,30 @@
                                 </table>
                             </div>
                         </div>
-
                         <div class="row">
-                            <h3>Payment Terms:</h3>
-                            <p t-raw="purchase.notes"/>
-                            <br/>
-                            <h3>Enclosures:</h3>
-                            <p t-raw="purchase.payment_terms"/>
+                            <div class="col-xs-12">
+                                <h3>Payment Terms:</h3>
+                                <div class="col-xs-12" style="padding-left:40px;">
+                                    <p t-raw="purchase.payment_terms"/>
+                                </div>
+
+                                <div class="col-xs-12" style="margin: 40px 0px; ">
+                                    <span>-------------------------------</span>
+                                    <br/>
+                                    <strong>Singature</strong>
+                                    <br/>
+                                    <strong>Farzana Afroze</strong>
+                                    <br/>
+                                    <span>Managing Partner, MARISHIPA OUTFITTERS (PEBBLES)</span>
+
+                                </div>
+
+                                <br/>
+                                <h3>Enclosures:</h3>
+                                <div class="col-xs-12" style="padding-left:40px;">
+                                    <p t-raw="purchase.notes"/>
+                                </div>
+                            </div>
                         </div>
 
                     </div>
