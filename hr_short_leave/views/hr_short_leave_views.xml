@@ -101,6 +101,10 @@
                     <field name="employee_id"/>
                     <field name="department_id"/>
                     <filter name="my_approval" string="My Approval" domain="[('pending_approver.user_id','=',uid)]"/>
+                    <separator/>
+                    <filter name="to_approval" string="To Approval" domain="[('pending_approver.user_id','=',uid)]"/>
+                    <separator/>
+                    <filter name="my_request" string="My Request" domain="[('employee_id.user_id', '=', uid)]"/>
                 </search>
             </field>
         </record>
@@ -119,15 +123,29 @@
                 number of open days related to your leave.
             </p>
             </field>
-            <field name="context" eval="{'search_default_my_approval': 1}"/>
+            <field name="context">{
+                'search_default_to_approval': 1,
+                'search_default_my_approval': 1 ,
+            }</field>
             <field name="search_view_id" ref="view_hr_short_leave_filter"/>
         </record>
+        <record id="my_short_leave_action" model="ir.actions.act_window">
+			<field name="name">Short Leaves</field>
+			<field name="res_model">hr.short.leave</field>
+			<field name="domain">[('employee_id.user_id', '=', uid)]</field>
+			<field name="create">false</field>
+			<field name="view_mode">tree,form</field>
+            <field name="context" eval="{'search_default_my_request': 1}"/>
+            <field name="search_view_id" ref="view_hr_short_leave_filter"/>
+		</record>
 
         <menuitem id="short_leave_menu" name="Short Leaves" parent="hr_holidays.menu_hr_holidays_root"
                   action="hr_short_leave_action" groups="base.group_user"/>
 
         <menuitem id="short_leave" name="Short Leaves" parent="short_leave_menu"
                   action="hr_short_leave_action" groups="base.group_user"/>
+        <menuitem id="my_short_leave_menu" name="My Short Leaves" parent="short_leave_menu"
+				  sequence="5" action="my_short_leave_action"/>
 
     </data>
 </odoo>

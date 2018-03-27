@@ -10,7 +10,7 @@
                     <group>
                         <group>
                             <field name="cnf_received_date"/>
-                            <field name="cnf_id"/>
+                            <field name="cnf_id" string="C&amp;F Agent"/>
                         </group>
                     </group>
                     <footer>
