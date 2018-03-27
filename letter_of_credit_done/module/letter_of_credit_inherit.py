@@ -41,7 +41,6 @@ class LetterOfCreditInherit(models.Model):
             'target': 'new',
             'domain': domain,
             'context': {'comment': self.comment or False},
-            'readonly': True,
         }
         return result
 
