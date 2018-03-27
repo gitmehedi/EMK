@@ -36,18 +36,16 @@
                    <sheet>
                        <group>
                           <group>
-                              <field name="lc_id" options="{'no_quick_create':True,'no_create_edit':True,'no_open': True}"/>
-                              <field name="ship_id" options="{'no_quick_create':True,'no_create_edit':True,'no_open': True}"/>
+                              <field name="receive_type" placeholder="Please Select"/>
+                              <field name="lc_id" options="{'no_quick_create':True,'no_create_edit':True,'no_open': True}" attrs="{'invisible': [('receive_type', '!=', 'lc')]}"/>
                               <field name="challan_bill_no"/>
                               <field name="truck_no"/>
                           </group>
                           <group>
+                              <field name="date"/>
+                              <field name="ship_id" options="{'no_quick_create':True,'no_create_edit':True,'no_open': True}" attrs="{'invisible': [('receive_type', '!=', 'lc')]}"/>
                               <field name="create_by"/>
                               <field name="received"/>
-                              <field name="company_id" groups="base.group_multi_company"
-                                                   options="{'no_create': True,'no_open':True}"/>
-                              <field name="operating_unit_id" options="{'no_create': True,'no_open':True}"
-                                   groups="operating_unit.group_multi_operating_unit" />
                           </group>
                        </group>
                        <notebook colspan="4">
@@ -60,6 +58,17 @@
                                       <field name="state" invisible="1"/>
                                   </tree>
                               </field>
+                          </page>
+                           <page string="Others">
+                               <group>
+                                   <group>
+                                        <field name="company_id" groups="base.group_multi_company"
+                                                   options="{'no_create': True,'no_open':True}"/>
+                                        <field name="operating_unit_id" options="{'no_create': True,'no_open':True}"
+                                               groups="operating_unit.group_multi_operating_unit" />
+                                   </group>
+                               </group>
+
                           </page>
                        </notebook>
                    </sheet>
@@ -84,7 +93,7 @@
         </record>
 
         <!-- menu categories -->
-        <menuitem name="Product Gate In" id="product_gate_in_menu" parent="commercial.menu_commercial_root"/>
+        <menuitem name="Product Gate In" id="product_gate_in_menu" parent="stock.menu_stock_root"/>
         <menuitem name="Gate In" id="product_gate_in_sub_menu" parent="product_gate_in_menu" sequence="5" action="product_gate_in_action_window"/>
 
 

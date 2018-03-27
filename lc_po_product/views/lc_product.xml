@@ -29,7 +29,7 @@
 					</xpath>
 				</data>
                 <xpath expr="//field[@name='name']" position="after">
-                    <field name="po_ids" widget="many2many_tags" domain="[('state','=','purchase')]"
+                    <field name="po_ids" widget="many2many_tags" domain="[('state','=','purchase'),('region_type','=',region_type)]"
                            options='{"no_open": True,"no_create": 1, "no_create_edit":1}'/>
                 </xpath>
 			</field>

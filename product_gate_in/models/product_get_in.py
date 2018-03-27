@@ -13,10 +13,10 @@ class productGateIn(models.Model):
     truck_no = fields.Char('Track/Vehical No', readonly=True, states={'draft': [('readonly', False)]})
 
     shipping_line_ids = fields.One2many('product.gate.line','parent_id')
-    operating_unit_id = fields.Many2one('operating.unit', 'Operating Unit', required=True,
+    operating_unit_id = fields.Many2one('operating.unit', string='Operating Unit', required=True,
                                         default=lambda self: self.env.user.default_operating_unit_id,
                                         readonly=True, states={'draft': [('readonly', False)]})
-    company_id = fields.Many2one('res.company', 'Company', readonly=True, states={'draft': [('readonly', False)]},
+    company_id = fields.Many2one('res.company', string='Company', readonly=True, states={'draft': [('readonly', False)]},
                                  default=lambda self: self.env.user.company_id, required=True)
     ship_id = fields.Many2one('purchase.shipment', string='Shipment Number',
                               required=True, states={'confirm': [('readonly', True)]},
@@ -24,6 +24,15 @@ class productGateIn(models.Model):
     lc_id = fields.Many2one('letter.credit', string='LC', required=True,
                             states={'confirm': [('readonly', True)]},
                             domain=['&', ('state', '=', 'progress'), ('type', '=', 'import')])
+
+    date = fields.Date(string="Date")
+    receive_type = fields.Selection([
+        ('lc', "L.C"),
+        ('tt', "T.T"),
+        ('cash', "Cash"),
+        ('credit', "Credit"),
+        ('loan', "Loan"),
+    ])
 
     state = fields.Selection([
         ('draft', "Draft"),
@@ -48,6 +57,7 @@ class productGateIn(models.Model):
         seq = self.env['ir.sequence'].next_by_code('product.gate.in') or '/'
         vals['name'] = seq
         return super(productGateIn, self).create(vals)
+
 
     #show shipment line in ship_id combo with match lc_id
     @api.onchange('lc_id')
