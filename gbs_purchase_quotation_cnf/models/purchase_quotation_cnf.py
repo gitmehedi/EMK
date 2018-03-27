@@ -18,7 +18,7 @@ class PurchaseCNFQuotation(models.Model):
         for cnf in self:
             if cnf.cnf_quotation:
                 self.shipment_id.write({'state': 'approve_cnf_quotation'})
-                return super(PurchaseCNFQuotation, self).button_confirm()
+                return super(PurchaseCNFQuotation, self).button_approve()
 
     # @api.multi
     # def button_approve(self):

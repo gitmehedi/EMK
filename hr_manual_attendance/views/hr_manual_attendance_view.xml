@@ -91,6 +91,8 @@
             <field name="model">hr.manual.attendance</field>
 			<field name="arch" type="xml">
 				<search string="Search Pending Manual Attendances">
+					<field name="employee_id"/>
+                    <field name="department_id"/>
 					<filter name ='my_approval' string="My Approval" domain="[('pending_approver.user_id','=',uid)]"/>
 				</search>
             </field>
