@@ -7,6 +7,7 @@
             <field name="model">letter.credit</field>
             <field name="arch" type="xml">
                 <search string="Search Letter of Credit">
+                    <field name="name"/>
                     <filter name="active" string="Active" domain="[('state', 'in', ('draft','open','confirmed','amendment','progress'))]"/>
                 </search>
             </field>
