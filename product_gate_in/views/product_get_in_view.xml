@@ -9,11 +9,12 @@
             <field name="arch" type="xml">
                 <tree string="Product Get In Form">
                     <field name="name" />
-                    <field name="lc_id" />
+                    <!--<field name="lc_id" />-->
                     <field name="ship_id" />
                     <field name="challan_bill_no"/>
                     <field name="received"/>
                     <field name="operating_unit_id"/>
+                    <field name="date"/>
                     <field name="state"/>
                 </tree>
             </field>
@@ -37,12 +38,12 @@
                        <group>
                           <group>
                               <field name="receive_type" placeholder="Please Select"/>
-                              <field name="lc_id" options="{'no_quick_create':True,'no_create_edit':True,'no_open': True}" attrs="{'invisible': [('receive_type', '!=', 'lc')]}"/>
+                              <field name="date"/>
+                              <!--<field name="lc_id" options="{'no_quick_create':True,'no_create_edit':True,'no_open': True}" attrs="{'invisible': [('receive_type', '!=', 'lc')]}"/>-->
                               <field name="challan_bill_no"/>
                               <field name="truck_no"/>
                           </group>
                           <group>
-                              <field name="date"/>
                               <field name="ship_id" options="{'no_quick_create':True,'no_create_edit':True,'no_open': True}" attrs="{'invisible': [('receive_type', '!=', 'lc')]}"/>
                               <field name="create_by"/>
                               <field name="received"/>

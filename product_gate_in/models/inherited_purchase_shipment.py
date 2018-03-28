@@ -21,3 +21,13 @@ class GateInShipmentProduct(models.Model):
             'context': {'default_lc_id': self.lc_id.id,'default_ship_id': self.id}
 
         }
+
+    # @api.multi
+    def name_get(self):
+        result = []
+        for record in self:
+            name = record.name
+            if record.lc_id:
+                name = "%s [%s]" % (record.lc_id.name_get()[0][1],name)
+            result.append((record.id, name))
+        return result
