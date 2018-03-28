@@ -28,10 +28,9 @@ class productGateIn(models.Model):
     date = fields.Date(string="Date")
     receive_type = fields.Selection([
         ('lc', "L.C"),
-        ('tt', "T.T"),
-        ('cash', "Cash"),
-        ('credit', "Credit"),
         ('loan', "Loan"),
+        ('others', "Others"),
+
     ])
 
     state = fields.Selection([
