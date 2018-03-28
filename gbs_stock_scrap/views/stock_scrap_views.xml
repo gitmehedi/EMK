@@ -1,23 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-        <!-- Scrap Tree View -->
+
         <record id='view_stock_scrap_tree' model='ir.ui.view'>
             <field name="name">view.stock.scrap.tree</field>
             <field name="model">gbs.stock.scrap</field>
             <field name="arch" type="xml">
                 <tree string="Scrap"
                       colors="gray:state=='approved';green:state=='waiting_approval';red:state=='reject';">
-                    <field name="name" />
-                    <field name="request_by" />
-                    <field name="requested_date" />
-                    <field name="location_id" />
+                    <field name="name"/>
+                    <field name="request_by"/>
+                    <field name="requested_date"/>
+                    <field name="location_id"/>
                     <field name="reason" invisible="1"/>
-                    <field name="state" />
+                    <field name="state"/>
                 </tree>
             </field>
         </record>
-        <!-- Scrap Form View -->
+
         <record id='view_stock_scrap_form' model='ir.ui.view'>
             <field name="name">view.stock.scrap.form</field>
             <field name="model">gbs.stock.scrap</field>
@@ -32,7 +32,7 @@
                                 groups="stock.group_stock_manager" type="object"/>
                         <field name="state" widget="statusbar"
                                statusbar_visible="draft,waiting_approval,approved"
-                               statusbar_colors='{"reject":"red"}' />
+                               statusbar_colors='{"reject":"red"}'/>
                     </header>
                     <sheet>
                         <div class="oe_right oe_button_box" name="button_box">
@@ -50,10 +50,13 @@
                             </group>
                             <group>
                                 <field name="company_id" groups="base.group_multi_company"
-                                       options="{'no_create': True,'no_open':True}"/>
-                                <field name="operating_unit_id" options="{'no_create': True,'no_open':True}"
-                                       groups="operating_unit.group_multi_operating_unit" />
-                                <field name="location_id" options="{'no_create': True,'no_open':True}"/>
+                                       options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
+                                <field name="operating_unit_id"
+                                       options="{'no_create':True,'no_create_edit':True,'no_open':True}"
+                                       groups="operating_unit.group_multi_operating_unit"/>
+                                <field name="location_id"
+                                       options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
+                                options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
                                 <field name="picking_type_id" invisible="1"/>
                             </group>
                         </group>
@@ -62,29 +65,42 @@
                                 <field name="product_lines">
                                     <tree string="Products" editable="bottom">
                                         <field name="sequence" widget="handle"/>
-                                        <field name="product_id"/>
+                                        <field name="product_id"
+                                               options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
                                         <field name="name"/>
-                                        <field name="qty_available"/>
-                                        <field name="product_uom" string="UOM"/>
+                                        <field name="qty_available" class="oe_read_only"/>
+                                        <field name="product_uom" string="UOM" class="oe_read_only"
+                                               options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
                                         <field name="product_uom_qty" sum="Total Qty"/>
                                     </tree>
                                 </field>
                                 <div class="oe_clear">
-                                    <label for="reason" />
+                                    <label for="reason"/>
                                 </div>
-                                <field name="reason" colspan="4" placeholder="The material is scraping for..." />
+                                <field name="reason" colspan="4" placeholder="The material is scraping for..."/>
                             </page>
                         </notebook>
                     </sheet>
                     <div class="oe_chatter">
-                        <field name="message_follower_ids" widget="mail_followers" />
-                        <field name="message_ids" widget="mail_thread" />
+                        <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name="message_ids" widget="mail_thread"/>
                     </div>
                 </form>
             </field>
         </record>
 
-        <!-- Indent Window Action -->
+        <record id="seq_type_code_scrap" model="ir.sequence.type">
+            <field name="name">Scrap</field>
+            <field name="code">stock.scraping</field>
+        </record>
+
+        <record id="seq_code_scrap" model="ir.sequence">
+            <field name="name">Scrap</field>
+            <field name="code">stock.scraping</field>
+            <field name="prefix">SCR/OU/%(year)s/</field>
+            <field name="padding">5</field>
+        </record>
+
         <record id='action_gbs_stock_scrap' model='ir.actions.act_window'>
             <field name="name">Scrap</field>
             <field name="res_model">gbs.stock.scrap</field>
@@ -95,11 +111,12 @@
                     Click to scrap products.
                 </p>
                 <p>
-                    Products you scrap will be removed from the stock and moved to a specific scrap location, for reporting purposes.
+                    Products you scrap will be removed from the stock and moved to a specific scrap location, for
+                    reporting purposes.
                 </p>
             </field>
         </record>
-        <!-- Scrap Menu -->
+
         <menuitem
                 id="stock.menu_stock_scrap"
                 name="Scrap"

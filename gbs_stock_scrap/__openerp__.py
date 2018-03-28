@@ -15,9 +15,9 @@
     'version': '10.0.0.1',
     'depends': ['stock',
                 'operating_unit',
-                'stock_operating_unit'],
+                'stock_operating_unit',
+                ],
     'data': [
-        'data/sequence.xml',
         'security/ir.model.access.csv',
         'security/ir_rule.xml',
         'views/stock_scrap_views.xml',

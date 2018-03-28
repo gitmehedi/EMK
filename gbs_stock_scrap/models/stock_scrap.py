@@ -28,19 +28,20 @@ class GBSStockScrap(models.Model):
                          states={'draft': [('readonly', False)]})
     request_by = fields.Many2one('res.users', string='Request By', required=True, readonly=True,
                                  default=lambda self: self.env.user)
-    requested_date = fields.Datetime('Request Date', required=True, default=fields.Datetime.now)
+    requested_date = fields.Datetime('Request Date', required=True, default=fields.Datetime.now,
+                                     readonly=True, states={'draft': [('readonly', False)]})
     approved_date = fields.Datetime('Approved Date', readonly=True)
     approver_id = fields.Many2one('res.users', string='Authority', readonly=True,
                                   help="who have approve or reject.")
     location_id = fields.Many2one('stock.location', 'Location', default=_default_location,
                                   domain="[('usage', '=', 'internal'),('operating_unit_id', '=',operating_unit_id)]",
-                                  required=True, states={'draft': [('readonly', False)]})
+                                  required=True, readonly=True, states={'draft': [('readonly', False)]})
     scrap_location_id = fields.Many2one('stock.location', 'Scrap Location', default=_default_scrap_location,
                                         domain="[('scrap_location', '=', True)]", readonly=True)
     company_id = fields.Many2one('res.company', 'Company', readonly=True, states={'draft': [('readonly', False)]},
                                  default=lambda self: self.env.user.company_id, required=True)
     operating_unit_id = fields.Many2one('operating.unit', 'Operating Unit', required=True,
-                                        states={'draft': [('readonly', False)]},
+                                        readonly=True, states={'draft': [('readonly', False)]},
                                         default=lambda self: self.env.user.default_operating_unit_id)
     picking_id = fields.Many2one('stock.picking', 'Picking', states={'draft': [('readonly', False)]})
     picking_type_id = fields.Many2one('stock.picking.type', string='Picking Type')
@@ -58,6 +59,19 @@ class GBSStockScrap(models.Model):
     ####################################################
     # Business methods
     ####################################################
+
+    @api.onchange('operating_unit_id')
+    def operating_unit(self):
+        res = {}
+        location = self.env['stock.location'].search(
+            [('usage', '=', 'internal'), ('operating_unit_id', '=', self.operating_unit_id.id)])
+
+        res['domain'] = {
+            'location_id': [('id', 'in', location.ids)],
+        }
+
+        self.location_id = location[0].id if location else 0
+        return res
 
     @api.multi
     def scrap_confirm(self):
@@ -110,7 +124,6 @@ class GBSStockScrap(models.Model):
                         'move_type': 'direct',
                         'company_id': self.env.user['company_id'].id,
                         'dest_operating_unit_id': self.operating_unit_id.id,
-                        'stock_transfer_id': self.id,
                         'state': 'done',
                         'invoice_state': 'none',
                         'origin': self.name,
@@ -161,10 +174,12 @@ class GBSStockScrap(models.Model):
         action['domain'] = [('id', '=', self.picking_id.id)]
         return action
 
+    @api.multi
     def unlink(self):
         for indent in self:
             if indent.state != 'draft':
                 raise Warning(_('You cannot delete this !!'))
+
         return super(GBSStockScrap, self).unlink()
 
 
@@ -191,8 +206,11 @@ class GBSStockScrapLines(models.Model):
                 [('operating_unit_id', '=', self.stock_scrap_id.operating_unit_id.id)], limit=1)
             quant = self.env['stock.quant'].search(
                 [('product_id', '=', self.product_id.id), ('location_id', '=', location_id.stock_location_id.id)])
+            quantity = sum([val.qty for val in quant])
+            if quantity <= 0:
+                raise Warning(_('Product "{0}" has not sufficient balance.'.format(self.product_id.display_name)))
 
-            self.qty_available = sum([val.qty for val in quant])
+            self.qty_available = quantity
 
     @api.one
     @api.constrains('product_uom_qty')
