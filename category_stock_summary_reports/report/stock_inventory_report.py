@@ -19,8 +19,8 @@ class StockInventoryReport(models.AbstractModel):
             'doc_model': report.model,
             'docs': self,
             'record': data,
-            'total': 0,
-            'lines': get_data
+             'lines': get_data['category'],
+            'total': get_data['total'],
 
         }
         return report_obj.render('category_stock_summary_reports.stock_inventory_report_qweb', docargs)
@@ -45,6 +45,17 @@ class StockInventoryReport(models.AbstractModel):
                 'total_ck_qty': 0,
                 'total_ck_val': 0,
             }
+        }
+	grand_total = {
+            'title': 'GRAND TOTAL',
+            'total_dk_qty': 0,
+            'total_dk_val': 0,
+            'total_in_qty': 0,
+            'total_in_val': 0,
+            'total_out_qty': 0,
+            'total_out_val': 0,
+            'total_ck_qty': 0,
+            'total_ck_val': 0,
         }
 
         if category_id:
@@ -534,6 +545,15 @@ class StockInventoryReport(models.AbstractModel):
                 total['total_out_val'] = total['total_out_val'] + vals['val_out_tk']
                 total['total_ck_qty'] = total['total_ck_qty'] + vals['qty_ck']
                 total['total_ck_val'] = total['total_ck_val'] + vals['val_ck']
+		
+		
+		grand_total['total_dk_qty'] = grand_total['total_dk_qty'] + vals['qty_dk']
+                grand_total['total_dk_val'] = grand_total['total_dk_val'] + vals['val_dk']
+                grand_total['total_in_qty'] = grand_total['total_in_qty'] + vals['qty_in_tk']
+                grand_total['total_in_val'] = grand_total['total_in_val'] + vals['val_in_tk']
+                grand_total['total_out_qty'] = grand_total['total_out_qty'] + vals['qty_out_tk']
+                grand_total['total_out_val'] = grand_total['total_out_val'] + vals['val_out_tk']
+                grand_total['total_ck_qty'] = grand_total['total_ck_qty'] + vals['qty_ck']
+                grand_total['total_ck_val'] = grand_total['total_ck_val'] + vals['val_ck']
 
-
-        return category
+        return {'category': category, 'total': grand_total}
