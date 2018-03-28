@@ -170,6 +170,7 @@
                 report_type="qweb-pdf"
                 name="purchase_work_order.report_product_work_order"
                 file="purchase_work_order.report_product_work_order"
+                groups="group_purchase_work_order_manager"
         />
     </data>
 </openerp>

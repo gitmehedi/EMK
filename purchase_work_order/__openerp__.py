@@ -16,7 +16,8 @@
         'custom_report',
     ],
     'data': [
-        # 'security/ir.model.access.csv',
+        'security/security.xml',
+        'security/ir.model.access.csv',
         'views/purchase_production_terms_views.xml',
         'views/work_order_views.xml',
         'report/work_order_report_view.xml',

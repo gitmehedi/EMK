@@ -284,6 +284,6 @@
         <menuitem id="work_order_menu" name="Work Orders"
                   sequence="1" action="work_order_action"
                   parent="purchase.menu_procurement_management"
-                  groups=""/>
+                  groups="group_purchase_work_order_manager"/>
     </data>
 </openerp>

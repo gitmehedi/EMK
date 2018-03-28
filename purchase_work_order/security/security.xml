@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="0">
+        <record id="group_purchase_work_order_manager" model="res.groups">
+            <field name="name">Purchase Work Order Manager</field>
+            <field name="category_id" ref="base.module_category_warehouse_management"/>
+        </record>
+    </data>
+</openerp>

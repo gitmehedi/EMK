@@ -1,5 +1,5 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
 
-access_purchase_production_terms,stock.requisition.transfer.manager,model_stock_requisition_transfer,pebbles_transfer_user.group_requisition_transfer_approval_manager,1,1,1,1
-access_stock_requisition_transfer_line_manager,stock.requisition.transfer.line.manager,model_stock_requisition_transfer_line,pebbles_transfer_user.group_requisition_transfer_approval_manager,1,1,1,1
+access_purchase_production_terms,purchase_production_terms,model_purchase_production_terms,group_purchase_work_order_manager,1,1,1,1
+
 
