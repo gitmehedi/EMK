@@ -55,7 +55,6 @@
                             <field name="warehouse_id" class="oe_inline"
                                    options='{"no_open": True,"no_create":1, "no_create_edit": 1}'
                                    attrs="{'readonly':[('readonly_check','!=',False)]}"/>
-
                             <field name="quantity"/>
                             <field name="receive_qty"/>
                             <field name="uom" groups="product.group_uom" string="Product Unit"/>
@@ -83,6 +82,7 @@
                     <field name="po_no"/>
                     <field name="quantity"/>
                     <field name="receive_qty"/>
+                    <field name="receive_date"/>
                     <field name="state"/>
                 </tree>
             </field>
@@ -94,10 +94,12 @@
             <field eval="10" name="priority"/>
             <field name="arch" type="xml">
                 <search string="Goods Receive Search">
-                    <filter name="state_approved" string="Approved" domain="[('state','=','approved')]"
-                    />
-                    <filter name="state_waiting" string="Waiting For Approval" domain="[('state','=','waiting')]"
-                    />
+                    <field name="po_no"/>
+                    <field name="quantity"/>
+                    <field name="receive_qty"/>
+                    <field name="receive_date"/>
+                    <filter name="state_approved" string="Approved" domain="[('state','=','approved')]"/>
+                    <filter name="state_waiting" string="Waiting For Approval" domain="[('state','=','waiting')]"/>
                     <group string="Group By">
                         <filter name="po" string="Purchase Order" context="{'group_by': 'po_no'}"/>
                     </group>
@@ -125,8 +127,8 @@
             <field name="context">{"search_default_state_waiting":1}</field>
         </record>
         <!--<report id="report_receive_matrix" string="Receive Matrix Report" model="goods.receive.matrix"-->
-                <!--report_type="qweb-pdf"-->
-                <!--file="sale.report_saleorder" name="sale.report_saleorder"/>-->
+        <!--report_type="qweb-pdf"-->
+        <!--file="sale.report_saleorder" name="sale.report_saleorder"/>-->
 
         <menuitem name="Goods Receive Matrix" id="goods_receive_maxtix" parent="stock.menu_stock_warehouse_mgmt"
                   sequence="251" action="goods_receive_matrix_action"/>

@@ -1,6 +1,7 @@
 import time
 import datetime
 
+from openerp import api
 from openerp.osv import osv, fields
 from openerp.tools.translate import _
 
@@ -14,29 +15,31 @@ class PosProductReturn(osv.osv_memory):
     }
 
     def return_products(self, cr, uid, ids, context=None):
-        obj = self.pool.get('pos.order')
-        pos_line = self.pool.get('pos.order.line')
-        refund = obj.refund(cr, uid, context['active_id'])
+        ins = self.pool.get('pos.order')
+        ins_line = self.pool.get('pos.order.line')
+        refund = ins.refund(cr, uid, context['active_id'])
 
+        pos_ids = ins.search(cr, uid, [('id', '=', context['active_id'])])
+        pos_rec = ins.browse(cr, uid, pos_ids)
         records = self.browse(cr, uid, ids, {})
-        for record in records.product_ids:
-            ids = pos_line.search(cr, uid, [('order_id', '=', context['active_id']), ('product_id', '=', record.id)])
-            ids = ids[0] if ids else []
-            product = pos_line.browse(cr, uid, ids)
 
+        for record in records.product_ids:
+            ids = ins_line.search(cr, uid, [('order_id', '=', context['active_id']), ('product_id', '=', record.id)])
+            ids = ids[0] if ids else []
+            product = ins_line.browse(cr, uid, ids)
             rec = {}
             rec['name'] = record.name
             rec['product_id'] = record.id
             rec['company_id'] = record.company_id.id
             rec['order_id'] = refund
             rec['qty'] = -product.qty if product else 1
-            rec['discount'] = product.discount if product else 0
+            rec['discount'] = self.get_discount_price(pos_rec, record)
             rec['price_unit'] = product.price_unit if product else record.list_price
-            pos_line.create(cr, uid, rec)
-            dat = obj.browse(cr, uid, refund)
+            ins_line.create(cr, uid, rec)
+            dat = ins.browse(cr, uid, refund)
             dat.write({'date_order': datetime.datetime.today()})
 
-        abs = {
+        return {
             'name': _('Return Products'),
             'view_type': 'form',
             'view_mode': 'form',
@@ -48,4 +51,9 @@ class PosProductReturn(osv.osv_memory):
             'nodestroy': True,
             'target': 'current',
         }
-        return abs
+
+    def get_discount_price(self, ins, record):
+        for rec in ins.lines:
+            if rec.product_id.product_tmpl_id.id == record.product_tmpl_id.id:
+                return rec.discount
+

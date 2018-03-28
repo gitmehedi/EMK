@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+        <record id="purchase_production_terms_tree_view" model="ir.ui.view">
+            <field name="name">Purchase Production Terms Tree View</field>
+            <field name="model">purchase.production.terms</field>
+            <field name="arch" type="xml">
+                <tree string="Purchase Production Terms" editable="bottom"
+                      fonts="bold:status==True"
+                      colors="green:status==True;gray:status==False">
+                    <field name="name"/>
+                    <field name="code"/>
+                    <field name="status"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="purchase_production_terms_search_view" model="ir.ui.view">
+            <field name="name">Purchase Production Terms Search View</field>
+            <field name="model">purchase.production.terms</field>
+            <field eval="10" name="priority"/>
+            <field name="arch" type="xml">
+                <search string="Purchase Production Terms Search">
+                    <field name="name"/>
+                    <field name="code"/>
+                    <field name="status"/>
+                </search>
+            </field>
+        </record>
+
+        <record id="purchase_production_terms_action" model="ir.actions.act_window">
+            <field name="name">Purchase Production Terms</field>
+            <field name="res_model">purchase.production.terms</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <record id="purchase_production_terms_action_tree" model="ir.actions.act_window.view">
+            <field eval="1" name="sequence"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="purchase_production_terms_tree_view"/>
+            <field name="act_window_id" ref="purchase_production_terms_action"/>
+        </record>
+
+        <menuitem id="purchase_production_terms_menu" name="Production Terms"
+                  sequence="15" action="purchase_production_terms_action"
+                  parent="purchase.menu_purchase_config_purchase"
+                  groups=""/>
+    </data>
+</openerp>
