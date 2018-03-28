@@ -204,58 +204,38 @@ class SaleOrder(models.Model):
                     customer_total_credit = account_receivable + sales_order_amount_total
                     customer_credit_limit = credit_limit_pool.credit_limit
 
+                    # 1. If Credit Limit is zero then keep it as zero
+                    if res_partner_cred_lim.remaining_credit_limit == 0:
+                        res_partner_cred_lim.write({'remaining_credit_limit': 0})
+                        order.write({'remaining_credit_limit': 0})
+
+                    # 2. If first time to deduct then deduct from original credit limit value.
+                    if res_partner_cred_lim.value == res_partner_cred_lim.remaining_credit_limit:
+                        if abs(customer_total_credit) < res_partner_cred_lim.value:
+                            remaining_limit = res_partner_cred_lim.value - abs(customer_total_credit)
+                            res_partner_cred_lim.write({'remaining_credit_limit': remaining_limit})
+                            order.write({'remaining_credit_limit': remaining_limit})
+
+                    else:
+                        remaining_limit = res_partner_cred_lim.remaining_credit_limit - abs(customer_total_credit)
+                        if remaining_limit > 0:
+                            res_partner_cred_lim.write({'remaining_credit_limit': remaining_limit})
+                            order.write({'remaining_credit_limit': remaining_limit})
+                        else:
+                            res_partner_cred_lim.write({'remaining_credit_limit': 0})
+                            order.write({'remaining_credit_limit': 0})
+
+
                     if (abs(customer_total_credit) > customer_credit_limit
                         or lines.commission_rate != cust_commission_pool.commission_rate
                         or lines.price_unit != price_change_pool.new_price):
-
-                        # Update Credit Limit and print log message
-                        # if abs(customer_total_credit) < res_partner_cred_lim.value:
-                        #     remaining_limit = res_partner_cred_lim.value - abs(customer_total_credit)
-                        #     res_partner_cred_lim.write({'remaining_credit_limit': remaining_limit})
-                        #     order.write({'remaining_credit_limit': remaining_limit})
-                        # else:
-                        #     res_partner_cred_lim.write({'remaining_credit_limit': '0'})
-                        #     order.write({'remaining_credit_limit': '0'})
-
-                        if res_partner_cred_lim.remaining_credit_limit == 0 \
-                                and abs(customer_total_credit) < res_partner_cred_lim.value:
-
-                                remaining_limit = res_partner_cred_lim.value - abs(customer_total_credit)
-                                res_partner_cred_lim.write({'remaining_credit_limit': remaining_limit})
-                                order.write({'remaining_credit_limit': remaining_limit})
-                        else:
-                            remaining_limit = res_partner_cred_lim.remaining_credit_limit - abs(customer_total_credit)
-                            if remaining_limit < 0:
-
-                                res_partner_cred_lim.write({'remaining_credit_limit': 0})
-                                order.write({'remaining_credit_limit': 0})
-                            else:
-                                res_partner_cred_lim.write({'remaining_credit_limit': remaining_limit})
-                                order.write({'remaining_credit_limit': remaining_limit})
-
 
                         is_double_validation = True
                         break;
 
                     else:
-                        # Update Credit Limit and print log message
-                        if res_partner_cred_lim.remaining_credit_limit == 0 \
-                                and abs(customer_total_credit) < res_partner_cred_lim.value:
-
-                                remaining_limit = res_partner_cred_lim.value - abs(customer_total_credit)
-                                res_partner_cred_lim.write({'remaining_credit_limit': remaining_limit})
-                                order.write({'remaining_credit_limit': remaining_limit})
-                        else:
-                            remaining_limit = res_partner_cred_lim.remaining_credit_limit - abs(customer_total_credit)
-                            if remaining_limit < 0:
-
-                                res_partner_cred_lim.write({'remaining_credit_limit': 0})
-                                order.write({'remaining_credit_limit': 0})
-                            else:
-                                res_partner_cred_lim.write({'remaining_credit_limit': remaining_limit})
-                                order.write({'remaining_credit_limit': remaining_limit})
-
                         is_double_validation = False
+
 
         if is_double_validation:
             order.write({'state': 'validate'})  # Go to two level approval process
