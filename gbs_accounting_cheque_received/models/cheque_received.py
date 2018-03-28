@@ -29,17 +29,17 @@ class ChequeReceived(models.Model):
             n.name = 'Customer Payments'
 
     name = fields.Char(string='Name', compute='_get_name')
-    partner_id = fields.Many2one('res.partner', string="Customer", required=True, states={'honoured': [('readonly', True)]})
-    bank_name = fields.Many2one('res.bank', string='Bank', required=True, states={'honoured': [('readonly', True)]})
-    branch_name = fields.Char(string='Branch Name', required=True, states={'honoured': [('readonly', True)]})
-    date_on_cheque = fields.Date('Date On Cheque', required=True, states={'honoured': [('readonly', True)]})
-    cheque_amount = fields.Float(string='Amount', required=True, states={'honoured': [('readonly', True)]})
-    sale_order_id = fields.Many2one('sale.order', string='Sale Order', states={'honoured': [('readonly', True)]})
+    partner_id = fields.Many2one('res.partner', string="Customer", required=True, states = {'returned': [('readonly', True)],'dishonoured': [('readonly', True)],'honoured': [('readonly', True)],'received': [('readonly', True)],'deposited': [('readonly', True)]})
+    bank_name = fields.Many2one('res.bank', string='Bank', required=True,states = {'returned': [('readonly', True)],'dishonoured': [('readonly', True)],'honoured': [('readonly', True)],'received': [('readonly', True)],'deposited': [('readonly', True)]})
+    branch_name = fields.Char(string='Branch Name', required=True, states = {'returned': [('readonly', True)],'dishonoured': [('readonly', True)],'honoured': [('readonly', True)],'received': [('readonly', True)],'deposited': [('readonly', True)]})
+    date_on_cheque = fields.Date('Date On Cheque', required=True, states = {'returned': [('readonly', True)],'dishonoured': [('readonly', True)],'honoured': [('readonly', True)],'received': [('readonly', True)],'deposited': [('readonly', True)]})
+    cheque_amount = fields.Float(string='Amount', required=True, states = {'returned': [('readonly', True)],'dishonoured': [('readonly', True)],'honoured': [('readonly', True)],'received': [('readonly', True)],'deposited': [('readonly', True)]})
+    sale_order_id = fields.Many2one('sale.order', string='Sale Order', states = {'returned': [('readonly', True)],'dishonoured': [('readonly', True)],'honoured': [('readonly', True)],'received': [('readonly', True)],'deposited': [('readonly', True)]})
     is_cheque_payment = fields.Boolean(string='Cheque Payment', default=True)
     company_id = fields.Many2one('res.company', string='Company', ondelete='cascade',
-                                 default=lambda self: self.env.user.company_id, readonly='True', states={'honoured': [('readonly', True)]})
+                                 default=lambda self: self.env.user.company_id, readonly='True', states = {'returned': [('readonly', True)],'dishonoured': [('readonly', True)],'honoured': [('readonly', True)],'received': [('readonly', True)],'deposited': [('readonly', True)]})
 
-    payment_date = fields.Date(string='Payment Date', default=fields.Date.context_today, required=True, copy=False, states={'honoured': [('readonly', True)]})
+    payment_date = fields.Date(string='Payment Date', default=fields.Date.context_today, required=True, copy=False, states = {'returned': [('readonly', True)],'dishonoured': [('readonly', True)],'honoured': [('readonly', True)],'received': [('readonly', True)],'deposited': [('readonly', True)]})
 
     @api.multi
     def _get_payment_method(self):
@@ -50,7 +50,7 @@ class ChequeReceived(models.Model):
 
     payment_method_id = fields.Many2one('account.payment.method', string='Payment Method Type',
                                     compute='_get_payment_method')
-    currency_id = fields.Many2one('res.currency', string='Currency', states={'honoured': [('readonly', True)]})
+    currency_id = fields.Many2one('res.currency', string='Currency', states = {'returned': [('readonly', True)],'dishonoured': [('readonly', True)],'honoured': [('readonly', True)],'received': [('readonly', True)],'deposited': [('readonly', True)]})
 
     payment_type = fields.Selection([('outbound', 'Send Money'), ('inbound', 'Receive Money')],
                                 string='Payment Type', required=True, default='inbound')
