@@ -1,6 +1,6 @@
 from odoo import api, fields, models,_
 
-class EmployeePayroll(models.Model):
+class EmployeeNameWithJobtitle(models.Model):
 
     _inherit = "hr.employee"
     

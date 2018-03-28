@@ -5,10 +5,11 @@
     'category': 'payroll',
     'version': '10.0.1.0.0',
     'depends': [
-        'hr',
+        'hr','hr_employee_seniority'
     ],
     'data': [
         "views/hr_emp_tin_view.xml",
+        "views/hr_emplyee_sequence.xml",
     ],
     'summary': 'Shows job titles and employee tin informations ',
     'description':
