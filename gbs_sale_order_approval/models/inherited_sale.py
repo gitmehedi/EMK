@@ -204,28 +204,6 @@ class SaleOrder(models.Model):
                     customer_total_credit = account_receivable + sales_order_amount_total
                     customer_credit_limit = credit_limit_pool.credit_limit
 
-                    # 1. If Credit Limit is zero then keep it as zero
-                    if res_partner_cred_lim.remaining_credit_limit == 0:
-                        res_partner_cred_lim.write({'remaining_credit_limit': 0})
-                        order.write({'remaining_credit_limit': 0})
-
-                    # 2. If first time to deduct then deduct from original credit limit value.
-                    if res_partner_cred_lim.value == res_partner_cred_lim.remaining_credit_limit:
-                        if abs(customer_total_credit) < res_partner_cred_lim.value:
-                            remaining_limit = res_partner_cred_lim.value - abs(customer_total_credit)
-                            res_partner_cred_lim.write({'remaining_credit_limit': remaining_limit})
-                            order.write({'remaining_credit_limit': remaining_limit})
-
-                    else:
-                        remaining_limit = res_partner_cred_lim.remaining_credit_limit - abs(customer_total_credit)
-                        if remaining_limit > 0:
-                            res_partner_cred_lim.write({'remaining_credit_limit': remaining_limit})
-                            order.write({'remaining_credit_limit': remaining_limit})
-                        else:
-                            res_partner_cred_lim.write({'remaining_credit_limit': 0})
-                            order.write({'remaining_credit_limit': 0})
-
-
                     if (abs(customer_total_credit) > customer_credit_limit
                         or lines.commission_rate != cust_commission_pool.commission_rate
                         or lines.price_unit != price_change_pool.new_price):
@@ -234,6 +212,29 @@ class SaleOrder(models.Model):
                         break;
 
                     else:
+                        # @todo: Below part needs refactor and make one single method
+                        # 1. If Credit Limit is zero then keep it as zero
+                        if res_partner_cred_lim.remaining_credit_limit == 0:
+                            res_partner_cred_lim.write({'remaining_credit_limit': 0})
+                            order.write({'remaining_credit_limit': 0})
+
+                        # 2. If first time to deduct then deduct from original credit limit value.
+                        if res_partner_cred_lim.value == res_partner_cred_lim.remaining_credit_limit:
+                            if abs(customer_total_credit) < res_partner_cred_lim.value:
+                                remaining_limit = res_partner_cred_lim.value - abs(customer_total_credit)
+                                res_partner_cred_lim.write({'remaining_credit_limit': remaining_limit})
+                                order.write({'remaining_credit_limit': remaining_limit})
+
+                        else:
+                            remaining_limit = res_partner_cred_lim.remaining_credit_limit - abs(customer_total_credit)
+                            if remaining_limit > 0:
+                                res_partner_cred_lim.write({'remaining_credit_limit': remaining_limit})
+                                order.write({'remaining_credit_limit': remaining_limit})
+                            else:
+                                res_partner_cred_lim.write({'remaining_credit_limit': 0})
+                                order.write({'remaining_credit_limit': 0})
+
+
                         is_double_validation = False
 
 
@@ -241,6 +242,53 @@ class SaleOrder(models.Model):
             order.write({'state': 'validate'})  # Go to two level approval process
         else:
             order.write({'state': 'done'})  # One level approval process
+
+
+    #########################################
+    # Inherited Action Confirm Button
+    #########################################
+    @api.multi
+    def action_confirm(self):
+        for order in self:
+            res = super(SaleOrder, order).action_confirm()
+
+            #@todo: Below part needs refactor and make one single method
+            credit_limit_pool = order.env['res.partner'].search([('id', '=', order.partner_id.id)])
+
+            res_partner_cred_lim = order.env['res.partner.credit.limit'].search(
+                [('partner_id', '=', order.partner_id.id),
+                 ('state', '=', 'approve')], order='assign_id DESC', limit=1)
+
+
+            account_receivable = credit_limit_pool.credit
+            sales_order_amount_total = -order.amount_total  # actually it should be minus value
+
+            customer_total_credit = account_receivable + sales_order_amount_total
+            customer_credit_limit = credit_limit_pool.credit_limit
+
+            # 1. If Credit Limit is zero then keep it as zero
+            if res_partner_cred_lim.remaining_credit_limit == 0:
+                res_partner_cred_lim.write({'remaining_credit_limit': 0})
+                order.write({'remaining_credit_limit': 0})
+
+            # 2. If first time to deduct then deduct from original credit limit value.
+            if res_partner_cred_lim.value == res_partner_cred_lim.remaining_credit_limit:
+                if abs(customer_total_credit) < res_partner_cred_lim.value:
+                    remaining_limit = res_partner_cred_lim.value - abs(customer_total_credit)
+                    res_partner_cred_lim.write({'remaining_credit_limit': remaining_limit})
+                    order.write({'remaining_credit_limit': remaining_limit})
+
+            else:
+                remaining_limit = res_partner_cred_lim.remaining_credit_limit - abs(customer_total_credit)
+                if remaining_limit > 0:
+                    res_partner_cred_lim.write({'remaining_credit_limit': remaining_limit})
+                    order.write({'remaining_credit_limit': remaining_limit})
+                else:
+                    res_partner_cred_lim.write({'remaining_credit_limit': 0})
+                    order.write({'remaining_credit_limit': 0})
+
+            return res
+
 
 
     def second_approval_business_logics(self, cust_commission_pool, lines, price_change_pool):
