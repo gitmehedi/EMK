@@ -1,2 +1,2 @@
-import hr_employee_payroll
+import hr_employee_inherit
 import hr_emp_tin
