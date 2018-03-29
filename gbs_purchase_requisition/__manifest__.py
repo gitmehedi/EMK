@@ -16,6 +16,7 @@
         # 'security/ir_rule.xml',
         # 'security/ir.model.access.csv',
         'wizard/pr_wizard_view.xml',
+        'wizard/pr_from_where_wizard_view.xml',
         'views/gbs_purchase_requisition_view.xml',
         'views/pr_commercial_menu_views.xml',
         'views/stock_indent_view.xml',
