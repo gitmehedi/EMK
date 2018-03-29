@@ -12,7 +12,7 @@
                     <button name="lc_done_action_window1" type="object"
                             class="oe_stat_button" icon="fa-usd"
                             context="{'rel_job_id': id}"
-                            attrs="{'invisible':[('state', '!=', 'progress')]}"
+                            attrs="{'invisible':[('state', '!=', 'done')]}"
                             string="LC Evaluation">
                     </button>
                 </xpath>

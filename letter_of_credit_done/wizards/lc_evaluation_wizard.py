@@ -31,7 +31,9 @@ class EvaluationJudgement(models.TransientModel):
         form_id = self.env.context.get('active_id')
         lc_pool = self.env['letter.credit'].search([('id', '=', form_id)])
         lc_pool.write(
-            {'comment': self.comment})
+            {'comment': self.comment,
+             'state': 'done'
+             })
 
         for wizard_line in self.criteria_line_ids:
             evaluating_line_form_pool = self.env['lc.evaluation.line'].search(

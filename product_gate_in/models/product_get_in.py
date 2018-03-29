@@ -13,17 +13,24 @@ class productGateIn(models.Model):
     truck_no = fields.Char('Track/Vehical No', readonly=True, states={'draft': [('readonly', False)]})
 
     shipping_line_ids = fields.One2many('product.gate.line','parent_id')
-    operating_unit_id = fields.Many2one('operating.unit', 'Operating Unit', required=True,
+    operating_unit_id = fields.Many2one('operating.unit', string='Operating Unit', required=True,
                                         default=lambda self: self.env.user.default_operating_unit_id,
                                         readonly=True, states={'draft': [('readonly', False)]})
-    company_id = fields.Many2one('res.company', 'Company', readonly=True, states={'draft': [('readonly', False)]},
+    company_id = fields.Many2one('res.company', string='Company', readonly=True, states={'draft': [('readonly', False)]},
                                  default=lambda self: self.env.user.company_id, required=True)
     ship_id = fields.Many2one('purchase.shipment', string='Shipment Number',
-                              required=True, states={'confirm': [('readonly', True)]},
-                              domain=[('lc_id', '=', 'self.lc_id')])
-    lc_id = fields.Many2one('letter.credit', string='LC', required=True,
-                            states={'confirm': [('readonly', True)]},
-                            domain=['&', ('state', '=', 'progress'), ('type', '=', 'import')])
+                              required=True, states={'confirm': [('readonly', True)]})
+    # lc_id = fields.Many2one('letter.credit', string='LC', required=True,
+    #                         states={'confirm': [('readonly', True)]},
+    #                         domain=['&', ('state', '=', 'progress'), ('type', '=', 'import')])
+
+    date = fields.Date(string="Date")
+    receive_type = fields.Selection([
+        ('lc', "L.C"),
+        ('loan', "Loan"),
+        ('others', "Others"),
+
+    ])
 
     state = fields.Selection([
         ('draft', "Draft"),
@@ -49,12 +56,13 @@ class productGateIn(models.Model):
         vals['name'] = seq
         return super(productGateIn, self).create(vals)
 
+
     #show shipment line in ship_id combo with match lc_id
-    @api.onchange('lc_id')
-    def _onchange_aml_data(self):
-        if self.lc_id:
-            com_obj = self.env['purchase.shipment'].search([('lc_id', '=', self.lc_id.id)])
-            return {'domain': {'ship_id': ['&',('id', 'in', com_obj.ids), ('state', 'in', ['cnf_clear','gate_in'])]}}
+    # @api.onchange('lc_id')
+    # def _onchange_aml_data(self):
+    #     if self.lc_id:
+    #         com_obj = self.env['purchase.shipment'].search([('lc_id', '=', self.lc_id.id)])
+    #         return {'domain': {'ship_id': ['&',('id', 'in', com_obj.ids), ('state', 'in', ['cnf_clear','gate_in'])]}}
 
     # change data and line data depands on ship_id
     @api.onchange('ship_id')

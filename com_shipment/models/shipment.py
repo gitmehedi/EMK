@@ -53,6 +53,16 @@ class Shipment(models.Model):
     invoice_number = fields.Char(string='Invoice Number', readonly=True)
     invoice_value = fields.Float(string='Invoice Value', readonly=True)
 
+    # @api.multi
+    def name_get(self):
+        result = []
+        for record in self:
+            name = record.name
+            if record.lc_id:
+                name = "%s [%s]" % (record.lc_id.name_get()[0][1], name)
+            result.append((record.id, name))
+        return result
+
     @api.model
     def create(self, vals):
 

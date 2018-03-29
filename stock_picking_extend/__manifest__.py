@@ -10,7 +10,7 @@
     'website': "www.genweb2.com",
     'category': 'Stock',
     'version': '10.0.0.1',
-    'depends': ['stock'],
+    'depends': ['stock','stock_operating_unit'],
     'data': [
         # 'security/ir.model.access.csv',
         'views/stock_picking_views.xml',

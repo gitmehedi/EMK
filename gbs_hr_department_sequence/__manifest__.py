@@ -13,7 +13,7 @@
     "depends": ["hr","hr_holidays"],
     "data": [
         "security/ir.model.access.csv",
-        # "views/hr_department_view.xml",
+        "views/hr_department_view.xml",
     ],
     'installable': True,
     'application': True
