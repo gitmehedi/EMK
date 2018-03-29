@@ -4,4 +4,4 @@ class EmployeeSequence(models.Model):
 
     _inherit = "hr.employee"
 
-    emp_sequence = fields.Integer("Employee Sequence")
+    employee_sequence = fields.Integer("Employee Sequence")
