@@ -243,9 +243,13 @@ class AttendanceUtility(models.TransientModel):
                     chk_out = next_chk_in
                     att_check_out = attendance_data[i+1][0]
 
+            chk_out_limit = nextDayDutyTime.startDutyTime
+
+            if currentDaydutyTime.endActualDutyTime >= nextDayDutyTime.startDutyTime:
+                chk_out_limit = currentDaydutyTime.endActualDutyTime + timedelta(hours= 1)
 
             if previousDayDutyTime.endActualDutyTime < chk_in < currentDaydutyTime.endActualDutyTime and \
-                                    currentDaydutyTime.startDutyTime < chk_out < nextDayDutyTime.startDutyTime:
+                                    currentDaydutyTime.startDutyTime < chk_out < chk_out_limit:
                 duration = (chk_out - chk_in).total_seconds() / 60 / 60
                 attendanceDayList.append(TempLateTime(att_check_in, att_check_out, duration))
                 temp_attendance_data.remove(attendance)
