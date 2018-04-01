@@ -64,8 +64,8 @@ class IndentIndent(models.Model):
                                           readonly=True, states={'draft': [('readonly', False)]})
     requirement = fields.Selection([('1', 'Ordinary'), ('2', 'Urgent')], 'Priority', readonly=True,
                                    default="1", required=True, states={'draft': [('readonly', False)]})
-    indent_type = fields.Many2one('indent.type',string='Type',readonly=True, states={'draft': [('readonly', False)]})
-    product_lines = fields.One2many('indent.product.lines', 'indent_id', 'Products', readonly=True,
+    indent_type = fields.Many2one('indent.type',string='Type',readonly=True, required = True, states={'draft': [('readonly', False)]})
+    product_lines = fields.One2many('indent.product.lines', 'indent_id', 'Products', readonly=True, required = True,
                                     states={'draft': [('readonly', False)],
                                             'waiting_approval': [('readonly', False)]})
     picking_id = fields.Many2one('stock.picking', 'Picking')
