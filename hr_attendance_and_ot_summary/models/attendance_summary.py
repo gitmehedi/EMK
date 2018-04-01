@@ -20,11 +20,12 @@ class AttendanceSummary(models.Model):
         ('draft', "Draft"),
         ('confirmed', "Confirmed"),
         ('approved', "Approved"),
-    ], default='draft')
+    ], default='draft',track_visibility='onchange')
 
+    button_show = fields.Boolean(string='Check', default=False)
 
     """ Relational Fields """
-    att_summary_lines = fields.One2many('hr.attendance.summary.line', 'att_summary_id', string='Summary Lines')
+    att_summary_lines = fields.One2many('hr.attendance.summary.line', 'att_summary_id', string='Summary Lines',track_visibility='onchange')
 
     # @api.model
     # def fields_view_get(self, view_id=None, view_type='form', toolbar=False, submenu=False):
@@ -48,8 +49,9 @@ class AttendanceSummary(models.Model):
             
     @api.multi
     def action_done(self):
-        for attendance in self:
-            self.state = 'approved'
+        self.state = 'approved'
+        self.button_show = True
+        self.att_summary_lines.write({'button_show': 'True'})
     # Show a msg for applied & approved state should not be delete
     @api.multi
     def unlink(self):
