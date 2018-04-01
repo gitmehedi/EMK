@@ -12,8 +12,18 @@ class PurchaseRequisition(models.Model):
     department_id = fields.Many2one('hr.department',string='Department', store=True)
     operating_unit_id = fields.Many2one('operating.unit', 'Operating Unit', required=True,
                                         default=lambda self: self.env.user.default_operating_unit_id)
-    region_type = fields.Selection([('local', 'Local'),('foreign', 'Foreign')], string="Region Type",help="Local: Local LC.\n""Foreign: Foreign LC.")
-    purchase_by = fields.Selection([('cash', 'Cash'), ('credit', 'Credit'), ('lc', 'LC'), ('tt', 'TT')], string="Purchase By")
+
+    region_type = fields.Selection([('local', 'Local'),('foreign', 'Foreign')],
+                                   string="Region Type", help="Local: Local LC.\n""Foreign: Foreign LC.")
+
+    purchase_by = fields.Selection([('cash', 'Cash'),
+                                    ('credit', 'Credit'),
+                                    ('lc', 'LC'),
+                                    ('tt', 'TT')], string="Purchase By")
+
+    purchase_from = fields.Selection([('own', 'Own'), ('ho', 'HO')],
+                                   string="Purchase From")
+
     requisition_date = fields.Date(string='Requisition Date',default = date.today())
     required_date = fields.Date(string='Required Date')
     state = fields.Selection([('draft', 'Draft'), ('in_progress', 'Confirmed'),
@@ -40,13 +50,25 @@ class PurchaseRequisition(models.Model):
 
     @api.multi
     def action_open(self):
-        self.write({'state': 'approve_head_procurement'})
+        res = self.env.ref('gbs_purchase_requisition.pr_from_where_wizard')
+        result = {
+            'name': _('Please take decision purchase from where?'),
+            'view_type': 'form',
+            'view_mode': 'form',
+            'view_id': res and res.id or False,
+            'res_model': 'pr.from.where.wizard',
+            'type': 'ir.actions.act_window',
+            'nodestroy': True,
+            'target': 'new',
+        }
+        return result
+        # self.write({'state': 'approve_head_procurement'})
 
     @api.multi
     def action_approve(self):
         res = self.env.ref('gbs_purchase_requisition.purchase_requisition_type_wizard')
         result = {
-            'name': _('Please Select LC Region Type and Purchase By before approve'),
+            'name': _('Please Select Region Type and Purchase By before approve'),
             'view_type': 'form',
             'view_mode': 'form',
             'view_id': res and res.id or False,
