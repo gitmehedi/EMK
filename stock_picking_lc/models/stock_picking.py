@@ -26,6 +26,8 @@ class Picking(models.Model):
         product_lines = []
         for ship_pro_line in self.shipment_id.shipment_product_lines:
 
+
+
             date_planned = time.strftime(DEFAULT_SERVER_DATETIME_FORMAT)
 
             product_lines.append((0, 0, {
