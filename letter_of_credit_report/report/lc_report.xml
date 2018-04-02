@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <template id="template_letter_of_credit_report">
+            <t t-call="report.html_container">
+                <t t-call="custom_report.gbs_internal_layout">
+                    <div class="page" style="page-break-inside: auto">
+                        <div class="clearfix">
+                            <div class="">
+                                <h3 class="text-center">Letter of Credit</h3>
+                            </div>
+                            <div class="row">
+                                <div class="col-xs-6 text-left">
+                                    <div>
+                                        <strong>Type:</strong>
+                                        <!--<span t-esc="data['report_type']"/>-->
+                                    </div>
+                                    <div>
+                                        <strong>Date:</strong>
+                                        <!--<span t-esc="data['report_type']"/>-->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </t>
+            </t>
+        </template>
+        <report id="action_letter_of_credit_report"
+                string="Letter of Credit"
+                model="letter.credit"
+                report_type="qweb-pdf"
+                name="letter_of_credit_report.template_letter_of_credit_report"
+                file="letter_of_credit_report.template_letter_of_credit_report"
+                menu="False"
+                paperformat="custom_report.paperformat_backend_portrait"
+        />
+    </data>
+</odoo>
