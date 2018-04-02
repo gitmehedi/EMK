@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--Custom report.-->
+<odoo>
+    <data>
+        <report
+                id="custom_report_mrr"
+                model="stock.picking"
+                string="Material Requisition Report"
+                report_type="qweb-pdf"
+                name="stock_picking_mrr.report_mrr_doc"
+                file="stock_picking_mrr.report_mrr_doc"
+                menu = "False"
+        />
+
+        <template id="report_mrr_doc">
+            <t t-call="report.html_container">
+                <t t-call="custom_report.gbs_internal_layout">
+                    <t t-foreach="docs" t-as="o">
+                        <div class="page" style="page-break-inside: auto">
+                            <style>
+                                .table-caption {
+                                border: 1px solid #ddd;
+                                border-bottom: none;
+                                font-size: 14px;
+                                font-weight: bold;
+                                margin: 0;
+                                padding: 5px 5px;
+                                }
+                            </style>
+                            <div class="row">
+                                <h4 class="text-center">Material Requisition Report</h4>
+                                <hr class="hr-sm mb-0"/>
+                                <div class="row">
+                                    <div class="col-xs-8">
+                                        <span t-field="o.mrr_no"/>
+                                    </div>
+                                </div>
+                                <hr class="hr-xs"/>
+                            </div>
+                            <div class="row">
+                                <h4 class="table-caption">Challan/Cash memo/Packing List</h4>
+                                <table class="table table-report table-bordered table-striped">
+                                    <thead>
+                                        <tr class="odo-bg-gray">
+                                            <th>Sl#</th>
+                                            <th>Code &amp; Item Description</th>
+                                            <th>PR No</th>
+                                            <th>Quantity</th>
+                                            <th>Unit</th>
+                                            <th>Rate</th>
+                                            <th>Discount</th>
+                                            <th>Amount</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <t t-foreach="o.pack_operation_product_ids" t-as="l">
+                                            <tr style="page-break-inside: avoid">
+                                                <td><span t-esc="l_index+1"/></td>
+                                                <td><span t-esc="l.product_id.name"/></td>
+                                                <td><span t-esc="o.shipment_id.lc_id.po_ids.requisition_id.name"/></td>
+                                                <td><span t-esc="l.mrr_quantity"/></td>
+                                                <td><span t-esc="l.product_uom_id.name"/></td>
+                                                <td><span t-esc="l.product_id.standard_price"/></td>
+                                                <td></td>
+                                                <td></td>
+
+                                            </tr>
+                                        </t>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <t t-call="custom_report.report_signing"></t>
+                        </div>
+                    </t>
+                </t>
+            </t>
+        </template>
+    </data>
+</odoo>

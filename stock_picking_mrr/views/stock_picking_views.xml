@@ -3,7 +3,7 @@
     <record model="ir.ui.view" id="view_picking_form_inherit3">
         <field name="name">stock.picking.inherit3.form</field>
         <field name="model">stock.picking</field>
-        <field name="inherit_id" ref="stock.view_picking_form"/>
+        <field name="inherit_id" ref="stock_picking_extend.view_stock_picking_form1"/>
         <field name="arch" type="xml">
             <xpath expr="//header/button[@name='%(stock.act_stock_return_picking)d']" position="after">
                 <field name="check_mrr_button" invisible="1"/>
@@ -11,7 +11,7 @@
                 <button name="button_approve" string="Approve" attrs="{'invisible': ['|',('state','!=','done'),('check_mrr_button', '=', True)]}"
                         type="object" class="oe_highlight"/>
 
-                <button name="button_mrr" string="Print MRR" attrs="{'invisible': [('check_mrr_button', '=', False)]}"
+                <button name="process_report" string="Print MRR" attrs="{'invisible': [('check_mrr_button', '=', False)]}"
                         type="object" class="oe_highlight"/>
             </xpath>
 
@@ -19,18 +19,6 @@
                 <field name="mrr_quantity" states="done"/>
             </xpath>
 
-        </field>
-    </record>
-
-
-    <record model="ir.ui.view" id="view_move_form_inherit1">
-        <field name="name">stock.move.inherit1.form</field>
-        <field name="model">stock.move</field>
-        <field name="inherit_id" ref="stock.view_move_form"/>
-        <field name="arch" type="xml">
-            <xpath expr="//field[@name='name']" position="after">
-                <field name="mrr_quantity"/>
-            </xpath>
         </field>
     </record>
 

@@ -7,6 +7,7 @@ class Picking(models.Model):
     _inherit = "stock.picking"
 
     check_mrr_button = fields.Boolean('Button Check')
+    mrr_no = fields.Char('MRR No')
 
     pack_operation_product_ids = fields.One2many(
         'stock.pack.operation', 'picking_id', 'Non pack',
@@ -17,23 +18,17 @@ class Picking(models.Model):
     def button_approve(self):
         for picking in self:
             picking.check_mrr_button = 'True'
+            new_seq = self.env['ir.sequence'].next_by_code('material.requisition')
+            if new_seq:
+                picking.mrr_no = new_seq
+
+    @api.multi
+    def process_report(self):
+        data = {}
+
+        return self.env['report'].get_action(self, 'stock_picking_mrr.report_mrr_doc', data=data)
 
 class PackOperation(models.Model):
     _inherit = "stock.pack.operation"
 
     mrr_quantity = fields.Float('MRR Quantity', related = 'qty_done', digits=dp.get_precision('Product Unit of Measure'))
-
-    # @api.onchange('mrr_quantity')
-    # def _onchange_mrr_quantity(self):
-    #     move_objs = self.env['stock.move'].search([('id', 'in', self.picking_id.move_lines.ids)])
-    #     for move_obj in move_objs:
-    #         print move_obj
-         # if self.mrr_quantity:
-        #     move_obj.write({'mrr_quantity': self.mrr_quantity})
-
-#
-# class StockMove(models.Model):
-#     _inherit = "stock.move"
-#
-#     mrr_quantity = fields.Float('MRR Quantity',  digits=dp.get_precision('Product Unit of Measure'))
-# related = 'picking_id.pack_operation_product_ids.mrr_quantity',

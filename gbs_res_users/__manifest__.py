@@ -10,7 +10,9 @@
     ],
 
     'data': [
-        'views/res_users_view.xml'
+        'security/ir_rule.xml',
+        # 'security/ir.model.access.csv',
+        'views/res_users_view.xml',
     ],
     'summary': 'This module handles custom ir sequence',
     'description':"Complete Solution for operating unit wise sequence",
