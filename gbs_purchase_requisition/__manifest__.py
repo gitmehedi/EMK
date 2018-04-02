@@ -9,6 +9,7 @@
         'stock_indent',
         'ir_sequence_operating_unit',
         'commercial',
+        'gbs_application_group',
     ],
     'data': [
         'data/pr_sequence.xml',
