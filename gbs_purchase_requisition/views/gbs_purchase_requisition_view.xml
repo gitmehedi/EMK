@@ -167,16 +167,16 @@
                 </data>
             </field>
         </record>
-        <!--<record id="inherit_pr_filter_view_form" model="ir.ui.view">-->
-            <!--<field name="name">purchase.requisition.filter.view.form</field>-->
-            <!--<field name="model">purchase.requisition</field>-->
-            <!--<field name="inherit_id" ref="purchase_requisition.view_purchase_requisition_filter"/>-->
-            <!--<field name="arch" type="xml">-->
-                <!--<xpath expr="//field[@name='user_id']" position="after" type="object">-->
-                    <!--<filter name="my_approval" string="My Approval" domain="[('pending_approver.user_id','=',uid)]"/>-->
-                <!--</xpath>-->
-            <!--</field>-->
-        <!--</record>-->
+        <record id="inherit_pr_filter_view_form" model="ir.ui.view">
+            <field name="name">purchase.requisition.filter.view.form</field>
+            <field name="model">purchase.requisition</field>
+            <field name="inherit_id" ref="purchase_requisition.view_purchase_requisition_filter"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='user_id']" position="after" type="object">
+                    <filter name="my_approval" string="My Approval" domain="[('state','=','in_progress')]"/>
+                </xpath>
+            </field>
+        </record>
         <!--Inherited view for field access-->
         <!--<record id="inherit_indent_pr_view_form" model="ir.ui.view">-->
         <!--<field name="name">indent.pr.view.form.inherit</field>-->
@@ -224,9 +224,11 @@
             <field name="res_model">purchase.requisition</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
-            <field name="context">{'search_default_user_id' : uid}
+            <field name="context">{
+                'search_default_my_approval':1,
+                'search_default_user_id':uid,
+                }
             </field>
-            <field name="domain">[('state','=','in_progress')]</field>
             <field name="search_view_id" ref="purchase_requisition.view_purchase_requisition_filter"/>
         </record>
 
