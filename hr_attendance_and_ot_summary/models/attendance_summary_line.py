@@ -14,7 +14,7 @@ class AttendanceSummaryLine(models.Model):
     schedule_ot_hrs = fields.Float(string='Schedule OT Hrs')
     cal_ot_hrs = fields.Float(string='Cal OT Hrs')
     extra_ot = fields.Float(string='Extra OT Hrs')
-    button_show =fields.Boolean(string='Check',default=False)
+    #button_show =fields.Boolean(string='Check')
 
     """" Relational Fields """
     att_summary_id = fields.Many2one("hr.attendance.summary", string="Summary", required=True, ondelete='cascade')
@@ -33,6 +33,11 @@ class AttendanceSummaryLine(models.Model):
     weekend_days_count = fields.Integer(string="Weekend Days", compute="_set_weekend_days_count")
     is_entered_rostering = fields.Integer(default=1, required=True)
 
+    state = fields.Selection([
+        ('draft', "Draft"),
+        ('confirmed', "Confirmed"),
+        ('approved', "Approved"),
+    ], default='draft')
 
     @api.depends('absent_days')
     def _set_absent_days_count(self):
