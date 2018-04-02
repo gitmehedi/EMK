@@ -21,6 +21,8 @@
 
     'data': [
         # 'security/ir.model.access.csv',
+        'data/sequence.xml',
+        'report/template_mrr.xml',
         'views/stock_picking_views.xml',
     ],
 
