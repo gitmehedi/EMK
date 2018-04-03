@@ -2,7 +2,7 @@ from odoo import api, fields, models, _
 
 
 class HrEmpLeaveReport(models.AbstractModel):
-    _name = 'report.letter_of_credit_report.letter_of_credit_report'
+    _name = 'report.letter_of_credit_report.template_letter_of_credit_report'
 
     @api.multi
     def render_html(self, docids, data=None):
@@ -10,7 +10,7 @@ class HrEmpLeaveReport(models.AbstractModel):
 
 
         docargs = {
-            'data': data,
+            'report_type': data['report_type'],
 
         }
         return report_obj.render('letter_of_credit_report.template_letter_of_credit_report', docargs)
