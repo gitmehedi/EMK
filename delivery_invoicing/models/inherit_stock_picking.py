@@ -12,7 +12,7 @@ class Picking(models.Model):
             if stock.sale_id.partner_shipping_id:
                 stock.delivery_address = stock.sale_id.partner_shipping_id.name
             else:
-                stock.sale_id.partner_shipping_id = ''
+                stock.delivery_address = ''
 
     @api.multi
     def do_new_transfer(self):

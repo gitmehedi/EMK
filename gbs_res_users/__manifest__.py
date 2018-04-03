@@ -11,7 +11,7 @@
 
     'data': [
         'security/ir_rule.xml',
-        'security/ir.model.access.csv',
+        # 'security/ir.model.access.csv',
         'views/res_users_view.xml',
     ],
     'summary': 'This module handles custom ir sequence',

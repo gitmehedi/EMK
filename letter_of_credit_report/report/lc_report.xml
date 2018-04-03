@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <template id="template_letter_of_credit_report">
+            <t t-call="report.html_container">
+                <t t-call="custom_report.gbs_internal_layout">
+                    <div class="page" style="page-break-inside: auto">
+                        <div class="clearfix">
+                            <div class="row">
+                                <h4 class="text-center">Letter of Credit</h4>
+                                <hr class="hr-sm mb-0"/>
+                                <div class="row">
+                                    <div class="col-xs-4">
+                                        <div><strong>Printing Time : </strong><span t-esc="context_timestamp(datetime.datetime.now()).strftime('%Y-%m-%d %H:%M')"/></div>
+                                        <div><strong>Printed By : </strong><span t-esc="user.name"/></div>
+                                        <div><strong>type : </strong><span t-esc="report_type"/></div>
+                                    </div>
+                                </div>
+                                <hr class="hr-xs"/>
+                            </div>
+                        </div>
+                        <!--<t t-if="att_summary['late']">-->
+                            <div class="row">
+                                <h4 class="table-caption">Active Employee List</h4>
+                                <tr><th>LC Number:</th>
+                                    <tr><th>Shipment Number:</th>
+                                        <table class="table table-report table-bordered table-striped">
+                                            <thead>
+                                                <tr class="odo-bg-gray">
+                                                    <tr>
+                                                        <th>Party Name</th>
+                                                        <th>Product Name</th>
+                                                        <th>Quantity</th>
+                                                        <th>PR No</th>
+                                                        <th>PR Date</th>
+                                                        <th>Price</th>
+                                                        <th>Discharge Port </th>
+                                                    </tr>
+                                                </tr>
+                                            </thead>
+                                        </table>
+                                    </tr>
+                                </tr>
+
+                                    <!--<tbody>-->
+                                        <!--<t t-foreach="att_summary['late']" t-as="l">-->
+                                            <!--<tr style="page-break-inside: avoid">-->
+                                                <!--<td><span t-esc="l_index+1"/></td>-->
+                                                <!--<td><span t-esc="att_summary['late'][l_index].name"/></td>-->
+                                                <!--<td><span t-esc="att_summary['late'][l_index].dept"/></td>-->
+                                                <!--<td><span t-esc="att_summary['late'][l_index].designation"/></td>-->
+                                                <!--<td><span t-esc="att_summary['late'][l_index].check_in"/></td>-->
+                                            <!--</tr>-->
+                                        <!--</t>-->
+                                    <!--</tbody>-->
+
+                            </div>
+                        <!--</t>-->
+                    </div>
+                </t>
+            </t>
+        </template>
+        <report id="action_letter_of_credit_report"
+                string="Letter of Credit"
+                model="letter.credit"
+                report_type="qweb-pdf"
+                name="letter_of_credit_report.template_letter_of_credit_report"
+                file="letter_of_credit_report.template_letter_of_credit_report"
+                menu="False"
+                paperformat="custom_report.paperformat_backend_portrait"
+        />
+    </data>
+</odoo>
