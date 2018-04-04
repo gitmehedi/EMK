@@ -10,7 +10,7 @@ class LetterCreditReport(models.TransientModel):
     report_type = fields.Selection([
         ('active', "Active"),
         ('done', "Done"),
-        ('cancel', "Cancel")],string='Select Type')
+        ('cancel', "Cancel")],string='Select')
 
     @api.multi
     def process_report(self):
