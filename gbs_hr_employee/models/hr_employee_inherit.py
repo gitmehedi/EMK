@@ -1,8 +1,14 @@
-from odoo import api, fields, models,_
+from odoo import api, fields, models
 
-class EmployeeNameWithJobtitle(models.Model):
+class HrEmployee(models.Model):
 
     _inherit = "hr.employee"
+
+    department_id = fields.Many2one('hr.department', string='Department', required=True)
+    tin_req = fields.Boolean(string='TIN Applicable')
+    tin = fields.Char(string='TIN')
+
+    employee_sequence = fields.Integer("Employee Sequence")
     
     @api.multi
     def name_get(self):
