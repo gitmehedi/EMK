@@ -1,3 +1,1 @@
 import hr_employee_inherit
-import hr_employee_sequence
-import hr_emp_tin
