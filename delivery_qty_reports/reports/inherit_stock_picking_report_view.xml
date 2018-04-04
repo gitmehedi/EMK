@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <template id="report_individual_payslip">
+            <t t-call="report.html_container">
+                <t t-call="custom_report.gbs_internal_layout">
+                    <div class="page" style="page-break-inside:auto">
+                        <div class="row">
+                            <div class="row">
+                                <div class="col-xs-6">
+                                    <label>Customer</label>
+                                </div>
+                                <div class="col-xs-6">
+                                    <span t-esc="data['partner_id']"/>
+                                </div>
+                            </div>
+                            <div class="row">
+
+                                <div class="col-xs-6">
+                                    <span t-esc="data['do_date']"/>
+                                </div>
+                            </div>
+                            <div class="row">
+
+                                <div class="col-xs-6">
+                                    <span t-esc="data['do_number']"/>
+                                </div>
+                            </div>
+                            <div class="row">
+
+                                <div class="col-xs-6">
+                                    <span t-esc="data['do_qty']"/>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </t>
+            </t>
+
+        </template>
+    </data>
+</odoo>

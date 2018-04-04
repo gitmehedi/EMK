@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <report
+                id="report_individual_paslips"
+                string="Daily Delivered &amp; Undelivered Products"
+                model="stock.picking"
+                report_type="qweb-pdf"
+                file="delivery_qty_reports.report_individual_payslip"
+                name="delivery_qty_reports.report_individual_payslip"
+        />
+
+        <!--paperformat="delivery_qty_reports.paperformat_money_receipt_portrait"-->
+
+    </data>
+</odoo>
