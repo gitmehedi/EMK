@@ -60,14 +60,18 @@
                                                 <td><span t-esc="o.shipment_id.lc_id.po_ids.requisition_id.name"/></td>
                                                 <td><span t-esc="l.mrr_quantity"/></td>
                                                 <td><span t-esc="l.product_uom_id.name"/></td>
-                                                <td><span t-esc="l.product_id.standard_price"/></td>
+                                                <td><span t-esc="l.linked_move_operation_ids.move_id.price_unit"/></td>
                                                 <td></td>
-                                                <td></td>
+                                                <td><span t-esc="l.mrr_quantity*l.linked_move_operation_ids.move_id.price_unit"/></td>
 
                                             </tr>
                                         </t>
                                     </tbody>
                                 </table>
+                                <div style="text-align:right">
+                                    <strong>Amount in words:</strong>
+                                    <!--<span t-esc="o.amount_to_word(doc.amount_total)"/>-->
+                                </div>
                             </div>
                             <t t-call="custom_report.report_signing"></t>
                         </div>
