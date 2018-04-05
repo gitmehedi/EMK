@@ -17,7 +17,9 @@
                 <t t-call="custom_report.gbs_internal_layout">
                     <div class="page">
                         <div class="row">
-                            <center><h6>Daily Delivered &amp; Undelivered Report</h6></center>
+                            <center>
+                                <h6>Daily Delivered &amp; Undelivered Report</h6>
+                            </center>
                             <h6>Date:
                                 <span t-esc="report_of_day"/>
                             </h6>
@@ -45,6 +47,9 @@
                                 <tbody>
 
                                     <t t-foreach="do_list" t-as="k">
+                                    <t t-if="k['product'] == k['product']">
+
+
                                         <tr>
                                             <td>
                                                 <span t-esc="k_index+1"/>
@@ -79,6 +84,7 @@
 
                                         </tr>
                                     </t>
+                                    </t>
 
                                     <tr style="background-color:#ebebe0;
 												border-bottom: 1px solid #030303;">
@@ -90,22 +96,22 @@
                                         <td></td>
                                         <td></td>
                                         <td></td>
-                                        <td>
+                                        <td class="text-right">
                                             <b>
                                                 <span t-esc="issued_do_sum_list"/>
                                             </b>
                                         </td>
-                                        <td>
+                                        <td class="text-right">
                                             <b>
                                                 <span t-esc="delivery_qty_sum_list"/>
                                             </b>
                                         </td>
-                                        <td>
+                                        <td class="text-right">
                                             <b>
                                                 <span t-esc="undelivery_qty_sum_list"/>
                                             </b>
                                         </td>
-                                        <td>-</td>
+                                        <td></td>
                                     </tr>
 
                                 </tbody>
