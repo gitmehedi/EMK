@@ -8,6 +8,7 @@
         'stock',
         'sale',
         'sales_team',
+        'custom_report',
     ],
 
     'data': [

@@ -1,19 +1,16 @@
 {
-    'name': 'HR Letter of Credit Reports',
+    'name': 'Letter of Credit Reports',
     'author': 'Genweb2 Limited',
     'website': 'www.genweb2.com',
-    'version': '1.0',
     'category': 'Reports',
     'website': 'www.genweb2.com',
-    'version': '1.0',
+    'version': '10.0.1',
     'data': [
         'wizard/lc_report_wizard.xml',
         'report/lc_report.xml',
     ],
     'depends': [
-        'letter_of_credit',
-        'letter_of_credit_done',
-        'report',
+        'com_shipment',
         'custom_report',
     ],
     'description': """ """,
