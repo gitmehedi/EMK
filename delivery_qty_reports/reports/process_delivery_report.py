@@ -18,6 +18,7 @@ class ProcessDeliveryReport(models.AbstractModel):
         undelivery_qty_sum_list = []
 
         stock_picking_pool = self.env['stock.picking'].search([('min_date', '<', data['report_of_day'])])
+        report_of_day = datetime.strptime(data['report_of_day'], "%Y-%m-%d %H:%M:%S").date()
 
         for stocks in stock_picking_pool:
 
@@ -55,6 +56,7 @@ class ProcessDeliveryReport(models.AbstractModel):
         docargs = \
             {
                 'do_list': do_list,
+                'report_of_day': report_of_day,
                 'issued_do_sum_list': sum(issued_do_sum_list),
                 'delivery_qty_sum_list': sum(delivery_qty_sum_list),
                 'undelivery_qty_sum_list': sum(undelivery_qty_sum_list),

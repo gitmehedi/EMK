@@ -14,10 +14,13 @@
 
         <template id="report_daily_delivery_products">
             <t t-call="report.html_container">
-                <t t-name="report.external_layout">
+                <t t-call="custom_report.gbs_internal_layout">
                     <div class="page">
                         <div class="row">
                             <h6>Daily Delivered &amp; Undelivered Report</h6>
+                            <h6>Date:
+                                <span t-esc="report_of_day"/>
+                            </h6>
                             <table class="table table-report-sm table-bordered table-striped">
                                 <thead>
                                     <tr
@@ -40,26 +43,67 @@
 
                                     <t t-foreach="do_list" t-as="k">
                                         <tr>
-                                            <td><span t-esc="k_index+1"/></td>
-                                            <td><span t-esc="k['partner_id']"/></td>
-                                            <td><span t-esc="k['do_no']"/></td>
-                                            <td><span t-esc="k['do_date']"/></td>
-                                            <td><span t-esc="k['uom']"/></td>
-                                            <td><span t-esc="k['do_qty']"/></td>
-                                            <td><span t-esc="k['issued_do_today']"/></td>
-                                            <td><span t-esc="k['delivered_qty']"/></td>
-                                            <td><span t-esc="k['un_delivered_qty']"/></td>
-                                            <td><span t-esc="k['product']"/></td>
+                                            <td>
+                                                <span t-esc="k_index+1"/>
+                                            </td>
+                                            <td>
+                                                <span t-esc="k['partner_id']"/>
+                                            </td>
+                                            <td style="text-align: center;">
+                                                <span t-esc="k['do_no']"/>
+                                            </td>
+                                            <td>
+                                                <span t-esc="k['do_date']"/>
+                                            </td>
+                                            <td>
+                                                <span t-esc="k['uom']"/>
+                                            </td>
+                                            <td class="text-right">
+                                                <span t-esc="k['do_qty']"/>
+                                            </td>
+                                            <td class="text-right">
+                                                <span t-esc="k['issued_do_today']"/>
+                                            </td>
+                                            <td class="text-right">
+                                                <span t-esc="k['delivered_qty']"/>
+                                            </td>
+                                            <td class="text-right">
+                                                <span t-esc="k['un_delivered_qty']"/>
+                                            </td>
+                                            <td style="text-align: center;">
+                                                <span t-esc="k['product']"/>
+                                            </td>
 
                                         </tr>
                                     </t>
 
-                                    <td><b>Total</b></td>
-                                    <td></td> <td></td><td></td><td></td><td></td>
-                                    <td><span t-esc="issued_do_sum_list"/></td>
-                                    <td><span t-esc="delivery_qty_sum_list"/></td>
-                                    <td><span t-esc="undelivery_qty_sum_list"/></td>
-                                    <td>-</td>
+                                    <tr style="background-color:#ebebe0;
+												border-bottom: 1px solid #030303;">
+                                        <td>
+                                            <b>Total</b>
+                                        </td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td>
+                                            <b>
+                                                <span t-esc="issued_do_sum_list"/>
+                                            </b>
+                                        </td>
+                                        <td>
+                                            <b>
+                                                <span t-esc="delivery_qty_sum_list"/>
+                                            </b>
+                                        </td>
+                                        <td>
+                                            <b>
+                                                <span t-esc="undelivery_qty_sum_list"/>
+                                            </b>
+                                        </td>
+                                        <td>-</td>
+                                    </tr>
 
                                 </tbody>
                             </table>
