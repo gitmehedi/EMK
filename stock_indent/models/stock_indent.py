@@ -209,7 +209,8 @@ class IndentIndent(models.Model):
     def indent_confirm(self):
         for indent in self:
             if not indent.product_lines:
-                raise UserError(_('You cannot confirm an indent %s which has no line.' % (indent.name)))
+                raise UserError(_('Unable to confirm an indent without product. Please add product(s).'))
+                # raise UserError(_('You cannot confirm an indent %s which has no line.' % (indent.name)))
                 # raise osv.except_osv(_('Warning!'),_('You cannot confirm an indent %s which has no line.' % (indent.name)))
             # Add all authorities of the indent as followers
             followers = []
