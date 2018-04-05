@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <report
+                id="action_report_daily_delivery_products"
+                string="Daily Delivery Report"
+                model="stock.picking"
+                report_type="qweb-pdf"
+                file="delivery_qty_reports.report_daily_delivery_products"
+                name="delivery_qty_reports.report_daily_delivery_products"
+                menu="False"
+        />
+
+
+        <template id="report_daily_delivery_products">
+            <t t-call="report.html_container">
+                <t t-name="report.external_layout">
+                    <div class="page">
+                        <div class="row">
+                            <table class="table table-report-sm table-bordered table-striped">
+                                <thead>
+                                    <tr
+                                            style="background-color:#B4FDF0;
+												border-bottom: 1px solid #030303;">
+                                        <th>SL</th>
+                                        <th>Customer</th>
+                                        <th>D.O Date</th>
+                                        <th>D.O Number</th>
+                                    </tr>
+                                </thead>
+
+                                <tbody>
+
+                                    <t t-foreach="do_list" t-as="k">
+                                        <tr>
+                                             <td><span t-esc="k_index+1"/></td>
+                                            <td>
+                                                <span t-esc="k['partner_id']"/>
+                                            </td>
+                                            <td>
+                                                <span t-esc="k['do_date']"/>
+                                            </td>
+                                            <td>
+                                                <span t-esc="k['do_no']"/>
+                                            </td>
+                                        </tr>
+                                    </t>
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </t>
+            </t>
+        </template>
+    </data>
+</odoo>

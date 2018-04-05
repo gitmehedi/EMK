@@ -85,9 +85,33 @@
                     <!--<attribute name='invisible'>1</attribute>-->
                     <!--</xpath>-->
                 </search>
+                <xpath expr="//filter[@name='year']" position="after">
+                    <separator/>
+                    <filter name="my_approval" string="My Approval" domain="[('pending_approver.user_id','=',uid)]"/>
+                    <field name="pending_approver" string="My Approval" filter_domain="[('pending_approver', 'ilike', self)]"/>
+                </xpath>
             </field>
         </record>
-
+        <!--Inherit Action-->
+        <record id="hr_holidays.open_department_holidays_approve" model="ir.actions.act_window">
+            <field name="name">Department Leaves</field>
+            <field name="res_model">hr.holidays</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form,calendar</field>
+            <field name="context">{
+                'search_default_year': 1,
+                'search_default_department':1,
+                'search_default_approve':1,
+                'search_default_my_approval': 1,}
+            </field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Click here to create a new leave request.
+                </p>
+            </field>
+            <field name="domain">[('type','=','remove')]</field>
+            <field name="search_view_id" ref="hr_holidays.view_hr_holidays_filter"/>
+        </record>
         <!--Action To SET the approver issue-->
 
         <act_window name="Set Approver"
