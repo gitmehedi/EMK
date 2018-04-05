@@ -2,7 +2,6 @@ from odoo import api, fields, models,_
 from odoo.exceptions import UserError, ValidationError
 from openerp.addons.commercial.models.utility import Status, UtilityNumber
 
-
 class LetterOfCredit(models.Model):
     _name = 'letter.credit'
     _description = 'Letter of Credit (L/C)'
@@ -195,7 +194,5 @@ class LetterOfCredit(models.Model):
             defaults.update({'name': prev_name, 'revision_number': revno, 'active': False, 'state': 'amendment',
                              'current_revision_id': self.id, 'unrevisioned_name': self.unrevisioned_name, })
         return super(LetterOfCredit, self).copy(defaults)
-
-
 
 
