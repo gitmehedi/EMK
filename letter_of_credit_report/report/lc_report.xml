@@ -7,55 +7,83 @@
                     <div class="page" style="page-break-inside: auto">
                         <div class="clearfix">
                             <div class="row">
-                                <h4 class="text-center">Letter of Credit</h4>
+                                <h3 class="text-center">Letter of Credit</h3>
                                 <hr class="hr-sm mb-0"/>
                                 <div class="row">
                                     <div class="col-xs-4">
-                                        <div><strong>Printing Time : </strong><span t-esc="context_timestamp(datetime.datetime.now()).strftime('%Y-%m-%d %H:%M')"/></div>
-                                        <div><strong>Printed By : </strong><span t-esc="user.name"/></div>
-                                        <div><strong>type : </strong><span t-esc="report_type"/></div>
+                                        <div><strong>Type : </strong><span t-esc="report_type"/></div>
                                     </div>
                                 </div>
                                 <hr class="hr-xs"/>
                             </div>
                         </div>
-                        <!--<t t-if="att_summary['late']">-->
-                            <div class="row">
-                                <h4 class="table-caption">Active Employee List</h4>
-                                <tr><th>LC Number:</th>
-                                    <tr><th>Shipment Number:</th>
-                                        <table class="table table-report table-bordered table-striped">
-                                            <thead>
-                                                <tr class="odo-bg-gray">
-                                                    <tr>
-                                                        <th>Party Name</th>
-                                                        <th>Product Name</th>
-                                                        <th>Quantity</th>
-                                                        <th>PR No</th>
-                                                        <th>PR Date</th>
-                                                        <th>Price</th>
-                                                        <th>Discharge Port </th>
-                                                    </tr>
-                                                </tr>
-                                            </thead>
-                                        </table>
+
+
+                        <div class="row">
+                            <table class="table table-report table-bordered table-striped">
+                                <thead>
+                                    <tr class="odo-bg-gray" style="text-align: center;">
+                                        <th>Party Name</th>
+                                        <th>PR No</th>
+                                        <th>PR Date</th>
+                                        <th>L/C No.</th>
+                                        <th>Date</th>
+                                        <th>Shipment Date</th>
+                                        <th>Expire Date</th>
+                                        <th>initial Price</th>
+                                        <th>Value</th>
+                                        <th>Discharging Port</th>
+                                        <th>Shipment No.</th>
+                                        <th>ETD</th>
+                                        <th>Product</th>
+                                        <th>Quantity</th>
+                                        <th>Status</th>
                                     </tr>
-                                </tr>
+                                </thead>
+                                <tbody>
+                                    <!--<td t-att-colspan="partial_value" >-->
+                                    <t t-foreach="lists" t-as="lc">
+                                        <tr t-att-rowspan="len(lc['shipment_list'])" style="page-break-inside: avoid">
+                                            <td><span t-esc="lc['party_name']"/></td>
+                                            <td><span t-esc="lc['pr_date']"/></td>
+                                            <td><span t-esc="lc['pr_no']"/></td>
+                                            <td><span t-esc="lc['lc_number']"/></td>
+                                            <td><span t-esc="lc['lc_date']"/></td>
+                                            <td><span t-esc="lc['ship_date']"/></td>
+                                            <td><span t-esc="lc['exp_date']"/></td>
+                                            <td><span t-esc="lc['initial_price']"/></td>
+                                            <td><span t-esc="lc['amount']"/></td>
+                                            <td><span t-esc="lc['discharging_port']"/></td>
+                                            <td colspan="5"></td>
+                                        </tr>
+                                        <tr>
+                                            <t t-foreach="lc['shipment_list']" t-as="ship">
+                                                <tr t-att-rowspan="len(ship['product_list'])" style="page-break-inside: avoid">
+                                                    <td colspan="10"></td>
+                                                    <td><span t-esc="ship['shipment_number']"/></td>
+                                                    <td><span t-esc="ship['etd']"/></td>
+                                                    <td colspan="5"></td>
+                                                </tr>
+                                                <tr>
+                                                    <t t-foreach="ship['product_list']" t-as="product">
+                                                        <tr style="page-break-inside: avoid">
+                                                            <td colspan="12"></td>
+                                                            <td><span t-esc="product['product_name']"/></td>
+                                                            <td><span t-esc="product['qty']"/></td>
+                                                            <td><span t-esc="product['status']"/></td>
+                                                        </tr>
+                                                    </t>
 
-                                    <!--<tbody>-->
-                                        <!--<t t-foreach="att_summary['late']" t-as="l">-->
-                                            <!--<tr style="page-break-inside: avoid">-->
-                                                <!--<td><span t-esc="l_index+1"/></td>-->
-                                                <!--<td><span t-esc="att_summary['late'][l_index].name"/></td>-->
-                                                <!--<td><span t-esc="att_summary['late'][l_index].dept"/></td>-->
-                                                <!--<td><span t-esc="att_summary['late'][l_index].designation"/></td>-->
-                                                <!--<td><span t-esc="att_summary['late'][l_index].check_in"/></td>-->
-                                            <!--</tr>-->
-                                        <!--</t>-->
-                                    <!--</tbody>-->
+                                                </tr>
+                                            </t>
 
-                            </div>
-                        <!--</t>-->
+                                        </tr>
+
+                                    </t>
+                                </tbody>
+                            </table>
+                        </div>
+
                     </div>
                 </t>
             </t>
@@ -67,7 +95,7 @@
                 name="letter_of_credit_report.template_letter_of_credit_report"
                 file="letter_of_credit_report.template_letter_of_credit_report"
                 menu="False"
-                paperformat="custom_report.paperformat_backend_portrait"
+                paperformat="custom_report.paperformat_backend_landscape"
         />
     </data>
 </odoo>
