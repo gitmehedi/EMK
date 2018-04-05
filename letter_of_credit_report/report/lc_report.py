@@ -40,7 +40,8 @@ class HrEmpLeaveReport(models.AbstractModel):
             lc_list.append(lc_obj)
 
         docargs = {
-            'lists': lc_list
+            'lists': lc_list,
+            'report_type' : data['report_type']
 
 
         }

@@ -8,9 +8,9 @@ class LetterCreditReport(models.TransientModel):
     _description = 'Letter of Credit Report'
 
     report_type = fields.Selection([
-        ('active', "Active"),
-        ('done', "Done"),
-        ('cancel', "Cancel")],string='Select')
+        ('Active', "Active"),
+        ('Done', "Done"),
+        ('Cancel', "Cancel")],string='Select')
 
     @api.multi
     def process_report(self):
