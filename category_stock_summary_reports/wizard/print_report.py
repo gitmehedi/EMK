@@ -37,6 +37,7 @@ class StockInventoryWizard(models.TransientModel):
     shop_id = fields.Many2one('operating.unit', string='Shop Name', required=True)
     category_id = fields.Many2one('product.category', string='Category', required=False)
     report_type_ids = fields.Many2many('report.type.selection', string="Report Type")
+    is_summary = fields.Boolean(string='Summary')
 
     _defaults = {
         'date_to': lambda *a: time.strftime('%Y-%m-%d'),
@@ -51,6 +52,7 @@ class StockInventoryWizard(models.TransientModel):
         data = {}
         data['date_from'] = self.date_from
         data['date_to'] = self.date_to
+        data['is_summary'] = self.is_summary
         data['shop_id'] = location.id
         data['shop_name'] = self.shop_id.name
         data['category_id'] = self.category_id.id

@@ -19,9 +19,8 @@ class StockInventoryReport(models.AbstractModel):
             'doc_model': report.model,
             'docs': self,
             'record': data,
-             'lines': get_data['category'],
+            'lines': get_data['category'],
             'total': get_data['total'],
-
         }
         return report_obj.render('category_stock_summary_reports.stock_inventory_report_qweb', docargs)
 
@@ -46,7 +45,7 @@ class StockInventoryReport(models.AbstractModel):
                 'total_ck_val': 0,
             }
         }
-	grand_total = {
+        grand_total = {
             'title': 'GRAND TOTAL',
             'total_dk_qty': 0,
             'total_dk_val': 0,
@@ -537,6 +536,8 @@ class StockInventoryReport(models.AbstractModel):
                 category[vals['category']]['product'].append(vals)
 
                 total = category[vals['category']]['sub-total']
+                total['name'] = vals['category']
+
                 total['total_dk_qty'] = total['total_dk_qty'] + vals['qty_dk']
                 total['total_dk_val'] = total['total_dk_val'] + vals['val_dk']
                 total['total_in_qty'] = total['total_in_qty'] + vals['qty_in_tk']
@@ -545,9 +546,8 @@ class StockInventoryReport(models.AbstractModel):
                 total['total_out_val'] = total['total_out_val'] + vals['val_out_tk']
                 total['total_ck_qty'] = total['total_ck_qty'] + vals['qty_ck']
                 total['total_ck_val'] = total['total_ck_val'] + vals['val_ck']
-		
-		
-		grand_total['total_dk_qty'] = grand_total['total_dk_qty'] + vals['qty_dk']
+
+                grand_total['total_dk_qty'] = grand_total['total_dk_qty'] + vals['qty_dk']
                 grand_total['total_dk_val'] = grand_total['total_dk_val'] + vals['val_dk']
                 grand_total['total_in_qty'] = grand_total['total_in_qty'] + vals['qty_in_tk']
                 grand_total['total_in_val'] = grand_total['total_in_val'] + vals['val_in_tk']
