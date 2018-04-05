@@ -7,12 +7,19 @@ class Picking(models.Model):
     _inherit = "stock.picking"
 
     check_mrr_button = fields.Boolean('Button Check')
+    check_approve_button = fields.Boolean('Button Check',compute='_compute_approve_button')
     mrr_no = fields.Char('MRR No')
 
     pack_operation_product_ids = fields.One2many(
         'stock.pack.operation', 'picking_id', 'Non pack',
         domain=[('product_id', '!=', False)],
         states={'cancel': [('readonly', True)]})
+
+    @api.depends('location_id','location_dest_id')
+    def _compute_approve_button(self):
+        if self.state == 'done':
+            if self.location_dest_id.name=='Stock':
+                self.check_approve_button = True
 
     @api.multi
     def button_approve(self):

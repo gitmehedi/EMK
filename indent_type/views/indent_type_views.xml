@@ -36,9 +36,9 @@
         </record>
 
         <menuitem id="menu_indent_type" name="Indent Type"
-                  parent="stock.menu_stock_root"
-                  action="action_indent_type" sequence="3"
-                  groups="stock.group_stock_user,stock.group_stock_manager"/>
+                  parent="stock.menu_stock_config_settings"
+                  action="action_indent_type" sequence="35"
+                  groups="stock.group_stock_manager"/>
 
     </data>
 </odoo>
