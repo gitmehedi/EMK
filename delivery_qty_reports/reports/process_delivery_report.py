@@ -12,6 +12,10 @@ class ProcessDeliveryReport(models.AbstractModel):
         stock_picking_pool = self.env['stock.picking'].search([('min_date', '<', data['report_of_day'])])
         do_list = []
 
+        issued_do_sum_list = []
+        delivery_qty_sum_list = []
+        undelivery_qty_sum_list = []
+
         for stocks in stock_picking_pool:
             data = {}
             data['partner_id'] = stocks.partner_id.name
@@ -25,6 +29,7 @@ class ProcessDeliveryReport(models.AbstractModel):
             ## Cross match with DO Date and today's date to get Issued D.O property
             if datetime.strptime(stocks.min_date, "%Y-%m-%d %H:%M:%S").date() == date.today():
                 data['issued_do_today'] = stocks.pack_operation_product_ids.product_qty
+                issued_do_sum_list.append(data['issued_do_today'])
             else:
                 data['issued_do_today'] = ''
 
@@ -40,9 +45,17 @@ class ProcessDeliveryReport(models.AbstractModel):
             else:
                 data['uom'] = ''
 
+            delivery_qty_sum_list.append(data['delivered_qty'])
+            undelivery_qty_sum_list.append(data['un_delivered_qty'])
             do_list.append(data)
 
 
-        docargs = {'do_list': do_list}
+        docargs = \
+            {
+                'do_list': do_list,
+                'issued_do_sum_list': sum(issued_do_sum_list),
+                'delivery_qty_sum_list': sum(delivery_qty_sum_list),
+                'undelivery_qty_sum_list': sum(undelivery_qty_sum_list),
+            }
 
         return self.env['report'].render('delivery_qty_reports.report_daily_delivery_products', docargs)

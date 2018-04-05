@@ -53,9 +53,13 @@
 
                                         </tr>
                                     </t>
-                                    <!--<td>-->
-                                        <!--<span t-esc="product"/>-->
-                                    <!--</td>-->
+
+                                    <td><b>Total</b></td>
+                                    <td></td> <td></td><td></td><td></td><td></td>
+                                    <td><span t-esc="issued_do_sum_list"/></td>
+                                    <td><span t-esc="delivery_qty_sum_list"/></td>
+                                    <td><span t-esc="undelivery_qty_sum_list"/></td>
+                                    <td>-</td>
 
                                 </tbody>
                             </table>
