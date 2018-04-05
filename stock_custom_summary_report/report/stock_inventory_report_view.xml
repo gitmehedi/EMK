@@ -13,23 +13,23 @@
                             <hr></hr>
                         </div>
                         <div class="row">
-                                <div class="col-xs-6">
-                                    <t t-if="record['date_from']">
-                                        <strong>Date : </strong>
-                                        <span t-esc="record['date_from']"/>
-                                    </t>
-                                    <t t-if="record['date_to']">
-                                        <strong>To : </strong>
-                                        <span t-esc="record['date_to']"/>
-                                    </t>
-                                </div>
-                                <div class="col-xs-6 text-right">
-                                    <t t-if="record['shop_name']">
-                                        <strong>Operating Unit : </strong>
-                                        <span t-esc="record['shop_name']"/>
-                                    </t>
-                                </div>
+                            <div class="col-xs-6">
+                                <t t-if="record['date_from']">
+                                    <strong>Date : </strong>
+                                    <span t-esc="record['date_from']"/>
+                                </t>
+                                <t t-if="record['date_to']">
+                                    <strong>To : </strong>
+                                    <span t-esc="record['date_to']"/>
+                                </t>
                             </div>
+                            <div class="col-xs-6 text-right">
+                                <t t-if="record['shop_name']">
+                                    <strong>Operating Unit : </strong>
+                                    <span t-esc="record['shop_name']"/>
+                                </t>
+                            </div>
+                        </div>
 
                         <table class="table table-bordered table-report-xs table-striped" style="margin-bottom: 10px;">
                             <thead>
@@ -78,7 +78,7 @@
                                 <t t-foreach="lines" t-as="data">
                                     <t t-if="data_value['product']">
 
-                                        <tr style="background-color: #ebebe0; text-align:center;">
+                                        <tr style="background-color: #ebebe0; text-align:left;">
                                             <td colspan="15" style="padding: 0px;">
                                                 <strong>
                                                     <t t-esc="data"/>
@@ -88,13 +88,13 @@
                                         <t t-foreach="data_value['product']" t-as="line">
                                             <tr>
                                                 <!--<td>-->
-                                                    <!--<t t-esc="line['code']"/>-->
+                                                <!--<t t-esc="line['code']"/>-->
                                                 <!--</td>-->
                                                 <td colspan="3">
                                                     <t t-esc="line['name']"/>
                                                 </td>
                                                 <!--<td>-->
-                                                    <!--<t t-esc="line['uom_name']"/>-->
+                                                <!--<t t-esc="line['uom_name']"/>-->
                                                 <!--</td>-->
                                                 <t t-if="'OS' in record['report_type']">
                                                     <td class="text-right">
@@ -188,7 +188,7 @@
                                     </t>
 
                                 </t>
-				<tr>
+                                <tr>
                                     <td colspan="12"></td>
                                 </tr>
                                 <tr style="font-weight: bold; background-color: #897d79; border-bottom: 1px solid black;">
