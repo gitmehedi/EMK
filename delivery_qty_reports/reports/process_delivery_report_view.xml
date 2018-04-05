@@ -17,6 +17,7 @@
                 <t t-name="report.external_layout">
                     <div class="page">
                         <div class="row">
+                            <h6>Daily Delivered &amp; Undelivered Report</h6>
                             <table class="table table-report-sm table-bordered table-striped">
                                 <thead>
                                     <tr
@@ -24,8 +25,14 @@
 												border-bottom: 1px solid #030303;">
                                         <th>SL</th>
                                         <th>Customer</th>
+                                        <th>D.O No.</th>
                                         <th>D.O Date</th>
-                                        <th>D.O Number</th>
+                                        <th>UoM</th>
+                                        <th>D.O Qty.</th>
+                                        <th>Issued D.O</th>
+                                        <th>Delivered Qty.</th>
+                                        <th>Unde. Qty</th>
+                                        <th>Category</th>
                                     </tr>
                                 </thead>
 
@@ -33,18 +40,22 @@
 
                                     <t t-foreach="do_list" t-as="k">
                                         <tr>
-                                             <td><span t-esc="k_index+1"/></td>
-                                            <td>
-                                                <span t-esc="k['partner_id']"/>
-                                            </td>
-                                            <td>
-                                                <span t-esc="k['do_date']"/>
-                                            </td>
-                                            <td>
-                                                <span t-esc="k['do_no']"/>
-                                            </td>
+                                            <td><span t-esc="k_index+1"/></td>
+                                            <td><span t-esc="k['partner_id']"/></td>
+                                            <td><span t-esc="k['do_no']"/></td>
+                                            <td><span t-esc="k['do_date']"/></td>
+                                            <td><span t-esc="k['uom']"/></td>
+                                            <td><span t-esc="k['do_qty']"/></td>
+                                            <td><span t-esc="k['issued_do_today']"/></td>
+                                            <td><span t-esc="k['delivered_qty']"/></td>
+                                            <td><span t-esc="k['un_delivered_qty']"/></td>
+                                            <td><span t-esc="k['product']"/></td>
+
                                         </tr>
                                     </t>
+                                    <!--<td>-->
+                                        <!--<span t-esc="product"/>-->
+                                    <!--</td>-->
 
                                 </tbody>
                             </table>
