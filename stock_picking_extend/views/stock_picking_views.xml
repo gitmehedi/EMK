@@ -142,7 +142,6 @@
                                     <field name="availability"/>
                                     <field name="product_uom_qty"/>
                                     <field name="product_uom" options="{'no_open': True, 'no_create': True}"/>
-                                    <field name="location_dest_id"/>
                                     <field name="scrapped"/>
                                     <field name="state"/>
                                     <templates>

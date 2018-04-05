@@ -8,7 +8,9 @@
         'hr',
     ],
     'data': [
+
         "views/hr_employee_view.xml",
+
     ],
     'summary': 'Shows job titles and employee tin informations ',
     'description':

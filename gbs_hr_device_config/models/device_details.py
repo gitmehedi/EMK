@@ -214,7 +214,7 @@ class DeviceDetail(models.Model):
 
             # Store all attendance data to application database.
             # Now Update on SQL Server Database(External)
-            cursor.execute("UPDATE CHECKINOUT SET IsRead = 1 WHERE id <=? AND IsRead = 0", maxId)
+            #cursor.execute("UPDATE CHECKINOUT SET IsRead = 1 WHERE id <=? AND IsRead = 0", maxId)
             conn.commit()
         except Exception as e:
             self.env.cr.rollback()

@@ -1,1 +1,1 @@
-import inherit_stock_picking
+import process_delivery_report

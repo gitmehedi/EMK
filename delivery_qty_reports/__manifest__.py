@@ -11,9 +11,8 @@
     ],
 
     'data': [
+        'reports/process_delivery_report_view.xml',
         'wizards/daily_delivery_report_wizard_view.xml',
-        'reports/inherit_stock_picking_report.xml',
-        'reports/inherit_stock_picking_report_view.xml',
     ],
 
     'summary': 'Different delivered & undelivered reports of products',
