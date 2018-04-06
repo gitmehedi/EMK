@@ -6,3 +6,4 @@ import doc_receive_wizard
 import cnf_approve_quotation_wizard
 import cnf_clear_wizard
 import send_to_cnf_wizard
+import email_template

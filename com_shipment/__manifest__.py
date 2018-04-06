@@ -5,8 +5,10 @@
     'category': 'Commercial',
     'version':'10.0.1',
     'depends': [
+        'mail',
         'commercial',
         'letter_of_credit',
+
     ],
 
     'data': [
@@ -20,6 +22,7 @@
             'wizard/doc_receive_wizard_view.xml',
             'wizard/cnf_clear_wizard_view.xml',
             'wizard/cnf_approve_quotation_wizard_view.xml',
+            'wizard/email_template_view.xml',
     ],
 
     'summary': 'LC Shipment',

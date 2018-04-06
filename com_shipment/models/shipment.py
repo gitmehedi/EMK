@@ -201,6 +201,20 @@ class Shipment(models.Model):
         return result
 
     @api.multi
+    def action_email_temp(self):
+        res = self.env.ref('com_shipment.email_template_wizard')
+        result = {
+            'name':_('New Message'),
+            'view_type': 'form',
+            'view_mode': 'form',
+            'view_id': res and res.id or False,
+            'res_model':'email.template.wizard',
+            'type': 'ir.actions.act_window',
+            'nodestroy': True,
+            'target': 'new',
+        }
+        return result
+    @api.multi
     def action_gate_in(self):
         res = self.env.ref('com_shipment.gate_in_wizard')
         result = {
