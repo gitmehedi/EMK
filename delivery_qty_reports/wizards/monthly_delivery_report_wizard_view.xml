@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <record id="monthly_delivery_date_wizard_view" model="ir.ui.view">
+            <field name="name">Monthly_delivery_report_wizard</field>
+            <field name="model">monthly.delivery.report.wizard</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <group>
+                            <field name="report_of_month" placeholder="Select a Day..."/>
+                            <field name="product_id" placeholder="Select a Product..."/>
+                        </group>
+                    </sheet>
+
+                    <footer>
+                        <button name="process_monthly_delivery_report" string="Print" type="object" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_monthly_delivery_report" model="ir.actions.act_window">
+            <field name="name">Monthly Delivery Report</field>
+            <field name="res_model">monthly.delivery.report.wizard</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="monthly_delivery_date_wizard_view"/>
+            <field name="target">new</field>
+        </record>
+
+
+        <menuitem name="Monthly Delivery Report"
+                  action="action_monthly_delivery_report"
+                  id="monthly_delivery_report_id"
+                  parent="sales_team.menu_sale_report" sequence="20"/>
+
+    </data>
+</odoo>
