@@ -24,10 +24,11 @@
                         </div>
 
                         <div class="row">
-                            <h6>Month:
-                                <span t-esc="report_month"/>
+                            <h6><b>To:</b> <span t-esc="report_date_to"/>
+                                <b>From: </b><span t-esc="report_date_from"/>
                             </h6>
-                            <h6>Product Name: <span t-esc="product_name"/>
+
+                            <h6><b>Product Name: </b><span t-esc="product_name"/>
 
                             </h6>
                             <table class="table table-report-sm table-bordered table-striped">
@@ -69,10 +70,10 @@
                                              <td>
                                                 <span t-esc="k['do_date']"/>
                                             </td>
-                                             <td>
+                                             <td class="text-right">
                                                 <span t-esc="k['do_qty_kg']"/>
                                             </td>
-                                            <td>
+                                            <td class="text-right">
                                                 <span t-esc="k['do_qty_mt']"/>
                                             </td>
                                             <td>

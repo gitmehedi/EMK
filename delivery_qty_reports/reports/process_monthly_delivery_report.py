@@ -11,17 +11,17 @@ class ProcessMonthlyDeliveryReport(models.AbstractModel):
     @api.model
     def render_html(self, docids, data=None):
 
+        product_name_with_variant = None
+
         do_list = []
         qty_mt_sum = []
         qty_kg_sum = []
 
-        report_month = data['report_of_month']
+        report_date_to = data['report_to']
+        report_date_from = data['report_from']
         report_of_product_id = data['product_id']
 
-        stock_move_pool = self.env['stock.move'].search([('product_id', '=', report_of_product_id)])
-        product_pool = self.env['product.product'].search([('id','=',report_of_product_id)])
-
-        #report_of_day = datetime.strptime(data['report_of_day'], "%Y-%m-%d %H:%M:%S").date()
+        stock_move_pool = self.env['stock.move'].search([('date','<',report_date_to),('date','>',report_date_from),('product_id', '=', report_of_product_id)])
 
         for stocks in stock_move_pool:
 
@@ -37,7 +37,7 @@ class ProcessMonthlyDeliveryReport(models.AbstractModel):
             datas['do_date'] = DO_date
             datas['challan_id'] = stocks.picking_id.name
 
-            #@todo : need to change it and make it dynamic. Need to use 'reference' val insted of hardcoded 1000
+            #@todo : need to change it and make it dynamic
             if product_uom.name == 'MT':
                 datas['do_qty_mt'] = stocks.product_uom_qty
                 datas['do_qty_kg'] = stocks.product_uom_qty * 1000
@@ -50,13 +50,19 @@ class ProcessMonthlyDeliveryReport(models.AbstractModel):
 
             do_list.append(datas)
 
+            product_name_with_variant = stocks.name
+
+        only_report_date_to = datetime.strptime(report_date_to, "%Y-%m-%d %H:%M:%S").date()
+        only_report_date_from = datetime.strptime(report_date_from, "%Y-%m-%d %H:%M:%S").date()
+
         docargs = \
             {
                 'do_list': do_list,
                 'qty_mt_sum': sum(qty_mt_sum),
                 'qty_kg_sum': sum(qty_kg_sum),
-                'product_name': product_pool.name,
-                'report_month': report_month,
+                'product_name': product_name_with_variant,
+                'report_date_to': only_report_date_to,
+                'report_date_from': only_report_date_from
 
             }
 

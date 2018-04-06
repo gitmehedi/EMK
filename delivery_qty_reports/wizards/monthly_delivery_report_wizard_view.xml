@@ -8,8 +8,9 @@
                 <form>
                     <sheet>
                         <group>
-                            <field name="report_of_month" placeholder="Select a Day..."/>
-                            <field name="product_id" placeholder="Select a Product..."/>
+                            <field name="report_from"/>
+                            <field name="report_to"/>
+                            <field name="product_id" options="{'no_quick_create':True,'no_create_edit':True,'no_open':True}"/>
                         </group>
                     </sheet>
 
