@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <data>
+        <record id="pr_from_where_wizard" model="ir.ui.view">
+            <field name="name">pr.from.where.wizard</field>
+            <field name="model">pr.from.where.wizard</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml" >
+                <form string="Please take decision purchase from where?" create="false" edit="false">
+                    <group>
+                        <group>
+                            <field name="purchase_from" placeholder="Please Select"/>
+                        </group>
+                    </group>
+                    <footer>
+                        <button string="Save" name="save_type" type="object" class="oe_highlight"  />
+                        <button string="Cancel" special="cancel" type="object"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+    </data>
+</odoo>

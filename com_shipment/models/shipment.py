@@ -7,7 +7,7 @@ class Shipment(models.Model):
     _name = 'purchase.shipment'
     _description = 'Shipment'
     _inherit = ['mail.thread']
-    _order = "id desc"
+    _order = "arrival_date asc"
 
     name = fields.Char(string='Number', required=True, readonly=True, index=True, default=lambda self: self.env.context.get('shipment_number'))
     comments = fields.Text(string='Comments', track_visibility='onchange')

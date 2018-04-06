@@ -7,13 +7,14 @@ class AttendanceSummaryLine(models.Model):
 
     salary_days = fields.Integer(string='Salary Days', required=True)
     present_days = fields.Integer(string='Present Days', required=True)
-    deduction_days = fields.Integer(string='Late Deduction Day(s)')
+    deduction_days = fields.Integer(string='Late Deduction Day(s)', track_visibility='onchange')
     leave_days = fields.Integer(string='Leave Days')
     holidays_days = fields.Integer(string='Holidays Days')
     late_hrs = fields.Float(string='Off Duty Hrs')
     schedule_ot_hrs = fields.Float(string='Schedule OT Hrs')
     cal_ot_hrs = fields.Float(string='Cal OT Hrs')
     extra_ot = fields.Float(string='Extra OT Hrs')
+    #button_show =fields.Boolean(string='Check')
 
     """" Relational Fields """
     att_summary_id = fields.Many2one("hr.attendance.summary", string="Summary", required=True, ondelete='cascade')
@@ -23,7 +24,7 @@ class AttendanceSummaryLine(models.Model):
 
     absent_days = fields.One2many('hr.attendance.absent.day', 'att_summary_line_id', string='Absent Days')
     absent_days_count = fields.Integer(string="Absent Days", compute="_set_absent_days_count")
-    absent_count = fields.Integer(string="Absent Days", compute="_set_absent_days_count", store = True)
+    absent_count = fields.Integer(string="Absent Days", compute="_set_absent_days_count", store = True, track_visibility='onchange')
 
     late_days = fields.One2many('hr.attendance.late.day', 'att_summary_line_id', string='Late Days')
     late_days_count = fields.Integer(string="Late Days", compute="_set_late_days_count")
@@ -32,6 +33,11 @@ class AttendanceSummaryLine(models.Model):
     weekend_days_count = fields.Integer(string="Weekend Days", compute="_set_weekend_days_count")
     is_entered_rostering = fields.Integer(default=1, required=True)
 
+    state = fields.Selection([
+        ('draft', "Draft"),
+        ('confirmed', "Confirmed"),
+        ('approved', "Approved"),
+    ], default='draft')
 
     @api.depends('absent_days')
     def _set_absent_days_count(self):

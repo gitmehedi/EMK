@@ -24,6 +24,7 @@
         #'sale_revision_history'
         'accounting_report',
         'gbs_accounting_cheque_received',
+        'delivery_qty_reports',
     ],
 
     'data': [ ],

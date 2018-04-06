@@ -5,7 +5,7 @@
     'category': 'Commercial',
     'version':'10.0.1.0.0',
     'depends': [
-        'letter_of_credit',
+        'com_shipment',
         'question_set',
     ],
 

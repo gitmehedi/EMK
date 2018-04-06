@@ -30,11 +30,6 @@
                     <filter name="year" string="Current Year" domain="[('leave_year_id.state','=','draft')]"/>
                     <field name="leave_year_id" string="Year" filter_domain="[('leave_year_id', 'ilike', self)]"/>
                 </xpath>
-                <xpath expr="//filter[@name='year']" position="after">
-                    <separator/>
-                    <filter name="my_approval" string="My Approval" domain="[('pending_approver.user_id','=',uid)]"/>
-                    <field name="pending_approver" string="My Approval" filter_domain="[('pending_approver', 'ilike', self)]"/>
-                </xpath>
 			</field>
 		</record>
 
@@ -124,8 +119,7 @@
             <field name="context">{
                 'search_default_year': 1,
                 'search_default_department':1,
-                'search_default_approve':1,
-                'search_default_my_approval': 1,}
+                'search_default_approve':1,}
             </field>
             <field name="help" type="html">
                 <p class="oe_view_nocontent_create">
