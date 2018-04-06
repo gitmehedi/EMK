@@ -20,6 +20,7 @@
                         <button string="ETA" name="action_eta" states="send_to_cnf" type="object" class="oe_highlight"/>
                         <!--<button string="C&amp;F Quotation" name="action_quotation" states="eta" type="object" class="oe_highlight"/>-->
                         <!--<button string="Approve" name="action_approve_quotation" states="cnf_quotation" type="object" class="oe_highlight"/>-->
+                        <button string="Send to Email" name="action_email_temp" states="draft,on_board,receive_doc,send_to_cnf,eta,cnf_quotation,approve_cnf_quotation,cnf_clear,gate_in,done" type="object" class="oe_read_only"/>
                         <button string="C&amp;F Clear" name="action_cnf_clear" states="approve_cnf_quotation" type="object" class="oe_highlight"/>
                         <!--<button string="Gate In" name="action_gate_in" states="cnf_clear" type="object" class="oe_highlight"/>-->
                         <button string="Done" name="action_done" states="gate_in" type="object" class="oe_highlight"/>
