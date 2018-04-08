@@ -27,10 +27,9 @@
                             <h6><b>To:</b> <span t-esc="report_date_to"/>
                                 <b>From: </b><span t-esc="report_date_from"/>
                             </h6>
+                            <h6><b>Product Name: </b><span t-esc="product_name"/></h6>
+                            <h6><b>Operating Unit: </b><span t-esc="operating_unit_name"/></h6>
 
-                            <h6><b>Product Name: </b><span t-esc="product_name"/>
-
-                            </h6>
                             <table class="table table-report-sm table-bordered table-striped">
                                 <thead>
                                     <tr

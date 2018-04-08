@@ -8,8 +8,10 @@ class GenerateMonthlyDeliveryReport(models.Model):
     report_to = fields.Datetime(string="Report To", required=True,)
     report_from = fields.Datetime(string="Report From", required=True, )
     product_id = fields.Many2one('product.product', string='Product',required=True,)
+    operating_unit_id = fields.Many2one('operating.unit', string='OP Unit', required=True)
+
 
     @api.multi
     def process_monthly_delivery_report(self):
         return self.env['report'].get_action(self, 'delivery_qty_reports.report_monthly_delivery_products',
-                                           data={'product_id': self.product_id.id,'report_to': self.report_to,'report_from': self.report_from})
+                                           data={'operating_unit_id':self.operating_unit_id.id, 'product_id': self.product_id.id,'report_to': self.report_to,'report_from': self.report_from})
