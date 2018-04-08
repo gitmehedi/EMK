@@ -4,7 +4,7 @@ from odoo import api, fields, models, _
 class HrEmpLeaveReport(models.AbstractModel):
     _name = 'report.letter_of_credit_report.template_letter_of_credit_report'
 
-    lc_query = """ SELECT lc.id, lc.name, lc.lc_value, lc.issue_date, lc.expiry_date, 
+    lc_query = """ SELECT DISTINCT(lc.id), lc.name, lc.lc_value, lc.issue_date, lc.expiry_date, 
                                   lc.shipment_date, lc.discharge_port, partner.name AS party, lc.state
                            FROM letter_credit lc
                            LEFT JOIN purchase_shipment ship ON ship.lc_id = lc.id
