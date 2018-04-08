@@ -12,6 +12,7 @@ class ProcessMonthlyDeliveryReport(models.AbstractModel):
     def render_html(self, docids, data=None):
 
         product_name_with_variant = None
+        operating_unit_name = None
 
         do_list = []
         qty_mt_sum = []
@@ -20,8 +21,9 @@ class ProcessMonthlyDeliveryReport(models.AbstractModel):
         report_date_to = data['report_to']
         report_date_from = data['report_from']
         report_of_product_id = data['product_id']
+        operating_unit_id = data['operating_unit_id']
 
-        stock_move_pool = self.env['stock.move'].search([('date','<',report_date_to),('date','>',report_date_from),('product_id', '=', report_of_product_id)])
+        stock_move_pool = self.env['stock.move'].search([('location_id.operating_unit_id','=',operating_unit_id),('date','<',report_date_to),('date','>',report_date_from),('product_id', '=', report_of_product_id)])
 
         for stocks in stock_move_pool:
 
@@ -51,6 +53,7 @@ class ProcessMonthlyDeliveryReport(models.AbstractModel):
             do_list.append(datas)
 
             product_name_with_variant = stocks.name
+            operating_unit_name = stocks.operating_unit_id.name
 
         only_report_date_to = datetime.strptime(report_date_to, "%Y-%m-%d %H:%M:%S").date()
         only_report_date_from = datetime.strptime(report_date_from, "%Y-%m-%d %H:%M:%S").date()
@@ -61,6 +64,7 @@ class ProcessMonthlyDeliveryReport(models.AbstractModel):
                 'qty_mt_sum': sum(qty_mt_sum),
                 'qty_kg_sum': sum(qty_kg_sum),
                 'product_name': product_name_with_variant,
+                'operating_unit_name': operating_unit_name,
                 'report_date_to': only_report_date_to,
                 'report_date_from': only_report_date_from
 

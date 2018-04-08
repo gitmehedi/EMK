@@ -9,6 +9,7 @@
         'sale',
         'sales_team',
         'custom_report',
+        'stock_operating_unit',
     ],
 
     'data': [
