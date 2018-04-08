@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
-from odoo import models, fields, api
+from odoo import models, fields, api,_
+from odoo.exceptions import ValidationError
 
 class Stock(models.Model):
     _inherit = 'stock.location'
@@ -12,6 +13,10 @@ class Stock(models.Model):
 
     @api.multi
     def write(self, values):
-
+        location_ids = self.search([('location_id', '=', self.id)])
+        for location in location_ids:
+            if location.operating_unit_id:
+                if values['operating_unit_id'] != location.operating_unit_id.id:
+                    raise ValidationError(_('The chosen operating unit is not in the child locations of its'))
         res = super(Stock, self).write(values)
         return res
