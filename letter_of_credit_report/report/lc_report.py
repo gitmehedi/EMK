@@ -45,8 +45,9 @@ class HrEmpLeaveReport(models.AbstractModel):
             prName = ""
             prDate = ""
             for po in lc.po_ids:
-                prName += po.requisition_id.name + " "
-                prDate += po.requisition_id.requisition_date + " "
+                if po.requisition_id:
+                    prName += po.requisition_id.name + " "
+                    prDate += po.requisition_id.requisition_date + " "
 
             lc_obj['pr_no'] = prName
             lc_obj['pr_date'] = prDate
@@ -61,15 +62,16 @@ class HrEmpLeaveReport(models.AbstractModel):
                     sh_obj['etd'] = shipment.etd_date
                     sh_obj['state'] = self.getShipmentStateMsg(shipment.state)
 
+                    product_list = []
                     if shipment.shipment_product_lines:
                         rowspan = rowspan + len(shipment.shipment_product_lines)
-                        product_list = []
                         for product in shipment.shipment_product_lines:
                             p_obj = {}
                             p_obj['product_name'] = product.name
                             p_obj['qty'] = str(product.product_qty) + "   " + product.product_uom.name
                             product_list.append(p_obj)
-                        sh_obj['product_list'] = product_list
+
+                    sh_obj['product_list'] = product_list
 
                     shipment_list.append(sh_obj)
 
