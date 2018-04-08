@@ -6,7 +6,7 @@ class InheritUsers(models.Model):
 
     @api.model
     def _get_default_location(self):
-        return self.env['stock.location'].search([('operating_unit_id','=',self.default_operating_unit_id.id),('usage','=','internal')], limit=1)
+        return self.env['stock.location'].search([('operating_unit_id','=',self.default_operating_unit_id.id)], limit=1)
 
     location_ids = fields.Many2many('stock.location',
                                     'stock_location_users_rel',
