@@ -4,12 +4,12 @@
     <data>
         <template id="report_delivery_order_doc">
             <t t-call="report.html_container">
-                <t t-call="report.external_layout">
+                 <t t-call="custom_report.gbs_internal_layout">
                     <t t-foreach="docs" t-as="o">
                         <div class="page" style="page-break-inside: auto">
                             <div class="row">
                                 <div class="col-xs-12" style="text-align:center;">
-                                    <h2><strong>Delivery Order Summary Report</strong></h2>
+                                    <h2><strong>Delivery Authorization Summary Report</strong></h2>
                                     <hr/>
                                 </div>
                             </div>
