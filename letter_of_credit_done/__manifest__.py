@@ -11,6 +11,7 @@
 
     'data': [
             'wizards/lc_evaluation_wizard_view.xml',
+            'wizards/confirmation_wizard_view.xml',
             'views/lc_done.xml',
     ],
     'images': [
