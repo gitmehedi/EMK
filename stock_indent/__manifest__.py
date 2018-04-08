@@ -6,7 +6,7 @@
                 'account',
                 'ir_sequence_operating_unit',
                 'indent_type',
-                'gbs_res_users'],
+                'stock_operating_unit_user'],
     'author': 'Genweb2 Limited',
     'website': 'www.genweb2.com',
     'license': 'AGPL-3',

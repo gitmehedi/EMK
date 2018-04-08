@@ -7,8 +7,8 @@
     'depends': [
         'base',
         'report',
-        'stock',
         'custom_report',
+        'stock_operating_unit',
     ],
     'summary': "This module generate custom report for stock summary",
     'description': """
