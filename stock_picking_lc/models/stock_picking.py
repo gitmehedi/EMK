@@ -33,12 +33,9 @@ class Picking(models.Model):
                 'origin': self.name,
                 'location_id': self.location_id.id,
                 'location_dest_id': self.location_dest_id.id,
-                'picking_id': self.id or False,
                 'picking_type_id': self.picking_type_id.id,
                 'date': date_planned,
                 'date_expected': date_planned,
-                # 'operating_unit_id':self.operating_unit_id.id,
-
                 'product_id': ship_pro_line.product_id.id,
                 'product_uom': ship_pro_line.product_uom.id,
                 'product_uom_qty': ship_pro_line.product_qty,
