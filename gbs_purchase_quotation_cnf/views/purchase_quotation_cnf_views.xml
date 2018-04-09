@@ -38,7 +38,7 @@
                             <page string="Services">
                                 <field name="order_line" >
                                     <tree string="Services" editable="bottom">
-                                        <field name="product_id" string="Service" domain="[('type','=','Service')]"/>
+                                        <field name="product_id" string="Service" domain="[('type','=','service')]"/>
                                         <field name="name"/>
                                         <field name="date_planned" string="Service date"/>
                                         <field name="product_qty"/>

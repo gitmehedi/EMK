@@ -22,14 +22,14 @@ class Picking(models.Model):
         for picking in self:
             if picking.state == 'done':
                 if picking.location_dest_id.name == 'Stock':
-                    origin_picking_objs = self.env['stock.picking'].search([('name','=',self.origin)])
+                    origin_picking_objs = self.search([('name','=',self.origin)])
                     if origin_picking_objs:
                         if origin_picking_objs[0].receive_type:
                             picking.check_approve_button = True
                             picking.check_ac_approve_button = False
-                        else:
-                            picking.check_ac_approve_button = True
-                            picking.check_approve_button = False
+                    else:
+                        picking.check_ac_approve_button = True
+                        picking.check_approve_button = False
 
                     if picking.check_mrr_button == True:
                         picking.check_approve_button = False

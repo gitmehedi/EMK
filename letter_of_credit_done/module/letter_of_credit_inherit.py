@@ -45,7 +45,7 @@ class LetterOfCreditInherit(models.Model):
                 'res_model': 'lc.done.confirmation.wizard',
                 'type': 'ir.actions.act_window',
                 'target': 'new',
-                'context': {'message': "LC Product Quantiy & Shipment Receive Quantiy are not same. Are you still done the LC?", "lc_id": self.id},
+                'context': {'message': "LC Product Quantiy & Shipment Receive Quantiy are not same. Are you want to done the LC?", "lc_id": self.id},
 
             }
             return result
@@ -71,7 +71,7 @@ class LetterOfCreditInherit(models.Model):
     @api.multi
     def lc_done_action_window1(self):
         domain = [('rel_job_id', '=', self.id)]
-        res = self.env.ref('letter_of_credit_done.lc_evaluation_wizard')
+        res = self.env.ref('letter_of_credit_done.lc_evaluation_wizard_button_box')
         result = {
             'name': _('LC Done'),
             'view_type': 'form',
@@ -82,6 +82,7 @@ class LetterOfCreditInherit(models.Model):
             'target': 'new',
             'domain': domain,
             'context': {'comment': self.comment or False, 'lc_id': self.id},
+            'flags': {'form': {'action_buttons': False},},
         }
         return result
 
