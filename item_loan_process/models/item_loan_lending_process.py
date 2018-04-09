@@ -109,7 +109,7 @@ class ItemLoanLending(models.Model):
                         'move_type': 'direct',
                         'company_id': self.env.user['company_id'].id,
                         'operating_unit_id': self.operating_unit_id.id,
-                        'state': 'Approved',
+                        'state': 'done',
                         'invoice_state': 'none',
                         'origin': self.name,
                         'name': pick_name,
@@ -171,7 +171,7 @@ class ItemLoanLendingLines(models.Model):
     _name = 'item.loan.lending.line'
     _description = 'Item Loan Lending Line'
 
-    item_loan_lending_id = fields.Many2one('indent.indent', string='Indent', required=True, ondelete='cascade')
+    item_loan_lending_id = fields.Many2one('item.loan.lending', string='Item', required=True, ondelete='cascade')
     product_id = fields.Many2one('product.product', string='Product', required=True)
     product_uom_qty = fields.Float('Quantity', digits=dp.get_precision('Product UoS'),
                                    required=True, default=1)

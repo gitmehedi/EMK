@@ -13,6 +13,7 @@
                     <field name="issue_date" />
                     <field name="company_id" />
                     <field name="operating_unit_id" />
+                    <field name="location_id" />
                     <field name="state" />
                     <field name="message_needaction" invisible="1"/>
                 </tree>
@@ -37,6 +38,7 @@
                     </header>
                     <sheet>
                         <group col="2">
+                            <field name="picking_id" invisible="1"/>
                             <group>
                                 <field name="issuer_id" readonly="1" />
                                 <field name="issue_date" />
@@ -49,6 +51,9 @@
                                        options="{'no_create': True,'no_open':True}"/>
                                 <field name="operating_unit_id" options="{'no_create': True,'no_open':True}"
                                        groups="operating_unit.group_multi_operating_unit" />
+                                <field name="location_id" options="{'no_create': True,'no_open':True}"/>
+                                <field name="item_loan_location_id" invisible="1"/>
+                                <field name="picking_type_id" invisible="1"/>
                             </group>
                         </group>
                         <notebook>
