@@ -3,12 +3,18 @@ from odoo.addons import decimal_precision as dp
 import datetime
 import time
 from odoo.exceptions import UserError, ValidationError
+from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
+
 
 class ItemLoanLending(models.Model):
     _name = 'item.loan.lending'
     _description = "Item Loan Lending"
     _inherit = ['mail.thread','ir.needaction_mixin']
     _order = "issue_date desc"
+
+
+    def _get_default_item_loan_location_id(self):
+        return self.env['stock.location'].search([('scrap_location', '=', True)], limit=1).id
 
     def _get_default_location_id(self):
         return self.env['stock.location'].search([('operating_unit_id', '=', self.env.user.default_operating_unit_id.id)], limit=1).id
@@ -33,9 +39,17 @@ class ItemLoanLending(models.Model):
                                   domain="[('usage', '=', 'internal'),('operating_unit_id', '=',operating_unit_id)]",
                                   required=True,
                                   states={'draft': [('readonly', False)]})
+    item_loan_location_id = fields.Many2one('stock.location', 'Scrap Location', default=_get_default_item_loan_location_id,
+                                        domain="[('scrap_location', '=', True)]", readonly=True)
     description = fields.Text('Description', readonly=True, states={'draft': [('readonly', False)]})
     item_lines = fields.One2many('item.loan.lending.line', 'item_loan_lending_id', 'Items', readonly=True,
                                     states={'draft': [('readonly', False)]})
+
+    picking_id = fields.Many2one('stock.picking', 'Picking', states={'draft': [('readonly', False)]})
+    picking_type_id = fields.Many2one('stock.picking.type', string='Picking Type')
+    request_by = fields.Many2one('res.users', string='Request By', required=True, readonly=True,
+                                 default=lambda self: self.env.user)
+
     state = fields.Selection([
         ('draft', 'Draft'),
         ('waiting_approval', 'Waiting for Approval'),
@@ -61,18 +75,78 @@ class ItemLoanLending(models.Model):
 
     @api.multi
     def button_approve(self):
-        for item in self:
-            for line in item.item_lines:
-                if line.product_uom_qty > line.qty_available:
-                    raise UserError(_(
-                    'You cannot give loan without having available stock for %s. '
-                    'You can correct it with an inventory adjustment.') % line.product_id.name)
-            res = {
-                'state': 'approved',
-                'approver_id': self.env.user.id,
-                'approved_date': time.strftime('%Y-%m-%d %H:%M:%S')
-            }
-            item.write(res)
+        picking_id = False
+        if self.item_lines:
+            picking_id = self._create_pickings_and_moves()
+        res = {
+            'state': 'approved',
+            'approver_id': self.env.user.id,
+            'approved_date': time.strftime('%Y-%m-%d %H:%M:%S'),
+            'picking_id' : picking_id
+        }
+        self.write(res)
+
+    @api.model
+    def _create_pickings_and_moves(self):
+        move_obj = self.env['stock.move']
+        picking_obj = self.env['stock.picking']
+        picking_id = False
+        for line in self.item_lines:
+            date_planned = datetime.datetime.strptime(self.issue_date, DEFAULT_SERVER_DATETIME_FORMAT)
+
+            if line.product_id:
+                if not picking_id:
+                    picking_type = self.env['stock.picking.type'].search(
+                        [('default_location_src_id', '=', self.location_id.id),
+                         ('default_location_dest_id', '=', self.item_loan_location_id.id), ('code', '=', 'internal')])
+                    if not picking_type:
+                        raise UserError(_('Please create picking type for product scraping.'))
+
+                    pick_name = self.env['ir.sequence'].next_by_code('stock.picking')
+                    res = {
+                        'picking_type_id': picking_type.id,
+                        'priority': '1',
+                        'move_type': 'direct',
+                        'company_id': self.env.user['company_id'].id,
+                        'operating_unit_id': self.operating_unit_id.id,
+                        'state': 'Approved',
+                        'invoice_state': 'none',
+                        'origin': self.name,
+                        'name': pick_name,
+                        'date': self.issue_date,
+                        'partner_id': self.request_by.partner_id.id or False,
+                        'location_id': self.location_id.id,
+                        'location_dest_id': self.item_loan_location_id.id,
+                    }
+                    if self.company_id:
+                        vals = dict(res, company_id=self.company_id.id)
+
+                    picking = picking_obj.create(vals)
+                    if picking:
+                        picking_id = picking.id
+
+                location_id = self.location_id.id
+
+                moves = {
+                    'name': self.name,
+                    'origin': self.name or self.picking_id.name,
+                    'location_id': location_id,
+                    'scrapped': True,
+                    'location_dest_id': self.item_loan_location_id.id,
+                    'picking_id': picking_id or False,
+                    'product_id': line.product_id.id,
+                    'product_uom_qty': line.product_uom_qty,
+                    'product_uom': line.product_uom.id,
+                    'date': date_planned,
+                    'date_expected': date_planned,
+                    'picking_type_id': picking_type.id,
+
+                }
+                move = move_obj.create(moves)
+                move.action_done()
+                self.write({'move_id': move.id})
+
+        return picking_id
 
     @api.multi
     def button_reject(self):
