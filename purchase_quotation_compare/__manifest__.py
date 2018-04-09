@@ -17,7 +17,7 @@
     'version': '10.0.1',
 
     # any module necessary for this one to work correctly
-    'depends': ['purchase_requisition'],
+    'depends': ['purchase_requisition','custom_report',],
 
     # always loaded
     'data': [
