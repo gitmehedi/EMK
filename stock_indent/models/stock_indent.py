@@ -227,7 +227,7 @@ class IndentIndent(models.Model):
                 'state': 'waiting_approval'
             }
             requested_date = self.required_date
-            new_seq = self.env['ir.sequence'].next_by_code('stock.indent',requested_date)
+            new_seq = self.env['ir.sequence'].next_by_code_new('stock.indent',requested_date)
             if new_seq:
                 res['name'] = new_seq
 

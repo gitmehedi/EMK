@@ -109,7 +109,7 @@ class ItemLoanLending(models.Model):
                         'move_type': 'direct',
                         'company_id': self.env.user['company_id'].id,
                         'operating_unit_id': self.operating_unit_id.id,
-                        'state': 'Approved',
+                        'state': 'done',
                         'invoice_state': 'none',
                         'origin': self.name,
                         'name': pick_name,

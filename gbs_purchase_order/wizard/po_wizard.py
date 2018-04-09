@@ -1,4 +1,5 @@
 from odoo import api, fields, models, _
+from datetime import datetime
 
 
 class PurchaseRequisitionTypeWizard(models.TransientModel):
@@ -40,7 +41,8 @@ class PurchaseRequisitionTypeWizard(models.TransientModel):
                     })
             po.check_po_action_button = False
 
-            new_seq = self.env['ir.sequence'].next_by_code('purchase.order')
+            requested_date = datetime.strptime(self.date_order, "%Y-%m-%d %H:%M:%S").date()
+            new_seq = self.env['ir.sequence'].next_by_code_new('purchase.order',requested_date)
             if new_seq:
                 po.write({'name':new_seq})
         else:
