@@ -157,6 +157,11 @@ class ItemLoanLending(models.Model):
         }
         self.write(res)
 
+    @api.multi
+    def action_draft(self):
+        self.state = 'draft'
+        self.item_lines.write({'state':'draft'})
+
     ####################################################
     # ORM Overrides methods
     ####################################################
@@ -216,6 +221,13 @@ class ItemLoanLendingLines(models.Model):
     def _check_product_uom_qty(self):
         if self.product_uom_qty <= 0:
             raise UserError('Product quantity can not be negative or zero!!!')
+
+    state = fields.Selection([
+        ('draft', 'Draft'),
+        ('waiting_approval', 'Waiting for Approval'),
+        ('approved', 'Approved'),
+        ('reject', 'Rejected'),
+    ], string='State')
     ####################################################
     # Override methods
     ####################################################
