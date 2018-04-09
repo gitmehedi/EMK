@@ -10,7 +10,7 @@ class IrSequenceOperatingUnit(models.Model):
                                         default=lambda self: self.env.user.default_operating_unit_id)
 
     @api.model
-    def next_by_code(self, sequence_code):
+    def next_by_code(self, sequence_code,requested_date):
         """ Draw an interpolated string using a sequence with the requested code.
             If several sequences with the correct code are available to the user
             (multi-company cases), the one from the user's current company will
@@ -46,6 +46,22 @@ class IrSequenceOperatingUnit(models.Model):
         else:
             seq_id = seq_ids[0]
                 
-        res = seq_id._next()
+        res = seq_id._next(requested_date)
         res_val = res.replace('OU', self.env.user.default_operating_unit_id.code)
         return res_val
+
+    def _next(self,requested_date):
+        """ Returns the next number in the preferred sequence in all the ones given in self."""
+        if not self.use_date_range:
+            return self._next_do()
+        # date mode
+        if requested_date:
+            dt = requested_date
+        else:
+            dt = fields.Date.today()
+        if self._context.get('ir_sequence_date'):
+            dt = self._context.get('ir_sequence_date')
+        seq_date = self.env['ir.sequence.date_range'].search([('sequence_id', '=', self.id), ('date_from', '<=', dt), ('date_to', '>=', dt)], limit=1)
+        if not seq_date:
+            seq_date = self._create_date_range_seq(dt)
+        return seq_date.with_context(ir_sequence_date_range=seq_date.date_from)._next()

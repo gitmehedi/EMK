@@ -29,7 +29,7 @@
 
             <xpath expr="//sheet/notebook/page/field/tree/field[@name='qty_done']" position="after">
                 <field name="check_mrr_button" invisible="1"/>
-                <field name="mrr_quantity" attrs="{'invisible': [('check_mrr_button', '=', False)]}"/>
+                <field name="mrr_quantity" attrs="{'invisible': [('check_mrr_button','=', False)]}"/>
             </xpath>
 
         </field>

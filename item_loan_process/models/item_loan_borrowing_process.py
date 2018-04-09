@@ -78,7 +78,7 @@ class ItemBorrowingLines(models.Model):
     _name = 'item.borrowing.line'
     _description = 'Item Borrowing Line'
 
-    item_borrowing_id = fields.Many2one('indent.indent', string='Indent', required=True, ondelete='cascade')
+    item_borrowing_id = fields.Many2one('item.borrowing', string='Item', required=True, ondelete='cascade')
     product_id = fields.Many2one('product.product', string='Product', required=True)
     product_uom_qty = fields.Float('Quantity', digits=dp.get_precision('Product UoS'),
                                    required=True, default=1)
