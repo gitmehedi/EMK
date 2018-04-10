@@ -41,7 +41,7 @@ class PurchaseRequisitionTypeWizard(models.TransientModel):
                     })
             po.check_po_action_button = False
 
-            requested_date = datetime.strptime(self.date_order, "%Y-%m-%d %H:%M:%S").date()
+            requested_date = datetime.strptime(order.date_order, "%Y-%m-%d %H:%M:%S").date()
             new_seq = self.env['ir.sequence'].next_by_code_new('purchase.order',requested_date)
             if new_seq:
                 po.write({'name':new_seq})
