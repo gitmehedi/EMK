@@ -4,7 +4,7 @@ from odoo.exceptions import UserError, ValidationError
 
 class DOProductLine(models.Model):
     _name = 'delivery.order.line'
-    _description = 'Sales Delivery Order line'
+    _description = 'Sales Delivery Authorization line'
 
     product_id = fields.Many2one('product.product', string="Product", readonly=True, ondelete='cascade')
     uom_id = fields.Many2one('product.uom', string="UoM", ondelete='cascade', readonly=True)
@@ -42,8 +42,8 @@ class DOProductLine(models.Model):
                     if da.quantity > sale_line.product_uom_qty:
                         raise ValidationError('Delivery Qty can not be greater than Ordered Qty')
 
-                    if da.quantity > sale_line.da_qty:
-                        raise ValidationError('You can Deliver {0} {1} for {2}'.format((sale_line.da_qty), (sale_line.product_uom.name), (sale_line.product_id.display_name)))
+                    # if da.quantity > sale_line.da_qty:
+                    #     raise ValidationError('You can Deliver {0} {1} for {2}'.format((sale_line.da_qty), (sale_line.product_uom.name), (sale_line.product_id.display_name)))
 
             da.set_da_amounts_automatically()
 
