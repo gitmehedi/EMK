@@ -44,18 +44,12 @@
                                 <field name="issuer_id" readonly="1" />
                                 <field name="request_date" />
                                 <field name="borrower_id"/>
+                            </group>
+                            <group>
                                 <field name="approved_date"/>
                                 <field name="approver_id"/>
                             </group>
-                            <group>
-                                <field name="company_id" groups="base.group_multi_company"
-                                       options="{'no_create': True,'no_open':True}"/>
-                                <field name="operating_unit_id" options="{'no_create': True,'no_open':True}"
-                                       groups="operating_unit.group_multi_operating_unit" />
-                                <field name="location_id" options="{'no_create': True,'no_open':True}"/>
-                                <field name="item_loan_location_id" />
-                                <field name="picking_type_id" />
-                            </group>
+
                         </group>
                         <notebook>
                             <page string="Items">
@@ -74,6 +68,21 @@
                                     <label for="description" />
                                 </div>
                                 <field name="description" placeholder="The material ..." />
+                            </page>
+                            <page string="Others">
+                                <group>
+                                    <group>
+                                        <field name="company_id" groups="base.group_multi_company"
+                                               options="{'no_create': True,'no_open':True}"/>
+                                        <field name="operating_unit_id" options="{'no_create': True,'no_open':True}"
+                                               groups="operating_unit.group_multi_operating_unit" />
+                                        <field name="location_id" options="{'no_create': True,'no_open':True}"/>
+                                    </group>
+                                    <group>
+                                        <field name="item_loan_location_id" />
+                                        <field name="picking_type_id" />
+                                    </group>
+                                </group>
                             </page>
                         </notebook>
                     </sheet>
