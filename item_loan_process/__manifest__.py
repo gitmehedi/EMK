@@ -19,7 +19,10 @@ the loan to other company. System will handle the both case mentioned above.
     'category': 'Inventory',
     'version': '10.0.0.1',
 
-    'depends': ['base','mail','product','gbs_application_group','stock','operating_unit'],
+    'depends': ['mail',
+                'stock',
+                'gbs_application_group',
+                'ir_sequence_operating_unit'],
 
     'data': [
         'data/sequence.xml',
