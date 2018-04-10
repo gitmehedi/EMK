@@ -1,6 +1,6 @@
 from odoo import api, fields, models, _
 from odoo.addons import decimal_precision as dp
-import datetime
+from datetime import datetime
 import time
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
@@ -10,17 +10,17 @@ class ItemBorrowing(models.Model):
     _name = 'item.borrowing'
     _description = "Item Borrowing"
     _inherit = ['mail.thread','ir.needaction_mixin']
-    _order = "issue_date desc"
+    _order = "request_date desc"
 
     def _get_default_item_loan_borrow_location_id(self):
-        return self.env['stock.location'].search([('scrap_location', '=', True)], limit=1).id
+        return self.env['stock.location'].search([('id', '=', self.env.user.default_location_id.id)], limit=1).id
 
     def _get_default_location_id(self):
-        return self.env['stock.location'].search([('operating_unit_id', '=', self.env.user.default_operating_unit_id.id)], limit=1).id
+        return self.env['stock.location'].search([('usage', '=', 'supplier')], limit=1).id
 
     name = fields.Char('Issue #', size=30, readonly=True, default="/")
-    issue_date = fields.Datetime('Issue Date', required=True, readonly=True,
-                                 default=datetime.datetime.today())
+    request_date = fields.Datetime('Request Date', required=True, readonly=True,
+                                 default=datetime.today())
     issuer_id = fields.Many2one('res.users', string='Issuer', required=True, readonly=True,
                                 default=lambda self: self.env.user,
                                 states={'draft': [('readonly', False)]})
@@ -39,13 +39,15 @@ class ItemBorrowing(models.Model):
                                   domain="[('usage', '=', 'internal'),('operating_unit_id', '=',operating_unit_id)]",
                                   required=True,
                                   states={'draft': [('readonly', False)]})
-    item_loan_borrow_location_id = fields.Many2one('stock.location', 'Scrap Location',
-                                            default=_get_default_item_loan_borrow_location_id,
-                                            domain="[('scrap_location', '=', True)]", readonly=True)
+    item_loan_borrow_location_id = fields.Many2one('stock.location', 'Destination Location',
+                                            default=_get_default_item_loan_borrow_location_id,readonly=True)
     picking_id = fields.Many2one('stock.picking', 'Picking', states={'draft': [('readonly', False)]})
     picking_type_id = fields.Many2one('stock.picking.type', string='Picking Type')
     request_by = fields.Many2one('res.users', string='Request By', required=True, readonly=True,
                                  default=lambda self: self.env.user)
+    approved_date = fields.Datetime('Approved Date', readonly=True)
+    approver_id = fields.Many2one('res.users', string='Authority', readonly=True,
+                                  help="who have approve or reject.")
 
     state = fields.Selection([
         ('draft', 'Draft'),
@@ -66,13 +68,8 @@ class ItemBorrowing(models.Model):
             res = {
                 'state': 'waiting_approval',
             }
-            seq = self.env['ir.sequence']
-            seq_search = seq.search([('name','=','Item Loan Lending Test')])
-            seq_search.sudo().write({'prefix':'Loan'+'/'+self.operating_unit_id.code+'/',
-                              'code':self.operating_unit_id.name,
-                              'operating_unit_id':self.operating_unit_id.id})
-
-            new_seq = self.env['ir.sequence'].next_by_code('item.borrowing')
+            requested_date = datetime.strptime(self.request_date, "%Y-%m-%d %H:%M:%S").date()
+            new_seq = self.env['ir.sequence'].next_by_code_new('item.borrowing',requested_date)
 
             if new_seq:
                 res['name'] = new_seq
@@ -97,29 +94,28 @@ class ItemBorrowing(models.Model):
         picking_obj = self.env['stock.picking']
         picking_id = False
         for line in self.item_lines:
-            date_planned = datetime.datetime.strptime(self.issue_date, DEFAULT_SERVER_DATETIME_FORMAT)
+            date_planned = datetime.strptime(self.request_date, DEFAULT_SERVER_DATETIME_FORMAT)
 
             if line.product_id:
                 if not picking_id:
                     picking_type = self.env['stock.picking.type'].search(
                         [('default_location_src_id', '=', self.location_id.id),
-                         ('default_location_dest_id', '=', self.item_loan_borrow_location_id.id), ('code', '=', 'internal')])
+                         ('default_location_dest_id', '=', self.item_loan_borrow_location_id.id), ('code', '=', 'incoming')])
                     if not picking_type:
-                        raise UserError(_('Please create picking type for product scraping.'))
-
-                    pick_name = self.env['ir.sequence'].next_by_code('stock.picking')
+                        raise UserError(_('Please create picking type for Item Borrowing.'))
+                    # pick_name = self.env['ir.sequence'].next_by_code('stock.picking')
                     res = {
                         'picking_type_id': picking_type.id,
                         'priority': '1',
                         'move_type': 'direct',
                         'company_id': self.env.user['company_id'].id,
                         'operating_unit_id': self.operating_unit_id.id,
-                        'state': 'done',
+                        'state': 'draft',
                         'invoice_state': 'none',
                         'origin': self.name,
-                        'name': pick_name,
-                        'date': self.issue_date,
-                        'partner_id': self.request_by.partner_id.id or False,
+                        'name': self.name,
+                        'date': self.request_date,
+                        'partner_id': self.partner_id.id or False,
                         'location_id': self.location_id.id,
                         'location_dest_id': self.item_loan_borrow_location_id.id,
                     }
@@ -145,10 +141,11 @@ class ItemBorrowing(models.Model):
                     'date': date_planned,
                     'date_expected': date_planned,
                     'picking_type_id': picking_type.id,
+                    'state': 'draft',
 
                 }
                 move = move_obj.create(moves)
-                move.action_done()
+                # move.action_done()
                 self.write({'move_id': move.id})
 
         return picking_id
@@ -177,7 +174,7 @@ class ItemBorrowingLines(models.Model):
     _description = 'Item Borrowing Line'
 
 
-    item_borrowing_id = fields.Many2one('item.borrowing', string='Indent', required=True, ondelete='cascade')
+    item_borrowing_id = fields.Many2one('item.borrowing', string='Item', required=True, ondelete='cascade')
     product_id = fields.Many2one('product.product', string='Product', required=True)
     product_uom_qty = fields.Float('Quantity', digits=dp.get_precision('Product UoS'),
                                    required=True, default=1)
