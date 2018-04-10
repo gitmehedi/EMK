@@ -88,11 +88,20 @@ class DeliveryOrderLayer(models.Model):
     #         order.line_ids.unlink()
     #     return super(DeliveryOrderLayer, self).unlink()
 
+    @api.model
+    def create(self, vals):
+        seq = self.env['ir.sequence'].next_by_code('delivery.order.layer') or '/'
+        vals['name'] = seq
+
+        return super(DeliveryOrderLayer, self).create(vals)
+
+
+
     @api.one
     def action_approve(self):
         self.state = 'approved'
-        seq = self.env['ir.sequence'].next_by_code('delivery.order.layer') or '/'
-        self.name = seq
+        #seq = self.env['ir.sequence'].next_by_code('delivery.order.layer') or '/'
+        #self.name = seq
 
         self.create_delivery_order()
         self.action_view_delivery()
@@ -119,6 +128,15 @@ class DeliveryOrderLayer(models.Model):
 
 
     def create_delivery_order(self):
+        ##################################################################
+        # Update the reference of Delivery Order to Stock Picking when
+        # clicking on this button action.
+        ###################################################################
+
+        stock_picking_id = self.delivery_order_id.sale_order_id.picking_ids
+        stock_picking_id.write({'delivery_order_id': self.id})
+
+        ## Show or Create DO Button
         for order in self.delivery_order_id.sale_order_id:
             order.state = 'sale'
             order.confirmation_date = fields.Datetime.now()
@@ -129,6 +147,7 @@ class DeliveryOrderLayer(models.Model):
 
         if self.env['ir.values'].get_default('sale.config.settings', 'auto_done_setting'):
             self.delivery_order_id.sale_order_id.action_done()
+
         return True
 
 
