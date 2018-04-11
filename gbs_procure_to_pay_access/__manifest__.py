@@ -21,6 +21,7 @@
                 'gbs_purchase_requisition',
                 'gbs_purchase_order',
                 'gbs_purchase_quotation_cnf',
+                'stock',
 
     ],
 

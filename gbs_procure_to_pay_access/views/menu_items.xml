@@ -60,5 +60,9 @@
         <menuitem id="gbs_purchase_requisition.submenu_commercial_pr_foreign" name="Approved PR(Foreign)" parent="gbs_purchase_requisition.menu_pr_commercial"
                 sequence="2" action="gbs_purchase_requisition.action_commercial_pr_foreign" groups="group_approve_pr_foreign"/>
 
+
+        <menuitem name="Inventory" id="stock.menu_stock_root" sequence="30"
+        groups="stock.group_stock_manager,stock.group_stock_user,group_approve_gate_in"
+        web_icon="stock,static/description/icon.png"/>
     </data>
 </odoo>
