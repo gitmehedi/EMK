@@ -211,29 +211,30 @@
         </field>
     </record>
 
-    <record id="view_stock_picking_filter1" model="ir.ui.view">
-        <field name="name">view.picking.filter1</field>
-        <field name="model">stock.picking</field>
-        <field name="arch" type="xml">
-            <search string="Receive">
-                <filter name="receive_filter" string="Received" domain="[('picking_type_code', '=', 'incoming')]"/>
-                <filter name="picking_type" string="Picking Type" domain="[]" context="{'group_by':'picking_type_id'}"/>
-            </search>
-        </field>
-    </record>
+    <!--<record id="view_stock_picking_filter1" model="ir.ui.view">-->
+        <!--<field name="name">view.picking.filter1</field>-->
+        <!--<field name="model">stock.picking</field>-->
+        <!--<field name="arch" type="xml">-->
+            <!--<search string="Receive">-->
+                <!--<filter name="receive_filter" string="Received" domain="[('picking_type_code', '=', 'incoming')]"/>-->
+                <!--<filter name="picking_type" string="Picking Type" domain="[]" context="{'group_by':'picking_type_id'}"/>-->
+            <!--</search>-->
+        <!--</field>-->
+    <!--</record>-->
 
     <record model="ir.actions.act_window" id="action_stock_picking_receive1">
-        <field name="name">Receive Transfers</field>
+        <field name="name">Receive Goods</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">stock.picking</field>
         <field name="view_type">form</field>
         <field name="view_id" ref="view_stock_picking_tree1"/>
-        <field name="search_view_id" ref="view_stock_picking_filter1"/>
-        <field name="context">{
-                    'search_default_receive_filter': 1,}</field>
+        <!--<field name="search_view_id" ref="view_stock_picking_filter1"/>-->
+        <!--<field name="context">{-->
+                    <!--'search_default_receive_filter': 1,}</field>-->
+        <field name="domain">[('picking_type_code', '=', 'incoming')]</field>
         <field name="help" type="html">
             <p>
-                Here you can see Received Transfer list.
+                Here you can see Received Goods list.
             </p>
         </field>
     </record>
