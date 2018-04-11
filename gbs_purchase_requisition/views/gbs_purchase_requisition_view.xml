@@ -4,7 +4,7 @@
         <!-- Inherited menuitem-->
         <menuitem name="Purchases"
                   id="purchase.menu_purchase_root"
-                  groups="purchase.group_purchase_manager,purchase.group_purchase_user,stock.group_stock_user"
+                  groups="purchase.group_purchase_manager,purchase.group_purchase_user,stock.group_stock_user,gbs_purchase_requisition.group_purchase_requisition_validator,gbs_purchase_requisition.group_purchase_requisition_approver"
                   web_icon="purchase,static/description/icon.png"
                   sequence="25"/>
         <!-- Inherited tree view-->
