@@ -3,33 +3,33 @@
     <data>
 
         <menuitem
-                id="gbs_purchase_order.menu_commercial_pq"
+                id="gbs_purchase_quotation_cnf.menu_commercial_pq"
                 parent="commercial.menu_commercial_root"
                 sequence="2"
                 name="Purchase Quotation"
                 groups="gbs_group_quotation"/>
 
         <menuitem
-                id="gbs_purchase_order.submenu_commercial_pq"
+                id="gbs_purchase_quotation_cnf.submenu_commercial_pq"
                 name="Purchase Quotation"
-                parent="gbs_purchase_order.menu_commercial_pq"
+                parent="gbs_purchase_quotation_cnf.menu_commercial_pq"
                 sequence="1"
-                action="purchase.purchase_rfq"
+                action="gbs_purchase_quotation_cnf.action_commercial_pq"
                 groups="gbs_group_quotation"/>
 
         <menuitem
-                id="gbs_purchase_order.menu_commercial_po"
+                id="gbs_purchase_quotation_cnf.menu_commercial_po"
                 parent="commercial.menu_commercial_root"
                 sequence="3"
                 name="Purchase Order"
                 groups="group_issue_po,group_approve_po" />
 
         <menuitem
-                id="gbs_purchase_order.submenu_commercial_po"
+                id="gbs_purchase_quotation_cnf.submenu_commercial_po"
                 name="Purchase Order"
-                parent="gbs_purchase_order.menu_commercial_po"
+                parent="gbs_purchase_quotation_cnf.menu_commercial_po"
                 sequence="1"
-                action="purchase.purchase_form_action"
+                action="gbs_purchase_quotation_cnf.action_commercial_po"
                 groups="group_issue_po,group_approve_po"/>
 
     </data>
