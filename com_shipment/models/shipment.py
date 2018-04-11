@@ -19,10 +19,6 @@ class Shipment(models.Model):
     comment = fields.Text('Comment', readonly=True)
     transport_by = fields.Char('Transport By', readonly=True,)
     vehical_no = fields.Char('Vehical No', readonly=True,)
-    employee_ids = fields.Many2many('hr.employee', string='''Employee's''')
-
-    # employee_ids = fields.Many2many('hr.employee',
-    #                                 'employee_id', readonly=True,string='Employees')
 
     state = fields.Selection(
         [('draft', "Draft"),
@@ -209,35 +205,6 @@ class Shipment(models.Model):
             'view_mode': 'form',
             'view_id': res and res.id or False,
             'res_model':'email.template.wizard',
-            'type': 'ir.actions.act_window',
-            'nodestroy': True,
-            'target': 'new',
-        }
-        return result
-    @api.multi
-    def action_gate_in(self):
-        res = self.env.ref('com_shipment.gate_in_wizard')
-        result = {
-            'name': _('Please Enter The Information'),
-            'view_type': 'form',
-            'view_mode': 'form',
-            'view_id': res and res.id or False,
-            'res_model': 'gate.in.wizard',
-            'type': 'ir.actions.act_window',
-            'nodestroy': True,
-            'target': 'new',
-        }
-        return result
-
-    @api.multi
-    def action_gate_in(self):
-        res = self.env.ref('com_shipment.gate_in_wizard')
-        result = {
-            'name': _('Please Enter The Information'),
-            'view_type': 'form',
-            'view_mode': 'form',
-            'view_id': res and res.id or False,
-            'res_model': 'gate.in.wizard',
             'type': 'ir.actions.act_window',
             'nodestroy': True,
             'target': 'new',
