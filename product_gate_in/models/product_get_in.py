@@ -5,6 +5,16 @@ from odoo import models, fields, api
 class productGateIn(models.Model):
     _name = 'product.gate.in'
 
+    def _default_lc_shipment(self):
+        sale_order_obj = self.env['purchase.shipment'].search([])
+        ship = []
+        for lc_ship in sale_order_obj:
+            if lc_ship.state in ('cnf_clear', 'gate_in','done'):
+                if lc_ship.lc_id.state != 'done':
+                    ship.append(lc_ship)
+        return ship
+
+
     name = fields.Char(string='Name', index=True, readonly=True)
     create_by = fields.Char('Carried By', readonly=True, states={'draft': [('readonly', False)]})
     received = fields.Char('To Whom Received', readonly=True, states={'draft': [('readonly', False)]})
@@ -18,7 +28,7 @@ class productGateIn(models.Model):
                                         readonly=True, states={'draft': [('readonly', False)]})
     company_id = fields.Many2one('res.company', string='Company', readonly=True, states={'draft': [('readonly', False)]},
                                  default=lambda self: self.env.user.company_id, required=True)
-    ship_id = fields.Many2one('purchase.shipment', string='Shipment Number',domain=[('state', '!=', 'done')],
+    ship_id = fields.Many2one('purchase.shipment', string='Shipment Number',default= _default_lc_shipment,
                               required=True, states={'confirm': [('readonly', True)]})
     # lc_id = fields.Many2one('letter.credit', string='LC', required=True,
     #                         states={'confirm': [('readonly', True)]},
