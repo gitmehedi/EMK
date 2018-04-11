@@ -31,7 +31,7 @@
         'report/money_receipt_paperformat.xml',
         'report/cash_received_report.xml',
         'report/cash_received_report_view.xml',
-
+        'views/inherit_stock_picking_view.xml',
     ],
 
     'summary': 'Delivery Authorization',

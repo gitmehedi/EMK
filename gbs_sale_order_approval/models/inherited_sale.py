@@ -412,8 +412,8 @@ class InheritedSaleOrderLine(models.Model):
 
     @api.constrains('da_qty')
     def check_da_qty_val(self):
-        if self.da_qty < 0.00:
-            raise ValidationError('DA Qty can not be negative')
+        # if self.da_qty < 0.00:
+        #     raise ValidationError('DA Qty can not be negative')
 
         if self.da_qty > self.product_uom_qty:
             raise ValidationError('DA Qty can not be greater than Ordered Qty')
