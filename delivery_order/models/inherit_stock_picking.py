@@ -6,4 +6,9 @@ class InheritStockPicking(models.Model):
     delivery_order_id = fields.Many2one('delivery.order.layer', string='D.O No.', readonly=True)
 
 
+class InheritStockMove(models.Model):
+    _inherit = 'stock.move'
+
+    delivery_order_id = fields.Many2one('delivery.order.layer', string='D.O No.', readonly=True)
+
 

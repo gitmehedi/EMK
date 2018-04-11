@@ -136,6 +136,15 @@ class DeliveryOrderLayer(models.Model):
         stock_picking_id = self.delivery_order_id.sale_order_id.picking_ids
         stock_picking_id.write({'delivery_order_id': self.id})
 
+
+        #########################################################
+        #  Update Stock Move with reference of Delivery Order
+        #########################################################
+
+        stock_move_id = self.delivery_order_id.sale_order_id.picking_ids.move_lines
+        stock_move_id.write({'delivery_order_id':self.id})
+
+
         ## Show or Create DO Button
         for order in self.delivery_order_id.sale_order_id:
             order.state = 'sale'
