@@ -4,7 +4,7 @@
     <record id="rule_for_stock_location" model="ir.rule">
         <field name="name">Unit Rule For Stock Location</field>
         <field name="model_id" ref="stock.model_stock_location"/>
-        <field name="domain_force">['|',('id','=',False),('id','in',user.location_ids.ids)]</field>
+        <field name="domain_force">[('id','in',user.location_ids.ids)]</field>
         <field name="perm_read" eval="True" />
         <field name="perm_create" eval="True"/>
         <field name="perm_write" eval="True"/>

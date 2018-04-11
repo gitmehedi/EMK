@@ -22,6 +22,18 @@ class Stock(models.Model):
         res = super(Stock, self).write(values)
         return res
 
+    @api.multi
+    def name_get(self):
+        ret_list = []
+        for location in self:
+            orig_location = location
+            name = location.name
+            while location.sudo().location_id and location.sudo().usage != 'view':
+                location = location.sudo().location_id
+                name = location.sudo().name + "/" + name
+            ret_list.append((orig_location.id, name))
+        return ret_list
+
 class StockMove(models.Model):
     _inherit = 'stock.move'
 

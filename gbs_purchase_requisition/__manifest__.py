@@ -14,7 +14,11 @@
     'data': [
         'data/pr_sequence.xml',
         'security/security.xml',
+<<<<<<< HEAD
         # 'security/ir_rule.xml',
+=======
+        'security/ir_rule.xml',
+>>>>>>> 0fc72e3522217e2d75adcce24e8795bfe11c1605
         'security/ir.model.access.csv',
         'wizard/pr_wizard_view.xml',
         'wizard/pr_from_where_wizard_view.xml',
