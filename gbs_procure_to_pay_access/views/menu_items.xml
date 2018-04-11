@@ -32,5 +32,33 @@
                 action="gbs_purchase_quotation_cnf.action_commercial_po"
                 groups="group_issue_po,group_approve_po"/>
 
+        <menuitem name="Commercial" id="commercial.menu_commercial_root" sequence="23"
+                    groups="group_approve_pr_foreign,group_approve_pr_local,group_imoprt_lc_local,group_imoprt_lc_foreign,group_export_lc_local,group_export_lc_foreign"/>
+
+        <menuitem id="letter_of_credit.lc_commercial_creation_menu" parent="commercial.menu_commercial_root"
+                    sequence="1" name="Letter of Credit" groups="group_imoprt_lc_local,group_imoprt_lc_foreign,group_export_lc_local,group_export_lc_foreign"/>
+
+        <menuitem id="letter_of_credit.lc_commercial_import_local_creation_submenu" name="Import LC(Local)" parent="letter_of_credit.lc_commercial_creation_menu"
+                    sequence="4" action="letter_of_credit.lc_import_local_creation_action" groups="group_imoprt_lc_local"/>
+
+        <menuitem id="letter_of_credit.lc_commercial_import_foreign_creation_submenu" name="Import LC(Foreign)" parent="letter_of_credit.lc_commercial_creation_menu"
+                    sequence="2" action="letter_of_credit.lc_import_foreign_creation_action" groups="group_imoprt_lc_foreign"/>
+
+        <menuitem id="letter_of_credit.lc_commercial_export_local_creation_submenu" name="Export LC(Local)" parent="letter_of_credit.lc_commercial_creation_menu"
+                    sequence="3" action="letter_of_credit.lc_export_local_creation_action" groups="group_export_lc_local"/>
+
+        <menuitem id="letter_of_credit.lc_commercial_export_foreign_creation_submenu" name="Export LC(Foreign)" parent="letter_of_credit.lc_commercial_creation_menu"
+                    sequence="1" action="letter_of_credit.lc_export_foreign_creation_action" groups="group_export_lc_foreign"/>
+
+
+        <menuitem id="gbs_purchase_requisition.menu_pr_commercial" parent="commercial.menu_commercial_root"
+            sequence="0" name="Purchase Requisition" groups="group_approve_pr_foreign,group_approve_pr_local"/>
+
+        <menuitem id="gbs_purchase_requisition.submenu_commercial_pr_local" name="Approved PR(Local)" parent="gbs_purchase_requisition.menu_pr_commercial"
+                sequence="1" action="gbs_purchase_requisition.action_commercial_pr_local" groups="group_approve_pr_local"/>
+
+        <menuitem id="gbs_purchase_requisition.submenu_commercial_pr_foreign" name="Approved PR(Foreign)" parent="gbs_purchase_requisition.menu_pr_commercial"
+                sequence="2" action="gbs_purchase_requisition.action_commercial_pr_foreign" groups="group_approve_pr_foreign"/>
+
     </data>
 </odoo>

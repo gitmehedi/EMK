@@ -17,6 +17,8 @@
     # any module necessary for this one to work correctly
     'depends': ['base',
                 'commercial',
+                'letter_of_credit',
+                'gbs_purchase_requisition',
                 'gbs_purchase_order',
                 'gbs_purchase_quotation_cnf',
 

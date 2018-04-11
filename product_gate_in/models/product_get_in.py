@@ -18,7 +18,7 @@ class productGateIn(models.Model):
                                         readonly=True, states={'draft': [('readonly', False)]})
     company_id = fields.Many2one('res.company', string='Company', readonly=True, states={'draft': [('readonly', False)]},
                                  default=lambda self: self.env.user.company_id, required=True)
-    ship_id = fields.Many2one('purchase.shipment', string='Shipment Number',
+    ship_id = fields.Many2one('purchase.shipment', string='Shipment Number',domain=[('state', '!=', 'done')],
                               required=True, states={'confirm': [('readonly', True)]})
     # lc_id = fields.Many2one('letter.credit', string='LC', required=True,
     #                         states={'confirm': [('readonly', True)]},
