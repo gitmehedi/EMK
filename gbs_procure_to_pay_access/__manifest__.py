@@ -18,6 +18,7 @@
     'depends': ['base',
                 'commercial',
                 'gbs_purchase_order',
+                'gbs_purchase_quotation_cnf',
 
     ],
 

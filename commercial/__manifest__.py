@@ -4,7 +4,7 @@
     'website': 'www.genweb2.com',
     'category': 'Commercial',
     'version':'1.0.0',
-    'depends': [
+    'depends': ['base',
     ],
 
     'data': [
