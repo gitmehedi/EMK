@@ -23,7 +23,9 @@ class ProcessMonthlyDeliveryReport(models.AbstractModel):
         report_of_product_id = data['product_id']
         operating_unit_id = data['operating_unit_id']
 
-        stock_move_pool = self.env['stock.move'].search([('location_id.operating_unit_id','=',operating_unit_id),('date','<',report_date_to),('date','>',report_date_from),('product_id', '=', report_of_product_id)])
+        stock_move_pool = self.env['stock.move'].search([('state','=','done'),
+                                                         ('location_id.operating_unit_id','=',operating_unit_id),('date','<',report_date_to),('date','>',report_date_from),
+                                                         ('product_id', '=', report_of_product_id)],order='date DESC')
 
         for stocks in stock_move_pool:
 
@@ -35,7 +37,7 @@ class ProcessMonthlyDeliveryReport(models.AbstractModel):
             datas = {}
             datas['create_date'] = do_create_date
             datas['partner_id'] = stocks.partner_id.name
-            datas['do_no'] = stocks.picking_id.name  # @todo: Need to talk with Matiar bhai
+            datas['do_no'] = stocks.delivery_order_id.name
             datas['do_date'] = DO_date
             datas['challan_id'] = stocks.picking_id.name
 
