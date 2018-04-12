@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="rule_stock_indent_commercial_user" model="ir.rule">
+        <field name="name">Stock Indent(Commercial)</field>
+        <field name="model_id" ref="stock_indent.model_indent_indent"/>
+        <field name="domain_force">[('operating_unit_id.id','in',user.operating_unit_ids.ids)]</field>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_create" eval="False"/>
+        <field name="perm_write" eval="False"/>
+        <field name="perm_unlink" eval="False"/>
+        <field name="groups" eval="[(4,ref('commercial.group_commercial_user'))]"/>
+    </record>
+</odoo>
+
