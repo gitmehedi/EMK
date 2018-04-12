@@ -23,7 +23,8 @@
                 'gbs_purchase_order',
                 'gbs_purchase_quotation_cnf',
                 'stock',
-                'purchase_requisition'
+                'purchase_requisition',
+                'lc_po_product',
 
     ],
 
