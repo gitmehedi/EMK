@@ -174,7 +174,7 @@ class DeliveryOrder(models.Model):
              ('partner_id', '=', self.parent_id.id)])
         account_payment_pool.write({'is_this_payment_checked': True})
 
-        self.create_delivery_order()
+        #self.create_delivery_order()
         self.update_sale_order_da_qty()
         return self.write({'state': 'close', 'confirmed_date': time.strftime('%Y-%m-%d %H:%M:%S')})
 
@@ -197,7 +197,7 @@ class DeliveryOrder(models.Model):
 
             if self.lc_no and self.pi_no:
                 if self.lc_no.lc_value >= self.total_sub_total_amount():
-                    self.create_delivery_order()
+                   # self.create_delivery_order()
                     self.update_sale_order_da_qty()
                     self.write({'state': 'close'})  # Final Approval
                 else:
@@ -225,7 +225,7 @@ class DeliveryOrder(models.Model):
 
                         self.env['ordered.qty'].create(res)
 
-                        self.create_delivery_order()
+                        #self.create_delivery_order()
                         self.update_sale_order_da_qty()
 
                         self.write({'state': 'close'})  # Final Approval
@@ -241,7 +241,7 @@ class DeliveryOrder(models.Model):
                                     if res['available_qty'] > 100:
                                         res['available_qty'] = 0
 
-                                    self.create_delivery_order()
+                                    #self.create_delivery_order()
                                     self.update_sale_order_da_qty()
 
                                     self.write({'state': 'close'})  # Final Approval
@@ -265,13 +265,13 @@ class DeliveryOrder(models.Model):
                             'context': {'delivery_order_id': self.id, 'product_name': product_pool.display_name}
                         }
             else:
-                self.create_delivery_order()
+                #self.create_delivery_order()
                 self.update_sale_order_da_qty()
 
                 self.state = 'approve'  # second
 
         elif self.so_type == 'credit_sales':
-            self.create_delivery_order()
+           # self.create_delivery_order()
             self.update_sale_order_da_qty()
             self.state = 'close'
 
@@ -311,7 +311,7 @@ class DeliveryOrder(models.Model):
 
         if total_cash_cheque_amount >= self.total_amount:
             account_payment_pool.write({'is_this_payment_checked': True})
-            self.create_delivery_order()
+           # self.create_delivery_order()
             self.update_sale_order_da_qty()
             return self.write({'state': 'close'})  # directly go to final approval level
         else:
