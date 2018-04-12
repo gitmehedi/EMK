@@ -27,7 +27,7 @@ class Stock(models.Model):
         ret_list = []
         for location in self:
             orig_location = location
-            name = location.name
+            name = location.sudo().name
             while location.sudo().location_id and location.sudo().usage != 'view':
                 location = location.sudo().location_id
                 name = location.sudo().name + "/" + name

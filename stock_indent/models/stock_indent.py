@@ -127,7 +127,7 @@ class IndentIndent(models.Model):
     def _compute_default_picking_type(self):
         for indent in self:
             picking_type_obj = indent.env['stock.picking.type']
-            picking_type_ids = picking_type_obj.search([('default_location_src_id', '=', indent.warehouse_id.lot_stock_id.id),('default_location_dest_id', '=', indent.stock_location_id.id)])
+            picking_type_ids = picking_type_obj.search([('default_location_src_id', '=', indent.warehouse_id.sudo().lot_stock_id.id),('default_location_dest_id', '=', indent.stock_location_id.id)])
             picking_type_id = picking_type_ids and picking_type_ids[0] or False
             indent.picking_type_id = picking_type_id
 
@@ -234,7 +234,7 @@ class IndentIndent(models.Model):
             indent.write(res)
 
     def _prepare_indent_line_move(self, line, picking_id, date_planned):
-        location_id = self.warehouse_id.lot_stock_id.id
+        location_id = self.warehouse_id.sudo().lot_stock_id.id
 
         res = {
             'name': line.name,
@@ -271,6 +271,7 @@ class IndentIndent(models.Model):
 
     def _prepare_indent_picking(self):
         pick_name = self.env['ir.sequence'].next_by_code('stock.picking')
+        location_id = self.warehouse_id.sudo().lot_stock_id.id
         res = {
             'invoice_state': 'none',
             'picking_type_id': self.picking_type_id.id,
@@ -281,9 +282,8 @@ class IndentIndent(models.Model):
             # 'type': 'internal',
             'move_type': self.move_type,
             'partner_id': self.indentor_id.partner_id.id or False,
-            'location_id': self.warehouse_id.lot_stock_id.id,
+            'location_id': location_id,
             'location_dest_id': self.stock_location_id.id,
-            'operating_unit_id': self.operating_unit_id.id
         }
         if self.company_id:
             res = dict(res, company_id=self.company_id.id)
@@ -410,8 +410,9 @@ class IndentProductLines(models.Model):
     @api.depends('product_id')
     @api.multi
     def _compute_product_qty(self):
-        location_id = self.indent_id.warehouse_id.sudo().lot_stock_id.id
-        product_quant = self.env['stock.quant'].search([('product_id', '=', self.product_id.id),
+        for product in self:
+            location_id = product.indent_id.warehouse_id.sudo().lot_stock_id.id
+            product_quant = self.env['stock.quant'].search([('product_id', '=', product.product_id.id),
                                                         ('location_id', '=', location_id)], limit=1)
-        quantity = sum([val.qty for val in product_quant])
-        self.qty_available = quantity
+            quantity = sum([val.qty for val in product_quant])
+            product.qty_available = quantity

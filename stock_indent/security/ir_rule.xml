@@ -19,7 +19,7 @@
         <field name="perm_create" eval="True"/>
         <field name="perm_write" eval="True"/>
         <field name="perm_unlink" eval="True"/>
-        <field name="groups" eval="[(4,ref('stock_indent.group_stock_indent_approver'))]"/>
+        <field name="groups" eval="[(4,ref('stock_indent.group_stock_indent_approver')),(4,ref('stock_indent.group_stock_indent_issuer')),(4,ref('stock.group_stock_user'))]"/>
     </record>
 </odoo>
 
