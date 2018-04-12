@@ -39,6 +39,8 @@
                                 <separator string="Applicant" colspan="2" attrs="{'invisible': [('type', '=', 'export')]}"/>
                                 <field name="first_party"/>
                                 <field name="first_party_bank"/>
+                                <field name="operating_unit_id" options="{'no_open':True,'no_quick_create':True,'no_create_edit':True}"/>
+
                             </group>
 
                             <group>
@@ -46,7 +48,6 @@
                                 <separator string="Applicant" colspan="2" attrs="{'invisible': [('type', '=', 'import')]}"/>
                                 <field name="second_party_applicant" attrs="{'invisible': [('type', '=', 'import')], 'required': [('type', '=', 'export')]}"/>
                                 <field name="second_party_beneficiary" attrs="{'invisible': [('type', '=', 'export')], 'required': [('type', '=', 'import')]}"/>
-
                                 <field name="second_party_bank"/>
                             </group>
 

@@ -242,8 +242,8 @@ class LetterOfCredit(models.Model):
         operating_unit_id = 0
         company_id = 0
         if len(lc_obj.po_ids) > 0:
-            operating_unit_id = lc_obj.po_ids.operating_unit_id.id
-            company_id = lc_obj.po_ids.company_id.id
+            operating_unit_id = lc_obj.po_ids[0].operating_unit_id.id
+            company_id = lc_obj.po_ids[0].company_id.id
 
         self.env['letter.credit'].search([('id', '=', self.id)]).po_ids.operating_unit_id.id
 
