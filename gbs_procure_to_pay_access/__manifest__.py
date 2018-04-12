@@ -17,7 +17,14 @@
     # any module necessary for this one to work correctly
     'depends': ['base',
                 'commercial',
+                'purchase',
+                'letter_of_credit',
+                'gbs_purchase_requisition',
                 'gbs_purchase_order',
+                'gbs_purchase_quotation_cnf',
+                'stock',
+                'purchase_requisition',
+                'lc_po_product',
 
     ],
 
@@ -25,6 +32,7 @@
     'data': [
         'security/security.xml',
         'security/ir.model.access.csv',
+        'security/ir_rule.xml',
         'views/menu_items.xml',
     ],
 }

@@ -9,7 +9,7 @@
             <field name="arch" type="xml" >
                 <form create="false" edit="false">
                     <group>
-                           <field name="employee_ids" widget="many2many_tags" nolabel="1" placeholder="Recipients" />
+                           <field name="user_ids" widget="many2many_tags" nolabel="1" placeholder="Recipients" />
                     </group>
                     <field name="subject" placeholder="Subject"/>
                     <field name="massage" nolabel="1" widget="html"/>

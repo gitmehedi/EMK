@@ -54,11 +54,17 @@
         <field name="sequence">80</field>
     </record>
 
-     <record id="gbs_group_quotation" model="res.groups">
+    <record id="gbs_group_quotation" model="res.groups">
         <field name="name">Quotation</field>
         <field name="category_id" ref="module_category_procure_to_pay"/>
         <field name="sequence">90</field>
-     </record>
+    </record>
+
+    <record id="group_approve_gate_in" model="res.groups">
+        <field name="name">Approve Gate In</field>
+        <field name="category_id" ref="module_category_procure_to_pay"/>
+        <field name="sequence">99</field>
+    </record>
 
 </odoo>
 

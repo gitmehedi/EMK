@@ -10,9 +10,10 @@
                       colors="gray:state=='approved';green:state=='waiting_approval';red:state=='reject';">
                     <field name="name" />
                     <field name="issuer_id" />
-                    <field name="issue_date" />
+                    <field name="request_date" />
                     <field name="company_id" />
                     <field name="operating_unit_id" />
+                    <field name="location_id" />
                     <field name="state" />
                     <field name="message_needaction" invisible="1"/>
                 </tree>
@@ -31,25 +32,24 @@
                                 class="oe_highlight" groups="gbs_application_group.group_head_of_plant"/>
                         <button name="button_reject" string="Reject" states="waiting_approval" type="object"
                                 groups="gbs_application_group.group_head_of_plant"/>
+                        <button string="Reset to Draft" name="action_draft" states="approved" type="object" attrs="{'invisible': [('state', 'in', ('draft','waiting_approval'))]}"/>
                         <field name="state" widget="statusbar"
                                statusbar_visible="draft,waiting_approval,approved"
                                statusbar_colors='{"reject":"red"}' />
                     </header>
                     <sheet>
                         <group col="2">
+                            <field name="picking_id" invisible="1"/>
                             <group>
                                 <field name="issuer_id" readonly="1" />
-                                <field name="issue_date" />
+                                <field name="request_date" />
                                 <field name="borrower_id"/>
+                            </group>
+                            <group>
                                 <field name="approved_date"/>
                                 <field name="approver_id"/>
                             </group>
-                            <group>
-                                <field name="company_id" groups="base.group_multi_company"
-                                       options="{'no_create': True,'no_open':True}"/>
-                                <field name="operating_unit_id" options="{'no_create': True,'no_open':True}"
-                                       groups="operating_unit.group_multi_operating_unit" />
-                            </group>
+
                         </group>
                         <notebook>
                             <page string="Items">
@@ -61,12 +61,28 @@
                                         <field name="qty_available" readonly="1"/>
                                         <field name="product_uom" string="UOM"/>
                                         <field name="product_uom_qty" sum="Total Qty"/>
+                                        <field name="state" invisible="1"/>
                                     </tree>
                                 </field>
                                 <div class="oe_clear">
                                     <label for="description" />
                                 </div>
                                 <field name="description" placeholder="The material ..." />
+                            </page>
+                            <page string="Others">
+                                <group>
+                                    <group>
+                                        <field name="company_id" groups="base.group_multi_company"
+                                               options="{'no_create': True,'no_open':True}"/>
+                                        <field name="operating_unit_id" options="{'no_create': True,'no_open':True}"
+                                               groups="operating_unit.group_multi_operating_unit" />
+                                        <field name="location_id" options="{'no_create': True,'no_open':True}"/>
+                                    </group>
+                                    <group>
+                                        <field name="item_loan_location_id" />
+                                        <field name="picking_type_id" />
+                                    </group>
+                                </group>
                             </page>
                         </notebook>
                     </sheet>

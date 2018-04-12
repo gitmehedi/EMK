@@ -9,8 +9,9 @@
             <field name="arch" type="xml">
                 <form string="Delivery Order" delete="false" copy='0'>
                     <header>
-                        <button name="action_validate" type="object" states="draft" string="Confirm" class="oe_highlight"
-                        groups="account.group_account_user,gbs_application_group.group_head_account,gbs_application_group.group_cxo"/>
+                        <button name="action_validate" type="object" states="draft" string="Confirm"
+                                class="oe_highlight"
+                                groups="account.group_account_user,gbs_application_group.group_head_account,gbs_application_group.group_cxo"/>
 
                         <button name="action_draft" type="object"
                                 states="validate" string="Reset to Draft"
@@ -37,7 +38,7 @@
 
                     </header>
                     <sheet>
-                         <div class="oe_button_box" name="button_box">
+                        <div class="oe_button_box" name="button_box">
                             <button type="object" string="Process Payments"
                                     name="action_process_unattached_payments"
                                     groups="account.group_account_user,gbs_application_group.group_head_account,gbs_application_group.group_cxo"
@@ -45,36 +46,39 @@
                                     attrs="{'invisible':['|', ('state','=','close'), ('so_type', '!=', 'cash')]}"
                                     icon="fa-usd">
                             </button>
-                         </div>
+                        </div>
 
-                         <div class="oe_button_box oe_right" name="button_box">
+                        <div class="oe_button_box oe_right" name="button_box">
                             <button type="object"
-                                name="action_view_delivery"
-                                class="oe_stat_button"
-                                icon="fa-truck"
-                                attrs="{'invisible': [('state','!=','close')]}"
-                                groups="account.group_account_user,gbs_application_group.group_head_account,gbs_application_group.group_cxo">
-                                <field name="delivery_count" widget="statinfo" string="Delivery"/>
+                                    name="action_view_delivery_order"
+                                    class="oe_stat_button"
+                                    icon="fa-truck" string="Delivery Order"
+                                    attrs="{'invisible': [('state','!=','close')]}"
+                                    groups="account.group_account_user,gbs_application_group.group_head_account,gbs_application_group.group_cxo">
+                                <!--<field name="delivery_count" widget="statinfo" string="Delivery"/>-->
                             </button>
-                         </div>
+                        </div>
 
-	                    <h1>
-	                        <field name="name"/>
+                        <h1>
+                            <field name="name"/>
                             <!--<field name="da_button_show" invisible="1"/>-->
-	                    </h1>
+                        </h1>
                         <group>
                             <group>
                                 <field name="sale_order_id"/>
                                 <field name="deli_address"/>
                             </group>
                             <group>
-                                <field name="parent_id" options="{'no_quick_create':True,'no_create_edit':True,'no_open':True}"/>
+                                <field name="parent_id"
+                                       options="{'no_quick_create':True,'no_create_edit':True,'no_open':True}"/>
                                 <field name="so_type"/>
                                 <field name="company_id" invisible="1"/>
                                 <field name="so_date"/>
 
-                                <field name="pi_no" attrs="{'invisible':[('so_type', '!=', 'lc_sales')]}" options="{'no_quick_create':True,'no_create_edit':True,'no_open':True}"/>
-                                <field name="lc_no" attrs="{'invisible':[('so_type', '!=', 'lc_sales')]}" options="{'no_quick_create':True,'no_create_edit':True,'no_open':True}"/>
+                                <field name="pi_no" attrs="{'invisible':[('so_type', '!=', 'lc_sales')]}"
+                                       options="{'no_quick_create':True,'no_create_edit':True,'no_open':True}"/>
+                                <field name="lc_no" attrs="{'invisible':[('so_type', '!=', 'lc_sales')]}"
+                                       options="{'no_quick_create':True,'no_create_edit':True,'no_open':True}"/>
 
                             </group>
 
@@ -82,9 +86,11 @@
                                 <page string="Products">
                                     <field name="line_ids">
                                         <tree string="List" editable="bottom">
-                                            <field name="product_id" options="{'no_quick_create':True,'no_create_edit':True}"/>
+                                            <field name="product_id"
+                                                   options="{'no_quick_create':True,'no_create_edit':True}"/>
                                             <field name="quantity" string="Ordered Qty"/>
-                                            <field name="uom_id" string="UoM" options="{'no_quick_create':True,'no_create_edit':True}"/>
+                                            <field name="uom_id" string="UoM"
+                                                   options="{'no_quick_create':True,'no_create_edit':True}"/>
                                             <field name="pack_type"/>
                                             <field name="deli_mode" invisible="1"/>
                                             <field name="commission_rate"/>
@@ -104,9 +110,14 @@
                                             <field name="requested_date"/>
                                         </group>
                                         <group>
-                                            <field name="approver1_id" attrs="{'invisible': [('state','in',('draft','validate','approve'))]}" options="{'no_open': True, 'no_create': True}"/>
-                                            <field name="confirmed_date" attrs="{'invisible': [('state','in',('draft','validate','approve'))]}"/>
-                                            <field name="approver2_id" attrs="{'invisible':['|', ('state','=','draft'),('state','=','validate')]}" options="{'no_open': True, 'no_create': True}"/>
+                                            <field name="approver1_id"
+                                                   attrs="{'invisible': [('state','in',('draft','validate','approve'))]}"
+                                                   options="{'no_open': True, 'no_create': True}"/>
+                                            <field name="confirmed_date"
+                                                   attrs="{'invisible': [('state','in',('draft','validate','approve'))]}"/>
+                                            <field name="approver2_id"
+                                                   attrs="{'invisible':['|', ('state','=','draft'),('state','=','validate')]}"
+                                                   options="{'no_open': True, 'no_create': True}"/>
                                             <field name="approved_date"/>
                                         </group>
                                     </group>
@@ -144,7 +155,7 @@
                                             <field name="bank"/>
                                             <field name="branch"/>
                                             <field name="amount"/>
-                                             <field name="date"/>
+                                            <field name="date"/>
                                         </tree>
                                     </field>
                                 </page>
@@ -165,10 +176,12 @@
                                 </page>
                             </notebook>
                             <group class="oe_subtotal_footer oe_right" colspan="2" name="sale_total">
-                                <field name="amount_untaxed" widget='monetary' options="{'currency_field': 'currency_id'}"/>
+                                <field name="amount_untaxed" widget='monetary'
+                                       options="{'currency_field': 'currency_id'}"/>
                                 <field name="tax_value" widget='monetary' options="{'currency_field': 'currency_id'}"/>
-                                <field name="total_amount" class="oe_subtotal_footer_separator" widget='monetary' options="{'currency_field': 'currency_id'}"/>
-                         </group>
+                                <field name="total_amount" class="oe_subtotal_footer_separator" widget='monetary'
+                                       options="{'currency_field': 'currency_id'}"/>
+                            </group>
                         </group>
                     </sheet>
                     <div class="oe_chatter">
@@ -201,7 +214,6 @@
             <field name="padding">6</field>
         </record>
 
-
         <record model="ir.actions.act_window" id="delivery_order_action">
             <field name="name">Delivery Authorization</field>
             <field name="res_model">delivery.order</field>
@@ -211,8 +223,11 @@
         <menuitem id="delivery_order_menu" name="Delivery Authorization" parent="sales_team.menu_base_partner"
                   groups="account.group_account_user,gbs_application_group.group_head_account,gbs_application_group.group_cxo"
                   sequence="12" action="delivery_order_action"/>
+
         <menuitem id="delivery_order_submenu" name="Delivery Authorization" parent="delivery_order_menu"
                   groups="account.group_account_user,gbs_application_group.group_head_account,gbs_application_group.group_cxo"
                   action="delivery_order_action"/>
+
+
     </data>
 </odoo>

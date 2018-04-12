@@ -2,7 +2,7 @@
     'name': 'Indent Management',
     'version': '10.0.1',
     'category': 'Warehouse Management',
-    'depends': ['stock',
+    'depends': ['gbs_stock_product',
                 'account',
                 'ir_sequence_operating_unit',
                 'indent_type',

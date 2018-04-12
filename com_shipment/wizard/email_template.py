@@ -4,23 +4,26 @@ from odoo import api, fields, models
 class EmailTemplateWizard(models.TransientModel):
     _name = 'email.template.wizard'
 
+    def _load_all_employee(self):
+        return self.env['hr.employee'].sudo().search([])
 
     subject = fields.Char('Subject', required= True)
-    employee_ids = fields.Many2many('hr.employee', string="Send To", required=True)
+    # employee_ids = fields.Many2many('hr.employee', string="Send To", required=True, default=_load_all_employee)
+    user_ids = fields.Many2many('res.users', string="Send To", required=True)
     massage = fields.Text('Notes', required=True)
 
 
     @api.multi
     def sendMail(self):
 
-        if len(self.employee_ids) == 0:
+        if len(self.user_ids) == 0:
             return
 
         email_server_list = []
         email_list = []
-        for emp in self.employee_ids:
-            if emp.work_email:
-                email_list.append((emp.work_email).strip())
+        for user in self.user_ids:
+            if user.login:
+                email_list.append((user.login).strip())
 
         template_obj = self.env['mail.mail']
         email_server_obj = self.env['ir.mail_server'].search([], order='id ASC')

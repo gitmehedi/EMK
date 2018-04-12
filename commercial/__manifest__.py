@@ -4,10 +4,11 @@
     'website': 'www.genweb2.com',
     'category': 'Commercial',
     'version':'1.0.0',
-    'depends': [
+    'depends': ['base',
     ],
 
     'data': [
+        'security/commercial_security.xml',
         'views/commercial_menu.xml'
     ],
 

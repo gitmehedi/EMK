@@ -26,11 +26,12 @@
         'wizards/letter_of_credits_view.xml',
         'wizards/do_max_order_qty_without_lc_views.xml',
         'views/delivery_order_view.xml',
+        'views/delivery_order_layer_view.xml',
         'views/inherited_account_payment_view.xml',
         'report/money_receipt_paperformat.xml',
         'report/cash_received_report.xml',
         'report/cash_received_report_view.xml',
-
+        'views/inherit_stock_picking_view.xml',
     ],
 
     'summary': 'Delivery Authorization',

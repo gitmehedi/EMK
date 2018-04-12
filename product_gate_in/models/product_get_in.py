@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
 
-from odoo import models, fields, api
+from odoo import models, fields, api,_
 
 class productGateIn(models.Model):
     _name = 'product.gate.in'
+
 
     name = fields.Char(string='Name', index=True, readonly=True)
     create_by = fields.Char('Carried By', readonly=True, states={'draft': [('readonly', False)]})
@@ -19,10 +20,9 @@ class productGateIn(models.Model):
     company_id = fields.Many2one('res.company', string='Company', readonly=True, states={'draft': [('readonly', False)]},
                                  default=lambda self: self.env.user.company_id, required=True)
     ship_id = fields.Many2one('purchase.shipment', string='Shipment Number',
-                              required=True, states={'confirm': [('readonly', True)]})
-    # lc_id = fields.Many2one('letter.credit', string='LC', required=True,
-    #                         states={'confirm': [('readonly', True)]},
-    #                         domain=['&', ('state', '=', 'progress'), ('type', '=', 'import')])
+                              required=True, states={'confirm': [('readonly', True)]},
+                              domain="['&','&','&',('operating_unit_id','=',operating_unit_id),('state','in',('cnf_clear', 'gate_in', 'done')),('lc_id.state','!=','done'),('lc_id.state','!=','cancel')]")
+
 
     date = fields.Date(string="Date")
     receive_type = fields.Selection([
@@ -56,13 +56,6 @@ class productGateIn(models.Model):
         vals['name'] = seq
         return super(productGateIn, self).create(vals)
 
-
-    #show shipment line in ship_id combo with match lc_id
-    # @api.onchange('lc_id')
-    # def _onchange_aml_data(self):
-    #     if self.lc_id:
-    #         com_obj = self.env['purchase.shipment'].search([('lc_id', '=', self.lc_id.id)])
-    #         return {'domain': {'ship_id': ['&',('id', 'in', com_obj.ids), ('state', 'in', ['cnf_clear','gate_in'])]}}
 
     # change data and line data depands on ship_id
     @api.onchange('ship_id')

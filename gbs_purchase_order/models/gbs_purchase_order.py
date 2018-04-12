@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from odoo import models, fields, api, _
 from odoo.exceptions import ValidationError
+from datetime import datetime
 
 
 class PurchaseOrder(models.Model):
@@ -155,8 +156,18 @@ class PurchaseOrder(models.Model):
     @api.model
     def create(self, vals):
         if vals.get('name', 'New') == 'New':
-            vals['name'] = self.env['ir.sequence'].next_by_code('purchase.quotation') or '/'
+            requested_date = datetime.strptime(vals['date_order'], "%Y-%m-%d %H:%M:%S").date()
+            vals['name'] = self.env['ir.sequence'].next_by_code_new('purchase.quotation',requested_date) or '/'
+        if not vals.get('requisition_id'):
+            vals['check_po_action_button'] = True
         return super(PurchaseOrder, self).create(vals)
+
+    @api.multi
+    def write(self, vals):
+        if vals.get('requisition_id'):
+            vals['check_po_action_button'] = False
+        res = super(PurchaseOrder, self).write(vals)
+        return res
 
     def unlink(self):
         for indent in self:

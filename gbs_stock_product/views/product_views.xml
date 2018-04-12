@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="product_product_tree_view1" model="ir.ui.view">
+            <field name="name">product.product.tree1</field>
+            <field name="model">product.product</field>
+            <field eval="1" name="priority"/>
+            <field name="arch" type="xml">
+                <tree string="Product Variants">
+                    <field name="default_code"/>
+                    <field name="name"/>
+                    <field name="lst_price"/>
+                    <field name="price"/>
+                    <field name="uom_id"/>
+                </tree>
+            </field>
+        </record>
+    </data>
+</odoo>

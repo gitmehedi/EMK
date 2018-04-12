@@ -7,21 +7,19 @@
             <field name="type">form</field>
             <field name="arch" type="xml" >
                 <form string="LC Done Confirmation">
-                    <group>
-                        <field name="text" colspan="4" nolabel="1" readonly="1"  widget="html"/>
-                        <field name="product_lines">
-                             <tree string="Purchase Order Lines" create="false" delete="false">
-                                <field name="product_id" readonly='1'/>
-                                <field name="name" readonly='1'/>
-                                <field name="date_planned" readonly='1'/>
-                                <field name="product_qty" readonly='1'/>
-                                <field name="product_uom" readonly='1'/>
-                                 <field name="product_received_qty" readonly='1'/>
-                            </tree>
+                    <field name="text" style="font-weight: bold;" colspan="4" nolabel="1" readonly="1"  widget="html"/>
+                    <separator string="Product List"/>
+                    <field name="product_lines" nolabel="1">
+                         <tree string="Purchase Order Lines" create="false" delete="false">
+                            <field name="product_id" readonly='1'/>
+                            <field name="name" readonly='1'/>
+                            <field name="date_planned" readonly='1'/>
+                            <field name="product_qty" readonly='1'/>
+                            <field name="product_uom" readonly='1'/>
+                             <field name="product_received_qty" readonly='1'/>
+                        </tree>
+                    </field>
 
-                        </field>
-
-                    </group>
                     <footer>
                         <button string="Yes" name="do_lc_done" type="object" class="oe_highlight"/>
                         <button special="cancel" string="No" type="object"/>
