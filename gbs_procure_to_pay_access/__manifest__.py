@@ -26,7 +26,7 @@
                 'purchase_requisition',
                 'question_set',
                 'letter_of_credit_done',
-
+                'lc_po_product',
     ],
 
     # always loaded
