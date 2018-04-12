@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record model="ir.ui.view" id="inherited_hr_applicant_bmb">
+        <field name="name">Jobs - Recruitment Form</field>
+        <field name="model">hr.applicant</field>
+        <field name="inherit_id" ref="hr_recruitment.crm_case_form_view_job"/>
+        <field name="priority" eval="20"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@class='oe_title']" position="after">
+                <group>
+                    <group>
+                        <field name="father_name"/>
+                        <field name="mother_name"/>
+                        <field name="national_id"/>
+                        <field name="birth_registration_no"/>
+                        <field name="birth_date"/>
+                    </group>
+                    <group>
+                        <field name="birth_city"/>
+                        <field name="nationality"/>
+                        <field name="gender"/>
+                        <field name="religion"/>
+                        <field name="occupation"/>
+                    </group>
+                </group>
+                <group>
+                    <group string="Present Address">
+                        <field name="pre_address_1"/>
+                        <field name="pre_address_2"/>
+                        <field name="pre_city_town"/>
+                        <field name="pre_state_province"/>
+                        <field name="pre_zip_postal"/>
+                        <field name="pre_district"/>
+                    </group>
+                    <group string="Permanent Address">
+                        <field name="per_address_1"/>
+                        <field name="per_address_2"/>
+                        <field name="per_city_town"/>
+                        <field name="per_state_province"/>
+                        <field name="per_zip_postal"/>
+                        <field name="per_district"/>
+                    </group>
+                </group>
+                <group>
+                    <group>
+                        <field name="treasury_challan"/>
+                        <field name="treasury_date"/>
+                        <field name="bank_branch_name"/>
+                    </group>
+                    <group>
+                        <field name="quota"/>
+                        <field name="divisional_candiate"/>
+                        <field name="ex_service_personnel"/>
+                    </group>
+                </group>
+                <group>
+                    <group>
+                       <field name="experience_remarks"/>
+                       <field name="authorize_district"/>
+                    </group>
+                    <group>
+                        <field name="curriculam_activities"/>
+                    </group>
+                </group>
+            </xpath>
+        </field>
+    </record>
+</odoo>
