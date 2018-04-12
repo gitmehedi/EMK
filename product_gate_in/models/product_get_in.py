@@ -57,13 +57,6 @@ class productGateIn(models.Model):
         return super(productGateIn, self).create(vals)
 
 
-    #show shipment line in ship_id combo with match lc_id
-    # @api.onchange('lc_id')
-    # def _onchange_aml_data(self):
-    #     if self.lc_id:
-    #         com_obj = self.env['purchase.shipment'].search([('lc_id', '=', self.lc_id.id)])
-    #         return {'domain': {'ship_id': ['&',('id', 'in', com_obj.ids), ('state', 'in', ['cnf_clear','gate_in'])]}}
-
     # change data and line data depands on ship_id
     @api.onchange('ship_id')
     def set_products_info_automatically(self):

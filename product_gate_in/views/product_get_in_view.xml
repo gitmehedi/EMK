@@ -8,9 +8,8 @@
             <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Product Get In Form">
-                    <field name="name" />
-                    <!--<field name="lc_id" />-->
-                    <field name="ship_id" />
+                    <field name="name"/>
+                    <field name="ship_id"/>
                     <field name="challan_bill_no"/>
                     <field name="received"/>
                     <field name="operating_unit_id"/>
@@ -26,55 +25,57 @@
             <field name="model">product.gate.in</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-               <form string="Product Get In Form">
-                   <header>
-                       <button string="Confirm" name="action_confirm" states="draft" type="object" groups="hr.group_hr_user" class="oe_highlight"/>
-                       <button name="action_draft" type="object"
-                                    string="Set to Draft"
-                                    states="confirm"/>
-                      <field name="state" widget="statusbar" statusbar_visible="draft,confirm"/>
-                   </header>
-                   <sheet>
-                       <group>
-                          <group>
-                              <field name="receive_type" placeholder="Please Select"/>
-                              <field name="date"/>
-                              <!--<field name="lc_id" options="{'no_quick_create':True,'no_create_edit':True,'no_open': True}" attrs="{'invisible': [('receive_type', '!=', 'lc')]}"/>-->
-                              <field name="challan_bill_no"/>
-                              <field name="truck_no"/>
-                          </group>
-                          <group>
-                              <field name="ship_id" options="{'no_quick_create':True,'no_create_edit':True,'no_open': True}" attrs="{'invisible': [('receive_type', '!=', 'lc')]}"/>
-                              <field name="create_by"/>
-                              <field name="received"/>
-                          </group>
-                       </group>
-                       <notebook colspan="4">
-                          <page string="Products">
-                              <field name="shipping_line_ids">
-                                  <tree string="Purchase Order Lines" create="false" editable="false">
-                                      <field name="product_id" readonly="1"/>
-                                      <field name="product_qty" />
-                                      <field name="product_uom" readonly="1"/>
-                                      <field name="state" invisible="1"/>
-                                  </tree>
-                              </field>
-                          </page>
-                           <page string="Others">
-                               <group>
-                                   <group>
+                <form string="Product Get In Form">
+                    <header>
+                        <button string="Confirm" name="action_confirm" states="draft" type="object"
+                                groups="hr.group_hr_user" class="oe_highlight"/>
+                        <button name="action_draft" type="object"
+                                string="Set to Draft"
+                                states="confirm"/>
+                        <field name="state" widget="statusbar" statusbar_visible="draft,confirm"/>
+                    </header>
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="receive_type" placeholder="Please Select"/>
+                                <field name="date"/>
+                                <field name="challan_bill_no"/>
+                                <field name="truck_no"/>
+                            </group>
+                            <group>
+                                <field name="ship_id"
+                                       options="{'no_quick_create':True,'no_create_edit':True,'no_open': True}"
+                                       attrs="{'invisible': [('receive_type', '!=', 'lc')]}"/>
+                                <field name="create_by"/>
+                                <field name="received"/>
+                            </group>
+                        </group>
+                        <notebook colspan="4">
+                            <page string="Products">
+                                <field name="shipping_line_ids">
+                                    <tree string="Purchase Order Lines" create="false" editable="false">
+                                        <field name="product_id" readonly="1"/>
+                                        <field name="product_qty"/>
+                                        <field name="product_uom" readonly="1"/>
+                                        <field name="state" invisible="1"/>
+                                    </tree>
+                                </field>
+                            </page>
+                            <page string="Others">
+                                <group>
+                                    <group>
                                         <field name="company_id" groups="base.group_multi_company"
-                                                   options="{'no_create': True,'no_open':True}"/>
+                                               options="{'no_create': True,'no_open':True}"/>
                                         <field name="operating_unit_id" options="{'no_create': True,'no_open':True}"
-                                               groups="operating_unit.group_multi_operating_unit" />
-                                   </group>
-                               </group>
+                                               groups="operating_unit.group_multi_operating_unit"/>
+                                    </group>
+                                </group>
 
-                          </page>
-                       </notebook>
-                   </sheet>
+                            </page>
+                        </notebook>
+                    </sheet>
 
-               </form>
+                </form>
             </field>
         </record>
 
@@ -85,17 +86,19 @@
             <field name="view_mode">tree,form</field>
         </record>
 
-         <!-- actions views for gate in button box -->
-        <record model="ir.actions.act_window" id="product_gate_in_action_window1">
+        <!-- actions views for gate in button box -->
+        <record model="ir.actions.act_window" id="act_product_gate_in">
             <field name="name">Product Gate In</field>
             <field name="res_model">product.gate.in</field>
-            <field name="context">{'search_default_ship_id': ship_id}</field>
+            <field name="domain">[('ship_id.id','=',active_id)]</field>
             <field name="view_mode">tree,form</field>
         </record>
 
         <!-- menu categories -->
-        <menuitem name="Product Gate In" id="product_gate_in_menu" parent="stock.menu_stock_root" groups="gbs_procure_to_pay_access.group_approve_gate_in"/>
-        <menuitem name="Gate In" id="product_gate_in_sub_menu" parent="product_gate_in_menu" sequence="5" action="product_gate_in_action_window" groups="gbs_procure_to_pay_access.group_approve_gate_in"/>
+        <menuitem name="Product Gate In" id="product_gate_in_menu" parent="stock.menu_stock_root"
+                  groups="gbs_procure_to_pay_access.group_approve_gate_in"/>
+        <menuitem name="Gate In" id="product_gate_in_sub_menu" parent="product_gate_in_menu" sequence="5"
+                  action="product_gate_in_action_window" groups="gbs_procure_to_pay_access.group_approve_gate_in"/>
 
 
     </data>
