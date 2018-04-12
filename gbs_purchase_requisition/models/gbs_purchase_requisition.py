@@ -8,6 +8,8 @@ from odoo.addons import decimal_precision as dp
 class PurchaseRequisition(models.Model):
     _inherit = 'purchase.requisition'
 
+    _order = "requisition_date desc"
+
     name = fields.Char(string='Purchase Requisition',default='/')
     department_id = fields.Many2one('hr.department',string='Department', store=True)
     operating_unit_id = fields.Many2one('operating.unit', 'Operating Unit', required=True,
