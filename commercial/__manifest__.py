@@ -8,6 +8,7 @@
     ],
 
     'data': [
+        'security/commercial_security.xml',
         'views/commercial_menu.xml'
     ],
 
