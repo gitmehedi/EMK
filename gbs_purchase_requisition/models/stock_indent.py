@@ -8,7 +8,7 @@ class StockIndent(models.Model):
     @api.multi
     def _compute_pr_issued(self):
         for indent in self:
-            pool_pr_obj = self.env['purchase.requisition'].search([('indent_ids', '=', indent.id)])
+            pool_pr_obj = self.env['purchase.requisition'].sudo().search([('indent_ids', '=', indent.id)])
             if pool_pr_obj:
                 query = """SELECT 
                                     product_id,sum(product_ordered_qty) as ordered_qty  
