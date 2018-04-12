@@ -23,7 +23,9 @@
                 'gbs_purchase_order',
                 'gbs_purchase_quotation_cnf',
                 'stock',
-                'purchase_requisition'
+                'purchase_requisition',
+                'question_set',
+                'letter_of_credit_done',
 
     ],
 
