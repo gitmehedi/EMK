@@ -37,5 +37,5 @@
         <menuitem id="submenu_commercial_products" name="Products" parent="menu_commercial_configuration"
                 sequence="2" action="product.product_template_action"/>
 
-    </data>z
+    </data>
 </odoo>
