@@ -191,8 +191,7 @@ class IndentIndent(models.Model):
     def approve_indent(self):
         self.check_approval()
         self.state = 'inprogress'
-        for indent in self:
-            indent.action_picking_create()
+
 
     @api.multi
     def check_approval(self):
@@ -353,6 +352,9 @@ class IndentIndent(models.Model):
         This function returns an action that display existing picking orders of given purchase order ids.
         When only one found, show the picking immediately.
         '''
+        for indent in self:
+            indent.action_picking_create()
+
         action = self.env.ref('stock.action_picking_tree')
         result = action.read()[0]
         # override the context to get rid of the default filtering on picking type

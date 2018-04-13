@@ -23,7 +23,8 @@
         'stock_operating_unit_extend',
     ],
     'data': [
-        # 'security/ir.model.access.csv',
+        'security/ir.model.access.csv',
+        'security/ir_rule.xml',
         'data/sequence_po.xml',
         'wizard/po_wizard_view.xml',
         'views/gbs_purchase_order_views.xml',
