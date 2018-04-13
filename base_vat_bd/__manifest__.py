@@ -1,5 +1,5 @@
 {
-    'name': 'Customers',
+    'name': 'Customers Trade and VAT license',
     'version': '10.0.1.0.0',
     'author': 'Genweb2 Limited',
     'website': 'http://www.genweb2.com',
@@ -11,7 +11,7 @@
     'data': [
         'views/inherited_res_partner_view.xml',
         ],
-    'description': 'Customer TEX And VAT Registration Details',
+    'description': 'Customer TAX And VAT Registration Details',
     'installable': True,
     'application': True,
 }

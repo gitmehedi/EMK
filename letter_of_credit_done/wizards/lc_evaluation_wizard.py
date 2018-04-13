@@ -11,10 +11,10 @@ class EvaluationJudgement(models.TransientModel):
 
     @api.model
     def _load_judgement(self):
-        form_id = self.env.context.get('active_id')
-        evalution = self.env['letter.credit'].search([('id', '=', form_id)])
+        form_id = self.env.context.get('lc_id')
+        lc = self.env['letter.credit'].search([('id', '=', form_id)])
         evalution_ids = self.criteria_line_ids
-        for record in evalution.gate_in_ids:
+        for record in lc.lc_evaluation_lines:
             evalution_ids += evalution_ids.new({
                 'parent_id': record.id,
                 'name': record.name,
@@ -28,8 +28,8 @@ class EvaluationJudgement(models.TransientModel):
 
     @api.multi
     def save_evaluating(self):
-        form_id = self.env.context.get('active_id')
-        lc_pool = self.env['letter.credit'].search([('id', '=', form_id)])
+        lc_id = self.env.context.get('lc_id')
+        lc_pool = self.env['letter.credit'].search([('id', '=', lc_id)])
         lc_pool.write(
             {'comment': self.comment,
              'state': 'done'

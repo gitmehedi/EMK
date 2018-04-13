@@ -19,6 +19,8 @@
         'purchase_order_revision',
         'gbs_purchase_requisition',
         'commercial',
+        'ir_sequence_operating_unit',
+        'stock_operating_unit_extend',
     ],
     'data': [
         # 'security/ir.model.access.csv',

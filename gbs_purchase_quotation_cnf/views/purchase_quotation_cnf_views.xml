@@ -38,7 +38,7 @@
                             <page string="Services">
                                 <field name="order_line" >
                                     <tree string="Services" editable="bottom">
-                                        <field name="product_id" string="Service" domain="[('type','=','Service')]"/>
+                                        <field name="product_id" string="Service" domain="[('type','=','service')]"/>
                                         <field name="name"/>
                                         <field name="date_planned" string="Service date"/>
                                         <field name="product_qty"/>
@@ -75,24 +75,14 @@
             </field>
         </record>
 
-        <record id="view_cnf_quotation_filter" model="ir.ui.view">
-            <field name="name">C&amp;F Quotation Search</field>
-            <field name="model">purchase.order</field>
-            <field name="arch" type="xml">
-                <search string="C&amp;F">
-                    <filter name="cnf_quotation" string="C&amp;F" domain="[('cnf_quotation', '=', True)]"/>
-                </search>
-            </field>
-        </record>
-
         <record model="ir.actions.act_window" id="action_cnf_quotation">
             <field name="name">C&amp;F Quotation</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">purchase.order</field>
             <field name="view_type">form</field>
             <field name="view_id" ref="view_cnf_quotation_tree"/>
-            <field name="search_view_id" ref="view_cnf_quotation_filter"/>
-            <field name="context">{'default_cnf_quotation':True,'search_default_cnf_quotation': 1}</field>
+            <field name="context">{'default_cnf_quotation':True}</field>
+            <field name="domain">[('cnf_quotation','=',True)]</field>
             <field name="help" type="html">
                 <p>
                     Here you can see C&amp;F  quotation list.

@@ -5,7 +5,7 @@ import time, datetime
 
 class DeliveryOrder(models.Model):
     _name = 'delivery.order'
-    _description = 'Delivery Order'
+    _description = 'Delivery Authorization'
     _inherit = ['mail.thread']
     _rec_name = 'name'
     _order = "approved_date desc,name desc"
@@ -37,7 +37,7 @@ class DeliveryOrder(models.Model):
     approver1_id = fields.Many2one('res.users', string="First Approval", readonly=True)
     approver2_id = fields.Many2one('res.users', string="Final Approval", readonly=True)
     requested_date = fields.Date(string="Requested Date", default=datetime.date.today(), readonly=True)
-    approved_date = fields.Date(string='Approval Date',
+    approved_date = fields.Date(string='Final Approval Date',
                                 states={'draft': [('invisible', True)],
                                         'validate': [('invisible', True)],
                                         'close': [('invisible', False), ('readonly', True)],
@@ -113,28 +113,55 @@ class DeliveryOrder(models.Model):
 
     """ DO button box action """
 
-    @api.multi
-    def action_view_delivery(self):
-        '''
-        This function returns an action that display existing delivery orders
-        of given sales order ids. It can either be a in a list or in a form
-        view, if there is only one delivery order to show.
-        '''
-        action = self.env.ref('stock.action_picking_tree_all').read()[0]
+    # @api.multi
+    # def action_view_delivery(self):
+    #     '''
+    #     This function returns an action that display existing delivery orders
+    #     of given sales order ids. It can either be a in a list or in a form
+    #     view, if there is only one delivery order to show.
+    #     '''
+    #     action = self.env.ref('stock.action_picking_tree_all').read()[0]
+    #
+    #     pickings = self.sale_order_id.mapped('picking_ids')
+    #     if len(pickings) > 1:
+    #         action['domain'] = [('id', 'in', pickings.ids)]
+    #     elif pickings:
+    #         action['views'] = [(self.env.ref('stock.view_picking_form').id, 'form')]
+    #         action['res_id'] = pickings.id
+    #     return action
 
-        pickings = self.sale_order_id.mapped('picking_ids')
-        if len(pickings) > 1:
-            action['domain'] = [('id', 'in', pickings.ids)]
-        elif pickings:
-            action['views'] = [(self.env.ref('stock.view_picking_form').id, 'form')]
-            action['res_id'] = pickings.id
-        return action
+    @api.multi
+    def action_view_delivery_order(self):
+
+    # @api.model
+    # def create(self, vals):
+    #     seq = self.env['ir.sequence'].next_by_code('delivery.order.layer') or '/'
+    #     vals['name'] = seq
+    #
+    #     return super(DeliveryOrderLayer, self).create(vals)
+
+        view = self.env.ref('delivery_order.delivery_order_layer_form')
+
+        return {
+            'name': ('Delivery Order'),
+            'view_type': 'form',
+            'view_mode': 'form',
+            'res_model': 'delivery.order.layer',
+            #'domain': [('sale_order_id', '=', self.sale_order_id.id)],#so_do_id
+            'context': {'default_delivery_order_id': self.id,'default_sale_order_id': self.sale_order_id.id},
+            'view_id': [view.id],
+            'type': 'ir.actions.act_window'
+        }
+
 
     """ Action for Validate Button"""
 
     @api.one
     def action_approve(self):
         self.state = 'validate'
+        self.approver2_id = self.env.user
+        self.approved_date = time.strftime('%Y-%m-%d %H:%M:%S')
+
 
     """ Action for Approve Button"""
 
@@ -147,7 +174,7 @@ class DeliveryOrder(models.Model):
              ('partner_id', '=', self.parent_id.id)])
         account_payment_pool.write({'is_this_payment_checked': True})
 
-        self.create_delivery_order()
+        #self.create_delivery_order()
         self.update_sale_order_da_qty()
         return self.write({'state': 'close', 'confirmed_date': time.strftime('%Y-%m-%d %H:%M:%S')})
 
@@ -170,7 +197,7 @@ class DeliveryOrder(models.Model):
 
             if self.lc_no and self.pi_no:
                 if self.lc_no.lc_value >= self.total_sub_total_amount():
-                    self.create_delivery_order()
+                   # self.create_delivery_order()
                     self.update_sale_order_da_qty()
                     self.write({'state': 'close'})  # Final Approval
                 else:
@@ -198,7 +225,7 @@ class DeliveryOrder(models.Model):
 
                         self.env['ordered.qty'].create(res)
 
-                        self.create_delivery_order()
+                        #self.create_delivery_order()
                         self.update_sale_order_da_qty()
 
                         self.write({'state': 'close'})  # Final Approval
@@ -214,7 +241,7 @@ class DeliveryOrder(models.Model):
                                     if res['available_qty'] > 100:
                                         res['available_qty'] = 0
 
-                                    self.create_delivery_order()
+                                    #self.create_delivery_order()
                                     self.update_sale_order_da_qty()
 
                                     self.write({'state': 'close'})  # Final Approval
@@ -238,13 +265,13 @@ class DeliveryOrder(models.Model):
                             'context': {'delivery_order_id': self.id, 'product_name': product_pool.display_name}
                         }
             else:
-                self.create_delivery_order()
+                #self.create_delivery_order()
                 self.update_sale_order_da_qty()
 
                 self.state = 'approve'  # second
 
         elif self.so_type == 'credit_sales':
-            self.create_delivery_order()
+           # self.create_delivery_order()
             self.update_sale_order_da_qty()
             self.state = 'close'
 
@@ -284,7 +311,7 @@ class DeliveryOrder(models.Model):
 
         if total_cash_cheque_amount >= self.total_amount:
             account_payment_pool.write({'is_this_payment_checked': True})
-            self.create_delivery_order()
+           # self.create_delivery_order()
             self.update_sale_order_da_qty()
             return self.write({'state': 'close'})  # directly go to final approval level
         else:

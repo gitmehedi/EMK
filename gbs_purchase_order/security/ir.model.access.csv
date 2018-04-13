@@ -1,2 +1,1 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-access_gbs_purchase_order_gbs_purchase_order,gbs_purchase_order.gbs_purchase_order,model_gbs_purchase_order_gbs_purchase_order,,1,0,0,0

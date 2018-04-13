@@ -47,9 +47,6 @@
                                 <tbody>
 
                                     <t t-foreach="do_list" t-as="k">
-                                    <t t-if="k['product'] == k['product']">
-
-
                                         <tr>
                                             <td>
                                                 <span t-esc="k_index+1"/>
@@ -84,7 +81,6 @@
 
                                         </tr>
                                     </t>
-                                    </t>
 
                                     <tr style="background-color:#ebebe0;
 												border-bottom: 1px solid #030303;">
@@ -116,6 +112,7 @@
 
                                 </tbody>
                             </table>
+                             <t t-call="custom_report.report_signing"></t>
                         </div>
                     </div>
                 </t>

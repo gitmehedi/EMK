@@ -78,6 +78,7 @@ class LetterOfCredit(models.Model):
     revision_number = fields.Integer('Revision', copy=False)
     unrevisioned_name = fields.Char('LC Reference', copy=True, readonly=True)
     active = fields.Boolean('Active', default=True, copy=True)
+    operating_unit_id = fields.Many2one('operating.unit', string='Operating Unit', required=True)
 
     state = fields.Selection([
         ('draft', "Draft"),
@@ -90,6 +91,21 @@ class LetterOfCredit(models.Model):
     ], default='draft')
 
     last_note = fields.Char(string='Step', track_visibility='onchange')
+
+    @api.multi
+    @api.onchange('first_party')
+    def onchange_company_id(self):
+        if self.first_party:
+            self.operating_unit_id = []
+            return {'domain': {'operating_unit_id': [('company_id', '=', self.first_party.id)]}}
+
+    @api.multi
+    @api.constrains('operating_unit_id')
+    def _check_operating_unit_id(self):
+        for po in self.po_ids:
+            if self.operating_unit_id.id != po.operating_unit_id.id:
+                raise ValidationError(_("Operating unit of %s is not same with operating unit of letter of credit.\n"
+                      "Your purchase order's operating unit and letter of credit's operating unit must be same.") % (po.name))
 
     @api.multi
     def action_cancel(self):
@@ -195,4 +211,11 @@ class LetterOfCredit(models.Model):
                              'current_revision_id': self.id, 'unrevisioned_name': self.unrevisioned_name, })
         return super(LetterOfCredit, self).copy(defaults)
 
-
+    # @api.constrains('name')
+    # def _check_unique_constraint(self):
+    #     if self.name:
+    #         filters = [['name', '=ilike', self.name]]
+    #         name = self.search(filters)
+    #         if len(name) > 1:
+    #             raise Warning('LC Number must be unique!')
+    #

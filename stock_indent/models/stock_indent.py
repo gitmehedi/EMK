@@ -58,7 +58,9 @@ class IndentIndent(models.Model):
                                   states={'draft': [('readonly', False)]})
     department_id = fields.Many2one('hr.department', string='Department', readonly=True,default=_default_department)
     stock_location_id = fields.Many2one('stock.location', string='Stock Location', readonly=True,required=True,
-                                    states={'draft': [('readonly', False)]}, default=lambda self: self.env.user.default_location_id)
+                                        states={'draft': [('readonly', False)]},
+                                        help="Default User Location.Destination location.",
+                                        default=lambda self: self.env.user.default_location_id)
     # manager_id = fields.Many2one('res.users', string='Department Manager', related='department_id.manager_id', store=True)
     analytic_account_id = fields.Many2one('account.analytic.account', string='Project', ondelete="cascade",
                                           readonly=True, states={'draft': [('readonly', False)]})
@@ -80,7 +82,7 @@ class IndentIndent(models.Model):
                                   states={'draft': [('readonly', False)]}, help="who have approve or reject indent.")
     warehouse_id = fields.Many2one('stock.warehouse', 'Warehouse', readonly=True,required=True,
                                    default=lambda self: self._get_default_warehouse(),
-                                   help="default warehose where inward will be taken",
+                                   help="Default Warehouse.Source location.",
                                    states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]})
     picking_type_id = fields.Many2one('stock.picking.type',string='Picking Type',compute = '_compute_default_picking_type',
                                       readonly=True, store = True)
@@ -110,6 +112,11 @@ class IndentIndent(models.Model):
     ####################################################
 
 
+    @api.onchange('warehouse_id')
+    def onchange_warehouse_id(self):
+        # if self.warehouse_id:
+        #     self.stock_location_id = []
+        return {'domain': {'stock_location_id': [('id', 'in', self.env.user.location_ids.ids)]}}
 
     @api.model
     def _default_stock_location(self):
@@ -125,7 +132,7 @@ class IndentIndent(models.Model):
     def _compute_default_picking_type(self):
         for indent in self:
             picking_type_obj = indent.env['stock.picking.type']
-            picking_type_ids = picking_type_obj.search([('default_location_src_id', '=', indent.warehouse_id.lot_stock_id.id),('default_location_dest_id', '=', indent.stock_location_id.id)])
+            picking_type_ids = picking_type_obj.search([('default_location_src_id', '=', indent.warehouse_id.sudo().lot_stock_id.id),('default_location_dest_id', '=', indent.stock_location_id.id)])
             picking_type_id = picking_type_ids and picking_type_ids[0] or False
             indent.picking_type_id = picking_type_id
 
@@ -224,14 +231,15 @@ class IndentIndent(models.Model):
             res = {
                 'state': 'waiting_approval'
             }
-            new_seq = self.env['ir.sequence'].next_by_code('stock.indent')
+            requested_date = self.required_date
+            new_seq = self.env['ir.sequence'].next_by_code_new('stock.indent',requested_date)
             if new_seq:
                 res['name'] = new_seq
 
             indent.write(res)
 
     def _prepare_indent_line_move(self, line, picking_id, date_planned):
-        location_id = self.warehouse_id.lot_stock_id.id
+        location_id = self.warehouse_id.sudo().lot_stock_id.id
 
         res = {
             'name': line.name,
@@ -243,9 +251,6 @@ class IndentIndent(models.Model):
             'date_expected': date_planned,
             'product_uom_qty': line.product_uom_qty,
             'product_uom': line.product_uom.id,
-            'product_uos_qty': (line.product_uos and line.product_uos_qty) or line.product_uom_qty,
-            'product_uos': (line.product_uos and line.product_uos.id) \
-                           or line.product_uom.id,
             'location_id': location_id,
             'location_dest_id': self.stock_location_id.id,
             'origin': self.name,
@@ -271,6 +276,7 @@ class IndentIndent(models.Model):
 
     def _prepare_indent_picking(self):
         pick_name = self.env['ir.sequence'].next_by_code('stock.picking')
+        location_id = self.warehouse_id.sudo().lot_stock_id.id
         res = {
             'invoice_state': 'none',
             'picking_type_id': self.picking_type_id.id,
@@ -281,9 +287,8 @@ class IndentIndent(models.Model):
             # 'type': 'internal',
             'move_type': self.move_type,
             'partner_id': self.indentor_id.partner_id.id or False,
-            'location_id': self.warehouse_id.lot_stock_id.id,
+            'location_id': location_id,
             'location_dest_id': self.stock_location_id.id,
-            'operating_unit_id': self.operating_unit_id.id
         }
         if self.company_id:
             res = dict(res, company_id=self.company_id.id)
@@ -299,8 +304,7 @@ class IndentIndent(models.Model):
         need_purchase_req = False
         picking_id = False
         for line in self.product_lines:
-            date_planned = datetime.datetime.strptime(self.indent_date, DEFAULT_SERVER_DATETIME_FORMAT) + relativedelta(
-                days=line.delay or 0.0)
+            date_planned = datetime.datetime.strptime(self.indent_date, DEFAULT_SERVER_DATETIME_FORMAT)
 
             if line.product_id:
                 if not picking_id:
@@ -318,8 +322,6 @@ class IndentIndent(models.Model):
         else:
             return False
 
-    def create_repairing_gatepass(self, indent):
-        pass
 
     @api.one
     def action_picking_create(self):
@@ -385,55 +387,19 @@ class IndentProductLines(models.Model):
     _name = 'indent.product.lines'
     _description = 'Indent Product Lines'
 
-    @api.depends('product_uom_qty', 'price_unit')
-    def _amount_subtotal(self):
-        for line in self:
-            line.price_subtotal = (line.product_uom_qty * line.price_unit)
-
     indent_id = fields.Many2one('indent.indent', string='Indent', required=True, ondelete='cascade')
     product_id = fields.Many2one('product.product', string='Product', required=True)
-    original_product_id = fields.Many2one('product.product', string='Product to be Repaired')
-    type = fields.Selection([('make_to_stock', 'Stock'),
-                             ('make_to_order', 'Purchase')],
-                            'Procure', required=True,
-                            default="make_to_order",
-                            help="From stock: When needed, the product is taken from the stock or we wait for replenishment.\nOn order: When needed, the product is purchased or produced.")
     product_uom_qty = fields.Float('Quantity', digits=dp.get_precision('Product UoS'),
                                    required=True, default=1)
-    product_uom = fields.Many2one('product.uom', 'Unit of Measure', required=True)
-    product_uos_qty = fields.Float('Quantity (UoS)', digits=dp.get_precision('Product UoS'),
-                                   default=1)
-    product_uos = fields.Many2one('product.uom', 'Product UoS')
-    price_unit = fields.Float('Price', digits=dp.get_precision('Product Price'),
+    product_uom = fields.Many2one(related='product_id.uom_id',string='Unit of Measure', required=True)
+    price_unit = fields.Float(related='product_id.standard_price',string='Price', digits=dp.get_precision('Product Price'),
                               help="Price computed based on the last purchase order approved.")
-    price_subtotal = fields.Float(string='Subtotal', compute='_amount_subtotal', digits=dp.get_precision('Account'),
+    price_subtotal = fields.Float(string='Subtotal', compute='_compute_amount_subtotal', digits=dp.get_precision('Account'),
                                   store=True)
-    qty_available = fields.Float('In Stock', compute='_getProductQuentity',store=True)
-    virtual_available = fields.Float('Forecasted Qty')
-    delay = fields.Float('Lead Time', required=True, default=0.0)
-    name = fields.Text('Specification',store=True)
-    # specification = fields.Text('Specification')
+    qty_available = fields.Float(string='In Stock',compute = '_compute_product_qty',store=True)
+    name = fields.Char(related='product_id.name',string='Specification',store=True)
     remarks = fields.Text('Remarks')
     sequence = fields.Integer('Sequence')
-
-    def _get_uom_id(self):
-        result = self.pool.get('ir.model.data').get_object_reference(self, 'product', 'product_uom_unit')
-        return result and result[1] or False
-
-    def _get_default_type(self):
-        context = self.args[0]
-        return context.get('indent_type')
-
-    def _check_stock_available(self):
-        for move in self:
-            if move.product_uom_qty > move.qty_available:
-                return False
-        return True
-
-    _constraints = [
-        (_check_stock_available, 'You can not procure more quantity form stock then the available !.',
-         ['Quantity Required']),
-    ]
 
     @api.one
     @api.constrains('product_uom_qty')
@@ -441,62 +407,17 @@ class IndentProductLines(models.Model):
         if self.product_uom_qty < 0:
             raise UserError('You can\'t give negative value!!!')
 
-    @api.onchange('product_id')
-    def onchange_product_id(self):
-        # result = {}
-
-        if not self.product_id:
-            return {'value': {'product_uom_qty': 1.0,
-                              'product_uom': False,
-                              'price_unit': 0.0,
-                              'qty_available': 0.0,
-                              'virtual_available': 0.0,
-                              'name': '',
-                              'delay': 0.0
-                              }
-                    }
-        product_obj = self.env['product.product']
-        product = product_obj.search([('id','=',self.product_id.id)])
-
-        if product.qty_available > 0:
-            # result['type'] = 'make_to_stock'
-            self.type = 'make_to_stock'
-        else:
-            # result['type'] = 'make_to_order'
-            self.type = 'make_to_order'
-
-        product_name = product.name_get()[0][1]
-        self.name = product_name
-        self.product_uom = product.uom_id.id
-        self.price_unit = product.standard_price
-        # self.qty_available = self.getProductQuentity(product.id, self.indent_id)
-        self.virtual_available = product.virtual_available
-
-        if product.type == 'service':
-            # result['original_product_id'] = product.repair_id.id
-            self.type = 'make_to_order'
-        else:
-            self.original_product_id = False
-
-        # You must define at least one supplier for this product
-        if not product.seller_ids:
-            self.delay = self.env.user.company_id.po_lead or 0
-            # raise osv.except_osv(_("Warning !"), _("You must define at least one supplier for this product"))
-        else:
-            self.delay = product.seller_ids[0].delay
+    @api.depends('product_uom_qty', 'price_unit')
+    def _compute_amount_subtotal(self):
+        for line in self:
+            line.price_subtotal = (line.product_uom_qty * line.price_unit)
 
     @api.depends('product_id')
     @api.multi
-    def _getProductQuentity(self):
-
-        for productLine in self:
-
-            if productLine.product_id.id:
-                location_id = productLine.indent_id.stock_location_id.id
-
-                product_quant = self.env['stock.quant'].search(
-                        ['&', ('product_id', '=',productLine.product_id.id), ('location_id', '=', location_id)],
-                        limit=1)
-
-                if product_quant:
-                    productLine.qty_available = product_quant.qty
+    def _compute_product_qty(self):
+        for product in self:
+            location_id = product.indent_id.warehouse_id.sudo().lot_stock_id.id
+            product_quant = self.env['stock.quant'].search([('product_id', '=', product.product_id.id),
+                                                        ('location_id', '=', location_id)], limit=1)
+            quantity = sum([val.qty for val in product_quant])
+            product.qty_available = quantity

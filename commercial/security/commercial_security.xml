@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<data noupdate="0">
+
+    <record id="module_category_commercial" model="ir.module.category" >
+        <field name="name">Commercial</field>
+        <field name="sequence">210</field>
+    </record>
+
+    <record id="group_commercial_user" model="res.groups">
+        <field name="name">User</field>
+        <field name="category_id" ref="module_category_commercial"/>
+    </record>
+
+    <record id="group_commercial_manager" model="res.groups">
+        <field name="name">Manager</field>
+        <field name="category_id" ref="module_category_commercial"/>
+        <field name="implied_ids" eval="[(4, ref('group_commercial_user'))]"/>
+    </record>
+
+</data>
+</odoo>

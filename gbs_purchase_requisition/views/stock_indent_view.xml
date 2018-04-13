@@ -11,7 +11,7 @@
                     <xpath expr="//button[@name='action_view_picking']" position="after">
                         <field name="check_pr_issued" invisible="1"/>
                         <button name="action_view_purchase_requisition" string="Issue PR" type="object"
-                            groups="stock_indent.group_stock_indent_issuer"
+                            groups="stock_indent.group_stock_indent_issuer,stock.group_stock_user"
                             attrs="{'invisible': ['|',('state','!=','inprogress'),('check_pr_issued','!=', True)]}"/>
                     </xpath>
                 </data>

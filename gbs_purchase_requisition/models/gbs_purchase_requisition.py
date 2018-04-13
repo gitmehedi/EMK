@@ -8,6 +8,8 @@ from odoo.addons import decimal_precision as dp
 class PurchaseRequisition(models.Model):
     _inherit = 'purchase.requisition'
 
+    _order = "requisition_date desc"
+
     name = fields.Char(string='Purchase Requisition',default='/')
     department_id = fields.Many2one('hr.department',string='Department', store=True)
     operating_unit_id = fields.Many2one('operating.unit', 'Operating Unit', required=True,
@@ -24,7 +26,7 @@ class PurchaseRequisition(models.Model):
     purchase_from = fields.Selection([('own', 'Own'), ('ho', 'HO')],
                                    string="Purchase From")
 
-    requisition_date = fields.Date(string='Requisition Date',default = date.today())
+    requisition_date = fields.Date(string='Requisition Date',required=True,default = date.today())
     required_date = fields.Date(string='Required Date')
     state = fields.Selection([('draft', 'Draft'), ('in_progress', 'Confirmed'),
                               ('approve_head_procurement', 'Waiting For Approval'),('done', 'Approved'),
@@ -41,7 +43,8 @@ class PurchaseRequisition(models.Model):
         res = {
             'state': 'in_progress'
         }
-        new_seq = self.env['ir.sequence'].next_by_code('purchase.requisition')
+        requested_date = self.requisition_date
+        new_seq = self.env['ir.sequence'].next_by_code_new('purchase.requisition',requested_date)
 
         if new_seq:
             res['name'] = new_seq

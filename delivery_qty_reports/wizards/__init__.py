@@ -1,1 +1,2 @@
 import daily_delivery_report_wizard
+import monthly_delivery_report_wizard
