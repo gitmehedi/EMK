@@ -168,7 +168,7 @@ class LetterOfCredit(models.Model):
         if 'unrevisioned_name' not in vals:
             if vals.get('name', 'New') == 'New':
                 seq = self.env['ir.sequence']
-                vals['name'] = seq.next_by_code('letter.credit') or '/'
+                vals['name'] = seq.next_by_code('letter.credit') or ''
             vals['unrevisioned_name'] = vals['name']
         return super(LetterOfCredit, self).create(vals)
 
@@ -211,9 +211,10 @@ class LetterOfCredit(models.Model):
                              'current_revision_id': self.id, 'unrevisioned_name': self.unrevisioned_name, })
         return super(LetterOfCredit, self).copy(defaults)
 
+    @api.one
     @api.constrains('name')
     def _check_unique_constraint(self):
-        if self.name and self.state == 'open':
+        if self.name:
             filters = [['name', '=ilike', self.name]]
             name = self.search(filters)
             if len(name) > 1:
