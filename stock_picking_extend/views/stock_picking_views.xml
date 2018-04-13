@@ -257,7 +257,7 @@
               name="Receive Transfers"
               parent="stock.menu_stock_warehouse_mgmt"
               sequence="3"
-              action="action_stock_picking_receive1"/>
+              action="action_stock_picking_receive1" groups="stock.group_stock_user"/>
 
     <record model="ir.ui.view" id="view_picking_form_inherit">
         <field name="name">stock.picking.inherit.form</field>
