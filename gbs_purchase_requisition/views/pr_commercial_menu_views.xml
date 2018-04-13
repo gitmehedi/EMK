@@ -28,14 +28,5 @@
                 sequence="5"/>
 
 
-        <menuitem id="menu_commercial_configuration" parent="commercial.menu_commercial_root"
-            sequence="100" name="Configuration" />
-
-        <menuitem id="submenu_commercial_customer" name="Customers/Suppliers" parent="menu_commercial_configuration"
-                sequence="1" action="base.action_partner_customer_form"/>
-
-        <menuitem id="submenu_commercial_products" name="Products" parent="menu_commercial_configuration"
-                sequence="2" action="product.product_template_action"/>
-
     </data>
 </odoo>
