@@ -112,6 +112,11 @@ class IndentIndent(models.Model):
     ####################################################
 
 
+    @api.onchange('warehouse_id')
+    def onchange_warehouse_id(self):
+        # if self.warehouse_id:
+        #     self.stock_location_id = []
+        return {'domain': {'stock_location_id': [('id', 'in', self.env.user.location_ids.ids)]}}
 
     @api.model
     def _default_stock_location(self):

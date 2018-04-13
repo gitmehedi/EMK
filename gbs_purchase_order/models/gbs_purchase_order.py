@@ -2,10 +2,26 @@
 from odoo import models, fields, api, _
 from odoo.exceptions import ValidationError
 from datetime import datetime
+import odoo.addons.decimal_precision as dp
 
 
 class PurchaseOrder(models.Model):
     _inherit = 'purchase.order'
+
+    @api.model
+    def _default_picking_type(self):
+        type_obj = self.env['stock.picking.type']
+        company_id = self.env.context.get('company_id') or self.env.user.company_id.id
+        types = type_obj.search([('code', '=', 'incoming'), ('warehouse_id.company_id', '=', company_id)])
+        if not types:
+            types = type_obj.search([('code', '=', 'incoming'), ('warehouse_id', '=', False)])
+        return types[:1]
+
+    READONLY_STATES = {
+        'purchase': [('readonly', True)],
+        'done': [('readonly', True)],
+        'cancel': [('readonly', True)],
+    }
 
     name = fields.Char('Order Reference', required=True, index=True, copy=False, default='New')
     operating_unit_id = fields.Many2one('operating.unit', 'Operating Unit', required=True,
@@ -17,6 +33,16 @@ class PurchaseOrder(models.Model):
     attachment_ids = fields.One2many('ir.attachment', 'res_id', string='Attachments')
     check_po_action_button = fields.Boolean('Check PO Action Button', default=False)
     disable_new_revision_button = fields.Boolean('Disable New Revision Button', default=False)
+
+    picking_type_id = fields.Many2one('stock.picking.type', 'Deliver To', states=READONLY_STATES, required=True,
+                                      default=_default_picking_type,
+                                      help="This will determine picking type of incoming shipment")
+    default_location_dest_id_usage = fields.Selection(related='picking_type_id.default_location_dest_id.usage',
+                                                      string='Destination Location Type',
+                                                      related_sudo=True,
+                                                      help="Technical field used to display the Drop Ship Address",
+                                                      readonly=True)
+
 
     @api.onchange('requisition_id')
     def _onchange_requisition_id(self):
@@ -113,6 +139,11 @@ class PurchaseOrder(models.Model):
         if requisition.state == 'done':
             self.check_po_action_button = True
 
+    @api.onchange('picking_type_id')
+    def _onchange_picking_type_id(self):
+        if self.picking_type_id.sudo().default_location_dest_id.usage != 'customer':
+            self.dest_address_id = False
+
     @api.multi
     def button_confirm(self):
         # res = {}
@@ -178,3 +209,21 @@ class PurchaseOrder(models.Model):
                 for att in self.attachment_ids:
                     self._cr.execute(query, tuple([att.res_id]))
                 return super(PurchaseOrder, self).unlink()
+
+class PurchaseOrderLine(models.Model):
+    _inherit = 'purchase.order.line'
+
+    qty_invoiced = fields.Float(compute='_compute_qty_invoiced', string="Billed Qty",
+                                digits=dp.get_precision('Product Unit of Measure'), store=True)
+    qty_received = fields.Float(compute='_compute_qty_received', string="Received Qty",
+                                digits=dp.get_precision('Product Unit of Measure'), store=True)
+
+    @api.depends('order_id.state', 'move_ids.state')
+    def _compute_qty_received(self):
+        for line in self:
+            line.qty_received = 0.0
+
+    @api.depends('invoice_lines.invoice_id.state')
+    def _compute_qty_invoiced(self):
+        for line in self:
+            line.qty_invoiced = 0.0

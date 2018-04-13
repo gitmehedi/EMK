@@ -15,7 +15,7 @@
     'category': 'Inventory',
     'version': '10.0.1',
 
-    'depends': ['stock_operating_unit'],
+    'depends': ['stock_operating_unit','gbs_application_group'],
 
     'data': [
         'security/ir_rule.xml',
