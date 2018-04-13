@@ -211,11 +211,11 @@ class LetterOfCredit(models.Model):
                              'current_revision_id': self.id, 'unrevisioned_name': self.unrevisioned_name, })
         return super(LetterOfCredit, self).copy(defaults)
 
-    # @api.constrains('name')
-    # def _check_unique_constraint(self):
-    #     if self.name:
-    #         filters = [['name', '=ilike', self.name]]
-    #         name = self.search(filters)
-    #         if len(name) > 1:
-    #             raise Warning('LC Number must be unique!')
-    #
+    @api.constrains('name')
+    def _check_unique_constraint(self):
+        if self.name and self.state == 'open':
+            filters = [['name', '=ilike', self.name]]
+            name = self.search(filters)
+            if len(name) > 1:
+                raise Warning('LC Number must be unique!')
+
