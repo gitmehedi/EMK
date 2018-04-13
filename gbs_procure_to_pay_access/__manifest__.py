@@ -29,6 +29,7 @@
                 'lc_po_product',
                 'indent_operating_unit',
                 'question_set',
+                'com_shipment',
     ],
 
     # always loaded
