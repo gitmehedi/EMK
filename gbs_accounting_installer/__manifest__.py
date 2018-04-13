@@ -4,7 +4,10 @@
     'author': 'Genweb2 Limited',
     'website': 'http://www.genweb2.com',
     'category': 'Accounting',
-    'depends': [],
+    'depends': ['account_accountant',
+                'account_parent',
+                'account_operating_unit',
+                'account_fiscal_year'],
 
     'data': [ ],
     'description': 'Install all modules which is related to Accounting',
