@@ -20,10 +20,9 @@
                 </header>
                 <sheet>
                     <div class="oe_button_box" name="button_box">
-                        <field name="has_scrap_move" invisible="True"/>
-                        <button name="action_see_move_scrap" string="Scraps" type="object"
-                                class="oe_stat_button" icon="fa-arrows-v"
-                                attrs="{'invisible': [('has_scrap_move', '=', False)]}"/>
+                        <button class="oe_stat_button" name="attachment_tree_view"  type="object" icon="fa-files-o">
+                            <field string="Documents" name="doc_count" widget="statinfo"/>
+                        </button>
                     </div>
                     <h1 class="hidden-xs">
                         <field name="name" attrs="{'invisible': [('name','=','/')]}" readonly="1"/>
@@ -32,6 +31,7 @@
                         <group>
                             <field name="partner_id" attrs="{'invisible': [('picking_type_code', '=', 'internal')]}"/>
                             <field name="receive_type"/>
+                            <field name="transfer_type" invisible="1"/>
                             <field name="location_id" groups="stock.group_stock_multi_locations" attrs="{'invisible': [('picking_type_code', '=', 'outgoing')]}"/>
                             <field name="location_dest_id" groups="stock.group_stock_multi_locations" attrs="{'invisible': [('picking_type_code', '=', 'incoming')]}"/>
                             <field name="backorder_id" readonly="1" attrs="{'invisible': [('backorder_id','=',False)]}"/>
@@ -169,7 +169,7 @@
                             <group>
                                 <group>
                                     <field name="move_type" readonly="1"/>
-                                    <field name="picking_type_id"/>
+                                    <field name="picking_type_id" readonly="1"/>
                                     <field name="picking_type_code" invisible="1"/>
                                     <field name="quant_reserved_exist" invisible="1"/>
                                 </group>
@@ -212,14 +212,14 @@
     </record>
 
     <!--<record id="view_stock_picking_filter1" model="ir.ui.view">-->
-        <!--<field name="name">view.picking.filter1</field>-->
-        <!--<field name="model">stock.picking</field>-->
-        <!--<field name="arch" type="xml">-->
-            <!--<search string="Receive">-->
-                <!--<filter name="receive_filter" string="Received" domain="[('picking_type_code', '=', 'incoming')]"/>-->
-                <!--<filter name="picking_type" string="Picking Type" domain="[]" context="{'group_by':'picking_type_id'}"/>-->
-            <!--</search>-->
-        <!--</field>-->
+    <!--<field name="name">view.picking.filter1</field>-->
+    <!--<field name="model">stock.picking</field>-->
+    <!--<field name="arch" type="xml">-->
+    <!--<search string="Receive">-->
+    <!--<filter name="receive_filter" string="Received" domain="[('picking_type_code', '=', 'incoming')]"/>-->
+    <!--<filter name="picking_type" string="Picking Type" domain="[]" context="{'group_by':'picking_type_id'}"/>-->
+    <!--</search>-->
+    <!--</field>-->
     <!--</record>-->
 
     <record model="ir.actions.act_window" id="action_stock_picking_receive1">
@@ -230,8 +230,9 @@
         <field name="view_id" ref="view_stock_picking_tree1"/>
         <!--<field name="search_view_id" ref="view_stock_picking_filter1"/>-->
         <!--<field name="context">{-->
-                    <!--'search_default_receive_filter': 1,}</field>-->
-        <field name="domain">[('picking_type_code', '=', 'incoming')]</field>
+        <!--'search_default_receive_filter': 1,}</field>-->
+        <field name="domain">[('transfer_type', '=', 'receive')]</field>
+        <field name="context">{'default_transfer_type': 'receive'}</field>
         <field name="help" type="html">
             <p>
                 Here you can see Received Goods list.
@@ -254,7 +255,7 @@
     </record>
 
     <menuitem id="menu_receive_picking"
-              name="Receive Transfers"
+              name="Receive Goods"
               parent="stock.menu_stock_warehouse_mgmt"
               sequence="3"
               action="action_stock_picking_receive1" groups="stock.group_stock_user"/>
@@ -264,6 +265,11 @@
         <field name="model">stock.picking</field>
         <field name="inherit_id" ref="stock.view_picking_form"/>
         <field name="arch" type="xml">
+            <xpath expr="//button[@name='action_see_move_scrap']" position="before">
+                    <button  class="oe_stat_button" name="attachment_tree_view"  type="object" icon="fa-files-o">
+                        <field string="Documents" name="doc_count" widget="statinfo"/>
+                    </button>
+                </xpath>
             <xpath expr="//header/button[@name='do_new_transfer']" position="replace">
                 <button name="do_new_transfer" string="Receive" groups="stock.group_stock_user"
                         states="draft,partially_available,assigned"
