@@ -25,7 +25,7 @@ class StockInventoryReport(models.AbstractModel):
     def get_report_data(self, data):
         date_start = data['date_from']
         date_end = data['date_to']
-        location_outsource = data['shop_id']
+        location_outsource = data['operating_unit_id']
         category_id = data['category_id']
         cat_pool = self.env['product.category']
 
