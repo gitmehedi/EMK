@@ -24,9 +24,9 @@
                                 </t>
                             </div>
                             <div class="col-xs-6 text-right">
-                                <t t-if="record['shop_name']">
+                                <t t-if="record['operating_unit_name']">
                                     <strong>Operating Unit : </strong>
-                                    <span t-esc="record['shop_name']"/>
+                                    <span t-esc="record['operating_unit_name']"/>
                                 </t>
                             </div>
                         </div>

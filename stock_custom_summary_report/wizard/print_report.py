@@ -24,7 +24,7 @@ class StockInventoryWizard(models.TransientModel):
         data['date_from'] = self.date_from
         data['date_to'] = self.date_to
         data['operating_unit_id'] = location.id
-        data['shop_name'] = self.operating_unit_id.name
+        data['operating_unit_name'] = self.operating_unit_id.name
         data['category_id'] = self.category_id.id
         data['report_type'] = selected_type if len(selected_type) > 0 else report_type
 
