@@ -10,6 +10,7 @@
         'sales_team',
         'report',
         'account',
+        'custom_report',
     ],
 
     'data': [

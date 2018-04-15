@@ -11,6 +11,7 @@
         'sales_team',
         'account',
         'stock',
+        'custom_report',
     ],
     'data': [
         'report/credit_limit_report.xml',

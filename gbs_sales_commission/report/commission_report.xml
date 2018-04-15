@@ -9,118 +9,146 @@
 
         <template id="report_Commission_view">
             <t t-call="report.html_container">
-                <t t-foreach="docs" t-as="doc">
-                    <t t-call="report.external_layout">
-                        <div class="page">
-                            <t t-if="doc.commission_type=='by_product'">
-                                <h2 style="padding: 15px 0px; text-align: center;">
-                                    Product Commission Report
-                                </h2>
-                                <div>
-                                    <div style="padding: 15px 0px;">
-                                        <div>
-                                            <div style="display: inline;">
-                                                <strong>Commission Type: </strong><span t-field="doc.commission_type"/>
+                <t t-call="custom_report.gbs_internal_layout">
+                    <t t-foreach="docs" t-as="doc">
+                        <t t-call="report.external_layout">
+                            <div class="page">
+                                <t t-if="doc.commission_type=='by_product'">
+                                    <h2 style="padding: 15px 0px; text-align: center;">
+                                        Product Commission Report
+                                    </h2>
+                                    <div>
+                                        <div style="padding: 15px 0px;">
+                                            <div>
+                                                <div style="display: inline;">
+                                                    <strong>Commission Type:</strong>
+                                                    <span t-field="doc.commission_type"/>
+                                                </div>
+                                                <div style="display: inline; float:right; padding-right:5px">
+                                                    <strong>Product:</strong>
+                                                    <span t-field="doc.product_id"/>
+                                                </div>
                                             </div>
-                                            <div style="display: inline; float:right; padding-right:5px">
-                                                <strong>Product: </strong><span t-field="doc.product_id"/>
+                                            <div>
+                                                <div style="display: inline;">
+                                                    <strong>Requested Date:</strong>
+                                                    <span t-field="doc.requested_date"/>
+                                                </div>
+                                                <div style="display: inline; float:right; padding-right:5px">
+                                                    <strong>Requested By :</strong>
+                                                    <span t-field="doc.requested_by"/>
+                                                </div>
+                                            </div>
+                                            <div>
+                                                <div style="display: inline;">
+                                                    <strong>Approved Date :</strong>
+                                                    <span t-field="doc.approved_date"/>
+                                                </div>
+                                                <div style="display: inline; float:right; padding-right:5px">
+                                                    <strong>Approved By :</strong>
+                                                    <span t-field="doc.approver1_id"/>
+                                                </div>
+                                            </div>
+                                            <div>
+                                                <strong>State :</strong>
+                                                <span t-field="doc.state"/>
                                             </div>
                                         </div>
-                                        <div>
-                                            <div style="display: inline;">
-                                                <strong>Requested Date: </strong><span t-field="doc.requested_date"/>
-                                            </div>
-                                            <div style="display: inline; float:right; padding-right:5px">
-                                                <strong>Requested By : </strong><span t-field="doc.requested_by"/>
-                                            </div>
-                                        </div>
-                                        <div>
-                                            <div style="display: inline;">
-                                                <strong>Approved Date : </strong><span t-field="doc.approved_date"/>
-                                            </div>
-                                            <div style="display: inline; float:right; padding-right:5px">
-                                                <strong>Approved By : </strong><span t-field="doc.approver1_id"/>
-                                            </div>
-                                        </div>
-                                        <div>
-                                            <strong>State : </strong><span t-field="doc.state"/>
-                                        </div>
-                                    </div>
-                                    <table class="table table-bordered" style="padding: 15px 0px;">
-                                        <thead>
-                                            <tr style="background-color:#C0C0C0;">
-                                                <th>Customer</th>
-                                                <th>Old Value</th>
-                                                <th>New Value</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <t t-foreach="doc.config_customer_ids" t-as="p">
-                                                <tr style="page-break-inside: avoid">
-                                                    <td><span t-esc="p.customer_id.name"/></td>
-                                                    <td><span t-esc="p.old_value"/></td>
-                                                    <td><span t-esc="p.new_value"/></td>
+                                        <table class="table table-bordered" style="padding: 15px 0px;">
+                                            <thead>
+                                                <tr style="background-color:#C0C0C0;">
+                                                    <th>Customer</th>
+                                                    <th>Old Value</th>
+                                                    <th>New Value</th>
                                                 </tr>
-                                            </t>
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </t>
-                            <t t-if="doc.commission_type=='by_customer'">
-                                <h2 style="padding: 15px 0px; text-align: center;">
-                                    Customer Commission Report
-                                </h2>
-                                <div>
-                                    <div style="padding: 15px 0px;">
-                                        <div>
-                                            <div style="display: inline;">
-                                                <strong>Commission Type: </strong><span t-field="doc.commission_type"/>
-                                            </div>
-                                            <div style="display: inline; float:right; padding-right:5px">
-                                                <strong>Customer: </strong><span t-field="doc.customer_id"/>
-                                            </div>
-                                        </div>
-                                        <div>
-                                            <div style="display: inline;">
-                                                <strong>Requested Date: </strong><span t-field="doc.requested_date"/>
-                                            </div>
-                                            <div style="display: inline; float:right; padding-right:5px">
-                                                <strong>Requested By : </strong><span t-field="doc.requested_by"/>
-                                            </div>
-                                        </div>
-                                        <div>
-                                            <div style="display: inline;">
-                                                <strong>Approved Date : </strong><span t-field="doc.approved_date"/>
-                                            </div>
-                                            <div style="display: inline; float:right; padding-right:5px">
-                                                <strong>Approved By : </strong><span t-field="doc.approver1_id"/>
-                                            </div>
-                                        </div>
-                                        <div>
-                                            <strong>State : </strong><span t-field="doc.state"/>
-                                        </div>
+                                            </thead>
+                                            <tbody>
+                                                <t t-foreach="doc.config_customer_ids" t-as="p">
+                                                    <tr style="page-break-inside: avoid">
+                                                        <td>
+                                                            <span t-esc="p.customer_id.name"/>
+                                                        </td>
+                                                        <td>
+                                                            <span t-esc="p.old_value"/>
+                                                        </td>
+                                                        <td>
+                                                            <span t-esc="p.new_value"/>
+                                                        </td>
+                                                    </tr>
+                                                </t>
+                                            </tbody>
+                                        </table>
                                     </div>
-                                    <table class="table table-bordered" style="padding: 15px 0px;">
-                                        <thead>
-                                            <tr style="background-color:#C0C0C0;">
-                                                <th>Product</th>
-                                                <th>Old Value</th>
-                                                <th>New Value</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <t t-foreach="doc.config_product_ids" t-as="p">
-                                                <tr style="page-break-inside: avoid">
-                                                    <td><span t-esc="p.product_id.name"/></td>
-                                                    <td><span t-esc="p.old_value"/></td>
-                                                    <td><span t-esc="p.new_value"/></td>
+                                </t>
+                                <t t-if="doc.commission_type=='by_customer'">
+                                    <h2 style="padding: 15px 0px; text-align: center;">
+                                        Customer Commission Report
+                                    </h2>
+                                    <div>
+                                        <div style="padding: 15px 0px;">
+                                            <div>
+                                                <div style="display: inline;">
+                                                    <strong>Commission Type:</strong>
+                                                    <span t-field="doc.commission_type"/>
+                                                </div>
+                                                <div style="display: inline; float:right; padding-right:5px">
+                                                    <strong>Customer:</strong>
+                                                    <span t-field="doc.customer_id"/>
+                                                </div>
+                                            </div>
+                                            <div>
+                                                <div style="display: inline;">
+                                                    <strong>Requested Date:</strong>
+                                                    <span t-field="doc.requested_date"/>
+                                                </div>
+                                                <div style="display: inline; float:right; padding-right:5px">
+                                                    <strong>Requested By :</strong>
+                                                    <span t-field="doc.requested_by"/>
+                                                </div>
+                                            </div>
+                                            <div>
+                                                <div style="display: inline;">
+                                                    <strong>Approved Date :</strong>
+                                                    <span t-field="doc.approved_date"/>
+                                                </div>
+                                                <div style="display: inline; float:right; padding-right:5px">
+                                                    <strong>Approved By :</strong>
+                                                    <span t-field="doc.approver1_id"/>
+                                                </div>
+                                            </div>
+                                            <div>
+                                                <strong>State :</strong>
+                                                <span t-field="doc.state"/>
+                                            </div>
+                                        </div>
+                                        <table class="table table-bordered" style="padding: 15px 0px;">
+                                            <thead>
+                                                <tr style="background-color:#C0C0C0;">
+                                                    <th>Product</th>
+                                                    <th>Old Value</th>
+                                                    <th>New Value</th>
                                                 </tr>
-                                            </t>
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </t>
-                        </div>
+                                            </thead>
+                                            <tbody>
+                                                <t t-foreach="doc.config_product_ids" t-as="p">
+                                                    <tr style="page-break-inside: avoid">
+                                                        <td>
+                                                            <span t-esc="p.product_id.name"/>
+                                                        </td>
+                                                        <td>
+                                                            <span t-esc="p.old_value"/>
+                                                        </td>
+                                                        <td>
+                                                            <span t-esc="p.new_value"/>
+                                                        </td>
+                                                    </tr>
+                                                </t>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </t>
+                            </div>
+                        </t>
                     </t>
                 </t>
             </t>
