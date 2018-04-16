@@ -19,7 +19,7 @@
     'depends': ['stock_picking_extend','com_shipment'],
 
     'data': [
-        # 'security/ir.model.access.csv',
+        'security/ir.model.access.csv',
         'views/stock_picking_views.xml',
     ],
 }
