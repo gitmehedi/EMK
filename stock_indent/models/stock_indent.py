@@ -4,7 +4,6 @@ import datetime
 from datetime import timedelta
 from odoo.addons import decimal_precision as dp
 from odoo.exceptions import UserError, ValidationError
-from dateutil.relativedelta import relativedelta
 from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
 
 
@@ -398,7 +397,7 @@ class IndentProductLines(models.Model):
                               help="Price computed based on the last purchase order approved.")
     price_subtotal = fields.Float(string='Subtotal', compute='_compute_amount_subtotal', digits=dp.get_precision('Account'),
                                   store=True)
-    qty_available = fields.Float(string='In Stock',compute = '_compute_product_qty',store=True)
+    qty_available = fields.Float(string='In Stock',compute = '_compute_product_qty')
     name = fields.Char(related='product_id.name',string='Specification',store=True)
     remarks = fields.Text('Remarks')
     sequence = fields.Integer('Sequence')

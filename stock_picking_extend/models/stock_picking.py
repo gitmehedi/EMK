@@ -14,9 +14,7 @@ class Picking(models.Model):
 
     transfer_type = fields.Selection([
         ('loan', 'Loan'),
-        ('receive', 'Receive'),
-        ('delivery', 'Delivery'),
-        ('transfer', 'Transfer')])
+        ('receive', 'Receive')])
     receive_type = fields.Selection([
         ('loan', 'Loan'),
         ('other', 'Other')],
@@ -25,22 +23,34 @@ class Picking(models.Model):
         'stock.picking.type', 'Picking Type',
         required=True,default = _get_default_picking_type,
         states={'done': [('readonly', True)], 'cancel': [('readonly', True)]})
+    date_done = fields.Datetime('Date of Transfer', copy=False, readonly=False, states={'done': [('readonly', True)]},
+                                help="Completion Date of Transfer",default=fields.Datetime.now())
+
+
+    doc_count = fields.Integer(compute='_compute_attached_docs', string="Number of documents attached")
 
     @api.one
-    def _get_attached_docs(self):
+    def _compute_attached_docs(self):
         attachment = self.env['ir.attachment']
-        origin_picking_objs = self.search([('name', '=', self.origin)])
-        res = self.ids + origin_picking_objs.ids
-        for id in res:
-            employee_attachments = attachment.search([('res_model', '=', 'stock.picking'), ('res_id', '=', id)])
-            self.doc_count = len([v.id for v in employee_attachments])
+        if self.origin:
+            origin_picking_objs = self.search(['|', ('name', '=', self.origin),('origin', '=', self.origin)])
+            res = self.ids + origin_picking_objs.ids
+        else:
+            res = self.ids
+        list_res =list(set(res))
+        self.doc_count = len(attachment.search([('res_model', '=', 'stock.picking'), ('res_id', '=', list_res)]))
 
-    doc_count = fields.Integer(compute=_get_attached_docs, string="Number of documents attached")
+        # for id in set(res):
+        #     picking_attachments = attachment.search([('res_model', '=', 'stock.picking'), ('res_id', '=', id)])
+        #     self.doc_count = len([v.id for v in picking_attachments])
 
     @api.multi
     def attachment_tree_view(self):
-        origin_picking_objs = self.search([('name', '=', self.origin)])
-        res = self.ids + origin_picking_objs.ids
+        if self.origin:
+            origin_picking_objs = self.search(['|',('name', '=', self.origin),('origin', '=', self.origin)])
+            res = self.ids + origin_picking_objs.ids
+        else:
+            res = self.ids
         domain = [('res_model', '=', 'stock.picking'),('res_id', 'in', res)]
         res_id = self.ids and self.ids[0] or False
         return {
