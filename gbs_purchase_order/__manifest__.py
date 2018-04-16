@@ -16,6 +16,7 @@
     'version': '10.0.1',
     'depends': [
         'purchase_requisition',
+        'purchase',
         'purchase_order_revision',
         'gbs_purchase_requisition',
         'commercial',
