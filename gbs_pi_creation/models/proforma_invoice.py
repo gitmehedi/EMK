@@ -9,31 +9,31 @@ class ProformaInvoice(models.Model):
     _rec_name='name'
 
     name = fields.Char(string='Name', index=True, readonly=True)
-    sale_order_id = fields.Many2one('sale.order',string='Ref. No.', readonly=True,required=True, states={'confirm': [('readonly', False)]})
-    partner_id = fields.Many2one('res.partner',string='Customer', domain=[('customer', '=', True)],required=True)
-    invoice_date = fields.Date('Invoice Date', readonly=True,required=True, states={'confirm': [('readonly', False)]})
-    advising_bank = fields.Text(string='Advising Bank', states={'confirm': [('readonly', False)]})
-    currency_id = fields.Many2one('res.currency', string='Currency', readonly=True,required=True, states={'confirm': [('readonly', False)]})
-    country_of_origin = fields.Char(string='Country of Origin',readonly=True, states={'confirm': [('readonly', False)]})
+    sale_order_id = fields.Many2one('sale.order',string='Sale Order Ref.', required=True,domain=[('state', '=', 'done')],readonly=True,states={'draft': [('readonly', False)]})
+    partner_id = fields.Many2one('res.partner', string='Customer', domain=[('customer', '=', True)],required=True,readonly=True,states={'draft': [('readonly', False)]})
+    invoice_date = fields.Date('Invoice Date', readonly=True,states={'draft': [('readonly', False)]})
+    advising_bank = fields.Text(string='Advising Bank', readonly=True, states={'draft': [('readonly', False)]})
+    currency_id = fields.Many2one('res.currency', string='Currency', readonly=True,required=True, states={'draft': [('readonly', False)]})
+    country_of_origin = fields.Char(string='Country of Origin',readonly=True, states={'draft': [('readonly', False)]})
 
     """ Shipping Address"""
-    ship_freight_type = fields.Char(string='Freight Type')
-    ship_exp_date = fields.Char(string='Exp. Shipping Date')
-    ship_exp_good_weight = fields.Char(string='Exp. Goods Weight')
-    ship_exp_cubic_weight = fields.Char(string='Exp. Cubic Weight')
-    ship_total_pkg = fields.Char(string='Total Package')
+    ship_freight_type = fields.Char(string='Freight Type',readonly=True,states={'draft': [('readonly', False)]})
+    ship_exp_date = fields.Char(string='Exp. Shipping Date',readonly=True,states={'draft': [('readonly', False)]})
+    ship_exp_good_weight = fields.Char(string='Exp. Goods Weight',readonly=True,states={'draft': [('readonly', False)]})
+    ship_exp_cubic_weight = fields.Char(string='Exp. Cubic Weight',readonly=True,states={'draft': [('readonly', False)]})
+    ship_total_pkg = fields.Char(string='Total Package',readonly=True,states={'draft': [('readonly', False)]})
 
     """ Customer Address"""
-    customer_add = fields.Text(string='Customer Addrss')
+    customer_add = fields.Text(string='Customer Address',readonly=True,states={'draft': [('readonly', False)]})
 
     """ Ship To"""
-    ship_to_add = fields.Text(string='Ship To Address')
-    terms_condition = fields.Text(string='Terms of Condition', readonly=True, states={'confirm': [('readonly', False)]})
+    ship_to_add = fields.Text(string='Ship To Address',readonly=True,states={'draft': [('readonly', False)]})
+    terms_condition = fields.Text(string='Terms of Condition', readonly=True, states={'draft': [('readonly', False)]})
 
     state = fields.Selection([
-        ('confirm', "Confirm"),
-        ('approve', "Approved")
-    ], default='confirm')
+        ('draft', "Draft"),
+        ('confirmed', "Confirmed")
+    ], default='draft')
 
     sequence_id = fields.Char('Sequence', readonly=True)
 
@@ -41,12 +41,12 @@ class ProformaInvoice(models.Model):
     sub_total = fields.Float(string='Sub Total',readonly=True)
     taxable_amount = fields.Float(string='Taxable Amount',readonly=True)
     taxed_amount = fields.Float(string='Tax',readonly=True)
-    freight_charge = fields.Float(string='Freight Charge',readonly=True, states={'confirm': [('readonly', False)]})
+    freight_charge = fields.Float(string='Freight Charge',readonly=True, states={'draft': [('readonly', False)]})
     total = fields.Float(string='Total', readonly=True)
 
 
     """ Relational field"""
-    line_ids = fields.One2many('proforma.invoice.line', 'parent_id', string="Products", readonly=True, states={'confirm': [('readonly', False)]})
+    line_ids = fields.One2many('proforma.invoice.line', 'parent_id', string="Products", readonly=True, states={'draft': [('readonly', False)]})
 
 
     @api.model
@@ -57,7 +57,7 @@ class ProformaInvoice(models.Model):
 
     @api.multi
     def action_confirm(self):
-        self.state = 'approve'
+        self.state = 'confirmed'
 
 
     @api.onchange('sale_order_id')
