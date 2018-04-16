@@ -36,6 +36,10 @@
                         <button name="button_confirm" string="Confirm Order" type="object"
                                 attrs="{'invisible': [('check_po_action_button','=',False)]}"/>
                     </xpath>
+                    <xpath expr="//button[@name='button_approve']" position="replace">
+                        <button name="button_approve" string="Approve Order" type="object" class="oe_highlight"
+                                states='to approve' groups="purchase.group_purchase_manager,commercial.group_commercial_manager"/>
+                    </xpath>
                     <xpath expr="//field[@name='company_id']" position="after">
                         <field name="operating_unit_id" groups="operating_unit.group_multi_operating_unit"
                                options='{"no_open": True,"no_create": 1, "no_create_edit":1}'/>

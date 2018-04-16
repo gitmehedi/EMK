@@ -30,6 +30,7 @@
                 'indent_operating_unit',
                 'question_set',
                 'com_shipment',
+                'gbs_application_group',
     ],
 
     # always loaded
