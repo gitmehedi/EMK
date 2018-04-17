@@ -10,7 +10,7 @@ class DeliveryOrder(models.Model):
     _rec_name = 'name'
     _order = "approved_date desc,name desc"
 
-    name = fields.Char(string='Name', index=True, readonly=True)
+    name = fields.Char(string='Delivery Authorization', index=True, readonly=True)
 
     so_date = fields.Datetime('Order Date', readonly=True, states={'draft': [('readonly', False)]})
     sequence_id = fields.Char('Sequence', readonly=True)
@@ -94,6 +94,7 @@ class DeliveryOrder(models.Model):
         vals['name'] = seq
         return super(DeliveryOrder, self).create(vals)
 
+
     @api.multi
     def unlink(self):
         for order in self:
@@ -102,10 +103,11 @@ class DeliveryOrder(models.Model):
             order.line_ids.unlink()
         return super(DeliveryOrder, self).unlink()
 
+
     @api.one
     def action_refuse(self):
         self.state = 'refused'
-        # self.line_ids.write({'state': 'close'})
+
 
     @api.one
     def action_draft(self):
@@ -113,32 +115,9 @@ class DeliveryOrder(models.Model):
 
     """ DO button box action """
 
-    # @api.multi
-    # def action_view_delivery(self):
-    #     '''
-    #     This function returns an action that display existing delivery orders
-    #     of given sales order ids. It can either be a in a list or in a form
-    #     view, if there is only one delivery order to show.
-    #     '''
-    #     action = self.env.ref('stock.action_picking_tree_all').read()[0]
-    #
-    #     pickings = self.sale_order_id.mapped('picking_ids')
-    #     if len(pickings) > 1:
-    #         action['domain'] = [('id', 'in', pickings.ids)]
-    #     elif pickings:
-    #         action['views'] = [(self.env.ref('stock.view_picking_form').id, 'form')]
-    #         action['res_id'] = pickings.id
-    #     return action
 
     @api.multi
     def action_view_delivery_order(self):
-
-    # @api.model
-    # def create(self, vals):
-    #     seq = self.env['ir.sequence'].next_by_code('delivery.order.layer') or '/'
-    #     vals['name'] = seq
-    #
-    #     return super(DeliveryOrderLayer, self).create(vals)
 
         view = self.env.ref('delivery_order.delivery_order_layer_form')
 
@@ -174,7 +153,6 @@ class DeliveryOrder(models.Model):
              ('partner_id', '=', self.parent_id.id)])
         account_payment_pool.write({'is_this_payment_checked': True})
 
-        #self.create_delivery_order()
         self.update_sale_order_da_qty()
         return self.write({'state': 'close', 'confirmed_date': time.strftime('%Y-%m-%d %H:%M:%S')})
 
@@ -331,6 +309,7 @@ class DeliveryOrder(models.Model):
             self.sale_order_id.action_done()
         return True
 
+
     @api.one
     def payment_information_check(self):
         for cash_line in self.cash_ids:
@@ -364,6 +343,7 @@ class DeliveryOrder(models.Model):
             elif payments.journal_id.type == 'cash':
                 self.set_payment_info_automatically(account_payment_pool)
 
+
     @api.one
     def set_cheque_info_automatically(self, account_payment_pool):
         vals = []
@@ -379,6 +359,7 @@ class DeliveryOrder(models.Model):
                                         }))
 
                 self.cheque_ids = vals
+
 
     @api.one
     def set_payment_info_automatically(self, account_payment_pool):
@@ -396,6 +377,7 @@ class DeliveryOrder(models.Model):
                                             }))
 
                         self.cash_ids = vals
+
 
     @api.one
     def set_products_info_automatically(self):
@@ -433,6 +415,7 @@ class DeliveryOrder(models.Model):
                 self.total_amount = sale_order_obj.amount_total
 
             self.line_ids = val
+
 
     def action_process_unattached_payments(self):
         account_payment_pool = self.env['account.payment'].search(
