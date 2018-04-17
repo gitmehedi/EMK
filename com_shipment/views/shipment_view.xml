@@ -10,7 +10,7 @@
                     <link rel="stylesheet" href="/com_shipment/static/src/css/lc_style.css"></link>
                     <header>
 
-                        <button string="Reset to Draft" name="action_draft" type="object" attrs="{'invisible': [('state', 'in', ('draft'))]}"/>
+                        <button string="Reset to Draft" name="action_draft" type="object" attrs="{'invisible': [('state', 'in', ('draft'))]}" groups="base_technical_features.group_technical_features"/>
 
                         <button string="On Board" name="action_on_board" states="draft" type="object" class="oe_highlight"/>
                         <button string="Receive Doc" name="action_doc_receive" states="on_board" type="object" class="oe_highlight"/>

@@ -24,13 +24,23 @@
             <field name="inherit_id" ref="purchase.purchase_order_form"/>
             <field name="arch" type="xml">
                 <data>
-                    <xpath expr="//button[@name='action_rfq_send']" position="replace">
+                    <xpath expr="//form/header/button[1]" position="replace">
                         <button name="action_rfq_send" string="Send RFQ by Email" type="object" class="btn-primary"
-                                attrs="{'invisible': [('check_po_action_button','=',False)]}"/>
+                                invisible="1"/>
                     </xpath>
+                    <xpath expr="//form/header/button[8]" position="replace">
+                        <button name="action_rfq_send" states="purchase" invisible="1" string="Send PO by Email" type="object" context="{'send_rfq':False}"/>
+                    </xpath>
+                    <xpath expr="//form/header/button[2]" position="replace">
+                        <button name="action_rfq_send" states="sent" invisible="1" string="Re-Send RFQ by Email" type="object" context="{'send_rfq':True}"/>
+                    </xpath>
+                    <xpath expr="//button[@name='button_done']" position="replace">
+                        <button name="button_done" type="object" string="Lock" states="purchase" invisible="1"/>
+                    </xpath>
+
                     <xpath expr="//button[@name='print_quotation']" position="replace">
                         <button name="print_quotation" string="Print RFQ" type="object" class="btn-primary"
-                                attrs="{'invisible': [('check_po_action_button','=',False)]}"/>
+                                invisible= "1"/>
                     </xpath>
                     <xpath expr="//button[@name='button_confirm']" position="replace">
                         <button name="button_confirm" string="Confirm Order" type="object"
