@@ -29,8 +29,8 @@
                     </h1>
                     <group>
                         <group>
-                            <field name="partner_id" attrs="{'invisible': [('picking_type_code', '=', 'internal')]}"/>
-                            <field name="receive_type"/>
+                            <field name="origin" placeholder="e.g. PO0032" class="oe_inline" attrs="{'readonly': [('picking_type_code', '=', 'internal')]}"/>
+                            <field name="receive_type" placeholder="Please Select" attrs="{'invisible': [('picking_type_code', 'in', ['internal','outgoing'])]}"/>
                             <field name="transfer_type" invisible="1"/>
                             <field name="location_id" groups="stock.group_stock_multi_locations" attrs="{'invisible': [('picking_type_code', '=', 'outgoing')]}"/>
                             <field name="location_dest_id" groups="stock.group_stock_multi_locations" attrs="{'invisible': [('picking_type_code', '=', 'incoming')]}"/>
@@ -38,7 +38,7 @@
                         </group>
                         <group>
                             <field name="min_date"/>
-                            <field name="origin" placeholder="e.g. PO0032" class="oe_inline"/>
+                            <field name="partner_id" attrs="{'invisible': [('picking_type_code', '=', 'internal')]}"/>
                             <label for="owner_id" groups="stock.group_tracking_owner"/>
                             <div groups="stock.group_tracking_owner">
                                 <field name="owner_id"/>
@@ -266,10 +266,10 @@
         <field name="inherit_id" ref="stock.view_picking_form"/>
         <field name="arch" type="xml">
             <xpath expr="//button[@name='action_see_move_scrap']" position="before">
-                    <button  class="oe_stat_button" name="attachment_tree_view"  type="object" icon="fa-files-o">
-                        <field string="Documents" name="doc_count" widget="statinfo"/>
-                    </button>
-                </xpath>
+                <button class="oe_stat_button" name="attachment_tree_view"  type="object" icon="fa-files-o">
+                    <field string="Documents" name="doc_count" widget="statinfo"/>
+                </button>
+            </xpath>
             <xpath expr="//header/button[@name='do_new_transfer']" position="replace">
                 <button name="do_new_transfer" string="Receive" groups="stock.group_stock_user"
                         states="draft,partially_available,assigned"

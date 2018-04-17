@@ -9,7 +9,7 @@
             <field name="arch" type="xml">
                 <form string="Proforma Invoice" delete="false" copy='0'>
                     <header>
-                        <button name="action_confirm" type="object" states="confirm" string="Confirm" class="oe_highlight"/>
+                        <button name="action_confirm" type="object" states="draft" string="Confirm" class="oe_highlight"/>
                         <field name="state" widget="statusbar"/>
                     </header>
 
