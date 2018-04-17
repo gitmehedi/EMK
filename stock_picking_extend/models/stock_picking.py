@@ -26,7 +26,6 @@ class Picking(models.Model):
     date_done = fields.Datetime('Date of Transfer', copy=False, readonly=False, states={'done': [('readonly', True)]},
                                 help="Completion Date of Transfer",default=fields.Datetime.now())
 
-
     doc_count = fields.Integer(compute='_compute_attached_docs', string="Number of documents attached")
 
     @api.one

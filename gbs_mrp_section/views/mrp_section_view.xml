@@ -1,0 +1,64 @@
+<odoo>
+  <data>
+
+    <!-- MRP section tree view -->
+      <record model="ir.ui.view" id="mrp_section_tree">
+          <field name="name">mrp_section_tree</field>
+          <field name="model">mrp.section</field>
+          <field name="arch" type="xml">
+              <tree>
+                  <field name="name"/>
+                  <field name="operating_unit_id"/>
+              </tree>
+          </field>
+      </record>
+
+    <!-- MRP section Form view -->
+      <record model="ir.ui.view" id="mrp_section_form">
+          <field name="name">mrp_section_from</field>
+          <field name="model">mrp.section</field>
+          <field name="arch" type="xml">
+              <form string="MRP Section">
+                  <group>
+                      <group>
+                          <field name="name"/>
+                      </group>
+                      <group>
+                          <field name="operating_unit_id"/>
+                      </group>
+                  </group>
+              </form>
+          </field>
+      </record>
+
+      <!-- actions opening views on models -->
+      <record model="ir.actions.act_window" id="mrp_section_action_window">
+          <field name="name">MRP Section</field>
+          <field name="res_model">mrp.section</field>
+          <field name="view_mode">tree,form</field>
+      </record>
+
+
+      <!-- menu item -->
+      <menuitem name="Section"
+                id="menu_mrp_section"
+                parent="mrp.menu_mrp_configuration"
+                action="mrp_section_action_window"
+                groups="mrp.group_mrp_manager"/>
+
+      <!-- inherit mrp configuration -->
+      <!--<menuitem id="mrp.menu_mrp_root"-->
+            <!--name="Manufacturing"-->
+            <!--groups="group_mrp_user,group_mrp_manager"-->
+            <!--icon="fa-wrench"-->
+            <!--web_icon="mrp,static/description/icon.png"-->
+            <!--sequence="35"/>-->
+
+      <!--<menuitem id="mrp.menu_mrp_configuration"-->
+            <!--name="Configuration"-->
+            <!--parent="mrp.menu_mrp_root"-->
+            <!--groups="mrp.group_mrp_manager"-->
+            <!--sequence="100"/>-->
+
+  </data>
+</odoo>
