@@ -33,7 +33,7 @@
 
       <!-- actions opening views on models -->
       <record model="ir.actions.act_window" id="mrp_section_action_window">
-          <field name="name">mrp_section_window</field>
+          <field name="name">MRP Section</field>
           <field name="res_model">mrp.section</field>
           <field name="view_mode">tree,form</field>
       </record>
