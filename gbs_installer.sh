@@ -51,6 +51,14 @@ sudo chown -R $OE_USER:$OE_USER $OE_HOME/*
 
 sudo su root -c "echo 'addons_path=$OE_OCA_HOME/addons' >> /etc/${OE_CONFIG}.conf"
 
+sudo su
+curl https://packages.microsoft.com/keys/microsoft.asc | apt-key add -
+curl https://packages.microsoft.com/config/ubuntu/16.04/prod.list > /etc/apt/so$
+exit
+sudo apt-get update
+sudo apt-get install msodbcsql mssql-tools unixodbc-dev
+sudo pip install pyodbc==3.1.1
+
 echo "-----------------------------------------------------------"
 echo "Done! "
 echo "-----------------------------------------------------------"
