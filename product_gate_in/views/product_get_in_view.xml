@@ -45,7 +45,7 @@
                             <group>
                                 <field name="ship_id"
                                        options="{'no_quick_create':True,'no_create_edit':True,'no_open': True}"
-                                       attrs="{'invisible': [('receive_type', '!=', 'lc')]}"/>
+                                       attrs="{'invisible': [('receive_type', '!=', 'lc')],'required': [('receive_type', '=', 'lc')]}"/>
                                 <field name="create_by"/>
                                 <field name="received"/>
                             </group>
