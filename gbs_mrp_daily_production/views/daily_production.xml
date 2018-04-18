@@ -7,7 +7,6 @@
           <field name="model">daily.production</field>
           <field name="arch" type="xml">
               <tree string="Daily Production">
-                  <field name="name"/>
                   <field name="section_id"/>
                   <field name="date"/>
               </tree>
@@ -22,18 +21,17 @@
               <form string="Daily Production">
                   <header>
                         <button string="Confirm" name="action_confirm"
-								states="draft" type="object" class="oe_highlight"/>
+								states="draft" type="object" class="oe_highlight" groups="mrp.group_mrp_user"/>
                         <button string="Approve" name="action_confirm"
-								states="confirmed" type="object" class="oe_highlight"/>
+								states="confirmed" type="object" class="oe_highlight" groups="mrp.group_mrp_manager"/>
 						<button string="Reset To Draft" name="action_reset"
-								type="object" states="approved"/>
+								type="object" states="approved" groups="base_technical_features.group_technical_features"/>
 						<field name="state" widget="statusbar" statusbar_visible="draft,confirmed,approved"/>
 
                   </header>
                   <sheet>
                       <group>
                           <group>
-                              <field name="name"/>
                               <field name="section_id" options='{"no_open" : True, "no_create" : True, "no_edit":True}'/>
                           </group>
                           <group>
@@ -45,7 +43,7 @@
                               <field name="finish_product_line_ids">
                                   <tree string="Finish Products" editable="bottom">
                                       <field name="product_id" options="{'no_quick_create':True,'no_create_edit':True}"/>
-                                      <field name="qty"/>
+                                      <field name="fnsh_product_qty"/>
                                       <field name="uom_id"/>
                                       <field name="date"/>
                                   </tree>
@@ -55,7 +53,7 @@
                                 <field name="consumed_product_line_ids">
                                     <tree string="Consumed Products" editable="bottom">
                                         <field name="product_id" options="{'no_quick_create':True,'no_create_edit':True}"/>
-                                        <field name="qty"/>
+                                        <field name="con_product_qty"/>
                                     </tree>
                                 </field>
                             </page>
@@ -77,12 +75,12 @@
       <menuitem name="Daily Production"
                 id="top_menu_daily_production"
                 parent="mrp.menu_mrp_root"
-                groups="mrp.group_mrp_manager"/>
+                groups="mrp.group_mrp_user"/>
       <menuitem name="Daily Production"
                 id="sub_menu_daily_production"
                 parent="top_menu_daily_production"
                 action="daily_production_action_window"
-                groups="mrp.group_mrp_manager"/>
+                groups="mrp.group_mrp_user"/>
 
   </data>
 </odoo>

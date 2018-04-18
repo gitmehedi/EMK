@@ -4,8 +4,9 @@ class ConsumedProduct(models.Model):
     _name = 'consumed.product.line'
 
     product_id = fields.Many2one('product.product', 'Product Name')
-    qty = fields.Float('Quantity')
+    con_product_qty = fields.Float('Quantity')
     daily_pro_id = fields.Many2one('daily.production', 'Daily Production')
+
 
     state = fields.Selection([
         ('draft', 'Draft'),

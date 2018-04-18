@@ -3,7 +3,7 @@ from odoo import models, fields, api
 class DailyProduction(models.Model):
     _name = 'daily.production'
 
-    name = fields.Char('Name',required=True)
+    product_id = fields.Many2one('product.template', 'Product Name')
     section_id = fields.Many2one('mrp.section','Section', required=True)
     date = fields.Date('Date')
     finish_product_line_ids = fields.One2many('finish.product.line','daily_pro_id','Finish Produts')

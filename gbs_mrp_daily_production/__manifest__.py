@@ -13,7 +13,7 @@
         'product',
     ],
     'data': [
-        #'security/ir.model.access.csv',
+        'security/ir.model.access.csv',
         'views/daily_production.xml',
     ],
     'installable': True,
