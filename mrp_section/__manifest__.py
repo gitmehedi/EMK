@@ -1,5 +1,5 @@
 {
-    'name': "GBS MRP SECTION",
+    'name': "MRP SECTION",
     'author': 'Genweb2',
     'version': '10.0.1.0.0',
     'category': 'Manufacturing',

@@ -1,2 +1,0 @@
-id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-access_gbs_mrp_section_gbs_mrp_section,gbs_mrp_section.gbs_mrp_section,model_gbs_mrp_section_gbs_mrp_section,,1,0,0,0

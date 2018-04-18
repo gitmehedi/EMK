@@ -1,5 +1,5 @@
 {
-    'name': "GBS MRP DAILY PRODUCTION",
+    'name': "MRP DAILY PRODUCTION",
     'author': 'Genweb2',
     'version': '10.0.1.0.0',
     'category': 'Manufacturing',
@@ -9,7 +9,7 @@
     'depends': [
         'mrp',
         'base',
-        'gbs_mrp_section',
+        'mrp_section',
         'product',
     ],
     'data': [
