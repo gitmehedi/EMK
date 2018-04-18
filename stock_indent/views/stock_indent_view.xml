@@ -80,7 +80,7 @@
 								<field name="product_lines">
 									<tree string="Products" editable="bottom">
 										<field name="sequence" widget="handle"/>
-										<field name="product_id"/>
+										<field name="product_id" domain="[('type','!=','service')]"/>
 										<field name="name" readonly="1" />
 										<field name="qty_available" readonly="1" groups="stock.group_stock_user" />
 										<field name="product_uom" string="UOM"/>
