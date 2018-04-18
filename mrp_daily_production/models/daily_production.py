@@ -3,7 +3,7 @@ from odoo import models, fields, api
 class DailyProduction(models.Model):
     _name = 'daily.production'
 
-    name = fields.Char('Name',required=True)
+
     product_id = fields.Many2one('product.template', 'Product Name')
     section_id = fields.Many2one('mrp.section','Section', required=True)
     date = fields.Date('Date')
@@ -16,22 +16,21 @@ class DailyProduction(models.Model):
         ('reset', 'Reset To Draft'),
     ], string='Status', default='draft', track_visibility='onchange')
 
-    @api.onchange('product_id')
-    def po_product_line(self):
-        #vals = self.daily_pro_id.consumed_product_line_ids
+    @api.onchange('date')
+    def default_date(self):
+        if self.date:
+            for finish_date in self.finish_product_line_ids:
+                finish_date.date = self.date
 
-        data = []
-        if self.product_id:
-            pro_line_pool = self.env['mrp.bom'].search(
-                [('product_tmpl_id', '=', self.product_id.id)])
-            for obj in pro_line_pool.bom_line_ids:
-                data.append((0, 0, {
-                    'product_id': obj.product_id,
-                    'con_product_qty': obj.product_qty,
-
-                }))
-
-            self.consumed_product_line_ids = data
+    @api.multi
+    def name_get(self):
+        result = []
+        for record in self:
+            name = record.date
+            if record.section_id:
+                name = "%s [%s]" % (record.section_id.name_get()[0][1],name)
+            result.append((record.id, name))
+        return result
 
     @api.one
     def action_reset(self):
