@@ -31,6 +31,7 @@
                 'question_set',
                 'com_shipment',
                 'gbs_application_group',
+                'shipment_lc_product',
     ],
 
     # always loaded
