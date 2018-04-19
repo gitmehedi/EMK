@@ -6,7 +6,7 @@ class DailyProduction(models.Model):
 
     #product_id = fields.Many2one('product.template', 'Product Name')
     section_id = fields.Many2one('mrp.section','Section', required=True)
-    date = fields.Date('Date')
+    production_date = fields.Date('Date')
     finish_product_line_ids = fields.One2many('finish.product.line','daily_pro_id','Finish Produts')
     consumed_product_line_ids = fields.One2many('consumed.product.line','daily_pro_id','Consumed Products')
     state = fields.Selection([
@@ -16,11 +16,14 @@ class DailyProduction(models.Model):
         ('reset', 'Reset To Draft'),
     ], string='Status', default='draft', track_visibility='onchange')
 
-    @api.onchange('date')
-    def default_date(self):
-        if self.date:
-            for finish_date in self.finish_product_line_ids:
-                finish_date.date = self.date
+    # @api.model
+    # def create(self, values):
+    #
+    #     if self.finish_product_line_ids) == 'remove'
+    #
+    #
+    #     return super(DailyProduction, self).create(values)
+
 
     @api.multi
     def action_consume(self):
@@ -48,7 +51,7 @@ class DailyProduction(models.Model):
     def name_get(self):
         result = []
         for record in self:
-            name = record.date
+            name = record.production_date
             if record.section_id:
                 name = "%s [%s]" % (record.section_id.name_get()[0][1],name)
             result.append((record.id, name))
