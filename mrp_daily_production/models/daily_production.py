@@ -31,7 +31,7 @@ class DailyProduction(models.Model):
                                            }))
                     else:
                         val.append((0, 0, {'product_id': record.product_id.id,
-                                           'con_product_qty': record.product_qty + product.fnsh_product_qty,
+                                           'con_product_qty': record.product_qty,
                                            }))
 
                 self.consumed_product_line_ids = val
