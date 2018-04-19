@@ -4,7 +4,7 @@ class DailyProduction(models.Model):
     _name = 'daily.production'
 
 
-    product_id = fields.Many2one('product.template', 'Product Name')
+    #product_id = fields.Many2one('product.template', 'Product Name')
     section_id = fields.Many2one('mrp.section','Section', required=True)
     date = fields.Date('Date')
     finish_product_line_ids = fields.One2many('finish.product.line','daily_pro_id','Finish Produts')
@@ -21,6 +21,28 @@ class DailyProduction(models.Model):
         if self.date:
             for finish_date in self.finish_product_line_ids:
                 finish_date.date = self.date
+
+    @api.multi
+    def action_consume(self):
+        if self.finish_product_line_ids:
+            for product in self.finish_product_line_ids:
+                val = []
+                bom_pool = self.env['mrp.bom'].search(
+                    [('product_tmpl_id', '=', product.product_id.id)])
+
+                for record in bom_pool.bom_line_ids:
+                    if product.fnsh_product_qty:
+                        val.append((0, 0, {'product_id': record.product_id.id,
+                                           'con_product_qty': record.product_qty + product.fnsh_product_qty,
+                                           }))
+                    else:
+                        val.append((0, 0, {'product_id': record.product_id.id,
+                                           'con_product_qty': record.product_qty + product.fnsh_product_qty,
+                                           }))
+
+                self.consumed_product_line_ids = val
+
+
 
     @api.multi
     def name_get(self):

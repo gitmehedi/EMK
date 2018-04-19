@@ -24,6 +24,8 @@
                   <header>
                         <button string="Confirm" name="action_confirm"
 								states="draft" type="object" class="oe_highlight" groups="mrp.group_mrp_user"/>
+                        <button string="Consumed Goods" name="action_consume"
+								type="object" class="oe_highlight" groups="mrp.group_mrp_user"/>
                         <button string="Approve" name="action_confirm"
 								states="confirmed" type="object" class="oe_highlight" groups="mrp.group_mrp_manager"/>
 						<button string="Reset To Draft" name="action_reset"
