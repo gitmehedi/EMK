@@ -4,7 +4,6 @@ class DailyProduction(models.Model):
     _name = 'daily.production'
 
 
-    #product_id = fields.Many2one('product.template', 'Product Name')
     section_id = fields.Many2one('mrp.section','Section', required=True)
     production_date = fields.Date('Date')
     finish_product_line_ids = fields.One2many('finish.product.line','daily_pro_id','Finish Produts')
@@ -15,14 +14,6 @@ class DailyProduction(models.Model):
         ('approved', 'Approved'),
         ('reset', 'Reset To Draft'),
     ], string='Status', default='draft', track_visibility='onchange')
-
-    # @api.model
-    # def create(self, values):
-    #
-    #     if self.finish_product_line_ids) == 'remove'
-    #
-    #
-    #     return super(DailyProduction, self).create(values)
 
 
     @api.multi
