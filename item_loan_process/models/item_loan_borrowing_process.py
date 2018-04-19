@@ -161,7 +161,12 @@ class ItemBorrowing(models.Model):
 
     @api.multi
     def action_draft(self):
-        self.state = 'draft'
+        res = {
+            'state': 'draft',
+            'approver_id': self.env.user.id,
+            'approved_date': time.strftime('%Y-%m-%d %H:%M:%S')
+        }
+        self.write(res)
         self.item_lines.write({'state': 'draft'})
 
 
