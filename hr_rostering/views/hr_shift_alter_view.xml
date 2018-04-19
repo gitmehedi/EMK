@@ -56,8 +56,13 @@
 							</group>
 							<group>
 								<field name="is_included_ot" attrs="{'readonly':['|', ('state','=','approved'),('state','=','confirmed')]}"/>
-								<field name="ot_start" attrs="{'readonly':['|', ('state','=','approved'),('state','=','confirmed')]}"/>
-								<field name="ot_end" attrs="{'readonly':['|', ('state','=','approved'),('state','=','confirmed')]}"/>
+								<field name="ot_start" attrs="{ 'readonly': ['|', ('state','=','approved'),('state','=','confirmed')],
+																'invisible': [('is_included_ot', '=', False)],
+																'required': [('is_included_ot', '=', True)]}"/>
+								<field name="ot_end"
+									   attrs="{ 'readonly': ['|', ('state','=','approved'),('state','=','confirmed')],
+									   			'invisible': [('is_included_ot', '=', False)],
+									   			'required': [('is_included_ot', '=', True)]}"/>
 								<field name="grace_time" attrs="{'readonly':['|', ('state','=','approved'),('state','=','confirmed')]}"/>
                                 <field name="pending_approver" groups="hr.group_hr_user"/>
 							</group>

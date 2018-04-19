@@ -15,6 +15,7 @@
     'data': [
         'security/ir.model.access.csv',
         'views/daily_production.xml',
+        'views/inherit_product_template.xml',
     ],
     'installable': True,
     'application': False,
