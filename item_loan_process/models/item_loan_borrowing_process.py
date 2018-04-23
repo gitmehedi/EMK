@@ -13,7 +13,7 @@ class ItemBorrowing(models.Model):
     _order = "request_date desc"
 
     def _get_default_item_loan_borrow_location_id(self):
-        return self.env['stock.location'].search([('id', '=', self.env.user.default_location_id.id)], limit=1).id
+        return self.env['stock.location'].search([('operating_unit_id', '=', self.env.user.default_operating_unit_id.id),('name','=','Input')], limit=1).id
 
     def _get_default_location_id(self):
         return self.env['stock.location'].search([('usage', '=', 'supplier')], limit=1).id
@@ -36,11 +36,12 @@ class ItemBorrowing(models.Model):
                                  states={'draft': [('readonly', False)]})
 
     location_id = fields.Many2one('stock.location', 'Location', default=_get_default_location_id,
-                                  domain="[('usage', '=', 'internal'),('operating_unit_id', '=',operating_unit_id)]",
-                                  required=True,
+                                  readonly = True,required=True,help="source location. from where item is borrowing.",
                                   states={'draft': [('readonly', False)]})
-    item_loan_borrow_location_id = fields.Many2one('stock.location', 'Destination Location',
-                                            default=_get_default_item_loan_borrow_location_id,readonly=True)
+    item_loan_borrow_location_id = fields.Many2one('stock.location', 'Destination Location',required=True,
+                                            default=_get_default_item_loan_borrow_location_id,
+                                            domain="[('usage', '=', 'internal'),('operating_unit_id', '=',operating_unit_id)]",
+                                            help="destination location.")
     picking_id = fields.Many2one('stock.picking', 'Picking', states={'draft': [('readonly', False)]})
     picking_type_id = fields.Many2one('stock.picking.type', string='Picking Type')
     request_by = fields.Many2one('res.users', string='Request By', required=True, readonly=True,

@@ -17,7 +17,7 @@ class ItemLoanLending(models.Model):
         return self.env['stock.location'].search([('usage', '=', 'customer')], limit=1).id
 
     def _get_default_location_id(self):
-        return self.env['stock.location'].search([('operating_unit_id', '=', self.env.user.default_operating_unit_id.id)], limit=1).id
+        return self.env['stock.location'].search([('operating_unit_id', '=', self.env.user.default_operating_unit_id.id),('name','=','Stock')], limit=1).id
 
     name = fields.Char('Issue #', size=30, readonly=True, default=lambda self: _('New'),copy=False,
                        states={'draft': [('readonly', False)]})
@@ -217,9 +217,12 @@ class ItemLoanLendingLines(models.Model):
             if productLine.product_id.id:
                 location_id = productLine.item_loan_lending_id.location_id.id
                 product_quant = self.env['stock.quant'].search(['&', ('product_id', '=', productLine.product_id.id),
-                                                                ('location_id', '=', location_id)], limit=1)
-                if product_quant:
-                    productLine.qty_available = product_quant.qty
+                                                                ('location_id', '=', location_id)])
+                quantity = sum([val.qty for val in product_quant])
+                if quantity <= 0:
+                    raise UserError(_('Product "{0}" has not sufficient balance for this location'.format(
+                        self.product_id.display_name)))
+                self.qty_available = quantity
 
     @api.one
     @api.constrains('product_uom_qty')
