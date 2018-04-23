@@ -40,7 +40,7 @@
         <menuitem
                 id="letter_of_credit.lc_commercial_creation_menu"
                 parent="commercial.menu_commercial_root"
-                sequence="1"
+                sequence="4"
                 name="Letter of Credit"
                 groups="group_imoprt_lc_local,group_imoprt_lc_foreign,group_export_lc_local,group_export_lc_foreign"/>
 
@@ -80,7 +80,7 @@
         <menuitem
                 id="gbs_purchase_requisition.menu_pr_commercial"
                 parent="commercial.menu_commercial_root"
-                sequence="0"
+                sequence="1"
                 name="Purchase Requisition"
                 groups="group_approve_pr_foreign,group_approve_pr_local"/>
 
@@ -111,7 +111,7 @@
         <menuitem
                 id="com_shipment.lc_shipment_creation_menu"
                 parent="commercial.menu_commercial_root"
-                sequence="2"
+                sequence="5"
                 name="Shipment"
                 groups="commercial.group_commercial_user"/>
 
