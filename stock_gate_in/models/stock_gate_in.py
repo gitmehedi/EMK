@@ -31,7 +31,7 @@ class ProductGateIn(models.Model):
                         [('code', '=', 'incoming'),('warehouse_id.operating_unit_id', '=', self.operating_unit_id.id),
                          ('default_location_dest_id', '=', location_dest_id.id)])
 
-                    pick_name = self.env['ir.sequence'].next_by_code('stock.picking')
+                    # pick_name = self.env['ir.sequence'].next_by_code('stock.picking')
                     res = {
                         'receive_type': self.receive_type,
                         'transfer_type': 'receive',
@@ -43,7 +43,7 @@ class ProductGateIn(models.Model):
                         'operating_unit_id': self.operating_unit_id.id,
                         'state': 'draft',
                         'invoice_state': 'none',
-                        'name': pick_name,
+                        'name': self.name,
                         'date': date_planned,
                         'location_id': location_id.id,
                         'location_dest_id': location_dest_id.id,
