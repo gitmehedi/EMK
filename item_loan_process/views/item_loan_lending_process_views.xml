@@ -41,7 +41,6 @@
                     </header>
                     <sheet>
                         <group col="2">
-                            <field name="picking_id" invisible="1"/>
                             <group>
                                 <field name="issuer_id" readonly="1" />
                                 <field name="request_date" />
@@ -78,11 +77,13 @@
                                                options="{'no_create': True,'no_open':True}"/>
                                         <field name="operating_unit_id" options="{'no_create': True,'no_open':True}"
                                                groups="operating_unit.group_multi_operating_unit" />
-                                        <field name="location_id" options="{'no_create': True,'no_open':True}"/>
+
                                     </group>
                                     <group>
+                                        <field name="location_id" options="{'no_create': True,'no_open':True}"/>
                                         <field name="item_loan_location_id" />
-                                        <field name="picking_type_id" groups="base.group_system"/>
+                                        <field name="picking_id" invisible="1"/>
+                                        <field name="picking_type_id" invisible="1"/>
                                     </group>
                                 </group>
                             </page>

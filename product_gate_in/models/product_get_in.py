@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import datetime
 
 from odoo import models, fields, api,_
 
@@ -52,6 +53,8 @@ class productGateIn(models.Model):
     #For create secquence
     @api.model
     def create(self,vals):
+        requested_date = datetime.strptime(datetime.today(), "%Y-%m-%d %H:%M:%S").date()
+        new_seq = self.env['ir.sequence'].next_by_code_new('item.borrowing', requested_date)
         seq = self.env['ir.sequence'].next_by_code('product.gate.in') or '/'
         vals['name'] = seq
         return super(productGateIn, self).create(vals)
