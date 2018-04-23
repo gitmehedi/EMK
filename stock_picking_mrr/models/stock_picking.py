@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-
+from datetime import datetime
 from odoo import models, fields, api
 from odoo.addons import decimal_precision as dp
 
@@ -47,6 +47,7 @@ class Picking(models.Model):
     def button_approve(self):
         for picking in self:
             picking.check_mrr_button = 'True'
+            requested_date = datetime.today().date()
             new_seq = self.env['ir.sequence'].next_by_code('material.requisition')
             if new_seq:
                 picking.mrr_no = new_seq
