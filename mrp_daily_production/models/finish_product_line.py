@@ -7,7 +7,7 @@ class FineshProduct(models.Model):
     product_id = fields.Many2one('product.template', 'Product Name')
     daily_pro_id = fields.Many2one('daily.production', 'Daily Production')
     fnsh_product_qty = fields.Float('Quantity')
-    line_date = fields.Date('Date',related = 'daily_pro_id.production_date')
+    finish_product_date = fields.Date('Date')
     uom_id = fields.Many2one('product.uom', 'UOM')
 
     state = fields.Selection([
@@ -21,7 +21,7 @@ class FineshProduct(models.Model):
     @api.onchange('product_id')
     def onchange_product(self):
         self.uom_id = self.product_id.uom_id
-        self.line_date = self.daily_pro_id.production_date
+        self.finish_product_date = self.daily_pro_id.production_date
 
 
 
