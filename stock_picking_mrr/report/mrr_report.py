@@ -1,8 +1,4 @@
 from odoo import api, exceptions, fields, models
-from odoo.addons.custom_report.data.utility import ReportUtility
-
-
-
 
 class MrrReport(models.AbstractModel):
     _name = 'report.stock_picking_mrr.report_mrr_doc'
