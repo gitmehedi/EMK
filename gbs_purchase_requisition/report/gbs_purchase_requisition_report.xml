@@ -16,83 +16,82 @@
                      <t t-call="custom_report.gbs_internal_layout">
                         <div class="page" style="page-break-inside:auto">
                             <div class="row">
+                                <style type="text/css">
+                                    .report-title { text-align:center; }
+                                    .odo-bg-gray, .odo-bg-gray > td { background-color: #f5f5f5; }
+                                </style>
                                 <div class="clearfix">
                                     <h3 class="report-title">Purchase Requisition</h3>
                                     <div class="row">
                                         <div class="col-xs-6 text-left">
-                                            <h5>
+                                            <h6>
                                                 <b>PR NO. </b><span t-field="o.name"/>
-                                            </h5>
+                                            </h6>
                                         </div>
                                         <div class="col-xs-6 text-right">
-                                            <h5>
+                                            <h6>
                                                 <b>Date : </b><span t-field="o.requisition_date"/>
-                                            </h5>
+                                            </h6>
                                         </div>
                                     </div>
                                     <div class="row">
-                                        <div class="col-xs-4 text-left">
-                                            <p>The following materials is required for </p>
-                                        </div>
-                                        <div class="col-xs-4 text-center">
-                                            <p> Admin Vehicle </p>
-                                        </div>
-                                        <div class="col-xs-4 text-right">
-                                            <p> Department </p>
+                                        <div class="col-xs-6 text-left">
+                                            <h5>The following materials is required for
+                                            <span t-field="o.department_id.name"/> department</h5>
                                         </div>
                                     </div>
                                 </div>
-                                <table class="table table-bordered table-report-xs table-striped" style="margin-bottom: 10px;">
-                                    <thead style="text-align: center;">
-                                        <tr class="odo-bg-gray" style="text-align: center;">
-                                            <th rowspan="2">SL</th>
-                                            <th rowspan="2">Particulars</th>
-                                            <th rowspan="2">Store Code</th>
-                                            <th rowspan="2">Present requirement</th>
-                                            <th colspan="2">Approx Value</th>
-                                            <th colspan="3">Last Purchase</th>
-                                            <th rowspan="2">Stock</th>
-                                            <th rowspan="2">Remarks</th>
+                                <table class="table table-report-xs table-bordered table-striped">
+                                    <thead>
+                                        <tr class="odo-bg-gray">
+                                            <th rowspan="2" style="text-align: center;">SL</th>
+                                            <th rowspan="2" style="text-align: left;">Particulars</th>
+                                            <th rowspan="2" style="text-align: center;">Store Code</th>
+                                            <th rowspan="2" style="text-align: center;">Present Requirement</th>
+                                            <th colspan="2" style="text-align: center;">Approx Value</th>
+                                            <th colspan="3" style="text-align: center;">Last Purchase</th>
+                                            <th rowspan="2" style="text-align: center;">Stock</th>
+                                            <th rowspan="2" style="text-align: left;" >Remarks</th>
                                         </tr>
-                                        <tr class="odo-bg-gray" style="text-align: center;">
-                                            <th>Unit</th>
-                                            <th>Total TK</th>
-                                            <th>Date</th>
-                                            <th>Qty</th>
-                                            <th>Rate</th>
+                                        <tr class="odo-bg-gray report-header">
+                                            <th style="text-align: center;">Unit</th>
+                                            <th style="text-align: center;">Total TK</th>
+                                            <th style="text-align: center;">Date</th>
+                                            <th style="text-align: center;">Qty</th>
+                                            <th style="text-align: center;">Rate</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         <t t-foreach="o.line_ids" t-as="l">
-                                            <tr style="page-break-inside: avoid">
-                                                <td><span t-esc="l_index+1"/></td>
-                                                <td><span t-esc="l.product_id.name"/></td>
-                                                <td><span t-esc="0.00"/></td>
-                                                <td><span t-esc="l.product_ordered_qty"/></td>
-                                                <td><span t-esc="l.product_uom_id.name"/></td>
-                                                <td><span t-esc="0.00"/></td>
-                                                <td><span t-esc="0.00"/></td>
-                                                <td><span t-esc="l.last_qty"/></td>
-                                                <td><span t-esc="l.last_price_unit"/></td>
-                                                <td><span t-esc="l.product_qty"/></td>
-                                                <td><span t-esc="l.remark"/></td>
+                                            <tr style="page-break-inside: avoid" class="text-center">
+                                                <td style="width:2%"><span t-esc="l_index+1"/></td>
+                                                <td style="text-align: left;"><span t-esc="l.product_id.name"/></td>
+                                                <td style="width:4%"><span t-esc="0.00"/></td>
+                                                <td style="width:4%"><span t-esc="l.product_ordered_qty"/></td>
+                                                <td style="width:4%"><span t-esc="l.product_uom_id.name"/></td>
+                                                <td style="width:4%"><span t-esc="l.price_unit"/></td>
+                                                <td style="width:4%"><span t-esc="l.product_ordered_qty*l.price_unit"/></td>
+                                                <td style="width:4%"><span t-esc="l.last_qty"/></td>
+                                                <td style="width:4%"><span t-esc="l.last_price_unit"/></td>
+                                                <td style="width:4%"><span t-esc="l.product_qty"/></td>
+                                                <td style="text-align: left;"><span t-esc="l.remark"/></td>
                                             </tr>
                                         </t>
                                     </tbody>
                                 </table>
                             </div>
-                            <div class="row mb32" style="margin-top: 10mm;">
+                            <div class="row mb32" style="margin-top: 10mm; font-size: 12px;">
                                 <div class="col-xs-3 text-center">
-                                    <strong style="border-top: 1px solid black; padding-top:5px;">Requisition raised by : </strong>
+                                    <strong style="border-top: 1px solid black; padding-top:5px;">Requisition Raised By</strong>
                                 </div>
                                 <div class="col-xs-3 text-center">
-                                    <strong style="border-top: 1px solid black; padding-top:5px;">Reviewed by : </strong>
+                                    <strong style="border-top: 1px solid black; padding-top:5px;">Reviewed By</strong>
                                 </div>
                                 <div class="col-xs-3 text-center">
-                                    <strong style="border-top: 1px solid black; padding-top:5px;">Recommended by : </strong>
+                                    <strong style="border-top: 1px solid black; padding-top:5px;">Recommended By</strong>
                                 </div>
                                 <div class="col-xs-3 text-center">
-                                    <strong style="border-top: 1px solid black; padding-top:5px;">Approved by : </strong>
+                                    <strong style="border-top: 1px solid black; padding-top:5px;">Approved By</strong>
                                 </div>
                             </div>
                         </div>

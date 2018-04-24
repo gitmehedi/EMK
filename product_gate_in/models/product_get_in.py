@@ -1,8 +1,11 @@
 # -*- coding: utf-8 -*-
+from datetime import datetime
 
 from odoo import models, fields, api,_
+from odoo.exceptions import UserError
 
-class productGateIn(models.Model):
+
+class ProductGateIn(models.Model):
     _name = 'product.gate.in'
 
 
@@ -49,14 +52,6 @@ class productGateIn(models.Model):
         self.state = 'draft'
         self.shipping_line_ids.write({'state': 'draft'})
 
-    #For create secquence
-    @api.model
-    def create(self,vals):
-        seq = self.env['ir.sequence'].next_by_code('product.gate.in') or '/'
-        vals['name'] = seq
-        return super(productGateIn, self).create(vals)
-
-
     # change data and line data depands on ship_id
     @api.onchange('ship_id')
     def set_products_info_automatically(self):
@@ -76,6 +71,25 @@ class productGateIn(models.Model):
                                        }))
 
             self.shipping_line_ids = val
+
+    ####################################################
+    # Override methods
+    ####################################################
+    #For create secquence
+    @api.model
+    def create(self,vals):
+        requested_date = datetime.today().date()
+        new_seq = self.env['ir.sequence'].next_by_code_new('product.gate.in', requested_date) or '/'
+        vals['name'] = new_seq
+        return super(ProductGateIn, self).create(vals)
+
+    @api.multi
+    def unlink(self):
+        for m in self:
+            if m.state != 'draft':
+                raise UserError(_('You can not delete in this state.'))
+        return super(ProductGateIn, self).unlink()
+
 
 
 class ShipmentProductLine(models.Model):

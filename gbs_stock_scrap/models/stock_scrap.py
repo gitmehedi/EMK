@@ -224,7 +224,7 @@ class GBSStockScrapLines(models.Model):
         if self.product_id:
             location_id = self.stock_scrap_id.location_id.id
             product_quant = self.env['stock.quant'].search([('product_id', '=', self.product_id.id),
-                                                            ('location_id', '=', location_id)],limit=1)
+                                                            ('location_id', '=', location_id)])
             quantity = sum([val.qty for val in product_quant])
 
             if quantity <= 0:

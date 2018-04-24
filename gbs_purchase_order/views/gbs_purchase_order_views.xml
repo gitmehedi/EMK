@@ -24,6 +24,9 @@
             <field name="inherit_id" ref="purchase.purchase_order_form"/>
             <field name="arch" type="xml">
                 <data>
+                    <xpath expr="//form/sheet/div[@name='button_box']" position="attributes">
+                        <attribute name="attrs">{'invisible': [('purchase_by', 'in', ['lc'])]}</attribute>
+                    </xpath>
                     <xpath expr="//form/header/button[1]" position="replace">
                         <button name="action_rfq_send" string="Send RFQ by Email" type="object" class="btn-primary"
                                 invisible="1"/>

@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-
+from datetime import datetime
 from odoo import models, fields, api
 from odoo.addons import decimal_precision as dp
 
@@ -10,6 +10,7 @@ class Picking(models.Model):
     check_approve_button = fields.Boolean(default=False,string='Approve Button Check',compute='_compute_approve_button',store=True)
     check_ac_approve_button = fields.Boolean(default=False,string='AC Button Check',compute='_compute_approve_button',store=True)
     mrr_no = fields.Char('MRR No')
+    mrr_date = fields.Date('MRR date')
 
     pack_operation_product_ids = fields.One2many(
         'stock.pack.operation', 'picking_id', 'Non pack',
@@ -47,13 +48,17 @@ class Picking(models.Model):
     def button_approve(self):
         for picking in self:
             picking.check_mrr_button = 'True'
-            new_seq = self.env['ir.sequence'].next_by_code('material.requisition')
+            requested_date = datetime.today().date()
+            new_seq = self.env['ir.sequence'].next_by_code_new('material.requisition',requested_date)
             if new_seq:
                 picking.mrr_no = new_seq
+                picking.mrr_date = datetime.today().date()
 
     @api.multi
     def button_print_mrr(self):
         data = {}
+        data['origin'] = self.origin
+        data['mrr_no'] = self.mrr_no
 
         return self.env['report'].get_action(self, 'stock_picking_mrr.report_mrr_doc', data=data)
 
