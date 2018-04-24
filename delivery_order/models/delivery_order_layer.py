@@ -59,6 +59,7 @@ class DeliveryOrderLayer(models.Model):
                                  default=lambda self: self.env.user.company_id)
     delivery_count = fields.Integer(string='Delivery Orders', compute='_compute_picking_ids')
 
+
     @api.multi
     @api.depends('delivery_order_id.sale_order_id.procurement_group_id')
     def _compute_picking_ids(self):
@@ -66,6 +67,7 @@ class DeliveryOrderLayer(models.Model):
             order.picking_ids = self.env['stock.picking'].search(
                 [('group_id', '=', order.procurement_group_id.id)]) if order.procurement_group_id else []
             self.delivery_count = len(order.picking_ids)
+
 
     """ PI and LC """
     pi_no = fields.Many2one('proforma.invoice', string='PI Ref. No.', readonly=True,
@@ -128,22 +130,6 @@ class DeliveryOrderLayer(models.Model):
 
 
     def create_delivery_order(self):
-        ##################################################################
-        # Update the reference of Delivery Order to Stock Picking when
-        # clicking on this button action.
-        ###################################################################
-
-        stock_picking_id = self.delivery_order_id.sale_order_id.picking_ids
-        stock_picking_id.write({'delivery_order_id': self.id})
-
-
-        #########################################################
-        #  Update Stock Move with reference of Delivery Order
-        #########################################################
-
-        stock_move_id = self.delivery_order_id.sale_order_id.picking_ids.move_lines
-        stock_move_id.write({'delivery_order_id':self.id})
-
 
         ## Show or Create DO Button
         for order in self.delivery_order_id.sale_order_id:
@@ -157,8 +143,21 @@ class DeliveryOrderLayer(models.Model):
         if self.env['ir.values'].get_default('sale.config.settings', 'auto_done_setting'):
             self.delivery_order_id.sale_order_id.action_done()
 
-        return True
 
+        # Update the reference of Delivery Order and LC No to Stock Picking
+        stock_picking_id = self.delivery_order_id.sale_order_id.picking_ids
+        stock_picking_id.write({'delivery_order_id': self.id})
+
+        # Update the reference of PI and LC on both Stock Picking and Sale Order Obj
+        if self.delivery_order_id.so_type == 'lc_sales':
+            stock_picking_id.write({'lc_no': self.lc_no.id})
+            self.delivery_order_id.sale_order_id.write({'lc_no': self.lc_no.id, 'pi_no': self.pi_no.id})
+
+        # Update Stock Move with reference of Delivery Order
+        stock_move_id = self.delivery_order_id.sale_order_id.picking_ids.move_lines
+        stock_move_id.write({'delivery_order_id':self.id})
+
+        return True
 
 
     @api.onchange('delivery_order_id')
