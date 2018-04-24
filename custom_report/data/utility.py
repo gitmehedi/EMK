@@ -13,3 +13,17 @@ class ReportUtility(models.TransientModel):
                 return ""
         except Exception as e:
             return ""
+
+    def getDateTimeFromStr(self, dateStr):
+        if dateStr:
+            return datetime.datetime.strptime(dateStr, "%Y-%m-%d %H:%M:%S")
+        else:
+            return None
+
+
+    # Utility Methods
+    def getDateFromStr(self, dateStr):
+        if dateStr:
+            return datetime.datetime.strptime(dateStr, "%Y-%m-%d")
+        else:
+            return datetime.datetime.now()
