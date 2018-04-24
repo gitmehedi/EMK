@@ -57,6 +57,8 @@ class Picking(models.Model):
     @api.multi
     def button_print_mrr(self):
         data = {}
+        data['origin'] = self.origin
+        data['mrr_no'] = self.mrr_no
 
         return self.env['report'].get_action(self, 'stock_picking_mrr.report_mrr_doc', data=data)
 
