@@ -10,72 +10,116 @@
                 name="stock_picking_mrr.report_mrr_doc"
                 file="stock_picking_mrr.report_mrr_doc"
                 menu = "False"
+                paperformat="custom_report.paperformat_backend_portrait"
         />
 
         <template id="report_mrr_doc">
             <t t-call="report.html_container">
                 <t t-call="custom_report.gbs_internal_layout">
-                    <t t-foreach="docs" t-as="o">
-                        <div class="page" style="page-break-inside: auto">
-                            <style>
-                                .table-caption {
-                                border: 1px solid #ddd;
-                                border-bottom: none;
-                                font-size: 14px;
-                                font-weight: bold;
-                                margin: 0;
-                                padding: 5px 5px;
-                                }
-                            </style>
-                            <div class="row">
-                                <h4 class="text-center">Material Requisition Report</h4>
-                                <hr class="hr-sm mb-0"/>
-                                <div class="row">
-                                    <div class="col-xs-8">
-                                        <span t-field="o.mrr_no"/>
-                                    </div>
-                                </div>
-                                <hr class="hr-xs"/>
-                            </div>
-                            <div class="row">
-                                <h4 class="table-caption">Challan/Cash memo/Packing List</h4>
-                                <table class="table table-report table-bordered table-striped">
-                                    <thead>
-                                        <tr class="odo-bg-gray">
-                                            <th>Sl#</th>
-                                            <th>Code &amp; Item Description</th>
-                                            <th>PR No</th>
-                                            <th>Quantity</th>
-                                            <th>Unit</th>
-                                            <th>Rate</th>
-                                            <th>Discount</th>
-                                            <th>Amount</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <t t-foreach="o.pack_operation_product_ids" t-as="l">
-                                            <tr style="page-break-inside: avoid">
-                                                <td><span t-esc="l_index+1"/></td>
-                                                <td><span t-esc="l.product_id.name"/></td>
-                                                <td><span t-esc="o.shipment_id.lc_id.po_ids.requisition_id.name"/></td>
-                                                <td><span t-esc="l.mrr_quantity"/></td>
-                                                <td><span t-esc="l.product_uom_id.name"/></td>
-                                                <td><span t-esc="l.linked_move_operation_ids.move_id.price_unit"/></td>
-                                                <td></td>
-                                                <td><span t-esc="l.mrr_quantity*l.linked_move_operation_ids.move_id.price_unit"/></td>
 
-                                            </tr>
-                                        </t>
-                                    </tbody>
-                                </table>
-                                <div style="text-align:right">
-                                    <strong>Amount in words:</strong>
-                                    <!--<span t-esc="o.amount_to_word(doc.amount_total)"/>-->
+                    <div class="page" style="page-break-inside: auto">
+                        <style>
+                            .table-caption {
+                            border: 1px solid #ddd;
+                            border-bottom: none;
+                            font-size: 14px;
+                            font-weight: bold;
+                            margin: 0;
+                            padding: 5px 5px;
+                            }
+                        </style>
+                        <div class="row">
+                            <h4 class="text-center">Material Requisition Report</h4>
+                            <hr class="hr-sm mb-0"/>
+                            <div class="row">
+                                <div class="col-xs-8">
+                                    <h6><b>MRR No : </b><span t-esc="mrr_no"/></h6>
+                                    <h6><b>Purchase Order No : </b><span t-esc="po_no"/></h6>
+                                    <h6><span t-esc="customer"/></h6>
+                                    <h6><b>Challan No : </b><span t-esc="challan"/></h6>
+                                </div>
+                                <div class="col-xs-4 text-right">
+                                    <h6><b>MRR Date : </b><span t-esc="context_timestamp(datetime.datetime.now()).strftime('%Y-%m-%d')"/></h6>
+                                    <h6><b>PO Date : </b><span t-esc="po_date"/></h6>
+                                    <h6><b>Challan Date : </b><span t-esc="challan_date"/></h6>
                                 </div>
                             </div>
-                            <t t-call="custom_report.report_signing"></t>
+                            <hr class="hr-xs"/>
                         </div>
-                    </t>
+                        <div class="row">
+                            <table class="table table-report table-bordered table-striped">
+                                <thead>
+                                    <tr class="odo-bg-gray">
+                                        <th>Sl#</th>
+                                        <th>Code &amp; Item Description</th>
+                                        <th>PR No</th>
+                                        <th>Quantity</th>
+                                        <th>Unit</th>
+                                        <th>Rate</th>
+                                        <th>Discount</th>
+                                        <th>Amount</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <t t-foreach="lists" t-as="l">
+                                        <tr style="page-break-inside: avoid">
+                                            <td><span t-esc="l_index+1"/></td>
+                                            <td><span t-esc="l['product_id']"/></td>
+                                            <td><span t-esc="l['pr_no']"/></td>
+                                            <td><span t-esc="l['mrr_quantity']"/></td>
+                                            <td><span t-esc="l['product_uom_id']"/></td>
+                                            <td><span t-esc="l['price_unit']"/></td>
+                                            <td></td>
+                                            <td><span t-esc="l['amount']"/></td>
+
+                                        </tr>
+                                        <tr>
+                                            <!--<td colspan="6">-->
+                                                <!--<span t-esc="o.amount_to_word(l.mrr_quantity*l.linked_move_operation_ids.move_id.price_unit)"/>-->
+                                            <!--</td>-->
+                                            <!--<td colspan="2">-->
+                                                <!--<span t-esc="sum(l.mrr_quantity*l.linked_move_operation_ids.move_id.price_unit)"/>-->
+                                            <!--</td>-->
+                                        </tr>
+                                    </t>
+                                </tbody>
+                            </table>
+                            <!--<div style="text-align:left">-->
+                                <!--<strong>Amount in words:</strong>-->
+                                <!--<span t-esc="o.amount_to_word(l.mrr_quantity*l.linked_move_operation_ids.move_id.price_unit)"/>-->
+                            <!--</div>-->
+                            <!--<div style="text-align:left">-->
+                                <!--<strong>Total:</strong><span t-esc="sum(l.mrr_quantity*l.linked_move_operation_ids.move_id.price_unit)"/>-->
+
+                            <!--</div>-->
+                        </div>
+                        <div class="row mb32 text-left" style="margin-top: 10mm;">
+                            <div class="col-xs-4 text-left">
+                                <strong>Quality Certified By:</strong>
+                                <br/>
+                                <br/>
+                                <br/>
+                                <br/><strong>----------------------</strong>
+                            </div>
+                            <div class="col-xs-4 text-center">
+                                <strong>Received By:</strong>
+                                <br/>
+                                <br/>
+                                <br/>
+                                <br/><strong>----------------------</strong>
+
+                            </div>
+                            <div class="col-xs-4 text-right">
+                                <strong>Approved By:</strong>
+                                <br/>
+                                <br/>
+                                <br/>
+                                <br/><strong>----------------------</strong>
+
+                            </div>
+
+                        </div>
+                    </div>
                 </t>
             </t>
         </template>
