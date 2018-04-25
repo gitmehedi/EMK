@@ -8,6 +8,9 @@ class DailyProduction(models.Model):
     production_date = fields.Date('Date' ,required=True)
     finish_product_line_ids = fields.One2many('finish.product.line','daily_pro_id','Finish Produts')
     consumed_product_line_ids = fields.One2many('consumed.product.line','daily_pro_id','Consumed Products')
+    operating_unit_id = fields.Many2one('operating.unit', 'Operating Unit', required=True,
+                                        default=lambda self: self.env.user.default_operating_unit_id)
+
     state = fields.Selection([
         ('draft', 'Draft'),
         ('confirmed', 'Confirmed'),
