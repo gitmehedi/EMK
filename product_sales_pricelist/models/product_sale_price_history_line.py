@@ -52,4 +52,5 @@ class ProductSalePriceHistiryLine(models.Model):
             #Update Products Sales Price also
             product_pool = self.env['product.product'].search([('id', '=', price_pool.product_id.ids)])
 
-            product_pool.write({'list_price': price_pool.new_price})
+            product_pool.write({'list_price': price_pool.new_price, 'fix_price':price_pool.new_price})
+
