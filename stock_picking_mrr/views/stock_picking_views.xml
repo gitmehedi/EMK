@@ -27,10 +27,10 @@
                 <!--<field name="check_ac_approve_button" />-->
             <!--</xpath>-->
 
-            <xpath expr="//sheet/notebook/page/field/tree/field[@name='qty_done']" position="after">
-                <field name="check_mrr_button" invisible="1"/>
-                <field name="mrr_quantity" attrs="{'invisible': [('check_mrr_button','=', False)]}"/>
-            </xpath>
+            <!--<xpath expr="//sheet/notebook/page/field/tree/field[@name='qty_done']" position="after">-->
+                <!--<field name="check_mrr_button" invisible="1"/>-->
+                <!--<field name="mrr_quantity" attrs="{'invisible': [('check_mrr_button','=', False)]}"/>-->
+            <!--</xpath>-->
 
         </field>
     </record>
@@ -56,12 +56,28 @@
                         type="object" class="oe_highlight"/>
             </xpath>
 
-            <!--<xpath expr="//sheet/notebook/page/field/tree/field[@name='qty_done']" position="after">-->
-                <!--<field name="check_mrr_button" invisible="1"/>-->
-                <!--<field name="mrr_quantity" attrs="{'invisible': [('check_mrr_button','=', False)]}"/>-->
-            <!--</xpath>-->
-
         </field>
     </record>
+
+    <record model="ir.actions.act_window" id="action_stock_picking_approval">
+        <field name="name">Pending Approval</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">stock.picking</field>
+        <field name="view_type">form</field>
+        <field name="view_id" ref="stock_picking_extend.view_stock_picking_tree1"/>
+        <field name="domain">[('check_approve_button', '=', 'True')]</field>
+        <field name="help" type="html">
+            <p>
+                Here you can see Received Goods list, which need to approve.
+            </p>
+        </field>
+    </record>
+
+    <menuitem id="menu_approval_picking"
+              name="Pending Approval"
+              parent="stock.menu_stock_warehouse_mgmt"
+              sequence="4"
+              action="action_stock_picking_approval"
+              groups="stock.group_stock_user"/>
 
 </odoo>

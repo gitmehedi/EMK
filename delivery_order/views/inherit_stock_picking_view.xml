@@ -9,6 +9,11 @@
                 <xpath expr="//field[@name='origin']" position="after">
                     <field name="delivery_order_id"/>
                 </xpath>
+
+                <xpath expr="//field[@name='origin']" position="after">
+                    <field name="lc_no"/>
+                </xpath>
+
             </field>
         </record>
 
