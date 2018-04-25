@@ -17,25 +17,29 @@ class MrrReport(models.AbstractModel):
                     po_date = report_utility_pool.getERPDateFormat(report_utility_pool.getDateTimeFromStr(po.date_order))
                     customer = po.partner_id.name
                     pr_no = po.requisition_id.name
+            else:
+                return None
 
             if picking.shipment_id.gate_in_ids:
                 for gate in picking.shipment_id.gate_in_ids:
                     challan = gate.challan_bill_no
                     challan_date = report_utility_pool.getERPDateFormat(report_utility_pool.getDateFromStr(gate.date))
-
+            else:
+                return None
             if picking.pack_operation_product_ids:
                 for pack in picking.pack_operation_product_ids:
                     pack_obj = {}
                     pack_obj['product_id'] = pack.product_id.name
-                    pack_obj['pr_no'] = pr_no
+                    #pack_obj['pr_no'] = pr_no
                     pack_obj['mrr_quantity'] = pack.qty_done
                     pack_obj['product_uom_id'] = pack.product_uom_id.name
                     pack_obj['price_unit'] = pack.linked_move_operation_ids.move_id.price_unit
                     pack_obj['amount'] = pack.qty_done*pack.linked_move_operation_ids.move_id.price_unit
                     total_amount.append(pack_obj['amount'])
                     pack_list.append(pack_obj)
+            else:
+                return None
 
-        #amt_to_word_amount = self.env['res.currency'].amount_to_word(total_amount)
         total = sum(total_amount)
         amt_to_word = self.env['res.currency'].amount_to_word(float(total))
         docargs = {
@@ -46,6 +50,7 @@ class MrrReport(models.AbstractModel):
             'challan' : challan,
             'challan_date' : challan_date,
             'po_no' : po_no,
+            'pr_no' : pr_no,
             'po_date': po_date,
             'total_amount' : total,
             'amt_to_word' : amt_to_word

@@ -35,7 +35,7 @@
                                 <div class="col-xs-9">
                                     <h6><b>MRR No : </b><span t-esc="mrr_no"/></h6>
                                     <h6><b>Purchase Order No : </b><span t-esc="po_no"/></h6>
-                                    <h6><span t-esc="customer"/></h6>
+                                    <h6><b>Supplier : </b><span t-esc="customer"/></h6>
                                     <h6><b>Challan No : </b><span t-esc="challan"/></h6>
                                 </div>
                                 <div class="col-xs-3 text-left" style="padding-left:65px;">
@@ -52,7 +52,9 @@
                                     <tr class="odo-bg-gray">
                                         <th>Sl#</th>
                                         <th>Code &amp; Item Description</th>
-                                        <th>PR No</th>
+                                        <t t-if="pr_no">
+                                            <th>PR No</th>
+                                        </t>
                                         <th>Quantity</th>
                                         <th>Unit</th>
                                         <th>Rate</th>
@@ -65,7 +67,9 @@
                                         <tr style="page-break-inside: avoid">
                                             <td><span t-esc="l_index+1"/></td>
                                             <td><span t-esc="l['product_id']"/></td>
-                                            <td><span t-esc="l['pr_no']"/></td>
+                                            <t t-if="pr_no">
+                                                <td><span t-esc="pr_no"/></td>
+                                            </t>
                                             <td><span t-esc="l['mrr_quantity']"/></td>
                                             <td><span t-esc="l['product_uom_id']"/></td>
                                             <td><span t-esc="l['price_unit']"/></td>
