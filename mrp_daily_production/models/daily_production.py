@@ -5,7 +5,7 @@ class DailyProduction(models.Model):
 
 
     section_id = fields.Many2one('mrp.section','Section', required=True)
-    production_date = fields.Date('Date')
+    production_date = fields.Date('Date' ,required=True)
     finish_product_line_ids = fields.One2many('finish.product.line','daily_pro_id','Finish Produts')
     consumed_product_line_ids = fields.One2many('consumed.product.line','daily_pro_id','Consumed Products')
     state = fields.Selection([
@@ -26,13 +26,15 @@ class DailyProduction(models.Model):
         consumeProductMap = {}
         if self.finish_product_line_ids:
             for product in self.finish_product_line_ids:
+                product.finish_product_date = self.production_date
                 self.buildConsumeProducts(product,consumeProductMap)
 
             consumed_product_list = []
             for i, key in enumerate(consumeProductMap):
                 consumeProductValue = consumeProductMap.get(key)
                 consumed_product_list.append((0, 0, {'product_id': consumeProductValue['product_id'],
-                                   'con_product_qty': consumeProductValue['con_product_qty']
+                                   'con_product_qty': consumeProductValue['con_product_qty'],
+                                    'consumed_product_date' :  consumeProductValue['consumed_product_date']
                                    }))
 
             self.consumed_product_line_ids = consumed_product_list
@@ -47,7 +49,8 @@ class DailyProduction(models.Model):
                                                         'con_product_qty'] + record.product_qty * product.fnsh_product_qty
             else:
                 consumeProductMap[record.product_id.id] = {'product_id': record.product_id.id,
-                                                           'con_product_qty': record.product_qty * product.fnsh_product_qty}
+                                                           'con_product_qty': record.product_qty * product.fnsh_product_qty,
+                                                           'consumed_product_date':self.production_date}
 
     @api.multi
     def name_get(self):
