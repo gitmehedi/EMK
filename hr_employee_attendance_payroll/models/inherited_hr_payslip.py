@@ -65,11 +65,11 @@ class InheritedHrAttendancePayslip(models.Model):
             self.worked_days_line_ids = worked_days_lines
 
             ### ABS Deduction Days
-            if summary_line_data.absent_count >= 0:
+            if summary_line_data.absent_deduction_days >= 0:
                 worked_days_lines += worked_days_lines.new({
                     'code': 'ABS',
                     'contract_id': self.contract_id.id,
-                    'number_of_days': summary_line_data.absent_count or 0,
+                    'number_of_days': summary_line_data.absent_deduction_days or 0,
                     'name': 'ABS Deduction Day(s)',
                 })
             self.worked_days_line_ids = worked_days_lines

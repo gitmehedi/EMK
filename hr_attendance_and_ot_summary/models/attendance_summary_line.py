@@ -5,9 +5,12 @@ from openerp import api, models, fields
 class AttendanceSummaryLine(models.Model):
     _name = 'hr.attendance.summary.line'
 
+    _inherit = ['mail.thread']
+
     salary_days = fields.Integer(string='Salary Days', required=True)
     present_days = fields.Integer(string='Present Days', required=True)
     deduction_days = fields.Integer(string='Late Deduction Day(s)', track_visibility='onchange')
+    absent_deduction_days = fields.Integer(string='Absent Deduction Day(s)', track_visibility='onchange')
     leave_days = fields.Integer(string='Leave Days')
     holidays_days = fields.Integer(string='Holidays Days')
     late_hrs = fields.Float(string='Off Duty Hrs')

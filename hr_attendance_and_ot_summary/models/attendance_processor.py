@@ -64,8 +64,8 @@ class AttendanceProcessor(models.Model):
         self.env["hr.attendance.summary.line"].search([('employee_id', '=', employeeId), ('att_summary_id', '=', summaryId)]).unlink()
 
         hr_employee_pool = self.env['hr.employee']
-        employee = hr_employee_pool.search([('id', '=', employeeId)])
 
+        employee = hr_employee_pool.search(['&', ('id', '=', employeeId), '|', ('active', '=', True), ('active', '=', False)])
         day = datetime.timedelta(days=1)
 
         # Get Date from Account Period
@@ -324,6 +324,7 @@ class AttendanceProcessor(models.Model):
                 'present_days':     attSummaryLine.present_days,
                 'holidays_days':    attSummaryLine.holidays_days,
                 'leave_days':       attSummaryLine.leave_days,
+                'absent_deduction_days': len(attSummaryLine.absent_days),
                 'deduction_days':   deduction_days,
                 'late_hrs':         attSummaryLine.late_hrs,
                 'schedule_ot_hrs':  attSummaryLine.schedule_ot_hrs,
