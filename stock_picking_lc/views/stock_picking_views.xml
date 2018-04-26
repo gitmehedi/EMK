@@ -9,6 +9,9 @@
                 <field name="shipment_id" options="{'no_quick_create':True,'no_create_edit':True,'no_open': True}"
                        attrs="{'invisible': [('receive_type', '!=', 'lc')],'required':[('receive_type', '=','lc')]}"/>
             </xpath>
+            <xpath expr="//field[@name='partner_id']" position="after">
+                <field name="challan_bill_no" attrs="{'required':[('receive_type', 'in',['lc','loan','other'])]}"/>
+            </xpath>
         </field>
     </record>
 </odoo>

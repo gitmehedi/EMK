@@ -18,7 +18,7 @@
     'depends': ['stock_operating_unit'],
 
     'data': [
-        # 'views/views.xml',
+        'views/stock_views.xml',
     ],
 
 }
