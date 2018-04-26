@@ -1,5 +1,5 @@
-from openerp import fields, models, api, _
-from openerp.exceptions import Warning
+from odoo import fields, models, api, _
+from odoo.exceptions import Warning
 
 class ReportTypeSelectionModel(models.Model):
     _name = 'report.type.selection'
