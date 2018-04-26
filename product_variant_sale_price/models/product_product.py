@@ -37,9 +37,8 @@ class ProductProduct(models.Model):
         for product in self:
             price = product.fix_price or product.list_price
             if 'uom' in self.env.context:
-                uom = product.uos_id or product.uom_id
-                price = uom._compute_price(
-                    product.uom_id.id, price, self.env.context['uom'])
+                uom = product.uom_id
+                price = uom._compute_price(price, product.uom_id)
             product.lst_price = price
 
     @api.multi
@@ -47,9 +46,8 @@ class ProductProduct(models.Model):
         for product in self:
             price = product.fix_price or product.product_tmpl_id.list_price
             if 'uom' in self.env.context:
-                uom = product.uos_id or product.uom_id
-                price = uom._compute_price(
-                    product.uom_id.id, price, self.env.context['uom'])
+                uom = product.uom_id
+                price = uom._compute_price(price, product.uom_id)
             product.list_price = price
 
     @api.multi
@@ -57,10 +55,8 @@ class ProductProduct(models.Model):
         for product in self:
             vals = {}
             if 'uom' in self.env.context:
-                uom = product.uos_id or product.uom_id
-                vals['fix_price'] = uom._compute_price(
-                    product.uom_id.id, product.lst_price,
-                    self.env.context['uom'])
+                uom = product.uom_id
+                vals['fix_price'] = uom._compute_price(product.lst_price, product.uom_id)
             else:
                 vals['fix_price'] = product.lst_price
             if product.product_variant_count == 1:
