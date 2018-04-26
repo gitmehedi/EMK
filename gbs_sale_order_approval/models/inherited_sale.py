@@ -58,8 +58,8 @@ class SaleOrder(models.Model):
     currency_id = fields.Many2one("res.currency", related='', string="Currency", required=True)
 
     """ PI and LC """
-    pi_no = fields.Many2one('proforma.invoice', string='PI Ref. No.')
-    lc_no = fields.Many2one('letter.credit', string='LC Ref. No.')
+    pi_no = fields.Many2one('proforma.invoice', string='PI Ref. No.',readonly=True, states={'to_submit': [('readonly', False)]})
+    lc_no = fields.Many2one('letter.credit', string='LC Ref. No.',readonly=True, states={'to_submit': [('readonly', False)]})
 
     remaining_credit_limit = fields.Char(string="Customer's Remaining Credit Limit", track_visibility='onchange')
 
@@ -224,10 +224,14 @@ class SaleOrder(models.Model):
                                 remaining_limit = res_partner_cred_lim.value - abs(customer_total_credit)
                                 res_partner_cred_lim.write({'remaining_credit_limit': remaining_limit})
                                 order.write({'remaining_credit_limit': remaining_limit})
+                            else:
+                                res_partner_cred_lim.write({'remaining_credit_limit': 0})
+                                order.write({'remaining_credit_limit': 0})
 
                         else:
-                            remaining_limit = res_partner_cred_lim.remaining_credit_limit - abs(customer_total_credit)
-                            if remaining_limit > 0:
+
+                            if abs(customer_total_credit) < res_partner_cred_lim.remaining_credit_limit:
+                                remaining_limit = res_partner_cred_lim.remaining_credit_limit - abs(customer_total_credit)
                                 res_partner_cred_lim.write({'remaining_credit_limit': remaining_limit})
                                 order.write({'remaining_credit_limit': remaining_limit})
                             else:
@@ -277,10 +281,13 @@ class SaleOrder(models.Model):
                     remaining_limit = res_partner_cred_lim.value - abs(customer_total_credit)
                     res_partner_cred_lim.write({'remaining_credit_limit': remaining_limit})
                     order.write({'remaining_credit_limit': remaining_limit})
+                else:
+                    res_partner_cred_lim.write({'remaining_credit_limit': 0})
+                    order.write({'remaining_credit_limit': 0})
 
             else:
-                remaining_limit = res_partner_cred_lim.remaining_credit_limit - abs(customer_total_credit)
-                if remaining_limit > 0:
+                if abs(customer_total_credit) < res_partner_cred_lim.remaining_credit_limit:
+                    remaining_limit = res_partner_cred_lim.remaining_credit_limit - abs(customer_total_credit)
                     res_partner_cred_lim.write({'remaining_credit_limit': remaining_limit})
                     order.write({'remaining_credit_limit': remaining_limit})
                 else:

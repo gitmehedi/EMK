@@ -57,6 +57,12 @@ class HRShiftAlter(models.Model):
     # Business methods
     ####################################################
 
+    @api.onchange('is_included_ot')
+    def _onchange_is_included_ot(self):
+        if self.is_included_ot == False:
+            self.ot_start = None
+            self.ot_end = None
+
     @api.onchange('employee_id')
     def _onchange_employee(self):
         if self.employee_id and self.employee_id.holidays_approvers:

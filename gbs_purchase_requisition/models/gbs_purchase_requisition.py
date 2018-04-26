@@ -123,6 +123,7 @@ class PurchaseRequisitionLine(models.Model):
     last_product_uom_id = fields.Many2one('product.uom', string='Last Purchase Unit')
     last_price_unit = fields.Float(string='Last Unit Price')
     remark = fields.Char(string='Remarks')
+    store_code = fields.Char(string='Store Code',size=20)
 
     product_qty = fields.Float(string='Quantity', digits=dp.get_precision('Product Unit of Measure'),
                                compute='_getProductQuentity')
@@ -147,6 +148,7 @@ class PurchaseRequisitionLine(models.Model):
             product_name = product.name_get()[0][1]
             self.name = product_name
             self.product_uom = product.uom_id.id
+            self.store_code = product.barcode
             self.product_qty = self.getProductQuentity(self.product_id.id, self.requisition_id.picking_type_id.id)
         if not self.account_analytic_id:
             self.account_analytic_id = self.requisition_id.account_analytic_id

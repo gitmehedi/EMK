@@ -22,7 +22,6 @@
         'views/hr_contract_view.xml',
         'views/inherited_hr_payslip_run_views.xml',
         'views/hr_payslip.xml',
-        "views/inherit_res_partner_bank_view.xml",
     ],
     'summary': 'Shows payslip reports',
     'description':

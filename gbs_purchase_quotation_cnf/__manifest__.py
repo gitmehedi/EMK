@@ -21,7 +21,7 @@
         'ir_sequence_operating_unit',
         'com_shipment',
         'purchase_order_revision',
-        # 'gbs_purchase_order',
+        'ir_sequence_operating_unit',
     ],
 
     'data': [

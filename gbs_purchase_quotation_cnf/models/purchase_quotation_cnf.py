@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from odoo import models, fields, api,_
+from datetime import datetime
 
 class PurchaseCNFQuotation(models.Model):
     _name = 'purchase.order'
@@ -12,6 +13,15 @@ class PurchaseCNFQuotation(models.Model):
 
     partner_id = fields.Many2one('res.partner', string='C&F Vendor', required=True, track_visibility='always',
                                  default=lambda self: self.env.context.get('partner_id') or False)
+
+    @api.model
+    def create(self, vals):
+        if vals.get('cnf_quotation'):
+            vals['name'] = self.env['ir.sequence'].next_by_code_new('cnf.quotation', datetime.today()) or '/'
+            shipment_pool = self.env['purchase.shipment']
+            shipment_obj = shipment_pool.search([('id', '=', vals['shipment_id'])])
+            shipment_obj.write({'state': 'approve_cnf_quotation'})
+        return super(PurchaseCNFQuotation, self).create(vals)
 
     @api.multi
     def cnf_button_confirm(self):

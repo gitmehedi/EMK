@@ -28,10 +28,10 @@
                 <form string="Product Get In Form">
                     <header>
                         <button string="Confirm" name="action_confirm" states="draft" type="object"
-                                groups="hr.group_hr_user" class="oe_highlight"/>
+                                class="oe_highlight"/>
                         <button name="action_draft" type="object"
-                                string="Set to Draft"
-                                states="confirm"/>
+                                string="Reset to Draft"
+                                states="confirm" groups="base_technical_features.group_technical_features"/>
                         <field name="state" widget="statusbar" statusbar_visible="draft,confirm"/>
                     </header>
                     <sheet>
@@ -45,7 +45,7 @@
                             <group>
                                 <field name="ship_id"
                                        options="{'no_quick_create':True,'no_create_edit':True,'no_open': True}"
-                                       attrs="{'invisible': [('receive_type', '!=', 'lc')]}"/>
+                                       attrs="{'invisible': [('receive_type', '!=', 'lc')],'required': [('receive_type', '=', 'lc')]}"/>
                                 <field name="create_by"/>
                                 <field name="received"/>
                             </group>

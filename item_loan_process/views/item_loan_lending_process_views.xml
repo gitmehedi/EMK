@@ -27,27 +27,28 @@
                 <form string="Item Loan Lending">
                     <header>
                         <button name="button_confirm" string="Confirm" states="draft"
-                                class="oe_highlight" type="object" groups="base.group_user"/>
+                                class="oe_highlight" type="object" groups="stock.group_stock_user"/>
                         <button name="button_approve" string="Approve" states="waiting_approval" type="object"
-                                class="oe_highlight" groups="gbs_application_group.group_head_of_plant"/>
+                                class="oe_highlight" groups="stock.group_stock_manager"/>
                         <button name="button_reject" string="Reject" states="waiting_approval" type="object"
-                                groups="gbs_application_group.group_head_of_plant"/>
-                        <button string="Reset to Draft" name="action_draft" states="approved" type="object" attrs="{'invisible': [('state', 'in', ('draft','waiting_approval'))]}"/>
+                                groups="stock.group_stock_manager"/>
+                        <button string="Reset to Draft" name="action_draft"
+                                groups="stock.group_stock_manager"
+                                states="waiting_approval" type="object"/>
                         <field name="state" widget="statusbar"
                                statusbar_visible="draft,waiting_approval,approved"
                                statusbar_colors='{"reject":"red"}' />
                     </header>
                     <sheet>
                         <group col="2">
-                            <field name="picking_id" invisible="1"/>
                             <group>
                                 <field name="issuer_id" readonly="1" />
                                 <field name="request_date" />
                                 <field name="borrower_id"/>
                             </group>
                             <group>
-                                <field name="approved_date"/>
-                                <field name="approver_id"/>
+                                <field name="approved_date" attrs="{'invisible': [('state', '=', 'draft')]}"/>
+                                <field name="approver_id" attrs="{'invisible': [('state', '=', 'draft')]}"/>
                             </group>
 
                         </group>
@@ -76,11 +77,13 @@
                                                options="{'no_create': True,'no_open':True}"/>
                                         <field name="operating_unit_id" options="{'no_create': True,'no_open':True}"
                                                groups="operating_unit.group_multi_operating_unit" />
-                                        <field name="location_id" options="{'no_create': True,'no_open':True}"/>
+
                                     </group>
                                     <group>
+                                        <field name="location_id" options="{'no_create': True,'no_open':True}"/>
                                         <field name="item_loan_location_id" />
-                                        <field name="picking_type_id" />
+                                        <field name="picking_id" invisible="1"/>
+                                        <field name="picking_type_id" invisible="1"/>
                                     </group>
                                 </group>
                             </page>

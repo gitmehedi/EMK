@@ -1,8 +1,11 @@
 # -*- coding: utf-8 -*-
+from datetime import datetime
 
 from odoo import models, fields, api,_
+from odoo.exceptions import UserError
 
-class productGateIn(models.Model):
+
+class ProductGateIn(models.Model):
     _name = 'product.gate.in'
 
 
@@ -20,13 +23,13 @@ class productGateIn(models.Model):
     company_id = fields.Many2one('res.company', string='Company', readonly=True, states={'draft': [('readonly', False)]},
                                  default=lambda self: self.env.user.company_id, required=True)
     ship_id = fields.Many2one('purchase.shipment', string='Shipment Number',
-                              required=True, states={'confirm': [('readonly', True)]},
-                              domain="['&','&','&',('operating_unit_id','=',operating_unit_id),('state','in',('cnf_clear', 'gate_in', 'done')),('lc_id.state','!=','done'),('lc_id.state','!=','cancel')]")
+                            states={'confirm': [('readonly', True)]},
+                            domain="['&','&','&',('operating_unit_id','=',operating_unit_id),('state','in',('cnf_clear', 'gate_in', 'done')),('lc_id.state','!=','done'),('lc_id.state','!=','cancel')]")
 
 
     date = fields.Date(string="Date")
     receive_type = fields.Selection([
-        ('lc', "L.C"),
+        ('lc', "LC"),
         ('loan', "Loan"),
         ('others', "Others"),
 
@@ -49,14 +52,6 @@ class productGateIn(models.Model):
         self.state = 'draft'
         self.shipping_line_ids.write({'state': 'draft'})
 
-    #For create secquence
-    @api.model
-    def create(self,vals):
-        seq = self.env['ir.sequence'].next_by_code('product.gate.in') or '/'
-        vals['name'] = seq
-        return super(productGateIn, self).create(vals)
-
-
     # change data and line data depands on ship_id
     @api.onchange('ship_id')
     def set_products_info_automatically(self):
@@ -76,6 +71,25 @@ class productGateIn(models.Model):
                                        }))
 
             self.shipping_line_ids = val
+
+    ####################################################
+    # Override methods
+    ####################################################
+    #For create secquence
+    @api.model
+    def create(self,vals):
+        requested_date = datetime.today().date()
+        new_seq = self.env['ir.sequence'].next_by_code_new('product.gate.in', requested_date) or '/'
+        vals['name'] = new_seq
+        return super(ProductGateIn, self).create(vals)
+
+    @api.multi
+    def unlink(self):
+        for m in self:
+            if m.state != 'draft':
+                raise UserError(_('You can not delete in this state.'))
+        return super(ProductGateIn, self).unlink()
+
 
 
 class ShipmentProductLine(models.Model):

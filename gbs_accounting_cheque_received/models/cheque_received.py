@@ -49,11 +49,17 @@ class ChequeReceived(models.Model):
 
 
     payment_method_id = fields.Many2one('account.payment.method', string='Payment Method Type',
-                                    compute='_get_payment_method')
+                                   )
     currency_id = fields.Many2one('res.currency', string='Currency', states = {'returned': [('readonly', True)],'dishonoured': [('readonly', True)],'honoured': [('readonly', True)],'received': [('readonly', True)],'deposited': [('readonly', True)]})
 
     payment_type = fields.Selection([('outbound', 'Send Money'), ('inbound', 'Receive Money')],
                                 string='Payment Type', required=True, default='inbound')
+
+    @api.onchange('partner_id')
+    def _on_change_partner_id(self):
+        for pay in self:
+            pay_method_pool = pay.env['account.payment.method'].search([('payment_type', '=', 'inbound')], limit=1)
+            pay.payment_method_id = pay_method_pool.id
 
 
     @api.multi

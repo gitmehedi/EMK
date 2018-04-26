@@ -17,7 +17,7 @@ class ItemLoanLending(models.Model):
         return self.env['stock.location'].search([('usage', '=', 'customer')], limit=1).id
 
     def _get_default_location_id(self):
-        return self.env['stock.location'].search([('operating_unit_id', '=', self.env.user.default_operating_unit_id.id)], limit=1).id
+        return self.env['stock.location'].search([('operating_unit_id', '=', self.env.user.default_operating_unit_id.id),('name','=','Stock')], limit=1).id
 
     name = fields.Char('Issue #', size=30, readonly=True, default=lambda self: _('New'),copy=False,
                        states={'draft': [('readonly', False)]})
@@ -98,8 +98,7 @@ class ItemLoanLending(models.Model):
             if line.product_id:
                 if not picking_id:
                     picking_type = self.env['stock.picking.type'].search(
-                        [('default_location_src_id', '=', self.location_id.id),
-                         ('default_location_dest_id', '=', self.item_loan_location_id.id), ('code', '=', 'outgoing')])
+                        [('default_location_src_id', '=', self.location_id.id),('code', '=', 'outgoing')])
                     if not picking_type:
                         raise UserError(_('Please create picking type for Item Landing.'))
                     # pick_name = self.env['ir.sequence'].next_by_code('stock.picking')
@@ -159,8 +158,13 @@ class ItemLoanLending(models.Model):
 
     @api.multi
     def action_draft(self):
-        self.state = 'draft'
-        self.item_lines.write({'state':'draft'})
+        res = {
+            'state': 'draft',
+            'approver_id': self.env.user.id,
+            'approved_date': time.strftime('%Y-%m-%d %H:%M:%S')
+        }
+        self.write(res)
+        self.item_lines.write({'state': 'draft'})
 
     ####################################################
     # ORM Overrides methods
@@ -212,9 +216,12 @@ class ItemLoanLendingLines(models.Model):
             if productLine.product_id.id:
                 location_id = productLine.item_loan_lending_id.location_id.id
                 product_quant = self.env['stock.quant'].search(['&', ('product_id', '=', productLine.product_id.id),
-                                                                ('location_id', '=', location_id)], limit=1)
-                if product_quant:
-                    productLine.qty_available = product_quant.qty
+                                                                ('location_id', '=', location_id)])
+                quantity = sum([val.qty for val in product_quant])
+                if quantity <= 0:
+                    raise UserError(_('Product "{0}" has not sufficient balance for this location'.format(
+                        self.product_id.display_name)))
+                self.qty_available = quantity
 
     @api.one
     @api.constrains('product_uom_qty')

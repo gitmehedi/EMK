@@ -22,12 +22,16 @@
                 'gbs_purchase_requisition',
                 'gbs_purchase_order',
                 'gbs_purchase_quotation_cnf',
-                'stock',
+                'stock_operating_unit_user',
                 'purchase_requisition',
                 'question_set',
                 'letter_of_credit_done',
                 'lc_po_product',
                 'indent_operating_unit',
+                'question_set',
+                'com_shipment',
+                'gbs_application_group',
+                'shipment_lc_product',
     ],
 
     # always loaded

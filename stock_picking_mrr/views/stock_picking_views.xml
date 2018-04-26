@@ -27,12 +27,57 @@
                 <!--<field name="check_ac_approve_button" />-->
             <!--</xpath>-->
 
-            <xpath expr="//sheet/notebook/page/field/tree/field[@name='qty_done']" position="after">
+            <!--<xpath expr="//sheet/notebook/page/field/tree/field[@name='qty_done']" position="after">-->
+                <!--<field name="check_mrr_button" invisible="1"/>-->
+                <!--<field name="mrr_quantity" attrs="{'invisible': [('check_mrr_button','=', False)]}"/>-->
+            <!--</xpath>-->
+
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="view_picking_form_inherit4">
+        <field name="name">stock.picking.inherit4.form</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock_picking_extend.view_stock_picking_form1"/>
+        <field name="arch" type="xml">
+            <xpath expr="//header/button[@name='%(stock.act_stock_return_picking)d']" position="after">
+
                 <field name="check_mrr_button" invisible="1"/>
-                <field name="mrr_quantity" attrs="{'invisible': [('check_mrr_button','=', False)]}"/>
+                <field name="check_approve_button" invisible="1"/>
+                <field name="check_ac_approve_button" invisible="1"/>
+
+                <button name="button_approve" string="Approve" attrs="{'invisible': [('check_approve_button','=',False)]}"
+                        type="object" class="oe_highlight"/>
+
+                <button name="button_ac_approve" string="AC Approve" attrs="{'invisible': [('check_ac_approve_button','=',False)]}"
+                        type="object" class="oe_highlight"/>
+
+                <button name="button_print_mrr" string="Print MRR" attrs="{'invisible': [('check_mrr_button', '=', False)]}"
+                        type="object" class="oe_highlight"/>
             </xpath>
 
         </field>
     </record>
+
+    <record model="ir.actions.act_window" id="action_stock_picking_approval">
+        <field name="name">Pending Approval</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">stock.picking</field>
+        <field name="view_type">form</field>
+        <field name="view_id" ref="stock_picking_extend.view_stock_picking_tree1"/>
+        <field name="domain">[('check_approve_button', '=', 'True')]</field>
+        <field name="help" type="html">
+            <p>
+                Here you can see Received Goods list, which need to approve.
+            </p>
+        </field>
+    </record>
+
+    <menuitem id="menu_approval_picking"
+              name="Pending Approval"
+              parent="stock.menu_stock_warehouse_mgmt"
+              sequence="4"
+              action="action_stock_picking_approval"
+              groups="stock.group_stock_user"/>
 
 </odoo>

@@ -19,7 +19,7 @@ class ShipmentProduct(models.Model):
                         'cnf_quotation': True,
                         'partner_id': self.cnf_id.id or False},
         }
-        self.state = 'cnf_quotation'
+        # self.state = 'cnf_quotation'
         return result
 
     @api.multi

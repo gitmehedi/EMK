@@ -77,9 +77,10 @@ class GBSStockScrap(models.Model):
             res = {
                 'state': 'waiting_approval'
             }
-            # new_seq = self.env['ir.sequence'].next_by_code('stock.scraping')
-            # if new_seq:
-            #     res['name'] = new_seq
+            requested_date = self.requested_date
+            new_seq = self.env['ir.sequence'].next_by_code_new('stock.scraping',requested_date)
+            if new_seq:
+                res['name'] = new_seq
 
             scrap.write(res)
 
@@ -170,6 +171,15 @@ class GBSStockScrap(models.Model):
         self.write(res)
 
     @api.multi
+    def action_draft(self):
+        res = {
+            'state': 'draft',
+            'approver_id': self.env.user.id,
+            'approved_date': time.strftime('%Y-%m-%d %H:%M:%S')
+        }
+        self.write(res)
+
+    @api.multi
     def action_get_stock_picking(self):
         action = self.env.ref('stock.action_picking_tree_all').read([])[0]
         action['domain'] = [('id', '=', self.picking_id.id)]
@@ -214,11 +224,11 @@ class GBSStockScrapLines(models.Model):
         if self.product_id:
             location_id = self.stock_scrap_id.location_id.id
             product_quant = self.env['stock.quant'].search([('product_id', '=', self.product_id.id),
-                                                            ('location_id', '=', location_id)],limit=1)
+                                                            ('location_id', '=', location_id)])
             quantity = sum([val.qty for val in product_quant])
 
             if quantity <= 0:
-                raise UserError(_('Product "{0}" has not sufficient balance.'.format(self.product_id.display_name)))
+                raise UserError(_('Product "{0}" has not sufficient balance for this location'.format(self.product_id.display_name)))
             self.qty_available = quantity
 
     @api.multi

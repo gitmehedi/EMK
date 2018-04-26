@@ -1,5 +1,4 @@
-from openerp import api, fields, models
-from openerp.osv import osv
+from odoo import api, fields, models
 
 class product_template(models.Model):
     

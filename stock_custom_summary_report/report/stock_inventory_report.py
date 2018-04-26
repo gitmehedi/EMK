@@ -1,6 +1,4 @@
-from datetime import datetime
-
-from openerp import api, models
+from odoo import api, models
 
 
 class StockInventoryReport(models.AbstractModel):
@@ -25,9 +23,10 @@ class StockInventoryReport(models.AbstractModel):
     def get_report_data(self, data):
         date_start = data['date_from']
         date_end = data['date_to']
-        location_outsource = data['shop_id']
+        location_outsource = data['operating_unit_id']
         category_id = data['category_id']
         cat_pool = self.env['product.category']
+        cat_lists = []
 
         sub_list = {
             'product': [],
@@ -92,8 +91,8 @@ class StockInventoryReport(models.AbstractModel):
 
         if cat_lists:
             categories = cat_lists.ids
-        else:
-            categories = cat_lists
+        # else:
+        #     categories = cat_lists
 
         if len(categories) == 1:
             category_param = "(" + str(data['category_id']) + ")"
