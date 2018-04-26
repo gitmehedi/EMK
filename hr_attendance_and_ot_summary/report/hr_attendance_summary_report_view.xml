@@ -45,6 +45,7 @@
 										<th>Salary Days</th>
 										<th>Present Days</th>
 										<th>Absent Days</th>
+										<th>Absent Deduction Day(s)</th>
 										<th>Late Days</th>
 										<th>Late Deduction Day(s)</th>
 										<th>Leave Days</th>
@@ -82,6 +83,9 @@
 													</td>
 													<td>
 														<span t-esc="o['absent_days_count']"></span>
+													</td>
+													<td>
+														<span t-esc="o['absent_deduction_days']"></span>
 													</td>
 													<td>
 														<span t-esc="o['late_days_count']"></span>

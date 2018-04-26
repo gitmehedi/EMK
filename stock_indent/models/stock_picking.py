@@ -71,11 +71,12 @@ class StockPicking(models.Model):
 
         indent_obj = self.env['indent.indent']
         indent_ids = indent_obj.search([('name', '=', picking.origin)])
+
         flag = True
         for picking in self:
-            if picking.state not in ('done', 'cancel'):
+            if picking.state not in ('done', 'cancel') or len(todo_moves)!=len(indent_ids[0].product_lines):
                 flag = False
             if flag:
-                indent_ids.write({'state': 'received'})
+                indent_ids[0].write({'state': 'received'})
 
         return True

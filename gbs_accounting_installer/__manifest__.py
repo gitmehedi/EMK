@@ -13,7 +13,12 @@
                 'account_move_fiscal_year',
                 'buff_partner_bank_branch',
                 'account_check_printing',
-                'account_invoice_supplier_ref_unique'],
+                'account_invoice_supplier_ref_unique',
+                'account_financial_report_qweb',
+                'customer_activity_statement',
+                'customer_outstanding_statement',
+                'account_journal_report',
+                ],
 
     'data': [ ],
     'description': 'Install all modules which is related to Accounting',
