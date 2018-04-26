@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<odoo>
+    <data>
+        <report
+                id="action_report_po"
+                model="purchase.order"
+                string="Purchase Order Report"
+                report_type="qweb-pdf"
+                name="gbs_purchase_order.report_purchase_order"
+                file="gbs_purchase_order.report_purchase_order"
+                menu = "True"
+                paperformat="custom_report.paperformat_backend_portrait"
+        />
+
+        <template id="report_purchase_order">
+            <t t-call="report.html_container">
+                <t t-call="custom_report.gbs_internal_layout">
+                    <div class="page" style="page-break-inside: auto">
+                        <style>
+                            .table-caption {
+                            border: 1px solid #ddd;
+                            border-bottom: none;
+                            font-size: 14px;
+                            font-weight: bold;
+                            margin: 0;
+                            padding: 5px 5px;
+                            }
+                        </style>
+                        <div class="row">
+                            <h4 class="text-center">Purchase Order</h4>
+                            <div class="row">
+                                <div class="col-xs-9">
+                                    <h6><b>Order No : </b><span t-esc="data['name']"/></h6>
+                                </div>
+                                <div class="col-xs-3 text-left" style="padding-left:65px;">
+                                    <h6><b>PO Date : </b><span t-esc="order_date"/></h6>
+                                </div>
+                            </div>
+                            <hr class="hr-sm mb-0"/>
+                            <div class="row">
+                                <div class="col-xs-8">
+                                    <h6><b>Suplier : </b><span t-esc="data['partner_id']"/></h6>
+                                    <h6><b>Address : </b><span t-esc="data['address']"/></h6>
+                                    <h6><b>Contract Parson : </b><span t-esc="data['sup_con']"/></h6>
+                                    <h6><b>Order Ref No : </b><span t-esc="data['partner_ref']"/></h6>
+                                </div>
+                                <div class="col-xs-4 text-left" style="padding-left:1px;">
+                                    <h6><b>Consignee : </b><span t-esc="data['company']"/></h6>
+                                    <h6><b>Address : </b><span t-esc="data['company_address']"/></h6>
+                                    <h6><b>Contract Parson : </b></h6>
+                                </div>
+                            </div>
+                            <hr class="hr-xs"/>
+                        </div>
+                        <div class="row">
+                            <table class="table table-report table-bordered table-striped">
+                                <thead>
+                                    <tr>
+                                        <td colspan="5">  We are pleased to issue the purchase order
+                                        for supplying under mentioned Materials to <span t-esc="data['company']"/>
+                                        as the management accepts your price and quality, on the basis
+                                        of following terms and conditions: </td>
+                                    </tr>
+                                    <tr class="odo-bg-gray">
+                                        <th>Sl#</th>
+                                        <th>Description/Specification/Origin</th>
+                                        <th>Quantity</th>
+                                        <th>Unit Rate</th>
+                                        <th>Total Price</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <t t-foreach="lists" t-as="l">
+                                        <tr style="page-break-inside: avoid">
+                                            <td><span t-esc="l_index+1"/></td>
+                                            <td><span t-esc="l['product_id']"/></td>
+                                            <td><span t-esc="l['product_qty']"/></td>
+                                            <td><span t-esc="l['price_unit']"/></td>
+                                            <td><span t-esc="l['price_subtotal']"/></td>
+                                        </tr>
+                                    </t>
+                                    <tr>
+                                        <td colspan="4" rowspan="2"><strong>Amount in words : </strong><span t-esc="amt_to_word"/></td>
+                                        <td><strong>Sub Total : </strong><span t-esc="total_amount" /></td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Grand Total : </strong><span t-esc="total_amount" /></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-6">
+
+                                <h6><b>Specific Terms and Conditions : </b>
+                                    <br/>
+                                    <br/>
+                                    <span t-esc="data['notes']" widget = "text_html"/></h6>
+                                <!--<h6><b>Mode of Payment : </b></h6>-->
+                                <!--<h6><b>Delivery : </b></h6>-->
+                                <!--<h6><b>Delivery Period : </b></h6>-->
+                                <!--<h6><b>Country of Origin : </b></h6>-->
+                                <!--<h6><b>Warranty : </b></h6>-->
+                            </div>
+                        </div>
+                        <div class="row mb32 text-left" style="margin-top: 20mm;">
+                            <div class="col-xs-10 text-left">
+                                <strong>Ordered by :</strong>
+                                <br/>
+                                <br/>
+                                <br/>
+                                <br/><strong>----------------------</strong>
+                            </div>
+                            <div class="col-xs-2 text-left">
+                                <strong>Approved by :</strong>
+                                <br/>
+                                <br/>
+                                <br/>
+                                <br/><strong>----------------------</strong>
+                            </div>
+                        </div>
+                    </div>
+                </t>
+            </t>
+        </template>
+    </data>
+</odoo>
