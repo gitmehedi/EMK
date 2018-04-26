@@ -5,9 +5,12 @@ class DailyProduction(models.Model):
 
 
     section_id = fields.Many2one('mrp.section','Section', required=True)
-    production_date = fields.Date('Date')
+    production_date = fields.Date('Date' ,required=True)
     finish_product_line_ids = fields.One2many('finish.product.line','daily_pro_id','Finish Produts')
     consumed_product_line_ids = fields.One2many('consumed.product.line','daily_pro_id','Consumed Products')
+    operating_unit_id = fields.Many2one('operating.unit', 'Operating Unit', required=True,
+                                        default=lambda self: self.env.user.default_operating_unit_id)
+
     state = fields.Selection([
         ('draft', 'Draft'),
         ('confirmed', 'Confirmed'),
@@ -18,25 +21,39 @@ class DailyProduction(models.Model):
 
     @api.multi
     def action_consume(self):
+
+        ############### Delete Existing Records ##########################################
+        if self.id:
+            self.env["consumed.product.line"].search([('daily_pro_id', '=', self.id)]).unlink()
+
+        consumeProductMap = {}
         if self.finish_product_line_ids:
             for product in self.finish_product_line_ids:
-                val = []
-                bom_pool = self.env['mrp.bom'].search(
-                    [('product_tmpl_id', '=', product.product_id.id)])
+                product.finish_product_date = self.production_date
+                self.buildConsumeProducts(product,consumeProductMap)
 
-                for record in bom_pool.bom_line_ids:
-                    if product.fnsh_product_qty:
-                        val.append((0, 0, {'product_id': record.product_id.id,
-                                           'con_product_qty': record.product_qty + product.fnsh_product_qty,
-                                           }))
-                    else:
-                        val.append((0, 0, {'product_id': record.product_id.id,
-                                           'con_product_qty': record.product_qty,
-                                           }))
+            consumed_product_list = []
+            for i, key in enumerate(consumeProductMap):
+                consumeProductValue = consumeProductMap.get(key)
+                consumed_product_list.append((0, 0, {'product_id': consumeProductValue['product_id'],
+                                   'con_product_qty': consumeProductValue['con_product_qty'],
+                                    'consumed_product_date' :  consumeProductValue['consumed_product_date']
+                                   }))
 
-                self.consumed_product_line_ids = val
+            self.consumed_product_line_ids = consumed_product_list
 
+    def buildConsumeProducts(self,product,consumeProductMap):
 
+        bom_pool = self.env['mrp.bom'].search([('product_tmpl_id', '=', product.product_id.id)])
+        for record in bom_pool.bom_line_ids:
+            consumeProduct = consumeProductMap.get(record.product_id.id)
+            if consumeProduct:
+                consumeProduct['con_product_qty'] = consumeProduct[
+                                                        'con_product_qty'] + record.product_qty * product.fnsh_product_qty
+            else:
+                consumeProductMap[record.product_id.id] = {'product_id': record.product_id.id,
+                                                           'con_product_qty': record.product_qty * product.fnsh_product_qty,
+                                                           'consumed_product_date':self.production_date}
 
     @api.multi
     def name_get(self):

@@ -13,7 +13,8 @@
         'sales_team',
         'account',
         'stock',
-        'custom_report'
+        'custom_report',
+        'product_variant_sale_price',
     ],
     'data': [
         'security/ir.model.access.csv',

@@ -16,6 +16,7 @@
     ],
 
     'data': [
+        'security/ir.model.access.csv',
         'views/cheque_received_view.xml',
         'views/cheque_list_not_honoured.xml',
         'views/money_receipt_sequence_view.xml',
