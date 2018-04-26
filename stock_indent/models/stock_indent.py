@@ -62,8 +62,8 @@ class IndentIndent(models.Model):
                                  default=lambda self: self.env.user.company_id,required=True)
     active = fields.Boolean('Active', default=True)
     # amount_total = fields.Float(string='Total', compute=_compute_amount, store=True)
-    approver_id = fields.Many2one('res.users', string='Authority', readonly=True,
-                                  states={'draft': [('readonly', False)]}, help="who have approve or reject indent.")
+    approver_id = fields.Many2one('res.users', string='Authority', readonly=True, help="who have approve or reject indent.")
+    closer_id = fields.Many2one('res.users', string='Authority', readonly=True, help="who have close indent.")
     warehouse_id = fields.Many2one('stock.warehouse', 'Warehouse', readonly=True,required=True,
                                    default=lambda self: self._get_default_warehouse(),
                                    help="Default Warehouse.Source location.",
@@ -141,6 +141,14 @@ class IndentIndent(models.Model):
             'state': 'reject',
             'approver_id': self.env.user.id,
             'approve_date': time.strftime('%Y-%m-%d %H:%M:%S')
+        }
+        self.write(res)
+
+    @api.multi
+    def action_close_indent(self):
+        res = {
+            'state': 'received',
+            'closer_id': self.env.user.id,
         }
         self.write(res)
 

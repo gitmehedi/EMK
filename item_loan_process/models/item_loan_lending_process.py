@@ -98,8 +98,7 @@ class ItemLoanLending(models.Model):
             if line.product_id:
                 if not picking_id:
                     picking_type = self.env['stock.picking.type'].search(
-                        [('default_location_src_id', '=', self.location_id.id),
-                         ('default_location_dest_id', '=', self.item_loan_location_id.id), ('code', '=', 'outgoing')])
+                        [('default_location_src_id', '=', self.location_id.id),('code', '=', 'outgoing')])
                     if not picking_type:
                         raise UserError(_('Please create picking type for Item Landing.'))
                     # pick_name = self.env['ir.sequence'].next_by_code('stock.picking')

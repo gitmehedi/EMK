@@ -24,7 +24,7 @@ class Picking(models.Model):
             if picking.transfer_type == 'receive' and picking.state == 'done' and picking.location_dest_id.name == 'Stock':
                 # if picking.state == 'done':
                 #     if picking.location_dest_id.name == 'Stock':
-                origin_picking_objs = self.search([('name','=',self.origin)])
+                origin_picking_objs = self.search([('name','=',picking.origin)])
                 if origin_picking_objs:
                     if origin_picking_objs[0].receive_type in ['lc','loan']:
                         picking.check_approve_button = True
