@@ -10,6 +10,13 @@ class MrrReport(models.AbstractModel):
         mrr_date = report_utility_pool.getERPDateFormat(report_utility_pool.getDateFromStr(data['mrr_date']))
         pack_list = []
         total_amount = []
+        customer =False
+        challan =False
+        challan_date = False
+        po_no = False
+        po_date = False
+        pr_no = False
+
         for picking in origin_picking_objs:
             if picking.shipment_id.lc_id.po_ids:
                 for po in picking.shipment_id.lc_id.po_ids:
@@ -17,15 +24,13 @@ class MrrReport(models.AbstractModel):
                     po_date = report_utility_pool.getERPDateFormat(report_utility_pool.getDateTimeFromStr(po.date_order))
                     customer = po.partner_id.name
                     pr_no = po.requisition_id.name
-            else:
-                return None
+
 
             if picking.shipment_id.gate_in_ids:
                 for gate in picking.shipment_id.gate_in_ids:
                     challan = gate.challan_bill_no
                     challan_date = report_utility_pool.getERPDateFormat(report_utility_pool.getDateFromStr(gate.date))
-            else:
-                return None
+
             if picking.pack_operation_product_ids:
                 for pack in picking.pack_operation_product_ids:
                     pack_obj = {}
@@ -37,8 +42,7 @@ class MrrReport(models.AbstractModel):
                     pack_obj['amount'] = pack.qty_done*pack.linked_move_operation_ids.move_id.price_unit
                     total_amount.append(pack_obj['amount'])
                     pack_list.append(pack_obj)
-            else:
-                return None
+
 
         total = sum(total_amount)
         amt_to_word = self.env['res.currency'].amount_to_word(float(total))
