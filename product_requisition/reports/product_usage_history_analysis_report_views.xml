@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <record model="ir.ui.view" id="view_product_usages_history_analysis_graph">
+            <field name="name">product.usage.history.analysis.report.graph</field>
+            <field name="model">product.usage.history.analysis.report</field>
+            <field name="arch" type="xml">
+                <graph string="Product Usage History Analysis" type="pivot">
+                    <field name="product_id" type="row"/>
+                    <field name="period_id" type="col"/>
+                    <field name="value" type="measure"/>
+                </graph>
+            </field>
+        </record>
+
+
+        <record id="view_product_usages_history_analysis_search" model="ir.ui.view">
+            <field name="name">product.usage.history.analysis.report.search</field>
+            <field name="model">product.usage.history.analysis.report</field>
+            <field name="arch" type="xml">
+                <search string="Product Usage History">
+                    <group expand="0" string="Extended Filters">
+                        <field name="value"/>
+                        <field name="operating_unit_id"/>
+                    </group>
+                    <group expand="1" string="Group By">
+                        <filter string="Period" name="group_period_id" context="{'group_by':'period_id'}"/>
+                        <filter string="Category of Product" name="category_id"
+                                context="{'group_by':'category_id'}"/>
+                        <filter string="Branch" context="{'group_by':'operating_unit_id'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record id="action_product_usages_analysis_report" model="ir.actions.act_window">
+            <field name="name">Product Usages Analysis</field>
+            <field name="res_model">product.usage.history.analysis.report</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">graph</field>
+            <field name="view_id" ref="view_product_usages_history_analysis_graph"></field>
+            <field name="context">{'search_default_period_id': 1, 'group_by_category_id':1,'group_by':[]}</field>
+            <field name="help">Product Usage History Analysis allows you to easily check and analyse your company
+                product usage history
+                and performance.
+            </field>
+        </record>
+
+
+        <menuitem action="action_product_usages_analysis_report"
+                  id="menu_action_product_usages_analysis_report"
+                  parent="stock.next_id_61" sequence="5"/>
+
+    </data>
+</openerp>

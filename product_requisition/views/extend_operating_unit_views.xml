@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+        <record id="extend_operating_unit_form_view" model="ir.ui.view">
+            <field name="name">Extend Operating Unit Form View</field>
+            <field name="model">operating.unit</field>
+            <field name="inherit_id" ref="operating_unit.view_operating_unit_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='partner_id']" position="after">
+                    <field name="min_stock_days"/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</openerp>

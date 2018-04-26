@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+        <record id="product_usage_history_form_view" model="ir.ui.view">
+            <field name="name">Product Usage History Form View</field>
+            <field name="model">product.usage.history</field>
+            <field name="arch" type="xml">
+                <form string="Product Usage History Form">
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="product_id"
+                                       options="{'no_quick_create': True, 'no_create_edit': True, 'no_open': True}"/>
+                                <field name="uom_id"
+                                       options="{'no_quick_create': True, 'no_create_edit': True, 'no_open': True}"/>
+                                <field name="category_id"
+                                       options="{'no_quick_create': True, 'no_create_edit': True, 'no_open': True}"/>
+
+                            </group>
+                            <group>
+                                <field name="operating_unit_id"
+                                       options="{'no_quick_create': True, 'no_create_edit': True, 'no_open': True}"
+                                       groups="operating_unit.group_multi_operating_unit"/>
+                                <field name="value"/>
+                                <field name="period_id"
+                                       options="{'no_quick_create': True, 'no_create_edit': True, 'no_open': True}"/>
+                            </group>
+                        </group>
+
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="product_usage_history_tree_view" model="ir.ui.view">
+            <field name="name">Product Usage History Tree View</field>
+            <field name="model">product.usage.history</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="operating_unit_id"/>
+                    <field name="period_id"/>
+                    <field name="product_id"/>
+                    <field name="value"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="product_usage_history_search_view" model="ir.ui.view">
+            <field name="name">Product Usage History Search View</field>
+            <field name="model">product.usage.history</field>
+            <field eval="10" name="priority"/>
+            <field name="arch" type="xml">
+                <search string="Product Usage History Search">
+                    <field name="operating_unit_id"/>
+                    <field name="period_id"/>
+                    <field name="product_id"/>
+                    <field name="value"/>
+                </search>
+            </field>
+        </record>
+
+        <record id="product_usage_history_action" model="ir.actions.act_window">
+            <field name="name">Product Usage History</field>
+            <field name="res_model">product.usage.history</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <record id="product_usage_history_action_tree" model="ir.actions.act_window.view">
+            <field eval="1" name="sequence"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="product_usage_history_tree_view"/>
+            <field name="act_window_id" ref="product_usage_history_action"/>
+        </record>
+
+        <record id="product_usage_history_action_form" model="ir.actions.act_window.view">
+            <field eval="2" name="sequence"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="product_usage_history_form_view"/>
+            <field name="act_window_id" ref="product_usage_history_action"/>
+        </record>
+
+        <menuitem id="product_usage_history_menu" name="Usage History"
+                  sequence="5" action="product_usage_history_action" parent="menu_stock_requisition"/>
+    </data>
+</openerp>

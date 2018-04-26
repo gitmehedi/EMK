@@ -9,7 +9,7 @@ class StockReportWizard(models.TransientModel):
 
 	start_date = fields.Date('Start Date', default=fields.Date.today())
 	end_date = fields.Date('End Date', default=fields.Date.today())
-	stock_type = fields.Selection([('1', "Issue"), ('2', "Return"), ('3', "Transfer")], default="0")
+	stock_type = fields.Selection([('1', "Issue"), ('2', "Return"), ('3', "Transfer")],default="0")
 	source_loc = fields.Many2one('stock.location', 'Source Location')
 	desti_loc = fields.Many2one('stock.location', 'Destination Location')
 	_sql_constraints = [
@@ -84,7 +84,9 @@ class StockReportWizard(models.TransientModel):
 			stock_flag = 'stock_return'
 		elif(self.stock_type=="3"):
 			stock_flag = 'stock_transfer'
-		picking_ids = obj_picking.search([('date_done','>=',self.start_date),('date_done','<=',self.end_date),(stock_flag,'=',True)])
+		picking_ids = obj_picking.search([('date_done','>=',self.start_date),
+										('date_done','<=',self.end_date),
+										(stock_flag,'=',True)])
 		
 		obj_move = self.env['stock.move']
 		for pick_id in picking_ids:

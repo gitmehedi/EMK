@@ -1,5 +1,7 @@
 from openerp import api, fields, models
 from openerp.osv import osv
+from openerp import tools
+from openerp.tools.translate import _
 
 
 class InheritedWizardValuationHistory(models.Model):
@@ -22,34 +24,25 @@ class InheritedWizardValuationHistory(models.Model):
     @api.multi
     def open_category_table(self):
         data = self.read()
-        catagory = data[0]['product_cat_id']
-        category_ids = self.product_cat_id.child_id.ids
+        category = self.product_cat_id
 
-        sub_categories = self.find_sub_category(category_ids)
+        cat_pool = self.env['product.category']
+        categories = cat_pool.get_categories(category.id)
 
-        if catagory != False and catagory[0] != 0 and sub_categories.__len__() == 0:
-
-            cat_id = int(data[0]['product_cat_id'][0])
-            choose_category = data[0]['choose_category']
-            cat_name = data[0]['product_cat_id'][1]
-            date = data[0]['date']
-
+        if category != False and self.date:
             return {
-                'domain': ['|', '&', ('product_categ_id', '=', cat_id), ('date', '<=', date),
-                           ('product_categ_id', '=', cat_id)],
-                #  'domain': ['|',('product_categ_id', '=', cat_id),('product_categ_id', '=', catagory[0])],
-                'name': cat_name,
+                'domain': [('product_categ_id', 'in', categories), ('date', '<=', self.date)],
+                'name': category.name,
                 'view_type': 'form',
                 'view_mode': 'tree,graph',
                 'res_model': 'stock.history',
                 'type': 'ir.actions.act_window',
                 # 'context': ctx,
             }
-
-        elif sub_categories.__len__() != 0:
+        elif category != False:
             return {
-                'domain': [('product_categ_id', 'in', category_ids)],
-                # 'name': cat_name,
+                'domain': [('product_categ_id', 'in', categories)],
+                'name': category.name,
                 'view_type': 'form',
                 'view_mode': 'tree,graph',
                 'res_model': 'stock.history',
@@ -62,3 +55,8 @@ class InheritedWizardValuationHistory(models.Model):
 
 class InheritedStockHistory(models.Model):
     _inherit = 'stock.history'
+    
+    uom = fields.Many2one('product.uom', string="UOM", related='product_id.uom_id')
+    
+    
+

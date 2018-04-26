@@ -52,6 +52,9 @@
                     <field name="product_categ_id"/>
 
                 </xpath>
+                <xpath expr="//field[@name='quantity']" position="before">
+                    <field name="uom"/>
+                </xpath>
             </field>
         </record>
 

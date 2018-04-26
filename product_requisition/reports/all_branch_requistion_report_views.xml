@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+        <!-- Main template -->
+        <template id="report_all_branch_requisition_report_view_qweb">
+            <t t-call="report.html_container">
+                <t t-call="report.external_layout">
+                    <style>
+                        .table th {
+                        padding: 2px !important;
+                        }
+                        .table td {
+                        padding: 2px !important;
+                        font-size: 12px !important;
+                        }
+                    </style>
+                    <div class="page" style="page-break-inside: auto">
+                        <div class="row">
+                            <div class="col-xs-12">
+                                <h2 class="text-center">Product Requisition Summary</h2>
+                            </div>
+                            <br/>
+                            <div class="col-xs-3 col-xs-offset-3">
+                                <div>
+                                    <strong>Period:</strong>
+                                    <span t-esc="record['period_name']"/>
+                                </div>
+                            </div>
+                        </div>
+                        <br/>
+                        <table class="table table-bordered table-condensed table-striped" style="padding: 0px;">
+                            <thead>
+                                <tr style="background-color: #f5f5f5;">
+                                    <t t-foreach="header" t-as="head">
+                                        <th style="text-align: center;">
+                                            <t t-esc="head_value"/>
+                                        </th>
+                                    </t>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <t t-foreach="lines" t-as="line">
+                                    <tr>
+                                        <td class="text-center">
+                                            <span t-esc="line_index+1"/>
+                                        </td>
+                                        <td>
+                                            <span t-esc="line"/>
+                                        </td>
+                                        <t t-foreach="line_value['period']" t-as="val">
+                                            <td class="text-right">
+                                                <span t-esc="val_value"/>
+                                            </td>
+                                        </t>
+                                        <td class="text-right">
+                                            <span t-esc="line_value['value']"/>
+                                        </td>
+                                        <td class="text-right">
+                                            <span t-esc="line_value['average']"/>
+                                        </td>
+                                    </tr>
+                                </t>
+                            </tbody>
+                        </table>
+                    </div>
+                </t>
+            </t>
+        </template>
+
+        <report id="report_all_branch_requisition"
+                model="product.requisition"
+                string="All Branch Requisition"
+                name="product_requisition.report_all_branch_requisition_report_view_qweb"
+                file="product_requisition.report_all_branch_requisition_report_view_qweb"
+                multi="True"
+                menu="False"
+                report_type="qweb-pdf"/>
+
+        <record id="paperformat_Landscape" model="report.paperformat">
+            <field name="name">Landscape Report</field>
+            <field name="orientation">Landscape</field>
+            <field name="format">A4</field>
+            <field name="header_line"/>
+        </record>
+
+        <record id="report_all_branch_requisition" model="ir.actions.report.xml">
+            <field name="paperformat_id" ref="paperformat_Landscape"/>
+        </record>
+    </data>
+</openerp>

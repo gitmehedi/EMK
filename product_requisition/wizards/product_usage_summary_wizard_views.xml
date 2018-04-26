@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+        <record id="view_wizard_product_usage_summary_wizard" model="ir.ui.view">
+            <field name="name">Product Usage Summary</field>
+            <field name="model">product.usage.summary.wizard</field>
+            <field name="arch" type="xml">
+                <form string="Product Usage Summary">
+                    <group>
+                        <group>
+                            <field name="start_period_id"
+                                   options="{'no_quick_create': True, 'no_create_edit': True, 'no_open': True}"/>
+                            <field name="end_period_id"
+                                   options="{'no_quick_create': True, 'no_create_edit': True, 'no_open': True}"/>
+                            <field name="operating_unit_id"
+                                   options="{'no_quick_create': True, 'no_create_edit': True, 'no_open': True}"
+                                   groups="operating_unit.group_multi_operating_unit"/>
+                        </group>
+                        <group/>
+                    </group>
+                    <footer>
+                        <button name="print_report" string="Print" type="object" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+
+        <record id="action_wizard_product_usage_summary" model="ir.actions.act_window">
+            <field name="name">Product Usage Summary</field>
+            <field name="res_model">product.usage.summary.wizard</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="view_wizard_product_usage_summary_wizard"/>
+            <field name="target">new</field>
+        </record>
+
+        <menuitem id="menu_action_wizard_product_usage_summary"
+                  action="action_wizard_product_usage_summary"
+                  parent="stock.next_id_61"
+                  sequence="10"/>
+
+    </data>
+</openerp>

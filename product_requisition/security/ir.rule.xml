@@ -1,0 +1,49 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+        <record id="product_usage_permission_operating_unit" model="ir.rule">
+            <field name="name">Product Usage Permission Operating Unit</field>
+            <field name="model_id" ref="model_product_usage_history"/>
+            <field name="domain_force">[('operating_unit_id','in',[o.id for o in user.operating_unit_ids])]</field>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_write" eval="False"/>
+            <field name="perm_unlink" eval="False"/>
+        </record>
+
+        <record id="product_requisition_permission_operating_unit" model="ir.rule">
+            <field name="name">Product Requisition Permission Operating Unit</field>
+            <field name="model_id" ref="model_product_requisition"/>
+            <field name="domain_force">[('operating_unit_id','in',[o.id for o in user.operating_unit_ids])]</field>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
+            <field name="groups" eval="[(4, ref('stock.group_stock_user'))]"/>
+        </record>
+
+        <record id="purchase_requisition_permission_operating_unit" model="ir.rule">
+            <field name="name">Purchase Requisition Permission Operating Unit</field>
+            <field name="model_id" ref="model_purchase_requisition"/>
+            <field name="domain_force">[('operating_unit_id','in',[o.id for o in user.operating_unit_ids])]</field>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
+            <field name="groups" eval="[(4, ref('stock.group_stock_user'))]"/>
+        </record>
+
+        <record id="purchase_requisition_permission_operating_unit" model="ir.rule">
+            <field name="name">Product Requisition Template Operating Unit</field>
+            <field name="model_id" ref="model_product_requisition_template"/>
+            <field name="domain_force">['|',('operating_unit_id','in',[o.id for o in
+                user.operating_unit_ids]),('operating_unit_id','=',False)]
+            </field>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
+            <field name="groups" eval="[(4, ref('stock.group_stock_user'))]"/>
+        </record>
+    </data>
+</openerp>

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+        <record id="view_wizard_product_requisition_template_wizard" model="ir.ui.view">
+            <field name="name">Product Requisition Template Wizard</field>
+            <field name="model">product.requisition.template.wizard</field>
+            <field name="arch" type="xml">
+                <form string="Product Usage Summary">
+                    <group>
+                        <group>
+                            <field name="template_id"
+                                   options="{'no_quick_create': True, 'no_create_edit': True, 'no_open': True}"/>
+                            <field name="operating_unit_id"
+                                   options="{'no_quick_create': True, 'no_create_edit': True, 'no_open': True}"
+                                   groups="operating_unit.group_multi_operating_unit"/>
+                        </group>
+                        <group></group>
+                    </group>
+                    <footer>
+                        <button name="print_report" string="Generate" type="object" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+
+        <record id="action_wizard_product_requisition_template" model="ir.actions.act_window">
+            <field name="name">Product Requistion Template Wizard</field>
+            <field name="res_model">product.requisition.template.wizard</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="view_wizard_product_requisition_template_wizard"/>
+            <field name="target">new</field>
+        </record>
+
+
+    </data>
+</openerp>
