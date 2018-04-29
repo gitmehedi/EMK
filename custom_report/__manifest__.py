@@ -9,7 +9,8 @@
         'data/paperformat.xml',
         'views/inherite_layout.xml',
         'views/templates.xml',
-        'views/gbs_internal_layout.xml'
+        'views/gbs_internal_layout.xml',
+        'views/gbs_external_layout.xml',
     ],
     'installable': True,
     'auto_install': False,

@@ -79,11 +79,21 @@
                                         </tr>
                                     </t>
                                     <tr>
-                                        <td colspan="7" ><strong>Amount in words : </strong><span t-esc="amt_to_word"/></td>
-                                        <td><strong>Total : </strong><span t-esc="total_amount"/></td>
+                                        <t t-if="pr_no">
+                                            <td colspan="7"><strong>Amount in words : </strong> <span t-esc="amt_to_word"/></td>
+                                            <!--<td class="text-right"><strong>Total</strong></td>-->
+                                            <td><strong>Total : </strong><span t-esc="total_amount"/></td>
+                                        </t>
+                                        <t t-else="">
+                                            <td colspan="6"><strong>Amount in words <label> : </label></strong> <span t-esc="amt_to_word"/></td>
+                                            <!--<td class="text-right"><strong>Total</strong></td>-->
+                                            <td><strong>Total : </strong><span t-esc="total_amount"/></td>
+                                        </t>
                                     </tr>
                                 </tbody>
                             </table>
+
+
                         </div>
                         <div class="row mb32 text-left" style="margin-top: 10mm;">
                             <div class="col-xs-4 text-left">
