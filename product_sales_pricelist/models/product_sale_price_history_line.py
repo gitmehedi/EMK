@@ -1,4 +1,6 @@
 from odoo import api, fields, models
+from odoo.exceptions import UserError, ValidationError, Warning
+
 import time
 
 
@@ -17,6 +19,12 @@ class ProductSalePriceHistiryLine(models.Model):
     product_package_mode = fields.Many2one('product.packaging.mode', string= 'Packaging Mode', readonly=True)
     category_id = fields.Many2one(string='UoM Category',related="uom_id.category_id",store=True)
     uom_id = fields.Many2one('product.uom', string="UoM", readonly=True)
+
+    @api.multi
+    def unlink(self):
+        raise UserError('You can not delete Price from here')
+        return super(ProductSalePriceHistiryLine, self).unlink()
+
 
     @api.model
     def pull_automation(self):
