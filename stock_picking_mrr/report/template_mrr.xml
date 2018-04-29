@@ -79,7 +79,7 @@
                                         </tr>
                                     </t>
                                     <tr>
-                                        <td colspan="6" ><strong>Amount in words : </strong><span t-esc="amt_to_word"/></td>
+                                        <td colspan="7" ><strong>Amount in words : </strong><span t-esc="amt_to_word"/></td>
                                         <td><strong>Total : </strong><span t-esc="total_amount"/></td>
                                     </tr>
                                 </tbody>
