@@ -29,7 +29,7 @@ class MrrReport(models.AbstractModel):
         if docs.partner_id.country_id:
             address.append(docs.partner_id.country_id.name)
 
-        str_address = '\n'.join(address)
+        str_address = '<br>'.join(address)
 
         data = {}
         data['name'] = docs.name
