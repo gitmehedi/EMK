@@ -2,10 +2,23 @@
 
 <odoo>
     <data>
+        <!--inherit purchase order report and menu hide -->
+        <report
+            string="Purchase Order"
+            id="purchase.action_report_purchase_order"
+            model="purchase.order"
+            report_type="qweb-pdf"
+            name="purchase.report_purchaseorder"
+            file="purchase.report_purchaseorder"
+            menu="False"
+        />
+        <!--inherit purchase order report and menu hide -->
+
+
         <report
                 id="action_report_po"
                 model="purchase.order"
-                string="Purchase Order Report"
+                string="Purchase Order"
                 report_type="qweb-pdf"
                 name="gbs_purchase_order.report_purchase_order"
                 file="gbs_purchase_order.report_purchase_order"
