@@ -1,0 +1,2 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_stock_loan_analysis_report_stock_loan_analysis_report,stock_loan_analysis_report.stock_loan_analysis_report,model_stock_loan_analysis_report_stock_loan_analysis_report,,1,0,0,0
