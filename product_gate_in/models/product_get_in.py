@@ -25,7 +25,7 @@ class ProductGateIn(models.Model):
     ship_id = fields.Many2one('purchase.shipment', string='Shipment Number',
                             states={'confirm': [('readonly', True)]},
                             domain="['&','&','&',('operating_unit_id','=',operating_unit_id),('state','in',('cnf_clear', 'gate_in', 'done')),('lc_id.state','!=','done'),('lc_id.state','!=','cancel')]")
-
+    partner_id = fields.Many2one('res.partner', string='Supplier')
 
     date = fields.Date(string="Date")
     receive_type = fields.Selection([
@@ -71,6 +71,14 @@ class ProductGateIn(models.Model):
                                        }))
 
             self.shipping_line_ids = val
+
+    @api.constrains('challan_bill_no')
+    def _check_unique_constraint(self):
+        if self.partner_id and self.challan_bill_no:
+            filters = [['challan_bill_no', '=ilike', self.challan_bill_no],['partner_id', '=', self.partner_id.id]]
+            bill_no = self.search(filters)
+            if len(bill_no) > 1:
+                raise UserError(_('[Unique Error] Challan Bill must be unique for %s !')% self.partner_id.name)
 
     ####################################################
     # Override methods

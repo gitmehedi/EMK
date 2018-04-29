@@ -42,3 +42,8 @@ class StockMove(models.Model):
                     'operating_unit_dest_id', 'location_dest_id')
     def _check_stock_move_operating_unit(self):
         pass
+
+class StockPickingType(models.Model):
+    _inherit = 'stock.picking.type'
+
+    operating_unit_id = fields.Many2one('operating.unit', string='Operating Unit', related='warehouse_id.operating_unit_id')

@@ -48,6 +48,7 @@
                                        attrs="{'invisible': [('receive_type', '!=', 'lc')],'required': [('receive_type', '=', 'lc')]}"/>
                                 <field name="create_by"/>
                                 <field name="received"/>
+                                <field name="partner_id" options="{'no_quick_create':True,'no_create_edit':True,'no_open': True}"/>
                             </group>
                         </group>
                         <notebook colspan="4">
