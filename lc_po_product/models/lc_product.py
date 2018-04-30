@@ -23,7 +23,7 @@ class LCProduct(models.Model):
 class LCPO(models.Model):
     _inherit = "letter.credit"
 
-    po_ids = fields.Many2many('purchase.order', 'po_lc_rel', 'lc_id', 'po_id', string='Purcahse Order')
+    po_ids = fields.Many2many('purchase.order', 'po_lc_rel', 'lc_id', 'po_id', string='Purchase Order')
     product_lines = fields.One2many('lc.product.line', 'lc_id', string='Product(s)')
 
     @api.onchange('po_ids')
