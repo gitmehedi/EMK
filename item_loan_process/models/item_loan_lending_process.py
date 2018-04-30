@@ -220,8 +220,8 @@ class ItemLoanLendingLines(models.Model):
                 quantity = sum([val.qty for val in product_quant])
                 if quantity <= 0:
                     raise UserError(_('Product "{0}" has not sufficient balance for this location'.format(
-                        self.product_id.display_name)))
-                self.qty_available = quantity
+                        productLine.product_id.display_name)))
+                productLine.qty_available = quantity
 
     @api.one
     @api.constrains('product_uom_qty')
