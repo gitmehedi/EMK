@@ -9,9 +9,9 @@
     ],
 
     'data': [
-        'wizard/lc_wizard_view.xml',
         'views/lc_sales_view.xml',
         'views/lc_sales_menu.xml',
+        'views/shipment_sale_view.xml'
     ],
 
     'summary': 'Sale By LC',

@@ -9,9 +9,10 @@
                 <form string="Letter Credit" delete="false" copy='0'>
                     <link rel="stylesheet" href="/letter_of_credit/static/src/css/lc_style.css"></link>
                     <header>
-                        <button string="Confirm" name="action_confirm" states="draft" type="object" class="oe_highlight"/>
+                        <button string="Confirm" name="action_confirm_export" states="draft" type="object" class="oe_highlight"/>
                         <button string="Reset to Draft" name="action_draft" type="object" states="confirmed" class="oe_read_only" groups="base_technical_features.group_technical_features"/>
-                        <button string="Amendment" name="action_revision" class="oe_read_only" type="object" attrs="{'invisible': [('state', 'in', ('draft', 'open', 'done'))]}"/>
+                        <button string="Amendment" name="action_revision_export" class="oe_read_only" type="object" attrs="{'invisible': [('state', 'in', ('draft', 'open', 'done'))]}"/>
+                        <button string="Shipment" name="action_shipment_export" type="object" attrs="{'invisible': [('state', 'in', ('draft', 'open', 'done'))]}" class="oe_highlight oe_read_only"/>
                         <button string="Cancel" name="action_cancel" class="oe_read_only" type="object" states="progress"/>
                         <field name="state" widget="statusbar" statusbar_visible="draft,confirmed,progress,done"/>
 
@@ -121,6 +122,21 @@
                                             <field name="name" string="Title"/>
                                             <field name="datas_fname" invisible="1"/>
                                             <field name="db_datas" filename="datas_fname"/>
+                                        </tree>
+                                    </field>
+                                </page>
+                                <page string="Shipment">
+                                    <field name="shipment_ids" widget="one2many">
+                                        <tree create="false" delete="false" editable="bottom"
+                                              colors="black:state=='receive_doc';blue:state=='eta';blue:state=='cnf_quotation';blue:state=='approve_cnf_quotation';green:state=='cnf_clear';gray:state=='done';">
+                                            <field name="name"/>
+                                            <field name="etd_date"/>
+                                            <field name="shipment_date"/>
+                                            <field name="eta_date"/>
+                                            <field name="arrival_date"/>
+                                            <field name="state"/>
+                                            <button name="action_view_shipment" string="View" type="object" icon="fa-search-plus" />
+                                            <button name="action_edit_shipment" string="Edit" type="object" icon="fa-pencil-square-o" />
                                         </tree>
                                     </field>
                                 </page>
