@@ -63,3 +63,9 @@ class Picking(models.Model):
             'limit': 80,
             'context': "{'default_res_model': '%s','default_res_id': %d}" % (self._name, res_id)
         }
+
+
+class StockPickingType(models.Model):
+    _inherit = 'stock.picking.type'
+
+    show_on_dashboard = fields.Boolean(string='Show Picking Type on dashboard', help="Whether this Picking Type should be displayed on the dashboard or not", default=True)

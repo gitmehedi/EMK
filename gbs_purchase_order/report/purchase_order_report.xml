@@ -2,7 +2,7 @@
 
 <odoo>
     <data>
-        <!--inherit purchase order report and menu hide -->
+        <!--inherit purchase order and menu hide -->
         <report
             string="Purchase Order"
             id="purchase.action_report_purchase_order"
@@ -12,9 +12,6 @@
             file="purchase.report_purchaseorder"
             menu="False"
         />
-        <!--inherit purchase order report and menu hide -->
-
-
         <report
                 id="action_report_po"
                 model="purchase.order"
@@ -54,13 +51,14 @@
                             <div class="row">
                                 <div class="col-xs-8">
                                     <h6><b>Suplier : </b><span t-esc="data['partner_id']"/></h6>
-                                    <h6><b>Address : </b><p><span t-esc="data['address']" widget='text'/></p></h6>
+                                    <h6><b>Address : </b><p><span t-esc="data['cus_address']" t-esc-options='{"widget": "contact", "fields": ["address"], "no_marker": true}'/></p></h6>
                                     <h6><b>Contract Parson : </b><span t-esc="data['sup_con']"/></h6>
-                                    <h6><b>Order Ref No : </b><span t-esc="data['partner_ref']"/></h6>
+                                    <h6><b>PR No : </b><span t-esc="data['requisition_id']"/></h6>
+                                    <h6><b>Order Ref No : </b><span t-esc="data['partner_ref']"/>, <b>Date : </b></h6>
                                 </div>
-                                <div class="col-xs-4 text-left" style="padding-left:1px;">
+                                <div class="col-xs-4 text-left" style="padding-left:45px;">
                                     <h6><b>Consignee : </b><span t-esc="data['company']"/></h6>
-                                    <h6><b>Address : </b><span t-esc="data['company_address']"/></h6>
+                                    <h6><b>Address : </b><p><span t-esc="data['company_address']" t-esc-options='{"widget": "contact", "fields": ["address"], "no_marker": true}'/></p></h6>
                                     <h6><b>Contract Parson : </b></h6>
                                 </div>
                             </div>
