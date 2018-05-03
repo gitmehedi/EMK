@@ -1,17 +1,17 @@
 from odoo import api, fields, models,_
 
-class LCPO(models.Model):
+class LCSO(models.Model):
     _inherit = "letter.credit"
 
-    po_ids = fields.Many2many('purchase.order', 'po_lc_rel', 'lc_id', 'po_id', string='Purchase Order')
+    so_ids = fields.Many2many('sale.order', 'so_lc_rel', 'lc_id', 'so_id', string='Sale Order')
     product_lines = fields.One2many('lc.product.line', 'lc_id', string='Product(s)')
 
-    @api.onchange('po_ids')
-    def po_product_line(self):
+    @api.onchange('so_ids')
+    def so_product_line(self):
         self.product_lines = []
         vals = []
-        for po_id in self.po_ids:
-            for obj in po_id.order_line:
+        for so_id in self.so_ids:
+            for obj in so_id.order_line:
                 vals.append((0, 0, {'product_id': obj.product_id,
                                     'name': obj.name,
                                     'product_qty': obj.product_qty,
