@@ -3,7 +3,7 @@ from odoo import api, fields, models,_
 class LCSO(models.Model):
     _inherit = "letter.credit"
 
-    so_ids = fields.Many2many('sale.order', 'so_lc_rel', 'lc_no', 'so_id', string='Sale Order')
+    so_ids = fields.Many2many('sale.order', 'so_lc_rel', 'lc_id', 'so_id', string='Sale Order')
     product_lines = fields.One2many('lc.product.line', 'lc_id', string='Product(s)')
 
     @api.onchange('so_ids')

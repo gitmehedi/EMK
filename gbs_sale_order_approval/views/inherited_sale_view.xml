@@ -370,7 +370,7 @@
                     </xpath>
 
                     <xpath expr="//field[@name='pi_no']" position="after">
-                        <field name="lc_no" attrs="{'invisible':[('credit_sales_or_lc', '!=', 'lc_sales')]}"
+                        <field name="lc_id" attrs="{'invisible':[('credit_sales_or_lc', '!=', 'lc_sales')]}"
                                options="{'no_quick_create':True,'no_create_edit':True,'no_open':True}"/>
                     </xpath>
 

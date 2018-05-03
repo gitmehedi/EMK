@@ -72,7 +72,7 @@ class DeliveryOrder(models.Model):
     """ PI and LC """
     pi_no = fields.Many2one('proforma.invoice', string='PI Ref. No.', readonly=True,
                             states={'draft': [('readonly', False)]})
-    lc_no = fields.Many2one('letter.credit', string='LC Ref. No.', readonly=True,
+    lc_id = fields.Many2one('letter.credit', string='LC Ref. No.', readonly=True,
                             states={'draft': [('readonly', False)]})
 
     """ Payment information"""
@@ -173,22 +173,22 @@ class DeliveryOrder(models.Model):
                 if not pi_pool:
                     raise UserError('PI is of a different Sale Order')
 
-            if self.lc_no and self.pi_no:
-                if self.lc_no.lc_value >= self.total_sub_total_amount():
+            if self.lc_id and self.pi_no:
+                if self.lc_id.lc_value >= self.total_sub_total_amount():
                    # self.create_delivery_order()
                     self.update_sale_order_da_qty()
                     self.write({'state': 'close'})  # Final Approval
                 else:
                     self.write({'state': 'approve'})  # Second approval
 
-            elif self.pi_no and not self.lc_no:
+            elif self.pi_no and not self.lc_id:
                 res = {}
                 list = dict.fromkeys(set([val.product_id.product_tmpl_id.id for val in self.line_ids]), 0)
                 for line in self.line_ids:
                     list[line.product_id.product_tmpl_id.id] = list[line.product_id.product_tmpl_id.id] + line.quantity
 
                 for rec in list:
-                    ordered_qty_pool = self.env['ordered.qty'].search([('lc_no', '=', False),
+                    ordered_qty_pool = self.env['ordered.qty'].search([('lc_id', '=', False),
                                                                        ('company_id', '=', self.company_id.id),
                                                                        ('product_id', '=', rec)])
 
@@ -209,7 +209,7 @@ class DeliveryOrder(models.Model):
                         self.write({'state': 'close'})  # Final Approval
                     else:
                         for orders in ordered_qty_pool:
-                            if not orders.lc_no:
+                            if not orders.lc_id:
                                 if list[rec] > orders.available_qty:
                                     res['available_qty'] = 0
                                     orders.create(res)
@@ -391,7 +391,7 @@ class DeliveryOrder(models.Model):
                 self.so_date = sale_order_obj.date_order
                 self.deli_address = sale_order_obj.partner_shipping_id.name
                 self.pi_no = sale_order_obj.pi_no.id
-                self.lc_no = sale_order_obj.lc_no.id
+                self.lc_id = sale_order_obj.lc_id.id
 
                 for record in sale_order_obj.order_line:
                     if record.da_qty != record.product_uom_qty \
@@ -465,7 +465,7 @@ class OrderedQty(models.Model):
     product_id = fields.Many2one('product.template', string='Product')
     ordered_qty = fields.Float(string='Ordered Qty')
     available_qty = fields.Float(string='Allowed Qty', default=0.00)  ## available_qty = max_qty - ordered_qty
-    lc_no = fields.Many2one('letter.credit', string='LC No')
+    lc_id = fields.Many2one('letter.credit', string='LC No')
     delivery_auth_no = fields.Many2one('delivery.order', string='Delivery Authrozation ref')
     company_id = fields.Many2one('res.company', 'Company',
                                  default=lambda self: self.env['res.company']._company_default_get(
