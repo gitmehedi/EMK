@@ -23,7 +23,7 @@
                             <group colspan="2">
                                 <group>
                                     <field name="name" required="1" readonly="0"/>
-                                    <field name="po_ids" widget="many2many_tags" options='{"no_open": True,"no_create": 1, "no_create_edit":1}'/>
+                                    <field name="so_ids" widget="many2many_tags" options='{"no_open": True,"no_create": 1, "no_create_edit":1}'/>
                                     <field name="type" attrs="{'invisible': '1'}" />
                                 </group>
                                 <group>
@@ -101,7 +101,6 @@
                                                colors="grey: product_received_qty==product_qty;green: product_received_qty!=product_qty;">
                                             <field name="product_id" readonly='1'/>
                                             <field name="name" readonly='1'/>
-                                            <field name="date_planned" readonly='1'/>
                                             <field name="product_qty" readonly='1'/>
                                             <field name="product_uom" readonly='1'/>
                                              <field name="product_received_qty" readonly='1'/>
