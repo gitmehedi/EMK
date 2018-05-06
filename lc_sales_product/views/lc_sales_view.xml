@@ -135,8 +135,8 @@
                                             <field name="eta_date"/>
                                             <field name="arrival_date"/>
                                             <field name="state"/>
-                                            <button name="action_view_shipment" string="View" type="object" icon="fa-search-plus" />
-                                            <button name="action_edit_shipment" string="Edit" type="object" icon="fa-pencil-square-o" />
+                                            <button name="action_view_shipment_export" string="View" type="object" icon="fa-search-plus" />
+                                            <button name="action_edit_shipment_export" string="Edit" type="object" icon="fa-pencil-square-o" />
                                         </tree>
                                     </field>
                                 </page>
