@@ -85,6 +85,11 @@ class ProductGateIn(models.Model):
             if len(bill_no) > 1:
                 raise UserError(_('[Unique Error] Challan Bill must be unique for %s !')% self.partner_id.name)
 
+    @api.constrains('shipping_line_ids')
+    def _check_shipping_line_ids(self):
+        if not self.shipping_line_ids:
+            raise UserError(_('You cannot confirm %s which has no line.' % (self.name)))
+
     ####################################################
     # Override methods
     ####################################################
