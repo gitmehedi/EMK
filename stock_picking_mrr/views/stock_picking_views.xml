@@ -76,7 +76,7 @@
     <menuitem id="menu_approval_picking"
               name="Pending Approval"
               parent="stock.menu_stock_warehouse_mgmt"
-              sequence="4"
+              sequence="5"
               action="action_stock_picking_approval"
               groups="stock.group_stock_user"/>
 

@@ -10,13 +10,13 @@ class ProductGateIn(models.Model):
 
 
     name = fields.Char(string='Name', index=True, readonly=True)
-    create_by = fields.Char('Carried By', readonly=True, states={'draft': [('readonly', False)]})
-    received = fields.Char('To Whom Received', readonly=True, states={'draft': [('readonly', False)]})
+    create_by = fields.Char('Carried By', readonly=True, states={'draft': [('readonly', False)]},required=True)
+    received = fields.Char('To Whom Received', readonly=True, states={'draft': [('readonly', False)]},required=True)
 
-    challan_bill_no = fields.Char('Challan Bill No', readonly=True, states={'draft': [('readonly', False)]})
-    truck_no = fields.Char('Truck/Vehicle No', readonly=True, states={'draft': [('readonly', False)]})
+    challan_bill_no = fields.Char('Challan Bill No', readonly=True, states={'draft': [('readonly', False)]},required=True)
+    truck_no = fields.Char('Truck/Vehicle No', readonly=True, states={'draft': [('readonly', False)]},required=True)
 
-    shipping_line_ids = fields.One2many('product.gate.line','parent_id')
+    shipping_line_ids = fields.One2many('product.gate.line','parent_id',required=True,readonly=True,states={'draft': [('readonly', False)]})
     operating_unit_id = fields.Many2one('operating.unit', string='Operating Unit', required=True,
                                         default=lambda self: self.env.user.default_operating_unit_id,
                                         readonly=True, states={'draft': [('readonly', False)]})
@@ -27,13 +27,12 @@ class ProductGateIn(models.Model):
                             domain="['&','&','&',('operating_unit_id','=',operating_unit_id),('state','in',('cnf_clear', 'gate_in', 'done')),('lc_id.state','!=','done'),('lc_id.state','!=','cancel')]")
     partner_id = fields.Many2one('res.partner', string='Supplier')
 
-    date = fields.Date(string="Date")
+    date = fields.Date(string="Date",readonly=True, states={'draft': [('readonly', False)]},required=True)
     receive_type = fields.Selection([
         ('lc', "LC"),
-        ('loan', "Loan"),
         ('others', "Others"),
 
-    ])
+    ],readonly=True,required=True,states={'draft': [('readonly', False)]})
 
     state = fields.Selection([
         ('draft', "Draft"),
@@ -51,6 +50,12 @@ class ProductGateIn(models.Model):
     def action_draft(self):
         self.state = 'draft'
         self.shipping_line_ids.write({'state': 'draft'})
+
+    @api.onchange('receive_type')
+    def _onchange_is_included_ot(self):
+        if self.receive_type != 'lc':
+            self.ship_id = None
+
 
     # change data and line data depands on ship_id
     @api.onchange('ship_id')
@@ -111,7 +116,7 @@ class ShipmentProductLine(models.Model):
     date_planned = fields.Date(string='Scheduled Date', index=True)
     product_uom = fields.Many2one('product.uom',
                                   string='UOM')
-    product_qty = fields.Float(string='Quantity',states={'confirm': [('readonly', True)]})
+    product_qty = fields.Float(string='Quantity')
     parent_id = fields.Many2one('product.gate.in',
                                 string='Purchase Shipment')
 
