@@ -30,18 +30,6 @@
         <field name="sequence">60</field>
      </record>
 
-    <record id="group_export_lc_local" model="res.groups">
-        <field name="name">Export LC (local)</field>
-        <field name="category_id" ref="module_category_procure_to_pay"/>
-        <field name="sequence">70</field>
-    </record>
-
-    <record id="group_export_lc_foreign" model="res.groups">
-        <field name="name">Export LC (Foreign)</field>
-        <field name="category_id" ref="module_category_procure_to_pay"/>
-        <field name="sequence">80</field>
-    </record>
-
     <record id="group_approve_gate_in" model="res.groups">
         <field name="name">Approve Gate In</field>
         <field name="category_id" ref="module_category_procure_to_pay"/>
