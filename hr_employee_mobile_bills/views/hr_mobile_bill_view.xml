@@ -16,8 +16,8 @@
                                 string="Approve" states="applied"
                                 class="oe_highlight"/>
 						<button name="action_draft" type="object"
-                                string="Reject" groups ="hr.group_hr_manager"
-                                states="applied"/>
+                                string="Reset to Draft" groups ="hr.group_hr_manager"
+                                states="applied,approved"/>
                          <field name="state" widget="statusbar"/>
 					</header>
 					<sheet>
@@ -35,6 +35,7 @@
 												<field name="employee_id"/>
 												<field  name="bill_amount" />
 												<field  name="amount" />
+												<field  name="state" invisible="1"/>
 											</tree>
 										</field>
 									</page>

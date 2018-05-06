@@ -6,11 +6,11 @@ class HrMealBillLine(models.Model):
     _name = 'hr.payroll.arrear.line'
     _description = 'HR Employee Arrear line'
 
-    arear_amount = fields.Integer(string="Amount", required=True)
+    arear_amount = fields.Integer(string="Amount", required=True,readonly=True,states={'draft': [('readonly', False)]})
 
     """ Relational Fields """
     parent_id = fields.Many2one(comodel_name='hr.payroll.arrear', ondelete='cascade')
-    employee_id = fields.Many2one('hr.employee', string="Employee", ondelete='cascade')
+    employee_id = fields.Many2one('hr.employee', string="Employee", ondelete='cascade',readonly=True,states={'draft': [('readonly', False)]})
 
     _sql_constraints = [
         ('unique_employee_id', 'unique(parent_id, employee_id)',
