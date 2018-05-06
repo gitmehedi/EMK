@@ -14,8 +14,8 @@ class HrMobileBill(models.Model):
                                  default=lambda self: self.env.user.company_id)
 
     """ All relations fields """
-    line_ids = fields.One2many(comodel_name='hr.mobile.bill.line',inverse_name='parent_id', string="Line Ids",states={'draft': [('invisible', False)],
-            'applied': [('readonly', True)], 'approved':[('readonly', True)]})
+    line_ids = fields.One2many(comodel_name='hr.mobile.bill.line',inverse_name='parent_id', string="Line Ids", readonly=True,copy=True,
+                               states={'draft': [('readonly', False)]})
     
     
     """ All Selection fields """
@@ -33,25 +33,31 @@ class HrMobileBill(models.Model):
     @api.multi
     def action_draft(self):
         self.state = 'draft'
-        self.line_ids.write({'state':'draft'})
+        for line in self.line_ids:
+            if line.state != 'adjusted':
+                line.write({'state':'draft'})
     
     @api.multi
     def action_confirm(self):
         self.state = 'applied'
-        self.line_ids.write({'state': 'applied'})
+        for line in self.line_ids:
+            if line.state != 'adjusted':
+                line.write({'state': 'applied'})
     
     @api.multi
     def action_done(self):
         self.state = 'approved'
-        self.line_ids.write({'state': 'approved'})
+        for line in self.line_ids:
+            if line.state != 'adjusted':
+                line.write({'state': 'approved'})
 
-    @api.constrains('name')
-    def _check_unique_constraint(self):
-        if self.name:
-            filters = [['name', '=ilike', self.name]]
-            name = self.search(filters)
-            if len(name) > 1:
-                raise Warning('[Unique Error] Name must be unique!')
+    # @api.constrains('name')
+    # def _check_unique_constraint(self):
+    #     if self.name:
+    #         filters = [['name', '=ilike', self.name]]
+    #         name = self.search(filters)
+    #         if len(name) > 1:
+    #             raise Warning('[Unique Error] Name must be unique!')
 
     @api.multi
     def unlink(self):
