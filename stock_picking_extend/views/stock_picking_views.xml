@@ -220,6 +220,8 @@
     <!--</field>-->
     <!--</record>-->
 
+
+    <!--Receive Goods Action -->
     <record model="ir.actions.act_window" id="action_stock_picking_receive1">
         <field name="name">Receive Goods</field>
         <field name="type">ir.actions.act_window</field>
@@ -238,6 +240,39 @@
         </field>
     </record>
 
+    <!--Accounts Approver Action -->
+    <record model="ir.actions.act_window" id="action_stock_picking_receive_acc_approver">
+        <field name="name">Accounts Approver</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">stock.picking</field>
+        <field name="view_type">form</field>
+        <field name="view_id" ref="view_stock_picking_tree1"/>
+        <field name="domain">[('transfer_type', '=', 'receive'),('check_ac_approve_button','=',True)]</field>
+        <field name="context">{'default_transfer_type': 'receive'}</field>
+    </record>
+
+    <!--Quality Control Action -->
+    <record model="ir.actions.act_window" id="action_stock_picking_receive_qc">
+        <field name="name">Quality Control</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">stock.picking</field>
+        <field name="view_type">form</field>
+        <field name="view_id" ref="view_stock_picking_tree1"/>
+        <field name="domain">[('transfer_type', '=', 'receive'),('location_dest_id.name','=','Quality Control')]</field>
+        <field name="context">{'default_transfer_type': 'receive'}</field>
+    </record>
+
+    <!--Sound Stock Action -->
+    <record model="ir.actions.act_window" id="action_stock_picking_receive_sound_stock">
+        <field name="name">Sound Stock</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">stock.picking</field>
+        <field name="view_type">form</field>
+        <field name="view_id" ref="view_stock_picking_tree1"/>
+        <field name="domain">[('transfer_type', '=', 'receive'),('location_dest_id.name','=','Stock')]</field>
+        <field name="context">{'default_transfer_type': 'receive'}</field>
+    </record>
+
     <record id="action_stock_picking_view1" model="ir.actions.act_window.view">
         <field eval="201" name="sequence"/>
         <field name="view_mode">tree</field>
@@ -252,11 +287,37 @@
         <field name="act_window_id" ref="action_stock_picking_receive1"/>
     </record>
 
+    <!--Receive Goods menu -->
     <menuitem id="menu_receive_picking"
               name="Receive Goods"
               parent="stock.menu_stock_warehouse_mgmt"
-              sequence="3"
+              sequence="2"
               action="action_stock_picking_receive1" groups="stock.group_stock_user"/>
+
+    <!--Quality Control Menu -->
+    <menuitem id="menu_receive_picking_qc"
+              name="Quality Control"
+              parent="stock.menu_stock_warehouse_mgmt"
+              sequence="3"
+              action="action_stock_picking_receive_qc" groups="stock.group_stock_user"/>
+
+    <!--Sound Stock Menu -->
+    <menuitem id="menu_receive_picking_sound_stock"
+              name="Sound Stock"
+              parent="stock.menu_stock_warehouse_mgmt"
+              sequence="4"
+              action="action_stock_picking_receive_sound_stock" groups="stock.group_stock_user"/>
+
+    <!--Accounts Approver menu -->
+    <menuitem id="menu_receive_picking_acc_approver"
+              name="Inventory"
+              parent="account.menu_finance"
+              sequence="3"
+              groups="stock.group_stock_user"/>
+    <menuitem id="menu_acc_approver"
+              name="Accounts Approver"
+              parent="menu_receive_picking_acc_approver"
+              action="action_stock_picking_receive_acc_approver" groups="stock.group_stock_user"/>
 
     <record model="ir.ui.view" id="view_picking_form_inherit">
         <field name="name">stock.picking.inherit.form</field>
