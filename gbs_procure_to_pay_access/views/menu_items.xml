@@ -61,19 +61,19 @@
                 groups="group_imoprt_lc_foreign"/>
 
         <menuitem
-                id="letter_of_credit.lc_commercial_export_local_creation_submenu"
+                id="lc_sales_product.lc_commercial_export_local_creation_submenu"
                 name="Export LC(Local)"
                 parent="letter_of_credit.lc_commercial_creation_menu"
                 sequence="3"
-                action="letter_of_credit.lc_export_local_creation_action"
+                action="lc_sales_product.lc_export_local_creation_action"
                 groups="group_export_lc_local"/>
 
         <menuitem
-                id="letter_of_credit.lc_commercial_export_foreign_creation_submenu"
+                id="lc_sales_product.lc_commercial_export_foreign_creation_submenu"
                 name="Export LC(Foreign)"
                 parent="letter_of_credit.lc_commercial_creation_menu"
                 sequence="1"
-                action="letter_of_credit.lc_export_foreign_creation_action"
+                action="lc_sales_product.lc_export_foreign_creation_action"
                 groups="group_export_lc_foreign"/>
 
 

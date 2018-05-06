@@ -11,7 +11,7 @@
                 </xpath>
 
                 <xpath expr="//field[@name='origin']" position="after">
-                    <field name="lc_no"/>
+                    <field name="lc_id"/>
                 </xpath>
 
             </field>

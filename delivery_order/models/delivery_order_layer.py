@@ -72,7 +72,7 @@ class DeliveryOrderLayer(models.Model):
     """ PI and LC """
     pi_no = fields.Many2one('proforma.invoice', string='PI Ref. No.', readonly=True,
                             states={'draft': [('readonly', False)]})
-    lc_no = fields.Many2one('letter.credit', string='LC Ref. No.', readonly=True,
+    lc_id = fields.Many2one('letter.credit', string='LC Ref. No.', readonly=True,
                             states={'draft': [('readonly', False)]})
 
     """ Payment information"""
@@ -150,8 +150,8 @@ class DeliveryOrderLayer(models.Model):
 
         # Update the reference of PI and LC on both Stock Picking and Sale Order Obj
         if self.delivery_order_id.so_type == 'lc_sales':
-            stock_picking_id.write({'lc_no': self.lc_no.id})
-            self.delivery_order_id.sale_order_id.write({'lc_no': self.lc_no.id, 'pi_no': self.pi_no.id})
+            stock_picking_id.write({'lc_id': self.lc_id.id})
+            self.delivery_order_id.sale_order_id.write({'lc_id': self.lc_id.id, 'pi_no': self.pi_no.id})
 
         # Update Stock Move with reference of Delivery Order
         stock_move_id = self.delivery_order_id.sale_order_id.picking_ids.move_lines
@@ -215,7 +215,7 @@ class DeliveryOrderLayer(models.Model):
                 self.so_date = delivery_auth_id.so_date
                 self.deli_address = delivery_auth_id.deli_address
                 self.pi_no = delivery_auth_id.pi_no.id
-                self.lc_no = delivery_auth_id.lc_no.id
+                self.lc_id = delivery_auth_id.lc_id.id
                 self.sale_order_id = delivery_auth_id.sale_order_id.id
                 self.amount_untaxed = delivery_auth_id.amount_untaxed
                 self.tax_value = delivery_auth_id.tax_value

@@ -336,4 +336,50 @@
         </field>
     </record>
 
+    <record id="view_stock_picking_type_search" model="ir.ui.view">
+        <field name="name">stock.picking.type.search</field>
+        <field name="model">stock.picking.type</field>
+        <field name="arch" type="xml">
+            <search string="Stock Picking Type">
+                <field name="show_on_dashboard"/>
+                <filter string="My Picking Type" name="dashboard" domain="[('show_on_dashboard', '=', True)]"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="stock.stock_picking_type_action" model="ir.actions.act_window">
+        <field name="name">Inventory</field>
+        <field name="res_model">stock.picking.type</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">kanban,form</field>
+        <field name="search_view_id" ref="view_stock_picking_type_search"/>
+        <field name="context">{'search_default_dashboard':1}</field>
+        <field name="help" type="html">
+            <p class="oe_view_nocontent_create">
+                Click to create a new picking type.
+            </p><p>
+            The picking type system allows you to assign each stock
+            operation a specific type which will alter its views accordingly.
+            On the picking type you could e.g. specify if packing is needed by default,
+            if it should show the customer.
+        </p>
+        </field>
+    </record>
+
+    <record id="view_picking_type_form1" model="ir.ui.view">
+        <field name="name">picking.type.form1</field>
+        <field name="model">stock.picking.type</field>
+        <field name="inherit_id" ref="stock.view_picking_type_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//form/sheet/group[2]" position="after">
+                <group>
+                    <field name="show_on_dashboard" groups="base.group_system"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+
+
 </odoo>

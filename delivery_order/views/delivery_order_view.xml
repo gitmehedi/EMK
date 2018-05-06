@@ -30,7 +30,7 @@
                                 groups="gbs_application_group.group_head_account,gbs_application_group.group_cxo"/>
 
                         <button string="Tag LC" name="%(action_view_lc_wizard)d" type="action"
-                                attrs="{'invisible':['|','|', ('pi_no', '=', False), ('state','!=','close'), ('lc_no', '!=', False)]}"
+                                attrs="{'invisible':['|','|', ('pi_no', '=', False), ('state','!=','close'), ('lc_id', '!=', False)]}"
                                 groups="account.group_account_user,gbs_application_group.group_head_account,gbs_application_group.group_cxo"
                                 class="oe_highlight"/>
 
@@ -77,7 +77,7 @@
 
                                 <field name="pi_no" attrs="{'invisible':[('so_type', '!=', 'lc_sales')]}"
                                        options="{'no_quick_create':True,'no_create_edit':True,'no_open':True}"/>
-                                <field name="lc_no" attrs="{'invisible':[('so_type', '!=', 'lc_sales')]}"
+                                <field name="lc_id" attrs="{'invisible':[('so_type', '!=', 'lc_sales')]}"
                                        options="{'no_quick_create':True,'no_create_edit':True,'no_open':True}"/>
 
                             </group>
