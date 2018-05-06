@@ -15,7 +15,7 @@
     'category': 'Stock',
     'version': '10.0.1',
 
-    'depends': ['stock_picking_mrr'],
+    'depends': ['stock_picking_mrr','custom_report'],
 
     'data': [
         # 'security/ir.model.access.csv',
