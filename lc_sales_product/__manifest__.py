@@ -12,7 +12,6 @@
         'views/lc_sales_view.xml',
         'views/lc_sales_menu.xml',
         'views/shipment_sale_view.xml'
-        'security/security.xml',
     ],
 
     'summary': 'Sale By LC',
