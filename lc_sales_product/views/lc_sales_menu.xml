@@ -60,19 +60,19 @@
         </record>
 
         <menuitem id="lc_export_creation_menu" parent="sales_team.menu_base_partner"
-            sequence="10" name="Letter of Credit" groups="group_export_lc_local,group_export_lc_foreign"/>
+            sequence="10" name="Letter of Credit" groups="gbs_application_group.group_export_local_lc,gbs_application_group.group_export_foreign_lc"/>
 
         <menuitem id="lc_export_foreign_submenu" name="Export LC(Foreign)" parent="lc_export_creation_menu"
-                  action="lc_export_foreign_creation_action" groups="group_export_lc_foreign"/>
+                  action="lc_export_foreign_creation_action" groups="gbs_application_group.group_export_foreign_lc"/>
 
         <menuitem id="lc_commercial_export_foreign_creation_submenu" name="Export LC(Foreign)" parent="letter_of_credit.lc_commercial_creation_menu"
-                sequence="1" action="lc_export_foreign_creation_action" groups="group_export_lc_foreign"/>
+                sequence="1" action="lc_export_foreign_creation_action" groups="gbs_application_group.group_export_foreign_lc"/>
 
         <menuitem id="lc_export_local_submenu" name="Export LC(Local)" parent="lc_export_creation_menu"
-                  action="lc_export_local_creation_action" groups="group_export_lc_local"/>
+                  action="lc_export_local_creation_action" groups="gbs_application_group.group_export_local_lc"/>
 
         <menuitem id="lc_commercial_export_local_creation_submenu" name="Export LC(Local)" parent="letter_of_credit.lc_commercial_creation_menu"
-                sequence="3" action="lc_export_local_creation_action" groups="group_export_lc_local"/>
+                sequence="3" action="lc_export_local_creation_action" groups="gbs_application_group.group_export_local_lc"/>
 
     </data>
 </odoo>

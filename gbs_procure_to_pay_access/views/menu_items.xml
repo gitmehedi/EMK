@@ -35,14 +35,14 @@
                 name="Commercial"
                 id="commercial.menu_commercial_root"
                 sequence="23"
-                groups="commercial.group_commercial_user,group_approve_pr_foreign,group_approve_pr_local,group_imoprt_lc_local,group_imoprt_lc_foreign,group_export_lc_foreign"/>
+                groups="commercial.group_commercial_user,group_approve_pr_foreign,group_approve_pr_local,group_imoprt_lc_local,group_imoprt_lc_foreign,gbs_application_group.group_export_local_lc,gbs_application_group.group_export_foreign_lc"/>
 
         <menuitem
                 id="letter_of_credit.lc_commercial_creation_menu"
                 parent="commercial.menu_commercial_root"
                 sequence="4"
                 name="Letter of Credit"
-                groups="group_imoprt_lc_local,group_imoprt_lc_foreign,group_export_lc_local,group_export_lc_foreign"/>
+                groups="group_imoprt_lc_local,group_imoprt_lc_foreign,gbs_application_group.group_export_local_lc,gbs_application_group.group_export_foreign_lc"/>
 
         <menuitem
                 id="letter_of_credit.lc_commercial_import_local_creation_submenu"
