@@ -5,7 +5,7 @@ from odoo.exceptions import ValidationError
 class DocReceiveWizard(models.TransientModel):
     _name = 'doc.receive.wizard.export'
 
-    product_lines = fields.One2many('shipment.product.line.wizard', 'doc_shipment_id', string='Product(s)')
+    product_lines = fields.One2many('shipment.product.line.export.wizard', 'doc_shipment_id', string='Product(s)')
     shipment_id = fields.Many2one('purchase.shipment', string='Purchase Shipment',
                                   default=lambda self: self.env.context.get('active_id'))
 
@@ -58,8 +58,23 @@ class DocReceiveWizard(models.TransientModel):
         return {'type': 'ir.actions.act_window_close'}
 
 
+class ShipmentProductLineWizard(models.TransientModel):
+    _name = 'shipment.product.line.export.wizard'
+    _description = 'Product'
+    _order = "date_planned desc"
 
+    name = fields.Text(string='Description', required=True)
+    product_id = fields.Many2one('product.product', string='Product',
+                                 change_default=True, required=True)
+    product_qty = fields.Float(string='Quantity')
+    currency_id = fields.Many2one('res.currency', 'Currency')
+    date_planned = fields.Datetime(string='Scheduled Date', index=True)
+    product_uom = fields.Many2one('product.uom', string='Product Unit of Measure')
 
+    doc_shipment_id = fields.Many2one('doc.receive.wizard.export', string='Purchase Shipment', ondelete='cascade')
+    price_unit = fields.Float(string='Unit Price')
+    lc_pro_line_id = fields.Integer(string='LC Line ID')
+    shipment_pro_line_id = fields.Integer(string='Shipment Line ID')
 
 
 
