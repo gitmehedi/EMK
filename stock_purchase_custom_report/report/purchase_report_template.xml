@@ -36,84 +36,87 @@
                             <tr style="background-color: #EFECEB;">
                                 <th class="text-center">Date</th>
                                 <th class="text-center">Ref</th>
-                                <th rowspan="2" class="text-center">Particulars</th>
+                                <th class="text-center">Particulars</th>
                                 <th class="text-center">Qty</th>
+                                <th class="text-center">Unit</th>
                                 <th class="text-center">Rate</th>
                                 <th class="text-center">Discount</th>
                                 <th class="text-center">Amount</th>
                             </tr>
                         </thead>
-                        <!--<tbody>-->
-                            <!--<t t-foreach="lines" t-as="data">-->
-                                <!--<t t-if="data_value['product']">-->
-                                    <!--&lt;!&ndash;<tr style="background-color: #ebebe0; text-align:left;">&ndash;&gt;-->
-                                        <!--&lt;!&ndash;<td colspan="15" style="padding: 0px;">&ndash;&gt;-->
-                                            <!--&lt;!&ndash;<strong>&ndash;&gt;-->
-                                                <!--&lt;!&ndash;<t t-esc="data"/>&ndash;&gt;-->
-                                            <!--&lt;!&ndash;</strong>&ndash;&gt;-->
-                                        <!--&lt;!&ndash;</td>&ndash;&gt;-->
-                                    <!--&lt;!&ndash;</tr>&ndash;&gt;-->
-                                    <!--<t t-foreach="data_value['product']" t-as="line">-->
-                                        <!--<tr>-->
-                                            <!--&lt;!&ndash;<td>&ndash;&gt;-->
-                                            <!--&lt;!&ndash;<t t-esc="line['code']"/>&ndash;&gt;-->
-                                            <!--&lt;!&ndash;</td>&ndash;&gt;-->
-                                            <!--<td colspan="3">-->
-                                                <!--<t t-esc="line['name']"/>-->
-                                            <!--</td>-->
-                                            <!--&lt;!&ndash;<td>&ndash;&gt;-->
-                                            <!--&lt;!&ndash;<t t-esc="line['uom_name']"/>&ndash;&gt;-->
-                                            <!--&lt;!&ndash;</td>&ndash;&gt;-->
-                                            <!--<td class="text-right">-->
-                                                <!--<t t-esc="line['qty_in_tk']"/>-->
-                                            <!--</td>-->
-                                            <!--<td class="text-right">-->
-                                                <!--<t t-esc="line['rate_in']"/>-->
-                                            <!--</td>-->
-                                            <!--<td></td>-->
-                                            <!--<td></td>-->
-                                            <!--<td class="text-right">-->
-                                                <!--<t t-esc="line['val_in_tk']"/>-->
-                                            <!--</td>-->
+                        <tbody>
+                            <t t-foreach="lines" t-as="data">
+                                <t t-if="data_value['product']">
+                                    <tr style="background-color: #ebebe0; text-align:left;">
+                                        <td colspan="8" style="padding: 0px;">
+                                            <strong>
+                                                <t t-esc="data"/>
+                                            </strong>
+                                        </td>
+                                    </tr>
+                                    <t t-foreach="data_value['product']" t-as="line">
+                                        <tr>
+                                            <td>
+                                                <t t-esc="line['m_date']"/>
+                                            </td>
+                                            <td>
+                                                <t t-esc="line['mrr']"/>
+                                            </td>
+                                            <td>
+                                                <t t-esc="line['name']"/>
+                                            </td>
+                                            <td class="text-right">
+                                                <t t-esc="line['qty_in_tk']"/>
+                                            </td>
+                                            <td>
+                                                <t t-esc="line['uom_name']"/>
+                                            </td>
+                                            <td class="text-right">
+                                                <t t-esc="line['rate_in']"/>
+                                            </td>
+                                            <td></td>
+                                            <td class="text-right">
+                                                <t t-esc="line['val_in_tk']"/>
+                                            </td>
 
-                                        <!--</tr>-->
-                                    <!--</t>-->
-                                    <!--&lt;!&ndash;<t t-if="data_value['product']">&ndash;&gt;-->
-                                        <!--&lt;!&ndash;<tr style="font-weight: bold; background-color: #E4E4E4; border-bottom: 1px solid black;">&ndash;&gt;-->
-                                            <!--&lt;!&ndash;<td colspan="3" class="text-center">&ndash;&gt;-->
-                                                <!--&lt;!&ndash;<t t-esc="data_value['sub-total']['title']"/>&ndash;&gt;-->
-                                            <!--&lt;!&ndash;</td>&ndash;&gt;-->
-                                            <!--&lt;!&ndash;<td class="text-right">&ndash;&gt;-->
-                                                <!--&lt;!&ndash;<t t-esc="data_value['sub-total']['total_in_qty']"/>&ndash;&gt;-->
-                                            <!--&lt;!&ndash;</td>&ndash;&gt;-->
-                                            <!--&lt;!&ndash;<td></td>&ndash;&gt;-->
-                                            <!--&lt;!&ndash;<td></td>&ndash;&gt;-->
-                                            <!--&lt;!&ndash;<td></td>&ndash;&gt;-->
-                                            <!--&lt;!&ndash;<td class="text-right">&ndash;&gt;-->
-                                                <!--&lt;!&ndash;<t t-esc="data_value['sub-total']['total_in_val']"/>&ndash;&gt;-->
-                                            <!--&lt;!&ndash;</td>&ndash;&gt;-->
-                                        <!--&lt;!&ndash;</tr>&ndash;&gt;-->
-                                    <!--&lt;!&ndash;</t>&ndash;&gt;-->
-                                <!--</t>-->
-                            <!--</t>-->
-                            <!--<tr>-->
-                                <!--<td colspan="12"></td>-->
-                            <!--</tr>-->
-                            <!--&lt;!&ndash;<tr style="font-weight: bold; background-color: #897d79; border-bottom: 1px solid black;">&ndash;&gt;-->
-                                <!--&lt;!&ndash;<td colspan="3" class="text-center">&ndash;&gt;-->
-                                    <!--&lt;!&ndash;<t t-esc="total['title']"/>&ndash;&gt;-->
-                                <!--&lt;!&ndash;</td>&ndash;&gt;-->
-                                <!--&lt;!&ndash;<td class="text-right">&ndash;&gt;-->
-                                    <!--&lt;!&ndash;<t t-esc="total['total_in_qty']"/>&ndash;&gt;-->
-                                <!--&lt;!&ndash;</td>&ndash;&gt;-->
-                                <!--&lt;!&ndash;<td></td>&ndash;&gt;-->
-                                <!--&lt;!&ndash;<td></td>&ndash;&gt;-->
-                                <!--&lt;!&ndash;<td></td>&ndash;&gt;-->
-                                <!--&lt;!&ndash;<td class="text-right">&ndash;&gt;-->
-                                    <!--&lt;!&ndash;<t t-esc="total['total_in_val']"/>&ndash;&gt;-->
-                                <!--&lt;!&ndash;</td>&ndash;&gt;-->
-                            <!--&lt;!&ndash;</tr>&ndash;&gt;-->
-                        <!--</tbody>-->
+                                        </tr>
+                                    </t>
+                                    <t t-if="data_value['product']">
+                                        <tr style="font-weight: bold; background-color: #E4E4E4; border-bottom: 1px solid black;">
+                                            <td colspan="3" class="text-left">
+                                                <t t-esc="data_value['sub-total']['title']"/>
+                                            </td>
+                                            <td class="text-right">
+                                                <t t-esc="data_value['sub-total']['total_in_qty']"/>
+                                            </td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td class="text-right">
+                                                <t t-esc="data_value['sub-total']['total_in_val']"/>
+                                            </td>
+                                        </tr>
+                                    </t>
+                                </t>
+                            </t>
+                            <tr>
+                                <td colspan="12"></td>
+                            </tr>
+                            <tr style="font-weight: bold; background-color: #897d79; border-bottom: 1px solid black;">
+                                <td colspan="3" class="text-left">
+                                    <t t-esc="total['title']"/>
+                                </td>
+                                <td class="text-right">
+                                    <t t-esc="total['total_in_qty']"/>
+                                </td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td class="text-right">
+                                    <t t-esc="total['total_in_val']"/>
+                                </td>
+                            </tr>
+                        </tbody>
                     </table>
                     <t t-call="custom_report.report_signing"></t>
                 </div>

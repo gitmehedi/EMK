@@ -18,7 +18,8 @@ class PurchaseReportWizard(models.TransientModel):
         data['date_from'] = self.date_from
         data['date_to'] = self.date_to
         data['partner_id'] = self.partner_id.id
-        data['operating_unit_id'] = location.id
+        data['location_id'] = location.id
+        data['operating_unit_id'] = self.operating_unit_id.id
         data['operating_unit_name'] = self.operating_unit_id.name
 
         return self.env['report'].get_action(self, 'stock_purchase_custom_report.purchase_report_template',
