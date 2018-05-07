@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <template id="report_stock_issue">
+            <t t-call="report.html_container">
+                <t t-call="custom_report.gbs_internal_layout">
+                    <div class="page" style="page-break-inside: auto">
+                        <style type="text/css">
+                            .report-title { text-align:center; }
+                            .odo-bg-gray, .odo-bg-gray > td { background-color: #f5f5f5; }
+                        </style>
+                        <div class="row">
+                            <h4 class="text-center">Stock Issue Summary</h4>
+                            <hr class="hr-sm mb-0"/>
+                            <div class="row">
+                                <div class="col-xs-9">
+                                    <h6>
+                                        <b>Operating Unit :</b>
+                                        <span t-esc="data['operating_unit_name']"/>
+                                    </h6>
+                                    <h6>
+                                        <b>Department :</b>
+                                        <t t-if="not data['department_name']">All</t>
+                                        <span t-esc="data['department_name']"/>
+                                    </h6>
+                                </div>
+                                <div class="col-xs-3 text-right">
+                                    <h6>
+                                        <b>From Date :</b>
+                                        <span t-esc="data['from_date']"/>
+                                    </h6>
+                                    <h6>
+                                        <b>To Date :</b>
+                                        <span t-esc="data['to_date']"/>
+                                    </h6>
+                                </div>
+                                <hr class="hr-xs"/>
+                            </div>
+                            <table class="table table-report-xs table-bordered table-striped">
+                                <thead>
+                                    <tr class="odo-bg-gray">
+                                        <th class="text-center">SL#</th>
+                                        <th class="text-center">Name of Heads</th>
+                                        <th class="text-center">Quantity</th>
+                                        <th class="text-center">Unit</th>
+                                        <th class="text-center">Rate</th>
+                                        <th class="text-center">Amount</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <t t-foreach="lists" t-as="list">
+                                        <tr>
+                                            <td class="text-center">
+                                                <span t-esc="list_value[4]"/>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="text-center">
+                                                <span t-esc="list_index+1"/>
+                                            </td>
+                                            <td class="text-center">
+                                                <span t-esc="list_value[0]"/>
+                                            </td>
+                                            <td class="text-right">
+                                                <span t-esc="list_value[1]"/>
+                                            </td>
+                                            <td class="text-center">
+                                                <span class="text-center" t-esc="list_value[2]"/>
+                                            </td>
+                                            <td class="text-right">
+                                                <span t-esc="list_value[3]"/>
+                                            </td>
+                                            <td class="text-right">
+                                                <span t-esc="list_value[4]"/>
+                                            </td>
+
+                                        </tr>
+                                    </t>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <t t-call="custom_report.report_signing"></t>
+                    </div>
+                </t>
+            </t>
+        </template>
+        <report id="action_stock_issue_report"
+                string="Stock Issue Report"
+                model="indent.indent"
+                report_type="qweb-pdf"
+                name="stock_issue_report.report_stock_issue"
+                file="stock_issue_report.report_stock_issue"
+                menu="False"
+                paperformat="custom_report.paperformat_backend_portrait"
+        />
+    </data>
+</odoo>

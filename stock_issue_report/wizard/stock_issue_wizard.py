@@ -1,6 +1,7 @@
 from odoo import api, fields, models, _
 from odoo.exceptions import Warning
 
+
 class StockIssue(models.Model):
     _name = 'stock.issue.wizard'
 
@@ -8,11 +9,18 @@ class StockIssue(models.Model):
                                         default=lambda self: self.env.user.default_operating_unit_id)
     department_id = fields.Many2one('hr.department', string='Department')
 
-    from_date = fields.Date('From',required=True)
-    to_date = fields.Date('To',required=True)
+    from_date = fields.Date('From', required=True)
+    to_date = fields.Date('To', required=True)
 
-    @api.constrains('to_date', 'from_date')
-    def _check_date(self):
-        if self.to_date and self.from_date:
-            if self.from_date >= self.to_date:
-                raise Warning("[Error] To Date must be greater than From Date!")
+    @api.multi
+    def process_report(self):
+        data = {
+            'department_id': self.department_id.id,
+            'department_name': self.department_id.name,
+            'operating_unit_id': self.operating_unit_id.id,
+            'operating_unit_name': self.operating_unit_id.name,
+            'from_date': self.from_date,
+            'to_date': self.to_date,
+        }
+
+        return self.env['report'].get_action(self, 'stock_issue_report.report_stock_issue', data=data)
