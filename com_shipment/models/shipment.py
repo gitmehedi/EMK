@@ -11,14 +11,14 @@ class Shipment(models.Model):
 
     name = fields.Char(string='Number', required=True, readonly=True, index=True, default=lambda self: self.env.context.get('shipment_number'))
     comments = fields.Text(string='Comments', track_visibility='onchange')
-    etd_date = fields.Date('ETD Date', readonly=True, help="Estimated Time of Departure")
-    eta_date = fields.Date('ETA Date', readonly=True, help="Estimated Time of Arrival")
-    arrival_date = fields.Date('Arrival Date', readonly=True)
+    etd_date = fields.Date('ETD Date', help="Estimated Time of Departure")
+    eta_date = fields.Date('ETA Date', help="Estimated Time of Arrival")
+    arrival_date = fields.Date('Arrival Date', )
     cnf_received_date = fields.Date('C&F Received Date', readonly=True)
     cnf_id = fields.Many2one('res.partner', "Supplier", readonly=True)
-    comment = fields.Text('Comment', readonly=True)
-    transport_by = fields.Char('Transport By', readonly=True,)
-    vehical_no = fields.Char('Vehical No', readonly=True,)
+    comment = fields.Text('Comment')
+    transport_by = fields.Char('Transport By')
+    vehical_no = fields.Char('Vehical No')
 
     operating_unit_id = fields.Many2one('operating.unit', default=lambda self: self.env.context.get('operating_unit_id'))
     company_id = fields.Many2one('res.company', default=lambda self: self.env.context.get('company_id'))
@@ -41,16 +41,16 @@ class Shipment(models.Model):
     shipment_attachment_ids = fields.One2many('ir.attachment', 'res_id', string='Shipment Attachments')
 
     # Bill Of Lading
-    bill_of_lading_number = fields.Char(string='BoL Number', readonly=True, index=True, help="Bill Of Lading Number")
-    shipment_date = fields.Date('Ship on Board', readonly=True)
+    bill_of_lading_number = fields.Char(string='BoL Number', index=True, help="Bill Of Lading Number")
+    shipment_date = fields.Date('Ship on Board')
 
     # Packing List
-    gross_weight = fields.Float('Gross Weight', readonly=True)
-    net_weight = fields.Float('Net Weight', readonly=True)
+    gross_weight = fields.Float('Gross Weight')
+    net_weight = fields.Float('Net Weight')
 
     # Invoice
-    invoice_number = fields.Char(string='Invoice Number', readonly=True)
-    invoice_value = fields.Float(string='Invoice Value', readonly=True)
+    invoice_number = fields.Char(string='Invoice Number')
+    invoice_value = fields.Float(string='Invoice Value')
 
     # @api.multi
     def name_get(self):
