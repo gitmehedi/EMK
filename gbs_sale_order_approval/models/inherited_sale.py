@@ -68,11 +68,9 @@ class SaleOrder(models.Model):
     @api.multi
     def action_invoice_create(self, grouped=False, final=False):
         res = super(SaleOrder, self).action_invoice_create()
-
-        # acc_inv_pool = self.env['account.invoice']
         self.invoice_ids.write({'is_commission_generated': False})
-
         return res
+
 
     @api.depends('order_line.da_qty')
     def _da_button_show_hide(self):
@@ -94,9 +92,11 @@ class SaleOrder(models.Model):
             currency = self.currency_id.name.encode('ascii', 'ignore')
             return amount_to_text_en.amount_to_text(number, 'en', currency)
 
+
     @api.multi
     def action_validate(self):
         self.state = 'sent'
+
 
     @api.multi
     def action_to_submit(self):
@@ -105,6 +105,7 @@ class SaleOrder(models.Model):
                 raise UserError('Expiration Date can not be less than Order Date')
 
             orders.state = 'draft'
+
 
     @api.onchange('type_id')
     def onchange_type(self):
@@ -144,10 +145,13 @@ class SaleOrder(models.Model):
                          ('product_package_mode', '=', orders.pack_type.id),
                          ('uom_id', '=', lines.product_uom.id)])
 
-                    account_receivable = credit_limit_pool.credit
-                    sales_order_amount_total = -orders.amount_total  # actually it should be minus value
+                    account_receivable = abs(credit_limit_pool.credit)
+                    sales_order_amount_total = abs(orders.amount_total)  # actually it should be minus value
 
-                    customer_total_credit = account_receivable + sales_order_amount_total
+                    unpaid_tot_inv_amt = orders.unpaid_total_invoiced_amount()
+                    undelivered_tot_do_amt = orders.undelivered_do_qty_amount()
+
+                    customer_total_credit = account_receivable + sales_order_amount_total + unpaid_tot_inv_amt + undelivered_tot_do_amt
                     customer_credit_limit = credit_limit_pool.credit_limit
 
                     if (abs(customer_total_credit) > customer_credit_limit
@@ -167,7 +171,6 @@ class SaleOrder(models.Model):
                 return False  # One level approval process
 
     double_validation = fields.Boolean('Apply Double Validation', compute="_is_double_validation_applicable")
-
 
 
     # Total DO Qty amount which is not delivered yet
@@ -197,7 +200,6 @@ class SaleOrder(models.Model):
         return tot_undelivered_amt
 
 
-
     ## Total Invoiced amount which is not in Paid state
     @api.multi
     def unpaid_total_invoiced_amount(self):
@@ -215,12 +217,8 @@ class SaleOrder(models.Model):
         return total_unpaid_amount
 
 
-
     @api.multi
     def action_submit(self):
-        self.unpaid_total_invoiced_amount()
-
-        self.undelivered_do_qty_amount()
 
         is_double_validation = False
 
@@ -243,16 +241,21 @@ class SaleOrder(models.Model):
                      ('uom_id', '=', lines.product_uom.id)])
 
                 if order.credit_sales_or_lc == 'cash' or order.credit_sales_or_lc == 'lc_sales':
+
                     is_double_validation = order.second_approval_business_logics(cust_commission_pool, lines,
                                                                                  price_change_pool)
                     if is_double_validation == True:
                         break;
 
                 elif order.credit_sales_or_lc == 'credit_sales':
-                    account_receivable = credit_limit_pool.credit
-                    sales_order_amount_total = -order.amount_total  # actually it should be minus value
 
-                    customer_total_credit = account_receivable + sales_order_amount_total
+                    account_receivable = abs(credit_limit_pool.credit)
+                    sales_order_amount_total = abs(order.amount_total)  # actually it should be minus value
+
+                    unpaid_tot_inv_amt = order.unpaid_total_invoiced_amount()
+                    undelivered_tot_do_amt = order.undelivered_do_qty_amount()
+
+                    customer_total_credit = account_receivable + sales_order_amount_total + undelivered_tot_do_amt + unpaid_tot_inv_amt
                     customer_credit_limit = credit_limit_pool.credit_limit
 
                     if (abs(customer_total_credit) > customer_credit_limit
@@ -316,11 +319,13 @@ class SaleOrder(models.Model):
                     [('partner_id', '=', order.partner_id.id),
                      ('state', '=', 'approve')], order='assign_id DESC', limit=1)
 
-                account_receivable = credit_limit_pool.credit
-                sales_order_amount_total = -order.amount_total  # actually it should be minus value
+                account_receivable = abs(credit_limit_pool.credit)
+                sales_order_amount_total = abs(order.amount_total)  # actually it should be minus value
 
-                customer_total_credit = account_receivable + sales_order_amount_total
-                #customer_credit_limit = credit_limit_pool.credit_limit
+                unpaid_tot_inv_amt = order.unpaid_total_invoiced_amount()
+                undelivered_tot_do_amt = order.undelivered_do_qty_amount()
+
+                customer_total_credit = account_receivable + sales_order_amount_total + unpaid_tot_inv_amt + undelivered_tot_do_amt
 
                 # 1. If Credit Limit is zero then keep it as zero
                 if res_partner_cred_lim.remaining_credit_limit == 0:
@@ -476,5 +481,3 @@ class InheritedSaleOrderLine(models.Model):
 
         if self.da_qty > self.product_uom_qty:
             raise ValidationError('DA Qty can not be greater than Ordered Qty')
-
-
