@@ -168,8 +168,59 @@ class SaleOrder(models.Model):
 
     double_validation = fields.Boolean('Apply Double Validation', compute="_is_double_validation_applicable")
 
+
+
+    # Total DO Qty amount which is not delivered yet
+    @api.multi
+    def undelivered_do_qty_amount(self):
+        for stock in self:
+            tot_undelivered_amt = None
+            # picking_type_id.code "outgoing" means: Customer
+            stock_pick_pool = stock.env['stock.picking'].search([('picking_type_id.code', '=', 'outgoing'),
+                                                                 ('picking_type_id.name', '=', 'Delivery Orders'),
+                                                                 ('partner_id', '=', stock.partner_id.id),
+                                                                 ('state', '!=', 'done')])
+
+            stock_amt_list = []
+            for stock_pool in stock_pick_pool:
+                # We assume that delivery_order_id will never be null,
+                # but to avoid garbage data added this extra checking
+                if stock_pool.delivery_order_id:
+                    for so_line in stock.order_line:
+                        for prod_op_ids in stock_pool.pack_operation_product_ids:
+                            unit_price = so_line.price_unit
+                            product_qty = prod_op_ids.product_qty
+                            stock_amt_list.append(unit_price * product_qty)
+
+                tot_undelivered_amt = sum(stock_amt_list)
+
+        return tot_undelivered_amt
+
+
+
+    ## Total Invoiced amount which is not in Paid state
+    @api.multi
+    def unpaid_total_invoiced_amount(self):
+        for invc in self:
+            acc_invoice_pool = invc.env['account.invoice'].search([('journal_id.type', '=', 'sale'),
+                                                                   ('partner_id', '=', invc.partner_id.id),
+                                                                   ('state', '=', 'draft')])
+
+            total_list = []
+            for inv_ in acc_invoice_pool:
+                total_list.append(inv_.amount_total)
+
+            total_unpaid_amount = sum(total_list)
+
+        return total_unpaid_amount
+
+
+
     @api.multi
     def action_submit(self):
+        self.unpaid_total_invoiced_amount()
+
+        self.undelivered_do_qty_amount()
 
         is_double_validation = False
 
@@ -256,43 +307,44 @@ class SaleOrder(models.Model):
         for order in self:
             res = super(SaleOrder, order).action_confirm()
 
-            #@todo: Below part needs refactor and make one single method
-            credit_limit_pool = order.env['res.partner'].search([('id', '=', order.partner_id.id)])
+            if order.credit_sales_or_lc == 'credit_sales':
 
-            res_partner_cred_lim = order.env['res.partner.credit.limit'].search(
-                [('partner_id', '=', order.partner_id.id),
-                 ('state', '=', 'approve')], order='assign_id DESC', limit=1)
+                #@todo: Below part needs refactor and make one single method
+                credit_limit_pool = order.env['res.partner'].search([('id', '=', order.partner_id.id)])
 
+                res_partner_cred_lim = order.env['res.partner.credit.limit'].search(
+                    [('partner_id', '=', order.partner_id.id),
+                     ('state', '=', 'approve')], order='assign_id DESC', limit=1)
 
-            account_receivable = credit_limit_pool.credit
-            sales_order_amount_total = -order.amount_total  # actually it should be minus value
+                account_receivable = credit_limit_pool.credit
+                sales_order_amount_total = -order.amount_total  # actually it should be minus value
 
-            customer_total_credit = account_receivable + sales_order_amount_total
-            customer_credit_limit = credit_limit_pool.credit_limit
+                customer_total_credit = account_receivable + sales_order_amount_total
+                #customer_credit_limit = credit_limit_pool.credit_limit
 
-            # 1. If Credit Limit is zero then keep it as zero
-            if res_partner_cred_lim.remaining_credit_limit == 0:
-                res_partner_cred_lim.write({'remaining_credit_limit': 0})
-                order.write({'remaining_credit_limit': 0})
-
-            # 2. If first time to deduct then deduct from original credit limit value.
-            if res_partner_cred_lim.value == res_partner_cred_lim.remaining_credit_limit:
-                if abs(customer_total_credit) < res_partner_cred_lim.value:
-                    remaining_limit = res_partner_cred_lim.value - abs(customer_total_credit)
-                    res_partner_cred_lim.write({'remaining_credit_limit': remaining_limit})
-                    order.write({'remaining_credit_limit': remaining_limit})
-                else:
+                # 1. If Credit Limit is zero then keep it as zero
+                if res_partner_cred_lim.remaining_credit_limit == 0:
                     res_partner_cred_lim.write({'remaining_credit_limit': 0})
                     order.write({'remaining_credit_limit': 0})
 
-            else:
-                if abs(customer_total_credit) < res_partner_cred_lim.remaining_credit_limit:
-                    remaining_limit = res_partner_cred_lim.remaining_credit_limit - abs(customer_total_credit)
-                    res_partner_cred_lim.write({'remaining_credit_limit': remaining_limit})
-                    order.write({'remaining_credit_limit': remaining_limit})
+                # 2. If first time to deduct then deduct from original credit limit value.
+                if res_partner_cred_lim.value == res_partner_cred_lim.remaining_credit_limit:
+                    if abs(customer_total_credit) < res_partner_cred_lim.value:
+                        remaining_limit = res_partner_cred_lim.value - abs(customer_total_credit)
+                        res_partner_cred_lim.write({'remaining_credit_limit': remaining_limit})
+                        order.write({'remaining_credit_limit': remaining_limit})
+                    else:
+                        res_partner_cred_lim.write({'remaining_credit_limit': 0})
+                        order.write({'remaining_credit_limit': 0})
+
                 else:
-                    res_partner_cred_lim.write({'remaining_credit_limit': 0})
-                    order.write({'remaining_credit_limit': 0})
+                    if abs(customer_total_credit) < res_partner_cred_lim.remaining_credit_limit:
+                        remaining_limit = res_partner_cred_lim.remaining_credit_limit - abs(customer_total_credit)
+                        res_partner_cred_lim.write({'remaining_credit_limit': remaining_limit})
+                        order.write({'remaining_credit_limit': remaining_limit})
+                    else:
+                        res_partner_cred_lim.write({'remaining_credit_limit': 0})
+                        order.write({'remaining_credit_limit': 0})
 
             return res
 
