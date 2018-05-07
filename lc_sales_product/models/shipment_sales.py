@@ -14,7 +14,7 @@ class Shipment(models.Model):
             'view_type': 'form',
             'view_mode': 'form',
             'view_id': res and res.id or False,
-            'res_model': 'doc.receive.wizard',
+            'res_model': 'doc.receive.wizard.export',
             'type': 'ir.actions.act_window',
             'nodestroy': True,
             'target': 'new',

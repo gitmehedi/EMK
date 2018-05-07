@@ -6,6 +6,10 @@ class LCSO(models.Model):
     so_ids = fields.Many2many('sale.order', 'so_lc_rel', 'lc_id', 'so_id', string='Sale Order')
     product_lines = fields.One2many('lc.product.line', 'lc_id', string='Product(s)')
 
+    # so_ids = fields.One2many('sale.order', 'lc_id', string='Sale Order')
+
+    # so_ids_temp = fields.Many2many('sale.order', 'so_lc_rel', 'lc_id', 'so_id', string='Sale Order')
+
     @api.onchange('so_ids')
     def so_product_line(self):
         self.product_lines = []
