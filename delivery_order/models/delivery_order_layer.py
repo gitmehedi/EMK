@@ -72,8 +72,13 @@ class DeliveryOrderLayer(models.Model):
     """ PI and LC """
     pi_no = fields.Many2one('proforma.invoice', string='PI Ref. No.', readonly=True,
                             states={'draft': [('readonly', False)]})
-    lc_id = fields.Many2one('letter.credit', string='LC Ref. No.', readonly=True,
-                            states={'draft': [('readonly', False)]})
+
+    lc_id = fields.Many2one('letter.credit', string='LC Ref. No.', readonly=True, compute = "_calculate_lc_id", store= False)
+
+    @api.multi
+    def _calculate_lc_id(self):
+        self.lc_id = self.sale_order_id.lc_id.id
+
 
     """ Payment information"""
     amount_untaxed = fields.Float(string='Untaxed Amount', readonly=True)
@@ -102,8 +107,6 @@ class DeliveryOrderLayer(models.Model):
     @api.one
     def action_approve(self):
         self.state = 'approved'
-        #seq = self.env['ir.sequence'].next_by_code('delivery.order.layer') or '/'
-        #self.name = seq
 
         self.create_delivery_order()
         self.action_view_delivery()
@@ -137,6 +140,7 @@ class DeliveryOrderLayer(models.Model):
             order.confirmation_date = fields.Datetime.now()
             if self.env.context.get('send_email'):
                 self.delivery_order_id.sale_order_id.force_quotation_send()
+
 
             order.order_line._action_procurement_create()
 

@@ -72,8 +72,14 @@ class DeliveryOrder(models.Model):
     """ PI and LC """
     pi_no = fields.Many2one('proforma.invoice', string='PI Ref. No.', readonly=True,
                             states={'draft': [('readonly', False)]})
-    lc_id = fields.Many2one('letter.credit', string='LC Ref. No.', readonly=True,
-                            states={'draft': [('readonly', False)]})
+
+
+    lc_id = fields.Many2one('letter.credit', string = 'LC Ref. No.', compute = "_calculate_lc_id", store= False)
+
+    @api.multi
+    def _calculate_lc_id(self):
+        self.lc_id = self.sale_order_id.lc_id.id
+
 
     """ Payment information"""
     amount_untaxed = fields.Float(string='Untaxed Amount', readonly=True)
@@ -470,3 +476,4 @@ class OrderedQty(models.Model):
     company_id = fields.Many2one('res.company', 'Company',
                                  default=lambda self: self.env['res.company']._company_default_get(
                                      'product_sales_pricelist'))
+
