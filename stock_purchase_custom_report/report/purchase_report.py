@@ -14,6 +14,7 @@ class StockPurchaseReport(models.AbstractModel):
             'record': data,
             'lines': get_data['supplier'],
             'total': get_data['total'],
+            'address': data['str_address'],
 
         }
         return self.env['report'].render('stock_purchase_custom_report.purchase_report_template', docargs)
