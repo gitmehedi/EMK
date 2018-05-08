@@ -3,8 +3,8 @@ from odoo.exceptions import UserError, ValidationError
 
 
 class DOProductLineLayer(models.Model):
-    _name = 'delivery.order.line.layer'
-    _description = 'Sales Delivery Order line'
+    _name = 'delivery.order.line'
+    _description = 'Delivery Order line'
 
     product_id = fields.Many2one('product.product', string="Product", readonly=True, ondelete='cascade')
     uom_id = fields.Many2one('product.uom', string="UoM", ondelete='cascade', readonly=True)
@@ -29,7 +29,7 @@ class DOProductLineLayer(models.Model):
     ], string='Delivery Mode')
 
     """ Relational Fields """
-    parent_id = fields.Many2one('delivery.order.layer', ondelete='cascade')
+    parent_id = fields.Many2one('delivery.order', ondelete='cascade')
 
 
 

@@ -13,7 +13,7 @@ class CashPaymentLine(models.Model):
     payment_date = fields.Date('Date')
 
     """ Relational Fields """
-    pay_cash_id = fields.Many2one('delivery.order.layer', ondelete='cascade')
+    pay_cash_id = fields.Many2one('delivery.order', ondelete='cascade')
 
     # @api.constrains('amount')
     # def check_amount(self):

@@ -374,7 +374,7 @@ class SaleOrder(models.Model):
             'name': ('Delivery Authorization'),
             'view_type': 'form',
             'view_mode': 'form',
-            'res_model': 'delivery.order',
+            'res_model': 'delivery.authorization',
             'view_id': [view.id],
             'type': 'ir.actions.act_window',
             'context': {'default_sale_order_id': self.id},
