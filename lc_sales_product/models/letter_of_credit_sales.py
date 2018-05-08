@@ -6,14 +6,24 @@ class LetterOfCredit(models.Model):
     _inherit = "letter.credit"
 
     so_ids = fields.One2many('sale.order', 'lc_id', string='Sale Order')
-    so_ids_temp = fields.Many2many('sale.order', 'so_lc_rel', 'lc_id', 'so_id', string='Sale Order')
+    so_ids_temp = fields.Many2many('sale.order', 'so_lc_rel', 'lc_id', 'so_id', string='Sale Order',
+                                   domain="[('state', '=', 'done'),('credit_sales_or_lc', '=','lc_sales'),('lc_id','!=',False)]")
     product_lines = fields.One2many('lc.product.line', 'lc_id', string='Product(s)')
 
     @api.onchange('so_ids_temp')
     def so_product_line(self):
         self.product_lines = []
         vals = []
+        self.first_party = None
+        self.second_party_applicant = None
+        self.currency_id = None
+        self.lc_value = None
+
         for so_id in self.so_ids_temp:
+            self.first_party = so_id.company_id.id
+            self.second_party_applicant = so_id.partner_id.id
+            self.currency_id = so_id.currency_id.id
+            self.lc_value = so_id.amount_total
             for obj in so_id.order_line:
                 vals.append((0, 0, {'product_id': obj.product_id,
                                     'name': obj.name,
