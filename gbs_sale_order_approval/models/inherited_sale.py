@@ -146,7 +146,7 @@ class SaleOrder(models.Model):
                          ('uom_id', '=', lines.product_uom.id)])
 
                     account_receivable = abs(credit_limit_pool.credit)
-                    sales_order_amount_total = abs(orders.amount_total)  # actually it should be minus value
+                    sales_order_amount_total = -orders.amount_total  # actually it should be minus value
 
                     unpaid_tot_inv_amt = orders.unpaid_total_invoiced_amount()
                     undelivered_tot_do_amt = orders.undelivered_do_qty_amount()
@@ -249,8 +249,8 @@ class SaleOrder(models.Model):
 
                 elif order.credit_sales_or_lc == 'credit_sales':
 
-                    account_receivable = abs(credit_limit_pool.credit)
-                    sales_order_amount_total = abs(order.amount_total)  # actually it should be minus value
+                    account_receivable = credit_limit_pool.credit
+                    sales_order_amount_total = -order.amount_total  # actually it should be minus value
 
                     unpaid_tot_inv_amt = order.unpaid_total_invoiced_amount()
                     undelivered_tot_do_amt = order.undelivered_do_qty_amount()
@@ -319,8 +319,8 @@ class SaleOrder(models.Model):
                     [('partner_id', '=', order.partner_id.id),
                      ('state', '=', 'approve')], order='assign_id DESC', limit=1)
 
-                account_receivable = abs(credit_limit_pool.credit)
-                sales_order_amount_total = abs(order.amount_total)  # actually it should be minus value
+                account_receivable = credit_limit_pool.credit
+                sales_order_amount_total = -order.amount_total  # actually it should be minus value
 
                 unpaid_tot_inv_amt = order.unpaid_total_invoiced_amount()
                 undelivered_tot_do_amt = order.undelivered_do_qty_amount()
@@ -481,3 +481,5 @@ class InheritedSaleOrderLine(models.Model):
 
         if self.da_qty > self.product_uom_qty:
             raise ValidationError('DA Qty can not be greater than Ordered Qty')
+
+
