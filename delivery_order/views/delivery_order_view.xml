@@ -29,10 +29,10 @@
                                 string="Refuse"
                                 groups="gbs_application_group.group_head_account,gbs_application_group.group_cxo"/>
 
-                        <button string="Tag LC" name="%(action_view_lc_wizard)d" type="action"
-                                attrs="{'invisible':['|','|', ('pi_no', '=', False), ('state','!=','close'), ('lc_id', '!=', False)]}"
-                                groups="account.group_account_user,gbs_application_group.group_head_account,gbs_application_group.group_cxo"
-                                class="oe_highlight"/>
+                        <!--<button string="Tag LC" name="%(action_view_lc_wizard)d" type="action"-->
+                                <!--attrs="{'invisible':['|','|', ('pi_no', '=', False), ('state','!=','close'), ('lc_id', '!=', False)]}"-->
+                                <!--groups="account.group_account_user,gbs_application_group.group_head_account,gbs_application_group.group_cxo"-->
+                                <!--class="oe_highlight"/>-->
 
                         <field name="state" statusbar_visible="draft,validate,close, refused" widget="statusbar"/>
 
