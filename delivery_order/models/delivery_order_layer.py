@@ -135,17 +135,16 @@ class DeliveryOrderLayer(models.Model):
     def create_delivery_order(self):
 
         ## Show or Create DO Button
-        for order in self.delivery_order_id.sale_order_id:
+        for order in self.sale_order_id:
             order.state = 'sale'
             order.confirmation_date = fields.Datetime.now()
             if self.env.context.get('send_email'):
-                self.delivery_order_id.sale_order_id.force_quotation_send()
-
+                self.sale_order_id.force_quotation_send()
 
             order.order_line._action_procurement_create()
 
         if self.env['ir.values'].get_default('sale.config.settings', 'auto_done_setting'):
-            self.delivery_order_id.sale_order_id.action_done()
+            self.sale_order_id.action_done()
 
 
         # Update the reference of Delivery Order and LC No to Stock Picking
@@ -155,11 +154,13 @@ class DeliveryOrderLayer(models.Model):
         # Update the reference of PI and LC on both Stock Picking and Sale Order Obj
         if self.delivery_order_id.so_type == 'lc_sales':
             stock_picking_id.write({'lc_id': self.lc_id.id})
-            self.delivery_order_id.sale_order_id.write({'lc_id': self.lc_id.id, 'pi_no': self.pi_no.id})
+            #self.delivery_order_id.sale_order_id.write({'lc_id': self.lc_id.id, 'pi_no': self.pi_no.id})
+            #As per decision, LC Id will be updated to Sale Order from LC creation menu -- rabbi
+            self.delivery_order_id.sale_order_id.write({'pi_no': self.pi_no.id})
 
         # Update Stock Move with reference of Delivery Order
         stock_move_id = self.delivery_order_id.sale_order_id.picking_ids.move_lines
-        stock_move_id.write({'delivery_order_id':self.id})
+        stock_move_id.write({'delivery_order_id': self.id})
 
         return True
 
