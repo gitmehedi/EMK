@@ -463,6 +463,22 @@ class DeliveryOrder(models.Model):
 
                 self.cheque_ids = vals_bank
 
+    ################
+    # 100 MT Logic
+    ###############
+    @api.multi
+    def update_lc_id_for_houndred_mt(self):
+
+        for delivery in self:
+            ordered_qty_pool = delivery.env['ordered.qty'].search([('delivery_auth_no', '=', delivery.id)])
+            if ordered_qty_pool:
+                ordered_qty_pool.write({'lc_id': delivery.lc_id.id})
+
+            ## Update LC No to Stock Picking Obj
+            stock_picking_id = delivery.sale_order_id.picking_ids
+            stock_picking_id.write({'lc_id': delivery.lc_id.id})
+
+
 
 class OrderedQty(models.Model):
     _name = 'ordered.qty'
