@@ -22,7 +22,7 @@ class HrEmployeeIouWizard(models.TransientModel):
 
         if self.repay:
             self.env['hr.employee.iou.line'].create({
-                'repay_id':self._context['active_id'],
+                'iou_id':self._context['active_id'],
                 'repay_amount': self.repay, 'employee_id': emp_id
             })
 
