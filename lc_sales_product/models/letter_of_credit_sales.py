@@ -7,7 +7,7 @@ class LetterOfCredit(models.Model):
 
     so_ids = fields.One2many('sale.order', 'lc_id', string='Sale Order')
     so_ids_temp = fields.Many2many('sale.order', 'so_lc_rel', 'lc_id', 'so_id', string='Sale Order',
-                                   domain="[('state', '=', 'done'),('credit_sales_or_lc', '=','lc_sales'),('lc_id','!=',False)]")
+                                   domain="[('state', '=', 'done'),('credit_sales_or_lc', '=','lc_sales'),('lc_id','=',False)]")
     product_lines = fields.One2many('lc.product.line', 'lc_id', string='Product(s)')
 
     @api.onchange('so_ids_temp')

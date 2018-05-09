@@ -3,18 +3,18 @@
     'name': "Stock Issue Report",
 
     'summary': """
-        Summary of Stock Issue Report
-        """,
+        Custom Report Of Issue Product""",
 
     'description': """
-        
+        By this report user can get the record of 
+        issued product list by departmental and periodical.
     """,
 
-    'author': "My Company",
-    'website': "http://www.yourcompany.com",
+    'author': "Genweb2",
+    'website': "www.genweb2.com",
 
-    'category': 'Warehouse Management',
-    'version': '10.0.1.0.0',
+    'category': 'Stock',
+    'version': '10.0.1',
 
     'depends': ['stock_indent','custom_report'],
 

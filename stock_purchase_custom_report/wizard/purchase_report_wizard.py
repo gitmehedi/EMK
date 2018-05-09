@@ -7,7 +7,8 @@ class PurchaseReportWizard(models.TransientModel):
     date_from = fields.Date("Date from",required=True)
     date_to = fields.Date("Date to",required=True)
     partner_id = fields.Many2one('res.partner', string='Supplier')
-    operating_unit_id = fields.Many2one('operating.unit', string='Unit Name', required=True)
+    operating_unit_id = fields.Many2one('operating.unit', string='Unit Name', required=True,
+                                        default=lambda self: self.env.user.default_operating_unit_id)
 
     @api.multi
     def report_print(self):
