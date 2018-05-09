@@ -43,7 +43,7 @@
                             </group>
 
                             <group>
-                                <separator string="Applicant" colspan="2"/>
+                                <separator string="Customer" colspan="2"/>
                                 <field name="second_party_applicant" required="1" string="Applicant"/>
                                 <field name="second_party_bank"/>
                             </group>
@@ -102,9 +102,9 @@
                                                colors="grey: product_received_qty==product_qty;green: product_received_qty!=product_qty;">
                                             <field name="product_id" readonly='1'/>
                                             <field name="name" readonly='1'/>
-                                            <field name="product_qty" readonly='1'/>
-                                            <field name="product_uom" readonly='1'/>
-                                             <field name="product_received_qty" readonly='1'/>
+                                            <field name="product_qty" string="LC Qty" readonly='1'/>
+                                            <field name="product_uom" string="UOM" readonly='1'/>
+                                             <field name="product_received_qty" string="Delivery Qty" readonly='1'/>
                                             <field name="price_unit" readonly='1'/>
                                         </tree>
                                     </field>
