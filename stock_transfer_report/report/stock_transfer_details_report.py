@@ -13,6 +13,7 @@ class StockTransferDetailsReport(models.AbstractModel):
             'record': data,
             'product_lines': get_data['product'],
             'total': get_data['total'],
+            'address': data['str_address'],
 
         }
         return self.env['report'].render('stock_transfer_report.std_report_temp', docargs)

@@ -16,7 +16,7 @@
     'category': 'Stock',
     'version': '10.0.1',
 
-    'depends': ['stock_operating_unit'],
+    'depends': ['stock_operating_unit','custom_report'],
 
     # always loaded
     'data': [

@@ -54,7 +54,7 @@
                                     <h6><b>Address : </b><p><span t-esc="data['cus_address']" t-esc-options='{"widget": "contact", "fields": ["address"], "no_marker": true}'/></p></h6>
                                     <h6><b>Contract Parson : </b><span t-esc="data['sup_con']"/></h6>
                                     <h6><b>PR No : </b><span t-esc="data['requisition_id']"/></h6>
-                                    <h6><b>Order Ref No : </b><span t-esc="data['partner_ref']"/>, <b>Date : </b></h6>
+                                    <h6><b>Order Ref No : </b><span t-esc="data['partner_ref']"/>, <b>Date : </b><span t-esc="data['requisition_date']"></span></h6>
                                 </div>
                                 <div class="col-xs-4 text-left" style="padding-left:45px;">
                                     <h6><b>Consignee : </b><span t-esc="data['company']"/></h6>
