@@ -98,7 +98,7 @@ class DeliveryAuthorization(models.Model):
     def create(self, vals):
         seq = self.env['ir.sequence'].next_by_code('delivery.authorization') or '/'
         vals['name'] = seq
-        return super(DeliveryOrder, self).create(vals)
+        return super(DeliveryAuthorization, self).create(vals)
 
 
     @api.multi
@@ -107,7 +107,7 @@ class DeliveryAuthorization(models.Model):
             if order.state != 'draft':
                 raise UserError('You can not delete this.')
             order.line_ids.unlink()
-        return super(DeliveryOrder, self).unlink()
+        return super(DeliveryAuthorization, self).unlink()
 
 
     @api.one
@@ -131,7 +131,7 @@ class DeliveryAuthorization(models.Model):
             'name': ('Delivery Order'),
             'view_type': 'form',
             'view_mode': 'form',
-            'res_model': 'delivery.order.layer',
+            'res_model': 'delivery.order',
             #'domain': [('sale_order_id', '=', self.sale_order_id.id)],#so_do_id
             'context': {'default_delivery_order_id': self.id,'default_sale_order_id': self.sale_order_id.id},
             'view_id': [view.id],

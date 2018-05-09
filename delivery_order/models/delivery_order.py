@@ -100,7 +100,7 @@ class DeliveryOrder(models.Model):
         seq = self.env['ir.sequence'].next_by_code('delivery.order') or '/'
         vals['name'] = seq
 
-        return super(DeliveryOrderLayer, self).create(vals)
+        return super(DeliveryOrder, self).create(vals)
 
 
 

@@ -176,8 +176,8 @@ class SaleOrder(models.Model):
     # Total DO Qty amount which is not delivered yet
     @api.multi
     def undelivered_do_qty_amount(self):
+        tot_undelivered_amt = 0
         for stock in self:
-            tot_undelivered_amt = None
             # picking_type_id.code "outgoing" means: Customer
             stock_pick_pool = stock.env['stock.picking'].search([('picking_type_id.code', '=', 'outgoing'),
                                                                  ('picking_type_id.name', '=', 'Delivery Orders'),
