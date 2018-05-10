@@ -144,7 +144,7 @@
                                         </t>
                                         <t t-if="data_value['product']">
                                             <tr style="font-weight: bold; background-color: #E4E4E4; border-bottom: 1px solid black;">
-                                                <td colspan="3" class="text-center">
+                                                <td colspan="3" class="text-left">
                                                     <t t-esc="data_value['sub-total']['title']"/>
                                                 </td>
                                                 <t t-if="'OS' in record['report_type']">
@@ -192,7 +192,7 @@
                                     <td colspan="12"></td>
                                 </tr>
                                 <tr style="font-weight: bold; background-color: #897d79; border-bottom: 1px solid black;">
-                                    <td colspan="3" class="text-center">
+                                    <td colspan="3" class="text-left">
                                         <t t-esc="total['title']"/>
                                     </td>
                                     <t t-if="'OS' in record['report_type']">

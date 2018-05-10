@@ -21,7 +21,7 @@
                             <div class=" text-left">
                                 <div>
                                     <strong>Requisition Date : </strong>
-                                    <span t-field="o.requisition_date"/>
+                                    <span t-field="o.requisition_date"  t-field-options='{"format": "d-MMM-y"}'/>
                                 </div>
                                 <div>
                                     <strong>PR No :</strong>
@@ -68,7 +68,7 @@
                                                                 </td>
                                                             </t>
                                                             <td colspan="5" class="text-center col-separator">
-                                                                Bid <span t-field="bid.name"/> / Quotation Date :<span t-field="bid.date_order"/>
+                                                                Bid <span t-field="bid.name"/> / Quotation Date : <span t-field="bid.date_order" t-field-options='{"format": "d-MMM-y"}'/>
                                                             </td>
                                                             <t t-if="bid_last">
                                                                 <th colspan="2" class="col-xs-3 info text-center col-separator">

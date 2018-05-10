@@ -110,21 +110,24 @@ class IndentIndent(models.Model):
             picking_type_ids = picking_type_obj.search([('default_location_src_id', '=', indent.warehouse_id.sudo().lot_stock_id.id),('default_location_dest_id', '=', indent.stock_location_id.id)])
             picking_type_id = picking_type_ids and picking_type_ids[0] or False
             indent.picking_type_id = picking_type_id
+            # if picking_type_id:
+            #     indent.picking_type_id = picking_type_id
+            # else:
+            #     raise ValidationError(_('No Picking Type For this location.'
+            #                             'Please Create a picking type with '
+            #                             'source location (%s) and destination location (%s)./n Or contract with your system Admin'
+            #                             %(indent.warehouse_id.sudo().lot_stock_id.name,indent.stock_location_id.name)))
 
     @api.onchange('requirement')
     def onchange_requirement(self):
-        vals = {}
         days_delay = 0
         if self.requirement == '2':
             days_delay = 0
         if self.requirement == '1':
             days_delay = 7
-        # TODO: for the moment it will count the next days based on the system time
-        # and not based on the indent_date available on the indent.
         required_day = datetime.datetime.strftime(datetime.datetime.today() + timedelta(days=days_delay),
                                                   DEFAULT_SERVER_DATETIME_FORMAT)
-        vals.update({'value': {'required_date': required_day}})
-        return vals
+        self.required_date= required_day
 
     @api.multi
     def approve_indent(self):
@@ -325,8 +328,8 @@ class IndentProductLines(models.Model):
     product_id = fields.Many2one('product.product', string='Product', required=True)
     product_uom_qty = fields.Float('Quantity', digits=dp.get_precision('Product UoS'),
                                    required=True, default=1)
-    product_uom = fields.Many2one(related='product_id.uom_id',string='Unit of Measure', required=True)
-    price_unit = fields.Float(related='product_id.standard_price',string='Price', digits=dp.get_precision('Product Price'),
+    product_uom = fields.Many2one(related='product_id.uom_id',string='Unit of Measure', required=True,store=True)
+    price_unit = fields.Float(related='product_id.standard_price',string='Price', digits=dp.get_precision('Product Price'),store=True,
                               help="Price computed based on the last purchase order approved.")
     price_subtotal = fields.Float(string='Subtotal', compute='_compute_amount_subtotal', digits=dp.get_precision('Account'),
                                   store=True)

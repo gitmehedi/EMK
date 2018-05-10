@@ -15,10 +15,12 @@ class GbsPurchaseOrder(models.AbstractModel):
         data['name'] = docs.name
         data['date_order'] = docs.date_order
         order_date = report_utility_pool.getERPDateFormat(report_utility_pool.getDateTimeFromStr(data['date_order']))
+        requisition_date = report_utility_pool.getERPDateFormat(report_utility_pool.getDateFromStr(docs.requisition_id.requisition_date))
         data['partner_id'] = docs.partner_id.name
         data['cus_address'] = docs.partner_id
         data['partner_ref'] = docs.partner_ref
         data['requisition_id'] = docs.requisition_id.name
+        data['requisition_date'] = requisition_date
         data['company'] = docs.operating_unit_id.partner_id.name
         data['notes'] = docs.notes
         data['company_address'] = docs.operating_unit_id.partner_id
