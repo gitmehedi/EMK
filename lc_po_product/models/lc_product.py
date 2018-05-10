@@ -11,7 +11,16 @@ class LCPO(models.Model):
     def po_product_line(self):
         self.product_lines = []
         vals = []
+        self.first_party = None
+        self.second_party_beneficiary = None
+        self.currency_id = None
+        self.lc_value = None
         for po_id in self.po_ids:
+            self.first_party = po_id.company_id.id
+            self.second_party_beneficiary = po_id.partner_id.id
+            self.currency_id = po_id.currency_id.id
+            self.lc_value = po_id.amount_total
+            self.operating_unit_id = po_id.operating_unit_id.id
             for obj in po_id.order_line:
                 vals.append((0, 0, {'product_id': obj.product_id,
                                     'name': obj.name,
