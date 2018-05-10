@@ -70,10 +70,9 @@ class DeliveryOrder(models.Model):
 
 
     """ PI and LC """
-    pi_no = fields.Many2one('proforma.invoice', string='PI Ref. No.', readonly=True,
-                            states={'draft': [('readonly', False)]})
-
+    pi_no = fields.Many2one('proforma.invoice', string='PI Ref. No.', readonly=True)
     lc_id = fields.Many2one('letter.credit', string='LC Ref. No.', readonly=True, compute = "_calculate_lc_id", store= False)
+
 
     @api.multi
     def _calculate_lc_id(self):
@@ -166,6 +165,7 @@ class DeliveryOrder(models.Model):
 
 
     @api.onchange('delivery_order_id')
+    @api.constrains('delivery_order_id')
     def onchange_sale_order_id(self):
         delivery_auth_id = self.env['delivery.authorization'].search([('id', '=', self.delivery_order_id.id)])
 
