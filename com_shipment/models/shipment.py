@@ -237,16 +237,6 @@ class LetterOfCredit(models.Model):
         comm_utility_pool = self.env['commercial.utility']
         note = comm_utility_pool.getStrNumber(shipmentNo) + ' ' + Status.AMENDMENT.value
 
-        lc_obj = self.env['letter.credit'].search([('id', '=', self.id)])
-
-        operating_unit_id = 0
-        company_id = 0
-        if len(lc_obj.po_ids) > 0:
-            operating_unit_id = lc_obj.po_ids[0].operating_unit_id.id
-            company_id = lc_obj.po_ids[0].company_id.id
-
-        self.env['letter.credit'].search([('id', '=', self.id)]).po_ids.operating_unit_id.id
-
         result = {'name': _('Shipment'),
                   'view_type': 'form',
                   'view_mode': 'form',
@@ -254,8 +244,8 @@ class LetterOfCredit(models.Model):
                   'res_model': 'purchase.shipment',
                   'context': {'shipment_number': comm_utility_pool.getStrNumber(shipmentNo) +' Shipment',
                               'lc_id': self.id,
-                              'operating_unit_id': operating_unit_id,
-                              'company_id': company_id},
+                              'operating_unit_id': self.operating_unit_id.id,
+                              'company_id': self.first_party.id},
                   'type': 'ir.actions.act_window',
                   'target': 'current'}
         self.env['letter.credit'].search([('id', '=', self.id)])
