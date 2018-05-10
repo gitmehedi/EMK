@@ -52,7 +52,7 @@ class ProformaInvoice(models.Model):
     so_ids = fields.Many2many('sale.order', 'so_pi_rel', 'pi_no', 'so_id',
                               string='Sale Order',
                               readonly=True, states={'draft': [('readonly', False)]},
-                              domain="[('state', '=', 'done'), ('credit_sales_or_lc', '=','lc_sales')]")
+                              domain="[('pi_no', '=', False),('state', '=', 'done'), ('credit_sales_or_lc', '=','lc_sales')]")
 
 
     @api.model
@@ -63,10 +63,11 @@ class ProformaInvoice(models.Model):
         return super(ProformaInvoice, self).create(vals)
 
 
+
     @api.constrains('freight_charge', 'so_ids')
     def check_freight_charge_val(self):
         if self.freight_charge < 0:
-            raise UserError('Freight Charge can not be minus value')
+            raise UserError('Freight Charge can not be Negative')
 
         # Below method is called here
         # to save onchanged readonly fields to DB
@@ -113,7 +114,27 @@ class ProformaInvoice(models.Model):
 
     @api.multi
     def action_confirm(self):
+        self.update_Pi_to_so_obj()
         self.state = 'confirmed'
+
+
+    def update_Pi_to_so_obj(self):
+        #Update PI to SO
+        for so in self.so_ids:
+            so.pi_no = self.id
+
+            #update DA
+            da_obj = so.env['delivery.authorization'].search([('sale_order_id', '=', so.id)])
+            if da_obj:
+                for da_ in da_obj:
+                    da_.pi_no = self.id # update PI to DA if it is already created
+
+            #update DO
+            do_obj = so.env['delivery.order'].search([('sale_order_id', '=', so.id)])
+            if do_obj:
+                for do_ in do_obj:
+                    do_.pi_no = self.id  # update PI to DO if it is already created
+
 
 
     @api.onchange('freight_charge')

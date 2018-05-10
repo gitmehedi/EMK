@@ -70,10 +70,7 @@ class DeliveryAuthorization(models.Model):
             self.delivery_count = len(order.picking_ids)
 
     """ PI and LC """
-    pi_no = fields.Many2one('proforma.invoice', string='PI Ref. No.', readonly=True,
-                            states={'draft': [('readonly', False)]})
-
-
+    pi_no = fields.Many2one('proforma.invoice', string='PI Ref. No.', readonly=True)
     lc_id = fields.Many2one('letter.credit', string = 'LC Ref. No.', compute = "_calculate_lc_id", store= False)
 
     @api.multi
