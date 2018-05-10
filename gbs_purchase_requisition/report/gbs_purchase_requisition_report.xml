@@ -2,6 +2,15 @@
 <odoo>
     <data>
         <report
+            string="Call for Tenders"
+            id="purchase_requisition.action_report_purchase_requisitions"
+            model="purchase.requisition"
+            report_type="qweb-pdf"
+            name="purchase_requisition.report_purchaserequisitions"
+            file="purchase_requisition.report.report_purchaserequisitions"
+            menu="False"
+         />
+        <report
                 id="custom_report_purchase_requisition"
                 model="purchase.requisition"
                 string="Purchase Requisition"
