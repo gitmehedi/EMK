@@ -165,6 +165,7 @@ class DeliveryOrder(models.Model):
 
 
     @api.onchange('delivery_order_id')
+    @api.constrains('delivery_order_id')
     def onchange_sale_order_id(self):
         delivery_auth_id = self.env['delivery.authorization'].search([('id', '=', self.delivery_order_id.id)])
 
