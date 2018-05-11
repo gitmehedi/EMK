@@ -129,6 +129,7 @@ class PurchaseRequisitionLine(models.Model):
                                compute='_getProductQuentity')
 
 
+
     # last_supplier_id = fields.Many2one(comodel_name='res.partner', string='Last Supplier', compute='_get_last_purchase')
 
     @api.onchange('product_id')
@@ -159,6 +160,8 @@ class PurchaseRequisitionLine(models.Model):
 
 
 
+
+
     def getProductQuentity(self, productId, pickingTypeId):
 
         locationId = 0
@@ -177,19 +180,14 @@ class PurchaseRequisitionLine(models.Model):
     @api.depends('product_id')
     @api.multi
     def _getProductQuentity(self):
-        for productLine in self:
-            if productLine.product_id.id:
-                locationId = 0
-                pickingTypeId = productLine.requisition_id.picking_type_id.id
-                pickingType = self.env['stock.picking.type'].search([('id', '=', pickingTypeId)])
-                if pickingType:
-                    locationId = pickingType.default_location_src_id.id
-                    product_quant = self.env['stock.quant'].search(
-                        ['&', ('product_id', '=', productLine.product_id.id), ('location_id', '=', locationId)],
-                        limit=1)
+        for product in self:
+                location = self.env['stock.location'].search(
+                    [('operating_unit_id', '=', product.requisition_id.operating_unit_id.id), ('name', '=', 'Stock')])
+                product_quant = self.env['stock.quant'].search([('product_id', '=', product.product_id.id),
+                                                            ('location_id', '=', location.id)])
+                quantity = sum([val.qty for val in product_quant])
+                product.product_qty = quantity
 
-                    if product_quant:
-                        productLine.product_qty = product_quant.qty
 
     @api.one
     def _get_last_purchase(self):

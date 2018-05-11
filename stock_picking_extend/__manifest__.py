@@ -13,6 +13,8 @@
     'depends': ['stock','stock_operating_unit','account'],
     'data': [
         # 'security/ir.model.access.csv',
+        'report/inherit_stock_picking_report.xml',
+        'wizard/inherit_stock_immediate_transfer_views.xml',
         'views/stock_picking_views.xml',
     ],
 }
