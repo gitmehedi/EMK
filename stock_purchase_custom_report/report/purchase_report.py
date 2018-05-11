@@ -116,23 +116,7 @@ class StockPurchaseReport(models.AbstractModel):
                                    ORDER BY m_date
                         ''' % (date_start, date_end, location_outsource, location_outsource,supplier_param)
 
-        sql = '''SELECT ROW_NUMBER() OVER(ORDER BY table_ck.code DESC) AS id ,
-                                    table_ck.product_id, 
-                                    table_ck.name, 
-                                    table_ck.uom_name, 
-                                    table_ck.code,
-                                    table_ck.category, 
-                                    table_ck.supplier, 
-                                    table_ck.m_date, 
-                                    table_ck.mrr, 
-                                    COALESCE(table_ck.rate_in,0) as rate_in,
-                                    COALESCE(table_ck.qty_in_tk,0) as qty_in_tk ,
-                                    COALESCE(table_ck.val_in_tk,0) as val_in_tk
-                            FROM  (%s) table_ck
-
-                        ''' % (sql_in_tk)
-
-        self.env.cr.execute(sql)
+        self.env.cr.execute(sql_in_tk)
         for vals in self.env.cr.dictfetchall():
             if vals:
                 supplier[vals['supplier']]['product'].append(vals)
@@ -148,3 +132,20 @@ class StockPurchaseReport(models.AbstractModel):
 
 
         return {'supplier': supplier, 'total': grand_total}
+
+
+        # sql = '''SELECT ROW_NUMBER() OVER(ORDER BY table_ck.code DESC) AS id ,
+        #                             table_ck.product_id,
+        #                             table_ck.name,
+        #                             table_ck.uom_name,
+        #                             table_ck.code,
+        #                             table_ck.category,
+        #                             table_ck.supplier,
+        #                             table_ck.m_date,
+        #                             table_ck.mrr,
+        #                             COALESCE(table_ck.rate_in,0) as rate_in,
+        #                             COALESCE(table_ck.qty_in_tk,0) as qty_in_tk ,
+        #                             COALESCE(table_ck.val_in_tk,0) as val_in_tk
+        #                     FROM  (%s) table_ck
+        #
+        #                 ''' % (sql_in_tk)

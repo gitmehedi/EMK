@@ -35,6 +35,7 @@
                 'lc_sales_product',
     ],
 
+
     # always loaded
     'data': [
         'security/security.xml',

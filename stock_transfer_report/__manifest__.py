@@ -22,6 +22,8 @@
     'data': [
         # 'security/ir.model.access.csv',
         'wizard/stock_transfer_details_wizard.xml',
+        'wizard/stock_transfer_summary_wizard.xml',
         'report/stock_transfer_details_report.xml',
+        'report/stock_transfer_summary_report.xml',
     ]
 }

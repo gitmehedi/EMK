@@ -262,6 +262,7 @@ class IndentIndent(models.Model):
         if self.product_lines:
             picking_id = self._create_pickings_and_procurements()
         self.write({'picking_id': picking_id})
+        return picking_id
 
     @api.multi
     def _get_picking_id(self):
@@ -289,6 +290,9 @@ class IndentIndent(models.Model):
             pass
         else:
             self.action_picking_create()
+            self.picking_id.action_confirm()
+            self.picking_id.force_assign()
+
 
         action = self.env.ref('stock.action_picking_tree')
         result = action.read()[0]
