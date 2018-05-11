@@ -12,6 +12,7 @@ class StockIssueReport(models.AbstractModel):
             'docs': self,
             'record': data,
             'product_lines': get_data['product'],
+            'total': get_data['total'],
 
         }
         return self.env['report'].render('stock_issue_report.report_stock_issue', docargs)
@@ -22,6 +23,10 @@ class StockIssueReport(models.AbstractModel):
         date_end = data['to_date']
         operating_unit_id = data['operating_unit_id']
         product = []
+        grand_total = {
+            'title': 'GRAND TOTAL',
+            'total_out_val': 0,
+        }
 
         sql = '''SELECT 		      
                       pt.name             AS pt_name,
@@ -30,7 +35,7 @@ class StockIssueReport(models.AbstractModel):
                       ipl.product_id,
                       ipl.price_unit      AS price,
                       ii.indent_date,
-                      ipl.price_unit * ipl.product_uom_qty AS total_val
+                      COALESCE((ipl.price_unit * ipl.product_uom_qty),0) AS total_val
                     FROM indent_indent AS ii
                     LEFT JOIN indent_product_lines AS ipl
                       ON ii.id = ipl.indent_id
@@ -50,4 +55,6 @@ class StockIssueReport(models.AbstractModel):
             if vals:
                 product.append(vals)
 
-        return {'product': product}
+                grand_total['total_out_val'] = grand_total['total_out_val'] + vals['total_val']
+
+        return {'product': product, 'total': grand_total}

@@ -66,6 +66,14 @@
                                             </tr>
                                         </t>
                                     </t>
+                                    <tr style="font-weight: bold; background-color: #897d79; border-bottom: 1px solid black;">
+                                        <td colspan="5" class="text-left">
+                                            <t t-esc="total['title']"/>
+                                        </td>
+                                        <td class="text-right">
+                                            <t t-esc="total['total_out_val']"/>
+                                        </td>
+                                    </tr>
                                 </tbody>
                             </table>
                         </div>
