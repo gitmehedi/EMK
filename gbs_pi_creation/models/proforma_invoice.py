@@ -52,7 +52,7 @@ class ProformaInvoice(models.Model):
     so_ids = fields.Many2many('sale.order', 'so_pi_rel', 'pi_no', 'so_id',
                               string='Sale Order',
                               readonly=True, states={'draft': [('readonly', False)]},
-                              domain="[('pi_no', '=', False),('state', '=', 'done'), ('credit_sales_or_lc', '=','lc_sales')]")
+                              domain="[('pi_no', '=', False), ('state', '=', 'done'), ('credit_sales_or_lc', '=','lc_sales')]")
 
 
     @api.model
@@ -60,18 +60,42 @@ class ProformaInvoice(models.Model):
         seq = self.env['ir.sequence'].next_by_code('proforma.invoice') or '/'
         vals['name'] = seq
 
+        if vals.get('so_ids'):
+            self.update_total_info(vals)
+
         return super(ProformaInvoice, self).create(vals)
 
+    @api.multi
+    def write(self, vals, context=None):
+        if vals.get('so_ids'):
+            self.update_total_info(vals)
+        return super(ProformaInvoice, self).write(vals)
 
 
-    @api.constrains('freight_charge', 'so_ids')
+    def update_total_info(self, vals):
+        sub_total = 0
+        taxed_amount = 0
+        total = 0
+        untaxed_amount = 0
+
+        so_ids = self.env['sale.order'].search([('id', 'in', vals['so_ids'][0][2])])
+
+        for so in so_ids:
+            sub_total += so.amount_untaxed
+            taxed_amount += so.amount_tax
+            total += so.amount_total
+            untaxed_amount += so.amount_untaxed
+
+        vals['sub_total'] = sub_total
+        vals['taxed_amount'] = taxed_amount
+        vals['total'] = total
+        vals['untaxed_amount'] = untaxed_amount
+
+
+    @api.constrains('freight_charge')
     def check_freight_charge_val(self):
         if self.freight_charge < 0:
             raise UserError('Freight Charge can not be Negative')
-
-        # Below method is called here
-        # to save onchanged readonly fields to DB
-        self.so_product_line()
 
 
     @api.onchange('so_ids')
@@ -103,11 +127,10 @@ class ProformaInvoice(models.Model):
                                    }))
 
 
-
         self.sub_total = sub_total
         self.taxed_amount = taxed_amount
         self.total = total
-        self.untaxaed_amount = untaxaed_amount
+        self.untaxed_amount = untaxaed_amount
 
         self.line_ids = vals
 
@@ -161,3 +184,4 @@ class ProformaInvoiceLine(models.Model):
 
     """ Relational field"""
     pi_no = fields.Many2one('proforma.invoice', ondelete='cascade')
+
