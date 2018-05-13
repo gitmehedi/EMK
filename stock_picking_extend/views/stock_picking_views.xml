@@ -317,7 +317,7 @@
     <menuitem id="menu_acc_approver"
               name="Accounts Approver"
               parent="menu_receive_picking_acc_approver"
-              action="action_stock_picking_receive_acc_approver" groups="stock.group_stock_user"/>
+              action="action_stock_picking_receive_acc_approver" groups="account.group_account_user"/>
 
     <record model="ir.ui.view" id="view_picking_form_inherit">
         <field name="name">stock.picking.inherit.form</field>
@@ -403,7 +403,7 @@
         <field name="arch" type="xml">
             <search string="Stock Picking Type">
                 <field name="show_on_dashboard"/>
-                <filter string="My Picking Type" name="dashboard" domain="[('show_on_dashboard', '=', True)]"/>
+                <filter string="Favorites" name="dashboard" domain="[('show_on_dashboard', '=', True)]"/>
             </search>
         </field>
     </record>

@@ -103,16 +103,8 @@
                         </div>
                         <div class="row">
                             <div class="col-xs-6">
-
-                                <h6><b>Specific Terms and Conditions : </b>
-                                    <br/>
-                                    <br/>
-                                    <span t-esc="data['notes']" widget = "text_html"/></h6>
-                                <!--<h6><b>Mode of Payment : </b></h6>-->
-                                <!--<h6><b>Delivery : </b></h6>-->
-                                <!--<h6><b>Delivery Period : </b></h6>-->
-                                <!--<h6><b>Country of Origin : </b></h6>-->
-                                <!--<h6><b>Warranty : </b></h6>-->
+                                <b>Specific Terms and Conditions :</b>
+                                <p t-raw="data['notes']"/>
                             </div>
                         </div>
                         <div class="row mb32 text-left" style="margin-top: 20mm;">

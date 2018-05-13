@@ -45,7 +45,7 @@
 
         <menuitem action="action_wizard_stock_inventory_report"
                   id="menu_action_wizard_report_inventory"
-                  parent="stock.menu_warehouse_report"
+                  parent="stock.menu_warehouse_report" groups="stock.group_stock_user"
                   sequence="10"/>
 
         <menuitem id="stock.menu_warehouse_report"
