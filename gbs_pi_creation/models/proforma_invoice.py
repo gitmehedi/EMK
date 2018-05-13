@@ -158,8 +158,7 @@ class ProformaInvoice(models.Model):
 
         for so in self.so_ids:
             if self.partner_id and self.partner_id != so.partner_id:
-                #raise ValidationError('Please add Sales Order whose Customer is same')
-                print ''
+                raise ValidationError('Please add Sale Order whose Customer is same.')
             else:
                 self.partner_id = so.partner_id
                 self.currency_id = so.currency_id
@@ -169,7 +168,6 @@ class ProformaInvoice(models.Model):
             taxed_amount += so.amount_tax
             total += so.amount_total
             untaxed_amount += so.amount_untaxed
-
 
         self.line_ids = self._prepare_lines_by_so_ids(self.so_ids)
 
@@ -215,7 +213,6 @@ class ProformaInvoice(models.Model):
             self.total = self.total + self.freight_charge
 
 
-
 class ProformaInvoiceLine(models.Model):
     _name = 'proforma.invoice.line'
     _description = 'Proforma Invoice Line (PI Line)'
@@ -226,8 +223,7 @@ class ProformaInvoiceLine(models.Model):
     quantity = fields.Float(string="Ordered Qty")
     price_unit = fields.Float(string="Price Unit")
     tax = fields.Many2one('account.tax',string='Tax (%)')
-    price_subtotal = fields.Float(string="Price Subtotal")
+    price_subtotal = fields.Float(string="Price Subtotal", readonly=True)
 
     """ Relational field"""
     pi_no = fields.Many2one('proforma.invoice', ondelete='cascade')
-
