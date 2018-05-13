@@ -31,7 +31,7 @@ class ProductGateIn(models.Model):
                         [('code', '=', 'incoming'),('warehouse_id.operating_unit_id', '=', self.operating_unit_id.id),
                          ('default_location_dest_id', '=', location_dest_id.id)])
 
-                    # pick_name = self.env['ir.sequence'].next_by_code('stock.picking')
+                    pick_name = self.env['ir.sequence'].next_by_code('stock.picking')
                     res = {
                         'receive_type': self.receive_type,
                         'transfer_type': 'receive',
@@ -39,22 +39,25 @@ class ProductGateIn(models.Model):
                         'picking_type_id': picking_type.id,
                         'priority': '1',
                         'move_type': 'direct',
-                        'company_id': self.env.user['company_id'].id,
+                        'company_id': self.company_id.id,
                         'operating_unit_id': self.operating_unit_id.id,
                         'state': 'draft',
-                        'invoice_state': 'none',
                         'name': self.name,
                         'date': date_planned,
                         'location_id': location_id.id,
                         'location_dest_id': location_dest_id.id,
-                        # 'origin': self.name,
+                        'challan_bill_no': self.challan_bill_no,
+                        'partner_id': self.partner_id.id,
+                        'origin': self.name,
                     }
-                    if self.company_id:
-                        vals = dict(res, company_id=self.company_id.id)
+                    # if self.company_id:
+                    #     vals = dict(res, company_id=self.company_id.id)
 
-                    picking = picking_obj.create(vals)
+                    picking = picking_obj.create(res)
                     if picking:
                         picking_id = picking.id
+                        picking.action_confirm()
+                        picking.force_assign()
 
                 moves = {
                     'name': self.name,
