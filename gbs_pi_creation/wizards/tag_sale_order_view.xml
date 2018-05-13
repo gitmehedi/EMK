@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="tag_so_to_pi" model="ir.ui.view">
+            <field name="name">tag.sale.order.wizard.view</field>
+            <field name="model">tag.sale.order.wizard</field>
+            <field name="arch" type="xml">
+                <form string="SO Wizard" edit="false" create="false" delete="false">
+                    <sheet>
+                        <group>
+                            <field name="so_id"/>
+                        </group>
+                        <footer>
+						    <button string="Tag Sale Order" name="tag_sale_order" type="object" class="oe_highlight" options="{'no_open': True, 'no_create': True}"/>
+                            or
+                            <button string="Cancel" class="oe_link" special="cancel"/>
+					    </footer>
+
+                    </sheet>
+               </form>
+            </field>
+        </record>
+
+		<record id="action_tag_so" model="ir.actions.act_window">
+			<field name="name">Tag SO</field>
+			<field name="type">ir.actions.act_window</field>
+            <field name="res_model">tag.sale.order.wizard</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">form</field>
+			<field name="target">new</field>
+		</record>
+
+    </data>
+</odoo>

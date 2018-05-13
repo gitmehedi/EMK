@@ -39,7 +39,7 @@ class ProformaInvoice(models.Model):
     sequence_id = fields.Char('Sequence', readonly=True)
 
     """ Calculations fields after """
-    sub_total = fields.Float(string='Sub Total', readonly=True)
+    sub_total = fields.Float(string='Sub Total', readonly=True, store=True)
     taxable_amount = fields.Float(string='Taxable Amount', readonly=True)
     untaxaed_amount = fields.Float(string='Untaxed Amount', readonly=True)
     taxed_amount = fields.Float(string='Tax', readonly=True)
@@ -110,15 +110,11 @@ class ProformaInvoice(models.Model):
 
     @api.multi
     def write(self, vals, context=None):
-        if vals.get('so_ids'):
+        if self.state == 'draft' and vals.get('so_ids'):
             self.update_total_info(vals)
 
-        # if vals.get('line_ids'):
-        #     so_ids = self.env['sale.order'].search([('id', 'in', vals.get('so_ids')[0][2])])
-        #     result = self._prepare_lines_by_so_ids(so_ids)
-        #     vals['line_ids'] = result
-
-
+        if self.state == 'confirmed':
+             vals['so_ids'] = vals['so_ids'].ids
         return super(ProformaInvoice, self).write(vals)
 
 
@@ -213,17 +209,64 @@ class ProformaInvoice(models.Model):
             self.total = self.total + self.freight_charge
 
 
+
 class ProformaInvoiceLine(models.Model):
     _name = 'proforma.invoice.line'
     _description = 'Proforma Invoice Line (PI Line)'
 
     """ Line values"""
     product_id = fields.Many2one('product.product', string="Product", ondelete='cascade')
-    uom_id = fields.Many2one('product.uom', string="UoM", ondelete='cascade')
+    uom_id = fields.Many2one('product.uom', string="UoM", ondelete='cascade', readonly=True)
     quantity = fields.Float(string="Ordered Qty")
-    price_unit = fields.Float(string="Price Unit")
-    tax = fields.Many2one('account.tax',string='Tax (%)')
+    price_unit = fields.Float(string="Price Unit", readonly=True)
+    tax = fields.Many2one('account.tax', string='Tax (%)')
     price_subtotal = fields.Float(string="Price Subtotal", readonly=True)
 
     """ Relational field"""
     pi_no = fields.Many2one('proforma.invoice', ondelete='cascade')
+
+
+
+    @api.onchange('product_id')
+    def onchange_product_id(self):
+        # Fetch Active price for this product
+        active_prod_price_pool = self.env['product.sale.history.line'].search([('product_id','=',self.product_id.id)])
+
+        print active_prod_price_pool.currency_id.id
+
+        self.uom_id = active_prod_price_pool.uom_id
+        self.price_unit = active_prod_price_pool.new_price
+        self.quantity = 1
+        self.price_subtotal = self.price_unit * self.quantity
+
+        ## Set Proforma Invoice Table value
+        #self.pi_no.currency_id.id = active_prod_price_pool.currency_id.id
+        self.pi_no.sub_total = self.price_subtotal
+        self.pi_no.taxed_amount = self.calculate_tax_amount(self.tax.id, self.price_subtotal)
+        self.pi_no.untaxaed_amount = self.price_subtotal
+        self.pi_no.total = self.pi_no.taxed_amount + self.price_subtotal
+
+
+
+    @api.onchange('quantity')
+    def onchange_quantity(self):
+        if self.quantity < 0:
+            raise UserError('Quantity can not be Negative')
+
+        self.price_subtotal = self.price_unit * self.quantity
+
+        ## Set Proforma Invoice Table value
+        # self.pi_no.currency_id.id = active_prod_price_pool.currency_id.id
+        self.pi_no.sub_total = self.price_subtotal
+        self.pi_no.taxed_amount = self.calculate_tax_amount(self.tax.id, self.price_subtotal)
+        self.pi_no.untaxed_amount = self.price_subtotal
+        self.pi_no.total = self.pi_no.taxed_amount + self.price_subtotal
+
+
+    def calculate_tax_amount(self, tax_id, total_price):
+        if tax_id:
+            tax_pool = self.env['account.tax'].search([('id','=',tax_id)])
+            return (tax_pool.amount/100) * total_price
+
+
+
