@@ -48,6 +48,11 @@
                   parent="stock.menu_warehouse_report" groups="stock.group_stock_user"
                   sequence="10"/>
 
+        <menuitem id="stock.menu_warehouse_report"
+                  name="Reports" sequence="99"
+                  parent="stock.menu_stock_root"
+                  groups="stock.group_stock_user"/>
+
 
     </data>
 </odoo>

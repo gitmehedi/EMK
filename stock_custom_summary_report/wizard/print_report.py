@@ -9,7 +9,8 @@ class StockInventoryWizard(models.TransientModel):
 
     date_from = fields.Date("Date from", required=True)
     date_to = fields.Date("Date to", required=True)
-    operating_unit_id = fields.Many2one('operating.unit', string='Unit Name', required=True)
+    operating_unit_id = fields.Many2one('operating.unit', string='Unit Name', required=True,
+                                        default=lambda self: self.env.user.default_operating_unit_id)
     category_id = fields.Many2one('product.category', string='Category', required=False)
     product_id = fields.Many2one('product.product', string='Product')
     report_type_ids = fields.Many2many('report.type.selection', string="Report Type")
