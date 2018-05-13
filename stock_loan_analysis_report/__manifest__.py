@@ -20,7 +20,7 @@
     'depends': ['item_loan_process'],
 
     'data': [
-        # 'security/ir.model.access.csv',
+        'security/ir.model.access.csv',
         'report/stock_loan_report_views.xml',
         'views/stock_loan_analysis_view.xml',
     ],

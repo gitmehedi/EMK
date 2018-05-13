@@ -12,7 +12,7 @@ class StockTransferSummaryReport(models.AbstractModel):
             'record': data,
             'lines': get_data['dest_location'],
             'total': get_data['total'],
-            # 'address': data['str_address'],
+            'address': data['str_address'],
         }
 
         return self.env['report'].render('stock_transfer_report.sts_report_temp', docargs)
