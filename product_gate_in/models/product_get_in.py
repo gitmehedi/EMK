@@ -60,12 +60,17 @@ class ProductGateIn(models.Model):
     # change data and line data depands on ship_id
     @api.onchange('ship_id')
     def set_products_info_automatically(self):
+
+        self.partner_id = False
+        self.truck_no = False
         if self.ship_id:
             val = []
             sale_order_obj = self.env['purchase.shipment'].search([('id', '=', self.ship_id.id)])
 
             if sale_order_obj:
                 self.lc_id = sale_order_obj.lc_id.id
+                self.partner_id = sale_order_obj.cnf_id.id
+                self.truck_no = sale_order_obj.vehical_no
 
                 for record in sale_order_obj.shipment_product_lines:
                     val.append((0, 0, {'product_id': record.product_id.id,
