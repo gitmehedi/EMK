@@ -16,5 +16,4 @@ class InheritAccountInvoice(models.Model):
         if self.converstion_rate != 0:
             currency_pool.rate = self.converstion_rate
 
-        res = currency_pool.rate
-        return res
+        return currency_pool.rate
