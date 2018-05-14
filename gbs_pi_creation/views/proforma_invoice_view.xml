@@ -13,7 +13,7 @@
                         <field name="state" widget="statusbar"/>
 
                          <button string="Tag Sale Order" name="%(action_tag_so)d" type="action"
-                            attrs="{'invisible':[('so_ids','=', True),('state', '=','draft')]}"
+                            attrs="{'invisible':['|', ('so_ids','=', True), ('state','in',('draft','confirmed'))]}"
                                  class="oe_highlight"/>
                     </header>
 
