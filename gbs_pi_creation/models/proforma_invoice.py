@@ -176,7 +176,7 @@ class ProformaInvoice(models.Model):
 
     @api.multi
     def action_confirm(self):
-        #self.update_Pi_to_so_obj()
+        self.update_Pi_to_so_obj()
 
         self.state = 'confirmed'
 

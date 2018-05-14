@@ -18,6 +18,7 @@
                 'customer_activity_statement',
                 'customer_outstanding_statement',
                 'account_journal_report',
+                'custom_amount_conversion',
                 ],
 
     'data': [ ],
