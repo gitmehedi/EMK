@@ -55,6 +55,8 @@ class StockPurchaseReport(models.AbstractModel):
 
         if supplier_id:
             supplier_param = "(" + str(data['partner_id']) + ")"
+        elif len(supplier_lists) == 1:
+            supplier_param = "(" + str(supplier_lists.id) + ")"
         else:
             supplier_param = str(tuple(supplier_lists.ids))
 
@@ -88,8 +90,8 @@ class StockPurchaseReport(models.AbstractModel):
                                            sp.mrr_no				                AS sp_mrr,
                                            sm.date                                  AS move_date,
                                            sm.product_qty                           AS qty_in_tk, 
-                                           sm.product_qty * COALESCE(price_unit, 0) AS val_in_tk,
-                                           COALESCE(price_unit, 0) AS cost_val
+                                           sm.product_qty * Coalesce(ph.cost, 0) AS val_in_tk,
+                                           Coalesce(ph.cost, 0)          AS cost_val
                                     FROM   stock_picking sp 
                                            INNER JOIN stock_picking sp1 
                                                   ON sp.origin = sp1.name
@@ -106,7 +108,9 @@ class StockPurchaseReport(models.AbstractModel):
                                            LEFT JOIN product_category pc 
                                                   ON pt.categ_id = pc.id
                                            LEFT JOIN product_uom pu 
-                                                  ON( pu.id = pt.uom_id )  
+                                                  ON( pu.id = pt.uom_id ) 
+                                           LEFT JOIN product_price_history ph 
+						                          ON ph.product_id = pp.id 
                                     WHERE  Date_trunc('day', sm.date) BETWEEN '%s' AND '%s' 
                                            AND sm.state = 'done' 
                                            AND sm.location_id <> %s

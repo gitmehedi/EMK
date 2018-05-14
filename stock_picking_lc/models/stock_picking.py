@@ -37,8 +37,11 @@ class Picking(models.Model):
             return
 
         date_planned = time.strftime(DEFAULT_SERVER_DATETIME_FORMAT)
-        self.challan_bill_no = self.shipment_id.gate_in_ids[0].challan_bill_no or False
-        self.partner_id = self.shipment_id.gate_in_ids[0].partner_id.id or False
+
+        if self.shipment_id.gate_in_ids:
+            self.challan_bill_no = self.shipment_id.gate_in_ids[0].challan_bill_no or False
+            self.partner_id = self.shipment_id.gate_in_ids[0].partner_id.id or False
+
         product_lines = []
         for ship_pro_line in self.shipment_id.shipment_product_lines:
 
