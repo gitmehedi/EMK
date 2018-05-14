@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <menuitem name="Stock Loan Report"
+                  parent="stock.menu_warehouse_report"
+                  id="main_menu_stock_loan_analysis"
+                  sequence="12" groups="stock.group_stock_user"/>
+
+        <menuitem name="Loan Lending Report"
+                  action="action_loan_lending_report"
+                  parent="main_menu_stock_loan_analysis"
+                  id="menu_stock_loan_lending_report"
+                  sequence="1" groups="stock.group_stock_user"/>
+
+        <menuitem name="Loan Borrowing Report"
+                  action="action_loan_borrowing_report"
+                  parent="main_menu_stock_loan_analysis"
+                  id="menu_stock_loan_borrowing_report"
+                  sequence="2" groups="stock.group_stock_user"/>
+
+    </data>
+</odoo>

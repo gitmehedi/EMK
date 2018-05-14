@@ -13,26 +13,6 @@
             </field>
         </record>
 
-        <record model="ir.actions.act_window" id="lc_export_foreign_creation_action">
-            <field name="name">Letter of Credit: Export</field>
-            <field name="res_model">letter.credit</field>
-            <field name="view_mode">tree,form</field>
-            <field name="domain">[('type','=','export'),('region_type','=','foreign')]</field>
-            <field name="context">{'default_type': 'export','default_region_type': 'foreign','search_default_active':1}</field>
-            <field name="view_id" ref="export_letter_credit_tree_view"/>
-            <field name="search_view_id" ref="view_letter_credit_filter"/>
-        </record>
-
-        <record model="ir.actions.act_window" id="lc_export_local_creation_action">
-            <field name="name">Letter of Credit: Export</field>
-            <field name="res_model">letter.credit</field>
-            <field name="view_mode">tree,form</field>
-            <field name="domain">[('type','=','export'),('region_type','=','local')]</field>
-            <field name="context">{'default_type': 'export','default_region_type': 'local','search_default_active':1}</field>
-            <field name="view_id" ref="export_letter_credit_tree_view"/>
-            <field name="search_view_id" ref="view_letter_credit_filter"/>
-        </record>
-
         <record model="ir.actions.act_window" id="lc_import_local_creation_action">
             <field name="name">Letter of Credit: Import</field>
             <field name="res_model">letter.credit</field>
@@ -53,30 +33,20 @@
             <field name="search_view_id" ref="view_letter_credit_filter"/>
         </record>
 
-        <menuitem id="lc_export_creation_menu" parent="sales_team.menu_base_partner"
-            sequence="10" name="Letter of Credit" />
-
-        <menuitem id="lc_export_creation_submenu" name="Export LC" parent="lc_export_creation_menu"
-                  action="lc_export_foreign_creation_action"/>
-
-
         <menuitem id="lc_import_creation_menu" parent="purchase.menu_purchase_root"
             sequence="10" name="Letter of Credit" />
 
-        <menuitem id="lc_import_creation_submenu" name="Import LC" parent="lc_import_creation_menu"
+        <menuitem id="lc_import_creation_submenu" name="Import LC(Foreign)" parent="lc_import_creation_menu"
                   action="lc_import_foreign_creation_action"/>
+
+        <menuitem id="lc_import_creation_submenu" name="Import LC(Local)" parent="lc_import_creation_menu"
+                  action="lc_import_local_creation_action"/>
 
         <menuitem id="lc_commercial_creation_menu" parent="commercial.menu_commercial_root"
             sequence="1" name="Letter of Credit" />
 
-        <menuitem id="lc_commercial_export_foreign_creation_submenu" name="Export LC(Foreign)" parent="lc_commercial_creation_menu"
-                sequence="1" action="lc_export_foreign_creation_action"/>
-
         <menuitem id="lc_commercial_import_foreign_creation_submenu" name="Import LC(Foreign)" parent="lc_commercial_creation_menu"
                   sequence="2" action="lc_import_foreign_creation_action"/>
-
-        <menuitem id="lc_commercial_export_local_creation_submenu" name="Export LC(Local)" parent="lc_commercial_creation_menu"
-                sequence="3" action="lc_export_local_creation_action"/>
 
         <menuitem id="lc_commercial_import_local_creation_submenu" name="Import LC(Local)" parent="lc_commercial_creation_menu"
                   sequence="4" action="lc_import_local_creation_action"/>

@@ -30,8 +30,10 @@
                                         <th>Total TDS</th>
                                         <th>Total PF</th>
                                         <th>Total Mess</th>
+                                        <t t-if="tot_ods">
+                                            <th>Total Other Deduction</th>
+                                        </t>
                                         <th>Total Payable</th>
-
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -62,6 +64,11 @@
                                                     <td class="text-right">
                                                         <span t-esc=" '%.2f'% o['mess']"/>
                                                     </td>
+                                                    <t t-if="tot_ods">
+                                                        <td class="text-right">
+                                                            <span t-esc=" '%.2f'% o['ods']"/>
+                                                        </td>
+                                                    </t>
                                                     <td class="text-right">
                                                         <span t-esc=" '%.2f'% o['total_net']"/>
                                                     </td>
@@ -92,6 +99,11 @@
                                     <td class="text-right">
                                         <span t-esc="'%.2f'% tot_mess"/>
                                     </td>
+                                    <t t-if="tot_ods">
+                                        <td class="text-right">
+                                            <span t-esc="'%.2f'% tot_ods"/>
+                                        </td>
+                                    </t>
                                     <td class="text-right">
                                         <span t-esc="tot_net"/>
                                     </td>

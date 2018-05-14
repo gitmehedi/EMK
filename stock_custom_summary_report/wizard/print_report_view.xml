@@ -19,7 +19,9 @@
                                    options="{'no_open': 1,'no_create': 1, 'no_create_edit': 1}"/>
                             <field name="category_id"
                                    options="{'no_open': 1,'no_create': 1, 'no_create_edit': 1}"/>
-
+                            <field name="product_id"
+                                   options="{'no_open': 1,'no_create': 1, 'no_create_edit': 1}"
+                                   domain="[('product_tmpl_id.categ_id.id', 'child_of', category_id)]"/>
                         </group>
                     </group>
                     <footer>
@@ -43,8 +45,13 @@
 
         <menuitem action="action_wizard_stock_inventory_report"
                   id="menu_action_wizard_report_inventory"
-                  parent="stock.menu_warehouse_report"
+                  parent="stock.menu_warehouse_report" groups="stock.group_stock_user"
                   sequence="10"/>
+
+        <menuitem id="stock.menu_warehouse_report"
+                  name="Reports" sequence="99"
+                  parent="stock.menu_stock_root"
+                  groups="stock.group_stock_user"/>
 
 
     </data>

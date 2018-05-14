@@ -11,6 +11,7 @@
         'report',
         'account',
         'custom_report',
+        #'gbs_sales_commission_so',
     ],
 
     'data': [

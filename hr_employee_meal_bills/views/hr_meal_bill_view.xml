@@ -17,6 +17,9 @@
                         <button name="action_draft" type="object"
                                 string="Reject" groups="hr.group_hr_manager"
                                 states="applied"/>
+                        <button name="action_draft" type="object"
+                                string="Reset to draft" states="applied,approved" groups="hr.group_hr_manager"
+                                />
                         <field name="state" widget="statusbar"/>
                     </header>
                     <sheet>
@@ -31,6 +34,7 @@
                                         <tree string="List" editable="bottom">
                                             <field name="employee_id" options="{'no_quick_create':True,'no_create_edit':True}"/>
                                             <field name="bill_amount"/>
+                                            <field  name="state" invisible="1"/>
                                         </tree>
                                     </field>
                                 </page>

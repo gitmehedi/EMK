@@ -10,5 +10,5 @@ class DOMaxOrderQtyWithoutLc(models.Model):
     @api.one
     def update_state(self, context=None):
         if context['delivery_order_id']:
-            delivery_order_pool = self.env['delivery.order'].search([('id', '=', context['delivery_order_id'])])
+            delivery_order_pool = self.env['delivery.authorization'].search([('id', '=', context['delivery_order_id'])])
             delivery_order_pool.write({'state': 'approve'})  # second approval

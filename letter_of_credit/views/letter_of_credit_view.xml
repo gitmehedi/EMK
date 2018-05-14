@@ -141,23 +141,6 @@
             </field>
         </record>
 
-        <record id="export_letter_credit_tree_view" model="ir.ui.view">
-            <field name="name">export.local.credit.tree</field>
-            <field name="model">letter.credit</field>
-            <field name="type">tree</field>
-            <field name="arch" type="xml">
-                <tree string="Letter of Credit">
-                    <field name="name"/>
-                    <field name="second_party_applicant" string="Applicant Name"/>
-                    <field name="second_party_bank" string="Applicant Bank"/>
-                    <field name="issue_date"/>
-                    <field name="expiry_date"/>
-                    <field name="shipment_date"/>
-                    <field name="state"/>
-                </tree>
-            </field>
-        </record>
-
         <record id="import_letter_credit_tree_view" model="ir.ui.view">
             <field name="name">import.local.credit.tree</field>
             <field name="model">letter.credit</field>
@@ -174,8 +157,6 @@
                 </tree>
             </field>
         </record>
-
-
 
     </data>
 </odoo>

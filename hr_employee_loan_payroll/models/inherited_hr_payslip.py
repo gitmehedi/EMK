@@ -1,7 +1,7 @@
 from odoo import api, fields, models, tools, _
 
 
-class InheritedHrMobilePayslip(models.Model):
+class InheritedHrPayslip(models.Model):
     """
     Inherit HR Payslip models and add onchange functionality on 
     employee_id
@@ -20,7 +20,7 @@ class InheritedHrMobilePayslip(models.Model):
                 self.remaining_loan = emp_loan.remaining_loan_amount or 0.00
 
             self.input_line_ids = 0
-            super(InheritedHrMobilePayslip, self).onchange_employee()
+            super(InheritedHrPayslip, self).onchange_employee()
 
             """
             Incorporate other payroll data
@@ -45,7 +45,7 @@ class InheritedHrMobilePayslip(models.Model):
 
     @api.multi
     def action_payslip_done(self):
-        res = super(InheritedHrMobilePayslip, self).action_payslip_done()
+        res = super(InheritedHrPayslip, self).action_payslip_done()
         loan_data = self.env['hr.employee.loan.line'].search([('employee_id', '=', self.employee_id.id),
                                                               ('schedule_date', '>=', self.date_from),
                                                               ('schedule_date', '<=', self.date_to),

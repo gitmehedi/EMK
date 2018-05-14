@@ -16,7 +16,7 @@
         unit wise and in between date range.
     """,
     'data': [
-        # 'security/ir.model.access.csv',
+        'security/ir.model.access.csv',
         # 'security/security.xml',
         'data/default_data.xml',
         'wizard/print_report_view.xml',

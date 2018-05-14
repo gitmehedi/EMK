@@ -3,6 +3,7 @@ from odoo import models, fields, api
 
 class Picking(models.Model):
     _inherit = "stock.picking"
+    _order = "write_date desc"
 
     @api.model
     def _get_default_picking_type(self):
@@ -13,7 +14,6 @@ class Picking(models.Model):
             return picking_type_objs[0].id
 
     transfer_type = fields.Selection([
-        ('loan', 'Loan'),
         ('receive', 'Receive')])
     receive_type = fields.Selection([
         ('loan', 'Loan'),
@@ -63,3 +63,9 @@ class Picking(models.Model):
             'limit': 80,
             'context': "{'default_res_model': '%s','default_res_id': %d}" % (self._name, res_id)
         }
+
+
+class StockPickingType(models.Model):
+    _inherit = 'stock.picking.type'
+
+    show_on_dashboard = fields.Boolean(string='Show Picking Type on dashboard', help="Whether this Picking Type should be displayed on the dashboard or not", default=True)

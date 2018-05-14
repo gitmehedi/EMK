@@ -11,7 +11,6 @@ class StockInventoryReport(models.AbstractModel):
 
         docargs = {
             'doc_ids': self._ids,
-            # 'doc_model': report.model,
             'docs': self,
             'record': data,
             'lines': get_data['category'],
@@ -25,7 +24,9 @@ class StockInventoryReport(models.AbstractModel):
         date_end = data['date_to']
         location_outsource = data['operating_unit_id']
         category_id = data['category_id']
+        product_id = data['product_id']
         cat_pool = self.env['product.category']
+        product_pool = self.env['product.product']
         cat_lists = []
 
         sub_list = {
@@ -99,6 +100,12 @@ class StockInventoryReport(models.AbstractModel):
         else:
             category_param = str(tuple(categories))
 
+        if product_id:
+            product_param = "(" + str(data['product_id']) + ")"
+        else:
+            product_list = product_pool.search([('product_tmpl_id.categ_id.id', 'in', categories)]).ids
+            product_param = str(tuple(product_list))
+
         sql_dk = '''
                  SELECT product_id,
                            name,
@@ -127,6 +134,7 @@ class StockInventoryReport(models.AbstractModel):
                    AND sm.location_id <> %s
                    AND sm.location_dest_id = %s
                    AND pc.id IN  %s
+                   AND pp.id IN %s
                    GROUP  BY sm.product_id,pt.name,pp.default_code,pp.id,pc.name,pu.name
                             UNION ALL
                             SELECT sm.product_id,
@@ -160,6 +168,7 @@ class StockInventoryReport(models.AbstractModel):
                                    AND sm.location_id <> %s
                                    AND sm.location_dest_id = %s
                                    AND pc.id IN  %s
+                                   AND pp.id IN %s
                             GROUP  BY sm.product_id,
                                       pt.name,
                                       pp.default_code,
@@ -196,6 +205,7 @@ class StockInventoryReport(models.AbstractModel):
                                    AND sm.location_id <> %s
                                    AND sm.location_dest_id = %s
                                    AND pc.id IN %s
+                                   AND pp.id IN %s
                                    AND sm.picking_id IS NULL
                             GROUP  BY sm.product_id,
                                       pt.name,
@@ -210,9 +220,9 @@ class StockInventoryReport(models.AbstractModel):
                               uom_name,
                               category
                  
-                 ''' % (date_start, date_start, location_outsource, location_outsource, category_param,
-                        date_start, date_start, location_outsource, location_outsource, category_param,
-                        date_start, date_start, location_outsource, location_outsource, category_param)
+                 ''' % (date_start, date_start, location_outsource, location_outsource, category_param,product_param,
+                        date_start, date_start, location_outsource, location_outsource, category_param,product_param,
+                        date_start, date_start, location_outsource, location_outsource, category_param,product_param)
 
         sql_in_tk = '''
                             SELECT product_id, 
@@ -229,8 +239,8 @@ class StockInventoryReport(models.AbstractModel):
                                            pu.name                                  AS uom_name, 
                                            pc.name                                  AS category, 
                                            sm.product_qty                           AS qty_in_tk, 
-                                           sm.product_qty * COALESCE(price_unit, 0) AS val_in_tk,
-                                           COALESCE(price_unit, 0) AS cost_val
+                                           sm.product_qty * Coalesce(ph.cost, 0) AS val_in_tk,
+                                           Coalesce(ph.cost, 0)          AS cost_val
                                     FROM   stock_picking sp 
                                            LEFT JOIN stock_move sm 
                                                   ON sm.picking_id = sp.id 
@@ -243,13 +253,16 @@ class StockInventoryReport(models.AbstractModel):
                                            LEFT JOIN product_category pc 
                                                   ON pt.categ_id = pc.id
                                            LEFT JOIN product_uom pu 
-        				                          ON( pu.id = pt.uom_id )  
+        				                          ON( pu.id = pt.uom_id )
+                                            LEFT JOIN product_price_history ph 
+                                                  ON ph.product_id = pp.id
                                     WHERE  Date_trunc('day', sm.date) BETWEEN '%s' AND '%s' 
                                            AND sm.state = 'done' 
                                            --AND sp.location_type = 'outsource_out' 
                                            AND sm.location_id <> %s
                                            AND sm.location_dest_id = %s 
                                            AND pc.id IN %s
+                                           AND pp.id IN %s
                                    --AND usage like 'internal' 
                                    )t1 
                             GROUP  BY product_id, 
@@ -258,10 +271,9 @@ class StockInventoryReport(models.AbstractModel):
                                       uom_name,
                                       category,
                                       cost_val 
-                        ''' % (date_start, date_end, location_outsource, location_outsource, category_param)
+                        ''' % (date_start, date_end, location_outsource, location_outsource, category_param,product_param)
 
-        sql_out_tk = '''
-                            SELECT product_id,
+        sql_out_tk = '''SELECT product_id,
                            name,
                            code,
                            uom_name,
@@ -300,6 +312,7 @@ class StockInventoryReport(models.AbstractModel):
                                    AND sm.location_id = %s
                                    AND sm.location_dest_id <> %s
                                    AND pc.id IN %s
+                                   AND pp.id IN %s
                            )t1
                     GROUP  BY product_id,
                               name,
@@ -308,7 +321,7 @@ class StockInventoryReport(models.AbstractModel):
                               category,
                               list_price,
                               val_out_tk
-                        ''' % (date_end, date_start, date_end, location_outsource, location_outsource, category_param)
+                        ''' % (date_end, date_start, date_end, location_outsource, location_outsource, category_param,product_param)
 
         sql_ck = '''
                   SELECT product_id,
@@ -351,6 +364,7 @@ class StockInventoryReport(models.AbstractModel):
                            AND sm.location_id <> %s
                            AND sm.location_dest_id = %s
                            AND pc.id IN %s
+                           AND pp.id IN %s
                     --AND usage like 'internal'
                     GROUP  BY sm.product_id,
                               pt.name,
@@ -391,6 +405,7 @@ class StockInventoryReport(models.AbstractModel):
                            AND sm.location_id = %s
                            AND sm.location_dest_id <> %s
                            AND pc.id IN %s
+                           AND pp.id IN %s
                     --AND usage like 'internal'
                     GROUP  BY sm.product_id,
                               pt.name,
@@ -428,6 +443,7 @@ class StockInventoryReport(models.AbstractModel):
                            AND sm.location_id <> %s
                            AND sm.location_dest_id = %s
                            AND pc.id IN %s
+                           AND pp.id IN %s
                            AND sm.picking_id IS NULL
                     GROUP  BY sm.product_id,
                               pt.name,
@@ -465,6 +481,7 @@ class StockInventoryReport(models.AbstractModel):
                            AND sm.location_id = %s
                            AND sm.location_dest_id <> %s
                            AND pc.id IN %s
+                           AND pp.id IN %s
                            AND sm.picking_id IS NULL
                     GROUP  BY sm.product_id,
                               pt.name,
@@ -478,10 +495,10 @@ class StockInventoryReport(models.AbstractModel):
                       uom_name,
                       category,
                       cost_val 
-                        ''' % (date_end, date_end, location_outsource, location_outsource, category_param,
-                               date_end, date_end, location_outsource, location_outsource, category_param,
-                               date_end, date_end, location_outsource, location_outsource, category_param,
-                               date_end, date_end, location_outsource, location_outsource, category_param)
+                        ''' % (date_end, date_end, location_outsource, location_outsource, category_param,product_param,
+                               date_end, date_end, location_outsource, location_outsource, category_param,product_param,
+                               date_end, date_end, location_outsource, location_outsource, category_param,product_param,
+                               date_end, date_end, location_outsource, location_outsource, category_param,product_param)
 
         sql = '''
                             SELECT ROW_NUMBER() OVER(ORDER BY table_ck.code DESC) AS id ,
@@ -517,6 +534,8 @@ class StockInventoryReport(models.AbstractModel):
                 category[vals['category']]['product'].append(vals)
 
                 total = category[vals['category']]['sub-total']
+                total['name'] = vals['category']
+
                 total['total_dk_qty'] = total['total_dk_qty'] + vals['qty_dk']
                 total['total_dk_val'] = total['total_dk_val'] + vals['val_dk']
                 total['total_in_qty'] = total['total_in_qty'] + vals['qty_in_tk']
@@ -534,6 +553,5 @@ class StockInventoryReport(models.AbstractModel):
                 grand_total['total_out_val'] = grand_total['total_out_val'] + vals['val_out_tk']
                 grand_total['total_ck_qty'] = grand_total['total_ck_qty'] + vals['qty_ck']
                 grand_total['total_ck_val'] = grand_total['total_ck_val'] + vals['val_ck']
-
 
         return {'category': category, 'total': grand_total}

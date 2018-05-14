@@ -2,9 +2,9 @@ from odoo import api, fields, models
 from odoo.exceptions import UserError, ValidationError
 
 
-class DOProductLine(models.Model):
-    _name = 'delivery.order.line'
-    _description = 'Sales Delivery Authorization line'
+class DeliveryAuthorizationLine(models.Model):
+    _name = 'delivery.authorization.line'
+    _description = 'Delivery Authorization line'
 
     product_id = fields.Many2one('product.product', string="Product", readonly=True, ondelete='cascade')
     uom_id = fields.Many2one('product.uom', string="UoM", ondelete='cascade', readonly=True)
@@ -16,7 +16,7 @@ class DOProductLine(models.Model):
     tax_id = fields.Many2one('account.tax', string='Tax', readonly=True)
 
     """ Relational Fields """
-    parent_id = fields.Many2one('delivery.order', ondelete='cascade')
+    parent_id = fields.Many2one('delivery.authorization', ondelete='cascade')
     state = fields.Selection([
         ('draft', "To Submit"),
         ('validate', "To Approve"),

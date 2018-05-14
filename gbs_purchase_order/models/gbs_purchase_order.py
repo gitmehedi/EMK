@@ -42,7 +42,9 @@ class PurchaseOrder(models.Model):
                                                       related_sudo=True,
                                                       help="Technical field used to display the Drop Ship Address",
                                                       readonly=True)
+    contact_person = fields.Many2many('res.partner','partner_po_rel','po_id','partner_id','Contact Person')
 
+    ref_date = fields.Date('Ref.Date')
 
     @api.onchange('requisition_id')
     def _onchange_requisition_id(self):

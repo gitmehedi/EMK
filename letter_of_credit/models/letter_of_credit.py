@@ -11,7 +11,7 @@ class LetterOfCredit(models.Model):
     # Import -> Applicant(Samuda)
 
     name = fields.Char(string='LC Number', index=True,readonly=True)
-    title = fields.Text(string='Discription', required=True)
+    title = fields.Text(string='Description', required=True)
 
     type = fields.Selection([
         ('export', 'Export'),
@@ -99,13 +99,13 @@ class LetterOfCredit(models.Model):
             self.operating_unit_id = []
             return {'domain': {'operating_unit_id': [('company_id', '=', self.first_party.id)]}}
 
-    @api.multi
-    @api.constrains('operating_unit_id')
-    def _check_operating_unit_id(self):
-        for po in self.po_ids:
-            if self.operating_unit_id.id != po.operating_unit_id.id:
-                raise ValidationError(_("Operating unit of %s is not same with operating unit of letter of credit.\n"
-                      "Your purchase order's operating unit and letter of credit's operating unit must be same.") % (po.name))
+    # @api.multi
+    # @api.constrains('operating_unit_id')
+    # def _check_operating_unit_id(self):
+    #     for po in self.po_ids:
+    #         if self.operating_unit_id.id != po.operating_unit_id.id:
+    #             raise ValidationError(_("Operating unit of %s is not same with operating unit of letter of credit.\n"
+    #                   "Your purchase order's operating unit and letter of credit's operating unit must be same.") % (po.name))
 
     @api.multi
     def action_cancel(self):

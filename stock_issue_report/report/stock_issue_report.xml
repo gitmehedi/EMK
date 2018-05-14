@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <template id="report_stock_issue">
+            <t t-call="report.html_container">
+                <t t-call="custom_report.gbs_internal_layout">
+                    <div class="page" style="page-break-inside: auto">
+                        <style type="text/css">
+                            .report-title { text-align:center; }
+                            .odo-bg-gray, .odo-bg-gray > td { background-color: #f5f5f5; }
+                        </style>
+                        <div class="row">
+                            <h4 class="text-center">Stock Issue Summary</h4>
+                            <div class="row" style="padding-top:10px;">
+                                <div class="col-xs-6" style="padding-bottom:10px;">
+                                    <t t-if="record['from_date']">
+                                        <strong>Date : </strong>
+                                        <span t-esc="record['from_date']"/>
+                                    </t>
+                                    <t t-if="record['to_date']">
+                                        <strong style="padding-left:5px;">To : </strong>
+                                        <span t-esc="record['to_date']"/>
+                                    </t>
+                                </div>
+                                <div class="col-xs-6 text-right">
+                                    <t t-if="record['operating_unit_name']">
+                                        <strong>Operating Unit : </strong>
+                                        <span t-esc="record['operating_unit_name']"/>
+                                    </t>
+                                </div>
+                            </div>
+                            <table class="table table-report-xs table-bordered table-striped">
+                                <thead>
+                                    <tr class="odo-bg-gray">
+                                        <th class="text-center">SL#</th>
+                                        <th class="text-center">Name of Heads</th>
+                                        <th class="text-center">Quantity</th>
+                                        <th class="text-center">Unit</th>
+                                        <th class="text-center">Rate</th>
+                                        <th class="text-center">Amount</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <t t-if="product_lines">
+                                        <t t-foreach="product_lines" t-as="line">
+                                            <tr>
+                                                <td class="text-left"  style="width:25px;">
+                                                    <t t-esc="line_index+1"/>
+                                                </td>
+                                                <td class="text-left">
+                                                    <t t-esc="line['pt_name']"/>
+                                                </td>
+                                                <td class="text-right">
+                                                    <t t-esc="line['quantity']"/>
+                                                </td>
+                                                <td class="text-left">
+                                                    <t class="text-center" t-esc="line['unit_name']"/>
+                                                </td>
+                                                <td class="text-right">
+                                                    <t t-esc="line['price']"/>
+                                                </td>
+                                                <td class="text-right">
+                                                    <span t-esc="line['total_val']"/>
+                                                </td>
+
+                                            </tr>
+                                        </t>
+                                    </t>
+                                    <tr style="font-weight: bold; background-color: #897d79; border-bottom: 1px solid black;">
+                                        <td colspan="5" class="text-left">
+                                            <t t-esc="total['title']"/>
+                                        </td>
+                                        <td class="text-right">
+                                            <t t-esc="total['total_out_val']"/>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <t t-call="custom_report.report_signing"></t>
+                    </div>
+                </t>
+            </t>
+        </template>
+        <report id="action_stock_issue_report"
+                string="Stock Issue Report"
+                model="indent.indent"
+                report_type="qweb-pdf"
+                name="stock_issue_report.report_stock_issue"
+                file="stock_issue_report.report_stock_issue"
+                menu="False"
+                paperformat="custom_report.paperformat_backend_portrait"
+        />
+    </data>
+</odoo>

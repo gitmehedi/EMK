@@ -58,8 +58,8 @@ class SaleOrder(models.Model):
     currency_id = fields.Many2one("res.currency", related='', string="Currency", required=True)
 
     """ PI and LC """
-    pi_no = fields.Many2one('proforma.invoice', string='PI Ref. No.',readonly=True, states={'to_submit': [('readonly', False)]})
-    lc_no = fields.Many2one('letter.credit', string='LC Ref. No.',readonly=True, states={'to_submit': [('readonly', False)]})
+    pi_no = fields.Many2one('proforma.invoice', string='PI Ref. No.', readonly=True)
+    lc_id = fields.Many2one('letter.credit', string='LC Ref. No.',readonly=True)
 
     remaining_credit_limit = fields.Char(string="Customer's Remaining Credit Limit", track_visibility='onchange')
 
@@ -68,11 +68,9 @@ class SaleOrder(models.Model):
     @api.multi
     def action_invoice_create(self, grouped=False, final=False):
         res = super(SaleOrder, self).action_invoice_create()
-
-        # acc_inv_pool = self.env['account.invoice']
         self.invoice_ids.write({'is_commission_generated': False})
-
         return res
+
 
     @api.depends('order_line.da_qty')
     def _da_button_show_hide(self):
@@ -94,9 +92,11 @@ class SaleOrder(models.Model):
             currency = self.currency_id.name.encode('ascii', 'ignore')
             return amount_to_text_en.amount_to_text(number, 'en', currency)
 
+
     @api.multi
     def action_validate(self):
         self.state = 'sent'
+
 
     @api.multi
     def action_to_submit(self):
@@ -105,6 +105,7 @@ class SaleOrder(models.Model):
                 raise UserError('Expiration Date can not be less than Order Date')
 
             orders.state = 'draft'
+
 
     @api.onchange('type_id')
     def onchange_type(self):
@@ -118,14 +119,14 @@ class SaleOrder(models.Model):
         for orders in self:
             if orders.credit_sales_or_lc == 'lc_sales':
                 # If LC and PI ref is present, go to the Final Approval, Else go to Second level approval
-                if orders.lc_no and orders.pi_no:
+                if orders.lc_id and orders.pi_no:
                     for lines in orders.order_line:
                         product_pool = orders.env['product.product'].search([('id', '=', lines.product_id.ids)])
                         if (lines.price_unit != product_pool.list_price):
                             return True  # Go to two level approval process
 
                     return False  # One level approval process
-                elif orders.pi_no and not orders.lc_no:
+                elif orders.pi_no and not orders.lc_id:
                     return True  # Go to two level approval process
                 else:
                     return False  # Go to two level approval process
@@ -144,10 +145,13 @@ class SaleOrder(models.Model):
                          ('product_package_mode', '=', orders.pack_type.id),
                          ('uom_id', '=', lines.product_uom.id)])
 
-                    account_receivable = credit_limit_pool.credit
+                    account_receivable = abs(credit_limit_pool.credit)
                     sales_order_amount_total = -orders.amount_total  # actually it should be minus value
 
-                    customer_total_credit = account_receivable + sales_order_amount_total
+                    unpaid_tot_inv_amt = orders.unpaid_total_invoiced_amount()
+                    undelivered_tot_do_amt = orders.undelivered_do_qty_amount()
+
+                    customer_total_credit = account_receivable + sales_order_amount_total + unpaid_tot_inv_amt + undelivered_tot_do_amt
                     customer_credit_limit = credit_limit_pool.credit_limit
 
                     if (abs(customer_total_credit) > customer_credit_limit
@@ -167,6 +171,51 @@ class SaleOrder(models.Model):
                 return False  # One level approval process
 
     double_validation = fields.Boolean('Apply Double Validation', compute="_is_double_validation_applicable")
+
+
+    # Total DO Qty amount which is not delivered yet
+    @api.multi
+    def undelivered_do_qty_amount(self):
+        tot_undelivered_amt = 0
+        for stock in self:
+            # picking_type_id.code "outgoing" means: Customer
+            stock_pick_pool = stock.env['stock.picking'].search([('picking_type_id.code', '=', 'outgoing'),
+                                                                 ('picking_type_id.name', '=', 'Delivery Orders'),
+                                                                 ('partner_id', '=', stock.partner_id.id),
+                                                                 ('state', '!=', 'done')])
+
+            stock_amt_list = []
+            for stock_pool in stock_pick_pool:
+                # We assume that delivery_order_id will never be null,
+                # but to avoid garbage data added this extra checking
+                if stock_pool.delivery_order_id:
+                    for so_line in stock.order_line:
+                        for prod_op_ids in stock_pool.pack_operation_product_ids:
+                            unit_price = so_line.price_unit
+                            product_qty = prod_op_ids.product_qty
+                            stock_amt_list.append(unit_price * product_qty)
+
+                tot_undelivered_amt = sum(stock_amt_list)
+
+        return tot_undelivered_amt
+
+
+    ## Total Invoiced amount which is not in Paid state
+    @api.multi
+    def unpaid_total_invoiced_amount(self):
+        for invc in self:
+            acc_invoice_pool = invc.env['account.invoice'].search([('journal_id.type', '=', 'sale'),
+                                                                   ('partner_id', '=', invc.partner_id.id),
+                                                                   ('state', '=', 'draft')])
+
+            total_list = []
+            for inv_ in acc_invoice_pool:
+                total_list.append(inv_.amount_total)
+
+            total_unpaid_amount = sum(total_list)
+
+        return total_unpaid_amount
+
 
     @api.multi
     def action_submit(self):
@@ -192,16 +241,21 @@ class SaleOrder(models.Model):
                      ('uom_id', '=', lines.product_uom.id)])
 
                 if order.credit_sales_or_lc == 'cash' or order.credit_sales_or_lc == 'lc_sales':
+
                     is_double_validation = order.second_approval_business_logics(cust_commission_pool, lines,
                                                                                  price_change_pool)
                     if is_double_validation == True:
                         break;
 
                 elif order.credit_sales_or_lc == 'credit_sales':
+
                     account_receivable = credit_limit_pool.credit
                     sales_order_amount_total = -order.amount_total  # actually it should be minus value
 
-                    customer_total_credit = account_receivable + sales_order_amount_total
+                    unpaid_tot_inv_amt = order.unpaid_total_invoiced_amount()
+                    undelivered_tot_do_amt = order.undelivered_do_qty_amount()
+
+                    customer_total_credit = account_receivable + sales_order_amount_total + undelivered_tot_do_amt + unpaid_tot_inv_amt
                     customer_credit_limit = credit_limit_pool.credit_limit
 
                     if (abs(customer_total_credit) > customer_credit_limit
@@ -256,43 +310,46 @@ class SaleOrder(models.Model):
         for order in self:
             res = super(SaleOrder, order).action_confirm()
 
-            #@todo: Below part needs refactor and make one single method
-            credit_limit_pool = order.env['res.partner'].search([('id', '=', order.partner_id.id)])
+            if order.credit_sales_or_lc == 'credit_sales':
 
-            res_partner_cred_lim = order.env['res.partner.credit.limit'].search(
-                [('partner_id', '=', order.partner_id.id),
-                 ('state', '=', 'approve')], order='assign_id DESC', limit=1)
+                #@todo: Below part needs refactor and make one single method
+                credit_limit_pool = order.env['res.partner'].search([('id', '=', order.partner_id.id)])
 
+                res_partner_cred_lim = order.env['res.partner.credit.limit'].search(
+                    [('partner_id', '=', order.partner_id.id),
+                     ('state', '=', 'approve')], order='assign_id DESC', limit=1)
 
-            account_receivable = credit_limit_pool.credit
-            sales_order_amount_total = -order.amount_total  # actually it should be minus value
+                account_receivable = credit_limit_pool.credit
+                sales_order_amount_total = -order.amount_total  # actually it should be minus value
 
-            customer_total_credit = account_receivable + sales_order_amount_total
-            customer_credit_limit = credit_limit_pool.credit_limit
+                unpaid_tot_inv_amt = order.unpaid_total_invoiced_amount()
+                undelivered_tot_do_amt = order.undelivered_do_qty_amount()
 
-            # 1. If Credit Limit is zero then keep it as zero
-            if res_partner_cred_lim.remaining_credit_limit == 0:
-                res_partner_cred_lim.write({'remaining_credit_limit': 0})
-                order.write({'remaining_credit_limit': 0})
+                customer_total_credit = account_receivable + sales_order_amount_total + unpaid_tot_inv_amt + undelivered_tot_do_amt
 
-            # 2. If first time to deduct then deduct from original credit limit value.
-            if res_partner_cred_lim.value == res_partner_cred_lim.remaining_credit_limit:
-                if abs(customer_total_credit) < res_partner_cred_lim.value:
-                    remaining_limit = res_partner_cred_lim.value - abs(customer_total_credit)
-                    res_partner_cred_lim.write({'remaining_credit_limit': remaining_limit})
-                    order.write({'remaining_credit_limit': remaining_limit})
-                else:
+                # 1. If Credit Limit is zero then keep it as zero
+                if res_partner_cred_lim.remaining_credit_limit == 0:
                     res_partner_cred_lim.write({'remaining_credit_limit': 0})
                     order.write({'remaining_credit_limit': 0})
 
-            else:
-                if abs(customer_total_credit) < res_partner_cred_lim.remaining_credit_limit:
-                    remaining_limit = res_partner_cred_lim.remaining_credit_limit - abs(customer_total_credit)
-                    res_partner_cred_lim.write({'remaining_credit_limit': remaining_limit})
-                    order.write({'remaining_credit_limit': remaining_limit})
+                # 2. If first time to deduct then deduct from original credit limit value.
+                if res_partner_cred_lim.value == res_partner_cred_lim.remaining_credit_limit:
+                    if abs(customer_total_credit) < res_partner_cred_lim.value:
+                        remaining_limit = res_partner_cred_lim.value - abs(customer_total_credit)
+                        res_partner_cred_lim.write({'remaining_credit_limit': remaining_limit})
+                        order.write({'remaining_credit_limit': remaining_limit})
+                    else:
+                        res_partner_cred_lim.write({'remaining_credit_limit': 0})
+                        order.write({'remaining_credit_limit': 0})
+
                 else:
-                    res_partner_cred_lim.write({'remaining_credit_limit': 0})
-                    order.write({'remaining_credit_limit': 0})
+                    if abs(customer_total_credit) < res_partner_cred_lim.remaining_credit_limit:
+                        remaining_limit = res_partner_cred_lim.remaining_credit_limit - abs(customer_total_credit)
+                        res_partner_cred_lim.write({'remaining_credit_limit': remaining_limit})
+                        order.write({'remaining_credit_limit': remaining_limit})
+                    else:
+                        res_partner_cred_lim.write({'remaining_credit_limit': 0})
+                        order.write({'remaining_credit_limit': 0})
 
             return res
 
@@ -317,7 +374,7 @@ class SaleOrder(models.Model):
             'name': ('Delivery Authorization'),
             'view_type': 'form',
             'view_mode': 'form',
-            'res_model': 'delivery.order',
+            'res_model': 'delivery.authorization',
             'view_id': [view.id],
             'type': 'ir.actions.act_window',
             'context': {'default_sale_order_id': self.id},

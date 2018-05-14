@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<odoo>
+    <data>
+        <!--inherit purchase order and menu hide -->
+        <report
+            string="Purchase Order"
+            id="purchase.action_report_purchase_order"
+            model="purchase.order"
+            report_type="qweb-pdf"
+            name="purchase.report_purchaseorder"
+            file="purchase.report_purchaseorder"
+            menu="False"
+        />
+        <report
+                id="action_report_po"
+                model="purchase.order"
+                string="Purchase Order"
+                report_type="qweb-pdf"
+                name="gbs_purchase_order.report_purchase_order"
+                file="gbs_purchase_order.report_purchase_order"
+                menu = "True"
+                paperformat="custom_report.paperformat_backend_portrait"
+        />
+
+        <template id="report_purchase_order">
+            <t t-call="report.html_container">
+                <t t-call="custom_report.gbs_internal_layout">
+                    <div class="page" style="page-break-inside: auto">
+                        <style>
+                            .table-caption {
+                            border: 1px solid #ddd;
+                            border-bottom: none;
+                            font-size: 14px;
+                            font-weight: bold;
+                            margin: 0;
+                            padding: 5px 5px;
+                            }
+                        </style>
+                        <div class="row">
+                            <h4 class="text-center">Purchase Order</h4>
+                            <div class="row">
+                                <div class="col-xs-9">
+                                    <h6><b>Order No : </b><span t-esc="data['name']"/></h6>
+                                </div>
+                                <div class="col-xs-3 text-left" style="padding-left:65px;">
+                                    <h6><b>PO Date : </b><span t-esc="order_date"/></h6>
+                                </div>
+                            </div>
+                            <hr class="hr-sm mb-0"/>
+                            <div class="row">
+                                <div class="col-xs-8">
+                                    <h6><b>Suplier : </b><span t-esc="data['partner_id']"/></h6>
+                                    <h6><b>Address : </b><p><span t-esc="data['cus_address']" t-esc-options='{"widget": "contact", "fields": ["address"], "no_marker": true}'/></p></h6>
+                                    <h6><b>Contract Parson : </b><span t-esc="data['sup_con']"/></h6>
+                                    <h6><b>PR No : </b><span t-esc="data['requisition_id']"/></h6>
+                                    <h6><b>Order Ref No : </b><span t-esc="data['partner_ref']"/>, <b>Date : </b><span t-esc="data['requisition_date']"></span></h6>
+                                </div>
+                                <div class="col-xs-4 text-left" style="padding-left:45px;">
+                                    <h6><b>Consignee : </b><span t-esc="data['company']"/></h6>
+                                    <h6><b>Address : </b><p><span t-esc="data['company_address']" t-esc-options='{"widget": "contact", "fields": ["address"], "no_marker": true}'/></p></h6>
+                                    <h6><b>Contract Parson : </b></h6>
+                                </div>
+                            </div>
+                            <hr class="hr-xs"/>
+                        </div>
+                        <div class="row">
+                            <table class="table table-report table-bordered table-striped">
+                                <thead>
+                                    <tr>
+                                        <td colspan="5">  We are pleased to issue the purchase order
+                                        for supplying under mentioned Materials to <span t-esc="data['company']"/>
+                                        as the management accepts your price and quality, on the basis
+                                        of following terms and conditions: </td>
+                                    </tr>
+                                    <tr class="odo-bg-gray">
+                                        <th>Sl#</th>
+                                        <th>Description/Specification/Origin</th>
+                                        <th>Quantity</th>
+                                        <th>Unit Rate</th>
+                                        <th>Total Price</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <t t-foreach="lists" t-as="l">
+                                        <tr style="page-break-inside: avoid">
+                                            <td><span t-esc="l_index+1"/></td>
+                                            <td><span t-esc="l['product_id']"/></td>
+                                            <td><span t-esc="l['product_qty']"/></td>
+                                            <td><span t-esc="l['price_unit']"/></td>
+                                            <td><span t-esc="l['price_subtotal']"/></td>
+                                        </tr>
+                                    </t>
+                                    <tr>
+                                        <td colspan="4" rowspan="2"><strong>Amount in words : </strong><span t-esc="amt_to_word"/></td>
+                                        <td><strong>Sub Total : </strong><span t-esc="total_amount" /></td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Grand Total : </strong><span t-esc="total_amount" /></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-6">
+                                <b>Specific Terms and Conditions :</b>
+                                <p t-raw="data['notes']"/>
+                            </div>
+                        </div>
+                        <div class="row mb32 text-left" style="margin-top: 20mm;">
+                            <div class="col-xs-10 text-left">
+                                <strong>Ordered by :</strong>
+                                <br/>
+                                <br/>
+                                <br/>
+                                <br/><strong>----------------------</strong>
+                            </div>
+                            <div class="col-xs-2 text-left">
+                                <strong>Approved by :</strong>
+                                <br/>
+                                <br/>
+                                <br/>
+                                <br/><strong>----------------------</strong>
+                            </div>
+                        </div>
+                    </div>
+                </t>
+            </t>
+        </template>
+    </data>
+</odoo>
