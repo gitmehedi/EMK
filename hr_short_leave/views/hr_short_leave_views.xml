@@ -102,7 +102,7 @@
                     <field name="department_id"/>
                     <filter name="my_approval" string="My Approval" domain="[('pending_approver.user_id','=',uid)]"/>
                     <separator/>
-                    <filter name="to_approval" string="To Approval" domain="[('pending_approver.user_id','=',uid)]"/>
+                    <filter name="to_approval" string="To Approval" domain="[('state','=','confirm')]"/>
                     <separator/>
                     <filter name="my_request" string="My Request" domain="[('employee_id.user_id', '=', uid)]"/>
                 </search>

@@ -54,12 +54,12 @@
 								<field name="present_days" readonly='1'/>
 								<field name="absent_days_count" invisible='1'/>
 								<field name="absent_count" readonly='1'/>
-								<field name="absent_deduction_days" groups="hr.group_hr_manager"/>
+								<field name="absent_deduction_days" groups="hr.group_hr_user"/>
 								<field name="late_days_count" readonly='1'/>
 								<field name="leave_days" readonly='1'/>
 								<field name="weekend_days_count" readonly='1'/>
 								<field name="holidays_days" readonly='1'/>
-								<field name="deduction_days" groups="hr.group_hr_manager"/>
+								<field name="deduction_days" groups="hr.group_hr_user"/>
 								<field name="late_hrs" readonly='1' widget="float_time"/>
 								<field name="schedule_ot_hrs" readonly='1' widget="float_time"/>
 								<field name="cal_ot_hrs" readonly='1' widget="float_time"/>
