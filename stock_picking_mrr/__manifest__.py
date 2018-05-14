@@ -17,10 +17,10 @@
     'category': 'Stock',
     'version': '10.0.0.1',
 
-    'depends': ['stock_picking_extend'],
+    'depends': ['stock_picking_extend','product_gate_in'],
 
     'data': [
-        # 'security/ir.model.access.csv',
+        'security/ir.model.access.csv',
         'data/sequence.xml',
         'report/template_mrr.xml',
         'views/stock_picking_views.xml',

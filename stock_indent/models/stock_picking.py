@@ -93,7 +93,7 @@ class StockPicking(models.Model):
             for picking in self.browse(self.ids):
                 if picking.state not in ('done', 'cancel'):
                     flag = False
-                if flag:
-                    indent_ids.write({'state': 'received'})
+            if flag:
+                indent_ids.write({'state': 'received'})
 
         return res

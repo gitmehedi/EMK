@@ -239,8 +239,8 @@ class StockInventoryReport(models.AbstractModel):
                                            pu.name                                  AS uom_name, 
                                            pc.name                                  AS category, 
                                            sm.product_qty                           AS qty_in_tk, 
-                                           sm.product_qty * COALESCE(price_unit, 0) AS val_in_tk,
-                                           COALESCE(price_unit, 0) AS cost_val
+                                           sm.product_qty * Coalesce(ph.cost, 0) AS val_in_tk,
+                                           Coalesce(ph.cost, 0)          AS cost_val
                                     FROM   stock_picking sp 
                                            LEFT JOIN stock_move sm 
                                                   ON sm.picking_id = sp.id 
@@ -253,7 +253,9 @@ class StockInventoryReport(models.AbstractModel):
                                            LEFT JOIN product_category pc 
                                                   ON pt.categ_id = pc.id
                                            LEFT JOIN product_uom pu 
-        				                          ON( pu.id = pt.uom_id )  
+        				                          ON( pu.id = pt.uom_id )
+                                            LEFT JOIN product_price_history ph 
+                                                  ON ph.product_id = pp.id
                                     WHERE  Date_trunc('day', sm.date) BETWEEN '%s' AND '%s' 
                                            AND sm.state = 'done' 
                                            --AND sp.location_type = 'outsource_out' 
@@ -271,8 +273,7 @@ class StockInventoryReport(models.AbstractModel):
                                       cost_val 
                         ''' % (date_start, date_end, location_outsource, location_outsource, category_param,product_param)
 
-        sql_out_tk = '''
-                            SELECT product_id,
+        sql_out_tk = '''SELECT product_id,
                            name,
                            code,
                            uom_name,
