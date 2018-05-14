@@ -32,6 +32,7 @@ class PayrollReportPivotal(models.AbstractModel):
         tot_tds = []
         tot_epmf = []
         tot_mess = []
+        tot_ods = []
         tot_net = []
         tot_bank = []
         tot_emp = []
@@ -54,6 +55,7 @@ class PayrollReportPivotal(models.AbstractModel):
             tds_sum = []
             pf_sum = []
             mess_sum = []
+            ods_sum = []
             gross_sum = []
             for slip in docs.slip_ids:
                 if d.id == slip.employee_id.department_id.id:
@@ -75,6 +77,9 @@ class PayrollReportPivotal(models.AbstractModel):
                         elif line.code == 'MESS':
                             total_mess = line.total
                             mess_sum.append(math.ceil(total_mess))
+                        elif line.code == 'ODS':
+                            total_ods = line.total
+                            ods_sum.append(math.ceil(total_ods))
                         elif line.code == 'GROSS':
                                 gross_total = line.total
                                 gross_sum.append(math.ceil(gross_total))
@@ -85,6 +90,7 @@ class PayrollReportPivotal(models.AbstractModel):
             payslip['tds'] = (abs(sum(tds_sum)))
             payslip['epmf'] = (abs(sum(pf_sum)))
             payslip['mess'] = (abs(sum(mess_sum)))
+            payslip['ods'] = (abs(sum(ods_sum)))
 
             dpt_payslips['val'].append(payslip)
             dpt_payslips_list.append(dpt_payslips)
@@ -93,6 +99,7 @@ class PayrollReportPivotal(models.AbstractModel):
             tot_gross.append(abs(sum(gross_sum)))
             tot_tds.append(abs(sum(tds_sum)))
             tot_mess.append(abs(sum(mess_sum)))
+            tot_ods.append(abs(sum(ods_sum)))
             tot_epmf.append(abs(sum(pf_sum)))
             tot_net.append(abs(sum(total_sum)))
             tot_bank.append(abs(sum(total_bank)))
@@ -126,6 +133,7 @@ class PayrollReportPivotal(models.AbstractModel):
             'tot_gross' : sum(tot_gross),
             'tot_tds' : sum(tot_tds),
             'tot_mess' : sum(tot_mess),
+            'tot_ods' : sum(tot_ods),
             'tot_epmf' : sum(tot_epmf),
             'tot_net' : thousand_separated_all_total_net,
             'tot_bank' : thousand_separated_all_total_bank,
