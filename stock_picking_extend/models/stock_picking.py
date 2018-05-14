@@ -3,7 +3,7 @@ from odoo import models, fields, api
 
 class Picking(models.Model):
     _inherit = "stock.picking"
-    _order = "state asc, min_date desc"
+    _order = "write_date desc"
 
     @api.model
     def _get_default_picking_type(self):
