@@ -13,29 +13,29 @@ class ProformaInvoice(models.Model):
 
     partner_id = fields.Many2one('res.partner', string='Customer', domain=[('customer', '=', True)],required=True,readonly=True,states={'draft': [('readonly', False)]})
     invoice_date = fields.Date('Invoice Date', readonly=True, required=1, states={'draft': [('readonly', False)]})
-    advising_bank = fields.Text(string='Advising Bank', readonly=True, states={'draft': [('readonly', False)]})
+    advising_bank = fields.Text(string='Advising Bank', required=True, readonly=True, states={'draft': [('readonly', False)]})
     currency_id = fields.Many2one('res.currency', string='Currency', readonly=True,required=True, states={'draft': [('readonly', False)]})
-    country_of_origin = fields.Char(string='Country of Origin',readonly=True, states={'draft': [('readonly', False)]})
 
-    beneficiary_id = fields.Many2one('res.company', string='Beneficiary', required=True)
-    operating_unit_id = fields.Many2one('operating.unit', string='Unit', required=True)
-    transport_by = fields.Char(string='Transport By',required=True)
-    terms_condition = fields.Text(string='Terms & Conditions', required=True)
+    beneficiary_id = fields.Many2one('res.company', string='Beneficiary', required=True, readonly=True, states={'draft': [('readonly', False)]})
+    operating_unit_id = fields.Many2one('operating.unit', string='Unit', required=True, readonly=True, states={'draft': [('readonly', False)]})
+    transport_by = fields.Char(string='Transport By',required=True, readonly=True, states={'draft': [('readonly', False)]})
+    terms_condition = fields.Text(string='Terms & Conditions', required=True, readonly=True, states={'draft': [('readonly', False)]})
 
 
     """ Shipping Address"""
-    ship_freight_type = fields.Char(string='Freight Type',readonly=True,states={'draft': [('readonly', False)]})
+    ship_freight_type = fields.Char(string='Freight Type',readonly=True, states={'draft': [('readonly', False)]})
     ship_exp_date = fields.Char(string='Exp. Shipping Date',readonly=True,states={'draft': [('readonly', False)]})
     ship_exp_good_weight = fields.Char(string='Exp. Goods Weight',readonly=True,states={'draft': [('readonly', False)]})
     ship_exp_cubic_weight = fields.Char(string='Exp. Cubic Weight',readonly=True,states={'draft': [('readonly', False)]})
     ship_total_pkg = fields.Char(string='Total Package',readonly=True,states={'draft': [('readonly', False)]})
 
     """ Customer Address"""
-    customer_add = fields.Text(string='Customer Address',readonly=True)
+    customer_add = fields.Text(string='Customer Address',readonly=True, compute='_compute_customer_address')
 
     """ Ship To"""
-    ship_to_add = fields.Text(string='Ship To Address',readonly=True,states={'draft': [('readonly', False)]})
-    terms_condition = fields.Text(string='Terms of Condition', readonly=True, states={'draft': [('readonly', False)]})
+    terms_condition = fields.Text(string='Terms of Condition', required=True, readonly=True, states={'draft': [('readonly', False)]})
+    packing = fields.Char(string='Packing', required=True, readonly=True, states={'draft': [('readonly', False)]})
+    terms_of_payment = fields.Char(string='Terms Of Payment', required=True, readonly=True, states={'draft': [('readonly', False)]})
 
     state = fields.Selection([
         ('draft', "Draft"),
@@ -59,6 +59,12 @@ class ProformaInvoice(models.Model):
                               string='Sale Order', required=True,
                               readonly=True, states={'draft': [('readonly', False)]},
                               domain="[('pi_id', '=', False), ('state', '=', 'done'), ('credit_sales_or_lc', '=','lc_sales')]")
+
+    @api.multi
+    def _compute_customer_address(self, context=None):
+        if self.operating_unit_id:
+            str_address = self.getAddressByUnit(self.operating_unit_id)
+            self.customer_add = str_address
 
 
     def _prepare_lines_by_so_ids(self, so_ids):
