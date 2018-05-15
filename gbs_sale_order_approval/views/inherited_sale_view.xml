@@ -378,6 +378,11 @@
                         <field name="da_btn_show_hide" invisible="1"/>
                     </xpath>
 
+                     <xpath expr="//field[@name='company_id']" position="after">
+                        <field name="currency_conversion_rate" groups="base.group_multi_currency"/>
+                    </xpath>
+
+
                 </data>
             </field>
         </record>

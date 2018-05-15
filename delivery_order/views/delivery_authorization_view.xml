@@ -67,6 +67,7 @@
                             <group>
                                 <field name="sale_order_id"/>
                                 <field name="deli_address"/>
+                                <field name="currency_id"/>
                             </group>
                             <group>
                                 <field name="parent_id"

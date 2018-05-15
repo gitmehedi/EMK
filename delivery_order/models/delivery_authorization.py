@@ -12,6 +12,11 @@ class DeliveryAuthorization(models.Model):
 
     name = fields.Char(string='Delivery Authorization', index=True, readonly=True)
 
+    def _get_sale_order_currency(self):
+        self.currency_id = self.sale_order_id.currency_id
+
+    currency_id = fields.Many2one('res.currency', string='Currency', compute='_get_sale_order_currency',readonly=True, states={'draft': [('readonly', False)]})
+
     so_date = fields.Datetime('Order Date', readonly=True, states={'draft': [('readonly', False)]})
     sequence_id = fields.Char('Sequence', readonly=True)
     deli_address = fields.Char('Delivery Address', readonly=True, states={'draft': [('readonly', False)]})
