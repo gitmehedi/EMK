@@ -5,13 +5,19 @@ from openerp.addons.commercial.models.utility import Status, UtilityNumber
 class LetterOfCredit(models.Model):
     _inherit = "letter.credit"
 
-    so_ids = fields.One2many('sale.order', 'lc_id', string='Sale Order')
-    so_ids_temp = fields.Many2many('sale.order', 'so_lc_rel', 'lc_id', 'so_id', string='Sale Order',
-                                   domain="[('state', '=', 'done'),('credit_sales_or_lc', '=','lc_sales'),('lc_id','=',False)]")
+
+    pi_ids = fields.One2many('proforma.invoice', 'lc_id', string='Proforma Invoice')
+    pi_ids_temp = fields.Many2many('proforma.invoice', 'pi_lc_rel', 'lc_id', 'pi_id', string='Proforma Invoice',
+                                   domain="[('state', '=', 'confirmed'),('lc_id','=',False)]")
+
+    # so_ids = fields.One2many('sale.order', 'lc_id', string='Sale Order')
+    # so_ids_temp = fields.Many2many('sale.order', 'so_lc_rel', 'lc_id', 'so_id', string='Sale Order',
+    #                                domain="[('state', '=', 'done'),('credit_sales_or_lc', '=','lc_sales'),('lc_id','=',False)]")
+
     product_lines = fields.One2many('lc.product.line', 'lc_id', string='Product(s)')
 
-    @api.onchange('so_ids_temp')
-    def so_product_line(self):
+    @api.onchange('pi_ids_temp')
+    def pi_product_line(self):
         self.product_lines = []
         vals = []
         self.first_party = None
@@ -19,12 +25,12 @@ class LetterOfCredit(models.Model):
         self.currency_id = None
         self.lc_value = None
 
-        for so_id in self.so_ids_temp:
-            self.first_party = so_id.company_id.id
-            self.second_party_applicant = so_id.partner_id.id
-            self.currency_id = so_id.currency_id.id
-            self.lc_value = so_id.amount_total
-            for obj in so_id.order_line:
+        for pi_id in self.pi_ids_temp:
+            self.first_party = pi_id.company_id.id
+            self.second_party_applicant = pi_id.partner_id.id
+            self.currency_id = pi_id.currency_id.id
+            self.lc_value = pi_id.amount_total
+            for obj in pi_id.order_line:
                 vals.append((0, 0, {'product_id': obj.product_id,
                                     'name': obj.name,
                                     'product_qty': obj.product_uom_qty,
@@ -36,8 +42,8 @@ class LetterOfCredit(models.Model):
 
     @api.multi
     def action_confirm_export(self):
-        for so in self.so_ids_temp:
-            so.lc_id = self.id
+        for pi in self.pi_ids_temp:
+            pi.lc_id = self.id
 
         self.write({'state': 'confirmed', 'last_note': Status.CONFIRM.value})
 

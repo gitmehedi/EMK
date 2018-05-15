@@ -42,7 +42,7 @@
                                 <field name="company_id" invisible="1"/>
                                 <field name="so_date"/>
 
-                                <field name="pi_no" attrs="{'invisible':[('so_type', '!=', 'lc_sales')]}" options="{'no_quick_create':True,'no_create_edit':True,'no_open':True}"/>
+                                <field name="pi_id" attrs="{'invisible':[('so_type', '!=', 'lc_sales')]}" options="{'no_quick_create':True,'no_create_edit':True,'no_open':True}"/>
                                 <field name="lc_id" attrs="{'invisible':[('so_type', '!=', 'lc_sales')]}" options="{'no_quick_create':True,'no_create_edit':True,'no_open':True}"/>
 
                             </group>
@@ -128,7 +128,7 @@
                                             <field name="tenure"/>
                                             <field name="transportation"/>
                                             <field name="lc_type"/>
-                                            <field name="pi_no"/>
+                                            <field name="pi_id"/>
                                         </tree>
                                     </field>
                                 </page>

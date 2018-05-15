@@ -60,7 +60,7 @@ class SaleOrder(models.Model):
     currency_id = fields.Many2one("res.currency", related='', string="Currency", required=True)
 
     """ PI and LC """
-    pi_no = fields.Many2one('proforma.invoice', string='PI Ref. No.', readonly=True)
+    pi_id = fields.Many2one('proforma.invoice', string='PI Ref. No.', readonly=True)
     lc_id = fields.Many2one('letter.credit', string='LC Ref. No.',readonly=True)
 
     remaining_credit_limit = fields.Char(string="Customer's Remaining Credit Limit", track_visibility='onchange')
@@ -121,14 +121,14 @@ class SaleOrder(models.Model):
         for orders in self:
             if orders.credit_sales_or_lc == 'lc_sales':
                 # If LC and PI ref is present, go to the Final Approval, Else go to Second level approval
-                if orders.lc_id and orders.pi_no:
+                if orders.lc_id and orders.pi_id:
                     for lines in orders.order_line:
                         product_pool = orders.env['product.product'].search([('id', '=', lines.product_id.ids)])
                         if (lines.price_unit != product_pool.list_price):
                             return True  # Go to two level approval process
 
                     return False  # One level approval process
-                elif orders.pi_no and not orders.lc_id:
+                elif orders.pi_id and not orders.lc_id:
                     return True  # Go to two level approval process
                 else:
                     return False  # Go to two level approval process

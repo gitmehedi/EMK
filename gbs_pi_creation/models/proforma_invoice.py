@@ -54,11 +54,11 @@ class ProformaInvoice(models.Model):
 
 
     """ Relational field"""
-    line_ids = fields.One2many('proforma.invoice.line', 'pi_no', string="Products", readonly=True, states={'draft': [('readonly', False)]})
-    so_ids = fields.Many2many('sale.order', 'so_pi_rel', 'pi_no', 'so_id',
+    line_ids = fields.One2many('proforma.invoice.line', 'pi_id', string="Products", readonly=True, states={'draft': [('readonly', False)]})
+    so_ids = fields.Many2many('sale.order', 'so_pi_rel', 'pi_id', 'so_id',
                               string='Sale Order', required=True,
                               readonly=True, states={'draft': [('readonly', False)]},
-                              domain="[('pi_no', '=', False), ('state', '=', 'done'), ('credit_sales_or_lc', '=','lc_sales')]")
+                              domain="[('pi_id', '=', False), ('state', '=', 'done'), ('credit_sales_or_lc', '=','lc_sales')]")
 
 
     def _prepare_lines_by_so_ids(self, so_ids):
@@ -221,19 +221,19 @@ class ProformaInvoice(models.Model):
     def update_Pi_to_so_obj(self):
         #Update PI to SO
         for so in self.so_ids:
-            so.pi_no = self.id
+            so.pi_id = self.id
 
             #update DA
             da_obj = so.env['delivery.authorization'].search([('sale_order_id', '=', so.id)])
             if da_obj:
                 for da_ in da_obj:
-                    da_.pi_no = self.id # update PI to DA if it is already created
+                    da_.pi_id = self.id # update PI to DA if it is already created
 
             #update DO
             do_obj = so.env['delivery.order'].search([('sale_order_id', '=', so.id)])
             if do_obj:
                 for do_ in do_obj:
-                    do_.pi_no = self.id  # update PI to DO if it is already created
+                    do_.pi_id = self.id  # update PI to DO if it is already created
 
 
 
@@ -260,7 +260,7 @@ class ProformaInvoiceLine(models.Model):
     price_subtotal = fields.Float(string="Price Subtotal", readonly=True)
 
     """ Relational field"""
-    pi_no = fields.Many2one('proforma.invoice', ondelete='cascade')
+    pi_id = fields.Many2one('proforma.invoice', ondelete='cascade')
 
 
 
@@ -277,11 +277,11 @@ class ProformaInvoiceLine(models.Model):
         self.price_subtotal = self.price_unit * self.quantity
 
         ## Set Proforma Invoice Table value
-        #self.pi_no.currency_id.id = active_prod_price_pool.currency_id.id
-        self.pi_no.sub_total = self.price_subtotal
-        self.pi_no.taxed_amount = self.calculate_tax_amount(self.tax.id, self.price_subtotal)
-        self.pi_no.untaxaed_amount = self.price_subtotal
-        self.pi_no.total = self.pi_no.taxed_amount + self.price_subtotal
+        #self.pi_id.currency_id.id = active_prod_price_pool.currency_id.id
+        self.pi_id.sub_total = self.price_subtotal
+        self.pi_id.taxed_amount = self.calculate_tax_amount(self.tax.id, self.price_subtotal)
+        self.pi_id.untaxaed_amount = self.price_subtotal
+        self.pi_id.total = self.pi_id.taxed_amount + self.price_subtotal
 
 
 
@@ -293,11 +293,11 @@ class ProformaInvoiceLine(models.Model):
         self.price_subtotal = self.price_unit * self.quantity
 
         ## Set Proforma Invoice Table value
-        # self.pi_no.currency_id.id = active_prod_price_pool.currency_id.id
-        self.pi_no.sub_total = self.price_subtotal
-        self.pi_no.taxed_amount = self.calculate_tax_amount(self.tax.id, self.price_subtotal)
-        self.pi_no.untaxed_amount = self.price_subtotal
-        self.pi_no.total = self.pi_no.taxed_amount + self.price_subtotal
+        # self.pi_id.currency_id.id = active_prod_price_pool.currency_id.id
+        self.pi_id.sub_total = self.price_subtotal
+        self.pi_id.taxed_amount = self.calculate_tax_amount(self.tax.id, self.price_subtotal)
+        self.pi_id.untaxed_amount = self.price_subtotal
+        self.pi_id.total = self.pi_id.taxed_amount + self.price_subtotal
 
 
     def calculate_tax_amount(self, tax_id, total_price):

@@ -73,7 +73,7 @@ class DeliveryOrder(models.Model):
 
 
     """ PI and LC """
-    pi_no = fields.Many2one('proforma.invoice', string='PI Ref. No.', readonly=True)
+    pi_id = fields.Many2one('proforma.invoice', string='PI Ref. No.', readonly=True)
     lc_id = fields.Many2one('letter.credit', string='LC Ref. No.', readonly=True, compute = "_calculate_lc_id", store= False)
 
 
@@ -156,9 +156,9 @@ class DeliveryOrder(models.Model):
         # Update the reference of PI and LC on both Stock Picking and Sale Order Obj
         if self.delivery_order_id.so_type == 'lc_sales':
             stock_picking_id.write({'lc_id': self.lc_id.id})
-            #self.delivery_order_id.sale_order_id.write({'lc_id': self.lc_id.id, 'pi_no': self.pi_no.id})
+            #self.delivery_order_id.sale_order_id.write({'lc_id': self.lc_id.id, 'pi_id': self.pi_id.id})
             #As per decision, LC Id will be updated to Sale Order from LC creation menu -- rabbi
-            self.delivery_order_id.sale_order_id.write({'pi_no': self.pi_no.id})
+            self.delivery_order_id.sale_order_id.write({'pi_id': self.pi_id.id})
 
         # Update Stock Move with reference of Delivery Order
         stock_move_id = self.delivery_order_id.sale_order_id.picking_ids.move_lines
@@ -221,7 +221,7 @@ class DeliveryOrder(models.Model):
                 self.so_type = delivery_auth_id.so_type
                 self.so_date = delivery_auth_id.so_date
                 self.deli_address = delivery_auth_id.deli_address
-                self.pi_no = delivery_auth_id.pi_no.id
+                self.pi_id = delivery_auth_id.pi_id.id
                 self.lc_id = delivery_auth_id.lc_id.id
                 self.sale_order_id = delivery_auth_id.sale_order_id.id
                 self.amount_untaxed = delivery_auth_id.amount_untaxed
