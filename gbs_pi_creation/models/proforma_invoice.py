@@ -12,10 +12,16 @@ class ProformaInvoice(models.Model):
     #sale_order_id = fields.Many2one('sale.order',string='Sale Order Ref.', required=True,domain=[('state', '=', 'done')],readonly=True,states={'draft': [('readonly', False)]})
 
     partner_id = fields.Many2one('res.partner', string='Customer', domain=[('customer', '=', True)],required=True,readonly=True,states={'draft': [('readonly', False)]})
-    invoice_date = fields.Date('Invoice Date', readonly=True,states={'draft': [('readonly', False)]})
+    invoice_date = fields.Date('Invoice Date', readonly=True, required=1, states={'draft': [('readonly', False)]})
     advising_bank = fields.Text(string='Advising Bank', readonly=True, states={'draft': [('readonly', False)]})
     currency_id = fields.Many2one('res.currency', string='Currency', readonly=True,required=True, states={'draft': [('readonly', False)]})
     country_of_origin = fields.Char(string='Country of Origin',readonly=True, states={'draft': [('readonly', False)]})
+
+    beneficiary_id = fields.Many2one('res.company', string='Beneficiary', required=True)
+    operating_unit_id = fields.Many2one('operating.unit', string='Unit', required=True)
+    transport_by = fields.Char(string='Transport By',required=True)
+    terms_condition = fields.Text(string='Terms & Conditions', required=True)
+
 
     """ Shipping Address"""
     ship_freight_type = fields.Char(string='Freight Type',readonly=True,states={'draft': [('readonly', False)]})
@@ -25,7 +31,7 @@ class ProformaInvoice(models.Model):
     ship_total_pkg = fields.Char(string='Total Package',readonly=True,states={'draft': [('readonly', False)]})
 
     """ Customer Address"""
-    customer_add = fields.Text(string='Customer Address',readonly=True,states={'draft': [('readonly', False)]})
+    customer_add = fields.Text(string='Customer Address',readonly=True)
 
     """ Ship To"""
     ship_to_add = fields.Text(string='Ship To Address',readonly=True,states={'draft': [('readonly', False)]})
@@ -50,7 +56,7 @@ class ProformaInvoice(models.Model):
     """ Relational field"""
     line_ids = fields.One2many('proforma.invoice.line', 'pi_no', string="Products", readonly=True, states={'draft': [('readonly', False)]})
     so_ids = fields.Many2many('sale.order', 'so_pi_rel', 'pi_no', 'so_id',
-                              string='Sale Order',
+                              string='Sale Order', required=True,
                               readonly=True, states={'draft': [('readonly', False)]},
                               domain="[('pi_no', '=', False), ('state', '=', 'done'), ('credit_sales_or_lc', '=','lc_sales')]")
 
@@ -153,12 +159,20 @@ class ProformaInvoice(models.Model):
         untaxed_amount = 0
 
         for so in self.so_ids:
-            if self.partner_id and self.partner_id != so.partner_id:
+            if self.beneficiary_id and self.beneficiary_id != so.company_id:
+                raise ValidationError('Please add Sale Order whose Beneficiary is same.')
+            elif self.operating_unit_id and self.operating_unit_id != so.operating_unit_id:
+                raise ValidationError('Please add Sale Order whose Unit is same.')
+            elif self.partner_id and self.partner_id != so.partner_id:
                 raise ValidationError('Please add Sale Order whose Customer is same.')
+            elif self.currency_id and self.currency_id != so.currency_id:
+                raise ValidationError('Please add Sale Order whose Currency is same.')
             else:
+                self.beneficiary_id = so.company_id
+                self.operating_unit_id = so.operating_unit_id
                 self.partner_id = so.partner_id
                 self.currency_id = so.currency_id
-
+                self.customer_add = self.getAddressByUnit(so.operating_unit_id)
 
             sub_total += so.amount_untaxed
             taxed_amount += so.amount_tax
@@ -173,6 +187,29 @@ class ProformaInvoice(models.Model):
         self.untaxed_amount = untaxed_amount
 
 
+    def getAddressByUnit(self, unit):
+        address = []
+        if unit.partner_id.street:
+            address.append(unit.partner_id.street)
+
+        if unit.partner_id.street2:
+            address.append(unit.partner_id.street2)
+
+        if unit.partner_id.zip_id:
+            address.append(unit.partner_id.zip_id.name)
+
+        if unit.partner_id.city:
+            address.append(unit.partner_id.city)
+
+        if unit.partner_id.state_id:
+            address.append(unit.partner_id.state_id.name)
+
+        if unit.partner_id.country_id:
+            address.append(unit.partner_id.country_id.name)
+
+        str_address = '\n '.join(address)
+
+        return str_address
 
     @api.multi
     def action_confirm(self):
