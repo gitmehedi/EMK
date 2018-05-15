@@ -17,6 +17,8 @@ class SaleOrder(models.Model):
     type_id = fields.Many2one(comodel_name='sale.order.type', string='Type', default=_get_order_type, readonly=True,
                               states={'to_submit': [('readonly', False)]})
 
+    currency_conversion_rate = fields.Float(string='Conversion Rate')
+
     order_line = fields.One2many('sale.order.line', 'order_id', string='Order Lines', readonly=True, copy=True)
     incoterm = fields.Many2one('stock.incoterms', 'Incoterms', readonly=True,
                                help="International Commercial Terms are a series of predefined commercial terms used in international transactions.",

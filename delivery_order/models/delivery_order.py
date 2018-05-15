@@ -16,7 +16,10 @@ class DeliveryOrder(models.Model):
                                         domain=[('state', '=', 'close')],
                                         readonly=True, states={'draft': [('readonly', False)]})
 
+    def _get_sale_order_currency(self):
+        self.currency_id = self.sale_order_id.currency_id
 
+    currency_id = fields.Many2one('res.currency', string='Currency', compute='_get_sale_order_currency',readonly=True, states={'draft': [('readonly', False)]})
     sale_order_id = fields.Many2one('sale.order', string='Sale Order', readonly=True, states={'draft': [('readonly', False)]})
     so_date = fields.Datetime('Order Date', readonly=True, states={'draft': [('readonly', False)]})
     deli_address = fields.Char('Delivery Address', readonly=True, states={'draft': [('readonly', False)]})
@@ -165,7 +168,6 @@ class DeliveryOrder(models.Model):
 
 
     @api.onchange('delivery_order_id')
-    @api.constrains('delivery_order_id')
     def onchange_sale_order_id(self):
         delivery_auth_id = self.env['delivery.authorization'].search([('id', '=', self.delivery_order_id.id)])
 
