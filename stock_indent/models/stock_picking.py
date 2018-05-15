@@ -88,12 +88,14 @@ class StockPicking(models.Model):
             picking = self.browse(self.ids)[0]
             indent_obj = self.env['indent.indent']
             indent_ids = indent_obj.search([('name', '=', picking.origin)])
-            picking_ids = self.search([('origin', '=', picking.origin)])
-            flag = True
-            for picking in self.browse(self.ids):
-                if picking.state not in ('done', 'cancel'):
-                    flag = False
-            if flag:
-                indent_ids.write({'state': 'received'})
+            if indent_ids:
+                picking_ids = self.search([('origin', '=', picking.origin)])
+                flag = True
+                # for picking in self.browse(self.ids):
+                for picking in picking_ids:
+                    if picking.state not in ('done', 'cancel'):
+                        flag = False
+                if flag:
+                    indent_ids.write({'state': 'received'})
 
         return res
