@@ -59,6 +59,7 @@ class Picking(models.Model):
         data = {}
 
         data['origin'] = self.origin
+        data['self_picking_id'] = self.id
         data['mrr_no'] = self.mrr_no
         data['mrr_date'] = self.mrr_date
 
