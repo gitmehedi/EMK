@@ -206,7 +206,6 @@ class StockInventoryReport(models.AbstractModel):
                                    AND sm.location_dest_id = %s
                                    AND pc.id IN %s
                                    AND pp.id IN %s
-                                   AND sm.picking_id IS NULL
                             GROUP  BY sm.product_id,
                                       pt.name,
                                       pp.default_code,
