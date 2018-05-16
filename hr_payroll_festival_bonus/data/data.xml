@@ -6,9 +6,11 @@
             <field name="code">FBONUS</field>
             <field name="sequence" eval="1"/>
             <field name="condition_select">python</field>
-            <field name="condition_python">result = 0 </field>
+            <field name="condition_python">if payslip.type == '0': result = False
+elif payslip.type == '1': result = True
+elif payslip.type == '2': result = True</field>
             <field name="amount_select">code</field>
-            <field name="amount_python_compute">result = 0</field>
+            <field name="amount_python_compute">result = (categories.BASIC + categories.ALW) / 2</field>
         </record>
     </data>
 </odoo>
