@@ -1,0 +1,14 @@
+<odoo>
+    <data noupdate="1">
+        <record id="festival_bonus_salary_rule" model="hr.salary.rule">
+            <field name="name">Festival Bonus</field>
+            <field name="category_id" ref="hr_payroll.ALW"/>
+            <field name="code">FBONUS</field>
+            <field name="sequence" eval="1"/>
+            <field name="condition_select">python</field>
+            <field name="condition_python">result = 0 </field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = 0</field>
+        </record>
+    </data>
+</odoo>
