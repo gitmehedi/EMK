@@ -62,8 +62,8 @@ class ProformaInvoice(models.Model):
 
     @api.multi
     def _compute_customer_address(self, context=None):
-        if self.operating_unit_id:
-            str_address = self.getAddressByUnit(self.operating_unit_id)
+        if self.partner_id:
+            str_address = self.getAddressByPartner(self.partner_id)
             self.customer_add = str_address
 
 
@@ -178,7 +178,7 @@ class ProformaInvoice(models.Model):
                 self.operating_unit_id = so.operating_unit_id
                 self.partner_id = so.partner_id
                 self.currency_id = so.currency_id
-                self.customer_add = self.getAddressByUnit(so.operating_unit_id)
+                self.customer_add = self.getAddressByPartner(so.partner_id)
 
             sub_total += so.amount_untaxed
             taxed_amount += so.amount_tax
@@ -193,25 +193,25 @@ class ProformaInvoice(models.Model):
         self.untaxed_amount = untaxed_amount
 
 
-    def getAddressByUnit(self, unit):
+    def getAddressByPartner(self, partner):
         address = []
-        if unit.partner_id.street:
-            address.append(unit.partner_id.street)
+        if partner.street:
+            address.append(partner.street)
 
-        if unit.partner_id.street2:
-            address.append(unit.partner_id.street2)
+        if partner.street2:
+            address.append(partner.street2)
 
-        if unit.partner_id.zip_id:
-            address.append(unit.partner_id.zip_id.name)
+        if partner.zip_id:
+            address.append(partner.zip_id.name)
 
-        if unit.partner_id.city:
-            address.append(unit.partner_id.city)
+        if partner.city:
+            address.append(partner.city)
 
-        if unit.partner_id.state_id:
-            address.append(unit.partner_id.state_id.name)
+        if partner.state_id:
+            address.append(partner.state_id.name)
 
-        if unit.partner_id.country_id:
-            address.append(unit.partner_id.country_id.name)
+        if partner.country_id:
+            address.append(partner.country_id.name)
 
         str_address = '\n '.join(address)
 
