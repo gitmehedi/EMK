@@ -14,10 +14,10 @@
 				<xpath expr="//field[@name='return_picking_type_id']"
 					position="after">
 					<field name="stock_issue_flag" string="Stock Issue" />
+					<field name="stock_receive_flag" string="Stock Receive" />
 					<field name="stock_return_flag" string="Stock Return" />
 					<field name="stock_transfer_flag" string="Stock Transfer" />
 				</xpath>
-				
 			</field>
 		</record>
 	</data>

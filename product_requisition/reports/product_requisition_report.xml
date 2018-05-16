@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+		<!-- Definition of the report (Branch Requisitions) -->
+		<report id="report_product_requisition"
+				model="product.requisition"
+				string="Branch Requisitions"
+				name="product_requisition.report_product_requisition_qweb"
+				file="product_requisition.report_product_requisition_qweb"
+				report_type="qweb-pdf" />
+
+		<!-- External Layout Header -->
+
+		<template id="report.external_layout_header">
+    		<div class="header">
+				<br />
+				<br />
+				<br />
+    		</div>
+		</template>
+
+		<template id="report.external_layout_footer">
+    		<div class="footer">
+        		<div>
+					<div class="col-xs-4">
+                		Print Date: <span t-esc="context_timestamp(datetime.datetime.now()).strftime('%Y-%m-%d')"/>
+            		</div>
+					<div class="pull-right">
+						<ul class="list-inline">
+							<li>Page No:</li>
+								<li>
+                                    <span class="page"/>
+								</li>
+							<li>/</li>
+                                <li>
+                                    <span class="topage"/>
+                                </li>
+						</ul>
+					</div>
+        		</div>
+    		</div>
+		</template>
+
+		<!-- Main template -->
+        <template id="report_product_requisition_qweb">
+            <t t-call="report.html_container">
+			<t t-foreach="docs" t-as="o">
+                <t t-call="report.external_layout">
+                    <div class="page" style="page-break-inside: auto">
+						<div class="row">
+	    					<div class="col-xs-4">
+
+	        				</div>
+	  						<div class="col-xs-4">
+								<h4 class="text-center">Product Requisition</h4>
+	        				</div>
+							<div class="col-xs-4">
+	        				</div>
+	    				</div>
+
+						<div class="row">
+	    					<div class="col-xs-8">
+	        					<p>Minumum Stock Level in Day's Usage  : <span t-field="o.quantity"/>  </p>
+								<br />
+								<p>Requisition For the Period   :  <span t-field="o.period_id"/> </p>
+	        				</div>
+	  						<div class="col-xs-4">
+								<p>Branch   :  <span t-field="o.operating_unit_id"/> </p>
+								<br />
+								<p>State  :  <span t-field="o.state"/> </p>
+	        				</div>
+	    				</div>
+						<br />
+						<table class="table table-bordered" style="font-size:12px">
+							<thead>
+								<tr style="background-color:#C0C0C0;
+											border-bottom: 1px solid #030303;">
+									<th class="text-center">Sl</th>
+									<th class="text-center">ITEM MANE</th>
+									<th class="text-center">Unit</th>
+									<th class="text-center">Products at<br /> hand in Central<br /> Store on the<br /> date of Order</th>
+									<th class="text-center">Products<br /> Required for<br /> Remaining<br /> Period</th>
+									<th class="text-center">Seasonal<br /> Adjustments</th>
+									<th class="text-center">Total<br /> Branches <br />Requirment<br /> for this Month</th>
+									<th class="text-center">Minimum <br />Stock Level</th>
+									<th class="text-center">Product <br />Required</th>
+									<th class="text-center">Excess <br />Stock</th>
+								</tr>
+							</thead>
+							<tbody>
+                                <t t-set="total_qty" t-value="0"/>
+								<tr t-foreach="o.line_ids" t-as="line" style="page-break-inside: avoid">
+									<td class="text-right"><span t-esc="line_index+1"/></td>
+									<td>
+										<span t-field="line.product_id.name"/>
+                                    </td>
+									<td class="text-right">
+										<span t-field="line.uom_id.name"/>
+                                    </td>
+									<td class="text-right">
+										<span t-field="line.stock_in_hand_qty"/>
+                                    </td>
+                                    <td class="text-right">
+										<span t-field="line.required_qty"/>
+                                    </td>
+									<td class="text-right">
+										<span t-field="line.adjustment_qty"/>
+                                    </td>
+									<td class="text-right">
+										<span t-field="line.average_qty"/>
+                                    </td>
+									<td class="text-right">
+										<span t-field="line.minimum_stock_qty"/>
+                                    </td>
+									<td class="text-right">
+										<span t-field="line.product_required_qty"/>
+                                    </td>
+									<td class="text-right">
+										<span t-field="line.excess_qty"/>
+                                    </td>
+								</tr>
+							</tbody>
+						</table>
+						<br />
+						<br />
+						<div class="row">
+	    					<div class="col-xs-4">
+	        					<p class="text-center">
+									<strong>_____________________</strong><br/>
+	            					<strong >Prepared By</strong>
+	           					</p>
+	        				</div>
+	        				<div class="col-xs-4">
+	        				</div>
+	  						<div class="col-xs-4">
+	        					<p class="text-center">
+	        						<strong>_____________________</strong><br/>
+	            					<strong>Approved By</strong>
+	            				</p>
+	        				</div>
+	    				</div>
+						<div class="footer">
+        		<br />
+            		<div class="text-left">
+                		<p>This is system generated report and signature is optional.</p>
+           			</div>
+        		</div>
+                    </div>
+                </t>
+            </t>
+			</t>
+        </template>
+
+	</data>
+</openerp>

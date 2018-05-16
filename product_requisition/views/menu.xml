@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <menuitem name="Requisitions" id="menu_stock_requisition"
+                  parent="stock.menu_stock_root" sequence="1" groups="stock.group_stock_user"/>
+        <menuitem name="Issue &amp; Receive" id="menu_stock_issue_receive"
+                  parent="stock.menu_stock_root" sequence="2" groups="stock.group_stock_user"/>
+    </data>
+</openerp>
+

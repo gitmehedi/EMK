@@ -20,7 +20,7 @@
 ##############################################################################
 {   
     'name': 'Stock Extend',
-    'author': 'Genweb2 Limited',
+    'author':  'Stock Extend New',
     'website': 'www.genweb2.com',
     'category': 'Warehouse',
     'data': [
@@ -31,9 +31,9 @@
             'views/stock_goods_price_views.xml',
             'views/stock_transfer_menu_view.xml',
             'views/inherited_stock_picking_type_views.xml',
-            'views/stock_issue_view.xml',
-            'views/stock_return_view.xml',
-            'views/stock_transfer_view.xml',
+            # 'views/stock_issue_view.xml',
+            # 'views/stock_return_view.xml',
+            # 'views/stock_transfer_view.xml',
             'wizard/stock_report_wizard_view.xml',
             'report/stock_issue_report.xml',
             'report/stock_issue_report_view.xml',
@@ -41,8 +41,8 @@
             'views/inherited_stock_valuation_history_view.xml'
              ],
     'depends': ['stock','purchase'],
-    'description': '''''',
+    'description': '''
+''',
     'installable': True,
-    'application': True,
     'version': '0.1',
 }

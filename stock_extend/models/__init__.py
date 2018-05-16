@@ -6,3 +6,5 @@ import stock_goods_price
 import inherited_stock_picking_type
 import inherited_stock_inventory
 import inherited_stock_valuation_history
+#import stock_move
+#import stock_quant
