@@ -17,7 +17,7 @@
             <field name="inherit_id" ref="hr_payroll.view_hr_payslip_form"/>
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='credit_note']" position="after">
-                    <fi name="type"/>
+                    <field name="type"/>
                 </xpath>
             </field>
         </record>
