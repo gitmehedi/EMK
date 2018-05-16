@@ -16,7 +16,10 @@ class DeliveryOrder(models.Model):
                                         domain=[('state', '=', 'close')],
                                         readonly=True, states={'draft': [('readonly', False)]})
 
+    def _get_sale_order_currency(self):
+        self.currency_id = self.sale_order_id.currency_id
 
+    currency_id = fields.Many2one('res.currency', string='Currency', compute='_get_sale_order_currency',readonly=True, states={'draft': [('readonly', False)]})
     sale_order_id = fields.Many2one('sale.order', string='Sale Order', readonly=True, states={'draft': [('readonly', False)]})
     so_date = fields.Datetime('Order Date', readonly=True, states={'draft': [('readonly', False)]})
     deli_address = fields.Char('Delivery Address', readonly=True, states={'draft': [('readonly', False)]})
@@ -70,7 +73,7 @@ class DeliveryOrder(models.Model):
 
 
     """ PI and LC """
-    pi_no = fields.Many2one('proforma.invoice', string='PI Ref. No.', readonly=True)
+    pi_id = fields.Many2one('proforma.invoice', string='PI Ref. No.', readonly=True)
     lc_id = fields.Many2one('letter.credit', string='LC Ref. No.', readonly=True, compute = "_calculate_lc_id", store= False)
 
 
@@ -153,9 +156,9 @@ class DeliveryOrder(models.Model):
         # Update the reference of PI and LC on both Stock Picking and Sale Order Obj
         if self.delivery_order_id.so_type == 'lc_sales':
             stock_picking_id.write({'lc_id': self.lc_id.id})
-            #self.delivery_order_id.sale_order_id.write({'lc_id': self.lc_id.id, 'pi_no': self.pi_no.id})
+            #self.delivery_order_id.sale_order_id.write({'lc_id': self.lc_id.id, 'pi_id': self.pi_id.id})
             #As per decision, LC Id will be updated to Sale Order from LC creation menu -- rabbi
-            self.delivery_order_id.sale_order_id.write({'pi_no': self.pi_no.id})
+            self.delivery_order_id.sale_order_id.write({'pi_id': self.pi_id.id})
 
         # Update Stock Move with reference of Delivery Order
         stock_move_id = self.delivery_order_id.sale_order_id.picking_ids.move_lines
@@ -165,7 +168,6 @@ class DeliveryOrder(models.Model):
 
 
     @api.onchange('delivery_order_id')
-    @api.constrains('delivery_order_id')
     def onchange_sale_order_id(self):
         delivery_auth_id = self.env['delivery.authorization'].search([('id', '=', self.delivery_order_id.id)])
 
@@ -219,7 +221,7 @@ class DeliveryOrder(models.Model):
                 self.so_type = delivery_auth_id.so_type
                 self.so_date = delivery_auth_id.so_date
                 self.deli_address = delivery_auth_id.deli_address
-                self.pi_no = delivery_auth_id.pi_no.id
+                self.pi_id = delivery_auth_id.pi_id.id
                 self.lc_id = delivery_auth_id.lc_id.id
                 self.sale_order_id = delivery_auth_id.sale_order_id.id
                 self.amount_untaxed = delivery_auth_id.amount_untaxed

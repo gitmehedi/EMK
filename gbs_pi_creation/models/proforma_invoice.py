@@ -12,24 +12,30 @@ class ProformaInvoice(models.Model):
     #sale_order_id = fields.Many2one('sale.order',string='Sale Order Ref.', required=True,domain=[('state', '=', 'done')],readonly=True,states={'draft': [('readonly', False)]})
 
     partner_id = fields.Many2one('res.partner', string='Customer', domain=[('customer', '=', True)],required=True,readonly=True,states={'draft': [('readonly', False)]})
-    invoice_date = fields.Date('Invoice Date', readonly=True,states={'draft': [('readonly', False)]})
-    advising_bank = fields.Text(string='Advising Bank', readonly=True, states={'draft': [('readonly', False)]})
+    invoice_date = fields.Date('Invoice Date', readonly=True, required=1, states={'draft': [('readonly', False)]})
+    advising_bank = fields.Text(string='Advising Bank', required=True, readonly=True, states={'draft': [('readonly', False)]})
     currency_id = fields.Many2one('res.currency', string='Currency', readonly=True,required=True, states={'draft': [('readonly', False)]})
-    country_of_origin = fields.Char(string='Country of Origin',readonly=True, states={'draft': [('readonly', False)]})
+
+    beneficiary_id = fields.Many2one('res.company', string='Beneficiary', required=True, readonly=True, states={'draft': [('readonly', False)]})
+    operating_unit_id = fields.Many2one('operating.unit', string='Unit', required=True, readonly=True, states={'draft': [('readonly', False)]})
+    transport_by = fields.Char(string='Transport By',required=True, readonly=True, states={'draft': [('readonly', False)]})
+    terms_condition = fields.Text(string='Terms & Conditions', required=True, readonly=True, states={'draft': [('readonly', False)]})
+
 
     """ Shipping Address"""
-    ship_freight_type = fields.Char(string='Freight Type',readonly=True,states={'draft': [('readonly', False)]})
+    ship_freight_type = fields.Char(string='Freight Type',readonly=True, states={'draft': [('readonly', False)]})
     ship_exp_date = fields.Char(string='Exp. Shipping Date',readonly=True,states={'draft': [('readonly', False)]})
     ship_exp_good_weight = fields.Char(string='Exp. Goods Weight',readonly=True,states={'draft': [('readonly', False)]})
     ship_exp_cubic_weight = fields.Char(string='Exp. Cubic Weight',readonly=True,states={'draft': [('readonly', False)]})
     ship_total_pkg = fields.Char(string='Total Package',readonly=True,states={'draft': [('readonly', False)]})
 
     """ Customer Address"""
-    customer_add = fields.Text(string='Customer Address',readonly=True,states={'draft': [('readonly', False)]})
+    customer_add = fields.Text(string='Customer Address',readonly=True, compute='_compute_customer_address')
 
     """ Ship To"""
-    ship_to_add = fields.Text(string='Ship To Address',readonly=True,states={'draft': [('readonly', False)]})
-    terms_condition = fields.Text(string='Terms of Condition', readonly=True, states={'draft': [('readonly', False)]})
+    terms_condition = fields.Text(string='Terms of Condition', required=True, readonly=True, states={'draft': [('readonly', False)]})
+    packing = fields.Char(string='Packing', required=True, readonly=True, states={'draft': [('readonly', False)]})
+    terms_of_payment = fields.Char(string='Terms Of Payment', required=True, readonly=True, states={'draft': [('readonly', False)]})
 
     state = fields.Selection([
         ('draft', "Draft"),
@@ -48,11 +54,17 @@ class ProformaInvoice(models.Model):
 
 
     """ Relational field"""
-    line_ids = fields.One2many('proforma.invoice.line', 'pi_no', string="Products", readonly=True, states={'draft': [('readonly', False)]})
-    so_ids = fields.Many2many('sale.order', 'so_pi_rel', 'pi_no', 'so_id',
-                              string='Sale Order',
+    line_ids = fields.One2many('proforma.invoice.line', 'pi_id', string="Products", readonly=True, states={'draft': [('readonly', False)]})
+    so_ids = fields.Many2many('sale.order', 'so_pi_rel', 'pi_id', 'so_id',
+                              string='Sale Order', required=True,
                               readonly=True, states={'draft': [('readonly', False)]},
-                              domain="[('pi_no', '=', False), ('state', '=', 'done'), ('credit_sales_or_lc', '=','lc_sales')]")
+                              domain="[('pi_id', '=', False), ('state', '=', 'done'), ('credit_sales_or_lc', '=','lc_sales')]")
+
+    @api.multi
+    def _compute_customer_address(self, context=None):
+        if self.partner_id:
+            str_address = self.getAddressByPartner(self.partner_id)
+            self.customer_add = str_address
 
 
     def _prepare_lines_by_so_ids(self, so_ids):
@@ -153,12 +165,20 @@ class ProformaInvoice(models.Model):
         untaxed_amount = 0
 
         for so in self.so_ids:
-            if self.partner_id and self.partner_id != so.partner_id:
+            if self.beneficiary_id and self.beneficiary_id != so.company_id:
+                raise ValidationError('Please add Sale Order whose Beneficiary is same.')
+            elif self.operating_unit_id and self.operating_unit_id != so.operating_unit_id:
+                raise ValidationError('Please add Sale Order whose Unit is same.')
+            elif self.partner_id and self.partner_id != so.partner_id:
                 raise ValidationError('Please add Sale Order whose Customer is same.')
+            elif self.currency_id and self.currency_id != so.currency_id:
+                raise ValidationError('Please add Sale Order whose Currency is same.')
             else:
+                self.beneficiary_id = so.company_id
+                self.operating_unit_id = so.operating_unit_id
                 self.partner_id = so.partner_id
                 self.currency_id = so.currency_id
-
+                self.customer_add = self.getAddressByPartner(so.partner_id)
 
             sub_total += so.amount_untaxed
             taxed_amount += so.amount_tax
@@ -173,6 +193,29 @@ class ProformaInvoice(models.Model):
         self.untaxed_amount = untaxed_amount
 
 
+    def getAddressByPartner(self, partner):
+        address = []
+        if partner.street:
+            address.append(partner.street)
+
+        if partner.street2:
+            address.append(partner.street2)
+
+        if partner.zip_id:
+            address.append(partner.zip_id.name)
+
+        if partner.city:
+            address.append(partner.city)
+
+        if partner.state_id:
+            address.append(partner.state_id.name)
+
+        if partner.country_id:
+            address.append(partner.country_id.name)
+
+        str_address = '\n '.join(address)
+
+        return str_address
 
     @api.multi
     def action_confirm(self):
@@ -184,19 +227,19 @@ class ProformaInvoice(models.Model):
     def update_Pi_to_so_obj(self):
         #Update PI to SO
         for so in self.so_ids:
-            so.pi_no = self.id
+            so.pi_id = self.id
 
             #update DA
             da_obj = so.env['delivery.authorization'].search([('sale_order_id', '=', so.id)])
             if da_obj:
                 for da_ in da_obj:
-                    da_.pi_no = self.id # update PI to DA if it is already created
+                    da_.pi_id = self.id # update PI to DA if it is already created
 
             #update DO
             do_obj = so.env['delivery.order'].search([('sale_order_id', '=', so.id)])
             if do_obj:
                 for do_ in do_obj:
-                    do_.pi_no = self.id  # update PI to DO if it is already created
+                    do_.pi_id = self.id  # update PI to DO if it is already created
 
 
 
@@ -223,7 +266,7 @@ class ProformaInvoiceLine(models.Model):
     price_subtotal = fields.Float(string="Price Subtotal", readonly=True)
 
     """ Relational field"""
-    pi_no = fields.Many2one('proforma.invoice', ondelete='cascade')
+    pi_id = fields.Many2one('proforma.invoice', ondelete='cascade')
 
 
 
@@ -240,11 +283,11 @@ class ProformaInvoiceLine(models.Model):
         self.price_subtotal = self.price_unit * self.quantity
 
         ## Set Proforma Invoice Table value
-        #self.pi_no.currency_id.id = active_prod_price_pool.currency_id.id
-        self.pi_no.sub_total = self.price_subtotal
-        self.pi_no.taxed_amount = self.calculate_tax_amount(self.tax.id, self.price_subtotal)
-        self.pi_no.untaxaed_amount = self.price_subtotal
-        self.pi_no.total = self.pi_no.taxed_amount + self.price_subtotal
+        #self.pi_id.currency_id.id = active_prod_price_pool.currency_id.id
+        self.pi_id.sub_total = self.price_subtotal
+        self.pi_id.taxed_amount = self.calculate_tax_amount(self.tax.id, self.price_subtotal)
+        self.pi_id.untaxaed_amount = self.price_subtotal
+        self.pi_id.total = self.pi_id.taxed_amount + self.price_subtotal
 
 
 
@@ -256,11 +299,11 @@ class ProformaInvoiceLine(models.Model):
         self.price_subtotal = self.price_unit * self.quantity
 
         ## Set Proforma Invoice Table value
-        # self.pi_no.currency_id.id = active_prod_price_pool.currency_id.id
-        self.pi_no.sub_total = self.price_subtotal
-        self.pi_no.taxed_amount = self.calculate_tax_amount(self.tax.id, self.price_subtotal)
-        self.pi_no.untaxed_amount = self.price_subtotal
-        self.pi_no.total = self.pi_no.taxed_amount + self.price_subtotal
+        # self.pi_id.currency_id.id = active_prod_price_pool.currency_id.id
+        self.pi_id.sub_total = self.price_subtotal
+        self.pi_id.taxed_amount = self.calculate_tax_amount(self.tax.id, self.price_subtotal)
+        self.pi_id.untaxed_amount = self.price_subtotal
+        self.pi_id.total = self.pi_id.taxed_amount + self.price_subtotal
 
 
     def calculate_tax_amount(self, tax_id, total_price):

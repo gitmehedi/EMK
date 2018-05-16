@@ -5,39 +5,19 @@ class GbsPurchaseRequisition(models.AbstractModel):
 
     @api.multi
     def render_html(self, docids, data=None):
-        po_run_pool = self.env['purchase.requisition']
-        docs = po_run_pool.browse(docids[0])
+        pr_pool = self.env['purchase.requisition']
+        pr_obj = pr_pool.browse(docids[0])
         report_utility_pool = self.env['report.utility']
         order_list = []
-        address = []
-        if docs.operating_unit_id.partner_id.street:
-            address.append(docs.operating_unit_id.partner_id.street)
-
-        if docs.operating_unit_id.partner_id.street2:
-            address.append(docs.operating_unit_id.partner_id.street2)
-
-        if docs.operating_unit_id.partner_id.zip_id:
-            address.append(docs.operating_unit_id.partner_id.zip_id.name)
-
-        if docs.operating_unit_id.partner_id.city:
-            address.append(docs.operating_unit_id.partner_id.city)
-
-        if docs.operating_unit_id.partner_id.state_id:
-            address.append(docs.operating_unit_id.partner_id.state_id.name)
-
-        if docs.operating_unit_id.partner_id.country_id:
-            address.append(docs.operating_unit_id.partner_id.country_id.name)
-
-        str_address = ', '.join(address)
 
         data = {}
-        data['name'] = docs.name
-        data['requisition_date'] = docs.requisition_date
+        data['name'] = pr_obj.name
+        data['requisition_date'] = pr_obj.requisition_date
         requisition_date = report_utility_pool.getERPDateFormat(report_utility_pool.getDateFromStr(data['requisition_date']))
-        data['department_id'] = docs.department_id.name
-        data['address'] = str_address
-        if docs.line_ids:
-            for line in docs.line_ids:
+        data['department_id'] = pr_obj.department_id.name
+        data['address'] = report_utility_pool.getAddressByUnit(pr_obj.operating_unit_id)
+        if pr_obj.line_ids:
+            for line in pr_obj.line_ids:
                 list_obj = {}
                 list_obj['product_id']= line.product_id.name
                 list_obj['store_code']= line.store_code

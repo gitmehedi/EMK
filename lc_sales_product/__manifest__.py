@@ -8,6 +8,7 @@
         'letter_of_credit',
         'com_shipment',
         'shipment_lc_product',
+        'gbs_pi_creation',
     ],
 
     'data': [

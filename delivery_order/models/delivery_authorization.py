@@ -12,6 +12,11 @@ class DeliveryAuthorization(models.Model):
 
     name = fields.Char(string='Delivery Authorization', index=True, readonly=True)
 
+    def _get_sale_order_currency(self):
+        self.currency_id = self.sale_order_id.currency_id
+
+    currency_id = fields.Many2one('res.currency', string='Currency', compute='_get_sale_order_currency',readonly=True, states={'draft': [('readonly', False)]})
+
     so_date = fields.Datetime('Order Date', readonly=True, states={'draft': [('readonly', False)]})
     sequence_id = fields.Char('Sequence', readonly=True)
     deli_address = fields.Char('Delivery Address', readonly=True, states={'draft': [('readonly', False)]})
@@ -70,7 +75,7 @@ class DeliveryAuthorization(models.Model):
             self.delivery_count = len(order.picking_ids)
 
     """ PI and LC """
-    pi_no = fields.Many2one('proforma.invoice', string='PI Ref. No.', readonly=True)
+    pi_id = fields.Many2one('proforma.invoice', string='PI Ref. No.', readonly=True)
     lc_id = fields.Many2one('letter.credit', string = 'LC Ref. No.', compute = "_calculate_lc_id", store= False)
 
     @api.multi
@@ -171,12 +176,12 @@ class DeliveryAuthorization(models.Model):
 
         elif self.so_type == 'lc_sales':
 
-            if self.pi_no:
+            if self.pi_id:
                 pi_pool = self.env['proforma.invoice'].search([('sale_order_id', '=', self.sale_order_id.id)])
                 if not pi_pool:
                     raise UserError('PI is of a different Sale Order')
 
-            if self.lc_id and self.pi_no:
+            if self.lc_id and self.pi_id:
                 if self.lc_id.lc_value >= self.total_sub_total_amount():
                    # self.create_delivery_order()
                     self.update_sale_order_da_qty()
@@ -184,7 +189,7 @@ class DeliveryAuthorization(models.Model):
                 else:
                     self.write({'state': 'approve'})  # Second approval
 
-            elif self.pi_no and not self.lc_id:
+            elif self.pi_id and not self.lc_id:
                 res = {}
                 list = dict.fromkeys(set([val.product_id.product_tmpl_id.id for val in self.line_ids]), 0)
                 for line in self.line_ids:
@@ -393,7 +398,7 @@ class DeliveryAuthorization(models.Model):
                 self.so_type = sale_order_obj.credit_sales_or_lc
                 self.so_date = sale_order_obj.date_order
                 self.deli_address = sale_order_obj.partner_shipping_id.name
-                self.pi_no = sale_order_obj.pi_no.id
+                self.pi_id = sale_order_obj.pi_id.id
                 self.lc_id = sale_order_obj.lc_id.id
 
                 for record in sale_order_obj.order_line:

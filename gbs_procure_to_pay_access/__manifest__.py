@@ -33,6 +33,7 @@
                 'gbs_application_group',
                 'shipment_lc_product',
                 'lc_sales_product',
+                'product_gate_in',
     ],
 
 

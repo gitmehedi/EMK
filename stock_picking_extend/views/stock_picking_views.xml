@@ -329,11 +329,11 @@
                     <field string="Documents" name="doc_count" widget="statinfo"/>
                 </button>
             </xpath>
-            <xpath expr="//header/button[@name='do_new_transfer']" position="replace">
-                <button name="do_new_transfer" string="Receive" groups="stock.group_stock_user"
-                        states="draft,partially_available,assigned"
-                        type="object" class="oe_highlight"/>
-            </xpath>
+            <!--<xpath expr="//header/button[@name='do_new_transfer']" position="replace">-->
+                <!--<button name="do_new_transfer" string="Receive" groups="stock.group_stock_user"-->
+                        <!--states="draft,partially_available,assigned"-->
+                        <!--type="object" class="oe_highlight"/>-->
+            <!--</xpath>-->
             <xpath expr="//header/button[@name='force_assign']" position="attributes">
                 <attribute name="groups">base_technical_features.group_technical_features</attribute>
             </xpath>
