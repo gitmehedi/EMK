@@ -6,7 +6,6 @@
     'version': '10.0.1.0.0',
     'depends': [
         'hr_payroll',
-        'l10n_in_hr_payroll',
         ],
     'data': [
         'data/data.xml',
