@@ -10,7 +10,7 @@
 elif payslip.type == '1': result = True
 elif payslip.type == '2': result = True</field>
             <field name="amount_select">code</field>
-            <field name="amount_python_compute">result = (categories.BASIC + categories.ALW) / 2</field>
+            <field name="amount_python_compute">result = contract.wage</field>
         </record>
     </data>
 </odoo>
