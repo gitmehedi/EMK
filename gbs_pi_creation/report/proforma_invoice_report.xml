@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<odoo>
+    <data>
+        <report
+                id="action_proforma_invoice"
+                string="Proforma Invoice"
+                model="proforma.invoice"
+                report_type="qweb-pdf"
+                file="gbs_pi_creation.report_proforma_invoice"
+                name="gbs_pi_creation.report_proforma_invoice"
+                paperformat="custom_report.paperformat_backend_portrait"
+
+        />
+
+        <template id="report_proforma_invoice">
+            <t t-call="report.html_container">
+                <t t-call="custom_report.gbs_internal_layout">
+                    <div class="page" style="page-break-inside: auto">
+                        <style>
+                            .table-caption {
+                            border: 1px solid #ddd;
+                            border-bottom: none;
+                            font-size: 14px;
+                            font-weight: bold;
+                            margin: 0;
+                            padding: 5px 5px;
+                            }
+                        </style>
+                        <div class="row">
+                            <h3 class="text-center">Proforma Invoice</h3>
+                            <hr class="hr-sm mb-0"/>
+                            <div class="row">
+                                <div class="col-xs-6">
+                                    <p><b>Beneficiary : </b><span t-esc="data['beneficiary_id']"/></p>
+                                    <p><b>Factory : </b><span t-esc="data['unit_address']"/></p>
+                                    <p><b>Vat Registration No : </b><span t-esc="data['vat']"/></p>
+                                </div>
+                                <div class="col-xs-6 text-left">
+                                    <p><b>Proforma Invoice No and Date : </b></p>
+                                    <P><span t-esc="data['name']"/></P>
+                                    <P><span t-esc="data['pi_date']"/></P>
+                                </div>
+                            </div>
+                            <hr class="hr-sm mb-0"/>
+                            <div class="row">
+                                <div class="col-xs-6">
+                                    <p><b>Applicant : </b><span t-esc="data['customer']"/></p>
+                                    <p><b>Factory : </b><span t-esc="data['unit_address']" /></p>
+                                </div>
+                                <div class="col-xs-6 text-left">
+                                    <p><b>Transport : </b><span t-esc="data['transport_by']"/></p>
+                                    <p><b>Place of Loading : </b>From Factory Premises of Beneficiary.</p>
+                                    <p><b>Final Destination : </b>Applicant's Factory.</p>
+                                </div>
+                            </div>
+                            <hr class="hr-sm mb-0"/>
+                        </div>
+                        <div class="row">
+                            <table class="table table-report table-bordered table-striped">
+                                <thead>
+                                    <tr class="odo-bg-gray">
+                                        <th>Sl#</th>
+                                        <th>Description of Goods</th>
+                                        <th>Quantity(MT)</th>
+                                        <th>Rate(Per MT)</th>
+                                        <th>Amount</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <t t-foreach="line_list" t-as="l">
+                                        <tr style="page-break-inside: avoid">
+                                            <td><span t-esc="l_index+1"/></td>
+                                            <td><span t-esc="l['product_id']"/></td>
+                                            <td><span t-esc="l['quantity']"/></td>
+                                            <td><span t-esc="l['price_unit']"/></td>
+                                            <td><span t-esc="l['price_subtotal']"/></td>
+                                        </tr>
+                                    </t>
+                                    <tr>
+                                        <td colspan="4" rowspan="2"><strong>Amount in words : </strong><span t-esc="amt_to_word"/></td>
+                                        <td><strong>Total : </strong><span t-esc="total_amount" /></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-6">
+                                <h4><b>Terms and Conditions :</b></h4>
+                                <p t-raw="data['terms_condition']"/>
+                            </div>
+                        </div>
+                        <div class="row mb32 text-left" style="margin-top: 20mm;">
+                            <div class="col-xs-10 text-left">
+                                <strong>For <span t-esc="data['beneficiary_id']"/></strong>
+                                <br/>
+                                <br/>
+                                <br/>
+                                <br/>
+                                <p style="border-top: 1px solid black;width: 20%;">Authorized Signature</p>
+                            </div>
+                        </div>
+                    </div>
+                </t>
+            </t>
+        </template>
+    </data>
+</odoo>
