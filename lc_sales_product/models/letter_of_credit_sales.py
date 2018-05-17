@@ -26,17 +26,17 @@ class LetterOfCredit(models.Model):
         self.lc_value = None
 
         for pi_id in self.pi_ids_temp:
-            self.first_party = pi_id.company_id.id
+            self.first_party = pi_id.beneficiary_id
             self.second_party_applicant = pi_id.partner_id.id
             self.currency_id = pi_id.currency_id.id
-            self.lc_value = pi_id.amount_total
-            for obj in pi_id.order_line:
+            self.lc_value = pi_id.total
+            for obj in pi_id.line_ids:
                 vals.append((0, 0, {'product_id': obj.product_id,
-                                    'name': obj.name,
-                                    'product_qty': obj.product_uom_qty,
+                                    'name': obj.product_id.name,
+                                    'product_qty': obj.quantity,
                                     'price_unit': obj.price_unit,
-                                    'currency_id': obj.currency_id,
-                                    'product_uom': obj.product_uom
+                                    'currency_id': pi_id.currency_id,
+                                    'product_uom': obj.uom_id
                                     }))
         self.product_lines = vals
 
