@@ -54,7 +54,7 @@ class ReportUtility(models.TransientModel):
 
 
 
-    def getCoustomerInvoiceAddress(self,coustomer):
+    def getCoustomerAddress(self,coustomer):
             address = []
             if coustomer.street:
                 address.append(coustomer.street)
@@ -76,8 +76,3 @@ class ReportUtility(models.TransientModel):
 
             str_address = ', '.join(address)
             return str_address
-
-            # if coustomer.type == 'invoice':
-            #     return str_address
-            # elif coustomer.type == 'delivery':
-            #     return str_address

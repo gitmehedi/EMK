@@ -193,24 +193,28 @@ class ProformaInvoice(models.Model):
 
 
     def getAddressByPartner(self, partner):
+
+        address = partner.address_get(['delivery', 'invoice'])
+        delivery_address = self.env['res.partner'].browse(address['delivery'])
+
         address = []
-        if partner.street:
-            address.append(partner.street)
+        if delivery_address.street:
+            address.append(delivery_address.street)
 
-        if partner.street2:
-            address.append(partner.street2)
+        if delivery_address.street2:
+            address.append(delivery_address.street2)
 
-        if partner.zip_id:
-            address.append(partner.zip_id.name)
+        if delivery_address.zip_id:
+            address.append(delivery_address.zip_id.name)
 
-        if partner.city:
-            address.append(partner.city)
+        if delivery_address.city:
+            address.append(delivery_address.city)
 
-        if partner.state_id:
-            address.append(partner.state_id.name)
+        if delivery_address.state_id:
+            address.append(delivery_address.state_id.name)
 
-        if partner.country_id:
-            address.append(partner.country_id.name)
+        if delivery_address.country_id:
+            address.append(delivery_address.country_id.name)
 
         str_address = '\n '.join(address)
 

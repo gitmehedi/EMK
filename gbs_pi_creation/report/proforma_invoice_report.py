@@ -11,15 +11,19 @@ class GbsProformaInvoice(models.AbstractModel):
         total_amount = []
         line_list = []
         data = {}
+
+        address = pi_obj.partner_id.address_get(['delivery', 'invoice'])
+        delivery_address = self.env['res.partner'].browse(address['delivery'])
+
         data['name'] = pi_obj.name
         data['pi_date'] = pi_obj.invoice_date
         data['beneficiary_id'] = pi_obj.beneficiary_id.name
         data['vat'] = pi_obj.operating_unit_id.partner_id.vat
         data['customer'] = pi_obj.partner_id.name
-        data['customer_add'] = report_utility_pool.getCoustomerInvoiceAddress(pi_obj.partner_id)
+        data['customer_add'] = report_utility_pool.getCoustomerAddress(delivery_address)
         data['transport_by'] = pi_obj.transport_by
         data['terms_condition'] = pi_obj.terms_condition
-        data['advising_bank'] = pi_obj.advising_bank
+        data['advising_bank'] = pi_obj.advising_bank_id
         data['packing'] = pi_obj.packing
         data['terms_of_payment'] = pi_obj.terms_of_payment
         data['unit_address'] = report_utility_pool.getAddressByUnit(pi_obj.operating_unit_id)
