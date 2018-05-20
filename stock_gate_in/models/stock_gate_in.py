@@ -53,8 +53,8 @@ class ProductGateIn(models.Model):
                         'partner_id': self.partner_id.id,
                         'origin': self.name,
                     }
-                    # if self.company_id:
-                    #     vals = dict(res, company_id=self.company_id.id)
+                    if self.company_id:
+                        vals = dict(res, company_id=self.company_id.id)
 
                     picking = picking_obj.create(res)
                     if picking:

@@ -79,6 +79,9 @@ class ItemLoanLending(models.Model):
         picking_id = False
         if self.item_lines:
             picking_id = self._create_pickings_and_moves()
+            picking_objs = self.env['stock.picking'].search([('id', '=', picking_id)])
+            picking_objs.action_confirm()
+            picking_objs.force_assign()
         res = {
             'state': 'approved',
             'approver_id': self.env.user.id,

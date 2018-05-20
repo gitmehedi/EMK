@@ -67,8 +67,7 @@ class StockPurchaseReport(models.AbstractModel):
             'total_in_val': 0,
         }
 
-        sql_in_tk = '''
-                            SELECT product_id, 
+        sql_in_tk = '''SELECT product_id, 
                                    NAME, 
                                    code,
                                    uom_name, 
@@ -92,13 +91,13 @@ class StockPurchaseReport(models.AbstractModel):
                                            sm.product_qty                           AS qty_in_tk, 
                                            sm.product_qty * Coalesce(ph.cost, 0) AS val_in_tk,
                                            Coalesce(ph.cost, 0)          AS cost_val
-                                    FROM   stock_picking sp 
+                                    FROM   stock_move sm 
+                                           LEFT JOIN stock_picking sp 
+                                                  ON sm.picking_id = sp.id 
                                            INNER JOIN stock_picking sp1 
                                                   ON sp.origin = sp1.name
                                            LEFT JOIN res_partner rp
 						                          ON rp.id = sp1.partner_id
-                                           LEFT JOIN stock_move sm 
-                                                  ON sm.picking_id = sp.id 
                                            LEFT JOIN product_product pp 
                                                   ON sm.product_id = pp.id 
                                            LEFT JOIN product_template pt 
@@ -136,20 +135,3 @@ class StockPurchaseReport(models.AbstractModel):
 
 
         return {'supplier': supplier, 'total': grand_total}
-
-
-        # sql = '''SELECT ROW_NUMBER() OVER(ORDER BY table_ck.code DESC) AS id ,
-        #                             table_ck.product_id,
-        #                             table_ck.name,
-        #                             table_ck.uom_name,
-        #                             table_ck.code,
-        #                             table_ck.category,
-        #                             table_ck.supplier,
-        #                             table_ck.m_date,
-        #                             table_ck.mrr,
-        #                             COALESCE(table_ck.rate_in,0) as rate_in,
-        #                             COALESCE(table_ck.qty_in_tk,0) as qty_in_tk ,
-        #                             COALESCE(table_ck.val_in_tk,0) as val_in_tk
-        #                     FROM  (%s) table_ck
-        #
-        #                 ''' % (sql_in_tk)

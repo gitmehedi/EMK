@@ -75,12 +75,16 @@ class ItemBorrowing(models.Model):
             if new_seq:
                 res['name'] = new_seq
             loan.write(res)
+            loan.item_lines.write({'state': 'waiting_approval'})
 
     @api.multi
     def button_approve(self):
         picking_id = False
         if self.item_lines:
             picking_id = self._create_pickings_and_moves()
+            picking_objs = self.env['stock.picking'].search([('id', '=', picking_id)])
+            picking_objs.action_confirm()
+            picking_objs.force_assign()
         res = {
             'state': 'approved',
             'approver_id': self.env.user.id,
@@ -88,6 +92,7 @@ class ItemBorrowing(models.Model):
             'picking_id': picking_id
         }
         self.write(res)
+        self.item_lines.write({'state': 'approved'})
 
     @api.model
     def _create_pickings_and_moves(self):
@@ -158,6 +163,7 @@ class ItemBorrowing(models.Model):
             'approved_date': time.strftime('%Y-%m-%d %H:%M:%S')
         }
         self.write(res)
+        self.item_lines.write({'state': 'reject'})
 
     @api.multi
     def action_draft(self):
@@ -184,13 +190,11 @@ class ItemBorrowingLines(models.Model):
     product_uom_qty = fields.Float('Quantity', digits=dp.get_precision('Product UoS'),
                                    required=True, default=1)
     product_uom = fields.Many2one('product.uom', 'Unit of Measure', required=True)
-    product_uos_qty = fields.Float('Quantity (UoS)', digits=dp.get_precision('Product UoS'),
-                                   default=1)
-    product_uos = fields.Many2one('product.uom', 'Product UoS')
     price_unit = fields.Float('Price', digits=dp.get_precision('Product Price'),
                               help="Price computed based on the last purchase order approved.")
     name = fields.Text('Specification', store=True)
     sequence = fields.Integer('Sequence')
+    received_qty = fields.Float('Received Quantity', digits=dp.get_precision('Product UoS'))
 
     state = fields.Selection([
         ('draft', 'Draft'),
