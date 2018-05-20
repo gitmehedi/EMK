@@ -76,6 +76,7 @@ class ProductGateIn(models.Model):
                     val.append((0, 0, {'product_id': record.product_id.id,
                                        'product_qty': record.product_qty,
                                        'product_uom': record.product_uom.id,
+                                       'price_unit': record.price_unit,
                                        'name': record.name,
                                        'date_planned': record.date_planned,
                                        }))
@@ -124,8 +125,8 @@ class ShipmentProductLine(models.Model):
     product_id = fields.Many2one('product.product', string='Product',
                                 change_default=True)
     date_planned = fields.Date(string='Scheduled Date', index=True)
-    product_uom = fields.Many2one('product.uom',
-                                  string='UOM')
+    product_uom = fields.Many2one('product.uom',string='UOM')
+    price_unit = fields.Float(string='Unit Price')
     product_qty = fields.Float(string='Quantity')
     parent_id = fields.Many2one('product.gate.in',
                                 string='Purchase Shipment')
