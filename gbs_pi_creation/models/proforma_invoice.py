@@ -9,7 +9,7 @@ class ProformaInvoice(models.Model):
     _rec_name='name'
 
     name = fields.Char(string='Name', index=True, readonly=True)
-    
+
     partner_id = fields.Many2one('res.partner', string='Customer', domain=[('customer', '=', True)],required=True,readonly=True,states={'draft': [('readonly', False)]})
     invoice_date = fields.Date('Invoice Date', readonly=True, required=1, states={'draft': [('readonly', False)]})
     advising_bank_id = fields.Many2one('res.bank', string='Advising Bank', required=True, readonly=True, states={'draft': [('readonly', False)]})
