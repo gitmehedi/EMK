@@ -53,8 +53,8 @@ class StockTransferDetailsReport(models.AbstractModel):
                                                             AND pp.id = ph.product_id
                                                      ORDER  BY ph.datetime DESC
                                                      LIMIT  1), 0) AS val_out_tk
-                                    FROM   stock_picking sp
-                                           LEFT JOIN stock_move sm
+                                    FROM   stock_move sm 
+                                           LEFT JOIN stock_picking sp 
                                                   ON sm.picking_id = sp.id
                                            LEFT JOIN product_product pp
                                                   ON sm.product_id = pp.id
