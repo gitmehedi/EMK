@@ -46,7 +46,7 @@
                             <div class="row">
                                 <div class="col-xs-6">
                                     <p><b>Applicant : </b><span t-esc="data['customer']"/></p>
-                                    <p><b>Factory : </b><span t-esc="data['unit_address']" /></p>
+                                    <p><b>Factory : </b><span t-esc="data['customer_add']" /></p>
                                 </div>
                                 <div class="col-xs-6 text-left">
                                     <p><b>Transport : </b><span t-esc="data['transport_by']"/></p>
@@ -62,6 +62,7 @@
                                     <tr class="odo-bg-gray">
                                         <th>Sl#</th>
                                         <th>Description of Goods</th>
+                                        <th>HS Code</th>
                                         <th>Quantity(MT)</th>
                                         <th>Rate(Per MT)</th>
                                         <th>Amount</th>
@@ -72,17 +73,32 @@
                                         <tr style="page-break-inside: avoid">
                                             <td><span t-esc="l_index+1"/></td>
                                             <td><span t-esc="l['product_id']"/></td>
+                                            <td>Dame</td>
                                             <td><span t-esc="l['quantity']"/></td>
                                             <td><span t-esc="l['price_unit']"/></td>
                                             <td><span t-esc="l['price_subtotal']"/></td>
                                         </tr>
                                     </t>
                                     <tr>
-                                        <td colspan="4" rowspan="2"><strong>Amount in words : </strong><span t-esc="amt_to_word"/></td>
-                                        <td><strong>Total : </strong><span t-esc="total_amount" /></td>
+                                        <td colspan="5" rowspan="2"><strong>Amount in words : </strong><span t-esc="amt_to_word"/></td>
+                                        <td><strong>Total : </strong><span t-esc="total_amount"/></td>
                                     </tr>
                                 </tbody>
                             </table>
+                        </div>
+                        <div class="row">
+                            <hr class="hr-sm mb-0"/>
+                            <div class="row">
+                                <div class="col-xs-6">
+                                    <p><b>Advising Bank : </b><span t-esc="data['advising_bank']"/></p>
+                                    <p><b>Bank Address : </b>Dame</p>
+                                </div>
+                                <div class="col-xs-6 text-left">
+                                    <p><b>Packing : </b><span t-esc="data['packing']"/></p>
+                                    <p><b>Terms of Payment : </b><span t-esc="data['terms_of_payment']"/></p>
+                                </div>
+                            </div>
+                            <hr class="hr-sm mb-0"/>
                         </div>
                         <div class="row">
                             <div class="col-xs-6">

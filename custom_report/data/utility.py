@@ -28,7 +28,6 @@ class ReportUtility(models.TransientModel):
         else:
             return datetime.datetime.now()
 
-
     def getAddressByUnit(self, unit):
         address = []
         if unit.partner_id.street:
@@ -52,3 +51,33 @@ class ReportUtility(models.TransientModel):
         str_address = ', '.join(address)
 
         return str_address
+
+
+
+    def getCoustomerInvoiceAddress(self,coustomer):
+            address = []
+            if coustomer.street:
+                address.append(coustomer.street)
+
+            if coustomer.street2:
+                address.append(coustomer.street2)
+
+            if coustomer.zip_id:
+                address.append(coustomer.zip_id.name)
+
+            if coustomer.city:
+                address.append(coustomer.city)
+
+            if coustomer.state_id:
+                address.append(coustomer.state_id.name)
+
+            if coustomer.country_id:
+                address.append(coustomer.country_id.name)
+
+            str_address = ', '.join(address)
+            return str_address
+
+            # if coustomer.type == 'invoice':
+            #     return str_address
+            # elif coustomer.type == 'delivery':
+            #     return str_address

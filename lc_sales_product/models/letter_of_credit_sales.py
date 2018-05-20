@@ -15,6 +15,7 @@ class LetterOfCredit(models.Model):
     #                                domain="[('state', '=', 'done'),('credit_sales_or_lc', '=','lc_sales'),('lc_id','=',False)]")
 
     product_lines = fields.One2many('lc.product.line', 'lc_id', string='Product(s)')
+    lc_document_line = fields.One2many('lc.document.line', 'lc_id', string='LC Documents')
 
     @api.onchange('pi_ids_temp')
     def pi_product_line(self):
