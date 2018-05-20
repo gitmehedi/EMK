@@ -9,11 +9,10 @@ class ProformaInvoice(models.Model):
     _rec_name='name'
 
     name = fields.Char(string='Name', index=True, readonly=True)
-    #sale_order_id = fields.Many2one('sale.order',string='Sale Order Ref.', required=True,domain=[('state', '=', 'done')],readonly=True,states={'draft': [('readonly', False)]})
-
+    
     partner_id = fields.Many2one('res.partner', string='Customer', domain=[('customer', '=', True)],required=True,readonly=True,states={'draft': [('readonly', False)]})
     invoice_date = fields.Date('Invoice Date', readonly=True, required=1, states={'draft': [('readonly', False)]})
-    advising_bank = fields.Text(string='Advising Bank', required=True, readonly=True, states={'draft': [('readonly', False)]})
+    advising_bank_id = fields.Many2one('res.bank', string='Advising Bank', required=True, readonly=True, states={'draft': [('readonly', False)]})
     currency_id = fields.Many2one('res.currency', string='Currency', readonly=True,required=True, states={'draft': [('readonly', False)]})
 
     beneficiary_id = fields.Many2one('res.company', string='Beneficiary', required=True, readonly=True, states={'draft': [('readonly', False)]})
