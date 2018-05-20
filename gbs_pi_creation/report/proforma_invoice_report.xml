@@ -73,7 +73,7 @@
                                         <tr style="page-break-inside: avoid">
                                             <td><span t-esc="l_index+1"/></td>
                                             <td><span t-esc="l['product_id']"/></td>
-                                            <td>###</td>
+                                            <td>Dame</td>
                                             <td><span t-esc="l['quantity']"/></td>
                                             <td><span t-esc="l['price_unit']"/></td>
                                             <td><span t-esc="l['price_subtotal']"/></td>
@@ -91,7 +91,7 @@
                             <div class="row">
                                 <div class="col-xs-6">
                                     <p><b>Advising Bank : </b><span t-esc="data['advising_bank']"/></p>
-                                    <p><b>Bank Address : </b></p>
+                                    <p><b>Bank Address : </b>Dame</p>
                                 </div>
                                 <div class="col-xs-6 text-left">
                                     <p><b>Packing : </b><span t-esc="data['packing']"/></p>
