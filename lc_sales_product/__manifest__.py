@@ -9,6 +9,7 @@
         'com_shipment',
         'shipment_lc_product',
         'gbs_pi_creation',
+        'gbs_document_type',
     ],
 
     'data': [

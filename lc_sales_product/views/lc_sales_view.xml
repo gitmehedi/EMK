@@ -113,8 +113,14 @@
                                 <page string="Terms &amp; Condition">
                                     <field name="terms_condition" widget="html" options="{'style-inline': true}"/>
                                 </page>
-                                <page string="Remarks">
-                                    <field name="remarks" widget="html" options="{'style-inline': true}"/>
+                                <page string="LC Documents">
+                                    <field name="lc_document_line" create="false" delete="false">
+                                        <tree string="LC Documents" editable="bottom">
+                                            <field name="doc_name"/>
+                                            <field name="original"/>
+                                            <field name="copy"/>
+                                        </tree>
+                                    </field>
                                 </page>
                                 <page string="Attachments">
                                     <field name="attachment_ids" widget="one2many" class="lc_attachment">
