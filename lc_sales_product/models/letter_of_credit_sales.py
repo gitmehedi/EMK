@@ -101,6 +101,10 @@ class LetterOfCredit(models.Model):
         self.env['letter.credit'].search([('id', '=', self.id)])
         return result
 
+    @api.multi
+    def action_lc_done_export(self):
+        self.write({'state': 'done', 'last_note': Status.DONE.value})
+
 
 
 
