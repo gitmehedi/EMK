@@ -102,6 +102,8 @@ class DeliveryOrder(models.Model):
         seq = self.env['ir.sequence'].next_by_code('delivery.order') or '/'
         vals['name'] = seq
 
+        self.update_total_info(vals)
+
         return super(DeliveryOrder, self).create(vals)
 
 
@@ -176,6 +178,24 @@ class DeliveryOrder(models.Model):
         self.set_payment_info_automatically(delivery_auth_id)
 
 
+    def update_total_info(self, vals):
+        sub_total = 0
+        taxed_amount = 0
+        untaxed_amount = 0
+
+        so_ids = self.env['sale.order'].search([('id', '=', vals.get('sale_order_id'))])
+
+        for so in so_ids:
+            sub_total += so.amount_untaxed
+            taxed_amount += so.amount_tax
+            untaxed_amount += so.amount_untaxed
+
+        vals['total_amount'] = sub_total
+        vals['tax_value'] = taxed_amount
+        vals['amount_untaxed'] = untaxed_amount
+
+
+
 
     @api.one
     def set_cheque_info_automatically(self,delivery_auth_id):
@@ -227,6 +247,7 @@ class DeliveryOrder(models.Model):
                 self.amount_untaxed = delivery_auth_id.amount_untaxed
                 self.tax_value = delivery_auth_id.tax_value
                 self.total_amount = delivery_auth_id.total_amount
+                self.currency_id = delivery_auth_id.currency_id
 
                 for record in delivery_auth_id.line_ids:
 

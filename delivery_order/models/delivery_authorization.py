@@ -400,6 +400,7 @@ class DeliveryAuthorization(models.Model):
                 self.deli_address = sale_order_obj.partner_shipping_id.name
                 self.pi_id = sale_order_obj.pi_id.id
                 self.lc_id = sale_order_obj.lc_id.id
+                self.currency_id = sale_order_obj.type_id.currency_id
 
                 for record in sale_order_obj.order_line:
                     if record.da_qty != record.product_uom_qty \
