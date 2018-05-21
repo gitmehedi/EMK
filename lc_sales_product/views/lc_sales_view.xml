@@ -21,11 +21,15 @@
                     <sheet>
                         <div class="oe_button_box" name="button_box"></div>
                         <group>
+                            <group colspan="4">
+                                <field name="pi_ids_temp" widget="many2many_tags" options='{"no_open": True,"no_create": 1, "no_create_edit":1}'/>
+                            </group>
+
                             <group colspan="2">
                                 <group>
                                     <field name="name" required="1" readonly="0"/>
-                                    <field name="pi_ids_temp" widget="many2many_tags" options='{"no_open": True,"no_create": 1, "no_create_edit":1}'/>
                                     <field name="type" attrs="{'invisible': '1'}" />
+                                    <field name="tenure" required="1" />
                                 </group>
                                 <group>
                                     <field name="region_type" widget="radio" options="{'horizontal': true}"/>
