@@ -5,10 +5,7 @@ import datetime
 
 
 class ChequeReceived(models.Model):
-    _inherit = 'account.payment'
     _name = 'accounting.cheque.received'
-    # _inherit = ['mail.thread', 'ir.needaction_mixin']
-    _rec_name = 'name'
 
     state = fields.Selection([
         ('draft', 'Cheque Entry'),
@@ -28,6 +25,7 @@ class ChequeReceived(models.Model):
         for n in self:
             n.name = 'Customer Payments'
 
+
     name = fields.Char(string='Name', compute='_get_name')
     partner_id = fields.Many2one('res.partner', domain=[('active', '=', True), ('customer', '=', True)], string="Customer", required=True, states = {'returned': [('readonly', True)],'dishonoured': [('readonly', True)],'honoured': [('readonly', True)],'received': [('readonly', True)],'deposited': [('readonly', True)]})
     bank_name = fields.Many2one('res.bank', string='Bank', required=True,states = {'returned': [('readonly', True)],'dishonoured': [('readonly', True)],'honoured': [('readonly', True)],'received': [('readonly', True)],'deposited': [('readonly', True)]})
@@ -41,97 +39,6 @@ class ChequeReceived(models.Model):
 
     payment_date = fields.Date(string='Payment Date', default=fields.Date.context_today, required=True, copy=False, states = {'returned': [('readonly', True)],'dishonoured': [('readonly', True)],'honoured': [('readonly', True)],'received': [('readonly', True)],'deposited': [('readonly', True)]})
 
-
-    # @api.multi
-    # def action_payslip_done(self):
-    #
-    #     for slip in self:
-    #         line_ids = []
-    #         debit_sum = 0.0
-    #         credit_sum = 0.0
-    #         date = slip.date or slip.date_to
-    #
-    #         name = "Test Rabbi"
-    #         move_dict = {
-    #             'narration': name,
-    #             #'ref': slip.number,
-    #             'journal_id': slip.journal_id.id,
-    #             'date': date,
-    #         }
-    #         for line in slip.details_by_salary_rule_category:
-    #             amount = slip.cheque_amount
-    #
-    #             debit_account_id = line.salary_rule_id.account_debit.id
-    #             credit_account_id = line.salary_rule_id.account_credit.id
-    #
-    #             if debit_account_id:
-    #                 debit_line = (0, 0, {
-    #                     'name': line.name,
-    #                     'partner_id': line._get_partner_id(credit_account=False),
-    #                     'account_id': debit_account_id,
-    #                     'journal_id': slip.journal_id.id,
-    #                     'date': date,
-    #                     'debit': amount > 0.0 and amount or 0.0,
-    #                     'credit': amount < 0.0 and -amount or 0.0,
-    #                     'analytic_account_id': line.salary_rule_id.analytic_account_id.id,
-    #                     'tax_line_id': line.salary_rule_id.account_tax_id.id,
-    #                 })
-    #                 line_ids.append(debit_line)
-    #                 debit_sum += debit_line[2]['debit'] - debit_line[2]['credit']
-    #
-    #             if credit_account_id:
-    #                 credit_line = (0, 0, {
-    #                     'name': line.name,
-    #                     'partner_id': line._get_partner_id(credit_account=True),
-    #                     'account_id': credit_account_id,
-    #                     'journal_id': slip.journal_id.id,
-    #                     'date': date,
-    #                     'debit': amount < 0.0 and -amount or 0.0,
-    #                     'credit': amount > 0.0 and amount or 0.0,
-    #                     'analytic_account_id': line.salary_rule_id.analytic_account_id.id,
-    #                     'tax_line_id': line.salary_rule_id.account_tax_id.id,
-    #                 })
-    #                 line_ids.append(credit_line)
-    #                 credit_sum += credit_line[2]['credit'] - credit_line[2]['debit']
-    #
-    #         if float_compare(credit_sum, debit_sum, precision_digits=precision) == -1:
-    #             acc_id = slip.journal_id.default_credit_account_id.id
-    #             if not acc_id:
-    #                 raise UserError(_('The Expense Journal "%s" has not properly configured the Credit Account!') % (
-    #                 slip.journal_id.name))
-    #             adjust_credit = (0, 0, {
-    #                 'name': _('Adjustment Entry'),
-    #                 'partner_id': False,
-    #                 'account_id': acc_id,
-    #                 'journal_id': slip.journal_id.id,
-    #                 'date': date,
-    #                 'debit': 0.0,
-    #                 'credit': debit_sum - credit_sum,
-    #             })
-    #             line_ids.append(adjust_credit)
-    #
-    #         elif float_compare(debit_sum, credit_sum, precision_digits=precision) == -1:
-    #             acc_id = slip.journal_id.default_debit_account_id.id
-    #             if not acc_id:
-    #                 raise UserError(_('The Expense Journal "%s" has not properly configured the Debit Account!') % (
-    #                 slip.journal_id.name))
-    #             adjust_debit = (0, 0, {
-    #                 'name': _('Adjustment Entry'),
-    #                 'partner_id': False,
-    #                 'account_id': acc_id,
-    #                 'journal_id': slip.journal_id.id,
-    #                 'date': date,
-    #                 'debit': credit_sum - debit_sum,
-    #                 'credit': 0.0,
-    #             })
-    #             line_ids.append(adjust_debit)
-    #         move_dict['line_ids'] = line_ids
-    #         move = self.env['account.move'].create(move_dict)
-    #         slip.write({'move_id': move.id, 'date': date})
-    #         move.post()
-    #     return super(HrPayslip, self).action_payslip_done()
-    #
-    #
 
     @api.multi
     def _get_payment_method(self):
@@ -204,23 +111,69 @@ class ChequeReceived(models.Model):
 
     @api.multi
     def action_honoured(self):
-        for cash_rcv in self:
-            # cash_rcv.cheque_amount = 0 # Test val
-            cash_rcv._create_payment_entry(cash_rcv.cheque_amount)
+        for cash in self:
+            cash.action_journal_entry_bank()
+            cash.updateCustomersCreditLimit()
+            cash.updateCustomersReceivableAmount()
 
-            # Update Customer's Credit Limit & Receilable Amount
-            cash_rcv.updateCustomersCreditLimit()
-            cash_rcv.updateCustomersReceivableAmount()
+            cash.state = 'honoured'
 
-            cash_rcv.state = 'honoured'
 
+    @api.multi
+    def action_journal_entry_bank(self):
+
+        for cr in self:
+            line_ids = []
+            debit_sum = 0.0
+            credit_sum = 0.0
+            date = cr.date_on_cheque
+
+            move_dict = {
+                'journal_id': cr.journal_id.id,
+                'date': date,
+            }
+
+            amount = cr.cheque_amount
+
+            debit_account_id = cr.journal_id.default_debit_account_id
+            credit_account_id = cr.journal_id.default_credit_account_id
+
+            if debit_account_id:
+                debit_line = (0, 0, {
+                    'name': debit_account_id.name,
+                    'partner_id': cr.partner_id.id,
+                    'account_id': debit_account_id.id,
+                    'journal_id': cr.journal_id.id,
+                    'date': date,
+                    'debit': amount > 0.0 and amount or 0.0,
+                    'credit': amount < 0.0 and -amount or 0.0,
+                })
+
+                line_ids.append(debit_line)
+                debit_sum += debit_line[2]['debit'] - debit_line[2]['credit']
+
+            if credit_account_id:
+                credit_line = (0, 0, {
+                    'name': credit_account_id.name,
+                    'partner_id': cr.partner_id.id,
+                    'account_id': credit_account_id.id,
+                    'journal_id': cr.journal_id.id,
+                    'date': date,
+                    'debit': amount < 0.0 and -amount or 0.0,
+                    'credit': amount > 0.0 and amount or 0.0,
+                })
+                line_ids.append(credit_line)
+                credit_sum += credit_line[2]['credit'] - credit_line[2]['debit']
+
+        move_dict['line_ids'] = line_ids
+        move = self.env['account.move'].create(move_dict)
+        move.post()
 
 
     @api.model
     def create(self, vals):
         seq = self.env['ir.sequence'].next_by_code('accounting.cheque.received') or '/'
         vals['name'] = seq
-        vals['amount'] = 12
         return super(ChequeReceived, self).create(vals)
 
 
