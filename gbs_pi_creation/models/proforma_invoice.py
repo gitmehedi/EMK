@@ -124,12 +124,9 @@ class ProformaInvoice(models.Model):
         if self.state == 'draft' and vals.get('so_ids'):
             self.update_total_info(vals)
 
-<<<<<<< HEAD
         if self.state == 'confirm':
-=======
-        if self.state == 'confirmed' and vals.get('so_ids'):
->>>>>>> b74e14bca21894d190bfc2cb184579a7ea35ff04
              vals['so_ids'] = vals['so_ids'].ids
+
         return super(ProformaInvoice, self).write(vals)
 
 

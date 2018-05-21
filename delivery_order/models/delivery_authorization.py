@@ -376,7 +376,7 @@ class DeliveryAuthorization(models.Model):
                                             }))
 
                         self.cash_ids = vals
-                        
+
 
     @api.one
     def set_products_info_automatically(self):
@@ -413,60 +413,60 @@ class DeliveryAuthorization(models.Model):
         self.line_ids = val
 
 
-def action_process_unattached_payments(self):
-    account_payment_pool = self.env['account.payment'].search(
-        [('is_this_payment_checked', '=', False), ('sale_order_id', '=', self.sale_order_id.id)])
+    def action_process_unattached_payments(self):
+        account_payment_pool = self.env['account.payment'].search(
+            [('is_this_payment_checked', '=', False), ('sale_order_id', '=', self.sale_order_id.id)])
 
-    for acc in account_payment_pool:
-        if acc.journal_id.type == 'cash':
-            val = []
-            for cash_line in self.cash_ids:
-                val.append(cash_line.account_payment_id.id)
+        for acc in account_payment_pool:
+            if acc.journal_id.type == 'cash':
+                val = []
+                for cash_line in self.cash_ids:
+                    val.append(cash_line.account_payment_id.id)
 
-            vals = []
-            for payments in acc:
-                if payments.id not in val:
-                    vals.append((0, 0, {'account_payment_id': payments.id,
-                                        'amount': payments.amount,
-                                        'dep_bank': payments.deposited_bank,
-                                        'branch': payments.bank_branch,
-                                        'payment_date': payments.payment_date,
-                                        }))
+                vals = []
+                for payments in acc:
+                    if payments.id not in val:
+                        vals.append((0, 0, {'account_payment_id': payments.id,
+                                            'amount': payments.amount,
+                                            'dep_bank': payments.deposited_bank,
+                                            'branch': payments.bank_branch,
+                                            'payment_date': payments.payment_date,
+                                            }))
 
-            self.cash_ids = vals
+                self.cash_ids = vals
 
-        elif acc.journal_id.type == 'bank':
-            val_bank = []
-            for bank_line in self.cheque_ids:
-                val_bank.append(bank_line.account_payment_id.id)
+            elif acc.journal_id.type == 'bank':
+                val_bank = []
+                for bank_line in self.cheque_ids:
+                    val_bank.append(bank_line.account_payment_id.id)
 
-            vals_bank = []
+                vals_bank = []
 
-            for bank_payments in acc:
-                if bank_payments.id not in val_bank:
-                    vals_bank.append((0, 0, {'account_payment_id': bank_payments.id,
-                                             'amount': bank_payments.amount,
-                                             'bank': bank_payments.deposited_bank,
-                                             'branch': bank_payments.bank_branch,
-                                             'payment_date': bank_payments.payment_date,
-                                             }))
+                for bank_payments in acc:
+                    if bank_payments.id not in val_bank:
+                        vals_bank.append((0, 0, {'account_payment_id': bank_payments.id,
+                                                 'amount': bank_payments.amount,
+                                                 'bank': bank_payments.deposited_bank,
+                                                 'branch': bank_payments.bank_branch,
+                                                 'payment_date': bank_payments.payment_date,
+                                                 }))
 
-            self.cheque_ids = vals_bank
+                self.cheque_ids = vals_bank
 
 
-################
-# 100 MT Logic
-###############
-@api.multi
-def update_lc_id_for_houndred_mt(self):
-    for delivery in self:
-        ordered_qty_pool = delivery.env['ordered.qty'].search([('delivery_auth_no', '=', delivery.id)])
-        if ordered_qty_pool:
-            ordered_qty_pool.write({'lc_id': delivery.lc_id.id})
+    ################
+    # 100 MT Logic
+    ###############
+    @api.multi
+    def update_lc_id_for_houndred_mt(self):
+        for delivery in self:
+            ordered_qty_pool = delivery.env['ordered.qty'].search([('delivery_auth_no', '=', delivery.id)])
+            if ordered_qty_pool:
+                ordered_qty_pool.write({'lc_id': delivery.lc_id.id})
 
-        ## Update LC No to Stock Picking Obj
-        stock_picking_id = delivery.sale_order_id.picking_ids
-        stock_picking_id.write({'lc_id': delivery.lc_id.id})
+            ## Update LC No to Stock Picking Obj
+            stock_picking_id = delivery.sale_order_id.picking_ids
+            stock_picking_id.write({'lc_id': delivery.lc_id.id})
 
 
 class OrderedQty(models.Model):
