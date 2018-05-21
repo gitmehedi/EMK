@@ -1,6 +1,5 @@
 from odoo import api, fields, models
-from odoo.exceptions import UserError, ValidationError, Warning
-
+from odoo.exceptions import UserError
 import time
 
 
