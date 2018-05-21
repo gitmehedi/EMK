@@ -8,7 +8,7 @@ class LetterOfCredit(models.Model):
 
     pi_ids = fields.One2many('proforma.invoice', 'lc_id', string='Proforma Invoice')
     pi_ids_temp = fields.Many2many('proforma.invoice', 'pi_lc_rel', 'lc_id', 'pi_id', string='Proforma Invoice',
-                                   domain="[('state', '=', 'confirmed'),('lc_id','=',False)]")
+                                   domain="[('state', '=', 'confirm'),('lc_id','=',False)]")
 
     # so_ids = fields.One2many('sale.order', 'lc_id', string='Sale Order')
     # so_ids_temp = fields.Many2many('sale.order', 'so_lc_rel', 'lc_id', 'so_id', string='Sale Order',

@@ -38,7 +38,7 @@ class ProformaInvoice(models.Model):
 
     state = fields.Selection([
         ('draft', "Draft"),
-        ('confirmed', "Confirmed")
+        ('confirm', "Confirmed")
     ], default='draft')
 
     sequence_id = fields.Char('Sequence', readonly=True)
@@ -124,7 +124,7 @@ class ProformaInvoice(models.Model):
         if self.state == 'draft' and vals.get('so_ids'):
             self.update_total_info(vals)
 
-        if self.state == 'confirmed':
+        if self.state == 'confirm':
              vals['so_ids'] = vals['so_ids'].ids
         return super(ProformaInvoice, self).write(vals)
 
@@ -224,7 +224,7 @@ class ProformaInvoice(models.Model):
     def action_confirm(self):
         self.update_Pi_to_so_obj()
 
-        self.state = 'confirmed'
+        self.state = 'confirm'
 
 
     def update_Pi_to_so_obj(self):
