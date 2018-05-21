@@ -24,8 +24,6 @@ class SalePriceChangeWizards(models.TransientModel):
                 'view_id': [view.id],
                 'type': 'ir.actions.act_window'
             }
-
-
         elif self.product_id:
             dmp_ids = employee_pool.search([('product_id', '=', self.product_id.id)])
 

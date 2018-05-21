@@ -2,15 +2,14 @@
 from odoo import api, fields, models
 
 
-class product_category(models.Model):
+class ProductCategory(models.Model):
     _inherit = 'product.category'
 
     code = fields.Char('Code', required=True, help='This fields Code,...')
     company_id = fields.Many2one('res.company', 'Company')
 
     _defaults = {
-        'company_id': lambda self, cr, uid, c: self.pool.get('res.company')._company_default_get(cr, uid,
-                                                                                                 'product.category',
+        'company_id': lambda self, cr, uid, c: self.pool.get('res.company')._company_default_get(cr, uid,                                                                                                'product.category',
                                                                                                  context=c),
     }
 

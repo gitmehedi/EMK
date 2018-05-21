@@ -79,7 +79,8 @@ class DeliveryOrder(models.Model):
 
     @api.multi
     def _calculate_lc_id(self):
-        self.lc_id = self.sale_order_id.lc_id.id
+        for _do in self:
+            _do.lc_id = _do.sale_order_id.lc_id.id
 
 
     """ Payment information"""
@@ -89,13 +90,13 @@ class DeliveryOrder(models.Model):
 
     """ All functions """
 
-    # @api.multi
-    # def unlink(self):
-    #     for order in self:
-    #         if order.state != 'draft':
-    #             raise UserError('You can not delete this.')
-    #         order.line_ids.unlink()
-    #     return super(DeliveryOrderLayer, self).unlink()
+    @api.multi
+    def unlink(self):
+        for order in self:
+            if order.state != 'draft':
+                raise UserError('You can not delete record which is in Approved state')
+            order.line_ids.unlink()
+        return super(DeliveryOrder, self).unlink()
 
     @api.model
     def create(self, vals):

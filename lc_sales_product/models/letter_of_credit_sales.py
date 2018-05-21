@@ -8,12 +8,9 @@ class LetterOfCredit(models.Model):
 
     pi_ids = fields.One2many('proforma.invoice', 'lc_id', string='Proforma Invoice')
     pi_ids_temp = fields.Many2many('proforma.invoice', 'pi_lc_rel', 'lc_id', 'pi_id', string='Proforma Invoice',
-                                   domain="[('state', '=', 'confirmed'),('lc_id','=',False)]")
+                                   domain="[('state', '=', 'confirm'),('lc_id','=',False)]")
 
-    # so_ids = fields.One2many('sale.order', 'lc_id', string='Sale Order')
-    # so_ids_temp = fields.Many2many('sale.order', 'so_lc_rel', 'lc_id', 'so_id', string='Sale Order',
-    #                                domain="[('state', '=', 'done'),('credit_sales_or_lc', '=','lc_sales'),('lc_id','=',False)]")
-
+    tenure = fields.Char(string='Tenure')
     product_lines = fields.One2many('lc.product.line', 'lc_id', string='Product(s)')
     lc_document_line = fields.One2many('lc.document.line', 'lc_id', string='LC Documents')
 
@@ -25,12 +22,16 @@ class LetterOfCredit(models.Model):
         self.second_party_applicant = None
         self.currency_id = None
         self.lc_value = None
+        self.operating_unit_id = None
+        self.first_party_bank = None
 
         for pi_id in self.pi_ids_temp:
             self.first_party = pi_id.beneficiary_id
             self.second_party_applicant = pi_id.partner_id.id
             self.currency_id = pi_id.currency_id.id
-            self.lc_value = pi_id.total
+            self.lc_value += pi_id.total
+            self.operating_unit_id = pi_id.operating_unit_id
+            self.first_party_bank = pi_id.advising_bank_id
             for obj in pi_id.line_ids:
                 vals.append((0, 0, {'product_id': obj.product_id,
                                     'name': obj.product_id.name,
@@ -99,6 +100,10 @@ class LetterOfCredit(models.Model):
                   'target': 'current'}
         self.env['letter.credit'].search([('id', '=', self.id)])
         return result
+
+    @api.multi
+    def action_lc_done_export(self):
+        self.write({'state': 'done', 'last_note': Status.DONE.value})
 
 
 
