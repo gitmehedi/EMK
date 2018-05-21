@@ -6,6 +6,7 @@ import datetime
 
 class ChequeReceived(models.Model):
     _name = 'accounting.cheque.received'
+    _inherit = ['mail.thread']
 
     state = fields.Selection([
         ('draft', 'Cheque Entry'),
