@@ -17,6 +17,7 @@
         'views/lc_sales_menu.xml',
         'views/shipment_sale_view.xml',
         'wizard/doc_receive_wizard_view.xml',
+        'wizard/lc_sales_report_wizard.xml',
     ],
 
     'summary': 'Sale By LC',

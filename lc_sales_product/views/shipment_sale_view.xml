@@ -1,6 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
     <data>
+        <act_window name="Print Reports"
+                res_model="lc.sales.report.wizard"
+                src_model="purchase.shipment"
+                view_mode="form" target="new"
+                domain="[('type','=','export')]"
+                view_type="form"
+                id="act_lc_sales_report"/>
+
         <record id="view_shipment_export_form" model="ir.ui.view">
             <field name="name">purchase.shipment.form</field>
             <field name="model">purchase.shipment</field>
