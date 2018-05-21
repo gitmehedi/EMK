@@ -76,6 +76,9 @@ class ChequeReceived(models.Model):
         if self.cheque_amount < 0:
             raise ValidationError('The payment amount must be strictly positive.')
 
+        if self.cheque_amount == 0:
+            raise ValidationError('The payment amount must be greater than zero')
+
 
     # Update customer's Credit Limit. Basically plus cheque amount with Customer Credit Limit
     @api.multi
