@@ -3,7 +3,6 @@ import time
 
 from odoo import models, fields, api, _
 from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
-from odoo.exceptions import UserError
 
 class Picking(models.Model):
     _inherit = "stock.picking"
@@ -18,11 +17,6 @@ class Picking(models.Model):
         'purchase.shipment',
         string='Shipment Number',
         readonly=True,states={'draft': [('readonly', False)]})
-
-    challan_bill_no = fields.Char(
-        string='Challan Bill No',
-        readonly=True,
-        states={'draft': [('readonly', False)]})
 
     @api.onchange('receive_type')
     def onchange_receive_type(self):
@@ -62,10 +56,3 @@ class Picking(models.Model):
 
         self.move_lines = product_lines
 
-    @api.constrains('challan_bill_no')
-    def _check_unique_constraint(self):
-        if self.partner_id and self.challan_bill_no:
-            filters = [['challan_bill_no', '=ilike', self.challan_bill_no], ['partner_id', '=', self.partner_id.id]]
-            bill_no = self.search(filters)
-            if len(bill_no) > 1:
-                raise UserError(_('[Unique Error] Challan Bill must be unique for %s !') % self.partner_id.name)

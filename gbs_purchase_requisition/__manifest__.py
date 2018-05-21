@@ -6,6 +6,7 @@
     'version':'10.0.1',
     'depends': [
         'purchase_requisition',
+        'purchase_operating_unit',
         'stock_indent',
         'ir_sequence_operating_unit',
         'commercial',
