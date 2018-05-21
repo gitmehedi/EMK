@@ -23,7 +23,15 @@
                                         <th>Employee</th>
                                         <th>Designation</th>
                                         <th style="min-width:90px">D.O.J</th>
-                                        <th style="min-width:90px">Loan Balance</th>
+                                        <t t-if="data['type'] != '1'">
+                                            <th style="min-width:90px">Loan Balance</th>
+                                        </t>
+                                        <t t-if="data['type'] == '1'">
+                                            <th>Basic</th>
+                                        </t>
+                                        <t t-if="data['type'] == '1'">
+                                            <th>Supplementary Allowance</th>
+                                        </t>
                                         <t t-foreach="rules" t-as="r">
                                             <th>
                                                 <span t-esc="r['name']"></span>
@@ -53,9 +61,21 @@
                                                     <td>
                                                         <span t-esc="o['doj']"></span>
                                                     </td>
-                                                    <td>
-                                                        <span t-esc="o['loan_balance']"></span>
-                                                    </td>
+                                                    <t t-if="data['type'] != '1'">
+                                                        <td>
+                                                            <span t-esc="o['loan_balance']"></span>
+                                                        </td>
+                                                    </t>
+                                                    <t t-if="data['type'] == '1'">
+                                                        <td>
+                                                            <span t-esc="'%.2f'% o['basic']"></span>
+                                                        </td>
+                                                    </t>
+                                                    <t t-if="data['type'] == '1'">
+                                                        <td>
+                                                            <span t-esc="'%.2f'% o['sa']"></span>
+                                                        </td>
+                                                    </t>
                                                     <t t-foreach="rules" t-as="r">
                                                         <td class="text-right">
                                                             <span t-esc="'%.2f'% o[r['code']]"></span>

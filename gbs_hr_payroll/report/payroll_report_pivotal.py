@@ -12,6 +12,7 @@ class PayrollReportPivotal(models.AbstractModel):
         docs = payslip_run_pool.browse(docids[0])
         data = {}
         data['name'] = docs.name
+        data['type'] = docs.type
         rule_list = []
         for slip in docs.slip_ids:
             for line in slip.line_ids:
@@ -48,7 +49,8 @@ class PayrollReportPivotal(models.AbstractModel):
                     payslip['emp_seq'] = slip.employee_id.employee_sequence
                     loan_remain = slip.remaining_loan or 0.00
                     payslip['loan_balance'] = format(loan_remain, '.2f') if loan_remain else None
-
+                    payslip['sa'] = slip.employee_id.contract_id.supplementary_allowance
+                    payslip['basic'] = slip.employee_id.contract_id.wage
                     for rule in rule_list:
                         payslip[rule['code']] = 0
                         for line in slip.line_ids:
