@@ -79,7 +79,8 @@ class DeliveryOrder(models.Model):
 
     @api.multi
     def _calculate_lc_id(self):
-        self.lc_id = self.sale_order_id.lc_id.id
+        for _do in self:
+            _do.lc_id = _do.sale_order_id.lc_id.id
 
 
     """ Payment information"""

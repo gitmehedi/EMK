@@ -13,7 +13,7 @@
 
     'data': [
         'security/ir.model.access.csv',
-        'wizards/tag_sale_order_view.xml',
+        #'wizards/tag_sale_order_view.xml',
         'views/proforma_invoice_view.xml',
         'report/proforma_invoice_report.xml',
     ],
