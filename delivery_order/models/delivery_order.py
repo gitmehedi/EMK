@@ -90,13 +90,13 @@ class DeliveryOrder(models.Model):
 
     """ All functions """
 
-    # @api.multi
-    # def unlink(self):
-    #     for order in self:
-    #         if order.state != 'draft':
-    #             raise UserError('You can not delete this.')
-    #         order.line_ids.unlink()
-    #     return super(DeliveryOrderLayer, self).unlink()
+    @api.multi
+    def unlink(self):
+        for order in self:
+            if order.state != 'draft':
+                raise UserError('You can not delete record which is in Approved state')
+            order.line_ids.unlink()
+        return super(DeliveryOrder, self).unlink()
 
     @api.model
     def create(self, vals):

@@ -7,7 +7,6 @@ class DeliveryAuthorization(models.Model):
     _name = 'delivery.authorization'
     _description = 'Delivery Authorization'
     _inherit = ['mail.thread']
-    # _rec_name = 'name'
     _order = "approved_date desc,name desc"
 
     name = fields.Char(string='Delivery Authorization', index=True, readonly=True)
@@ -79,6 +78,7 @@ class DeliveryAuthorization(models.Model):
     pi_id = fields.Many2one('proforma.invoice', string='PI Ref. No.', readonly=True)
     lc_id = fields.Many2one('letter.credit', string='LC Ref. No.', compute="_calculate_lc_id", store=False)
 
+
     @api.multi
     def _calculate_lc_id(self):
         self.lc_id = self.sale_order_id.lc_id.id
@@ -102,21 +102,25 @@ class DeliveryAuthorization(models.Model):
         vals['name'] = seq
         return super(DeliveryAuthorization, self).create(vals)
 
+
     @api.multi
     def unlink(self):
         for order in self:
             if order.state != 'draft':
-                raise UserError('You can not delete this.')
+                raise UserError('You can not delete record which is in Approved state')
             order.line_ids.unlink()
         return super(DeliveryAuthorization, self).unlink()
+
 
     @api.one
     def action_refuse(self):
         self.state = 'refused'
 
+
     @api.one
     def action_draft(self):
         self.state = 'draft'
+
 
     """ DO button box action """
 
@@ -130,7 +134,6 @@ class DeliveryAuthorization(models.Model):
             'view_type': 'form',
             'view_mode': 'form',
             'res_model': 'delivery.order',
-            # 'domain': [('sale_order_id', '=', self.sale_order_id.id)],#so_do_id
             'context': {'default_delivery_order_id': self.id, 'default_sale_order_id': self.sale_order_id.id},
             'view_id': [view.id],
             'type': 'ir.actions.act_window'
@@ -159,6 +162,7 @@ class DeliveryAuthorization(models.Model):
         return self.write({'state': 'close', 'confirmed_date': time.strftime('%Y-%m-%d %H:%M:%S')})
 
     """ Action for Confirm button"""
+
 
     @api.multi
     def action_validate(self):
@@ -255,6 +259,7 @@ class DeliveryAuthorization(models.Model):
             self.update_sale_order_da_qty()
             self.state = 'close'
 
+
     def total_sub_total_amount(self):
         total_amt = 0
         for orders in self:
@@ -262,6 +267,7 @@ class DeliveryAuthorization(models.Model):
                 total_amt = total_amt + do_line.price_subtotal
 
         return total_amt
+
 
     @api.one
     def payments_amount_checking_with_products_subtotal(self):
@@ -298,6 +304,7 @@ class DeliveryAuthorization(models.Model):
             account_payment_pool.write({'is_this_payment_checked': True})
             return self.write({'state': 'approve'})  # Only Second level approval
 
+
     def create_delivery_order(self):
         for order in self.sale_order_id:
             order.state = 'sale'
@@ -310,6 +317,7 @@ class DeliveryAuthorization(models.Model):
         if self.env['ir.values'].get_default('sale.config.settings', 'auto_done_setting'):
             self.sale_order_id.action_done()
         return True
+
 
     @api.one
     def payment_information_check(self):
@@ -325,12 +333,14 @@ class DeliveryAuthorization(models.Model):
                     "Payment Information entered is already in use: %s" % (cash_line.account_payment_id.display_name))
                 break;
 
+
     def update_sale_order_da_qty(self):
         for da_line in self.line_ids:
             for sale_line in self.sale_order_id.order_line:
                 if da_line.product_id.id == sale_line.product_id.id:
                     vals = sale_line.da_qty - da_line.quantity
                     sale_line.write({'da_qty': vals})
+
 
     @api.onchange('sale_order_id')
     def onchange_sale_order_id(self):
@@ -343,6 +353,7 @@ class DeliveryAuthorization(models.Model):
                 self.set_cheque_info_automatically(account_payment_pool)
             elif payments.journal_id.type == 'cash':
                 self.set_payment_info_automatically(account_payment_pool)
+
 
     @api.one
     def set_cheque_info_automatically(self, account_payment_pool):
@@ -359,6 +370,7 @@ class DeliveryAuthorization(models.Model):
                                         }))
 
                 self.cheque_ids = vals
+
 
     @api.one
     def set_payment_info_automatically(self, account_payment_pool):
@@ -467,6 +479,7 @@ class DeliveryAuthorization(models.Model):
             ## Update LC No to Stock Picking Obj
             stock_picking_id = delivery.sale_order_id.picking_ids
             stock_picking_id.write({'lc_id': delivery.lc_id.id})
+
 
 
 class OrderedQty(models.Model):
