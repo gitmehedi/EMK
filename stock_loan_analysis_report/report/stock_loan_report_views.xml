@@ -7,7 +7,8 @@
             <pivot string="Loan Analysis" disable_linking="True">
                 <field name="date" interval="day" type="col"/>
                 <field name="product_id" type="row"/>
-                <field name="product_uom_qty" type="measure"/>
+                <!--<field name="product_uom_qty" type="measure"/>-->
+                <field name="received_qty" type="measure"/>
             </pivot>
         </field>
     </record>
@@ -20,6 +21,7 @@
                 <!--<field name="date" interval="day" type="row"/>-->
                 <field name="product_id" type="row"/>
                 <field name="product_uom_qty" type="measure"/>
+                <field name="received_qty" type="measure"/>
             </graph>
         </field>
     </record>
@@ -71,7 +73,8 @@
             <pivot string="Loan Analysis" disable_linking="True">
                 <field name="date" interval="day" type="col"/>
                 <field name="product_id" type="row"/>
-                <field name="product_uom_qty" type="measure"/>
+                <!--<field name="product_uom_qty" type="measure"/>-->
+                <field name="received_qty" type="measure"/>
             </pivot>
         </field>
     </record>
@@ -84,6 +87,7 @@
                 <!--<field name="date" interval="day" type="row"/>-->
                 <field name="product_id" type="row"/>
                 <field name="product_uom_qty" type="measure"/>
+                <field name="received_qty" type="measure"/>
             </graph>
         </field>
     </record>
