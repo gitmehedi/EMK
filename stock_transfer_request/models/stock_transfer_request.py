@@ -17,6 +17,11 @@ class StockTransferRequest(models.Model):
     def _default_operating_unit(self):
         return self.env.user.default_operating_unit_id
 
+    @api.model
+    def _company_default_get(self):
+        if self.env.user.company_id:
+            return self.env.user.company_id
+
     barcode = fields.Char(string='Product Barcode', size=20,
                           readonly=True, states={'draft': [('readonly', False)]})
 
@@ -41,6 +46,7 @@ class StockTransferRequest(models.Model):
                                        readonly=True, states={'draft': [('readonly', False)]})
     is_transfer = fields.Boolean(string="Is Transfer", default=False)
     is_receive = fields.Boolean(string="Is Receive", default=False)
+    company_id = fields.Many2one('res.company', string='Company', default=_company_default_get)
 
     """ Approval Process User """
     submit_user_id = fields.Many2one('res.users', string="Submit User")
@@ -50,7 +56,8 @@ class StockTransferRequest(models.Model):
 
     """ States Fields """
     state = fields.Selection([('draft', "Draft"), ('submit', "Submit"), ('approve', "Approved"),
-                              ('transfer', "Transfer"), ('receive', "Received"), ('reject', "Rejected")], default='draft')
+                              ('transfer', "Transfer"), ('receive', "Received"), ('reject', "Rejected")],
+                             default='draft')
 
     @api.onchange('barcode')
     def _onchange_barcode(self):

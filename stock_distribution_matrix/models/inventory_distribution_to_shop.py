@@ -17,6 +17,11 @@ class InventoryDistributionToShop(models.Model):
         res = self.env['stock.warehouse'].search([('id', '=', self.env.ref('stock.warehouse0').id)])
         return res and res[0] or False
 
+    @api.model
+    def _company_default_get(self):
+        if self.env.user.company_id:
+            return self.env.user.company_id
+
     # models fields
     received_qty = fields.Float(string='Received Qty')
     distribute_qty = fields.Float(string='Distribute Qty', readonly=True)
@@ -32,6 +37,7 @@ class InventoryDistributionToShop(models.Model):
                                                    states={'confirm': [('readonly', True)]})
     warehoue_id = fields.Many2one('stock.warehouse', string='Warehouse', default=_Default_WareHouse_Id, required=True)
     product_image = fields.Binary(related='product_tmp_id.image', store=True, readonly=True)
+    company_id = fields.Many2one('res.company', string='Company', default=_company_default_get)
 
     state = fields.Selection([
         ('draft', 'Waiting'),
