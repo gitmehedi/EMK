@@ -11,7 +11,8 @@ class StockLoanLendingReport(models.Model):
     loan_no = fields.Char(string='Stock Loan No.', readonly=True)
     date = fields.Datetime(string='Request Date', readonly=True)
     product_id = fields.Many2one('product.product', string='Product', readonly=True)
-    product_uom_qty = fields.Float(string='Quantity',readonly=True)
+    product_uom_qty = fields.Float(string='Issued Quantity',readonly=True)
+    received_qty = fields.Float('Received Quantity', readonly=True)
     product_uom = fields.Many2one('product.uom', 'Unit of Measure', readonly=True)
     categ_id = fields.Many2one('product.category', 'Product Category', readonly=True)
     product_specification = fields.Text(string='Specification', readonly=True)
@@ -36,6 +37,7 @@ class StockLoanLendingReport(models.Model):
                 t.uom_id as product_uom,
                 t.categ_id as categ_id,
                 sum(l.product_uom_qty/ u.factor * u2.factor) as product_uom_qty,
+                sum(l.received_qty/ u.factor * u2.factor) as received_qty,
                 i.name as loan_no, 
                 i.request_date as date,
                 i.issuer_id,
@@ -99,7 +101,8 @@ class StockLoanBorrowingReport(models.Model):
     loan_no = fields.Char(string='Stock Loan No.', readonly=True)
     date = fields.Datetime(string='Request Date', readonly=True)
     product_id = fields.Many2one('product.product', string='Product', readonly=True)
-    product_uom_qty = fields.Float(string='Quantity', readonly=True)
+    product_uom_qty = fields.Float(string='Issued Quantity', readonly=True)
+    received_qty = fields.Float('Received Quantity',readonly=True)
     product_uom = fields.Many2one('product.uom', 'Unit of Measure', readonly=True)
     categ_id = fields.Many2one('product.category', 'Product Category', readonly=True)
     product_specification = fields.Text(string='Specification', readonly=True)
@@ -124,6 +127,7 @@ class StockLoanBorrowingReport(models.Model):
                     t.uom_id as product_uom,
                     t.categ_id as categ_id,
                     sum(l.product_uom_qty/ u.factor * u2.factor) as product_uom_qty,
+                    sum(l.received_qty/ u.factor * u2.factor) as received_qty,
                     i.name as loan_no, 
                     i.request_date as date,
                     i.issuer_id,

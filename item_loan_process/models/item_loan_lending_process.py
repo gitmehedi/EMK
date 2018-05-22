@@ -169,6 +169,12 @@ class ItemLoanLending(models.Model):
         self.write(res)
         self.item_lines.write({'state': 'draft'})
 
+    @api.multi
+    def action_get_stock_picking(self):
+        action = self.env.ref('stock.action_picking_tree_all').read([])[0]
+        action['domain'] = [('id', '=', self.picking_id.id)]
+        return action
+
     ####################################################
     # ORM Overrides methods
     ####################################################
@@ -191,6 +197,7 @@ class ItemLoanLendingLines(models.Model):
     qty_available = fields.Float('In Stock', compute='_computeProductQuentity', store=True)
     name = fields.Text('Specification', store=True)
     sequence = fields.Integer('Sequence')
+    received_qty = fields.Float('Received Quantity', digits=dp.get_precision('Product UoS'))
 
     ####################################################
     # Business methods

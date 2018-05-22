@@ -175,6 +175,12 @@ class ItemBorrowing(models.Model):
         self.write(res)
         self.item_lines.write({'state': 'draft'})
 
+    @api.multi
+    def action_get_stock_picking(self):
+        action = self.env.ref('stock.action_picking_tree_all').read([])[0]
+        action['domain'] = [('id', '=', self.picking_id.id)]
+        return action
+
 
     ####################################################
     # Override methods
