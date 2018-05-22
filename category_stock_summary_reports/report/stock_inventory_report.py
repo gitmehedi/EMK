@@ -251,8 +251,8 @@ class StockInventoryReport(models.AbstractModel):
                                    sm.product_qty                           AS qty_in_tk, 
                                    sm.product_qty * COALESCE(price_unit, 0) AS val_in_tk,
                                    COALESCE(price_unit, 0) AS cost_val
-                            FROM   stock_picking sp 
-                                   LEFT JOIN stock_move sm 
+                            FROM  stock_move sm 
+                                   LEFT JOIN stock_picking sp  
                                           ON sm.picking_id = sp.id 
                                    LEFT JOIN product_product pp 
                                           ON sm.product_id = pp.id 
@@ -302,8 +302,8 @@ class StockInventoryReport(models.AbstractModel):
                                                     AND pt.id = ph.product_template_id 
                                              ORDER  BY ph.datetime DESC 
                                              LIMIT  1), 0) AS val_out_tk 
-                            FROM   stock_picking sp 
-                                   LEFT JOIN stock_move sm 
+                            FROM   stock_move sm 
+                                   LEFT JOIN stock_picking sp 
                                           ON sm.picking_id = sp.id 
                                    LEFT JOIN product_product pp 
                                           ON sm.product_id = pp.id 
