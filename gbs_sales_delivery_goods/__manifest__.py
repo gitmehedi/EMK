@@ -1,5 +1,5 @@
 {
-    'name': 'Delivery Goods',
+    'name': 'Transport Details',
     'author': 'Genweb2 Limited',
     'website': 'www.genweb2.com',
     'category': 'sales',
@@ -11,7 +11,7 @@
         'views/sales_delivery_goods_view.xml',
     ],
     
-    'summary': 'Delievry Goods',
+    'summary': 'Transport details',
     'installable': True,
-    'application': True,
+    'application': False,
 }

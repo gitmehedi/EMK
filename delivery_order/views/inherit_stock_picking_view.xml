@@ -14,6 +14,12 @@
                     <field name="lc_id"/>
                 </xpath>
 
+                <xpath expr="//field[@name='origin']" position="after">
+                    <field name="transport_id"/>
+                </xpath>
+
+
+
             </field>
         </record>
 

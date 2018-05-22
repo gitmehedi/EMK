@@ -26,6 +26,7 @@
         'gbs_accounting_cheque_received',
         'delivery_qty_reports',
         'sale_operating_unit',
+        'gbs_samuda_sales_install',
     ],
 
     'data': [ ],
