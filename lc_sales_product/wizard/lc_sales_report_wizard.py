@@ -8,5 +8,5 @@ class LcSalesReportWizard(models.TransientModel):
     def process_report(self):
         data = {}
 
-        return self.env['report'].get_action(self, 'gbs_hr_leave_report.hr_emp_leave_report', data=data)
+        return self.env['report'].get_action(self, 'lc_sales_product.report_top_sheet', data=data)
 

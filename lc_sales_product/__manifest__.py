@@ -10,12 +10,14 @@
         'shipment_lc_product',
         'gbs_pi_creation',
         'gbs_document_type',
+        'custom_report'
     ],
 
     'data': [
         'views/lc_sales_view.xml',
         'views/lc_sales_menu.xml',
         'views/shipment_sale_view.xml',
+        'reports/bank_top_sheet.xml',
         'wizard/doc_receive_wizard_view.xml',
         'wizard/lc_sales_report_wizard.xml',
     ],
