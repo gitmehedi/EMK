@@ -12,10 +12,13 @@ class BankTopSheet(models.AbstractModel):
         data = {}
         data['first_party_bank'] = report_utility_pool.getBankAddress(shipment_obj.lc_id.first_party_bank)
         data['company'] = shipment_obj.company_id.name
+        data['currency_id'] = shipment_obj.lc_id.currency_id.name
+        data['lc_id'] = shipment_obj.lc_id.name
+        data['shipment_date'] = shipment_obj.lc_id.shipment_date
         if shipment_obj.lc_id.lc_document_line:
             for line in shipment_obj.lc_id.lc_document_line:
                 doc_obj = {}
-                doc_obj['name'] = line.doc_name
+                doc_obj['name'] = line.doc_name.name
                 doc_obj['original'] = line.original
                 doc_obj['copy'] = line.copy
                 doc_list.append(doc_obj)

@@ -34,33 +34,30 @@
                         <p>The Manager,</p>
                         <p><span t-esc="data['first_party_bank']"/></p>
                         <br/>
-                        <p>Subject: Request for negotiation/collection of Export document amounting to USD DAME against L/C No:DAME Date:</p>
+                        <p>Subject: Request for negotiation/collection of Export document amounting to <span t-esc="data['currency_id']"/> against L/C No: <span t-esc="data['lc_id']"/> Date: <span t-esc="data['shipment_date']"/></p>
                         <br/>
                         <p>Dear Sir,</p>
                         <p>With reference to above, we are pleased to submit/enclose herewith the following document for your negotiation.</p>
                         <br/>
                     </div>
-                    <table class="table table-report-xs table-bordered table-striped">
-                        <p>The enclosed documents are:</p>
-                        <thead>
-                            <tr class="odo-bg-gray">
-                                <th>SL</th>
-                                <th>Document Name</th>
-                                <th>Original</th>
-                                <th>Copies</th>
-                            </tr>
-                        </thead>
+                    <p><b>The enclosed documents are:</b></p>
+
+                    <table style="border: none !important;">
                         <tbody>
+                            <tr>
+                                <td>Draft : </td>
+                                <td>1 Set</td>
+                            </tr>
                             <t t-foreach="lists" t-as="l">
-                                <tr style="page-break-inside: avoid" class="text-center">
-                                    <td style="width:2%"><span t-esc="l_index+1"/></td>
-                                    <td><span t-esc="l['name']"/></td>
-                                    <td><span t-esc="l['original']"/></td>
-                                    <td><span t-esc="l['copy']"/></td>
+                                <tr style="page-break-inside: avoid; border-top: none !important;" class="text-left">
+                                    <td><span t-esc="l['name']"/> :  </td>
+                                    <td><span t-esc="l['original']"/> Original+    <span t-esc="l['copy']"/> Copies</td>
                                 </tr>
                             </t>
                         </tbody>
                     </table>
+
+                    <br/>
                     <p>Your prompt action in this respect is solicited.</p>
                     <br/>
                     <br/>
