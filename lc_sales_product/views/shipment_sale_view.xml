@@ -43,8 +43,9 @@
                             </group>
 
                             <group string="Invoice">
-                                <field name="invoice_number" attrs="{'readonly': [('state','=','done')]}"/>
-                                <field name="invoice_value" attrs="{'readonly': [('state','=','done')]}"/>
+                                <field name="invoice_id" attrs="{'readonly': [('state','=','done')]}"  options="{'no_open':True,'no_quick_create':True,'no_create_edit':True}"/>
+                                <!--<field name="invoice_number" attrs="{'readonly': [('state','=','done')]}"/>-->
+                                <field name="invoice_value"/>
                             </group>
                             <group string="Transport Information">
                                 <field name="transport_by" attrs="{'readonly': [('state','=','done')]}"/>
