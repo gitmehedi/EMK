@@ -24,6 +24,7 @@ class GbsProformaInvoice(models.AbstractModel):
         data['transport_by'] = pi_obj.transport_by
         data['terms_condition'] = pi_obj.terms_condition
         data['advising_bank'] = pi_obj.advising_bank_id.name
+        data['currency'] = pi_obj.currency_id.name
         data['packing'] = pi_obj.packing
         data['terms_of_payment'] = pi_obj.terms_of_payment
         data['unit_address'] = report_utility_pool.getAddressByUnit(pi_obj.operating_unit_id)
@@ -34,6 +35,7 @@ class GbsProformaInvoice(models.AbstractModel):
                 list_obj = {}
                 list_obj['product_id']= line.product_id.name
                 list_obj['quantity']= line.quantity
+                list_obj['uom']= line.uom_id.name
                 list_obj['price_unit']= line.price_unit
                 list_obj['price_subtotal']= line.price_subtotal
                 total_amount.append(list_obj['price_subtotal'])
