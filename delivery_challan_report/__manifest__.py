@@ -11,10 +11,10 @@
     ],
 
     'data': [
-        'reports/delivery_challan_report_view.xml',
+        'reports/delivery_challan_potro_report_view.xml',
     ],
 
-    'summary': 'Reports printing for Delivery Challan',
+    'summary': 'Reports printing for Delivery Challan and Challan Potro',
     'installable': True,
     'application': False,
 }
