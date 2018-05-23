@@ -10,6 +10,7 @@
                 file="lc_sales_product.report_top_sheet"
                 name="lc_sales_product.report_top_sheet"
                 paperformat="custom_report.paperformat_backend_portrait"
+                menu="False"
 
         />
 
@@ -35,7 +36,7 @@
                         <p t-esc="data['first_party_bank']"/>
                         <p t-raw="data['first_party_bank_add']"/>
                         <br/>
-                        <p>Sub: Request for negotiation/collection of Export document amounting to <strong t-esc="data['currency_id']"/> <strong t-esc="data['invoice_value']"/> against L/C No: <strong t-esc="data['lc_id']"/> Date: <b><span t-esc="data['shipment_date']"/></b></p>
+                        <p>Sub: Request for negotiation/collection of Export document amounting to <strong t-esc="data['currency_id']"/> <strong t-esc="data['invoice_value']"/> against L/C No: <strong t-esc="data['lc_id']"/> Date: <b><span t-esc="data['issue_date']"/></b></p>
                         <br/>
                         <p>Dear Sir,</p>
                         <p>With reference to above, we are pleased to submit/enclose herewith the following document for your negotiation.</p>

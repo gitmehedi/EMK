@@ -16,7 +16,7 @@ class BankTopSheet(models.AbstractModel):
         data['currency_id'] = shipment_obj.lc_id.currency_id.name
         data['invoice_value'] = shipment_obj.invoice_value
         data['lc_id'] = shipment_obj.lc_id.name
-        data['shipment_date'] = report_utility_pool.getERPDateFormat(report_utility_pool.getDateFromStr(shipment_obj.lc_id.shipment_date))
+        data['issue_date'] = report_utility_pool.getERPDateFormat(report_utility_pool.getDateFromStr(shipment_obj.lc_id.issue_date))
         if shipment_obj.lc_id.lc_document_line:
             for line in shipment_obj.lc_id.lc_document_line:
                 doc_obj = {}

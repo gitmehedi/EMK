@@ -23,3 +23,9 @@ class LcSalesReportWizard(models.TransientModel):
         data = {}
         data['shipment_id'] = self.env.context.get('active_id')
         return self.env['report'].get_action(self, 'lc_sales_product.report_packing_list', data)
+
+    @api.multi
+    def process_bill_exchange(self):
+        data = {}
+        data['shipment_id'] = self.env.context.get('active_id')
+        return self.env['report'].get_action(self, 'lc_sales_product.report_bill_exchange', data)

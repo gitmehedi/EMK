@@ -19,6 +19,7 @@
         'views/lc_sales_menu.xml',
         'views/shipment_sale_view.xml',
         'reports/bank_top_sheet.xml',
+        'reports/bill_of_exchange_first_report.xml',
         'reports/commercial_invoice_report_view.xml',
         'wizard/doc_receive_wizard_view.xml',
         'wizard/lc_sales_report_wizard.xml',

@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<odoo>
+    <data>
+        <report
+                id="action_bill_exchange"
+                string="Bill OF Exchange(First)"
+                model="purchase.shipment"
+                report_type="qweb-pdf"
+                file="lc_sales_product.report_bill_exchange"
+                name="lc_sales_product.report_bill_exchange"
+                paperformat="custom_report.paperformat_backend_portrait"
+                menu="False"
+
+        />
+
+        <template id="report_bill_exchange">
+            <t t-call="report.html_container">
+                <div class="page" style="page-break-inside: auto">
+                    <style>
+                        .table-caption {
+                        border: 1px solid #ddd;
+                        border-bottom: none;
+                        font-size: 14px;
+                        font-weight: bold;
+                        margin: 0;
+                        padding: 5px 5px;
+                        }
+                    </style>
+                    <div class="row">
+                        <p>For <span t-esc="data['currency_id']"/> <strong t-esc="data['invoice_value']"/> </p>
+                        <br/>
+                        <br/>
+                        <p><strong>First</strong> Bill of Exchange(<b>Second</b> Unpaid)</p>
+                        <br/>
+                        <p>Tenure: <span t-esc="data['tenure']"/></p>
+                        <p>Pay to the order of: <strong t-esc="data['first_party_bank']"/>. <strong t-esc="data['first_party_bank_add']"/></p>
+                        <p>Sum of <span t-esc="data['currency_id']"/> Dollar: </p>
+                    </div>
+                    <div class="row">
+                        <p>Value received against <b>Dame</b> delivery of</p>
+                        <br/>
+                        <table class="table table-report table-bordered table-striped">
+                            <thead>
+                                <tr class="odo-bg-gray">
+                                    <th>Sl#</th>
+                                    <th>Products</th>
+                                    <th>Quantity</th>
+                                    <th>Unit</th>
+                                    <th>Rate</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <t t-foreach="lists" t-as="l">
+                                    <tr style="page-break-inside: avoid">
+                                        <td><span t-esc="l_index+1"/></td>
+                                        <td><span t-esc="l['product_id']"/></td>
+                                        <td><span t-esc="l['uom']"/></td>
+                                        <td><span t-esc="l['quantity']"/></td>
+                                        <td><span t-esc="'%.2f'% l['price_unit']"/></td>
+                                    </tr>
+                                </t>
+                                <!--<tr>-->
+                                    <!--<td colspan="6" rowspan="2"><strong>Amount in words : </strong> <span t-esc="data['currency']"/> <span t-esc="amt_to_word"/></td>-->
+                                    <!--<td><strong>Total : </strong><span t-esc="'%.2f'% total_amount"/></td>-->
+                                <!--</tr>-->
+                            </tbody>
+                        </table>
+                    </div>
+                    <br/>
+                    <p>Proforma Invoice No: <b><strong t-esc="data['invoice_value']"/></b>Date: <b><strong t-esc="data['invoice_date']"/></b></p>
+                    <br/>
+                    <div class="row">
+                        <div class="col-xs-6">
+                            <p t-raw="data['terms_condition']"/>
+                        </div>
+                        <div class="col-xs-6">
+                            <p>Drawn under the Document Credit No:</p>
+                            <p><strong t-esc="data['lc_id']"/> Date: <strong t-esc="data['issue_date']"/></p>
+                            <p>of</p>
+                            <p t-raw="data['second_party_bank']"/>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div>
+                            <p>To: <strong t-raw="data['second_party_bank']"/></p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div>
+                            <p>A/C: <strong t-esc="data['second_party_applicant']"/></p>
+                            <p>A/C: <strong t-esc="data['second_party_applicant']"/></p>
+                        </div>
+                    </div>
+
+                </div>
+            </t>
+        </template>
+    </data>
+</odoo>
