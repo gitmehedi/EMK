@@ -32,9 +32,10 @@
                         <br/>
                         <p>To</p>
                         <p>The Manager,</p>
-                        <p><span t-esc="data['first_party_bank']"/></p>
+                        <p t-esc="data['first_party_bank']"/>
+                        <p t-raw="data['first_party_bank_add']"/>
                         <br/>
-                        <p>Subject: Request for negotiation/collection of Export document amounting to <span t-esc="data['currency_id']"/> against L/C No: <span t-esc="data['lc_id']"/> Date: <span t-esc="data['shipment_date']"/></p>
+                        <p>Sub: Request for negotiation/collection of Export document amounting to <strong t-esc="data['currency_id']"/> <strong t-esc="data['invoice_value']"/> against L/C No: <strong t-esc="data['lc_id']"/> Date: <b><span t-esc="data['shipment_date']"/></b></p>
                         <br/>
                         <p>Dear Sir,</p>
                         <p>With reference to above, we are pleased to submit/enclose herewith the following document for your negotiation.</p>

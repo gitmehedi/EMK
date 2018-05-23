@@ -10,11 +10,13 @@ class BankTopSheet(models.AbstractModel):
         report_utility_pool = self.env['report.utility']
         doc_list = []
         data = {}
-        data['first_party_bank'] = report_utility_pool.getBankAddress(shipment_obj.lc_id.first_party_bank)
+        data['first_party_bank'] = shipment_obj.lc_id.first_party_bank.name
+        data['first_party_bank_add'] = report_utility_pool.getBankAddress2(shipment_obj.lc_id.first_party_bank)
         data['company'] = shipment_obj.company_id.name
         data['currency_id'] = shipment_obj.lc_id.currency_id.name
+        data['invoice_value'] = shipment_obj.invoice_value
         data['lc_id'] = shipment_obj.lc_id.name
-        data['shipment_date'] = shipment_obj.lc_id.shipment_date
+        data['shipment_date'] = report_utility_pool.getERPDateFormat(report_utility_pool.getDateFromStr(shipment_obj.lc_id.shipment_date))
         if shipment_obj.lc_id.lc_document_line:
             for line in shipment_obj.lc_id.lc_document_line:
                 doc_obj = {}
