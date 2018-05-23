@@ -50,6 +50,7 @@
                                         <span t-esc="pack_operation_index+1"/>
                                     </td>
 
+
                                     <td>
                                         <span t-field="pack_operation.product_id"/>
                                         <t t-if="not pack_operation.product_id and pack_operation.package_id">
@@ -69,6 +70,7 @@
                                                     <td name="lot_qty">
                                                         <span t-field="packlot.qty"/>
                                                     </td>
+
                                                 </tr>
                                             </table>
                                         </td>
@@ -85,9 +87,17 @@
                                             <span t-field="pack_operation.product_uom_id"></span>
                                         </t>
                                     </td>
+
+                                    <td>
+                                        <span t-esc="o.delivery_order_id.sale_order_id.order_line.price_unit * pack_operation.qty_done"/>
+                                    </td>
+                                    <td>
+                                        <span t-esc="o.delivery_order_id.sale_order_id.order_line.price_unit * pack_operation.qty_done"/>
+
+                                    </td>
+
                                 </tr>
                             </div>
-
 
                         </div>
                     </div>
