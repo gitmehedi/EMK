@@ -10,7 +10,8 @@
         'shipment_lc_product',
         'gbs_pi_creation',
         'gbs_document_type',
-        'custom_report'
+        'custom_report',
+        'amount_to_word_bd'
     ],
 
     'data': [
@@ -18,8 +19,10 @@
         'views/lc_sales_menu.xml',
         'views/shipment_sale_view.xml',
         'reports/bank_top_sheet.xml',
+        'reports/commercial_invoice_report_view.xml',
         'wizard/doc_receive_wizard_view.xml',
         'wizard/lc_sales_report_wizard.xml',
+
     ],
 
     'summary': 'Sale By LC',
