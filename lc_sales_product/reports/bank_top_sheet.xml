@@ -15,66 +15,64 @@
 
         <template id="report_top_sheet">
             <t t-call="report.html_container">
-                <t t-call="custom_report.gbs_internal_layout">
-                    <div class="page" style="page-break-inside: auto">
-                        <style>
-                            .table-caption {
-                            border: 1px solid #ddd;
-                            border-bottom: none;
-                            font-size: 14px;
-                            font-weight: bold;
-                            margin: 0;
-                            padding: 5px 5px;
-                            }
-                        </style>
-                        <div class="row">
-							<p>Date: </p>
-                            <br/>
-                            <br/>
-							<p>To</p>
-							<p>The Manager,</p>
-							<p><span t-esc="data['first_party_bank']"/></p>
-							<br/>
-							<p>Subject: Request for negotiation/collection of Export document amounting to USD DAME against L/C No:DAME Date:</p>
-							<br/>
-							<p>Dear Sir,</p>
-                            <p>With reference to above, we are pleased to submit/enclose herewith the following document for your negotiation.</p>
-							<br/>
-                        </div>
-                        <table class="table table-report-xs table-bordered table-striped">
-                            <p>The enclosed documents are:</p>
-                            <thead>
-                                <tr class="odo-bg-gray">
-                                    <th>SL</th>
-                                    <th>Document Name</th>
-                                    <th>Original</th>
-                                    <th>Copies</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <t t-foreach="lists" t-as="l">
-                                    <tr style="page-break-inside: avoid" class="text-center">
-                                        <td style="width:2%"><span t-esc="l_index+1"/></td>
-                                        <td><span t-esc="l['name']"/></td>
-                                        <td><span t-esc="l['original']"/></td>
-                                        <td><span t-esc="l['copy']"/></td>
-                                    </tr>
-                                </t>
-                            </tbody>
-                        </table>
-                        <p>Your prompt action in this respect is solicited.</p>
+                <div class="page" style="page-break-inside: auto">
+                    <style>
+                        .table-caption {
+                        border: 1px solid #ddd;
+                        border-bottom: none;
+                        font-size: 14px;
+                        font-weight: bold;
+                        margin: 0;
+                        padding: 5px 5px;
+                        }
+                    </style>
+                    <div class="row">
+                        <p>Date: </p>
                         <br/>
                         <br/>
-                        <p>Thank you.</p>
+                        <p>To</p>
+                        <p>The Manager,</p>
+                        <p><span t-esc="data['first_party_bank']"/></p>
                         <br/>
+                        <p>Subject: Request for negotiation/collection of Export document amounting to USD DAME against L/C No:DAME Date:</p>
                         <br/>
-                        <p>For and on behalf of</p>
-                        <p><span t-esc="data['company']"/></p>
+                        <p>Dear Sir,</p>
+                        <p>With reference to above, we are pleased to submit/enclose herewith the following document for your negotiation.</p>
                         <br/>
-                        <br/>
-                        <p>Authorised Signature</p>
                     </div>
-                </t>
+                    <table class="table table-report-xs table-bordered table-striped">
+                        <p>The enclosed documents are:</p>
+                        <thead>
+                            <tr class="odo-bg-gray">
+                                <th>SL</th>
+                                <th>Document Name</th>
+                                <th>Original</th>
+                                <th>Copies</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <t t-foreach="lists" t-as="l">
+                                <tr style="page-break-inside: avoid" class="text-center">
+                                    <td style="width:2%"><span t-esc="l_index+1"/></td>
+                                    <td><span t-esc="l['name']"/></td>
+                                    <td><span t-esc="l['original']"/></td>
+                                    <td><span t-esc="l['copy']"/></td>
+                                </tr>
+                            </t>
+                        </tbody>
+                    </table>
+                    <p>Your prompt action in this respect is solicited.</p>
+                    <br/>
+                    <br/>
+                    <p>Thank you.</p>
+                    <br/>
+                    <br/>
+                    <p>For and on behalf of</p>
+                    <p><span t-esc="data['company']"/></p>
+                    <br/>
+                    <br/>
+                    <p>Authorised Signature</p>
+                </div>
             </t>
         </template>
     </data>

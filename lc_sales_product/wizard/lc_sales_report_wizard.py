@@ -7,6 +7,6 @@ class LcSalesReportWizard(models.TransientModel):
     @api.multi
     def process_report(self):
         data = {}
-
-        return self.env['report'].get_action(self, 'lc_sales_product.report_top_sheet', data=data)
+        data['shipment_id'] = self.env.context.get('active_id')
+        return self.env['report'].get_action(self, 'lc_sales_product.report_top_sheet', data)
 

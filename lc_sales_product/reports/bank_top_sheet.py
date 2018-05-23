@@ -6,7 +6,7 @@ class BankTopSheet(models.AbstractModel):
     @api.multi
     def render_html(self, docids, data=None):
         shipment_pool = self.env['purchase.shipment']
-        shipment_obj = shipment_pool.browse(docids[0])
+        shipment_obj = shipment_pool.browse(data.get('shipment_id'))
         report_utility_pool = self.env['report.utility']
         doc_list = []
         data = {}

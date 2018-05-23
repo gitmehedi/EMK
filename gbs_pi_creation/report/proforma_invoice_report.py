@@ -23,7 +23,7 @@ class GbsProformaInvoice(models.AbstractModel):
         data['customer_add'] = report_utility_pool.getCoustomerAddress(delivery_address)
         data['transport_by'] = pi_obj.transport_by
         data['terms_condition'] = pi_obj.terms_condition
-        data['advising_bank'] = pi_obj.advising_bank_id
+        data['advising_bank'] = pi_obj.advising_bank_id.name
         data['packing'] = pi_obj.packing
         data['terms_of_payment'] = pi_obj.terms_of_payment
         data['unit_address'] = report_utility_pool.getAddressByUnit(pi_obj.operating_unit_id)
