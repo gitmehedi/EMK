@@ -23,8 +23,8 @@ class BillExchangeFirst(models.AbstractModel):
         data['company'] = shipment_obj.company_id.name
         data['currency_id'] = shipment_obj.lc_id.currency_id.name
         data['invoice_value'] = shipment_obj.invoice_value
-        data['invoice_id'] = shipment_obj.invoice_id.name
-        data['invoice_date'] = shipment_obj.invoice_id.date_invoice
+        data['invoice_id'] = shipment_obj.invoice_id.display_name
+        data['invoice_date'] = report_utility_pool.getERPDateFormat(report_utility_pool.getDateFromStr(shipment_obj.invoice_id.date_invoice))
         data['terms_condition'] = shipment_obj.lc_id.terms_condition
         data['tenure'] = shipment_obj.lc_id.tenure
         data['lc_id'] = shipment_obj.lc_id.name
@@ -41,6 +41,14 @@ class BillExchangeFirst(models.AbstractModel):
                 price.append(list_obj['quantity'])
                 line_list.append(list_obj)
 
+        pi_list =[]
+        if shipment_obj.lc_id.pi_ids_temp:
+            for pi in shipment_obj.lc_id.pi_ids_temp:
+                pi_obj = {}
+                pi_obj['number'] = pi.name
+                pi_obj['date'] = pi.invoice_date
+                pi_list.append(pi_obj)
+
         price_total = sum(price)
         total= shipment_obj.invoice_value
         amt_to_word = self.env['res.currency'].amount_to_word(float(total))
@@ -49,6 +57,7 @@ class BillExchangeFirst(models.AbstractModel):
             'lists': line_list,
             'price_total': price_total,
             'amt_to_word': amt_to_word,
+            'pi_list': pi_list
 
         }
         return self.env['report'].render('lc_sales_product.report_bill_exchange', docargs)

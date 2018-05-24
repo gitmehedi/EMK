@@ -45,8 +45,12 @@
                                         <tr>
                                             <td>
                                                 <p>Terms of Delivery:</p>
-                                                <p>PI No: <strong t-esc="data['pi_id']"/></p>
-                                                <p>PI Date: <strong t-esc="data['pi_date']" t-options='{"widget": "date"}'/></p>
+                                                <p>As per Proforma Invoice No:
+                                                    <t t-foreach="pi_list" t-as="p">
+                                                        <p><strong t-esc="p['number']"/> Date:
+                                                        <strong t-esc="p['date']"/></p>
+                                                    </t>
+                                                </p>
                                             </td>
                                             <td>
                                                 <p>Loading:</p>
@@ -91,8 +95,12 @@
                                             accordance
                                             with the Proforma Invoice No.
                                         </p>
-                                        <p><strong t-esc="data['pi_id']"/></p>
-                                        <p>PI Date: <strong t-esc="data['pi_date']" t-options='{"widget": "date"}'/></p>
+                                        <p>Proforma Invoice No:
+                                            <t t-foreach="pi_list" t-as="p">
+                                                <p><strong t-esc="p['number']"/> Date:
+                                                <strong t-esc="p['date']"/></p>
+                                            </t>
+                                        </p>
                                     </table>
                                 </td>
                             </tr>
@@ -103,9 +111,6 @@
                                     <th>SL</th>
                                     <th>Product</th>
                                     <th>H.S Code</th>
-                                    <th>Quantity</th>
-                                    <th>Unit Price</th>
-                                    <th>Total Price</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -116,14 +121,11 @@
                                         <td style="width:2%"><span t-esc="l_index+1"/></td>
                                         <td><span t-esc="l['name']"/></td>
                                         <td><span t-esc="l['hs_code']"/></td>
-                                        <td><span t-esc="l['quantity']"/></td>
-                                        <td><span t-esc="'%.2f'% l['unit_price']"/></td>
-                                        <td><span t-esc="'%.2f'% l['total_price']"/></td>
                                     </tr>
                                 </t>
                             </tbody>
                         </table>
-                        <p>Quantity of goods: <strong t-esc="total_qty"/></p>
+                        <p>Quantity of goods: <strong t-esc="total_qty"/><strong t-esc="uom"/></p>
                         <p>Goods dispatched on: <strong t-esc="data['arrival_date']"/></p>
                         <div class="row mb32 text-left" style="margin-top:10mm;">
                             <div class="col-xs-12">

@@ -62,7 +62,12 @@
                                 </t>
                             </tbody>
                         </table>
-                        <p>Proforma Invoice No: <b><strong t-esc="data['invoice_value']"/></b> Date: <b><strong t-esc="data['invoice_date']"/></b></p>
+                        <p>Proforma Invoice No:
+                            <t t-foreach="pi_list" t-as="p">
+                                <p><strong t-esc="p['number']"/> Date:
+                                <strong t-esc="p['date']"/></p>
+                            </t>
+                        </p>
                     </div>
 
                     <hr class="hr-sm mb-0"/>
@@ -91,13 +96,13 @@
                     </div>
                     <hr class="hr-sm mb-0"/>
                     <div class="row mb32 text-right" style="margin-top:10mm;">
-                        <div class="col-xs-10 text-left">
+                        <div class="col-xs-12 text-right">
                             <p>For and on behalf of <span t-esc="data['first_party']"/></p>
                             <br/>
                             <br/>
                             <br/>
-                            <br/>
-                            <p style="border-top: 1px solid black;width: 20%;">Authorized Signature</p>
+                            <p>-------------------------------</p>
+                            <p>Authorized Signature</p>
                         </div>
                     </div>
                 </div>
