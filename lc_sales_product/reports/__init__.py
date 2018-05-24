@@ -4,3 +4,5 @@ import packing_list_report
 import bill_of_exchange_first_report
 import bill_of_exchange_second_report
 import beneficiary_certificate
+import certificate_of_origin
+import inspection_certificate

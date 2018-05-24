@@ -3,22 +3,22 @@
 <odoo>
     <data>
         <report
-                id="action_beneficiary_certificate"
-                string="Beneficiary Certificate"
+                id="action_inspection_certificate"
+                string="Inspection Certificate"
                 model="purchase.shipment"
                 report_type="qweb-pdf"
-                file="lc_sales_product.report_beneficiary_certificate"
-                name="lc_sales_product.report_beneficiary_certificate"
+                file="lc_sales_product.report_inspection_certificate"
+                name="lc_sales_product.report_inspection_certificate"
                 paperformat="custom_report.paperformat_backend_portrait"
 
         />
 
-        <template id="report_beneficiary_certificate">
+        <template id="report_inspection_certificate">
             <t t-call="report.html_container">
                 <div class="page" style="page-break-inside: auto">
                     <div class="row">
                         <div class="clearfix">
-                            <h3 class="report-title">Beneficiary Certificate</h3>
+                            <h3 class="report-title">Inspection Certificate</h3>
                         </div>
                         <style>
                             table, th, td {
