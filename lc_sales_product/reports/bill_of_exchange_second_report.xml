@@ -3,21 +3,21 @@
 <odoo>
     <data>
         <report
-                id="action_bill_exchange"
-                string="Bill OF Exchange(First)"
+                id="action_bill_exchange_second"
+                string="Bill OF Exchange(Second)"
                 model="purchase.shipment"
                 report_type="qweb-pdf"
-                file="lc_sales_product.report_bill_exchange"
-                name="lc_sales_product.report_bill_exchange"
+                file="lc_sales_product.report_bill_exchange_second"
+                name="lc_sales_product.report_bill_exchange_second"
                 paperformat="custom_report.paperformat_backend_portrait"
                 menu="False"
 
         />
 
-        <template id="report_bill_exchange">
+        <template id="report_bill_exchange_second">
             <t t-call="report.html_container">
                 <div class="page" style="page-break-inside: auto">
-                    <h4 class="text-center"><b>Bill Of Exchange(First)</b></h4>
+                    <h4 class="text-center"><b>Bill Of Exchange(Second)</b></h4>
                     <br/>
                     <br/>
                     <div class="row">
@@ -31,7 +31,7 @@
                     </div>
                     <br/>
                     <div>
-                        <p><strong>First</strong> Bill of Exchange(<b>Second</b> Unpaid)</p>
+                        <p><strong>Second</strong> Bill of Exchange(<b>First</b> Unpaid)</p>
                         <br/>
                         <p>Tenure: <strong t-esc="data['tenure']"/></p>
                         <p>Pay to the order of: <strong t-esc="data['first_party_bank']"/>. <strong t-esc="data['first_party_bank_add']"/></p>
