@@ -190,34 +190,29 @@ class ItemLoanLendingLines(models.Model):
     _description = 'Item Loan Lending Line'
 
     item_loan_lending_id = fields.Many2one('item.loan.lending', string='Item', required=True, ondelete='cascade')
-    product_id = fields.Many2one('product.product', string='Product', required=True)
+    product_id = fields.Many2one('product.product', string='Product', required=True,ondelete='cascade')
     product_uom_qty = fields.Float('Quantity', digits=dp.get_precision('Product UoS'),
                                    required=True, default=1)
-    product_uom = fields.Many2one('product.uom', 'Unit of Measure', required=True)
+    product_uom = fields.Many2one(related='product_id.uom_id', comodel='product.uom', string='Unit of Measure',
+                                  required=True, store=True)
+    price_unit = fields.Float(related='product_id.standard_price', string='Price',
+                              digits=dp.get_precision('Product Price'),
+                              help="Price computed based on the last purchase order approved.", store=True)
     qty_available = fields.Float('In Stock', compute='_computeProductQuentity', store=True)
-    name = fields.Text('Specification', store=True)
+    name = fields.Char(related='product_id.name', string='Specification', store=True)
     sequence = fields.Integer('Sequence')
-    received_qty = fields.Float('Received Quantity', digits=dp.get_precision('Product UoS'))
+    received_qty = fields.Float('Given Quantity', digits=dp.get_precision('Product UoS'))
+
+    state = fields.Selection([
+        ('draft', 'Draft'),
+        ('waiting_approval', 'Waiting for Approval'),
+        ('approved', 'Approved'),
+        ('reject', 'Rejected'),
+    ], string='State')
 
     ####################################################
     # Business methods
     ####################################################
-
-    @api.onchange('product_id')
-    def onchange_product_id(self):
-        if not self.product_id:
-            return {'value': {'product_uom_qty': 1.0,
-                              'product_uom': False,
-                              'qty_available': 0.0,
-                              'name': '',
-                              }
-                    }
-        product_obj = self.env['product.product']
-        product = product_obj.search([('id', '=', self.product_id.id)])
-
-        product_name = product.name_get()[0][1]
-        self.name = product_name
-        self.product_uom = product.uom_id.id
 
     @api.depends('product_id')
     @api.multi
@@ -239,12 +234,7 @@ class ItemLoanLendingLines(models.Model):
         if self.product_uom_qty <= 0:
             raise UserError('Product quantity can not be negative or zero!!!')
 
-    state = fields.Selection([
-        ('draft', 'Draft'),
-        ('waiting_approval', 'Waiting for Approval'),
-        ('approved', 'Approved'),
-        ('reject', 'Rejected'),
-    ], string='State')
+
     ####################################################
     # Override methods
     ####################################################

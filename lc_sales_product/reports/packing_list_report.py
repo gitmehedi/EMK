@@ -1,13 +1,13 @@
 from odoo import api, fields, models, _
 
 
-class CommercialInvoice(models.AbstractModel):
-    _name = 'report.lc_sales_product.report_commercial_invoice'
+class PackingList(models.AbstractModel):
+    _name = 'report.lc_sales_product.report_packing_list'
 
     @api.multi
     def render_html(self, docids, data=None):
         shipment_pool = self.env['purchase.shipment']
-        shipment_obj = shipment_pool.browse(data.get('lc_id'))
+        shipment_obj = shipment_pool.browse(data.get('shipment_id'))
         report_utility_pool = self.env['report.utility']
         prod_list = []
         data = {}
@@ -55,4 +55,4 @@ class CommercialInvoice(models.AbstractModel):
             'total_price': total_price,
         }
 
-        return self.env['report'].render('lc_sales_product.report_commercial_invoice', docargs)
+        return self.env['report'].render('lc_sales_product.report_packing_list', docargs)

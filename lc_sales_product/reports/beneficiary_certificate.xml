@@ -124,9 +124,9 @@
                             </tbody>
                         </table>
                         <p>Quantity of goods: <strong t-esc="total_qty"/></p>
-                        <p>Goods dispatched on: <strong t-esc="total_qty"/></p>
-                        <div class="row mb32 text-right" style="margin-top:10mm;">
-                            <div class="col-xs-10 text-right">
+                        <p>Goods dispatched on: <strong t-esc="data['arrival_date']"/></p>
+                        <div class="row mb32 text-left" style="margin-top:10mm;">
+                            <div class="col-xs-12">
                                 <p>For and on behalf of </p>
                                 <p><span t-esc="data['first_party']"/></p>
                                 <br/>
