@@ -36,7 +36,7 @@
                                 <p><b>Vat Registration No : </b><span t-esc="data['vat']"/></p>
                             </div>
                             <div class="col-xs-6 text-left">
-                                <p><b>Proforma Invoice No and Date : </b></p>
+                                <p><b>Proforma Invoice No &amp; Date : </b></p>
                                 <P><span t-esc="data['name']"/></P>
                                 <P><span t-esc="data['pi_date']"/></P>
                             </div>

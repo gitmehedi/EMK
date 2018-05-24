@@ -35,7 +35,7 @@
                         <br/>
                         <p>Tenure: <strong t-esc="data['tenure']"/></p>
                         <p>Pay to the order of: <strong t-esc="data['first_party_bank']"/>. <strong t-esc="data['first_party_bank_add']"/></p>
-                        <p>Sum of <span t-esc="data['currency_id']"/> Dollar: <span t-esc="amt_to_word"/></p>
+                        <p>Sum of <span t-esc="data['currency_id']"/> : <span t-esc="amt_to_word"/></p>
                     </div>
                     <hr class="hr-sm mb-0"/>
                     <div class="row">

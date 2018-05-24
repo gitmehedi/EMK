@@ -45,7 +45,7 @@
                                 <tr>
                                     <td>
                                         <p>
-                                            <u>Exporter</u>
+                                            <b> <u>Exporter</u></b>
                                         </p>
                                         <b>
                                             <p>
@@ -108,14 +108,14 @@
                                 <tr>
                                     <td>
                                         <p>
-                                            <u>Buyer</u>
+                                            <b><u>Buyer</u></b>
                                         </p>
                                         <b>
                                             <p>
                                                 <span t-esc="data['buyer']"/>
                                             </p>
                                             <p>
-                                                <span t-esc="data['buyer_address']"/>
+                                              Office:  <span t-esc="data['buyer_address']"/>
                                             </p>
                                         </b>
                                     </td>
