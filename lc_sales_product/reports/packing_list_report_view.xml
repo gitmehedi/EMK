@@ -115,7 +115,7 @@
                                                 <span t-esc="data['buyer']"/>
                                             </p>
                                             <p>
-                                                <span t-esc="data['buyer_address']"/>
+                                               Office: <span t-esc="data['buyer_address']"/>
                                             </p>
                                         </b>
                                     </td>
@@ -172,9 +172,7 @@
                                         <th>Product</th>
                                         <th>H.S Code</th>
                                         <th>UoM</th>
-                                        <th>Gross Weight</th>
-                                        <th>Total Jar</th>
-                                        <th>Net Weight</th>
+
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -196,26 +194,25 @@
                                             </td>
                                         </tr>
                                     </t>
-                                    <tr>
-                                        <td>Total</td>
-                                        <td></td>
-                                        <td class="text-right">
-                                            <span t-esc="total_qty"/>
-                                        </td>
-                                        <td></td>
-                                        <td></td>
-                                        <td class="text-right">
-                                            <span t-esc="'%.2f'% total_price"/>
-                                        </td>
-                                    </tr>
+
                                 </tbody>
                             </table>
-                            <p>
-                                In Words:
-                                <b>
-                                    <span t-esc="amt_to_word"/>
-                                </b>
-                            </p>
+                            <td>
+                                <table>
+                                    <tr>
+                                        <th>Gross Weight</th>
+                                        <th>Total Jar</th>
+                                        <th>Net Weight</th>
+
+                                    </tr>
+                                    <tr>
+                                        <td> <span t-esc="data['gross_weight']"/> <span t-esc="data['weight_uom']"/></td>
+                                        <td><span t-esc="data['count_qty']"/> <span t-esc="data['count_uom']"/></td>
+                                        <td><span t-esc=" data['net_weight']"/> <span t-esc="data['weight_uom']"/></td>
+                                    </tr>
+                                </table>
+                            </td>
+
                             <div class="text-right">
 
                                 <p>For and on behalf of</p>
