@@ -34,7 +34,7 @@
                                     <field name="name" attrs="{'readonly': [('state','=','done')]}"/>
                                 </group>
                                 <group>
-                                    <field name="arrival_date" string="Dispatched Date" attrs="{'readonly': [('state','=','done')]}"/>
+                                    <field name="arrival_date" required="1" string="Dispatch Date" attrs="{'readonly': [('state','=','done')]}"/>
                                 </group>
                                 <!--<separator string="Comments"/>-->
                                 <!--<field name="comment" nolabel="1" attrs="{'readonly': [('state','=','done')]}"/>-->
