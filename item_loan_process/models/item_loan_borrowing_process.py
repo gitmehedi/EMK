@@ -186,19 +186,25 @@ class ItemBorrowing(models.Model):
     # Override methods
     ####################################################
 
+    def unlink(self):
+        for indent in self:
+            if indent.state != 'draft':
+                raise ValidationError(_('You cannot delete this !!'))
+        return super(ItemBorrowing, self).unlink()
+
 class ItemBorrowingLines(models.Model):
     _name = 'item.borrowing.line'
     _description = 'Item Borrowing Line'
 
-
     item_borrowing_id = fields.Many2one('item.borrowing', string='Item', required=True, ondelete='cascade')
-    product_id = fields.Many2one('product.product', string='Product', required=True)
+    product_id = fields.Many2one('product.product', string='Product', required=True,ondelete='cascade')
     product_uom_qty = fields.Float('Quantity', digits=dp.get_precision('Product UoS'),
                                    required=True, default=1)
-    product_uom = fields.Many2one('product.uom', 'Unit of Measure', required=True)
-    price_unit = fields.Float('Price', digits=dp.get_precision('Product Price'),
-                              help="Price computed based on the last purchase order approved.")
-    name = fields.Text('Specification', store=True)
+    product_uom = fields.Many2one(related='product_id.uom_id',comodel='product.uom',string= 'Unit of Measure',
+                                  required=True,store=True)
+    price_unit = fields.Float(related='product_id.standard_price',string='Price', digits=dp.get_precision('Product Price'),
+                              help="Price computed based on the last purchase order approved.",store=True)
+    name = fields.Char(related='product_id.name',string='Specification',store=True)
     sequence = fields.Integer('Sequence')
     received_qty = fields.Float('Received Quantity', digits=dp.get_precision('Product UoS'))
 
@@ -213,23 +219,11 @@ class ItemBorrowingLines(models.Model):
     ####################################################
     # Business methods
     ####################################################
-    @api.onchange('product_id')
-    def onchange_product_id(self):
-        if not self.product_id:
-            return {'value': {'product_uom_qty': 1.0,
-                              'product_uom': False,
-                              'price_unit': 0.0,
-                              'name': '',
-                              }
-                    }
-        product_obj = self.env['product.product']
-        product = product_obj.search([('id', '=', self.product_id.id)])
-
-        product_name = product.name_get()[0][1]
-        self.name = product_name
-        self.product_uom = product.uom_id.id
-        self.price_unit = product.standard_price
-
+    @api.one
+    @api.constrains('product_uom_qty')
+    def _check_product_uom_qty(self):
+        if self.product_uom_qty < 0:
+            raise UserError('You can\'t give negative value!!!')
 
     ####################################################
     # Override methods
