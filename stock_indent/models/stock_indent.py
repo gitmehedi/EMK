@@ -190,7 +190,7 @@ class IndentIndent(models.Model):
             'product_id': line.product_id.id,
             'date': date_planned,
             'date_expected': date_planned,
-            'product_uom_qty': line.product_uom_qty,
+            'product_uom_qty': line.issue_qty,
             'product_uom': line.product_uom.id,
             'location_id': location_id,
             'location_dest_id': self.stock_location_id.id,
@@ -283,9 +283,12 @@ class IndentIndent(models.Model):
         When only one found, show the picking immediately.
         '''
         for product in self.product_lines:
-            if product.qty_available < product.product_uom_qty:
+            if product.qty_available <= 0:
                 raise UserError('Stock not available!!!')
-
+            elif product.qty_available < product.product_uom_qty:
+                product.issue_qty = product.qty_available
+            else:
+                product.issue_qty = product.product_uom_qty
         if self.picking_id:
             pass
         else:
@@ -332,6 +335,8 @@ class IndentProductLines(models.Model):
     product_id = fields.Many2one('product.product', string='Product', required=True)
     product_uom_qty = fields.Float('Quantity', digits=dp.get_precision('Product UoS'),
                                    required=True, default=1)
+    received_qty = fields.Float('Received', digits=dp.get_precision('Product UoS'),help="Receive Quantity which Update by done quntity.")
+    issue_qty = fields.Float('Issue Quantity', digits=dp.get_precision('Product UoS'),help="Issued Quantity which Update by avilable quantity.")
     product_uom = fields.Many2one(related='product_id.uom_id',string='Unit of Measure', required=True,store=True)
     price_unit = fields.Float(related='product_id.standard_price',string='Price', digits=dp.get_precision('Product Price'),store=True,
                               help="Price computed based on the last purchase order approved.")

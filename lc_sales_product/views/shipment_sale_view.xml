@@ -56,8 +56,11 @@
                                 <field name="shipment_date" attrs="{'readonly': [('state','=','done')]}"/>
                             </group>
                             <group string="Packing List">
-                                <field name="net_weight" attrs="{'readonly': [('state','=','done')]}"/>
-                                <field name="gross_weight" attrs="{'readonly': [('state','=','done')]}"/>
+                                <field name="gross_weight" required="1" attrs="{'readonly': [('state','=','done')]}"/>
+                                <field name="net_weight" required="1" attrs="{'readonly': [('state','=','done')]}"/>
+                                <field name="weight_uom" required="1" attrs="{'readonly': [('state','=','done')]}"/>
+                                <field name="count_qty" required="1" attrs="{'readonly': [('state','=','done')]}"/>
+                                <field name="count_uom" required="1" attrs="{'readonly': [('state','=','done')]}"/>
                             </group>
 
                             <notebook colspan="4">
