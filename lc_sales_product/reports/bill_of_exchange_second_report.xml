@@ -85,8 +85,8 @@
                     <div class="row">
                         <div class="col-xs-6">
                             <p>A/C:     <strong t-esc="data['second_party_applicant']"/>,</p>
-                            <p>         <strong>Office: </strong><strong t-esc="data['delivery_address']"/></p>
-                            <p>         <strong>Factory: </strong><strong t-esc="data['invoice_address']"/></p>
+                            <p>         <strong>Office: </strong><strong t-esc="data['invoice_address']"/></p>
+                            <p>         <strong>Factory: </strong><strong t-esc="data['delivery_address']"/></p>
                         </div>
                     </div>
                     <hr class="hr-sm mb-0"/>

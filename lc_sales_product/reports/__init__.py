@@ -2,3 +2,4 @@ import bank_top_sheet
 import commercial_invoice_report
 import bill_of_exchange_first_report
 import bill_of_exchange_second_report
+import beneficiary_certificate

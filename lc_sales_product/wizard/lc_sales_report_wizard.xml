@@ -24,6 +24,9 @@
                         <group>
                             <button string="Bill of Exchange(Second)" name="process_bill_exchange_second" type="object" class="oe_highlight"/>
                         </group>
+                        <group>
+                            <button string="Beneficiary Certificate" name="process_beneficiary_certificate" type="object" class="oe_highlight"/>
+                        </group>
                     </group>
                     <footer>
                         <button special="cancel" string="Cancel" type="object"/>
