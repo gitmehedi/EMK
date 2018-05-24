@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<odoo>
+    <data>
+        <report
+                id="action_beneficiary_certificate"
+                string="Beneficiary  Certificate"
+                model="purchase.shipment"
+                report_type="qweb-pdf"
+                file="lc_sales_product.report_beneficiary_certificate"
+                name="lc_sales_product.report_beneficiary_certificate"
+                paperformat="custom_report.paperformat_backend_portrait"
+
+        />
+
+        <template id="report_beneficiary_certificate">
+            <t t-call="report.html_container">
+                <div class="page" style="page-break-inside: auto">
+                    <div class="row">
+                        <div class="clearfix">
+                            <h3 class="report-title">Beneficiary  Certificate</h3>
+                        </div>
+                        <style>
+                            table, th, td {
+                            border: 1px solid black;
+                            border-collapse: collapse;
+                            }
+                            th, td {
+                            padding: 5px;
+                            }
+                        </style>
+                        <table>
+                            <tr>
+                                <td>
+                                    <strong>Exporter:</strong>
+                                    <p><span t-esc="data['first_party']"/></p>
+                                    <p><b>Factory: </b><span t-esc="data['factory']"/></p>
+                                </td>
+                                <td>
+                                    <table>
+                                        <tr>
+                                            <td>Invoice No: <strong t-esc="data['invoice_id']"/></td>
+                                            <td>Invoice Date: <strong t-esc="data['invoice_date']"/></td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <p>Terms of Delivery:</p>
+                                                <p>PI No: <strong t-esc="data['pi_id']"/></p>
+                                                <p>PI Date: <strong t-esc="data['pi_date']" t-options='{"widget": "date"}'/></p>
+                                            </td>
+                                            <td>
+                                                <p>Loading:</p>
+                                                <p><span t-esc="data['factory']"/></p>
+                                            </td>
+                                        </tr>
+                                        <td>
+                                            <p>Packing: </p>
+                                            <p>Export Standard</p>
+                                        </td>
+                                        <td>
+                                            <p>Destination:</p>
+                                            <p>Applicant' Factory</p>
+                                        </td>
+                                    </table>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <strong>Buyer:</strong>
+                                    <p><span t-esc="data['buyer']"/></p>
+                                    <p>Office: <span t-esc="data['invoice_address']"/></p>
+                                    <p>Factory: <span t-esc="data['delivery_address']"/></p>
+                                </td>
+                                <td>
+                                    <table>
+                                        <p>Drawn under the Documentary Credit No.:</p>
+                                        <strong t-esc="data['lc_id']"/>
+                                        <p>Date:<strong t-esc="data['lc_date']"/> of</p>
+                                        <strong t-esc="data['second_party_bank']"/>
+                                    </table>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <p t-raw="data['terms_condition']"/>
+                                </td>
+                                <td>
+                                    <table>
+                                        <p>We certify that the goods supplied are of Bangladesh origin and strictly
+                                            in
+                                            accordance
+                                            with the Proforma Invoice No.
+                                        </p>
+                                        <p><strong t-esc="data['pi_id']"/></p>
+                                        <p>PI Date: <strong t-esc="data['pi_date']" t-options='{"widget": "date"}'/></p>
+                                    </table>
+                                </td>
+                            </tr>
+                        </table>
+                        <table class="table table-report table-bordered table-striped">
+                            <thead>
+                                <tr class="odo-bg-gray">
+                                    <th>SL</th>
+                                    <th>Product</th>
+                                    <th>H.S Code</th>
+                                    <th>Quantity</th>
+                                    <th>Unit Price</th>
+                                    <th>Total Price</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <br/>
+                                <p>Description of Goods</p>
+                                <t t-foreach="lists" t-as="l">
+                                    <tr style="page-break-inside: avoid">
+                                        <td style="width:2%"><span t-esc="l_index+1"/></td>
+                                        <td><span t-esc="l['name']"/></td>
+                                        <td><span t-esc="l['hs_code']"/></td>
+                                        <td><span t-esc="l['quantity']"/></td>
+                                        <td><span t-esc="'%.2f'% l['unit_price']"/></td>
+                                        <td><span t-esc="'%.2f'% l['total_price']"/></td>
+                                    </tr>
+                                </t>
+                            </tbody>
+                        </table>
+                        <p>Quantity of goods: <strong t-esc="total_qty"/></p>
+                        <p>Goods dispatched on: <strong t-esc="data['arrival_date']"/></p>
+                        <div class="row mb32 text-left" style="margin-top:10mm;">
+                            <div class="col-xs-12">
+                                <p>For and on behalf of </p>
+                                <p><span t-esc="data['first_party']"/></p>
+                                <br/>
+                                <br/>
+                                <br/>
+                                <p style="border-top: 1px solid black;width: 20%;">Authorized Signature</p>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </t>
+        </template>
+    </data>
+</odoo>
