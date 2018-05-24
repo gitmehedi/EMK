@@ -47,6 +47,10 @@ class Shipment(models.Model):
     # Packing List
     gross_weight = fields.Float('Gross Weight')
     net_weight = fields.Float('Net Weight')
+    weight_uom = fields.Many2one('product.uom', string='Weight Unit')
+
+    count_qty = fields.Float(string='Count')
+    count_uom = fields.Many2one('product.uom', string='Unit')
 
     # Invoice
     invoice_number = fields.Char(string='Invoice Number')
