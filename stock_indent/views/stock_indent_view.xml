@@ -86,6 +86,8 @@
 										<field name="qty_available" readonly="1" groups="stock.group_stock_user" />
 										<field name="product_uom" string="UOM"/>
 										<field name="product_uom_qty" sum="Total Qty"/>
+										<field name="received_qty" sum="Total Receive Qty" readonly="1"/>
+										<field name="issue_qty" invisible="1"/>
 										<field name="remarks"/>
 										<!--groups="stock.group_stock_user"-->
 										<!--<field name="price_unit" sum="Total Price"/>-->

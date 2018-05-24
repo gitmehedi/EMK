@@ -16,6 +16,7 @@
         'security/ir_rule.xml',
         'report/inherit_stock_picking_report.xml',
         'wizard/inherit_stock_immediate_transfer_views.xml',
+        'wizard/inherit_pack_operation_details_form.xml',
         'views/stock_picking_views.xml',
     ],
 }

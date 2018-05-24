@@ -15,6 +15,12 @@ class StockPicking(models.Model):
             indent_obj = self.env['indent.indent']
             indent_ids = indent_obj.search([('name', '=', picking.origin)])
             if indent_ids:
+                for product_line in indent_ids[0].product_lines:
+                    move = picking.move_lines.filtered(lambda o: o.product_id == product_line.product_id)
+                    if picking.backorder_id:
+                        product_line.write({'received_qty': product_line.received_qty + move.product_qty})
+                    else:
+                        product_line.write({'received_qty': move.product_qty})
                 picking_ids = self.search([('origin', '=', picking.origin)])
                 flag = True
                 # for picking in self.browse(self.ids):
