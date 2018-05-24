@@ -30,16 +30,14 @@
                         <group name="details">
                             <group string="Shipment Details" colspan="4">
                                 <group>
+                                    <field name="lc_id" options="{'no_open':True,'no_quick_create':True,'no_create_edit':True}"/>
                                     <field name="name" attrs="{'readonly': [('state','=','done')]}"/>
-                                    <field name="etd_date" attrs="{'readonly': [('state','=','done')]}"/>
-                                    <field name="eta_date" attrs="{'readonly': [('state','=','done')]}"/>
                                 </group>
                                 <group>
-                                    <field name="lc_id" options="{'no_open':True,'no_quick_create':True,'no_create_edit':True}"/>
-                                    <field name="arrival_date" attrs="{'readonly': [('state','=','done')]}"/>
+                                    <field name="arrival_date" required="1" string="Dispatch Date" attrs="{'readonly': [('state','=','done')]}"/>
                                 </group>
-                                <separator string="Comments"/>
-                                <field name="comment" nolabel="1" attrs="{'readonly': [('state','=','done')]}"/>
+                                <!--<separator string="Comments"/>-->
+                                <!--<field name="comment" nolabel="1" attrs="{'readonly': [('state','=','done')]}"/>-->
                             </group>
 
                             <group string="Invoice">
@@ -49,18 +47,24 @@
                             <group string="Transport Information">
                                 <field name="transport_by" attrs="{'readonly': [('state','=','done')]}"/>
                                 <field name="vehical_no" attrs="{'readonly': [('state','=','done')]}"/>
-                                <!--<field name="employee_ids" widget="many2many_tags"/>-->
                             </group>
-                            <group string="Bill Of Lading">
-                                <field name="bill_of_lading_number" attrs="{'readonly': [('state','=','done')]}"/>
-                                <field name="shipment_date" attrs="{'readonly': [('state','=','done')]}"/>
+                            <group string="Packing Details" colspan="4">
+                                <group>
+                                    <field name="gross_weight" required="1" attrs="{'readonly': [('state','=','done')]}"/>
+                                    <field name="net_weight" required="1" attrs="{'readonly': [('state','=','done')]}"/>
+                                </group>
+                                <group>
+                                    <field name="weight_uom" required="1" attrs="{'readonly': [('state','=','done')]}"
+                                        options="{'no_open':True,'no_quick_create':True,'no_create_edit':True}"/>
+                                </group>
                             </group>
-                            <group string="Packing List">
-                                <field name="gross_weight" required="1" attrs="{'readonly': [('state','=','done')]}"/>
-                                <field name="net_weight" required="1" attrs="{'readonly': [('state','=','done')]}"/>
-                                <field name="weight_uom" required="1" attrs="{'readonly': [('state','=','done')]}"/>
-                                <field name="count_qty" required="1" attrs="{'readonly': [('state','=','done')]}"/>
-                                <field name="count_uom" required="1" attrs="{'readonly': [('state','=','done')]}"/>
+                            <group colspan="4">
+                                <p><b>Total(Jar/Drum/Bag/Balk): &#x2063;&#x2063;</b>
+                                <field name="count_qty" required="1" class="oe_inline" nolable="1" style="width: 70px !important" attrs="{'readonly': [('state','=','done')]}"/>
+                                &#x2063;&#x2063;<field name="count_uom" required="1" class="oe_inline" nolable="1"
+                                       style="width: 80px !important" attrs="{'readonly': [('state','=','done')]}"
+                                         options="{'no_open':True,'no_quick_create':True,'no_create_edit':True}"/>
+                                    </p>
                             </group>
 
                             <notebook colspan="4">

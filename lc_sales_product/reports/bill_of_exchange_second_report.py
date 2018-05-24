@@ -1,7 +1,7 @@
 from odoo import api, fields, models, _
 
 class BillExchangeFirst(models.AbstractModel):
-    _name = 'report.lc_sales_product.report_bill_exchange'
+    _name = 'report.lc_sales_product.report_bill_exchange_second'
 
     @api.multi
     def render_html(self, docids, data=None):
@@ -51,4 +51,4 @@ class BillExchangeFirst(models.AbstractModel):
             'amt_to_word': amt_to_word,
 
         }
-        return self.env['report'].render('lc_sales_product.report_bill_exchange', docargs)
+        return self.env['report'].render('lc_sales_product.report_bill_exchange_second', docargs)
