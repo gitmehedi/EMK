@@ -79,14 +79,17 @@
                                                 <p>As per Proforma Invoice No:</p>
                                                 <p>
                                                     <b>
-                                                        <span t-esc="data['pi_id']"/>
+                                                        <t t-foreach="pi_id_list" t-as="r">
+                                                            <span t-esc="r['pi_id']"/>
+                                                            Date:
+                                                            <span t-esc="r['pi_date']"
+                                                                  t-options='{"widget": "date"}'/>,
+                                                        </t>
+
                                                     </b>
-                                                    Date:
-                                                    <b>
-                                                        <span t-esc="data['pi_date']"
-                                                              t-options='{"widget": "date"}'/>
-                                                    </b>
+
                                                 </p>
+
 
                                             </td>
 
@@ -154,15 +157,17 @@
                                             accordance
                                             with the Proforma Invoice No.
                                         </p>
-                                        <p>
+
                                             <b>
-                                                <span t-esc="data['pi_id']"/>
+                                                <t t-foreach="pi_id_list" t-as="r">
+                                                    <span t-esc="r['pi_id']"/>
+                                                    Date:
+                                                    <span t-esc="r['pi_date']"
+                                                          t-options='{"widget": "date"}'/>,
+                                                </t>
+
                                             </b>
-                                            Date:
-                                            <b>
-                                                <span t-esc="data['pi_date']" t-options='{"widget": "date"}'/>
-                                            </b>
-                                        </p>
+
 
                                     </table>
                                 </td>
