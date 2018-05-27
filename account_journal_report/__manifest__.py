@@ -12,7 +12,7 @@
     ],
 
     'data': [
-        'view/journal_items_view.xml'
+        'reports/journal_items_view.xml'
     ],
 
     'installable': True,
