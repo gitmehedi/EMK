@@ -10,12 +10,13 @@ class ProductGateIn(models.Model):
     @api.multi
     def action_confirm(self):
         res = super(ProductGateIn, self).action_confirm()
-        if self.shipping_line_ids:
-            picking_id = self._create_pickings_and_procurements()
-            picking_objs = self.env['stock.picking'].search([('id','=',picking_id)])
-            picking_objs.action_confirm()
-            picking_objs.force_assign()
-            self.write({'picking_id': picking_id})
+        if self.receive_type == 'lc':
+            if self.shipping_line_ids:
+                picking_id = self._create_pickings_and_procurements()
+                picking_objs = self.env['stock.picking'].search([('id','=',picking_id)])
+                picking_objs.action_confirm()
+                picking_objs.force_assign()
+                self.write({'picking_id': picking_id})
         return res
 
     @api.model

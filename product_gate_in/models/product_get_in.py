@@ -94,7 +94,7 @@ class ProductGateIn(models.Model):
     @api.constrains('shipping_line_ids')
     def _check_shipping_line_ids(self):
         if not self.shipping_line_ids:
-            raise UserError(_('You cannot confirm %s which has no line.' % (self.name)))
+            raise UserError(_('You cannot save %s which has no line.' % (self.name)))
 
     ####################################################
     # Override methods
@@ -125,11 +125,11 @@ class ShipmentProductLine(models.Model):
     product_id = fields.Many2one('product.product', string='Product',
                                 change_default=True)
     date_planned = fields.Date(string='Scheduled Date', index=True)
-    product_uom = fields.Many2one('product.uom',string='UOM')
-    price_unit = fields.Float(string='Unit Price')
+    product_uom = fields.Many2one(related='product_id.uom_id',comodel='product.uom',string='UOM',store=True)
+    price_unit = fields.Float(related='product_id.standard_price',string='Unit Price',store=True)
     product_qty = fields.Float(string='Quantity')
     parent_id = fields.Many2one('product.gate.in',
-                                string='Purchase Shipment')
+                                string='Gate In')
 
     state = fields.Selection([
         ('draft', "Draft"),
