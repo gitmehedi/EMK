@@ -3,17 +3,17 @@
 <odoo>
     <data>
         <report
-                id="action_commercial_invoice"
-                string="Commercial Invoice"
+                id="action_packing_list"
+                string="Packing List"
                 model="purchase.shipment"
                 report_type="qweb-pdf"
-                file="lc_sales_product.report_commercial_invoice"
-                name="lc_sales_product.report_commercial_invoice"
+                file="lc_sales_product.report_packing_list"
+                name="lc_sales_product.report_packing_list"
                 paperformat="custom_report.paperformat_backend_portrait"
 
         />
 
-        <template id="report_commercial_invoice">
+        <template id="report_packing_list">
             <t t-call="report.html_container">
                 <div class="page" style="page-break-inside: auto">
                     <style>
@@ -28,7 +28,7 @@
                     </style>
                     <div class="row">
                         <div class="clearfix">
-                            <h3 class="report-title">Commercial Invoice</h3>
+                            <h3 class="report-title">Packing List</h3>
 
                         </div>
                         <style>
@@ -44,9 +44,7 @@
                             <tr>
                                 <td>
                                     <p>
-                                        <b>
-                                            <u>Exporter</u>
-                                        </b>
+                                        <u>Exporter</u>
                                     </p>
                                     <b>
                                         <p>
@@ -77,19 +75,15 @@
                                             <td>
                                                 <u>Terms of Delivery:</u>
                                                 <p>As per Proforma Invoice No:</p>
-                                                <p>
-                                                    <b>
-                                                        <t t-foreach="pi_id_list" t-as="r">
-                                                            <span t-esc="r['pi_id']"/>
-                                                            Date:
-                                                            <span t-esc="r['pi_date']"
-                                                                  t-options='{"widget": "date"}'/>,
-                                                        </t>
 
-                                                    </b>
-
-                                                </p>
-
+                                                <b>
+                                                    <t t-foreach="pi_id_list" t-as="r">
+                                                        <span t-esc="r['pi_id']"/>
+                                                        Date:
+                                                        <span t-esc="r['pi_date']"
+                                                              t-options='{"widget": "date"}'/>,
+                                                    </t>
+                                                </b>
 
                                             </td>
 
@@ -112,9 +106,7 @@
                             <tr>
                                 <td>
                                     <p>
-                                        <b>
-                                            <u>Buyer</u>
-                                        </b>
+                                        <u>Buyer</u>
                                     </p>
                                     <b>
                                         <p>
@@ -158,15 +150,14 @@
                                             with the Proforma Invoice No.
                                         </p>
 
-                                            <b>
-                                                <t t-foreach="pi_id_list" t-as="r">
-                                                    <span t-esc="r['pi_id']"/>
-                                                    Date:
-                                                    <span t-esc="r['pi_date']"
-                                                          t-options='{"widget": "date"}'/>,
-                                                </t>
-
-                                            </b>
+                                        <b>
+                                            <t t-foreach="pi_id_list" t-as="r">
+                                                <span t-esc="r['pi_id']"/>
+                                                Date:
+                                                <span t-esc="r['pi_date']"
+                                                      t-options='{"widget": "date"}'/>,
+                                            </t>
+                                        </b>
 
 
                                     </table>
@@ -180,10 +171,8 @@
                                 <tr class="odo-bg-gray">
                                     <th>Product</th>
                                     <th>H.S Code</th>
-                                    <th class="text-right">Qty</th>
                                     <th>UoM</th>
-                                    <th class="text-right">Unit Price</th>
-                                    <th class="text-right">Total Price</th>
+
                                 </tr>
                             </thead>
                             <tbody>
@@ -201,40 +190,40 @@
                                             <span t-esc="l['hs_code']"/>
                                         </td>
                                         <td class="text-right">
-                                            <span t-esc="l['quantity']"/>
-                                        </td>
-                                        <td class="text-right">
                                             <span t-esc="l['product_uom']"/>
-                                        </td>
-
-                                        <td class="text-right">
-                                            <span t-esc="'%.2f'% l['unit_price']"/>
-                                        </td>
-                                        <td class="text-right">
-                                            <span t-esc="'%.2f'% l['total_price']"/>
                                         </td>
                                     </tr>
                                 </t>
-                                <tr>
-                                    <td>Total</td>
-                                    <td></td>
-                                    <td class="text-right">
-                                        <span t-esc="total_qty"/>
-                                    </td>
-                                    <td></td>
-                                    <td></td>
-                                    <td class="text-right">
-                                        <span t-esc="'%.2f'% total_price"/>
-                                    </td>
-                                </tr>
+
                             </tbody>
                         </table>
-                        <p>
-                            In Words:
-                            <b>
-                                <span t-esc="amt_to_word"/>
-                            </b>
-                        </p>
+                        <td>
+                            <table>
+                                <tr>
+                                    <th>Gross Weight</th>
+                                    <th>Total
+                                        <span t-esc="data['count_uom']"/>
+                                    </th>
+                                    <th>Net Weight</th>
+
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <span t-esc="data['gross_weight']"/>
+                                        <span t-esc="data['weight_uom']"/>
+                                    </td>
+                                    <td>
+                                        <span t-esc="data['count_qty']"/>
+                                        <span t-esc="data['count_uom']"/>
+                                    </td>
+                                    <td>
+                                        <span t-esc=" data['net_weight']"/>
+                                        <span t-esc="data['weight_uom']"/>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+
                         <div class="text-right">
 
                             <p>For and on behalf of</p>

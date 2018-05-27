@@ -1,7 +1,7 @@
 from odoo import api, fields, models, _
 
 class BillExchangeFirst(models.AbstractModel):
-    _name = 'report.lc_sales_product.report_bill_exchange'
+    _name = 'report.lc_sales_product.report_bill_exchange_second'
 
     @api.multi
     def render_html(self, docids, data=None):
@@ -41,7 +41,7 @@ class BillExchangeFirst(models.AbstractModel):
                 price.append(list_obj['quantity'])
                 line_list.append(list_obj)
 
-        pi_list =[]
+        pi_list = []
         if shipment_obj.lc_id.pi_ids_temp:
             for pi in shipment_obj.lc_id.pi_ids_temp:
                 pi_obj = {}
@@ -60,4 +60,4 @@ class BillExchangeFirst(models.AbstractModel):
             'pi_list': pi_list
 
         }
-        return self.env['report'].render('lc_sales_product.report_bill_exchange', docargs)
+        return self.env['report'].render('lc_sales_product.report_bill_exchange_second', docargs)

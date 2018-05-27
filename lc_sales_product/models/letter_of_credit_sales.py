@@ -46,6 +46,8 @@ class LetterOfCredit(models.Model):
     def action_confirm_export(self):
         for pi in self.pi_ids_temp:
             pi.lc_id = self.id
+            for so in pi.so_ids:
+                so.lc_id = self.id
 
         self.write({'state': 'confirmed', 'last_note': Status.CONFIRM.value})
 

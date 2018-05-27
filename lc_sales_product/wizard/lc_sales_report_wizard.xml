@@ -21,6 +21,18 @@
                         <group>
                             <button string="Bill of Exchange(First)" name="process_bill_exchange" type="object" class="oe_highlight"/>
                         </group>
+                        <group>
+                            <button string="Bill of Exchange(Second)" name="process_bill_exchange_second" type="object" class="oe_highlight"/>
+                        </group>
+                        <group>
+                            <button string="Beneficiary Certificate" name="process_beneficiary_certificate" type="object" class="oe_highlight"/>
+                        </group>
+                        <group>
+                            <button string="Inspection Certificate" name="process_inspection_certificate" type="object" class="oe_highlight"/>
+                        </group>
+                        <group>
+                            <button string="Certificate of Origin" name="process_certificate_origin" type="object" class="oe_highlight"/>
+                        </group>
                     </group>
                     <footer>
                         <button special="cancel" string="Cancel" type="object"/>

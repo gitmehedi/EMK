@@ -7,8 +7,8 @@ class StockPickingLoan(models.Model):
     _inherit = "stock.picking"
 
     loan_id = fields.Many2one(
-        'item.borrowing',
-        string='Loan Number',
+        'item.loan.lending',
+        string='Loan Number',domain=[('state', '=', 'approved')],
         readonly=True, states={'draft': [('readonly', False)]})
 
     @api.onchange('receive_type')
@@ -25,7 +25,7 @@ class StockPickingLoan(models.Model):
 
         date_planned = time.strftime(DEFAULT_SERVER_DATETIME_FORMAT)
 
-        self.partner_id = self.loan_id.partner_id.id or False
+        self.partner_id = self.loan_id.borrower_id.id or False
 
         product_lines = []
         for loan_pro_line in self.loan_id.item_lines:

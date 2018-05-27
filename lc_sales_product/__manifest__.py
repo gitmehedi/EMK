@@ -20,10 +20,14 @@
         'views/shipment_sale_view.xml',
         'reports/bank_top_sheet.xml',
         'reports/bill_of_exchange_first_report.xml',
+        'reports/bill_of_exchange_second_report.xml',
         'reports/commercial_invoice_report_view.xml',
+        'reports/beneficiary_certificate.xml',
+        'reports/packing_list_report_view.xml',
+        'reports/certificate_of_origin.xml',
+        'reports/inspection_certificate.xml',
         'wizard/doc_receive_wizard_view.xml',
         'wizard/lc_sales_report_wizard.xml',
-
     ],
 
     'summary': 'Sale By LC',

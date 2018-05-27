@@ -337,7 +337,7 @@ class IndentProductLines(models.Model):
                                    required=True, default=1)
     received_qty = fields.Float('Received', digits=dp.get_precision('Product UoS'),help="Receive Quantity which Update by done quntity.")
     issue_qty = fields.Float('Issue Quantity', digits=dp.get_precision('Product UoS'),help="Issued Quantity which Update by avilable quantity.")
-    product_uom = fields.Many2one(related='product_id.uom_id',string='Unit of Measure', required=True,store=True)
+    product_uom = fields.Many2one(related='product_id.uom_id',comodel='product.uom',string='Unit of Measure', required=True,store=True)
     price_unit = fields.Float(related='product_id.standard_price',string='Price', digits=dp.get_precision('Product Price'),store=True,
                               help="Price computed based on the last purchase order approved.")
     price_subtotal = fields.Float(string='Subtotal', compute='_compute_amount_subtotal', digits=dp.get_precision('Account'),

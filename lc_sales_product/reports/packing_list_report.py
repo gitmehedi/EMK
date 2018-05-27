@@ -1,13 +1,13 @@
 from odoo import api, fields, models, _
 
 
-class CommercialInvoice(models.AbstractModel):
-    _name = 'report.lc_sales_product.report_commercial_invoice'
+class PackingList(models.AbstractModel):
+    _name = 'report.lc_sales_product.report_packing_list'
 
     @api.multi
     def render_html(self, docids, data=None):
         shipment_pool = self.env['purchase.shipment']
-        shipment_obj = shipment_pool.browse(data.get('lc_id'))
+        shipment_obj = shipment_pool.browse(data.get('shipment_id'))
         report_utility_pool = self.env['report.utility']
         prod_list = []
         data = {}
@@ -22,12 +22,21 @@ class CommercialInvoice(models.AbstractModel):
         data['invoice_id'] = shipment_obj.invoice_id.display_name
         data['invoice_date'] = shipment_obj.invoice_id.date_invoice
         data['terms_condition'] = shipment_obj.lc_id.terms_condition
+        # data['pi_id'] = shipment_obj.lc_id.pi_ids_temp.name
+        # data['pi_date'] = shipment_obj.lc_id.pi_ids_temp.create_date
         data['lc_id'] = shipment_obj.lc_id.name
         data['lc_date'] = shipment_obj.lc_id.issue_date
         data['second_party_bank'] = shipment_obj.lc_id.second_party_bank
 
+        data['gross_weight'] = shipment_obj.gross_weight
+        data['net_weight'] = shipment_obj.net_weight
+        data['weight_uom'] = shipment_obj.weight_uom.name
+        data['count_qty'] = shipment_obj.count_qty
+        data['count_uom'] = shipment_obj.count_uom.name
+
         for pi_id in shipment_obj.lc_id.pi_ids:
             pi_id_list.append({'pi_id':pi_id.name,'pi_date':pi_id.create_date})
+
 
         if shipment_obj.lc_id.product_lines:
             for prod_line in shipment_obj.lc_id.product_lines:
@@ -55,7 +64,7 @@ class CommercialInvoice(models.AbstractModel):
             'amt_to_word': amt_to_word,
             'total_qty': total_qty,
             'total_price': total_price,
-            'pi_id_list': pi_id_list,
+            'pi_id_list':pi_id_list,
         }
 
-        return self.env['report'].render('lc_sales_product.report_commercial_invoice', docargs)
+        return self.env['report'].render('lc_sales_product.report_packing_list', docargs)

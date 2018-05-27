@@ -13,8 +13,7 @@ class LcSalesReportWizard(models.TransientModel):
 
     @api.multi
     def process_commercial_invoice(self):
-        #data = {}
-        #data['shipment_id'] = self.env.context.get('active_id')
+
         return self.env['report'].get_action(self, 'lc_sales_product.report_commercial_invoice',
                                              {'lc_id':self.env.context.get('active_id')})
 
@@ -29,3 +28,27 @@ class LcSalesReportWizard(models.TransientModel):
         data = {}
         data['shipment_id'] = self.env.context.get('active_id')
         return self.env['report'].get_action(self, 'lc_sales_product.report_bill_exchange', data)
+
+    @api.multi
+    def process_bill_exchange_second(self):
+        data = {}
+        data['shipment_id'] = self.env.context.get('active_id')
+        return self.env['report'].get_action(self, 'lc_sales_product.report_bill_exchange_second', data)
+
+    @api.multi
+    def process_beneficiary_certificate(self):
+        data = {}
+        data['shipment_id'] = self.env.context.get('active_id')
+        return self.env['report'].get_action(self, 'lc_sales_product.report_beneficiary_certificate', data)
+
+    @api.multi
+    def process_inspection_certificate(self):
+        data = {}
+        data['shipment_id'] = self.env.context.get('active_id')
+        return self.env['report'].get_action(self, 'lc_sales_product.report_inspection_certificate', data)
+
+    @api.multi
+    def process_certificate_origin(self):
+        data = {}
+        data['shipment_id'] = self.env.context.get('active_id')
+        return self.env['report'].get_action(self, 'lc_sales_product.report_certificate_origin', data)
