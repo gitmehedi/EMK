@@ -78,7 +78,7 @@
                                                     </t>
                                                     <t t-foreach="rules" t-as="r">
                                                         <td class="text-right">
-                                                            <span t-esc="'%.2f'% o[r['code']]"></span>
+                                                            <span t-esc="o[r['code']]"></span>
                                                         </td>
                                                     </t>
                                                 </tr>
