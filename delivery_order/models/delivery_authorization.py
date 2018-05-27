@@ -75,8 +75,12 @@ class DeliveryAuthorization(models.Model):
             self.delivery_count = len(order.picking_ids)
 
     """ PI and LC """
-    pi_id = fields.Many2one('proforma.invoice', string='PI Ref. No.', readonly=True)
+    pi_id = fields.Many2one('proforma.invoice', string='PI Ref. No.', compute="_calculate_pi_id", store=False)
     lc_id = fields.Many2one('letter.credit', string='LC Ref. No.', compute="_calculate_lc_id", store=False)
+
+    @api.multi
+    def _calculate_pi_id(self):
+        self.pi_id = self.sale_order_id.pi_id.id
 
 
     @api.multi
@@ -173,12 +177,6 @@ class DeliveryAuthorization(models.Model):
             return cash_check
 
         elif self.so_type == 'lc_sales':
-
-            if self.pi_id:
-                pi_pool = self.env['proforma.invoice'].search([('sale_order_id', '=', self.sale_order_id.id)])
-                if not pi_pool:
-                    raise UserError('PI is of a different Sale Order')
-
             if self.lc_id and self.pi_id:
                 if self.lc_id.lc_value >= self.total_sub_total_amount():
                     # self.create_delivery_order()
