@@ -19,6 +19,7 @@ class ProformaInvoice(models.Model):
     operating_unit_id = fields.Many2one('operating.unit', string='Unit', required=True, readonly=True, states={'draft': [('readonly', False)]})
     transport_by = fields.Char(string='Transport By',required=True, readonly=True, states={'draft': [('readonly', False)]})
     terms_condition = fields.Text(string='Terms & Conditions', required=True, readonly=True, states={'draft': [('readonly', False)]})
+    terms_id = fields.Many2one('terms.setup', string='Terms',store = False,readonly=True, states={'draft': [('readonly', False)]})
 
 
     """ Shipping Address"""
@@ -255,6 +256,10 @@ class ProformaInvoice(models.Model):
         if self.freight_charge:
             self.total = self.total + self.freight_charge
 
+    @api.onchange('terms_id')
+    def onchange_terms_id(self):
+        if self.terms_id:
+            self.terms_condition = self.terms_id.terms_condition
 
 
 class ProformaInvoiceLine(models.Model):

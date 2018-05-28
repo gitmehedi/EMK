@@ -8,6 +8,7 @@
         'stock',
         'gbs_application_group',
         'sales_team',
+        'terms_setup',
         'custom_report'
     ],
 
