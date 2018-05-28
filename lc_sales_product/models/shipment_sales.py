@@ -6,7 +6,9 @@ class Shipment(models.Model):
 
     _inherit = 'purchase.shipment'
 
-    invoice_id = fields.Many2one("account.invoice", string='Invoice Number', ondelete='cascade')
+    invoice_id = fields.Many2one("account.invoice", string='Invoice Number', ondelete='cascade',
+                                 domain=[('sale_type_id.sale_order_type', '=','lc_sales'),
+                                         ('state', '=', 'open')])
 
     @api.onchange('invoice_id')
     def _onchange_invoice_id(self):
