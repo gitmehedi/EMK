@@ -10,7 +10,7 @@
             <field name="arch" type="xml">
                 <data>
                     <xpath expr="//field[@name='type_id']" position="after">
-                        <field name="bonus_application" />
+                        <field name="bonus_applicable" />
                     </xpath>
                 </data>
             </field>
