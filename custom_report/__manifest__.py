@@ -11,6 +11,7 @@
         'views/templates.xml',
         'views/gbs_internal_layout.xml',
         'views/gbs_external_layout.xml',
+        'views/gbs_custom_pad_report_template.xml',
     ],
     'installable': True,
     'auto_install': False,

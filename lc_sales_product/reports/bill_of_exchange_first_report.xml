@@ -16,96 +16,98 @@
 
         <template id="report_bill_exchange">
             <t t-call="report.html_container">
-                <div class="page" style="page-break-inside: auto">
-                    <h4 class="text-center"><b>Bill Of Exchange(First)</b></h4>
-                    <br/>
-                    <br/>
-                    <div class="row">
-                        <div class="col-xs-9">
-                            <p>For <span t-esc="data['currency_id']"/> <strong t-esc="data['invoice_value']"/> </p>
-                        </div>
-                        <div class="col-xs-3">
-                            <p>No.: <strong t-esc="data['invoice_id']"/></p>
-                            <p>Date: <strong t-esc="data['invoice_date']"/></p>
-                        </div>
-                    </div>
-                    <br/>
-                    <div>
-                        <p><strong>First</strong> Bill of Exchange(<b>Second</b> Unpaid)</p>
+                <t t-call="custom_report.gbs_custom_pad_report_template">
+                    <div class="page" style="page-break-inside: auto">
+                        <h4 class="text-center"><b>Bill Of Exchange(First)</b></h4>
                         <br/>
-                        <p>Tenure: <strong t-esc="data['tenure']"/></p>
-                        <p>Pay to the order of: <strong t-esc="data['first_party_bank']"/>. <strong t-esc="data['first_party_bank_add']"/></p>
-                        <p>Sum of <span t-esc="data['currency_id']"/> : <span t-esc="amt_to_word"/></p>
-                    </div>
-                    <hr class="hr-sm mb-0"/>
-                    <div class="row">
-                        <table class="table table-report table-bordered table-striped">
-                            <thead>
-                                <p>Value received against <b><strong t-esc="price_total"/></b> delivery of</p>
-                                <tr class="odo-bg-gray">
-                                    <th>Sl#</th>
-                                    <th>Products</th>
-                                    <th>Quantity</th>
-                                    <th>Unit</th>
-                                    <th>Rate</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <t t-foreach="lists" t-as="l">
-                                    <tr style="page-break-inside: avoid">
-                                        <td><span t-esc="l_index+1"/></td>
-                                        <td><span t-esc="l['product_id']"/></td>
-                                        <td><span t-esc="l['uom']"/></td>
-                                        <td><span t-esc="l['quantity']"/></td>
-                                        <td><span t-esc="'%.2f'% l['price_unit']"/></td>
+                        <br/>
+                        <div class="row">
+                            <div class="col-xs-9">
+                                <p>For <span t-esc="data['currency_id']"/> <strong t-esc="data['invoice_value']"/> </p>
+                            </div>
+                            <div class="col-xs-3">
+                                <p>No.: <strong t-esc="data['invoice_id']"/></p>
+                                <p>Date: <strong t-esc="data['invoice_date']"/></p>
+                            </div>
+                        </div>
+                        <br/>
+                        <div>
+                            <p><strong>First</strong> Bill of Exchange(<b>Second</b> Unpaid)</p>
+                            <br/>
+                            <p>Tenure: <strong t-esc="data['tenure']"/></p>
+                            <p>Pay to the order of: <strong t-esc="data['first_party_bank']"/>. <strong t-esc="data['first_party_bank_add']"/></p>
+                            <p>Sum of <span t-esc="data['currency_id']"/> : <span t-esc="amt_to_word"/></p>
+                        </div>
+                        <hr class="hr-sm mb-0"/>
+                        <div class="row">
+                            <table class="table table-report table-bordered table-striped">
+                                <thead>
+                                    <p>Value received against <b><strong t-esc="price_total"/></b> delivery of</p>
+                                    <tr class="odo-bg-gray">
+                                        <th>Sl#</th>
+                                        <th>Products</th>
+                                        <th>Quantity</th>
+                                        <th>Unit</th>
+                                        <th>Rate</th>
                                     </tr>
+                                </thead>
+                                <tbody>
+                                    <t t-foreach="lists" t-as="l">
+                                        <tr style="page-break-inside: avoid">
+                                            <td><span t-esc="l_index+1"/></td>
+                                            <td><span t-esc="l['product_id']"/></td>
+                                            <td><span t-esc="l['uom']"/></td>
+                                            <td><span t-esc="l['quantity']"/></td>
+                                            <td><span t-esc="'%.2f'% l['price_unit']"/></td>
+                                        </tr>
+                                    </t>
+                                </tbody>
+                            </table>
+                            <p>Proforma Invoice No:
+                                <t t-foreach="pi_list" t-as="p">
+                                    <p><strong t-esc="p['number']"/> Date:
+                                    <strong t-esc="p['date']"/></p>
                                 </t>
-                            </tbody>
-                        </table>
-                        <p>Proforma Invoice No:
-                            <t t-foreach="pi_list" t-as="p">
-                                <p><strong t-esc="p['number']"/> Date:
-                                <strong t-esc="p['date']"/></p>
-                            </t>
-                        </p>
-                    </div>
+                            </p>
+                        </div>
 
-                    <hr class="hr-sm mb-0"/>
-                    <div class="row">
-                        <div class="col-xs-8">
-                            <p t-raw="data['terms_condition']"/>
+                        <hr class="hr-sm mb-0"/>
+                        <div class="row">
+                            <div class="col-xs-8">
+                                <p t-raw="data['terms_condition']"/>
+                            </div>
+                            <div class="col-xs-4">
+                                <p>Drawn under the Document Credit No:</p>
+                                <p><strong t-esc="data['lc_id']"/> Date: <strong t-esc="data['issue_date']"/> of</p>
+                                <p t-raw="data['second_party_bank']"/>
+                            </div>
                         </div>
-                        <div class="col-xs-4">
-                            <p>Drawn under the Document Credit No:</p>
-                            <p><strong t-esc="data['lc_id']"/> Date: <strong t-esc="data['issue_date']"/> of</p>
-                            <p t-raw="data['second_party_bank']"/>
+                        <hr class="hr-sm mb-0"/>
+                        <div class="row">
+                            <div class="col-xs-6">
+                                <p>To:      <strong t-esc="data['second_party_bank']"/></p>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-6">
+                                <p>A/C:     <strong t-esc="data['second_party_applicant']"/>,</p>
+                                <p>         <strong>Office: </strong><strong t-esc="data['invoice_address']"/></p>
+                                <p>         <strong>Factory: </strong><strong t-esc="data['delivery_address']"/></p>
+                            </div>
+                        </div>
+                        <hr class="hr-sm mb-0"/>
+                        <div class="row mb32 text-right" style="margin-top:10mm;">
+                            <div class="col-xs-12 text-right">
+                                <p>For and on behalf of <span t-esc="data['first_party']"/></p>
+                                <br/>
+                                <br/>
+                                <br/>
+                                <p>-------------------------------</p>
+                                <p>Authorized Signature</p>
+                            </div>
                         </div>
                     </div>
-                    <hr class="hr-sm mb-0"/>
-                    <div class="row">
-                        <div class="col-xs-6">
-                            <p>To:      <strong t-esc="data['second_party_bank']"/></p>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-xs-6">
-                            <p>A/C:     <strong t-esc="data['second_party_applicant']"/>,</p>
-                            <p>         <strong>Office: </strong><strong t-esc="data['invoice_address']"/></p>
-                            <p>         <strong>Factory: </strong><strong t-esc="data['delivery_address']"/></p>
-                        </div>
-                    </div>
-                    <hr class="hr-sm mb-0"/>
-                    <div class="row mb32 text-right" style="margin-top:10mm;">
-                        <div class="col-xs-12 text-right">
-                            <p>For and on behalf of <span t-esc="data['first_party']"/></p>
-                            <br/>
-                            <br/>
-                            <br/>
-                            <p>-------------------------------</p>
-                            <p>Authorized Signature</p>
-                        </div>
-                    </div>
-                </div>
+                </t>
             </t>
         </template>
     </data>

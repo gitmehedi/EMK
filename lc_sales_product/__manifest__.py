@@ -11,7 +11,8 @@
         'gbs_pi_creation',
         'gbs_document_type',
         'custom_report',
-        'amount_to_word_bd'
+        'amount_to_word_bd',
+        'custom_report'
     ],
 
     'data': [
