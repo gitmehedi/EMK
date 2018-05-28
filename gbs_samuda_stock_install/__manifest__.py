@@ -17,6 +17,7 @@
 
     'depends': [
         'stock_indent',
+        'indent_operating_unit',
         'gbs_stock_product',
         'ir_sequence_operating_unit',
         'indent_type',

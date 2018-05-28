@@ -25,8 +25,8 @@ class StockPicking(models.Model):
                     for product_line in loan_ids[0].item_lines:
                         move = picking.move_lines.filtered(lambda o: o.product_id == product_line.product_id)
                         if picking.backorder_id:
-                            product_line.write({'received_qty': product_line.received_qty+move.product_qty})
+                            product_line.write({'given_qty': product_line.given_qty+move.product_qty})
                         else:
-                            product_line.write({'received_qty': move.product_qty})
+                            product_line.write({'given_qty': move.product_qty})
 
         return res

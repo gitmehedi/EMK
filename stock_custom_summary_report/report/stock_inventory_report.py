@@ -8,6 +8,10 @@ class StockInventoryReport(models.AbstractModel):
     def render_html(self,docids, data=None):
 
         get_data = self.get_report_data(data)
+        report_utility_pool = self.env['report.utility']
+        op_unit_id = data['operating_unit_id']
+        op_unit_obj = self.env['operating.unit'].search([('id', '=', op_unit_id)])
+        data['address'] = report_utility_pool.getAddressByUnit(op_unit_obj)
 
         docargs = {
             'doc_ids': self._ids,
@@ -15,14 +19,14 @@ class StockInventoryReport(models.AbstractModel):
             'record': data,
             'lines': get_data['category'],
             'total': get_data['total'],
-
+            'address': data['address'],
         }
         return self.env['report'].render('stock_custom_summary_report.stock_report_template', docargs)
 
     def get_report_data(self, data):
         date_start = data['date_from']
         date_end = data['date_to']
-        location_outsource = data['operating_unit_id']
+        location_outsource = data['location_id']
         category_id = data['category_id']
         product_id = data['product_id']
         cat_pool = self.env['product.category']
@@ -216,8 +220,18 @@ class StockInventoryReport(models.AbstractModel):
                                            pu.name                                  AS uom_name, 
                                            pc.name                                  AS category, 
                                            sm.product_qty                           AS qty_in_tk, 
-                                           sm.product_qty * Coalesce(ph.cost, 0) AS val_in_tk,
-                                           Coalesce(ph.cost, 0)          AS cost_val
+                                           sm.product_qty * Coalesce((SELECT ph.cost
+                                             FROM   product_price_history ph
+                                             WHERE  Date_trunc('day', ph.datetime) <= '%s'
+                                                    AND pp.id = ph.product_id
+                                             ORDER  BY ph.datetime DESC
+                                             LIMIT  1), 0) AS val_in_tk,
+                                           Coalesce((SELECT ph.cost
+                                             FROM   product_price_history ph
+                                             WHERE  Date_trunc('day', ph.datetime) <= '%s'
+                                                    AND pp.id = ph.product_id
+                                             ORDER  BY ph.datetime DESC
+                                             LIMIT  1), 0)          AS cost_val
                                     FROM   stock_move sm 
                                            LEFT JOIN stock_picking sp 
                                                   ON sm.picking_id = sp.id 
@@ -231,8 +245,6 @@ class StockInventoryReport(models.AbstractModel):
                                                   ON pt.categ_id = pc.id
                                            LEFT JOIN product_uom pu 
         				                          ON( pu.id = pt.uom_id )
-                                            LEFT JOIN product_price_history ph 
-                                                  ON ph.product_id = pp.id
                                     WHERE  Date_trunc('day', sm.date) BETWEEN '%s' AND '%s' 
                                            AND sm.state = 'done' 
                                            --AND sp.location_type = 'outsource_out' 
@@ -248,7 +260,7 @@ class StockInventoryReport(models.AbstractModel):
                                       uom_name,
                                       category,
                                       cost_val 
-                        ''' % (date_start, date_end, location_outsource, location_outsource, category_param,product_param)
+                        ''' % (date_end,date_end,date_start, date_end, location_outsource, location_outsource, category_param,product_param)
 
         sql_out_tk = '''SELECT product_id,
                            name,
