@@ -78,7 +78,8 @@ class DeliveryOrder(models.Model):
 
     @api.multi
     def _calculate_pi_id(self):
-        self.pi_id = self.sale_order_id.pi_id.id
+        for _pi in self:
+            _pi.pi_id = _pi.sale_order_id.pi_id.id
 
 
     @api.multi

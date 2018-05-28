@@ -80,7 +80,8 @@ class DeliveryAuthorization(models.Model):
 
     @api.multi
     def _calculate_pi_id(self):
-        self.pi_id = self.sale_order_id.pi_id.id
+        for p in self:
+            p.pi_id = p.sale_order_id.pi_id.id
 
 
     @api.multi
