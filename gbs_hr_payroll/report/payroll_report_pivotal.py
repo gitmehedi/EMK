@@ -1,4 +1,6 @@
-from odoo import api, exceptions, fields, models
+from odoo import api, exceptions, fields, models, tools
+from odoo.addons import decimal_precision as dp
+from odoo.tools.misc import formatLang
 import math
 import locale
 
@@ -48,7 +50,7 @@ class PayrollReportPivotal(models.AbstractModel):
                     payslip['doj'] = slip.employee_id.initial_employment_date
                     payslip['emp_seq'] = slip.employee_id.employee_sequence
                     loan_remain = slip.remaining_loan or 0.00
-                    payslip['loan_balance'] = format(loan_remain, '.2f') if loan_remain else None
+                    payslip['loan_balance'] = formatLang(self.env, loan_remain) if loan_remain else None
                     payslip['sa'] = slip.employee_id.contract_id.supplementary_allowance
                     payslip['basic'] = slip.employee_id.contract_id.wage
                     for rule in rule_list:
@@ -56,7 +58,7 @@ class PayrollReportPivotal(models.AbstractModel):
                         for line in slip.line_ids:
                             if line.code == rule['code']:
                                 total_amount = math.ceil(line.total)
-                                payslip[rule['code']] = total_amount
+                                payslip[rule['code']] = formatLang(self.env, total_amount)
 
                                 if line.code == "NET":
                                     total_sum.append(math.ceil(total_amount))
