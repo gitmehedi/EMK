@@ -73,8 +73,13 @@ class DeliveryOrder(models.Model):
 
 
     """ PI and LC """
-    pi_id = fields.Many2one('proforma.invoice', string='PI Ref. No.', readonly=True)
+    pi_id = fields.Many2one('proforma.invoice', string='PI Ref. No.', compute="_calculate_pi_id", store=False)
     lc_id = fields.Many2one('letter.credit', string='LC Ref. No.', readonly=True, compute = "_calculate_lc_id", store= False)
+
+    @api.multi
+    def _calculate_pi_id(self):
+        for _pi in self:
+            _pi.pi_id = _pi.sale_order_id.pi_id.id
 
 
     @api.multi
