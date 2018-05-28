@@ -201,7 +201,8 @@ class ItemLoanLendingLines(models.Model):
     qty_available = fields.Float('In Stock', compute='_computeProductQuentity', store=True)
     name = fields.Char(related='product_id.name', string='Specification', store=True)
     sequence = fields.Integer('Sequence')
-    received_qty = fields.Float('Given Quantity', digits=dp.get_precision('Product UoS'))
+    given_qty = fields.Float('Given Quantity', digits=dp.get_precision('Product UoS'))
+    received_qty = fields.Float('Receive Quantity', digits=dp.get_precision('Product UoS'))
 
     state = fields.Selection([
         ('draft', 'Draft'),

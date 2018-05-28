@@ -6,14 +6,20 @@ class StockTransferDetailsReport(models.AbstractModel):
 
     @api.multi
     def render_html(self, docids, data=None):
+
         get_data = self.get_report_data(data)
+        report_utility_pool = self.env['report.utility']
+        op_unit_id = data['operating_unit_id']
+        op_unit_obj = self.env['operating.unit'].search([('id', '=', op_unit_id)])
+        data['address'] = report_utility_pool.getAddressByUnit(op_unit_obj)
+
         docargs = {
             'doc_ids': self._ids,
             'docs': self,
             'record': data,
             'product_lines': get_data['product'],
             'total': get_data['total'],
-            'address': data['str_address'],
+            'address': data['address'],
 
         }
         return self.env['report'].render('stock_transfer_report.std_report_temp', docargs)

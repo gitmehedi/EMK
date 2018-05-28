@@ -26,7 +26,8 @@ class StockInventoryWizard(models.TransientModel):
         data = {}
         data['date_from'] = self.date_from
         data['date_to'] = self.date_to
-        data['operating_unit_id'] = location.id
+        data['location_id'] = location.id
+        data['operating_unit_id'] = self.operating_unit_id.id
         data['operating_unit_name'] = self.operating_unit_id.name
         data['category_id'] = self.category_id.id
         data['product_id'] = self.product_id.id
