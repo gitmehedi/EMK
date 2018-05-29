@@ -9,7 +9,7 @@
                 report_type="qweb-pdf"
                 file="gbs_pi_creation.report_proforma_invoice"
                 name="gbs_pi_creation.report_proforma_invoice"
-                paperformat="custom_report.paperformat_backend_portrait"
+                paperformat="custom_report.custom_pad_paperformat"
 
         />
 
