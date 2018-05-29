@@ -19,59 +19,60 @@
                 <t t-call="custom_report.gbs_custom_pad_report_template">
                     <div class="page" style="page-break-inside: auto">
                         <style>
-                            .table-caption {
-                            border: 1px solid #ddd;
-                            border-bottom: none;
-                            font-size: 14px;
-                            font-weight: bold;
-                            margin: 0;
-                            padding: 5px 5px;
+                            .bank-letter_subject { margin:30px 0; }
+                            .bank-letter_body { margin-bottom:30px; }
+                            .bank-letter_doclist { width: 80%; margin-left:30px; }
+                            .bank-letter_doclist > tbody > tr > td {
+                                border:0 none!important; padding: 0px!important;
                             }
                         </style>
-                        <div class="row">
+                        <div class="bank-letter row">
                             <p>Date: </p>
                             <br/>
-                            <br/>
-                            <p>To</p>
-                            <p>The Manager,</p>
-                            <p t-esc="data['first_party_bank']"/>
-                            <p t-raw="data['first_party_bank_add']"/>
-                            <br/>
-                            <p>Sub: Request for negotiation/collection of Export document amounting to <strong t-esc="data['currency_id']"/> <strong t-esc="data['invoice_value']"/> against L/C No: <strong t-esc="data['lc_id']"/> Date: <b><span t-esc="data['issue_date']"/></b></p>
-                            <br/>
-                            <p>Dear Sir,</p>
-                            <p>With reference to above, we are pleased to submit/enclose herewith the following document for your negotiation.</p>
-                            <br/>
-                        </div>
-                        <p><b>The enclosed documents are:</b></p>
+                            <div class="bank-letter_head">
+                                <p>To, <br/>
+                                    The Manager <br/>
+                                    <span t-esc="data['first_party_bank']"/> <br/>
+                                    <span t-raw="data['first_party_bank_add']"/> <br/>
+                                </p>
+                            </div>
+                            <div class="bank-letter_subject">
+                                <p>Sub: Request for negotiation/collection of Export document amounting to <strong t-esc="data['currency_id']"/> <strong t-esc="data['invoice_value']"/> against L/C No: <strong t-esc="data['lc_id']"/> Date: <b><span t-esc="data['issue_date']"/></b></p>
+                            </div>
+                            <div class="bank-letter_body">
+                                <p>Dear Sir,</p>
+                                <p>With reference to above, we are pleased to submit/enclose herewith the following document for your negotiation.</p>
+                            </div>
 
-                        <table style="border: none !important;">
-                            <tbody>
-                                <tr>
-                                    <td>Draft : </td>
-                                    <td>1 Set</td>
-                                </tr>
-                                <t t-foreach="lists" t-as="l">
-                                    <tr style="page-break-inside: avoid; border-top: none !important;" class="text-left">
-                                        <td><span t-esc="l['name']"/> :  </td>
-                                        <td><span t-esc="l['original']"/> Original+    <span t-esc="l['copy']"/> Copies</td>
+                            <p><b>The enclosed documents are:</b></p>
+
+                            <table class="bank-letter_doclist table table-condensed">
+                                <tbody>
+                                    <tr>
+                                        <td>1. Draft</td>
+                                        <td>: 1 Set</td>
                                     </tr>
-                                </t>
-                            </tbody>
-                        </table>
+                                    <t t-foreach="lists" t-as="l">
+                                        <tr class="text-left">
+                                            <td style="width:40%"><span t-esc="l_index+2"/>. <span t-esc="l['name']"/></td>
+                                            <td>: <span t-esc="l['original']"/> Original+    <span t-esc="l['copy']"/> Copies</td>
+                                        </tr>
+                                    </t>
+                                </tbody>
+                            </table>
 
-                        <br/>
-                        <p>Your prompt action in this respect is solicited.</p>
-                        <br/>
-                        <br/>
-                        <p>Thank you.</p>
-                        <br/>
-                        <br/>
-                        <p>For and on behalf of</p>
-                        <p><span t-esc="data['company']"/></p>
-                        <br/>
-                        <br/>
-                        <p>Authorised Signature</p>
+                            <br/>
+                            <p>Your prompt action in this respect is solicited.</p>
+                            <br/>
+                            <p>Thank you.</p>
+                            <br/>
+                            <p>For and on behalf of <br/>
+                               <span t-esc="data['company']"/>
+                            </p>
+                            <br/>
+                            <br/>
+                            <p>Authorised Signature</p>
+                        </div> <!-- end bl -->
                     </div>
                 </t>
             </t>
