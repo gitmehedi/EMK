@@ -16,7 +16,8 @@
                             </div>
 
 
-                            <table class="table table-bordered table-report-xs table-striped" style="margin-bottom: 10px;">
+                            <table class="table table-bordered table-report-xs table-striped"
+                                   style="margin-bottom: 10px;">
                                 <thead>
                                     <tr class="odo-bg-gray">
                                         <th>SN</th>
@@ -77,6 +78,7 @@
                                                         </td>
                                                     </t>
                                                     <t t-foreach="rules" t-as="r">
+
                                                         <td class="text-right">
                                                             <span t-esc="o[r['code']]"></span>
                                                         </td>
@@ -86,14 +88,34 @@
                                         </t>
                                     </t>
 
+                                    <tr style="page-break-inside: avoid">
+                                        <td></td>
+                                        <td>Total</td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+
+                                        <t t-foreach="rules" t-as="r">
+                                            <td class="text-right">
+                                                <strong class="text-nowrap" t-esc="row_total[r['code']]"></strong>
+                                            </td>
+                                        </t>
+                                    </tr>
+
                                     <tr>
                                         <td t-att-colspan="docs_len">
-                                            <h4 class="text-right pr-5"><strong> Total: <span t-esc="total_sum"></span> </strong></h4>
+                                            <h4 class="text-right pr-5">
+                                                <strong>Total:
+                                                    <span t-esc="total_sum"></span>
+                                                </strong>
+                                            </h4>
                                         </td>
                                     </tr>
                                 </tbody>
                             </table>
-                            <p class="text-right">In Words: <strong t-esc="amt_to_word"></strong></p>
+                            <p class="text-right">In Words:
+                                <strong t-esc="amt_to_word"></strong>
+                            </p>
                         </div>
                         <t t-call="custom_report.report_signing"></t>
                     </div>

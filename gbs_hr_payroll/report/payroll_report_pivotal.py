@@ -27,14 +27,18 @@ class PayrollReportPivotal(models.AbstractModel):
                     if rule not in rule_list:
                         rule_list.append(rule)
 
+
         rule_list = sorted(rule_list, key=lambda k: k['seq'])
 
         dept = self.env['hr.department'].search([])
 
         dpt_payslips_list = []
         total_sum = []
-
         sn = 1
+
+        row_total = {}
+        for srule in rule_list:
+            row_total[srule['code']] = 0
 
         for d in dept:
             dpt_payslips = {}
@@ -53,12 +57,16 @@ class PayrollReportPivotal(models.AbstractModel):
                     payslip['loan_balance'] = formatLang(self.env, loan_remain) if loan_remain else None
                     payslip['sa'] = slip.employee_id.contract_id.supplementary_allowance
                     payslip['basic'] = slip.employee_id.contract_id.wage
+
                     for rule in rule_list:
                         payslip[rule['code']] = 0
+
                         for line in slip.line_ids:
                             if line.code == rule['code']:
                                 total_amount = math.ceil(line.total)
                                 payslip[rule['code']] = formatLang(self.env, total_amount)
+
+                                row_total[line.code] = row_total[line.code] + total_amount
 
                                 if line.code == "NET":
                                     total_sum.append(math.ceil(total_amount))
@@ -110,6 +118,9 @@ class PayrollReportPivotal(models.AbstractModel):
         locale.setlocale(locale.LC_ALL, 'bn_BD.UTF-8')
         thousand_separated_total_sum = locale.currency(all_total, grouping=True)
 
+        for rule in rule_list:
+            row_total[rule['code']] = formatLang(self.env, row_total[rule['code']])
+
         docargs = {
             'doc_ids': self.ids,
             'doc_model': 'hr.payslip.run',
@@ -119,6 +130,7 @@ class PayrollReportPivotal(models.AbstractModel):
             'total_sum': thousand_separated_total_sum,
             'amt_to_word': amt_to_word,
             'data': data,
+            'row_total': row_total,
         }
 
         return self.env['report'].render('gbs_hr_payroll.report_individual_payslip', docargs)

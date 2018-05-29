@@ -1,7 +1,7 @@
+import time
+from datetime import datetime
 from odoo import api, fields, models, _
 from odoo.addons import decimal_precision as dp
-from datetime import datetime
-import time
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
 
@@ -18,7 +18,7 @@ class ItemBorrowing(models.Model):
     def _get_default_location_id(self):
         return self.env['stock.location'].search([('usage', '=', 'supplier')], limit=1).id
 
-    name = fields.Char('Issue #', size=30, readonly=True, default="/")
+    name = fields.Char('Issue #', size=40, readonly=True, default="/")
     request_date = fields.Datetime('Request Date', required=True, readonly=True,
                                  default=datetime.today())
     issuer_id = fields.Many2one('res.users', string='Issuer', required=True, readonly=True,
@@ -137,7 +137,6 @@ class ItemBorrowing(models.Model):
                     'name': self.name,
                     'origin': self.name or self.picking_id.name,
                     'location_id': location_id,
-                    'scrapped': True,
                     'location_dest_id': self.item_loan_borrow_location_id.id,
                     'picking_id': picking_id or False,
                     'product_id': line.product_id.id,
@@ -178,9 +177,8 @@ class ItemBorrowing(models.Model):
     @api.multi
     def action_get_stock_picking(self):
         action = self.env.ref('stock.action_picking_tree_all').read([])[0]
-        action['domain'] = [('id', '=', self.picking_id.id)]
+        action['domain'] = ['|',('id', '=', self.picking_id.id),('origin','=',self.name)]
         return action
-
 
     ####################################################
     # Override methods
@@ -206,19 +204,30 @@ class ItemBorrowingLines(models.Model):
                               help="Price computed based on the last purchase order approved.",store=True)
     name = fields.Char(related='product_id.name',string='Specification',store=True)
     sequence = fields.Integer('Sequence')
-    received_qty = fields.Float('Received Quantity', digits=dp.get_precision('Product UoS'))
+    given_qty = fields.Float('Given Quantity', digits=dp.get_precision('Product UoS'))
+    received_qty = fields.Float('Receive Quantity', digits=dp.get_precision('Product UoS'))
+    due_qty = fields.Float(string='Due', digits=dp.get_precision('Product UoS'),
+                           compute='_compute_due_quantity')
 
     state = fields.Selection([
         ('draft', 'Draft'),
         ('confirm', 'Confirm'),
         ('waiting_approval', 'Waiting for Approval'),
         ('approved', 'Approved'),
+        ('receive', 'Receive'),
         ('reject', 'Rejected'),
     ], string='State')
 
     ####################################################
     # Business methods
     ####################################################
+
+    @api.depends('given_qty', 'received_qty')
+    @api.multi
+    def _compute_due_quantity(self):
+        for product_line in self:
+            product_line.due_qty = product_line.received_qty - product_line.given_qty
+
     @api.one
     @api.constrains('product_uom_qty')
     def _check_product_uom_qty(self):

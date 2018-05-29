@@ -19,7 +19,7 @@ class ItemLoanLending(models.Model):
     def _get_default_location_id(self):
         return self.env['stock.location'].search([('operating_unit_id', '=', self.env.user.default_operating_unit_id.id),('name','=','Stock')], limit=1).id
 
-    name = fields.Char('Issue #', size=30, readonly=True, default=lambda self: _('New'),copy=False,
+    name = fields.Char('Issue #', size=40, readonly=True, default=lambda self: _('New'),copy=False,
                        states={'draft': [('readonly', False)]})
     request_date = fields.Datetime('Request Date', required=True, readonly=True,
                                   default=datetime.today())
@@ -73,6 +73,7 @@ class ItemLoanLending(models.Model):
             if new_seq:
                 res['name'] = new_seq
             loan.write(res)
+            loan.item_lines.write({'state': 'waiting_approval'})
 
     @api.multi
     def button_approve(self):
@@ -89,6 +90,7 @@ class ItemLoanLending(models.Model):
             'picking_id' : picking_id
         }
         self.write(res)
+        self.item_lines.write({'state': 'approved'})
 
     @api.model
     def _create_pickings_and_moves(self):
@@ -158,6 +160,7 @@ class ItemLoanLending(models.Model):
             'approved_date': time.strftime('%Y-%m-%d %H:%M:%S')
         }
         self.write(res)
+        self.item_lines.write({'state': 'reject'})
 
     @api.multi
     def action_draft(self):
@@ -198,26 +201,41 @@ class ItemLoanLendingLines(models.Model):
     price_unit = fields.Float(related='product_id.standard_price', string='Price',
                               digits=dp.get_precision('Product Price'),
                               help="Price computed based on the last purchase order approved.", store=True)
-    qty_available = fields.Float('In Stock', compute='_computeProductQuentity', store=True)
+    qty_available = fields.Float('In Stock', compute='_compute_product_quantity', store=True)
     name = fields.Char(related='product_id.name', string='Specification', store=True)
     sequence = fields.Integer('Sequence')
     given_qty = fields.Float('Given Quantity', digits=dp.get_precision('Product UoS'))
     received_qty = fields.Float('Receive Quantity', digits=dp.get_precision('Product UoS'))
+    due_qty = fields.Float(string='Due', digits=dp.get_precision('Product UoS'),
+                           compute = '_compute_due_quantity')
 
     state = fields.Selection([
         ('draft', 'Draft'),
         ('waiting_approval', 'Waiting for Approval'),
         ('approved', 'Approved'),
+        ('receive', 'Receive'),
         ('reject', 'Rejected'),
-    ], string='State')
+    ], string='State', default='draft')
 
     ####################################################
     # Business methods
     ####################################################
 
+    # @api.onchange('received_qty')
+    # def _onchange_received_qty(self):
+    #     if self.received_qty:
+    #         if self.received_qty==self.given_qty:
+    #             self.write({'state': 'receive'})
+
+    @api.depends('given_qty','received_qty')
+    @api.multi
+    def _compute_due_quantity(self):
+        for product_line in self:
+            product_line.due_qty = product_line.given_qty - product_line.received_qty
+
     @api.depends('product_id')
     @api.multi
-    def _computeProductQuentity(self):
+    def _compute_product_quantity(self):
         for productLine in self:
             if productLine.product_id.id:
                 location_id = productLine.item_loan_lending_id.location_id.id
