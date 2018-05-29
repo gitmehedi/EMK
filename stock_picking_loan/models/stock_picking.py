@@ -3,7 +3,7 @@ import time
 from odoo import models, fields, api
 from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
 
-class StockPickingLoan(models.Model):
+class StockPicking(models.Model):
     _inherit = "stock.picking"
 
     loan_id = fields.Many2one(
@@ -28,7 +28,7 @@ class StockPickingLoan(models.Model):
         self.partner_id = self.loan_id.borrower_id.id or False
 
         product_lines = []
-        for loan_pro_line in self.loan_id.item_lines:
+        for loan_pro_line in self.loan_id.item_lines.filtered(lambda o: o.state == 'approved' ):
             product_lines.append((0, 0, {
                 'name': self.name,
                 'origin': self.name,
@@ -39,9 +39,62 @@ class StockPickingLoan(models.Model):
                 'date_expected': date_planned,
                 'product_id': loan_pro_line.product_id.id,
                 'product_uom': loan_pro_line.product_uom.id,
-                'product_uom_qty': loan_pro_line.product_uom_qty,
+                'product_uom_qty': loan_pro_line.due_qty,
                 'price_unit': loan_pro_line.price_unit,
                 'state': self.state,
             }))
 
         self.move_lines = product_lines
+
+    @api.multi
+    def do_transfer(self):
+        res = super(StockPicking, self).do_transfer()
+        if res:
+            picking = self.browse(self.ids)[0]
+            loan_borrowing_obj = self.env['item.borrowing']
+            loan_lending_obj = self.env['item.loan.lending']
+            if picking.location_dest_id.name == 'Stock':
+                loan_borrowing_ids = loan_borrowing_obj.search([('name', '=', picking.origin)])
+                if loan_borrowing_ids:
+                    for product_line in loan_borrowing_ids[0].item_lines:
+                        move = picking.move_lines.filtered(lambda o: o.product_id == product_line.product_id)
+                        if picking.backorder_id:
+                            product_line.write({'received_qty': product_line.received_qty + move.product_qty})
+                        else:
+                            product_line.write({'received_qty': move.product_qty})
+                if self.transfer_type == 'receive':
+                    origin_picking_objs = self.search([('name', '=', self.origin)])
+                    if origin_picking_objs[0].receive_type == 'loan':
+                        loan_lending_ids = loan_lending_obj.search([('id', '=', origin_picking_objs[0].loan_id.id)])
+                        if loan_lending_ids:
+                            for product_line in loan_lending_ids[0].item_lines:
+                                move = picking.move_lines.filtered(lambda o: o.product_id == product_line.product_id)
+                                if picking.backorder_id:
+                                    product_line.write({'received_qty': product_line.received_qty + move.product_qty})
+                                    if product_line.received_qty == product_line.given_qty:
+                                        product_line.write({'state': 'receive'})
+                                else:
+                                    product_line.write({'received_qty': move.product_qty})
+                                    if product_line.received_qty == product_line.given_qty:
+                                        product_line.write({'state': 'receive'})
+
+            if picking.location_dest_id.name == 'Customers':
+                loan_lending_ids = loan_lending_obj.search([('name', '=', picking.origin)])
+                if loan_lending_ids:
+                    for product_line in loan_lending_ids[0].item_lines:
+                        move = picking.move_lines.filtered(lambda o: o.product_id == product_line.product_id)
+                        if picking.backorder_id:
+                            product_line.write({'given_qty': product_line.given_qty + move.product_qty})
+                        else:
+                            product_line.write({'given_qty': move.product_qty})
+
+                loan_borrowing_ids = loan_borrowing_obj.search([('return_picking_id', '=', self.id)])
+                if loan_borrowing_ids:
+                    for product_line in loan_borrowing_ids[0].item_lines:
+                        move = picking.move_lines.filtered(lambda o: o.product_id == product_line.product_id)
+                        if picking.backorder_id:
+                            product_line.write({'given_qty': product_line.given_qty + move.product_qty})
+                        else:
+                            product_line.write({'given_qty': move.product_qty})
+
+        return res
