@@ -5,7 +5,7 @@
                 res_model="lc.sales.report.wizard"
                 src_model="purchase.shipment"
                 view_mode="form" target="new"
-                domain="[('type','=','export')]"
+                domain = "[('type','=','export')]"
                 view_type="form"
                 id="act_lc_sales_report"/>
 

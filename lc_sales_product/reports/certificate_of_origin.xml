@@ -9,7 +9,7 @@
                 report_type="qweb-pdf"
                 file="lc_sales_product.report_certificate_origin"
                 name="lc_sales_product.report_certificate_origin"
-                paperformat="custom_report.paperformat_backend_portrait"
+                paperformat="custom_report.custom_pad_paperformat"
                 menu="False"
 
         />

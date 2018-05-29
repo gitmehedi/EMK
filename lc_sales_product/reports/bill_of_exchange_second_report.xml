@@ -9,7 +9,7 @@
                 report_type="qweb-pdf"
                 file="lc_sales_product.report_bill_exchange_second"
                 name="lc_sales_product.report_bill_exchange_second"
-                paperformat="custom_report.paperformat_backend_portrait"
+                paperformat="custom_report.custom_pad_paperformat"
                 menu="False"
 
         />
