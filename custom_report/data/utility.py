@@ -103,22 +103,22 @@ class ReportUtility(models.TransientModel):
     def getBankAddress2(self,bank):
             address = []
             if bank.street:
-                address.append(bank.street)
+                address.append('<p>'+bank.street+'</p>')
 
             if bank.street2:
-                address.append(bank.street2)
+                address.append('<p>'+bank.street2+'</p>')
 
             if bank.zip:
-                address.append(bank.zip)
+                address.append('<p>'+bank.zip+'</p>')
 
             if bank.city:
-                address.append(bank.city)
+                address.append('<p>'+bank.city+'</p>')
 
             if bank.state:
-                address.append(bank.state.name)
+                address.append('<p>'+bank.state.name+'</p>')
 
             if bank.country:
-                address.append(bank.country.name)
+                address.append('<p>'+bank.country.name+'</p>')
 
-            str_address = '\n'.join(address)
+            str_address = ''.join(address)
             return str_address
