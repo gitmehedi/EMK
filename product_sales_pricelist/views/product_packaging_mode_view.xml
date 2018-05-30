@@ -20,7 +20,7 @@
 					<sheet>
 						<group>
 							<field name="packaging_mode"/>
-							<field name="is_jar_included"/>
+							<field name="is_jar_bill_included"/>
 						</group>
 	                </sheet>
 				</form>

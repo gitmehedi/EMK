@@ -6,4 +6,5 @@ class ProductPackagingMode(models.Model):
     _rec_name = 'packaging_mode'
 
     packaging_mode = fields.Char(string='Packaging Mode', required=True)
-    is_jar_included = fields.Boolean(string='Is Jar Included to Bill?')
+    is_jar_bill_included = fields.Boolean(string='Is Jar Bill Included?')
+
