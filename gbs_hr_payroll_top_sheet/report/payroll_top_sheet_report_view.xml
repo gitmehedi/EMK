@@ -40,7 +40,7 @@
                                             </td>
                                             <t t-foreach="rec_value['vals']" t-as="rule">
                                                 <td class="text-right">
-                                                    <span class="text-nowrap" t-esc="'%.2f'% rule_value"></span>
+                                                    <span class="text-nowrap" t-esc="rule_value"></span>
                                                 </td>
                                             </t>
                                         </tr>
@@ -51,7 +51,7 @@
                                         </td>
                                         <t t-foreach="total" t-as="t">
                                             <td class="text-right">
-                                                <strong class="text-nowrap" t-esc="'%.2f'% t_value"></strong>
+                                                <strong class="text-nowrap" t-esc="t_value"></strong>
                                             </td>
                                         </t>
                                     </tr>
@@ -61,11 +61,11 @@
                         <h5>
                             <b>Bank Credit dsfds:</b>
                             <span t-esc="bnet"></span>
-                            (<span t-esc="amt_to_word_bank"/>)
+                            (<span t-esc="amt_to_word_bnet"/>)
                         </h5>
                         <h5>
                             <b>Cash payment :</b>
-                            <span t-esc="tot_cash"></span>
+                            <span t-esc="total_cash"></span>
                             (<span t-esc="amt_to_word_cash"/>)
                         </h5>
                         <h5>

@@ -56,9 +56,14 @@ class PayrollReportPivotal(models.AbstractModel):
                     rec['vals'][line.name] = rec['vals'][line.name] + math.ceil(line.total)
                     total[line.name] = total[line.name] + math.ceil(line.total)
                 if line.code == 'BNET':
-                    bnet = bnet + line.total
+                    bnet = bnet + math.ceil(line.total)
                 if line.code == 'NET':
-                    net = net + line.total
+                    net = net + math.ceil(line.total)
+
+        total_cash = net-bnet
+        amt_to_word_bnet = self.env['res.currency'].amount_to_word(float(bnet))
+        amt_to_word_net = self.env['res.currency'].amount_to_word(float(net))
+        amt_to_word_cash = self.env['res.currency'].amount_to_word(float(total_cash))
 
         docargs = {
 
@@ -69,8 +74,12 @@ class PayrollReportPivotal(models.AbstractModel):
             'record': record,
             'total': total,
             'rules': rule_list,
-            'bnet': bnet,
-            'net': net,
+            'bnet': formatLang(self.env,(bnet)),
+            'net': formatLang(self.env,(net)),
+            'total_cash': formatLang(self.env,(net-bnet)),
+            'amt_to_word_bnet': amt_to_word_bnet,
+            'amt_to_word_net': amt_to_word_net,
+            'amt_to_word_cash': amt_to_word_cash,
 
         }
 
