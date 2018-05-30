@@ -18,52 +18,52 @@
                 <t t-call="custom_report.gbs_custom_pad_report_template">
                     <div class="page" style="page-break-inside: auto">
                         <style>
-                            .table-caption {
-                            border: 1px solid #ddd;
-                            border-bottom: none;
-                            font-size: 14px;
-                            font-weight: bold;
-                            margin: 0;
-                            padding: 5px 5px;
+                            .proforma-terms p, .proforma-terms li {
+                                padding:0!important; margin:0!important; line-height:normal;
                             }
+                            .auth-signature { padding: 5px 0; border-top: 1px dashed #333; float: left; }
                         </style>
-                        <div class="row">
+                        <div class="clearfix">
                             <h3 class="text-center">Proforma Invoice</h3>
                             <hr class="hr-sm mb-0"/>
                             <div class="row">
                                 <div class="col-xs-6">
-                                    <p><b>Beneficiary : </b><span t-esc="data['beneficiary_id']"/></p>
-                                    <p><b>Factory : </b><span t-esc="data['unit_address']"/></p>
-                                    <p><b>Vat Registration No : </b><span t-esc="data['vat']"/></p>
+                                    <p><b><u>Beneficiary:</u></b></p>
+                                    <p class="m-0"><strong t-esc="data['beneficiary_id']"/> <br/>
+                                        Factory: <span t-esc="data['unit_address']"/></p>
+                                    <p><b>Vat Registration No:</b>
+                                        <span t-esc="data['vat']"/></p>
                                 </div>
                                 <div class="col-xs-6 text-left">
-                                    <p><b>Proforma Invoice No &amp; Date : </b></p>
-                                    <P><span t-esc="data['name']"/></P>
-                                    <P><span t-esc="data['pi_date']"/></P>
+                                    <p><b>Proforma Invoice No &amp; Date : </b><br/>
+                                        <span t-esc="data['name']"/> <br/>
+                                        <span t-esc="data['pi_date']"/></p>
                                 </div>
                             </div>
-                            <hr class="hr-sm mb-0"/>
+
                             <div class="row">
                                 <div class="col-xs-6">
-                                    <p><b>Applicant : </b><span t-esc="data['customer']"/></p>
-                                    <p><b>Factory : </b><span t-esc="data['customer_add']" /></p>
+                                    <p><b><u>Applicant:</u></b></p>
+                                    <p><strong t-esc="data['customer']"/> <br/>
+                                        Factory: <span t-esc="data['customer_add']" /></p>
                                 </div>
                                 <div class="col-xs-6 text-left">
-                                    <p><b>Transport : </b><span t-esc="data['transport_by']"/></p>
-                                    <p><b>Place of Loading : </b>From Factory Premises of Beneficiary.</p>
-                                    <p><b>Final Destination : </b>Applicant's Factory.</p>
+                                    <p><b>Transport : </b><span t-esc="data['transport_by']"/> <br/>
+                                        <b>Place of Loading : </b>From Factory Premises of Beneficiary. <br/>
+                                        <b>Final Destination : </b>Applicant's Factory.</p>
                                 </div>
                             </div>
-                            <hr class="hr-sm mb-0"/>
                         </div>
-                        <div class="row">
-                            <table class="table table-report table-bordered table-striped">
+                        <div class="clearfix mb-10">
+                            <hr class="hr-xxs m-0"/>
+                            <h5 class="text-center mt-5"><u>Description of Goods</u></h5>
+                            <table class="table table-report table-bordered table-striped mb-0">
                                 <thead>
                                     <tr class="odo-bg-gray">
-                                        <th>Sl#</th>
+                                        <th class="w5">Sl#</th>
                                         <th>Description of Goods</th>
                                         <th>HS Code</th>
-                                        <th>Quantity</th>
+                                        <th class="w10">Qty</th>
                                         <th>Unit</th>
                                         <th>Rate</th>
                                         <th>Amount</th>
@@ -88,35 +88,33 @@
                                 </tbody>
                             </table>
                         </div>
-                        <div class="row">
-                            <hr class="hr-sm mb-0"/>
+                        <div class="clearfix">
                             <div class="row">
                                 <div class="col-xs-6">
-                                    <p><b>Advising Bank : </b><span t-esc="data['advising_bank']"/></p>
-                                    <p><b>Bank Address : </b><span t-esc="data['customer_add']"/></p>
+                                    <p><b>Advising Bank : </b><span t-esc="data['advising_bank']"/> <br/>
+                                        <b>Bank Address : </b><span t-esc="data['customer_add']"/></p>
                                 </div>
                                 <div class="col-xs-6 text-left">
-                                    <p><b>Packing : </b><span t-esc="data['packing']"/></p>
-                                    <p><b>Terms of Payment : </b><span t-esc="data['terms_of_payment']"/></p>
+                                    <p><b>Packing : </b><span t-esc="data['packing']"/> <br/>
+                                        <b>Terms of Payment : </b><span t-esc="data['terms_of_payment']"/></p>
                                 </div>
                             </div>
-                            <hr class="hr-sm mb-0"/>
+                            <hr class="hr-xxs m-0"/>
                         </div>
-                        <div class="row">
-                            <div class="col-xs-6">
-                                <h4><b>Terms and Conditions :</b></h4>
-                                <p t-raw="data['terms_condition']"/>
-                            </div>
+                        <div class="proforma-terms mb-15">
+                            <p><b>Terms and Conditions:</b></p>
+                            <p t-raw="data['terms_condition']"/>
                         </div>
-                        <div class="row mb32 text-left" style="margin-top: 20mm;">
-                            <div class="col-xs-10 text-left">
-                                <strong>For <span t-esc="data['beneficiary_id']"/></strong>
-                                <br/>
-                                <br/>
-                                <br/>
-                                <br/>
-                                <p style="border-top: 1px solid black;width: 20%;">Authorized Signature</p>
-                            </div>
+                        <hr class="hr-xxs"/>
+                        <div>
+                            <p>For and on behalf of <br/>
+                                <span t-esc="data['beneficiary_id']"/>
+                            </p>
+                            <br/>
+                            <br/>
+                            <br/>
+                            <br/>
+                            <p class="auth-signature">Authorized Signature</p>
                         </div>
                     </div>
                 </t>

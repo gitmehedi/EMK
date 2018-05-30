@@ -177,7 +177,7 @@ class ItemBorrowing(models.Model):
     @api.multi
     def action_get_stock_picking(self):
         action = self.env.ref('stock.action_picking_tree_all').read([])[0]
-        action['domain'] = ['|',('id', '=', self.picking_id.id),('origin','=',self.name)]
+        action['domain'] = ['&','|',('id', '=', self.picking_id.id),('origin','=',self.name)]
         return action
 
     ####################################################

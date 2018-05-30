@@ -1,6 +1,14 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <openerp>
 	<data>
+		<template id="assets_backend" name="hr_attendance_and_ot_summary assets" inherit_id="web.assets_backend">
+			<xpath expr="." position="inside">
+				<link rel="stylesheet" href="/hr_attendance_and_ot_summary/static/libs/jquery.scrollbar.css" type="text/css"/>
+				<link rel="stylesheet" href="/hr_attendance_and_ot_summary/static/src/css/scrollbar.css" type="text/css"/>
+				<script type="text/javascript" src="/hr_attendance_and_ot_summary/static/libs/jquery.scrollbar.js"></script>
+				<script type="text/javascript" src="/hr_attendance_and_ot_summary/static/src/js/scrollbar.js"></script>
+			</xpath>
+		</template>
 		<!-- Tree View -->
 		<record id="attendance_ot_summary_tree" model="ir.ui.view">
 			<field name="name">hr.attendance.summary.tree</field>
@@ -13,7 +21,7 @@
 				</tree>
 			</field>
 		</record>
-		
+
 		<!-- Form View -->
 		<record id="attendance_ot_summary_form" model="ir.ui.view">
 			<field name="name">hr.attendance.summary.form</field>
@@ -32,7 +40,7 @@
 						<field name="state" widget="statusbar"/>
 					</header>
 					<sheet>
-						<group>
+						<!--<group>
 							<field name="name" />
 							<field name="period"/>
 						</group>
@@ -43,7 +51,7 @@
 							<group>
 								<field name="operating_unit_id" options='{"no_open": True,"no_create": 1, "no_create_edit":1}' />
 							</group>
-						</group>
+						</group>-->
 						<field name="att_summary_lines" attrs="{'readonly':[('state','=','approved')]}">
 							<tree string="List" editable="top" colors="red:is_entered_rostering == 0">
 								<field name="is_entered_rostering" invisible="1"/>
@@ -67,22 +75,16 @@
 								<button name="action_regenerate" string="Action" type="object" icon="fa-cogs" attrs="{'invisible':[('state','=','approved')]}"/>
 							</tree>
 						</field>
-
-
 					</sheet>
 					
-					<div class="oe_chatter">
+					<!--<div class="oe_chatter">
 						<field name="message_follower_ids" widget="mail_followers"/>
 	                    <field name="message_ids" widget="mail_thread"/>
-	                </div>
+	                </div>-->
 					
 				</form>
 			</field>
 		</record>
-
-
-
-
 
 		<record id="hr_attendance_ot_summary_action" model="ir.actions.act_window">
 			<field name="name">Attendance Summary</field>
@@ -92,8 +94,6 @@
 
 		<menuitem id="menu_hr_attendance_ot_summary" name="Attendance Summary" parent="hr_attendance.menu_hr_attendance_manage_attendances"
 					groups="hr.group_hr_user" action="hr_attendance_ot_summary_action" />
-					
-
 
 		<!-- Detail View -->
 		<record id="view_attendance_summary_line_details_form" model="ir.ui.view">
@@ -177,8 +177,6 @@
                 </form>
             </field>
         </record>
-
-
 					
 	</data>
 </openerp>
