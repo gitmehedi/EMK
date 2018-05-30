@@ -18,106 +18,104 @@
             <t t-call="report.html_container">
                 <t t-call="custom_report.gbs_custom_pad_report_template">
                     <div class="page" style="page-break-inside: auto">
+                        <style>
+                            .auth-signature { padding: 5px; border-top: 1px dashed #333; float: right; }
+                        </style>
                         <div class="row">
                             <div class="clearfix">
                                 <h3 class="report-title">Beneficiary Certificate</h3>
                             </div>
-                            <style>
-                                table, th, td {
-                                border: 1px solid black;
-                                border-collapse: collapse;
-                                }
-                                th, td {
-                                padding: 5px;
-                                }
-                            </style>
-                            <table>
+
+                            <table class="table table-bordered mb-0">
                                 <tr>
-                                    <td>
-                                        <strong>Exporter:</strong>
-                                        <p><span t-esc="data['first_party']"/></p>
-                                        <p><b>Factory: </b><span t-esc="data['factory']"/></p>
+                                    <td class="w50">
+                                        <p><strong><u>Exporter</u></strong></p>
+                                        <p><strong t-esc="data['first_party']"/> <br/>
+                                            <span t-esc="data['factory']"/></p>
+                                        <br/>
+                                        <p><strong><u>Buyer</u></strong></p>
+                                        <p class="pb-0"><strong t-esc="data['buyer']"/> <br/>
+                                            Office: <span t-esc="data['invoice_address']"/>
+                                            Factory: <span t-esc="data['delivery_address']"/></p>
                                     </td>
-                                    <td>
-                                        <table>
-                                            <tr>
-                                                <td>Invoice No: <strong t-esc="data['invoice_id']"/></td>
-                                                <td>Invoice Date: <strong t-esc="data['invoice_date']"/></td>
+                                    <td class="w50 p-0">
+                                        <table class="table table-bordered mb-0">
+                                            <tr class="odo-bg-gray">
+                                                <td class="w50 bt-0">
+                                                    Invoice No: <strong t-esc="data['invoice_id']"/>
+                                                </td>
+                                                <td class="w50 bt-0">
+                                                    Date: <strong t-esc="data['invoice_date']"/>
+                                                </td>
                                             </tr>
-                                            <tr>
+                                            <tr class="odo-bg-gray">
                                                 <td>
-                                                    <p>Terms of Delivery:</p>
-                                                    <p>As per Proforma Invoice No:
+                                                    <p><b><u>Terms of Delivery:</u></b> <br/>
+                                                        As per Proforma Invoice No:
                                                         <t t-foreach="pi_list" t-as="p">
-                                                            <p><strong t-esc="p['number']"/> Date:
-                                                            <strong t-esc="p['date']"/></p>
+                                                            <strong t-esc="p['number']"/>
+                                                            Date: <strong t-esc="p['date']"/>
                                                         </t>
                                                     </p>
                                                 </td>
                                                 <td>
-                                                    <p>Loading:</p>
-                                                    <p><span t-esc="data['factory']"/></p>
+                                                    <p><b><u>Packing:</u></b> <br/>
+                                                        Export Standard
+                                                    </p>
                                                 </td>
                                             </tr>
-                                            <td>
-                                                <p>Packing: </p>
-                                                <p>Export Standard</p>
-                                            </td>
-                                            <td>
-                                                <p>Destination:</p>
-                                                <p>Applicant' Factory</p>
-                                            </td>
+                                            <tr class="odo-bg-gray">
+                                                <td>
+                                                    <p><u><b>Loading</b></u> <br/>
+                                                        <span t-esc="data['factory']"/>
+                                                    </p>
+                                                </td>
+                                                <td>
+                                                    <p><u><b>Destination</b></u> <br/>
+                                                        Applicant's Factory</p>
+                                                </td>
+                                            </tr>
                                         </table>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td>
-                                        <strong>Buyer:</strong>
-                                        <p><span t-esc="data['buyer']"/></p>
-                                        <p>Office: <span t-esc="data['invoice_address']"/></p>
-                                        <p>Factory: <span t-esc="data['delivery_address']"/></p>
+                                        <p class="m-0 p-0" t-raw="data['terms_condition']"/>
                                     </td>
-                                    <td>
-                                        <table>
-                                            <p>Drawn under the Documentary Credit No.:</p>
-                                            <strong t-esc="data['lc_id']"/>
-                                            <p>Date:<strong t-esc="data['lc_date']"/> of</p>
-                                            <strong t-esc="data['second_party_bank']"/>
-                                        </table>
+                                    <td class="bl-1 bl-r">
+                                        <p>
+                                            Drawn under the Documentary Credit No.: <br/>
+                                            <strong t-esc="data['lc_id']"/> Date: <strong t-esc="data['lc_date']"/> <br/>
+                                            <span style="padding-left:25%">of</span> <br/>
+                                            <span t-esc="data['second_party_bank']"/>
+                                        </p>
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td>
-                                        <p t-raw="data['terms_condition']"/>
-                                    </td>
-                                    <td>
-                                        <table>
-                                            <p>We certify that the goods supplied are of Bangladesh origin and strictly
-                                                in
-                                                accordance
-                                                with the Proforma Invoice No.
-                                            </p>
-                                            <p>Proforma Invoice No:
-                                                <t t-foreach="pi_list" t-as="p">
-                                                    <p><strong t-esc="p['number']"/> Date:
-                                                    <strong t-esc="p['date']"/></p>
-                                                </t>
-                                            </p>
-                                        </table>
+                                    <!--<td> </td>-->
+                                    <td colspan="2">
+                                        <p>We certify that the goods supplied are of Bangladesh origin and strictly
+                                            in accordance with the Proforma Invoice No.
+
+                                            <t t-foreach="pi_list" t-as="p">
+                                                <strong t-esc="p['number']"/>
+                                                Date: <strong t-esc="p['date']"/>
+                                            </t>
+                                        </p>
                                     </td>
                                 </tr>
                             </table>
+
+                            <h5 class="text-center"><u>Description of Goods</u></h5>
                             <table class="table table-report table-bordered table-striped">
                                 <thead>
                                     <tr class="odo-bg-gray">
-                                        <th>SL</th>
+                                        <th class="w5">SL</th>
                                         <th>Product</th>
-                                        <th>H.S Code</th>
+                                        <th class="w10">H.S Code</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <br/>
-                                    <p>Description of Goods</p>
                                     <t t-foreach="lists" t-as="l">
                                         <tr style="page-break-inside: avoid">
                                             <td style="width:2%"><span t-esc="l_index+1"/></td>
@@ -127,17 +125,21 @@
                                     </t>
                                 </tbody>
                             </table>
-                            <p>Quantity of goods: <strong t-esc="total_qty"/><strong t-esc="uom"/></p>
-                            <p>Goods dispatched on: <strong t-esc="data['arrival_date']"/></p>
-                            <div class="row mb32 text-left" style="margin-top:10mm;">
-                                <div class="col-xs-12">
-                                    <p>For and on behalf of </p>
-                                    <p><span t-esc="data['first_party']"/></p>
-                                    <br/>
-                                    <br/>
-                                    <br/>
-                                    <p style="border-top: 1px solid black;width: 20%;">Authorized Signature</p>
-                                </div>
+
+                            <div class="row mb-10">
+                                <div class="col-xs-6">Quantity of goods: <strong t-esc="total_qty"/><strong t-esc="uom"/></div>
+                                <div class="col-xs-6 text-right">Goods dispatched on: <strong t-esc="data['arrival_date']"/></div>
+                            </div>
+
+                            <hr class="hr-xs"/>
+
+                            <div class="text-right">
+                                <p>For and on behalf of <br/>
+                                    <span t-esc="data['first_party']"/>
+                                </p>
+                                <br/>
+                                <br/>
+                                <p >Authorised Signature</p>
                             </div>
 
                         </div>
