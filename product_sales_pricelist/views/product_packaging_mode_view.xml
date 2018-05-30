@@ -20,6 +20,7 @@
 					<sheet>
 						<group>
 							<field name="packaging_mode"/>
+							<field name="is_jar_included"/>
 						</group>
 	                </sheet>
 				</form>
