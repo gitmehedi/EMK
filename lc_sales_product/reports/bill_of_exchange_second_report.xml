@@ -19,7 +19,7 @@
                 <t t-call="custom_report.gbs_custom_pad_report_template">
                     <div class="page" style="page-break-inside: auto">
                         <style>
-                            .bill-ofex-signature { padding: 5px; border-top: 1px dashed #333; float: right; }
+                            .auth-signature { padding: 5px 0; border-top: 1px dashed #333; float: right; }
                         </style>
                         <h4 class="text-center"><b>Bill Of Exchange (Second)</b></h4>
                         <br/>
@@ -135,7 +135,7 @@
                                 <br/>
                                 <br/>
                                 <br/>
-                                <p class="bill-ofex-signature">Authorized Signature</p>
+                                <p class="auth-signature">Authorized Signature</p>
                             </div>
                         </div>
                     </div>

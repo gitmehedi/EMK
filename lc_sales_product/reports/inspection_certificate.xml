@@ -18,6 +18,9 @@
             <t t-call="report.html_container">
                 <t t-call="custom_report.gbs_custom_pad_report_template">
                     <div class="page" style="page-break-inside: auto">
+                        <style>
+                            .auth-signature { padding: 5px 0; border-top: 1px dashed #333; float: right; }
+                        </style>
                         <div class="row">
                             <div class="clearfix">
                                 <h3 class="report-title">Inspection Certificate</h3>
@@ -128,7 +131,7 @@
                                 <div class="col-xs-6 text-right">Goods dispatched on: <strong t-esc="data['arrival_date']"/></div>
                             </div>
 
-                            <hr class="hr-xs"/>
+                            <hr class="hr-xs mb-10"/>
 
                             <div class="text-right">
                                 <p>For and on behalf of <br/>
@@ -136,7 +139,8 @@
                                 </p>
                                 <br/>
                                 <br/>
-                                <p>Authorised Signature</p>
+                                <br/>
+                                <p class="auth-signature">Authorised Signature</p>
                             </div>
 
                         </div>

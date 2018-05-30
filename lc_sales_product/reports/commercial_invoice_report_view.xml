@@ -18,6 +18,9 @@
             <t t-call="report.html_container">
                 <t t-call="custom_report.gbs_custom_pad_report_template">
                     <div class="page" style="page-break-inside: auto">
+                        <style>
+                            .auth-signature { padding: 5px 0; border-top: 1px dashed #333; float: right; }
+                        </style>
                         <div class="row">
                             <div class="clearfix">
                                 <h3 class="report-title">Commercial Invoice</h3>
@@ -162,14 +165,16 @@
                             <p>
                                 In Words: <strong t-esc="amt_to_word"/>
                             </p>
-                            <hr class="hr-xxs"/>
+                            <hr class="hr-xs mb-10"/>
+
                             <div class="text-right">
                                 <p>For and on behalf of <br/>
                                     <span t-esc="data['company_id']"/>
                                 </p>
                                 <br/>
                                 <br/>
-                                <p>Authorised Signature</p>
+                                <br/>
+                                <p class="auth-signature">Authorised Signature</p>
                             </div>
 
                         </div>

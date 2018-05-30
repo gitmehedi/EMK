@@ -25,6 +25,7 @@
                             .bank-letter_doclist > tbody > tr > td {
                                 border:0 none!important; padding: 0px!important;
                             }
+                            .auth-signature { padding: 5px 0; border-top: 1px dashed #333; float: left; }
                         </style>
                         <div class="bank-letter">
                             <p>Date: </p>
@@ -71,7 +72,8 @@
                             </p>
                             <br/>
                             <br/>
-                            <p>Authorised Signature</p>
+                            <br/>
+                            <p class="auth-signature">Authorised Signature</p>
                         </div> <!-- end bl -->
                     </div>
                 </t>
