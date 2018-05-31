@@ -129,8 +129,10 @@ class WarehouseToShopDistribution(models.Model):
         move_new_obj = self.env['stock.move']
 
         warehouse_loc = self.env['stock.location'].search(
-            [('operating_unit_id', '=', self.warehouse_id.operating_unit_id.id)], limit=1)
-        transit_loc = self.env['stock.location'].search([('name', 'ilike', 'Inter Company Transit')])
+            [('operating_unit_id', '=', self.warehouse_id.operating_unit_id.id),
+             ('company_id', '=', self.company_id.id)], limit=1)
+        transit_loc = self.env['stock.location'].search(
+            [('usage', '=', 'transit'), ('active', '=', True), ('company_id', '=', self.company_id.id)])
 
         picking = self.get_picking(src_loc=warehouse_loc, dest_loc=transit_loc)
 
@@ -161,7 +163,8 @@ class WarehouseToShopDistribution(models.Model):
 
         move_new_obj = self.env['stock.move']
 
-        transit_location = self.env['stock.location'].search([('name', 'ilike', 'Inter Company Transit')])
+        transit_location = self.env['stock.location'].search(
+            [('usage', '=', 'transit'), ('active', '=', True), ('company_id', '=', self.company_id.id)])
         dest_loc = self.env['stock.location'].search([('operating_unit_id', '=', self.shop_id.id)])
 
         picking = self.get_picking(src_loc=transit_location, dest_loc=dest_loc)

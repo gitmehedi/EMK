@@ -1,0 +1,166 @@
+id,name,uom_po_id/id,uom_id/id,line_ids/product_qty,line_ids/location_id/id
+__export__.product_template_26777,100 piece marbel eyeshadow palette,product.product_uom_unit,product.product_uom_unit,2700,__export__.stock_location_30
+__export__.product_template_25682,Ac Clean up after balm,product.product_uom_unit,product.product_uom_unit,300,__export__.stock_location_30
+__export__.product_template_26649,Ac Clean up after balm,product.product_uom_unit,product.product_uom_unit,300,__export__.stock_location_30
+__export__.product_template_25686,Ac Clean up after balm 23,product.product_uom_unit,product.product_uom_unit,0,__export__.stock_location_30
+__export__.product_template_25684,Ac Clean up after balm 23,product.product_uom_unit,product.product_uom_unit,0,__export__.stock_location_30
+__export__.product_template_25688,Ac Clean up after balm 7854212,product.product_uom_unit,product.product_uom_unit,0,__export__.stock_location_30
+__export__.product_template_26650,Ac Clean up Cleansing Water,product.product_uom_unit,product.product_uom_unit,1300,__export__.stock_location_30
+__export__.product_template_26651,Ac Clean up Gel Lotion,product.product_uom_unit,product.product_uom_unit,1100,__export__.stock_location_30
+__export__.product_template_26652,Ac clean up pink powder mask ,product.product_uom_unit,product.product_uom_unit,1250,__export__.stock_location_30
+__export__.product_template_26653,Ac Clean up Spot Patch,product.product_uom_unit,product.product_uom_unit,1300,__export__.stock_location_30
+__export__.product_template_26654,Ac Clean Up toner ,product.product_uom_unit,product.product_uom_unit,350,__export__.stock_location_30
+__export__.product_template_26655,All Around Safe block aqua sun gel,product.product_uom_unit,product.product_uom_unit,1300,__export__.stock_location_30
+__export__.product_template_26656,BH Blushed Neutrals 26 color,product.product_uom_unit,product.product_uom_unit,1050,__export__.stock_location_30
+__export__.product_template_26657,bh illuminate ashley,product.product_uom_unit,product.product_uom_unit,1400,__export__.stock_location_30
+__export__.product_template_26658,bh Liquid Eyeliser,product.product_uom_unit,product.product_uom_unit,1800,__export__.stock_location_30
+__export__.product_template_26659,bh Marble Collection,product.product_uom_unit,product.product_uom_unit,600,__export__.stock_location_30
+__export__.product_template_26660,bh Metal rose 11pcs&Bag,product.product_uom_unit,product.product_uom_unit,1200,__export__.stock_location_30
+__export__.product_template_26661,bh sculpt & Blend 10pcs,product.product_uom_unit,product.product_uom_unit,1500,__export__.stock_location_30
+__export__.product_template_26662,BH Smokey Eyes 28 color,product.product_uom_unit,product.product_uom_unit,1200,__export__.stock_location_30
+__export__.product_template_26663,BH Special occasion 39 color  ,product.product_uom_unit,product.product_uom_unit,1400,__export__.stock_location_30
+__export__.product_template_26664,Cosmetics A,product.product_uom_unit,product.product_uom_unit,1400,__export__.stock_location_30
+__export__.product_template_25476,Cosmetics A,product.product_uom_unit,product.product_uom_unit,1400,__export__.stock_location_30
+__export__.product_template_26665,Egg forehead blackhead steam night,product.product_uom_unit,product.product_uom_unit,1,__export__.stock_location_30
+__export__.product_template_26694,Elf hypershine lipgloss,product.product_uom_unit,product.product_uom_unit,1600,__export__.stock_location_30
+__export__.product_template_26695,Elf Mineral eyeliner,product.product_uom_unit,product.product_uom_unit,300,__export__.stock_location_30
+__export__.product_template_26696,Elf plampin lipgloss,product.product_uom_unit,product.product_uom_unit,700,__export__.stock_location_30
+__export__.product_template_26697,Elf shimmer lipgloss,product.product_uom_unit,product.product_uom_unit,650,__export__.stock_location_30
+__export__.product_template_26698,Elf Super Glossy lip Shine,product.product_uom_unit,product.product_uom_unit,300,__export__.stock_location_30
+__export__.product_template_26699,Etude House fresh cherry tint cherry peach,product.product_uom_unit,product.product_uom_unit,300,__export__.stock_location_30
+__export__.product_template_26700,Etude House fresh cherry tint cherry read,product.product_uom_unit,product.product_uom_unit,650,__export__.stock_location_30
+__export__.product_template_26701,Etude House kissful lip care cherry,product.product_uom_unit,product.product_uom_unit,650,__export__.stock_location_30
+__export__.product_template_26702,Etude House kissful lip care peach,product.product_uom_unit,product.product_uom_unit,450,__export__.stock_location_30
+__export__.product_template_26703,Etude House kissful lip care strawberry,product.product_uom_unit,product.product_uom_unit,450,__export__.stock_location_30
+__export__.product_template_26704,Etude house  wonder pore freshner,product.product_uom_unit,product.product_uom_unit,1100,__export__.stock_location_30
+__export__.product_template_26666,Etude house  wonder pore freshner,product.product_uom_unit,product.product_uom_unit,1100,__export__.stock_location_30
+__export__.product_template_26779,Eyelash Curler,product.product_uom_unit,product.product_uom_unit,3000,__export__.stock_location_30
+__export__.product_template_26778,Eyelash Curler,product.product_uom_unit,product.product_uom_unit,3000,__export__.stock_location_30
+__export__.product_template_26780,Ezzy Breezy (Skin Elixir),product.product_uom_unit,product.product_uom_unit,0,__export__.stock_location_30
+__export__.product_template_26781,innisfree bija trouble facial foam blemish,product.product_uom_unit,product.product_uom_unit,0,__export__.stock_location_30
+__export__.product_template_26782,Innisfree green tea balancing cream,product.product_uom_unit,product.product_uom_unit,900,__export__.stock_location_30
+__export__.product_template_26783,Innisfree green tea balancing skin,product.product_uom_unit,product.product_uom_unit,1350,__export__.stock_location_30
+__export__.product_template_26784,Innisfree green tea cleansing foam,product.product_uom_unit,product.product_uom_unit,1550,__export__.stock_location_30
+__export__.product_template_26785,Innisfree green tea cleansing water,product.product_uom_unit,product.product_uom_unit,900,__export__.stock_location_30
+__export__.product_template_26786,innisfree it's real squeeze mask acai berry,product.product_uom_unit,product.product_uom_unit,1550,__export__.stock_location_30
+__export__.product_template_26787,innisfree it's real squeeze mask bija,product.product_uom_unit,product.product_uom_unit,120,__export__.stock_location_30
+__export__.product_template_26788,innisfree it's real squeeze mask cucumber,product.product_uom_unit,product.product_uom_unit,175,__export__.stock_location_30
+__export__.product_template_26789,innisfree it's real squeeze mask green tea,product.product_uom_unit,product.product_uom_unit,120,__export__.stock_location_30
+__export__.product_template_26790,innisfree it's real squeeze mask lime,product.product_uom_unit,product.product_uom_unit,120,__export__.stock_location_30
+__export__.product_template_26791,innisfree it's real squeeze mask manuka honey,product.product_uom_unit,product.product_uom_unit,120,__export__.stock_location_30
+__export__.product_template_26792,innisfree it's real squeeze mask pomegranate,product.product_uom_unit,product.product_uom_unit,120,__export__.stock_location_30
+__export__.product_template_26793,innisfree it's real squeeze mask rice single pack,product.product_uom_unit,product.product_uom_unit,120,__export__.stock_location_30
+__export__.product_template_26794,innisfree it's real squeeze mask rose,product.product_uom_unit,product.product_uom_unit,120,__export__.stock_location_30
+__export__.product_template_26795,innisfree it's real squeeze mask strawberry,product.product_uom_unit,product.product_uom_unit,120,__export__.stock_location_30
+__export__.product_template_26796,Innisfree it's real squeeze mask Tea Tree,product.product_uom_unit,product.product_uom_unit,120,__export__.stock_location_30
+__export__.product_template_26797,Innisfree jeju lava seawater ampoule skin,product.product_uom_unit,product.product_uom_unit,120,__export__.stock_location_30
+__export__.product_template_26798,Innisfree jeju lava seawater deep cream,product.product_uom_unit,product.product_uom_unit,2650,__export__.stock_location_30
+__export__.product_template_26799,Innisfree jeju lava seawater deep essence,product.product_uom_unit,product.product_uom_unit,2450,__export__.stock_location_30
+__export__.product_template_26800,Innisfree jeju lava seawater eye serum,product.product_uom_unit,product.product_uom_unit,2450,__export__.stock_location_30
+__export__.product_template_26801,Innisfree jeju lava seawater intensive ampoule,product.product_uom_unit,product.product_uom_unit,2950,__export__.stock_location_30
+__export__.product_template_26802,Innisfree jeju lava seawater lotion,product.product_uom_unit,product.product_uom_unit,2950,__export__.stock_location_30
+__export__.product_template_26803,Innisfree jeju sparkling mineral essence,product.product_uom_unit,product.product_uom_unit,2650,__export__.stock_location_30
+__export__.product_template_26804,innisfree jeju volcanic blackhead 3 step program,product.product_uom_unit,product.product_uom_unit,2550,__export__.stock_location_30
+__export__.product_template_26805,Innisfree jeju volcanic pore clay mask,product.product_uom_unit,product.product_uom_unit,550,__export__.stock_location_30
+__export__.product_template_26806,Innisfree jeju volcanic pore cleansing foam,product.product_uom_unit,product.product_uom_unit,1200,__export__.stock_location_30
+__export__.product_template_26807,Innisfree jeju volcanic pore toner,product.product_uom_unit,product.product_uom_unit,900,__export__.stock_location_30
+__export__.product_template_26667,innisfree no-sebum mineral pact,product.product_uom_unit,product.product_uom_unit,1050,__export__.stock_location_30
+__export__.product_template_26668,innisfree no-sebum mineral powder,product.product_uom_unit,product.product_uom_unit,1100,__export__.stock_location_30
+__export__.product_template_26764,innisfree olive real cleansing foam,product.product_uom_unit,product.product_uom_unit,520,__export__.stock_location_30
+__export__.product_template_26765,innisfree olive real skin,product.product_uom_unit,product.product_uom_unit,1150,__export__.stock_location_30
+__export__.product_template_26766,innisfree orchid eye cream,product.product_uom_unit,product.product_uom_unit,1950,__export__.stock_location_30
+__export__.product_template_26767,innisfree perfect 9 repair lotion,product.product_uom_unit,product.product_uom_unit,2550,__export__.stock_location_30
+__export__.product_template_26768,innisfree perfect 9 repair skin,product.product_uom_unit,product.product_uom_unit,3250,__export__.stock_location_30
+__export__.product_template_26769,innisfree skinny microcara,product.product_uom_unit,product.product_uom_unit,2950,__export__.stock_location_30
+__export__.product_template_26771,Innisfree super volcanic pore clay mask,product.product_uom_unit,product.product_uom_unit,950,__export__.stock_location_30
+__export__.product_template_26770,Innisfree super volcanic pore clay mask,product.product_uom_unit,product.product_uom_unit,950,__export__.stock_location_30
+__export__.product_template_26772,Innisfree the green tea seed cream,product.product_uom_unit,product.product_uom_unit,0,__export__.stock_location_30
+__export__.product_template_26773,Innisfree the green tea seed eye cream,product.product_uom_unit,product.product_uom_unit,750,__export__.stock_location_30
+__export__.product_template_26760,Innisfree the green tea seed eye cream,product.product_uom_unit,product.product_uom_unit,750,__export__.stock_location_30
+__export__.product_template_26761,Innisfree the green tea seed serum,product.product_uom_unit,product.product_uom_unit,1850,__export__.stock_location_30
+__export__.product_template_26762,KLEAN Color Madly Matte,product.product_uom_unit,product.product_uom_unit,1850,__export__.stock_location_30
+__export__.product_template_26763,LA GIRL Matte Liquid Lipstick,product.product_uom_unit,product.product_uom_unit,520,__export__.stock_location_30
+__export__.product_template_26669,La girl Pro face powder ,product.product_uom_unit,product.product_uom_unit,550,__export__.stock_location_30
+__export__.product_template_26774,LA GIRL Pro Face Powder,product.product_uom_unit,product.product_uom_unit,0,__export__.stock_location_30
+__export__.product_template_26775,Laneige multiberry yogurt pack,product.product_uom_unit,product.product_uom_unit,800,__export__.stock_location_30
+__export__.product_template_26776,Laneige water sleeping mask,product.product_uom_unit,product.product_uom_unit,2500,__export__.stock_location_30
+__export__.product_template_26670,Lip & Eye Remover(100ml),product.product_uom_unit,product.product_uom_unit,0,__export__.stock_location_30
+__export__.product_template_26671,Lip & eye remover(250ml),product.product_uom_unit,product.product_uom_unit,0,__export__.stock_location_30
+__export__.product_template_26672,MDHL Collagen Impt. Essential mask ex,product.product_uom_unit,product.product_uom_unit,850,__export__.stock_location_30
+__export__.product_template_26673,MDHL IPI Lightmax ample msk ex,product.product_uom_unit,product.product_uom_unit,175,__export__.stock_location_30
+__export__.product_template_26674,MDHL MEN timetox Blk msk ex,product.product_uom_unit,product.product_uom_unit,175,__export__.stock_location_30
+__export__.product_template_26675,MDHL NMF Aqr ample mask ex,product.product_uom_unit,product.product_uom_unit,175,__export__.stock_location_30
+__export__.product_template_26676,MDHL NMF Aqr.gel Eyefil patch,product.product_uom_unit,product.product_uom_unit,175,__export__.stock_location_30
+__export__.product_template_26677,MDHL NMF midnight capping pack ,product.product_uom_unit,product.product_uom_unit,175,__export__.stock_location_30
+__export__.product_template_26678,MDHL Vita lightbeam essential mask ex,product.product_uom_unit,product.product_uom_unit,175,__export__.stock_location_30
+__export__.product_template_26679,MDHL WHP wht Hydrating BLK msk ex,product.product_uom_unit,product.product_uom_unit,175,__export__.stock_location_30
+__export__.product_template_26680,Missha Paraffin Heating foot mask ,product.product_uom_unit,product.product_uom_unit,175,__export__.stock_location_30
+__export__.product_template_26746,Mua 3in1 extreme contour liner,product.product_uom_unit,product.product_uom_unit,0,__export__.stock_location_30
+__export__.product_template_26747,Mua Artiste collection Eyeshadow palette,product.product_uom_unit,product.product_uom_unit,750,__export__.stock_location_30
+__export__.product_template_26748,Mua cover & Conceal,product.product_uom_unit,product.product_uom_unit,1700,__export__.stock_location_30
+__export__.product_template_26749,Mua Eyelash,product.product_uom_unit,product.product_uom_unit,450,__export__.stock_location_30
+__export__.product_template_26750,Mua Eyeshadow(Single),product.product_uom_unit,product.product_uom_unit,0,__export__.stock_location_30
+__export__.product_template_26751,Mua Hide & Conceal,product.product_uom_unit,product.product_uom_unit,250,__export__.stock_location_30
+__export__.product_template_26752,Mua Lip Balm,product.product_uom_unit,product.product_uom_unit,450,__export__.stock_location_30
+__export__.product_template_26753,Mua Lipstick,product.product_uom_unit,product.product_uom_unit,450,__export__.stock_location_30
+__export__.product_template_26754,Mua Luxe Velvet lip lacquer,product.product_uom_unit,product.product_uom_unit,400,__export__.stock_location_30
+__export__.product_template_26755,Mua Luxe whipped velvet lip lacquer,product.product_uom_unit,product.product_uom_unit,650,__export__.stock_location_30
+__export__.product_template_26756,Mua Mascara,product.product_uom_unit,product.product_uom_unit,650,__export__.stock_location_30
+__export__.product_template_26757,Mua Matte Lipstick,product.product_uom_unit,product.product_uom_unit,450,__export__.stock_location_30
+__export__.product_template_26758,Mua Pro-Base complexion Kit (Foundation),product.product_uom_unit,product.product_uom_unit,0,__export__.stock_location_30
+__export__.product_template_26759,Mua Winter forest eyeshadow palette,product.product_uom_unit,product.product_uom_unit,1000,__export__.stock_location_30
+__export__.product_template_26681,Precious mineral BB cream matte-Beige,product.product_uom_unit,product.product_uom_unit,400,__export__.stock_location_30
+__export__.product_template_26682,Precious mineral BB cream Matte-Tan ,product.product_uom_unit,product.product_uom_unit,1200,__export__.stock_location_30
+__export__.product_template_26717,Skinfood black pomegranate cream,product.product_uom_unit,product.product_uom_unit,950,__export__.stock_location_30
+__export__.product_template_26718,Skinfood black pomegranate emulsion,product.product_uom_unit,product.product_uom_unit,1950,__export__.stock_location_30
+__export__.product_template_26719,Skinfood black sugar honey mask,product.product_uom_unit,product.product_uom_unit,1700,__export__.stock_location_30
+__export__.product_template_26720,Skinfood black sugar mask,product.product_uom_unit,product.product_uom_unit,900,__export__.stock_location_30
+__export__.product_template_26721,Skinfood black sugar perfect cleansing foam for me,product.product_uom_unit,product.product_uom_unit,750,__export__.stock_location_30
+__export__.product_template_26722,Skinfood black sugar perfect cleansing oil,product.product_uom_unit,product.product_uom_unit,900,__export__.stock_location_30
+__export__.product_template_26723,Skinfood black sugar perfect emulsion for men,product.product_uom_unit,product.product_uom_unit,1450,__export__.stock_location_30
+__export__.product_template_26724,Skinfood black sugar perfect scrub foam,product.product_uom_unit,product.product_uom_unit,1650,__export__.stock_location_30
+__export__.product_template_26725,Skinfood egg white pore hard foam,product.product_uom_unit,product.product_uom_unit,1100,__export__.stock_location_30
+__export__.product_template_26726,Skinfood egg white pore mask,product.product_uom_unit,product.product_uom_unit,1200,__export__.stock_location_30
+__export__.product_template_26727,Skinfood gold caviar emulsion,product.product_uom_unit,product.product_uom_unit,750,__export__.stock_location_30
+__export__.product_template_26728,Skinfood gold caviar serum,product.product_uom_unit,product.product_uom_unit,1950,__export__.stock_location_30
+__export__.product_template_26729,Skinfood lemon mask,product.product_uom_unit,product.product_uom_unit,2050,__export__.stock_location_30
+__export__.product_template_26730,Skinfood miracle food 10 solution serum,product.product_uom_unit,product.product_uom_unit,900,__export__.stock_location_30
+__export__.product_template_26731,Skinfood parsley & mandarin emulsion,product.product_uom_unit,product.product_uom_unit,2650,__export__.stock_location_30
+__export__.product_template_26732,Skinfood pineapple peeling gel,product.product_uom_unit,product.product_uom_unit,1400,__export__.stock_location_30
+__export__.product_template_26733,Skinfood premium lettuce cucumber watery emulsion,product.product_uom_unit,product.product_uom_unit,750,__export__.stock_location_30
+__export__.product_template_26734,Skinfood premium tomato whitening cream,product.product_uom_unit,product.product_uom_unit,1400,__export__.stock_location_30
+__export__.product_template_26735,Skinfood premium tomato whitening emulsion,product.product_uom_unit,product.product_uom_unit,1350,__export__.stock_location_30
+__export__.product_template_26736,Skinfood premium tomato whitening emulsion,product.product_uom_unit,product.product_uom_unit,1350,__export__.stock_location_30
+__export__.product_template_26737,Skinfood premium tomato whitening moisture synergy,product.product_uom_unit,product.product_uom_unit,1550,__export__.stock_location_30
+__export__.product_template_26738,Skinfood Rice Brightening Cleansing Foam,product.product_uom_unit,product.product_uom_unit,2150,__export__.stock_location_30
+__export__.product_template_26739,Skinfood rice brightening scrub foam,product.product_uom_unit,product.product_uom_unit,1200,__export__.stock_location_30
+__export__.product_template_26740,Skinfood rice mask,product.product_uom_unit,product.product_uom_unit,1150,__export__.stock_location_30
+__export__.product_template_26741,Skinfood royal honey essential queen's serum,product.product_uom_unit,product.product_uom_unit,750,__export__.stock_location_30
+__export__.product_template_26742,Skinfood salmon brightening  eye cream,product.product_uom_unit,product.product_uom_unit,2050,__export__.stock_location_30
+__export__.product_template_26743,Skinfood strawberry black sugar mask,product.product_uom_unit,product.product_uom_unit,1550,__export__.stock_location_30
+__export__.product_template_26744,Sparkling Squeaky (Face Cleanser) ,product.product_uom_unit,product.product_uom_unit,0,__export__.stock_location_30
+__export__.product_template_26745,Stay Sunny (Sun Block) ,product.product_uom_unit,product.product_uom_unit,0,__export__.stock_location_30
+__export__.product_template_26683,Super Peeling liquid ,product.product_uom_unit,product.product_uom_unit,1200,__export__.stock_location_30
+__export__.product_template_26808,Swept Away (Face Wash),product.product_uom_unit,product.product_uom_unit,0,__export__.stock_location_30
+__export__.product_template_26684,Tightening cooling pack egg pore,product.product_uom_unit,product.product_uom_unit,1300,__export__.stock_location_30
+__export__.product_template_26685,Time Revolution best seller special set 1,product.product_uom_unit,product.product_uom_unit,1100,__export__.stock_location_30
+__export__.product_template_26686,time revolution ninght repair borabit ampoule,product.product_uom_unit,product.product_uom_unit,6500,__export__.stock_location_30
+__export__.product_template_26687,Time revolution the first treatment essence,product.product_uom_unit,product.product_uom_unit,3300,__export__.stock_location_30
+__export__.product_template_26688,Time revolution white cure blanc tone-up cream,product.product_uom_unit,product.product_uom_unit,3000,__export__.stock_location_30
+__export__.product_template_26689,Time revolution white cure blanc tone-up toner,product.product_uom_unit,product.product_uom_unit,2600,__export__.stock_location_30
+__export__.product_template_26690,Time revolution white cure special set 1,product.product_uom_unit,product.product_uom_unit,1700,__export__.stock_location_30
+__export__.product_template_26706,TONYMOLY Backstage Gel Eyeliner,product.product_uom_unit,product.product_uom_unit,0,__export__.stock_location_30
+__export__.product_template_26707,TONYMOLY I Am Real Pomegranate Elasticity Mask She,product.product_uom_unit,product.product_uom_unit,850,__export__.stock_location_30
+__export__.product_template_26708,TONYMOLY I'm Real Aloe Moisturizing Mask Sheet,product.product_uom_unit,product.product_uom_unit,150,__export__.stock_location_30
+__export__.product_template_26709,TONYMOLY i'm real avocado Nutrition mask sheet,product.product_uom_unit,product.product_uom_unit,150,__export__.stock_location_30
+__export__.product_template_26710,TONYMOLY I'm Real Lemon Brightening Mask Sheet,product.product_uom_unit,product.product_uom_unit,150,__export__.stock_location_30
+__export__.product_template_26711,TONYMOLY i'm real makgeolli Skin Purifying mask sh,product.product_uom_unit,product.product_uom_unit,150,__export__.stock_location_30
+__export__.product_template_26712,TONYMOLY i'm real rice Clear Skin mask sheet,product.product_uom_unit,product.product_uom_unit,150,__export__.stock_location_30
+__export__.product_template_26713,TONYMOLY i'm real seaweeds Skin Purifying mask she,product.product_uom_unit,product.product_uom_unit,150,__export__.stock_location_30
+__export__.product_template_26714,TONYMOLY i'm real tea tree Skin Soothing  mask she,product.product_uom_unit,product.product_uom_unit,150,__export__.stock_location_30
+__export__.product_template_26715,TONYMOLY I'm Real Tomato Radiance Mask Sheet,product.product_uom_unit,product.product_uom_unit,150,__export__.stock_location_30
+__export__.product_template_26716,TONYMOLY Perfect Eyes Long Kinny Gel Pen Liner,product.product_uom_unit,product.product_uom_unit,150,__export__.stock_location_30
+__export__.product_template_26691,Truly Freely(Face Foundation) ,product.product_uom_unit,product.product_uom_unit,0,__export__.stock_location_30
+__export__.product_template_26692,Winking Hour (Eye Cream) ,product.product_uom_unit,product.product_uom_unit,0,__export__.stock_location_30
+__export__.product_template_26705,Witching Hour (Night Emulsion) ,product.product_uom_unit,product.product_uom_unit,0,__export__.stock_location_30
+__export__.product_template_26693,Wonder pore freshner (500ml),product.product_uom_unit,product.product_uom_unit,0,__export__.stock_location_30

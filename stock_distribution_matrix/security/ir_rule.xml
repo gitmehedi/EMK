@@ -27,7 +27,6 @@
             <field name="perm_write" eval="1"/>
             <field name="perm_create" eval="1"/>
             <field name="perm_unlink" eval="1"/>
-            <field name="domain_force">[('warehouse_id.operating_unit_id','in', [rec.id for rec in user.operating_unit_ids])]</field>
         </record>
 
         <record id="rule_warehouse_to_shop_distribution_line_by_warehouse" model="ir.rule">

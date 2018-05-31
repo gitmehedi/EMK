@@ -152,7 +152,8 @@ class StockTransferRequest(models.Model):
             raise ValidationError(_('Please transfer product in validate state.'))
 
         move_obj = self.env['stock.move']
-        transit_location = self.env['stock.location'].search([('name', 'ilike', 'Inter Company Transit')])
+        transit_location = self.env['stock.location'].search(
+            [('usage', '=', 'transit'), ('active', '=', True), ('company_id', '=', self.company_id.id)])
         shop_location = self.get_location(self.my_shop_id.id)
         picking = self.get_picking(source_loc=shop_location, dest_loc=transit_location.id)
 
@@ -186,7 +187,8 @@ class StockTransferRequest(models.Model):
             raise ValidationError(_('Please transfer product in validate state.'))
 
         move_obj = self.env['stock.move']
-        transit_location = self.env['stock.location'].search([('name', 'ilike', 'Inter Company Transit')])
+        transit_location = self.env['stock.location'].search(
+            [('usage', '=', 'transit'), ('active', '=', True), ('company_id', '=', self.company_id.id)])
         shop_location = self.get_location(self.transfer_shop_id.id)
         picking = self.get_picking(source_loc=transit_location.id, dest_loc=shop_location)
 
