@@ -35,6 +35,7 @@ class GbsProformaInvoice(models.AbstractModel):
                 list_obj = {}
                 list_obj['product_id']= line.product_id.name
                 list_obj['quantity']= line.quantity
+                list_obj['hs_code']= line.product_id.hs_code_id.display_name
                 list_obj['uom']= line.uom_id.name
                 list_obj['price_unit']= line.price_unit
                 list_obj['price_subtotal']= line.price_subtotal
