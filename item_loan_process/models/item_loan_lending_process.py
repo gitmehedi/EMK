@@ -19,7 +19,7 @@ class ItemLoanLending(models.Model):
     def _get_default_location_id(self):
         return self.env['stock.location'].search([('operating_unit_id', '=', self.env.user.default_operating_unit_id.id),('name','=','Stock')], limit=1).id
 
-    name = fields.Char('Issue #', size=40, readonly=True, default=lambda self: _('New'),copy=False,
+    name = fields.Char('Issue #', size=100, readonly=True, default=lambda self: _('New'),copy=False,
                        states={'draft': [('readonly', False)]})
     request_date = fields.Datetime('Request Date', required=True, readonly=True,
                                   default=datetime.today())
@@ -54,6 +54,7 @@ class ItemLoanLending(models.Model):
         ('draft', 'Draft'),
         ('waiting_approval', 'Waiting for Approval'),
         ('approved', 'Approved'),
+        ('received', 'Received'),
         ('reject', 'Rejected'),
     ], string='State', readonly=True, copy=False, track_visibility='onchange', default='draft')
 
@@ -213,7 +214,7 @@ class ItemLoanLendingLines(models.Model):
         ('draft', 'Draft'),
         ('waiting_approval', 'Waiting for Approval'),
         ('approved', 'Approved'),
-        ('receive', 'Receive'),
+        ('received', 'Received'),
         ('reject', 'Rejected'),
     ], string='State', default='draft')
 
