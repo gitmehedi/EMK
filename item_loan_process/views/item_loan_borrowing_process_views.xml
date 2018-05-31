@@ -50,10 +50,9 @@
                                     string="Stock Operation" type="object"
                                     attrs="{'invisible':[('picking_id','=',False)]}" icon="fa-cogs"/>
                             <field name="picking_id" invisible="1"/>
-                            <button class="oe_stat_button" name="action_get_adjustment_picking"
-                                    string="Adjustment Operation" type="object"
-                                    attrs="{'invisible':[('return_picking_id','=',False)]}" icon="fa-cogs"/>
-                            <field name="return_picking_id" invisible="1"/>
+                            <!--<button class="oe_stat_button" name="action_get_adjustment_picking"-->
+                                    <!--string="Adjustment Operation" type="object"-->
+                                    <!--attrs="{'invisible':[('return_picking_id','=',False)]}" icon="fa-cogs"/>-->
                         </div>
                         <group col="2">
                             <group>

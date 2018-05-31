@@ -1,6 +1,8 @@
 from openerp import api, fields, models
 import amount_to_text_bdt
 import operator, math
+from odoo.tools.misc import formatLang
+
 
 class PayrollReportBankAc(models.AbstractModel):
     _name = 'report.gbs_hr_payroll_bank_letter.report_individual_payslip1'
@@ -43,7 +45,7 @@ class PayrollReportBankAc(models.AbstractModel):
             for line in slip.line_ids:
                 if line.code == 'BNET':
                     total_amt = line.total
-                    payslip['BNET'] = math.ceil(total_amt)
+                    payslip['BNET'] = formatLang(self.env,math.ceil(total_amt))
                     total_sum.append(math.ceil(total_amt))
                     break;
 
@@ -58,12 +60,13 @@ class PayrollReportBankAc(models.AbstractModel):
             
         dpt_payslips['val'] = emp_sort_list
         dpt_payslips_list.append(dpt_payslips)
-        all_total = sum(total_sum)
+        total = sum(total_sum)
+        all_total = formatLang(self.env,total)
 
         # Test Value
         # all_total = 1.11
 
-        amt_to_word = self.env['res.currency'].amount_to_word(float(all_total))
+        amt_to_word = self.env['res.currency'].amount_to_word(total)
 
         docargs = {
             'doc_ids': self.ids,
@@ -79,7 +82,7 @@ class PayrollReportBankAc(models.AbstractModel):
             'cur_year': data['cur_year'],
             'cur_month': data['cur_month'],
             'cur_day': data['cur_day'],
-            'total_net': float(all_total),
+            'total_net': all_total,
             'docs_len': len(rule_list) + 4,
             'company': self.env['res.company']._company_default_get('gbs_hr_payroll_bank_letter').name,
             'amount_to_text_bdt': amt_to_word,

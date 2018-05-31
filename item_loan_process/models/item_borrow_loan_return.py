@@ -7,49 +7,40 @@ from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
 class ItemBorrowing(models.Model):
     _inherit = 'item.borrowing'
 
-    return_picking_id = fields.Many2one('stock.picking', 'Picking')
+    return_picking_ids = fields.Many2many('stock.picking','picking_loan_rel','loan_id','picking_id','Picking(s)')
 
     @api.multi
     def action_view_picking(self):
-        '''
-        This function returns an action that display existing picking orders of given purchase order ids.
-        When only one found, show the picking immediately.
-        '''
-        # for product in self.item_lines:
-        #     if product.due_qty <= 0:
-        #         raise UserError('No Due so no need any adjustment!!!')
 
-        if self.return_picking_id:
-            pass
+        product_list = self.item_lines.filtered(lambda o: o.due_qty > 0.0 )
+
+        if not product_list:
+            raise UserError('No Due so no need any adjustment!!!')
         else:
-            self._create_return_pickings_and_moves()
-            self.return_picking_id.action_confirm()
-            self.return_picking_id.force_assign()
+            self._create_return_pickings_and_moves(product_list)
+            self.return_picking_ids.action_confirm()
+            self.return_picking_ids.force_assign()
 
         action = self.env.ref('stock.action_picking_tree')
         result = action.read()[0]
         # override the context to get rid of the default filtering on picking type
         result.pop('id', None)
         result['context'] = {}
-        pick_id = self.return_picking_id.id
-        # choose the view_mode accordingly
-        # if len(pick_ids) > 1:
-        #     result['domain'] = "[('id','in',[" + ','.join(map(str, pick_ids)) + "])]"
-        # elif len(pick_ids) == 1:
-        #     res = self.env.ref('stock.view_picking_form', False)
-        #     result['views'] = [(res and res.id or False, 'form')]
-        #     result['res_id'] = pick_ids and pick_ids[0] or False
-        res = self.env.ref('stock.view_picking_form', False)
-        result['views'] = [(res and res.id or False, 'form')]
-        result['res_id'] = pick_id or False
+        pick_ids = self.return_picking_ids.ids
+        if len(pick_ids) > 1:
+            result['domain'] = "[('id','in',[" + ','.join(map(str, pick_ids)) + "])]"
+        elif len(pick_ids) == 1:
+            res = self.env.ref('stock.view_picking_form', False)
+            result['views'] = [(res and res.id or False, 'form')]
+            result['res_id'] = pick_ids and pick_ids[0] or False
         return result
 
     @api.model
-    def _create_return_pickings_and_moves(self):
+    def _create_return_pickings_and_moves(self,product_list):
         move_obj = self.env['stock.move']
         picking_obj = self.env['stock.picking']
         picking_id = False
-        for line in self.item_lines:
+        for line in product_list:
             date_planned = datetime.strptime(self.request_date, DEFAULT_SERVER_DATETIME_FORMAT)
             location_id = self.env['stock.location'].search(
                 [('operating_unit_id', '=', self.env.user.default_operating_unit_id.id), ('name', '=', 'Stock')],
@@ -62,7 +53,8 @@ class ItemBorrowing(models.Model):
                          ('code', '=', 'outgoing')])
                     if not picking_type:
                         raise UserError(_('Please create picking type for Item Borrowing.'))
-                    pick_name = self.env['ir.sequence'].next_by_code('stock.picking')
+                    # pick_name = self.env['ir.sequence'].next_by_code('stock.picking')
+                    pick_name = self.env['stock.picking.type'].browse(picking_type.id).sequence_id.next_by_id()
                     res = {
                         'picking_type_id': picking_type.id,
                         'priority': '1',
@@ -104,26 +96,14 @@ class ItemBorrowing(models.Model):
                 # move.action_done()
                 self.write({'move_id': move.id})
 
-        self.return_picking_id = picking_id
+        query = """INSERT INTO picking_loan_rel (loan_id,picking_id) VALUES (%s, %s) """
+        self._cr.execute(query, tuple([self.id,picking_id]))
+        # self.return_picking_id = picking_id
 
-        # self.return_picking_id.action_confirm()
-        # self.return_picking_id.force_assign()
         return True
 
     # @api.multi
-    # def _get_picking_id(self):
-    #     picking_id = self.return_picking_id.id
-    #     picking_obj = self.env['stock.picking']
-    #     picking = picking_obj.browse(picking_id)
-    #     if picking.state != 'done':
-    #         return [picking.id]
-    #     elif picking.state == 'done' and self.state == 'inprogress':
-    #         picking_ids = picking_obj.search([('id', '=', picking_id)])
-    #         return picking_ids.ids
-    #     return False
-
-    @api.multi
-    def action_get_adjustment_picking(self):
-        action = self.env.ref('stock.action_picking_tree_all').read([])[0]
-        action['domain'] = [('id', '=', self.return_picking_id.id)]
-        return action
+    # def action_get_adjustment_picking(self):
+    #     action = self.env.ref('stock.action_picking_tree_all').read([])[0]
+    #     action['domain'] = [('id', '=', self.return_picking_id.id)]
+    #     return action

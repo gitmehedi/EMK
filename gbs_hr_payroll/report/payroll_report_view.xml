@@ -69,12 +69,12 @@
                                                     </t>
                                                     <t t-if="data['type'] == '1'">
                                                         <td>
-                                                            <span t-esc="'%.2f'% o['basic']"></span>
+                                                            <span t-esc="o['basic']"></span>
                                                         </td>
                                                     </t>
                                                     <t t-if="data['type'] == '1'">
                                                         <td>
-                                                            <span t-esc="'%.2f'% o['sa']"></span>
+                                                            <span t-esc="o['sa']"></span>
                                                         </td>
                                                     </t>
                                                     <t t-foreach="rules" t-as="r">

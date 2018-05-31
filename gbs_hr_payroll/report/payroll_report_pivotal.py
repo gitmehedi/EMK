@@ -1,8 +1,8 @@
+import math,locale
+
 from odoo import api, exceptions, fields, models, tools
 from odoo.addons import decimal_precision as dp
 from odoo.tools.misc import formatLang
-import math
-import locale
 
 
 class PayrollReportPivotal(models.AbstractModel):
@@ -55,8 +55,8 @@ class PayrollReportPivotal(models.AbstractModel):
                     payslip['emp_seq'] = slip.employee_id.employee_sequence
                     loan_remain = slip.remaining_loan or 0.00
                     payslip['loan_balance'] = formatLang(self.env, loan_remain) if loan_remain else None
-                    payslip['sa'] = slip.employee_id.contract_id.supplementary_allowance
-                    payslip['basic'] = slip.employee_id.contract_id.wage
+                    payslip['sa'] = formatLang(self.env,slip.employee_id.contract_id.supplementary_allowance)
+                    payslip['basic'] = formatLang(self.env,slip.employee_id.contract_id.wage)
 
                     for rule in rule_list:
                         payslip[rule['code']] = 0
@@ -115,8 +115,10 @@ class PayrollReportPivotal(models.AbstractModel):
         dpt_payslips_list.append(dpt_payslips)
         amt_to_word = self.env['res.currency'].amount_to_word(float(all_total))
 
-        locale.setlocale(locale.LC_ALL, 'bn_BD.UTF-8')
-        thousand_separated_total_sum = locale.currency(all_total, grouping=True)
+        # locale.setlocale(locale.LC_ALL, 'bn_BD.UTF-8')
+        # thousand_separated_total_sum = locale.currency(all_total, grouping=True)
+
+        thousand_separated_total_sum = formatLang(self.env, all_total)
 
         for rule in rule_list:
             row_total[rule['code']] = formatLang(self.env, row_total[rule['code']])
