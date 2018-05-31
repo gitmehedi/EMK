@@ -1,13 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
     <data>
-        <act_window name="Print Reports"
-                res_model="lc.sales.report.wizard"
-                src_model="purchase.shipment"
-                view_mode="form" target="new"
-                view_id = "view_shipment_export_form"
-                view_type="form"
-                id="act_lc_sales_report"/>
+        <record id="act_lc_sales_report" model="ir.actions.act_window">
+			<field name="name">Print Reports</field>
+			<field name="res_model">lc.sales.report.wizard</field>
+            <field name="views" eval="[(ref('view_shipment_export_form'))]"/>
+			<field name="view_type">form</field>
+			<field name="view_mode">form</field>
+            <field name="view_id" eval="False"/>
+			<field name="target">new</field>
+		</record>
 
         <record id="view_shipment_export_form" model="ir.ui.view">
             <field name="name">purchase.shipment.form</field>

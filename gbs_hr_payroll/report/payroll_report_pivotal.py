@@ -66,7 +66,7 @@ class PayrollReportPivotal(models.AbstractModel):
                                 total_amount = math.ceil(line.total)
                                 payslip[rule['code']] = formatLang(self.env, total_amount)
 
-                                row_total[line.code] = row_total[line.code] + total_amount
+                                row_total[line.code] = row_total[line.code] + (math.ceil(total_amount))
 
                                 if line.code == "NET":
                                     total_sum.append(math.ceil(total_amount))

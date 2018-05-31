@@ -12,22 +12,22 @@
         <field name="category_id" ref="module_category_commercial"/>
     </record>
 
+    <record id="group_com_user_export" model="res.groups">
+        <field name="name">User: Export</field>
+        <field name="category_id" ref="module_category_commercial"/>
+    </record>
+
     <record id="group_commercial_manager" model="res.groups">
         <field name="name">Manager: Import</field>
         <field name="category_id" ref="module_category_commercial"/>
         <field name="implied_ids" eval="[(4, ref('group_commercial_user'))]"/>
     </record>
 
-    <record id="group_commercial_user_export" model="res.groups">
-        <field name="name">User: Export</field>
-        <field name="category_id" ref="module_category_commercial"/>
-    </record>
-
-    <record id="group_commercial_manager_export" model="res.groups">
-        <field name="name">Manager: Export</field>
-        <field name="category_id" ref="module_category_commercial"/>
-        <field name="implied_ids" eval="[(4, ref('group_commercial_user_export'))]"/>
-    </record>
+    <!--<record id="group_commercial_manager_export" model="res.groups">-->
+        <!--<field name="name">Manager: Export</field>-->
+        <!--<field name="category_id" ref="module_category_commercial"/>-->
+        <!--<field name="implied_ids" eval="[(4, ref('group_commercial_user_export'))]"/>-->
+    <!--</record>-->
 
 </data>
 </odoo>
