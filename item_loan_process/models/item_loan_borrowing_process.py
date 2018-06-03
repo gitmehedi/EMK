@@ -1,7 +1,7 @@
+import time
+from datetime import datetime
 from odoo import api, fields, models, _
 from odoo.addons import decimal_precision as dp
-from datetime import datetime
-import time
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
 
@@ -18,7 +18,7 @@ class ItemBorrowing(models.Model):
     def _get_default_location_id(self):
         return self.env['stock.location'].search([('usage', '=', 'supplier')], limit=1).id
 
-    name = fields.Char('Issue #', size=30, readonly=True, default="/")
+    name = fields.Char('Issue #', size=100, readonly=True, default="/")
     request_date = fields.Datetime('Request Date', required=True, readonly=True,
                                  default=datetime.today())
     issuer_id = fields.Many2one('res.users', string='Issuer', required=True, readonly=True,
@@ -75,12 +75,16 @@ class ItemBorrowing(models.Model):
             if new_seq:
                 res['name'] = new_seq
             loan.write(res)
+            loan.item_lines.write({'state': 'waiting_approval'})
 
     @api.multi
     def button_approve(self):
         picking_id = False
         if self.item_lines:
             picking_id = self._create_pickings_and_moves()
+            picking_objs = self.env['stock.picking'].search([('id', '=', picking_id)])
+            picking_objs.action_confirm()
+            picking_objs.force_assign()
         res = {
             'state': 'approved',
             'approver_id': self.env.user.id,
@@ -88,6 +92,7 @@ class ItemBorrowing(models.Model):
             'picking_id': picking_id
         }
         self.write(res)
+        self.item_lines.write({'state': 'approved'})
 
     @api.model
     def _create_pickings_and_moves(self):
@@ -132,7 +137,6 @@ class ItemBorrowing(models.Model):
                     'name': self.name,
                     'origin': self.name or self.picking_id.name,
                     'location_id': location_id,
-                    'scrapped': True,
                     'location_dest_id': self.item_loan_borrow_location_id.id,
                     'picking_id': picking_id or False,
                     'product_id': line.product_id.id,
@@ -158,6 +162,7 @@ class ItemBorrowing(models.Model):
             'approved_date': time.strftime('%Y-%m-%d %H:%M:%S')
         }
         self.write(res)
+        self.item_lines.write({'state': 'reject'})
 
     @api.multi
     def action_draft(self):
@@ -169,57 +174,65 @@ class ItemBorrowing(models.Model):
         self.write(res)
         self.item_lines.write({'state': 'draft'})
 
+    @api.multi
+    def action_get_stock_picking(self):
+        action = self.env.ref('stock.action_picking_tree_all').read([])[0]
+        action['domain'] = ['|',('id', '=', self.picking_id.id),('origin','=',self.name)]
+        return action
 
     ####################################################
     # Override methods
     ####################################################
 
+    def unlink(self):
+        for indent in self:
+            if indent.state != 'draft':
+                raise ValidationError(_('You cannot delete this !!'))
+        return super(ItemBorrowing, self).unlink()
+
 class ItemBorrowingLines(models.Model):
     _name = 'item.borrowing.line'
     _description = 'Item Borrowing Line'
 
-
     item_borrowing_id = fields.Many2one('item.borrowing', string='Item', required=True, ondelete='cascade')
-    product_id = fields.Many2one('product.product', string='Product', required=True)
+    product_id = fields.Many2one('product.product', string='Product', required=True,ondelete='cascade')
     product_uom_qty = fields.Float('Quantity', digits=dp.get_precision('Product UoS'),
                                    required=True, default=1)
-    product_uom = fields.Many2one('product.uom', 'Unit of Measure', required=True)
-    product_uos_qty = fields.Float('Quantity (UoS)', digits=dp.get_precision('Product UoS'),
-                                   default=1)
-    product_uos = fields.Many2one('product.uom', 'Product UoS')
-    price_unit = fields.Float('Price', digits=dp.get_precision('Product Price'),
-                              help="Price computed based on the last purchase order approved.")
-    name = fields.Text('Specification', store=True)
+    product_uom = fields.Many2one(related='product_id.uom_id',comodel='product.uom',string= 'Unit of Measure',
+                                  required=True,store=True)
+    price_unit = fields.Float(related='product_id.standard_price',string='Price', digits=dp.get_precision('Product Price'),
+                              help="Price computed based on the last purchase order approved.",store=True)
+    name = fields.Char(related='product_id.name',string='Specification',store=True)
     sequence = fields.Integer('Sequence')
+    given_qty = fields.Float('Given Quantity', digits=dp.get_precision('Product UoS'))
+    received_qty = fields.Float('Receive Quantity', digits=dp.get_precision('Product UoS'))
+    due_qty = fields.Float(string='Due', digits=dp.get_precision('Product UoS'),
+                           compute='_compute_due_quantity')
 
     state = fields.Selection([
         ('draft', 'Draft'),
         ('confirm', 'Confirm'),
         ('waiting_approval', 'Waiting for Approval'),
         ('approved', 'Approved'),
+        ('receive', 'Receive'),
         ('reject', 'Rejected'),
     ], string='State')
 
     ####################################################
     # Business methods
     ####################################################
-    @api.onchange('product_id')
-    def onchange_product_id(self):
-        if not self.product_id:
-            return {'value': {'product_uom_qty': 1.0,
-                              'product_uom': False,
-                              'price_unit': 0.0,
-                              'name': '',
-                              }
-                    }
-        product_obj = self.env['product.product']
-        product = product_obj.search([('id', '=', self.product_id.id)])
 
-        product_name = product.name_get()[0][1]
-        self.name = product_name
-        self.product_uom = product.uom_id.id
-        self.price_unit = product.standard_price
+    @api.depends('given_qty', 'received_qty')
+    @api.multi
+    def _compute_due_quantity(self):
+        for product_line in self:
+            product_line.due_qty = product_line.received_qty - product_line.given_qty
 
+    @api.one
+    @api.constrains('product_uom_qty')
+    def _check_product_uom_qty(self):
+        if self.product_uom_qty < 0:
+            raise UserError('You can\'t give negative value!!!')
 
     ####################################################
     # Override methods

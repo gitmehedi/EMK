@@ -7,6 +7,11 @@ class StockPurchaseReport(models.AbstractModel):
     def render_html(self, docids, data=None):
 
         get_data = self.get_report_data(data)
+        report_utility_pool = self.env['report.utility']
+        op_unit_id = data['operating_unit_id']
+        op_unit_obj = self.env['operating.unit'].search([('id','=',op_unit_id)])
+        data['address'] = report_utility_pool.getAddressByUnit(op_unit_obj)
+
 
         docargs = {
             'doc_ids': self._ids,
@@ -14,7 +19,7 @@ class StockPurchaseReport(models.AbstractModel):
             'record': data,
             'lines': get_data['supplier'],
             'total': get_data['total'],
-            'address': data['str_address'],
+            'address': data['address'],
 
         }
         return self.env['report'].render('stock_purchase_custom_report.purchase_report_template', docargs)
@@ -22,7 +27,6 @@ class StockPurchaseReport(models.AbstractModel):
     def get_report_data(self, data):
         date_start = data['date_from']
         date_end = data['date_to']
-        # op_unit_id = data['operating_unit_id']
         location_outsource = data['location_id']
         supplier_id = data['partner_id']
         supplier_pool = self.env['res.partner']
@@ -53,13 +57,11 @@ class StockPurchaseReport(models.AbstractModel):
                 }
             } for val in supplier_lists}
 
+        _where = ''
         if supplier_id:
-            supplier_param = "(" + str(data['partner_id']) + ")"
-        elif len(supplier_lists) == 1:
-            supplier_param = "(" + str(supplier_lists.id) + ")"
-        else:
-            supplier_param = str(tuple(supplier_lists.ids))
-
+            _where = ' AND sp1.partner_id IN ({0})'.format(data['partner_id'])
+        elif supplier_lists:
+            _where = ' AND sp1.partner_id IN {0}'.format(tuple(supplier_lists.ids))
 
         grand_total = {
             'title': 'GRAND TOTAL',
@@ -67,8 +69,7 @@ class StockPurchaseReport(models.AbstractModel):
             'total_in_val': 0,
         }
 
-        sql_in_tk = '''
-                            SELECT product_id, 
+        sql_in_tk = '''SELECT product_id, 
                                    NAME, 
                                    code,
                                    uom_name, 
@@ -90,15 +91,25 @@ class StockPurchaseReport(models.AbstractModel):
                                            sp.mrr_no				                AS sp_mrr,
                                            sm.date                                  AS move_date,
                                            sm.product_qty                           AS qty_in_tk, 
-                                           sm.product_qty * Coalesce(ph.cost, 0) AS val_in_tk,
-                                           Coalesce(ph.cost, 0)          AS cost_val
-                                    FROM   stock_picking sp 
+                                           sm.product_qty * Coalesce((SELECT ph.cost
+                                             FROM   product_price_history ph
+                                             WHERE  Date_trunc('day', ph.datetime) <= '%s'
+                                                    AND pp.id = ph.product_id
+                                             ORDER  BY ph.datetime DESC
+                                             LIMIT  1), 0) AS val_in_tk,
+                                           Coalesce((SELECT ph.cost
+                                             FROM   product_price_history ph
+                                             WHERE  Date_trunc('day', ph.datetime) <= '%s'
+                                                    AND pp.id = ph.product_id
+                                             ORDER  BY ph.datetime DESC
+                                             LIMIT  1), 0)          AS cost_val
+                                    FROM   stock_move sm 
+                                           LEFT JOIN stock_picking sp 
+                                                  ON sm.picking_id = sp.id 
                                            INNER JOIN stock_picking sp1 
                                                   ON sp.origin = sp1.name
                                            LEFT JOIN res_partner rp
 						                          ON rp.id = sp1.partner_id
-                                           LEFT JOIN stock_move sm 
-                                                  ON sm.picking_id = sp.id 
                                            LEFT JOIN product_product pp 
                                                   ON sm.product_id = pp.id 
                                            LEFT JOIN product_template pt 
@@ -108,17 +119,15 @@ class StockPurchaseReport(models.AbstractModel):
                                            LEFT JOIN product_category pc 
                                                   ON pt.categ_id = pc.id
                                            LEFT JOIN product_uom pu 
-                                                  ON( pu.id = pt.uom_id ) 
-                                           LEFT JOIN product_price_history ph 
-						                          ON ph.product_id = pp.id 
+                                                  ON( pu.id = pt.uom_id )                                           
                                     WHERE  Date_trunc('day', sm.date) BETWEEN '%s' AND '%s' 
                                            AND sm.state = 'done' 
                                            AND sm.location_id <> %s
                                            AND sm.location_dest_id = %s
-                                           AND sp1.partner_id IN %s
+                                            %s
                                    )tbl 
                                    ORDER BY m_date
-                        ''' % (date_start, date_end, location_outsource, location_outsource,supplier_param)
+                        ''' % (date_end,date_end,date_start, date_end, location_outsource, location_outsource,_where)
 
         self.env.cr.execute(sql_in_tk)
         for vals in self.env.cr.dictfetchall():
@@ -136,20 +145,3 @@ class StockPurchaseReport(models.AbstractModel):
 
 
         return {'supplier': supplier, 'total': grand_total}
-
-
-        # sql = '''SELECT ROW_NUMBER() OVER(ORDER BY table_ck.code DESC) AS id ,
-        #                             table_ck.product_id,
-        #                             table_ck.name,
-        #                             table_ck.uom_name,
-        #                             table_ck.code,
-        #                             table_ck.category,
-        #                             table_ck.supplier,
-        #                             table_ck.m_date,
-        #                             table_ck.mrr,
-        #                             COALESCE(table_ck.rate_in,0) as rate_in,
-        #                             COALESCE(table_ck.qty_in_tk,0) as qty_in_tk ,
-        #                             COALESCE(table_ck.val_in_tk,0) as val_in_tk
-        #                     FROM  (%s) table_ck
-        #
-        #                 ''' % (sql_in_tk)

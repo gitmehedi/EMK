@@ -64,13 +64,6 @@ class customer_creditlimit_assign(models.Model):
         if self.credit_limit <= 0 or self.days <= 0:
             raise Warning("[Error] Limit or Days never take zero or negative value!")
 
-    # @api.constrains('name')
-    # def _check_unique_constraint(self):
-    #     if self.name:
-    #         filters = [['name', '=ilike', self.name]]
-    #         name = self.search(filters)
-    #         if len(name) > 1:
-    #             raise Warning('[Unique Error] Name must be unique!')
 
     @api.multi
     def action_confirm(self):
@@ -83,7 +76,7 @@ class customer_creditlimit_assign(models.Model):
 
         for limit in self:
             limit.state = 'confirm'
-            # limit.name = self.env['ir.sequence'].get('sequence_id')
+
 
     @api.multi
     def action_validate(self):
@@ -116,9 +109,10 @@ class ResPartner(models.Model):
 
     @api.constrains('name')
     def _check_unique_name(self):
-        name = self.env['res.partner'].search([('name', '=', self.name)])
-        if len(name) > 1:
-            raise ValidationError('Customer already exists.')
+        if self.name:
+            name = self.env['res.partner'].search([('name', '=', self.name)])
+            if len(name) > 1:
+                raise ValidationError('Customer already exists.')
 
     @api.multi
     def _current_limit(self, context=None):
@@ -155,35 +149,10 @@ class res_partner_credit_limit(models.Model):
     day_num = fields.Integer(string='Credit Days')
     assign_id = fields.Many2one('customer.creditlimit.assign')
 
-    # sl_num = fields.Integer(string="SL")
     state = fields.Selection([
         ('draft', 'Draft'),
         ('approve', 'Approve'),
     ], select=True, readonly=True, default='draft')
-
-    # def unlink(self, context=None):
-    #     for limit in self.browse(cr, uid, ids, context=context):
-    #         if limit.state in ['approve']:
-    #             raise models.except_models(_('Warning!'),_('You cannot delete a value which is not draft state!'))
-    #     return super(res_partner_credit_limit, self).unlink(cr, uid, ids, context)
-
-    # _defaults = {
-    #     'assign_date': lambda *a: time.strftime('%Y-%m-%d')
-    # }
-
-    # @api.constrains('value')
-    # def check_credit_limit(self):
-    #     if self.value <= 0.00:
-    #         raise ValidationError('Limit can not be zero or negative')
-
-    # @api.constrains('assign_id','partner_id')
-    # def check_partner_id(self):
-    #     val_id=[]
-    #     for i in self.assign_id.limit_ids:
-    #         val_id.append(i.assign_id)
-    #     for i in self.count:
-    #         if val_id.count(i.assign_id)>1:
-    #             raise ValidationError('Same Customer')
 
 
     @api.constrains('day_num')

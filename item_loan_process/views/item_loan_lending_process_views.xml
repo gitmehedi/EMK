@@ -40,6 +40,12 @@
                                statusbar_colors='{"reject":"red"}' />
                     </header>
                     <sheet>
+                        <div class="oe_button_box" name="button_box">
+                            <button class="oe_stat_button" name="action_get_stock_picking"
+                                    string="Stock Operation" type="object"
+                                    attrs="{'invisible':[('picking_id','=',False)]}" icon="fa-cogs"/>
+                            <field name="picking_id" invisible="1"/>
+                        </div>
                         <group col="2">
                             <group>
                                 <field name="issuer_id" readonly="1" />
@@ -62,6 +68,9 @@
                                         <field name="qty_available" readonly="1"/>
                                         <field name="product_uom" string="UOM"/>
                                         <field name="product_uom_qty" sum="Total Qty"/>
+                                        <field name="given_qty" sum="Total Given Qty" readonly="1"/>
+                                        <field name="received_qty" sum="Total Receive Qty" readonly="1"/>
+                                        <field name="due_qty" sum="Total Due" readonly="1"/>
                                         <field name="state" invisible="1"/>
                                     </tree>
                                 </field>
@@ -77,12 +86,10 @@
                                                options="{'no_create': True,'no_open':True}"/>
                                         <field name="operating_unit_id" options="{'no_create': True,'no_open':True}"
                                                groups="operating_unit.group_multi_operating_unit" />
-
                                     </group>
                                     <group>
                                         <field name="location_id" options="{'no_create': True,'no_open':True}"/>
                                         <field name="item_loan_location_id" />
-                                        <field name="picking_id" invisible="1"/>
                                         <field name="picking_type_id" invisible="1"/>
                                     </group>
                                 </group>

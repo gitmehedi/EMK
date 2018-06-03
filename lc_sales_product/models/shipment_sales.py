@@ -6,6 +6,16 @@ class Shipment(models.Model):
 
     _inherit = 'purchase.shipment'
 
+    invoice_id = fields.Many2one("account.invoice", string='Invoice Number', ondelete='cascade',
+                                 domain=[('sale_type_id.sale_order_type', '=','lc_sales'),
+                                         ('state', '=', 'open')])
+
+    @api.onchange('invoice_id')
+    def _onchange_invoice_id(self):
+        self.invoice_value = None
+        if self.invoice_id:
+            self.invoice_value = self.invoice_id.amount_total
+
     @api.multi
     def action_doc_receive_export(self):
         res = self.env.ref('lc_sales_product.doc_receive_wizard_export')

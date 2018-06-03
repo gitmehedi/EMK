@@ -5,39 +5,49 @@ from openerp.addons.commercial.models.utility import Status, UtilityNumber
 class LetterOfCredit(models.Model):
     _inherit = "letter.credit"
 
-    so_ids = fields.One2many('sale.order', 'lc_id', string='Sale Order')
-    so_ids_temp = fields.Many2many('sale.order', 'so_lc_rel', 'lc_id', 'so_id', string='Sale Order',
-                                   domain="[('state', '=', 'done'),('credit_sales_or_lc', '=','lc_sales'),('lc_id','=',False)]")
-    product_lines = fields.One2many('lc.product.line', 'lc_id', string='Product(s)')
 
-    @api.onchange('so_ids_temp')
-    def so_product_line(self):
+    pi_ids = fields.One2many('proforma.invoice', 'lc_id', string='Proforma Invoice')
+    pi_ids_temp = fields.Many2many('proforma.invoice', 'pi_lc_rel', 'lc_id', 'pi_id', string='Proforma Invoice',
+                                   domain="[('state', '=', 'confirm'),('lc_id','=',False)]")
+
+    tenure = fields.Char(string='Tenure')
+    product_lines = fields.One2many('lc.product.line', 'lc_id', string='Product(s)')
+    lc_document_line = fields.One2many('lc.document.line', 'lc_id', string='LC Documents')
+
+    @api.onchange('pi_ids_temp')
+    def pi_product_line(self):
         self.product_lines = []
         vals = []
         self.first_party = None
         self.second_party_applicant = None
         self.currency_id = None
         self.lc_value = None
+        self.operating_unit_id = None
+        self.first_party_bank = None
 
-        for so_id in self.so_ids_temp:
-            self.first_party = so_id.company_id.id
-            self.second_party_applicant = so_id.partner_id.id
-            self.currency_id = so_id.currency_id.id
-            self.lc_value = so_id.amount_total
-            for obj in so_id.order_line:
+        for pi_id in self.pi_ids_temp:
+            self.first_party = pi_id.beneficiary_id
+            self.second_party_applicant = pi_id.partner_id.id
+            self.currency_id = pi_id.currency_id.id
+            self.lc_value += pi_id.total
+            self.operating_unit_id = pi_id.operating_unit_id
+            self.first_party_bank = pi_id.advising_bank_id
+            for obj in pi_id.line_ids:
                 vals.append((0, 0, {'product_id': obj.product_id,
-                                    'name': obj.name,
-                                    'product_qty': obj.product_uom_qty,
+                                    'name': obj.product_id.name,
+                                    'product_qty': obj.quantity,
                                     'price_unit': obj.price_unit,
-                                    'currency_id': obj.currency_id,
-                                    'product_uom': obj.product_uom
+                                    'currency_id': pi_id.currency_id,
+                                    'product_uom': obj.uom_id
                                     }))
         self.product_lines = vals
 
     @api.multi
     def action_confirm_export(self):
-        for so in self.so_ids_temp:
-            so.lc_id = self.id
+        for pi in self.pi_ids_temp:
+            pi.lc_id = self.id
+            for so in pi.so_ids:
+                so.lc_id = self.id
 
         self.write({'state': 'confirmed', 'last_note': Status.CONFIRM.value})
 
@@ -92,6 +102,10 @@ class LetterOfCredit(models.Model):
                   'target': 'current'}
         self.env['letter.credit'].search([('id', '=', self.id)])
         return result
+
+    @api.multi
+    def action_lc_done_export(self):
+        self.write({'state': 'done', 'last_note': Status.DONE.value})
 
 
 

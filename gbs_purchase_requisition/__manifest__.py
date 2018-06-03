@@ -6,7 +6,8 @@
     'version':'10.0.1',
     'depends': [
         'purchase_requisition',
-        'stock_indent',
+        'purchase_operating_unit',
+        'indent_operating_unit',
         'ir_sequence_operating_unit',
         'commercial',
         'gbs_application_group',

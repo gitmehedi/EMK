@@ -7,6 +7,7 @@ class MrrReport(models.AbstractModel):
     def render_html(self, docids, data=None):
         report_utility_pool = self.env['report.utility']
         origin_picking_objs = self.env['stock.picking'].search([('name', '=', data['origin'])])
+        this_picking_objs = self.env['stock.picking'].search([('id', '=', data['self_picking_id'])])
         mrr_date = report_utility_pool.getERPDateFormat(report_utility_pool.getDateFromStr(data['mrr_date']))
         pack_list = []
         total_amount = []
@@ -31,8 +32,9 @@ class MrrReport(models.AbstractModel):
                     challan = gate.challan_bill_no
                     challan_date = report_utility_pool.getERPDateFormat(report_utility_pool.getDateFromStr(gate.date))
 
-            if picking.pack_operation_product_ids:
-                for pack in picking.pack_operation_product_ids:
+        for new_picking in this_picking_objs:
+            if new_picking.pack_operation_product_ids:
+                for pack in new_picking.pack_operation_product_ids:
                     pack_obj = {}
                     pack_obj['product_id'] = pack.product_id.name
                     #pack_obj['pr_no'] = pr_no

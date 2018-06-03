@@ -10,11 +10,11 @@ class ProductGateIn(models.Model):
 
 
     name = fields.Char(string='Name', index=True, readonly=True)
-    create_by = fields.Char('Carried By', readonly=True, states={'draft': [('readonly', False)]},required=True)
-    received = fields.Char('To Whom Received', readonly=True, states={'draft': [('readonly', False)]},required=True)
+    create_by = fields.Char('Carried By',size=100, readonly=True, states={'draft': [('readonly', False)]},required=True)
+    received = fields.Char('To Whom Received',size=100, readonly=True, states={'draft': [('readonly', False)]},required=True)
 
-    challan_bill_no = fields.Char('Challan Bill No', readonly=True, states={'draft': [('readonly', False)]},required=True)
-    truck_no = fields.Char('Truck/Vehicle No', readonly=True, states={'draft': [('readonly', False)]},required=True)
+    challan_bill_no = fields.Char('Challan Bill No',size=100, readonly=True, states={'draft': [('readonly', False)]},required=True)
+    truck_no = fields.Char('Truck/Vehicle No',size=100, readonly=True, states={'draft': [('readonly', False)]},required=True)
 
     shipping_line_ids = fields.One2many('product.gate.line','parent_id',required=True,readonly=True,states={'draft': [('readonly', False)]})
     operating_unit_id = fields.Many2one('operating.unit', string='Operating Unit', required=True,
@@ -52,9 +52,15 @@ class ProductGateIn(models.Model):
         self.shipping_line_ids.write({'state': 'draft'})
 
     @api.onchange('receive_type')
-    def _onchange_is_included_ot(self):
+    def _onchange_receive_type(self):
         if self.receive_type != 'lc':
             self.ship_id = None
+
+    @api.one
+    @api.constrains('date')
+    def _check_date(self):
+        if self.date <= self.ship_id.shipment_date:
+            raise UserError('Gate In Date can not be less then Shipment date!!!')
 
 
     # change data and line data depands on ship_id
@@ -76,6 +82,7 @@ class ProductGateIn(models.Model):
                     val.append((0, 0, {'product_id': record.product_id.id,
                                        'product_qty': record.product_qty,
                                        'product_uom': record.product_uom.id,
+                                       'price_unit': record.price_unit,
                                        'name': record.name,
                                        'date_planned': record.date_planned,
                                        }))
@@ -93,7 +100,7 @@ class ProductGateIn(models.Model):
     @api.constrains('shipping_line_ids')
     def _check_shipping_line_ids(self):
         if not self.shipping_line_ids:
-            raise UserError(_('You cannot confirm %s which has no line.' % (self.name)))
+            raise UserError(_('You cannot save %s which has no line.' % (self.name)))
 
     ####################################################
     # Override methods
@@ -124,13 +131,23 @@ class ShipmentProductLine(models.Model):
     product_id = fields.Many2one('product.product', string='Product',
                                 change_default=True)
     date_planned = fields.Date(string='Scheduled Date', index=True)
-    product_uom = fields.Many2one('product.uom',
-                                  string='UOM')
+    product_uom = fields.Many2one(related='product_id.uom_id',comodel='product.uom',string='UOM',store=True)
+    price_unit = fields.Float(related='product_id.standard_price',string='Unit Price',store=True)
     product_qty = fields.Float(string='Quantity')
     parent_id = fields.Many2one('product.gate.in',
-                                string='Purchase Shipment')
+                                string='Gate In')
 
     state = fields.Selection([
         ('draft', "Draft"),
         ('confirm', "Confirm"),
     ], default='draft')
+
+    ####################################################
+    # Business methods
+    ####################################################
+
+    @api.one
+    @api.constrains('product_qty')
+    def _check_product_qty(self):
+        if self.product_qty < 0:
+            raise UserError('You can\'t give negative value!!!')

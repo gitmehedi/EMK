@@ -57,17 +57,6 @@ class GBSStockScrap(models.Model):
     # Business methods
     ####################################################
 
-    # @api.multi
-    # @api.depends('location_id')
-    # def _computePickingType(self):
-    #     for scrap in self:
-    #         picking_type_obj = scrap.env['stock.picking.type']
-    #         picking_type_ids = picking_type_obj.search(
-    #             ['&',('default_location_src_id', '=', scrap.location_id.id),
-    #              ('code', '=', 'internal')])
-    #         picking_type_id = picking_type_ids and picking_type_ids[0] or False
-    #         scrap.picking_type_id = picking_type_id
-
     @api.multi
     def scrap_confirm(self):
         for scrap in self:
@@ -110,8 +99,7 @@ class GBSStockScrap(models.Model):
             if line.product_id:
                 if not picking_id:
                     picking_type = self.env['stock.picking.type'].search(
-                        [('default_location_src_id', '=', self.location_id.id),
-                         ('default_location_dest_id', '=', self.scrap_location_id.id), ('code', '=', 'internal')])
+                        [('default_location_dest_id', '=', self.scrap_location_id.id),('operating_unit_id', '=', self.operating_unit_id.id)])
                     if not picking_type:
                         raise UserError(_('Please create picking type for product scraping.'))
 

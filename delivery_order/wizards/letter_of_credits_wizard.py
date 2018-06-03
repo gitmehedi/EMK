@@ -23,7 +23,7 @@ class LetterOfCredits(models.TransientModel):
     #
     #     ## Update LC No & PI No to Sale Order Obj
     #     if do_pool.so_type == 'lc_sales':
-    #         do_pool.sale_order_id.write({'lc_id': self.lc_id.id, 'pi_no': do_pool.pi_no.id})
+    #         do_pool.sale_order_id.write({'lc_id': self.lc_id.id, 'pi_id': do_pool.pi_id.id})
     #
     #         ## Update LC No to Stock Picking Obj
     #         stock_picking_id = do_pool.sale_order_id.picking_ids

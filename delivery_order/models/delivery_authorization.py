@@ -7,10 +7,15 @@ class DeliveryAuthorization(models.Model):
     _name = 'delivery.authorization'
     _description = 'Delivery Authorization'
     _inherit = ['mail.thread']
-    #_rec_name = 'name'
     _order = "approved_date desc,name desc"
 
     name = fields.Char(string='Delivery Authorization', index=True, readonly=True)
+
+    def _get_sale_order_currency(self):
+        self.currency_id = self.sale_order_id.currency_id
+
+    currency_id = fields.Many2one('res.currency', string='Currency', compute='_get_sale_order_currency', readonly=True,
+                                  states={'draft': [('readonly', False)]})
 
     so_date = fields.Datetime('Order Date', readonly=True, states={'draft': [('readonly', False)]})
     sequence_id = fields.Char('Sequence', readonly=True)
@@ -70,13 +75,18 @@ class DeliveryAuthorization(models.Model):
             self.delivery_count = len(order.picking_ids)
 
     """ PI and LC """
-    pi_no = fields.Many2one('proforma.invoice', string='PI Ref. No.', readonly=True)
-    lc_id = fields.Many2one('letter.credit', string = 'LC Ref. No.', compute = "_calculate_lc_id", store= False)
+    pi_id = fields.Many2one('proforma.invoice', string='PI Ref. No.', compute="_calculate_pi_id", store=False)
+    lc_id = fields.Many2one('letter.credit', string='LC Ref. No.', compute="_calculate_lc_id", store=False)
+
+    @api.multi
+    def _calculate_pi_id(self):
+        for p in self:
+            p.pi_id = p.sale_order_id.pi_id.id
+
 
     @api.multi
     def _calculate_lc_id(self):
         self.lc_id = self.sale_order_id.lc_id.id
-
 
     """ Payment information"""
     amount_untaxed = fields.Float(string='Untaxed Amount', readonly=True)
@@ -102,7 +112,7 @@ class DeliveryAuthorization(models.Model):
     def unlink(self):
         for order in self:
             if order.state != 'draft':
-                raise UserError('You can not delete this.')
+                raise UserError('You can not delete record which is in Approved state')
             order.line_ids.unlink()
         return super(DeliveryAuthorization, self).unlink()
 
@@ -116,8 +126,8 @@ class DeliveryAuthorization(models.Model):
     def action_draft(self):
         self.state = 'draft'
 
-    """ DO button box action """
 
+    """ DO button box action """
 
     @api.multi
     def action_view_delivery_order(self):
@@ -129,12 +139,10 @@ class DeliveryAuthorization(models.Model):
             'view_type': 'form',
             'view_mode': 'form',
             'res_model': 'delivery.order',
-            #'domain': [('sale_order_id', '=', self.sale_order_id.id)],#so_do_id
-            'context': {'default_delivery_order_id': self.id,'default_sale_order_id': self.sale_order_id.id},
+            'context': {'default_delivery_order_id': self.id, 'default_sale_order_id': self.sale_order_id.id},
             'view_id': [view.id],
             'type': 'ir.actions.act_window'
         }
-
 
     """ Action for Validate Button"""
 
@@ -143,7 +151,6 @@ class DeliveryAuthorization(models.Model):
         self.state = 'validate'
         self.approver2_id = self.env.user
         self.approved_date = time.strftime('%Y-%m-%d %H:%M:%S')
-
 
     """ Action for Approve Button"""
 
@@ -161,6 +168,7 @@ class DeliveryAuthorization(models.Model):
 
     """ Action for Confirm button"""
 
+
     @api.multi
     def action_validate(self):
 
@@ -170,21 +178,15 @@ class DeliveryAuthorization(models.Model):
             return cash_check
 
         elif self.so_type == 'lc_sales':
-
-            if self.pi_no:
-                pi_pool = self.env['proforma.invoice'].search([('sale_order_id', '=', self.sale_order_id.id)])
-                if not pi_pool:
-                    raise UserError('PI is of a different Sale Order')
-
-            if self.lc_id and self.pi_no:
+            if self.lc_id and self.pi_id:
                 if self.lc_id.lc_value >= self.total_sub_total_amount():
-                   # self.create_delivery_order()
+                    # self.create_delivery_order()
                     self.update_sale_order_da_qty()
                     self.write({'state': 'close'})  # Final Approval
                 else:
                     self.write({'state': 'approve'})  # Second approval
 
-            elif self.pi_no and not self.lc_id:
+            elif self.pi_id and not self.lc_id:
                 res = {}
                 list = dict.fromkeys(set([val.product_id.product_tmpl_id.id for val in self.line_ids]), 0)
                 for line in self.line_ids:
@@ -206,7 +208,7 @@ class DeliveryAuthorization(models.Model):
 
                         self.env['ordered.qty'].create(res)
 
-                        #self.create_delivery_order()
+                        # self.create_delivery_order()
                         self.update_sale_order_da_qty()
 
                         self.write({'state': 'close'})  # Final Approval
@@ -216,13 +218,13 @@ class DeliveryAuthorization(models.Model):
                                 if list[rec] > orders.available_qty:
                                     res['available_qty'] = 0
                                     orders.create(res)
-                                    #self.write({'state': 'close'})  # Final Approval
+                                    # self.write({'state': 'close'})  # Final Approval
                                 else:
                                     res['available_qty'] = orders.available_qty - list[rec]
                                     if res['available_qty'] > 100:
                                         res['available_qty'] = 0
 
-                                    #self.create_delivery_order()
+                                    # self.create_delivery_order()
                                     self.update_sale_order_da_qty()
 
                                     self.write({'state': 'close'})  # Final Approval
@@ -246,15 +248,16 @@ class DeliveryAuthorization(models.Model):
                             'context': {'delivery_order_id': self.id, 'product_name': product_pool.display_name}
                         }
             else:
-                #self.create_delivery_order()
+                # self.create_delivery_order()
                 self.update_sale_order_da_qty()
 
                 self.state = 'approve'  # second
 
         elif self.so_type == 'credit_sales':
-           # self.create_delivery_order()
+            # self.create_delivery_order()
             self.update_sale_order_da_qty()
             self.state = 'close'
+
 
     def total_sub_total_amount(self):
         total_amt = 0
@@ -263,6 +266,7 @@ class DeliveryAuthorization(models.Model):
                 total_amt = total_amt + do_line.price_subtotal
 
         return total_amt
+
 
     @api.one
     def payments_amount_checking_with_products_subtotal(self):
@@ -292,12 +296,13 @@ class DeliveryAuthorization(models.Model):
 
         if total_cash_cheque_amount >= self.total_amount:
             account_payment_pool.write({'is_this_payment_checked': True})
-           # self.create_delivery_order()
+            # self.create_delivery_order()
             self.update_sale_order_da_qty()
             return self.write({'state': 'close'})  # directly go to final approval level
         else:
             account_payment_pool.write({'is_this_payment_checked': True})
             return self.write({'state': 'approve'})  # Only Second level approval
+
 
     def create_delivery_order(self):
         for order in self.sale_order_id:
@@ -327,12 +332,14 @@ class DeliveryAuthorization(models.Model):
                     "Payment Information entered is already in use: %s" % (cash_line.account_payment_id.display_name))
                 break;
 
+
     def update_sale_order_da_qty(self):
         for da_line in self.line_ids:
             for sale_line in self.sale_order_id.order_line:
                 if da_line.product_id.id == sale_line.product_id.id:
                     vals = sale_line.da_qty - da_line.quantity
                     sale_line.write({'da_qty': vals})
+
 
     @api.onchange('sale_order_id')
     def onchange_sale_order_id(self):
@@ -386,38 +393,35 @@ class DeliveryAuthorization(models.Model):
     def set_products_info_automatically(self):
         if self.sale_order_id:
             val = []
-            sale_order_obj = self.env['sale.order'].search([('id', '=', self.sale_order_id.id)])
+            # sale_order_obj = self.env['sale.order'].search([('id', '=', self.sale_order_id.id)])
 
-            if sale_order_obj:
-                self.warehouse_id = sale_order_obj.warehouse_id.id
-                self.so_type = sale_order_obj.credit_sales_or_lc
-                self.so_date = sale_order_obj.date_order
-                self.deli_address = sale_order_obj.partner_shipping_id.name
-                self.pi_no = sale_order_obj.pi_no.id
-                self.lc_id = sale_order_obj.lc_id.id
+            self.warehouse_id = self.sale_order_id.warehouse_id.id
+            self.so_type = self.sale_order_id.credit_sales_or_lc
+            self.so_date = self.sale_order_id.date_order
+            self.deli_address = self.sale_order_id.partner_shipping_id.name
+            self.pi_id = self.sale_order_id.pi_id.id
+            self.lc_id = self.sale_order_id.lc_id.id
+            self.currency_id = self.sale_order_id.type_id.currency_id
 
-                for record in sale_order_obj.order_line:
-                    if record.da_qty != record.product_uom_qty \
-                            and record.da_qty != 0:
+            for record in self.sale_order_id.order_line:
+                if record.da_qty != record.product_uom_qty \
+                        and record.da_qty != 0:
+                    record.product_uom_qty = record.da_qty
 
-                        record.product_uom_qty = record.da_qty
+                val.append((0, 0, {'product_id': record.product_id.id,
+                                   'quantity': record.product_uom_qty,
+                                   'pack_type': self.sale_order_id.pack_type.id,
+                                   'uom_id': record.product_uom.id,
+                                   'commission_rate': record.commission_rate,
+                                   'price_unit': record.price_unit,
+                                   'price_subtotal': record.price_subtotal,
+                                   'tax_id': record.tax_id.id
+                                   }))
+            self.amount_untaxed = self.sale_order_id.amount_untaxed
+            self.tax_value = self.sale_order_id.amount_tax
+            self.total_amount = self.sale_order_id.amount_total
 
-
-
-                    val.append((0, 0, {'product_id': record.product_id.id,
-                                       'quantity': record.product_uom_qty,
-                                       'pack_type': sale_order_obj.pack_type.id,
-                                       'uom_id': record.product_uom.id,
-                                       'commission_rate': record.commission_rate,
-                                       'price_unit': record.price_unit,
-                                       'price_subtotal': record.price_subtotal,
-                                       'tax_id': record.tax_id.id
-                                       }))
-                self.amount_untaxed = sale_order_obj.amount_untaxed
-                self.tax_value = sale_order_obj.amount_tax
-                self.total_amount = sale_order_obj.amount_total
-
-            self.line_ids = val
+        self.line_ids = val
 
 
     def action_process_unattached_payments(self):
@@ -460,12 +464,12 @@ class DeliveryAuthorization(models.Model):
 
                 self.cheque_ids = vals_bank
 
+
     ################
     # 100 MT Logic
     ###############
     @api.multi
     def update_lc_id_for_houndred_mt(self):
-
         for delivery in self:
             ordered_qty_pool = delivery.env['ordered.qty'].search([('delivery_auth_no', '=', delivery.id)])
             if ordered_qty_pool:
@@ -489,4 +493,3 @@ class OrderedQty(models.Model):
     company_id = fields.Many2one('res.company', 'Company',
                                  default=lambda self: self.env['res.company']._company_default_get(
                                      'product_sales_pricelist'))
-

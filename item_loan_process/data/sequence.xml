@@ -4,7 +4,7 @@
         <record id="sequence_item_borrowing_SCCL_HO" model="ir.sequence">
             <field name="name">Item Borrowing SCCL HO</field>
             <field name="code">item.borrowing</field>
-            <field name="prefix">ITEM BORROW-%(year)s-</field>
+            <field name="prefix">ITEM BORROW-OU-%(year)s-</field>
             <field eval="6" name="padding"/>
             <field eval="1" name="number_increment"/>
             <field eval="False" name="company_id"/>
@@ -12,7 +12,7 @@
         <record id="sequence_item_borrowing_SCCL_DF" model="ir.sequence">
             <field name="name">Item Borrowing SCCL DF</field>
             <field name="code">item.borrowing</field>
-            <field name="prefix">ITEM BORROW-%(year)s-</field>
+            <field name="prefix">ITEM BORROW-OU-%(year)s-</field>
             <field eval="6" name="padding"/>
             <field eval="1" name="number_increment"/>
             <field eval="False" name="company_id"/>
@@ -20,7 +20,7 @@
         <record id="sequence_item_borrowing_SCCL_CTG" model="ir.sequence">
             <field name="name">Item Borrowing SCCL CTG</field>
             <field name="code">item.borrowing</field>
-            <field name="prefix">ITEM BORROW-%(year)s-</field>
+            <field name="prefix">ITEM BORROW-OU-%(year)s-</field>
             <field eval="6" name="padding"/>
             <field eval="1" name="number_increment"/>
             <field eval="False" name="company_id"/>
@@ -28,7 +28,7 @@
         <record id="sequence_item_borrowing_SPL_HO" model="ir.sequence">
             <field name="name">Item Borrowing SPL HO</field>
             <field name="code">item.borrowing</field>
-            <field name="prefix">ITEM BORROW-%(year)s-</field>
+            <field name="prefix">ITEM BORROW-OU-%(year)s-</field>
             <field eval="6" name="padding"/>
             <field eval="1" name="number_increment"/>
             <field eval="False" name="company_id"/>
@@ -36,7 +36,7 @@
         <record id="sequence_item_borrowing_SPL_DF" model="ir.sequence">
             <field name="name">Item Borrowing SPL DF</field>
             <field name="code">item.borrowing</field>
-            <field name="prefix">ITEM BORROW-%(year)s-</field>
+            <field name="prefix">ITEM BORROW-OU-%(year)s-</field>
             <field eval="6" name="padding"/>
             <field eval="1" name="number_increment"/>
             <field eval="False" name="company_id"/>
@@ -44,7 +44,7 @@
         <record id="sequence_item_borrowing_SPL_CTG" model="ir.sequence">
             <field name="name">Item Borrowing SPL CTG</field>
             <field name="code">item.borrowing</field>
-            <field name="prefix">ITEM BORROW-%(year)s-</field>
+            <field name="prefix">ITEM BORROW-OU-%(year)s-</field>
             <field eval="6" name="padding"/>
             <field eval="1" name="number_increment"/>
             <field eval="False" name="company_id"/>
@@ -52,7 +52,7 @@
         <record id="sequence_item_borrowing_SSCL_HO" model="ir.sequence">
             <field name="name">Item Borrowing SSCL HO</field>
             <field name="code">item.borrowing</field>
-            <field name="prefix">ITEM BORROW-%(year)s-</field>
+            <field name="prefix">ITEM BORROW-OU-%(year)s-</field>
             <field eval="6" name="padding"/>
             <field eval="1" name="number_increment"/>
             <field eval="False" name="company_id"/>
@@ -60,7 +60,7 @@
         <record id="sequence_item_borrowing_SSCL_CTG" model="ir.sequence">
             <field name="name">Item Borrowing SSCL CTG</field>
             <field name="code">item.borrowing</field>
-            <field name="prefix">ITEM BORROW-%(year)s-</field>
+            <field name="prefix">ITEM BORROW-OU-%(year)s-</field>
             <field eval="6" name="padding"/>
             <field eval="1" name="number_increment"/>
             <field eval="False" name="company_id"/>
@@ -68,7 +68,7 @@
         <record id="sequence_item_borrowing_SPPL_HO" model="ir.sequence">
             <field name="name">Item Borrowing SPPL HO</field>
             <field name="code">item.borrowing</field>
-            <field name="prefix">ITEM BORROW-%(year)s-</field>
+            <field name="prefix">ITEM BORROW-OU-%(year)s-</field>
             <field eval="6" name="padding"/>
             <field eval="1" name="number_increment"/>
             <field eval="False" name="company_id"/>
@@ -76,7 +76,7 @@
         <record id="sequence_item_borrowing_SPPL_CTG" model="ir.sequence">
             <field name="name">Item Borrowing SPPL CTG</field>
             <field name="code">item.borrowing</field>
-            <field name="prefix">ITEM BORROW-%(year)s-</field>
+            <field name="prefix">ITEM BORROW-OU-%(year)s-</field>
             <field eval="6" name="padding"/>
             <field eval="1" name="number_increment"/>
             <field eval="False" name="company_id"/>
@@ -85,7 +85,7 @@
         <record id="sequence_item_loan_lending_SCCL_HO" model="ir.sequence">
             <field name="name">Item Loan Lending SCCL HO</field>
             <field name="code">item.loan.lending</field>
-            <field name="prefix">LOAN LENDING-%(year)s-</field>
+            <field name="prefix">LOAN LENDING-OU-%(year)s-</field>
             <field eval="6" name="padding"/>
             <field eval="1" name="number_increment"/>
             <field eval="False" name="company_id"/>
@@ -93,7 +93,7 @@
         <record id="sequence_item_loan_lending_SCCL_DF" model="ir.sequence">
             <field name="name">Item Loan Lending SCCL DF</field>
             <field name="code">item.loan.lending</field>
-            <field name="prefix">LOAN LENDING-%(year)s-</field>
+            <field name="prefix">LOAN LENDING-OU-%(year)s-</field>
             <field eval="6" name="padding"/>
             <field eval="1" name="number_increment"/>
             <field eval="False" name="company_id"/>
@@ -101,7 +101,7 @@
         <record id="sequence_item_loan_lending_SCCL_CTG" model="ir.sequence">
             <field name="name">Item Loan Lending SCCL CTG</field>
             <field name="code">item.loan.lending</field>
-            <field name="prefix">LOAN LENDING-%(year)s-</field>
+            <field name="prefix">LOAN LENDING-OU-%(year)s-</field>
             <field eval="6" name="padding"/>
             <field eval="1" name="number_increment"/>
             <field eval="False" name="company_id"/>
@@ -109,7 +109,7 @@
         <record id="sequence_item_loan_lending_SPL_HO" model="ir.sequence">
             <field name="name">Item Loan Lending SPL HO</field>
             <field name="code">item.loan.lending</field>
-            <field name="prefix">LOAN LENDING-%(year)s-</field>
+            <field name="prefix">LOAN LENDING-OU-%(year)s-</field>
             <field eval="6" name="padding"/>
             <field eval="1" name="number_increment"/>
             <field eval="False" name="company_id"/>
@@ -117,7 +117,7 @@
         <record id="sequence_item_loan_lending_SPL_DF" model="ir.sequence">
             <field name="name">Item Loan Lending SPL DF</field>
             <field name="code">item.loan.lending</field>
-            <field name="prefix">LOAN LENDING-%(year)s-</field>
+            <field name="prefix">LOAN LENDING-OU-%(year)s-</field>
             <field eval="6" name="padding"/>
             <field eval="1" name="number_increment"/>
             <field eval="False" name="company_id"/>
@@ -125,7 +125,7 @@
         <record id="sequence_item_loan_lending_SPL_CTG" model="ir.sequence">
             <field name="name">Item Loan Lending SPL CTG</field>
             <field name="code">item.loan.lending</field>
-            <field name="prefix">LOAN LENDING-%(year)s-</field>
+            <field name="prefix">LOAN LENDING-OU-%(year)s-</field>
             <field eval="6" name="padding"/>
             <field eval="1" name="number_increment"/>
             <field eval="False" name="company_id"/>
@@ -133,7 +133,7 @@
         <record id="sequence_item_loan_lending_SSCL_HO" model="ir.sequence">
             <field name="name">Item Loan Lending SSCL HO</field>
             <field name="code">item.loan.lending</field>
-            <field name="prefix">LOAN LENDING-%(year)s-</field>
+            <field name="prefix">LOAN LENDING-OU-%(year)s-</field>
             <field eval="6" name="padding"/>
             <field eval="1" name="number_increment"/>
             <field eval="False" name="company_id"/>
@@ -141,7 +141,7 @@
         <record id="sequence_item_loan_lending_SSCL_CTG" model="ir.sequence">
             <field name="name">Item Loan Lending SSCL CTG</field>
             <field name="code">item.loan.lending</field>
-            <field name="prefix">LOAN LENDING-%(year)s-</field>
+            <field name="prefix">LOAN LENDING-OU-%(year)s-</field>
             <field eval="6" name="padding"/>
             <field eval="1" name="number_increment"/>
             <field eval="False" name="company_id"/>
@@ -149,7 +149,7 @@
         <record id="sequence_item_loan_lending_SPPL_HO" model="ir.sequence">
             <field name="name">Item Loan Lending SPPL HO</field>
             <field name="code">item.loan.lending</field>
-            <field name="prefix">LOAN LENDING-%(year)s-</field>
+            <field name="prefix">LOAN LENDING-OU-%(year)s-</field>
             <field eval="6" name="padding"/>
             <field eval="1" name="number_increment"/>
             <field eval="False" name="company_id"/>
@@ -157,7 +157,7 @@
         <record id="sequence_item_loan_lending_SPPL_CTG" model="ir.sequence">
             <field name="name">Item Loan Lending SPPL CTG</field>
             <field name="code">item.loan.lending</field>
-            <field name="prefix">LOAN LENDING-%(year)s-</field>
+            <field name="prefix">LOAN LENDING-OU-%(year)s-</field>
             <field eval="6" name="padding"/>
             <field eval="1" name="number_increment"/>
             <field eval="False" name="company_id"/>

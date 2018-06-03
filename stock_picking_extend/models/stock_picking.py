@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
-from odoo import models, fields, api
+from odoo import models, fields, api, _
+from odoo.exceptions import UserError
 
 class Picking(models.Model):
     _inherit = "stock.picking"
@@ -27,6 +28,19 @@ class Picking(models.Model):
                                 help="Completion Date of Transfer",default=fields.Datetime.now())
 
     doc_count = fields.Integer(compute='_compute_attached_docs', string="Number of documents attached")
+
+    challan_bill_no = fields.Char(
+        string='Challan Bill No',
+        readonly=True,
+        states={'draft': [('readonly', False)]})
+
+    @api.constrains('challan_bill_no')
+    def _check_unique_constraint(self):
+        if self.partner_id and self.challan_bill_no:
+            filters = [['challan_bill_no', '=ilike', self.challan_bill_no], ['partner_id', '=', self.partner_id.id]]
+            bill_no = self.search(filters)
+            if len(bill_no) > 1:
+                raise UserError(_('[Unique Error] Challan Bill must be unique for %s !') % self.partner_id.name)
 
     @api.one
     def _compute_attached_docs(self):

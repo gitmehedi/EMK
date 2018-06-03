@@ -35,11 +35,25 @@
                         <button string="Reset to Draft" name="action_draft"
                                 states="waiting_approval" type="object"
                                 groups="stock.group_stock_manager"/>
+
+                        <button string="Loan Adjustment" name="action_view_picking"
+                                groups="stock.group_stock_user" class="oe_highlight"
+                                states="approved" type="object"/>
+
                         <field name="state" widget="statusbar"
                                statusbar_visible="draft,waiting_approval,approved"
                                statusbar_colors='{"reject":"red"}' />
                     </header>
                     <sheet>
+                        <div class="oe_button_box" name="button_box">
+                            <button class="oe_stat_button" name="action_get_stock_picking"
+                                    string="Stock Operation" type="object"
+                                    attrs="{'invisible':[('picking_id','=',False)]}" icon="fa-cogs"/>
+                            <field name="picking_id" invisible="1"/>
+                            <!--<button class="oe_stat_button" name="action_get_adjustment_picking"-->
+                                    <!--string="Adjustment Operation" type="object"-->
+                                    <!--attrs="{'invisible':[('return_picking_id','=',False)]}" icon="fa-cogs"/>-->
+                        </div>
                         <group col="2">
                             <group>
                                 <field name="issuer_id" readonly="1" />
@@ -60,6 +74,9 @@
                                         <field name="name"/>
                                         <field name="product_uom" string="UOM"/>
                                         <field name="product_uom_qty" sum="Total Qty"/>
+                                        <field name="received_qty" sum="Total Received" readonly="1"/>
+                                        <field name="given_qty" sum="Total Given" readonly="1"/>
+                                        <field name="due_qty" sum="Total Due" readonly="1"/>
                                         <field name="price_unit" invisible="1"/>
                                         <field name="state" invisible="1"/>
                                     </tree>
@@ -80,7 +97,6 @@
                                     <group>
                                         <field name="location_id" readonly="1"/>
                                         <field name="item_loan_borrow_location_id" options="{'no_create': True,'no_open':True}"/>
-                                        <field name="picking_id" invisible="1"/>
                                         <field name="picking_type_id" invisible="1"/>
                                     </group>
                                 </group>

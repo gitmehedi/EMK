@@ -10,9 +10,13 @@ class ProductGateIn(models.Model):
     @api.multi
     def action_confirm(self):
         res = super(ProductGateIn, self).action_confirm()
-        if self.shipping_line_ids:
-            picking_id = self._create_pickings_and_procurements()
-            self.write({'picking_id': picking_id})
+        if self.receive_type == 'lc':
+            if self.shipping_line_ids:
+                picking_id = self._create_pickings_and_procurements()
+                picking_objs = self.env['stock.picking'].search([('id','=',picking_id)])
+                picking_objs.action_confirm()
+                picking_objs.force_assign()
+                self.write({'picking_id': picking_id})
         return res
 
     @api.model
@@ -50,14 +54,12 @@ class ProductGateIn(models.Model):
                         'partner_id': self.partner_id.id,
                         'origin': self.name,
                     }
-                    # if self.company_id:
-                    #     vals = dict(res, company_id=self.company_id.id)
+                    if self.company_id:
+                        vals = dict(res, company_id=self.company_id.id)
 
                     picking = picking_obj.create(res)
                     if picking:
                         picking_id = picking.id
-                        picking.action_confirm()
-                        picking.force_assign()
 
                 moves = {
                     'name': self.name,
@@ -68,6 +70,7 @@ class ProductGateIn(models.Model):
                     'product_id': line.product_id.id,
                     'product_uom_qty': line.product_qty,
                     'product_uom': line.product_uom.id,
+                    'price_unit': line.price_unit,
                     'date': date_planned,
                     'date_expected': date_planned,
                     'picking_type_id': picking_type.id,

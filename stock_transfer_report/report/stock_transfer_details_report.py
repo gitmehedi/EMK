@@ -6,14 +6,20 @@ class StockTransferDetailsReport(models.AbstractModel):
 
     @api.multi
     def render_html(self, docids, data=None):
+
         get_data = self.get_report_data(data)
+        report_utility_pool = self.env['report.utility']
+        op_unit_id = data['operating_unit_id']
+        op_unit_obj = self.env['operating.unit'].search([('id', '=', op_unit_id)])
+        data['address'] = report_utility_pool.getAddressByUnit(op_unit_obj)
+
         docargs = {
             'doc_ids': self._ids,
             'docs': self,
             'record': data,
             'product_lines': get_data['product'],
             'total': get_data['total'],
-            'address': data['str_address'],
+            'address': data['address'],
 
         }
         return self.env['report'].render('stock_transfer_report.std_report_temp', docargs)
@@ -53,8 +59,8 @@ class StockTransferDetailsReport(models.AbstractModel):
                                                             AND pp.id = ph.product_id
                                                      ORDER  BY ph.datetime DESC
                                                      LIMIT  1), 0) AS val_out_tk
-                                    FROM   stock_picking sp
-                                           LEFT JOIN stock_move sm
+                                    FROM   stock_move sm 
+                                           LEFT JOIN stock_picking sp 
                                                   ON sm.picking_id = sp.id
                                            LEFT JOIN product_product pp
                                                   ON sm.product_id = pp.id

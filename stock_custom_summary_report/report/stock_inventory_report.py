@@ -8,6 +8,10 @@ class StockInventoryReport(models.AbstractModel):
     def render_html(self,docids, data=None):
 
         get_data = self.get_report_data(data)
+        report_utility_pool = self.env['report.utility']
+        op_unit_id = data['operating_unit_id']
+        op_unit_obj = self.env['operating.unit'].search([('id', '=', op_unit_id)])
+        data['address'] = report_utility_pool.getAddressByUnit(op_unit_obj)
 
         docargs = {
             'doc_ids': self._ids,
@@ -15,14 +19,14 @@ class StockInventoryReport(models.AbstractModel):
             'record': data,
             'lines': get_data['category'],
             'total': get_data['total'],
-
+            'address': data['address'],
         }
         return self.env['report'].render('stock_custom_summary_report.stock_report_template', docargs)
 
     def get_report_data(self, data):
         date_start = data['date_from']
         date_end = data['date_to']
-        location_outsource = data['operating_unit_id']
+        location_outsource = data['location_id']
         category_id = data['category_id']
         product_id = data['product_id']
         cat_pool = self.env['product.category']
@@ -115,27 +119,42 @@ class StockInventoryReport(models.AbstractModel):
                            cost_val AS rate_dk,
                            Sum(product_qty_in - product_qty_out)                AS qty_dk,
                            ( cost_val * Sum(product_qty_in - product_qty_out) ) AS val_dk
-                    FROM   (SELECT sm.product_id,pt.name,pp.default_code AS code,pu.name AS uom_name,pc.name AS category,
-  Coalesce(Sum(sm.product_qty), 0) AS product_qty_in,
-  Coalesce((SELECT ph.cost FROM   product_price_history ph
-            WHERE  Date_trunc('day', ph.datetime) < '%s'
-            AND pp.id = ph.product_id
-            ORDER  BY ph.datetime DESC LIMIT  1), 0) AS cost_val,
-            0 AS product_qty_out
-            FROM   stock_picking sp
-            LEFT JOIN stock_move sm ON sm.picking_id = sp.id
-            LEFT JOIN product_product pp ON sm.product_id = pp.id
-            LEFT JOIN product_template pt ON pp.product_tmpl_id = pt.id
-            LEFT JOIN stock_location sl ON sm.location_id = sl.id
-            LEFT JOIN product_category pc ON pt.categ_id = pc.id
-            LEFT JOIN product_uom pu ON( pu.id = pt.uom_id )
-            WHERE  Date_trunc('day', sm.date) < '%s'
-                   AND sm.state = 'done'
-                   AND sm.location_id <> %s
-                   AND sm.location_dest_id = %s
-                   AND pc.id IN  %s
-                   AND pp.id IN %s
-                   GROUP  BY sm.product_id,pt.name,pp.default_code,pp.id,pc.name,pu.name
+                    FROM   (
+                            SELECT sm.product_id,
+                                    pt.name,
+                                    pp.default_code AS code,
+                                    pu.name AS uom_name,
+                                    pc.name AS category,
+                                    Coalesce(Sum(sm.product_qty), 0) AS product_qty_in,
+                                    Coalesce((SELECT ph.cost FROM   product_price_history ph
+                            WHERE  Date_trunc('day', ph.datetime) < '%s'
+                                  AND pp.id = ph.product_id
+                            ORDER  BY ph.datetime DESC LIMIT  1), 0) AS cost_val,
+                            0 AS product_qty_out
+                            FROM stock_move sm  
+                            LEFT JOIN stock_picking sp 
+                                   ON sm.picking_id = sp.id
+                            LEFT JOIN product_product pp 
+                                   ON sm.product_id = pp.id
+                            LEFT JOIN product_template pt 
+                                   ON pp.product_tmpl_id = pt.id
+                            LEFT JOIN stock_location sl 
+                                  ON sm.location_id = sl.id
+                            LEFT JOIN product_category pc 
+                                  ON pt.categ_id = pc.id
+                            LEFT JOIN product_uom pu 
+                                  ON( pu.id = pt.uom_id )
+                            WHERE  Date_trunc('day', sm.date) < '%s'
+                                   AND sm.state = 'done'
+                                   AND sm.location_id <> %s
+                                   AND sm.location_dest_id = %s
+                                   AND pc.id IN  %s
+                                   AND pp.id IN %s
+                            GROUP  BY sm.product_id,
+                                      pt.name,pp.default_code,
+                                      pp.id,
+                                      pc.name,
+                                      pu.name
                             UNION ALL
                             SELECT sm.product_id,
                                    pt.name,
@@ -150,8 +169,8 @@ class StockInventoryReport(models.AbstractModel):
                                              ORDER  BY ph.datetime DESC
                                              LIMIT  1), 0)          AS cost_val,
                                    Coalesce(Sum(sm.product_qty), 0) AS product_qty_out
-                            FROM   stock_picking sp
-                                   LEFT JOIN stock_move sm
+                            FROM   stock_move sm
+                                   LEFT JOIN stock_picking sp
                                           ON sm.picking_id = sp.id
                                    LEFT JOIN product_product pp
                                           ON sm.product_id = pp.id
@@ -165,8 +184,8 @@ class StockInventoryReport(models.AbstractModel):
 				                          ON( pu.id = pt.uom_id )
                             WHERE  Date_trunc('day', sm.date) < '%s'
                                    AND sm.state = 'done'
-                                   AND sm.location_id <> %s
-                                   AND sm.location_dest_id = %s
+                                   AND sm.location_id = %s
+                                   AND sm.location_dest_id <> %s
                                    AND pc.id IN  %s
                                    AND pp.id IN %s
                             GROUP  BY sm.product_id,
@@ -175,44 +194,7 @@ class StockInventoryReport(models.AbstractModel):
                                       pp.id,
                                       pc.name,
                                       pu.name
-                            UNION ALL
-                            SELECT sm.product_id,
-                                   pt.name,
-                                   pp.default_code                  AS code,
-                                   pu.name                          AS uom_name,
-                                   pc.name				            AS category,
-                                   Coalesce(Sum(sm.product_qty), 0) AS product_qty_in,
-                                   Coalesce((SELECT ph.cost
-                                             FROM   product_price_history ph
-                                             WHERE  Date_trunc('day', ph.datetime) < '%s'
-                                                    AND pp.id = ph.product_id
-                                             ORDER  BY ph.datetime DESC
-                                             LIMIT  1), 0)          AS cost_val,
-                                   0                                AS product_qty_out
-                            FROM   stock_move sm
-                                   LEFT JOIN product_product pp
-                                          ON sm.product_id = pp.id
-                                   LEFT JOIN product_template pt
-                                          ON pp.product_tmpl_id = pt.id
-                                   LEFT JOIN stock_location sl
-                                          ON sm.location_id = sl.id
-                                   LEFT JOIN product_category pc
-                                          ON pt.categ_id = pc.id
-                                   LEFT JOIN product_uom pu
-				                          ON( pu.id = pt.uom_id )
-                            WHERE  Date_trunc('day', sm.date) < '%s'
-                                   AND sm.state = 'done'
-                                   AND sm.location_id <> %s
-                                   AND sm.location_dest_id = %s
-                                   AND pc.id IN %s
-                                   AND pp.id IN %s
-                                   AND sm.picking_id IS NULL
-                            GROUP  BY sm.product_id,
-                                      pt.name,
-                                      pp.default_code,
-                                      pp.id,
-                                      pc.name,
-                                      pu.name) table_dk
+                            ) table_dk
                     GROUP  BY product_id,
                               name,
                               code,
@@ -221,7 +203,6 @@ class StockInventoryReport(models.AbstractModel):
                               category
                  
                  ''' % (date_start, date_start, location_outsource, location_outsource, category_param,product_param,
-                        date_start, date_start, location_outsource, location_outsource, category_param,product_param,
                         date_start, date_start, location_outsource, location_outsource, category_param,product_param)
 
         sql_in_tk = '''
@@ -239,10 +220,20 @@ class StockInventoryReport(models.AbstractModel):
                                            pu.name                                  AS uom_name, 
                                            pc.name                                  AS category, 
                                            sm.product_qty                           AS qty_in_tk, 
-                                           sm.product_qty * Coalesce(ph.cost, 0) AS val_in_tk,
-                                           Coalesce(ph.cost, 0)          AS cost_val
-                                    FROM   stock_picking sp 
-                                           LEFT JOIN stock_move sm 
+                                           sm.product_qty * Coalesce((SELECT ph.cost
+                                             FROM   product_price_history ph
+                                             WHERE  Date_trunc('day', ph.datetime) <= '%s'
+                                                    AND pp.id = ph.product_id
+                                             ORDER  BY ph.datetime DESC
+                                             LIMIT  1), 0) AS val_in_tk,
+                                           Coalesce((SELECT ph.cost
+                                             FROM   product_price_history ph
+                                             WHERE  Date_trunc('day', ph.datetime) <= '%s'
+                                                    AND pp.id = ph.product_id
+                                             ORDER  BY ph.datetime DESC
+                                             LIMIT  1), 0)          AS cost_val
+                                    FROM   stock_move sm 
+                                           LEFT JOIN stock_picking sp 
                                                   ON sm.picking_id = sp.id 
                                            LEFT JOIN product_product pp 
                                                   ON sm.product_id = pp.id 
@@ -254,8 +245,6 @@ class StockInventoryReport(models.AbstractModel):
                                                   ON pt.categ_id = pc.id
                                            LEFT JOIN product_uom pu 
         				                          ON( pu.id = pt.uom_id )
-                                            LEFT JOIN product_price_history ph 
-                                                  ON ph.product_id = pp.id
                                     WHERE  Date_trunc('day', sm.date) BETWEEN '%s' AND '%s' 
                                            AND sm.state = 'done' 
                                            --AND sp.location_type = 'outsource_out' 
@@ -271,7 +260,7 @@ class StockInventoryReport(models.AbstractModel):
                                       uom_name,
                                       category,
                                       cost_val 
-                        ''' % (date_start, date_end, location_outsource, location_outsource, category_param,product_param)
+                        ''' % (date_end,date_end,date_start, date_end, location_outsource, location_outsource, category_param,product_param)
 
         sql_out_tk = '''SELECT product_id,
                            name,
@@ -294,8 +283,8 @@ class StockInventoryReport(models.AbstractModel):
                                                     AND pp.id = ph.product_id
                                              ORDER  BY ph.datetime DESC
                                              LIMIT  1), 0) AS val_out_tk
-                            FROM   stock_picking sp
-                                   LEFT JOIN stock_move sm
+                            FROM   stock_move sm
+                                   LEFT JOIN stock_picking sp
                                           ON sm.picking_id = sp.id
                                    LEFT JOIN product_product pp
                                           ON sm.product_id = pp.id
@@ -345,8 +334,8 @@ class StockInventoryReport(models.AbstractModel):
                                      ORDER  BY ph.datetime DESC
                                      LIMIT  1), 0)          AS cost_val,
                            0                                AS product_qty_out
-                    FROM   stock_picking sp
-                           LEFT JOIN stock_move sm
+                    FROM   stock_move sm
+                           LEFT JOIN stock_picking sp
                                   ON sm.picking_id = sp.id
                            LEFT JOIN product_product pp
                                   ON sm.product_id = pp.id
@@ -386,8 +375,8 @@ class StockInventoryReport(models.AbstractModel):
                                      ORDER  BY ph.datetime DESC
                                      LIMIT  1), 0)          AS cost_val,
                            Coalesce(Sum(sm.product_qty), 0) AS product_qty_out
-                    FROM   stock_picking sp
-                           LEFT JOIN stock_move sm
+                    FROM   stock_move sm
+                           LEFT JOIN stock_picking sp
                                   ON sm.picking_id = sp.id
                            LEFT JOIN product_product pp
                                   ON sm.product_id = pp.id
@@ -413,82 +402,7 @@ class StockInventoryReport(models.AbstractModel):
                               pp.id,
                               pc.name,
                               pu.name
-                    UNION ALL
-                    SELECT sm.product_id,
-                           pt.name,
-                           pp.default_code                  AS code,
-                           pu.name                          AS uom_name,
-                           pc.name                          AS category,
-                           Coalesce(Sum(sm.product_qty), 0) AS product_qty_in,
-                           Coalesce((SELECT ph.cost
-                                     FROM   product_price_history ph
-                                     WHERE  Date_trunc('day', ph.datetime) <= '%s'
-                                            AND pp.id = ph.product_id
-                                     ORDER  BY ph.datetime DESC
-                                     LIMIT  1), 0)          AS cost_val,
-                           0                                AS product_qty_out
-                    FROM   stock_move sm
-                           LEFT JOIN product_product pp
-                                  ON sm.product_id = pp.id
-                           LEFT JOIN product_template pt
-                                  ON pp.product_tmpl_id = pt.id
-                           LEFT JOIN stock_location sl
-                                  ON sm.location_id = sl.id
-                           LEFT JOIN product_category pc
-                                  ON pt.categ_id = pc.id
-                           LEFT JOIN product_uom pu
-                                  ON( pu.id = pt.uom_id )
-                    WHERE  Date_trunc('day', sm.date) <= '%s'
-                           AND sm.state = 'done'
-                           AND sm.location_id <> %s
-                           AND sm.location_dest_id = %s
-                           AND pc.id IN %s
-                           AND pp.id IN %s
-                           AND sm.picking_id IS NULL
-                    GROUP  BY sm.product_id,
-                              pt.name,
-                              pp.default_code,
-                              pp.id,
-                              pc.name,
-                              pu.name
-                    UNION ALL
-                    SELECT sm.product_id,
-                           pt.name,
-                           pp.default_code                  AS code,
-                           pu.name                          AS uom_name,
-                           pc.name                          AS category,
-                           0                                AS product_qty_in,
-                           Coalesce((SELECT ph.cost
-                                     FROM   product_price_history ph
-                                     WHERE  Date_trunc('day', ph.datetime) <= '%s'
-                                            AND pp.id = ph.product_id
-                                     ORDER  BY ph.datetime DESC
-                                     LIMIT  1), 0)          AS cost_val,
-                           Coalesce(Sum(sm.product_qty), 0) AS product_qty_out
-                    FROM   stock_move sm
-                           LEFT JOIN product_product pp
-                                  ON sm.product_id = pp.id
-                           LEFT JOIN product_template pt
-                                  ON pp.product_tmpl_id = pt.id
-                           LEFT JOIN stock_location sl
-                                  ON sm.location_id = sl.id
-                           LEFT JOIN product_category pc
-                                  ON pt.categ_id = pc.id
-                           LEFT JOIN product_uom pu
-                                  ON( pu.id = pt.uom_id )
-                    WHERE  Date_trunc('day', sm.date) <= '%s'
-                           AND sm.state = 'done'
-                           AND sm.location_id = %s
-                           AND sm.location_dest_id <> %s
-                           AND pc.id IN %s
-                           AND pp.id IN %s
-                           AND sm.picking_id IS NULL
-                    GROUP  BY sm.product_id,
-                              pt.name,
-                              pp.default_code,
-                              pp.id,
-                              pc.name,
-                              pu.name) table_ck
+                    ) table_ck
             GROUP  BY product_id,
                       name,
                       code,
@@ -496,8 +410,6 @@ class StockInventoryReport(models.AbstractModel):
                       category,
                       cost_val 
                         ''' % (date_end, date_end, location_outsource, location_outsource, category_param,product_param,
-                               date_end, date_end, location_outsource, location_outsource, category_param,product_param,
-                               date_end, date_end, location_outsource, location_outsource, category_param,product_param,
                                date_end, date_end, location_outsource, location_outsource, category_param,product_param)
 
         sql = '''

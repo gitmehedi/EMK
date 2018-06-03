@@ -16,7 +16,6 @@
         'sale_order_type',
         'sale_order_revision',
         'samuda_so_type',
-        'letter_of_credit',
         'gbs_pi_creation',
         'delivery_schedules',
         'gbs_application_group',
@@ -25,6 +24,8 @@
         'accounting_report',
         'gbs_accounting_cheque_received',
         'delivery_qty_reports',
+        'sale_operating_unit',
+        'lc_sales_product',
     ],
 
     'data': [ ],

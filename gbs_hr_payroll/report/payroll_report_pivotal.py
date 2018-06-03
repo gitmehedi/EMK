@@ -1,6 +1,8 @@
-from odoo import api, exceptions, fields, models
-import math
-import locale
+import math,locale
+
+from odoo import api, exceptions, fields, models, tools
+from odoo.addons import decimal_precision as dp
+from odoo.tools.misc import formatLang
 
 
 class PayrollReportPivotal(models.AbstractModel):
@@ -12,6 +14,7 @@ class PayrollReportPivotal(models.AbstractModel):
         docs = payslip_run_pool.browse(docids[0])
         data = {}
         data['name'] = docs.name
+        data['type'] = docs.type
         rule_list = []
         for slip in docs.slip_ids:
             for line in slip.line_ids:
@@ -24,14 +27,18 @@ class PayrollReportPivotal(models.AbstractModel):
                     if rule not in rule_list:
                         rule_list.append(rule)
 
+
         rule_list = sorted(rule_list, key=lambda k: k['seq'])
 
         dept = self.env['hr.department'].search([])
 
         dpt_payslips_list = []
         total_sum = []
-
         sn = 1
+
+        row_total = {}
+        for srule in rule_list:
+            row_total[srule['code']] = 0
 
         for d in dept:
             dpt_payslips = {}
@@ -47,14 +54,20 @@ class PayrollReportPivotal(models.AbstractModel):
                     payslip['doj'] = slip.employee_id.initial_employment_date
                     payslip['emp_seq'] = slip.employee_id.employee_sequence
                     loan_remain = slip.remaining_loan or 0.00
-                    payslip['loan_balance'] = format(loan_remain, '.2f') if loan_remain else None
+                    payslip['loan_balance'] = formatLang(self.env, loan_remain) if loan_remain else None
+                    payslip['sa'] = formatLang(self.env,math.ceil(slip.employee_id.contract_id.supplementary_allowance))
+                    gross = math.ceil((slip.employee_id.contract_id.wage)*2.5)
+                    payslip['gross'] = formatLang(self.env,gross)
 
                     for rule in rule_list:
                         payslip[rule['code']] = 0
+
                         for line in slip.line_ids:
                             if line.code == rule['code']:
                                 total_amount = math.ceil(line.total)
-                                payslip[rule['code']] = total_amount
+                                payslip[rule['code']] = formatLang(self.env, total_amount)
+
+                                row_total[line.code] = row_total[line.code] + (math.ceil(total_amount))
 
                                 if line.code == "NET":
                                     total_sum.append(math.ceil(total_amount))
@@ -103,8 +116,13 @@ class PayrollReportPivotal(models.AbstractModel):
         dpt_payslips_list.append(dpt_payslips)
         amt_to_word = self.env['res.currency'].amount_to_word(float(all_total))
 
-        locale.setlocale(locale.LC_ALL, 'bn_BD.UTF-8')
-        thousand_separated_total_sum = locale.currency(all_total, grouping=True)
+        # locale.setlocale(locale.LC_ALL, 'bn_BD.UTF-8')
+        # thousand_separated_total_sum = locale.currency(all_total, grouping=True)
+
+        thousand_separated_total_sum = formatLang(self.env, all_total)
+
+        for rule in rule_list:
+            row_total[rule['code']] = formatLang(self.env, row_total[rule['code']])
 
         docargs = {
             'doc_ids': self.ids,
@@ -115,6 +133,7 @@ class PayrollReportPivotal(models.AbstractModel):
             'total_sum': thousand_separated_total_sum,
             'amt_to_word': amt_to_word,
             'data': data,
+            'row_total': row_total,
         }
 
         return self.env['report'].render('gbs_hr_payroll.report_individual_payslip', docargs)

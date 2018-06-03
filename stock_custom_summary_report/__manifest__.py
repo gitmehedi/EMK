@@ -5,10 +5,9 @@
     'website': 'www.genweb2.com',
     'category': 'Warehouse Management',
     'depends': [
-        'base',
-        'report',
         'custom_report',
         'stock_operating_unit',
+        'gbs_stock_product',
     ],
     'summary': "This module generate custom report for stock summary",
     'description': """
@@ -16,13 +15,10 @@
         unit wise and in between date range.
     """,
     'data': [
-        'security/ir.model.access.csv',
         # 'security/security.xml',
         'data/default_data.xml',
         'wizard/print_report_view.xml',
         # 'views/inherite_layout.xml',
-        # 'views/inherited_product_template_views.xml',
-        # 'views/inherited_product_category_view.xml',
         'report/stock_inventory_report_view.xml',
 
     ],

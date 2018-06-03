@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <report
+                id="report_individual_paslips"
+                string="Money Receipt"
+                model="account.payment"
+                report_type="qweb-pdf"
+                file="delivery_order.report_individual_payslip"
+                name="delivery_order.report_individual_payslip"
+                paperformat="delivery_order.paperformat_money_receipt_portrait"
+
+        />
+
+    </data>
+</odoo>

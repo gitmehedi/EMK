@@ -3,7 +3,7 @@
 
     <template id="report_transfer_temp" inherit_id="custom_report.gbs_external_layout" primary="True">
         <xpath expr="//t[@t-call='custom_report.gbs_external_layout_header']" position="attributes">
-            <attribute name="t-call">gbs_purchase_requisition.external_layout_header_po</attribute>
+            <attribute name="t-call">stock_transfer_report.external_layout_header_po</attribute>
         </xpath>
     </template>
     <template id="external_layout_header_po" inherit_id="custom_report.gbs_external_layout_header" primary="True">

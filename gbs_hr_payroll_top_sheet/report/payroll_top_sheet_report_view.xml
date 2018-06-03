@@ -19,115 +19,63 @@
                                 </b>
                             </h4>
 
-
                             <table class="table table-bordered table-report-sm table-striped">
                                 <thead style="border-style:none;">
                                     <tr class="odo-bg-gray">
-                                        <th>SN</th>
-                                        <th>Department</th>
-                                        <th>Total Employee</th>
-                                        <th>Total Salary</th>
-                                        <th>Total TDS</th>
-                                        <th>Total PF</th>
-                                        <th>Total Mess</th>
-                                        <t t-if="tot_ods">
-                                            <th>Total Other Deduction</th>
+                                        <t t-foreach="header" t-as="head">
+                                            <th class="text-center">
+                                                <span t-esc="head_value"></span>
+                                            </th>
                                         </t>
-                                        <th>Total Payable</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <t t-set="i" t-value="1"/>
-                                    <t t-foreach="docs" t-as="k">
+                                    <t t-foreach="record" t-as="rec">
                                         <tr style="page-break-inside: avoid">
-                                            <t t-if="k['val']">
-                                                <td>
-                                                    <span t-esc="i"/>
-                                                    <t t-set="i" t-value="i+1"/>
+                                            <td>
+                                                <span class="text-nowrap" t-esc="rec"></span>
+                                            </td>
+                                            <td class="text-right">
+                                                <span t-esc="rec_value['count']"></span>
+                                            </td>
+                                            <t t-foreach="rec_value['vals']" t-as="rule">
+                                                <td class="text-right">
+                                                    <span class="text-nowrap" t-esc="rule_value"></span>
                                                 </td>
-                                                <td>
-                                                    <span class="text-nowrap" t-esc="k['name']"></span>
-                                                </td>
-                                                <t t-foreach="k['val']" t-as="o">
-                                                    <td>
-                                                        <span t-esc="o['count_emp']"></span>
-                                                    </td>
-                                                    <td class="text-right">
-                                                        <span t-esc="'%.2f'% o['gross']"/>
-                                                    </td>
-                                                    <td class="text-right">
-                                                        <span t-esc=" '%.2f'% o['tds']"/>
-                                                    </td>
-                                                    <td class="text-right">
-                                                        <span t-esc="'%.2f'% o['epmf']" widget="monetary"/>
-                                                    </td>
-                                                    <td class="text-right">
-                                                        <span t-esc=" '%.2f'% o['mess']"/>
-                                                    </td>
-                                                    <t t-if="tot_ods">
-                                                        <td class="text-right">
-                                                            <span t-esc=" '%.2f'% o['ods']"/>
-                                                        </td>
-                                                    </t>
-                                                    <td class="text-right">
-                                                        <span t-esc=" '%.2f'% o['total_net']"/>
-                                                    </td>
-                                                </t>
                                             </t>
                                         </tr>
                                     </t>
-                                    <td>
-
-                                    </td>
-                                    <td>
-                                        <h5 style="float:left;border-style:none;">
-                                            <b>Total</b>
-                                        </h5>
-                                    </td>
-                                    <td>
-                                        <span t-esc="tot_emp"/>
-                                    </td>
-                                    <td class="text-right">
-                                        <span t-esc="'%.2f'% tot_gross"/>
-                                    </td>
-                                    <td class="text-right">
-                                        <span t-esc="'%.2f'% tot_tds"/>
-                                    </td>
-                                    <td class="text-right">
-                                        <span t-esc=" '%.2f'% tot_epmf"/>
-                                    </td>
-                                    <td class="text-right">
-                                        <span t-esc="'%.2f'% tot_mess"/>
-                                    </td>
-                                    <t t-if="tot_ods">
-                                        <td class="text-right">
-                                            <span t-esc="'%.2f'% tot_ods"/>
+                                    <tr style="page-break-inside: avoid">
+                                        <td colspan="2">
+                                            <strong class="text-nowrap">Total</strong>
                                         </td>
-                                    </t>
-                                    <td class="text-right">
-                                        <span t-esc="tot_net"/>
-                                    </td>
+                                        <t t-foreach="total" t-as="t">
+                                            <td class="text-right">
+                                                <strong class="text-nowrap" t-esc="t_value"></strong>
+                                            </td>
+                                        </t>
+                                    </tr>
                                 </tbody>
                             </table>
                         </div>
                         <h5>
-                            <b>Bank Credit :</b>
-                            <span t-esc="tot_bank"></span>
-                            (<span t-esc="amt_to_word_bank"/>)
+                            <b>Bank Credit dsfds:</b>
+                            <span t-esc="bnet"></span>
+                            (<span t-esc="amt_to_word_bnet"/>)
                         </h5>
                         <h5>
                             <b>Cash payment :</b>
-                            <span t-esc="tot_cash"></span>
+                            <span t-esc="total_cash"></span>
                             (<span t-esc="amt_to_word_cash"/>)
                         </h5>
                         <h5>
                             <b>Total Fund Required :</b>
-                            <span t-esc="tot_net"></span>
+                            <span t-esc="net"></span>
                             (<span t-esc="amt_to_word_net"/>)
                         </h5>
 
                         <div class="row mb32" style="margin-top: 30mm;">
-                            <div class="col-xs-3 text-center">
+                            <div class="col-xs-3 text-left">
                                 <strong>Initiated By:-------------------</strong>
                                 <br/>Human Resources
                             </div>
@@ -146,12 +94,13 @@
         </template>
 
         <report
-        	id="report_top_sheets"
-            string="Top Sheet"
-            model="hr.payslip.run"
-            report_type="qweb-pdf"
-            file="gbs_hr_payroll_top_sheet.report_top_sheet"
-            name="gbs_hr_payroll_top_sheet.report_top_sheet"
+                id="report_top_sheets"
+                string="Top Sheet"
+                model="hr.payslip.run"
+                report_type="qweb-pdf"
+                file="gbs_hr_payroll_top_sheet.report_top_sheet"
+                name="gbs_hr_payroll_top_sheet.report_top_sheet"
+                paperformat="custom_report.paperformat_backend_landscape"
         />
 
     </data>
