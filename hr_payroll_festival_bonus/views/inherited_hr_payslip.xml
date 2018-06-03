@@ -6,8 +6,14 @@
             <field name="model">hr.payslip.run</field>
             <field name="inherit_id" ref="hr_payroll.hr_payslip_run_form"/>
             <field name="arch" type="xml">
-                <xpath expr="//field[@name='credit_note']" position="after">
-                    <field name="type"/>
+                <xpath expr="//form/sheet/group[1]" position="after">
+                    <group>
+                        <group>
+                            <field name="type"/>
+                            <field name="festival_date"
+                               attrs="{'required': [('type','!=','0')],'invisible': [('type','=','0')]}"/>
+                        </group>
+                    </group>
                 </xpath>
             </field>
         </record>
@@ -18,6 +24,7 @@
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='credit_note']" position="after">
                     <field name="type"/>
+                    <field name="festival_date" attrs="{'required': [('type','!=','0')],'invisible': [('type','=','0')]}"/>
                 </xpath>
             </field>
         </record>
