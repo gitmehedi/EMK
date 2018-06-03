@@ -10,11 +10,11 @@ class ProductGateIn(models.Model):
 
 
     name = fields.Char(string='Name', index=True, readonly=True)
-    create_by = fields.Char('Carried By', readonly=True, states={'draft': [('readonly', False)]},required=True)
-    received = fields.Char('To Whom Received', readonly=True, states={'draft': [('readonly', False)]},required=True)
+    create_by = fields.Char('Carried By',size=100, readonly=True, states={'draft': [('readonly', False)]},required=True)
+    received = fields.Char('To Whom Received',size=100, readonly=True, states={'draft': [('readonly', False)]},required=True)
 
-    challan_bill_no = fields.Char('Challan Bill No', readonly=True, states={'draft': [('readonly', False)]},required=True)
-    truck_no = fields.Char('Truck/Vehicle No', readonly=True, states={'draft': [('readonly', False)]},required=True)
+    challan_bill_no = fields.Char('Challan Bill No',size=100, readonly=True, states={'draft': [('readonly', False)]},required=True)
+    truck_no = fields.Char('Truck/Vehicle No',size=100, readonly=True, states={'draft': [('readonly', False)]},required=True)
 
     shipping_line_ids = fields.One2many('product.gate.line','parent_id',required=True,readonly=True,states={'draft': [('readonly', False)]})
     operating_unit_id = fields.Many2one('operating.unit', string='Operating Unit', required=True,
@@ -52,9 +52,15 @@ class ProductGateIn(models.Model):
         self.shipping_line_ids.write({'state': 'draft'})
 
     @api.onchange('receive_type')
-    def _onchange_is_included_ot(self):
+    def _onchange_receive_type(self):
         if self.receive_type != 'lc':
             self.ship_id = None
+
+    @api.one
+    @api.constrains('date')
+    def _check_date(self):
+        if self.date <= self.ship_id.shipment_date:
+            raise UserError('Gate In Date can not be less then Shipment date!!!')
 
 
     # change data and line data depands on ship_id
@@ -135,3 +141,13 @@ class ShipmentProductLine(models.Model):
         ('draft', "Draft"),
         ('confirm', "Confirm"),
     ], default='draft')
+
+    ####################################################
+    # Business methods
+    ####################################################
+
+    @api.one
+    @api.constrains('product_qty')
+    def _check_product_qty(self):
+        if self.product_qty < 0:
+            raise UserError('You can\'t give negative value!!!')
