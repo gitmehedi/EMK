@@ -5,7 +5,7 @@ class InheritHRPayslipsBatches(models.Model):
 
     type = fields.Selection([("0", "Regular Salary"),
                              ("1", "Festival Bonus"),
-                             ("2", "Salary With Bonus")], "Type", required=True)
+                             ("2", "Salary With Bonus")], "Type", required=True,default="0")
     festival_date = fields.Date('Festival Date')
 
 
