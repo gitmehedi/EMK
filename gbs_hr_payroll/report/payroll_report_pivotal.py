@@ -55,8 +55,9 @@ class PayrollReportPivotal(models.AbstractModel):
                     payslip['emp_seq'] = slip.employee_id.employee_sequence
                     loan_remain = slip.remaining_loan or 0.00
                     payslip['loan_balance'] = formatLang(self.env, loan_remain) if loan_remain else None
-                    payslip['sa'] = formatLang(self.env,slip.employee_id.contract_id.supplementary_allowance)
-                    payslip['basic'] = formatLang(self.env,slip.employee_id.contract_id.wage)
+                    payslip['sa'] = formatLang(self.env,math.ceil(slip.employee_id.contract_id.supplementary_allowance))
+                    gross = math.ceil((slip.employee_id.contract_id.wage)*2.5)
+                    payslip['gross'] = formatLang(self.env,gross)
 
                     for rule in rule_list:
                         payslip[rule['code']] = 0
