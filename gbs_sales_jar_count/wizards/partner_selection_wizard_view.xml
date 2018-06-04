@@ -22,7 +22,7 @@
         </record>
 
         <record id="action_jar_summary_report" model="ir.actions.act_window">
-            <field name="name">JAR Summary Partner Selection</field>
+            <field name="name">JAR Summary</field>
             <field name="res_model">partner.selection.report.wizard</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
