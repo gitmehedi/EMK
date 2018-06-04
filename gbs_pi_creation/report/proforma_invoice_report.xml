@@ -74,9 +74,9 @@
                                         <tr style="page-break-inside: avoid">
                                             <td><span t-esc="l_index+1"/></td>
                                             <td><span t-esc="l['product_id']"/></td>
-                                            <td>Dame</td>
-                                            <td><span t-esc="l['uom']"/></td>
+                                            <td><span t-esc="l['hs_code']"/></td>
                                             <td><span t-esc="l['quantity']"/></td>
+                                            <td><span t-esc="l['uom']"/></td>
                                             <td><span t-esc="'%.2f'% l['price_unit']"/></td>
                                             <td><span t-esc="'%.2f'% l['price_subtotal']"/></td>
                                         </tr>

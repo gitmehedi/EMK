@@ -73,6 +73,7 @@ class PurchaseOrder(models.Model):
         self.notes = requisition.description
         self.date_order = requisition.date_end or fields.Datetime.now()
         self.picking_type_id = requisition.picking_type_id.id
+        self.operating_unit_id = requisition.operating_unit_id.id
 
         if requisition.type_id.line_copy != 'copy':
             return

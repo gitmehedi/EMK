@@ -1,2 +1,1 @@
 import inherited_hr_payslip
-import inherit_hr_contract
