@@ -70,9 +70,12 @@
     <template id="gbs_layout_footer">
         <div class="footer">
             <div class="footer-content text-center">
-                <span t-field="company.partner_id.street"/>
-                <span t-field="company.partner_id.city"/>
-                <!--<span t-field="company.partner_id" t-field-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": true}'/>-->
+                <span t-field="company.partner_id.street"/>,
+                <span t-field="company.partner_id.street2"/>
+                <span t-field="company.partner_id.zip_id.name"/>,
+                <span t-field="company.partner_id.city"/>,
+                <span t-field="company.partner_id.state_id.name"/>,
+                <span t-field="company.partner_id.country_id.name"/>
             </div>
         </div>
     </template>
