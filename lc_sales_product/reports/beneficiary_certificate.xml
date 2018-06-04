@@ -21,7 +21,7 @@
                         <style>
                             .auth-signature { padding: 5px; border-top: 1px dashed #333; float: right; }
                         </style>
-                        <div class="row">
+                        <div class="beneficiary-certf">
                             <div class="clearfix">
                                 <h3 class="report-title">Beneficiary Certificate</h3>
                             </div>
