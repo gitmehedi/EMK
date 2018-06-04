@@ -28,11 +28,9 @@
 												border-bottom: 1px solid #030303;">
                                         <th>SL</th>
                                         <th>Customer</th>
-                                        <th># Jar Taken</th>
-                                        <th># Jar Received</th>
-                                        <th>Jar Received Date</th>
+                                        <th>Jar Type</th>
                                         <th># Due Jar</th>
-                                        <th>UoM</th>
+                                        <th># Jar Taken</th>
                                     </tr>
                                 </thead>
 
@@ -47,20 +45,19 @@
                                                 <span t-esc="k['partner_id']"/>
                                             </td>
                                             <td>
-                                                <span t-esc="k['total_jar_taken']"/>
-                                            </td>
-                                            <td>
-                                                <span t-esc="k['jar_received']"/>
-                                            </td>
-                                            <td>
-                                                <span t-esc="k['jar_received_date']" t-options='{"widget": "date"}'/>
+                                                <span t-esc="k['uom_id']"/>
                                             </td>
                                             <td>
                                                 <span t-esc="k['due_jar']"/>
                                             </td>
+
                                             <td>
-                                                <span t-esc="k['uom_id']"/>
+                                                <span t-esc="k['total_jar_taken']"/>
                                             </td>
+                                            <!--<td>-->
+                                                <!--<span t-esc="k['jar_received']"/>-->
+                                            <!--</td>-->
+
                                         </tr>
                                     </t>
 
