@@ -18,7 +18,7 @@ class ItemBorrowing(models.Model):
     def _get_default_location_id(self):
         return self.env['stock.location'].search([('usage', '=', 'supplier')], limit=1).id
 
-    name = fields.Char('Issue #', size=40, readonly=True, default="/")
+    name = fields.Char('Issue #', size=100, readonly=True, default="/")
     request_date = fields.Datetime('Request Date', required=True, readonly=True,
                                  default=datetime.today())
     issuer_id = fields.Many2one('res.users', string='Issuer', required=True, readonly=True,

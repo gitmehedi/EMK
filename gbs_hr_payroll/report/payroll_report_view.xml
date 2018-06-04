@@ -28,10 +28,10 @@
                                             <th style="min-width:90px">Loan Balance</th>
                                         </t>
                                         <t t-if="data['type'] == '1'">
-                                            <th>Basic</th>
+                                            <th>Gross</th>
                                         </t>
                                         <t t-if="data['type'] == '1'">
-                                            <th>Supplementary Allowance</th>
+                                            <th>Special Allowance</th>
                                         </t>
                                         <t t-foreach="rules" t-as="r">
                                             <th>
@@ -69,12 +69,12 @@
                                                     </t>
                                                     <t t-if="data['type'] == '1'">
                                                         <td>
-                                                            <span t-esc="'%.2f'% o['basic']"></span>
+                                                            <span t-esc="o['gross']"></span>
                                                         </td>
                                                     </t>
                                                     <t t-if="data['type'] == '1'">
                                                         <td>
-                                                            <span t-esc="'%.2f'% o['sa']"></span>
+                                                            <span t-esc="o['sa']"></span>
                                                         </td>
                                                     </t>
                                                     <t t-foreach="rules" t-as="r">
@@ -89,16 +89,17 @@
                                     </t>
 
                                     <tr style="page-break-inside: avoid">
-                                        <td></td>
-                                        <td>Total</td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-
-                                        <t t-foreach="rules" t-as="r">
-                                            <td class="text-right">
-                                                <strong class="text-nowrap" t-esc="row_total[r['code']]"></strong>
-                                            </td>
+                                        <t t-if="data['type'] != '1'">
+                                            <td></td>
+                                            <td>Total</td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <t t-foreach="rules" t-as="r">
+                                                <td class="text-right">
+                                                    <strong class="text-nowrap" t-esc="row_total[r['code']]"></strong>
+                                                </td>
+                                            </t>
                                         </t>
                                     </tr>
 

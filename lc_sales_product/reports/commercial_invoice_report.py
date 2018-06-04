@@ -33,7 +33,7 @@ class CommercialInvoice(models.AbstractModel):
             for prod_line in shipment_obj.lc_id.product_lines:
                 prod = {}
                 prod['name'] = prod_line.product_id.name
-                prod['hs_code'] = 'Dummy'
+                prod['hs_code'] = prod_line.product_id.hs_code_id.display_name
                 prod['quantity'] = prod_line.product_qty
                 prod['product_uom'] = prod_line.product_uom.name
                 prod['unit_price'] = prod_line.price_unit

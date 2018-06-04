@@ -72,11 +72,15 @@ class StockPicking(models.Model):
                                 if picking.backorder_id:
                                     product_line.write({'received_qty': product_line.received_qty + move.product_qty})
                                     if product_line.received_qty == product_line.given_qty:
-                                        product_line.write({'state': 'receive'})
+                                        product_line.write({'state': 'received'})
                                 else:
                                     product_line.write({'received_qty': move.product_qty})
                                     if product_line.received_qty == product_line.given_qty:
-                                        product_line.write({'state': 'receive'})
+                                        product_line.write({'state': 'received'})
+
+                            receiveable_line_list = loan_lending_ids[0].item_lines.filtered(lambda o: o.state in ('approved'))
+                            if not receiveable_line_list:
+                                loan_lending_ids[0].write({'state': 'received'})
 
             if picking.location_dest_id.name == 'Customers':
                 loan_lending_ids = loan_lending_obj.search([('name', '=', picking.origin)])
@@ -88,13 +92,10 @@ class StockPicking(models.Model):
                         else:
                             product_line.write({'given_qty': move.product_qty})
 
-                loan_borrowing_ids = loan_borrowing_obj.search([('return_picking_id', '=', self.id)])
+                loan_borrowing_ids = loan_borrowing_obj.search([('return_picking_ids', '=', self.id)])
                 if loan_borrowing_ids:
                     for product_line in loan_borrowing_ids[0].item_lines:
                         move = picking.move_lines.filtered(lambda o: o.product_id == product_line.product_id)
-                        if picking.backorder_id:
-                            product_line.write({'given_qty': product_line.given_qty + move.product_qty})
-                        else:
-                            product_line.write({'given_qty': move.product_qty})
+                        product_line.write({'given_qty': product_line.given_qty + move.product_qty})
 
         return res
