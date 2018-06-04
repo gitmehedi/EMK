@@ -21,7 +21,7 @@
                         <style>
                             .auth-signature { padding: 5px 0; border-top: 1px dashed #333; float: right; }
                         </style>
-                        <div>
+                        <div class="packing-list">
                             <div class="clearfix">
                                 <h3 class="report-title">Packing List</h3>
                             </div>

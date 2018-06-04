@@ -20,7 +20,7 @@
                         <style>
                             .auth-signature { padding: 5px 0; border-top: 1px dashed #333; float: right; }
                         </style>
-                        <div class="row">
+                        <div class="certificate-oforign">
                             <div class="clearfix">
                                 <h3 class="report-title">Certificate of Origin</h3>
                             </div>

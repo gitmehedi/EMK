@@ -19,7 +19,6 @@
                 <t t-call="custom_report.gbs_custom_pad_report_template">
                     <div class="page" style="page-break-inside: auto">
                         <style>
-                            .page { background: #cfc; }
                             .bank-letter_subject { margin:30px 0; }
                             .bank-letter_body { margin-bottom:30px; }
                             .bank-letter_doclist { width: 80%; margin-left:30px; }
