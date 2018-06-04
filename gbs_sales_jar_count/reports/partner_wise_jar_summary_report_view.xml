@@ -53,7 +53,7 @@
                                                 <span t-esc="k['jar_received']"/>
                                             </td>
                                             <td>
-                                                <span t-esc="k['jar_received_date']"/>
+                                                <span t-esc="k['jar_received_date']" t-options='{"widget": "date"}'/>
                                             </td>
                                             <td>
                                                 <span t-esc="k['due_jar']"/>
