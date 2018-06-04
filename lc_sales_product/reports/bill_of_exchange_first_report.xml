@@ -21,10 +21,10 @@
                         <style>
                             .auth-signature { padding: 5px 0; border-top: 1px dashed #333; float: right; }
                         </style>
-                        <h4 class="text-center"><b>Bill Of Exchange(First)</b></h4>
+                        <h4 class="text-center"><b>Bill Of Exchange (First)</b></h4>
                         <br/>
                         <br/>
-                        <div class="row">
+                        <div class="bill-ofexcfi row">
                             <div class="col-xs-9">
                                 <p>For <span t-esc="data['currency_id']"/> <strong t-esc="data['invoice_value']"/> </p>
                             </div>
