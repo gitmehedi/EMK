@@ -16,7 +16,7 @@
         <template id="report_proforma_invoice">
             <t t-call="report.html_container">
                 <t t-call="custom_report.gbs_custom_pad_report_template">
-                    <div class="page" style="page-break-inside: auto">
+                    <div class="page clearfix blu-border" style="page-break-inside: auto">
                         <style>
                             .proforma-terms p, .proforma-terms li {
                                 padding:0!important; margin:0!important; line-height:normal;
@@ -24,7 +24,7 @@
                             .auth-signature { padding: 5px 0; border-top: 1px dashed #333; float: left; }
                         </style>
                         <div class="clearfix">
-                            <h3 class="text-center">Proforma Invoice</h3>
+                            <h3 class="text-center mt-0">Proforma Invoice</h3>
                             <hr class="hr-sm mb-0"/>
                             <div class="row">
                                 <div class="col-xs-6">
