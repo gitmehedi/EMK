@@ -7,7 +7,7 @@
     'website': 'https://www.genweb2.com',
 
     'depends': [
-        'stock_indent','hr_employee_operating_unit'
+        'stock_indent','operating_unit'
     ],
 
     'data': [

@@ -10,7 +10,7 @@
     'data': [
         'data/data.xml',
         'views/inherited_hr_payslip.xml',
-        'views/inherit_hr_contract.xml',
+        #'views/inherit_hr_contract.xml',
     ],
 
     'summary': 'This Module Generate Payroll Festival Bonus Summary',

@@ -7,7 +7,7 @@
     'depends': [
         'purchase_requisition',
         'purchase_operating_unit',
-        'stock_indent',
+        'indent_operating_unit',
         'ir_sequence_operating_unit',
         'commercial',
         'gbs_application_group',

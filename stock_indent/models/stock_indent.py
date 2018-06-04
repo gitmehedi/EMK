@@ -102,6 +102,12 @@ class IndentIndent(models.Model):
         #     self.stock_location_id = []
         return {'domain': {'stock_location_id': [('id', 'in', self.env.user.location_ids.ids)]}}
 
+    @api.one
+    @api.constrains('required_date')
+    def _check_required_date(self):
+        if self.required_date <= self.indent_date:
+            raise UserError('Required Date can not be less then current date!!!')
+
     @api.multi
     @api.depends('warehouse_id','stock_location_id')
     def _compute_default_picking_type(self):
@@ -346,6 +352,10 @@ class IndentProductLines(models.Model):
     name = fields.Char(related='product_id.name',string='Specification',store=True)
     remarks = fields.Text('Remarks')
     sequence = fields.Integer('Sequence')
+
+    ####################################################
+    # Business methods
+    ####################################################
 
     @api.one
     @api.constrains('product_uom_qty')
