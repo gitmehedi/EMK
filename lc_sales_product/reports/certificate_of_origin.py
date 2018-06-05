@@ -31,8 +31,8 @@ class BeneficiaryCertificate(models.AbstractModel):
         data['second_party_bank'] = shipment_obj.lc_id.second_party_bank
 
         uom = []
-        if shipment_obj.lc_id.product_lines:
-            for prod_line in shipment_obj.lc_id.product_lines:
+        if shipment_obj.shipment_product_lines:
+            for prod_line in shipment_obj.shipment_product_lines:
                 prod = {}
                 prod['name'] = prod_line.product_id.name
                 prod['hs_code'] = prod_line.product_id.hs_code_id.display_name

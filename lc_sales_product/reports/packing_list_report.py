@@ -38,8 +38,8 @@ class PackingList(models.AbstractModel):
             pi_id_list.append({'pi_id':pi_id.name,'pi_date':pi_id.create_date})
 
 
-        if shipment_obj.lc_id.product_lines:
-            for prod_line in shipment_obj.lc_id.product_lines:
+        if shipment_obj.shipment_product_lines:
+            for prod_line in shipment_obj.shipment_product_lines:
                 prod = {}
                 prod['name'] = prod_line.product_id.name
                 prod['hs_code'] = prod_line.product_id.hs_code_id.display_name

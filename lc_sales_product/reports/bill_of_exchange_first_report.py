@@ -31,8 +31,8 @@ class BillExchangeFirst(models.AbstractModel):
         data['issue_date'] = report_utility_pool.getERPDateFormat(report_utility_pool.getDateFromStr(shipment_obj.lc_id.shipment_date))
 
         price =[]
-        if shipment_obj.lc_id.product_lines:
-            for line in shipment_obj.lc_id.product_lines:
+        if shipment_obj.shipment_product_lines:
+            for line in shipment_obj.shipment_product_lines:
                 list_obj = {}
                 list_obj['product_id'] = line.product_id.name
                 list_obj['quantity'] = line.product_qty
