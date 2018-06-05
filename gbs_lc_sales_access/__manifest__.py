@@ -21,13 +21,12 @@
                 'gbs_application_group',
                 'shipment_lc_product',
                 'lc_sales_product',
-                'lc_po_product'
     ],
 
 
     # always loaded
     'data': [
-        # 'security/ir.model.access.csv',
+        'security/ir.model.access.csv',
         'security/ir_rule.xml',
         'views/menu_items.xml',
     ],
