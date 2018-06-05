@@ -16,7 +16,7 @@
         <template id="report_proforma_invoice">
             <t t-call="report.html_container">
                 <t t-call="custom_report.gbs_custom_pad_report_template">
-                    <div class="page clearfix blu-border" style="page-break-inside: auto">
+                    <div class="page clearfix" style="page-break-inside: auto">
                         <style>
                             .proforma-terms p, .proforma-terms li {
                                 padding:0!important; margin:0!important; line-height:normal;

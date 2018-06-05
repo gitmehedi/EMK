@@ -46,7 +46,7 @@
                 .footer-content { width:100%; text-align: center; white-space: no-wrap; }
 
             </style>
-            <div class="header-content clearfix red-border">
+            <div class="header-content clearfix">
                 <div class="com-logo">
                     <img class="com-logo-img" t-if="company.logo" t-att-src="'data:image/png;base64,%s' % company.logo" />
                 </div>
@@ -68,9 +68,9 @@
     </template>
 
     <template id="gbs_layout_footer">
-        <div class="footer clearfix gre-border">
+        <div class="footer clearfix">
             <div class="footer-content text-center">
-                <span t-field="company.partner_id.street"/>,
+                <span t-field="company.partner_id.street"/>
                 <span t-field="company.partner_id.street"/>
                 <span t-field="company.partner_id.street2"/>
                 <span t-field="company.partner_id.zip_id.name"/>
