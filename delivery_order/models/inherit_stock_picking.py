@@ -7,7 +7,7 @@ class InheritStockPicking(models.Model):
     lc_id = fields.Many2one('letter.credit', string='L/C No', readonly=True, compute="_calculate_lc_id", store=False)
 
      ## Relational fields for Transport informations
-    transport_id = fields.Many2one('sales.delivery.goods', string='Transport Info', required=True)
+    transport_id = fields.Many2one('sales.delivery.goods', string='Transport Info',)
 
 
     @api.multi
