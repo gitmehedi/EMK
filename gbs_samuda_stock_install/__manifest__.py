@@ -38,7 +38,7 @@
         'stock_issue_report',
         'stock_inventory_extend',
         'stock_picking_loan',
-
+        'stock_assign_picking',
     ],
 
     'installable': True,

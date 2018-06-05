@@ -20,6 +20,8 @@
         'views/lc_sales_view.xml',
         'views/lc_sales_menu.xml',
         'views/shipment_sale_view.xml',
+        'views/lc_sales_commercial.xml',
+        'views/commercial_sales.xml',
         'reports/bank_top_sheet.xml',
         'reports/bill_of_exchange_first_report.xml',
         'reports/bill_of_exchange_second_report.xml',
