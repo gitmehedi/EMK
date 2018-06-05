@@ -106,6 +106,22 @@
                 action="com_shipment.shipment_creation_action"
                 groups="commercial.group_commercial_user"/>
 
+
+        <menuitem
+                 id="letter_of_credit_report.lc_report_menu_root"
+                 parent="commercial.menu_commercial_root"
+                 name="Reports"
+                 sequence="7"
+                 groups="commercial.group_commercial_user"/>
+
+        <menuitem
+                id="letter_of_credit_report.lc_report_menu"
+                name="Letter of Credit Report"
+                parent="letter_of_credit.lc_report_menu_root"
+                action="letter_of_credit_report.action_letter_of_credit_wizard"
+                groups="commercial.group_commercial_user"/>
+
+
         <menuitem
                 id="gbs_purchase_requisition.menu_commercial_configuration"
                 parent="commercial.menu_commercial_root"
