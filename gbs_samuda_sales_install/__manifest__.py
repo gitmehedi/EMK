@@ -27,6 +27,7 @@
         'sale_operating_unit',
         'lc_sales_product',
         'gbs_lc_sales_access',
+        'gbs_sales_jar_count',
     ],
 
     'data': [ ],
