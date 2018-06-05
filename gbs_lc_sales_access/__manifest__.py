@@ -15,19 +15,23 @@
     'version': '10.0.1.0.0',
 
     'depends': ['base',
+                'gbs_application_group',
                 'commercial',
                 'letter_of_credit',
                 'com_shipment',
-                'gbs_application_group',
                 'shipment_lc_product',
+                'gbs_document_type',
                 'lc_sales_product',
-    ],
-
+                'gbs_pi_creation',
+                'sale',
+                'account',
+                'sale_order_type'
+                ],
 
     # always loaded
     'data': [
         'security/ir.model.access.csv',
-        'security/ir_rule.xml',
-        'views/menu_items.xml',
+        # 'security/ir_rule.xml',
+        # 'views/menu_items.xml',
     ],
 }
