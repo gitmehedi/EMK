@@ -51,7 +51,7 @@ class BillExchangeFirst(models.AbstractModel):
 
         price_total = sum(price)
         total= shipment_obj.invoice_value
-        amt_to_word = self.env['res.currency'].amount_to_word(float(total))
+        amt_to_word = self.env['res.currency'].amount_to_word(float(total),False)
         docargs = {
             'data': data,
             'lists': line_list,

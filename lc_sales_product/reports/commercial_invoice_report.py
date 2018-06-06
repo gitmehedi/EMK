@@ -47,7 +47,7 @@ class CommercialInvoice(models.AbstractModel):
         total_qty = sum(qty_list)
         total_price = sum(total_price_list)
 
-        amt_to_word = self.env['res.currency'].amount_to_word(float(total_price))
+        amt_to_word = self.env['res.currency'].amount_to_word(float(total_price),False)
 
         docargs = {
             'data': data,
