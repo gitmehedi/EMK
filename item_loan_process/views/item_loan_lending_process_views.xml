@@ -35,6 +35,7 @@
                         <button string="Reset to Draft" name="action_draft"
                                 groups="stock.group_stock_manager"
                                 states="waiting_approval" type="object"/>
+
                         <field name="state" widget="statusbar"
                                statusbar_visible="draft,waiting_approval,approved"
                                statusbar_colors='{"reject":"red"}' />

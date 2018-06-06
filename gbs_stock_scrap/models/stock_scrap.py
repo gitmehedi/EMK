@@ -78,6 +78,9 @@ class GBSStockScrap(models.Model):
         picking_id = False
         if self.product_lines:
             picking_id = self._create_pickings_and_procurements()
+            picking_objs = self.env['stock.picking'].search([('id', '=', picking_id)])
+            picking_objs.action_confirm()
+            picking_objs.force_assign()
 
         res = {
             'state': 'approved',
@@ -126,6 +129,7 @@ class GBSStockScrap(models.Model):
                     if picking:
                         picking_id = picking.id
 
+
                 location_id = self.location_id.id
 
                 moves = {
@@ -144,7 +148,7 @@ class GBSStockScrap(models.Model):
 
                 }
                 move = move_obj.create(moves)
-                move.action_done()
+                # move.action_done()
                 self.write({'move_id': move.id})
 
         return picking_id

@@ -17,11 +17,7 @@
     'depends': [
         'purchase_order_revision',
         'gbs_purchase_requisition',
-        'purchase_operating_unit',
-        'commercial',
-        'ir_sequence_operating_unit',
         'stock_operating_unit_extend',
-        'custom_report',
         'amount_to_word_bd',
     ],
     'data': [
