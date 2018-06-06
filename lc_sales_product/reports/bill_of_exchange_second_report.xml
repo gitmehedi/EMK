@@ -50,7 +50,7 @@
                                     </tr>
                                     <tr>
                                         <td class="w20">Sum of <span t-esc="data['currency_id']"/>:</td>
-                                        <td><strong t-esc="amt_to_word"/></td>
+                                        <td><strong t-esc="amt_to_word"/> only</td>
                                     </tr>
                                 </tbody>
                             </table>

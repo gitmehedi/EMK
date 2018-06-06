@@ -163,7 +163,7 @@
                             </table>
 
                             <p>
-                                In Words: <strong t-esc="amt_to_word"/>
+                                In Words: <strong t-esc="amt_to_word"/> only
                             </p>
                             <hr class="hr-xs mb-10"/>
 

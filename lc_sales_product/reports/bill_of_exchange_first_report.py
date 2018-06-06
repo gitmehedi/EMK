@@ -31,6 +31,7 @@ class BillExchangeFirst(models.AbstractModel):
         data['issue_date'] = report_utility_pool.getERPDateFormat(report_utility_pool.getDateFromStr(shipment_obj.lc_id.issue_date))
 
         price =[]
+        uom = []
         if shipment_obj.shipment_product_lines:
             for line in shipment_obj.shipment_product_lines:
                 list_obj = {}
@@ -39,6 +40,7 @@ class BillExchangeFirst(models.AbstractModel):
                 list_obj['uom'] = line.product_uom.name
                 list_obj['price_unit'] = line.price_unit
                 price.append(list_obj['quantity'])
+                uom.append(list_obj['uom'])
                 line_list.append(list_obj)
 
         pi_list =[]
@@ -57,7 +59,8 @@ class BillExchangeFirst(models.AbstractModel):
             'lists': line_list,
             'price_total': price_total,
             'amt_to_word': amt_to_word,
-            'pi_list': pi_list
+            'pi_list': pi_list,
+            'uom': uom[0],
 
         }
         return self.env['report'].render('lc_sales_product.report_bill_exchange', docargs)
