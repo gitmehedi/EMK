@@ -28,7 +28,7 @@ class BillExchangeFirst(models.AbstractModel):
         data['terms_condition'] = shipment_obj.lc_id.terms_condition
         data['tenure'] = shipment_obj.lc_id.tenure
         data['lc_id'] = shipment_obj.lc_id.name
-        data['issue_date'] = report_utility_pool.getERPDateFormat(report_utility_pool.getDateFromStr(shipment_obj.lc_id.shipment_date))
+        data['issue_date'] = report_utility_pool.getERPDateFormat(report_utility_pool.getDateFromStr(shipment_obj.lc_id.issue_date))
 
         price =[]
         if shipment_obj.shipment_product_lines:
