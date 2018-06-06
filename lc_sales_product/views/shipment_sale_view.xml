@@ -6,6 +6,7 @@
                 src_model="purchase.shipment"
                 view_mode="form" target="new"
                 view_type="form"
+                groups="commercial.group_commercial_user_export"
                 id="act_lc_sales_report"/>
 
         <record id="view_shipment_export_form" model="ir.ui.view">
