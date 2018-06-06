@@ -19,18 +19,18 @@ class MrrReport(models.AbstractModel):
         pr_no = False
 
         for picking in origin_picking_objs:
-            if picking.shipment_id.lc_id.po_ids:
-                for po in picking.shipment_id.lc_id.po_ids:
-                    po_no = po.name
-                    po_date = report_utility_pool.getERPDateFormat(report_utility_pool.getDateTimeFromStr(po.date_order))
-                    customer = po.partner_id.name
-                    pr_no = po.requisition_id.name
+            if picking.shipment_id:
+                if picking.shipment_id.lc_id.po_ids:
+                    for po in picking.shipment_id.lc_id.po_ids:
+                        po_no = po.name
+                        po_date = report_utility_pool.getERPDateFormat(report_utility_pool.getDateTimeFromStr(po.date_order))
+                        customer = po.partner_id.name
+                        pr_no = po.requisition_id.name
 
-
-            if picking.shipment_id.gate_in_ids:
-                for gate in picking.shipment_id.gate_in_ids:
-                    challan = gate.challan_bill_no
-                    challan_date = report_utility_pool.getERPDateFormat(report_utility_pool.getDateFromStr(gate.date))
+                if picking.shipment_id.gate_in_ids:
+                    for gate in picking.shipment_id.gate_in_ids:
+                        challan = gate.challan_bill_no
+                        challan_date = report_utility_pool.getERPDateFormat(report_utility_pool.getDateFromStr(gate.date))
 
         for new_picking in this_picking_objs:
             if new_picking.pack_operation_product_ids:

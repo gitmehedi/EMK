@@ -22,8 +22,8 @@
                             .auth-signature { padding: 5px 0; border-top: 1px dashed #333; float: right; }
                         </style>
                         <div class="commercial-invo">
-                            <div class="clearfix">
-                                <h3 class="report-title">Commercial Invoice</h3>
+                            <div class="report-title">
+                                <h3 class="mt-0"><b>Commercial Invoice</b></h3>
                             </div>
                             <table class="table table-bordered mb-0">
                                 <tr>
@@ -110,17 +110,17 @@
                             </table>
 
                             <!--<hr class="hr-xxs"/>-->
-                            <h5 class="text-center"><u>Description of Goods</u></h5>
+                            <h5 class="text-left"><u>Description of Goods</u></h5>
 
-                            <table class="table table-report-xs table-bordered table-striped m-middle" style="width:94%;">
+                            <table class="table table-report-sm table-bordered table-striped m-middle">
                                 <thead>
                                     <tr class="odo-bg-gray">
-                                        <th class="w50">Product</th>
-                                        <th class="w10">H.S Code</th>
-                                        <th class="text-right w10">Qty</th>
-                                        <th class="w10">UoM</th>
-                                        <th class="text-right w10">Unit Price</th>
-                                        <th class="text-right w10">Total Price</th>
+                                        <th class="w50">Products</th>
+                                        <th class="text-center w10">H.S Code</th>
+                                        <th class="text-center w10">Qty</th>
+                                        <th class="text-center w10">UoM</th>
+                                        <th class="text-center w10">Unit Price</th>
+                                        <th class="text-center w10">Total Price</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -135,7 +135,7 @@
                                             <td class="text-right">
                                                 <span t-esc="'%.2f'% l['quantity']"/>
                                             </td>
-                                            <td class="text-right">
+                                            <td>
                                                 <span t-esc="l['product_uom']"/>
                                             </td>
 

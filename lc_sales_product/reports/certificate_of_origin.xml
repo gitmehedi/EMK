@@ -21,8 +21,8 @@
                             .auth-signature { padding: 5px 0; border-top: 1px dashed #333; float: right; }
                         </style>
                         <div class="certificate-oforign">
-                            <div class="clearfix">
-                                <h3 class="report-title">Certificate of Origin</h3>
+                            <div class="report-title">
+                                <h3 class="mt-0"><b>Certificate of Origin</b></h3>
                             </div>
 
                             <table class="table table-bordered mb-0">
@@ -105,13 +105,13 @@
                                 </tr>
                             </table>
 
-                            <h5 class="text-center"><u>Description of Goods</u></h5>
-                            <table class="table table-report table-bordered table-striped">
+                            <h5 class="text-left"><u>Description of Goods</u></h5>
+                            <table class="table table-report-sm table-bordered table-striped">
                                 <thead>
                                     <tr class="odo-bg-gray">
-                                        <th class="w5">SL</th>
-                                        <th>Product</th>
-                                        <th class="w10">H.S Code</th>
+                                        <th class="w5">Sl</th>
+                                        <th>Products</th>
+                                        <th class="w10 text-center">H.S Code</th>
                                     </tr>
                                 </thead>
                                 <tbody>

@@ -21,9 +21,10 @@
                         <style>
                             .auth-signature { padding: 5px 0; border-top: 1px dashed #333; float: right; }
                         </style>
-                        <h4 class="text-center"><b>Bill Of Exchange (Second)</b></h4>
-                        <br/>
-                        <br/>
+                        <div class="report-title">
+                            <h3 class="mt-0"><b>Bill Of Exchange (Second)</b></h3>
+                        </div>
+                        <hr class="hr-sm mb-0"/>
                         <div class="row">
                             <div class="col-xs-9">
                                 <p>For <span t-esc="data['currency_id']"/> <strong t-esc="data['invoice_value']"/> </p>
@@ -58,15 +59,15 @@
                         <hr class="hr-xs"/>
 
                         <div class="clearfix">
-                            <table class="m-middle table table-report table-bordered table-striped mb-0" style="width:94%">
+                            <table class="m-middle table table-report-sm table-bordered table-striped mb-0">
                                 <thead>
                                     <p>Value received against <strong t-esc="price_total"/> delivery of</p>
                                     <tr class="odo-bg-gray">
-                                        <th>Sl#</th>
+                                        <th>Sl</th>
                                         <th>Products</th>
-                                        <th>Quantity</th>
-                                        <th>Unit</th>
-                                        <th>Rate</th>
+                                        <th class="text-center">Qty</th>
+                                        <th class="text-center">Unit</th>
+                                        <th class="text-center">Rate</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -74,9 +75,9 @@
                                         <tr style="page-break-inside: avoid">
                                             <td class="w5"><span t-esc="l_index+1"/></td>
                                             <td class="w60"><span t-esc="l['product_id']"/></td>
-                                            <td class="w10"><span t-esc="'%.2f'% l['quantity']"/></td>
+                                            <td class="w10 text-right"><span t-esc="'%.2f'% l['quantity']"/></td>
                                             <td class="w10"><span t-esc="l['uom']"/></td>
-                                            <td class="w15"><span t-esc="'%.2f'% l['price_unit']"/></td>
+                                            <td class="w15 text-right"><span t-esc="'%.2f'% l['price_unit']"/></td>
                                         </tr>
                                     </t>
                                 </tbody>

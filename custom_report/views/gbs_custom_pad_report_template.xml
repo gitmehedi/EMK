@@ -23,7 +23,7 @@
     </template>
 
     <template id="gbs_layout_header">
-        <div class="header">
+        <div class="header clearfix">
             <style>
                 .header-content { position: relative; }
                 .com-logo { float: left; }
@@ -68,8 +68,9 @@
     </template>
 
     <template id="gbs_layout_footer">
-        <div class="footer">
+        <div class="footer clearfix">
             <div class="footer-content text-center">
+                <span t-field="company.partner_id.street"/>
                 <span t-field="company.partner_id.street"/>
                 <span t-field="company.partner_id.street2"/>
                 <span t-field="company.partner_id.zip_id.name"/>
