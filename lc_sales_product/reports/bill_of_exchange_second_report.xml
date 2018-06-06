@@ -75,8 +75,8 @@
                                         <tr style="page-break-inside: avoid">
                                             <td class="w5"><span t-esc="l_index+1"/></td>
                                             <td class="w60"><span t-esc="l['product_id']"/></td>
+                                            <td class="w10 text-right"><span t-esc="'%.2f'% l['quantity']"/></td>
                                             <td class="w10"><span t-esc="l['uom']"/></td>
-                                            <td class="w10 text-right"><span t-esc="l['quantity']"/></td>
                                             <td class="w15 text-right"><span t-esc="'%.2f'% l['price_unit']"/></td>
                                         </tr>
                                     </t>

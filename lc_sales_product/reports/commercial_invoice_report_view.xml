@@ -133,7 +133,7 @@
                                                 <span t-esc="l['hs_code']"/>
                                             </td>
                                             <td class="text-right">
-                                                <span t-esc="l['quantity']"/>
+                                                <span t-esc="'%.2f'% l['quantity']"/>
                                             </td>
                                             <td>
                                                 <span t-esc="l['product_uom']"/>
