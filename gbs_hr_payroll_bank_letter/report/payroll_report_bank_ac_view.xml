@@ -37,15 +37,17 @@
 									<t t-foreach="docs" t-as="k">
 										<t t-if="k['val']">
 											<t t-foreach="k['val']" t-as="o">
-												<tr>
-													<td><span t-esc="o['sn']"/></td>
-													<td><span t-esc="o['emp_name']"/></td>
-													<td><span t-esc="o['acc_no']"/></td>
+												<t t-if="o['BNET'] != '0.00'">
+													<tr>
+														<td><span t-esc="o['sn']"/></td>
+														<td><span t-esc="o['emp_name']"/></td>
+														<td><span t-esc="o['acc_no']"/></td>
 
-													<td class="text-right">
-														<span t-esc="o['BNET']"/>
-													</td>
-												</tr>
+														<td class="text-right">
+															<span t-esc="o['BNET']"/>
+														</td>
+													</tr>
+												</t>
 											</t>
 										</t>
 									</t>

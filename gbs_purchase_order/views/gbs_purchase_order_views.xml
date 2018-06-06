@@ -53,10 +53,10 @@
                         <button name="button_approve" string="Approve Order" type="object" class="oe_highlight"
                                 states='to approve' groups="purchase.group_purchase_manager,commercial.group_commercial_manager"/>
                     </xpath>
-                    <xpath expr="//field[@name='company_id']" position="after">
-                        <field name="operating_unit_id" groups="operating_unit.group_multi_operating_unit"
-                               options='{"no_open": True,"no_create": 1, "no_create_edit":1}'/>
-                    </xpath>
+                    <!--<xpath expr="//field[@name='company_id']" position="after">-->
+                        <!--<field name="operating_unit_id" groups="operating_unit.group_multi_operating_unit"-->
+                               <!--options='{"no_open": True,"no_create": 1, "no_create_edit":1}'/>-->
+                    <!--</xpath>-->
                     <xpath expr="//field[@name='company_id']" position="after">
                         <field name="check_po_action_button" invisible="1"/>
                     </xpath>
@@ -74,7 +74,7 @@
                     <xpath expr="//field[@name='partner_ref']" position="after">
                         <field name="ref_date"/>
                     </xpath>
-                    <xpath expr="//field[@name='operating_unit_id']" position="after">
+                    <xpath expr="//field[@name='company_id']" position="after">
                         <field name="contact_person" widget="many2many_tags"/>
                     </xpath>
                     <xpath expr="//field[@name='notes']" position="replace">
