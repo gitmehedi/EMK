@@ -50,7 +50,7 @@
                                     </tr>
                                     <tr>
                                         <td class="w20">Sum of <span t-esc="data['currency_id']"/>:</td>
-                                        <td><strong t-esc="amt_to_word"/> only</td>
+                                        <td><strong t-esc="amt_to_word"/> <strong>only</strong></td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -61,7 +61,7 @@
                         <div class="clearfix">
                             <table class="m-middle table table-report-sm table-bordered table-striped mb-0">
                                 <thead>
-                                    <p>Value received against <strong t-esc="price_total"/> delivery of</p>
+                                    <p>Value received against <strong t-esc="price_total"/> <strong t-esc="uom"/> delivery of</p>
                                     <tr class="odo-bg-gray">
                                         <th>Sl</th>
                                         <th>Products</th>
@@ -74,7 +74,7 @@
                                     <t t-foreach="lists" t-as="l">
                                         <tr style="page-break-inside: avoid">
                                             <td class="w5"><span t-esc="l_index+1"/></td>
-                                            <td class="w60"><span t-esc="l['product_id']"/></td>
+                                            <td class="w60"><span t-esc="l['name']"/></td>
                                             <td class="w10 text-right"><span t-esc="'%.2f'% l['quantity']"/></td>
                                             <td class="w10"><span t-esc="l['uom']"/></td>
                                             <td class="w15 text-right"><span t-esc="'%.2f'% l['price_unit']"/></td>

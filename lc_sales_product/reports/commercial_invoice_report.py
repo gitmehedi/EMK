@@ -25,6 +25,7 @@ class CommercialInvoice(models.AbstractModel):
         data['lc_id'] = shipment_obj.lc_id.name
         data['lc_date'] = shipment_obj.lc_id.issue_date
         data['second_party_bank'] = shipment_obj.lc_id.second_party_bank
+        data['currency_id'] = shipment_obj.lc_id.currency_id.name
 
         for pi_id in shipment_obj.lc_id.pi_ids:
             pi_id_list.append({'pi_id':pi_id.name,'pi_date':pi_id.create_date})
@@ -32,7 +33,7 @@ class CommercialInvoice(models.AbstractModel):
         if shipment_obj.shipment_product_lines:
             for prod_line in shipment_obj.shipment_product_lines:
                 prod = {}
-                prod['name'] = prod_line.product_id.name
+                prod['name'] = prod_line.product_id.name_get()[0][1]
                 prod['hs_code'] = prod_line.product_id.hs_code_id.display_name
                 prod['quantity'] = prod_line.product_qty
                 prod['product_uom'] = prod_line.product_uom.name

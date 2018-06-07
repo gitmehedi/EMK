@@ -110,7 +110,7 @@
                             </table>
 
                             <!--<hr class="hr-xxs"/>-->
-                            <h5 class="text-left"><u>Description of Goods</u></h5>
+                            <h5 class="text-left"><u><b>Description of Goods</b></u></h5>
 
                             <table class="table table-report-sm table-bordered table-striped m-middle">
                                 <thead>
@@ -163,7 +163,7 @@
                             </table>
 
                             <p>
-                                In Words: <strong t-esc="amt_to_word"/> only
+                                In Words: <span t-esc="data['currency_id']"/> <strong t-esc="amt_to_word"/> <strong>only</strong>
                             </p>
                             <hr class="hr-xs mb-10"/>
 

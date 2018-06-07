@@ -24,6 +24,7 @@ class GbsProformaInvoice(models.AbstractModel):
         data['transport_by'] = pi_obj.transport_by
         data['terms_condition'] = pi_obj.terms_condition
         data['advising_bank'] = pi_obj.advising_bank_id.name
+        data['bank_add'] = report_utility_pool.getBankAddress(pi_obj.advising_bank_id)
         data['currency'] = pi_obj.currency_id.name
         data['packing'] = pi_obj.packing
         data['terms_of_payment'] = pi_obj.terms_of_payment
@@ -33,7 +34,7 @@ class GbsProformaInvoice(models.AbstractModel):
         if pi_obj.line_ids:
             for line in pi_obj.line_ids:
                 list_obj = {}
-                list_obj['product_id']= line.product_id.name
+                list_obj['pro_name']= line.product_id.name_get()[0][1]
                 list_obj['quantity']= line.quantity
                 list_obj['hs_code']= line.product_id.hs_code_id.display_name
                 list_obj['uom']= line.uom_id.name
