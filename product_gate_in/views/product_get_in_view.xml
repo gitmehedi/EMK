@@ -98,9 +98,9 @@
 
         <!-- menu categories -->
         <!--<menuitem name="Product Gate In" id="product_gate_in_menu" parent="stock.menu_stock_root"-->
-                  <!--groups="gbs_procure_to_pay_access.group_approve_gate_in"/>-->
+                  <!--groups="gbs_procure_n_commercial_access.group_approve_gate_in"/>-->
         <!--<menuitem name="Gate In" id="product_gate_in_sub_menu" parent="product_gate_in_menu" sequence="5"-->
-                  <!--action="product_gate_in_action_window" groups="gbs_procure_to_pay_access.group_approve_gate_in"/>-->
+                  <!--action="product_gate_in_action_window" groups="gbs_procure_n_commercial_access.group_approve_gate_in"/>-->
         <menuitem name="Product Gate In" id="product_gate_in_menu" parent="stock.menu_stock_root"/>
         <menuitem name="Gate In" id="product_gate_in_sub_menu" parent="product_gate_in_menu" sequence="5"
                   action="product_gate_in_action_window"/>
