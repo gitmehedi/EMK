@@ -72,7 +72,6 @@
             <div class="footer-content text-center">
                 <span t-field="company.partner_id.name"/>,
                 <span t-field="company.partner_id.street"/>
-                <span t-field="company.partner_id.street"/>
                 <span t-field="company.partner_id.street2"/>
                 <span t-field="company.partner_id.zip_id.name"/>
                 <span t-field="company.partner_id.city"/>
