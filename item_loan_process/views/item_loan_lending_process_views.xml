@@ -7,7 +7,7 @@
             <field name="model">item.loan.lending</field>
             <field name="arch" type="xml">
                 <tree string="Item Loan Lending" ecoration-bf="message_needaction == True"
-                      colors="gray:state=='approved';green:state=='waiting_approval';red:state=='reject';">
+                      colors="gray:state=='received';green:state=='waiting_approval';red:state=='reject';">
                     <field name="name" />
                     <field name="issuer_id" />
                     <field name="request_date" />

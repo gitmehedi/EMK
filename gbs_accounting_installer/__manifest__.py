@@ -19,6 +19,7 @@
                 'customer_outstanding_statement',
                 'account_journal_report',
                 'custom_amount_conversion',
+                'cheque_printing',
                 ],
 
     'data': [ ],
