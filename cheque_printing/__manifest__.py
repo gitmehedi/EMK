@@ -11,10 +11,12 @@
     'data': [
         'security/security.xml',
         'security/ir.model.access.csv',
+        'wizards/cheque_info_wizard_views.xml',
+        'views/cheque_pay_confirmation_view.xml',
         'views/cheque_info_entry_view.xml',
     ],
 
-    'summary': 'Cheque Printing',
+    'summary': 'Cheque Printing & Journal Entry',
     'installable': True,
     'application': False,
 }
