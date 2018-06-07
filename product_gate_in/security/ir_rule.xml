@@ -9,6 +9,6 @@
         <!--<field name="perm_create" eval="True"/>-->
         <!--<field name="perm_write" eval="True"/>-->
         <!--<field name="perm_unlink" eval="False"/>-->
-        <!--<field name="groups" eval="[(4,ref('gbs_procure_to_pay_access.group_approve_gate_in'))]"/>-->
+        <!--<field name="groups" eval="[(4,ref('gbs_procure_n_commercial_access.group_approve_gate_in'))]"/>-->
     <!--</record>-->
 </odoo>

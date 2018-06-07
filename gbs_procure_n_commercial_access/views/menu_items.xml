@@ -127,7 +127,7 @@
                 parent="commercial.menu_commercial_root"
                 sequence="100"
                 name="Configuration"
-                groups="commercial.group_commercial_manager"/>
+                groups="commercial.group_commercial_manager,commercial.group_commercial_manager_export"/>
 
         <menuitem
                 id="gbs_purchase_requisition.submenu_commercial_customer"
@@ -135,7 +135,7 @@
                 parent="gbs_purchase_requisition.menu_commercial_configuration"
                 sequence="1"
                 action="base.action_partner_customer_form"
-                groups="commercial.group_commercial_manager"/>
+                groups="commercial.group_commercial_manager,commercial.group_commercial_manager_export"/>
 
         <menuitem
                 id="gbs_purchase_requisition.submenu_commercial_products"
@@ -143,7 +143,7 @@
                 parent="gbs_purchase_requisition.menu_commercial_configuration"
                 sequence="2"
                 action="product.product_template_action"
-                groups="commercial.group_commercial_manager"/>
+                groups="commercial.group_commercial_manager,commercial.group_commercial_manager_export"/>
 
         <menuitem
 				name="Question Set"
@@ -152,6 +152,20 @@
 				id="question_set.hr_criteria_main_me"
                 action="question_set.action_lc_criteria"
                 groups="commercial.group_commercial_manager"/>
+
+        <menuitem id="main_menu_lc_sales_comm"
+                  parent="commercial.menu_commercial_root"
+                  sequence="1" name="Sales" groups="commercial.group_commercial_user_export"/>
+
+        <menuitem id="menu_lc_sales_comm"
+                  parent="main_menu_lc_sales_comm"
+                  sequence="1" name="Sale Order"
+                  action="lc_sales_product.action_sale_order_comm" groups="commercial.group_commercial_user_export"/>
+
+        <menuitem id="menu_lc_pi_comm"
+                  parent="main_menu_lc_sales_comm"
+                  sequence="2" name="Proforma Invoice"
+                  action="lc_sales_product.action_sale_pi_comm" groups="commercial.group_commercial_user_export"/>
 
     </data>
 </odoo>
