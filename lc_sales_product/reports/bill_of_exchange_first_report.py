@@ -35,7 +35,7 @@ class BillExchangeFirst(models.AbstractModel):
         if shipment_obj.shipment_product_lines:
             for line in shipment_obj.shipment_product_lines:
                 list_obj = {}
-                list_obj['product_id'] = line.product_id.name
+                list_obj['name'] = line.product_id.name_get()[0][1]
                 list_obj['quantity'] = line.product_qty
                 list_obj['uom'] = line.product_uom.name
                 list_obj['price_unit'] = line.price_unit

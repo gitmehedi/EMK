@@ -58,7 +58,7 @@
                         </div>
                         <div class="clearfix mb-10">
                             <hr class="hr-xxs m-0"/>
-                            <h5 class="text-left mt-5"><u>Description of Goods</u></h5>
+                            <h5 class="text-left mt-5"><u><b>Description of Goods</b></u></h5>
                             <table class="table table-report-sm table-bordered table-striped mb-0">
                                 <thead>
                                     <tr class="odo-bg-gray">
@@ -75,7 +75,7 @@
                                     <t t-foreach="line_list" t-as="l">
                                         <tr style="page-break-inside: avoid">
                                             <td><span t-esc="l_index+1"/></td>
-                                            <td><span t-esc="l['product_id']"/></td>
+                                            <td><span t-esc="l['pro_name']"/></td>
                                             <td><span t-esc="l['hs_code']"/></td>
                                             <td class="text-right"><span t-esc="l['quantity']"/></td>
                                             <td><span t-esc="l['uom']"/></td>
@@ -84,7 +84,7 @@
                                         </tr>
                                     </t>
                                     <tr>
-                                        <td colspan="6" rowspan="2"><strong>Amount in words : </strong> <span t-esc="data['currency']"/> <span t-esc="amt_to_word"/></td>
+                                        <td colspan="6" rowspan="2"><strong>Amount in words : </strong> <span t-esc="data['currency']"/> <span t-esc="amt_to_word"/> only</td>
                                         <td class="text-right"><strong>Total : </strong><span t-esc="'%.2f'% total_amount"/></td>
                                     </tr>
                                 </tbody>
@@ -94,7 +94,7 @@
                             <div class="row">
                                 <div class="col-xs-6">
                                     <p><b>Advising Bank : </b><span t-esc="data['advising_bank']"/> <br/>
-                                        <b>Bank Address : </b><span t-esc="data['customer_add']"/></p>
+                                        <b>Bank Address : </b><span t-esc="data['bank_add']"/></p>
                                 </div>
                                 <div class="col-xs-6 text-left">
                                     <p><b>Packing : </b><span t-esc="data['packing']"/> <br/>
