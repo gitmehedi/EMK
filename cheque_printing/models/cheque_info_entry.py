@@ -7,11 +7,14 @@ class ChequeInfoEntry(models.Model):
     _name = 'cheque.info.entry'
     _description = 'Cheque Info Entry'
     _rec_name = 'partner_id'
+    _inherit = ['mail.thread']
 
     partner_id = fields.Many2one('res.partner', string='Customer', domain=[('customer', '=', True)], required=True, )
     cheque_number = fields.Integer(string='Cheque No.', required=True,)
     cheque_date = fields.Date(string='Date', required=True,)
     amount = fields.Float(string='Amount', required=True, )
+
+    is_cheque_paid = fields.Boolean(string='Is Cheque Paid', default=False)
 
     state = fields.Selection([
         ('draft', 'Draft'),
