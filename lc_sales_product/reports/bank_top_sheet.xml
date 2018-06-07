@@ -4,7 +4,7 @@
     <data>
         <report
                 id="action_top_sheet"
-                string="BankTopSheet"
+                string="Bank Forwarding"
                 model="purchase.shipment"
                 report_type="qweb-pdf"
                 file="lc_sales_product.report_top_sheet"

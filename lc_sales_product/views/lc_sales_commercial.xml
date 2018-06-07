@@ -29,18 +29,18 @@
             </field>
         </record>
 
-        <menuitem id="main_menu_lc_sales_comm"
-                  parent="commercial.menu_commercial_root"
-                  sequence="1" name="Sales"/>
+        <!--<menuitem id="main_menu_lc_sales_comm"-->
+                  <!--parent="commercial.menu_commercial_root"-->
+                  <!--sequence="1" name="Sales" />-->
 
-        <menuitem id="menu_lc_sales_comm"
-                  parent="main_menu_lc_sales_comm"
-                  sequence="1" name="Sales"
-                  action="action_sale_order_comm"/>
+        <!--<menuitem id="menu_lc_sales_comm"-->
+                  <!--parent="main_menu_lc_sales_comm"-->
+                  <!--sequence="1" name="Sale Order"-->
+                  <!--action="action_sale_order_comm"/>-->
 
-        <menuitem id="menu_lc_pi_comm"
-                  parent="main_menu_lc_sales_comm"
-                  sequence="2" name="Proforma Invoice"
-                  action="action_sale_pi_comm"/>
+        <!--<menuitem id="menu_lc_pi_comm"-->
+                  <!--parent="main_menu_lc_sales_comm"-->
+                  <!--sequence="2" name="Proforma Invoice"-->
+                  <!--action="action_sale_pi_comm"/>-->
     </data>
 </odoo>

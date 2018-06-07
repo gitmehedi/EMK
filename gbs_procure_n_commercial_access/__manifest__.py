@@ -35,6 +35,8 @@
                 'lc_sales_product',
                 'product_gate_in',
                 'letter_of_credit_report',
+                'gbs_document_type',
+                'terms_setup',
     ],
 
 

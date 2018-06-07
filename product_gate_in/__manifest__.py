@@ -6,7 +6,6 @@
     'website': 'www.genweb2.com',
     'summary': "This module handles purchase product gate in process in a customized business logic way.",
     'depends': [
-        # 'gbs_procure_to_pay_access',
         'com_shipment',
         'stock_operating_unit',
         'ir_sequence_operating_unit',
