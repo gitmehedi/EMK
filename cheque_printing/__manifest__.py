@@ -14,6 +14,7 @@
         'wizards/cheque_info_wizard_views.xml',
         'views/cheque_pay_confirmation_view.xml',
         'views/cheque_info_entry_view.xml',
+        'views/inherited_account_payment_view.xml',
     ],
 
     'summary': 'Cheque Printing & Journal Entry',
