@@ -1,2 +1,3 @@
 import cheque_info_entry
 import cheque_pay_confirmation
+import inherit_account_payment
