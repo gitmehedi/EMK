@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 {
-    'name': "GBS Samuda Stock Install",
+    'name': "GBS Samuda Stock Installer",
 
     'summary': """
-        Installetion Module for Inventory""",
+        Installation Module for Inventory""",
 
     'description': """
         All inventory related modules are install by this module. 
@@ -16,6 +16,7 @@
     'version': '10.0.1',
 
     'depends': [
+        'stock_assign_picking',
         'stock_indent',
         'indent_operating_unit',
         'gbs_stock_product',
@@ -38,7 +39,6 @@
         'stock_issue_report',
         'stock_inventory_extend',
         'stock_picking_loan',
-        'stock_assign_picking',
     ],
 
     'installable': True,

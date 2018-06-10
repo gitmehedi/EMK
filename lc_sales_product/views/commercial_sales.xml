@@ -12,9 +12,6 @@
                 <xpath expr="//header/button[@name='action_quotation_send']" position="attributes">
                     <attribute name="groups">sales_team.group_sale_salesman_all_leads</attribute>
                 </xpath>
-                <xpath expr="//header/button[@name='action_create_delivery_order']" position="attributes">
-                    <attribute name="groups">sales_team.group_sale_salesman_all_leads</attribute>
-                </xpath>
                 <xpath expr="//header/button[@name='%(sale.action_view_sale_advance_payment_inv)d']" position="attributes">
                     <attribute name="groups">sales_team.group_sale_salesman_all_leads</attribute>
                 </xpath>
