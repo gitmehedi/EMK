@@ -61,7 +61,7 @@ class LetterOfCredit(models.Model):
         number = len(self.old_revision_ids)
 
         comm_utility_pool = self.env['commercial.utility']
-        note = comm_utility_pool.getStrNumber(number) + ' ' + Status.AMENDMENT.value
+        note = comm_utility_pool.getStrNumber(number) + ' ' + Status.AMENDMENT
 
         self.write({'state': self.state, 'last_note': note})
         return {
@@ -105,7 +105,7 @@ class LetterOfCredit(models.Model):
 
     @api.multi
     def action_lc_done_export(self):
-        self.write({'state': 'done', 'last_note': Status.DONE.value})
+        self.write({'state': 'done', 'last_note': Status.DONE})
 
 
 

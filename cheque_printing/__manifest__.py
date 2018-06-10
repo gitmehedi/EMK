@@ -15,6 +15,7 @@
         'views/cheque_pay_confirmation_view.xml',
         'views/cheque_info_entry_view.xml',
         'views/inherited_account_payment_view.xml',
+        'reports/cheque_printing_report_view.xml',
     ],
 
     'summary': 'Cheque Printing & Journal Entry',

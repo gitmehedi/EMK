@@ -38,6 +38,7 @@
                             <field name="min_date"/>
                             <field name="partner_id" attrs="{'invisible': [('picking_type_code', '=', 'internal')],'required':[('receive_type', 'in',['lc','other'])]}"/>
                             <field name="challan_bill_no" attrs="{'required':[('receive_type', 'in',['lc','other'])]}"/>
+                            <field name="date_done"/>
                             <label for="owner_id" groups="stock.group_tracking_owner"/>
                             <div groups="stock.group_tracking_owner">
                                 <field name="owner_id"/>

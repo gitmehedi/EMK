@@ -13,7 +13,6 @@
         'gbs_document_type',
         'custom_report',
         'amount_to_word_bd',
-        'custom_report',
         'product_harmonized_system'
     ],
 
