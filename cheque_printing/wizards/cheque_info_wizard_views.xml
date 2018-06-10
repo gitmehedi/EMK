@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+	<data>
+		<record id="cheque_info_form" model="ir.ui.view">
+			<field name="name">cheque.info.wizard.Wizard</field>
+			<field name="model">cheque.info.wizard</field>
+			<field name="arch" type="xml">
+				<form string="Cheque Info">
+                    <header>
+                        <button icon="fa-cogs" string="Process" name="process_cheque_info_line" type="object" class="oe_highlight"  />
+                    </header>
+                    <group>
+                        <label colspan="4" nolabel="1" string="This form will process for all selected employee(s)." />                    </group>
+                    <group colspan="4" >
+                        <separator string="Cheque Info" colspan="4"/>
+                        <newline/>
+                        <field name="cheque_info_ids" nolabel="1" >
+                        	<tree string="List" editable="bottom">
+                        		<field name="partner_id"/>
+								<field name="amount"/>
+                        		<field name="cheque_date"/>
+                        	</tree>
+                        </field>
+                    </group>
+               </form>
+			</field>
+		</record>
+		
+		
+		<record id="cheque_info_wizard_actions" model="ir.actions.act_window">
+			<field name="name">Cheque Information Selection</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">cheque.info.wizard</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">form</field>
+			<field name="target">new</field>
+		</record>
+		
+	</data>
+</odoo>

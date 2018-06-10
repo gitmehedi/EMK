@@ -1,0 +1,3 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_cheque_create_user,access_cheque_create_user,model_cheque_info_entry,cheque_printing.group_cheque_prepare_user,1,1,1,0
+access_cheque_approval_user,access_cheque_approval_user,model_cheque_info_entry,cheque_printing.group_cheque_approval_user,1,1,1,0

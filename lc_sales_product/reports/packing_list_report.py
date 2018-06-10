@@ -38,10 +38,10 @@ class PackingList(models.AbstractModel):
             pi_id_list.append({'pi_id':pi_id.name,'pi_date':pi_id.create_date})
 
 
-        if shipment_obj.lc_id.product_lines:
-            for prod_line in shipment_obj.lc_id.product_lines:
+        if shipment_obj.shipment_product_lines:
+            for prod_line in shipment_obj.shipment_product_lines:
                 prod = {}
-                prod['name'] = prod_line.product_id.name
+                prod['name'] = prod_line.product_id.name_get()[0][1]
                 prod['hs_code'] = prod_line.product_id.hs_code_id.display_name
                 prod['quantity'] = prod_line.product_qty
                 prod['product_uom'] = prod_line.product_uom.name
@@ -56,7 +56,7 @@ class PackingList(models.AbstractModel):
         total_qty = sum(qty_list)
         total_price = sum(total_price_list)
 
-        amt_to_word = self.env['res.currency'].amount_to_word(float(total_price))
+        amt_to_word = self.env['res.currency'].amount_to_word(float(total_price),False)
 
         docargs = {
             'data': data,

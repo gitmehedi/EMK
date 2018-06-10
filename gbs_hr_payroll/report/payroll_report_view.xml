@@ -31,7 +31,7 @@
                                             <th>Gross</th>
                                         </t>
                                         <t t-if="data['type'] == '1'">
-                                            <th>Supplementary Allowance</th>
+                                            <th>Special Allowance</th>
                                         </t>
                                         <t t-foreach="rules" t-as="r">
                                             <th>

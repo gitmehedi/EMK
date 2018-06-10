@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
 {
-    'name': "Procure To Pay Access",
+    'name': "GBS Procure To Pay & Commercial Access",
 
     'summary': """
         This module will install base required addons.""",
 
     'description': """
-        This module will install base required addons.
+        This module will install base required addons for Samuda chemical.  
     """,
 
     'author': "Genweb2 Limited",
@@ -34,6 +34,9 @@
                 'shipment_lc_product',
                 'lc_sales_product',
                 'product_gate_in',
+                'letter_of_credit_report',
+                'gbs_document_type',
+                'terms_setup',
     ],
 
 

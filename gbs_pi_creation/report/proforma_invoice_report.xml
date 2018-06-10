@@ -16,7 +16,7 @@
         <template id="report_proforma_invoice">
             <t t-call="report.html_container">
                 <t t-call="custom_report.gbs_custom_pad_report_template">
-                    <div class="page" style="page-break-inside: auto">
+                    <div class="page clearfix" style="page-break-inside: auto">
                         <style>
                             .proforma-terms p, .proforma-terms li {
                                 padding:0!important; margin:0!important; line-height:normal;
@@ -24,7 +24,9 @@
                             .auth-signature { padding: 5px 0; border-top: 1px dashed #333; float: left; }
                         </style>
                         <div class="clearfix">
-                            <h3 class="text-center">Proforma Invoice</h3>
+                            <div class="report-title">
+                                <h3 class="mt-0"><b>Proforma Invoice</b></h3>
+                            </div>
                             <hr class="hr-sm mb-0"/>
                             <div class="row">
                                 <div class="col-xs-6">
@@ -56,34 +58,34 @@
                         </div>
                         <div class="clearfix mb-10">
                             <hr class="hr-xxs m-0"/>
-                            <h5 class="text-center mt-5"><u>Description of Goods</u></h5>
-                            <table class="table table-report table-bordered table-striped mb-0">
+                            <h5 class="text-left mt-5"><u><b>Description of Goods</b></u></h5>
+                            <table class="table table-report-sm table-bordered table-striped mb-0">
                                 <thead>
                                     <tr class="odo-bg-gray">
-                                        <th class="w5">Sl#</th>
-                                        <th>Description of Goods</th>
-                                        <th>HS Code</th>
-                                        <th class="w10">Qty</th>
-                                        <th>Unit</th>
-                                        <th>Rate</th>
-                                        <th>Amount</th>
+                                        <th class="w5">Sl</th>
+                                        <th>Products</th>
+                                        <th class="text-center">HS Code</th>
+                                        <th class="w10 text-center">Qty</th>
+                                        <th class="text-center">Unit</th>
+                                        <th class="text-center">Rate</th>
+                                        <th class="text-center">Amount</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <t t-foreach="line_list" t-as="l">
                                         <tr style="page-break-inside: avoid">
                                             <td><span t-esc="l_index+1"/></td>
-                                            <td><span t-esc="l['product_id']"/></td>
+                                            <td><span t-esc="l['pro_name']"/></td>
                                             <td><span t-esc="l['hs_code']"/></td>
-                                            <td><span t-esc="l['quantity']"/></td>
+                                            <td class="text-right"><span t-esc="l['quantity']"/></td>
                                             <td><span t-esc="l['uom']"/></td>
-                                            <td><span t-esc="'%.2f'% l['price_unit']"/></td>
-                                            <td><span t-esc="'%.2f'% l['price_subtotal']"/></td>
+                                            <td class="text-right"><span t-esc="'%.2f'% l['price_unit']"/></td>
+                                            <td class="text-right"><span t-esc="'%.2f'% l['price_subtotal']"/></td>
                                         </tr>
                                     </t>
                                     <tr>
-                                        <td colspan="6" rowspan="2"><strong>Amount in words : </strong> <span t-esc="data['currency']"/> <span t-esc="amt_to_word"/></td>
-                                        <td><strong>Total : </strong><span t-esc="'%.2f'% total_amount"/></td>
+                                        <td colspan="6" rowspan="2"><strong>Amount in words : </strong> <span t-esc="data['currency']"/> <span t-esc="amt_to_word"/> only</td>
+                                        <td class="text-right"><strong>Total : </strong><span t-esc="'%.2f'% total_amount"/></td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -92,7 +94,7 @@
                             <div class="row">
                                 <div class="col-xs-6">
                                     <p><b>Advising Bank : </b><span t-esc="data['advising_bank']"/> <br/>
-                                        <b>Bank Address : </b><span t-esc="data['customer_add']"/></p>
+                                        <b>Bank Address : </b><span t-esc="data['bank_add']"/></p>
                                 </div>
                                 <div class="col-xs-6 text-left">
                                     <p><b>Packing : </b><span t-esc="data['packing']"/> <br/>

@@ -4,7 +4,7 @@
     <data>
         <report
                 id="action_top_sheet"
-                string="BankTopSheet"
+                string="Bank Forwarding"
                 model="purchase.shipment"
                 report_type="qweb-pdf"
                 file="lc_sales_product.report_top_sheet"
@@ -25,6 +25,11 @@
                             .bank-letter_doclist > tbody > tr > td {
                                 border:0 none!important; padding: 0px!important;
                             }
+                            .bank-letter_head p,
+                            .bank-letter_head span,
+                            .bank-letter_head div {
+                                margin:0; padding:0;
+                            }
                             .auth-signature { padding: 5px 0; border-top: 1px dashed #333; float: left; }
                         </style>
                         <div class="bank-letter">
@@ -34,7 +39,7 @@
                                 <p>To, <br/>
                                     The Manager <br/>
                                     <span t-esc="data['first_party_bank']"/> <br/>
-                                    <span t-raw="data['first_party_bank_add']"/> <br/>
+                                    <span t-raw="data['first_party_bank_add']"/>
                                 </p>
                             </div>
                             <div class="bank-letter_subject">

@@ -37,7 +37,7 @@ class ProductGateIn(models.Model):
     state = fields.Selection([
         ('draft', "Draft"),
         ('confirm', "Confirm"),
-    ], default='draft')
+    ], default='draft',track_visibility='onchange')
 
     #change state, update line data, update 'purchase.shipment' model state
     @api.multi

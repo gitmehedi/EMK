@@ -7,7 +7,7 @@
             <field name="model">item.loan.lending</field>
             <field name="arch" type="xml">
                 <tree string="Item Loan Lending" ecoration-bf="message_needaction == True"
-                      colors="gray:state=='approved';green:state=='waiting_approval';red:state=='reject';">
+                      colors="gray:state=='received';green:state=='waiting_approval';red:state=='reject';">
                     <field name="name" />
                     <field name="issuer_id" />
                     <field name="request_date" />
@@ -35,6 +35,7 @@
                         <button string="Reset to Draft" name="action_draft"
                                 groups="stock.group_stock_manager"
                                 states="waiting_approval" type="object"/>
+
                         <field name="state" widget="statusbar"
                                statusbar_visible="draft,waiting_approval,approved"
                                statusbar_colors='{"reject":"red"}' />

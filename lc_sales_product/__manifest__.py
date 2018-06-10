@@ -5,6 +5,7 @@
     'category': 'Commercial',
     'version':'10.0.1.0.0',
     'depends': [
+        'sale',
         'letter_of_credit',
         'com_shipment',
         'shipment_lc_product',
@@ -20,6 +21,8 @@
         'views/lc_sales_view.xml',
         'views/lc_sales_menu.xml',
         'views/shipment_sale_view.xml',
+        'views/lc_sales_commercial.xml',
+        'views/commercial_sales.xml',
         'reports/bank_top_sheet.xml',
         'reports/bill_of_exchange_first_report.xml',
         'reports/bill_of_exchange_second_report.xml',

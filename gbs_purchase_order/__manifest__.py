@@ -12,15 +12,12 @@
     'author': "Genweb2 Limited",
     'website': "https://www.genweb2.com",
 
-    'category': 'Uncategorized',
+    'category': 'Purchase',
     'version': '10.0.1',
     'depends': [
         'purchase_order_revision',
         'gbs_purchase_requisition',
-        'commercial',
-        'ir_sequence_operating_unit',
         'stock_operating_unit_extend',
-        'custom_report',
         'amount_to_word_bd',
     ],
     'data': [

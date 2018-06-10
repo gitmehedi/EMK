@@ -9,7 +9,7 @@
                 <form string="Print Reports" create="false" edit="false">
                     <group>
                         <group>
-                            <button string="Bank Top Sheet" name="process_report" type="object" class="oe_highlight"/>
+                            <button string="Bank Forwarding" name="process_report" type="object" class="oe_highlight"/>
                         </group>
                         <group>
                             <button string="Commercial Invoice" name="process_commercial_invoice" type="object" class="oe_highlight"/>

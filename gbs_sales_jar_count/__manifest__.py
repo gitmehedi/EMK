@@ -11,6 +11,9 @@
     'data': [
         'views/uom_jar_summary_view.xml',
         'views/uom_jar_received_view.xml',
+        'wizards/partner_selection_wizard_view.xml',
+        'reports/partner_wise_jar_summary_report_view.xml',
+        'reports/jar_summary_analytic_report_view.xml',
     ],
 
     'summary': 'Summary of Jar taken or returned',

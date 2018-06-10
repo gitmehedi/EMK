@@ -28,17 +28,19 @@ class BillExchangeFirst(models.AbstractModel):
         data['terms_condition'] = shipment_obj.lc_id.terms_condition
         data['tenure'] = shipment_obj.lc_id.tenure
         data['lc_id'] = shipment_obj.lc_id.name
-        data['issue_date'] = report_utility_pool.getERPDateFormat(report_utility_pool.getDateFromStr(shipment_obj.lc_id.shipment_date))
+        data['issue_date'] = report_utility_pool.getERPDateFormat(report_utility_pool.getDateFromStr(shipment_obj.lc_id.issue_date))
 
         price =[]
+        uom = []
         if shipment_obj.shipment_product_lines:
             for line in shipment_obj.shipment_product_lines:
                 list_obj = {}
-                list_obj['product_id'] = line.product_id.name
+                list_obj['name'] = line.product_id.name_get()[0][1]
                 list_obj['quantity'] = line.product_qty
                 list_obj['uom'] = line.product_uom.name
                 list_obj['price_unit'] = line.price_unit
                 price.append(list_obj['quantity'])
+                uom.append(list_obj['uom'])
                 line_list.append(list_obj)
 
         pi_list =[]
@@ -51,13 +53,14 @@ class BillExchangeFirst(models.AbstractModel):
 
         price_total = sum(price)
         total= shipment_obj.invoice_value
-        amt_to_word = self.env['res.currency'].amount_to_word(float(total))
+        amt_to_word = self.env['res.currency'].amount_to_word(float(total),False)
         docargs = {
             'data': data,
             'lists': line_list,
             'price_total': price_total,
             'amt_to_word': amt_to_word,
-            'pi_list': pi_list
+            'pi_list': pi_list,
+            'uom': uom[0],
 
         }
         return self.env['report'].render('lc_sales_product.report_bill_exchange', docargs)
