@@ -5,6 +5,7 @@
     'category': 'Commercial',
     'version':'10.0.1.0.0',
     'depends': [
+        'sale',
         'letter_of_credit',
         'com_shipment',
         'shipment_lc_product',
@@ -12,7 +13,6 @@
         'gbs_document_type',
         'custom_report',
         'amount_to_word_bd',
-        'custom_report',
         'product_harmonized_system'
     ],
 

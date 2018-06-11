@@ -63,7 +63,7 @@ class ItemBorrowing(models.Model):
                         'operating_unit_id': self.operating_unit_id.id,
                         'state': 'draft',
                         'invoice_state': 'none',
-                        'origin': 'Return/'+self.name,
+                        'origin': 'RETURN/'+self.name,
                         'name': pick_name,
                         'date': self.request_date,
                         'partner_id': self.partner_id.id or False,

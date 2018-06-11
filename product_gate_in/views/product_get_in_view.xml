@@ -29,9 +29,9 @@
                     <header>
                         <button string="Confirm" name="action_confirm" states="draft" type="object"
                                 class="oe_highlight"/>
-                        <button name="action_draft" type="object"
-                                string="Reset to Draft"
-                                states="confirm" groups="base_technical_features.group_technical_features"/>
+                        <!--<button name="action_draft" type="object"-->
+                                <!--string="Reset to Draft"-->
+                                <!--states="confirm" groups="base_technical_features.group_technical_features"/>-->
                         <field name="state" widget="statusbar" statusbar_visible="draft,confirm"/>
                     </header>
                     <sheet>

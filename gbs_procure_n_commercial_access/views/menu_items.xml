@@ -167,5 +167,17 @@
                   sequence="2" name="Proforma Invoice"
                   action="lc_sales_product.action_sale_pi_comm" groups="commercial.group_commercial_user_export"/>
 
+        <menuitem id="terms_setup_com_menu"
+                  parent="gbs_purchase_requisition.menu_commercial_configuration"
+                  action="terms_setup.terms_setup_action"
+                  groups="commercial.group_commercial_manager_export"
+                  sequence="25"/>
+
+        <menuitem id="gbs_document_type.hr_do_type_menu"
+				name="Document Type"
+                parent="gbs_purchase_requisition.menu_commercial_configuration"
+				sequence="21" groups="commercial.group_commercial_manager_export"
+                action="gbs_document_type.action_document_type"/>
+
     </data>
 </odoo>

@@ -20,7 +20,7 @@
     # always loaded
     'data': [
         # 'security/ir.model.access.csv',
-        # 'views/views.xml',
+        'views/gate_in_view.xml',
     ],
 
 }
