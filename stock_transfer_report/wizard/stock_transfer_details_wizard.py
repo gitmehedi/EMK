@@ -1,11 +1,12 @@
+import datetime
 from odoo import api, fields, models
 
 
 class StockTransferDetailsWizard(models.TransientModel):
     _name = 'stock.transfer.details.wizard'
 
-    date_from = fields.Date("Date from",required=True)
-    date_to = fields.Date("Date to",required=True)
+    date_from = fields.Date("Date From",required=True)
+    date_to = fields.Date("Date To",required=True)
     operating_unit_id = fields.Many2one('operating.unit', string='Unit Name', required=True,
                                         default=lambda self: self.env.user.default_operating_unit_id)
 
