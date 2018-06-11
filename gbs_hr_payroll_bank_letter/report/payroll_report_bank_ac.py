@@ -1,4 +1,4 @@
-from openerp import api, fields, models
+from odoo import api, fields, models
 import amount_to_text_bdt
 import operator, math
 from odoo.tools.misc import formatLang
