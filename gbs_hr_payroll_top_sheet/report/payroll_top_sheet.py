@@ -55,7 +55,7 @@ class PayrollReportPivotal(models.AbstractModel):
                 if line.appears_on_payslip:
                     rec['vals'][line.name] = rec['vals'][line.name] + math.ceil(line.total)
                     total[line.name] = total[line.name] + math.ceil(line.total)
-                if line.code == 'BNET':
+                if line.code == 'BNET' and slip.employee_id.bank_account_id.bank_id:
                     bnet = bnet + math.ceil(line.total)
                 if line.code == 'NET':
                     net = net + math.ceil(line.total)
