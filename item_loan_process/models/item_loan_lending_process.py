@@ -251,8 +251,12 @@ class ItemLoanLendingLines(models.Model):
     @api.one
     @api.constrains('product_uom_qty')
     def _check_product_uom_qty(self):
-        if self.product_uom_qty <= 0:
-            raise UserError('Product quantity can not be negative or zero!!!')
+        for product in self:
+            if product.product_uom_qty <= 0:
+                raise UserError('Product quantity can not be negative or zero!!!')
+
+            if product.product_uom_qty > product.qty_available:
+                raise UserError('Product quantity can not be greater then available stock!!!')
 
 
     ####################################################
