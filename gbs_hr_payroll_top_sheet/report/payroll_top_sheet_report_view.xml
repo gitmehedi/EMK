@@ -40,7 +40,7 @@
                                             </td>
                                             <t t-foreach="rec_value['vals']" t-as="rule">
                                                 <td class="text-right">
-                                                    <span class="text-nowrap" t-esc="rule_value"></span>
+                                                    <span class="text-nowrap" t-esc="formatLang(rule_value)"></span>
                                                 </td>
                                             </t>
                                         </tr>
@@ -51,7 +51,7 @@
                                         </td>
                                         <t t-foreach="total" t-as="t">
                                             <td class="text-right">
-                                                <strong class="text-nowrap" t-esc="t_value"></strong>
+                                                <strong class="text-nowrap" t-esc="formatLang(t_value)"></strong>
                                             </td>
                                         </t>
                                     </tr>
@@ -59,38 +59,33 @@
                             </table>
                         </div>
                         <h5>
-                            <b>Bank Credit dsfds:</b>
-                            <span t-esc="bnet"></span>
-                            (<span t-esc="amt_to_word_bnet"/>)
+                            <b>Bank Credit:</b>
+                            <span t-esc="inword['bnet']"></span>
+                            (<span t-esc="inword['bnet_word']"/>)
                         </h5>
                         <h5>
-                            <b>Cash payment :</b>
-                            <span t-esc="total_cash"></span>
-                            (<span t-esc="amt_to_word_cash"/>)
+                            <b>Cash Payment :</b>
+                            <span t-esc="inword['cash']"></span>
+                            (<span t-esc="inword['cash_word']"/>)
                         </h5>
                         <h5>
                             <b>Total Fund Required :</b>
-                            <span t-esc="net"></span>
-                            (<span t-esc="amt_to_word_net"/>)
+                            <span t-esc="inword['net']"></span>
+                            (<span t-esc="inword['net_word']"/>)
                         </h5>
-
-                        <div class="row mb32" style="margin-top: 30mm;">
-                            <div class="col-xs-3 text-left">
-                                <strong>Initiated By:-------------------</strong>
+                        <div class="row mb32" style="margin-top: 50mm;">
+                            <div class="col-xs-9" style="float:Left;">
+                                <strong>Initiated By:------------------------</strong>
                                 <br/>Human Resources
                             </div>
-                            <br/>
-                            <br/>
-                            <br/>
-                            <strong style="float:right;">Approved By:-------------------</strong>
+                            <div class="col-xs-3 text-right">
+                                <strong>Approved By:-------------------------</strong>
+                            </div>
 
                         </div>
-
-
                     </div>
                 </t>
             </t>
-
         </template>
 
         <report
@@ -100,8 +95,7 @@
                 report_type="qweb-pdf"
                 file="gbs_hr_payroll_top_sheet.report_top_sheet"
                 name="gbs_hr_payroll_top_sheet.report_top_sheet"
-                paperformat="custom_report.paperformat_backend_landscape"
-        />
+                paperformat="custom_report.paperformat_backend_landscape"/>
 
     </data>
 </odoo>
