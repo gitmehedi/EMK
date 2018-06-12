@@ -16,13 +16,15 @@ class Picking(models.Model):
     shipment_id = fields.Many2one(
         'purchase.shipment',
         string='Shipment Number',
-        readonly=True,states={'draft': [('readonly', False)]})
+        readonly=True,states={'draft': [('readonly', False)]},
+        domain = "[('state','in',('cnf_clear', 'gate_in', 'done'))]")
 
     @api.onchange('receive_type')
     def onchange_receive_type(self):
         if self.receive_type:
             self.shipment_id = False
             self.challan_bill_no = False
+            self.partner_id = False
             self.move_lines = []
 
     @api.onchange('shipment_id')
