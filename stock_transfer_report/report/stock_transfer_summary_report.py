@@ -24,8 +24,10 @@ class StockTransferSummaryReport(models.AbstractModel):
         return self.env['report'].render('stock_transfer_report.sts_report_temp', docargs)
 
     def get_report_data(self, data):
-        date_start = data['date_from']
-        date_end = data['date_to']
+        date_from = data['date_from']
+        date_start = date_from + ' 00:00:00'
+        date_to = data['date_to']
+        date_end = date_to + ' 23:59:59'
         location_outsource = data['location_id']
 
         grand_total = {
@@ -57,7 +59,7 @@ class StockTransferSummaryReport(models.AbstractModel):
                                        LEFT JOIN product_category pc
                                               ON pt.categ_id = pc.id
                                            
-                                WHERE  Date_trunc('day', sm.date) BETWEEN '%s' AND '%s'
+                                WHERE  sm.date + interval'6h' BETWEEN '%s' AND '%s'
                                        AND sm.state = 'done'
                                        AND sm.location_id = %s
                                        AND sm.location_dest_id <> %s
@@ -89,11 +91,3 @@ class StockTransferSummaryReport(models.AbstractModel):
                 grand_total['total_out_val'] = grand_total['total_out_val'] + vals['val_out_tk']
 
         return {'dest_location': dest_location, 'total': grand_total}
-
-
-       # sql = ''' SELECT ROW_NUMBER() OVER(ORDER BY table_ck.cetegory_id DESC) AS id ,
-        #                                     table_ck.category,
-        #                                     table_ck.destination,
-        #                                     COALESCE(table_ck.val_out_tk,0) AS val_out_tk
-        #                             FROM  (%s) table_ck
-        #                         ''' % (sql_out_tk)

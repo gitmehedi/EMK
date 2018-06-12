@@ -25,8 +25,10 @@ class StockTransferDetailsReport(models.AbstractModel):
         return self.env['report'].render('stock_transfer_report.std_report_temp', docargs)
 
     def get_report_data(self, data):
-        date_start = data['date_from']
-        date_end = data['date_to']
+        date_from = data['date_from']
+        date_start = date_from + ' 00:00:00'
+        date_to = data['date_to']
+        date_end = date_to + ' 23:59:59'
         location_outsource = data['location_id']
         product = []
         grand_total = {
@@ -49,7 +51,7 @@ class StockTransferDetailsReport(models.AbstractModel):
                                            pp.default_code         AS code,
                                            pu.name                 AS uom_name,
                                            pc.name                 AS category,
-                                           sm.date                 AS move_date,
+                                           sm.date + interval'6h'  AS move_date,
                                            sm.origin               AS move_origin,
                                            sm.product_qty          AS qty_out_tk,
                                            pt.list_price,
@@ -72,7 +74,7 @@ class StockTransferDetailsReport(models.AbstractModel):
                                                   ON pt.categ_id = pc.id
                                            LEFT JOIN product_uom pu
                                                   ON( pu.id = pt.uom_id )
-                                    WHERE  Date_trunc('day', sm.date) BETWEEN '%s' AND '%s'
+                                    WHERE  sm.date + interval'6h' BETWEEN '%s' AND '%s'
                                            AND sm.state = 'done'
                                            AND sm.location_id = %s
                                            AND sm.location_dest_id <> %s

@@ -25,8 +25,10 @@ class StockPurchaseReport(models.AbstractModel):
         return self.env['report'].render('stock_purchase_custom_report.purchase_report_template', docargs)
 
     def get_report_data(self, data):
-        date_start = data['date_from']
-        date_end = data['date_to']
+        date_from = data['date_from']
+        date_start = date_from + ' 00:00:00'
+        date_to = data['date_to']
+        date_end = date_to + ' 23:59:59'
         location_outsource = data['location_id']
         supplier_id = data['partner_id']
         supplier_pool = self.env['res.partner']
@@ -89,7 +91,7 @@ class StockPurchaseReport(models.AbstractModel):
                                            sp1.partner_id			                AS partner_id,
                                            rp.name			                        AS partner_name,
                                            sp.mrr_no				                AS sp_mrr,
-                                           sm.date                                  AS move_date,
+                                           sm.date + interval'6h'                   AS move_date,
                                            sm.product_qty                           AS qty_in_tk, 
                                            sm.product_qty * Coalesce((SELECT ph.cost
                                              FROM   product_price_history ph
@@ -120,7 +122,7 @@ class StockPurchaseReport(models.AbstractModel):
                                                   ON pt.categ_id = pc.id
                                            LEFT JOIN product_uom pu 
                                                   ON( pu.id = pt.uom_id )                                           
-                                    WHERE  Date_trunc('day', sm.date) BETWEEN '%s' AND '%s' 
+                                    WHERE  sm.date + interval'6h' BETWEEN '%s' AND '%s' 
                                            AND sm.state = 'done' 
                                            AND sm.location_id <> %s
                                            AND sm.location_dest_id = %s
