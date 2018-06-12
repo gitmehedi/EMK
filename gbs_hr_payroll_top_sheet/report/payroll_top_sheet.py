@@ -11,6 +11,10 @@ class PayrollReportPivotal(models.AbstractModel):
     # def getKey(item):
     #     return item[1]
 
+
+    def formatDigits(self, digits):
+        return formatLang(self.env, digits)
+
     @api.model
     def render_html(self, docids, data=None):
         top_sheet = self.env['hr.payslip.run'].browse(docids[0])
@@ -44,7 +48,6 @@ class PayrollReportPivotal(models.AbstractModel):
         for rule in rule_list:
             total[rule[1]] = 0
 
-
         bnet = 0
         net = 0
 
@@ -60,27 +63,26 @@ class PayrollReportPivotal(models.AbstractModel):
                 if line.code == 'NET':
                     net = net + math.ceil(line.total)
 
-        total_cash = net-bnet
-        amt_to_word_bnet = self.env['res.currency'].amount_to_word(float(bnet))
-        amt_to_word_net = self.env['res.currency'].amount_to_word(float(net))
-        amt_to_word_cash = self.env['res.currency'].amount_to_word(float(total_cash))
+        inword = {
+            'total_cash': formatLang(self.env, (net - bnet)),
+            'bnet_word': self.env['res.currency'].amount_to_word(float(bnet)),
+            'net_word': self.env['res.currency'].amount_to_word(float(net)),
+            'cash_word': self.env['res.currency'].amount_to_word(float(net - bnet)),
+            'bnet': formatLang(self.env, bnet),
+            'net': formatLang(self.env, net),
+            'cash': formatLang(self.env, float(net - bnet)),
+        }
 
         docargs = {
-
             'doc_ids': self.ids,
             'doc_model': 'hr.payslip.run',
+            'formatLang': self.formatDigits,
             'header': header,
             'data': data,
             'record': record,
             'total': total,
             'rules': rule_list,
-            'bnet': formatLang(self.env,(bnet)),
-            'net': formatLang(self.env,(net)),
-            'total_cash': formatLang(self.env,(net-bnet)),
-            'amt_to_word_bnet': amt_to_word_bnet,
-            'amt_to_word_net': amt_to_word_net,
-            'amt_to_word_cash': amt_to_word_cash,
-
+            'inword': inword
         }
 
         return self.env['report'].render('gbs_hr_payroll_top_sheet.report_top_sheet', docargs)
