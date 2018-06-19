@@ -9,9 +9,17 @@ class InheritAccountPayment(models.Model):
 
 
     @api.onchange('cheque_info_id')
-    def _check_same_supplier(self):
+    def _onchange_cheque_info(self):
 
         if self.partner_type == 'supplier':
             if self.cheque_info_id.partner_id.id != self.partner_id.id:
                 raise ValidationError('Supplier of Cheque No. and Payment section must be same')
+
+        self.amount = self.cheque_info_id.amount
+        self.partner_id = self.cheque_info_id.partner_id
+
+
+
+
+
 
