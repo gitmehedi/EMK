@@ -6,7 +6,7 @@
             <field name="name">credit.limit.partner</field>
             <field name="model">creditlimit.partners</field>
             <field name="arch" type="xml">
-                <form string="Creditlimit by Customers" edit="false" create="false" delete="false">
+                <form string="Credit Limit by Customers" edit="false" create="false" delete="false">
                     <sheet>
                         <group>
                             <label string="This wizard will generate limit for all selected Customer(s) based on the dates." />
@@ -22,7 +22,7 @@
         </record>
 
         <record id="action_creditlimit_by_partner" model="ir.actions.act_window">
-            <field name="name">Generate Creditlimit</field>
+            <field name="name">Generate Credit Limit</field>
             <field name="res_model">creditlimit.partners</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
