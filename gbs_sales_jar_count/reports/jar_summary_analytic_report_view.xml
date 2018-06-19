@@ -79,7 +79,10 @@
 
         <menuitem name="Jar Summary Analysis"
                   action="action_jar_summary_analysis"
-                  id="menu_jar_summary_report" parent="uom_jar_summary_menu" sequence="20"/>
+                  groups="account.group_account_user,gbs_application_group.group_head_account"
+                  id="menu_jar_summary_report"
+                  parent="uom_jar_summary_menu"
+                  sequence="20"/>
 
     </data>
 </odoo>

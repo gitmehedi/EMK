@@ -5,10 +5,13 @@
     'category': 'Sales',
     'version':'10.1.1.1',
     'depends': [
+        'gbs_application_group',
+        'account',
         'sale',
     ],
 
     'data': [
+        'security/ir.model.access.csv',
         'views/uom_jar_summary_view.xml',
         'views/uom_jar_received_view.xml',
         'wizards/partner_selection_wizard_view.xml',
