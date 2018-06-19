@@ -3,7 +3,7 @@
     'version': '10.0.1.0.0',
     'author': 'Genweb2 Limited',
     'website': 'http://www.genweb2.com',
-    'category': 'Sale',
+    'category': 'sales',
     'depends': [
         'gbs_application_group',
         'sale',
