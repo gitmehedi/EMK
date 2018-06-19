@@ -166,6 +166,6 @@
 
     <menuitem id="sale_customer_commission_configuration_menu" name="Customer Commission"
               parent="sales_team.menu_sales" sequence="12"
-              groups="gbs_application_group.group_head_account,gbs_application_group.group_head_sale,gbs_application_group.group_cxo"
+              groups="sales_team.group_sale_salesman_all_leads,gbs_application_group.group_head_account,gbs_application_group.group_head_sale,gbs_application_group.group_cxo"
               action="sale_customer_commission_configuration_action"/>
 </odoo>
