@@ -15,10 +15,8 @@
         unit wise and in between date range.
     """,
     'data': [
-        # 'security/security.xml',
         'data/default_data.xml',
         'wizard/print_report_view.xml',
-        # 'views/inherite_layout.xml',
         'report/stock_inventory_report_view.xml',
 
     ],
