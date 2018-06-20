@@ -1,12 +1,14 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <odoo>
     <data>
-        <report id="report_indent_indent"
-                model="indent.indent"
-                string="Stock Indent"
-                name="stock_indent.report_stock_indent_view"
-                file="stock_indent.report_stock_indent_view"
-                report_type="qweb-pdf"/>
+
+        <!--<report id="report_indent_indent"-->
+                <!--model="indent.indent"-->
+                <!--string="Stock Indent"-->
+                <!--name="stock_indent.report_stock_indent_view"-->
+                <!--file="stock_indent.report_stock_indent_view"-->
+                <!--report_type="qweb-pdf"/>-->
+
         <template id="report_stock_indent_view">
             <t t-call="report.html_container">
                 <t t-foreach="docs" t-as="o">
