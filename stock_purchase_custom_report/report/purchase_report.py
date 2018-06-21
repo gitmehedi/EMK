@@ -63,7 +63,10 @@ class StockPurchaseReport(models.AbstractModel):
         if supplier_id:
             _where = ' AND sp1.partner_id IN ({0})'.format(data['partner_id'])
         elif supplier_lists:
-            _where = ' AND sp1.partner_id IN {0}'.format(tuple(supplier_lists.ids))
+            if len(supplier_lists) == 1:
+                _where = ' AND sp1.partner_id IN ({0})'.format(supplier_lists.id)
+            else:
+                _where = ' AND sp1.partner_id IN {0}'.format(tuple(supplier_lists.ids))
 
         grand_total = {
             'title': 'GRAND TOTAL',

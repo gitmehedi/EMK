@@ -37,6 +37,7 @@
                 <filter string="This Year" name="year" invisible="1" domain="[('date','&lt;=', time.strftime('%%Y-12-31')),('date','&gt;=',time.strftime('%%Y-01-01'))]"/>
                 <filter name="requested" string="Requested" domain="[('state','in',('draft', 'waiting_approval'))]"/>
                 <filter name="approved" string="Approved" domain="[('state','=','approved')]"/>
+                <filter name="received" string="Received" domain="[('state','=','received')]"/>
                 <separator/>
                 <field name="borrower_id"/>
                 <field name="product_id"/>
@@ -62,7 +63,7 @@
         <field name="res_model">stock.loan.lending.report</field>
         <field name="view_type">form</field>
         <field name="view_mode">pivot,graph</field>
-        <field name="context">{'search_default_approved':1}</field>
+        <field name="context">{'search_default_approved':1,'search_default_received' : 1}</field>
         <field name="search_view_id" ref="view_stock_loan_lending_search"/>
         <field name="help">From this report, you can have an overview of the Stock Loan report. The search tool can also be used to personalise your reports and so, match this analysis to your needs.</field>
     </record>

@@ -109,8 +109,13 @@ class StockInventoryReport(models.AbstractModel):
         if product_id:
             product_param = "(" + str(data['product_id']) + ")"
         else:
-            product_list = product_pool.search([('product_tmpl_id.categ_id.id', 'in', categories)]).ids
-            product_param = str(tuple(product_list))
+            product_list = product_pool.search([('product_tmpl_id.categ_id.id', 'in', categories)])
+            if len(product_list) == 1:
+                product_param = "(" + str(product_list.id) + ")"
+            elif len(product_list) > 1:
+                product_param = str(tuple(product_list.ids))
+            else:
+                product_param = '(0)'
 
         sql_dk = '''
                  SELECT product_id,
