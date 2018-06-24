@@ -190,6 +190,10 @@ class ItemBorrowing(models.Model):
                 raise ValidationError(_('You cannot delete this !!'))
         return super(ItemBorrowing, self).unlink()
 
+    @api.model
+    def _needaction_domain_get(self):
+        return [('state', 'in', ['waiting_approval'])]
+
 class ItemBorrowingLines(models.Model):
     _name = 'item.borrowing.line'
     _description = 'Item Borrowing Line'

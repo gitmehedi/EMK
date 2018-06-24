@@ -125,7 +125,25 @@
         <!-- Item Borrowing Menu -->
         <menuitem action="action_item_borrowing" name="Item Borrowing"
                   parent="menu_item_loan_lending_main" id="menu_item_borrowing" sequence="2"
-                  groups="base.group_user"/>
+                  groups="stock.group_stock_user"/>
+
+        <!-- Item Borrowing Pending Approval Window Action -->
+        <record id='action_pending_item_borrowing' model='ir.actions.act_window'>
+            <field name="name">Pending Approval</field>
+            <field name="res_model">item.borrowing</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('state','=','waiting_approval')]</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Nothing to approve.
+                </p>
+            </field>
+        </record>
+        <!-- Item Borrowing Pending Approval Menu -->
+        <menuitem action="action_pending_item_borrowing" name="Pending Approval"
+                  parent="menu_item_borrowing" id="menu_pending_item_borrowing" sequence="1"
+                  groups="stock.group_stock_user"/>
 
     </data>
 </odoo>
