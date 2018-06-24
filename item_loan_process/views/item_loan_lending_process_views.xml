@@ -104,6 +104,11 @@
                 </form>
             </field>
         </record>
+
+        <!-- Item Loan Main Menu -->
+        <menuitem name="Item Loan Process" parent="stock.menu_stock_root" id="menu_item_loan_lending_main"
+                  sequence="4" groups="stock.group_stock_user"/>
+
         <!-- Item Loan Lending Window Action -->
         <record id='action_item_loan_lending' model='ir.actions.act_window'>
             <field name="name">Item Loan Lending</field>
@@ -117,12 +122,27 @@
             </field>
         </record>
         <!-- Item Loan Lending Menu -->
-        <menuitem name="Item Loan Process" parent="stock.menu_stock_root" id="menu_item_loan_lending_main"
-                  sequence="4" groups="base.group_user"/>
-
         <menuitem action="action_item_loan_lending" name="Item Loan Lending"
                   parent="menu_item_loan_lending_main" id="menu_item_loan_lending" sequence="1"
-                  groups="base.group_user"/>
+                  groups="stock.group_stock_user"/>
+
+        <!-- Item Loan Lending Pending Approval Window Action -->
+        <record id='action_pending_item_loan_lending' model='ir.actions.act_window'>
+            <field name="name">Pending Approval</field>
+            <field name="res_model">item.loan.lending</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('state','=','waiting_approval')]</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Nothing to approve.
+                </p>
+            </field>
+        </record>
+        <!-- Item Loan Lending Pending Approval Menu -->
+        <menuitem action="action_pending_item_loan_lending" name="Pending Approval"
+                  parent="menu_item_loan_lending" id="menu_pending_item_loan_lending" sequence="1"
+                  groups="stock.group_stock_user"/>
 
     </data>
 </odoo>
