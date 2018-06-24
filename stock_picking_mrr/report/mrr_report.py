@@ -40,8 +40,8 @@ class MrrReport(models.AbstractModel):
                     #pack_obj['pr_no'] = pr_no
                     pack_obj['mrr_quantity'] = pack.qty_done
                     pack_obj['product_uom_id'] = pack.product_uom_id.name
-                    pack_obj['price_unit'] = pack.linked_move_operation_ids.move_id.price_unit
-                    pack_obj['amount'] = pack.qty_done*pack.linked_move_operation_ids.move_id.price_unit
+                    pack_obj['price_unit'] = pack.linked_move_operation_ids[0].move_id.price_unit
+                    pack_obj['amount'] = pack.qty_done*pack.linked_move_operation_ids[0].move_id.price_unit
                     total_amount.append(pack_obj['amount'])
                     pack_list.append(pack_obj)
 
