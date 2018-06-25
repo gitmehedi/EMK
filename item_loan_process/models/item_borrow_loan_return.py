@@ -7,7 +7,8 @@ from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
 class ItemBorrowing(models.Model):
     _inherit = 'item.borrowing'
 
-    return_picking_ids = fields.Many2many('stock.picking','picking_loan_rel','loan_id','picking_id','Picking(s)')
+    # return_picking_ids = fields.Many2many('stock.picking','picking_loan_rel','loan_id','picking_id','Picking(s)')
+    return_picking_id = fields.Many2one('stock.picking','Return Picking')
 
     @api.multi
     def action_view_picking(self):
@@ -17,22 +18,30 @@ class ItemBorrowing(models.Model):
         if not product_list:
             raise UserError('No Due so no need any adjustment!!!')
         else:
+            self.write({'return_picking_id': False})
+
+        if not self.return_picking_id:
             self._create_return_pickings_and_moves(product_list)
-            self.return_picking_ids.action_confirm()
-            self.return_picking_ids.force_assign()
+            self.return_picking_id.action_confirm()
+            self.return_picking_id.force_assign()
+        else:
+            pass
+
 
         action = self.env.ref('stock.action_picking_tree')
         result = action.read()[0]
         # override the context to get rid of the default filtering on picking type
         result.pop('id', None)
         result['context'] = {}
-        pick_ids = self.return_picking_ids.ids
-        if len(pick_ids) > 1:
+        pick_objs = self.env['stock.picking'].search([('backorder_id', '=', self.return_picking_id.id)])
+        if pick_objs:
+            pick_ids = pick_objs.ids + self.return_picking_id.ids
             result['domain'] = "[('id','in',[" + ','.join(map(str, pick_ids)) + "])]"
-        elif len(pick_ids) == 1:
+        else:
+            pick_id = self.return_picking_id.id
             res = self.env.ref('stock.view_picking_form', False)
             result['views'] = [(res and res.id or False, 'form')]
-            result['res_id'] = pick_ids and pick_ids[0] or False
+            result['res_id'] = pick_id or False
         return result
 
     @api.model
@@ -93,14 +102,15 @@ class ItemBorrowing(models.Model):
 
                 }
                 move = move_obj.create(moves)
-                # move.action_done()
                 self.write({'move_id': move.id})
 
-        query = """INSERT INTO picking_loan_rel (loan_id,picking_id) VALUES (%s, %s) """
-        self._cr.execute(query, tuple([self.id,picking_id]))
-        # self.return_picking_id = picking_id
+
+        self.return_picking_id = picking_id
 
         return True
+
+    # query = """INSERT INTO picking_loan_rel (loan_id,picking_id) VALUES (%s, %s) """
+    # self._cr.execute(query, tuple([self.id, picking_id]))
 
     # @api.multi
     # def action_get_adjustment_picking(self):

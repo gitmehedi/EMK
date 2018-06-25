@@ -57,11 +57,9 @@ class StockPicking(models.Model):
                 loan_borrowing_ids = loan_borrowing_obj.search([('name', '=', picking.origin)])
                 if loan_borrowing_ids:
                     for product_line in loan_borrowing_ids[0].item_lines:
-                        move = picking.move_lines.filtered(lambda o: o.product_id == product_line.product_id)
-                        if picking.backorder_id:
+                        moves = picking.move_lines.filtered(lambda o: o.product_id == product_line.product_id)
+                        for move in moves:
                             product_line.write({'received_qty': product_line.received_qty + move.product_qty})
-                        else:
-                            product_line.write({'received_qty': move.product_qty})
                 if self.transfer_type == 'receive':
                     origin_picking_objs = self.search([('name', '=', self.origin)])
                     if origin_picking_objs[0].receive_type == 'loan':
@@ -92,9 +90,14 @@ class StockPicking(models.Model):
                         else:
                             product_line.write({'given_qty': move.product_qty})
 
-                loan_borrowing_ids = loan_borrowing_obj.search([('return_picking_ids', '=', self.id)])
+                loan_borrowing_ids = loan_borrowing_obj.search([('return_picking_id', '=', self.id)])
+                loan_borrowing_back_ids = loan_borrowing_obj.search([('return_picking_id', '=', self.backorder_id.id)])
                 if loan_borrowing_ids:
                     for product_line in loan_borrowing_ids[0].item_lines:
+                        move = picking.move_lines.filtered(lambda o: o.product_id == product_line.product_id)
+                        product_line.write({'given_qty': product_line.given_qty + move.product_qty})
+                elif loan_borrowing_back_ids:
+                    for product_line in loan_borrowing_back_ids[0].item_lines:
                         move = picking.move_lines.filtered(lambda o: o.product_id == product_line.product_id)
                         product_line.write({'given_qty': product_line.given_qty + move.product_qty})
 
