@@ -28,51 +28,47 @@
                 <t t-call="custom_report.gbs_internal_layout">
                     <div class="page" style="page-break-inside: auto">
                         <style>
-                            .table-caption {
-                            border: 1px solid #ddd;
-                            border-bottom: none;
-                            font-size: 14px;
-                            font-weight: bold;
-                            margin: 0;
-                            padding: 5px 5px;
-                            }
+                            .signed-by { display: inline-block; border-top: 1px solid #333; padding: 5px; margin-top: 60px; }
                         </style>
-                        <div class="row">
-                            <h4 class="text-center">Purchase Order</h4>
+                        <div class="clearfix">
+                            <h3 class="text-center mt-0">Purchase Order</h3>
                             <div class="row">
-                                <div class="col-xs-9">
-                                    <h6><b>Order No : </b><span t-esc="data['name']"/></h6>
+                                <div class="col-xs-6">
+                                    <p class="mb-5"><b>Order No : </b><span t-esc="data['name']"/></p>
                                 </div>
-                                <div class="col-xs-3 text-left" style="padding-left:65px;">
-                                    <h6><b>PO Date : </b><span t-esc="order_date"/></h6>
+                                <div class="col-xs-6 text-right">
+                                    <p class="mb-5"><b>PO Date : </b><span t-esc="order_date"/></p>
                                 </div>
                             </div>
-                            <hr class="hr-sm mb-0"/>
+
+                            <hr class="hr-xs mt-0"/>
+
                             <div class="row">
-                                <div class="col-xs-8">
-                                    <h6><b>Suplier : </b><span t-esc="data['partner_id']"/></h6>
-                                    <h6><b>Address : </b><p><span t-esc="data['cus_address']" t-esc-options='{"widget": "contact", "fields": ["address"], "no_marker": true}'/></p></h6>
-                                    <h6><b>Contract Parson : </b><span t-esc="data['sup_con']"/></h6>
-                                    <h6><b>PR No : </b><span t-esc="data['requisition_id']"/></h6>
-                                    <h6><b>Order Ref No : </b><span t-esc="data['partner_ref']"/>, <b>Date : </b><span t-esc="data['requisition_date']"></span></h6>
+                                <div class="col-xs-6">
+                                    <p><b>Suplier : </b><br/><span t-esc="data['partner_id']"/></p>
+                                    <p><span t-esc="data['cus_address']" t-esc-options='{"widget": "contact", "fields": ["address"], "no_marker": true}'/> <br/>
+                                        <b>Contract Parson : </b><span t-esc="data['sup_con']"/><br/>
+                                        <b>PR No : </b><span t-esc="data['requisition_id']"/><br/>
+                                        <b>Order Ref No : </b><span t-esc="data['partner_ref']"/><br/>
+                                        <b>Date : </b><span t-esc="data['requisition_date']"></span> </p>
                                 </div>
-                                <div class="col-xs-4 text-left" style="padding-left:45px;">
-                                    <h6><b>Consignee : </b><span t-esc="data['company']"/></h6>
-                                    <h6><b>Address : </b><p><span t-esc="data['company_address']" t-esc-options='{"widget": "contact", "fields": ["address"], "no_marker": true}'/></p></h6>
-                                    <h6><b>Contract Parson : </b></h6>
+                                <div class="col-xs-6 text-left">
+                                    <p><b>Consignee : </b><br/><span t-esc="data['company']"/></p>
+                                    <p><span t-esc="data['company_address']" t-esc-options='{"widget": "contact", "fields": ["address"], "no_marker": true}'/> <br/>
+                                        <b>Contract Parson : </b></p>
                                 </div>
                             </div>
                             <hr class="hr-xs"/>
                         </div>
-                        <div class="row">
+                        <div class="clearfix">
+                            <p class="text-sm">
+                                We are pleased to issue the purchase order
+                                for supplying under mentioned Materials to <span t-esc="data['company']"/>
+                                as the management accepts your price and quality, on the basis
+                                of following terms and conditions:
+                            </p>
                             <table class="table table-report table-bordered table-striped">
                                 <thead>
-                                    <tr>
-                                        <td colspan="5">  We are pleased to issue the purchase order
-                                        for supplying under mentioned Materials to <span t-esc="data['company']"/>
-                                        as the management accepts your price and quality, on the basis
-                                        of following terms and conditions: </td>
-                                    </tr>
                                     <tr class="odo-bg-gray">
                                         <th>Sl#</th>
                                         <th>Description/Specification/Origin</th>
@@ -107,20 +103,12 @@
                                 <p t-raw="data['notes']"/>
                             </div>
                         </div>
-                        <div class="row mb32 text-left" style="margin-top: 20mm;">
-                            <div class="col-xs-10 text-left">
-                                <strong>Ordered by :</strong>
-                                <br/>
-                                <br/>
-                                <br/>
-                                <br/><strong>----------------------</strong>
+                        <div class="row">
+                            <div class="col-xs-6 text-left">
+                                <span class="signed-by"><b>Ordered by :</b></span>
                             </div>
-                            <div class="col-xs-2 text-left">
-                                <strong>Approved by :</strong>
-                                <br/>
-                                <br/>
-                                <br/>
-                                <br/><strong>----------------------</strong>
+                            <div class="col-xs-6 text-right">
+                                <span class="signed-by"><b>Approved by :</b></span>
                             </div>
                         </div>
                     </div>
