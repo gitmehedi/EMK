@@ -24,8 +24,10 @@ class StockInventoryReport(models.AbstractModel):
         return self.env['report'].render('stock_custom_summary_report.stock_report_template', docargs)
 
     def get_report_data(self, data):
-        date_start = data['date_from']
-        date_end = data['date_to']
+        date_from = data['date_from']
+        date_start =date_from + ' 00:00:00'
+        date_to = data['date_to']
+        date_end = date_to + ' 23:59:59'
         location_outsource = data['location_id']
         category_id = data['category_id']
         product_id = data['product_id']
@@ -107,8 +109,13 @@ class StockInventoryReport(models.AbstractModel):
         if product_id:
             product_param = "(" + str(data['product_id']) + ")"
         else:
-            product_list = product_pool.search([('product_tmpl_id.categ_id.id', 'in', categories)]).ids
-            product_param = str(tuple(product_list))
+            product_list = product_pool.search([('product_tmpl_id.categ_id.id', 'in', categories)])
+            if len(product_list) == 1:
+                product_param = "(" + str(product_list.id) + ")"
+            elif len(product_list) > 1:
+                product_param = str(tuple(product_list.ids))
+            else:
+                product_param = '(0)'
 
         sql_dk = '''
                  SELECT product_id,
@@ -144,7 +151,7 @@ class StockInventoryReport(models.AbstractModel):
                                   ON pt.categ_id = pc.id
                             LEFT JOIN product_uom pu 
                                   ON( pu.id = pt.uom_id )
-                            WHERE  Date_trunc('day', sm.date) < '%s'
+                            WHERE  sm.date + interval'6h' < '%s'
                                    AND sm.state = 'done'
                                    AND sm.location_id <> %s
                                    AND sm.location_dest_id = %s
@@ -182,7 +189,7 @@ class StockInventoryReport(models.AbstractModel):
                                           ON pt.categ_id = pc.id
                                    LEFT JOIN product_uom pu
 				                          ON( pu.id = pt.uom_id )
-                            WHERE  Date_trunc('day', sm.date) < '%s'
+                            WHERE  sm.date + interval'6h' < '%s'
                                    AND sm.state = 'done'
                                    AND sm.location_id = %s
                                    AND sm.location_dest_id <> %s
@@ -245,7 +252,7 @@ class StockInventoryReport(models.AbstractModel):
                                                   ON pt.categ_id = pc.id
                                            LEFT JOIN product_uom pu 
         				                          ON( pu.id = pt.uom_id )
-                                    WHERE  Date_trunc('day', sm.date) BETWEEN '%s' AND '%s' 
+                                    WHERE  sm.date + interval'6h' BETWEEN '%s' AND '%s' 
                                            AND sm.state = 'done' 
                                            --AND sp.location_type = 'outsource_out' 
                                            AND sm.location_id <> %s
@@ -296,7 +303,7 @@ class StockInventoryReport(models.AbstractModel):
                                           ON pt.categ_id = pc.id
                                    LEFT JOIN product_uom pu
 				                          ON( pu.id = pt.uom_id )
-                            WHERE  Date_trunc('day', sm.date) BETWEEN '%s' AND '%s'
+                            WHERE  sm.date + interval'6h' BETWEEN '%s' AND '%s'
                                    AND sm.state = 'done'
                                    AND sm.location_id = %s
                                    AND sm.location_dest_id <> %s
@@ -347,7 +354,7 @@ class StockInventoryReport(models.AbstractModel):
                                   ON pt.categ_id = pc.id
                            LEFT JOIN product_uom pu
                                   ON( pu.id = pt.uom_id )
-                    WHERE  Date_trunc('day', sm.date) <= '%s'
+                    WHERE  sm.date + interval'6h' <= '%s'
                            AND sm.state = 'done'
                            --AND sp.location_type = 'outsource_out'
                            AND sm.location_id <> %s
@@ -388,7 +395,7 @@ class StockInventoryReport(models.AbstractModel):
                                   ON pt.categ_id = pc.id
                            LEFT JOIN product_uom pu
                                   ON( pu.id = pt.uom_id )
-                    WHERE  Date_trunc('day', sm.date) <= '%s'
+                    WHERE  sm.date + interval'6h' <= '%s'
                            AND sm.state = 'done'
                            --AND sp.location_type = 'outsource_in'
                            AND sm.location_id = %s

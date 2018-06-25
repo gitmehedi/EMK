@@ -391,8 +391,8 @@ class DeliveryAuthorization(models.Model):
 
     @api.one
     def set_products_info_automatically(self):
+        val = []
         if self.sale_order_id:
-            val = []
             # sale_order_obj = self.env['sale.order'].search([('id', '=', self.sale_order_id.id)])
 
             self.warehouse_id = self.sale_order_id.warehouse_id.id

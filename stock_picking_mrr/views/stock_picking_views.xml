@@ -68,7 +68,7 @@
         <field name="domain">[('check_approve_button', '=', 'True')]</field>
         <field name="help" type="html">
             <p>
-                Here you can see Received Goods list, which need to approve.
+                Here you can see pending approval list.
             </p>
         </field>
     </record>
@@ -82,7 +82,7 @@
         <field name="domain">[('check_mrr_button', '=', 'True')]</field>
         <field name="help" type="html">
             <p>
-                Here you can see Received Goods list, which need to approve.
+                Here you can see MRR list.
             </p>
         </field>
     </record>

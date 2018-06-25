@@ -61,7 +61,7 @@ class LetterOfCredit(models.Model):
         number = len(self.old_revision_ids)
 
         comm_utility_pool = self.env['commercial.utility']
-        note = comm_utility_pool.getStrNumber(number) + ' ' + Status.AMENDMENT
+        note = comm_utility_pool.getStrNumber(number) + ' ' + Status.AMENDMENT.value
 
         self.write({'state': self.state, 'last_note': note})
         return {

@@ -189,6 +189,10 @@ class ItemLoanLending(models.Model):
                 raise ValidationError(_('You cannot delete this !!'))
         return super(ItemLoanLending, self).unlink()
 
+    @api.model
+    def _needaction_domain_get(self):
+        return [('state', 'in', ['waiting_approval'])]
+
 class ItemLoanLendingLines(models.Model):
     _name = 'item.loan.lending.line'
     _description = 'Item Loan Lending Line'
@@ -251,8 +255,12 @@ class ItemLoanLendingLines(models.Model):
     @api.one
     @api.constrains('product_uom_qty')
     def _check_product_uom_qty(self):
-        if self.product_uom_qty <= 0:
-            raise UserError('Product quantity can not be negative or zero!!!')
+        for product in self:
+            if product.product_uom_qty <= 0:
+                raise UserError('Product quantity can not be negative or zero!!!')
+
+            if product.product_uom_qty > product.qty_available:
+                raise UserError('Product quantity can not be greater then available stock!!!')
 
 
     ####################################################

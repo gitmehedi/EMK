@@ -1,7 +1,5 @@
-from datetime import datetime
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
-from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
 
 class LoanLending(models.Model):
     _inherit = 'item.loan.lending'

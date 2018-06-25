@@ -8,7 +8,7 @@ class DeliveryOrder(models.Model):
     _description = 'Delivery Order'
     _inherit = ['mail.thread']
     #_rec_name = 'name'
-    _order = "approved_date desc,name desc"
+    _order = "id desc"
 
     name = fields.Char(string='Name', index=True, readonly=True)
 
@@ -148,29 +148,26 @@ class DeliveryOrder(models.Model):
         for order in self.sale_order_id:
             order.state = 'sale'
             order.confirmation_date = fields.Datetime.now()
-            if self.env.context.get('send_email'):
-                self.sale_order_id.force_quotation_send()
-
-            order.order_line._action_procurement_create()
-
+            if order.env.context.get('send_email'):
+                order.force_quotation_send()
+            order.order_line.sudo()._action_procurement_create()
         if self.env['ir.values'].get_default('sale.config.settings', 'auto_done_setting'):
-            self.sale_order_id.action_done()
-
+            self.sale_order_id.sudo().action_done()
 
         # Update the reference of Delivery Order and LC No to Stock Picking
         stock_picking_id = self.delivery_order_id.sale_order_id.picking_ids
-        stock_picking_id.write({'delivery_order_id': self.id})
+        stock_picking_id.sudo().write({'delivery_order_id': self.id})
 
         # Update the reference of PI and LC on both Stock Picking and Sale Order Obj
         if self.delivery_order_id.so_type == 'lc_sales':
-            stock_picking_id.write({'lc_id': self.lc_id.id})
+            stock_picking_id.sudo().write({'lc_id': self.lc_id.id})
             #self.delivery_order_id.sale_order_id.write({'lc_id': self.lc_id.id, 'pi_id': self.pi_id.id})
             #As per decision, LC Id will be updated to Sale Order from LC creation menu -- rabbi
-            self.delivery_order_id.sale_order_id.write({'pi_id': self.pi_id.id})
+            self.delivery_order_id.sale_order_id.sudo().write({'pi_id': self.pi_id.id})
 
         # Update Stock Move with reference of Delivery Order
         stock_move_id = self.delivery_order_id.sale_order_id.picking_ids.move_lines
-        stock_move_id.write({'delivery_order_id': self.id})
+        stock_move_id.sudo().write({'delivery_order_id': self.id})
 
         return True
 

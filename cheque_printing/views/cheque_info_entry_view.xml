@@ -28,10 +28,10 @@
                     <sheet>
                         <group>
                             <group>
-                                <field name="partner_id"/>
-                                <field name="cheque_number"/>
-                                <field name="cheque_date"/>
-                                <field name="amount"/>
+                                <field name="partner_id" attrs="{'readonly': [('state','!=','draft')]}"/>
+                                <field name="cheque_number" attrs="{'readonly': [('state','!=','draft')]}"/>
+                                <field name="cheque_date" attrs="{'readonly': [('state','!=','draft')]}"/>
+                                <field name="amount" attrs="{'readonly': [('state','!=','draft')]}"/>
                                 <field name="is_cheque_paid" invisible="1"/>
                             </group>
                         </group>

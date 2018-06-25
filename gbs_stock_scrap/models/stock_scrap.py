@@ -230,7 +230,7 @@ class GBSStockScrapLines(models.Model):
             if product.product_uom_qty <= 0:
                 raise UserError('Product quantity can not be negative or zero!!!')
 
-            if product.product_uom_qty > self.qty_available:
+            if product.product_uom_qty > product.qty_available:
                 raise UserError('Product quantity can not be greater then available stock!!!')
 
     ####################################################

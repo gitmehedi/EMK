@@ -46,7 +46,8 @@
             <field name="view_mode">tree,form</field>
         </record>
 
-        <menuitem id="uom_jar_received_submenu" parent="uom_jar_summary_menu"
+        <menuitem id="uom_jar_received_submenu"
+                  parent="uom_jar_summary_menu"
                   groups="account.group_account_user,gbs_application_group.group_head_account,gbs_application_group.group_cxo"
                   action="uom_jar_received_action"/>
 

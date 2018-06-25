@@ -28,6 +28,7 @@ class StockLoanLendingReport(models.Model):
         ('draft', 'Draft'),
         ('waiting_approval', 'Waiting for Approval'),
         ('approved', 'Approved'),
+        ('received', 'Received'),
         ('reject', 'Rejected'),
     ], string='State', readonly=True)
 
