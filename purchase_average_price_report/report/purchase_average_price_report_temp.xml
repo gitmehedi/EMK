@@ -48,6 +48,32 @@
                                     </tr>
                                 </thead>
                                 <tbody>
+                                    <t t-if="lines">
+                                        <t t-foreach="lines" t-as="line">
+                                            <tr>
+                                                <td>
+                                                    <!--<t t-esc="line['move_date']"/>-->
+                                                    <t t-esc="time.strftime('%d-%m-%Y',time.strptime(line['move_date'],'%Y-%m-%d %H:%M:%S'))"/>
+                                                </td>
+                                                <td>
+                                                    <t t-if="line['variant_name']">
+                                                        <t t-esc="line['product_name']"/>(<t t-esc="line['variant_name']"/>)
+                                                    </t>
+                                                    <t t-else="">
+                                                        <t t-esc="line['product_name']"/>
+                                                    </t>
+
+                                                    <!--<t t-esc="line['variant_name']"/>-->
+                                                </td>
+                                                <td>
+                                                    <t t-esc="line['uom_name']"/>
+                                                </td>
+                                                <td>
+                                                    <t t-esc="line['avg_price']"/>
+                                                </td>
+                                            </tr>
+                                        </t>
+                                    </t>
 
                                 </tbody>
                             </table>
