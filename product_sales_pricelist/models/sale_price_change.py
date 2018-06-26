@@ -93,8 +93,10 @@ class SalePriceChange(models.Model):
                                                                 ('currency_id', '=', self.currency_id.id),
                                                                 ('state', '=', 'validate')], order='id desc')[0]
                     self.list_price = price_change_pool.new_price
+                    self.uom_id = price_change_pool.uom_id
                 else:
                     self.list_price = product_pool.list_price
+
         else:
             self.list_price = 0.00
 
