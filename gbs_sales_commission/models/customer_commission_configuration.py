@@ -6,7 +6,7 @@ from odoo import api, fields, models, _
 
 class CustomerCommissionConfiguration(models.Model):
     _name = "customer.commission.configuration"
-    _inherit = ['mail.thread']
+    _inherit = ['mail.thread', 'ir.needaction_mixin']
     _order = 'confirmed_date desc'
 
     name = fields.Char(string='Name', index=True, readonly=True)
@@ -54,6 +54,25 @@ class CustomerCommissionConfiguration(models.Model):
     ], readonly=True, track_visibility='onchange', copy=False, default='draft')
 
     """ All functions """
+
+    ### Showing batch
+    @api.model
+    def _needaction_domain_get(self):
+        return [('state', 'in', ['validate'])]
+
+
+    ## mail notification
+    # @api.multi
+    # def _notify_approvers(self):
+    #     approvers = self.employee_id._get_employee_manager()
+    #     if not approvers:
+    #         return True
+    #     for approver in approvers:
+    #         self.sudo(SUPERUSER_ID).add_follower(approver.id)
+    #         if approver.sudo(SUPERUSER_ID).user_id:
+    #             self.sudo(SUPERUSER_ID)._message_auto_subscribe_notify(
+    #                 [approver.sudo(SUPERUSER_ID).user_id.partner_id.id])
+    #     return True
 
     @api.model
     def create(self, vals):

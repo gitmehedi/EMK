@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
 {
-    'name': "Product Variant Average Price History",
+    'name': "Product Purchase Price Average History",
     'summary': """
-        History Of Purchased Product Average""",
+        History Of Product Variant Purchased Price Average
+        """,
     'description': """
         This module save the history record of all product purchased price variant wise
     """,

@@ -12,6 +12,7 @@
     ],
 
     'data': [
+        'security/ir.model.access.csv',
         'views/inherited_sale_order_type_view.xml',
     ],
     'installable': True,
