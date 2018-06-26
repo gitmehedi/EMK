@@ -3,15 +3,17 @@ from odoo.exceptions import UserError, ValidationError
 
 class InheritedSaleOrderType(models.Model):
     _inherit = 'sale.order.type'
+    #_inherit = ['sale.order.type','mail.thread', 'ir.needaction_mixin']
 
-    operating_unit = fields.Many2one('operating.unit', string="Operating Unit", required=True)
+
+    operating_unit = fields.Many2one('operating.unit', string="Operating Unit", required=True,track_visibility='onchange')
     sale_order_type = fields.Selection([
         ('cash', 'Cash'),
         ('credit_sales', 'Credit'),
         ('lc_sales', 'L/C'),
-    ], string='Sale Order Type', required=True)
+    ], string='Sale Order Type', required=True,track_visibility='onchange')
 
-    currency_id = fields.Many2one('res.currency', string="Currency", required=True)
+    currency_id = fields.Many2one('res.currency', string="Currency", required=True,track_visibility='onchange')
 
     @api.constrains('name')
     def _check_unique_name(self):
