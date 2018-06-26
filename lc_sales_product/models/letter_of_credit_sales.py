@@ -42,6 +42,7 @@ class LetterOfCredit(models.Model):
                                     }))
         self.product_lines = vals
 
+
     @api.multi
     def action_confirm_export(self):
         for pi in self.pi_ids_temp:
@@ -49,7 +50,13 @@ class LetterOfCredit(models.Model):
             for so in pi.so_ids:
                 so.lc_id = self.id
 
+                # Update 100 MT logic
+                da_obj = self.env['delivery.authorization'].search([('sale_order_id','=',so.id)])
+                da_obj.update_lc_id_for_houndred_mt()
+
+
         self.write({'state': 'confirmed', 'last_note': Status.CONFIRM.value})
+
 
     @api.multi
     def action_revision_export(self):

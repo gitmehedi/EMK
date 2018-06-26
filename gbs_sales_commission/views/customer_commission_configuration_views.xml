@@ -121,6 +121,17 @@
         </field>
     </record>
 
+
+    <!--<record id="search_view_cust_commission" model="ir.ui.view">-->
+    <!--<field name="name">customer.commission.configuration.search</field>-->
+    <!--<field name="model">customer.commission.configuration</field>-->
+    <!--<field name="arch" type="xml">-->
+    <!--<search string="Customer Commission">-->
+    <!--<filter name="validate" string="To Approve" domain="[('state','=','validate')]"/>-->
+    <!--</search>-->
+    <!--</field>-->
+    <!--</record>-->
+
     <record id="sale_customer_commission_configuration_tree" model="ir.ui.view">
         <field name="name">Customer Commission Configuration Tree</field>
         <field name="model">customer.commission.configuration</field>
@@ -151,6 +162,8 @@
             <search string="Customer Commission Configuration Search">
                 <field name="product_id"/>
                 <field name="customer_id"/>
+                <filter name="validate" string="To Approve" domain="[('state','=','validate')]"/>
+
             </search>
         </field>
     </record>
@@ -158,7 +171,7 @@
     <record model="ir.actions.act_window" id="sale_customer_commission_configuration_action">
         <field name="name">Customer Commission</field>
         <field name="res_model">customer.commission.configuration</field>
-        <!--<field name="domain">[('state','in',('disbursed',))]</field>-->
+        <field name="context">{'search_default_validate':1}</field>
         <field name="view_mode">tree,form</field>
     </record>
 

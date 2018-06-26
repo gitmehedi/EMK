@@ -6,8 +6,9 @@ import time, datetime
 class DeliveryAuthorization(models.Model):
     _name = 'delivery.authorization'
     _description = 'Delivery Authorization'
-    _inherit = ['mail.thread']
-    _order = "approved_date desc,name desc"
+    _inherit = ['mail.thread', 'ir.needaction_mixin']
+
+    _order = "id desc"
 
     name = fields.Char(string='Delivery Authorization', index=True, readonly=True)
 
@@ -479,6 +480,25 @@ class DeliveryAuthorization(models.Model):
             stock_picking_id = delivery.sale_order_id.picking_ids
             stock_picking_id.write({'lc_id': delivery.lc_id.id})
 
+            ### Showing batch
+
+    @api.model
+    def _needaction_domain_get(self):
+        return [('state', 'in', ['validate'])]
+
+
+    ## mail notification
+    # @api.multi
+    # def _notify_approvers(self):
+    #     approvers = self.employee_id._get_employee_manager()
+    #     if not approvers:
+    #         return True
+    #     for approver in approvers:
+    #         self.sudo(SUPERUSER_ID).add_follower(approver.id)
+    #         if approver.sudo(SUPERUSER_ID).user_id:
+    #             self.sudo(SUPERUSER_ID)._message_auto_subscribe_notify(
+    #                 [approver.sudo(SUPERUSER_ID).user_id.partner_id.id])
+    #     return True
 
 
 class OrderedQty(models.Model):

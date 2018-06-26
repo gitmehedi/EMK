@@ -5,7 +5,8 @@ from odoo.exceptions import UserError, ValidationError
 class ProformaInvoice(models.Model):
     _name = 'proforma.invoice'
     _description = 'Proforma Invoice (PI)'
-    _inherit = ['mail.thread']
+    _inherit = ['mail.thread', 'ir.needaction_mixin']
+
     _rec_name='name'
 
     name = fields.Char(string='Name', index=True, readonly=True)
@@ -261,6 +262,23 @@ class ProformaInvoice(models.Model):
         if self.terms_id:
             self.terms_condition = self.terms_id.terms_condition
 
+    @api.model
+    def _needaction_domain_get(self):
+        return [('state', 'in', ['draft'])]
+
+
+    ## mail notification
+    # @api.multi
+    # def _notify_approvers(self):
+    #     approvers = self.employee_id._get_employee_manager()
+    #     if not approvers:
+    #         return True
+    #     for approver in approvers:
+    #         self.sudo(SUPERUSER_ID).add_follower(approver.id)
+    #         if approver.sudo(SUPERUSER_ID).user_id:
+    #             self.sudo(SUPERUSER_ID)._message_auto_subscribe_notify(
+    #                 [approver.sudo(SUPERUSER_ID).user_id.partner_id.id])
+    #     return True
 
 class ProformaInvoiceLine(models.Model):
     _name = 'proforma.invoice.line'
@@ -276,7 +294,6 @@ class ProformaInvoiceLine(models.Model):
 
     """ Relational field"""
     pi_id = fields.Many2one('proforma.invoice', ondelete='cascade')
-
 
 
     @api.onchange('product_id')
@@ -319,6 +336,3 @@ class ProformaInvoiceLine(models.Model):
         if tax_id:
             tax_pool = self.env['account.tax'].search([('id','=',tax_id)])
             return (tax_pool.amount/100) * total_price
-
-
-
