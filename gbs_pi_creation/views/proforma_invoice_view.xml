@@ -116,9 +116,21 @@
         </record>
 
 
+         <record id="search_pi_view" model="ir.ui.view">
+            <field name="name">proforma.invoice.search</field>
+            <field name="model">proforma.invoice</field>
+            <field name="arch" type="xml">
+                <search string="PI">
+                    <filter name="draft" string="To Confirm" domain="[('state','=','draft')]"/>
+                </search>
+            </field>
+        </record>
+
+
         <record model="ir.actions.act_window" id="pi_creation_action">
             <field name="name">Proforma Invoice</field>
             <field name="res_model">proforma.invoice</field>
+            <field name="context">{'search_default_draft':1}</field>
             <field name="view_mode">tree,form</field>
         </record>
 

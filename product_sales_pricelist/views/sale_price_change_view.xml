@@ -27,8 +27,8 @@
                 <form string="Change Products Sale Price">
                     <header>
                         <!--<button string="Submit" name="action_submit"-->
-                                <!--groups="gbs_application_group.group_head_account,gbs_application_group.group_head_sale,gbs_application_group.group_cxo"-->
-                                <!--states="draft" type="object" class="oe_highlight"/>-->
+                        <!--groups="gbs_application_group.group_head_account,gbs_application_group.group_head_sale,gbs_application_group.group_cxo"-->
+                        <!--states="draft" type="object" class="oe_highlight"/>-->
 
                         <button string="Confirm" name="action_confirm"
                                 groups="sales_team.group_sale_salesman_all_leads,gbs_application_group.group_head_account,gbs_application_group.group_head_sale,gbs_application_group.group_cxo"
@@ -91,10 +91,22 @@
             </field>
         </record>
 
+
+        <record id="search_view_pricelists" model="ir.ui.view">
+            <field name="name">product.sales.pricelist.search</field>
+            <field name="model">product.sales.pricelist</field>
+            <field name="arch" type="xml">
+                <search string="Sales Pricelist">
+                    <filter name="confirm" string="To Approve" domain="[('state','=','confirm')]"/>
+                </search>
+            </field>
+        </record>
+
+
         <record id="action_product_sale_price_change" model="ir.actions.act_window">
             <field name="name">Product Sales Pricelist</field>
             <field name="res_model">product.sales.pricelist</field>
-            <field name="context">{'search_default_group_product_id': 1}</field>
+            <field name="context">{'search_default_group_product_id':1,'search_default_confirm':1}</field>
             <field name="view_mode">tree,form</field>
         </record>
 

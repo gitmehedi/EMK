@@ -30,9 +30,9 @@
                                 groups="gbs_application_group.group_head_account,gbs_application_group.group_cxo"/>
 
                         <!--<button string="Tag LC" name="%(action_view_lc_wizard)d" type="action"-->
-                                <!--attrs="{'invisible':['|','|', ('pi_id', '=', False), ('state','!=','close'), ('lc_id', '!=', False)]}"-->
-                                <!--groups="account.group_account_user,gbs_application_group.group_head_account,gbs_application_group.group_cxo"-->
-                                <!--class="oe_highlight"/>-->
+                        <!--attrs="{'invisible':['|','|', ('pi_id', '=', False), ('state','!=','close'), ('lc_id', '!=', False)]}"-->
+                        <!--groups="account.group_account_user,gbs_application_group.group_head_account,gbs_application_group.group_cxo"-->
+                        <!--class="oe_highlight"/>-->
 
                         <field name="state" statusbar_visible="draft,validate,close, refused" widget="statusbar"/>
 
@@ -215,9 +215,21 @@
             <field name="padding">6</field>
         </record>
 
+        <record id="search_delivery_auth" model="ir.ui.view">
+            <field name="name">delivery.authorization.search</field>
+            <field name="model">delivery.authorization</field>
+            <field name="arch" type="xml">
+                <search string="Delivery Authorization">
+                    <filter name="validate" string="To Validate" domain="[('state','=','validate')]"/>
+                </search>
+            </field>
+        </record>
+
+
         <record model="ir.actions.act_window" id="delivery_order_action">
             <field name="name">Delivery Authorization</field>
             <field name="res_model">delivery.authorization</field>
+            <field name="context">{'search_default_validate':1}</field>
             <field name="view_mode">tree,form</field>
         </record>
 
