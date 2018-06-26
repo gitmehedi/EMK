@@ -29,6 +29,40 @@
 			<field name="type">form</field>
 			<field name="arch" type="xml">
 				<form string="Attendance and Over Time Summary" delete="false" create="0">
+					<style>
+						.o-form_attendance_summary {
+							max-width: 100% !important;
+							padding-top: 0px !important;
+						}
+
+						.o-form_attendance_summary .o_list_view thead,
+						.o-form_attendance_summary .o_list_view thead th {
+							white-space: nowrap;
+							position: -webkit-sticky;
+							position: sticky;
+							top: 0;
+						}
+
+						.o-form_attendance_summary .o_list_view thead th {
+							background: #ededed;
+							border-left: 1px solid #dfdfdf;
+							border-bottom: 2px solid #ddd;
+						}
+
+						.o-form_attendance_summary .o_list_view tbody td {
+							white-space: nowrap;
+						}
+						.o-form_attendance_summary .o_list_editable {
+							max-height: calc(100vh - 255px);
+							overflow: auto;
+							border: 1px solid #ddd;
+						}
+						.o-form_attendance_summary .table-responsive {
+							overflow: initial;
+						}
+
+
+					</style>
 					<header>
 						<button name="hr_attendance_and_ot_summary.attendance_summary_wizard_action_view"
 							type="action" string="Generated" states="draft" context="{'operating_unit_id': operating_unit_id}"/>
@@ -39,16 +73,14 @@
                         <button name="action_done" type="object" string="Approve" states="confirmed" class="oe_highlight"/>
 						<field name="state" widget="statusbar"/>
 					</header>
-					<sheet>
-						<group>
-							<field name="name" />
-							<field name="period"/>
-						</group>
+					<sheet class="o-form_attendance_summary">
 						<group col="2">
 							<group>
-								<field name="company_id" options='{"no_open": True,"no_create": 1, "no_create_edit":1}'/>
+								<field name="name" />
+								<field name="period"/>
 							</group>
 							<group>
+								<field name="company_id" options='{"no_open": True,"no_create": 1, "no_create_edit":1}'/>
 								<field name="operating_unit_id" options='{"no_open": True,"no_create": 1, "no_create_edit":1}' />
 							</group>
 						</group>
@@ -76,12 +108,12 @@
 							</tree>
 						</field>
 					</sheet>
-					
+
 					<div class="oe_chatter">
 						<field name="message_follower_ids" widget="mail_followers"/>
 	                    <field name="message_ids" widget="mail_thread"/>
 	                </div>
-					
+
 				</form>
 			</field>
 		</record>
