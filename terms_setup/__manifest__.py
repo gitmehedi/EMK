@@ -13,7 +13,7 @@
     'category': 'sales',
     'version': '10.0.1',
 
-    'depends': ['sales_team',
+    'depends': ['base',
                 ],
     'data': [
         'views/terms_setup.xml',

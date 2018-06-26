@@ -1,0 +1,11 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_product_category_manager,access_product_category_manager,product.model_product_category,gbs_application_group.group_sales_product_manager,1,1,1,0
+access_product_uom_manager,access_product_uom_manager,product.model_product_uom,gbs_application_group.group_sales_product_manager,1,1,1,0
+access_product_hs_code_manager,access_product_hs_code_manager,product_harmonized_system.model_hs_code,gbs_application_group.group_sales_product_manager,1,1,1,0
+access_product_ir_property_manager,access_product_ir_property_manager,base.model_ir_property,gbs_application_group.group_sales_product_manager,1,0,0,0
+
+access_terms_setup_executive,access_terms_setup_executive,terms_setup.model_terms_setup,sales_team.group_sale_salesman,1,0,0,0
+
+
+
+
