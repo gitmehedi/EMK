@@ -5,6 +5,8 @@ import datetime
 class UomJarSummary(models.Model):
     _name = 'uom.jar.received'
     _description = 'UoM JAR Received'
+    _rec_name = 'partner_id'
+
 
     partner_id = fields.Many2one('res.partner', string='Customer', domain=[('customer', '=', True)], required=True)
     due_jar = fields.Integer(string='Due Jar', readonly=False)
@@ -41,4 +43,4 @@ class UomJarSummary(models.Model):
 
                     })
 
-                self.state = 'confirmed'
+        self.state = 'confirmed'

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="rule_for_all_stock_location" model="ir.rule">
+        <field name="name">Stock Location For Sales(All Access)</field>
+        <field name="model_id" ref="stock.model_stock_location"/>
+        <field name="domain_force">[(1,'=',1)]</field>
+        <field name="perm_read" eval="True" />
+        <field name="perm_create" eval="False"/>
+        <field name="perm_write" eval="False"/>
+        <field name="perm_unlink" eval="False"/>
+        <field name="groups" eval="[(4,ref('gbs_application_group.group_sales_product_manager')),(4,ref('sales_team.group_sale_salesman'))]"/>
+    </record>
+
+</odoo>
+
