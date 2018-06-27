@@ -19,9 +19,12 @@
         'base',
         'product',
         'product_harmonized_system',
-        'sales_team',
+        # 'sales_team',
         'gbs_application_group',
         'stock',
+        'account',
+        'gbs_sales_commission',
+        'delivery_order',
     ],
 
 

@@ -137,5 +137,38 @@
                   groups="account.group_account_user,gbs_application_group.group_sales_customer_manager,gbs_application_group.group_sales_product_manager,sales_team.group_sale_salesman_all_leads,gbs_application_group.group_head_sale,gbs_application_group.group_head_account,gbs_application_group.group_cxo"
                   action="price_history_action"/>
 
+
+        <!--Remove Customer Manager group from certain menu-->
+        <record id="product_sales_pricelist.price_history_menu" model="ir.ui.menu">
+            <field name="groups_id"
+                   eval="[(3,ref('gbs_application_group.group_sales_customer_manager'))]"/>
+        </record>
+
+        <record id="sale.menu_product_template_action" model="ir.ui.menu">
+            <field name="groups_id"
+                   eval="[(3,ref('gbs_application_group.group_sales_customer_manager'))]"/>
+        </record>
+
+        <record id="sale.menu_product_template_action" model="ir.ui.menu">
+            <field name="groups_id"
+                   eval="[(3,ref('gbs_application_group.group_sales_customer_manager'))]"/>
+        </record>
+
+        <record id="sale.menu_sale_order_upselling" model="ir.ui.menu">
+            <field name="groups_id"
+                   eval="[(3,ref('gbs_application_group.group_sales_customer_manager'))]"/>
+        </record>
+
+        <record id="product_sales_pricelist.custom_menu_products" model="ir.ui.menu">
+            <field name="groups_id"
+                   eval="[(3,ref('gbs_application_group.group_sales_customer_manager'))]"/>
+        </record>
+
+        <!--<record id="sales_team.menu_sales" model="ir.ui.menu">-->
+            <!--<field name="groups_id"-->
+                   <!--eval="[(3,ref('gbs_application_group.group_sales_customer_manager'))]"/>-->
+        <!--</record>-->
+
+
     </data>
 </odoo>
