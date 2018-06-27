@@ -18,9 +18,10 @@
         'views/hr_emp_master_checklists_view.xml',
         'workflow/emp_exit_req_workflow.xml',
         # 'wizard/employee_exit_search_popup.xml',
-        # 'report/report_employee_exit.xml',
-        # 'report/hr_exit_report.xml'
-        'security/ir.model.access.csv'
+        'report/report_employee_exit.xml',
+        #'report/hr_exit_report.xml',
+        'security/ir.model.access.csv',
+        'security/ir_rule.xml'
     ],
     'installable': True,
     'application': True,

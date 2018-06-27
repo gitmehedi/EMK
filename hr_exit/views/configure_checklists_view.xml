@@ -13,26 +13,25 @@
 					</header>
 					<sheet>
 						<group>
-							<!--<field name="code" />-->
 							<field name="name" />
 							<field name="responsible_type" />
-							<field name="responsible_userdepartment"
-								attrs="{'invisible':[('responsible_type', '!=', 'department')]}" />
-							<field name="responsible_username"
+							<field name="responsible_userdepartment_id"
+								attrs="{'invisible':[('responsible_type', '!=', 'department')]}"/>
+							<field name="responsible_username_id"
 								attrs="{'invisible':[('responsible_type', '!=', 'individual')]}" />
+							<!--<field name="applicable_for"/>-->
+							<!--<field name="applicable_department_id"-->
+								   <!--attrs="{'invisible':[('applicable_for','!=', 'department')]}"/>-->
+							<!--<field name="applicable_empname_id"-->
+								   <!--attrs="{'invisible':[('applicable_for','!=', 'individual')]}"/>-->
+							<!--<field name="applicable_jobtitle_id"-->
+								   <!--attrs="{'invisible':[('applicable_for','!=', 'designation')]}"/>-->
+
 							<field name="is_active" />
 							<field name="notes" />
 
 						</group>
 						<notebook>
-							<!--<page string="Check Lists">
-								<field name="checklists_ids">
-									<tree editable="top">
-										<field name="check_list_type_id"
-											options='{"no_open": True,"no_create": 1, "no_create_edit": 1}' />
-									</tree>
-								</field>
-							</page>-->
 							<page string="Check Lists">
 								<field name="checklist_item_ids">
 									<tree editable="top">
@@ -54,11 +53,7 @@
 			<field name="type">tree</field>
 			<field name="arch" type="xml">
 				<tree string="Configure Checklists Tree">
-					<!--<field name="code" />-->
 					<field name="name" />
-					<!-- <field name="responsible_type" /> -->
-					<!-- <field name="responsible_userdepartment" /> -->
-					<!-- <field name="responsible_username" /> -->
 					<field name="notes" />
 					<field name="is_active" />
 				</tree>
@@ -71,14 +66,10 @@
 			<field name="model">hr.exit.configure.checklists</field>
 			<field name="arch" type="xml">
 				<search string="Search">
-					<!--<field name="code" string="Code" filter_domain="[('code','ilike','self')]" />-->
 					<field name="name" string="Name" filter_domain="[('name','ilike','self')]" />
-					<!-- <field name="responsible_type" string="Name" filter_domain="[('name','ilike','self')]" -->
-					<!-- /> -->
-					<!-- <field name="responsible_userdepartment" string="Name" filter_domain="[('name','ilike','self')]" -->
-					<!-- /> -->
-					<!-- <field name="responsible_username" string="Name" filter_domain="[('name','ilike','self')]" -->
-					<!-- /> -->
+					 <field name="responsible_type" string="Name" filter_domain="[('name','ilike','self')]"/>
+					 <field name="responsible_userdepartment_id" string="Name" filter_domain="[('name','ilike','self')]"/>
+					 <field name="responsible_username_id" string="Name" filter_domain="[('name','ilike','self')]"/>
 					<field name="notes" string="Notes" filter_domain="[('notes','ilike','self')]" />
 				</search>
 			</field>

@@ -1,7 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--Custom report. -->
-<openerp>
+<odoo>
 	<data>
+		<report
+			id="custom_report_employee_exit"
+			model="employee.exit.req"
+			string="Employee Exit Report"
+			report_type="qweb-pdf"
+			name="hr_exit.report_employee_exit"
+			attachment_use="False"
+			file="hr_exit.report_employee_exit"
+		/>
 		<template id="report_employee_exit_document">
 			<t t-call="report.external_layout">
 				<div class="page">
@@ -21,4 +30,4 @@
 			</t>
 		</template>
 	</data>
-</openerp>
+</odoo>
