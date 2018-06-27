@@ -10,6 +10,7 @@ class PurchaseAveragePriceWizard(models.TransientModel):
     date_to = fields.Date("Date To", required=True)
     operating_unit_id = fields.Many2one('operating.unit', string='Unit Name', required=True,
                                         default=lambda self: self.env.user.default_operating_unit_id)
+    product_id = fields.Many2one('product.product', string='Product')
 
     @api.constrains('date_from', 'date_to')
     def _check_date_validation(self):
@@ -26,6 +27,7 @@ class PurchaseAveragePriceWizard(models.TransientModel):
         data['operating_unit_id'] = self.operating_unit_id.id
         data['operating_unit_name'] = self.operating_unit_id.name
         data['location_id'] = location.id
+        data['product_id'] = self.product_id.id
 
         return self.env['report'].get_action(self, 'purchase_average_price_report.purchase_price_report_temp',
                                              data=data)

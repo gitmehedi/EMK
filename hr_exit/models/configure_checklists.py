@@ -4,11 +4,14 @@ class ConfigureChecklists(models.Model):
     _name='hr.exit.configure.checklists'
     
     #Model Fields
-    #code=fields.Char(string='Code', size=50, help='Please enter code.')
     name=fields.Char(string='Name', size=100, required=True, help='Please enter name.')
     responsible_type=fields.Selection(selection=[('department', 'Department'),('individual','Individual')])
-    responsible_userdepartment=fields.Many2one('hr.department', ondelete='set null', string='Responsible Department', help='Please enter responsible department name.')
-    responsible_username=fields.Many2one('hr.employee',string='Responsible User', help='Please enter responsible user name.')
+    applicable_for=fields.Selection(selection=[('department', 'Department'),('designation','Designation'),('individual','Individual')])
+    applicable_department_id=fields.Many2one('hr.department', string='Applicable Department')
+    applicable_empname_id=fields.Many2one('hr.employee',string='Applicable Employee')
+    applicable_jobtitle_id=fields.Many2one('hr.job',string='Applicable Designation')
+    responsible_userdepartment_id=fields.Many2one('hr.department', string='Responsible Department')
+    responsible_username_id=fields.Many2one('hr.employee',string='Responsible User')
     notes=fields.Text(string='Notes', size=500, help='Please enter notes.')
     is_active=fields.Boolean(string='Active', default=True)
     
@@ -19,5 +22,5 @@ class ConfigureChecklists(models.Model):
     checklists_line_ids = fields.Many2many('hr.exit.configure.checklists.line','exit_configure_checklists_line_rel')
     @api.onchange('responsible_type')
     def on_change_responsible_type(self):
-        self.responsible_userdepartment=0
-        self.responsible_username=0
+        self.responsible_userdepartment_id=0
+        self.responsible_username_id=0

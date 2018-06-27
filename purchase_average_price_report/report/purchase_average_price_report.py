@@ -26,7 +26,18 @@ class PurchasePriceReport(models.AbstractModel):
         date_to = data['date_to']
         date_end = date_to + ' 23:59:59'
         location_stock = data['location_id']
+        product_id = data['product_id']
+        product_pool = self.env['product.product']
         product = []
+
+        if product_id:
+            product_param = "(" + str(data['product_id']) + ")"
+        else:
+            product_list = product_pool.search([])
+            if len(product_list) == 1:
+                product_param = "(" + str(product_list.id) + ")"
+            else:
+                product_param = str(tuple(product_list.ids))
 
         sql_avg ='''SELECT sm.product_id,
                            pt.name AS product_name,
@@ -49,9 +60,10 @@ class PurchasePriceReport(models.AbstractModel):
                           AND sm.state = 'done'
                           AND sm.location_id <> %s
                           AND sm.location_dest_id = %s
+                          AND pp.id IN %s
                     Group by Date_trunc('day', sm.date + interval'6h'),sm.product_id,pt.name,pu.name,pv.name
                     Order by Date_trunc('day', sm.date + interval'6h')   
-        '''% (date_start, date_end,location_stock,location_stock)
+        '''% (date_start, date_end,location_stock,location_stock,product_param)
 
         self.env.cr.execute(sql_avg)
         for vals in self.env.cr.dictfetchall():
