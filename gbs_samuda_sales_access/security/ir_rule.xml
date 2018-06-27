@@ -12,7 +12,5 @@
         <field name="groups" eval="[(4,ref('gbs_application_group.group_sales_product_manager')),(4,ref('sales_team.group_sale_salesman'))]"/>
     </record>
 
-    <delete model="ir.rule" id="sales_team.crm_rule_all_salesteam"/>
-
 </odoo>
 

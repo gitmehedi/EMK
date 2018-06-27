@@ -132,7 +132,7 @@ class ResPartner(models.Model):
     @api.constrains('name')
     def _check_unique_name(self):
         if self.name:
-            name = self.env['res.partner'].search([('name', '=', self.name)])
+            name = self.env['res.partner'].search([('name', '=ilike', self.name)])
             if len(name) > 1:
                 raise ValidationError('Customer already exists.')
 
