@@ -1,10 +1,1 @@
 
-<report 
-	id="custom_report_employee_exit" 
-	model="hr_exit.employee_exit_req"
-	string="Employee Exit Report" 
-	report_type="qweb-pdf"
-	name="hr_exit.report_employee_exit" 
-	attachment_use="False"
-	file="hr_exit.report_employee_exit" 
-/>
