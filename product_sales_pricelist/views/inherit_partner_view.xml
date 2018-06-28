@@ -7,16 +7,6 @@
             <field name="model">res.partner</field>
             <field name="inherit_id" ref="account.view_partner_property_form"/>
             <field name="arch" type="xml">
-                <!--<data>-->
-                <!--<div class="oe_button_box" name="button_box">-->
-                <!--<button type="object" string="Pricing History"-->
-                <!--name="action_view_pricing_history"-->
-                <!--class="oe_stat_button"-->
-                <!--icon="fa-usd">-->
-                <!--</button>-->
-                <!--</div>-->
-                <!--</data>-->
-
 
                 <xpath expr="//group[@name='accounting_entries']" position="replace">
                     <group string="Accounting Entries" name="accounting_entries"
@@ -25,16 +15,6 @@
                         <field name="property_account_payable_id"/>
                     </group>
                 </xpath>
-
-
-                <!--<xpath expr="//field[@name='company_id']" position="after">-->
-                <!--<field name="max_ordering_qty"/>-->
-                <!--</xpath>-->
-
-                <!--<xpath expr="//field[@name='max_ordering_qty']" position="after">-->
-                <!--<field name="available_qty"/>-->
-                <!--</xpath>-->
-
 
             </field>
         </record>
