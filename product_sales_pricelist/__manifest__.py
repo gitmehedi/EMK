@@ -27,7 +27,7 @@
         'report/change_product_price_report.xml',
         'views/ir_cron.xml',
         'views/product_variants_price_history_view.xml',
-        'views/inherit_account_view.xml',
+        'views/inherit_partner_view.xml',
     ],
     'installable': True,
     'application': False,
