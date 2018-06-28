@@ -5,11 +5,35 @@
         <field name="name">Stock Location For Sales(All Access)</field>
         <field name="model_id" ref="stock.model_stock_location"/>
         <field name="domain_force">[(1,'=',1)]</field>
-        <field name="perm_read" eval="True" />
+        <field name="perm_read" eval="True"/>
         <field name="perm_create" eval="False"/>
         <field name="perm_write" eval="False"/>
         <field name="perm_unlink" eval="False"/>
-        <field name="groups" eval="[(4,ref('gbs_application_group.group_sales_product_manager')),(4,ref('sales_team.group_sale_salesman'))]"/>
+        <field name="groups"
+               eval="[(4,ref('gbs_application_group.group_sales_product_manager')),(4,ref('sales_team.group_sale_salesman'))]"/>
+    </record>
+
+
+    <function name="write" model="ir.model.data">
+        <!-- First we need to find the record...-->
+        <function name="search" model="ir.model.data">
+            <value
+                    eval="[('module', '=', 'sale'), ('name', '=', 'sale_order_line_comp_rule')]"
+            />
+        </function>
+        <!-- ...and temporarily set the noupdate field to False-->
+        <value eval="{'noupdate': False}"/>
+
+    </function>
+
+    <!-- Get our main job done, i.e. modify the domain_force field of a record -->
+
+    <record id="sale.sale_order_line_comp_rule" model="ir.rule">
+        <field name="perm_read" eval="True"/>
+        <field name="perm_create" eval="False"/>
+        <field name="perm_write" eval="False"/>
+        <field name="perm_unlink" eval="False"/>
+        <field name="domain_force">['|',('company_id','=',False),('company_id','child_of',[user.company_id.id])]</field>
     </record>
 
 </odoo>
