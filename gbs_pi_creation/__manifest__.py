@@ -9,14 +9,15 @@
         'gbs_application_group',
         'sales_team',
         'terms_setup',
-        'custom_report'
+        'custom_report',
+        'ir_sequence_operating_unit',
     ],
 
     'data': [
         'security/ir.model.access.csv',
-        #'wizards/tag_sale_order_view.xml',
         'views/proforma_invoice_view.xml',
         'report/proforma_invoice_report.xml',
+        'data/pi_sequence.xml',
     ],
 
     'summary': 'Proforma Invoice (PI) Creation',
