@@ -24,3 +24,9 @@ class ConfigureChecklists(models.Model):
     def on_change_responsible_type(self):
         self.responsible_userdepartment_id=0
         self.responsible_username_id=0
+
+    @api.onchange('applicable_for')
+    def on_change_applicable_for(self):
+        self.applicable_department_id=0
+        self.applicable_empname_id=0
+        self.applicable_jobtitle_id=0

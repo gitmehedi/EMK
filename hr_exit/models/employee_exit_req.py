@@ -96,13 +96,18 @@ class EmployeeExitReq(models.Model):
                 self.write({'state': 'refuse'})
         return True
 
-
+    @api.multi
     @api.onchange('employee_id')
     def on_change_employee(self):
+        self.checklists_ids = []
+        vals = []
         confg_checklist_pool = self.env['hr.exit.configure.checklists'].search([('is_active','=',True)])
         for record in confg_checklist_pool:
             if record.applicable_empname_id:
-                if confg_checklist_pool.applicable_empname_id.id == self.employee_id.id:
-                    for check in self.checklists_ids:
-                        for config in confg_checklist_pool.checklist_item_ids:
-                            check.checklist_item_id = config.name
+                if record.applicable_empname_id == self.employee_id:
+                    for config in record.checklist_item_ids:
+                        vals.append((0, 0, {
+                                            'name': config.name,
+                                            #'employee': config.applicable_empname_id,
+                                            }))
+        self.checklists_ids = vals
