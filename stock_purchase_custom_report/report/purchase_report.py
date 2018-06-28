@@ -30,6 +30,8 @@ class StockPurchaseReport(models.AbstractModel):
         date_to = data['date_to']
         date_end = date_to + ' 23:59:59'
         location_outsource = data['location_id']
+        location_input =  self.env['stock.location'].search(
+            [('operating_unit_id', '=', data['operating_unit_id']),('name', '=', 'Input')])[0].id
         supplier_id = data['partner_id']
         supplier_pool = self.env['res.partner']
         picking_pool = self.env['stock.picking'].search([])
@@ -112,7 +114,11 @@ class StockPurchaseReport(models.AbstractModel):
                                            LEFT JOIN stock_picking sp 
                                                   ON sm.picking_id = sp.id 
                                            INNER JOIN stock_picking sp1 
-                                                  ON sp.origin = sp1.name
+                                                  ON CASE 
+                                                WHEN sp1.location_dest_id = %s AND sp.origin = sp1.name THEN 1
+                                                WHEN sp1.location_dest_id = %s AND sp.origin = sp1.origin THEN 1
+                                                ELSE 0																								
+                                                END = 1
                                            LEFT JOIN res_partner rp
 						                          ON rp.id = sp1.partner_id
                                            LEFT JOIN product_product pp 
@@ -132,7 +138,7 @@ class StockPurchaseReport(models.AbstractModel):
                                             %s
                                    )tbl 
                                    ORDER BY m_date
-                        ''' % (date_end,date_end,date_start, date_end, location_outsource, location_outsource,_where)
+                        ''' % (date_end,date_end,location_input,location_input,date_start, date_end, location_outsource, location_outsource,_where)
 
         self.env.cr.execute(sql_in_tk)
         for vals in self.env.cr.dictfetchall():

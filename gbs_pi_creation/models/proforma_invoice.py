@@ -9,7 +9,7 @@ class ProformaInvoice(models.Model):
 
     _rec_name='name'
 
-    name = fields.Char(string='Name', index=True, readonly=True)
+    name = fields.Char(string='Name', index=True, readonly=True, default="/")
 
     partner_id = fields.Many2one('res.partner', string='Customer', domain=[('customer', '=', True)],required=True,readonly=True,states={'draft': [('readonly', False)]})
     invoice_date = fields.Date('Invoice Date', readonly=True, required=1, states={'draft': [('readonly', False)]})
@@ -108,8 +108,6 @@ class ProformaInvoice(models.Model):
 
     @api.model
     def create(self, vals):
-        seq = self.env['ir.sequence'].next_by_code('proforma.invoice') or '/'
-        vals['name'] = seq
 
         if vals.get('so_ids'):
             so_ids = self.env['sale.order'].search([('id', 'in', vals.get('so_ids')[0][2])])
@@ -225,9 +223,13 @@ class ProformaInvoice(models.Model):
 
     @api.multi
     def action_confirm(self):
-        self.update_Pi_to_so_obj()
 
-        self.state = 'confirm'
+        self.update_Pi_to_so_obj()
+        res = {'state': 'confirm'}
+        new_seq = self.env['ir.sequence'].next_by_code_new('proforma.invoice', self.invoice_date)
+        if new_seq:
+            res['name'] = new_seq
+        self.write(res)
 
 
     def update_Pi_to_so_obj(self):
