@@ -107,16 +107,7 @@
             </field>
         </record>
 
-        <!-- Generate automated sequence -->
-        <record id="seq_letter_credit" model="ir.sequence">
-            <field name="name">PI Sequences</field>
-            <field name="code">proforma.invoice</field>
-            <field name="prefix">PI-</field>
-            <field name="padding">9</field>
-        </record>
-
-
-         <record id="search_pi_view" model="ir.ui.view">
+        <record id="search_pi_view" model="ir.ui.view">
             <field name="name">proforma.invoice.search</field>
             <field name="model">proforma.invoice</field>
             <field name="arch" type="xml">
