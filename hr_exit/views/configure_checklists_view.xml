@@ -19,13 +19,13 @@
 								attrs="{'invisible':[('responsible_type', '!=', 'department')]}"/>
 							<field name="responsible_username_id"
 								attrs="{'invisible':[('responsible_type', '!=', 'individual')]}" />
-							<!--<field name="applicable_for"/>-->
-							<!--<field name="applicable_department_id"-->
-								   <!--attrs="{'invisible':[('applicable_for','!=', 'department')]}"/>-->
-							<!--<field name="applicable_empname_id"-->
-								   <!--attrs="{'invisible':[('applicable_for','!=', 'individual')]}"/>-->
-							<!--<field name="applicable_jobtitle_id"-->
-								   <!--attrs="{'invisible':[('applicable_for','!=', 'designation')]}"/>-->
+							<field name="applicable_for"/>
+							<field name="applicable_department_id"
+								   attrs="{'invisible':[('applicable_for','!=', 'department')]}"/>
+							<field name="applicable_empname_id"
+								   attrs="{'invisible':[('applicable_for','!=', 'individual')]}"/>
+							<field name="applicable_jobtitle_id"
+								   attrs="{'invisible':[('applicable_for','!=', 'designation')]}"/>
 
 							<field name="is_active" />
 							<field name="notes" />
