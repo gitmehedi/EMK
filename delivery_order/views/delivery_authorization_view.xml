@@ -233,12 +233,12 @@
             <field name="view_mode">tree,form</field>
         </record>
 
-        <menuitem id="delivery_order_menu" name="Delivery Authorization" parent="sales_team.menu_base_partner"
-                  groups="account.group_account_user,gbs_application_group.group_head_account,gbs_application_group.group_cxo"
-                  sequence="12" action="delivery_order_action"/>
+        <!--<menuitem id="delivery_order_menu" name="Delivery Authorization" parent="sales_team.menu_base_partner"-->
+                  <!--groups="account.group_account_user,gbs_application_group.group_head_account,gbs_application_group.group_cxo"-->
+                  <!--sequence="12" action="delivery_order_action"/>-->
 
-        <menuitem id="delivery_order_submenu" name="Delivery Authorization" parent="delivery_order_menu"
-                  groups="account.group_account_user,gbs_application_group.group_head_account,gbs_application_group.group_cxo"
+        <menuitem id="delivery_order_submenu" name="Delivery Authorization" parent="delivery_schedules.delivery_schedule_menu"
+                  sequence="1" groups="account.group_account_user,gbs_application_group.group_head_account,gbs_application_group.group_cxo"
                   action="delivery_order_action"/>
 
 

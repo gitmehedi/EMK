@@ -121,8 +121,9 @@
             <field name="view_id" ref="customer_creditlimit_assign_tree"/>
         </record>
 
+
         <menuitem action="action_creditlimit_tree"
-                  id="menu_action_creditlimit_tree" parent="sales_team.menu_sales" sequence="12"
+                  id="menu_action_creditlimit_tree" parent="gbs_sale_order_approval.menu_customer" sequence="2"
                   groups="gbs_application_group.group_head_account,gbs_application_group.group_head_sale,gbs_application_group.group_cxo,sales_team.group_sale_salesman_all_leads"/>
 
     </data>

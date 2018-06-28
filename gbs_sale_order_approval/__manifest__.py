@@ -25,6 +25,7 @@
         'security/ir.model.access.csv',
         'security/sale_order_approval_security.xml',
         'views/inherited_sale_view.xml',
+        'views/menuitems.xml',
         'report/inherit_sale_order_report.xml',
     ],
     'installable': True,

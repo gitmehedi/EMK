@@ -116,11 +116,11 @@
                   web_icon="sale,static/description/icon.png"/>
 
         <menuitem id="custom_menu_products"
-                  sequence="5"
+                  sequence="8"
                   name="Products"
                   groups="sales_team.group_sale_salesman_all_leads,account.group_account_user,gbs_application_group.group_sales_customer_manager,gbs_application_group.group_sales_product_manager,gbs_application_group.group_head_sale,gbs_application_group.group_head_account,gbs_application_group.group_cxo"
                   parent="sales_team.menu_base_partner"/>
-
+        <menuitem id="sale.menu_products" action="product.product_normal_action_sell" parent="custom_menu_products" groups="product.group_product_variant" sequence="10"/>
         <menuitem id="product_sale_price_change_menu_action"
                   name="Product Sales Pricelist"
                   groups="account.group_account_user,gbs_application_group.group_sales_customer_manager,gbs_application_group.group_sales_product_manager,sales_team.group_sale_salesman_all_leads,gbs_application_group.group_head_sale,gbs_application_group.group_head_account,gbs_application_group.group_cxo"
