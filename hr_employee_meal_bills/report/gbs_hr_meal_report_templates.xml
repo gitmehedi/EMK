@@ -4,17 +4,17 @@
     <data>
         <template id="report_meal_bill">
             <t t-call="report.html_container">
-                <t t-foreach="docs" t-as="o">
-                    <t t-call="report.external_layout">
-                        <div class="page">
+                <t t-call="custom_report.gbs_internal_layout">
+                    <t t-foreach="docs" t-as="o">
+                        <div class="page" style="page-break-inside:auto">
                             <div class="row">
                                 <div class="col-xs-12" style="text-align:center;">
-                                    <h2 ><strong >Employee Meal Bills Report</strong></h2>
+                                    <h4 class="report-title">Employee Meal Bills Report</h4>
                                     <p><span t-field="o.name"/></p>
                                 </div>
                             </div>
 
-                            <table class="table table-condensed">
+                            <table class="table table-bordered table-report-sm table-striped">
                                 <thead>
                                     <tr style="background-color:#C0C0C0;">
                                         <th>Employee</th>

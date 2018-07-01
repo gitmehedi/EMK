@@ -27,11 +27,11 @@
                 <form string="Change Products Sale Price">
                     <header>
                         <!--<button string="Submit" name="action_submit"-->
-                                <!--groups="gbs_application_group.group_head_account,gbs_application_group.group_head_sale,gbs_application_group.group_cxo"-->
-                                <!--states="draft" type="object" class="oe_highlight"/>-->
+                        <!--groups="gbs_application_group.group_head_account,gbs_application_group.group_head_sale,gbs_application_group.group_cxo"-->
+                        <!--states="draft" type="object" class="oe_highlight"/>-->
 
                         <button string="Confirm" name="action_confirm"
-                                groups="gbs_application_group.group_head_account,gbs_application_group.group_head_sale,gbs_application_group.group_cxo"
+                                groups="sales_team.group_sale_salesman_all_leads,gbs_application_group.group_head_account,gbs_application_group.group_head_sale,gbs_application_group.group_cxo"
                                 states="draft" type="object" class="oe_highlight"/>
                         <button string="Approve" name="action_approve" groups="gbs_application_group.group_cxo"
                                 states="validate1" type="object" class="oe_highlight"/>
@@ -91,10 +91,22 @@
             </field>
         </record>
 
+
+        <record id="search_view_pricelists" model="ir.ui.view">
+            <field name="name">product.sales.pricelist.search</field>
+            <field name="model">product.sales.pricelist</field>
+            <field name="arch" type="xml">
+                <search string="Sales Pricelist">
+                    <filter name="confirm" string="To Approve" domain="[('state','=','confirm')]"/>
+                </search>
+            </field>
+        </record>
+
+
         <record id="action_product_sale_price_change" model="ir.actions.act_window">
             <field name="name">Product Sales Pricelist</field>
             <field name="res_model">product.sales.pricelist</field>
-            <field name="context">{'search_default_group_product_id': 1}</field>
+            <field name="context">{'search_default_group_product_id':1,'search_default_confirm':1}</field>
             <field name="view_mode">tree,form</field>
         </record>
 
@@ -104,11 +116,12 @@
                   web_icon="sale,static/description/icon.png"/>
 
         <menuitem id="custom_menu_products"
-                  sequence="5"
+                  sequence="8"
                   name="Products"
                   groups="sales_team.group_sale_salesman_all_leads,account.group_account_user,gbs_application_group.group_sales_customer_manager,gbs_application_group.group_sales_product_manager,gbs_application_group.group_head_sale,gbs_application_group.group_head_account,gbs_application_group.group_cxo"
                   parent="sales_team.menu_base_partner"/>
-
+        <menuitem id="sale.menu_products" groups="sales_team.group_sale_salesman_all_leads,account.group_account_user,gbs_application_group.group_sales_customer_manager,gbs_application_group.group_sales_product_manager,gbs_application_group.group_head_sale,gbs_application_group.group_head_account,gbs_application_group.group_cxo"
+                  action="product.product_normal_action_sell" parent="custom_menu_products" sequence="10"/>
         <menuitem id="product_sale_price_change_menu_action"
                   name="Product Sales Pricelist"
                   groups="account.group_account_user,gbs_application_group.group_sales_customer_manager,gbs_application_group.group_sales_product_manager,sales_team.group_sale_salesman_all_leads,gbs_application_group.group_head_sale,gbs_application_group.group_head_account,gbs_application_group.group_cxo"
@@ -124,6 +137,39 @@
                   parent="custom_menu_products"
                   groups="account.group_account_user,gbs_application_group.group_sales_customer_manager,gbs_application_group.group_sales_product_manager,sales_team.group_sale_salesman_all_leads,gbs_application_group.group_head_sale,gbs_application_group.group_head_account,gbs_application_group.group_cxo"
                   action="price_history_action"/>
+
+
+        <!--Remove Customer Manager group from certain menu-->
+        <record id="product_sales_pricelist.price_history_menu" model="ir.ui.menu">
+            <field name="groups_id"
+                   eval="[(3,ref('gbs_application_group.group_sales_customer_manager'))]"/>
+        </record>
+
+        <record id="sale.menu_product_template_action" model="ir.ui.menu">
+            <field name="groups_id"
+                   eval="[(3,ref('gbs_application_group.group_sales_customer_manager'))]"/>
+        </record>
+
+        <record id="sale.menu_product_template_action" model="ir.ui.menu">
+            <field name="groups_id"
+                   eval="[(3,ref('gbs_application_group.group_sales_customer_manager'))]"/>
+        </record>
+
+        <record id="sale.menu_sale_order_upselling" model="ir.ui.menu">
+            <field name="groups_id"
+                   eval="[(3,ref('gbs_application_group.group_sales_customer_manager'))]"/>
+        </record>
+
+        <record id="product_sales_pricelist.custom_menu_products" model="ir.ui.menu">
+            <field name="groups_id"
+                   eval="[(3,ref('gbs_application_group.group_sales_customer_manager'))]"/>
+        </record>
+
+        <!--<record id="sales_team.menu_sales" model="ir.ui.menu">-->
+            <!--<field name="groups_id"-->
+                   <!--eval="[(3,ref('gbs_application_group.group_sales_customer_manager'))]"/>-->
+        <!--</record>-->
+
 
     </data>
 </odoo>

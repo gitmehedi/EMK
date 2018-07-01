@@ -10,13 +10,13 @@
         'product_sales_pricelist',
         'account',
         'sale_order_type',
-        'letter_of_credit',
         'gbs_pi_creation',
         'letter_of_credit',
         'gbs_sales_commission_so',
         'stock',
         'amount_to_word_bd',
         'custom_report',
+        'gbs_sales_delivery_goods'
     ],
 
     'data': [
@@ -25,8 +25,8 @@
         'report/delivery_order_report_template.xml',
         'wizards/letter_of_credits_view.xml',
         'wizards/do_max_order_qty_without_lc_views.xml',
+        'views/delivery_authorization_view.xml',
         'views/delivery_order_view.xml',
-        'views/delivery_order_layer_view.xml',
         'views/inherited_account_payment_view.xml',
         'report/money_receipt_paperformat.xml',
         'report/cash_received_report.xml',

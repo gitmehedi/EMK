@@ -18,7 +18,6 @@
     'depends': ['stock_operating_unit'],
 
     'data': [
-        'security/ir_rule.xml',
         'views/stock_users_views.xml',
     ],
 

@@ -52,6 +52,8 @@
 								groups="stock_indent.group_stock_indent_approver" type="object"/>
 						<button name="action_view_picking" string="Issue Product(s)" type="object"
 								states="inprogress" class="oe_highlight" groups="stock_indent.group_stock_indent_issuer"/>
+						<button name="action_close_indent" string="Close" type="object"
+								states="inprogress" groups="stock.group_stock_user"/>
 						<field name="state" widget="statusbar"
 							   statusbar_visible="draft,waiting_approval,inprogress,received"
 							   statusbar_colors='{"reject":"red"}' />
@@ -60,8 +62,7 @@
 						<group>
 							<group>
 								<field name="indentor_id" readonly="1" />
-								<field name="requirement"
-									   on_change="onchange_requirement(indent_date, requirement)" />
+								<field name="requirement"/>
 								<field name="department_id"/>
 							</group>
 							<group>
@@ -80,11 +81,13 @@
 								<field name="product_lines">
 									<tree string="Products" editable="bottom">
 										<field name="sequence" widget="handle"/>
-										<field name="product_id"/>
+										<field name="product_id" domain="[('type','!=','service')]"/>
 										<field name="name" readonly="1" />
 										<field name="qty_available" readonly="1" groups="stock.group_stock_user" />
 										<field name="product_uom" string="UOM"/>
 										<field name="product_uom_qty" sum="Total Qty"/>
+										<field name="received_qty" sum="Total Receive Qty" readonly="1"/>
+										<field name="issue_qty" invisible="1"/>
 										<field name="remarks"/>
 										<!--groups="stock.group_stock_user"-->
 										<!--<field name="price_unit" sum="Total Price"/>-->
@@ -108,12 +111,13 @@
 											   options="{'no_create': True,'no_open':True}"/>
 										<field name="move_type" />
 										<field name="approver_id" invisible="1"/>
+										<field name="closer_id" invisible="1"/>
 										<field name="pr_indent_check" invisible="1"/>
 									</group>
 									<group>
 										<!--<field name="manager_id" readonly="1" />-->
-										<field name="warehouse_id" options="{'no_create': True,'no_open':True}"/>
-										<field name="stock_location_id" options="{'no_create': True,'no_open':True}"/>
+										<field name="warehouse_id" groups="stock.group_stock_multi_locations" options="{'no_create': True,'no_open':True}"/>
+										<field name="stock_location_id" groups="stock.group_stock_multi_locations" options="{'no_create': True,'no_open':True}"/>
 										<field name="picking_type_id"/>
 										<!--groups="stock.group_stock_manager"-->
 									</group>

@@ -1,138 +1,88 @@
+import operator, math, locale
+from collections import OrderedDict
+
 from odoo import api, exceptions, fields, models
-import operator, math
-import locale
+from odoo.tools.misc import formatLang
+
 
 class PayrollReportPivotal(models.AbstractModel):
     _name = 'report.gbs_hr_payroll_top_sheet.report_top_sheet'
 
+    # def getKey(item):
+    #     return item[1]
 
-    
+
+    def formatDigits(self, digits):
+        return formatLang(self.env, digits)
+
     @api.model
     def render_html(self, docids, data=None):
-        payslip_run_pool = self.env['hr.payslip.run']
-        docs = payslip_run_pool.browse(docids[0])
-        data = {}
-        data['name'] = docs.name
+        top_sheet = self.env['hr.payslip.run'].browse(docids[0])
+
+        data['name'] = top_sheet.name
+
         rule_list = []
-        for slip in docs.slip_ids:
+        for slip in top_sheet.slip_ids:
             for line in slip.line_ids:
-                if line.appears_on_payslip is True:
-                    rule = {}
-                    rule['name'] = line.name
-                    rule['seq'] = line.sequence
-                    rule['code'] = line.code
+                if (line.sequence, line.name) not in rule_list and line.appears_on_payslip:
+                    rule_list.append((line.sequence, line.name))
 
-                    if rule not in rule_list:
-                        rule_list.append(rule)
-        #rule_list = sorted(rule_list, key=lambda k: k['seq'])
+        rule_list = sorted(rule_list, key=lambda k: k[0])
 
-        dept = self.env['hr.department'].search([])
-        dpt_payslips_list = []
-        tot_gross = []
-        tot_tds = []
-        tot_epmf = []
-        tot_mess = []
-        tot_net = []
-        tot_bank = []
-        tot_emp = []
+        header = OrderedDict()
+        header[0] = 'Department'
+        header[1] = 'Employee'
+        for rec in rule_list:
+            header[len(header)] = rec[1]
 
-        for d in dept:
-            dpt_payslips = {}
-            dpt_payslips['name'] = d.name
-            dpt_payslips['val'] = []
-            count = 0
-            payslip = {}
-            for slip in docs.slip_ids:
-                if d.id == slip.employee_id.department_id.id:
-                    count +=1
-            payslip['count_emp'] = count
-            if payslip['count_emp'] == 0:
-                continue;
+        record = OrderedDict()
+        for rec in top_sheet.slip_ids:
+            rules = OrderedDict()
+            for rule in rule_list:
+                rules[rule[1]] = 0
+            record[rec.employee_id.department_id.name] = {}
+            record[rec.employee_id.department_id.name]['count'] = 0
+            record[rec.employee_id.department_id.name]['vals'] = rules
 
-            total_bank = []
-            total_sum = []
-            tds_sum = []
-            pf_sum = []
-            mess_sum = []
-            gross_sum = []
-            for slip in docs.slip_ids:
-                if d.id == slip.employee_id.department_id.id:
-                    #payslip['NET'] = 0
-                    for line in slip.line_ids:
-                        if line.code == 'NET':
-                            total_amt = line.total
-                            total_sum.append(math.ceil(total_amt))
-                        elif line.code == 'BNET' and slip.employee_id.bank_account_id:
-                            total_bamt = line.total
-                            total_bank.append(math.ceil(total_bamt))
-                        elif line.code == 'TDS':
-                            total_tds = line.total
-                            tds_sum.append(math.ceil(total_tds))
-                        elif line.code == 'EPMF':
-                            total_epmf = line.total
-                            pf_sum.append(math.ceil(total_epmf))
+        total = OrderedDict()
+        for rule in rule_list:
+            total[rule[1]] = 0
 
-                        elif line.code == 'MESS':
-                            total_mess = line.total
-                            mess_sum.append(math.ceil(total_mess))
-                        elif line.code == 'GROSS':
-                                gross_total = line.total
-                                gross_sum.append(math.ceil(gross_total))
+        bnet = 0
+        net = 0
 
-            payslip['gross'] = (sum(gross_sum))
-            payslip['total_net'] = (sum(total_sum))
-            payslip['total_bank'] = (sum(total_bank))
-            payslip['tds'] = (abs(sum(tds_sum)))
-            payslip['epmf'] = (abs(sum(pf_sum)))
-            payslip['mess'] = (abs(sum(mess_sum)))
+        for slip in top_sheet.slip_ids:
+            rec = record[slip.employee_id.department_id.name]
+            rec['count'] = rec['count'] + 1
+            for line in slip.line_ids:
+                if line.appears_on_payslip:
+                    rec['vals'][line.name] = rec['vals'][line.name] + math.ceil(line.total)
+                    total[line.name] = total[line.name] + math.ceil(line.total)
+                if line.code == 'BNET' and slip.employee_id.bank_account_id.bank_id:
+                    bnet = bnet + math.ceil(line.total)
+                if line.code == 'NET':
+                    net = net + math.ceil(line.total)
 
-            dpt_payslips['val'].append(payslip)
-            dpt_payslips_list.append(dpt_payslips)
-
-
-            tot_gross.append(abs(sum(gross_sum)))
-            tot_tds.append(abs(sum(tds_sum)))
-            tot_mess.append(abs(sum(mess_sum)))
-            tot_epmf.append(abs(sum(pf_sum)))
-            tot_net.append(abs(sum(total_sum)))
-            tot_bank.append(abs(sum(total_bank)))
-            tot_emp.append(count)
-
-            # sum1= []
-            # for j in dpt_payslips_list:
-            #     sum1.append(j[payslip['mess']])
-            # print sum1
-
-            all_total_net = sum(tot_net)
-            all_total_bank = sum(tot_bank)
-            all_total_cash = (sum(tot_net))-(sum(tot_bank))
-
-            amt_to_word_net = self.env['res.currency'].amount_to_word(all_total_net)
-            amt_to_word_bank = self.env['res.currency'].amount_to_word(all_total_bank)
-            amt_to_word_cash = self.env['res.currency'].amount_to_word(all_total_cash)
-
-            locale.setlocale(locale.LC_ALL, 'bn_BD.UTF-8')
-            thousand_separated_all_total_bank = locale.currency(all_total_bank, grouping=True)
-            thousand_separated_all_total_net = locale.currency(all_total_net, grouping=True)
-            thousand_separated_all_total_cash = locale.currency(all_total_cash, grouping=True)
+        inword = {
+            'total_cash': formatLang(self.env, (net - bnet)),
+            'bnet_word': self.env['res.currency'].amount_to_word(float(bnet)),
+            'net_word': self.env['res.currency'].amount_to_word(float(net)),
+            'cash_word': self.env['res.currency'].amount_to_word(float(net - bnet)),
+            'bnet': formatLang(self.env, bnet),
+            'net': formatLang(self.env, net),
+            'cash': formatLang(self.env, float(net - bnet)),
+        }
 
         docargs = {
             'doc_ids': self.ids,
             'doc_model': 'hr.payslip.run',
-            'docs': dpt_payslips_list,
-            #'all_mess': all_mess,
+            'formatLang': self.formatDigits,
+            'header': header,
             'data': data,
-            'tot_emp': sum(tot_emp),
-            'tot_gross' : sum(tot_gross),
-            'tot_tds' : sum(tot_tds),
-            'tot_mess' : sum(tot_mess),
-            'tot_epmf' : sum(tot_epmf),
-            'tot_net' : thousand_separated_all_total_net,
-            'tot_bank' : thousand_separated_all_total_bank,
-            'tot_cash' : thousand_separated_all_total_cash,
-            'amt_to_word_net' : amt_to_word_net,
-            'amt_to_word_bank' : amt_to_word_bank,
-            'amt_to_word_cash' : amt_to_word_cash,
+            'record': record,
+            'total': total,
+            'rules': rule_list,
+            'inword': inword
         }
-        
+
         return self.env['report'].render('gbs_hr_payroll_top_sheet.report_top_sheet', docargs)

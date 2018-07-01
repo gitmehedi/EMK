@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-    <record id="customer_credit_limit_permission_accpunt_executive" model="ir.rule">
-        <field name="name">Delivery Order Permission for Account Exe.</field>
-        <field name="model_id" ref="model_delivery_order"/>
+    <record id="DA_permission_accpunt_executive" model="ir.rule">
+        <field name="name">Delivery Auth Permission for Account Exe.</field>
+        <field name="model_id" ref="model_delivery_authorization"/>
         <field name="domain_force">[(1,'=',1)]</field>
         <field name="perm_read" eval="True" />
         <field name="perm_create" eval="True"/>
@@ -12,9 +12,9 @@
         <field name="groups" eval="[(4,ref('account.group_account_user'))]"/>
     </record>
 
-    <record id="customer_credit_limit_permission_head_of_accounts" model="ir.rule">
-        <field name="name">Delivery Order Permission for HOA</field>
-        <field name="model_id" ref="model_delivery_order"/>
+    <record id="DA_permission_head_of_accounts" model="ir.rule">
+        <field name="name">Delivery Auth Permission for HOA</field>
+        <field name="model_id" ref="model_delivery_authorization"/>
         <field name="domain_force">[(1,'=',1)]</field>
         <field name="perm_read" eval="True" />
         <field name="perm_create" eval="True"/>
@@ -23,9 +23,9 @@
         <field name="groups" eval="[(4,ref('gbs_application_group.group_head_account'))]"/>
     </record>
 
-    <record id="customer_credit_limit_permission_director" model="ir.rule">
-        <field name="name">Delivery Order Permission for M.D/Director</field>
-        <field name="model_id" ref="model_delivery_order"/>
+    <record id="DA_permission_director" model="ir.rule">
+        <field name="name">Delivery AUth Permission for M.D/Director</field>
+        <field name="model_id" ref="model_delivery_authorization"/>
         <field name="domain_force">[(1,'=',1)]</field>
         <field name="perm_read" eval="True" />
         <field name="perm_create" eval="True"/>

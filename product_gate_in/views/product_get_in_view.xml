@@ -28,10 +28,10 @@
                 <form string="Product Get In Form">
                     <header>
                         <button string="Confirm" name="action_confirm" states="draft" type="object"
-                                groups="hr.group_hr_user" class="oe_highlight"/>
-                        <button name="action_draft" type="object"
-                                string="Set to Draft"
-                                states="confirm"/>
+                                class="oe_highlight"/>
+                        <!--<button name="action_draft" type="object"-->
+                                <!--string="Reset to Draft"-->
+                                <!--states="confirm" groups="base_technical_features.group_technical_features"/>-->
                         <field name="state" widget="statusbar" statusbar_visible="draft,confirm"/>
                     </header>
                     <sheet>
@@ -45,18 +45,20 @@
                             <group>
                                 <field name="ship_id"
                                        options="{'no_quick_create':True,'no_create_edit':True,'no_open': True}"
-                                       attrs="{'invisible': [('receive_type', '!=', 'lc')]}"/>
+                                       attrs="{'invisible': [('receive_type', '!=', 'lc')],'required': [('receive_type', '=', 'lc')]}"/>
                                 <field name="create_by"/>
                                 <field name="received"/>
+                                <field name="partner_id" options="{'no_quick_create':True,'no_create_edit':True,'no_open': True}"/>
                             </group>
                         </group>
                         <notebook colspan="4">
                             <page string="Products">
                                 <field name="shipping_line_ids">
-                                    <tree string="Purchase Order Lines" create="false" editable="false">
-                                        <field name="product_id" readonly="1"/>
+                                    <tree string="Product Lines" editable="bottom">
+                                        <field name="product_id"/>
                                         <field name="product_qty"/>
-                                        <field name="product_uom" readonly="1"/>
+                                        <field name="product_uom"/>
+                                        <field name="price_unit"/>
                                         <field name="state" invisible="1"/>
                                     </tree>
                                 </field>
@@ -95,10 +97,13 @@
         </record>
 
         <!-- menu categories -->
-        <menuitem name="Product Gate In" id="product_gate_in_menu" parent="stock.menu_stock_root"
-                  groups="gbs_procure_to_pay_access.group_approve_gate_in"/>
+        <!--<menuitem name="Product Gate In" id="product_gate_in_menu" parent="stock.menu_stock_root"-->
+                  <!--groups="gbs_procure_n_commercial_access.group_approve_gate_in"/>-->
+        <!--<menuitem name="Gate In" id="product_gate_in_sub_menu" parent="product_gate_in_menu" sequence="5"-->
+                  <!--action="product_gate_in_action_window" groups="gbs_procure_n_commercial_access.group_approve_gate_in"/>-->
+        <menuitem name="Product Gate In" id="product_gate_in_menu" parent="stock.menu_stock_root"/>
         <menuitem name="Gate In" id="product_gate_in_sub_menu" parent="product_gate_in_menu" sequence="5"
-                  action="product_gate_in_action_window" groups="gbs_procure_to_pay_access.group_approve_gate_in"/>
+                  action="product_gate_in_action_window"/>
 
 
     </data>

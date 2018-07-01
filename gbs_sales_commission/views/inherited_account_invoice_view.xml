@@ -10,6 +10,12 @@
                 <field name="move_id" position="after">
                     <field name="generated_commission_amount"/>
                 </field>
+
+
+                <!--<button name="action_invoice_open" type="object" states="draft" string="Validate" class="oe_highlight"-->
+                        <!--groups="account.group_account_invoice"/>-->
+
+
             </field>
         </record>
 

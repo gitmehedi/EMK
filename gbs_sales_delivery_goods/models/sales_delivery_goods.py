@@ -3,7 +3,7 @@ from odoo import api, fields, models
 class SalesDeliveryGoods(models.Model):
     _name = 'sales.delivery.goods'
     _description = 'Sales Delivery Goods'
-    _rec_name = 'product_details'
+    _rec_name = 'vehicle_no'
 
     transport_details = fields.Selection([
         ('owned', 'Owned'),
@@ -14,8 +14,8 @@ class SalesDeliveryGoods(models.Model):
     vehicle_no = fields.Char(size=100, string='Vehicle No.', required=True)
     driver_no = fields.Char(size=100, string='Driver Name', required=True)
     driver_mob = fields.Char(size=100, string='Driver Mob.', required=True)
-    product_details = fields.Many2one('product.product', domain=[('sale_ok', '=', True)], string="Product Details", required=True)
-    qty= fields.Integer(size=100, string='Qty. (MT)', required=True)
+    product_id = fields.Many2one('product.product', domain=[('sale_ok', '=', True)], string="Product Details", required=False)
+    qty = fields.Integer(size=100, string='Qty. (MT)', required=False)
 
 
 

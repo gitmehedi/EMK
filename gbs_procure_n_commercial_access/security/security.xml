@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="module_category_procure_to_pay" model="ir.module.category" >
+        <field name="name">Procure To Pay</field>
+        <field name="sequence">400</field>
+    </record>
+
+    <record id="group_approve_pr_local" model="res.groups">
+        <field name="name">Approve PR (Local)</field>
+        <field name="category_id" ref="module_category_procure_to_pay"/>
+        <field name="sequence">10</field>
+    </record>
+
+    <record id="group_approve_pr_foreign" model="res.groups">
+        <field name="name">Approve PR (Foreign)</field>
+        <field name="category_id" ref="module_category_procure_to_pay"/>
+         <field name="sequence">20</field>
+    </record>
+
+    <record id="group_imoprt_lc_local" model="res.groups">
+        <field name="name">Import LC (Local)</field>
+        <field name="category_id" ref="module_category_procure_to_pay"/>
+         <field name="sequence">50</field>
+    </record>
+
+     <record id="group_imoprt_lc_foreign" model="res.groups">
+        <field name="name">Import LC (Foreign)</field>
+        <field name="category_id" ref="module_category_procure_to_pay"/>
+        <field name="sequence">60</field>
+     </record>
+
+    <record id="group_approve_gate_in" model="res.groups">
+        <field name="name">Approve Gate In</field>
+        <field name="category_id" ref="module_category_procure_to_pay"/>
+        <field name="sequence">99</field>
+    </record>
+
+</odoo>
+

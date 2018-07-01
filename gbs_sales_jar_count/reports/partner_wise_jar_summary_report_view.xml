@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <report
+                id="action_report_jar_summary"
+                string="Jar Summary Report"
+                model="uom.jar.summary"
+                report_type="qweb-pdf"
+                file="gbs_sales_jar_count.report_jar_summary"
+                name="gbs_sales_jar_count.report_jar_summary"
+                menu="False"
+        />
+
+
+        <template id="report_jar_summary">
+            <t t-call="report.html_container">
+                <t t-call="custom_report.gbs_internal_layout">
+                    <div class="page">
+                        <div class="row">
+                            <center>
+                                <h6>JAR Summary Report</h6>
+                            </center>
+
+                            <table class="table table-report-sm table-bordered table-striped">
+                                <thead>
+                                    <tr
+                                            style="background-color:#B4FDF0;
+												border-bottom: 1px solid #030303;">
+                                        <th>SL</th>
+                                        <th>Customer</th>
+                                        <th>Jar Type</th>
+                                        <th># Due Jar</th>
+                                        <th># Jar Taken</th>
+                                    </tr>
+                                </thead>
+
+                                <tbody>
+
+                                    <t t-foreach="data_list" t-as="k">
+                                        <tr>
+                                            <td>
+                                                <span t-esc="k_index+1"/>
+                                            </td>
+                                            <td>
+                                                <span t-esc="k['partner_id']"/>
+                                            </td>
+                                            <td>
+                                                <span t-esc="k['uom_id']"/>
+                                            </td>
+                                            <td>
+                                                <span t-esc="k['due_jar']"/>
+                                            </td>
+
+                                            <td>
+                                                <span t-esc="k['total_jar_taken']"/>
+                                            </td>
+                                            <!--<td>-->
+                                                <!--<span t-esc="k['jar_received']"/>-->
+                                            <!--</td>-->
+
+                                        </tr>
+                                    </t>
+
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </t>
+            </t>
+        </template>
+    </data>
+</odoo>

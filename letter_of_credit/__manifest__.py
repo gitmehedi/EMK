@@ -10,6 +10,7 @@
         'sales_team',
         'purchase',
         'commercial',
+        'hr_employee_operating_unit',
     ],
 
     'data': [

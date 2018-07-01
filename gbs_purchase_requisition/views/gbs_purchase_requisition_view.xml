@@ -127,6 +127,9 @@
                     <xpath expr="//field[@name='qty_ordered']" position="replace" type="object">
                         <field name="product_ordered_qty"/>
                     </xpath>
+                    <xpath expr="//field[@name='product_ordered_qty']" position="before" type="object">
+                        <field name="store_code"/>
+                    </xpath>
                     <xpath expr="//field[@name='price_unit']" position="attributes" type="object">
                         <attribute name="readonly">1</attribute>
                     </xpath>

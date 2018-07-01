@@ -12,6 +12,6 @@ class ChequePaymentLine(models.Model):
     account_payment_id = fields.Many2one('account.payment', string='Payment Information')
 
     """ Relational Fields """
-    pay_cash_id = fields.Many2one('delivery.order', ondelete='cascade')
+    pay_cash_id = fields.Many2one('delivery.authorization', ondelete='cascade')
 
 

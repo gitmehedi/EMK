@@ -16,10 +16,10 @@
     'category': 'Stock',
     'version': '10.0.0.1',
 
-    'depends': ['stock_picking_extend','com_shipment'],
+    'depends': ['stock_picking_extend','shipment_lc_product'],
 
     'data': [
-        # 'security/ir.model.access.csv',
+        'security/ir.model.access.csv',
         'views/stock_picking_views.xml',
     ],
 }

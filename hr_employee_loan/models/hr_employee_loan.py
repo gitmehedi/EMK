@@ -91,6 +91,7 @@ class HrEmployeeLoanRequest(models.Model):
     def action_disbursed(self):
         self.state = 'disbursed'
         self.remaining_loan_amount = self.principal_amount
+        self.disbursement_date = datetime.datetime.now()
 
     @api.multi
     def action_draft(self):
@@ -104,7 +105,6 @@ class HrEmployeeLoanRequest(models.Model):
         for loan in self:
             loan.state = 'approved'
             loan.approved_date = datetime.datetime.now()
-            loan.disbursement_date = datetime.datetime.now()
 
     @api.multi
     def generate_schedules(self):

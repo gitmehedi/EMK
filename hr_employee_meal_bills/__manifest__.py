@@ -4,7 +4,7 @@
     'website': 'www.genweb2.com',
     'category': 'Employee Meal Bills',
     'version':'1.0',
-    'depends': ['hr'],
+    'depends': ['hr','custom_report'],
     'data': [
         'security/ir.model.access.csv',
         #'security/ir_rule.xml',

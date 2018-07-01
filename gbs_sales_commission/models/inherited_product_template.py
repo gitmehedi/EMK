@@ -6,8 +6,5 @@ class InheritedProductTemplate(models.Model):
     commission_type = fields.Selection([
         ('percentage', 'Percentage'),
         ('fixed', 'Fixed')
-    ], string='Commission Type')
-
-
-
+    ], string='Commission Type',default='percentage')
 

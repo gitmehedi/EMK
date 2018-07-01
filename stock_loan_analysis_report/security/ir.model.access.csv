@@ -1,0 +1,3 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_stock_loan_lending_report,stock_stock_loan_lending_report,model_stock_loan_lending_report,stock.group_stock_user,1,1,1,0
+access_stock_loan_borrowing_report,stock_stock_loan_borrowing_report,model_stock_loan_borrowing_report,stock.group_stock_user,1,1,1,0

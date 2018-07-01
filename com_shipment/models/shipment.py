@@ -11,14 +11,14 @@ class Shipment(models.Model):
 
     name = fields.Char(string='Number', required=True, readonly=True, index=True, default=lambda self: self.env.context.get('shipment_number'))
     comments = fields.Text(string='Comments', track_visibility='onchange')
-    etd_date = fields.Date('ETD Date', readonly=True, help="Estimated Time of Departure")
-    eta_date = fields.Date('ETA Date', readonly=True, help="Estimated Time of Arrival")
-    arrival_date = fields.Date('Arrival Date', readonly=True)
+    etd_date = fields.Date('ETD Date', help="Estimated Time of Departure")
+    eta_date = fields.Date('ETA Date', help="Estimated Time of Arrival")
+    arrival_date = fields.Date('Arrival Date', )
     cnf_received_date = fields.Date('C&F Received Date', readonly=True)
     cnf_id = fields.Many2one('res.partner', "Supplier", readonly=True)
-    comment = fields.Text('Comment', readonly=True)
-    transport_by = fields.Char('Transport By', readonly=True,)
-    vehical_no = fields.Char('Vehical No', readonly=True,)
+    comment = fields.Text('Comment')
+    transport_by = fields.Char('Transport By')
+    vehical_no = fields.Char('Vehical No')
 
     operating_unit_id = fields.Many2one('operating.unit', default=lambda self: self.env.context.get('operating_unit_id'))
     company_id = fields.Many2one('res.company', default=lambda self: self.env.context.get('company_id'))
@@ -41,16 +41,20 @@ class Shipment(models.Model):
     shipment_attachment_ids = fields.One2many('ir.attachment', 'res_id', string='Shipment Attachments')
 
     # Bill Of Lading
-    bill_of_lading_number = fields.Char(string='BoL Number', readonly=True, index=True, help="Bill Of Lading Number")
-    shipment_date = fields.Date('Ship on Board', readonly=True)
+    bill_of_lading_number = fields.Char(string='BoL Number', index=True, help="Bill Of Lading Number")
+    shipment_date = fields.Date('Ship on Board')
 
     # Packing List
-    gross_weight = fields.Float('Gross Weight', readonly=True)
-    net_weight = fields.Float('Net Weight', readonly=True)
+    gross_weight = fields.Float('Gross Weight')
+    net_weight = fields.Float('Net Weight')
+    weight_uom = fields.Many2one('product.uom', string='Weight Unit')
+
+    count_qty = fields.Float(string='Count')
+    count_uom = fields.Many2one('product.uom', string='Unit')
 
     # Invoice
-    invoice_number = fields.Char(string='Invoice Number', readonly=True)
-    invoice_value = fields.Float(string='Invoice Value', readonly=True)
+    invoice_number = fields.Char(string='Invoice Number')
+    invoice_value = fields.Float(string='Invoice Value')
 
     # @api.multi
     def name_get(self):
@@ -235,17 +239,7 @@ class LetterOfCredit(models.Model):
             shipmentNo = len(self.shipment_ids) + 1
 
         comm_utility_pool = self.env['commercial.utility']
-        note = comm_utility_pool.getStrNumber(shipmentNo) + ' ' + Status.AMENDMENT.value
-
-        lc_obj = self.env['letter.credit'].search([('id', '=', self.id)])
-
-        operating_unit_id = 0
-        company_id = 0
-        if len(lc_obj.po_ids) > 0:
-            operating_unit_id = lc_obj.po_ids.operating_unit_id.id
-            company_id = lc_obj.po_ids.company_id.id
-
-        self.env['letter.credit'].search([('id', '=', self.id)]).po_ids.operating_unit_id.id
+        note = comm_utility_pool.getStrNumber(shipmentNo) + ' ' + Status.AMENDMENT
 
         result = {'name': _('Shipment'),
                   'view_type': 'form',
@@ -254,8 +248,8 @@ class LetterOfCredit(models.Model):
                   'res_model': 'purchase.shipment',
                   'context': {'shipment_number': comm_utility_pool.getStrNumber(shipmentNo) +' Shipment',
                               'lc_id': self.id,
-                              'operating_unit_id': operating_unit_id,
-                              'company_id': company_id},
+                              'operating_unit_id': self.operating_unit_id.id,
+                              'company_id': self.first_party.id},
                   'type': 'ir.actions.act_window',
                   'target': 'current'}
         self.env['letter.credit'].search([('id', '=', self.id)])

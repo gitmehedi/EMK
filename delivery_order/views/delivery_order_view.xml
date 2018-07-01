@@ -2,71 +2,39 @@
 <odoo>
     <data>
 
-        <record id="delivery_order_form" model="ir.ui.view">
-            <field name="name">delivery.order.form</field>
+        <record id="delivery_order_layer_form" model="ir.ui.view">
+            <field name="name">delivery.order.layer.form</field>
             <field name="model">delivery.order</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Delivery Order" delete="false" copy='0'>
                     <header>
-                        <button name="action_validate" type="object" states="draft" string="Confirm"
-                                class="oe_highlight"
+                        <button name="action_approve" type="object" states="draft" string="Confirm" class="oe_highlight"
                                 groups="account.group_account_user,gbs_application_group.group_head_account,gbs_application_group.group_cxo"/>
 
-                        <button name="action_draft" type="object"
-                                states="validate" string="Reset to Draft"
-                                groups="gbs_application_group.group_head_account,gbs_application_group.group_cxo"/>
-
-                        <button name="action_approve" type="object" states="approve"
-                                string="Validate" class="oe_highlight"
-                                groups="gbs_application_group.group_cxo,gbs_application_group.group_head_account"/>
-
-                        <button name="action_close" type="object" states="validate"
-                                string="Approve" class="oe_highlight"
-                                groups="gbs_application_group.group_cxo"/>
-
-                        <button name="action_refuse" type="object" states="approve,validate"
-                                string="Refuse"
-                                groups="gbs_application_group.group_head_account,gbs_application_group.group_cxo"/>
-
-                        <button string="Tag LC" name="%(action_view_lc_wizard)d" type="action"
-                                attrs="{'invisible':['|','|', ('pi_no', '=', False), ('state','!=','close'), ('lc_no', '!=', False)]}"
-                                groups="account.group_account_user,gbs_application_group.group_head_account,gbs_application_group.group_cxo"
-                                class="oe_highlight"/>
-
-                        <field name="state" statusbar_visible="draft,validate,close, refused" widget="statusbar"/>
-
+                        <field name="state" statusbar_visible="draft,approved" widget="statusbar"/>
                     </header>
                     <sheet>
-                        <div class="oe_button_box" name="button_box">
-                            <button type="object" string="Process Payments"
-                                    name="action_process_unattached_payments"
-                                    groups="account.group_account_user,gbs_application_group.group_head_account,gbs_application_group.group_cxo"
-                                    class="oe_stat_button"
-                                    attrs="{'invisible':['|', ('state','=','close'), ('so_type', '!=', 'cash')]}"
-                                    icon="fa-usd">
-                            </button>
-                        </div>
-
                         <div class="oe_button_box oe_right" name="button_box">
                             <button type="object"
-                                    name="action_view_delivery_order"
+                                    name="action_view_delivery"
                                     class="oe_stat_button"
-                                    icon="fa-truck" string="Delivery Order"
-                                    attrs="{'invisible': [('state','!=','close')]}"
+                                    icon="fa-truck"
+                                    attrs="{'invisible': [('state','!=','approved')]}"
                                     groups="account.group_account_user,gbs_application_group.group_head_account,gbs_application_group.group_cxo">
-                                <!--<field name="delivery_count" widget="statinfo" string="Delivery"/>-->
+                                <field name="delivery_count" widget="statinfo" string="Delivery"/>
                             </button>
                         </div>
 
                         <h1>
                             <field name="name"/>
-                            <!--<field name="da_button_show" invisible="1"/>-->
                         </h1>
                         <group>
                             <group>
+                                <field name="delivery_order_id"/>
                                 <field name="sale_order_id"/>
                                 <field name="deli_address"/>
+                                <field name="currency_id"/>
                             </group>
                             <group>
                                 <field name="parent_id"
@@ -75,9 +43,9 @@
                                 <field name="company_id" invisible="1"/>
                                 <field name="so_date"/>
 
-                                <field name="pi_no" attrs="{'invisible':[('so_type', '!=', 'lc_sales')]}"
+                                <field name="pi_id" attrs="{'invisible':[('so_type', '!=', 'lc_sales')]}"
                                        options="{'no_quick_create':True,'no_create_edit':True,'no_open':True}"/>
-                                <field name="lc_no" attrs="{'invisible':[('so_type', '!=', 'lc_sales')]}"
+                                <field name="lc_id" attrs="{'invisible':[('so_type', '!=', 'lc_sales')]}"
                                        options="{'no_quick_create':True,'no_create_edit':True,'no_open':True}"/>
 
                             </group>
@@ -170,7 +138,7 @@
                                             <field name="tenure"/>
                                             <field name="transportation"/>
                                             <field name="lc_type"/>
-                                            <field name="pi_no"/>
+                                            <field name="pi_id"/>
                                         </tree>
                                     </field>
                                 </page>
@@ -193,40 +161,52 @@
         </record>
 
         <record id="delivery_order_tree" model="ir.ui.view">
-            <field name="name">delivery.order.tree</field>
+            <field name="name">delivery.order.layer.tree</field>
             <field name="model">delivery.order</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree string="Delivery Order">
-                    <field name="sale_order_id"/>
-                    <field name="name" string="Delivery Authorization"/>
+                <tree string="Delivery Orders ">
+                    <field name="name" string="Delivery Order"/>
+                    <field name="delivery_order_id"/>
                     <field name="state"/>
-                    <field name="approved_date"/>
                 </tree>
             </field>
         </record>
 
         <!-- Generate automated sequence -->
-        <record id="seq_hr_employee" model="ir.sequence">
-            <field name="name">DA Sequences</field>
+        <record id="do_seqs" model="ir.sequence">
+            <field name="name">DO Sequences</field>
             <field name="code">delivery.order</field>
-            <field name="prefix">DA</field>
+            <field name="prefix">DO</field>
             <field name="padding">6</field>
         </record>
 
-        <record model="ir.actions.act_window" id="delivery_order_action">
-            <field name="name">Delivery Authorization</field>
+
+        <record id="search_delivery_order" model="ir.ui.view">
+            <field name="name">delivery.order.search</field>
+            <field name="model">delivery.order</field>
+            <field name="arch" type="xml">
+                <search string="Delivery Order">
+                    <filter name="draft" string="To Confirm" domain="[('state','=','draft')]"/>
+                </search>
+            </field>
+        </record>
+
+
+        <record model="ir.actions.act_window" id="delivery_order_layer_action">
+            <field name="name">Delivery Order</field>
             <field name="res_model">delivery.order</field>
+            <field name="context">{'search_default_draft':1}</field>
             <field name="view_mode">tree,form</field>
         </record>
 
-        <menuitem id="delivery_order_menu" name="Delivery Authorization" parent="sales_team.menu_base_partner"
-                  groups="account.group_account_user,gbs_application_group.group_head_account,gbs_application_group.group_cxo"
-                  sequence="12" action="delivery_order_action"/>
+        <!--<menuitem id="delivery_order_layer_menu" name="Delivery Order" parent="sales_team.menu_base_partner"-->
+                  <!--groups="account.group_account_user,gbs_application_group.group_head_account,gbs_application_group.group_cxo"-->
+                  <!--sequence="12" action="delivery_order_layer_action"/>-->
 
-        <menuitem id="delivery_order_submenu" name="Delivery Authorization" parent="delivery_order_menu"
-                  groups="account.group_account_user,gbs_application_group.group_head_account,gbs_application_group.group_cxo"
-                  action="delivery_order_action"/>
+        <menuitem id="delivery_order_layer_submenu" name="Delivery Order" parent="delivery_schedules.delivery_schedule_menu"
+                  groups="gbs_application_group.group_cxo,account.group_account_user,gbs_application_group.group_head_account,gbs_application_group.group_cxo"
+                  action="delivery_order_layer_action" sequence="3"/>
 
 
     </data>

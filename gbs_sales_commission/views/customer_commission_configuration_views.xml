@@ -9,7 +9,7 @@
             <form copy="0" delete="false">
                 <header>
                     <button name="action_validate" type="object" states="draft" string="Confirm" class="oe_highlight"
-                            groups="gbs_application_group.group_head_account,gbs_application_group.group_head_sale,gbs_application_group.group_cxo"/>
+                            groups="sales_team.group_sale_salesman_all_leads,gbs_application_group.group_head_account,gbs_application_group.group_head_sale,gbs_application_group.group_cxo"/>
 
                     <button name="action_draft" type="object"
                             states="validate" string="Reset to Draft"
@@ -27,10 +27,9 @@
                             string="Refuse"
                             groups="gbs_application_group.group_head_account,gbs_application_group.group_cxo"/>
 
-                    <!--<button name="action_done" type="object" states="confirm"
-                            string="Done" class="oe_highlight"/>-->
+                    <field name="state" widget="statusbar"
+                           statusbar_visible="draft,validate,approve,close"/>
 
-                    <field name="state" widget="statusbar"/>
                 </header>
                 <sheet>
                     <h1>
@@ -122,6 +121,17 @@
         </field>
     </record>
 
+
+    <!--<record id="search_view_cust_commission" model="ir.ui.view">-->
+    <!--<field name="name">customer.commission.configuration.search</field>-->
+    <!--<field name="model">customer.commission.configuration</field>-->
+    <!--<field name="arch" type="xml">-->
+    <!--<search string="Customer Commission">-->
+    <!--<filter name="validate" string="To Approve" domain="[('state','=','validate')]"/>-->
+    <!--</search>-->
+    <!--</field>-->
+    <!--</record>-->
+
     <record id="sale_customer_commission_configuration_tree" model="ir.ui.view">
         <field name="name">Customer Commission Configuration Tree</field>
         <field name="model">customer.commission.configuration</field>
@@ -152,6 +162,8 @@
             <search string="Customer Commission Configuration Search">
                 <field name="product_id"/>
                 <field name="customer_id"/>
+                <filter name="validate" string="To Approve" domain="[('state','=','validate')]"/>
+
             </search>
         </field>
     </record>
@@ -159,13 +171,13 @@
     <record model="ir.actions.act_window" id="sale_customer_commission_configuration_action">
         <field name="name">Customer Commission</field>
         <field name="res_model">customer.commission.configuration</field>
-        <!--<field name="domain">[('state','in',('disbursed',))]</field>-->
+        <field name="context">{'search_default_validate':1}</field>
         <field name="view_mode">tree,form</field>
     </record>
 
 
     <menuitem id="sale_customer_commission_configuration_menu" name="Customer Commission"
-              parent="sales_team.menu_sales" sequence="12"
-              groups="gbs_application_group.group_head_account,gbs_application_group.group_head_sale,gbs_application_group.group_cxo"
+              parent="gbs_sale_order_approval.menu_customer" sequence="3"
+              groups="account.group_account_user,sales_team.group_sale_salesman_all_leads,gbs_application_group.group_head_account,gbs_application_group.group_head_sale,gbs_application_group.group_cxo"
               action="sale_customer_commission_configuration_action"/>
 </odoo>

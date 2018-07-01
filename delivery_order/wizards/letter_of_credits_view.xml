@@ -9,7 +9,7 @@
                 <form string="LC Wizard" edit="false" create="false" delete="false">
                     <sheet>
                         <group>
-                            <field name="lc_no"/>
+                            <field name="lc_id"/>
                         </group>
                         <footer>
 						    <button string="Generate" name="compute_lc_no" type="object" class="oe_highlight" options="{'no_open': True, 'no_create': True}"/>

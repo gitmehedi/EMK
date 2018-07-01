@@ -57,17 +57,6 @@ class GBSStockScrap(models.Model):
     # Business methods
     ####################################################
 
-    # @api.multi
-    # @api.depends('location_id')
-    # def _computePickingType(self):
-    #     for scrap in self:
-    #         picking_type_obj = scrap.env['stock.picking.type']
-    #         picking_type_ids = picking_type_obj.search(
-    #             ['&',('default_location_src_id', '=', scrap.location_id.id),
-    #              ('code', '=', 'internal')])
-    #         picking_type_id = picking_type_ids and picking_type_ids[0] or False
-    #         scrap.picking_type_id = picking_type_id
-
     @api.multi
     def scrap_confirm(self):
         for scrap in self:
@@ -77,9 +66,10 @@ class GBSStockScrap(models.Model):
             res = {
                 'state': 'waiting_approval'
             }
-            # new_seq = self.env['ir.sequence'].next_by_code('stock.scraping')
-            # if new_seq:
-            #     res['name'] = new_seq
+            requested_date = self.requested_date
+            new_seq = self.env['ir.sequence'].next_by_code_new('stock.scraping',requested_date)
+            if new_seq:
+                res['name'] = new_seq
 
             scrap.write(res)
 
@@ -88,6 +78,9 @@ class GBSStockScrap(models.Model):
         picking_id = False
         if self.product_lines:
             picking_id = self._create_pickings_and_procurements()
+            picking_objs = self.env['stock.picking'].search([('id', '=', picking_id)])
+            picking_objs.action_confirm()
+            picking_objs.force_assign()
 
         res = {
             'state': 'approved',
@@ -109,8 +102,7 @@ class GBSStockScrap(models.Model):
             if line.product_id:
                 if not picking_id:
                     picking_type = self.env['stock.picking.type'].search(
-                        [('default_location_src_id', '=', self.location_id.id),
-                         ('default_location_dest_id', '=', self.scrap_location_id.id), ('code', '=', 'internal')])
+                        [('default_location_dest_id', '=', self.scrap_location_id.id),('operating_unit_id', '=', self.operating_unit_id.id)])
                     if not picking_type:
                         raise UserError(_('Please create picking type for product scraping.'))
 
@@ -137,6 +129,7 @@ class GBSStockScrap(models.Model):
                     if picking:
                         picking_id = picking.id
 
+
                 location_id = self.location_id.id
 
                 moves = {
@@ -155,7 +148,7 @@ class GBSStockScrap(models.Model):
 
                 }
                 move = move_obj.create(moves)
-                move.action_done()
+                # move.action_done()
                 self.write({'move_id': move.id})
 
         return picking_id
@@ -164,6 +157,15 @@ class GBSStockScrap(models.Model):
     def scrap_reject(self):
         res = {
             'state': 'reject',
+            'approver_id': self.env.user.id,
+            'approved_date': time.strftime('%Y-%m-%d %H:%M:%S')
+        }
+        self.write(res)
+
+    @api.multi
+    def action_draft(self):
+        res = {
+            'state': 'draft',
             'approver_id': self.env.user.id,
             'approved_date': time.strftime('%Y-%m-%d %H:%M:%S')
         }
@@ -214,11 +216,11 @@ class GBSStockScrapLines(models.Model):
         if self.product_id:
             location_id = self.stock_scrap_id.location_id.id
             product_quant = self.env['stock.quant'].search([('product_id', '=', self.product_id.id),
-                                                            ('location_id', '=', location_id)],limit=1)
+                                                            ('location_id', '=', location_id)])
             quantity = sum([val.qty for val in product_quant])
 
             if quantity <= 0:
-                raise UserError(_('Product "{0}" has not sufficient balance.'.format(self.product_id.display_name)))
+                raise UserError(_('Product "{0}" has not sufficient balance for this location'.format(self.product_id.display_name)))
             self.qty_available = quantity
 
     @api.multi
@@ -228,7 +230,7 @@ class GBSStockScrapLines(models.Model):
             if product.product_uom_qty <= 0:
                 raise UserError('Product quantity can not be negative or zero!!!')
 
-            if product.product_uom_qty > self.qty_available:
+            if product.product_uom_qty > product.qty_available:
                 raise UserError('Product quantity can not be greater then available stock!!!')
 
     ####################################################

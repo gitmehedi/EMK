@@ -7,7 +7,7 @@
             <field name="model">item.loan.lending</field>
             <field name="arch" type="xml">
                 <tree string="Item Loan Lending" ecoration-bf="message_needaction == True"
-                      colors="gray:state=='approved';green:state=='waiting_approval';red:state=='reject';">
+                      colors="gray:state=='received';green:state=='waiting_approval';red:state=='reject';">
                     <field name="name" />
                     <field name="issuer_id" />
                     <field name="request_date" />
@@ -27,27 +27,35 @@
                 <form string="Item Loan Lending">
                     <header>
                         <button name="button_confirm" string="Confirm" states="draft"
-                                class="oe_highlight" type="object" groups="base.group_user"/>
+                                class="oe_highlight" type="object" groups="stock.group_stock_user"/>
                         <button name="button_approve" string="Approve" states="waiting_approval" type="object"
-                                class="oe_highlight" groups="gbs_application_group.group_head_of_plant"/>
+                                class="oe_highlight" groups="stock.group_stock_manager"/>
                         <button name="button_reject" string="Reject" states="waiting_approval" type="object"
-                                groups="gbs_application_group.group_head_of_plant"/>
-                        <button string="Reset to Draft" name="action_draft" states="approved" type="object" attrs="{'invisible': [('state', 'in', ('draft','waiting_approval'))]}"/>
+                                groups="stock.group_stock_manager"/>
+                        <button string="Reset to Draft" name="action_draft"
+                                groups="stock.group_stock_manager"
+                                states="waiting_approval" type="object"/>
+
                         <field name="state" widget="statusbar"
                                statusbar_visible="draft,waiting_approval,approved"
                                statusbar_colors='{"reject":"red"}' />
                     </header>
                     <sheet>
-                        <group col="2">
+                        <div class="oe_button_box" name="button_box">
+                            <button class="oe_stat_button" name="action_get_stock_picking"
+                                    string="Stock Operation" type="object"
+                                    attrs="{'invisible':[('picking_id','=',False)]}" icon="fa-cogs"/>
                             <field name="picking_id" invisible="1"/>
+                        </div>
+                        <group col="2">
                             <group>
                                 <field name="issuer_id" readonly="1" />
                                 <field name="request_date" />
                                 <field name="borrower_id"/>
                             </group>
                             <group>
-                                <field name="approved_date"/>
-                                <field name="approver_id"/>
+                                <field name="approved_date" attrs="{'invisible': [('state', '=', 'draft')]}"/>
+                                <field name="approver_id" attrs="{'invisible': [('state', '=', 'draft')]}"/>
                             </group>
 
                         </group>
@@ -61,6 +69,9 @@
                                         <field name="qty_available" readonly="1"/>
                                         <field name="product_uom" string="UOM"/>
                                         <field name="product_uom_qty" sum="Total Qty"/>
+                                        <field name="given_qty" sum="Total Given Qty" readonly="1"/>
+                                        <field name="received_qty" sum="Total Receive Qty" readonly="1"/>
+                                        <field name="due_qty" sum="Total Due" readonly="1"/>
                                         <field name="state" invisible="1"/>
                                     </tree>
                                 </field>
@@ -76,11 +87,11 @@
                                                options="{'no_create': True,'no_open':True}"/>
                                         <field name="operating_unit_id" options="{'no_create': True,'no_open':True}"
                                                groups="operating_unit.group_multi_operating_unit" />
-                                        <field name="location_id" options="{'no_create': True,'no_open':True}"/>
                                     </group>
                                     <group>
+                                        <field name="location_id" options="{'no_create': True,'no_open':True}"/>
                                         <field name="item_loan_location_id" />
-                                        <field name="picking_type_id" />
+                                        <field name="picking_type_id" invisible="1"/>
                                     </group>
                                 </group>
                             </page>
@@ -93,6 +104,11 @@
                 </form>
             </field>
         </record>
+
+        <!-- Item Loan Main Menu -->
+        <menuitem name="Item Loan Process" parent="stock.menu_stock_root" id="menu_item_loan_lending_main"
+                  sequence="4" groups="stock.group_stock_user"/>
+
         <!-- Item Loan Lending Window Action -->
         <record id='action_item_loan_lending' model='ir.actions.act_window'>
             <field name="name">Item Loan Lending</field>
@@ -106,12 +122,27 @@
             </field>
         </record>
         <!-- Item Loan Lending Menu -->
-        <menuitem name="Item Loan Process" parent="stock.menu_stock_root" id="menu_item_loan_lending_main"
-                  sequence="4" groups="base.group_user"/>
-
         <menuitem action="action_item_loan_lending" name="Item Loan Lending"
                   parent="menu_item_loan_lending_main" id="menu_item_loan_lending" sequence="1"
-                  groups="base.group_user"/>
+                  groups="stock.group_stock_user"/>
+
+        <!-- Item Loan Lending Pending Approval Window Action -->
+        <record id='action_pending_item_loan_lending' model='ir.actions.act_window'>
+            <field name="name">Pending Approval</field>
+            <field name="res_model">item.loan.lending</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('state','=','waiting_approval')]</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Nothing to approve.
+                </p>
+            </field>
+        </record>
+        <!-- Item Loan Lending Pending Approval Menu -->
+        <menuitem action="action_pending_item_loan_lending" name="Pending Approval"
+                  parent="menu_item_loan_lending" id="menu_pending_item_loan_lending" sequence="1"
+                  groups="stock.group_stock_user"/>
 
     </data>
 </odoo>

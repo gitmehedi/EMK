@@ -9,66 +9,68 @@
 
         <template id="report_productPricelist_view">
             <t t-call="report.html_container">
-                <t t-foreach="docs" t-as="doc">
-                    <t t-call="report.external_layout">
-                        <div class="page">
-                            <h2 style="padding: 25px 0px; text-align: center;">
-                                Product Sales Pricelist
-                            </h2>
-                            <div style="margin-bottom:70px;">
-                                <div class="col-xs-3">
-                                    <strong>Prepared By:</strong>
-                                    <p t-field="doc.requested_by"/>
+                <t t-call="custom_report.gbs_internal_layout">
+                    <t t-foreach="docs" t-as="doc">
+                        <t t-call="report.external_layout">
+                            <div class="page">
+                                <h2 style="padding: 25px 0px; text-align: center;">
+                                    Product Sales Pricelist
+                                </h2>
+                                <div style="margin-bottom:70px;">
+                                    <div class="col-xs-3">
+                                        <strong>Prepared By:</strong>
+                                        <p t-field="doc.requested_by"/>
+                                    </div>
+                                    <div class="col-xs-3">
+                                        <strong>First Approval By:</strong>
+                                        <p t-field="doc.approver1_id"/>
+                                    </div>
+                                    <div class="col-xs-3">
+                                        <strong>Second Approval By:</strong>
+                                        <p t-field="doc.approver2_id"/>
+                                    </div>
+                                    <div class="col-xs-3">
+                                        <strong>Effective Date:</strong>
+                                        <p t-field="doc.effective_date"/>
+                                    </div>
                                 </div>
-                                <div class="col-xs-3">
-                                    <strong>First Approval By:</strong>
-                                    <p t-field="doc.approver1_id"/>
-                                </div>
-                                <div class="col-xs-3">
-                                    <strong>Second Approval By:</strong>
-                                    <p t-field="doc.approver2_id"/>
-                                </div>
-                                <div class="col-xs-3">
-                                    <strong>Effective Date:</strong>
-                                    <p t-field="doc.effective_date"/>
-                                </div>
-                            </div>
 
-                            <table class="table table-bordered">
-                                <thead>
-                                    <tr style="background-color:#C0C0C0;">
-                                        <th>Product</th>
-                                        <th>Packaging Mode</th>
-                                        <th>UoM</th>
-                                        <th>Currency</th>
-                                        <th>Old Price</th>
-                                        <th>New Price</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td>
-                                            <span t-field="doc.product_id"/>
-                                        </td>
-                                        <td>
-                                            <span t-field="doc.product_package_mode"/>
-                                        </td>
-                                        <td>
-                                            <span t-field="doc.uom_id"/>
-                                        </td>
-                                        <td>
-                                            <span t-field="doc.currency_id"/>
-                                        </td>
-                                        <td>
-                                            <span t-field="doc.list_price"/>
-                                        </td>
-                                        <td>
-                                            <span t-field="doc.new_price"/>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
+                                <table class="table table-bordered">
+                                    <thead>
+                                        <tr style="background-color:#C0C0C0;">
+                                            <th>Product</th>
+                                            <th>Packaging Mode</th>
+                                            <th>UoM</th>
+                                            <th>Currency</th>
+                                            <th>Old Price</th>
+                                            <th>New Price</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>
+                                                <span t-field="doc.product_id"/>
+                                            </td>
+                                            <td>
+                                                <span t-field="doc.product_package_mode"/>
+                                            </td>
+                                            <td>
+                                                <span t-field="doc.uom_id"/>
+                                            </td>
+                                            <td>
+                                                <span t-field="doc.currency_id"/>
+                                            </td>
+                                            <td>
+                                                <span t-field="doc.list_price"/>
+                                            </td>
+                                            <td>
+                                                <span t-field="doc.new_price"/>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </t>
                     </t>
                 </t>
             </t>

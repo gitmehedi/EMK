@@ -5,7 +5,6 @@ from odoo.exceptions import UserError
 class InheritResPartnerBank(models.Model):
     _inherit = 'res.partner.bank'
 
-    is_payroll_account = fields.Boolean(string='Payroll A/C', default=False)
 
 
 class HrPayrollAdvice(models.Model):

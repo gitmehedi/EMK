@@ -8,6 +8,7 @@
                 report_type="qweb-pdf"
                 name="hr_employee_mobile_bills.report_mobile_bill"
                 file="hr_employee_mobile_bills.report_mobile_bill"
+                paperformat="custom_report.paperformat_backend_portrait"
         />
     </data>
 </odoo>

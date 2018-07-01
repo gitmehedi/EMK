@@ -1,64 +1,85 @@
 # -*- coding: utf-8 -*-
-from odoo import models, fields, api
+from odoo import models, fields, api, _
+from odoo.exceptions import UserError
 
 class Picking(models.Model):
     _inherit = "stock.picking"
+    _order = "write_date desc"
 
+    @api.model
+    def _get_default_picking_type(self):
+        if self.env.context.get('default_transfer_type') == 'receive':
+            picking_type_objs = self.env['stock.picking.type'].search(
+                    [('warehouse_id.operating_unit_id', '=', self.env.user.default_operating_unit_id.id),
+                     ('code', '=', 'incoming')])
+            return picking_type_objs[0].id
+
+    transfer_type = fields.Selection([
+        ('receive', 'Receive')])
     receive_type = fields.Selection([
         ('loan', 'Loan'),
         ('other', 'Other')],
         readonly=True,states={'draft': [('readonly', False)]})
+    picking_type_id = fields.Many2one(
+        'stock.picking.type', 'Picking Type',
+        required=True,default = _get_default_picking_type,
+        states={'done': [('readonly', True)], 'cancel': [('readonly', True)]})
+    date_done = fields.Datetime('Date of Transfer', copy=False, readonly=False, states={'done': [('readonly', True)]},
+                                help="Completion Date of Transfer",default=fields.Datetime.now())
 
-    # operating_unit_id = fields.Many2one('operating.unit','Operating Unit',states={'draft': [('readonly', False)]})
+    doc_count = fields.Integer(compute='_compute_attached_docs', string="Number of documents attached")
 
-    # gate_pass = fields.Char(
-    #     'Gate Pass', index=True,
-    #     states={'done': [('readonly', True)], 'cancel': [('readonly', True)]},
-    #     help="Reference of the Gate Pass")
-    # qc_need = fields.Boolean(
-    #     'QC Need',default=False,help="Decision field that QC need or not")
-    # check_do_new_transfer = fields.Boolean(
-    #     'Check', default=False, compute="_compute_do_new_transfer")
-    # check_qc_need = fields.Boolean(
-    #     'Check', default=False, compute="_compute_qc_need")
-    # state = fields.Selection([
-    #     ('draft', 'Draft'), ('cancel', 'Cancelled'),
-    #     ('waiting', 'Waiting Another Operation'),
-    #     ('confirmed', 'Waiting Availability'),
-    #     ('partially_available', 'Partially Available'),
-    #     ('assigned', 'Available'),
-    #     ('quality_control', 'Quality Control'),
-    #     ('done', 'Done')],
-    #     string='Status', compute='_compute_state',
-    #     copy=False, index=True, readonly=True, store=True, track_visibility='onchange',
-    #     help=" * Draft: not confirmed yet and will not be scheduled until confirmed\n"
-    #          " * Waiting Another Operation: waiting for another move to proceed before it becomes automatically available (e.g. in Make-To-Order flows)\n"
-    #          " * Waiting Availability: still waiting for the availability of products\n"
-    #          " * Partially Available: some products are available and reserved\n"
-    #          " * Ready to Transfer: products reserved, simply waiting for confirmation.\n"
-    #          " * Transferred: has been processed, can't be modified or cancelled anymore\n"
-    #          " * Quality Control: If product is qc passed then transfer done otherwise transfer stoped and product can be return\n"
-    #          " * Cancelled: has been cancelled, can't be confirmed anymore")
-    #
-    # @api.multi
-    # @api.depends('qc_need')
-    # def _compute_do_new_transfer(self):
-    #     for rec in self:
-    #         if rec.qc_need == False:
-    #             if rec.state in ['draft','partially_available','assigned']:
-    #                 rec.check_do_new_transfer = True
-    #         if rec.state == 'quality_control':
-    #             rec.check_do_new_transfer = True
-    #
-    # @api.multi
-    # @api.depends('qc_need')
-    # def _compute_qc_need(self):
-    #     for rec in self:
-    #         if rec.qc_need == True:
-    #             if rec.state in ['assigned']:
-    #                 rec.check_qc_need = True
-    #
-    # @api.one
-    # def button_qc(self):
-    #     self.state = 'quality_control'
+    challan_bill_no = fields.Char(
+        string='Challan Bill No',
+        readonly=True,
+        states={'draft': [('readonly', False)]})
 
+    @api.constrains('challan_bill_no')
+    def _check_unique_constraint(self):
+        if self.partner_id and self.challan_bill_no:
+            filters = [['challan_bill_no', '=ilike', self.challan_bill_no], ['partner_id', '=', self.partner_id.id]]
+            bill_no = self.search(filters)
+            if len(bill_no) > 1:
+                raise UserError(_('[Unique Error] Challan Bill must be unique for %s !') % self.partner_id.name)
+
+    @api.one
+    def _compute_attached_docs(self):
+        attachment = self.env['ir.attachment']
+        if self.origin:
+            origin_picking_objs = self.search(['|', ('name', '=', self.origin),('origin', '=', self.origin)])
+            res = self.ids + origin_picking_objs.ids
+        else:
+            res = self.ids
+        list_res =list(set(res))
+        self.doc_count = len(attachment.search([('res_model', '=', 'stock.picking'), ('res_id', '=', list_res)]))
+
+        # for id in set(res):
+        #     picking_attachments = attachment.search([('res_model', '=', 'stock.picking'), ('res_id', '=', id)])
+        #     self.doc_count = len([v.id for v in picking_attachments])
+
+    @api.multi
+    def attachment_tree_view(self):
+        if self.origin:
+            origin_picking_objs = self.search(['|',('name', '=', self.origin),('origin', '=', self.origin)])
+            res = self.ids + origin_picking_objs.ids
+        else:
+            res = self.ids
+        domain = [('res_model', '=', 'stock.picking'),('res_id', 'in', res)]
+        res_id = self.ids and self.ids[0] or False
+        return {
+            'name': 'Attachments',
+            'domain': domain,
+            'res_model': 'ir.attachment',
+            'type': 'ir.actions.act_window',
+            'view_id': False,
+            'view_mode': 'kanban,tree,form',
+            'view_type': 'form',
+            'limit': 80,
+            'context': "{'default_res_model': '%s','default_res_id': %d}" % (self._name, res_id)
+        }
+
+
+class StockPickingType(models.Model):
+    _inherit = 'stock.picking.type'
+
+    show_on_dashboard = fields.Boolean(string='Show Picking Type on dashboard', help="Whether this Picking Type should be displayed on the dashboard or not", default=True)

@@ -86,10 +86,10 @@
             <field name="view_mode">tree,form</field>
         </record>
 
-        <menuitem id="delivery_schedule_menu" name="Delivery Schedules" parent="sales_team.menu_base_partner"
-                  groups="delivery_schedules.group_delivery_schedule_manager"/>
+        <menuitem id="delivery_schedule_menu" name="Delivery" parent="sales_team.menu_base_partner"
+                  groups="gbs_application_group.group_cxo,delivery_schedules.group_delivery_schedule_manager" sequence="9" />
         <menuitem id="delivery_schedule_submenu" name="Delivery Schedules" parent="delivery_schedule_menu"
-                  groups="delivery_schedules.group_delivery_schedule_manager"
-                  action="delivery_schedule_action" sequence="15"/>
+                  groups="gbs_application_group.group_cxo,delivery_schedules.group_delivery_schedule_manager"
+                  action="delivery_schedule_action" sequence="5"/>
     </data>
 </odoo>

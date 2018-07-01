@@ -4,7 +4,6 @@ import datetime
 from datetime import timedelta
 from odoo.addons import decimal_precision as dp
 from odoo.exceptions import UserError, ValidationError
-from dateutil.relativedelta import relativedelta
 from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
 
 
@@ -14,21 +13,6 @@ class IndentIndent(models.Model):
     _inherit = ['mail.thread','ir.needaction_mixin']
     _order = "approve_date desc"
 
-    @api.depends('product_lines')
-    def _compute_amount(self):
-        for indent in self:
-            total = 0.0
-            for line in indent.product_lines:
-                total += line.price_subtotal
-            indent.amount_total = total
-
-    @api.model
-    def _get_product_line(self):
-        result = {}
-        line_obj = self.env['indent.product.lines']
-        for line in line_obj:
-            result[line.indent_id.id] = True
-        return result.keys()
 
     @api.model
     def _get_default_warehouse(self):
@@ -77,9 +61,9 @@ class IndentIndent(models.Model):
     company_id = fields.Many2one('res.company', 'Company', readonly=True, states={'draft': [('readonly', False)]},
                                  default=lambda self: self.env.user.company_id,required=True)
     active = fields.Boolean('Active', default=True)
-    amount_total = fields.Float(string='Total', compute=_compute_amount, store=True)
-    approver_id = fields.Many2one('res.users', string='Authority', readonly=True,
-                                  states={'draft': [('readonly', False)]}, help="who have approve or reject indent.")
+    # amount_total = fields.Float(string='Total', compute=_compute_amount, store=True)
+    approver_id = fields.Many2one('res.users', string='Authority', readonly=True, help="who have approve or reject indent.")
+    closer_id = fields.Many2one('res.users', string='Authority', readonly=True, help="who have close indent.")
     warehouse_id = fields.Many2one('stock.warehouse', 'Warehouse', readonly=True,required=True,
                                    default=lambda self: self._get_default_warehouse(),
                                    help="Default Warehouse.Source location.",
@@ -112,15 +96,17 @@ class IndentIndent(models.Model):
     ####################################################
 
 
+    @api.onchange('warehouse_id')
+    def onchange_warehouse_id(self):
+        # if self.warehouse_id:
+        #     self.stock_location_id = []
+        return {'domain': {'stock_location_id': [('id', 'in', self.env.user.location_ids.ids)]}}
 
-    @api.model
-    def _default_stock_location(self):
-        # TODO: need to improve this try except with some better option
-        try:
-            stock_location = self.pool.get('ir.model.data').get_object(self, 'stock_indent', 'location_production1').id
-        except:
-            stock_location = False
-        return stock_location
+    @api.one
+    @api.constrains('required_date')
+    def _check_required_date(self):
+        if self.required_date <= self.indent_date:
+            raise UserError('Required Date can not be less then current date!!!')
 
     @api.multi
     @api.depends('warehouse_id','stock_location_id')
@@ -130,67 +116,27 @@ class IndentIndent(models.Model):
             picking_type_ids = picking_type_obj.search([('default_location_src_id', '=', indent.warehouse_id.sudo().lot_stock_id.id),('default_location_dest_id', '=', indent.stock_location_id.id)])
             picking_type_id = picking_type_ids and picking_type_ids[0] or False
             indent.picking_type_id = picking_type_id
+            # if picking_type_id:
+            #     indent.picking_type_id = picking_type_id
+            # else:
+            #     raise ValidationError(_('No Picking Type For this location.'
+            #                             'Please Create a picking type with '
+            #                             'source location (%s) and destination location (%s)./n Or contract with your system Admin'
+            #                             %(indent.warehouse_id.sudo().lot_stock_id.name,indent.stock_location_id.name)))
 
-    def _check_purchase_limit(self):
-        return True
-
-    _constraints = [
-        (_check_purchase_limit, 'You have exided your purchase limit for the current period !.', ['amount_total']),
-    ]
-
-    def onchange_requirement(self, indent_date, requirement='urgent'):
-        vals = {}
+    @api.onchange('requirement')
+    def onchange_requirement(self):
         days_delay = 0
-        if requirement == '2':
+        if self.requirement == '2':
             days_delay = 0
-        if requirement == '1':
+        if self.requirement == '1':
             days_delay = 7
-        # TODO: for the moment it will count the next days based on the system time
-        # and not based on the indent_date available on the indent.
         required_day = datetime.datetime.strftime(datetime.datetime.today() + timedelta(days=days_delay),
                                                   DEFAULT_SERVER_DATETIME_FORMAT)
-        vals.update({'value': {'required_date': required_day}})
-        return vals
-
-    def _needaction_domain_get(self):
-        return [('state', '=', 'waiting_approval')]
-
-    @api.one
-    @api.returns('self', lambda value: value.id)
-    def copy(self, default=None):
-        if default is None:
-            default = {}
-        required_date = datetime.datetime.strftime(datetime.datetime.today() + timedelta(days=7),
-                                                   DEFAULT_SERVER_DATETIME_FORMAT)
-        default.update({
-            'name': "/",
-            'indent_date': time.strftime('%Y-%m-%d %H:%M:%S'),
-            'requirement': '1',
-            'picking_id': False,
-            'indent_authority_ids': [],
-            'state': 'draft',
-            'approver_id': False,
-            'approve_date': False,
-            'required_date': required_date
-        })
-
-        return super(IndentIndent, self).copy(default)
-
-    def onchange_item(self, item_for=False):
-        result = {}
-        if not item_for or item_for == 'store':
-            result['analytic_account_id'] = False
-        return {'value': result}
+        self.required_date= required_day
 
     @api.multi
     def approve_indent(self):
-        self.check_approval()
-        self.state = 'inprogress'
-        for indent in self:
-            indent.action_picking_create()
-
-    @api.multi
-    def check_approval(self):
         res = {
             'state': 'inprogress',
             'approver_id': self.env.user.id,
@@ -208,12 +154,18 @@ class IndentIndent(models.Model):
         self.write(res)
 
     @api.multi
+    def action_close_indent(self):
+        res = {
+            'state': 'received',
+            'closer_id': self.env.user.id,
+        }
+        self.write(res)
+
+    @api.multi
     def indent_confirm(self):
         for indent in self:
             if not indent.product_lines:
                 raise UserError(_('Unable to confirm an indent without product. Please add product(s).'))
-                # raise UserError(_('You cannot confirm an indent %s which has no line.' % (indent.name)))
-                # raise osv.except_osv(_('Warning!'),_('You cannot confirm an indent %s which has no line.' % (indent.name)))
             # Add all authorities of the indent as followers
             followers = []
             if indent.indentor_id and indent.indentor_id.partner_id and indent.indentor_id.partner_id.id:
@@ -244,7 +196,7 @@ class IndentIndent(models.Model):
             'product_id': line.product_id.id,
             'date': date_planned,
             'date_expected': date_planned,
-            'product_uom_qty': line.product_uom_qty,
+            'product_uom_qty': line.issue_qty,
             'product_uom': line.product_uom.id,
             'location_id': location_id,
             'location_dest_id': self.stock_location_id.id,
@@ -280,6 +232,7 @@ class IndentIndent(models.Model):
             'origin': self.name,
             'date': self.indent_date,
             # 'type': 'internal',
+            'state':'draft',
             'move_type': self.move_type,
             'partner_id': self.indentor_id.partner_id.id or False,
             'location_id': location_id,
@@ -294,9 +247,6 @@ class IndentIndent(models.Model):
     def _create_pickings_and_procurements(self):
         move_obj = self.env['stock.move']
         picking_obj = self.env['stock.picking']
-        # Check if the indent is for purchase indent
-        # A purchase requisition will create
-        need_purchase_req = False
         picking_id = False
         for line in self.product_lines:
             date_planned = datetime.datetime.strptime(self.indent_date, DEFAULT_SERVER_DATETIME_FORMAT)
@@ -311,24 +261,14 @@ class IndentIndent(models.Model):
                 move_obj.create(self._prepare_indent_line_move(line, picking_id, date_planned))
         return picking_id
 
-    def _check_gatepass_flow(self, indent):
-        if indent.type == 'existing':
-            return True
-        else:
-            return False
-
 
     @api.one
     def action_picking_create(self):
-        move_obj = self.env['stock.move']
         picking_id = False
         if self.product_lines:
             picking_id = self._create_pickings_and_procurements()
-        move_ids = move_obj.search([('picking_id', '=', picking_id)])
-        self.write({'picking_id': picking_id,
-                    'state': 'inprogress',
-                    }
-                   )
+        self.write({'picking_id': picking_id})
+        return picking_id
 
     @api.multi
     def _get_picking_id(self):
@@ -348,6 +288,21 @@ class IndentIndent(models.Model):
         This function returns an action that display existing picking orders of given purchase order ids.
         When only one found, show the picking immediately.
         '''
+        for product in self.product_lines:
+            if product.qty_available <= 0:
+                raise UserError('Stock not available!!!')
+            elif product.qty_available < product.product_uom_qty:
+                product.issue_qty = product.qty_available
+            else:
+                product.issue_qty = product.product_uom_qty
+        if self.picking_id:
+            pass
+        else:
+            self.action_picking_create()
+            self.picking_id.action_confirm()
+            self.picking_id.force_assign()
+
+
         action = self.env.ref('stock.action_picking_tree')
         result = action.read()[0]
         # override the context to get rid of the default filtering on picking type
@@ -386,15 +341,21 @@ class IndentProductLines(models.Model):
     product_id = fields.Many2one('product.product', string='Product', required=True)
     product_uom_qty = fields.Float('Quantity', digits=dp.get_precision('Product UoS'),
                                    required=True, default=1)
-    product_uom = fields.Many2one(related='product_id.uom_id',string='Unit of Measure', required=True)
-    price_unit = fields.Float(related='product_id.standard_price',string='Price', digits=dp.get_precision('Product Price'),
+    received_qty = fields.Float('Received', digits=dp.get_precision('Product UoS'),help="Receive Quantity which Update by done quntity.")
+    issue_qty = fields.Float('Issue Quantity', digits=dp.get_precision('Product UoS'),help="Issued Quantity which Update by avilable quantity.")
+    product_uom = fields.Many2one(related='product_id.uom_id',comodel='product.uom',string='Unit of Measure', required=True,store=True)
+    price_unit = fields.Float(related='product_id.standard_price',string='Price', digits=dp.get_precision('Product Price'),store=True,
                               help="Price computed based on the last purchase order approved.")
     price_subtotal = fields.Float(string='Subtotal', compute='_compute_amount_subtotal', digits=dp.get_precision('Account'),
                                   store=True)
-    qty_available = fields.Float(string='In Stock',compute = '_compute_product_qty',store=True)
+    qty_available = fields.Float(string='In Stock',compute = '_compute_product_qty')
     name = fields.Char(related='product_id.name',string='Specification',store=True)
     remarks = fields.Text('Remarks')
     sequence = fields.Integer('Sequence')
+
+    ####################################################
+    # Business methods
+    ####################################################
 
     @api.one
     @api.constrains('product_uom_qty')
@@ -413,6 +374,6 @@ class IndentProductLines(models.Model):
         for product in self:
             location_id = product.indent_id.warehouse_id.sudo().lot_stock_id.id
             product_quant = self.env['stock.quant'].search([('product_id', '=', product.product_id.id),
-                                                        ('location_id', '=', location_id)], limit=1)
+                                                        ('location_id', '=', location_id)])
             quantity = sum([val.qty for val in product_quant])
             product.qty_available = quantity

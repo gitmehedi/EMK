@@ -87,7 +87,7 @@
 
 
     <menuitem id="sales_commission_generate_menu"
-              parent="sales_team.menu_sales" sequence="12"
-              groups="gbs_application_group.group_head_account,gbs_application_group.group_cxo"
+              parent="gbs_sale_order_approval.menu_customer" sequence="4"
+              groups="account.group_account_user,gbs_application_group.group_head_account,gbs_application_group.group_cxo"
               action="action_sales_commission_generate"/>
 </odoo>

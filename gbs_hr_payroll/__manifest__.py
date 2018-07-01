@@ -13,7 +13,8 @@
         'gbs_hr_employee',
         'hr_employee_loan_payroll',
         'custom_report',
-        'amount_to_word_bd'
+        'amount_to_word_bd',
+        'hr_payroll_festival_bonus'
     ],
     'data': [
         'wizard/inherited_hr_payroll_payslips_by_employees_views.xml',
@@ -22,7 +23,6 @@
         'views/hr_contract_view.xml',
         'views/inherited_hr_payslip_run_views.xml',
         'views/hr_payslip.xml',
-        "views/inherit_res_partner_bank_view.xml",
     ],
     'summary': 'Shows payslip reports',
     'description':

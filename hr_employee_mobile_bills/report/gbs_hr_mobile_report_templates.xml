@@ -3,20 +3,20 @@
 <odoo>
     <data>
         <template id="report_mobile_bill">
-            <t t-call="report.html_container">
-                <t t-foreach="docs" t-as="o">
-                    <t t-call="report.external_layout">
-                        <div class="page">
+           <t t-call="report.html_container">
+                <t t-call="custom_report.gbs_internal_layout">
+                    <t t-foreach="docs" t-as="o">
+                        <div class="page" style="page-break-inside:auto">
                             <div class="row">
                                 <div class="col-xs-12" style="text-align:center;">
-                                    <h2 ><strong >Employee Mobile Bills Report</strong></h2>
+                                    <h4 class="report-title">Employee Mobile Bills Report</h4>
                                     <p><span t-field="o.name"/></p>
                                 </div>
                             </div>
 
-                            <table class="table table-condensed">
-                                <thead>
-                                    <tr style="background-color:#C0C0C0;">
+                            <table class="table table-bordered table-report-sm table-striped">
+                                <thead style="border-style:none;">
+                                    <tr class="odo-bg-gray">
                                         <th>Employee</th>
                                         <th>Mobile Number</th>
                                         <th>Bill Amount</th>

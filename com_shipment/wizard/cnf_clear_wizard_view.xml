@@ -7,19 +7,15 @@
             <field name="type">form</field>
             <field name="arch" type="xml" >
                 <form string="Please Enter The Information" create="false" edit="false">
-                    <sheet>
+                    <group>
                         <group>
-                            <group>
-                                <field name="arrival_date"/>
-                            </group>
+                            <field name="arrival_date"/>
                         </group>
-                        <group string="Transport Information">
-                            <group>
-                                <field name="transport_by"/>
-                                <field name="vehical_no"/>
-                            </group>
+                        <group>
+                            <field name="transport_by"/>
+                            <field name="vehical_no"/>
                         </group>
-                    </sheet>
+                    </group>
                     <footer>
                         <button string="Save" name="save_cnf_clear" type="object" class="oe_highlight"  />
                         <button special="cancel" string="Close" type="object"/>

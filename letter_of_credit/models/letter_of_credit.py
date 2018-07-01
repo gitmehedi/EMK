@@ -11,7 +11,7 @@ class LetterOfCredit(models.Model):
     # Import -> Applicant(Samuda)
 
     name = fields.Char(string='LC Number', index=True,readonly=True)
-    title = fields.Text(string='Discription', required=True)
+    title = fields.Text(string='Description', required=True)
 
     type = fields.Selection([
         ('export', 'Export'),
@@ -78,6 +78,7 @@ class LetterOfCredit(models.Model):
     revision_number = fields.Integer('Revision', copy=False)
     unrevisioned_name = fields.Char('LC Reference', copy=True, readonly=True)
     active = fields.Boolean('Active', default=True, copy=True)
+    operating_unit_id = fields.Many2one('operating.unit', string='Operating Unit', required=True)
 
     state = fields.Selection([
         ('draft', "Draft"),
@@ -90,6 +91,21 @@ class LetterOfCredit(models.Model):
     ], default='draft')
 
     last_note = fields.Char(string='Step', track_visibility='onchange')
+
+    @api.multi
+    @api.onchange('first_party')
+    def onchange_company_id(self):
+        if self.first_party:
+            self.operating_unit_id = []
+            return {'domain': {'operating_unit_id': [('company_id', '=', self.first_party.id)]}}
+
+    # @api.multi
+    # @api.constrains('operating_unit_id')
+    # def _check_operating_unit_id(self):
+    #     for po in self.po_ids:
+    #         if self.operating_unit_id.id != po.operating_unit_id.id:
+    #             raise ValidationError(_("Operating unit of %s is not same with operating unit of letter of credit.\n"
+    #                   "Your purchase order's operating unit and letter of credit's operating unit must be same.") % (po.name))
 
     @api.multi
     def action_cancel(self):
@@ -113,7 +129,7 @@ class LetterOfCredit(models.Model):
 
     @api.multi
     def action_open(self):
-        self.write({'state': 'open','last_note': Status.OPEN.value})
+        self.write({'state': 'open','last_note': Status.OPEN})
         if self.tolerance > 10 :
             raise Warning('You should set "Tolerance" upto 10 !')
 
@@ -152,7 +168,7 @@ class LetterOfCredit(models.Model):
         if 'unrevisioned_name' not in vals:
             if vals.get('name', 'New') == 'New':
                 seq = self.env['ir.sequence']
-                vals['name'] = seq.next_by_code('letter.credit') or '/'
+                vals['name'] = seq.next_by_code('letter.credit') or ''
             vals['unrevisioned_name'] = vals['name']
         return super(LetterOfCredit, self).create(vals)
 
@@ -166,7 +182,7 @@ class LetterOfCredit(models.Model):
         number = len(self.old_revision_ids)
 
         comm_utility_pool = self.env['commercial.utility']
-        note = comm_utility_pool.getStrNumber(number) + ' ' + Status.AMENDMENT.value
+        note = comm_utility_pool.getStrNumber(number) + ' ' + Status.AMENDMENT
 
         self.write({'state': self.state, 'last_note': note})
         return {
@@ -195,6 +211,7 @@ class LetterOfCredit(models.Model):
                              'current_revision_id': self.id, 'unrevisioned_name': self.unrevisioned_name, })
         return super(LetterOfCredit, self).copy(defaults)
 
+    @api.one
     @api.constrains('name')
     def _check_unique_constraint(self):
         if self.name:
