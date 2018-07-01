@@ -15,9 +15,13 @@ class InheritedHrPayslip(models.Model):
         if self.employee_id:
 
             emp_loan=self.env['hr.employee.loan'].search([('employee_id.id','=',self.employee_id.id),
-                                                            ('state','=','disbursed')],limit=1)
-            if emp_loan:
-                self.remaining_loan = emp_loan.remaining_loan_amount or 0.00
+                                                            ('state','=','disbursed')])
+            loan_amt = 0
+            for loan in emp_loan:
+                loan_amt += loan.remaining_loan_amount or 0.00
+
+            # if emp_loan:
+            self.remaining_loan = loan_amt
 
             self.input_line_ids = 0
             super(InheritedHrPayslip, self).onchange_employee()
@@ -29,16 +33,20 @@ class InheritedHrPayslip(models.Model):
             loan_data = self.env['hr.employee.loan.line'].search([('employee_id', '=', self.employee_id.id),
                                                                   ('schedule_date', '>=', self.date_from),
                                                                   ('schedule_date', '<=', self.date_to),
-                                                                  ('state', '=', 'pending')], limit=1)
+                                                                  ('state', '=', 'pending')])
 
             """
             Loan Amount
             """
-            if loan_data and self.contract_id.id and loan_data.parent_id.state=='disbursed':
+            line_amt=0
+            for line in loan_data:
+                if line.parent_id.state=='disbursed':
+                    line_amt += line.installment
+            if self.contract_id.id:
                 other_line_ids += other_line_ids.new({
                     'name': 'Current Loan',
                     'code': "LOAN",
-                    'amount': loan_data.installment,
+                    'amount': line_amt,
                     'contract_id': self.contract_id.id,
                 })
                 self.input_line_ids = other_line_ids
@@ -49,11 +57,11 @@ class InheritedHrPayslip(models.Model):
         loan_data = self.env['hr.employee.loan.line'].search([('employee_id', '=', self.employee_id.id),
                                                               ('schedule_date', '>=', self.date_from),
                                                               ('schedule_date', '<=', self.date_to),
-                                                              ('state', '=', 'pending')], limit=1)
-
-        if loan_data and self.contract_id.id and loan_data.parent_id.state=='disbursed':
-            loan_data.write({'state': 'done'})
-            loan_data.parent_id.write({'remaining_loan_amount': loan_data.parent_id.remaining_loan_amount - loan_data.installment})
+                                                              ('state', '=', 'pending')])
+        for line_state in loan_data:
+            if self.contract_id.id and line_state.parent_id.state=='disbursed':
+                line_state.write({'state': 'done'})
+                line_state.parent_id.write({'remaining_loan_amount': line_state.parent_id.remaining_loan_amount - line_state.installment})
 
         return res
 
