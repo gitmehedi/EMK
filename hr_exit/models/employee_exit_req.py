@@ -52,7 +52,7 @@ class EmployeeExitReq(models.Model):
     approver1_by = fields.Many2one('res.users', string="Approved By Department Manager",
                                    readonly=True)
     approver2_by = fields.Many2one('res.users', string="Approved By HR Manager", readonly=True)
-    checklists_ids = fields.One2many('hr.exit.configure.checklists.line', 'checklists_id')
+    checklists_ids = fields.One2many('hr.exit.checklists.line', 'checklist_id')
 
     @api.one
     def _compute_current_user_is_approver(self):
@@ -105,9 +105,26 @@ class EmployeeExitReq(models.Model):
         for record in confg_checklist_pool:
             if record.applicable_empname_id:
                 if record.applicable_empname_id == self.employee_id:
-                    for config in record.checklist_item_ids:
+                    for config in record.checklists_ids:
                         vals.append((0, 0, {
-                                            'name': config.name,
+                                            'checklist_item_id': config.checklist_item_id,
                                             #'employee': config.applicable_empname_id,
                                             }))
         self.checklists_ids = vals
+
+class EmpReqChecklistsLine(models.Model):
+    _name = "hr.exit.checklists.line"
+
+    #check_list_type_id = fields.Many2one('hr.exit.checklist.type', string="Checklist Types")
+    status_line_id = fields.Many2one('hr.checklist.status')
+    checklist_item_id = fields.Many2one('hr.exit.checklist.item', string='Checklist Item', required=True)
+    remarks = fields.Text(string='Remarks')
+    status = fields.Selection([('received', 'Received'), ('not_received', 'Not Received')], 'Status',
+                              default='received')
+
+    # Relational fields
+    checklist_id = fields.Many2one('hr.emp.exit.req')
+    #checklists_id = fields.Many2one('hr.exit.configure.checklists')
+    #emp_checklist_line_id = fields.Many2one('hr.emp.exit.req')
+    #responsible_department = fields.Many2one('hr.department', ondelete='set null', string='Responsible Department')
+    #responsible_emp = fields.Many2one('hr.employee', string='Responsible User')

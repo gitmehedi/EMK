@@ -33,9 +33,12 @@
 						</group>
 						<notebook>
 							<page string="Check Lists">
-								<field name="checklist_item_ids">
+								<field name="checklists_ids">
 									<tree editable="top">
-										<field name="name"/>
+										<field name="checklist_item_id"/>
+										<field name="applicable_department_id"/>
+										<field name="applicable_empname_id"/>
+										<field name="applicable_jobtitle_id"/>
 									</tree>
 								</field>
 							</page>
