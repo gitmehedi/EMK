@@ -205,7 +205,7 @@
                   <!--sequence="12" action="delivery_order_layer_action"/>-->
 
         <menuitem id="delivery_order_layer_submenu" name="Delivery Order" parent="delivery_schedules.delivery_schedule_menu"
-                  groups="gbs_application_group.group_cxo,,account.group_account_user,gbs_application_group.group_head_account,gbs_application_group.group_cxo"
+                  groups="gbs_application_group.group_cxo,account.group_account_user,gbs_application_group.group_head_account,gbs_application_group.group_cxo"
                   action="delivery_order_layer_action" sequence="3"/>
 
 
