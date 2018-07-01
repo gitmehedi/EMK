@@ -33,3 +33,6 @@ access_res_partner_director,access_res_partner_director,model_res_partner,gbs_ap
 
 access_res_partner_customer_manager,access_res_partner_customer_manager,base.model_res_partner,gbs_application_group.group_sales_customer_manager,1,1,1,0
 
+access_comm_due_report_hoa,access_comm_due_report_hoa,model_commission_due_report,gbs_application_group.group_head_account,1,1,1,0
+access_comm_due_report_acc_exe,access_comm_due_report_acc_exe,model_commission_due_report,account.group_account_user,1,1,1,0
+
