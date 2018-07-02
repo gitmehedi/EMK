@@ -116,17 +116,17 @@
                                         </tree>
                                     </field>
                                 </page>
-                                <page string="T.T" attrs="{'invisible':[('so_type', '!=', 'cash')]}">
-                                    <field name="tt_ids">
-                                        <tree string="List" editable="bottom">
-                                            <field name="ref_num"/>
-                                            <field name="bank"/>
-                                            <field name="branch"/>
-                                            <field name="amount"/>
-                                            <field name="date"/>
-                                        </tree>
-                                    </field>
-                                </page>
+                                <!--<page string="T.T" attrs="{'invisible':[('so_type', '!=', 'cash')]}">-->
+                                    <!--<field name="tt_ids">-->
+                                        <!--<tree string="List" editable="bottom">-->
+                                            <!--<field name="ref_num"/>-->
+                                            <!--<field name="bank"/>-->
+                                            <!--<field name="branch"/>-->
+                                            <!--<field name="amount"/>-->
+                                            <!--<field name="date"/>-->
+                                        <!--</tree>-->
+                                    <!--</field>-->
+                                <!--</page>-->
                                 <page string="L/C" attrs="{'invisible':[('so_type', '!=', 'lc_sales')]}">
                                     <field name="lc_ids">
                                         <tree string="List" editable="bottom">
