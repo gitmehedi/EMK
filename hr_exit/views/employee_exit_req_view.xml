@@ -15,10 +15,10 @@
                                 states="confirm"  type="object" class="oe_highlight"/>
                         <button string="Validate" name="exit_first_validate" groups ="hr.group_hr_manager" states="validate1" type="object"
                                 class="oe_highlight" />
-                        <button string="Refuse" name="exit_refuse" groups ="hr.group_hr_manager" states="validate1"
-                                type="object" />
+                        <button string="Refuse" name="exit_refuse" groups ="hr.group_hr_manager"
+                                states="validate1" type="object" />
                         <button string="Reset to Draft" name="exit_reset" groups ="hr.group_hr_manager"
-                                attrs="{'invisible': [('state', 'not in', ['confirm', 'refuse'])]}"
+                                attrs="{'invisible': [('state', 'not in', ['validate1', 'refuse'])]}"
                                 type="object"/>
                         <field name="state" widget="statusbar" statusbar_visible="draft,confirm,validate1,validate"
                                statusbar_colors='{"confirm":"blue","validate1":"blue","refuse":"red"}'/>
@@ -58,8 +58,8 @@
 									<tree editable="top">
 										<field name="checklist_item_id"
 											options='{"no_open": True,"no_create": 1, "no_create_edit": 1}' />
-									    <!--<field name="responsible_department"/>-->
-									    <!--<field name="responsible_emp"/>-->
+									    <field name="responsible_department"/>
+									    <field name="responsible_emp"/>
 									    <field name="remarks"/>
 									    <field name="status"/>
                                     </tree>

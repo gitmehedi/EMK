@@ -7,6 +7,9 @@ class EmployeeExitReq(models.Model):
     _name = 'hr.emp.exit.req'
 
     _rec_name = 'employee_id'
+
+    def _current_employee(self):
+        return self.env['hr.employee'].search([('user_id', '=', self.env.uid)], limit=1)
     emp_notes = fields.Text(string='Employee Notes')
     reason_for_exit = fields.Text(string='Reason for Leaving')
     department_notes = fields.Text(string='Department Manager Notes')
@@ -37,7 +40,7 @@ class EmployeeExitReq(models.Model):
             \nThe status is \'Refused\', when exit request is refused by manager.\
             \nThe status is \'Approved\', when exit request is approved by manager.')
 
-    employee_id = fields.Many2one('hr.employee', select=True, invisible=False)
+    employee_id = fields.Many2one('hr.employee', select=True, invisible=False,default=_current_employee)
     job_id = fields.Many2one('hr.job', string='Job Title', related='employee_id.job_id')
     user_id = fields.Many2one('res.users', default=lambda self: self.env.user, copy=False)
     manager_id = fields.Many2one('hr.employee', related='employee_id.parent_id',
@@ -52,7 +55,7 @@ class EmployeeExitReq(models.Model):
     approver1_by = fields.Many2one('res.users', string="Approved By Department Manager",
                                    readonly=True)
     approver2_by = fields.Many2one('res.users', string="Approved By HR Manager", readonly=True)
-    checklists_ids = fields.One2many('hr.exit.checklists.line', 'checklist_id')
+    checklists_ids = fields.One2many('hr.exit.checklists.line', 'checklist_id',default='')
 
     @api.one
     def _compute_current_user_is_approver(self):
@@ -97,34 +100,33 @@ class EmployeeExitReq(models.Model):
         return True
 
     @api.multi
-    @api.onchange('employee_id')
+    @api.onchange('employee_id','department_id','job_id')
     def on_change_employee(self):
         self.checklists_ids = []
         vals = []
         confg_checklist_pool = self.env['hr.exit.configure.checklists'].search([('is_active','=',True)])
         for record in confg_checklist_pool:
-            if record.applicable_empname_id:
-                if record.applicable_empname_id == self.employee_id:
-                    for config in record.checklists_ids:
-                        vals.append((0, 0, {
-                                            'checklist_item_id': config.checklist_item_id,
-                                            #'employee': config.applicable_empname_id,
-                                            }))
+            if record.applicable_empname_id or record.applicable_department_id or record.applicable_jobtitle_id:
+                if self.job_id or self.employee_id or self.department_id:
+                    if record.applicable_empname_id == self.employee_id or record.applicable_department_id == self.department_id or record.applicable_jobtitle_id == self.job_id:
+                        for config in record.checklists_ids:
+                            vals.append((0, 0, {
+                                                'checklist_item_id': config.checklist_item_id,
+                                                'responsible_department': config.responsible_department,
+                                                'responsible_emp': config.responsible_emp,
+                                                }))
         self.checklists_ids = vals
 
 class EmpReqChecklistsLine(models.Model):
     _name = "hr.exit.checklists.line"
 
-    #check_list_type_id = fields.Many2one('hr.exit.checklist.type', string="Checklist Types")
     status_line_id = fields.Many2one('hr.checklist.status')
-    checklist_item_id = fields.Many2one('hr.exit.checklist.item', string='Checklist Item', required=True)
+    checklist_item_id = fields.Many2one('hr.exit.checklist.item', string='Checklist Item',required=True)
     remarks = fields.Text(string='Remarks')
     status = fields.Selection([('received', 'Received'), ('not_received', 'Not Received')], 'Status',
-                              default='received')
+                              default='not_received')
 
     # Relational fields
     checklist_id = fields.Many2one('hr.emp.exit.req')
-    #checklists_id = fields.Many2one('hr.exit.configure.checklists')
-    #emp_checklist_line_id = fields.Many2one('hr.emp.exit.req')
-    #responsible_department = fields.Many2one('hr.department', ondelete='set null', string='Responsible Department')
-    #responsible_emp = fields.Many2one('hr.employee', string='Responsible User')
+    responsible_department = fields.Many2one('hr.department', ondelete='set null', string='Responsible Department')
+    responsible_emp = fields.Many2one('hr.employee', string='Responsible User')
