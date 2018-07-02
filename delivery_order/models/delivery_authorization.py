@@ -100,6 +100,19 @@ class DeliveryAuthorization(models.Model):
                                     domain=[('da_btn_show_hide', '=', False), ('state', '=', 'done')],
                                     states={'draft': [('readonly', False)]})
 
+    @api.multi
+    def _compute_do_button_visibility(self):
+
+        for da in self:
+            delivery_order_pool = da.env['delivery.order'].search([('delivery_order_id','=',da.id)])
+            if delivery_order_pool:
+                da.delivery_order_btn_hide = True
+            else:
+                da.delivery_order_btn_hide = False
+
+
+    delivery_order_btn_hide = fields.Boolean(string='Is DO Butotn Visible', compute='_compute_do_button_visibility')
+
     """ All functions """
 
     @api.model
@@ -160,7 +173,7 @@ class DeliveryAuthorization(models.Model):
 
         self.approver1_id = self.env.user
         account_payment_pool = self.env['account.payment'].search(
-            [('is_this_payment_checked', '=', False), ('sale_order_id', '=', self.sale_order_id.id),
+            [('state','!=','draft'),('is_this_payment_checked', '=', False), ('sale_order_id', '=', self.sale_order_id.id),
              ('partner_id', '=', self.parent_id.id)])
         account_payment_pool.write({'is_this_payment_checked': True})
 
@@ -273,7 +286,7 @@ class DeliveryAuthorization(models.Model):
     def payments_amount_checking_with_products_subtotal(self):
 
         account_payment_pool = self.env['account.payment'].search(
-            [('is_this_payment_checked', '=', False), ('sale_order_id', '=', self.sale_order_id.id),
+            [('state','!=','draft'),('is_this_payment_checked', '=', False), ('sale_order_id', '=', self.sale_order_id.id),
              ('partner_id', '=', self.parent_id.id)])
 
         if not self.line_ids:
@@ -346,7 +359,8 @@ class DeliveryAuthorization(models.Model):
     def onchange_sale_order_id(self):
         self.set_products_info_automatically()
 
-        account_payment_pool = self.env['account.payment'].search([('sale_order_id', '=', self.sale_order_id.id)])
+        account_payment_pool = self.env['account.payment'].search([('state','!=','draft'),
+                                                                   ('sale_order_id', '=', self.sale_order_id.id)])
 
         for payments in account_payment_pool:
             if payments.journal_id.type == 'bank':
@@ -427,7 +441,7 @@ class DeliveryAuthorization(models.Model):
 
     def action_process_unattached_payments(self):
         account_payment_pool = self.env['account.payment'].search(
-            [('is_this_payment_checked', '=', False), ('sale_order_id', '=', self.sale_order_id.id)])
+            [('state','!=','draft'),('is_this_payment_checked', '=', False), ('sale_order_id', '=', self.sale_order_id.id)])
 
         for acc in account_payment_pool:
             if acc.journal_id.type == 'cash':
