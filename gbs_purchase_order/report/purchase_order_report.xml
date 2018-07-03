@@ -48,7 +48,6 @@
                                     <p><b>Suplier : </b><br/><span t-esc="data['partner_id']"/></p>
                                     <p><span t-esc="data['cus_address']" t-esc-options='{"widget": "contact", "fields": ["address"], "no_marker": true}'/> <br/>
                                         <b>Contract Parson : </b><span t-esc="data['sup_con']"/><br/>
-                                        <b>PR No : </b><span t-esc="data['requisition_id']"/><br/>
                                         <b>Order Ref No : </b><span t-esc="data['partner_ref']"/><br/>
                                         <b>Date : </b><span t-esc="data['requisition_date']"></span> </p>
                                 </div>

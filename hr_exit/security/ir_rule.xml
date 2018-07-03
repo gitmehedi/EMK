@@ -10,4 +10,14 @@
         <field eval="1" name="perm_create"/>
         <field name="groups" eval="[(4,ref('base.group_user'))]"/>
     </record>
+    <record id="rule_hr_emp_exit_req_manager" model="ir.rule">
+            <field name="name">Employee exit request permission for HR</field>
+            <field name="model_id" ref="model_hr_emp_exit_req"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="perm_read" eval="True" />
+            <field name="perm_create" eval="True" />
+            <field name="perm_write" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
+            <field name="groups" eval="[(4,ref('hr.group_hr_manager'))]"/>
+        </record>
 </odoo>
