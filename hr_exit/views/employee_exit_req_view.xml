@@ -38,23 +38,28 @@
                                 <field name="user_id" string="User" readonly="1"/>
                             </group>
                         </group>
-                        <group attrs="{'invisible': [('state', ' not in', ['confirm'])]}">
+                        <group attrs="{'invisible': [('state', '=', ['draft'])]}">
                             <group>
-                                <field name="confirm_date" attrs="{'invisible': [('state', ' not in', ['confirm'])]}"/>
-                                <field name="approved1_date" attrs="{'invisible': [('state', ' not in', ['validate1'])]}"/>
+                                <field name="confirm_date" attrs="{'invisible': [('state', 'in', ['draft'])]}"/>
+                                <field name="approved1_date" attrs="{'invisible': [('state', 'in', ['draft','confirm'])]}"/>
                                 <field name="approved2_date" attrs="{'invisible': [('state', 'not in', ['validate'])]}"/>
                             </group>
                             <group>
-                                <field name="confirm_by" attrs="{'invisible': [('state', 'not in', ['confirm'])]}"/>
-                                <field name="approver1_by" attrs="{'invisible': [('state', 'not in', ['validate1'])]}"/>
+                                <field name="confirm_by" attrs="{'invisible': [('state', 'in', ['draft'])]}"/>
+                                <field name="approver1_by"  attrs="{'invisible': [('state', 'in', ['draft','confirm'])]}"/>
                                 <field name="approver2_by" attrs="{'invisible': [('state', 'not in', ['validate'])]}"/>
                             </group>
                         </group>
 
                         <notebook>
                             <page string ="Information">
-                                <separator string="Chick List"/>
-                                <field name="checklists_ids">
+                                <separator string="Reason for Exit"/>
+                                <group>
+                                    <field name="reason_for_exit"  required="True" attrs="{'readonly': [('state', 'not in', ['draft'])]}" placeholder="Add a reason..."/>
+                                    <field name="emp_notes" attrs="{'readonly': [('state', 'not in', ['draft'])]}"/>
+                                </group>
+                                <separator string="Check List" attrs="{'invisible': [('state', 'in', ['draft'])]}"/>
+                                <field name="checklists_ids" attrs="{'invisible': [('state', 'in', ['draft'])]}">
 									<tree editable="top">
 										<field name="checklist_item_id"
 											options='{"no_open": True,"no_create": 1, "no_create_edit": 1}' />
@@ -64,11 +69,6 @@
 									    <field name="status"/>
                                     </tree>
 								</field>
-                                <separator string="Reason for Exit"/>
-                                <group>
-                                    <field name="reason_for_exit"  required="True" attrs="{'readonly': [('state', 'not in', ['draft'])]}" placeholder="Add a reason..."/>
-                                    <field name="emp_notes" attrs="{'readonly': [('state', 'not in', ['draft'])]}"/>
-                                </group>
                             </page>
                         </notebook>
 
