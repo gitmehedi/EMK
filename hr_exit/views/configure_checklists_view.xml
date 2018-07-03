@@ -36,9 +36,8 @@
 								<field name="checklists_ids">
 									<tree editable="top">
 										<field name="checklist_item_id"/>
-										<field name="applicable_department_id"/>
-										<field name="applicable_empname_id"/>
-										<field name="applicable_jobtitle_id"/>
+										<field name="responsible_department" invisible="1"/>
+									    <field name="responsible_emp" invisible="1"/>
 									</tree>
 								</field>
 							</page>

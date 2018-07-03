@@ -17,9 +17,8 @@ class ConfigureChecklists(models.Model):
     
     #Relational Fields   
     checklists_ids = fields.One2many('hr.exit.configure.checklists.line','checklists_id')
-    #checklist_item_ids= fields.Many2many('hr.exit.checklist.item',string='Checklist Item')
 
-    #checklists_line_ids = fields.Many2many('hr.exit.configure.checklists.line','exit_configure_checklists_line_rel')
+
     @api.onchange('responsible_type')
     def on_change_responsible_type(self):
         self.responsible_userdepartment_id=0
