@@ -73,7 +73,7 @@
                             <group>
                                 <field name="parent_id"
                                        options="{'no_quick_create':True,'no_create_edit':True,'no_open':True}"/>
-                                <field name="so_type"/>
+                                <field name="so_type"/>in
                                 <field name="company_id" invisible="1"/>
                                 <field name="so_date"/>
 

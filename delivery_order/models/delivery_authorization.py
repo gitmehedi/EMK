@@ -100,7 +100,7 @@ class DeliveryAuthorization(models.Model):
                                     domain=[('da_btn_show_hide', '=', False), ('state', '=', 'done')],
                                     states={'draft': [('readonly', False)]})
 
-    @api.multi
+
     def _compute_do_button_visibility(self):
 
         for da in self:
@@ -111,7 +111,7 @@ class DeliveryAuthorization(models.Model):
                 da.delivery_order_btn_hide = False
 
 
-    delivery_order_btn_hide = fields.Boolean(string='Is DO Butotn Visible', compute='_compute_do_button_visibility')
+    delivery_order_btn_hide = fields.Boolean(string='Is DO Butotn Visible', compute='_compute_do_button_visibility',store=True)
 
     """ All functions """
 
