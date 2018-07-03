@@ -101,17 +101,18 @@ class DeliveryAuthorization(models.Model):
                                     states={'draft': [('readonly', False)]})
 
 
+    @api.multi
     def _compute_do_button_visibility(self):
 
         for da in self:
-            delivery_order_pool = da.env['delivery.order'].search([('delivery_order_id','=',da.id)])
+            delivery_order_pool = da.env['delivery.order'].search([('delivery_order_id','=', da.id)])
             if delivery_order_pool:
                 da.delivery_order_btn_hide = True
             else:
                 da.delivery_order_btn_hide = False
 
 
-    delivery_order_btn_hide = fields.Boolean(string='Is DO Butotn Visible', compute='_compute_do_button_visibility',store=True)
+    delivery_order_btn_hide = fields.Boolean(string='Is DO Button Visible', store=False, compute='_compute_do_button_visibility')
 
     """ All functions """
 
