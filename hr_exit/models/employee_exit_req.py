@@ -1,6 +1,7 @@
 from odoo import models, fields, api, exceptions,_
 import datetime
 import time
+from dateutil.relativedelta import relativedelta
 
 
 class EmployeeExitReq(models.Model):
@@ -8,14 +9,19 @@ class EmployeeExitReq(models.Model):
 
     _rec_name = 'employee_id'
 
+    def last_days(self):
+        ldate = datetime.date.today() + relativedelta(months=1)
+        return ldate
+
     def _current_employee(self):
         return self.env['hr.employee'].search([('user_id', '=', self.env.uid)], limit=1)
+
     emp_notes = fields.Text(string='Employee Notes')
     reason_for_exit = fields.Text(string='Reason for Leaving')
     department_notes = fields.Text(string='Department Manager Notes')
     req_date = fields.Date('Request Date', default=fields.Date.today(),
                            required=True)
-    last_date = fields.Date('Last Day of Work', default=fields.Date.today(),
+    last_date = fields.Date('Last Day of Work', default=last_days,
                             required=True)
     confirm_date = fields.Date(string="Confirm Date", default=datetime.date.today(),
                                readonly=True)
@@ -32,7 +38,6 @@ class EmployeeExitReq(models.Model):
          ('confirm', 'To Approve'),
          ('refuse', 'Refused'),
          ('validate1', 'Second Approval'),
-         ('validate2', 'Third Approval'),
          ('validate', 'Approved')],
         'Status', readonly=True, copy=False, default='draft',
         help='The status is set to \'To Submit\', when a Exit request is created.\
