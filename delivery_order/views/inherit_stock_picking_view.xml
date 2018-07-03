@@ -19,6 +19,16 @@
                 </xpath>
 
 
+                <xpath expr="//button[@name='do_new_transfer']" position="replace">
+
+                    <button name="do_new_transfer"
+                            states="draft,partially_available,assigned"
+                            string="Validate"
+                            groups="stock.group_stock_user,account.group_account_user"
+                            type="object" class="oe_highlight"/>
+
+                </xpath>
+
 
             </field>
         </record>
