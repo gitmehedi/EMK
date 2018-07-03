@@ -59,3 +59,11 @@ access_salesman_own_transport_info,access_salesman_own_transport_info,gbs_sales_
 access_cxo_transport_info,access_cxo_transport_info,gbs_sales_delivery_goods.model_sales_delivery_goods,gbs_application_group.group_cxo,1,1,1,0
 
 access_commercial_user_export,access_commercial_user_export,delivery_order.model_delivery_authorization,commercial.group_commercial_user_export,1,1,1,0
+
+access_sales_product_manager_move_line,access_sales_product_manager_move_line,account.model_account_move_line,gbs_application_group.group_sales_product_manager,1,1,1,0
+
+
+
+
+
+

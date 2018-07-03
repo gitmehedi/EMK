@@ -5,7 +5,9 @@
     'category': 'sales',
     'version':'1.0',
     'depends': [
-        'sale', 'product',
+        'sale',
+        'product',
+        'delivery_schedules',
     ],
     'data': [
         'views/sales_delivery_goods_view.xml',

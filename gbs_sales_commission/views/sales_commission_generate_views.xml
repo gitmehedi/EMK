@@ -85,9 +85,4 @@
         <field name="view_mode">tree,form</field>
     </record>
 
-
-    <menuitem id="sales_commission_generate_menu"
-              parent="gbs_sale_order_approval.menu_customer" sequence="4"
-              groups="account.group_account_user,gbs_application_group.group_head_account,gbs_application_group.group_cxo"
-              action="action_sales_commission_generate"/>
 </odoo>
