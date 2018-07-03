@@ -26,7 +26,7 @@ class Shipment(models.Model):
     state = fields.Selection(
         [('draft', "Draft"),
          ('on_board', "Shipment On Board"),
-         ('receive_doc', "Receive Doc"),
+         ('receive_doc', "Transfer Doc"),
          ('send_to_cnf', "Send TO C&F"),
          ('eta', "ETA"),
          ('cnf_quotation', "C&F Quotation"),
