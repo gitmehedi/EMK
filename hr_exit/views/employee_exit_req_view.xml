@@ -15,8 +15,8 @@
                                 states="confirm"  type="object" class="oe_highlight"/>
                         <button string="Validate" name="exit_first_validate" groups ="hr.group_hr_manager" states="validate1" type="object"
                                 class="oe_highlight" />
-                        <button string="Refuse" name="exit_refuse" groups ="hr.group_hr_manager"
-                                states="validate1" type="object" />
+                        <button string="Refuse" name="exit_refuse"
+                                states="confirm,validate1" type="object" />
                         <button string="Reset to Draft" name="exit_reset" groups ="hr.group_hr_manager"
                                 attrs="{'invisible': [('state', 'not in', ['validate1', 'refuse'])]}"
                                 type="object"/>
@@ -91,6 +91,16 @@
                 </tree>
             </field>
         </record>
+        <record id="exit_req_search_view" model="ir.ui.view">
+			<field name="name">hr.emp.exit.req.search</field>
+			<field name="model">hr.emp.exit.req</field>
+			<field name="arch" type="xml">
+				<search string="Search">
+					<field name="employee_id"/>
+                    <filter name ='my_approval' string="My Approval" domain="[('state','=','validate1')]"/>
+				</search>
+			</field>
+		</record>
 
         <!-- Checklist Item Action Views -->
         <record id="action_exit_req_view" model="ir.actions.act_window">
@@ -100,6 +110,8 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="view_id" ref="emp_req_tree_view"/>
+            <field name="context" eval="{'search_default_my_approval': 1}"/>
+            <field name="search_view_id" ref="exit_req_search_view"/>
             <field name="help" type="html">
                 <p class="oe_view_nocontent_create">
                     Click to create a exit request.
