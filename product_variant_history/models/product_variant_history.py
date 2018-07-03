@@ -4,6 +4,8 @@ from odoo import models, fields, api
 
 class ProductVariantHistory(models.Model):
     _name = 'product.variant.history'
+    _order = 'effective_datetime desc'
+
 
     value = fields.Float('Value')
     effective_datetime = fields.Datetime('Effective Date')

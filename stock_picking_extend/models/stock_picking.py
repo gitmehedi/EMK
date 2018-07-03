@@ -83,3 +83,15 @@ class StockPickingType(models.Model):
     _inherit = 'stock.picking.type'
 
     show_on_dashboard = fields.Boolean(string='Show Picking Type on dashboard', help="Whether this Picking Type should be displayed on the dashboard or not", default=True)
+
+
+class StockMove(models.Model):
+    _inherit = 'stock.move'
+
+    @api.model
+    def create(self, vals):
+        if not vals['price_unit']:
+            product = self.env['product.product'].browse(vals['product_id'])
+            vals['price_unit'] = product.standard_price
+        res = super(StockMove, self).create(vals)
+        return res
