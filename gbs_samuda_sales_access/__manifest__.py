@@ -28,6 +28,7 @@
         'sales_team',
         'gbs_sales_delivery_goods',
         'customer_credit_limit',
+        'sale',
     ],
 
 
