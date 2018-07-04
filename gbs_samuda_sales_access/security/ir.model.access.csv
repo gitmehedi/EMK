@@ -62,6 +62,7 @@ access_commercial_user_export,access_commercial_user_export,delivery_order.model
 
 access_sales_product_manager_move_line,access_sales_product_manager_move_line,account.model_account_move_line,gbs_application_group.group_sales_product_manager,1,1,1,0
 
+access_acc_user_delivery_without_lc_wizard,access_acc_user_delivery_without_lc_wizard,delivery_order.model_max_delivery_without_lc_wizard,account.group_account_user,1,1,1,0
 
 
 
