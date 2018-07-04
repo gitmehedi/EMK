@@ -12,7 +12,7 @@ class CustomerCommissionConfigurationProduct(models.Model):
 
     """ Relational Fields """
     product_id = fields.Many2one('product.product', string="Product", required=True,
-                                 domain="([('sale_ok','=','True'),('type','=','consu')])")
+                                 domain="([('sale_ok','=','True')])")
     config_parent_id = fields.Many2one('customer.commission.configuration', ondelete='cascade')
 
     @api.multi

@@ -7,7 +7,7 @@ from odoo.exceptions import UserError, ValidationError
 class customer_creditlimit_assign(models.Model):
     _name = 'customer.creditlimit.assign'
     _inherit = ['mail.thread', 'ir.needaction_mixin']
-    _description = "Credit limit assign"
+    _description = "Credit Limit"
 
     name = fields.Char(string='Name', index=True, readonly=True)
     sequence_id = fields.Char('Sequence', readonly=True)
@@ -17,14 +17,14 @@ class customer_creditlimit_assign(models.Model):
                                        'approve': [('invisible', False), ('readonly', True)]})
     credit_limit = fields.Float('Credit Limit',
                                 states={'confirm': [('readonly', True)], 'validate1': [('readonly', True)],
-                                        'approve': [('readonly', True)]})
+                                        'approve': [('readonly', True)]},track_visibility='onchange')
     days = fields.Integer('Credit Days',
                           states={'confirm': [('readonly', True)], 'validate1': [('readonly', True)],
                                   'approve': [('readonly', True)]})
     requested_by = fields.Many2one('res.users', string="Requested By", default=lambda self: self.env.user,
                                    readonly=True)
-    approver1_id = fields.Many2one('res.users', string='First Approval', readonly=True)
-    approver2_id = fields.Many2one('res.users', string='Second Approval', readonly=True)
+    approver1_id = fields.Many2one('res.users', string='First Approval', track_visibility='onchange', readonly=True)
+    approver2_id = fields.Many2one('res.users', string='Second Approval', track_visibility='onchange', readonly=True)
 
     """ Relational Fields """
     limit_ids = fields.One2many('res.partner.credit.limit', 'assign_id', 'Limits',
@@ -39,7 +39,7 @@ class customer_creditlimit_assign(models.Model):
          ('refuse', 'Refused'),
          ('validate1', 'Second Approval'),
          ('approve', 'Approved'), ],
-        default='draft')
+        default='draft',track_visibility='onchange')
 
     """ All functions """
 
@@ -67,7 +67,7 @@ class customer_creditlimit_assign(models.Model):
     @api.constrains('credit_limit', 'days')
     def _check_value(self):
         if self.credit_limit <= 0 or self.days <= 0:
-            raise Warning("[Error] Limit or Days never take zero or negative value!")
+            raise Warning("Limit or Days never take zero or negative value!")
 
     @api.multi
     def action_confirm(self):
