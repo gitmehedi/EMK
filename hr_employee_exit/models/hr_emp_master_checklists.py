@@ -3,21 +3,50 @@ from odoo import models, fields, api, exceptions
 class ConfigureEmpChecklist(models.Model):
     _name = "hr.emp.master.checklists"
 
-    employee_id = fields.Many2one('hr.employee',string='Employee', select=True, invisible=False,  default=lambda self: self._employee_gets())
-    _rec_name = 'employee_id'
+    config_checklist_id = fields.Many2one('hr.exit.configure.checklists','Checklist',required= True)
+    employee_id = fields.Many2one('hr.employee',string='Employee', select=True, required= True, invisible=False)
     department_id = fields.Many2one('hr.department', string='Department', related='employee_id.department_id')
-    state = fields.Selection([('draft', 'Draft'), ('done', 'Done'), ('send', 'Send'), ('verify', 'Verified')], readonly=True, copy=False,
-                             default='draft')
+    responsible_userdepartment_id = fields.Many2one('hr.department', string='Responsible Department',related='config_checklist_id.responsible_userdepartment_id')
+    responsible_username_id = fields.Many2one('hr.employee', string='Responsible User',related='config_checklist_id.responsible_username_id')
     checklist_status_ids = fields.One2many('hr.checklist.status', 'checklist_status_id')
+    state = fields.Selection([('draft', 'Draft'), ('done', 'Done'), ('send', 'Send'), ('verify', 'Verified')],
+                             readonly=True, copy=False,
+                             default='draft')
+    responsible_type=fields.Selection(selection=[('department', 'Department'),('individual','Individual')],related='config_checklist_id.responsible_type')
+    remarks= fields.Text('Remarks',required=True)
 
 
-    @api.multi
-    def _employee_gets(self):
+    @api.onchange('config_checklist_id')
+    def on_change_config_checklist_id(self):
+        vals = []
+        if self.config_checklist_id:
+            confg_checklist_obj = self.env['hr.exit.configure.checklists'].search(
+                [('id', '=', self.config_checklist_id.id)])
+            for record in confg_checklist_obj:
+                for config in record.checklists_ids:
+                    vals.append((0, 0, {
+                                        'checklist_status_item_id': config.checklist_item_id,
+                                        'checklist_type_id': config.checklist_type,
 
-        ids = self.env['hr.employee'].search([('user_id', '=', self.env.user.id)])
-        if ids:
-            return ids[0]
-        return False
+
+                                        }))
+                    self.checklist_status_ids = vals
+
+    # @api.onchange('config_checklist_id')
+    # def on_change_config_checklist_id(self):
+    #     vals = []
+    #     # self.required_date = self.indent_ids.required_date
+    #     for indent_id in self.indent_ids:
+    #         indent_product_line_obj = self.env['indent.product.lines'].search([('indent_id', '=', indent_id.id)])
+    #         for indent_product_line in indent_product_line_obj:
+    #             vals.append((0, 0, {'product_id': indent_product_line.product_id,
+    #                                 'name': indent_product_line.name,
+    #                                 'product_uom_id': indent_product_line.product_uom,
+    #                                 'product_ordered_qty': indent_product_line.product_uom_qty,
+    #                                 'product_qty': indent_product_line.qty_available,
+    #                                 }))
+    #             self.line_ids = vals
+
 
     @api.multi
     def check_list_submit(self):

@@ -36,6 +36,7 @@
 								<field name="checklists_ids">
 									<tree editable="top">
 										<field name="checklist_item_id"/>
+										<field name="checklist_type"/>
 										<field name="responsible_department" invisible="1"/>
 									    <field name="responsible_emp" invisible="1"/>
 									</tree>

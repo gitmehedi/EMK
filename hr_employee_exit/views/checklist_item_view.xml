@@ -47,14 +47,8 @@
 			<field name="model">hr.exit.checklist.item</field>
 			<field name="arch" type="xml">
 				<search string="Search">
-					<!--<field name="checklist_type" string="Checklist Type"-->
-						<!--filter_domain="[('checklist_type','ilike','self')]" />-->
 					<field name="name" string="Name" filter_domain="[('name','ilike','self')]" />
-					<!--<field name="keeper" string="Item Keeper" filter_domain="[('keeper','ilike','self')]" />-->
-					<!--<field name="description" string="Description"-->
-						<!--filter_domain="[('description','ilike','self')]" />-->
-
-					 <group expand="0" string="Group By">
+					<group expand="0" string="Group By">
                         <filter string="Type" icon="terp-personal" domain="[]" context="{'group_by':'checklist_type'}"/>
                     </group>
 
@@ -75,9 +69,6 @@
 		</record>
 
 		<!-- Checklist Item Menu -->
-		<!--<menuitem id="exit_checklist_menu" name="Exit Checklist"-->
-			<!--parent="hr.menu_hr_configuration" sequence="6"/>-->
-
 		<menuitem id="checklist_item_menu" name="Checklist Item"
 			parent="exit_checklist_menu" sequence="7"
 			action="action_checklist_item_view" />
