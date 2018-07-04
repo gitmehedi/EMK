@@ -66,7 +66,7 @@
 									    <field name="responsible_department"/>
 									    <field name="responsible_emp"/>
 									    <field name="remarks"/>
-									    <field name="status"/>
+									    <field name="state"/>
                                     </tree>
 								</field>
                             </page>

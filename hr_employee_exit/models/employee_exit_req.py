@@ -128,8 +128,10 @@ class EmpReqChecklistsLine(models.Model):
     status_line_id = fields.Many2one('hr.checklist.status')
     checklist_item_id = fields.Many2one('hr.exit.checklist.item', string='Checklist Item',required=True)
     remarks = fields.Text(string='Remarks')
-    status = fields.Selection([('received', 'Received'), ('not_received', 'Not Received')], 'Status',
-                              default='not_received')
+    state = fields.Selection([
+        ('received', "Received"),
+        ('not_received', "Not Received")
+    ], 'Status',default='not_received')
 
     # Relational fields
     checklist_id = fields.Many2one('hr.emp.exit.req')

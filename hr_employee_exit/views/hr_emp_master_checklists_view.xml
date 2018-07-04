@@ -27,7 +27,6 @@
                         <group>
                             <field name="employee_id" attrs="{'readonly': [('state', 'in', ['done','send'])]}"/>
                             <field name="department_id" attrs="{'readonly': [('state', 'in', ['done','send'])]}"/>
-                            <!--<field name="status"/>-->
                         </group>
 
                         <separator string="Check Lists" colspan="4"/>
