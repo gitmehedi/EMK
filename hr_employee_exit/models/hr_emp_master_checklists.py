@@ -32,6 +32,16 @@ class ConfigureEmpChecklist(models.Model):
                                         }))
                     self.checklist_status_ids = vals
 
+    @api.multi
+    def check_list_verify(self):
+        exit_req_obj = self.env['hr.emp.exit.req'].search(
+            [('employee_id', '=', self.employee_id.id)])
+        for exit_line in exit_req_obj.checklists_ids:
+            if exit_line.responsible_department == self.responsible_userdepartment_id or exit_line.responsible_emp == self.responsible_username_id:
+                exit_line.remarks = self.remarks
+                exit_line.write({'state': 'received'})
+        return self.write({'state': 'verify'})
+
     # @api.onchange('config_checklist_id')
     # def on_change_config_checklist_id(self):
     #     vals = []
@@ -50,9 +60,6 @@ class ConfigureEmpChecklist(models.Model):
 
     @api.multi
     def check_list_submit(self):
-        # for record in self:
-        #     if record.employee_id and record.employee_id.parent_id and record.employee_id.parent_id.user_id:
-        #         self.message_subscribe_users([record.id], user_ids=[record.employee_id.parent_id.user_id.id])
         return self.write({'state': 'done'})
 
     @api.multi
@@ -63,22 +70,16 @@ class ConfigureEmpChecklist(models.Model):
     def check_list_send(self):
         return self.write({'state': 'send'})
 
-    @api.multi
-    def check_list_verify(self):
-        return self.write({'state': 'verify'})
+    # @api.multi
+    # def check_list_verify(self):
+    #     return self.write({'state': 'verify'})
 
 
     @api.multi
     def _compute_check(self):
         return 1
 
-    # @api.multi
-    # def unlink(self):
-    #     for rec in self:
-    #         if rec.state not in ['draft', 'done', 'send']:
-    #             #raise UserError(_('You cannot delete a request which is in %s state.') % (rec.state,))
-    #             raise osv.except_osv(('Error'), ('You cannot delete a request which is in %s state') % (rec.state))
-    #     return super(ConfigureEmpChecklist, self).unlink()
+
 
 
 
