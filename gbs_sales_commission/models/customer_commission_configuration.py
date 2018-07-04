@@ -6,10 +6,13 @@ from odoo import api, fields, models, _
 
 class CustomerCommissionConfiguration(models.Model):
     _name = "customer.commission.configuration"
+    _rec_name = 'name'
+    _description = "Customer Commission"
+
     _inherit = ['mail.thread', 'ir.needaction_mixin']
     _order = 'confirmed_date desc'
 
-    name = fields.Char(string='Name', index=True, readonly=True)
+    name = fields.Char(string='Name', index=True, track_visibility='onchange', readonly=True)
     requested_date = fields.Date(string="Requested Date", default=datetime.date.today(), readonly=True)
     approved_date = fields.Date('Approved Date',
                                 states={'draft': [('invisible', True)],
@@ -32,7 +35,7 @@ class CustomerCommissionConfiguration(models.Model):
                                  readonly=True, states={'draft': [('readonly', False)]})
 
     customer_id = fields.Many2one('res.partner', string="Customer", domain="([('customer','=','True')])",
-                                  readonly=True, states={'draft': [('readonly', False)]})
+                                  readonly=True, states={'draft': [('readonly', False)]},track_visibility='onchange')
     requested_by = fields.Many2one('res.users', string="Requested By", default=lambda self: self.env.user,
                                    readonly=True)
 
