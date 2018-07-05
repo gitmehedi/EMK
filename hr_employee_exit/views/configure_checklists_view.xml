@@ -26,10 +26,8 @@
 								   attrs="{'invisible':[('applicable_for','!=', 'individual')]}"/>
 							<field name="applicable_jobtitle_id"
 								   attrs="{'invisible':[('applicable_for','!=', 'designation')]}"/>
-
 							<field name="is_active" />
 							<field name="notes" />
-
 						</group>
 						<notebook>
 							<page string="Check Lists">
@@ -42,7 +40,6 @@
 									</tree>
 								</field>
 							</page>
-
 						</notebook>
 					</sheet>
 				</form>

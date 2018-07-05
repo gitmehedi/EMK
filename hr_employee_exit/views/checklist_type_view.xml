@@ -13,11 +13,9 @@
 					</header>
 					<sheet>
 						<group>
-							<!--<field name="code" />-->
 							<field name="name" />
 							<field name="is_active" />
 							<field name="description" />
-
 						</group>
 					</sheet>
 				</form>
@@ -31,7 +29,6 @@
 			<field name="type">tree</field>
 			<field name="arch" type="xml">
 				<tree string="Checklist Type Tree">
-					<!--<field name="code" />-->
 					<field name="name" />
 					<field name="description" />
 					<field name="is_active" />
@@ -45,8 +42,6 @@
 			<field name="model">hr.exit.checklist.type</field>
 			<field name="arch" type="xml">
 				<search string="Search">
-					<!--<field name="code" string="Code" filter_domain="[('code','ilike','self')]"-->
-						<!--/>-->
 					<field name="name" string="Name" filter_domain="[('name','ilike','self')]"/>
 					<field name="description" string="Description" filter_domain="[('description','ilike','self')]"/>
 				</search>

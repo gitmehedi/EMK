@@ -15,10 +15,8 @@
 						<group>
 							<field name="checklist_type" />
 							<field name="name" />
-							<!--<field name="keeper" />-->
 							<field name="is_active" />
 							<field name="description" />
-
 						</group>
 					</sheet>
 				</form>
@@ -34,7 +32,6 @@
 				<tree string="Checklist Item Tree">
 					<field name="checklist_type" />
 					<field name="name" />
-					<!--<field name="keeper" />-->
 					<field name="description" />
 					<field name="is_active" />
 				</tree>
@@ -51,7 +48,6 @@
 					<group expand="0" string="Group By">
                         <filter string="Type" icon="terp-personal" domain="[]" context="{'group_by':'checklist_type'}"/>
                     </group>
-
 				</search>
 			</field>
 		</record>
@@ -65,7 +61,6 @@
 			<field name="view_type">form</field>
 			<field name="view_mode">tree,form</field>
 			<field name="view_id" ref="checklist_item_tree_view" />
-			<!--<field name="search_view_id" ref="checklist_item_search_views"/>-->
 		</record>
 
 		<!-- Checklist Item Menu -->

@@ -1,7 +1,5 @@
 <odoo>
     <data>
-        <!-- Configure Checklist Menu -->
-        <!--<menuitem id="employee_exit_menu" name="Exit" sequence="0"/>-->
         <menuitem id="exit_checklist_menu" name="Exit Configurations" groups ="hr.group_hr_manager"
                   parent="hr.menu_human_resources_configuration" sequence="30"/>
 
