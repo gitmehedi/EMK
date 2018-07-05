@@ -4,7 +4,7 @@ class ConfigureEmpChecklist(models.Model):
     _name = "hr.emp.master.checklists"
     _inherit = ['mail.thread', 'ir.needaction_mixin']
 
-
+    _rec_name = 'employee_id'
     responsible_type=fields.Selection(selection=[('department', 'Department'),('individual','Individual')],related='config_checklist_id.responsible_type')
     remarks= fields.Text('Remarks',required=True)
     state = fields.Selection([('draft', 'Draft'), ('done', 'Done'), ('send', 'Send'), ('verify', 'Verified')],

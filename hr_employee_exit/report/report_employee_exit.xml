@@ -34,7 +34,7 @@
                                     </div>
                                     <div class="col-xs-6 text-left">
                                         <h6><b>Request Date :  </b><span t-esc="data['req_date']"  t-options='{"widget": "date"}'/></h6>
-                                        <h6><b>Last Days of work :  </b><span t-esc="data['last_date']"/></h6>
+                                        <h6><b>Last Days of work :  </b><span t-esc="data['last_date']" t-options='{"widget": "date"}'/></h6>
                                         <h6><b>Department Manager :  </b><span t-esc="data['manager_id']"/></h6>
 
                                     </div>
@@ -44,12 +44,12 @@
                                 <div class="row">
                                     <div class="col-xs-6 text-left">
                                         <h6><b>Confirm Date (Employee) :  </b><span t-esc="data['confirm_date']"  t-options='{"widget": "date"}'/></h6>
-                                        <h6><b>Approved Date (Department Manager) :  </b><span t-esc="data['approved1_date']"/></h6>
-                                        <h6><b>Approved Date (HR Manager) :  </b><span t-esc="data['approved2_date']"/></h6>
+                                        <h6><b>Approved Date (Department Manager) :  </b><span t-esc="data['approved1_date']" t-options='{"widget": "date"}'/></h6>
+                                        <h6><b>Approved Date (HR Manager) :  </b><span t-esc="data['approved2_date']" t-options='{"widget": "date"}'/></h6>
                                     </div>
                                     <div class="col-xs-6 text-left">
                                         <h6><b>Confirm By :  </b><span t-esc="data['confirm_by']"/></h6>
-                                        <h6><b>Approved By Department Manager :  </b><span t-esc="data['approver1_by']"/></h6>
+                                        <h6><b>Approved By Department Manager :  </b><span t-esc="data['approver1_by']" /></h6>
                                         <h6><b>Approved By HR Manager :  </b><span t-esc="data['approver2_by']"/></h6>
                                     </div>
                                 </div>
