@@ -8,6 +8,7 @@ class customer_creditlimit_assign(models.Model):
     _name = 'customer.creditlimit.assign'
     _inherit = ['mail.thread', 'ir.needaction_mixin']
     _description = "Credit Limit"
+    _order= 'id DESC'
 
     name = fields.Char(string='Name', index=True, readonly=True)
     sequence_id = fields.Char('Sequence', readonly=True)
@@ -17,7 +18,7 @@ class customer_creditlimit_assign(models.Model):
                                        'approve': [('invisible', False), ('readonly', True)]})
     credit_limit = fields.Float('Credit Limit',
                                 states={'confirm': [('readonly', True)], 'validate1': [('readonly', True)],
-                                        'approve': [('readonly', True)]},track_visibility='onchange')
+                                        'approve': [('readonly', True)]}, track_visibility='onchange')
     days = fields.Integer('Credit Days',
                           states={'confirm': [('readonly', True)], 'validate1': [('readonly', True)],
                                   'approve': [('readonly', True)]})
@@ -34,12 +35,14 @@ class customer_creditlimit_assign(models.Model):
     """ State fields for containing various states """
     state = fields.Selection(
         [('draft', 'To Submit'),
-         ('cancel', 'Cancelled'),
          ('confirm', 'To Approve'),
+         ('validate', 'Validate'),
+         ('validate1', 'Accounts Approval'),
+         ('approve', 'Approved'),
+
          ('refuse', 'Refused'),
-         ('validate1', 'Second Approval'),
-         ('approve', 'Approved'), ],
-        default='draft',track_visibility='onchange')
+         ('cancel', 'Cancelled'),],
+        default='draft', track_visibility='onchange')
 
     """ All functions """
 
@@ -49,6 +52,7 @@ class customer_creditlimit_assign(models.Model):
         vals['name'] = seq
         return super(customer_creditlimit_assign, self).create(vals)
 
+
     @api.multi
     def approve_creditlimit_run(self):
 
@@ -57,6 +61,7 @@ class customer_creditlimit_assign(models.Model):
         self.approver2_id = self.env.user
         return self.write({'state': 'approve', 'approve_date': time.strftime('%Y-%m-%d %H:%M:%S')})
 
+
     @api.multi
     def unlink(self):
         for limit in self:
@@ -64,10 +69,12 @@ class customer_creditlimit_assign(models.Model):
                 raise UserError(_('You cannot delete a record which is not draft state!'))
         return super(customer_creditlimit_assign, self).unlink()
 
+
     @api.constrains('credit_limit', 'days')
     def _check_value(self):
         if self.credit_limit <= 0 or self.days <= 0:
             raise Warning("Limit or Days never take zero or negative value!")
+
 
     @api.multi
     def action_confirm(self):
@@ -81,6 +88,12 @@ class customer_creditlimit_assign(models.Model):
         for limit in self:
             limit.state = 'confirm'
 
+
+    @api.multi
+    def action_validate_sales_head(self):
+        self.state = 'validate'
+
+
     @api.multi
     def action_validate(self):
         for record in self:
@@ -91,25 +104,24 @@ class customer_creditlimit_assign(models.Model):
     def action_refuse(self):
         self.state = 'refuse'
 
-
     ### Showing batch
     @api.model
     def _needaction_domain_get(self):
         return [('state', 'in', ['confirm'])]
 
 
-    ## mail notification
-    # @api.multi
-    # def _notify_approvers(self):
-    #     approvers = self.employee_id._get_employee_manager()
-    #     if not approvers:
-    #         return True
-    #     for approver in approvers:
-    #         self.sudo(SUPERUSER_ID).add_follower(approver.id)
-    #         if approver.sudo(SUPERUSER_ID).user_id:
-    #             self.sudo(SUPERUSER_ID)._message_auto_subscribe_notify(
-    #                 [approver.sudo(SUPERUSER_ID).user_id.partner_id.id])
-    #     return True
+        ## mail notification
+        # @api.multi
+        # def _notify_approvers(self):
+        #     approvers = self.employee_id._get_employee_manager()
+        #     if not approvers:
+        #         return True
+        #     for approver in approvers:
+        #         self.sudo(SUPERUSER_ID).add_follower(approver.id)
+        #         if approver.sudo(SUPERUSER_ID).user_id:
+        #             self.sudo(SUPERUSER_ID)._message_auto_subscribe_notify(
+        #                 [approver.sudo(SUPERUSER_ID).user_id.partner_id.id])
+        #     return True
 
 
 class ResPartner(models.Model):

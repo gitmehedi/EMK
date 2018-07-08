@@ -53,8 +53,9 @@ class SalePriceChange(models.Model):
         ('draft', 'To Submit'),
         ('cancel', 'Cancelled'),
         ('confirm', 'To Approve'),
+        ('validate2', 'Sales Approval'),
         ('refuse', 'Refused'),
-        ('validate1', 'Second Approval'),
+        ('validate1', 'Accounts Approval'),
         ('validate', 'Approved')
     ], string='State', readonly=True, track_visibility='onchange', copy=False, default='draft')
 
@@ -64,6 +65,10 @@ class SalePriceChange(models.Model):
     company_id = fields.Many2one('res.company', 'Company',
                                  default=lambda self: self.env['res.company']._company_default_get(
                                      'product_sales_pricelist'), required=True)
+
+    def action_sales_head(self):
+        self.state = 'validate2'
+
 
     @api.constrains('new_price')
     def check_new_price(self):
