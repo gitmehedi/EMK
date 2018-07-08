@@ -26,23 +26,28 @@
             <field name="arch" type="xml">
                 <form string="Change Products Sale Price">
                     <header>
-                        <!--<button string="Submit" name="action_submit"-->
-                        <!--groups="gbs_application_group.group_head_account,gbs_application_group.group_head_sale,gbs_application_group.group_cxo"-->
-                        <!--states="draft" type="object" class="oe_highlight"/>-->
 
                         <button string="Confirm" name="action_confirm"
                                 groups="sales_team.group_sale_salesman_all_leads,gbs_application_group.group_head_account,gbs_application_group.group_head_sale,gbs_application_group.group_cxo"
                                 states="draft" type="object" class="oe_highlight"/>
-                        <button string="Approve" name="action_approve" groups="gbs_application_group.group_cxo"
+
+                        <button string="Apparove" name="action_approve" groups="gbs_application_group.group_cxo"
                                 states="validate1" type="object" class="oe_highlight"/>
+
                         <button string="Validate" name="action_validate"
                                 groups="gbs_application_group.group_cxo,gbs_application_group.group_head_account"
-                                states="confirm" type="object" class="oe_highlight"/>
+                                states="validate2" type="object" class="oe_highlight"/>
+
+                        <button string="Sales Approval" name="action_sales_head"
+                                groups="gbs_application_group.group_head_sale,gbs_application_group.group_cxo"
+                                states="confirm" class="oe_highlight" type="object" />
+
                         <button string="Refuse" name="action_refuse"
                                 groups="gbs_application_group.group_head_account,gbs_application_group.group_cxo"
-                                states="confirm,validate1" type="object"/>
+                                states="confirm,validate1,validate2" type="object"/>
 
-                        <field name="state" widget="statusbar" statusbar_visible="draft,confirm,validate1,validate"/>
+                        <field name="state" widget="statusbar"
+                               statusbar_visible="draft,confirm,validate2,validate1,validate"/>
                     </header>
                     <sheet>
                         <group>
@@ -120,7 +125,8 @@
                   name="Products"
                   groups="sales_team.group_sale_salesman_all_leads,account.group_account_user,gbs_application_group.group_sales_customer_manager,gbs_application_group.group_sales_product_manager,gbs_application_group.group_head_sale,gbs_application_group.group_head_account,gbs_application_group.group_cxo"
                   parent="sales_team.menu_base_partner"/>
-        <menuitem id="sale.menu_products" groups="sales_team.group_sale_salesman_all_leads,account.group_account_user,gbs_application_group.group_sales_customer_manager,gbs_application_group.group_sales_product_manager,gbs_application_group.group_head_sale,gbs_application_group.group_head_account,gbs_application_group.group_cxo"
+        <menuitem id="sale.menu_products"
+                  groups="sales_team.group_sale_salesman_all_leads,account.group_account_user,gbs_application_group.group_sales_customer_manager,gbs_application_group.group_sales_product_manager,gbs_application_group.group_head_sale,gbs_application_group.group_head_account,gbs_application_group.group_cxo"
                   action="product.product_normal_action_sell" parent="custom_menu_products" sequence="10"/>
         <menuitem id="product_sale_price_change_menu_action"
                   name="Product Sales Pricelist"
@@ -166,8 +172,8 @@
         </record>
 
         <!--<record id="sales_team.menu_sales" model="ir.ui.menu">-->
-            <!--<field name="groups_id"-->
-                   <!--eval="[(3,ref('gbs_application_group.group_sales_customer_manager'))]"/>-->
+        <!--<field name="groups_id"-->
+        <!--eval="[(3,ref('gbs_application_group.group_sales_customer_manager'))]"/>-->
         <!--</record>-->
 
 

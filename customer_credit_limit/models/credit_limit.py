@@ -8,7 +8,7 @@ class customer_creditlimit_assign(models.Model):
     _name = 'customer.creditlimit.assign'
     _inherit = ['mail.thread', 'ir.needaction_mixin']
     _description = "Credit Limit"
-    _order_by = 'id desc'
+    _order= 'id DESC'
 
     name = fields.Char(string='Name', index=True, readonly=True)
     sequence_id = fields.Char('Sequence', readonly=True)
