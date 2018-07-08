@@ -9,7 +9,7 @@ class CustomerCommissionConfiguration(models.Model):
     _rec_name = 'name'
 
     _inherit = ['mail.thread', 'ir.needaction_mixin']
-    _order = 'confirmed_date desc'
+    _order = 'id DESC'
 
     name = fields.Char(string='Name', index=True, readonly=True)
     requested_date = fields.Date(string="Requested Date", default=datetime.date.today(), readonly=True)
