@@ -15,7 +15,7 @@
                                 states="confirm"  type="object" class="oe_highlight"/>
                         <button string="Validate" name="exit_first_validate" groups ="hr.group_hr_manager" states="validate1" type="object"
                                 class="oe_highlight" />
-                        <button string="Refuse" name="exit_refuse" groups="gbs_application_group.group_dept_manager"
+                        <button string="Refuse" name="exit_refuse" groups="gbs_application_group.group_dept_manager,hr.group_hr_manager"
                                 states="confirm,validate1" type="object" />
                         <button string="Reset to Draft" name="exit_reset" groups ="hr.group_hr_manager"
                                 attrs="{'invisible': [('state', 'not in', ['validate1', 'refuse'])]}"

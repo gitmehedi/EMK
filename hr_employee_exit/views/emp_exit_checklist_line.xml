@@ -11,7 +11,7 @@
                     <header>
                         <button string="Done" name="check_list_submit" attrs="{'invisible': [('status', 'not in', ['draft'])]}" type="object"/>
                         <button string="Reset to Draft" name="check_list_reset"
-                                attrs="{'invisible': [('status', 'in', ['draft'])]}"
+                                attrs="{'invisible': [('status', 'in', ['draft','verify'])]}"
                                 type="object"/>
                         <button string="Send" name="check_list_send"
                                 attrs="{'invisible': [('status', 'in', ['draft','send','verify'])]}"
