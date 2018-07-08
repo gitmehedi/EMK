@@ -59,7 +59,7 @@
                                 groups="gbs_application_group.group_cxo"/>
 
                         <button string="Refuse" name="action_refuse" type="object" states="confirm,validate,validate1"
-                                groups="gbs_application_group.group_head_account,gbs_application_group.group_cxo"/>
+                                groups="gbs_application_group.group_head_sale,gbs_application_group.group_head_account,gbs_application_group.group_cxo"/>
 
                         <field name="state" widget="statusbar" statusbar_visible="draft,confirm,validate,validate1,approve"/>
 
