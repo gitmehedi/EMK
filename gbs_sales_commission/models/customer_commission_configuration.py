@@ -50,12 +50,18 @@ class CustomerCommissionConfiguration(models.Model):
     state = fields.Selection([
         ('draft', "To Submit"),
         ('validate', "To Approve"),
-        ('approve', "Second Approval"),
+        ('validate2', "Sales Approval"),
+        ('approve', "Accounts Approval"),
         ('close', "Approved"),
         ('refused', 'Refused')
     ], readonly=True, track_visibility='onchange', copy=False, default='draft')
 
     """ All functions """
+
+    def action_sales_head(self):
+        self.state = 'validate2'
+
+
 
     ### Showing batch
     @api.model

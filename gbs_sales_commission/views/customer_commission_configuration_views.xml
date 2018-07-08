@@ -11,11 +11,14 @@
                     <button name="action_validate" type="object" states="draft" string="Confirm" class="oe_highlight"
                             groups="sales_team.group_sale_salesman_all_leads,gbs_application_group.group_head_account,gbs_application_group.group_head_sale,gbs_application_group.group_cxo"/>
 
+                    <button name="action_sales_head" type="object" states="validate" string="Sales Head" class="oe_highlight"
+                            groups="gbs_application_group.group_head_sale,gbs_application_group.group_cxo"/>
+
                     <button name="action_draft" type="object"
                             states="validate" string="Reset to Draft"
                             groups="gbs_application_group.group_head_account,gbs_application_group.group_cxo"/>
 
-                    <button name="action_approve" type="object" states="validate"
+                    <button name="action_approve" type="object" states="validate2"
                             string="Validate" class="oe_highlight"
                             groups="gbs_application_group.group_cxo,gbs_application_group.group_head_account"/>
 
@@ -23,12 +26,12 @@
                             string="Approve" class="oe_highlight"
                             groups="gbs_application_group.group_cxo"/>
 
-                    <button name="action_cancel" type="object" states="approve,validate"
+                    <button name="action_cancel" type="object" states="approve,validate2,validate"
                             string="Refuse"
                             groups="gbs_application_group.group_head_account,gbs_application_group.group_cxo"/>
 
                     <field name="state" widget="statusbar"
-                           statusbar_visible="draft,validate,approve,close"/>
+                           statusbar_visible="draft,validate,validate2,approve,close"/>
 
                 </header>
                 <sheet>
