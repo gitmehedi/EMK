@@ -48,7 +48,7 @@
 
                         <button string="Sales Head" name="action_validate_sales_head" type="object" states="confirm"
                                 class="oe_highlight"
-                                groups="gbs_application_group.group_head_sale"/>
+                                groups="gbs_application_group.group_head_sale,gbs_application_group.group_cxo"/>
 
                         <button string="Validate" name="action_validate" type="object" states="validate"
                                 class="oe_highlight"
