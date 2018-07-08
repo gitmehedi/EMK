@@ -145,7 +145,9 @@ class EmployeeExitReq(models.Model):
 
 class EmpReqChecklistsLine(models.Model):
     _name = "hr.exit.checklists.line"
+    _rec_name = 'checklist_item_id'
 
+    employee_id = fields.Many2one('hr.employee',related='checklist_id.employee_id',track_visibility='onchange')
     status_line_id = fields.Many2one('hr.checklist.status')
     checklist_item_id = fields.Many2one('hr.exit.checklist.item', string='Checklist Item',required=True)
     remarks = fields.Text(string='Remarks')
@@ -163,36 +165,23 @@ class EmpReqChecklistsLine(models.Model):
                              readonly=True, copy=False,
                              default='draft', track_visibility='onchange')
 
-    @api.multi
-    def check_list_verify(self):
-        exit_req_obj = self.env['hr.emp.exit.req'].search(
-            [('employee_id', '=', self.employee_id.id),
-             ('department_id', '=', self.department_id.id), ('state', '=', 'validate')])
-        for exit_line in exit_req_obj.checklists_ids:
-            if exit_line.responsible_department:
-                if exit_line.responsible_department == self.responsible_userdepartment_id:
-                    exit_line.remarks = self.remarks
-                    exit_line.write({'state': 'received'})
-            elif exit_line.responsible_emp:
-                if exit_line.responsible_emp == self.responsible_username_id:
-                    exit_line.remarks = self.remarks
-                    exit_line.write({'state': 'received'})
-            else:
-                pass
-        return self.write({'state': 'verify'})
 
     @api.multi
     def check_list_submit(self):
-        return self.write({'state': 'done'})
+        return self.write({'status': 'done'})
 
     @api.multi
     def check_list_reset(self):
-        return self.write({'state': 'draft'})
+        return self.write({'status': 'draft'})
 
     @api.multi
     def check_list_send(self):
-        return self.write({'state': 'send'})
+        return self.write({'status': 'send'})
 
     @api.multi
     def _compute_check(self):
         return 1
+
+    @api.multi
+    def check_list_verify(self):
+        return self.write({'status': 'verify','state':'received'})
