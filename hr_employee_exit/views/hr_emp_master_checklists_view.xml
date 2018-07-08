@@ -47,7 +47,7 @@
                            <field name="checklist_status_ids">
                                 <tree editable="top">
                                     <field name="checklist_type_id" options='{"no_open": True,"no_create": 1, "no_create_edit": 1}' />
-                                    <field name="checklist_status_item_id"/>
+                                    <field name="checklist_status_item_id" options='{"no_open": True,"no_create": 1, "no_create_edit": 1}' />
                                     <field name="is_check"/>
                                 </tree>
                             </field>

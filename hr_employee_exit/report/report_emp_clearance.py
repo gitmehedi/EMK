@@ -11,17 +11,11 @@ class LoanReport(models.AbstractModel):
         data['employee_id'] = exit_obj.employee_id.name
         data['req_date'] = exit_obj.req_date
         data['last_date'] = exit_obj.last_date
-        data['manager_id'] = exit_obj.manager_id.name
+        data['initial_employment_date'] = exit_obj.employee_id.initial_employment_date
         data['department_id'] = exit_obj.department_id.name
         data['job_id'] = exit_obj.job_id.name
-        data['confirm_by'] = exit_obj.confirm_by.name
-        data['approver1_by'] = exit_obj.approver1_by.name
-        data['approver2_by'] = exit_obj.approver2_by.name
-        data['confirm_date'] = exit_obj.confirm_date
-        data['approved1_date'] = exit_obj.approved1_date
-        data['approved2_date'] = exit_obj.approved2_date
-        data['emp_notes'] = exit_obj.emp_notes
-        data['reason_for_exit'] = exit_obj.reason_for_exit
+        data['emp_code'] = exit_obj.employee_id.device_employee_acc
+
 
         checklist=[]
         if exit_obj.checklists_ids:
