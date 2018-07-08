@@ -10,6 +10,7 @@ class EmployeeExitReq(models.Model):
     _name = 'hr.emp.exit.req'
     _inherit = ['mail.thread','ir.needaction_mixin']
     _rec_name = 'employee_id'
+    _order = 'state asc'
 
     def last_days(self):
         ldate = datetime.date.today() + relativedelta(months=1)
