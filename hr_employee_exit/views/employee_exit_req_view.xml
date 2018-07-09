@@ -60,7 +60,7 @@
                                     <field name="emp_notes" attrs="{'readonly': [('state', 'not in', ['draft'])]}"/>
                                 </group>
                                 <separator string="Check List" attrs="{'invisible': [('state', 'in', ['draft'])]}"/>
-                                <field name="checklists_ids" attrs="{'invisible': [('state', 'in', ['draft'])],'readonly': [('state', 'in', ['validate'])]}">
+                                <field name="checklists_ids" string='Employee Exit Checklists' attrs="{'invisible': [('state', 'in', ['draft'])],'readonly': [('state', 'in', ['validate'])]}">
 									<tree editable="top">
 										<field name="checklist_item_id"
 											options='{"no_open": True,"no_create": 1, "no_create_edit": 1}' />
