@@ -15,15 +15,15 @@
         <field name="model_id" ref="model_hr_exit_checklists_line"/>
         <field name="domain_force">['|',('employee_id.user_id','=',user.id),('employee_id','child_of',[e.id for e in user.employee_ids])]</field>
         <field name="name">Employee exit request permissions</field>
-        <field eval="0" name="perm_unlink"/>
-        <field eval="0" name="perm_write"/>
-        <field eval="1" name="perm_read"/>
-        <field eval="0" name="perm_create"/>
+        <field name="perm_read" eval="True" />
+        <field name="perm_create" eval="False" />
+        <field name="perm_write" eval="False"/>
+        <field name="perm_unlink" eval="False"/>
         <field name="groups" eval="[(4,ref('base.group_user'))]"/>
     </record>
 
-    <record id="rule_hr_exit_checklists_line_user" model="ir.rule">
-        <field name="model_id" ref="model_hr_exit_checklists_line"/>
+    <record id="rule_pendding_checklists_line_res_user" model="ir.rule">
+        <field name="model_id" ref="model_pendding_checklists_line"/>
         <field name="domain_force">['|',('responsible_emp.user_id','=',user.id),('responsible_department.manager_id.user_id','=',user.id)]</field>
         <field name="name">Employee Chick List permission for responsible user</field>
         <field eval="1" name="perm_unlink"/>
@@ -41,7 +41,7 @@
         <field eval="1" name="perm_write"/>
         <field eval="1" name="perm_read"/>
         <field eval="1" name="perm_create"/>
-        <field name="groups" eval="[(4,ref('hr.group_hr_manager'))]"/>
+        <field name="groups" eval="[(4,ref('hr.group_hr_manager','gbs_application_group.group_dept_manager'))]"/>
     </record>
 
     <record id="rule_hr_emp_exit_req_manager" model="ir.rule">

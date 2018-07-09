@@ -10,8 +10,7 @@
                 <form string="Exit Request">
                     <header>
                         <button string="Confirm" name="exit_confirm" states="draft" type="object" class="oe_highlight"/>
-                        <button string="Approve" name="exit_validate"
-                                attrs="{'invisible': ['|', ('current_user_is_approver', '!=', True)]}"
+                        <button string="Approve" name="exit_validate" attrs="{'invisible': ['|', ('current_user_is_approver', '!=', True)]}"
                                 states="confirm"  type="object" class="oe_highlight"/>
                         <button string="Validate" name="exit_first_validate" groups ="hr.group_hr_manager" states="validate1" type="object"
                                 class="oe_highlight" />
@@ -54,13 +53,14 @@
 
                         <notebook>
                             <page string ="Information">
-                                <separator string="Reason for Exit"/>
                                 <group>
                                     <field name="reason_for_exit"  required="True" attrs="{'readonly': [('state', 'not in', ['draft'])]}" placeholder="Add a reason..."/>
                                     <field name="emp_notes" attrs="{'readonly': [('state', 'not in', ['draft'])]}"/>
                                 </group>
-                                <separator string="Check List" attrs="{'invisible': [('state', 'in', ['draft'])]}"/>
+                            </page>
+                            <page string ="Check List" attrs="{'invisible': [('state', 'in', ['draft'])]}">
                                 <field name="checklists_ids" string='Employee Exit Checklists' attrs="{'invisible': [('state', 'in', ['draft'])],'readonly': [('state', 'in', ['validate'])]}">
+                                    <!--attrs="{'invisible': [('state', 'in', ['draft'])],'readonly': [('state', 'in', ['validate'])]}"-->
 									<tree editable="top">
 										<field name="checklist_item_id"
 											options='{"no_open": True,"no_create": 1, "no_create_edit": 1}' />
@@ -71,6 +71,19 @@
                                     </tree>
 								</field>
                             </page>
+                            <!--<page string ="Information">-->
+                                <!--<separator string="Check List"/>-->
+                                <!--<field name="pen_checklists_ids" string='Employee Exit Checklists'>-->
+									<!--<tree editable="top">-->
+										<!--<field name="checklist_item_id"-->
+											<!--options='{"no_open": True,"no_create": 1, "no_create_edit": 1}' />-->
+									    <!--<field name="responsible_department" options='{"no_open": True,"no_create": 1, "no_create_edit": 1}'/>-->
+									    <!--<field name="responsible_emp" options='{"no_open": True,"no_create": 1, "no_create_edit": 1}'/>-->
+									    <!--<field name="remarks"/>-->
+									    <!--<field name="state"/>-->
+                                    <!--</tree>-->
+								<!--</field>-->
+                            <!--</page>-->
                         </notebook>
                     </sheet>
                     <div class="oe_chatter">

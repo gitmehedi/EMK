@@ -62,6 +62,7 @@ class EmployeeExitReq(models.Model):
                                    readonly=True)
     approver2_by = fields.Many2one('res.users', string="Approved By HR Manager", readonly=True)
     checklists_ids = fields.One2many('hr.exit.checklists.line','checklist_id',ondelete="cascade")
+    pen_checklists_ids = fields.One2many('pendding.checklists.line','pen_checklist_id',ondelete="cascade")
 
     # compute current_user_is_approver
     @api.one
@@ -78,9 +79,33 @@ class EmployeeExitReq(models.Model):
             pass
 
     # Onchange Function
+    # @api.multi
+    # @api.onchange('employee_id', 'department_id', 'job_id')
+    # def on_change_employee(self):
+    #     self.checklists_ids = []
+    #     vals = []
+    #     confg_checklist_pool = self.env['hr.exit.configure.checklists'].search([('is_active', '=', True)])
+    #     for record in confg_checklist_pool:
+    #         if record.applicable_empname_id or record.applicable_department_id or record.applicable_jobtitle_id:
+    #             if self.job_id or self.employee_id or self.department_id:
+    #                 if record.applicable_empname_id == self.employee_id or record.applicable_department_id == self.department_id or record.applicable_jobtitle_id == self.job_id:
+    #                     for config in record.checklists_ids:
+    #                         vals.append((0, 0, {
+    #                             'checklist_item_id': config.checklist_item_id,
+    #                             'responsible_department': config.responsible_department,
+    #                             'responsible_emp': config.responsible_emp,
+    #                             'state': 'not_received'
+    #                         }))
+    #     self.checklists_ids = vals
+
+    # Button actions
     @api.multi
-    @api.onchange('employee_id', 'department_id', 'job_id')
-    def on_change_employee(self):
+    def exit_reset(self):
+        self.write({'state': 'draft'})
+        return True
+
+    @api.multi
+    def exit_confirm(self):
         self.checklists_ids = []
         vals = []
         confg_checklist_pool = self.env['hr.exit.configure.checklists'].search([('is_active', '=', True)])
@@ -96,15 +121,6 @@ class EmployeeExitReq(models.Model):
                                 'state': 'not_received'
                             }))
         self.checklists_ids = vals
-
-    # Button actions
-    @api.multi
-    def exit_reset(self):
-        self.write({'state': 'draft'})
-        return True
-
-    @api.multi
-    def exit_confirm(self):
         self.confirm_by = self.env.user
         return self.write({'state': 'confirm','confirm_date': time.strftime('%Y-%m-%d %H:%M:%S')})
 
@@ -115,6 +131,19 @@ class EmployeeExitReq(models.Model):
 
     @api.multi
     def exit_first_validate(self):
+        self.pen_checklists_ids = []
+        vals = []
+        line_obj = self.env['hr.exit.checklists.line'].search(
+            [('checklist_id', '=', self.id)])
+        for record in line_obj:
+                vals.append((0, 0, {
+                    'checklist_item_id': record.checklist_item_id,
+                    'responsible_department': record.responsible_department,
+                    'responsible_emp': record.responsible_emp,
+                    'employee_id': record.employee_id,
+                    'state': 'not_received'
+                }))
+        self.pen_checklists_ids = vals
         self.approver2_by = self.env.user
         return self.write({'state': 'validate','approved2_date': time.strftime('%Y-%m-%d %H:%M:%S')})
 
@@ -131,17 +160,6 @@ class EmployeeExitReq(models.Model):
     def _check_last_date(self):
         if self.req_date > self.last_date :
             raise Warning('Last Date must be grater than request date.')
-
-    # @api.multi
-    # def unlink(self):
-    #     for exitreq in self:
-    #         # if exitreq.state != 'draft':
-    #         #     raise UserError(_('After confirm you can not delete this exit request.'))
-    #         exitreq.checklists_ids.unlink()
-    #     return super(EmployeeExitReq, self).unlink()
-
-
-
 
 
 class EmpReqChecklistsLine(models.Model):
@@ -163,27 +181,44 @@ class EmpReqChecklistsLine(models.Model):
     responsible_department = fields.Many2one('hr.department', ondelete='set null', string='Responsible Department')
     responsible_emp = fields.Many2one('hr.employee', string='Responsible User')
 
-    status = fields.Selection([('draft', 'Draft'), ('done', 'Done'), ('send', 'Send'), ('verify', 'Verified')],
-                             readonly=True, copy=False,
-                             default='draft', track_visibility='onchange')
+class PendingChecklistsLine(models.Model):
+    _name = "pendding.checklists.line"
+    _rec_name = 'checklist_item_id'
+    _inherit = ['mail.thread', 'ir.needaction_mixin']
 
+    employee_id = fields.Many2one('hr.employee', related='pen_checklist_id.employee_id', track_visibility='onchange')
+    status_line_id = fields.Many2one('hr.checklist.status')
+    checklist_item_id = fields.Many2one('hr.exit.checklist.item', string='Checklist Item', required=True)
+    remarks = fields.Text(string='Remarks', track_visibility='onchange')
+    state = fields.Selection([
+        ('received', "Received"),
+        ('not_received', "Not Received")
+    ], 'Status', default='not_received')
 
-    @api.multi
-    def check_list_submit(self):
-        return self.write({'status': 'done'})
+    # Relational fields
+    #checklist_id = fields.Many2one('hr.emp.exit.req', ondelete="cascade")
+    pen_checklist_id = fields.Many2one('hr.emp.exit.req', ondelete="cascade")
+    responsible_department = fields.Many2one('hr.department', ondelete='set null', string='Responsible Department')
+    responsible_emp = fields.Many2one('hr.employee', string='Responsible User')
 
-    @api.multi
-    def check_list_reset(self):
-        return self.write({'status': 'draft'})
+    status = fields.Selection([('draft', 'Draft'), ('verify', 'Verified')],
+                              readonly=True, copy=False,
+                              default='draft', track_visibility='onchange')
 
-    @api.multi
-    def check_list_send(self):
-        return self.write({'status': 'send'})
-
-    @api.multi
-    def _compute_check(self):
-        return 1
 
     @api.multi
     def check_list_verify(self):
-        return self.write({'status': 'verify','state':'received'})
+        exit_req_obj = self.env['hr.exit.checklists.line'].search(
+            [('checklist_id','=',self.pen_checklist_id.id)])
+        for exit_line in exit_req_obj:
+            if exit_line.responsible_department:
+                if exit_line.checklist_item_id == self.checklist_item_id and exit_line.responsible_department == self.responsible_department:
+                    exit_line.remarks = self.remarks
+                    exit_line.write({'state': 'received'})
+            elif exit_line.responsible_emp:
+                if exit_line.checklist_item_id == self.checklist_item_id and exit_line.responsible_emp == self.responsible_emp:
+                    exit_line.remarks = self.remarks
+                    exit_line.write({'state': 'received'})
+            else:
+                pass
+        return self.write({'status': 'verify', 'state': 'received'})
