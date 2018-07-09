@@ -15,16 +15,16 @@
 						<group>
 							<field name="name" />
 							<field name="responsible_type" />
-							<field name="responsible_userdepartment_id"
+							<field name="responsible_userdepartment_id" options='{"no_open": True,"no_create": 1, "no_create_edit": 1}'
 								attrs="{'invisible':[('responsible_type', '!=', 'department')]}"/>
-							<field name="responsible_username_id"
+							<field name="responsible_username_id" options='{"no_open": True,"no_create": 1, "no_create_edit": 1}'
 								attrs="{'invisible':[('responsible_type', '!=', 'individual')]}" />
 							<field name="applicable_for"/>
-							<field name="applicable_department_id"
+							<field name="applicable_department_id" options='{"no_open": True,"no_create": 1, "no_create_edit": 1}'
 								   attrs="{'invisible':[('applicable_for','!=', 'department')]}"/>
-							<field name="applicable_empname_id"
+							<field name="applicable_empname_id" options='{"no_open": True,"no_create": 1, "no_create_edit": 1}'
 								   attrs="{'invisible':[('applicable_for','!=', 'individual')]}"/>
-							<field name="applicable_jobtitle_id"
+							<field name="applicable_jobtitle_id" options='{"no_open": True,"no_create": 1, "no_create_edit": 1}'
 								   attrs="{'invisible':[('applicable_for','!=', 'designation')]}"/>
 							<field name="is_active" />
 							<field name="notes" />
@@ -33,8 +33,8 @@
 							<page string="Check Lists">
 								<field name="checklists_ids">
 									<tree editable="top">
-										<field name="checklist_item_id"/>
-										<field name="checklist_type"/>
+										<field name="checklist_item_id" options='{"no_open": True,"no_create": 1, "no_create_edit": 1}' />
+										<field name="checklist_type" options='{"no_open": True,"no_create": 1, "no_create_edit": 1}' />
 										<field name="responsible_department" invisible="1"/>
 									    <field name="responsible_emp" invisible="1"/>
 									</tree>

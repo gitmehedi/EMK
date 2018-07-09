@@ -9,10 +9,9 @@
 			<field name="arch" type="xml">
 				<form string="Checklist Item">
                     <header>
-                        <button name="%(action_hr_checklist_popup)d" states="draft" type="action" string="Generate Checklist" class="oe_highlight"/>
-                        <button string="Done" name="check_list_submit" states="draft" type="object"/>
+                        <button string="Done" name="check_list_submit" attrs="{'invisible': [('status', 'not in', ['draft'])]}" type="object"/>
                         <button string="Reset to Draft" name="check_list_reset"
-                                attrs="{'invisible': [('status', 'in', ['draft'])]}"
+                                attrs="{'invisible': [('status', 'in', ['draft','verify'])]}"
                                 type="object"/>
                         <button string="Send" name="check_list_send"
                                 attrs="{'invisible': [('status', 'in', ['draft','send','verify'])]}"
@@ -25,6 +24,7 @@
                     </header>
 					<sheet>
 						<group>
+							<field name="employee_id" readonly="1"/>
 							<field name="checklist_item_id" readonly="1"
                            	options='{"no_open": True,"no_create": 1, "no_create_edit": 1}' />
 							<field name="responsible_emp" readonly="1"/>
