@@ -7,6 +7,7 @@ import datetime
 class ChequeReceived(models.Model):
     _name = 'accounting.cheque.received'
     _inherit = ['mail.thread']
+    _order = 'id DESC'
 
     state = fields.Selection([
         ('draft', 'Cheque Entry'),
@@ -86,7 +87,7 @@ class ChequeReceived(models.Model):
         for cust in self:
             res_partner_credit_limit = cust.env['res.partner.credit.limit'].search(
                 [('partner_id', '=', cust.partner_id.id),
-                 ('state', '=', 'approve')], order='assign_id DESC', limit=1)
+                 ('state', '=', 'approve')], order='id DESC', limit=1)
 
             # Cheque Amount with Credit limit of customer; it should not exceed customer's original Credit Limit.
             if cust.sale_order_id.credit_sales_or_lc == 'credit_sales' \
@@ -109,8 +110,8 @@ class ChequeReceived(models.Model):
 
             if cust.sale_order_id.credit_sales_or_lc == 'credit_sales':
                 # Customer's Receivable amount is actually minus value
-                update_cust_receivable_amount = res_partner_pool.credit + cust.cheque_amount
-                res_partner_pool.property_account_payable_id.write({'credit': update_cust_receivable_amount})
+                update_cust_receivable_amount = res_partner_pool.credit - cust.cheque_amount
+                res_partner_pool.write({'credit': update_cust_receivable_amount})
 
 
     @api.multi

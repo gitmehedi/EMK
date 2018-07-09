@@ -11,7 +11,7 @@
                 <tree string="Partner limit">
                     <field name="partner_id"/>
                     <field name="value"/>
-                    <field name="remaining_credit_limit"/>
+                    <!--<field name="remaining_credit_limit"/>-->
                 </tree>
             </field>
         </record>

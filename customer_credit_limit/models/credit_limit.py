@@ -56,7 +56,7 @@ class customer_creditlimit_assign(models.Model):
     def approve_creditlimit_run(self):
 
         self.limit_ids.write(
-            {'credit_limit': self.credit_limit, 'state': 'approve', 'assign_date': time.strftime('%Y-%m-%d')})
+            {'remaining_credit_limit': self.credit_limit, 'state': 'approve', 'assign_date': time.strftime('%Y-%m-%d')})
         self.approver2_id = self.env.user
         return self.write({'state': 'approve', 'approve_date': time.strftime('%Y-%m-%d %H:%M:%S')})
 
@@ -159,10 +159,10 @@ class ResPartner(models.Model):
 
             if len(results) > 0:
                 partner.credit_limit = results[0]['value']
-                # partner.remaining_credit_limit = results[0]['remaining_credit_limit']
+                partner.remaining_credit_limit = results[0]['remaining_credit_limit']
             else:
                 partner.credit_limit = 0
-                # partner.remaining_credit_limit = 0
+                partner.remaining_credit_limit = 0
 
 
 class res_partner_credit_limit(models.Model):
@@ -184,7 +184,7 @@ class res_partner_credit_limit(models.Model):
     partner_id = fields.Many2one('res.partner', "Customer", required=True)
     assign_date = fields.Date(string="Credit Date", _defaults=lambda *a: time.strftime('%Y-%m-%d'))
     value = fields.Float(string='Credit Limit', default=_default_credit_limit_and_days)
-    remaining_credit_limit = fields.Float(string='Remaining Credit Limit')
+    #remaining_credit_limit = fields.Float(string='Remaining Credit Limit')
     day_num = fields.Integer(string='Credit Days', )
 
 
