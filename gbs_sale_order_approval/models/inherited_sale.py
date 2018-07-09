@@ -252,7 +252,7 @@ class SaleOrder(models.Model):
                 elif order.credit_sales_or_lc == 'credit_sales':
 
                     account_receivable = credit_limit_pool.credit
-                    sales_order_amount_total = -order.amount_total  # actually it should be minus value
+                    sales_order_amount_total = order.amount_total  # actually it should be minus value
 
                     unpaid_tot_inv_amt = order.unpaid_total_invoiced_amount()
                     undelivered_tot_do_amt = order.undelivered_do_qty_amount()
