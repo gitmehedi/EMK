@@ -61,7 +61,7 @@ class EmployeeExitReq(models.Model):
     approver1_by = fields.Many2one('res.users', string="Approved By Department Manager",
                                    readonly=True)
     approver2_by = fields.Many2one('res.users', string="Approved By HR Manager", readonly=True)
-    checklists_ids = fields.One2many('hr.exit.checklists.line', 'checklist_id',ondelete="cascade")
+    checklists_ids = fields.One2many('hr.exit.checklists.line','checklist_id',ondelete="cascade")
 
     # compute current_user_is_approver
     @api.one
@@ -93,6 +93,7 @@ class EmployeeExitReq(models.Model):
                                 'checklist_item_id': config.checklist_item_id,
                                 'responsible_department': config.responsible_department,
                                 'responsible_emp': config.responsible_emp,
+                                'state': 'not_received'
                             }))
         self.checklists_ids = vals
 
@@ -125,19 +126,19 @@ class EmployeeExitReq(models.Model):
             else:
                 self.write({'state': 'refuse'})
         return True
-    #
-    # @api.constrains('req_date', 'last_date')
-    # def _check_last_date(self):
-    #     if self.req_date < self.last_date :
-    #         raise Warning('Request Date must be grater than last_date.')
 
-    @api.multi
-    def unlink(self):
-        for exitreq in self:
-            # if exitreq.state != 'draft':
-            #     raise UserError(_('After confirm you can not delete this exit request.'))
-            exitreq.checklists_ids.unlink()
-        return super(EmployeeExitReq, self).unlink()
+    @api.constrains('req_date', 'last_date')
+    def _check_last_date(self):
+        if self.req_date > self.last_date :
+            raise Warning('Last Date must be grater than request date.')
+
+    # @api.multi
+    # def unlink(self):
+    #     for exitreq in self:
+    #         # if exitreq.state != 'draft':
+    #         #     raise UserError(_('After confirm you can not delete this exit request.'))
+    #         exitreq.checklists_ids.unlink()
+    #     return super(EmployeeExitReq, self).unlink()
 
 
 
@@ -146,18 +147,19 @@ class EmployeeExitReq(models.Model):
 class EmpReqChecklistsLine(models.Model):
     _name = "hr.exit.checklists.line"
     _rec_name = 'checklist_item_id'
+    _inherit = ['mail.thread','ir.needaction_mixin']
 
     employee_id = fields.Many2one('hr.employee',related='checklist_id.employee_id',track_visibility='onchange')
     status_line_id = fields.Many2one('hr.checklist.status')
     checklist_item_id = fields.Many2one('hr.exit.checklist.item', string='Checklist Item',required=True)
-    remarks = fields.Text(string='Remarks')
+    remarks = fields.Text(string='Remarks',track_visibility='onchange')
     state = fields.Selection([
         ('received', "Received"),
         ('not_received', "Not Received")
     ],'Status',default='not_received')
 
     # Relational fields
-    checklist_id = fields.Many2one('hr.emp.exit.req')
+    checklist_id = fields.Many2one('hr.emp.exit.req',ondelete="cascade")
     responsible_department = fields.Many2one('hr.department', ondelete='set null', string='Responsible Department')
     responsible_emp = fields.Many2one('hr.employee', string='Responsible User')
 
