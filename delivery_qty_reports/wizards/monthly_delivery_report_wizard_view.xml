@@ -10,13 +10,16 @@
                         <group>
                             <field name="report_from"/>
                             <field name="report_to"/>
-                            <field name="product_id" options="{'no_quick_create':True,'no_create_edit':True,'no_open':True}"/>
-                            <field name="operating_unit_id" options="{'no_quick_create':True,'no_create_edit':True,'no_open':True}"/>
+                            <field name="product_id"
+                                   options="{'no_quick_create':True,'no_create_edit':True,'no_open':True}"/>
+                            <field name="operating_unit_id"
+                                   options="{'no_quick_create':True,'no_create_edit':True,'no_open':True}"/>
                         </group>
                     </sheet>
 
                     <footer>
-                        <button name="process_monthly_delivery_report" string="Print" type="object" class="oe_highlight"/>
+                        <button name="process_monthly_delivery_report" string="Print" type="object"
+                                class="oe_highlight"/>
                         or
                         <button string="Cancel" class="oe_link" special="cancel"/>
                     </footer>
@@ -35,6 +38,7 @@
 
 
         <menuitem name="Monthly Delivery Report"
+                  groups="sales_team.group_sale_salesman_all_leads,gbs_application_group.group_head_sale,gbs_application_group.group_cxo"
                   action="action_monthly_delivery_report"
                   id="monthly_delivery_report_id"
                   parent="sales_team.menu_sale_report" sequence="20"/>

@@ -29,7 +29,7 @@ class ProcessDeliveryReport(models.AbstractModel):
                 data = {}
                 data['partner_id'] = stocks.partner_id.name
                 data['do_date'] = DO_date
-                data['do_no'] = stocks.name
+                data['do_no'] = stocks.delivery_order_id.name
                 data['do_qty'] = DO_Qty
                 data['un_delivered_qty'] = stock_op.product_qty - stock_op.qty_done
                 data['delivered_qty'] = stock_op.qty_done
