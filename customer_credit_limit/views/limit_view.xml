@@ -41,12 +41,12 @@
                         <button string="Confirm" name="action_confirm" type="object" states="draft" class="oe_highlight"
                                 groups="sales_team.group_sale_salesman_all_leads,gbs_application_group.group_head_account,gbs_application_group.group_head_sale,gbs_application_group.group_cxo"/>
 
-                        <button string="Generate Limit" name="%(action_creditlimit_by_partner)d" type="action"
-                                states="draft" class="oe_highlight"
-                                groups="sales_team.group_sale_salesman_all_leads,gbs_application_group.group_head_account,gbs_application_group.group_head_sale,gbs_application_group.group_cxo"/>
+                        <!--<button string="Generate Limit" name="%(action_creditlimit_by_partner)d" type="action"-->
+                                <!--states="draft" class="oe_highlight"-->
+                                <!--groups="sales_team.group_sale_salesman_all_leads,gbs_application_group.group_head_account,gbs_application_group.group_head_sale,gbs_application_group.group_cxo"/>-->
 
 
-                        <button string="Sales Head" name="action_validate_sales_head" type="object" states="confirm"
+                        <button string="Approve" name="action_validate_sales_head" type="object" states="confirm"
                                 class="oe_highlight"
                                 groups="gbs_application_group.group_head_sale,gbs_application_group.group_cxo"/>
 
