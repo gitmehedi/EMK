@@ -8,7 +8,6 @@ class InheritStockPicking(models.Model):
 
     @api.multi
     def do_new_transfer(self):
-
         for record in self.move_lines:
             if record.location_dest_id.name == 'Stock':
                 self._set_cost_price(record)
@@ -18,7 +17,6 @@ class InheritStockPicking(models.Model):
     @api.multi
     def _set_cost_price(self,record):
         cost_price_history = self.env['product.cost.price.history']
-
         cost_price_history.create({
             'product_id': record.product_id.id,
             'product_tmpl_id': record.product_id.product_tmpl_id.id,
@@ -48,11 +46,6 @@ class InheritStockPicking(models.Model):
                 amount_unit = self.get_last_price_history(price_obj,price_obj.modified_datetime).current_price or 0.0
 
                 std_price = ((amount_unit * product_tot_qty_available) + (last_moves[-1].price_unit * last_moves[-1].product_qty)) / (product_tot_qty_available + last_moves[-1].product_qty)
-
-
-        # if there record found greater then move date then all record will updated
-
-               # Need to update price history main table
                 price_obj.write({
                     'current_price': round(std_price, 2),
                     'old_price': round(self.get_last_price_history(price_obj,price_obj.modified_datetime).current_price, 2),
@@ -69,21 +62,3 @@ class InheritStockPicking(models.Model):
                 order='modified_datetime DESC', limit=1)
 
             return last_price_objs
-
-                # sum = 0
-                # get sum of previous quantity
-                # for rec in self.env['stock.move'].search(
-                #         [('product_id', '=', record.product_id.id),('id','!=',record.id)]):
-                #
-                #     if rec.location_dest_id.name == 'Stock':
-                #         sum = sum + rec.product_qty
-                #     # else:
-                #     #     sum = sum - rec.product_qty
-                #
-                # avg_price = self.env['product.variant.history'].search([('product_id', '=', record.product_id.id)],
-                #                                                        order='effective_datetime DESC', limit=1)
-
-                # avg = (sum * avg_price.value + record.ordered_qty * record.price_unit) / (sum + record.ordered_qty)
-                # self.env['product.variant.history'].
-                # record.product_id.write({'standard_price': round(avg, 2)})
-
