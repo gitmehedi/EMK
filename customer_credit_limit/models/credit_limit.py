@@ -121,8 +121,8 @@ class customer_creditlimit_assign(models.Model):
 class ResPartner(models.Model):
     _inherit = 'res.partner'
 
-    credit = fields.Monetary(compute='_credit_debit_get',
-                             string='Total Receivable', help="Total amount this customer owes you.", store=True)
+    # credit = fields.Monetary(compute='_credit_debit_get',
+    #                          string='Total Receivable', help="Total amount this customer owes you.", store=True)
 
     limit_ids = fields.One2many('res.partner.credit.limit', 'partner_id', 'Limits', domain=[('state', '=', 'approve')])
     credit_limit = fields.Float(compute='_current_limit', string='Credit Limit', )
@@ -130,10 +130,10 @@ class ResPartner(models.Model):
 
     """ All functions """
 
-    @api.multi
-    def _credit_debit_get(self):
-        res = super(ResPartner, self)._credit_debit_get()
-        return res
+    # @api.multi
+    # def _credit_debit_get(self):
+    #     res = super(ResPartner, self)._credit_debit_get()
+    #     return res
 
     @api.constrains('name')
     def _check_unique_name(self):
