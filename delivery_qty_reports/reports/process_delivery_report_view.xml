@@ -23,9 +23,9 @@
                             <h6>Date:
                                 <span t-esc="report_of_day"/>
                             </h6>
-                            <h6>Product Name:
+                            <!--<h6>Product Name:-->
 
-                            </h6>
+                            <!--</h6>-->
                             <table class="table table-report-sm table-bordered table-striped">
                                 <thead>
                                     <tr
