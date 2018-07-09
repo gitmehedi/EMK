@@ -57,7 +57,7 @@ class customer_creditlimit_assign(models.Model):
     def approve_creditlimit_run(self):
 
         self.limit_ids.write(
-            {'remaining_credit_limit': self.credit_limit, 'state': 'approve', 'assign_date': time.strftime('%Y-%m-%d')})
+            {'credit_limit': self.credit_limit, 'state': 'approve', 'assign_date': time.strftime('%Y-%m-%d')})
         self.approver2_id = self.env.user
         return self.write({'state': 'approve', 'approve_date': time.strftime('%Y-%m-%d %H:%M:%S')})
 
@@ -132,7 +132,7 @@ class ResPartner(models.Model):
 
     limit_ids = fields.One2many('res.partner.credit.limit', 'partner_id', 'Limits', domain=[('state', '=', 'approve')])
     credit_limit = fields.Float(compute='_current_limit', string='Credit Limit', )
-    remaining_credit_limit = fields.Float(compute='_current_limit', string='Remaining Credit Limit', store=True)
+    remaining_credit_limit = fields.Float(compute='_current_limit', string='Remaining Credit Limit')
 
     """ All functions """
 
@@ -165,10 +165,10 @@ class ResPartner(models.Model):
 
             if len(results) > 0:
                 partner.credit_limit = results[0]['value']
-                partner.remaining_credit_limit = results[0]['remaining_credit_limit']
+                #partner.remaining_credit_limit = results[0]['remaining_credit_limit']
             else:
                 partner.credit_limit = 0
-                partner.remaining_credit_limit = 0
+                #partner.remaining_credit_limit = 0
 
 
 class res_partner_credit_limit(models.Model):
