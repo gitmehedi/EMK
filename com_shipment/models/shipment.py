@@ -239,7 +239,7 @@ class LetterOfCredit(models.Model):
             shipmentNo = len(self.shipment_ids) + 1
 
         comm_utility_pool = self.env['commercial.utility']
-        note = comm_utility_pool.getStrNumber(shipmentNo) + ' ' + Status.AMENDMENT
+        note = comm_utility_pool.getStrNumber(shipmentNo) + ' ' + Status.AMENDMENT.value
 
         result = {'name': _('Shipment'),
                   'view_type': 'form',
