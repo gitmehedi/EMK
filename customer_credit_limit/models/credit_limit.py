@@ -167,7 +167,7 @@ class ResPartner(models.Model):
 
 class res_partner_credit_limit(models.Model):
     _name = 'res.partner.credit.limit'
-    _order = "partner_id ASC"
+    _order = "id DESC"
 
 
     @api.multi

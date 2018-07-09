@@ -38,7 +38,7 @@
                                 groups="gbs_application_group.group_cxo,gbs_application_group.group_head_account"
                                 states="validate2" type="object" class="oe_highlight"/>
 
-                        <button string="Sales Approval" name="action_sales_head"
+                        <button string="Approve" name="action_sales_head"
                                 groups="gbs_application_group.group_head_sale,gbs_application_group.group_cxo"
                                 states="confirm" class="oe_highlight" type="object" />
 

@@ -64,6 +64,7 @@ access_sales_product_manager_move_line,access_sales_product_manager_move_line,ac
 
 access_acc_user_delivery_without_lc_wizard,access_acc_user_delivery_without_lc_wizard,delivery_order.model_max_delivery_without_lc_wizard,account.group_account_user,1,1,1,0
 
+access_res_partner_sale_manager,res.partner.sale.manager,base.model_res_partner,sales_team.group_sale_manager,1,0,0,0
 
 
 
