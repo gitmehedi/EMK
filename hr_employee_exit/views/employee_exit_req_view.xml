@@ -10,9 +10,8 @@
                 <form string="Exit Request">
                     <header>
                         <button string="Confirm" name="exit_confirm" states="draft" type="object" class="oe_highlight"/>
-                        <button string="Approve" name="exit_validate"
+                        <button string="Approve" name="exit_validate" attrs="{'invisible': ['|', ('current_user_is_approver', '!=', True)]}"
                                 states="confirm"  type="object" class="oe_highlight"/>
-                        <!--attrs="{'invisible': ['|', ('current_user_is_approver', '!=', True)]}"-->
                         <button string="Validate" name="exit_first_validate" groups ="hr.group_hr_manager" states="validate1" type="object"
                                 class="oe_highlight" />
                         <button string="Refuse" name="exit_refuse" groups="gbs_application_group.group_dept_manager,hr.group_hr_manager"

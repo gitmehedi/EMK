@@ -79,9 +79,33 @@ class EmployeeExitReq(models.Model):
             pass
 
     # Onchange Function
+    # @api.multi
+    # @api.onchange('employee_id', 'department_id', 'job_id')
+    # def on_change_employee(self):
+    #     self.checklists_ids = []
+    #     vals = []
+    #     confg_checklist_pool = self.env['hr.exit.configure.checklists'].search([('is_active', '=', True)])
+    #     for record in confg_checklist_pool:
+    #         if record.applicable_empname_id or record.applicable_department_id or record.applicable_jobtitle_id:
+    #             if self.job_id or self.employee_id or self.department_id:
+    #                 if record.applicable_empname_id == self.employee_id or record.applicable_department_id == self.department_id or record.applicable_jobtitle_id == self.job_id:
+    #                     for config in record.checklists_ids:
+    #                         vals.append((0, 0, {
+    #                             'checklist_item_id': config.checklist_item_id,
+    #                             'responsible_department': config.responsible_department,
+    #                             'responsible_emp': config.responsible_emp,
+    #                             'state': 'not_received'
+    #                         }))
+    #     self.checklists_ids = vals
+
+    # Button actions
     @api.multi
-    @api.onchange('employee_id', 'department_id', 'job_id')
-    def on_change_employee(self):
+    def exit_reset(self):
+        self.write({'state': 'draft'})
+        return True
+
+    @api.multi
+    def exit_confirm(self):
         self.checklists_ids = []
         vals = []
         confg_checklist_pool = self.env['hr.exit.configure.checklists'].search([('is_active', '=', True)])
@@ -97,15 +121,6 @@ class EmployeeExitReq(models.Model):
                                 'state': 'not_received'
                             }))
         self.checklists_ids = vals
-
-    # Button actions
-    @api.multi
-    def exit_reset(self):
-        self.write({'state': 'draft'})
-        return True
-
-    @api.multi
-    def exit_confirm(self):
         self.confirm_by = self.env.user
         return self.write({'state': 'confirm','confirm_date': time.strftime('%Y-%m-%d %H:%M:%S')})
 
@@ -190,21 +205,6 @@ class PendingChecklistsLine(models.Model):
                               readonly=True, copy=False,
                               default='draft', track_visibility='onchange')
 
-    # @api.multi
-    # def check_list_submit(self):
-    #     return self.write({'status': 'verify'})
-    #
-    # @api.multi
-    # def check_list_reset(self):
-    #     return self.write({'status': 'draft'})
-    #
-    # @api.multi
-    # def check_list_send(self):
-    #     return self.write({'status': 'send'})
-
-    # @api.multi
-    # def _compute_check(self):
-    #     return 1
 
     @api.multi
     def check_list_verify(self):
