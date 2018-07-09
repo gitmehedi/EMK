@@ -12,8 +12,6 @@ class ConfigureEmpChecklist(models.Model):
         active_id = vals['active_id']
         status_poll = self.env['hr.checklist.status']
 
-        # if not self.checklist_item_ids:
-        #     raise osv.except_osv(_("Warning!"), _("You must select items to generate checklist"))
         for item in self.browse(self['checklist_item_ids']):
             res = {
                 'checklist_status_item_id': item.id.id,

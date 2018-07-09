@@ -8,6 +8,7 @@ class customer_creditlimit_assign(models.Model):
     _name = 'customer.creditlimit.assign'
     _inherit = ['mail.thread', 'ir.needaction_mixin']
     _description = "Credit Limit"
+    _order = 'id DESC'
 
     name = fields.Char(string='Name', index=True, readonly=True)
     sequence_id = fields.Char('Sequence', readonly=True)
@@ -17,7 +18,7 @@ class customer_creditlimit_assign(models.Model):
                                        'approve': [('invisible', False), ('readonly', True)]})
     credit_limit = fields.Float('Credit Limit',
                                 states={'confirm': [('readonly', True)], 'validate1': [('readonly', True)],
-                                        'approve': [('readonly', True)]},track_visibility='onchange')
+                                        'approve': [('readonly', True)]}, track_visibility='onchange')
     days = fields.Integer('Credit Days',
                           states={'confirm': [('readonly', True)], 'validate1': [('readonly', True)],
                                   'approve': [('readonly', True)]})
@@ -34,12 +35,14 @@ class customer_creditlimit_assign(models.Model):
     """ State fields for containing various states """
     state = fields.Selection(
         [('draft', 'To Submit'),
-         ('cancel', 'Cancelled'),
          ('confirm', 'To Approve'),
+         ('validate', 'Validate'),
+         ('validate1', 'Accounts Approval'),
+         ('approve', 'Approved'),
+
          ('refuse', 'Refused'),
-         ('validate1', 'Second Approval'),
-         ('approve', 'Approved'), ],
-        default='draft',track_visibility='onchange')
+         ('cancel', 'Cancelled'), ],
+        default='draft', track_visibility='onchange')
 
     """ All functions """
 
@@ -53,7 +56,7 @@ class customer_creditlimit_assign(models.Model):
     def approve_creditlimit_run(self):
 
         self.limit_ids.write(
-            {'remaining_credit_limit': self.credit_limit, 'state': 'approve', 'assign_date': time.strftime('%Y-%m-%d')})
+            {'credit_limit': self.credit_limit, 'state': 'approve', 'assign_date': time.strftime('%Y-%m-%d')})
         self.approver2_id = self.env.user
         return self.write({'state': 'approve', 'approve_date': time.strftime('%Y-%m-%d %H:%M:%S')})
 
@@ -82,6 +85,10 @@ class customer_creditlimit_assign(models.Model):
             limit.state = 'confirm'
 
     @api.multi
+    def action_validate_sales_head(self):
+        self.state = 'validate'
+
+    @api.multi
     def action_validate(self):
         for record in self:
             record.approver1_id = self.env.user
@@ -91,25 +98,24 @@ class customer_creditlimit_assign(models.Model):
     def action_refuse(self):
         self.state = 'refuse'
 
-
     ### Showing batch
     @api.model
     def _needaction_domain_get(self):
         return [('state', 'in', ['confirm'])]
 
 
-    ## mail notification
-    # @api.multi
-    # def _notify_approvers(self):
-    #     approvers = self.employee_id._get_employee_manager()
-    #     if not approvers:
-    #         return True
-    #     for approver in approvers:
-    #         self.sudo(SUPERUSER_ID).add_follower(approver.id)
-    #         if approver.sudo(SUPERUSER_ID).user_id:
-    #             self.sudo(SUPERUSER_ID)._message_auto_subscribe_notify(
-    #                 [approver.sudo(SUPERUSER_ID).user_id.partner_id.id])
-    #     return True
+        ## mail notification
+        # @api.multi
+        # def _notify_approvers(self):
+        #     approvers = self.employee_id._get_employee_manager()
+        #     if not approvers:
+        #         return True
+        #     for approver in approvers:
+        #         self.sudo(SUPERUSER_ID).add_follower(approver.id)
+        #         if approver.sudo(SUPERUSER_ID).user_id:
+        #             self.sudo(SUPERUSER_ID)._message_auto_subscribe_notify(
+        #                 [approver.sudo(SUPERUSER_ID).user_id.partner_id.id])
+        #     return True
 
 
 class ResPartner(models.Model):
@@ -120,7 +126,7 @@ class ResPartner(models.Model):
 
     limit_ids = fields.One2many('res.partner.credit.limit', 'partner_id', 'Limits', domain=[('state', '=', 'approve')])
     credit_limit = fields.Float(compute='_current_limit', string='Credit Limit', )
-    remaining_credit_limit = fields.Float(compute='_current_limit', string='Remaining Credit Limit', store=True)
+    remaining_credit_limit = fields.Float(compute='_current_limit', string='Remaining Credit Limit')
 
     """ All functions """
 
@@ -153,29 +159,44 @@ class ResPartner(models.Model):
 
             if len(results) > 0:
                 partner.credit_limit = results[0]['value']
-                partner.remaining_credit_limit = results[0]['remaining_credit_limit']
+                # partner.remaining_credit_limit = results[0]['remaining_credit_limit']
             else:
                 partner.credit_limit = 0
-                partner.remaining_credit_limit = 0
+                # partner.remaining_credit_limit = 0
 
 
 class res_partner_credit_limit(models.Model):
     _name = 'res.partner.credit.limit'
-    _order = "partner_id asc"
+    _order = "partner_id ASC"
 
+
+    @api.multi
+    def _default_credit_limit_and_days(self):
+        return self.assign_id.credit_limit
+
+
+    # @api.multi
+    # def _default_credit_days(self):
+    #     return self.assign_id.days
+
+
+    assign_id = fields.Many2one('customer.creditlimit.assign')
     partner_id = fields.Many2one('res.partner', "Customer", required=True)
     assign_date = fields.Date(string="Credit Date", _defaults=lambda *a: time.strftime('%Y-%m-%d'))
-    value = fields.Float(string='Credit Limit')
+    value = fields.Float(string='Credit Limit', default=_default_credit_limit_and_days)
     remaining_credit_limit = fields.Float(string='Remaining Credit Limit')
-    day_num = fields.Integer(string='Credit Days')
-    assign_id = fields.Many2one('customer.creditlimit.assign')
+    day_num = fields.Integer(string='Credit Days', )
+
 
     state = fields.Selection([
         ('draft', 'Draft'),
         ('approve', 'Approve'),
     ], select=True, readonly=True, default='draft')
 
+
     @api.constrains('day_num')
     def check_credit_days(self):
         if self.day_num <= 0.00:
             raise ValidationError('Days can not be zero or negative')
+
+

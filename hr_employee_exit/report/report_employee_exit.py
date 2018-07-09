@@ -1,7 +1,7 @@
 from odoo import api,models,fields
 
-class LoanReport(models.AbstractModel):
-    _name = "report.hr_exit.report_employee_exit"
+class ExitReport(models.AbstractModel):
+    _name = "report.hr_employee_exit.report_employee_exit"
 
     @api.multi
     def render_html(self, docids, data=None):
@@ -39,5 +39,4 @@ class LoanReport(models.AbstractModel):
             'data': data,
             'lists': checklist
         }
-
-        return self.env['report'].render('hr_exit.report_employee_exit',docargs)
+        return self.env['report'].render('hr_employee_exit.report_employee_exit', docargs)

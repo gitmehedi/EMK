@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<openerp>
+<odoo>
 	<data>
 		<!-- Employee Exit Search Form Views -->
 		<record id="employee_exit_search_popup_form_view" model="ir.ui.view">
@@ -39,4 +39,4 @@
 		<menuitem id="employee_exit_search_menu" name="Exit Report"
 			parent="menu_exit_management" sequence="10" action="action_search_employee_exit_view" />
 	</data>
-</openerp>
+</odoo>
