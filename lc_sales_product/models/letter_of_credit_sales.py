@@ -112,7 +112,7 @@ class LetterOfCredit(models.Model):
 
     @api.multi
     def action_lc_done_export(self):
-        self.write({'state': 'done', 'last_note': Status.DONE})
+        self.write({'state': 'done', 'last_note': Status.DONE.value})
 
 
 
