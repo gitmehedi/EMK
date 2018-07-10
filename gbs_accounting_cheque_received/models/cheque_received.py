@@ -8,7 +8,7 @@ class ChequeReceived(models.Model):
     _name = 'accounting.cheque.received'
     _inherit = ['mail.thread']
     _order = 'id DESC'
-    _description = "Cheque Info Capturing Begins"
+    _description = "Cheque Info"
 
 
     state = fields.Selection([
@@ -43,6 +43,9 @@ class ChequeReceived(models.Model):
 
     payment_date = fields.Date(string='Payment Date', default=fields.Date.context_today, required=True, copy=False, states = {'returned': [('readonly', True)],'dishonoured': [('readonly', True)],'honoured': [('readonly', True)],'received': [('readonly', True)],'deposited': [('readonly', True)]})
 
+    #@todo : Update this field
+    is_this_payment_checked = fields.Boolean(string='is_this_payment_checked', default=False)
+    cheque_no = fields.Integer(string='Cheque No')
 
     @api.multi
     def _get_payment_method(self):
