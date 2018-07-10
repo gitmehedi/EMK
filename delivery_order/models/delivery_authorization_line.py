@@ -17,12 +17,12 @@ class DeliveryAuthorizationLine(models.Model):
 
     """ Relational Fields """
     parent_id = fields.Many2one('delivery.authorization', ondelete='cascade')
-    state = fields.Selection([
-        ('draft', "To Submit"),
-        ('validate', "To Approve"),
-        ('approve', "Second Approval"),
-        ('close', "Approved")
-    ], default='draft')
+    # state = fields.Selection([
+    #     ('draft', "To Submit"),
+    #     ('validate', "To Approve"),
+    #     ('approve', "Second Approval"),
+    #     ('close', "Approved")
+    # ], default='draft')
 
     deli_mode = fields.Selection([
         ('bonded', 'Bonded'),
