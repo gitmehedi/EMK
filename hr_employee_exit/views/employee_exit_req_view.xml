@@ -38,7 +38,7 @@
                                 <field name="user_id" string="User" readonly="1"/>
                             </group>
                         </group>
-                        <group attrs="{'invisible': [('state', '=', ['draft'])]}">
+                        <group attrs="{'invisible': [('state', 'in', ['draft'])]}">
                             <group>
                                 <field name="confirm_date" attrs="{'invisible': [('state', 'in', ['draft'])]}"/>
                                 <field name="approved1_date" attrs="{'invisible': [('state', 'in', ['draft','confirm'])]}"/>

@@ -78,30 +78,13 @@ class EmployeeExitReq(models.Model):
         else:
             pass
 
-    # Onchange Function
-    # @api.multi
-    # @api.onchange('employee_id', 'department_id', 'job_id')
-    # def on_change_employee(self):
-    #     self.checklists_ids = []
-    #     vals = []
-    #     confg_checklist_pool = self.env['hr.exit.configure.checklists'].search([('is_active', '=', True)])
-    #     for record in confg_checklist_pool:
-    #         if record.applicable_empname_id or record.applicable_department_id or record.applicable_jobtitle_id:
-    #             if self.job_id or self.employee_id or self.department_id:
-    #                 if record.applicable_empname_id == self.employee_id or record.applicable_department_id == self.department_id or record.applicable_jobtitle_id == self.job_id:
-    #                     for config in record.checklists_ids:
-    #                         vals.append((0, 0, {
-    #                             'checklist_item_id': config.checklist_item_id,
-    #                             'responsible_department': config.responsible_department,
-    #                             'responsible_emp': config.responsible_emp,
-    #                             'state': 'not_received'
-    #                         }))
-    #     self.checklists_ids = vals
+
 
     # Button actions
     @api.multi
     def exit_reset(self):
         self.write({'state': 'draft'})
+        self.checklists_ids = 0
         return True
 
     @api.multi
@@ -145,6 +128,32 @@ class EmployeeExitReq(models.Model):
                 }))
         self.pen_checklists_ids = vals
         self.approver2_by = self.env.user
+
+        # if len(self.user_ids) == 0:
+        #     return
+
+        email_server_list = []
+        # email_list = []
+        # for user in self.user_ids:
+        #     if user.login:
+        #         email_list.append((user.login).strip())
+
+        template_obj = self.env['mail.mail']
+        email_server_obj = self.env['ir.mail_server'].search([], order='id ASC')
+
+        for email in email_server_obj:
+            if email.smtp_user:
+                server = email.smtp_user
+                email_server_list.append(server)
+        emp = self.employee_id
+        template_data = {
+            'subject': 'emp'+'request is approved',
+            'body_html': 'Dear Sir,'+'emp'+'request is approved',
+            'email_from': email_server_list[0],
+            'email_to': self.employee_id.parent_id.user_id.login
+        }
+        template_id = template_obj.create(template_data)
+        template_obj.send(template_id)
         return self.write({'state': 'validate','approved2_date': time.strftime('%Y-%m-%d %H:%M:%S')})
 
     @api.multi
