@@ -36,7 +36,7 @@
                             <field name="payment_date" invisible="1"/>
                             <field name="payment_method_id" invisible="1"/>
                             <field name="payment_type" invisible="1"/>
-                            <field name="is_this_payment_checked" invisible="0"/>
+                            <field name="is_this_payment_checked" invisible="1"/>
                         </group>
 
                         <group>
