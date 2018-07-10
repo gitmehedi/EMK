@@ -155,7 +155,7 @@ class ResPartner(models.Model):
                 total_credit_sale = s.amount_total + total_credit_sale
 
             customer_total_credit = total_credit_sale + lim.credit
-            remain = lim.credit_limit - (total_credit_sale + customer_total_credit)
+            remain = lim.credit_limit - customer_total_credit
 
             #Need discussion -- rabbi
             # if cheque_rcv_pool:
