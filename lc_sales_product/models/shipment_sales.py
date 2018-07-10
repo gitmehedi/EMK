@@ -10,6 +10,33 @@ class Shipment(models.Model):
                                  domain=[('sale_type_id.sale_order_type', '=','lc_sales'),
                                          ('state', '=', 'open')])
 
+    to_sales_date = fields.Date('Dispatch to Sales')
+    to_buyer_date = fields.Date('Dispatch to Party')
+    to_seller_bank_date = fields.Date('Beneficiary Bank Receive')
+    to_buyer_bank_date = fields.Date('Party Bank Receive')
+    to_maturity_date = fields.Date('Maturity Date')
+
+    # Existing state override
+    state = fields.Selection(
+        [('draft', "Draft"),
+         ('on_board', "Shipment On Board"),
+         ('receive_doc', "Transfer Doc"),
+         ('send_to_cnf', "Send TO C&F"),
+         ('eta', "ETA"),
+         ('cnf_quotation', "C&F Quotation"),
+         ('approve_cnf_quotation', "Approve"),
+         ('cnf_clear', "C&F Clear"),
+         ('gate_in', "Gate In"),
+         ('done', "Done"),
+         ('to_sales',"To Sales"),
+         ('to_buyer',"To Buyer"),
+         ('to_seller_bank',"To Seller Bank"),
+         ('to_buyer_bank',"To Buyer Bank"),
+         ('to_maturity', "To Maturity"),
+         ('cancel', "Cancel")], default='draft', track_visibility='onchange')
+
+
+
     @api.onchange('invoice_id')
     def _onchange_invoice_id(self):
         self.invoice_value = None

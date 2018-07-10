@@ -126,7 +126,7 @@ class ResPartner(models.Model):
 
     limit_ids = fields.One2many('res.partner.credit.limit', 'partner_id', 'Limits', domain=[('state', '=', 'approve')])
     credit_limit = fields.Float(compute='_current_limit', string='Credit Limit', )
-    remaining_credit_limit = fields.Float(compute='_current_limit', string='Remaining Credit Limit')
+    remaining_credit_limit = fields.Float(compute='_remaining_credit_limit', string='Remaining Credit Limit')
 
     """ All functions """
 
@@ -141,6 +141,32 @@ class ResPartner(models.Model):
             name = self.env['res.partner'].search([('name', '=ilike', self.name)])
             if len(name) > 1:
                 raise ValidationError('Customer already exists.')
+
+
+    @api.multi
+    def _remaining_credit_limit(self):
+        for lim in self:
+
+            total_credit_sale = 0
+            sale_pool = lim.env['sale.order'].search([('partner_id','=',lim.id),('credit_sales_or_lc','=','credit_sales')])
+            cheque_rcv_pool = lim.env['accounting.cheque.received'].search([('state', '=', 'honoured'),('partner_id', '=', lim.id)])
+
+            for s in sale_pool:
+                total_credit_sale = s.amount_total + total_credit_sale
+
+            customer_total_credit = total_credit_sale + lim.credit
+            remain = lim.credit_limit - customer_total_credit
+
+            #Need discussion -- rabbi
+            # if cheque_rcv_pool:
+            #     for cheque in cheque_rcv_pool:
+            #         remain = remain + cheque.cheque_amount
+
+            if remain > 0:
+                lim.remaining_credit_limit = remain
+            else:
+                lim.remaining_credit_limit = 0
+
 
     @api.multi
     def _current_limit(self, context=None):
@@ -159,10 +185,8 @@ class ResPartner(models.Model):
 
             if len(results) > 0:
                 partner.credit_limit = results[0]['value']
-                partner.remaining_credit_limit = results[0]['remaining_credit_limit']
             else:
                 partner.credit_limit = 0
-                partner.remaining_credit_limit = 0
 
 
 class res_partner_credit_limit(models.Model):
@@ -181,7 +205,7 @@ class res_partner_credit_limit(models.Model):
 
 
     assign_id = fields.Many2one('customer.creditlimit.assign')
-    partner_id = fields.Many2one('res.partner', "Customer", required=True)
+    partner_id = fields.Many2one('res.partner', "Customer", required=True,  domain="[('customer', '=', True)]")
     assign_date = fields.Date(string="Credit Date", _defaults=lambda *a: time.strftime('%Y-%m-%d'))
     value = fields.Float(string='Credit Limit', default=_default_credit_limit_and_days)
     #remaining_credit_limit = fields.Float(string='Remaining Credit Limit')
