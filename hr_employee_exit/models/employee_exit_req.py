@@ -102,6 +102,7 @@ class EmployeeExitReq(models.Model):
     @api.multi
     def exit_reset(self):
         self.write({'state': 'draft'})
+        self.checklists_ids = 0
         return True
 
     @api.multi
