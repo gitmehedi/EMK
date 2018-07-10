@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
     <data>
-    <record model="ir.ui.view" id="inherit_stock_picking_for_delivery_order">
+        <record model="ir.ui.view" id="inherit_stock_picking_for_delivery_order">
             <field name="name">Stock.picking.form.view</field>
             <field name="model">stock.picking</field>
             <field name="inherit_id" ref="stock.view_picking_form"/>
@@ -28,6 +28,17 @@
                             type="object" class="oe_highlight"/>
 
                 </xpath>
+
+                 <xpath expr="//button[@name='force_assign']" position="replace">
+
+                      <button name="force_assign" states="confirmed,waiting,partially_available" string="Force Availability"
+                        type="object" groups="stock.group_stock_manager,account.group_account_user"/>
+
+                </xpath>
+
+
+
+
 
 
             </field>
