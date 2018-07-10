@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="head_local_first_acceptance_temp" inherit_id="custom_report.gbs_external_layout" primary="True">
+        <xpath expr="//t[@t-call='custom_report.gbs_external_layout_header']" position="attributes">
+            <attribute name="t-call">lc_sales_local_report.external_local_first_acceptance_temp</attribute>
+        </xpath>
+    </template>
+    <template id="external_local_first_acceptance_temp" inherit_id="custom_report.gbs_external_layout_header" primary="True">
+        <xpath expr="//div[@class='company-info']" position="after">
+            <div name="company_address">
+                <h5><span t-esc="address"/></h5>
+            </div>
+        </xpath>
+    </template>
+    <!-- Main template -->
+    <template id="local_first_acceptance_temp">
+        <t t-call="report.html_container">
+            <t t-call="lc_sales_local_report.head_local_first_acceptance_temp">
+                <div class="page" style="page-break-inside:auto">
+                    <div class="row" style="padding-top:25px;">
+                        <style type="text/css">
+                            .report-title { text-align:center; }
+                            .odo-bg-gray, .odo-bg-gray > td { background-color: #f5f5f5; }
+                        </style>
+                        <div class="clearfix">
+                            <h4 class="report-title">First Acceptance Report</h4>
+                            <div class="row" style="padding-bottom:10px;">
+                                <div class="col-xs-8 text-left">
+                                    <div><strong>Reported On: </strong><span t-esc="context_timestamp(datetime.datetime.now()).strftime('%m/%d/%Y, %H:%M %p')"/></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <table class="table table-report-xs table-bordered table-striped">
+                            <thead>
+                                <tr class="odo-bg-gray">
+                                    <th class="text-center">SL</th>
+                                    <th class="text-center">Customer</th>
+                                    <th class="text-center">L/C No</th>
+                                    <th class="text-center">Shipment No</th>
+                                    <th class="text-center">Value</th>
+                                    <th class="text-center">Tenor</th>
+                                    <th class="text-center">Dispatch To Sales</th>
+                                    <th class="text-center">Dispatch To Customer</th>
+                                    <th class="text-center">Aging</th>
+                                    <th class="text-center">First Delivery</th>
+                                    <th class="text-center">Last Delivery</th>
+                                    <th class="text-center">Remarks/Status</th>
+                                    <th class="text-center">F.P.R</th>
+                                    <th class="text-center">Customer Bank</th>
+                                    <th class="text-center">Beneficiary Bank</th>
+                                </tr>
+                            </thead>
+                            <!--<tbody>-->
+                                <!--<t t-foreach="lines" t-as="data">-->
+                                    <!--<t t-if="data_value['product']">-->
+                                        <!--<tr style="page-break-inside: avoid" class="text-left">-->
+                                            <!--<td colspan="8" style="padding: 0px;">-->
+                                                <!--<strong>-->
+                                                    <!--<t t-esc="data"/>-->
+                                                <!--</strong>-->
+                                            <!--</td>-->
+                                        <!--</tr>-->
+                                        <!--<t t-foreach="data_value['product']" t-as="line">-->
+                                            <!--<tr>-->
+                                                <!--<td>-->
+                                                    <!--&lt;!&ndash;<t t-esc="line['m_date']" t-options='{"widget": "date"}'/>&ndash;&gt;-->
+                                                    <!--<t t-esc="time.strftime('%d-%m-%Y',time.strptime(line['m_date'],'%Y-%m-%d %H:%M:%S'))"/>-->
+                                                <!--</td>-->
+                                                <!--<td>-->
+                                                    <!--<t t-esc="line['mrr']"/>-->
+                                                <!--</td>-->
+                                                <!--<td>-->
+                                                    <!--<t t-esc="line['name']"/>-->
+                                                <!--</td>-->
+                                                <!--<td class="text-right">-->
+                                                    <!--<t t-esc="line['qty_in_tk']"/>-->
+                                                <!--</td>-->
+                                                <!--<td>-->
+                                                    <!--<t t-esc="line['uom_name']"/>-->
+                                                <!--</td>-->
+                                                <!--<td class="text-right">-->
+                                                    <!--<t t-esc="line['rate_in']"/>-->
+                                                <!--</td>-->
+                                                <!--<td></td>-->
+                                                <!--<td class="text-right">-->
+                                                    <!--<t t-esc="line['val_in_tk']"/>-->
+                                                <!--</td>-->
+
+                                            <!--</tr>-->
+                                        <!--</t>-->
+                                        <!--<t t-if="data_value['product']">-->
+                                            <!--<tr style="font-weight: bold; background-color: #E4E4E4; border-bottom: 1px solid black;">-->
+                                                <!--<td colspan="3" class="text-left">-->
+                                                    <!--<t t-esc="data_value['sub-total']['title']"/>-->
+                                                <!--</td>-->
+                                                <!--<td class="text-right">-->
+                                                    <!--<t t-esc="data_value['sub-total']['total_in_qty']"/>-->
+                                                <!--</td>-->
+                                                <!--<td></td>-->
+                                                <!--<td></td>-->
+                                                <!--<td></td>-->
+                                                <!--<td class="text-right">-->
+                                                    <!--<t t-esc="data_value['sub-total']['total_in_val']"/>-->
+                                                <!--</td>-->
+                                            <!--</tr>-->
+                                        <!--</t>-->
+                                    <!--</t>-->
+                                <!--</t>-->
+                                <!--<tr style="font-weight: bold; background-color: #897d79; border-bottom: 1px solid black;">-->
+                                    <!--<td colspan="3" class="text-left">-->
+                                        <!--<t t-esc="total['title']"/>-->
+                                    <!--</td>-->
+                                    <!--<td class="text-right">-->
+                                        <!--<t t-esc="total['total_in_qty']"/>-->
+                                    <!--</td>-->
+                                    <!--<td></td>-->
+                                    <!--<td></td>-->
+                                    <!--<td></td>-->
+                                    <!--<td class="text-right">-->
+                                        <!--<t t-esc="total['total_in_val']"/>-->
+                                    <!--</td>-->
+                                <!--</tr>-->
+                            <!--</tbody>-->
+                        </table>
+                        <!--<t t-call="custom_report.report_signing"></t>-->
+                    </div>
+                </div>
+            </t>
+        </t>
+    </template>
+
+    <report id="report_local_first_acceptance"
+            model="letter.credit"
+            string="LC Sales First Acceptance Report"
+            name="lc_sales_local_report.local_first_acceptance_temp"
+            file="lc_sales_local_report.local_first_acceptance_temp"
+            multi="True"
+            menu="False"
+            report_type="qweb-pdf"/>
+
+    <record id="report_local_first_acceptance" model="ir.actions.report.xml">
+        <field name="paperformat_id" ref="custom_report.paperformat_backend_landscape"/>
+    </record>
+</odoo>
