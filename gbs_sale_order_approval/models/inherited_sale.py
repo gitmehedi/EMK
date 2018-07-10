@@ -222,6 +222,26 @@ class SaleOrder(models.Model):
 
 
     @api.multi
+    def _remaining_credit_limit(self):
+        for lim in self:
+
+            total_credit_sale = 0
+
+            for s in lim:
+                total_credit_sale = s.amount_total + total_credit_sale
+
+            remain = lim.credit_limit - total_credit_sale
+
+            if remain > 0:
+                lim.remaining_credit_limit = remain
+            else:
+                lim.remaining_credit_limit = 0
+
+        return lim.remaining_credit_limit
+
+
+
+    @api.multi
     def action_submit(self):
 
         is_double_validation = False
