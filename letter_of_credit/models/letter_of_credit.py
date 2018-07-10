@@ -54,6 +54,8 @@ class LetterOfCredit(models.Model):
     expiry_date = fields.Date('Expiry Date', track_visibility='onchange')
     shipment_date = fields.Date('Shipment Date', track_visibility='onchange')
 
+    amendment_date = fields.Date('Amendment Date', track_visibility='onchange')
+
     master_lc_number = fields.Char(string='Master LC Number', track_visibility='onchange')
     hs_code = fields.Char(string='HS Code', track_visibility='onchange')
     tolerance = fields.Float(string='Tolerance (%)', track_visibility='onchange')## 10% plus and minus value
@@ -129,7 +131,7 @@ class LetterOfCredit(models.Model):
 
     @api.multi
     def action_open(self):
-        self.write({'state': 'open','last_note': Status.OPEN})
+        self.write({'state': 'open','last_note': Status.OPEN.value})
         if self.tolerance > 10 :
             raise Warning('You should set "Tolerance" upto 10 !')
 
@@ -182,7 +184,7 @@ class LetterOfCredit(models.Model):
         number = len(self.old_revision_ids)
 
         comm_utility_pool = self.env['commercial.utility']
-        note = comm_utility_pool.getStrNumber(number) + ' ' + Status.AMENDMENT
+        note = comm_utility_pool.getStrNumber(number) + ' ' + Status.AMENDMENT.value
 
         self.write({'state': self.state, 'last_note': note})
         return {

@@ -25,6 +25,10 @@
         'account',
         'gbs_sales_commission',
         'delivery_order',
+        'sales_team',
+        'gbs_sales_delivery_goods',
+        'customer_credit_limit',
+        'sale',
     ],
 
 
@@ -32,5 +36,6 @@
     'data': [
         'security/ir.model.access.csv',
         'security/ir_rule.xml',
+        'views/menu_items.xml',
     ],
 }

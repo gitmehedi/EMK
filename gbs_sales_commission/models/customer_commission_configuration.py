@@ -6,8 +6,10 @@ from odoo import api, fields, models, _
 
 class CustomerCommissionConfiguration(models.Model):
     _name = "customer.commission.configuration"
+    _rec_name = 'name'
+
     _inherit = ['mail.thread', 'ir.needaction_mixin']
-    _order = 'confirmed_date desc'
+    _order = 'id DESC'
 
     name = fields.Char(string='Name', index=True, readonly=True)
     requested_date = fields.Date(string="Requested Date", default=datetime.date.today(), readonly=True)
@@ -48,12 +50,18 @@ class CustomerCommissionConfiguration(models.Model):
     state = fields.Selection([
         ('draft', "To Submit"),
         ('validate', "To Approve"),
-        ('approve', "Second Approval"),
+        ('validate2', "Sales Approval"),
+        ('approve', "Accounts Approval"),
         ('close', "Approved"),
         ('refused', 'Refused')
     ], readonly=True, track_visibility='onchange', copy=False, default='draft')
 
     """ All functions """
+
+    def action_sales_head(self):
+        self.state = 'validate2'
+
+
 
     ### Showing batch
     @api.model

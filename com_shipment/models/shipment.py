@@ -26,7 +26,7 @@ class Shipment(models.Model):
     state = fields.Selection(
         [('draft', "Draft"),
          ('on_board', "Shipment On Board"),
-         ('receive_doc', "Receive Doc"),
+         ('receive_doc', "Transfer Doc"),
          ('send_to_cnf', "Send TO C&F"),
          ('eta', "ETA"),
          ('cnf_quotation', "C&F Quotation"),
@@ -239,7 +239,7 @@ class LetterOfCredit(models.Model):
             shipmentNo = len(self.shipment_ids) + 1
 
         comm_utility_pool = self.env['commercial.utility']
-        note = comm_utility_pool.getStrNumber(shipmentNo) + ' ' + Status.AMENDMENT
+        note = comm_utility_pool.getStrNumber(shipmentNo) + ' ' + Status.AMENDMENT.value
 
         result = {'name': _('Shipment'),
                   'view_type': 'form',

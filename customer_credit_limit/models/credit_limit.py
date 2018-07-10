@@ -7,7 +7,8 @@ from odoo.exceptions import UserError, ValidationError
 class customer_creditlimit_assign(models.Model):
     _name = 'customer.creditlimit.assign'
     _inherit = ['mail.thread', 'ir.needaction_mixin']
-    _description = "Credit limit assign"
+    _description = "Credit Limit"
+    _order = 'id DESC'
 
     name = fields.Char(string='Name', index=True, readonly=True)
     sequence_id = fields.Char('Sequence', readonly=True)
@@ -17,14 +18,14 @@ class customer_creditlimit_assign(models.Model):
                                        'approve': [('invisible', False), ('readonly', True)]})
     credit_limit = fields.Float('Credit Limit',
                                 states={'confirm': [('readonly', True)], 'validate1': [('readonly', True)],
-                                        'approve': [('readonly', True)]})
+                                        'approve': [('readonly', True)]}, track_visibility='onchange')
     days = fields.Integer('Credit Days',
                           states={'confirm': [('readonly', True)], 'validate1': [('readonly', True)],
                                   'approve': [('readonly', True)]})
     requested_by = fields.Many2one('res.users', string="Requested By", default=lambda self: self.env.user,
                                    readonly=True)
-    approver1_id = fields.Many2one('res.users', string='First Approval', readonly=True)
-    approver2_id = fields.Many2one('res.users', string='Second Approval', readonly=True)
+    approver1_id = fields.Many2one('res.users', string='First Approval', track_visibility='onchange', readonly=True)
+    approver2_id = fields.Many2one('res.users', string='Second Approval', track_visibility='onchange', readonly=True)
 
     """ Relational Fields """
     limit_ids = fields.One2many('res.partner.credit.limit', 'assign_id', 'Limits',
@@ -34,12 +35,14 @@ class customer_creditlimit_assign(models.Model):
     """ State fields for containing various states """
     state = fields.Selection(
         [('draft', 'To Submit'),
-         ('cancel', 'Cancelled'),
          ('confirm', 'To Approve'),
+         ('validate', 'Validate'),
+         ('validate1', 'Accounts Approval'),
+         ('approve', 'Approved'),
+
          ('refuse', 'Refused'),
-         ('validate1', 'Second Approval'),
-         ('approve', 'Approved'), ],
-        default='draft')
+         ('cancel', 'Cancelled'), ],
+        default='draft', track_visibility='onchange')
 
     """ All functions """
 
@@ -67,7 +70,7 @@ class customer_creditlimit_assign(models.Model):
     @api.constrains('credit_limit', 'days')
     def _check_value(self):
         if self.credit_limit <= 0 or self.days <= 0:
-            raise Warning("[Error] Limit or Days never take zero or negative value!")
+            raise Warning("Limit or Days never take zero or negative value!")
 
     @api.multi
     def action_confirm(self):
@@ -82,6 +85,10 @@ class customer_creditlimit_assign(models.Model):
             limit.state = 'confirm'
 
     @api.multi
+    def action_validate_sales_head(self):
+        self.state = 'validate'
+
+    @api.multi
     def action_validate(self):
         for record in self:
             record.approver1_id = self.env.user
@@ -91,43 +98,42 @@ class customer_creditlimit_assign(models.Model):
     def action_refuse(self):
         self.state = 'refuse'
 
-
     ### Showing batch
     @api.model
     def _needaction_domain_get(self):
         return [('state', 'in', ['confirm'])]
 
 
-    ## mail notification
-    # @api.multi
-    # def _notify_approvers(self):
-    #     approvers = self.employee_id._get_employee_manager()
-    #     if not approvers:
-    #         return True
-    #     for approver in approvers:
-    #         self.sudo(SUPERUSER_ID).add_follower(approver.id)
-    #         if approver.sudo(SUPERUSER_ID).user_id:
-    #             self.sudo(SUPERUSER_ID)._message_auto_subscribe_notify(
-    #                 [approver.sudo(SUPERUSER_ID).user_id.partner_id.id])
-    #     return True
+        ## mail notification
+        # @api.multi
+        # def _notify_approvers(self):
+        #     approvers = self.employee_id._get_employee_manager()
+        #     if not approvers:
+        #         return True
+        #     for approver in approvers:
+        #         self.sudo(SUPERUSER_ID).add_follower(approver.id)
+        #         if approver.sudo(SUPERUSER_ID).user_id:
+        #             self.sudo(SUPERUSER_ID)._message_auto_subscribe_notify(
+        #                 [approver.sudo(SUPERUSER_ID).user_id.partner_id.id])
+        #     return True
 
 
 class ResPartner(models.Model):
     _inherit = 'res.partner'
 
-    credit = fields.Monetary(compute='_credit_debit_get',
-                             string='Total Receivable', help="Total amount this customer owes you.", store=True)
+    # credit = fields.Monetary(compute='_credit_debit_get',
+    #                          string='Total Receivable', help="Total amount this customer owes you.", store=True)
 
     limit_ids = fields.One2many('res.partner.credit.limit', 'partner_id', 'Limits', domain=[('state', '=', 'approve')])
     credit_limit = fields.Float(compute='_current_limit', string='Credit Limit', )
-    remaining_credit_limit = fields.Float(compute='_current_limit', string='Remaining Credit Limit', store=True)
+    remaining_credit_limit = fields.Float(compute='_remaining_credit_limit', string='Remaining Credit Limit')
 
     """ All functions """
 
-    @api.multi
-    def _credit_debit_get(self):
-        res = super(ResPartner, self)._credit_debit_get()
-        return res
+    # @api.multi
+    # def _credit_debit_get(self):
+    #     res = super(ResPartner, self)._credit_debit_get()
+    #     return res
 
     @api.constrains('name')
     def _check_unique_name(self):
@@ -135,6 +141,32 @@ class ResPartner(models.Model):
             name = self.env['res.partner'].search([('name', '=ilike', self.name)])
             if len(name) > 1:
                 raise ValidationError('Customer already exists.')
+
+
+    @api.multi
+    def _remaining_credit_limit(self):
+        for lim in self:
+
+            total_credit_sale = 0
+            sale_pool = lim.env['sale.order'].search([('partner_id','=',lim.id),('credit_sales_or_lc','=','credit_sales')])
+            cheque_rcv_pool = lim.env['accounting.cheque.received'].search([('state', '=', 'honoured'),('partner_id', '=', lim.id)])
+
+            for s in sale_pool:
+                total_credit_sale = s.amount_total + total_credit_sale
+
+            customer_total_credit = total_credit_sale + lim.credit
+            remain = lim.credit_limit - customer_total_credit
+
+            #Need discussion -- rabbi
+            # if cheque_rcv_pool:
+            #     for cheque in cheque_rcv_pool:
+            #         remain = remain + cheque.cheque_amount
+
+            if remain > 0:
+                lim.remaining_credit_limit = remain
+            else:
+                lim.remaining_credit_limit = 0
+
 
     @api.multi
     def _current_limit(self, context=None):
@@ -153,29 +185,42 @@ class ResPartner(models.Model):
 
             if len(results) > 0:
                 partner.credit_limit = results[0]['value']
-                partner.remaining_credit_limit = results[0]['remaining_credit_limit']
             else:
                 partner.credit_limit = 0
-                partner.remaining_credit_limit = 0
 
 
 class res_partner_credit_limit(models.Model):
     _name = 'res.partner.credit.limit'
-    _order = "partner_id asc"
+    _order = "id DESC"
 
-    partner_id = fields.Many2one('res.partner', "Customer", required=True)
-    assign_date = fields.Date(string="Credit Date", _defaults=lambda *a: time.strftime('%Y-%m-%d'))
-    value = fields.Float(string='Credit Limit')
-    remaining_credit_limit = fields.Float(string='Remaining Credit Limit')
-    day_num = fields.Integer(string='Credit Days')
+
+    @api.multi
+    def _default_credit_limit_and_days(self):
+        return self.assign_id.credit_limit
+
+
+    # @api.multi
+    # def _default_credit_days(self):
+    #     return self.assign_id.days
+
+
     assign_id = fields.Many2one('customer.creditlimit.assign')
+    partner_id = fields.Many2one('res.partner', "Customer", required=True,  domain="[('customer', '=', True)]")
+    assign_date = fields.Date(string="Credit Date", _defaults=lambda *a: time.strftime('%Y-%m-%d'))
+    value = fields.Float(string='Credit Limit', default=_default_credit_limit_and_days)
+    #remaining_credit_limit = fields.Float(string='Remaining Credit Limit')
+    day_num = fields.Integer(string='Credit Days', )
+
 
     state = fields.Selection([
         ('draft', 'Draft'),
         ('approve', 'Approve'),
     ], select=True, readonly=True, default='draft')
 
+
     @api.constrains('day_num')
     def check_credit_days(self):
         if self.day_num <= 0.00:
             raise ValidationError('Days can not be zero or negative')
+
+
