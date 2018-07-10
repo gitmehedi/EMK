@@ -54,6 +54,8 @@ class LetterOfCredit(models.Model):
     expiry_date = fields.Date('Expiry Date', track_visibility='onchange')
     shipment_date = fields.Date('Shipment Date', track_visibility='onchange')
 
+    amendment_date = fields.Date('Amendment Date', track_visibility='onchange')
+
     master_lc_number = fields.Char(string='Master LC Number', track_visibility='onchange')
     hs_code = fields.Char(string='HS Code', track_visibility='onchange')
     tolerance = fields.Float(string='Tolerance (%)', track_visibility='onchange')## 10% plus and minus value

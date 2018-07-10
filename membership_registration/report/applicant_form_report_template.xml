@@ -1,0 +1,232 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--Custom report.-->
+<odoo>
+    <data>
+        <template id="app_form_template">
+            <t t-call="report.html_container">
+                <t t-foreach="docs" t-as="o">
+                    <!--<t t-call="report.external_layout">-->
+                    <div class="page">
+                        <div class="row">
+                            <div class="col-xs-12" style="text-align:center;">
+                                <h2><strong><u>চাকরির আবেদন ফরম</u></strong></h2>
+                            </div>
+                        </div>
+                        <style>
+                            #tarikh {
+                            text-align:left;
+                            vertical-align:middle;
+                            }
+                        </style>
+
+                        <table class="table table-bordered">
+                            <tbody >
+                                <tr>
+                                    <td colspan="1">১.</td>
+                                    <td colspan="27">পদের নাম: <span t-field="o.job_id.name"/></td>
+                                </tr>
+                                <tr>
+                                    <td colspan="1">২.</td>
+                                    <td colspan="22">বিজ্ঞপ্তি নম্বর: <span t-field="o.job_id.job_publish_number"/> </td>
+                                    <td id="tarikh" colspan="7">তারিখ: <span t-field="o.job_id.job_publish_date"/> </td>
+                                </tr>
+                                <tr>
+                                    <td rowspan="2" colspan="1">৩.</td>
+                                    <td rowspan="2" colspan="3">প্রার্থীর নাম: </td>
+                                    <td colspan="24">বাংলায়: <span t-field="o.partner_name_bangla"/></td>
+                                </tr>
+                                <tr>
+                                    <td colspan="24">ইংরেজিতে(বড় অক্ষরে): <span t-field="o.partner_name"/></td>
+                                </tr>
+                                <tr>
+                                    <td rowspan="2" colspan="1">৪.</td>
+                                    <td colspan="27">জাতীয় পরিচয় নম্বর: <span t-field="o.national_id"/></td>
+                                    <!--<td rowspan="2" colspan="3">(যেকোন একটি)</td>-->
+                                </tr>
+                                <tr>
+                                    <td colspan="27">জন্ম নিবন্ধন নম্বর: <span t-field="o.birth_registration_no"/></td>
+                                </tr>
+                                <tr>
+                                    <td colspan="1">৫.</td>
+                                    <td colspan='27'>জন্ম তারিখ: <span t-field="o.birth_date"/></td>
+                                </tr>
+                                <tr>
+                                    <td colspan="1">৬.</td>
+                                    <td colspan="27">জন্মস্থান(জেলা): <span t-field="o.divisional_candiate"/></td>
+                                </tr>
+                                <tr>
+                                    <td colspan="1">৭.</td>
+                                    <td colspan="27">বিজ্ঞপ্তিতে উল্লেখিত তারিখে প্রার্থীর বয়স: <span t-field="o.applicant_age"/> </td>
+                                    <!--<td colspan="4">বছর</td>-->
+                                    <!--<td colspan="2">মাস</td>-->
+                                    <!--<td colspan="2">দিন</td>-->
+                                </tr>
+                                <tr>
+                                    <td colspan="1">৮.</td>
+                                    <td colspan="27">মাতার নাম: <span t-field="o.father_name"/></td>
+                                </tr>
+                                <tr>
+                                    <td colspan="1">৯.</td>
+                                    <td colspan="27">পিতার নাম: <span t-field="o.mother_name"/></td>
+                                </tr>
+                                <tr>
+                                    <td rowspan="7" colspan="1">১০.</td>
+                                    <td colspan="7">ঠিকানা: </td>
+                                    <td colspan="10">বর্তমান: </td>
+                                    <td colspan="10">স্থায়ী: </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="7">বাসা ও সড়ক(নাম ও নম্বর): </td>
+                                    <td colspan="10"><span t-field="o.pre_address_1"/></td>
+                                    <td colspan="10"><span t-field="o.per_address_1"/></td>
+                                </tr>
+                                <tr>
+                                    <td colspan="7">ইউনিয়ন/ওয়ার্ড:</td>
+                                    <td colspan="10"><span t-field="o.pre_city_town"/></td>
+                                    <td colspan="10"><span t-field="o.per_city_town"/></td>
+                                </tr>
+                                <tr>
+                                    <td colspan="7">ডাকঘর:</td>
+                                    <td colspan="10"><span t-field="o.pre_address_2"/></td>
+                                    <td colspan="10"><span t-field="o.per_address_2"/></td>
+                                </tr>
+                                <tr>
+                                    <td colspan="7">পোস্ট কোড নম্বর:</td>
+                                    <td colspan="10"><span t-field="o.pre_zip_postal"/></td>
+                                    <td colspan="10"><span t-field="o.per_zip_postal"/></td>
+                                </tr>
+                                <tr>
+                                    <td colspan="7">উপজেলা:</td>
+                                    <td colspan="10"><span t-field="o.pre_state_province"/></td>
+                                    <td colspan="10"><span t-field="o.per_state_province"/></td>
+                                </tr>
+                                <tr>
+                                    <td colspan="7">জেলা:</td>
+                                    <td colspan="10"><span t-field="o.pre_district"/></td>
+                                    <td colspan="10"><span t-field="o.per_district"/></td>
+                                </tr>
+                                <tr>
+                                    <td rowspan="2" colspan="1">১১.</td>
+                                    <td rowspan="2" colspan="3">যোগাযোগ:</td>
+                                    <td colspan="24">মোবাইল/টেলিফোন নম্বর: <span t-field="o.partner_phone"/></td>
+                                </tr>
+                                <tr>
+                                    <td colspan="24">ইমেইল(যদি থাকে):<span t-field="o.email_from"/></td>
+                                </tr>
+                                <tr>
+                                    <td colspan="1">১২.</td>
+                                    <td colspan="27">জাতীয়তা: <span t-field="o.nationality"/></td>
+                                </tr>
+                                <tr>
+                                    <td colspan="1">১৩.</td>
+                                    <td colspan="27">লিঙ্গ: <span t-field="o.gender"/></td>
+                                </tr>
+                                <tr>
+                                    <td colspan="1">১৪.</td>
+                                    <td colspan="27">ধর্ম: <span t-field="o.religion"/></td>
+                                </tr>
+                                <tr>
+                                    <td colspan="1">১৫.</td>
+                                    <td colspan="27">পেশা: <span t-field="o.occupation"/></td>
+                                    <br/>
+                                    <br/>
+                                </tr>
+                                <tr>
+                                    <td rowspan="7" colspan="1">১৬.</td>
+                                </tr>
+                                <tr>
+                                    <td colspan="4">পরীক্ষার নাম</td>
+                                    <td colspan="4">বিষয়</td>
+                                    <td colspan="10">শিক্ষা প্রতিষ্ঠান</td>
+                                    <td colspan="2">পাসের সন</td>
+                                    <td colspan="4">বোর্ড/বিশ্ববিদ্যালয়</td>
+                                    <td colspan="4">গ্রেড/শ্রেণি/বিভাগ</td>
+                                </tr>
+                                <tr>
+                                    <td colspan="4"><span t-field="o.exm_ssc"/></td>
+                                    <td colspan="4"><span t-field="o.exm_ssc_subject"/></td>
+                                    <td colspan="10"><span t-field="o.exm_ssc_institute"/></td>
+                                    <td colspan="2"><span t-field="o.exm_ssc_passing_year"/></td>
+                                    <td colspan="4"><span t-field="o.exm_ssc_board"/></td>
+                                    <td colspan="4"><span t-field="o.exm_ssc_class"/></td>
+                                </tr>
+                                <tr>
+                                    <td colspan="4"><span t-field="o.exm_hsc"/></td>
+                                    <td colspan="4"><span t-field="o.exm_hsc_subject"/></td>
+                                    <td colspan="10"><span t-field="o.exm_hsc_institute"/></td>
+                                    <td colspan="2"><span t-field="o.exm_hsc_passing_year"/></td>
+                                    <td colspan="4"><span t-field="o.exm_hsc_board"/></td>
+                                    <td colspan="4"><span t-field="o.exm_hsc_class"/></td>
+                                </tr>
+                                <tr>
+                                    <td colspan="4"><span t-field="o.exm_bsc"/></td>
+                                    <td colspan="4"><span t-field="o.exm_bsc_subject"/></td>
+                                    <td colspan="10"><span t-field="o.exm_bsc_institute"/></td>
+                                    <td colspan="2"><span t-field="o.exm_bsc_passing_year"/></td>
+                                    <td colspan="4"><span t-field="o.exm_bsc_board"/></td>
+                                    <td colspan="4"><span t-field="o.exm_bsc_class"/></td>
+                                </tr>
+                                <tr>
+                                    <td colspan="4"><span t-field="o.exm_msc"/></td>
+                                    <td colspan="4"><span t-field="o.exm_msc_subject"/></td>
+                                    <td colspan="10"><span t-field="o.exm_msc_institute"/></td>
+                                    <td colspan="2"><span t-field="o.exm_msc_passing_year"/></td>
+                                    <td colspan="4"><span t-field="o.exm_msc_board"/></td>
+                                    <td colspan="4"><span t-field="o.exm_msc_class"/></td>
+                                </tr>
+                                <tr>
+                                    <td colspan="4"><span t-field="o.exm_other"/></td>
+                                    <td colspan="4"><span t-field="o.exm_other_subject"/></td>
+                                    <td colspan="10"><span t-field="o.exm_other_institute"/></td>
+                                    <td colspan="2"><span t-field="o.exm_other_passing_year"/></td>
+                                    <td colspan="4"><span t-field="o.exm_other_board"/></td>
+                                    <td colspan="4"><span t-field="o.exm_other_class"/></td>
+                                </tr>
+                                <tr>
+                                    <td colspan="1">১৭.</td>
+                                    <td colspan="27">অতিরিক্ত যোগ্যতা(যদি থাকে): <span t-field="o.experience_remarks"/> </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="1">১৮.</td>
+                                    <td colspan="27">অভিজ্ঞতার বিবরণী(প্রযোজ্য ক্ষেত্রে): <span t-field="o.curriculam_activities"/> </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="1">১৯.</td>
+                                    <td colspan="27">কোটা: <span t-field="o.quota"/> </td>
+
+                                </tr>
+                                <!--<tr>-->
+                                    <!--<td colspan="6">ক্ষুদ্র নৃ-গোষ্ঠী</td>-->
+                                    <!--<td colspan="8">আনসার ও গ্রাম প্রতিরক্ষা সদস্য</td>-->
+                                    <!--<td colspan="14">অন্যান্য (উল্লেখ করুন)</td>-->
+                                <!--</tr>-->
+                                <tr>
+                                    <td rowspan="2" colspan="1">২০.</td>
+                                    <td colspan="22">ট্রেজারি চালান নম্বর: <span t-field="o.treasury_challan"/> </td>
+                                    <td colspan="7">তারিখ: <span t-field="o.treasury_date"/> </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="27">ব্যাংক ও শাখার নাম: <span t-field="o.bank_branch_name"/> </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="1">২১.</td>
+                                    <td colspan="127">বিভাগীয় প্রার্থী কিনা: <span t-field="o.divisional_candiate"/> </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="28">আমি এই মর্মে অঙ্গীকার করছি যে ওপরে বর্ণিত তথ্যাবলি সম্পূর্ণ সত্য। মৌখিক পরীক্ষার সময় উল্লেখিত তথ্য প্রমাণের জন্য মূল সার্টিফিকেট ও রেকর্ডপত্র উপস্থাপন করব। কোন তথ্য অসত্য প্রমাণিত হলে আইনানুগ শাস্তি ভোগ করতে বাধ্য থাকব।<br/><br/><br/></td>
+                                </tr>
+                                <tr>
+                                    <td colspan="7">তারিখ: </td>
+                                    <td colspan="22" style="text-align:right;"><br/><br/>প্রার্থীর সাক্ষর</td>
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </t>
+            </t>
+        </template>
+    </data>
+</odoo>
+
+
