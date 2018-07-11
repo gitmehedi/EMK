@@ -25,6 +25,7 @@ class LocalFirstAcceptanceReport(models.AbstractModel):
     def get_report_data(self, data):
         acceptances = []
         current_date =  fields.Date.context_today(self)
+        currency_format = '9,99,99,99,999'
 
         product_temp_id = data['product_temp_id']
 
@@ -34,14 +35,14 @@ class LocalFirstAcceptanceReport(models.AbstractModel):
                               pt.name as product_name,
                               ps.name as shipment_name,
                               lc.name as lc_name, 
-                              ps.invoice_value as value,
+                              to_char(ps.invoice_value, '%s') as value,
                               rp.name as customer,
                               lc.tenure as tenor,
                               lc.second_party_bank as customer_bank,
                               rb.name as beneficiary_bank,
                               ps.to_sales_date as dispatch_to_sale,
                               ps.to_buyer_date as dispatch_to_customer,
-                              ps.comments as comments,
+                              ps.comment as comment,
                               rc.symbol as currency,
                               (CASE
                                   WHEN ps.to_buyer_date is not null THEN date('%s') - date(ps.to_buyer_date)
@@ -56,9 +57,9 @@ class LocalFirstAcceptanceReport(models.AbstractModel):
                           left join res_partner rp on lc.second_party_applicant = rp.id
                           left join res_bank rb on lc.first_party_bank = rb.id
                           left join res_currency rc on lc.currency_id = rc.id
-                       WHERE pt.id = %s and lc.type = 'export' and lc.region_type = 'local'
+                       WHERE pt.id = %s and lc.type = 'export' and lc.region_type = 'local' and ps.state in ('to_sales','to_buyer')
                        ORDER by pt.id asc
-                    '''% (current_date,current_date,product_temp_id)
+                    '''% (currency_format,current_date,current_date,product_temp_id)
 
         self.env.cr.execute(sql_in_tk)
         for vals in self.env.cr.dictfetchall():

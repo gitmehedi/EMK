@@ -25,13 +25,19 @@
                         </style>
                         <div class="clearfix">
                             <h4 class="report-title">First Acceptance Report</h4>
-                            <div class="row" style="padding-bottom:10px;">
+                            <div class="row" style="padding-bottom:2px;">
                                 <div class="col-xs-8 text-left">
                                     <div><strong>Reported On: </strong><span t-esc="context_timestamp(datetime.datetime.now()).strftime('%m/%d/%Y, %H:%M %p')"/></div>
                                 </div>
                             </div>
+                            <div class="row">
+                                <div class="col-xs-8 text-left">
+                                    <strong>Product: </strong><span t-esc="record['product_temp_name']"/>
+                                </div>
+                            </div>
                         </div>
-                        <table class="table table-report-xs table-bordered table-striped">
+                        <table class="table table-bordered table-report-xs table-striped"
+                                   style="margin-bottom: 10px;">
                             <thead>
                                 <tr class="odo-bg-gray">
                                     <th class="text-center">SL</th>
@@ -74,10 +80,17 @@
                                                 <t t-esc="line['tenor']"/>
                                             </td>
                                             <td class="text-center">
-                                                <t t-esc="line['dispatch_to_sale']"/>
+                                                <!--<t t-esc="line['dispatch_to_sale']"/>-->
+                                                <t t-if="line['dispatch_to_sale']">
+                                                    <t t-esc="time.strftime('%d-%b-%Y',time.strptime(line['dispatch_to_sale'],'%Y-%m-%d'))"/>
+                                                </t>
                                             </td>
                                             <td class="text-center">
-                                                <t t-esc="line['dispatch_to_customer']"/>
+                                                <!--<t t-esc="line['dispatch_to_customer']"/>-->
+                                                <t t-if="line['dispatch_to_customer']">
+                                                    <t t-esc="time.strftime('%d-%b-%Y',time.strptime(line['dispatch_to_customer'],'%Y-%m-%d'))"/>
+                                                </t>
+
                                             </td>
                                             <td class="text-center">
                                                 <t t-esc="line['aging']"/>
@@ -89,7 +102,7 @@
                                                 <!--<t t-esc="line['']"/>-->
                                             </td>
                                             <td class="text-center">
-                                                <t t-raw="line['comments']"/>
+                                                <t t-esc="line['comment']" />
                                             </td>
                                             <td class="text-center">
                                                 <!--<t t-esc="line['']"/>-->
