@@ -32,6 +32,11 @@
         'reports/inspection_certificate.xml',
         'wizard/doc_receive_wizard_view.xml',
         'wizard/lc_sales_report_wizard.xml',
+        'wizard/sales_export_wizard_view.xml',
+        'wizard/buyer_export_wizard_view.xml',
+        'wizard/seller_bank_export_wizard_view.xml',
+        'wizard/buyer_bank_export_wizard_view.xml',
+        'wizard/maturity_export_wizard_view.xml',
     ],
 
     'summary': 'Sale By LC',
