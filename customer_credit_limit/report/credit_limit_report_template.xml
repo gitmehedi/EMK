@@ -8,12 +8,11 @@
                     <t t-foreach="docs" t-as="o">
                         <t t-call="report.external_layout">
                             <div class="page" style="page-break-inside:auto">
-
                                 <div class="row">
                                     <div class="col-xs-12" style="text-align:center;">
-                                        <h2>
+                                        <h4>
                                             <strong>Customer Credit Limit</strong>
-                                        </h2>
+                                        </h4>
                                     </div>
                                     <div class="col-xs-12" style="text-align:left;">
                                         <p>
@@ -31,14 +30,13 @@
                                         <tr style="background-color:#C0C0C0;">
                                             <th>SL</th>
                                             <th>Customer</th>
-                                            <th>Limit</th>
+                                            <th>Credit Limit</th>
                                             <th>Days</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         <t t-foreach="o.limit_ids" t-as="l">
                                             <tr style="page-break-inside: avoid">
-                                                <!--<td><span t-esc="l.sl_num"/></td>-->
                                                 <td>
                                                     <span t-esc="l_index+1"/>
                                                 </td>
@@ -61,7 +59,11 @@
                                         <span t-field="o.requested_by"/>
                                     </p>
                                     <p>
-                                        <b>First Approval by:</b>
+                                        <b>Sales Approval by:</b>
+                                        <span t-field="o.approver3_id"/>
+                                    </p>
+                                    <p>
+                                        <b>Accounts Approval by:</b>
                                         <span t-field="o.approver1_id"/>
                                     </p>
                                     <p>
