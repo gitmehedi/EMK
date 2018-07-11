@@ -7,7 +7,7 @@ class GenerateMonthlyDeliveryReport(models.Model):
 
     report_to = fields.Datetime(string="Report To", required=True,)
     report_from = fields.Datetime(string="Report From", required=True, )
-    product_id = fields.Many2one('product.product', string='Product',required=True,)
+    product_id = fields.Many2one('product.product', string='Product',required=True,domain="([('sale_ok','=','True')])",)
     operating_unit_id = fields.Many2one('operating.unit', string='OP Unit', required=True)
 
 
