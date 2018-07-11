@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="example_email_template1" model="mail.template">
+          <field name="name">Example e-mail template New</field>
+          <!--<field name="email_from">${object.company_id and object.company_id.email or ''}</field>-->
+          <!--<field name="subject">Congratz ${object.name}</field>-->
+          <!--<field name="email_to">${object.email_to}</field>-->
+          <field name="lang">${object.lang}</field>
+          <field name="model_id" ref="hr_employee_exit.model_hr_emp_exit_req"/>
+          <field name="auto_delete" eval="True"/>
+          <field name="body_html">
+              <![CDATA[<html>
+                <head></head>
+                <body style="margin: 0; padding: 0;">
+                    Good job!
+                    <p>Dear ${object.employee_id.name}</p>
+                    Regards,
+                    <p>${object.employee_id.company_id.name}</p>
+                </body>
+                </html>
+            ]]></field>
+        </record>
+
+    </data>
+</odoo>
