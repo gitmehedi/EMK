@@ -91,57 +91,6 @@
                                     </group>
                                 </page>
 
-                                <page string="Cash" attrs="{'invisible':[('so_type', '!=', 'cash')]}">
-                                    <field name="cash_ids">
-                                        <tree string="List" editable="bottom">
-                                            <field name="account_payment_id"/>
-                                            <field name="amount"/>
-                                            <field name="dep_bank"/>
-                                            <field name="branch"/>
-                                            <field name="validity"/>
-                                            <field name="payment_date" string="Payment Date"/>
-
-                                        </tree>
-                                    </field>
-                                </page>
-                                <page string="Cheque" attrs="{'invisible':[('so_type', '!=', 'cash')]}">
-                                    <field name="cheque_ids">
-                                        <tree string="List" editable="bottom">
-                                            <field name="account_payment_id"/>
-                                            <field name="amount"/>
-                                            <field name="number"/>
-                                            <field name="bank"/>
-                                            <field name="branch"/>
-                                            <field name="payment_date" string="Payment Date"/>
-                                        </tree>
-                                    </field>
-                                </page>
-                                <!--<page string="T.T" attrs="{'invisible':[('so_type', '!=', 'cash')]}">-->
-                                    <!--<field name="tt_ids">-->
-                                        <!--<tree string="List" editable="bottom">-->
-                                            <!--<field name="ref_num"/>-->
-                                            <!--<field name="bank"/>-->
-                                            <!--<field name="branch"/>-->
-                                            <!--<field name="amount"/>-->
-                                            <!--<field name="date"/>-->
-                                        <!--</tree>-->
-                                    <!--</field>-->
-                                <!--</page>-->
-                                <page string="L/C" attrs="{'invisible':[('so_type', '!=', 'lc_sales')]}">
-                                    <field name="lc_ids">
-                                        <tree string="List" editable="bottom">
-                                            <field name="number"/>
-                                            <field name="bank"/>
-                                            <field name="branch"/>
-                                            <field name="amount"/>
-                                            <field name="date"/>
-                                            <field name="tenure"/>
-                                            <field name="transportation"/>
-                                            <field name="lc_type"/>
-                                            <field name="pi_id"/>
-                                        </tree>
-                                    </field>
-                                </page>
                             </notebook>
                             <group class="oe_subtotal_footer oe_right" colspan="2" name="sale_total">
                                 <field name="amount_untaxed" widget='monetary'

@@ -10,7 +10,7 @@
             <field name="arch" type="xml">
                 <data>
                     <xpath expr="//page[@name='sales_purchases']" position="after">
-                        <page groups="sales_team.group_sale_salesman" string="Credit Limit" attrs="{'invisible': [('customer', '=', False)]}">
+                        <page groups="sales_team.group_sale_salesman,account.group_account_user" string="Credit Limit" attrs="{'invisible': [('customer', '=', False)]}">
                             <group>
                                 <field name="credit_limit"/>
                                 <field name="remaining_credit_limit" invisible="0"/>

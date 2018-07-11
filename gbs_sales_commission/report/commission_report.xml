@@ -57,6 +57,7 @@
                                         <table class="table table-bordered" style="padding: 15px 0px;">
                                             <thead>
                                                 <tr style="background-color:#C0C0C0;">
+                                                    <th>SL</th>
                                                     <th>Customer</th>
                                                     <th>Old Value</th>
                                                     <th>New Value</th>
@@ -66,13 +67,16 @@
                                                 <t t-foreach="doc.config_customer_ids" t-as="p">
                                                     <tr style="page-break-inside: avoid">
                                                         <td>
+                                                            <span t-esc="p_index+1"/>
+                                                        </td>
+                                                        <td>
                                                             <span t-esc="p.customer_id.name"/>
                                                         </td>
                                                         <td>
-                                                            <span t-esc="p.old_value"/>
+                                                            <span t-esc="'%.2f'%(p.old_value)"/>
                                                         </td>
                                                         <td>
-                                                            <span t-esc="p.new_value"/>
+                                                            <span t-esc="'%.2f'%(p.new_value)"/>
                                                         </td>
                                                     </tr>
                                                 </t>

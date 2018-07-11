@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <data>
+        <report
+            id = "app_form"
+            string = "Application Form"
+            model = "hr.applicant"
+            report_type = "qweb-pdf"
+            file ="website_job_application.app_form_template"
+            name ="website_job_application.app_form_template"
+        />
+
+
+        <record id="app_form" model="ir.actions.report.xml">
+            <field name="paperformat_id" ref="paperformat_application"/>
+        </record>
+    </data>
+</odoo>
