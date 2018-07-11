@@ -12,6 +12,6 @@ class ExtendWebsite(Website):
             if request.env['res.users'].browse(request.uid).has_group('base.group_user'):
                 redirect = '/web?' + request.httprequest.query_string
             else:
-                redirect = '/'
+                return request.render('web.login')
             return http.redirect_with_hash(redirect)
         return response

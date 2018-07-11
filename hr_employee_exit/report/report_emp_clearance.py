@@ -20,13 +20,17 @@ class LoanReport(models.AbstractModel):
         checklist=[]
         if exit_obj.checklists_ids:
             for line in exit_obj.checklists_ids:
-                user = line.responsible_department.name
-                list_obj={}
-                list_obj['responsible_department'] = line.responsible_department.name
-                list_obj['user'] = {}
-                list_obj['user']['checklist_item'] = line.checklist_item_id.name
-                list_obj['user']['remarks']  = line.remarks
-                list_obj['user']['state']  = line.state
+                dept_list=[]
+                dept= line.responsible_department
+                dept_list.append(dept)
+                for dept in dept_list:
+                    if dept == line.responsible_department:
+                        list_obj={}
+                        list_obj['responsible_department'] = line.responsible_department.name
+                        list_obj['user'] = {}
+                        list_obj['user']['checklist_item'] = line.checklist_item_id.name
+                        list_obj['user']['remarks']  = line.remarks
+                        list_obj['user']['state']  = line.state
 
                 checklist.append(list_obj)
 

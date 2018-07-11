@@ -15,12 +15,12 @@ class DOProductLineLayer(models.Model):
     price_subtotal = fields.Float(string="Subtotal", readonly=True)
     tax_id = fields.Many2one('account.tax', string='Tax', readonly=True)
 
-    state = fields.Selection([
-        ('draft', "To Submit"),
-        ('validate', "To Approve"),
-        ('approve', "Second Approval"),
-        ('close', "Approved")
-    ], default='draft')
+    # state = fields.Selection([
+    #     ('draft', "To Submit"),
+    #     ('validate', "To Approve"),
+    #     ('approve', "Second Approval"),
+    #     ('close', "Approved")
+    # ], default='draft')
 
     deli_mode = fields.Selection([
         ('bonded', 'Bonded'),
