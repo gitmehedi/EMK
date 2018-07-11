@@ -387,6 +387,32 @@
             </field>
         </record>
 
+        <record id="inherited_sale_order_tree_view" model="ir.ui.view">
+            <field name="name">sale.order.inherited.tree</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.view_order_tree"/>
+            <field name="arch" type="xml">
+                <field name="partner_id" position="after">
+                    <field name="type_id" string="Sale Order Type"/>
+                </field>
+
+            </field>
+        </record>
+
+        <record id="inherited_sale_quotation_tree_view" model="ir.ui.view">
+            <field name="name">sale.quotation.inherited.tree</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.view_quotation_tree"/>
+            <field name="arch" type="xml">
+                <field name="partner_id" position="after">
+                    <field name="type_id" string="Sale Order Type"/>
+                </field>
+
+            </field>
+        </record>
+
+
+
 
         <record id="gbs_sale_order_action_pendding_orders" model="ir.actions.act_window">
             <field name="name">Sales Orders</field>

@@ -23,7 +23,7 @@ class DeliveryAuthorization(models.Model):
     deli_address = fields.Char('Delivery Address', readonly=True, states={'draft': [('readonly', False)]})
 
     parent_id = fields.Many2one('res.partner', 'Customer', ondelete='cascade', readonly=True,
-                                related='sale_order_id.partner_id')
+                                related='sale_order_id.partner_id',track_visibility='onchange')
     payment_term_id = fields.Many2one('account.payment.term', string='Payment Terms', readonly=True,
                                       related='sale_order_id.payment_term_id')
     warehouse_id = fields.Many2one('stock.warehouse', string='Warehouse', readonly=True,
@@ -48,7 +48,7 @@ class DeliveryAuthorization(models.Model):
                                         'validate': [('invisible', True)],
                                         'close': [('invisible', False), ('readonly', True)],
                                         'approve': [('invisible', False), ('readonly', True)]})
-    confirmed_date = fields.Date(string="Approval Date", _defaults=lambda *a: time.strftime('%Y-%m-%d'), readonly=True)
+    confirmed_date = fields.Date(string="Approval Date", _defaults=lambda *a: time.strftime('%Y-%m-%d'), readonly=True,track_visibility='onchange')
     so_type = fields.Selection([
         ('cash', 'Cash'),
         ('credit_sales', 'Credit'),
@@ -61,7 +61,7 @@ class DeliveryAuthorization(models.Model):
         ('approve', "Second Approval"),
         ('close', "Approved"),
         ('refused', 'Refused'),
-    ], default='draft')
+    ], default='draft',track_visibility='onchange')
 
     company_id = fields.Many2one('res.company', string='Company', readonly=True,
                                  default=lambda self: self.env.user.company_id)
@@ -92,13 +92,13 @@ class DeliveryAuthorization(models.Model):
     """ Payment information"""
     amount_untaxed = fields.Float(string='Untaxed Amount', readonly=True)
     tax_value = fields.Float(string='Taxes', readonly=True)
-    total_amount = fields.Float(string='Total', readonly=True)
+    total_amount = fields.Float(string='Total', readonly=True,track_visibility='onchange')
 
     sale_order_id = fields.Many2one('sale.order',
                                     string='Sale Order',
                                     readonly=True,
                                     domain=[('da_btn_show_hide', '=', False), ('state', '=', 'done')],
-                                    states={'draft': [('readonly', False)]})
+                                    states={'draft': [('readonly', False)]},track_visibility='onchange')
 
 
     @api.multi
@@ -290,6 +290,11 @@ class DeliveryAuthorization(models.Model):
             [('state','!=','draft'),('is_this_payment_checked', '=', False), ('sale_order_id', '=', self.sale_order_id.id),
              ('partner_id', '=', self.parent_id.id)])
 
+        cheque_rcv_pool = self.env['accounting.cheque.received'].search(
+            [('partner_id', '=', self.sale_order_id.partner_id.id), ('state', '=', 'honoured'),
+             ('sale_order_id', '=', self.sale_order_id.id)])
+
+
         if not self.line_ids:
             return self.write({'state': 'approve'})  # Only Second level approval
 
@@ -307,15 +312,18 @@ class DeliveryAuthorization(models.Model):
 
         if not total_cash_cheque_amount or total_cash_cheque_amount == 0:
             account_payment_pool.write({'is_this_payment_checked': True})
+            cheque_rcv_pool.write({'is_this_payment_checked': True})
             return self.write({'state': 'approve'})  # Only Second level approval
 
         if total_cash_cheque_amount >= self.total_amount:
             account_payment_pool.write({'is_this_payment_checked': True})
+            cheque_rcv_pool.write({'is_this_payment_checked': True})
             # self.create_delivery_order()
             self.update_sale_order_da_qty()
             return self.write({'state': 'close'})  # directly go to final approval level
         else:
             account_payment_pool.write({'is_this_payment_checked': True})
+            cheque_rcv_pool.write({'is_this_payment_checked': True})
             return self.write({'state': 'approve'})  # Only Second level approval
 
 
@@ -366,6 +374,7 @@ class DeliveryAuthorization(models.Model):
         for payments in account_payment_pool:
             if payments.journal_id.type == 'bank':
                 self.set_cheque_info_automatically(account_payment_pool)
+                self.process_cheque_payment()
             elif payments.journal_id.type == 'cash':
                 self.set_payment_info_automatically(account_payment_pool)
 
@@ -441,6 +450,8 @@ class DeliveryAuthorization(models.Model):
 
 
     def action_process_unattached_payments(self):
+        self.process_cheque_payment()
+
         account_payment_pool = self.env['account.payment'].search(
             [('state','!=','draft'),('is_this_payment_checked', '=', False), ('sale_order_id', '=', self.sale_order_id.id)])
 
@@ -463,6 +474,7 @@ class DeliveryAuthorization(models.Model):
                 self.cash_ids = vals
 
             elif acc.journal_id.type == 'bank':
+
                 val_bank = []
                 for bank_line in self.cheque_ids:
                     val_bank.append(bank_line.account_payment_id.id)
@@ -476,9 +488,37 @@ class DeliveryAuthorization(models.Model):
                                                  'bank': bank_payments.deposited_bank,
                                                  'branch': bank_payments.bank_branch,
                                                  'payment_date': bank_payments.payment_date,
+                                                 'number': bank_payments.cheque_no
                                                  }))
 
                 self.cheque_ids = vals_bank
+
+
+    @api.multi
+    def process_cheque_payment(self):
+        vals = []
+        for pay in self:
+            cheque_rcv_pool = pay.env['accounting.cheque.received'].search(
+                [('partner_id','=',pay.sale_order_id.partner_id.id),('state', '=', 'honoured'), ('sale_order_id', '=', pay.sale_order_id.id)])
+
+            val_bank = []
+            for bank_line in self.cheque_ids:
+                val_bank.append(bank_line.cheque_info_id)
+
+
+            for payments in cheque_rcv_pool:
+                if payments.journal_id.type != 'cash':
+                    if not payments.is_this_payment_checked and payments.id not in val_bank:
+                        vals.append((0, 0, {'cheque_info_id': payments.id,
+                                            'amount': payments.cheque_amount,
+                                            'bank': payments.bank_name.name,
+                                            'branch': payments.branch_name,
+                                            'payment_date': payments.payment_date,
+                                            'number': payments.cheque_no,
+                                            }))
+
+            pay.cheque_ids = vals
+
 
 
     ################

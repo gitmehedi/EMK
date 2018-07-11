@@ -24,7 +24,7 @@ class DeliveryOrder(models.Model):
     deli_address = fields.Char('Delivery Address', readonly=True, states={'draft': [('readonly', False)]})
 
     parent_id = fields.Many2one('res.partner', 'Customer', ondelete='cascade', readonly=True,
-                                related='delivery_order_id.sale_order_id.partner_id')
+                                related='delivery_order_id.sale_order_id.partner_id',track_visibility='onchange')
     payment_term_id = fields.Many2one('account.payment.term', string='Payment Terms', readonly=True,
                                       related='delivery_order_id.sale_order_id.payment_term_id')
     warehouse_id = fields.Many2one('stock.warehouse', string='Warehouse', readonly=True,
@@ -55,7 +55,7 @@ class DeliveryOrder(models.Model):
     state = fields.Selection([
         ('draft', "Submit"),
         ('approved', "Approved"),
-    ], default='draft')
+    ], default='draft',track_visibility='onchange')
 
     company_id = fields.Many2one('res.company', string='Company', readonly=True,
                                  default=lambda self: self.env.user.company_id)
@@ -88,7 +88,7 @@ class DeliveryOrder(models.Model):
 
 
     """ Payment information"""
-    amount_untaxed = fields.Float(string='Untaxed Amount', readonly=True)
+    amount_untaxed = fields.Float(string='Untaxed Amount', readonly=True,track_visibility='onchange')
     tax_value = fields.Float(string='Taxes', readonly=True)
     total_amount = fields.Float(string='Total', readonly=True)
 
