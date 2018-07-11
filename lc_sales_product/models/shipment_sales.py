@@ -10,11 +10,12 @@ class Shipment(models.Model):
                                  domain=[('sale_type_id.sale_order_type', '=','lc_sales'),
                                          ('state', '=', 'open')])
 
-    to_sales_date = fields.Date('Dispatch to Sales')
-    to_buyer_date = fields.Date('Dispatch to Party')
-    to_seller_bank_date = fields.Date('Beneficiary Bank Receive')
-    to_buyer_bank_date = fields.Date('Party Bank Receive')
-    to_maturity_date = fields.Date('Maturity Date')
+    to_sales_date = fields.Date('Dispatch to Sales', track_visibility='onchange')
+    to_buyer_date = fields.Date('Dispatch to Party', track_visibility='onchange')
+    to_seller_bank_date = fields.Date('Seller Bank Receive', track_visibility='onchange')
+    to_buyer_bank_date = fields.Date('Buyer Bank Receive', track_visibility='onchange')
+    to_maturity_date = fields.Date('Maturity Date', track_visibility='onchange')
+    bill_id = fields.Char('Bill ID', track_visibility='onchange')
 
     # Existing state override
     state = fields.Selection(
@@ -27,12 +28,12 @@ class Shipment(models.Model):
          ('approve_cnf_quotation', "Approve"),
          ('cnf_clear', "C&F Clear"),
          ('gate_in', "Gate In"),
-         ('done', "Done"),
          ('to_sales',"To Sales"),
          ('to_buyer',"To Buyer"),
          ('to_seller_bank',"To Seller Bank"),
          ('to_buyer_bank',"To Buyer Bank"),
          ('to_maturity', "To Maturity"),
+         ('done', "Done"),
          ('cancel', "Cancel")], default='draft', track_visibility='onchange')
 
 
@@ -108,4 +109,78 @@ class Shipment(models.Model):
         return result
     # State Change Actions
 
+#########################################################################################
+    @api.multi
+    def action_to_sales_export(self):
+        res = self.env.ref('lc_sales_product.to_sales_export_wizard')
+        result = {
+            'name': _('Please Enter The Information'),
+            'view_type': 'form',
+            'view_mode': 'form',
+            'view_id': res and res.id or False,
+            'res_model': 'to.sales.export.wizard',
+            'type': 'ir.actions.act_window',
+            'nodestroy': True,
+            'target': 'new',
+        }
+        return result
 
+    @api.multi
+    def action_to_buyer_export(self):
+        res = self.env.ref('lc_sales_product.to_buyer_export_wizard')
+        result = {
+            'name': _('Please Enter The Information'),
+            'view_type': 'form',
+            'view_mode': 'form',
+            'view_id': res and res.id or False,
+            'res_model': 'to.buyer.export.wizard',
+            'type': 'ir.actions.act_window',
+            'nodestroy': True,
+            'target': 'new',
+        }
+        return result
+
+    @api.multi
+    def action_to_seller_bank_export(self):
+        res = self.env.ref('lc_sales_product.to_seller_bank_export_wizard')
+        result = {
+            'name': _('Please Enter The Information'),
+            'view_type': 'form',
+            'view_mode': 'form',
+            'view_id': res and res.id or False,
+            'res_model': 'to.seller.bank.export.wizard',
+            'type': 'ir.actions.act_window',
+            'nodestroy': True,
+            'target': 'new',
+        }
+        return result
+
+    @api.multi
+    def action_to_buyer_bank_export(self):
+        res = self.env.ref('lc_sales_product.to_buyer_bank_export_wizard')
+        result = {
+            'name': _('Please Enter The Information'),
+            'view_type': 'form',
+            'view_mode': 'form',
+            'view_id': res and res.id or False,
+            'res_model': 'to.buyer.bank.export.wizard',
+            'type': 'ir.actions.act_window',
+            'nodestroy': True,
+            'target': 'new',
+        }
+        return result
+
+    @api.multi
+    def action_to_maturity_export(self):
+        res = self.env.ref('lc_sales_product.to_maturity_export_wizard')
+        result = {
+            'name': _('Please Enter The Information'),
+            'view_type': 'form',
+            'view_mode': 'form',
+            'view_id': res and res.id or False,
+            'res_model': 'to.maturity.export.wizard',
+            'type': 'ir.actions.act_window',
+            'nodestroy': True,
+            'target': 'new',
+        }
+        return result
