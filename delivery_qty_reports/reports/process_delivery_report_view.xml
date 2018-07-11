@@ -18,14 +18,19 @@
                     <div class="page">
                         <div class="row">
                             <center>
-                                <h6>Daily Delivered &amp; Undelivered Report</h6>
+                                <h3>Daily Delivered &amp; Undelivered Report</h3>
                             </center>
-                            <h6>Date:
+                            <h5>Date:
                                 <span t-esc="report_of_day"/>
-                            </h6>
-                            <!--<h6>Product Name:-->
-
-                            <!--</h6>-->
+                            </h5>
+                            <h5>
+                                <strong>Product Name:</strong>
+                                <span t-esc="product_name_for_report"/>
+                            </h5>
+                            <div class="text-right">
+                                <strong>Operating Unit:</strong>
+                                <span t-esc="operating_unit_name"/>
+                            </div>
                             <table class="table table-report-sm table-bordered table-striped">
                                 <thead>
                                     <tr
@@ -45,7 +50,6 @@
                                 </thead>
 
                                 <tbody>
-
                                     <t t-foreach="do_list" t-as="k">
                                         <tr>
                                             <td>
@@ -64,16 +68,16 @@
                                                 <span t-esc="k['uom']"/>
                                             </td>
                                             <td class="text-right">
-                                                <span t-esc="k['do_qty']"/>
+                                                <span t-esc="'%.2f'%k['do_qty']"/>
                                             </td>
                                             <td class="text-right">
                                                 <span t-esc="k['issued_do_today']"/>
                                             </td>
                                             <td class="text-right">
-                                                <span t-esc="k['delivered_qty']"/>
+                                                <span t-esc="'%.2f'%k['delivered_qty']"/>
                                             </td>
                                             <td class="text-right">
-                                                <span t-esc="k['un_delivered_qty']"/>
+                                                <span t-esc="'%.2f'%k['un_delivered_qty']"/>
                                             </td>
                                             <td style="text-align: center;">
                                                 <span t-esc="k['product']"/>
@@ -89,22 +93,26 @@
                                         </td>
                                         <td></td>
                                         <td></td>
-                                        <td></td>
+                                        <td>
+                                            <b>
+                                                <span t-esc="'%.2f'%total_do_qty"/>
+                                            </b>
+                                        </td>
                                         <td></td>
                                         <td></td>
                                         <td class="text-right">
                                             <b>
-                                                <span t-esc="issued_do_sum_list"/>
+                                                <span t-esc="'%.2f'%issued_do_sum_list"/>
                                             </b>
                                         </td>
                                         <td class="text-right">
                                             <b>
-                                                <span t-esc="delivery_qty_sum_list"/>
+                                                <span t-esc="'%.2f'%delivery_qty_sum_list"/>
                                             </b>
                                         </td>
                                         <td class="text-right">
                                             <b>
-                                                <span t-esc="undelivery_qty_sum_list"/>
+                                                <span t-esc="'%.2f'%undelivery_qty_sum_list"/>
                                             </b>
                                         </td>
                                         <td></td>
@@ -112,7 +120,7 @@
 
                                 </tbody>
                             </table>
-                             <t t-call="custom_report.report_signing"></t>
+                            <t t-call="custom_report.report_signing"></t>
                         </div>
                     </div>
                 </t>

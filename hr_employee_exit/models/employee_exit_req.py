@@ -1,4 +1,4 @@
-from odoo import models, fields, api, exceptions,_
+from odoo import models, fields, api, exceptions,tools,_
 import datetime
 import time
 from dateutil.relativedelta import relativedelta
@@ -137,22 +137,33 @@ class EmployeeExitReq(models.Model):
             [('name', '=', 'group_hr_manager')], limit=1)
         record_id = model_data_pool.res_id
         manager = self.env['res.groups'].search([('id', '=', record_id)]).users
-        emp = self.employee_id
+        emp = self.employee_id.name
         emailto = []
         for eml in manager:
             login= eml.login
             emailto.append(login)
         emailto.append(self.employee_id.parent_id.user_id.login)
+        template = self.env.ref('hr_employee_exit.example_email_template1')
+        #mailing.write({'body_html': self.env['mail.template']._replace_local_links(template.body_html)})
+        #self.env['mail.template']._replace_local_links(template.body_html),
+
         for email in emailto:
             template_data = {
-                'subject': 'emp'+'request is approved',
-                'body_html': 'Dear Sir,'+'emp'+'request is approved',
+                'subject': emp+' request is approved',
+                'body_html': self.env['mail.template'].browse(template.id).send_mail(self.id),
                 'email_from': email_server_obj,
                 'email_to': email
             }
             template_id = template_obj.create(template_data)
         template_obj.send(template_id)
         return self.write({'state': 'validate','approved2_date': time.strftime('%Y-%m-%d %H:%M:%S')})
+
+    @api.multi
+    def send_mail_template(self):
+        template = self.env.ref('hr_employee_exit.example_email_template1')
+        self.env['mail.template'].browse(template.id).send_mail(self.id)
+
+
 
     @api.multi
     def exit_refuse(self):
@@ -167,6 +178,11 @@ class EmployeeExitReq(models.Model):
     def _check_last_date(self):
         if self.req_date > self.last_date :
             raise Warning('Last Date must be grater than request date.')
+
+    # @api.multi
+    # def send_mail_template(self):
+    #     template = self.env.ref('hr_employee_exit.example_email_template')
+    #     self.env['mail.template'].browse(template.id).send_mail(self.id)
 
 
 class EmpReqChecklistsLine(models.Model):
