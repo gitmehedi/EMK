@@ -95,22 +95,13 @@
                         <page string="Others">
                             <group>
                                 <group>
-                                    <field name="requested_date"/>
-                                    <field name="requested_by"
-                                           options="{'no_open': True, 'no_create': True}"/>
+                                    <field name="requested_by"/>
+                                    <field name="approver3_id"/>
+                                    <field name="approver2_id"/>
+                                    <field name="approver1_id"/>
                                 </group>
                                 <group>
                                     <field name="approved_date"/>
-                                    <field name="approver1_id"
-                                           attrs="{'invisible': [('state','in',('draft','validate','approve'))]}"
-                                           options="{'no_open': True, 'no_create': True}"/>
-                                </group>
-                                <group>
-                                    <field name="confirmed_date"
-                                           attrs="{'invisible': [('state','in',('draft','validate','approve'))]}"/>
-                                    <field name="approver2_id"
-                                           attrs="{'invisible':['|', ('state','=','draft'),('state','=','validate')]}"
-                                           options="{'no_open': True, 'no_create': True}"/>
                                 </group>
                             </group>
                         </page>
@@ -123,17 +114,6 @@
             </form>
         </field>
     </record>
-
-
-    <!--<record id="search_view_cust_commission" model="ir.ui.view">-->
-    <!--<field name="name">customer.commission.configuration.search</field>-->
-    <!--<field name="model">customer.commission.configuration</field>-->
-    <!--<field name="arch" type="xml">-->
-    <!--<search string="Customer Commission">-->
-    <!--<filter name="validate" string="To Approve" domain="[('state','=','validate')]"/>-->
-    <!--</search>-->
-    <!--</field>-->
-    <!--</record>-->
 
     <record id="sale_customer_commission_configuration_tree" model="ir.ui.view">
         <field name="name">Customer Commission Configuration Tree</field>

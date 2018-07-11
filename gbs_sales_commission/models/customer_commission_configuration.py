@@ -6,18 +6,21 @@ from odoo import api, fields, models, _
 
 class CustomerCommissionConfiguration(models.Model):
     _name = "customer.commission.configuration"
-    _rec_name = 'name'
-
     _inherit = ['mail.thread', 'ir.needaction_mixin']
     _order = 'id DESC'
 
+    _description = "Customer Commission"
+    _rec_name = 'name'
+
     name = fields.Char(string='Name', index=True, readonly=True)
-    requested_date = fields.Date(string="Requested Date", default=datetime.date.today(), readonly=True)
+    requested_date = fields.Date(string="Requested Date", track_visibility='onchange', default=datetime.date.today(), readonly=True)
     approved_date = fields.Date('Approved Date',
                                 states={'draft': [('invisible', True)],
                                         'validate': [('invisible', True)],
+                                        'validate2': [('invisible', True)],
                                         'close': [('invisible', False), ('readonly', True)],
-                                        'approve': [('invisible', False), ('readonly', True)]})
+                                        'approve': [('invisible', True), ('readonly', True)]},
+                                track_visibility='onchange')
     confirmed_date = fields.Date(string="Confirmed Date", _defaults=lambda *a: time.strftime('%Y-%m-%d'), readonly=True)
 
     status = fields.Boolean(string='Status', default=True, required=True)
@@ -36,10 +39,11 @@ class CustomerCommissionConfiguration(models.Model):
     customer_id = fields.Many2one('res.partner', string="Customer", domain="([('customer','=','True')])",
                                   readonly=True, states={'draft': [('readonly', False)]})
     requested_by = fields.Many2one('res.users', string="Requested By", default=lambda self: self.env.user,
-                                   readonly=True)
+                                   readonly=True, track_visibility='onchange')
 
-    approver1_id = fields.Many2one('res.users', string="Approved By", readonly=True)
-    approver2_id = fields.Many2one('res.users', string="Confirmed By", readonly=True)
+    approver1_id = fields.Many2one('res.users', string="Final Approval By", readonly=True, track_visibility='onchange')
+    approver2_id = fields.Many2one('res.users', string="Accounts Approval By", readonly=True, track_visibility='onchange')
+    approver3_id = fields.Many2one('res.users', string="Sales Approval By", readonly=True, track_visibility='onchange')
 
     config_product_ids = fields.One2many('customer.commission.configuration.product', 'config_parent_id',
                                          readonly=True, states={'draft': [('readonly', False)]})
@@ -60,14 +64,13 @@ class CustomerCommissionConfiguration(models.Model):
 
     def action_sales_head(self):
         self.state = 'validate2'
-
+        self.approver3_id = self.env.user
 
 
     ### Showing batch
     @api.model
     def _needaction_domain_get(self):
         return [('state', 'in', ['validate'])]
-
 
     ## mail notification
     # @api.multi
@@ -87,6 +90,7 @@ class CustomerCommissionConfiguration(models.Model):
         seq = self.env['ir.sequence'].next_by_code('customer.commission.configuration') or '/'
         vals['name'] = seq
         return super(CustomerCommissionConfiguration, self).create(vals)
+
 
     @api.onchange('product_id')
     def onchange_product_id(self):
@@ -122,6 +126,7 @@ class CustomerCommissionConfiguration(models.Model):
                     else:
                         rec.old_value = 0
 
+
     @api.onchange('customer_id')
     def onchange_customer_id(self):
         for rec in self.config_product_ids:
@@ -135,6 +140,7 @@ class CustomerCommissionConfiguration(models.Model):
                         rec.old_value = coms.commission_rate
                 else:
                     rec.old_value = 0
+
 
     @api.multi
     def action_cancel(self):
@@ -154,6 +160,7 @@ class CustomerCommissionConfiguration(models.Model):
     def name_get(self):
         result = []
         for record in self:
+            name = ''
 
             if record.product_id:
                 name = "Commission of Product [%s]" % (record.product_id.name)
@@ -162,19 +169,23 @@ class CustomerCommissionConfiguration(models.Model):
             result.append((record.id, name))
         return result
 
+
     @api.one
     def action_draft(self):
         self.state = 'draft'
+
 
     @api.one
     def action_approve(self):
         self.state = 'approve'
         self.approver2_id = self.env.user
-        return self.write({'state': 'approve', 'approved_date': time.strftime('%Y-%m-%d %H:%M:%S')})
+        return self.write({'state': 'approve'})
+
 
     @api.one
     def action_validate(self):
         self.state = 'validate'
+
 
     @api.one
     def action_close(self):
@@ -235,7 +246,8 @@ class CustomerCommissionConfiguration(models.Model):
                 cusComLine.create(val_line)
 
         self.approver1_id = self.env.user
-        return self.write({'state': 'close', 'confirmed_date': time.strftime('%Y-%m-%d %H:%M:%S')})
+        return self.write({'state': 'close', 'approved_date': time.strftime('%Y-%m-%d %H:%M:%S')})
+
 
     @api.multi
     def unlink(self):

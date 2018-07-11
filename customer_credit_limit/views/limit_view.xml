@@ -42,8 +42,8 @@
                                 groups="sales_team.group_sale_salesman_all_leads,gbs_application_group.group_head_account,gbs_application_group.group_head_sale,gbs_application_group.group_cxo"/>
 
                         <!--<button string="Generate Limit" name="%(action_creditlimit_by_partner)d" type="action"-->
-                                <!--states="draft" class="oe_highlight"-->
-                                <!--groups="sales_team.group_sale_salesman_all_leads,gbs_application_group.group_head_account,gbs_application_group.group_head_sale,gbs_application_group.group_cxo"/>-->
+                        <!--states="draft" class="oe_highlight"-->
+                        <!--groups="sales_team.group_sale_salesman_all_leads,gbs_application_group.group_head_account,gbs_application_group.group_head_sale,gbs_application_group.group_cxo"/>-->
 
 
                         <button string="Approve" name="action_validate_sales_head" type="object" states="confirm"
@@ -61,7 +61,8 @@
                         <button string="Refuse" name="action_refuse" type="object" states="confirm,validate,validate1"
                                 groups="gbs_application_group.group_head_sale,gbs_application_group.group_head_account,gbs_application_group.group_cxo"/>
 
-                        <field name="state" widget="statusbar" statusbar_visible="draft,confirm,validate,validate1,approve"/>
+                        <field name="state" widget="statusbar"
+                               statusbar_visible="draft,confirm,validate,validate1,approve"/>
 
                     </header>
                     <sheet>
@@ -71,27 +72,30 @@
                         <group>
                             <group>
                                 <field name="credit_limit"/>
-                                <!--<field name="remaining_credit_limit" invisible="1"/>-->
                                 <field name="days"/>
                             </group>
                             <group>
                                 <field name="approve_date"/>
                             </group>
-                            <field name="requested_by"
-                                   attrs="{'invisible': [('state','in',('draft','confirm','validate1','approve','cancel','refuse'))]}"/>
-                            <field name="approver1_id" invisible='1'/>
-                            <field name="approver2_id" invisible='1'/>
                             <notebook colspan="4">
                                 <page string="Customers">
                                     <field name="limit_ids">
                                         <tree string="List" editable="bottom">
-                                            <!--<field name="sl_num" invisible = '1'/>-->
                                             <field name="partner_id"
                                                    options="{'no_quick_create':True,'no_create_edit':True,'no_open':True}"/>
                                             <field name="value"/>
                                             <field name="day_num"/>
                                         </tree>
                                     </field>
+                                </page>
+                                <page string="Others">
+                                    <group>
+                                        <field name="requested_by"/>
+                                        <field name="approver3_id"/>
+                                        <field name="approver1_id"/>
+                                        <field name="approver2_id"/>
+
+                                    </group>
                                 </page>
                             </notebook>
                         </group>
