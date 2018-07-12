@@ -109,7 +109,7 @@
                                             <field name="name" readonly='1'/>
                                             <field name="product_qty" string="LC Qty" readonly='1'/>
                                             <field name="product_uom" string="UOM" readonly='1'/>
-                                             <field name="product_received_qty" string="Delivery Qty" readonly='1'/>
+                                             <field name="product_received_qty" string="Shipment Qty" readonly='1'/>
                                             <field name="price_unit" readonly='1'/>
                                         </tree>
                                     </field>
@@ -155,8 +155,8 @@
                                     <field name="old_revision_ids" >
                                         <tree>
                                             <field name='name'/>
-                                            <field name='create_date' string="Superseeded on"/>
-                                            <field name='create_uid' string="Superseeded by"/>
+                                            <field name='amendment_date' string="Amendment On"/>
+                                            <field name='create_uid' string="Amendment By"/>
                                             <field name='state' invisible='1'/>
                                         </tree>
                                     </field>
