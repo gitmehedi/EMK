@@ -37,6 +37,7 @@
         'wizard/seller_bank_export_wizard_view.xml',
         'wizard/buyer_bank_export_wizard_view.xml',
         'wizard/maturity_export_wizard_view.xml',
+        'wizard/lc_amendment_wizard_view.xml',
     ],
 
     'summary': 'Sale By LC',
