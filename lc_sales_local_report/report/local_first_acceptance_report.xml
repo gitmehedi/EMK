@@ -26,46 +26,47 @@
                         <div class="clearfix">
                             <h4 class="report-title">First Acceptance Report</h4>
                             <div class="row" style="padding-bottom:2px;">
-                                <div class="col-xs-8 text-left">
-                                    <div><strong>Reported On: </strong><span t-esc="context_timestamp(datetime.datetime.now()).strftime('%m/%d/%Y, %H:%M %p')"/></div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-xs-8 text-left">
+                                <div class="col-xs-6 text-left">
                                     <strong>Product: </strong><span t-esc="record['product_temp_name']"/>
+                                </div>
+                                <div class="col-xs-6 text-right">
+                                    <div><strong>Reported On: </strong><span t-esc="context_timestamp(datetime.datetime.now()).strftime('%m/%d/%Y, %H:%M %p')"/></div>
                                 </div>
                             </div>
                         </div>
                         <table class="table table-bordered table-report-xs table-striped"
-                                   style="margin-bottom: 10px;">
+                                   style="margin-bottom: 10px;table-layout: fixed;">
                             <thead>
                                 <tr class="odo-bg-gray">
-                                    <th class="text-center">SL</th>
-                                    <th class="text-center">Customer</th>
-                                    <th class="text-center">L/C No</th>
-                                    <th class="text-center">Shipment No</th>
-                                    <th class="text-center">Value</th>
-                                    <th class="text-center">Tenor</th>
-                                    <th class="text-center">Dispatch To Sales</th>
-                                    <th class="text-center">Dispatch To Customer</th>
-                                    <th class="text-center">Aging</th>
-                                    <th class="text-center">First Delivery</th>
-                                    <th class="text-center">Last Delivery</th>
-                                    <th class="text-center">Remarks/Status</th>
-                                    <th class="text-center">F.P.R</th>
-                                    <th class="text-center">Customer Bank</th>
-                                    <th class="text-center">Beneficiary Bank</th>
+                                    <th class="text-center" style="width:3%;">SL</th>
+                                    <th class="text-center" style="width:15%;">Customer</th>
+                                    <th class="text-center" style="width:8%;">L/C No</th>
+                                    <th class="text-center" style="width:8%;">Shipment No</th>
+                                    <th class="text-center" style="width:8%;">Value</th>
+                                    <th class="text-center" style="width:4%;">Tenor</th>
+                                    <th class="text-center" style="width:6%;">Dispatch To Sales</th>
+                                    <th class="text-center" style="width:6%;">Dispatch To Customer</th>
+                                    <th class="text-center" style="width:4%;">Aging</th>
+                                    <th class="text-center" style="width:6%;">First Delivery</th>
+                                    <th class="text-center" style="width:6%;">Last Delivery</th>
+                                    <th class="text-center" style="width:10%;">Remarks/Status</th>
+                                    <th class="text-center" style="width:8%;">F.P.R</th>
+                                    <th class="text-center" style="width:8%;">Customer Bank</th>
+                                    <!--<th class="text-center">Beneficiary Bank</th>-->
                                 </tr>
                             </thead>
                             <tbody>
                                 <t t-if="lines">
                                     <t t-foreach="lines" t-as="line">
                                         <tr>
-                                            <td>
+                                            <td class="text-left">
                                                 <t t-esc="line_index+1"/>
                                             </td>
                                             <td class="text-left">
-                                                <t t-esc="line['customer']"/>
+                                                <span t-esc="line['customer']" />&amp;nbsp;
+                                                <t t-if="line['beneficiary_bank']">
+                                                    (<span t-esc="line['beneficiary_bank']"/>)
+                                                </t>
                                             </td>
                                             <td class="text-left">
                                                 <t t-esc="line['lc_name']"/>
@@ -73,8 +74,8 @@
                                             <td class="text-left">
                                                 <t t-esc="line['shipment_name']"/>
                                             </td>
-                                            <td >
-                                                <span class="text-left" t-esc="line['currency']"/><span class="text-right" t-esc="line['value']"/>
+                                            <td class="text-center">
+                                                <span t-esc="line['currency']"/>&amp;nbsp;&amp;nbsp;<span t-esc="line['value']"/>
                                             </td>
                                             <td class="text-center">
                                                 <t t-esc="line['tenor']"/>
@@ -101,18 +102,18 @@
                                             <td class="text-center">
                                                 <!--<t t-esc="line['']"/>-->
                                             </td>
-                                            <td class="text-center">
+                                            <td class="text-center" style="white-space: nowrap; overflow: hidden;text-overflow: ellipsis;">
                                                 <t t-esc="line['comment']" />
                                             </td>
                                             <td class="text-center">
-                                                <!--<t t-esc="line['']"/>-->
+                                                <t t-esc="line['sale_persons']"/>
                                             </td>
-                                            <td class="text-center">
+                                            <td class="text-left">
                                                 <t t-esc="line['customer_bank']"/>
                                             </td>
-                                            <td class="text-center">
-                                                <t t-esc="line['beneficiary_bank']"/>
-                                            </td>
+                                            <!--<td class="text-center">-->
+                                                <!--<t t-esc="line['beneficiary_bank']"/>-->
+                                            <!--</td>-->
                                         </tr>
                                     </t>
                                 </t>

@@ -26,6 +26,7 @@ class LCSalesMaturityWizard(models.TransientModel):
 
         data = {}
         data['product_temp_id'] = self.product_temp_id.id
+        data['product_temp_name'] = self.product_temp_id.name
 
         return self.env['report'].get_action(self, 'lc_sales_local_report.lc_sales_maturity_temp',
                                              data=data)
