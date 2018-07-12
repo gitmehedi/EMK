@@ -26,99 +26,71 @@
                         <div class="clearfix">
                             <h4 class="report-title">Maturity Report</h4>
                             <div class="row" style="padding-bottom:10px;">
-                                <div class="col-xs-8 text-left">
+                                <div class="col-xs-6 text-left">
+                                    <strong>Product: </strong><span t-esc="record['product_temp_name']"/>
+                                </div>
+                                <div class="col-xs-6 text-right">
                                     <div><strong>Reported On: </strong><span t-esc="context_timestamp(datetime.datetime.now()).strftime('%m/%d/%Y, %H:%M %p')"/></div>
                                 </div>
                             </div>
                         </div>
 
-                        <table class="table table-report-xs table-bordered table-striped">
+                        <table class="table table-bordered table-report-xs table-striped"
+                               style="margin-bottom: 10px;table-layout: fixed;">
                             <thead>
                                 <tr class="odo-bg-gray">
-                                    <th class="text-center">SL</th>
-                                    <th class="text-center">Customer</th>
-                                    <th class="text-center">L/C No</th>
-                                    <th class="text-center">Shipment No</th>
-                                    <th class="text-center">Value</th>
-                                    <th class="text-center">Tenor</th>
-                                    <th class="text-center">Customer Bank</th>
-                                    <th class="text-center">Maturity</th>
-                                    <th class="text-center">Remarks/Status</th>
+                                    <th class="text-center" style="width:4%;">SL</th>
+                                    <th class="text-center" style="width:20%;">Customer</th>
+                                    <th class="text-center" style="width:10%;">L/C No</th>
+                                    <th class="text-center" style="width:10%;">Shipment No</th>
+                                    <th class="text-center" style="width:8%;">Value</th>
+                                    <th class="text-center" style="width:6%;">Tenor</th>
+                                    <th class="text-center" style="width:12%;">Customer Bank</th>
+                                    <th class="text-center" style="width:8%;">Maturity</th>
+                                    <th class="text-center" style="width:12%;">Bill Id</th>
                                 </tr>
                             </thead>
-                            <!--<tbody>-->
-                                <!--<t t-foreach="lines" t-as="data">-->
-                                    <!--<t t-if="data_value['product']">-->
-                                        <!--<tr style="page-break-inside: avoid" class="text-left">-->
-                                            <!--<td colspan="8" style="padding: 0px;">-->
-                                                <!--<strong>-->
-                                                    <!--<t t-esc="data"/>-->
-                                                <!--</strong>-->
-                                            <!--</td>-->
-                                        <!--</tr>-->
-                                        <!--<t t-foreach="data_value['product']" t-as="line">-->
-                                            <!--<tr>-->
-                                                <!--<td>-->
-                                                    <!--&lt;!&ndash;<t t-esc="line['m_date']" t-options='{"widget": "date"}'/>&ndash;&gt;-->
-                                                    <!--<t t-esc="time.strftime('%d-%m-%Y',time.strptime(line['m_date'],'%Y-%m-%d %H:%M:%S'))"/>-->
-                                                <!--</td>-->
-                                                <!--<td>-->
-                                                    <!--<t t-esc="line['mrr']"/>-->
-                                                <!--</td>-->
-                                                <!--<td>-->
-                                                    <!--<t t-esc="line['name']"/>-->
-                                                <!--</td>-->
-                                                <!--<td class="text-right">-->
-                                                    <!--<t t-esc="line['qty_in_tk']"/>-->
-                                                <!--</td>-->
-                                                <!--<td>-->
-                                                    <!--<t t-esc="line['uom_name']"/>-->
-                                                <!--</td>-->
-                                                <!--<td class="text-right">-->
-                                                    <!--<t t-esc="line['rate_in']"/>-->
-                                                <!--</td>-->
-                                                <!--<td></td>-->
-                                                <!--<td class="text-right">-->
-                                                    <!--<t t-esc="line['val_in_tk']"/>-->
-                                                <!--</td>-->
-
-                                            <!--</tr>-->
-                                        <!--</t>-->
-                                        <!--<t t-if="data_value['product']">-->
-                                            <!--<tr style="font-weight: bold; background-color: #E4E4E4; border-bottom: 1px solid black;">-->
-                                                <!--<td colspan="3" class="text-left">-->
-                                                    <!--<t t-esc="data_value['sub-total']['title']"/>-->
-                                                <!--</td>-->
-                                                <!--<td class="text-right">-->
-                                                    <!--<t t-esc="data_value['sub-total']['total_in_qty']"/>-->
-                                                <!--</td>-->
-                                                <!--<td></td>-->
-                                                <!--<td></td>-->
-                                                <!--<td></td>-->
-                                                <!--<td class="text-right">-->
-                                                    <!--<t t-esc="data_value['sub-total']['total_in_val']"/>-->
-                                                <!--</td>-->
-                                            <!--</tr>-->
-                                        <!--</t>-->
-                                    <!--</t>-->
-                                <!--</t>-->
-                                <!--<tr style="font-weight: bold; background-color: #897d79; border-bottom: 1px solid black;">-->
-                                    <!--<td colspan="3" class="text-left">-->
-                                        <!--<t t-esc="total['title']"/>-->
-                                    <!--</td>-->
-                                    <!--<td class="text-right">-->
-                                        <!--<t t-esc="total['total_in_qty']"/>-->
-                                    <!--</td>-->
-                                    <!--<td></td>-->
-                                    <!--<td></td>-->
-                                    <!--<td></td>-->
-                                    <!--<td class="text-right">-->
-                                        <!--<t t-esc="total['total_in_val']"/>-->
-                                    <!--</td>-->
-                                <!--</tr>-->
-                            <!--</tbody>-->
+                            <tbody>
+                                <t t-if="lines">
+                                    <t t-foreach="lines" t-as="line">
+                                        <tr>
+                                            <td class="text-left">
+                                                <t t-esc="line_index+1"/>
+                                            </td>
+                                            <td class="text-left">
+                                                <span t-esc="line['customer']" />&amp;nbsp;
+                                                <t t-if="line['beneficiary_bank']">
+                                                    (<span t-esc="line['beneficiary_bank']"/>)
+                                                </t>
+                                            </td>
+                                            <td class="text-left">
+                                                <t t-esc="line['lc_name']"/>
+                                            </td>
+                                            <td class="text-left">
+                                                <t t-esc="line['shipment_name']"/>
+                                            </td>
+                                            <td class="text-center">
+                                                <span t-esc="line['currency']"/>&amp;nbsp;&amp;nbsp;<span t-esc="line['value']"/>
+                                            </td>
+                                            <td class="text-center">
+                                                <t t-esc="line['tenor']"/>
+                                            </td>
+                                            <td class="text-left">
+                                                <t t-esc="line['customer_bank']"/>
+                                            </td>
+                                            <td class="text-center">
+                                                <t t-if="line['to_maturity_date']">
+                                                    <t t-esc="time.strftime('%d-%b-%Y',time.strptime(line['to_maturity_date'],'%Y-%m-%d'))"/>
+                                                </t>
+                                            </td>
+                                            <td class="text-center">
+                                                <t t-esc="line['bill_id']" />
+                                            </td>
+                                        </tr>
+                                    </t>
+                                </t>
+                            </tbody>
                         </table>
-                        <!--<t t-call="custom_report.report_signing"></t>-->
                     </div>
                 </div>
             </t>
