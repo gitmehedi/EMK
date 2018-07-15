@@ -61,7 +61,5 @@
 			<field name="view_id" ref="sale_price_change_history_tree"/>
 		</record>
 
-
-
     </data>
 </odoo>
