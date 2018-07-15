@@ -209,8 +209,13 @@ class LetterOfCredit(models.Model):
             prev_name = self.name
             revno = self.revision_number
             self.write({'revision_number': revno + 1, 'name': '%s-%02d' % (self.unrevisioned_name, revno + 1)})
-            defaults.update({'name': prev_name, 'revision_number': revno, 'active': False, 'state': 'amendment',
-                             'current_revision_id': self.id, 'unrevisioned_name': self.unrevisioned_name, })
+            if self.env.context.get('amendment_date'):
+                defaults.update({'name': prev_name, 'revision_number': revno, 'active': False, 'state': 'amendment',
+                                 'current_revision_id': self.id, 'unrevisioned_name': self.unrevisioned_name,
+                                 'amendment_date': self.env.context.get('amendment_date') })
+            else:
+                defaults.update({'name': prev_name, 'revision_number': revno, 'active': False, 'state': 'amendment',
+                                 'current_revision_id': self.id, 'unrevisioned_name': self.unrevisioned_name, })
         return super(LetterOfCredit, self).copy(defaults)
 
     @api.one

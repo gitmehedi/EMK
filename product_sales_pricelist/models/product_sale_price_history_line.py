@@ -18,6 +18,7 @@ class ProductSalePriceHistiryLine(models.Model):
     product_package_mode = fields.Many2one('product.packaging.mode', string= 'Packaging Mode', readonly=True)
     category_id = fields.Many2one(string='UoM Category',related="uom_id.category_id",store=True)
     uom_id = fields.Many2one('product.uom', string="UoM", readonly=True)
+    discount = fields.Float(string='Discount')
 
     @api.multi
     def unlink(self):
@@ -50,14 +51,16 @@ class ProductSalePriceHistiryLine(models.Model):
                 vals['product_package_mode'] = price_pool.product_package_mode.id
                 vals['uom_id'] = price_pool.uom_id.id
                 vals['category_id'] = price_pool.uom_id.category_id.id
+                vals['discount'] = price_pool.discount
 
                 price_history_pool.create(vals)
             else:
                 price_history_pool.write({'product_id':price_pool.product_id.id, 'approve_price_date':price_pool.effective_date,
-                                          'new_price':price_pool.new_price})
+                                          'new_price':price_pool.new_price, 'discount':price_pool.discount})
 
             #Update Products Sales Price also
             product_pool = self.env['product.product'].search([('id', '=', price_pool.product_id.ids)])
 
             product_pool.write({'list_price': price_pool.new_price, 'fix_price':price_pool.new_price})
 
+            product_pool.write({'discount': price_pool.discount})

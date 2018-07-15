@@ -11,7 +11,7 @@
                     <header>
                         <button string="Confirm" name="action_confirm_export" states="draft" type="object" class="oe_highlight"/>
                         <button string="Reset to Draft" name="action_draft" type="object" states="confirmed" class="oe_read_only" groups="base_technical_features.group_technical_features"/>
-                        <button string="Amendment" name="action_revision_export" class="oe_read_only" type="object" attrs="{'invisible': [('state', 'in', ('draft', 'open', 'done'))]}"/>
+                        <button string="Amendment" name="action_amendment" class="oe_read_only" type="object" attrs="{'invisible': [('state', 'in', ('draft', 'open', 'done'))]}"/>
                         <button string="Shipment" name="action_shipment_export" type="object" attrs="{'invisible': [('state', 'in', ('draft', 'open', 'done'))]}" class="oe_highlight oe_read_only"/>
                         <button string="Done" name="action_lc_done_export" class="oe_read_only" type="object" states="progress" confirm="Are you sure you want to continue?"/>
                         <button string="Cancel" name="action_cancel" class="oe_read_only" type="object" states="progress" confirm="Are you sure you want to continue?"/>
@@ -109,7 +109,7 @@
                                             <field name="name" readonly='1'/>
                                             <field name="product_qty" string="LC Qty" readonly='1'/>
                                             <field name="product_uom" string="UOM" readonly='1'/>
-                                             <field name="product_received_qty" string="Delivery Qty" readonly='1'/>
+                                             <field name="product_received_qty" string="Shipment Qty" readonly='1'/>
                                             <field name="price_unit" readonly='1'/>
                                         </tree>
                                     </field>
@@ -155,8 +155,8 @@
                                     <field name="old_revision_ids" >
                                         <tree>
                                             <field name='name'/>
-                                            <field name='create_date' string="Superseeded on"/>
-                                            <field name='create_uid' string="Superseeded by"/>
+                                            <field name='amendment_date' string="Amendment On"/>
+                                            <field name='create_uid' string="Amendment By"/>
                                             <field name='state' invisible='1'/>
                                         </tree>
                                     </field>

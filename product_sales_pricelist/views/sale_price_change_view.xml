@@ -10,6 +10,7 @@
                 <tree string="Change Products Sale Price">
                     <field name="product_id"/>
                     <field name="new_price"/>
+                    <field name="discount"/>
                     <field name="currency_id"/>
                     <field name="state"/>
                     <field name="approver2_date"/>
@@ -40,7 +41,7 @@
 
                         <button string="Approve" name="action_sales_head"
                                 groups="gbs_application_group.group_head_sale,gbs_application_group.group_cxo"
-                                states="confirm" class="oe_highlight" type="object" />
+                                states="confirm" class="oe_highlight" type="object"/>
 
                         <button string="Refuse" name="action_refuse"
                                 groups="gbs_application_group.group_head_account,gbs_application_group.group_cxo"
@@ -59,6 +60,7 @@
                                 <field name="currency_id" options="{'no_open':True,'no_create_edit': True}"/>
                                 <field name="list_price"/>
                                 <field name="new_price"/>
+                                <field name="discount"/>
                                 <field name="effective_date"/>
                             </group>
                         </group>
