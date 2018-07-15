@@ -7,7 +7,7 @@ class ProductSalePriceHistiryLine(models.Model):
     _name = 'product.sale.history.line'
     _description = "Sale Price History"
     _rec_name = 'product_id'
-    _order = "approve_price_date desc"
+    _order = "approve_price_date,id desc"
 
     product_id = fields.Many2one('product.product', string="Product", required=True, domain=[('sale_ok', '=', True)],readonly=True)
     list_price = fields.Float(string='Old Price', readonly=True)

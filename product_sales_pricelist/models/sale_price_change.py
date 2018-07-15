@@ -12,7 +12,7 @@ class SalePriceChange(models.Model):
     _description = "Product Sales Pricelist"
     _inherit = ['mail.thread', 'ir.needaction_mixin']
     _rec_name = 'product_id'
-    _order = "effective_date desc"
+    _order = "effective_date,id desc"
 
     product_id = fields.Many2one('product.product', domain=[('sale_ok', '=', True)],
                                  states={'confirm': [('readonly', True)], 'validate1': [('readonly', True)],
