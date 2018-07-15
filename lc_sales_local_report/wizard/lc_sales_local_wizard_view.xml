@@ -37,6 +37,7 @@
         <menuitem action="action_wizard_local_first_acceptance"
                   id="menu_wizard_local_first_acceptance"
                   parent="letter_of_credit.lc_report_menu_root"
+                  groups="commercial.group_commercial_user_export"
                   sequence="2"/>
 
         <!--First Acceptance Wizard end-->
@@ -77,6 +78,7 @@
         <menuitem action="action_wizard_local_second_acceptance"
                   id="menu_wizard_local_second_acceptance"
                   parent="letter_of_credit.lc_report_menu_root"
+                  groups="commercial.group_commercial_user_export"
                   sequence="3"/>
 
         <!--Second Acceptance Wizard end-->
@@ -117,6 +119,7 @@
         <menuitem action="action_wizard_lc_sales_maturity"
                   id="menu_wizard_lc_sales_maturity"
                   parent="letter_of_credit.lc_report_menu_root"
+                  groups="commercial.group_commercial_user_export"
                   sequence="4"/>
 
         <!--Maturity Wizard end-->

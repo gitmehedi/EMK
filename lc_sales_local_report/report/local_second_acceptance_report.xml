@@ -74,7 +74,7 @@
                                                 <t t-esc="line['shipment_name']"/>
                                             </td>
                                             <td>
-                                                <span style="float:left;" t-esc="line['currency']"/><span style="float:right;" t-esc="line['value']"/>
+                                                <span style="float:left" t-esc="line['currency']"/>&amp;nbsp;&amp;nbsp;<span style="float:right;" t-esc="line['value']"/>
                                             </td>
                                             <td class="text-left">
                                                 <t t-esc="line['tenor']"/>
