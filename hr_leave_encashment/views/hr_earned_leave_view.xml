@@ -5,7 +5,7 @@
 			<field name="name">hr.leave.encashment.tree</field>
 			<field name="model">hr.leave.encashment</field>
 			<field name="arch" type="xml">
-				<tree string="Leave Carry Forward">
+				<tree string="Leave Encashment">
 					<field name="name" />
 					<field name="encashment_year" />
 					<field name="leave_type" />
