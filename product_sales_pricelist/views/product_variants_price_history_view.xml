@@ -28,6 +28,7 @@
                     <field name="product_package_mode"/>
                     <field name="uom_id"/>
                     <field name="new_price"/>
+                    <field name="discount"/>
                     <field name="currency_id"/>
                     <field name="approve_price_date" string="Effective Date"/>
                 </tree>

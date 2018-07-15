@@ -1,4 +1,4 @@
-from odoo import api, fields, models,SUPERUSER_ID
+from odoo import api, fields, models, SUPERUSER_ID
 from odoo.exceptions import ValidationError
 
 from datetime import date
@@ -16,22 +16,27 @@ class SalePriceChange(models.Model):
 
     product_id = fields.Many2one('product.product', domain=[('sale_ok', '=', True)],
                                  states={'confirm': [('readonly', True)], 'validate1': [('readonly', True)],
+                                         'validate2': [('readonly', True)],
                                          'validate': [('readonly', True)]}, string='Product', required=True)
 
     list_price = fields.Float(string='Old Price', compute='compute_list_price', readonly=True, store=True)
 
     new_price = fields.Float(string='New Price',
                              states={'confirm': [('readonly', True)], 'validate1': [('readonly', True)],
+                                     'validate2': [('readonly', True)],
                                      'validate': [('readonly', True)]}, required=True)
     product_package_mode = fields.Many2one('product.packaging.mode', string='Packaging Mode',
                                            states={'confirm': [('readonly', True)], 'validate1': [('readonly', True)],
+                                                   'validate2': [('readonly', True)],
                                                    'validate': [('readonly', True)]}, required=True)
     uom_id = fields.Many2one('product.uom', string="UoM", domain=[('category_id', '=', 2)],
                              states={'confirm': [('readonly', True)], 'validate1': [('readonly', True)],
+                                     'validate2': [('readonly', True)],
                                      'validate': [('readonly', True)]}, required=True)
     category_id = fields.Many2one(string='UoM Category', related="uom_id.category_id", store=True)
     request_date = fields.Date(string='Request Date', default=datetime.datetime.now(),
                                states={'confirm': [('readonly', True)], 'validate1': [('readonly', True)],
+                                       'validate2': [('readonly', True)],
                                        'validate': [('readonly', True)]}, readonly=True)
     requested_by = fields.Many2one('res.users', string="Requested By", default=lambda self: self.env.user,
                                    readonly=True)
@@ -41,12 +46,15 @@ class SalePriceChange(models.Model):
 
     approver1_date = fields.Date(string='First Approval Date',
                                  states={'confirm': [('readonly', True)], 'validate1': [('readonly', True)],
+                                         'validate2': [('readonly', True)],
                                          'validate': [('readonly', True)]}, readonly=True)
     approver2_date = fields.Date(string='Second Approval Date',
                                  states={'confirm': [('readonly', True)], 'validate1': [('readonly', True)],
+                                         'validate2': [('readonly', True)],
                                          'validate': [('readonly', True)]}, readonly=True)
     effective_date = fields.Date(string='Effective Date',
                                  states={'confirm': [('readonly', True)], 'validate1': [('readonly', True)],
+                                         'validate2': [('readonly', True)],
                                          'validate': [('readonly', True)]}, required=True)
 
     state = fields.Selection([
@@ -60,15 +68,18 @@ class SalePriceChange(models.Model):
     ], string='State', readonly=True, track_visibility='onchange', copy=False, default='draft')
 
     currency_id = fields.Many2one('res.currency', string="Currency",
-                                  states={'confirm': [('readonly', True)], 'validate1': [('readonly', True)],
+                                  states={'confirm': [('readonly', True)], 'validate1': [('readonly', True)],'validate2': [('readonly', True)],
                                           'validate': [('readonly', True)]}, required=True)
     company_id = fields.Many2one('res.company', 'Company',
                                  default=lambda self: self.env['res.company']._company_default_get(
                                      'product_sales_pricelist'), required=True)
 
+    discount = fields.Float(string='Discount',
+                            states={'confirm': [('readonly', True)], 'validate1': [('readonly', True)],'validate2': [('readonly', True)],'validate2': [('readonly', True)],
+                                    'validate': [('readonly', True)]}, )
+
     def action_sales_head(self):
         self.state = 'validate2'
-
 
     @api.constrains('new_price')
     def check_new_price(self):
@@ -94,9 +105,9 @@ class SalePriceChange(models.Model):
 
                 if count > 0:
                     price_change_pool = \
-                    self.env['product.sales.pricelist'].search([('product_id', '=', self.product_id.id),
-                                                                ('currency_id', '=', self.currency_id.id),
-                                                                ('state', '=', 'validate')], order='id desc')[0]
+                        self.env['product.sales.pricelist'].search([('product_id', '=', self.product_id.id),
+                                                                    ('currency_id', '=', self.currency_id.id),
+                                                                    ('state', '=', 'validate')], order='id desc')[0]
                     self.list_price = price_change_pool.new_price
                     self.uom_id = price_change_pool.uom_id
                 else:
@@ -183,6 +194,9 @@ class SalePriceChange(models.Model):
         ## Execute below function immedietly to update on Variants History
         # self.env['product.sale.history.line'].pull_automation()
 
+        #self.product_id.write({'discount':self.discount})
+
+
         return self.write({'state': 'validate', 'approver2_date': time.strftime('%Y-%m-%d %H:%M:%S')})
 
     @api.multi
@@ -206,15 +220,15 @@ class SalePriceChange(models.Model):
         return [('state', 'in', ['confirm'])]
 
 
-    ## mail notification
-    # @api.multi
-    # def _notify_approvers(self):
-    #     approvers = self.employee_id._get_employee_manager()
-    #     if not approvers:
-    #         return True
-    #     for approver in approvers:
-    #         self.sudo(SUPERUSER_ID).add_follower(approver.id)
-    #         if approver.sudo(SUPERUSER_ID).user_id:
-    #             self.sudo(SUPERUSER_ID)._message_auto_subscribe_notify(
-    #                 [approver.sudo(SUPERUSER_ID).user_id.partner_id.id])
-    #     return True
+        ## mail notification
+        # @api.multi
+        # def _notify_approvers(self):
+        #     approvers = self.employee_id._get_employee_manager()
+        #     if not approvers:
+        #         return True
+        #     for approver in approvers:
+        #         self.sudo(SUPERUSER_ID).add_follower(approver.id)
+        #         if approver.sudo(SUPERUSER_ID).user_id:
+        #             self.sudo(SUPERUSER_ID)._message_auto_subscribe_notify(
+        #                 [approver.sudo(SUPERUSER_ID).user_id.partner_id.id])
+        #     return True

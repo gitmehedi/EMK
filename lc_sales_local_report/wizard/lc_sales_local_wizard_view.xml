@@ -41,6 +41,46 @@
 
         <!--First Acceptance Wizard end-->
 
+        <!--Second Acceptance Wizard start-->
+        <record id="wizard_local_second_acceptance" model="ir.ui.view">
+            <field name="name">wizard.local.second.acceptance</field>
+            <field name="model">local.second.acceptance.wizard</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Report Options">
+                    <group>
+                        <group>
+                            <field name="product_temp_id" String="Select Product"/>
+                        </group>
+                        <group>
+
+                        </group>
+                    </group>
+                    <footer>
+                        <button name="report_print" string="Print" type="object" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_wizard_local_second_acceptance" model="ir.actions.act_window">
+            <field name="name">Second Acceptance Report</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">local.second.acceptance.wizard</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+
+        <menuitem action="action_wizard_local_second_acceptance"
+                  id="menu_wizard_local_second_acceptance"
+                  parent="letter_of_credit.lc_report_menu_root"
+                  sequence="3"/>
+
+        <!--Second Acceptance Wizard end-->
+
         <!--Maturity Wizard start-->
 
         <record id="wizard_lc_sales_maturity" model="ir.ui.view">
@@ -77,7 +117,7 @@
         <menuitem action="action_wizard_lc_sales_maturity"
                   id="menu_wizard_lc_sales_maturity"
                   parent="letter_of_credit.lc_report_menu_root"
-                  sequence="3"/>
+                  sequence="4"/>
 
         <!--Maturity Wizard end-->
 

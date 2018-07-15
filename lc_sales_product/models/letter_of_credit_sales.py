@@ -55,20 +55,20 @@ class LetterOfCredit(models.Model):
                 da_obj.update_lc_id_for_houndred_mt()
 
 
-        self.write({'state': 'confirmed', 'last_note': Status.CONFIRM.value})
+        self.write({'state': 'confirmed', 'last_note': Status.CONFIRM})
 
 
     @api.multi
-    def action_revision_export(self):
+    def action_revision_export(self,amendment_date=None):
         self.ensure_one()
         view_ref = self.env['ir.model.data'].get_object_reference('lc_sales_product', 'view_lc_export_form')
         view_id = view_ref and view_ref[1] or False,
-        self.with_context(new_lc_revision=True).copy()
+        self.with_context(new_lc_revision=True,amendment_date=amendment_date).copy()
 
         number = len(self.old_revision_ids)
 
         comm_utility_pool = self.env['commercial.utility']
-        note = comm_utility_pool.getStrNumber(number) + ' ' + Status.AMENDMENT.value
+        note = comm_utility_pool.getStrNumber(number) + ' ' + Status.AMENDMENT
 
         self.write({'state': self.state, 'last_note': note})
         return {
@@ -113,6 +113,21 @@ class LetterOfCredit(models.Model):
     @api.multi
     def action_lc_done_export(self):
         self.write({'state': 'done', 'last_note': Status.DONE.value})
+
+    @api.multi
+    def action_amendment(self):
+        res = self.env.ref('lc_sales_product.lc_amendment_wizard')
+        result = {
+            'name': _('Please Enter The Information'),
+            'view_type': 'form',
+            'view_mode': 'form',
+            'view_id': res and res.id or False,
+            'res_model': 'lc.amendment.wizard',
+            'type': 'ir.actions.act_window',
+            'nodestroy': True,
+            'target': 'new',
+        }
+        return result
 
 
 
