@@ -28,6 +28,7 @@
         'views/ir_cron.xml',
         'views/product_variants_price_history_view.xml',
         'views/inherit_partner_view.xml',
+        'views/inherit_product_product.xml',
     ],
     'installable': True,
     'application': False,
