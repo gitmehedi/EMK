@@ -12,6 +12,7 @@ class BeneficiaryCertificate(models.AbstractModel):
         data = {}
         qty_list = []
         prod_list = []
+        lc_revision_list = []
 
         address = shipment_obj.lc_id.second_party_applicant.address_get(['delivery', 'invoice'])
         delivery_address = self.env['res.partner'].browse(address['delivery'])
@@ -26,7 +27,7 @@ class BeneficiaryCertificate(models.AbstractModel):
         data['invoice_date'] = report_utility_pool.getERPDateFormat(report_utility_pool.getDateFromStr(shipment_obj.invoice_id.date_invoice))
         data['arrival_date'] = report_utility_pool.getERPDateFormat(report_utility_pool.getDateFromStr(shipment_obj.arrival_date))
         data['terms_condition'] = shipment_obj.lc_id.terms_condition
-        data['lc_id'] = shipment_obj.lc_id.name
+        data['lc_id'] = shipment_obj.lc_id.unrevisioned_name
         data['lc_date'] = shipment_obj.lc_id.issue_date
         data['second_party_bank'] = shipment_obj.lc_id.second_party_bank
 
@@ -52,6 +53,9 @@ class BeneficiaryCertificate(models.AbstractModel):
                 pi_obj['date'] = pi.invoice_date
                 pi_list.append(pi_obj)
 
+        for revision in shipment_obj.lc_id.old_revision_ids:
+            lc_revision_list.append({'no': revision.revision_number + 1, 'date': revision.amendment_date})
+
         total_qty = sum(qty_list)
 
 
@@ -61,6 +65,7 @@ class BeneficiaryCertificate(models.AbstractModel):
             'total_qty': total_qty,
             'uom': uom[0],
             'pi_list': pi_list,
+            'lc_revision_list': lc_revision_list
         }
 
         return self.env['report'].render('lc_sales_product.report_inspection_certificate', docargs)
