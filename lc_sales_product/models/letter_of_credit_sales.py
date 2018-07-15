@@ -55,7 +55,7 @@ class LetterOfCredit(models.Model):
                 da_obj.update_lc_id_for_houndred_mt()
 
 
-        self.write({'state': 'confirmed', 'last_note': Status.CONFIRM.value})
+        self.write({'state': 'confirmed', 'last_note': Status.CONFIRM})
 
 
     @api.multi
@@ -68,7 +68,7 @@ class LetterOfCredit(models.Model):
         number = len(self.old_revision_ids)
 
         comm_utility_pool = self.env['commercial.utility']
-        note = comm_utility_pool.getStrNumber(number) + ' ' + Status.AMENDMENT.value
+        note = comm_utility_pool.getStrNumber(number) + ' ' + Status.AMENDMENT
 
         self.write({'state': self.state, 'last_note': note})
         return {
