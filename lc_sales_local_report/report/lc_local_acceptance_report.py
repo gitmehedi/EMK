@@ -76,9 +76,13 @@ class AcceptanceReportsUtility(models.TransientModel):
                               rb.bic as beneficiary_bank,
                               ps.to_sales_date as dispatch_to_sale,
                               ps.to_buyer_date as dispatch_to_customer,
+                              ps.to_buyer_bank_date as buyer_bank_date,
+                              ps.to_seller_bank_date as seller_bank_date,
                               ps.comment as comment,
                               rc.symbol as currency,
                               (CASE
+                                  WHEN ps.to_buyer_bank_date is not null THEN date('%s') - date(ps.to_buyer_bank_date)
+                                  WHEN ps.to_seller_bank_date is not null THEN date('%s') - date(ps.to_seller_bank_date)
                                   WHEN ps.to_buyer_date is not null THEN date('%s') - date(ps.to_buyer_date)
                                   WHEN ps.to_sales_date is not null THEN date('%s') - date(ps.to_sales_date)
                                 ELSE 0
@@ -93,7 +97,7 @@ class AcceptanceReportsUtility(models.TransientModel):
                           LEFT JOIN res_currency rc on lc.currency_id = rc.id
                        WHERE pt.id = %s AND lc.type = 'export' AND lc.region_type = 'local' AND ps.state in %s
                        ORDER BY pt.id ASC
-                    '''% (current_date,current_date,product_temp_id,state_condition)
+                    '''% (current_date,current_date,current_date,current_date,product_temp_id,state_condition)
 
         self.env.cr.execute(sql_in_tk)
         for vals in self.env.cr.dictfetchall():
