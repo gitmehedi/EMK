@@ -119,53 +119,55 @@ class SaleOrder(models.Model):
     @api.multi
     def _is_double_validation_applicable(self):
         for orders in self:
-            if orders.credit_sales_or_lc == 'lc_sales':
-                # If LC and PI ref is present, go to the Final Approval, Else go to Second level approval
-                if orders.lc_id and orders.pi_id:
-                    for lines in orders.order_line:
-                        product_pool = orders.env['product.product'].search([('id', '=', lines.product_id.ids)])
-                        if (lines.price_unit != product_pool.list_price):
-                            return True  # Go to two level approval process
+            for lines in orders.order_line:
+                cust_commission_pool = orders.env['customer.commission'].search(
+                    [('customer_id', '=', orders.partner_id.id), ('product_id', '=', lines.product_id.ids)])
 
-                    return False  # One level approval process
-                elif orders.pi_id and not orders.lc_id:
-                    return True  # Go to two level approval process
-                else:
-                    return False  # Go to two level approval process
+                price_change_pool = self.env['product.sale.history.line'].search(
+                    [('product_id', '=', lines.product_id.id),
+                     ('currency_id', '=', lines.currency_id.id),
+                     ('product_package_mode', '=', orders.pack_type.id),
+                     ('uom_id', '=', lines.product_uom.id)])
 
-            elif orders.credit_sales_or_lc == 'credit_sales':
+                discounted_product_price = price_change_pool.new_price - price_change_pool.discount
 
-                for lines in orders.order_line:
+                if orders.credit_sales_or_lc == 'lc_sales':
+                    # If LC and PI ref is present, go to the Final Approval, Else go to Second level approval
+                    if orders.lc_id and orders.pi_id:
+                        for coms in cust_commission_pool:
+                            if lines.commission_rate != coms.commission_rate or \
+                                            lines.price_unit < discounted_product_price or lines.price_unit > discounted_product_price:
+                                return True  # Go to two level approval process
+                                break;
 
-                    cust_commission_pool = orders.env['customer.commission'].search(
-                        [('customer_id', '=', orders.partner_id.id), ('product_id', '=', lines.product_id.ids)])
-                    partner_pool = orders.partner_id
-
-                    price_change_pool = self.env['product.sale.history.line'].search(
-                        [('product_id', '=', lines.product_id.id),
-                         ('currency_id', '=', lines.currency_id.id),
-                         ('product_package_mode', '=', orders.pack_type.id),
-                         ('uom_id', '=', lines.product_uom.id)])
-
-                    account_receivable = abs(partner_pool.credit)
-                    sales_order_amount_total = orders.amount_total
-
-                    unpaid_tot_inv_amt = orders.unpaid_total_invoiced_amount()
-                    undelivered_tot_do_amt = orders.undelivered_do_qty_amount()
-
-                    customer_total_credit = account_receivable + sales_order_amount_total + unpaid_tot_inv_amt + undelivered_tot_do_amt
-                    customer_credit_limit = partner_pool.credit_limit
-
-                    #print 'Customer Total Credit Amount:', customer_total_credit
-
-                    if (abs(customer_total_credit) > customer_credit_limit
-                        or lines.commission_rate != cust_commission_pool.commission_rate
-                        or lines.price_unit != price_change_pool.new_price):
-
-                        return True
-                        break;
+                            return False  # One level approval process
+                    elif orders.pi_id and not orders.lc_id:
+                        return True  # Go to two level approval process
                     else:
-                        return False
+                        return False  # Go to two level approval process
+
+                elif orders.credit_sales_or_lc == 'credit_sales':
+
+                        partner_pool = orders.partner_id
+
+                        account_receivable = abs(partner_pool.credit)
+                        sales_order_amount_total = orders.amount_total
+
+                        unpaid_tot_inv_amt = orders.unpaid_total_invoiced_amount()
+                        undelivered_tot_do_amt = orders.undelivered_do_qty_amount()
+
+                        customer_total_credit = account_receivable + sales_order_amount_total + unpaid_tot_inv_amt + undelivered_tot_do_amt
+                        customer_credit_limit = partner_pool.credit_limit
+
+                        for coms in cust_commission_pool:
+                            if (abs(customer_total_credit) > customer_credit_limit
+                                or lines.commission_rate != coms.commission_rate
+                                or lines.price_unit < discounted_product_price or lines.price_unit > discounted_product_price):
+
+                                return True
+                                break;
+                            else:
+                                return False
 
         for lines in self.order_line:
             product_pool = self.env['product.product'].search([('id', '=', lines.product_id.ids)])
@@ -222,26 +224,6 @@ class SaleOrder(models.Model):
 
 
     @api.multi
-    def _remaining_credit_limit(self):
-        for lim in self:
-
-            total_credit_sale = 0
-
-            for s in lim:
-                total_credit_sale = s.amount_total + total_credit_sale
-
-            remain = lim.credit_limit - total_credit_sale
-
-            if remain > 0:
-                lim.remaining_credit_limit = remain
-            else:
-                lim.remaining_credit_limit = 0
-
-        return lim.remaining_credit_limit
-
-
-
-    @api.multi
     def action_submit(self):
 
         is_double_validation = False
@@ -277,15 +259,18 @@ class SaleOrder(models.Model):
                     customer_total_credit = account_receivable + sales_order_amount_total + undelivered_tot_do_amt + unpaid_tot_inv_amt
                     customer_credit_limit = partner_pool.credit_limit
 
-                    if (abs(customer_total_credit) > customer_credit_limit
-                        or lines.commission_rate != cust_commission_pool.commission_rate
-                        or lines.price_unit != price_change_pool.new_price):
+                    discounted_product_price = price_change_pool.new_price - price_change_pool.discount
 
-                        is_double_validation = True
-                        break;
+                    for coms in cust_commission_pool:
+                        if (abs(customer_total_credit) > customer_credit_limit
+                            or lines.commission_rate != coms.commission_rate
+                            or lines.price_unit < discounted_product_price or lines.price_unit > discounted_product_price):
 
-                    else:
-                        is_double_validation = False
+                            is_double_validation = True
+                            break;
+
+                        else:
+                            is_double_validation = False
 
 
         if is_double_validation:
@@ -297,8 +282,9 @@ class SaleOrder(models.Model):
     def second_approval_business_logics(self, cust_commission_pool, lines, price_change_pool):
         for coms in cust_commission_pool:
             if price_change_pool.currency_id.id == lines.currency_id.id:
-                for hsitry in price_change_pool:
-                    if lines.commission_rate != coms.commission_rate or lines.price_unit != hsitry.new_price:
+                for price_history in price_change_pool:
+                    discounted_product_price = price_history.new_price - price_history.discount
+                    if lines.commission_rate != coms.commission_rate or (lines.price_unit < discounted_product_price or lines.price_unit > discounted_product_price):
                         return True
                         break;
                     else:
