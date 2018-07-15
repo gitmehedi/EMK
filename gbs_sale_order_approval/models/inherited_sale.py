@@ -60,8 +60,8 @@ class SaleOrder(models.Model):
     currency_id = fields.Many2one("res.currency", related='', string="Currency", required=True)
 
     """ PI and LC """
-    pi_id = fields.Many2one('proforma.invoice', string='PI Ref. No.', readonly=True)
-    lc_id = fields.Many2one('letter.credit', string='LC Ref. No.',readonly=True)
+    pi_id = fields.Many2one('proforma.invoice', string='PI Ref. No.')
+    lc_id = fields.Many2one('letter.credit', string='LC Ref. No.')
 
     remaining_credit_limit = fields.Char(string="Customer's Remaining Credit Limit", track_visibility='onchange')
 
@@ -325,6 +325,42 @@ class SaleOrder(models.Model):
                 if line.product_id:
                     vals['price_unit'] = line._get_product_sales_price(line.product_id)
                     line.update(vals)
+
+
+    @api.onchange('pi_id')
+    def onchange_pi_id(self):
+
+        pi_pool = self.env['proforma.invoice'].search([('id','=',self.pi_id.id)])
+
+        if pi_pool:
+            val = []
+            self.partner_id = pi_pool.partner_id
+
+            for record in pi_pool.line_ids:
+                commission = self.env['customer.commission'].search(
+                    [('customer_id', '=', self.partner_id.id), ('product_id', '=', record.product_id.id),
+                     ('status', '=', True)])
+
+                if commission:
+                    for coms in commission:
+                        self.commission_rate = coms.commission_rate
+                else:
+                    self.commission_rate = 0
+
+                val.append((0, 0, {'product_id': record.product_id.id,
+                                   'name': record.product_id.name,
+                                   'product_uom_qty': record.quantity,
+                                   'product_uom': record.uom_id.id,
+                                   'price_unit': record.price_unit,
+                                   'commission_rate': self.commission_rate,
+                                   'price_subtotal': record.price_subtotal,
+                                   # 'tax_id': record.tax.id,
+                                   'da_qty': record.quantity, #this value is set to show hide DA Create Button on SO
+
+                                   }))
+
+            self.order_line = val
+
 
 
 class InheritedSaleOrderLine(models.Model):
