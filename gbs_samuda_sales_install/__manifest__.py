@@ -26,6 +26,7 @@
         'delivery_qty_reports',
         'sale_operating_unit',
         'lc_sales_product',
+        'lc_sales_local_report',
         'gbs_sales_jar_count',
     ],
 
