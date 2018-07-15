@@ -132,6 +132,10 @@ class SaleOrder(models.Model):
                 discounted_product_price = price_change_pool.new_price - price_change_pool.discount
 
                 if orders.credit_sales_or_lc == 'lc_sales':
+
+                    if price_change_pool.new_price >= lines.price_unit and lines.price_unit >= discounted_product_price:
+                        return False # Single Validation
+
                     # If LC and PI ref is present, go to the Final Approval, Else go to Second level approval
                     if orders.lc_id and orders.pi_id:
                         for coms in cust_commission_pool:
@@ -158,6 +162,9 @@ class SaleOrder(models.Model):
 
                         customer_total_credit = account_receivable + sales_order_amount_total + unpaid_tot_inv_amt + undelivered_tot_do_amt
                         customer_credit_limit = partner_pool.credit_limit
+
+                        if price_change_pool.new_price >= lines.price_unit and lines.price_unit >= discounted_product_price:
+                            return False  # Single Validation
 
                         for coms in cust_commission_pool:
                             if (abs(customer_total_credit) > customer_credit_limit
@@ -261,6 +268,9 @@ class SaleOrder(models.Model):
 
                     discounted_product_price = price_change_pool.new_price - price_change_pool.discount
 
+                    if price_change_pool.new_price >= lines.price_unit and lines.price_unit >= discounted_product_price:
+                        return False # Single Validation
+
                     for coms in cust_commission_pool:
                         if (abs(customer_total_credit) > customer_credit_limit
                             or lines.commission_rate != coms.commission_rate
@@ -284,7 +294,13 @@ class SaleOrder(models.Model):
             if price_change_pool.currency_id.id == lines.currency_id.id:
                 for price_history in price_change_pool:
                     discounted_product_price = price_history.new_price - price_history.discount
-                    if lines.commission_rate != coms.commission_rate or (lines.price_unit < discounted_product_price or lines.price_unit > discounted_product_price):
+
+                    if price_history.new_price >= lines.price_unit and lines.price_unit >= discounted_product_price:
+                        return False # Single Validation
+
+                    if lines.commission_rate != coms.commission_rate or\
+                            (lines.price_unit < discounted_product_price
+                             or lines.price_unit > discounted_product_price):
                         return True
                         break;
                     else:
