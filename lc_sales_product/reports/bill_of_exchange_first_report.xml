@@ -84,7 +84,7 @@
                             </table>
                             <div class="mt-10">Proforma Invoice No:
                                 <t t-foreach="pi_list" t-as="p">
-                                    <strong t-esc="p['number']"/> Date: <strong t-esc="p['date']"/>
+                                    <strong t-esc="p['number']"/> Date: <strong t-esc="p['date']" t-options='{"widget": "date"}'/>
                                 </t>
                             </div>
                         </div>
@@ -99,7 +99,12 @@
                             </div>
                             <div class="col-xs-5">
                                 Drawn under the Document Credit No: <br/>
-                                <strong t-esc="data['lc_id']"/> Date: <strong t-esc="data['issue_date']"/> <br/>
+                                <strong t-esc="data['lc_id']"/> Date: <strong t-esc="data['issue_date']" t-options='{"widget": "date"}'/> <br/>
+                                <t t-foreach="lc_revision_list" t-as="r">
+                                    <strong>
+                                        Number of Amendment :<span t-esc="r['no']"/> &amp; Date :<span t-esc="r['date']" t-options='{"widget": "date"}'/> <br/>
+                                    </strong>
+                                </t>
                                 <span style="padding-left:30%;">of</span> <br/>
                                 <span t-raw="data['second_party_bank']"/>
                             </div>
