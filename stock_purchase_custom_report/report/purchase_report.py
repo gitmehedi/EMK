@@ -100,15 +100,15 @@ class StockPurchaseReport(models.AbstractModel):
                                            sm.product_qty                           AS qty_in_tk, 
                                            sm.product_qty * Coalesce((SELECT ph.cost
                                              FROM   product_price_history ph
-                                             WHERE  Date_trunc('day', ph.datetime) <= '%s'
+                                             WHERE  ph.datetime + interval'6h' <= '%s'
                                                     AND pp.id = ph.product_id
-                                             ORDER  BY ph.datetime DESC
+                                             ORDER  BY ph.datetime DESC,ph.id DESC
                                              LIMIT  1), 0) AS val_in_tk,
                                            Coalesce((SELECT ph.cost
                                              FROM   product_price_history ph
-                                             WHERE  Date_trunc('day', ph.datetime) <= '%s'
+                                             WHERE  ph.datetime + interval'6h' <= '%s'
                                                     AND pp.id = ph.product_id
-                                             ORDER  BY ph.datetime DESC
+                                             ORDER  BY ph.datetime DESC,ph.id DESC
                                              LIMIT  1), 0)          AS cost_val
                                     FROM   stock_move sm 
                                            LEFT JOIN stock_picking sp 
