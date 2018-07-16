@@ -1,0 +1,396 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="website_hr_recuitment_tests" name="Website HR Recruitment Tests" inherit_id="web.assets_common">
+        <xpath expr="." position="inside">
+            <script type="text/javascript" src="/member_signup/static/src/js/custom.js"></script>
+            <link rel="stylesheet" href="/member_signup/static/src/css/style.css"/>
+        </xpath>
+    </template>
+
+    <template id="member_signup.login" inherit_id="web.login" name="Sign up - Reset Password">
+        <xpath expr="//button[@type='submit']" position="before">
+            <a t-if="member_signup_enabled" t-attf-href="/web/member_signup?{{ keep_query() }}"
+               class="btn btn-link pull-right">Member Sign up
+            </a>
+            <a t-if="member_reset_password_enabled" t-attf-href="/web/member_reset_password?{{ keep_query() }}"
+               class="btn btn-link pull-right">Reset Password
+            </a>
+        </xpath>
+    </template>
+
+    <template id="member_signup.fields" name="Auth Signup/ResetPassword form fields">
+
+        <div class="col-md-6">
+            <div class="col-md-6">
+                <h1>EMK</h1>
+            </div>
+            <div class="col-md-6">
+                <div class="img__wrap  pull-right" id="img_wrap">
+                    <input id="member-image-upload" class="hidden" type="file" name="image" required="True">
+                        <img id="member_image"/>
+                    </input>
+                    <div class="member_image_layer">
+                        <p class="img_desc text-center">Click here to upload image.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-12 margin-top-15">
+                <div class="panel panel-success">
+                    <div class="panel-heading">
+                        <h3 class="panel-title text-center">Applicant Information</h3>
+                    </div>
+                    <div class="panel-body">
+                        <div class="col-md-12 text-center margin-bottom-15">
+                            The membership fee is 500 Taka per year
+                            <br/>
+                            (Please write in block letters)
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group form-field o_website_form_required_custom">
+                                <label for="name" class="control-label">Name</label>
+                                <input type="text" name="name" t-att-value="name" id="name" maxlength="100"
+                                       placeholder="e.g. John Doe"
+                                       class="form-control o_website_form_input input-sm" rq="required"/>
+                            </div>
+
+
+                            <div class="form-group form-field o_website_form_required_custom">
+                                <label for="email" class="control-label">Email</label>
+                                <input type="email" name="login" t-att-value="login" id="login" minlength="2"
+                                       maxlength="100" placeholder="e.g. info@info.com "
+                                       class="form-control o_website_form_input input-sm" rq="required"/>
+                            </div>
+
+                            <div class="form-group form-field o_website_form_required_custom">
+                                <label for="birthdate_date" class="control-label">Date of Birth</label>
+                                <input type="text" name="birthdate_date" t-att-value="birthdate_date" maxlength="10"
+                                       minlength="10" class="form-control o_website_form_input input-sm"
+                                       id="birthdate_date" rq="required"/>
+                            </div>
+
+                            <div class="form-group form-field o_website_form_required_custom">
+                                <label for="street" class="control-label">Current Address</label>
+                                <input type="text" name="street" t-att-value="street" id="street"
+                                       class="form-control o_website_form_input input-sm" maxlength="50" minlength="2"
+                                       rq="required"/>
+
+                            </div>
+                            <div class="form-group form-field o_website_form_required_custom">
+                                <input type="text" name="street2" t-att-value="street2" id="street2"
+                                       class="form-control o_website_form_input input-sm"/>
+                            </div>
+                            <div class="row">
+                                <div class="form-group form-field col-sm-6 o_website_form_required_custom">
+                                    <input type="text" name="city" t-att-value="city" id="city" minlength="2"
+                                           maxlength="30"
+                                           class="form-control o_website_form_input input-sm"
+                                           rq="required"/>
+
+                                </div>
+                                <div class="form-group form-field col-sm-6  o_website_form_required_custom">
+                                    <select class="form-control o_website_form_input input-sm" name="per_district"
+                                            rq="required">
+                                        <option value="">--Please Select--</option>
+                                        <t t-foreach="config['districts']" t-as='label'>
+                                            <option t-att-value="label">
+                                                <t t-esc="label_value"/>
+                                            </option>
+                                        </t>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="form-group form-field o_website_form_required_custom">
+                                <label for="password" class="control-label">Password</label>
+                                <input type="password" name="password" id="password" class="form-control"
+                                       required="required" t-att-autofocus="'autofocus' if only_passwords else None"/>
+                            </div>
+
+                            <div class="form-group form-field o_website_form_required_custom">
+                                <label for="confirm_password" class="control-label">Confirm Password</label>
+                                <input type="password" name="confirm_password" id="confirm_password"
+                                       class="form-control"
+                                       required="required"/>
+                            </div>
+
+
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group form-field o_website_form_required_custom">
+
+                                <label for="gender" class="control-label">Gender</label>
+                                <select class="form-control o_website_form_input input-sm" name="gender"
+                                        rq="required">
+                                    <option value="">--Please Select--</option>
+                                    <t t-foreach="config['gender']" t-as='label'>
+                                        <option t-att-value="label">
+                                            <t t-esc="label_value"/>
+                                        </option>
+                                    </t>
+                                </select>
+                            </div>
+
+                            <div class="form-group form-field o_website_form_required_custom">
+                                <label for="phone" class="control-label">Phone</label>
+                                <input type="text" name="phone" t-att-value="phone" id="phone"
+                                       placeholder="e.g. +88019130120122"
+                                       class="form-control o_website_form_input input-sm" maxlength="20" minlength="5"
+                                       rq="required"/>
+                            </div>
+                            <div class="form-group form-field o_website_form_required_custom">
+                                <label for="mobile" class="control-label">Mobile</label>
+                                <input type="text" name="mobile" t-att-value="mobile" id="mobile" maxlength="14"
+                                       placeholder="e.g. +88019130120122"
+                                       class="form-control o_website_form_input input-sm"
+                                       rq="required"/>
+                            </div>
+
+                            <div class="form-group form-field o_website_form_required_custom">
+                                <label for="website" class="control-label">Website</label>
+                                <input type="text" name="website" id="website"
+                                       class="form-control o_website_form_input input-sm" rq="required"/>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="form-group form-field o_website_form_required_custom">
+                                <label for="occupation" class="control-label">Occupation</label>
+                                <select class="form-control o_website_form_input input-sm" name="occupation"
+                                        rq="required">
+                                    <option value="">--Please Select--</option>
+                                    <t t-foreach="config['occupation']" t-as='label'>
+                                        <option t-att-value="label">
+                                            <t t-esc="label_value"/>
+                                        </option>
+                                    </t>
+                                </select>
+                            </div>
+
+                            <div class="form-group form-field o_website_form_required_custom">
+                                <label for="subject_of_interest" class="control-label">Subjects of Interest: (Please
+                                    check all that apply)
+                                </label>
+                                <div class="mar-btm">
+                                    <t t-foreach="config['subject_of_interest']" t-as='label'>
+                                        <label class="checkbox-inline">
+                                            <input type="checkbox" name="subject_of_interest" t-att-id="label"
+                                                   t-att-value="label"/>
+                                            <t t-esc="label_value"/>
+                                        </label>
+                                    </t>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="panel panel-success">
+                <div class="panel-heading">
+                    <h3 class="panel-title text-center">Educational Information</h3>
+                </div>
+                <div class="panel-body">
+                    <div class="form-group form-field o_website_form_required_custom col-sm-12">
+                        <label for="last_place_of_study" class="control-label">Last or Current Place of Study</label>
+                        <input type="text" name="last_place_of_study" t-att-value="last_place_of_study"
+                               id="last_place_of_study"
+                               class="form-control o_website_form_input input-sm" maxlength="50" minlength="2"
+                               rq="required"/>
+                    </div>
+
+                    <div class="form-group form-field o_website_form_required_custom col-sm-12">
+                        <label for="hightest_certification" class="control-label">Highest Certification Achieved</label>
+                        <select class="form-control o_website_form_input input-sm" name="hightest_certification"
+                                rq="required">
+                            <option value="">--Please Select--</option>
+                            <t t-foreach="config['hightest_certification']" t-as='label'>
+                                <option t-att-value="label">
+                                    <t t-esc="label_value"/>
+                                </option>
+                            </t>
+                        </select>
+                    </div>
+
+                    <div>
+                        <div class="form-group form-field o_website_form_required_custom col-sm-6">
+                            <label for="field_of_study" class="control-label">Field of Study</label>
+                            <input type="text" name="field_of_study" t-att-value="field_of_study"
+                                   class="form-control o_website_form_input input-sm" id="field_of_study"
+                                   minlength="2" maxlength="50"
+                                   rq="required"/>
+                        </div>
+                        <div class="form-group form-field o_website_form_required_custom col-sm-6">
+                            <label for="place_of_study" class="control-label">Place of Study</label>
+                            <input type="text" name="place_of_study" t-att-value="place_of_study"
+                                   class="form-control o_website_form_input input-sm" id="place_of_study"
+                                   rq="required"/>
+                        </div>
+                    </div>
+
+                    <div class="form-group form-field o_website_form_required_custom col-sm-12">
+                        <label for="usa_work_or_study" class="control-label">Have you worked, or studied in the U.S.?
+                        </label>
+
+                        <div class="mar-btm">
+                            <select class="form-control o_website_form_input input-sm" name="usa_work_or_study"
+                                    rq="required">
+                                <option value="">--Please Select--</option>
+                                <t t-foreach="config['usa_work_or_study']" t-as='label'>
+                                    <option t-att-value="label">
+                                        <t t-esc="label_value"/>
+                                    </option>
+                                </t>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group form-field o_website_form_required_custom col-sm-12">
+                        <label for="usa_work_or_study_place" class="control-label">If yes, where in the U.S. have you
+                            worked, or Studied
+                        </label>
+                        <input type="text" name="usa_work_or_study_place" t-att-value="usa_work_or_study_place"
+                               id="usa_work_or_study_place" class="form-control o_website_form_input input-sm"/>
+                    </div>
+
+                    <div class="form-group form-field o_website_form_required_custom col-sm-12">
+                        <label for="alumni_institute" class="control-label">If you are an alumni of an American
+                            institution, which
+                            school did you attend?
+                        </label>
+                        <input type="text" name="alumni_institute" t-att-value="alumni_institute" rq="required"
+                               class="form-control o_website_form_input input-sm" id="alumni_institute"/>
+                    </div>
+
+                    <div class="form-group form-field o_website_form_required_custom col-sm-12">
+                        <label for="current_employee" class="control-label">Current Employee</label>
+                        <input type="text" name="current_employee" t-att-value="current_employee" rq="required"
+                               class="form-control o_website_form_input input-sm" id="current_employee"/>
+                    </div>
+
+                    <div>
+                        <div class="form-group form-field o_website_form_required_custom col-sm-6">
+                            <label for="work_title" class="control-label">Your Title</label>
+                            <input type="text" name="work_title" t-att-value="work_title" id="work_title"
+                                   class="form-control o_website_form_input input-sm" maxlength="50" minlength="2"
+                                   rq="required"/>
+                        </div>
+
+
+                        <div class="form-group form-field o_website_form_required_custom  col-sm-6">
+                            <label for="work_phone" class="control-label">Work Phone</label>
+                            <input type="text" name="work_phone" t-att-value="work_phone" id="work_phone"
+                                   class="form-control o_website_form_input input-sm" maxlength="14"
+                                   rq="required"/>
+                        </div>
+                    </div>
+
+                    <div class="form-group form-field o_website_form_required_custom  col-sm-12">
+                        <label for="info_about_emk" class="control-label">How did you learn about the EMK Center?
+                        </label>
+                        <input type="textarea" name="info_about_emk" t-att-value="info_about_emk" id="info_about_emk"
+                               class="form-control o_website_form_input input-sm" maxlength="200" minlength="2"
+                               rq="required"/>
+                    </div>
+
+                    <h1>Singature</h1>
+
+                    <div class="col-md-12 text-center margin-bottom-15">
+                        I hereby aply for membership to th EMK Center and agree to comply with its rules and regulation.
+                    </div>
+
+
+                    <div class="form-group form-field o_website_form_required_custom col-sm-12">
+                        <div class="wrap_signature pull-left" id="wrap_signature">
+                            <input id="signature-image-upload" name="signature_image" class="hidden" type="file"
+                                   required="True">
+                                <img id="signature_image"/>
+                            </input>
+                            <div class="signature_image_layer">
+                                <p class="img_desc text-center">Click here to upload singnature.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group form-field o_website_form_required_custom col-sm-6">
+                        <label for="date_of_signature" class="control-label">Date</label>
+                        <input type="text" name="date_of_signature" t-att-value="date_of_signature"
+                               class="form-control o_website_form_input input-sm"
+                               id="date_of_signature" rq="required"/>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <template id="member_signup.signup" name="Sign up login">
+        <t t-call="web.login_layout">
+
+            <form class="s_website_form container-fluid mt32" enctype="multipart/form-data" role="form" method="post"
+                  t-if="not message">
+                <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+
+                <div class="col-md-12" style="margin-bottom:10px">
+                    <t t-call="member_signup.fields">
+                        <t t-set="only_passwords" t-value="bool(token)"/>
+                    </t>
+
+
+                    <p class="alert alert-danger" t-if="error">
+                        <t t-esc="error"/>
+                    </p>
+                    <input type="hidden" name="redirect" t-att-value="redirect"/>
+                    <input type="hidden" name="token" t-att-value="token"/>
+
+                    <div class="clearfix oe_login_buttons pull-left col-md-12">
+                        <a t-attf-href="/web/login?{{ keep_query() }}" class="btn btn-link pull-right">Back to Login</a>
+                        <button type="submit" class="btn btn-primary pull-left">Sign up</button>
+                    </div>
+                </div>
+            </form>
+        </t>
+    </template>
+
+    <template id="member_signup.reset_password" name="Reset password">
+        <t t-call="web.login_layout">
+            <div t-if="message">
+                <p class="alert alert-success" t-if="message">
+                    <t t-esc="message"/>
+                </p>
+                <a href="/web/login" class="btn btn-link pull-right">Back to Login</a>
+            </div>
+
+            <form class="oe_reset_password_form" role="form" method="post" t-if="not message">
+                <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+
+                <t t-if="token and not invalid_token">
+                    <t t-call="member_signup.fields">
+                        <t t-set="only_passwords" t-value="1"/>
+                    </t>
+                </t>
+
+                <t t-if="not token">
+                    <div class="form-group field-login">
+                        <label for="login" class="control-label">Your Email</label>
+                        <input type="text" name="login" t-att-value="login" id="login" class="form-control"
+                               autofocus="autofocus" required="required" autocapitalize="off"/>
+                    </div>
+                </t>
+
+                <p class="alert alert-danger" t-if="error">
+                    <t t-esc="error"/>
+                </p>
+                <input type="hidden" name="redirect" t-att-value="redirect"/>
+                <input type="hidden" name="token" t-att-value="token"/>
+                <div class="clearfix oe_login_buttons">
+                    <a t-if="not token" t-attf-href="/web/login?{{ keep_query() }}" class="btn btn-link pull-right">Back
+                        to Login
+                    </a>
+                    <a t-if="invalid_token" href="/web/login" class="btn btn-link pull-right">Back to Login</a>
+                    <button type="submit" class="btn btn-primary pull-left">Confirm</button>
+                </div>
+
+            </form>
+
+        </t>
+    </template>
+</odoo>
