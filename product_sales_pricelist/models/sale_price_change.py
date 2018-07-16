@@ -74,7 +74,7 @@ class SalePriceChange(models.Model):
                                  default=lambda self: self.env['res.company']._company_default_get(
                                      'product_sales_pricelist'), required=True)
 
-    discount = fields.Float(string='Discount',
+    discount = fields.Float(string='Max Discount Limit',
                             states={'confirm': [('readonly', True)], 'validate1': [('readonly', True)],'validate2': [('readonly', True)],'validate2': [('readonly', True)],
                                     'validate': [('readonly', True)]}, )
 
