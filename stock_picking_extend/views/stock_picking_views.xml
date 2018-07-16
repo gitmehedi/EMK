@@ -211,6 +211,27 @@
         </field>
     </record>
 
+
+    <record id="view_stock_picking_tree2" model="ir.ui.view">
+        <field name="name">view.picking.tree1</field>
+        <field name="model">stock.picking</field>
+        <field name="arch" type="xml">
+            <tree string="Receive Transfers" create="false" edit="false">
+                <field name="name"/>
+                <field name="location_dest_id"/>
+                <field name="partner_id"/>
+                <field name="date" invisible="1"/>
+                <field name="min_date"/>
+                <field name="origin"/>
+                <field name="group_id" invisible="1"/>
+                <field name="backorder_id"/>
+                <field name="state"/>
+                <field name="priority" invisible="1"/>
+                <field name="picking_type_id" invisible="1"/>
+            </tree>
+        </field>
+    </record>
+
     <!--<record id="view_stock_picking_filter1" model="ir.ui.view">-->
     <!--<field name="name">view.picking.filter1</field>-->
     <!--<field name="model">stock.picking</field>-->
@@ -259,7 +280,7 @@
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">stock.picking</field>
         <field name="view_type">form</field>
-        <field name="view_id" ref="view_stock_picking_tree1"/>
+        <field name="view_id" ref="view_stock_picking_tree2"/>
         <field name="domain">[('location_dest_id.name','=','Quality Control')]</field>
         <field name="context">{'default_transfer_type': 'receive'}</field>
     </record>
@@ -270,7 +291,7 @@
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">stock.picking</field>
         <field name="view_type">form</field>
-        <field name="view_id" ref="view_stock_picking_tree1"/>
+        <field name="view_id" ref="view_stock_picking_tree2"/>
         <field name="domain">[('location_dest_id.name','=','Stock')]</field>
         <field name="context">{'default_transfer_type': 'receive'}</field>
     </record>
@@ -316,6 +337,7 @@
               parent="account.menu_finance"
               sequence="3"
               groups="account.group_account_user"/>
+
     <menuitem id="menu_acc_approver"
               name="Accounts Approver"
               parent="menu_receive_picking_acc_approver"
