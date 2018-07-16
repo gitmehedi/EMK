@@ -34,7 +34,7 @@ class IndentIndent(models.Model):
     name = fields.Char('Indent #', size=30, readonly=True, default="/")
     approve_date = fields.Datetime('Approve Date', readonly=True)
     indent_date = fields.Datetime('Indent Date', required=True, readonly=True,
-                                  default=datetime.datetime.today())
+                                  default=datetime.datetime.now())
     required_date = fields.Date('Required Date', required=True,readonly=True,states={'draft': [('readonly', False)]},
                                 default=lambda self: self._get_required_date())
     indentor_id = fields.Many2one('res.users', string='Indentor', required=True, readonly=True,

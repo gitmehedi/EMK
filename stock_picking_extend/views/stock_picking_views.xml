@@ -260,7 +260,7 @@
         <field name="res_model">stock.picking</field>
         <field name="view_type">form</field>
         <field name="view_id" ref="view_stock_picking_tree1"/>
-        <field name="domain">[('transfer_type', '=', 'receive'),('location_dest_id.name','=','Quality Control')]</field>
+        <field name="domain">[('location_dest_id.name','=','Quality Control')]</field>
         <field name="context">{'default_transfer_type': 'receive'}</field>
     </record>
 
@@ -271,7 +271,7 @@
         <field name="res_model">stock.picking</field>
         <field name="view_type">form</field>
         <field name="view_id" ref="view_stock_picking_tree1"/>
-        <field name="domain">[('transfer_type', '=', 'receive'),('location_dest_id.name','=','Stock')]</field>
+        <field name="domain">[('location_dest_id.name','=','Stock')]</field>
         <field name="context">{'default_transfer_type': 'receive'}</field>
     </record>
 
