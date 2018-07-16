@@ -1,0 +1,84 @@
+<?xml version="1.0"?>
+<odoo>
+    <record id="view_member_occupation_tree" model="ir.ui.view">
+        <field name="name">member.occupation.tree</field>
+        <field name="model">member.occupation</field>
+        <field name="priority" eval="1"/>
+        <field name="arch" type="xml">
+            <tree string="Occupation" editable="bottom">
+                <field name="name"/>
+                <field name="status"/>
+            </tree>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="action_membership_occupation">
+        <field name="name">Occupations</field>
+        <field name="res_model">member.occupation</field>
+        <field name="help" type="html">
+            <p class="oe_view_nocontent_create">
+                Click to add a new Member's Occupation
+            </p>
+        </field>
+    </record>
+
+    <menuitem id="menu_membership_occupation" sequence="150"
+              parent="membership.menu_marketing_config_association"
+              action="action_membership_occupation"
+              groups="membership_extension.group_membership_manager"/>
+
+    <record id="view_member_subject_of_interest_tree" model="ir.ui.view">
+        <field name="name">member.subject.interest.tree</field>
+        <field name="model">member.subject.interest</field>
+        <field name="priority" eval="1"/>
+        <field name="arch" type="xml">
+            <tree string="Subject of Interest" editable="bottom">
+                <field name="name"/>
+                <field name="status"/>
+            </tree>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="action_membership_subject_of_interest">
+        <field name="name">Subject of Interests</field>
+        <field name="res_model">member.subject.interest</field>
+        <field name="help" type="html">
+            <p class="oe_view_nocontent_create">
+                Click to add a new Member's Subject of Interest
+            </p>
+        </field>
+    </record>
+
+    <menuitem id="menu_membership_subject_of_interest" sequence="155"
+              parent="membership.menu_marketing_config_association"
+              action="action_membership_subject_of_interest"
+              groups="membership_extension.group_membership_manager"/>
+
+
+    <record id="view_member_certification_tree" model="ir.ui.view">
+        <field name="name">member.certification.tree</field>
+        <field name="model">member.certification</field>
+        <field name="priority" eval="1"/>
+        <field name="arch" type="xml">
+            <tree string="Certification" editable="bottom">
+                <field name="name"/>
+                <field name="status"/>
+            </tree>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="action_membership_certification">
+        <field name="name">Certifications</field>
+        <field name="res_model">member.certification</field>
+        <field name="help" type="html">
+            <p class="oe_view_nocontent_create">
+                Click to add a new Member's Certification
+            </p>
+        </field>
+    </record>
+
+    <menuitem id="menu_membership_certification" sequence="160"
+              parent="membership.menu_marketing_config_association"
+              action="action_membership_certification" groups="membership_extension.group_membership_manager"/>
+
+</odoo>

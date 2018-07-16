@@ -4,7 +4,8 @@ from odoo import api, exceptions, fields, models, _
 class LocalFirstAcceptanceWizard(models.TransientModel):
     _name = 'local.first.acceptance.wizard'
 
-    product_temp_id = fields.Many2one('product.template', string='Product',required=True)
+    product_temp_id = fields.Many2one('product.template', string='Product',required=True,
+                                      domain=[('sale_ok', '=', True)])
 
     @api.multi
     def report_print(self):
@@ -20,7 +21,8 @@ class LocalFirstAcceptanceWizard(models.TransientModel):
 class LocalSecondAcceptanceWizard(models.TransientModel):
     _name = 'local.second.acceptance.wizard'
 
-    product_temp_id = fields.Many2one('product.template', string='Product',required=True)
+    product_temp_id = fields.Many2one('product.template', string='Product',required=True,
+                                      domain=[('sale_ok', '=', True)])
 
     @api.multi
     def report_print(self):
@@ -36,7 +38,8 @@ class LocalSecondAcceptanceWizard(models.TransientModel):
 class LCSalesMaturityWizard(models.TransientModel):
     _name = 'lc.sales.maturity.wizard'
 
-    product_temp_id = fields.Many2one('product.template', string='Product',required=True)
+    product_temp_id = fields.Many2one('product.template', string='Product',required=True,
+                                      domain = [('sale_ok', '=', True)])
 
     @api.multi
     def report_print(self):

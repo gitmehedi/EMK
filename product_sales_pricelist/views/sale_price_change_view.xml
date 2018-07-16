@@ -141,7 +141,7 @@
                   groups="account.group_account_user,gbs_application_group.group_sales_customer_manager,gbs_application_group.group_sales_product_manager,sales_team.group_sale_salesman_all_leads,gbs_application_group.group_head_sale,gbs_application_group.group_head_account,gbs_application_group.group_cxo"/>
 
         <menuitem id="price_history_menu"
-                  name="Product Price History" sequence="11"
+                  name="Single Product Price" sequence="11"
                   parent="custom_menu_products"
                   groups="account.group_account_user,gbs_application_group.group_sales_customer_manager,gbs_application_group.group_sales_product_manager,sales_team.group_sale_salesman_all_leads,gbs_application_group.group_head_sale,gbs_application_group.group_head_account,gbs_application_group.group_cxo"
                   action="price_history_action"/>
