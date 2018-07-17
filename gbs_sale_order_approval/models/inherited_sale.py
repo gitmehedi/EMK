@@ -60,7 +60,7 @@ class SaleOrder(models.Model):
     currency_id = fields.Many2one("res.currency", related='', string="Currency", required=True)
 
     """ PI and LC """
-    pi_id = fields.Many2one('proforma.invoice', string='PI Ref. No.')
+    pi_id = fields.Many2one('proforma.invoice', string='PI Ref. No.',domain=[('state', '=', 'confirm')])
     lc_id = fields.Many2one('letter.credit', string='LC Ref. No.')
 
     remaining_credit_limit = fields.Char(string="Customer's Remaining Credit Limit", track_visibility='onchange')
