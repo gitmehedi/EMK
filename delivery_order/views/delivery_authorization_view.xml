@@ -194,14 +194,15 @@
             </field>
         </record>
 
-        <record id="delivery_order_tree" model="ir.ui.view">
+        <record id="delivery_authorization_tree_view" model="ir.ui.view">
             <field name="name">delivery.authorization.tree</field>
             <field name="model">delivery.authorization</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Delivery Order">
-                    <field name="sale_order_id"/>
                     <field name="name" string="Delivery Authorization"/>
+                    <field name="sale_order_id" string="Sale Order"/>
+                    <field name="so_type"/>
                     <field name="state"/>
                     <field name="approved_date"/>
                 </tree>
@@ -209,7 +210,7 @@
         </record>
 
         <!-- Generate automated sequence -->
-        <record id="seq_hr_employee" model="ir.sequence">
+        <record id="da_seqs" model="ir.sequence">
             <field name="name">DA Sequences</field>
             <field name="code">delivery.authorization</field>
             <field name="prefix">DA</field>
@@ -244,7 +245,6 @@
                   sequence="1"
                   groups="account.group_account_user,gbs_application_group.group_head_account,gbs_application_group.group_cxo"
                   action="delivery_order_action"/>
-
 
     </data>
 </odoo>
