@@ -5,10 +5,10 @@ import datetime
 class GenerateDailyDeliveryReport(models.Model):
     _name = 'daily.delivery.report.wizard'
 
-    report_of_day = fields.Datetime(string="Report of day", required=True, )
+    report_of_day = fields.Date(string="Report of day", required=True, )
     product_id = fields.Many2one('product.product', string='Product', domain="([('sale_ok','=','True')])",
-                                 required=True, )
-    operating_unit_id = fields.Many2one('operating.unit', string='OP Unit', required=True)
+                                 required=False, )
+    operating_unit_id = fields.Many2one('operating.unit', string='OP Unit', required=False)
 
     @api.multi
     def process_delivery_report(self):
