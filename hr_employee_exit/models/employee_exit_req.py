@@ -128,40 +128,26 @@ class EmployeeExitReq(models.Model):
                 }))
         self.pen_checklists_ids = vals
         self.approver2_by = self.env.user
-
-
-        #email_server_list = []
-        template_obj = self.env['mail.mail']
-        email_server_obj = self.env['ir.mail_server'].search([], order='id ASC',limit=1)
-        model_data_pool = self.env['ir.model.data'].search(
-            [('name', '=', 'group_hr_manager')], limit=1)
-        record_id = model_data_pool.res_id
-        manager = self.env['res.groups'].search([('id', '=', record_id)]).users
-        emp = self.employee_id.name
-        emailto = []
-        for eml in manager:
-            login= eml.login
-            emailto.append(login)
-        emailto.append(self.employee_id.parent_id.user_id.login)
-        template = self.env.ref('hr_employee_exit.example_email_template1')
-        #mailing.write({'body_html': self.env['mail.template']._replace_local_links(template.body_html)})
-        #self.env['mail.template']._replace_local_links(template.body_html),
-
-        for email in emailto:
-            template_data = {
-                'subject': emp+' request is approved',
-                'body_html': self.env['mail.template'].browse(template.id).send_mail(self.id),
-                'email_from': email_server_obj,
-                'email_to': email
-            }
-            template_id = template_obj.create(template_data)
-        template_obj.send(template_id)
+        self.send_mail_template()
         return self.write({'state': 'validate','approved2_date': time.strftime('%Y-%m-%d %H:%M:%S')})
 
     @api.multi
     def send_mail_template(self):
-        template = self.env.ref('hr_employee_exit.example_email_template1')
-        self.env['mail.template'].browse(template.id).send_mail(self.id)
+        email_server_obj = self.env['ir.mail_server'].search([], order='id ASC', limit=1)
+        model_data_pool = self.env['ir.model.data'].search([('name', '=', 'group_hr_manager')], limit=1)
+        record_id = model_data_pool.res_id
+        manager = self.env['res.groups'].search([('id', '=', record_id)]).users
+        emailto = []
+        for eml in manager:
+            login = eml.login
+            emailto.append(login)
+        emailto.append(self.employee_id.parent_id.user_id.login)
+        for email in emailto:
+            template = self.env.ref('hr_employee_exit.example_email_template1')
+            template.write({'email_from':email_server_obj,'email_to':email})
+            self.env['mail.template'].browse(template.id).send_mail(self.id)
+
+
 
 
 
