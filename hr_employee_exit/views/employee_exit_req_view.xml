@@ -11,14 +11,18 @@
                     <header>
                         <button name="send_mail_template" string="Send e-mail" type="object" class="oe_highlight"/>
                         <button string="Confirm" name="exit_confirm" states="draft" type="object" class="oe_highlight"/>
-                        <button string="Approve" name="exit_validate" attrs="{'invisible': ['|', ('current_user_is_approver', '!=', True)]}"
+                        <button string="Approve" name="exit_validate"
                                 states="confirm"  type="object" class="oe_highlight"/>
-                        <button string="Validate" name="exit_first_validate" groups ="hr.group_hr_manager" states="validate1" type="object"
+                        <!--attrs="{'invisible': ['|', ('current_user_is_approver', '!=', True)]}"-->
+                        <button string="Validate" name="exit_done" groups ="hr.group_hr_manager" states="validate1" type="object"
                                 class="oe_highlight" />
                         <button string="Refuse" name="exit_refuse" groups="gbs_application_group.group_dept_manager,hr.group_hr_manager"
                                 states="confirm,validate1" type="object" />
                         <button string="Reset to Draft" name="exit_reset" groups ="hr.group_hr_manager"
                                 attrs="{'invisible': [('state', 'not in', ['validate1', 'refuse'])]}"
+                                type="object"/>
+                        <button string="Reset to Draft" name="exit_reset" groups="base_technical_features.group_technical_features"
+                                attrs="{'invisible': [('state', 'not in', ['validate'])]}"
                                 type="object"/>
                         <field name="state" widget="statusbar" statusbar_visible="draft,confirm,validate1,validate"
                                statusbar_colors='{"confirm":"blue","validate1":"blue","refuse":"red"}'/>
