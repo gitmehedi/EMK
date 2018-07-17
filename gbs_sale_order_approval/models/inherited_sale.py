@@ -60,8 +60,10 @@ class SaleOrder(models.Model):
     currency_id = fields.Many2one("res.currency", related='', string="Currency", required=True)
 
     """ PI and LC """
-    pi_id = fields.Many2one('proforma.invoice', string='PI Ref. No.', domain=[('state', '=', 'confirm')])
-    lc_id = fields.Many2one('letter.credit', string='LC Ref. No.')
+    pi_id = fields.Many2one('proforma.invoice', string='PI Ref. No.', domain=[('state', '=', 'confirm')], readonly=True,
+                            states={'to_submit': [('readonly', False)]})
+    lc_id = fields.Many2one('letter.credit', string='LC Ref. No.', readonly=True,
+                            states={'to_submit': [('readonly', False)]})
 
     remaining_credit_limit = fields.Char(string="Customer's Remaining Credit Limit", track_visibility='onchange')
 
@@ -322,7 +324,6 @@ class SaleOrder(models.Model):
 
             self.env['delivery.authorization.line'].create(da_line)
 
-
     def action_view_delivery_auth(self):
         form_view = self.env.ref('delivery_order.delivery_order_form')
         tree_view = self.env.ref('delivery_order.delivery_authorization_tree_view')
@@ -340,8 +341,6 @@ class SaleOrder(models.Model):
             ],
             "domain": [('id', '=', da_pool.id)],
         }
-
-
 
     def second_approval_business_logics(self, cust_commission_pool, lines, price_change_pool):
         for coms in cust_commission_pool:
