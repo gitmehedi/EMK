@@ -24,12 +24,12 @@
                                 <span t-esc="report_of_day"/>
                             </h5>
                             <h5>
-                                <strong>Product Name:</strong>
-                                <span t-esc="product_name_for_report"/>
+                                <!--<strong>Product Name:</strong>-->
+                                <!--<span t-esc="product_name_for_report"/>-->
                             </h5>
                             <div class="text-right">
-                                <strong>Operating Unit:</strong>
-                                <span t-esc="operating_unit_name"/>
+                                <!--<strong>Operating Unit:</strong>-->
+                                <!--<span t-esc="operating_unit_name"/>-->
                             </div>
                             <table class="table table-report-sm table-bordered table-striped">
                                 <thead>
@@ -93,13 +93,11 @@
                                         </td>
                                         <td></td>
                                         <td></td>
-                                        <td>
-                                            <b>
+                                        <td></td>
+                                        <td></td>
+                                        <td class="text-right"><b>
                                                 <span t-esc="'%.2f'%total_do_qty"/>
-                                            </b>
-                                        </td>
-                                        <td></td>
-                                        <td></td>
+                                            </b></td>
                                         <td class="text-right">
                                             <b>
                                                 <span t-esc="'%.2f'%issued_do_sum_list"/>
