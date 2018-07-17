@@ -78,13 +78,23 @@ class SalePriceChange(models.Model):
                             states={'confirm': [('readonly', True)], 'validate1': [('readonly', True)],'validate2': [('readonly', True)],'validate2': [('readonly', True)],
                                     'validate': [('readonly', True)]}, )
 
+
+    @api.constrains('discount')
+    def _max_discount_limit_validation(self):
+        if self.discount < 0.00:
+            raise ValidationError('Max Discount Limit can not be Negative')
+
+        if self.discount > self.new_price:
+            raise ValidationError('Max Discount Limit can not be greater than New Price')
+
+
     def action_sales_head(self):
         self.state = 'validate2'
 
     @api.constrains('new_price')
     def check_new_price(self):
         if self.new_price < 0.00:
-            raise ValidationError('New Price can not be Negetive')
+            raise ValidationError('New Price can not be Negative')
 
     @api.constrains('effective_date')
     def check_effective_date(self):
