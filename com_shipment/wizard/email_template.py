@@ -26,7 +26,9 @@ class EmailTemplateWizard(models.TransientModel):
                 email_list.append((user.login).strip())
 
         template_obj = self.env['mail.mail']
-        email_server_obj = self.env['ir.mail_server'].search([], order='id ASC')
+        email_server_obj = self.env['ir.mail_server'].search([], order='id DESC')
+
+        email_server = self.env['ir.mail_server'].search([], order='id DESC', limit=1)
 
         for email in email_server_obj:
             if email.smtp_user:

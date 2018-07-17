@@ -54,13 +54,7 @@ class StockTransferDetailsReport(models.AbstractModel):
                                            sm.date + interval'6h'  AS move_date,
                                            sm.origin               AS move_origin,
                                            sm.product_qty          AS qty_out_tk,
-                                           pt.list_price,
-                                           Coalesce((SELECT ph.cost
-                                                     FROM   product_price_history ph
-                                                     WHERE  Date_trunc('day', ph.datetime) <= '%s'
-                                                            AND pp.id = ph.product_id
-                                                     ORDER  BY ph.datetime DESC
-                                                     LIMIT  1), 0) AS val_out_tk
+                                           pt.list_price
                                     FROM   stock_move sm 
                                            LEFT JOIN stock_picking sp 
                                                   ON sm.picking_id = sp.id
@@ -79,7 +73,7 @@ class StockTransferDetailsReport(models.AbstractModel):
                                            AND sm.location_id = %s
                                            AND sm.location_dest_id <> %s
                                    )tbl
-                                    ''' % (date_end, date_start, date_end, location_outsource, location_outsource)
+                                    ''' % (date_start, date_end, location_outsource, location_outsource)
 
         self.env.cr.execute(sql_out_tk)
         for vals in self.env.cr.dictfetchall():

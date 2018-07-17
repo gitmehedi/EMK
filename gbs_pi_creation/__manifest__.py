@@ -11,6 +11,8 @@
         'terms_setup',
         'custom_report',
         'ir_sequence_operating_unit',
+        'product_sales_pricelist',
+        'samuda_so_type',
     ],
 
     'data': [

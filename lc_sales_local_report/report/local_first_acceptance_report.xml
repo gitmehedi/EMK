@@ -74,38 +74,38 @@
                                             <td class="text-left">
                                                 <t t-esc="line['shipment_name']"/>
                                             </td>
-                                            <td class="text-center">
-                                                <span t-esc="line['currency']"/>&amp;nbsp;&amp;nbsp;<span t-esc="line['value']"/>
+                                            <td class="text-right">
+                                                <span style="float:left;" t-esc="line['currency']"/><span style="float:right;" t-esc="line['value']"/>
                                             </td>
-                                            <td class="text-center">
+                                            <td class="text-left">
                                                 <t t-esc="line['tenor']"/>
                                             </td>
-                                            <td class="text-center">
+                                            <td class="text-left">
                                                 <!--<t t-esc="line['dispatch_to_sale']"/>-->
                                                 <t t-if="line['dispatch_to_sale']">
                                                     <t t-esc="time.strftime('%d-%b-%Y',time.strptime(line['dispatch_to_sale'],'%Y-%m-%d'))"/>
                                                 </t>
                                             </td>
-                                            <td class="text-center">
+                                            <td class="text-left">
                                                 <!--<t t-esc="line['dispatch_to_customer']"/>-->
                                                 <t t-if="line['dispatch_to_customer']">
                                                     <t t-esc="time.strftime('%d-%b-%Y',time.strptime(line['dispatch_to_customer'],'%Y-%m-%d'))"/>
                                                 </t>
 
                                             </td>
-                                            <td class="text-center">
+                                            <td class="text-right">
                                                 <t t-esc="line['aging']"/>
                                             </td>
-                                            <td class="text-center">
+                                            <td class="text-left">
                                                 <!--<t t-esc="line['']"/>-->
                                             </td>
-                                            <td class="text-center">
+                                            <td class="text-left">
                                                 <!--<t t-esc="line['']"/>-->
                                             </td>
-                                            <td class="text-center" style="white-space: nowrap; overflow: hidden;text-overflow: ellipsis;">
+                                            <td class="text-left" style="white-space: nowrap; overflow: hidden;text-overflow: ellipsis;">
                                                 <t t-esc="line['comment']" />
                                             </td>
-                                            <td class="text-center">
+                                            <td class="text-left">
                                                 <t t-esc="line['sale_persons']"/>
                                             </td>
                                             <td class="text-left">

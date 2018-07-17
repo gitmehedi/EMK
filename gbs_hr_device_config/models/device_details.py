@@ -1,4 +1,4 @@
-from openerp import models, fields
+from openerp import models, fields,_
 from openerp import api
 from odoo.http import request
 import pyodbc
@@ -107,7 +107,7 @@ class DeviceDetail(models.Model):
             if conn is not None:
                 conn.close()
             if isConnect == True:
-                raise Warning("Successfully connect to the "+self.server+ " server.")
+                raise Warning("Successfully connect to the "+self.name+" ("+self.server+ ") server.")
             else:
                 raise ValidationError("Unable to connect the "+self.server+ " server. Please check the configuration.")
 
@@ -149,21 +149,22 @@ class DeviceDetail(models.Model):
             if maxId[0] is None:
                 return
 
-            self.processData(maxId[0], attDevice, conn, cursor)
+            self.processData(maxId[0], attDevice, currentDate, conn, cursor)
 
-            self.last_update = currentDate
+            raise Warning("Successfully pull the data from "+self.name+" ("+self.server+ ") server.")
+
         except Exception as e:
             msg = "Exception on gbs_hr_device_config-> device_details.py -> action_pull_data() at " + \
                   str(datetime.datetime.now()) + "  \n Error Message : " + str(e[0])
             _logger.error(msg)
-            print ("Exception : ", msg)
+            raise ValidationError(_(e[0]))
         finally:
             if cursor is not None:
                 cursor.close()
             if conn is not None:
                 conn.close()
 
-    def processData(self, maxId, attDevice, conn, cursor):
+    def processData(self, maxId, attDevice, currentDate, conn, cursor):
 
         deviceInOutCode = {}  # Where key is code and value is "IN" OR OUT
 
@@ -216,12 +217,17 @@ class DeviceDetail(models.Model):
             # Now Update on SQL Server Database(External)
             cursor.execute("UPDATE CHECKINOUT SET IsRead = 1 WHERE id <=? AND IsRead = 0", maxId)
             conn.commit()
+
+            self.last_update = currentDate
         except Exception as e:
             self.env.cr.rollback()
-            msg = "Exception on gbs_hr_device_config-> device_details.py -> processData() at " + \
+            msg = "Error: Unable to pull data on gbs_hr_device_config-> device_details.py -> processData() at " + \
                   str(datetime.datetime.now()) + ": \n Attendance Data: " + str(row) + "  \n Error Message : " + str(e[0])
             _logger.error(msg)
-            print (msg)
+
+            show_msg = "Error: Unable to pull data."+ "\n Attendance Data: " + str(row) + "  \n Error Message : " + str(
+                e[0])
+            raise ValidationError(_(show_msg))
 
 
     def isValidByDuration(self, currentRow, previousRow, deviceInOutCode, tolerableSecond):

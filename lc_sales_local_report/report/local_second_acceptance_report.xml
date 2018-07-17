@@ -44,15 +44,14 @@
                                     <th class="text-center" style="width:8%;">Shipment No</th>
                                     <th class="text-center" style="width:8%;">Value</th>
                                     <th class="text-center" style="width:4%;">Tenor</th>
-                                    <th class="text-center" style="width:6%;">Dispatch To Sales</th>
-                                    <th class="text-center" style="width:6%;">Dispatch To Customer</th>
+                                    <th class="text-center" style="width:6%;">TBL Receive on</th>
+                                    <th class="text-center" style="width:6%;">Party Bank Receive</th>
                                     <th class="text-center" style="width:4%;">Aging</th>
                                     <th class="text-center" style="width:6%;">First Delivery</th>
                                     <th class="text-center" style="width:6%;">Last Delivery</th>
                                     <th class="text-center" style="width:10%;">Remarks/Status</th>
                                     <th class="text-center" style="width:8%;">F.P.R</th>
                                     <th class="text-center" style="width:8%;">Customer Bank</th>
-                                    <!--<th class="text-center">Beneficiary Bank</th>-->
                                 </tr>
                             </thead>
                             <tbody>
@@ -74,46 +73,41 @@
                                             <td class="text-left">
                                                 <t t-esc="line['shipment_name']"/>
                                             </td>
-                                            <td class="text-center">
-                                                <span t-esc="line['currency']"/>&amp;nbsp;&amp;nbsp;<span t-esc="line['value']"/>
+                                            <td>
+                                                <span style="float:left" t-esc="line['currency']"/>&amp;nbsp;&amp;nbsp;<span style="float:right;" t-esc="line['value']"/>
                                             </td>
-                                            <td class="text-center">
+                                            <td class="text-left">
                                                 <t t-esc="line['tenor']"/>
                                             </td>
-                                            <td class="text-center">
-                                                <!--<t t-esc="line['dispatch_to_sale']"/>-->
-                                                <t t-if="line['dispatch_to_sale']">
-                                                    <t t-esc="time.strftime('%d-%b-%Y',time.strptime(line['dispatch_to_sale'],'%Y-%m-%d'))"/>
+                                            <td class="text-left">
+                                                <t t-if="line['seller_bank_date']">
+                                                    <t t-esc="time.strftime('%d-%b-%Y',time.strptime(line['seller_bank_date'],'%Y-%m-%d'))"/>
                                                 </t>
                                             </td>
-                                            <td class="text-center">
-                                                <!--<t t-esc="line['dispatch_to_customer']"/>-->
-                                                <t t-if="line['dispatch_to_customer']">
-                                                    <t t-esc="time.strftime('%d-%b-%Y',time.strptime(line['dispatch_to_customer'],'%Y-%m-%d'))"/>
+                                            <td class="text-left">
+                                                <t t-if="line['buyer_bank_date']">
+                                                    <t t-esc="time.strftime('%d-%b-%Y',time.strptime(line['buyer_bank_date'],'%Y-%m-%d'))"/>
                                                 </t>
 
                                             </td>
-                                            <td class="text-center">
+                                            <td class="text-right">
                                                 <t t-esc="line['aging']"/>
                                             </td>
-                                            <td class="text-center">
+                                            <td class="text-left">
                                                 <!--<t t-esc="line['']"/>-->
                                             </td>
-                                            <td class="text-center">
+                                            <td class="text-left">
                                                 <!--<t t-esc="line['']"/>-->
                                             </td>
-                                            <td class="text-center" style="white-space: nowrap; overflow: hidden;text-overflow: ellipsis;">
+                                            <td class="text-left" style="white-space: nowrap; overflow: hidden;text-overflow: ellipsis;">
                                                 <t t-esc="line['comment']" />
                                             </td>
-                                            <td class="text-center">
+                                            <td class="text-left">
                                                 <t t-esc="line['sale_persons']"/>
                                             </td>
                                             <td class="text-left">
                                                 <t t-esc="line['customer_bank']"/>
                                             </td>
-                                            <!--<td class="text-center">-->
-                                                <!--<t t-esc="line['beneficiary_bank']"/>-->
-                                            <!--</td>-->
                                         </tr>
                                     </t>
                                 </t>
@@ -136,7 +130,6 @@
                                 </tr>
                             </tbody>
                         </table>
-                        <!--<t t-call="custom_report.report_signing"></t>-->
                     </div>
                 </div>
             </t>

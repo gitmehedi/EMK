@@ -12,7 +12,7 @@ class SalePriceChange(models.Model):
     _description = "Product Sales Pricelist"
     _inherit = ['mail.thread', 'ir.needaction_mixin']
     _rec_name = 'product_id'
-    _order = "effective_date desc"
+    _order = "effective_date,id desc"
 
     product_id = fields.Many2one('product.product', domain=[('sale_ok', '=', True)],
                                  states={'confirm': [('readonly', True)], 'validate1': [('readonly', True)],
@@ -74,9 +74,19 @@ class SalePriceChange(models.Model):
                                  default=lambda self: self.env['res.company']._company_default_get(
                                      'product_sales_pricelist'), required=True)
 
-    discount = fields.Float(string='Discount',
+    discount = fields.Float(string='Max Discount Limit',
                             states={'confirm': [('readonly', True)], 'validate1': [('readonly', True)],'validate2': [('readonly', True)],'validate2': [('readonly', True)],
                                     'validate': [('readonly', True)]}, )
+
+
+    @api.constrains('discount')
+    def _max_discount_limit_validation(self):
+        if self.discount < 0.00:
+            raise ValidationError('Max Discount Limit can not be Negative')
+
+        if self.discount > self.new_price:
+            raise ValidationError('Max Discount Limit can not be greater than New Price')
+
 
     def action_sales_head(self):
         self.state = 'validate2'
@@ -84,7 +94,7 @@ class SalePriceChange(models.Model):
     @api.constrains('new_price')
     def check_new_price(self):
         if self.new_price < 0.00:
-            raise ValidationError('New Price can not be Negetive')
+            raise ValidationError('New Price can not be Negative')
 
     @api.constrains('effective_date')
     def check_effective_date(self):
