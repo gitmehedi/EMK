@@ -6,6 +6,7 @@
     'version':'10.1.1.1',
     'depends': [
         'sale',
+        'gbs_application_group',
         'sale_stock',
         'product_sales_pricelist',
         'account',
@@ -16,10 +17,12 @@
         'stock',
         'amount_to_word_bd',
         'custom_report',
-        'delivery_challan_report',#for printing report
+        'delivery_challan_report',
     ],
 
     'data': [
+        'security/ir_rule.xml',
+        'security/security.xml',
         'security/ir.model.access.csv',
         'report/delivery_order_report.xml',
         'report/delivery_order_report_template.xml',
@@ -32,6 +35,7 @@
         'report/cash_received_report.xml',
         'report/cash_received_report_view.xml',
         'views/inherit_stock_picking_view.xml',
+        'views/stock_indent_inherit.xml',
     ],
 
     'summary': 'Delivery Authorization',

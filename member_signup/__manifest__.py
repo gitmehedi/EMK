@@ -17,7 +17,7 @@
         'data/member_signup_data.xml',
         'security/ir.model.access.csv',
         'security/ir_rule.xml',
-        'views/inherited_res_partner_views.xml',
+        'views/res_partner_views.xml',
         # 'views/member_singup_application_views.xml',
         'views/member_config_views.xml',
         'views/res_config_views.xml',

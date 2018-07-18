@@ -6,7 +6,7 @@
         <field name="groups" eval="[(4,ref('membership_extension.group_membership_manager'))]"></field>
         <field eval="1" name="perm_read"></field>
         <field eval="1" name="perm_write"></field>
-        <field eval="1" name="perm_unlink"></field>
+        <field eval="0" name="perm_unlink"></field>
         <field eval="1" name="perm_create"></field>
     </record>
 
