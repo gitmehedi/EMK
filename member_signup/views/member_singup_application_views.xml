@@ -312,10 +312,7 @@
         <field name="act_window_id" ref="action_membership_applicant"/>
     </record>
 
-    <record id="membership.action_membership_members" model="ir.actions.act_window">
-        <field name="domain">[('free_member','=',True)]</field>
-        <field name="context">{}</field>
-    </record>
+
 
     <menuitem name="Application" id="menu_membership" sequence="5" parent="menu_member_general"
               action="action_membership_applicant"/>
