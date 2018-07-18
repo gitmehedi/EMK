@@ -29,6 +29,7 @@
         'gbs_sales_delivery_goods',
         'customer_credit_limit',
         'sale',
+        'gbs_procure_n_commercial_access',
     ],
 
 
@@ -36,6 +37,8 @@
     'data': [
         'security/ir.model.access.csv',
         'security/ir_rule.xml',
+        'views/lc_sales_comm_acc.xml',
         'views/menu_items.xml',
+
     ],
 }

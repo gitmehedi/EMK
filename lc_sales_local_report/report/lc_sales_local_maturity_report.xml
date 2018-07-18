@@ -43,11 +43,11 @@
                                     <th class="text-center" style="width:20%;">Customer</th>
                                     <th class="text-center" style="width:10%;">L/C No</th>
                                     <th class="text-center" style="width:10%;">Shipment No</th>
-                                    <th class="text-center" style="width:8%;">Value</th>
+                                    <th class="text-center" style="width:10%;">Value</th>
                                     <th class="text-center" style="width:6%;">Tenor</th>
                                     <th class="text-center" style="width:12%;">Customer Bank</th>
-                                    <th class="text-center" style="width:8%;">Maturity</th>
-                                    <th class="text-center" style="width:12%;">Bill Id</th>
+                                    <th class="text-center" style="width:7%;">Maturity</th>
+                                    <th class="text-center" style="width:11%;">Bill Id</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -69,26 +69,38 @@
                                             <td class="text-left">
                                                 <t t-esc="line['shipment_name']"/>
                                             </td>
-                                            <td class="text-center">
-                                                <span t-esc="line['currency']"/>&amp;nbsp;&amp;nbsp;<span t-esc="line['value']"/>
+                                            <td>
+                                                <span style="float:left;" t-esc="line['currency']"/><span style="float:right;" t-esc="line['value']"/>
                                             </td>
-                                            <td class="text-center">
+                                            <td class="text-left">
                                                 <t t-esc="line['tenor']"/>
                                             </td>
                                             <td class="text-left">
                                                 <t t-esc="line['customer_bank']"/>
                                             </td>
-                                            <td class="text-center">
+                                            <td class="text-left">
                                                 <t t-if="line['to_maturity_date']">
                                                     <t t-esc="time.strftime('%d-%b-%Y',time.strptime(line['to_maturity_date'],'%Y-%m-%d'))"/>
                                                 </t>
                                             </td>
-                                            <td class="text-center">
+                                            <td class="text-left">
                                                 <t t-esc="line['bill_id']" />
                                             </td>
                                         </tr>
                                     </t>
                                 </t>
+                                <tr style="font-weight: bold; background-color: #897d79; border-bottom: 1px solid black;">
+                                    <td colspan="4" class="text-left">
+                                        <t t-esc="total['title']"/>
+                                    </td>
+                                    <td class="text-right">
+                                        <t t-esc="total['total_val']"/>
+                                    </td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
                             </tbody>
                         </table>
                     </div>

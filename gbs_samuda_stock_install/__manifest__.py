@@ -39,6 +39,7 @@
         'stock_issue_report',
         'stock_inventory_extend',
         'stock_picking_loan',
+            'gbs_product_cost_price_history',
     ],
 
     'installable': True,

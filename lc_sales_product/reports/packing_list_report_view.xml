@@ -44,7 +44,7 @@
                                                     Invoice No: <strong t-esc="data['invoice_id']"/>
                                                 </td>
                                                 <td class="w50 bt-0">
-                                                    Date: <strong t-esc="data['invoice_date']"/>
+                                                    Date: <strong t-esc="data['invoice_date']" t-options='{"widget": "date"}'/>
                                                 </td>
                                             </tr>
                                             <tr class="odo-bg-gray">
@@ -86,7 +86,12 @@
                                         <div>
                                             <p>
                                                 Drawn under the Documentary Credit No.: <br/>
-                                                <strong t-esc="data['lc_id']"/> Date: <strong t-esc="data['lc_date']"/> <br/>
+                                                <strong t-esc="data['lc_id']"/> Date: <strong t-esc="data['lc_date']" t-options='{"widget": "date"}'/> <br/>
+                                                <t t-foreach="lc_revision_list" t-as="r">
+                                                    <strong>
+                                                        Number of Amendment :<span t-esc="r['no']"/> &amp; Date :<span t-esc="r['date']" t-options='{"widget": "date"}'/> <br/>
+                                                    </strong>
+                                                </t>
                                                 <span style="padding-left:25%">of</span> <br/>
                                                 <span t-esc="data['second_party_bank']"/>
                                             </p>

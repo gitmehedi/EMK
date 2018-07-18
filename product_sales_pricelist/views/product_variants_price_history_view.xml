@@ -28,6 +28,7 @@
                     <field name="product_package_mode"/>
                     <field name="uom_id"/>
                     <field name="new_price"/>
+                    <field name="discount"/>
                     <field name="currency_id"/>
                     <field name="approve_price_date" string="Effective Date"/>
                 </tree>
@@ -35,14 +36,14 @@
         </record>
 
         <record id="action_product_variants_sale_price_history_tree_view" model="ir.actions.act_window">
-            <field name="name">Product Variant Price</field>
+            <field name="name">Current Approved Price</field>
             <field name="res_model">product.sale.history.line</field>
             <field name="view_mode">tree</field>
             <field name="view_id" ref="product_sale_price_history_variant_wise_tree"/>
         </record>
 
         <menuitem id="variant_wise_price_history_menu"
-                  name="Product Variant Price" sequence="10"
+                  name="Current Approved Price" sequence="10"
                   parent="custom_menu_products"
                   groups="account.group_account_user,gbs_application_group.group_sales_customer_manager,gbs_application_group.group_sales_product_manager,sales_team.group_sale_salesman_all_leads,gbs_application_group.group_head_sale,gbs_application_group.group_head_account,gbs_application_group.group_cxo"
                   action="action_product_variants_sale_price_history_tree_view"/>

@@ -1,4 +1,5 @@
 from odoo import fields,api, models
+from odoo.tools.misc import formatLang
 
 class LCSalesMaturityReport(models.AbstractModel):
     _name = 'report.lc_sales_local_report.lc_sales_maturity_temp'
@@ -17,6 +18,7 @@ class LCSalesMaturityReport(models.AbstractModel):
             'record': data,
             'lines': get_data['data_list'],
             'address': data['address'],
+            'total': get_data['total'],
 
         }
         return self.env['report'].render('lc_sales_local_report.lc_sales_maturity_temp', docargs)
@@ -24,7 +26,11 @@ class LCSalesMaturityReport(models.AbstractModel):
     def get_report_data(self, data):
         data_list = []
         product_temp_id = data['product_temp_id']
-        currency_format = '9,99,99,99,999'
+
+        total_value = {
+            'title': 'TOTAL VALUE',
+            'total_val': 0,
+        }
 
         sql_in_tk = '''SELECT DISTINCT pt.id as template_id,
                               lc.id as lc_id,
@@ -32,7 +38,7 @@ class LCSalesMaturityReport(models.AbstractModel):
                               pt.name as product_name,
                               ps.name as shipment_name,
                               lc.unrevisioned_name as lc_name, 
-                              to_char(ps.invoice_value, '%s') as value,
+                              COALESCE((ps.invoice_value),0) as value,
                               rp.name as customer,
                               lc.tenure as tenor,
                               lc.second_party_bank as customer_bank,
@@ -50,11 +56,14 @@ class LCSalesMaturityReport(models.AbstractModel):
                           LEFT JOIN res_currency rc on lc.currency_id = rc.id
                        WHERE pt.id = %s AND lc.type ='export' AND lc.region_type = 'local' AND ps.state = 'to_maturity'
                        ORDER BY pt.id ASC
-                    '''% (currency_format,product_temp_id)
+                    '''% (product_temp_id)
 
         self.env.cr.execute(sql_in_tk)
         for vals in self.env.cr.dictfetchall():
             if vals:
+                total_value['total_val'] = total_value['total_val'] + vals['value']
+                vals['value'] = formatLang(self.env, vals['value']) if vals['value'] else None
                 data_list.append(vals)
 
-        return {'data_list': data_list}
+        total_value['total_val'] = formatLang(self.env, total_value['total_val']) if total_value['total_val'] else None
+        return {'data_list': data_list ,'total': total_value}

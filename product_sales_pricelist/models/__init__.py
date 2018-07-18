@@ -3,3 +3,4 @@ import product_sale_price_history_line
 import inherit_product_template
 import product_packaging_mode
 import inherit_res_partner
+import inherited_product_product

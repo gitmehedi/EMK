@@ -14,6 +14,7 @@ class CommercialInvoice(models.AbstractModel):
         qty_list = []
         total_price_list = []
         pi_id_list = []
+        lc_revision_list = []
 
         data['company_id'] = shipment_obj.company_id.name
         data['factory'] = report_utility_pool.getAddressByUnit(shipment_obj.operating_unit_id)
@@ -22,13 +23,17 @@ class CommercialInvoice(models.AbstractModel):
         data['invoice_id'] = shipment_obj.invoice_id.display_name
         data['invoice_date'] = shipment_obj.invoice_id.date_invoice
         data['terms_condition'] = shipment_obj.lc_id.terms_condition
-        data['lc_id'] = shipment_obj.lc_id.name
+        data['lc_id'] = shipment_obj.lc_id.unrevisioned_name
         data['lc_date'] = shipment_obj.lc_id.issue_date
         data['second_party_bank'] = shipment_obj.lc_id.second_party_bank
         data['currency_id'] = shipment_obj.lc_id.currency_id.name
 
         for pi_id in shipment_obj.lc_id.pi_ids:
             pi_id_list.append({'pi_id':pi_id.name,'pi_date':pi_id.create_date})
+
+
+        for revision in shipment_obj.lc_id.old_revision_ids:
+            lc_revision_list.append({'no': revision.revision_number + 1, 'date': revision.amendment_date})
 
         if shipment_obj.shipment_product_lines:
             for prod_line in shipment_obj.shipment_product_lines:
@@ -57,6 +62,7 @@ class CommercialInvoice(models.AbstractModel):
             'total_qty': total_qty,
             'total_price': total_price,
             'pi_id_list': pi_id_list,
+            'lc_revision_list': lc_revision_list
         }
 
         return self.env['report'].render('lc_sales_product.report_commercial_invoice', docargs)

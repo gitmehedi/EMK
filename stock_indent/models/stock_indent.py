@@ -1,7 +1,6 @@
-from odoo import api, fields, models, _
 import time
-import datetime
-from datetime import timedelta
+from odoo import api, fields, models, _
+from datetime import datetime, timedelta
 from odoo.addons import decimal_precision as dp
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
@@ -24,7 +23,7 @@ class IndentIndent(models.Model):
 
     @api.model
     def _get_required_date(self):
-        return datetime.datetime.strftime(datetime.datetime.today() + timedelta(days=7), DEFAULT_SERVER_DATETIME_FORMAT)
+        return datetime.strftime(datetime.today() + timedelta(days=7), DEFAULT_SERVER_DATETIME_FORMAT)
 
     @api.multi
     def _default_department(self):
@@ -34,7 +33,7 @@ class IndentIndent(models.Model):
     name = fields.Char('Indent #', size=30, readonly=True, default="/")
     approve_date = fields.Datetime('Approve Date', readonly=True)
     indent_date = fields.Datetime('Indent Date', required=True, readonly=True,
-                                  default=datetime.datetime.today())
+                                  default = fields.Datetime.now)
     required_date = fields.Date('Required Date', required=True,readonly=True,states={'draft': [('readonly', False)]},
                                 default=lambda self: self._get_required_date())
     indentor_id = fields.Many2one('res.users', string='Indentor', required=True, readonly=True,
@@ -131,7 +130,7 @@ class IndentIndent(models.Model):
             days_delay = 0
         if self.requirement == '1':
             days_delay = 7
-        required_day = datetime.datetime.strftime(datetime.datetime.today() + timedelta(days=days_delay),
+        required_day = datetime.strftime(datetime.today() + timedelta(days=days_delay),
                                                   DEFAULT_SERVER_DATETIME_FORMAT)
         self.required_date= required_day
 
@@ -249,7 +248,7 @@ class IndentIndent(models.Model):
         picking_obj = self.env['stock.picking']
         picking_id = False
         for line in self.product_lines:
-            date_planned = datetime.datetime.strptime(self.indent_date, DEFAULT_SERVER_DATETIME_FORMAT)
+            date_planned = datetime.strptime(self.indent_date, DEFAULT_SERVER_DATETIME_FORMAT)
 
             if line.product_id:
                 if not picking_id:

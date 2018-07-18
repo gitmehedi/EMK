@@ -20,7 +20,7 @@ class ItemBorrowing(models.Model):
 
     name = fields.Char('Issue #', size=100, readonly=True, default="/")
     request_date = fields.Datetime('Request Date', required=True, readonly=True,
-                                 default=datetime.today())
+                                 default=fields.Datetime.now)
     issuer_id = fields.Many2one('res.users', string='Issuer', required=True, readonly=True,
                                 default=lambda self: self.env.user,
                                 states={'draft': [('readonly', False)]})

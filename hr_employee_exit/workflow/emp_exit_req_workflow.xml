@@ -34,7 +34,7 @@
             <field name="wkf_id" ref="wkf_emp_exit"/>
             <field name="name">first_validate</field>
             <field name="kind">function</field>
-            <field name="action">exit_first_validate()</field>
+            <field name="action">exit_done()</field>
             <field name="split_mode">OR</field>
         </record>
         <record model="workflow.activity" id="act_exit_validate2"> <!-- first_accepted -->
