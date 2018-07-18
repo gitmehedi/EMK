@@ -8,6 +8,7 @@
                 report_type="qweb-pdf"
                 file="delivery_challan_report.report_delivery_cha"
                 name="delivery_challan_report.report_delivery_cha"
+                menu="False"
         />
 
 
@@ -17,7 +18,7 @@
                     <div class="page" style="page-break-inside: auto">
                         <div class="row">
                             <div class="col-xs-6" style="text-align:left; padding: 1px 0px 100px 100px;">
-                                <span t-esc="o.transport_id.display_name"/>
+                                <!--<span t-esc="o.transport_id.display_name"/>-->
                                 <br/>
                                 <span t-esc="o.partner_id.name"/>
                                 <br/>
@@ -80,7 +81,6 @@
                                 </tr>
 
                             </div>
-                            <span t-esc="o.partner_id.vat"/>
 
                         </div>
                     </div>

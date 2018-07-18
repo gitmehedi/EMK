@@ -110,6 +110,12 @@ class InheritStockPicking(models.Model):
             stock_lc.lc_id = stock_lc.delivery_order_id.sale_order_id.lc_id.id
 
 
+    @api.multi
+    def do_print_delivery_challan(self):
+        return self.env["report"].get_action(self, 'delivery_challan_report.report_delivery_cha')
+
+
+
 class InheritStockMove(models.Model):
     _inherit = 'stock.move'
 

@@ -28,6 +28,7 @@
         'lc_sales_product',
         'lc_sales_local_report',
         'gbs_sales_jar_count',
+        'delivery_challan_report',
     ],
 
     'data': [ ],

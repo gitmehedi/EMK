@@ -16,7 +16,7 @@
         'stock',
         'amount_to_word_bd',
         'custom_report',
-        'gbs_sales_delivery_goods'
+        'delivery_challan_report',#for printing report
     ],
 
     'data': [
