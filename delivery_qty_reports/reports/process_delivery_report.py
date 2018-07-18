@@ -55,6 +55,9 @@ class ProcessDeliveryReport(models.AbstractModel):
 
                 data[rec.product_id.id]['total']['delivered_qty'] = data[rec.product_id.id]['total'][
                                                                  'delivered_qty'] + rec.qty_done
+                # if rec.product_qty:
+                #     data[rec.product_id.id]['total']['issued_do_today'] = data[rec.product_id.id]['total'][
+                #                                                         'issued_do_today'] + rec.product_qty
 
                 data[rec.product_id.id]['details'].append(val)
 
