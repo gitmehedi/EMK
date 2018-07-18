@@ -6,6 +6,7 @@
     'version':'10.1.1.1',
     'depends': [
         'sale',
+        'gbs_application_group',
         'sale_stock',
         'product_sales_pricelist',
         'account',
@@ -16,8 +17,7 @@
         'stock',
         'amount_to_word_bd',
         'custom_report',
-        'gbs_sales_delivery_goods',
-        'gbs_application_group',
+        'delivery_challan_report',
     ],
 
     'data': [

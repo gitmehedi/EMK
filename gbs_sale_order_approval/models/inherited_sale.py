@@ -60,8 +60,10 @@ class SaleOrder(models.Model):
     currency_id = fields.Many2one("res.currency", related='', string="Currency", required=True)
 
     """ PI and LC """
-    pi_id = fields.Many2one('proforma.invoice', string='PI Ref. No.',domain=[('state', '=', 'confirm')])
-    lc_id = fields.Many2one('letter.credit', string='LC Ref. No.')
+    pi_id = fields.Many2one('proforma.invoice', string='PI Ref. No.', domain=[('state', '=', 'confirm')], readonly=True,
+                            states={'to_submit': [('readonly', False)]})
+    lc_id = fields.Many2one('letter.credit', string='LC Ref. No.', readonly=True,
+                            states={'to_submit': [('readonly', False)]})
 
     remaining_credit_limit = fields.Char(string="Customer's Remaining Credit Limit", track_visibility='onchange')
 
@@ -72,7 +74,6 @@ class SaleOrder(models.Model):
         res = super(SaleOrder, self).action_invoice_create()
         self.invoice_ids.write({'is_commission_generated': False})
         return res
-
 
     @api.depends('order_line.da_qty')
     def _da_button_show_hide(self):
@@ -94,11 +95,9 @@ class SaleOrder(models.Model):
             currency = self.currency_id.name.encode('ascii', 'ignore')
             return amount_to_text_en.amount_to_text(number, 'en', currency)
 
-
     @api.multi
     def action_validate(self):
         self.state = 'sent'
-
 
     @api.multi
     def action_to_submit(self):
@@ -107,7 +106,6 @@ class SaleOrder(models.Model):
                 raise UserError('Expiration Date can not be less than Order Date')
 
             orders.state = 'draft'
-
 
     @api.onchange('type_id')
     def onchange_type(self):
@@ -134,7 +132,7 @@ class SaleOrder(models.Model):
                 if orders.credit_sales_or_lc == 'lc_sales':
 
                     if price_change_pool.new_price >= lines.price_unit and lines.price_unit >= discounted_product_price:
-                        return False # Single Validation
+                        return False  # Single Validation
 
                     # If LC and PI ref is present, go to the Final Approval, Else go to Second level approval
                     if orders.lc_id and orders.pi_id:
@@ -152,29 +150,29 @@ class SaleOrder(models.Model):
 
                 elif orders.credit_sales_or_lc == 'credit_sales':
 
-                        partner_pool = orders.partner_id
+                    partner_pool = orders.partner_id
 
-                        account_receivable = abs(partner_pool.credit)
-                        sales_order_amount_total = orders.amount_total
+                    account_receivable = abs(partner_pool.credit)
+                    sales_order_amount_total = orders.amount_total
 
-                        unpaid_tot_inv_amt = orders.unpaid_total_invoiced_amount()
-                        undelivered_tot_do_amt = orders.undelivered_do_qty_amount()
+                    unpaid_tot_inv_amt = orders.unpaid_total_invoiced_amount()
+                    undelivered_tot_do_amt = orders.undelivered_do_qty_amount()
 
-                        customer_total_credit = account_receivable + sales_order_amount_total + unpaid_tot_inv_amt + undelivered_tot_do_amt
-                        customer_credit_limit = partner_pool.credit_limit
+                    customer_total_credit = account_receivable + sales_order_amount_total + unpaid_tot_inv_amt + undelivered_tot_do_amt
+                    customer_credit_limit = partner_pool.credit_limit
 
-                        if price_change_pool.new_price >= lines.price_unit and lines.price_unit >= discounted_product_price:
-                            return False  # Single Validation
+                    if price_change_pool.new_price >= lines.price_unit and lines.price_unit >= discounted_product_price:
+                        return False  # Single Validation
 
-                        for coms in cust_commission_pool:
-                            if (abs(customer_total_credit) > customer_credit_limit
-                                or lines.commission_rate != coms.commission_rate
-                                or lines.price_unit < discounted_product_price or lines.price_unit > discounted_product_price):
+                    for coms in cust_commission_pool:
+                        if (abs(customer_total_credit) > customer_credit_limit
+                            or lines.commission_rate != coms.commission_rate
+                            or lines.price_unit < discounted_product_price or lines.price_unit > discounted_product_price):
 
-                                return True
-                                break;
-                            else:
-                                return False
+                            return True
+                            break;
+                        else:
+                            return False
 
         for lines in self.order_line:
             product_pool = self.env['product.product'].search([('id', '=', lines.product_id.ids)])
@@ -184,7 +182,6 @@ class SaleOrder(models.Model):
                 return False  # One level approval process
 
     double_validation = fields.Boolean('Apply Double Validation', compute="_is_double_validation_applicable")
-
 
     # Total DO Qty amount which is not delivered yet
     @api.multi
@@ -212,7 +209,6 @@ class SaleOrder(models.Model):
 
         return tot_undelivered_amt
 
-
     ## Total Invoiced amount which is not in Paid state
     @api.multi
     def unpaid_total_invoiced_amount(self):
@@ -228,7 +224,6 @@ class SaleOrder(models.Model):
             total_unpaid_amount = sum(total_list)
 
         return total_unpaid_amount
-
 
     @api.multi
     def action_submit(self):
@@ -269,7 +264,7 @@ class SaleOrder(models.Model):
                     discounted_product_price = price_change_pool.new_price - price_change_pool.discount
 
                     if price_change_pool.new_price >= lines.price_unit and lines.price_unit >= discounted_product_price:
-                        return False # Single Validation
+                        return False  # Single Validation
 
                     for coms in cust_commission_pool:
                         if (abs(customer_total_credit) > customer_credit_limit
@@ -282,12 +277,70 @@ class SaleOrder(models.Model):
                         else:
                             is_double_validation = False
 
-
         if is_double_validation:
             order.write({'state': 'validate'})  # Go to two level approval process
+
         else:
+            self._automatic_delivery_authorization_creation()
+
             order.write({'state': 'done'})  # One level approval process
 
+    @api.multi
+    def action_confirm(self):
+        res = super(SaleOrder, self).action_confirm()
+        self._automatic_delivery_authorization_creation()
+
+        return res
+
+    @api.multi
+    def _automatic_delivery_authorization_creation(self):
+
+        vals = {
+            'sale_order_id': self.id,
+            'deli_address': self.partner_shipping_id.name,
+            'currency_id': self.type_id.currency_id,
+            'partner_id': self.partner_id,
+            'so_type': self.credit_sales_or_lc,
+            'so_date': self.date_order,
+            # 'warehouse_id': self.warehouse_id,
+            'amount_untaxed': self.amount_untaxed,
+            'tax_value': self.amount_tax,
+            'total_amount': self.amount_total,
+        }
+
+        da_pool = self.env['delivery.authorization'].create(vals)
+
+        for record in self.order_line:
+            da_line = {
+                'parent_id': da_pool.id,
+                'product_id': record.product_id.id,
+                'quantity': record.product_uom_qty,
+                'pack_type': self.pack_type.id,
+                'uom_id': record.product_uom.id,
+                'price_unit': record.price_unit,
+                'price_subtotal': record.price_subtotal,
+                'tax_id': record.tax_id
+            }
+
+            self.env['delivery.authorization.line'].create(da_line)
+
+    def action_view_delivery_auth(self):
+        form_view = self.env.ref('delivery_order.delivery_order_form')
+        tree_view = self.env.ref('delivery_order.delivery_authorization_tree_view')
+        da_pool = self.env['delivery.authorization'].search([('sale_order_id', '=', self.id)])
+
+        return {
+            'name': ('Delivery Authorization'),
+            "type": "ir.actions.act_window",
+            'res_model': 'delivery.authorization',
+            'view_type': 'form',
+            'view_mode': 'tree,form',
+            'views': [
+                (tree_view.id, 'tree'),
+                (form_view.id, 'form'),
+            ],
+            "domain": [('id', '=', da_pool.id)],
+        }
 
     def second_approval_business_logics(self, cust_commission_pool, lines, price_change_pool):
         for coms in cust_commission_pool:
@@ -296,16 +349,15 @@ class SaleOrder(models.Model):
                     discounted_product_price = price_history.new_price - price_history.discount
 
                     if price_history.new_price >= lines.price_unit and lines.price_unit >= discounted_product_price:
-                        return False # Single Validation
+                        return False  # Single Validation
 
-                    if lines.commission_rate != coms.commission_rate or\
+                    if lines.commission_rate != coms.commission_rate or \
                             (lines.price_unit < discounted_product_price
                              or lines.price_unit > discounted_product_price):
                         return True
                         break;
                     else:
                         return False
-
 
     @api.multi
     def action_create_delivery_order(self):
@@ -321,18 +373,15 @@ class SaleOrder(models.Model):
             'context': {'default_sale_order_id': self.id},
         }
 
-
     @api.multi
     @api.onchange('currency_id')
     def currency_id_onchange(self):
         self._get_changed_price()
 
-
     @api.multi
     @api.onchange('pack_type')
     def pack_type_onchange(self):
         self._get_changed_price()
-
 
     def _get_changed_price(self):
         for order in self:
@@ -342,11 +391,10 @@ class SaleOrder(models.Model):
                     vals['price_unit'] = line._get_product_sales_price(line.product_id)
                     line.update(vals)
 
-
     @api.onchange('pi_id')
     def onchange_pi_id(self):
 
-        pi_pool = self.env['proforma.invoice'].search([('id','=',self.pi_id.id)])
+        pi_pool = self.env['proforma.invoice'].search([('id', '=', self.pi_id.id)])
 
         if pi_pool:
             val = []
@@ -371,12 +419,11 @@ class SaleOrder(models.Model):
                                    'commission_rate': self.commission_rate,
                                    'price_subtotal': record.price_subtotal,
                                    # 'tax_id': record.tax.id,
-                                   'da_qty': record.quantity, #this value is set to show hide DA Create Button on SO
+                                   'da_qty': record.quantity,  # this value is set to show hide DA Create Button on SO
 
                                    }))
 
             self.order_line = val
-
 
 
 class InheritedSaleOrderLine(models.Model):
@@ -458,5 +505,3 @@ class InheritedSaleOrderLine(models.Model):
 
         if self.da_qty > self.product_uom_qty:
             raise ValidationError('DA Qty can not be greater than Ordered Qty')
-
-

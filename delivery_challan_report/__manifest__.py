@@ -9,11 +9,11 @@
     ],
 
     'data': [
-        'reports/delivery_challan_potro_report_view.xml',
         'reports/delivery_challan_report_view.xml',
+        'reports/inherit_stock_picking_report.xml',
     ],
 
-    'summary': 'Reports printing for Delivery Challan and Challan Potro',
+    'summary': 'Reports printing for Delivery Challan',
     'installable': True,
     'application': False,
 }

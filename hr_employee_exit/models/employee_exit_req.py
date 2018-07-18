@@ -87,6 +87,7 @@ class EmployeeExitReq(models.Model):
         self.checklists_ids = 0
         return True
 
+    #exit request confirm
     @api.multi
     def exit_confirm(self):
         self.checklists_ids = []
@@ -105,15 +106,58 @@ class EmployeeExitReq(models.Model):
                             }))
         self.checklists_ids = vals
         self.confirm_by = self.env.user
+        self.send_mail_exit_request_confirm()
         return self.write({'state': 'confirm','confirm_date': time.strftime('%Y-%m-%d %H:%M:%S')})
 
     @api.multi
+    def send_mail_exit_request_confirm(self):
+        email_server_obj = self.env['ir.mail_server'].search([], order='id ASC', limit=1)
+        model_data_pool = self.env['ir.model.data'].search([('name', '=', 'group_hr_manager')], limit=1)
+        record_id = model_data_pool.res_id
+        manager = self.env['res.groups'].search([('id', '=', record_id)]).users
+        emailto = []
+        for eml in manager:
+            login = eml.login
+            emailto.append(login)
+        emailto.append(self.employee_id.parent_id.user_id.login)
+        for email in emailto:
+            template = self.env.ref('hr_employee_exit.example_exit_req_email_template')
+            template.write({
+                'subject': "Exit Request",
+                'email_from': email_server_obj,
+                'email_to': email})
+            self.env['mail.template'].browse(template.id).send_mail(self.id)
+
+    # exit request approved
+    @api.multi
     def exit_validate(self):
         self.approver1_by = self.env.user
+        self.send_mail_template()
         return self.write({'state': 'validate1', 'approved1_date': time.strftime('%Y-%m-%d %H:%M:%S')})
 
     @api.multi
-    def exit_first_validate(self):
+    def send_mail_template(self):
+        email_server_obj = self.env['ir.mail_server'].search([], order='id ASC', limit=1)
+        model_data_pool = self.env['ir.model.data'].search([('name', '=', 'group_hr_manager')], limit=1)
+        record_id = model_data_pool.res_id
+        manager = self.env['res.groups'].search([('id', '=', record_id)]).users
+        emailto = []
+        for eml in manager:
+            login = eml.login
+            emailto.append(login)
+        emailto.append(self.employee_id.user_id.login)
+        for email in emailto:
+            template = self.env.ref('hr_employee_exit.email_template_exit_req_approved')
+            template.write({
+                'subject': "Exit Request has been approved",
+                'email_from': email_server_obj,
+                'email_to': email})
+            self.env['mail.template'].browse(template.id).send_mail(self.id)
+
+
+    #exit request done(final approval)
+    @api.multi
+    def exit_done(self):
         self.pen_checklists_ids = []
         vals = []
         line_obj = self.env['hr.exit.checklists.line'].search(
@@ -128,43 +172,9 @@ class EmployeeExitReq(models.Model):
                 }))
         self.pen_checklists_ids = vals
         self.approver2_by = self.env.user
-
-
-        #email_server_list = []
-        template_obj = self.env['mail.mail']
-        email_server_obj = self.env['ir.mail_server'].search([], order='id ASC',limit=1)
-        model_data_pool = self.env['ir.model.data'].search(
-            [('name', '=', 'group_hr_manager')], limit=1)
-        record_id = model_data_pool.res_id
-        manager = self.env['res.groups'].search([('id', '=', record_id)]).users
-        emp = self.employee_id.name
-        emailto = []
-        for eml in manager:
-            login= eml.login
-            emailto.append(login)
-        emailto.append(self.employee_id.parent_id.user_id.login)
-        template = self.env.ref('hr_employee_exit.example_email_template1')
-        #mailing.write({'body_html': self.env['mail.template']._replace_local_links(template.body_html)})
-        #self.env['mail.template']._replace_local_links(template.body_html),
-
-        for email in emailto:
-            template_data = {
-                'subject': emp+' request is approved',
-                'body_html': self.env['mail.template'].browse(template.id).send_mail(self.id),
-                'email_from': email_server_obj,
-                'email_to': email
-            }
-            template_id = template_obj.create(template_data)
-        template_obj.send(template_id)
         return self.write({'state': 'validate','approved2_date': time.strftime('%Y-%m-%d %H:%M:%S')})
 
-    @api.multi
-    def send_mail_template(self):
-        template = self.env.ref('hr_employee_exit.example_email_template1')
-        self.env['mail.template'].browse(template.id).send_mail(self.id)
-
-
-
+    # Exit request cancel
     @api.multi
     def exit_refuse(self):
         for emp_exit in self:
@@ -172,17 +182,24 @@ class EmployeeExitReq(models.Model):
                 self.write({'state': 'refuse'})
             else:
                 self.write({'state': 'refuse'})
+        self.send_mail_exit_request_cancel()
         return True
+
+    @api.multi
+    def send_mail_exit_request_cancel(self):
+        email_server_obj = self.env['ir.mail_server'].search([], order='id ASC', limit=1)
+        template = self.env.ref('hr_employee_exit.send_mail_exit_request_cancel')
+        template.write({
+            'subject': "Exit request has been cancelled",
+            'email_from': email_server_obj,
+            'email_to': self.employee_id.user_id.login})
+        self.env['mail.template'].browse(template.id).send_mail(self.id)
 
     @api.constrains('req_date', 'last_date')
     def _check_last_date(self):
         if self.req_date > self.last_date :
             raise Warning('Last Date must be grater than request date.')
 
-    # @api.multi
-    # def send_mail_template(self):
-    #     template = self.env.ref('hr_employee_exit.example_email_template')
-    #     self.env['mail.template'].browse(template.id).send_mail(self.id)
 
 
 class EmpReqChecklistsLine(models.Model):
@@ -227,8 +244,6 @@ class PendingChecklistsLine(models.Model):
     status = fields.Selection([('draft', 'Draft'), ('verify', 'Verified')],
                               readonly=True, copy=False,
                               default='draft', track_visibility='onchange')
-
-
     @api.multi
     def check_list_verify(self):
         exit_req_obj = self.env['hr.exit.checklists.line'].search(
@@ -244,4 +259,25 @@ class PendingChecklistsLine(models.Model):
                     exit_line.write({'state': 'received'})
             else:
                 pass
+        self.send_mail_received_item()
         return self.write({'status': 'verify', 'state': 'received'})
+
+    @api.multi
+    def send_mail_received_item(self):
+        email_server_obj = self.env['ir.mail_server'].search([], order='id ASC', limit=1)
+        model_data_pool = self.env['ir.model.data'].search([('name', '=', 'group_hr_manager')], limit=1)
+        record_id = model_data_pool.res_id
+        manager = self.env['res.groups'].search([('id', '=', record_id)]).users
+        emailto = []
+        for eml in manager:
+            login = eml.login
+            emailto.append(login)
+        emailto.append(self.employee_id.parent_id.user_id.login)
+        emailto.append(self.employee_id.user_id.login)
+        for email in emailto:
+            template = self.env.ref('hr_employee_exit.email_template_received_item')
+            template.write({
+                'subject': "Items has been received",
+                'email_from': email_server_obj,
+                'email_to': email})
+            self.env['mail.template'].browse(template.id).send_mail(self.id)
