@@ -13,7 +13,6 @@
     ],
 
     'data': [
-        'security/ir.model.access.csv',
         'reports/process_delivery_report_view.xml',
         'reports/process_monthly_delivery_report_view.xml',
         'wizards/daily_delivery_report_wizard_view.xml',

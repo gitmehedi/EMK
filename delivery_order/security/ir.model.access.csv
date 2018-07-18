@@ -100,13 +100,13 @@ access_do_user_del_auth_line,access_do_user_del_auth_line,delivery_order.model_d
 access_do_user_pricelist,access_do_user_pricelist,product_sales_pricelist.model_product_sale_history_line,stock.delivery_user,1,1,1,0
 access_do_user_stock_order_point,access_do_user_stock_order_point,stock.model_stock_warehouse_orderpoint,stock.delivery_user,1,0,0,0
 
-
-
-
-
-
-
-
-
-
+access_do_user_acc_invoice,access_do_user_acc_invoice,account.model_account_invoice,stock.delivery_user,1,1,1,0
+access_do_user_acc_journal,access_do_user_acc_journal,account.model_account_journal,stock.delivery_user,1,1,1,0
+access_do_user_acc_inv_tax,access_do_user_acc_inv_tax,account.model_account_invoice_tax,stock.delivery_user,1,1,1,0
+access_do_user_credit_lim,access_do_user_credit_lim,customer_credit_limit.model_res_partner_credit_limit,stock.delivery_user,1,1,1,0
+access_do_user_commission,access_do_user_commission,gbs_sales_commission.model_customer_commission,stock.delivery_user,1,1,1,0
+access_do_user_del_auth,access_do_user_del_auth,delivery_order.model_delivery_authorization,stock.delivery_user,1,1,1,0
+access_do_user_del_auth_line,access_do_user_del_auth_line,delivery_order.model_delivery_authorization_line,stock.delivery_user,1,1,1,0
+access_do_user_pricelist,access_do_user_pricelist,product_sales_pricelist.model_product_sale_history_line,stock.delivery_user,1,1,1,0
+access_do_user_stock_order_point,access_do_user_stock_order_point,stock.model_stock_warehouse_orderpoint,stock.delivery_user,1,0,0,0
 

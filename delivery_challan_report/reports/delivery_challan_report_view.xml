@@ -18,6 +18,8 @@
                     <div class="page" style="page-break-inside: auto">
                         <div class="row">
                             <div class="col-xs-6" style="text-align:left; padding: 1px 0px 100px 100px;">
+                                 <span t-esc="o.name"/>
+                                <br/>
                                 <span t-esc="o.vehicle_no"/>
                                 <br/>
                                 <br/>
@@ -27,16 +29,15 @@
                                 <span t-esc="o.partner_id.street2"/>
                                 <span t-esc="o.partner_id.city"/>
                                 <br/>
+                                <td class="text-right">
+                                    <span t-esc="o.date_done" t-options='{"widget": "date"}'/>
+                                </td>
 
-                                <span t-esc="o.date_done"/>
 
                             </div>
 
                             <div class="col-xs-12">
                                 <tr t-foreach="o.pack_operation_ids" t-as="pack_operation">
-                                    <td>
-                                        <span t-esc="pack_operation_index+1"/>
-                                    </td>
                                     <span t-esc="o.delivery_order_id.name"/>
                                     <span t-esc="o.date_done" t-options='{"widget": "date"}'/>
 
@@ -82,7 +83,12 @@
                             </div>
 
                         </div>
+                        <td class="text-right">
+                            <span t-esc="o.date_done" t-options='{"widget": "date"}'/>
+                        </td>
+
                     </div>
+
 
                 </t>
             </t>
