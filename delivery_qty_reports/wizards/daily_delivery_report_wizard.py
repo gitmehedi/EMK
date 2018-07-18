@@ -2,7 +2,7 @@ from odoo import api, fields, models
 import datetime
 
 
-class GenerateDailyDeliveryReport(models.Model):
+class GenerateDailyDeliveryReport(models.TransientModel):
     _name = 'daily.delivery.report.wizard'
 
     report_of_day = fields.Date(string="Report of day", required=True, )
