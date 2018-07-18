@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="stock.delivery_user" model="res.groups">
+        <field name="name">Delivery Operation</field>
+        <field name="category_id" ref="gbs_application_group.module_category_sale"/>
+    </record>
+
+</odoo>
+
+

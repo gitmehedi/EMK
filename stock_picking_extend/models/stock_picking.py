@@ -4,7 +4,7 @@ from odoo.exceptions import UserError
 
 class Picking(models.Model):
     _inherit = "stock.picking"
-    _order = "write_date desc"
+    _order = "id desc"
 
     @api.model
     def _get_default_picking_type(self):
@@ -24,8 +24,6 @@ class Picking(models.Model):
         'stock.picking.type', 'Picking Type',
         required=True,default = _get_default_picking_type,
         states={'done': [('readonly', True)], 'cancel': [('readonly', True)]})
-    date_done = fields.Datetime('Date of Transfer', copy=False, readonly=False, states={'done': [('readonly', True)]},
-                                help="Completion Date of Transfer",default=fields.Datetime.now())
 
     doc_count = fields.Integer(compute='_compute_attached_docs', string="Number of documents attached")
 

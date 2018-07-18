@@ -6,16 +6,12 @@
             <field name="model">sales.delivery.goods</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Delivery Goods">
+                <form string="Transport Information">
                     <sheet>
                         <group>
                             <group>
                                 <field name="transport_details"/>
                                 <field name="transport_name"/>
-                                <field name="product_id"/>
-                                <field name="qty"/>
-                            </group>
-                            <group>
                                 <field name="vehicle_no"/>
                                 <field name="driver_no"/>
                                 <field name="driver_mob"/>
@@ -31,11 +27,9 @@
             <field name="model">sales.delivery.goods</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree string="Delivery Goods">
+                <tree string="Transport Information">
                    <field name="transport_details"/>
                     <field name="transport_name"/>
-                    <field name="product_id"/>
-                    <field name="qty"/>
                     <field name="vehicle_no"/>
                     <field name="driver_no"/>
                 </tree>

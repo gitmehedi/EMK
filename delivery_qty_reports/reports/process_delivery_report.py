@@ -10,74 +10,62 @@ class ProcessDeliveryReport(models.AbstractModel):
     @api.model
     def render_html(self, docids, data=None):
 
-        do_list = []
-
-        issued_do_sum_list = []
-        delivery_qty_sum_list = []
-        undelivery_qty_sum_list = []
-        total_do_qty = []
-
-        product_id = data['product_id']
-        op_unit = data['operating_unit_id']
         report_of_day = data['report_of_day']
 
-        stock_picking_pool = self.env['stock.picking'].search([('move_lines.product_id', '=', product_id),
-                                                               ('move_lines.operating_unit_id', '=', op_unit),
-                                                               ('min_date', '<=', report_of_day)])
+        date_start = report_of_day + ' 00:00:00'
+        date_end = report_of_day + ' 23:59:59'
 
-        report_of_day = datetime.strptime(report_of_day, "%Y-%m-%d %H:%M:%S").date()
+        stock_picking = self.env['stock.picking'].search(
+            [('min_date', '>', date_start), ('max_date', '<', date_end)])
 
-        for stocks in stock_picking_pool:
-            for stock_op in stocks.pack_operation_product_ids:
+        data = {}
+        for val in stock_picking:
+            data[val.product_id.id] = {'name': val.product_id.name + " (" + val.product_id.attribute_value_ids.name + ")",
+                                       'details': [],
+                                       'total': {'do_qty': 0,
+                                                 'un_delivered_qty': 0,
+                                                 'delivered_qty': 0,
+                                                 'delivefsdafred_qty': 0,
+                                                 'deliverefsdd_qty': 0
+                                                 }
+                                       }
 
-                DO_date = datetime.strptime(stocks.min_date, "%Y-%m-%d %H:%M:%S").date()
-                DO_Qty = stock_op.product_qty
+        for record in stock_picking:
+            for rec in record.pack_operation_product_ids:
+                val = {}
+                val['partner_id'] = record.partner_id.name
+                val['do_date'] = datetime.strptime(record.min_date, "%Y-%m-%d %H:%M:%S").date()
+                val['do_no'] = record.delivery_order_id.name
+                val['do_qty'] = rec.product_qty
+                val['un_delivered_qty'] = rec.product_qty - rec.qty_done
+                val['delivered_qty'] = rec.qty_done
+                val['product'] = rec.product_id.name + " (" + rec.product_id.attribute_value_ids.name + ")"
+                val['uom'] = 'MT'
+                #val['issued_do_today'] = rec.product_id.name + " (" + rec.product_id.attribute_value_ids.name + ")"
 
-                data = {}
-                data['partner_id'] = stocks.partner_id.name
-                data['do_date'] = DO_date
-                data['do_no'] = stocks.delivery_order_id.name
-                data['do_qty'] = DO_Qty
-                data['un_delivered_qty'] = stock_op.product_qty - stock_op.qty_done
-                data['delivered_qty'] = stock_op.qty_done
-                data['product'] = stock_op.product_id.name + " ("+stock_op.product_id.attribute_value_ids.name+")"
-
-                ## Cross match with DO Date and today's date to get Issued D.O property
-                if DO_date == date.today():
-                    data['issued_do_today'] = DO_Qty
-                    issued_do_sum_list.append(data['issued_do_today'])
+                if datetime.strptime(record.min_date, "%Y-%m-%d %H:%M:%S").date() == date.today():
+                    val['issued_do_today'] = rec.product_qty
                 else:
-                    data['issued_do_today'] = ''
+                    val['issued_do_today'] = ''
 
-            sale_order_pool = self.env['sale.order'].search([('name', '=', stocks.origin)])
-            if sale_order_pool:
-                for s in sale_order_pool.order_line:
-                    data['uom'] = s.product_uom.name
-            else:
-                data['uom'] = '-'
+                data[rec.product_id.id]['total']['do_qty'] = data[rec.product_id.id]['total'][
+                                                                 'do_qty'] + rec.product_qty
+                data[rec.product_id.id]['total']['un_delivered_qty'] = data[rec.product_id.id]['total'][
+                                                                 'un_delivered_qty'] + (rec.product_qty - rec.qty_done)
 
-            delivery_qty_sum_list.append(data['delivered_qty'])
-            undelivery_qty_sum_list.append(data['un_delivered_qty'])
-            total_do_qty.append(data['do_qty'])
+                data[rec.product_id.id]['total']['delivered_qty'] = data[rec.product_id.id]['total'][
+                                                                 'delivered_qty'] + rec.qty_done
+                # if rec.product_qty:
+                #     data[rec.product_id.id]['total']['issued_do_today'] = data[rec.product_id.id]['total'][
+                #                                                         'issued_do_today'] + rec.product_qty
 
-            do_list.append(data)
+                data[rec.product_id.id]['details'].append(val)
 
 
-        product_pool = self.env['product.product'].search([('id','=',product_id)])
-        product_name_for_report = product_pool.name  + " ("+product_pool.attribute_value_ids.name+")"
 
-        op_unit_pool = self.env['operating.unit'].search([('id','=',op_unit)])
-
-        docargs = \
-            {
-                'do_list': do_list,
-                'report_of_day': report_of_day,
-                'issued_do_sum_list': sum(issued_do_sum_list),
-                'delivery_qty_sum_list': sum(delivery_qty_sum_list),
-                'undelivery_qty_sum_list': sum(undelivery_qty_sum_list),
-                'total_do_qty': sum(total_do_qty),
-                'product_name_for_report': product_name_for_report,
-                'operating_unit_name':op_unit_pool.name
-            }
+        docargs = {
+            'do_list': data,
+            'report_of_day': report_of_day,
+        }
 
         return self.env['report'].render('delivery_qty_reports.report_daily_delivery_products', docargs)
