@@ -16,10 +16,13 @@
         'stock',
         'amount_to_word_bd',
         'custom_report',
-        'gbs_sales_delivery_goods'
+        'gbs_sales_delivery_goods',
+        'gbs_application_group',
     ],
 
     'data': [
+        'security/ir_rule.xml',
+        'security/security.xml',
         'security/ir.model.access.csv',
         'report/delivery_order_report.xml',
         'report/delivery_order_report_template.xml',
@@ -32,6 +35,7 @@
         'report/cash_received_report.xml',
         'report/cash_received_report_view.xml',
         'views/inherit_stock_picking_view.xml',
+        'views/stock_indent_inherit.xml',
     ],
 
     'summary': 'Delivery Authorization',

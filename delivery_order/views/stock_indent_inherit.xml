@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+	<data>
+
+		<menuitem
+				action="stock.stock_picking_type_action"
+				id="stock.stock_picking_type_menu"
+				parent="stock.menu_stock_root" sequence="0"
+				groups="stock.delivery_user"
+				name="Dashboard"/>
+
+	</data>
+</odoo>
