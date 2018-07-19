@@ -21,9 +21,7 @@
     ],
 
     'data': [
-        'security/ir_rule.xml',
         'security/security.xml',
-        'security/ir.model.access.csv',
         'report/delivery_order_report.xml',
         'report/delivery_order_report_template.xml',
         'wizards/letter_of_credits_view.xml',
@@ -36,6 +34,8 @@
         'report/cash_received_report_view.xml',
         'views/inherit_stock_picking_view.xml',
         'views/stock_indent_inherit.xml',
+        'security/ir.model.access.csv',
+        'security/ir_rule.xml',
     ],
 
     'summary': 'Delivery Authorization',

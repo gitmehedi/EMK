@@ -32,28 +32,28 @@ class Picking(models.Model):
                         or stock_pack_products.qty_done == stock_pack_products.product_qty:
 
                     stock_pack_products.qty_done = stock_pack_products.product_qty
-                    self.sale_id.order_line.write({'qty_to_invoice': stock_pack_products.qty_done})
-                    self.sale_id.action_invoice_create(final=True)
+                    self.sale_id.order_line.sudo().write({'qty_to_invoice': stock_pack_products.qty_done})
+                    self.sale_id.sudo().action_invoice_create(final=True)
 
                 else:
-                    self.sale_id.order_line.write({'qty_to_invoice': stock_pack_products.qty_done})
-                    self.sale_id.action_invoice_create()
+                    self.sale_id.order_line.sudo().write({'qty_to_invoice': stock_pack_products.qty_done})
+                    self.sale_id.sudo().action_invoice_create()
 
             if stock_pack_products.qty_done == 0 \
                     or stock_pack_products.qty_done == stock_pack_products.product_qty:
                 stock_pack_products.qty_done = stock_pack_products.product_qty
 
-                self.sale_id.order_line.write({'qty_to_invoice': stock_pack_products.qty_done})
+                self.sale_id.order_line.sudo().write({'qty_to_invoice': stock_pack_products.qty_done})
 
                 for do_invoices in sale_adv_pay_inv:
                     do_invoices.advance_payment_method = 'all'
-                    self.sale_id.action_invoice_create(final=True)
+                    self.sale_id.sudo().action_invoice_create(final=True)
                     break;
             else:
-                self.sale_id.order_line.write({'qty_to_invoice': stock_pack_products.qty_done})
+                self.sale_id.order_line.sudo().write({'qty_to_invoice': stock_pack_products.qty_done})
                 for do_invoices in sale_adv_pay_inv:
                     do_invoices.advance_payment_method = 'delivered'
-                    self.sale_id.action_invoice_create()
+                    self.sale_id.sudo().action_invoice_create()
                     break;
 
 

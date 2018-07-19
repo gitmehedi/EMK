@@ -10,13 +10,10 @@
                     <field name="show_transport_info"/>
                 </xpath>
                 <xpath expr="//field[@name='show_transport_info']" position="after">
-                    <field name="transport_details" attrs="{'invisible': [('show_transport_info','=', False)]}"/>
-                </xpath>
-                <xpath expr="//field[@name='transport_details']" position="after">
-                    <field name="transport_name" attrs="{'invisible': [('show_transport_info','=', False)]}"/>
+                    <field name="transport_details" widget="radio" options="{'horizontal': true}" attrs="{'invisible': [('show_transport_info','=', False)]}"/>
                 </xpath>
 
-                <xpath expr="//field[@name='transport_name']" position="after">
+                <xpath expr="//field[@name='transport_details']" position="after">
                     <field name="vehicle_no" attrs="{'invisible': [('show_transport_info','=', False)]}"/>
                 </xpath>
 
@@ -25,6 +22,10 @@
                 </xpath>
                 <xpath expr="//field[@name='driver_no']" position="after">
                     <field name="driver_mob" attrs="{'invisible': [('show_transport_info','=', False)]}"/>
+                </xpath>
+
+                <xpath expr="//field[@name='driver_mob']" position="after">
+                    <field name="transport_name" attrs="{'invisible': [('show_transport_info','=', False)]}"/>
                 </xpath>
 
                 <xpath expr="//field[@name='min_date']" position="after">
@@ -47,7 +48,7 @@
 
 
                 <xpath expr="//button[@name='do_print_picking']" position="replace">
-                    <button name="do_print_delivery_challan" string="Print" groups="stock.group_stock_user"
+                    <button name="do_print_delivery_challan" string="Print" groups="stock.delivery_user,stock.group_stock_user"
                             type="object"
                             attrs="{'invisible': [('state', 'in', ('assigned', 'confirmed','waiting','cancel'))]}"/>
                 </xpath>
@@ -56,7 +57,7 @@
                     <button name="do_new_transfer"
                             states="draft,partially_available,assigned"
                             string="Validate"
-                            groups="stock.group_stock_user,account.group_account_user"
+                            groups="stock.delivery_user,stock.group_stock_user,account.group_account_user"
                             type="object" class="oe_highlight"/>
                 </xpath>
 
@@ -64,7 +65,7 @@
                     <button name="force_assign" states="confirmed,waiting,partially_available"
                             string="Force Availability"
                             type="object"
-                            groups="stock.group_stock_user,stock.group_stock_manager,account.group_account_user"/>
+                            groups="stock.delivery_user,stock.group_stock_user,stock.group_stock_manager,account.group_account_user"/>
 
                 </xpath>
 

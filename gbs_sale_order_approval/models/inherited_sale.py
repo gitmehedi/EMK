@@ -264,7 +264,7 @@ class SaleOrder(models.Model):
                     discounted_product_price = price_change_pool.new_price - price_change_pool.discount
 
                     if price_change_pool.new_price >= lines.price_unit and lines.price_unit >= discounted_product_price:
-                        return False  # Single Validation
+                        is_double_validation = False  # Single Validation
 
                     for coms in cust_commission_pool:
                         if (abs(customer_total_credit) > customer_credit_limit
@@ -277,12 +277,12 @@ class SaleOrder(models.Model):
                         else:
                             is_double_validation = False
 
+
         if is_double_validation:
             order.write({'state': 'validate'})  # Go to two level approval process
 
         else:
             self._automatic_delivery_authorization_creation()
-
             order.write({'state': 'done'})  # One level approval process
 
     @api.multi
@@ -323,6 +323,7 @@ class SaleOrder(models.Model):
             }
 
             self.env['delivery.authorization.line'].create(da_line)
+
 
     def action_view_delivery_auth(self):
         form_view = self.env.ref('delivery_order.delivery_order_form')

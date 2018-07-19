@@ -20,11 +20,11 @@ class InheritStockPicking(models.Model):
                               'confirmed': [('readonly', True)], 'waiting': [('readonly', True)],
                               'done': [('readonly', True)], 'cancel': [('readonly', True)]})
 
-    transport_name = fields.Char(size=100, string='Transport Details',
+    transport_name = fields.Text(string='Transport Details',
                                  states={'partially_available': [('readonly', True)],
                                          'confirmed': [('readonly', True)], 'waiting': [('readonly', True)],
                                          'done': [('readonly', True)], 'cancel': [('readonly', True)]})
-    vehicle_no = fields.Char(size=100, string='Vehicle No.',
+    vehicle_no = fields.Char(size=100, string='Vehicle #',
                              states={'partially_available': [('readonly', True)],
                                      'confirmed': [('readonly', True)], 'waiting': [('readonly', True)],
                                      'done': [('readonly', True)], 'cancel': [('readonly', True)]})
@@ -32,7 +32,7 @@ class InheritStockPicking(models.Model):
                             states={'partially_available': [('readonly', True)],
                                     'confirmed': [('readonly', True)], 'waiting': [('readonly', True)],
                                     'done': [('readonly', True)], 'cancel': [('readonly', True)]})
-    driver_mob = fields.Char(size=100, string='Driver Mob.',
+    driver_mob = fields.Char(size=100, string='Driver Mob #',
                              states={'partially_available': [('readonly', True)],
                                      'confirmed': [('readonly', True)], 'waiting': [('readonly', True)],
                                      'done': [('readonly', True)], 'cancel': [('readonly', True)]})

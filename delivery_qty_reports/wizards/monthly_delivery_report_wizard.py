@@ -2,7 +2,7 @@ from odoo import api, fields, models
 import datetime
 
 
-class GenerateMonthlyDeliveryReport(models.Model):
+class GenerateMonthlyDeliveryReport(models.TransientModel):
     _name = 'monthly.delivery.report.wizard'
 
     report_to = fields.Datetime(string="Report To", required=True,)

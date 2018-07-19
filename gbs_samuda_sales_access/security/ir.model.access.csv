@@ -88,3 +88,5 @@ access_head_sales_del_auth_line,access_head_sales_del_auth_line,delivery_order.m
 
 access_warehouse_user_comisin,access_warehouse_user_comisin,gbs_sales_commission.model_customer_commission,stock.group_stock_user,1,0,0,0
 access_warehouse_user_pricelist,access_warehouse_user_pricelist,product_sales_pricelist.model_product_sale_history_line,stock.group_stock_user,1,0,0,0
+
+
