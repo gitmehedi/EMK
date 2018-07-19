@@ -96,6 +96,7 @@
                                                     <span t-esc="'%.2f'%total_value"/>
 
                                                 </td>
+
                                             </t>
                                         </tr>
                                     </t>
