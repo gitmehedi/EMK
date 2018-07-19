@@ -128,12 +128,17 @@ class DeviceDetail(models.Model):
     @api.multi
     def action_pull_data(self):
 
+        error_message = ""
+        success_message = ""
+        isConnect = False
         conn = None
         cursor = None
         try:
             hr_att_device_pool = self.env['hr.attendance.device.detail']
             attDevice = hr_att_device_pool.search([('id', '=', self.id)])
             if attDevice is None:
+                _logger.error("Unable to get device. ID:" + self.id)
+                error_message = "Unable to get device. ID:" + self.id
                 return
 
             conn = pyodbc.connect('DRIVER=' + driver + ';PORT=1433;SERVER=' +
@@ -141,30 +146,57 @@ class DeviceDetail(models.Model):
                                   attDevice.database + ';UID=' + attDevice.username +
                                   ';PWD=' + attDevice.password)
             cursor = conn.cursor()
+            isConnect = True
 
             currentDate = datetime.datetime.now()
             cursor.execute("""SELECT max(Id) FROM CHECKINOUT WHERE IsRead = 0""")
             maxId = cursor.fetchone()
 
+            cursor.execute("""SELECT min(Id) FROM CHECKINOUT WHERE IsRead = 0""")
+            minId = cursor.fetchone()
+
             if maxId[0] is None:
+                success_message = "Attendance data are already updated. There are no new attendance data yet."
                 return
 
-            self.processData(maxId[0], attDevice, currentDate, conn, cursor)
+            error_message = self.processData(maxId[0], attDevice, conn, cursor)
 
-            raise Warning("Successfully pull the data from "+self.name+" ("+self.server+ ") server.")
+            if len(error_message) == 0:
+                self.write({'last_update': currentDate})
+                success_message = "Successfully pull the data from "+self.name+" ("+self.server+ ") server."
+                _logger.info("Attendance Date pull from " + attDevice.server + " : at " + str(datetime.datetime.now()) + " Whrere checkoutin table ID between: " + str(minId[0]) +"to"+str(maxId[0]))
 
         except Exception as e:
-            msg = "Exception on gbs_hr_device_config-> device_details.py -> action_pull_data() at " + \
-                  str(datetime.datetime.now()) + "  \n Error Message : " + str(e[0])
-            _logger.error(msg)
-            raise ValidationError(_(e[0]))
+
+            _logger.error(e)
+            error_message = e
+
         finally:
             if cursor is not None:
                 cursor.close()
             if conn is not None:
                 conn.close()
+            if isConnect == False:
+                raise ValidationError("Unable to connect the " + self.server + " server. Please check the configuration.")
+            elif len(error_message) > 0:
+                raise ValidationError(error_message)
+            else:
+                res = self.env.ref('gbs_hr_device_config.success_msg_wizard_id')
+                result = {
+                    'name': _('Success Message'),
+                    'view_type': 'form',
+                    'view_mode': 'form',
+                    'view_id': res and res.id or False,
+                    'res_model': 'success.msg.wizard',
+                    'type': 'ir.actions.act_window',
+                    'nodestroy': True,
+                    'target': 'new',
+                }
+                return result
+                # raise Warning(success_message)
 
-    def processData(self, maxId, attDevice, currentDate, conn, cursor):
+
+    def processData(self, maxId, attDevice, conn, cursor):
 
         deviceInOutCode = {}  # Where key is code and value is "IN" OR OUT
 
@@ -200,7 +232,7 @@ class DeviceDetail(models.Model):
 
         cursor.execute(get_att_data_sql, maxId)
         att_rows = cursor.fetchall()
-        _logger.debug("Attendance Date pull from " + attDevice.server + " : at " + str(datetime.datetime.now()) + " : " + str(att_rows))
+        _logger.info("Attendance Date pull from " + attDevice.server + " : at " + str(datetime.datetime.now()) + " : " + str(att_rows))
 
         try:
             previousRow = {}
@@ -218,16 +250,13 @@ class DeviceDetail(models.Model):
             cursor.execute("UPDATE CHECKINOUT SET IsRead = 1 WHERE id <=? AND IsRead = 0", maxId)
             conn.commit()
 
-            self.last_update = currentDate
+            return ""
+
         except Exception as e:
             self.env.cr.rollback()
-            msg = "Error: Unable to pull data on gbs_hr_device_config-> device_details.py -> processData() at " + \
-                  str(datetime.datetime.now()) + ": \n Attendance Data: " + str(row) + "  \n Error Message : " + str(e[0])
-            _logger.error(msg)
-
-            show_msg = "Error: Unable to pull data."+ "\n Attendance Data: " + str(row) + "  \n Error Message : " + str(
-                e[0])
-            raise ValidationError(_(show_msg))
+            error_message = "Error: Unable to pull data." + "\n Attendance Data: " + str(row) + "  \n Error Message : " + str(e[0])
+            _logger.error(error_message)
+            return error_message
 
 
     def isValidByDuration(self, currentRow, previousRow, deviceInOutCode, tolerableSecond):
