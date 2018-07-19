@@ -193,7 +193,6 @@ class DeviceDetail(models.Model):
                     'target': 'new',
                 }
                 return result
-                # raise Warning(success_message)
 
 
     def processData(self, maxId, attDevice, conn, cursor):
