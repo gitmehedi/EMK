@@ -9,6 +9,7 @@
     'depends': [
         'base',
         'mail',
+        'website',
         'membership',
         'membership_extension',
         'membership_withdrawal',
@@ -18,12 +19,11 @@
         'security/ir.model.access.csv',
         'security/ir_rule.xml',
         'views/res_partner_views.xml',
-        # 'views/member_singup_application_views.xml',
-        'views/member_config_views.xml',
         'views/res_config_views.xml',
         'views/res_users_views.xml',
-        'views/member_signup_templates.xml',
+        'views/member_application_templates.xml',
+        'views/member_config_views.xml',
+        'views/member_application_views.xml',
     ],
     'bootstrap': True,
 }
-# Part of Odoo. See LICENSE file for full copyright and licensing details.

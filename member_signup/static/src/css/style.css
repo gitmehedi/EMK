@@ -1,3 +1,12 @@
+input.odooreq {
+  background-color: #D2D2FF;
+}
+.odoobg{
+    background-color: #7c7bad !important ;
+    font-weight: bold;
+    color: white !important;
+}
+
 #img_wrap{
           position: relative;
           height:160px;
@@ -6,7 +15,7 @@
           margin: 0 auto;
 }
 #member_image {
-          background-image: url('/membership_signup/static/src/images/default_picture.jpg');
+          background-image: url('/member_signup/static/src/images/default_picture.jpg');
           background-repeat:no-repeat;
           background-size:contain;
           height:160px;
@@ -15,7 +24,7 @@
           float:right;
           border-style: solid;
           border-width: 5px;
-          border-color: #d6e9c6;
+          border-color: #D2D2FF;
 }
 .member_image_layer {
           position: absolute;
@@ -57,7 +66,7 @@
           float:right;
           border-style: solid;
           border-width: 5px;
-          border-color: #d6e9c6;
+          border-color: #D2D2FF;
 }
 .signature_image_layer {
           position: absolute;
@@ -115,4 +124,4 @@
 .margin-left-15 { margin-left: 15px; }
 .margin-left-15 { margin-left: 20px; }
 
-.mar-btm{ margin-bottom: 32px;}
+.mar-btm{ margin-bottom: 24px;}

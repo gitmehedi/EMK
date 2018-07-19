@@ -35,7 +35,7 @@
                             <field name="current_employee"/>
                             <field name="work_title"/>
                             <field name="work_phone"/>
-                            <field name="birthdate_date"/>
+                            <field name="birthdate"/>
                             <field name="signature_image" widget='image' class="oe_avatar"
                                    options='{"preview_signature_image": "image_medium", "size": [90, 90]}'/>
 

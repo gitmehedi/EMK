@@ -36,7 +36,7 @@
             </div>
             <div class="col-md-12 margin-top-15">
                 <div class="panel panel-success">
-                    <div class="panel-heading">
+                    <div class="panel-heading odoobg">
                         <h3 class="panel-title text-center">Applicant Information</h3>
                     </div>
                     <div class="panel-body">
@@ -45,33 +45,48 @@
                             <br/>
                             (Please write in block letters)
                         </div>
-                        <div class="col-md-6">
-                            <div class="form-group form-field o_website_form_required_custom">
-                                <label for="name" class="control-label">Name</label>
-                                <input type="text" name="name" t-att-value="name" id="name" maxlength="100"
-                                       placeholder="e.g. John Doe"
-                                       class="form-control o_website_form_input input-sm" rq="required"/>
+                        <div class="col-md-12 row">
+                            <div class="form-group col-md-4 form-field o_website_form_required_custom">
+                                <label for="firstname" class="control-label">First Name</label>
+                                <input type="text" name="firstname" t-att-value="firstname" id="firstname"
+                                       maxlength="100"
+                                       placeholder="Firstname"
+                                       class="form-control o_website_form_input input-sm odooreq" rq="required"/>
                             </div>
-
-
+                            <div class="form-group col-md-4 form-field o_website_form_required_custom">
+                                <label for="lastname" class="control-label">Middle Name</label>
+                                <input type="text" name="lastname" t-att-value="lastname" id="lastname" maxlength="100"
+                                       placeholder="Middle Name"
+                                       class="form-control o_website_form_input input-sm odooreq" rq="required"/>
+                            </div>
+                            <div class="form-group col-md-4 form-field o_website_form_required_custom">
+                                <label for="lastname2" class="control-label">Last Name</label>
+                                <input type="text" name="lastname2" t-att-value="lastname2" id="lastname2"
+                                       maxlength="100"
+                                       placeholder="Lastname"
+                                       class="form-control o_website_form_input input-sm odooreq" rq="required"/>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
                             <div class="form-group form-field o_website_form_required_custom">
                                 <label for="email" class="control-label">Email</label>
                                 <input type="email" name="login" t-att-value="login" id="login" minlength="2"
                                        maxlength="100" placeholder="e.g. info@info.com "
-                                       class="form-control o_website_form_input input-sm" rq="required"/>
+                                       class="form-control o_website_form_input input-sm odooreq" rq="required"/>
                             </div>
 
                             <div class="form-group form-field o_website_form_required_custom">
-                                <label for="birthdate_date" class="control-label">Date of Birth</label>
-                                <input type="text" name="birthdate_date" t-att-value="birthdate_date" maxlength="10"
-                                       minlength="10" class="form-control o_website_form_input input-sm"
-                                       id="birthdate_date" rq="required"/>
+                                <label for="birthdate" class="control-label">Date of Birth</label>
+                                <input type="text" name="birthdate" t-att-value="birthdate" maxlength="10"
+                                       minlength="10" class="form-control o_website_form_input input-sm odooreq"
+                                       id="birthdate" rq="required"/>
                             </div>
 
                             <div class="form-group form-field o_website_form_required_custom">
                                 <label for="street" class="control-label">Current Address</label>
                                 <input type="text" name="street" t-att-value="street" id="street"
-                                       class="form-control o_website_form_input input-sm" maxlength="50" minlength="2"
+                                       class="form-control o_website_form_input input-sm odooreq" maxlength="50"
+                                       minlength="2"
                                        rq="required"/>
 
                             </div>
@@ -83,12 +98,13 @@
                                 <div class="form-group form-field col-sm-6 o_website_form_required_custom">
                                     <input type="text" name="city" t-att-value="city" id="city" minlength="2"
                                            maxlength="30"
-                                           class="form-control o_website_form_input input-sm"
+                                           class="form-control o_website_form_input input-sm odooreq"
                                            rq="required"/>
 
                                 </div>
                                 <div class="form-group form-field col-sm-6  o_website_form_required_custom">
-                                    <select class="form-control o_website_form_input input-sm" name="per_district"
+                                    <select class="form-control o_website_form_input input-sm odooreq"
+                                            name="per_district"
                                             rq="required">
                                         <option value="">--Please Select--</option>
                                         <t t-foreach="config['districts']" t-as='label'>
@@ -117,17 +133,15 @@
                         </div>
                         <div class="col-md-6">
                             <div class="form-group form-field o_website_form_required_custom">
-
-                                <label for="gender" class="control-label">Gender</label>
-                                <select class="form-control o_website_form_input input-sm" name="gender"
-                                        rq="required">
-                                    <option value="">--Please Select--</option>
+                                <label for="gender" id="gender" class="control-label">Gender</label>
+                                <div class="mar-btm">
                                     <t t-foreach="config['gender']" t-as='label'>
-                                        <option t-att-value="label">
+                                        <label class="radio-inline">
+                                            <input type="radio" name="gender" t-att-value="label" checked="checked"/>
                                             <t t-esc="label_value"/>
-                                        </option>
+                                        </label>
                                     </t>
-                                </select>
+                                </div>
                             </div>
 
                             <div class="form-group form-field o_website_form_required_custom">
@@ -148,6 +162,7 @@
                             <div class="form-group form-field o_website_form_required_custom">
                                 <label for="website" class="control-label">Website</label>
                                 <input type="text" name="website" id="website"
+                                       placeholder="e.g. www.abc.com"
                                        class="form-control o_website_form_input input-sm" rq="required"/>
                             </div>
                         </div>
@@ -158,26 +173,33 @@
                                         rq="required">
                                     <option value="">--Please Select--</option>
                                     <t t-foreach="config['occupation']" t-as='label'>
-                                        <option t-att-value="label">
-                                            <t t-esc="label_value"/>
+                                        <option t-att-value="label_value[0]">
+                                            <t t-esc="label_value[1]"/>
                                         </option>
                                     </t>
                                 </select>
                             </div>
 
                             <div class="form-group form-field o_website_form_required_custom">
-                                <label for="subject_of_interest" class="control-label">Subjects of Interest: (Please
+                                <label for="subject_of_interest" id="subject_of_interest" class="control-label">Subjects
+                                    of Interest: (Please
                                     check all that apply)
                                 </label>
                                 <div class="mar-btm">
                                     <t t-foreach="config['subject_of_interest']" t-as='label'>
                                         <label class="checkbox-inline">
-                                            <input type="checkbox" name="subject_of_interest" t-att-id="label"
-                                                   t-att-value="label"/>
-                                            <t t-esc="label_value"/>
+                                            <input type="checkbox" name="subject_of_interest"
+                                                   t-att-value="label_value[0]"/>
+                                            <t t-esc="label_value[1]"/>
                                         </label>
                                     </t>
                                 </div>
+                            </div>
+                            <div class="form-group form-field o_website_form_required_custom"
+                                 id="subject_of_interest_others" style="display: none;">
+                                <input type="text" name="subject_of_interest_others"
+                                       t-att-value="subject_of_interest_others" id="subject_of_interest_others"
+                                       class="form-control o_website_form_input input-sm"/>
                             </div>
                         </div>
                     </div>
@@ -186,7 +208,7 @@
         </div>
         <div class="col-md-6">
             <div class="panel panel-success">
-                <div class="panel-heading">
+                <div class="panel-heading odoobg">
                     <h3 class="panel-title text-center">Educational Information</h3>
                 </div>
                 <div class="panel-body">
@@ -204,8 +226,8 @@
                                 rq="required">
                             <option value="">--Please Select--</option>
                             <t t-foreach="config['hightest_certification']" t-as='label'>
-                                <option t-att-value="label">
-                                    <t t-esc="label_value"/>
+                                <option t-att-value="label_value[0]">
+                                    <t t-esc="label_value[1]"/>
                                 </option>
                             </t>
                         </select>
@@ -232,15 +254,12 @@
                         </label>
 
                         <div class="mar-btm">
-                            <select class="form-control o_website_form_input input-sm" name="usa_work_or_study"
-                                    rq="required">
-                                <option value="">--Please Select--</option>
-                                <t t-foreach="config['usa_work_or_study']" t-as='label'>
-                                    <option t-att-value="label">
-                                        <t t-esc="label_value"/>
-                                    </option>
-                                </t>
-                            </select>
+                            <t t-foreach="config['usa_work_or_study']" t-as='label'>
+                                <label class="radio-inline">
+                                    <input type="radio" name="gender" t-att-value="label" checked="checked"/>
+                                    <t t-esc="label_value"/>
+                                </label>
+                            </t>
                         </div>
                     </div>
 
@@ -311,12 +330,6 @@
                         </div>
                     </div>
 
-                    <div class="form-group form-field o_website_form_required_custom col-sm-6">
-                        <label for="date_of_signature" class="control-label">Date</label>
-                        <input type="text" name="date_of_signature" t-att-value="date_of_signature"
-                               class="form-control o_website_form_input input-sm"
-                               id="date_of_signature" rq="required"/>
-                    </div>
                 </div>
             </div>
         </div>

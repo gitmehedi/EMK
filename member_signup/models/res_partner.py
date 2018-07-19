@@ -38,7 +38,7 @@ class ResPartner(models.Model):
     signup_expiration = fields.Datetime(copy=False)
     signup_valid = fields.Boolean(compute='_compute_signup_valid', string='Signup Token is Valid')
     signup_url = fields.Char(compute='_compute_signup_url', string='Signup URL')
-    birthdate_date = fields.Date("Birth Date")
+    birthdate = fields.Date("Birth Date")
 
     last_place_of_study = fields.Char(string='Last or Current Place of Study')
     field_of_study = fields.Char(string='Field of Study')
@@ -55,6 +55,7 @@ class ResPartner(models.Model):
     usa_work_or_study = fields.Selection([('yes', 'Yes'), ('no', 'No')], default='no',
                                          string="Have you worked, or studied in the U.S?")
     usa_work_or_study_yes = fields.Char(string="If yes, where in the U.S have you worked, or studied?")
+    subject_of_interest_others = fields.Char()
 
     nationality_id = fields.Many2one("res.country", "Nationality")
     occupation = fields.Many2one('member.occupation', string='Occupation')
@@ -65,18 +66,18 @@ class ResPartner(models.Model):
         [('application', 'Application'), ('invoice', 'Invoiced'), ('paid', 'Paid'),
          ('member', 'Membership')], default='application')
 
-    @api.onchange('birthdate_date')
-    def validate_birthdate_date(self):
-        if self.birthdate_date:
+    @api.onchange('birthdate')
+    def validate_birthdate(self):
+        if self.birthdate:
             today = str(datetime.now().date())
-            if self.birthdate_date > today:
+            if self.birthdate > today:
                 raise ValidationError(
-                    _('Birth Date [{0}] should not greater than current date.'.format(self.birthdate_date)))
+                    _('Birth Date should not greater than current date.'))
 
-    @api.constrains('birthdate_date')
+    @api.constrains('birthdate')
     def _check_birthdate(self):
         today = str(datetime.now().date())
-        if self.birthdate_date > today:
+        if self.birthdate > today:
             raise ValueError(_('Birth Date should not greater than current date.'))
 
     @api.onchange('email')
@@ -84,14 +85,14 @@ class ResPartner(models.Model):
         if self.email:
             match = re.match('^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,4})$', self.email)
             if match == None:
-                raise ValidationError('Not a valid E-mail ID')
+                raise ValidationError('Please provide valid email.')
 
     @api.constrains('email')
     def check_email(self):
         if self.email:
             match = re.match('^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,4})$', self.email)
             if match == None:
-                raise ValidationError('Not a valid E-mail ID')
+                raise ValidationError('Please provide valid email.')
 
     @api.multi
     def _compute_signup_valid(self):
