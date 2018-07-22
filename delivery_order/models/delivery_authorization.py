@@ -170,33 +170,35 @@ class DeliveryAuthorization(models.Model):
 
     @api.multi
     def _automatic_delivery_order_creation(self):
-
-        vals = {
-            'delivery_order_id': self.id,
-            'sale_order_id': self.sale_order_id.id,
-            'deli_address': self.sale_order_id.partner_shipping_id.name,
-            'currency_id': self.sale_order_id.type_id.currency_id,
-            'partner_id': self.sale_order_id.partner_id,
-            'so_type': self.sale_order_id.credit_sales_or_lc,
-            'so_date': self.sale_order_id.date_order,
-            'state': 'approved',
-        }
-
-        do_pool = self.env['delivery.order'].create(vals)
-
-        for record in self.sale_order_id.order_line:
-            da_line = {
-                'parent_id': do_pool.id,
-                'product_id': record.product_id.id,
-                'quantity': record.product_uom_qty,
-                'pack_type': self.sale_order_id.pack_type.id,
-                'uom_id': record.product_uom.id,
+        # System confirms that one Sale Order will have only one DA & DO, so check with Sales Order ID
+        do_sale_pool = self.env['delivery.order'].search([('sale_order_id', '=', self.sale_order_id.id)])
+        if not do_sale_pool:
+            vals = {
+                'delivery_order_id': self.id,
+                'sale_order_id': self.sale_order_id.id,
+                'deli_address': self.sale_order_id.partner_shipping_id.name,
+                'currency_id': self.sale_order_id.type_id.currency_id,
+                'partner_id': self.sale_order_id.partner_id,
+                'so_type': self.sale_order_id.credit_sales_or_lc,
+                'so_date': self.sale_order_id.date_order,
+                'state': 'approved',
             }
 
-            self.env['delivery.order.line'].create(da_line)
+            do_pool = self.env['delivery.order'].create(vals)
 
-        do_pool.create_delivery_order()
-        do_pool.action_view_delivery()
+            for record in self.sale_order_id.order_line:
+                da_line = {
+                    'parent_id': do_pool.id,
+                    'product_id': record.product_id.id,
+                    'quantity': record.product_uom_qty,
+                    'pack_type': self.sale_order_id.pack_type.id,
+                    'uom_id': record.product_uom.id,
+                }
+
+                self.env['delivery.order.line'].create(da_line)
+
+            do_pool.create_delivery_order()
+            do_pool.action_view_delivery()
 
 
     @api.multi
@@ -272,7 +274,7 @@ class DeliveryAuthorization(models.Model):
                                     if res['available_qty'] > 100:
                                         res['available_qty'] = 0
 
-                                    #self._automatic_delivery_order_creation()
+                                    self._automatic_delivery_order_creation()
                                     self.write({'state': 'close'})  # Final Approval
                                     orders.create(res)
 
@@ -553,7 +555,6 @@ class DeliveryAuthorization(models.Model):
             stock_picking_id = delivery.sale_order_id.picking_ids
             stock_picking_id.write({'lc_id': delivery.lc_id.id})
 
-            ### Showing batch
 
     @api.model
     def _needaction_domain_get(self):

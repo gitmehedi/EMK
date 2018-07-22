@@ -294,35 +294,39 @@ class SaleOrder(models.Model):
 
     @api.multi
     def _automatic_delivery_authorization_creation(self):
+        # System confirms that one Sale Order will have only one DA & DO, so check with Sales Order ID
+        sale_obj = self.env['delivery.authorization'].search([('sale_order_id', '=', self.id)])
 
-        vals = {
-            'sale_order_id': self.id,
-            'deli_address': self.partner_shipping_id.name,
-            'currency_id': self.type_id.currency_id,
-            'partner_id': self.partner_id,
-            'so_type': self.credit_sales_or_lc,
-            'so_date': self.date_order,
-            # 'warehouse_id': self.warehouse_id,
-            'amount_untaxed': self.amount_untaxed,
-            'tax_value': self.amount_tax,
-            'total_amount': self.amount_total,
-        }
-
-        da_pool = self.env['delivery.authorization'].create(vals)
-
-        for record in self.order_line:
-            da_line = {
-                'parent_id': da_pool.id,
-                'product_id': record.product_id.id,
-                'quantity': record.product_uom_qty,
-                'pack_type': self.pack_type.id,
-                'uom_id': record.product_uom.id,
-                'price_unit': record.price_unit,
-                'price_subtotal': record.price_subtotal,
-                'tax_id': record.tax_id
+        if not sale_obj:
+            vals = {
+                'sale_order_id': self.id,
+                'deli_address': self.partner_shipping_id.name,
+                'currency_id': self.type_id.currency_id,
+                'partner_id': self.partner_id,
+                'so_type': self.credit_sales_or_lc,
+                'so_date': self.date_order,
+                # 'warehouse_id': self.warehouse_id,
+                'amount_untaxed': self.amount_untaxed,
+                'tax_value': self.amount_tax,
+                'total_amount': self.amount_total,
             }
 
-            self.env['delivery.authorization.line'].create(da_line)
+            da_pool = self.env['delivery.authorization'].create(vals)
+
+            for record in self.order_line:
+                da_line = {
+                    'parent_id': da_pool.id,
+                    'product_id': record.product_id.id,
+                    'quantity': record.product_uom_qty,
+                    'pack_type': self.pack_type.id,
+                    'uom_id': record.product_uom.id,
+                    'price_unit': record.price_unit,
+                    'commission_rate': record.commission_rate,
+                    'price_subtotal': record.price_subtotal,
+                    'tax_id': record.tax_id
+                }
+
+                self.env['delivery.authorization.line'].create(da_line)
 
 
     def action_view_delivery_auth(self):

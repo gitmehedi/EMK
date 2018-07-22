@@ -10,7 +10,8 @@
                     <field name="show_transport_info"/>
                 </xpath>
                 <xpath expr="//field[@name='show_transport_info']" position="after">
-                    <field name="transport_details" widget="radio" options="{'horizontal': true}" attrs="{'invisible': [('show_transport_info','=', False)]}"/>
+                    <field name="transport_details" widget="radio" options="{'horizontal': true}"
+                           attrs="{'invisible': [('show_transport_info','=', False)]}"/>
                 </xpath>
 
                 <xpath expr="//field[@name='transport_details']" position="after">
@@ -40,7 +41,6 @@
                     <field name="lc_id"/>
                 </xpath>
 
-
                 <xpath expr="//button[@name='%(stock.action_report_delivery)d']" position="replace">
                     <button name="%(stock.action_report_delivery)d" string="Print" states="done" type="action"
                             groups="base.group_user" invisible="1"/>
@@ -48,7 +48,8 @@
 
 
                 <xpath expr="//button[@name='do_print_picking']" position="replace">
-                    <button name="do_print_delivery_challan" string="Print" groups="stock.delivery_user,stock.group_stock_user"
+                    <button name="do_print_delivery_challan" string="Print"
+                            groups="stock.delivery_user,stock.group_stock_user"
                             type="object"
                             attrs="{'invisible': [('state', 'in', ('assigned', 'confirmed','waiting','cancel'))]}"/>
                 </xpath>
