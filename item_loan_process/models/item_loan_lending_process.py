@@ -1,7 +1,7 @@
+import time
 from odoo import api, fields, models, _
 from odoo.addons import decimal_precision as dp
 from datetime import datetime
-import time
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
 
@@ -22,7 +22,7 @@ class ItemLoanLending(models.Model):
     name = fields.Char('Issue #', size=100, readonly=True, default=lambda self: _('New'),copy=False,
                        states={'draft': [('readonly', False)]})
     request_date = fields.Datetime('Request Date', required=True, readonly=True,
-                                  default=datetime.today())
+                                  default=fields.Datetime.now)
     issuer_id = fields.Many2one('res.users', string='Issue By', required=True, readonly=True,
                                   default=lambda self: self.env.user,states={'draft': [('readonly', False)]})
     borrower_id = fields.Many2one('res.partner', string="Request By" ,readonly=True, required=True,

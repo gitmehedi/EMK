@@ -4,10 +4,11 @@
 import random
 import werkzeug
 import logging
+import re
 
 from datetime import datetime, timedelta
 from urlparse import urljoin
-from odoo.exceptions import UserError
+from odoo.exceptions import UserError, ValidationError, Warning
 
 from odoo import api, fields, models, _
 
@@ -37,13 +38,13 @@ class ResPartner(models.Model):
     signup_expiration = fields.Datetime(copy=False)
     signup_valid = fields.Boolean(compute='_compute_signup_valid', string='Signup Token is Valid')
     signup_url = fields.Char(compute='_compute_signup_url', string='Signup URL')
-    birthdate_date = fields.Date("Birthdate")
+    birthdate = fields.Date("Birth Date")
 
     last_place_of_study = fields.Char(string='Last or Current Place of Study')
     field_of_study = fields.Char(string='Field of Study')
     usa_work_or_study_place = fields.Char(string='Work Place')
     alumni_institute = fields.Char(string='Alumni Institute')
-    current_employee = fields.Char(string='Current Employee')
+    current_employee = fields.Char(string='Current Employer')
     work_title = fields.Char(string='Work Title')
     work_phone = fields.Char(string='Work Phone')
     signature_image = fields.Binary(string='Signature')
@@ -51,11 +52,14 @@ class ResPartner(models.Model):
     info_about_emk = fields.Text(string="How did you learn about the EMK Center?")
 
     gender = fields.Selection([('male', 'Male'), ('female', 'Female')], default='male', string='Gender')
-    usa_work_or_study = fields.Selection([('yes', 'Yes'), ('no', 'No')], default='no', string="USA Work or Study")
+    usa_work_or_study = fields.Selection([('yes', 'Yes'), ('no', 'No')], default='no',
+                                         string="Have you worked, or studied in the U.S?")
+    usa_work_or_study_yes = fields.Char(string="If yes, where in the U.S have you worked, or studied?")
+    subject_of_interest_others = fields.Char()
 
     nationality_id = fields.Many2one("res.country", "Nationality")
     occupation = fields.Many2one('member.occupation', string='Occupation')
-    subject_of_interest = fields.Many2one('member.subject.interest', string='Subject of Interest')
+    subject_of_interest = fields.Many2many('member.subject.interest', string='Subject of Interest')
     hightest_certification = fields.Many2one('member.certification', string='Highest Certification Achieved')
 
     state = fields.Selection(
@@ -63,12 +67,32 @@ class ResPartner(models.Model):
          ('member', 'Membership')], default='application')
 
     @api.onchange('birthdate')
-    def _onchange(self):
-        self.birthdate_date
+    def validate_birthdate(self):
+        if self.birthdate:
+            today = str(datetime.now().date())
+            if self.birthdate > today:
+                raise ValidationError(
+                    _('Birth Date should not greater than current date.'))
 
     @api.constrains('birthdate')
     def _check_birthdate(self):
-        self.birthdate_date
+        today = str(datetime.now().date())
+        if self.birthdate > today:
+            raise ValueError(_('Birth Date should not greater than current date.'))
+
+    @api.onchange('email')
+    def validate_email(self):
+        if self.email:
+            match = re.match('^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,4})$', self.email)
+            if match == None:
+                raise ValidationError('Please provide valid email.')
+
+    @api.constrains('email')
+    def check_email(self):
+        if self.email:
+            match = re.match('^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,4})$', self.email)
+            if match == None:
+                raise ValidationError('Please provide valid email.')
 
     @api.multi
     def _compute_signup_valid(self):

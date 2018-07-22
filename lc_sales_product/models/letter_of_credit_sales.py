@@ -46,14 +46,14 @@ class LetterOfCredit(models.Model):
     @api.multi
     def action_confirm_export(self):
         for pi in self.pi_ids_temp:
-            pi.lc_id = self.id
-            for so in pi.so_ids:
-                so.lc_id = self.id
+            sale_obj = pi.env['sale.order'].search([('pi_id','=',pi.id)])
+            if sale_obj:
+                for s_order in sale_obj:
+                    s_order.write({'lc_id':self.id}) # update lc_id
 
-                # Update 100 MT logic
-                da_obj = self.env['delivery.authorization'].search([('sale_order_id','=',so.id)])
-                da_obj.update_lc_id_for_houndred_mt()
-
+                    # Update 100 MT logic
+                    da_obj = self.env['delivery.authorization'].search([('sale_order_id', '=', s_order.id)])
+                    da_obj.update_lc_id_for_houndred_mt()
 
         self.write({'state': 'confirmed', 'last_note': Status.CONFIRM})
 

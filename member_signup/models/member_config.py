@@ -7,6 +7,7 @@ from odoo import api, fields, models, _
 class MemberOccupation(models.Model):
     _name = 'member.occupation'
     _description = "Members Occupation"
+    _order = 'id ASC'
 
     name = fields.Char(string='Title', required=True, size=50)
     status = fields.Boolean(string='Status', default=True)
@@ -21,6 +22,7 @@ class MemberOccupation(models.Model):
 class MemberSubjectOfInterest(models.Model):
     _name = 'member.subject.interest'
     _description = "Members Subject of Interest"
+    _order = 'id ASC'
 
     name = fields.Char(string='Title', required=True, size=50)
     status = fields.Boolean(string='Status', default=True)
@@ -35,6 +37,7 @@ class MemberSubjectOfInterest(models.Model):
 class MemberCertification(models.Model):
     _name = 'member.certification'
     _description = "Members Certification"
+    _order='id ASC'
 
     name = fields.Char(string='Title', required=True, size=50)
     status = fields.Boolean(string='Status', default=True)

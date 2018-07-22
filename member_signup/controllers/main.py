@@ -45,41 +45,23 @@ class AuthSignupHome(Home):
         config = {
             'districts': self.get_districts(),
             'gender': {'male': 'Male', 'female': 'Female'},
-            'occupation': {'student': 'Student', 'educator': 'Educator', 'enterpreneur': 'Enterpreneur'},
-            'occupation': {'student': 'Student',
-                           'educator': 'Educator',
-                           'enterpreneur': 'Enterpreneur',
-                           'artist': 'Artist',
-                           'performer': 'Performer',
-                           'media_professional': 'Media Professional',
-                           'communityw_worker': 'Community Worker',
-                           'other': 'Other',
-                           },
-            'subject_of_interest': {'social_or_community_work': 'Social/Community Work',
-                                    'literature_poetry': 'Literature/Poetry',
-                                    'arts_culture': 'Arts/Culture',
-                                    'education': 'Education',
-                                    'economics_entrepreneurism': 'Economics/Entrepreneurism',
-                                    'health_nutrition': 'Health/Nutrition',
-                                    'environment': 'Environment',
-                                    'international_affairs': 'International Affairs',
-                                    'science_technology': 'Science/Technology',
-                                    'politics_society': 'Politics/Society',
-                                    'other': 'Other',
-                                    },
-            'hightest_certification': {'ssc': 'SSC',
-                                       'o_label': 'O\'Lable',
-                                       'hsc': 'HSC',
-                                       'a_label': 'A\'Lable',
-                                       'undergraduate_degree': 'Undergraduate Degree',
-                                       'undergraduate_honors': 'Undergraduate Honors',
-                                       'graduate': 'Graduate',
-                                       'post-graduate': 'Post-Graduate',
-                                       'other': 'Other',
-                                       },
+            'occupation': self.generateDropdown('member.occupation'),
+            'subject_of_interest': self.generateDropdown('member.subject.interest'),
+            'hightest_certification': self.generateDropdown('member.certification'),
             'usa_work_or_study': {'yes': 'Yes', 'no': 'No'},
         }
         return request.render('member_signup.signup', {'qcontext': qcontext, 'config': config})
+
+    def generateDropdown(self, model):
+        data = []
+        record = request.env[model].sudo().search([('status', '=', True)], order='id ASC')
+
+        for rec in record:
+            val = '_'.join((rec.name).strip().lower().split())
+            data.append((val,rec.name))
+            # data[val] = rec.name
+
+        return data
 
     @http.route('/web/member_reset_password', type='http', auth='public', website=True)
     def web_auth_reset_password(self, *args, **kw):
@@ -137,7 +119,7 @@ class AuthSignupHome(Home):
         return ('login',
                 'name',
                 'password',
-                'birthdate_date',
+                'birthdate',
                 'street',
                 'street2',
                 'city',
@@ -158,7 +140,6 @@ class AuthSignupHome(Home):
                 'current_employee',
                 'work_title',
                 'work_phone',
-                'date_of_signature',
                 'image',
                 'signature_image',
                 'is_applicant',

@@ -41,11 +41,9 @@ class DeliveryOrder(models.Model):
                              states={'draft': [('readonly', False)]})
     requested_by = fields.Many2one('res.users', string='Requested By', readonly=True,
                                    default=lambda self: self.env.user)
-    approver1_id = fields.Many2one('res.users', string="First Approval", readonly=True)
-    approver2_id = fields.Many2one('res.users', string="Final Approval", readonly=True)
+
     requested_date = fields.Date(string="Requested Date", default=datetime.date.today(), readonly=True)
-    approved_date = fields.Date(string='Approval Date',readonly=True)
-    confirmed_date = fields.Date(string="Approval Date", _defaults=lambda *a: time.strftime('%Y-%m-%d'), readonly=True)
+
     so_type = fields.Selection([
         ('cash', 'Cash'),
         ('credit_sales', 'Credit'),
@@ -86,12 +84,6 @@ class DeliveryOrder(models.Model):
         for _do in self:
             _do.lc_id = _do.sale_order_id.lc_id.id
 
-
-    """ Payment information"""
-    amount_untaxed = fields.Float(string='Untaxed Amount', readonly=True,track_visibility='onchange')
-    tax_value = fields.Float(string='Taxes', readonly=True)
-    total_amount = fields.Float(string='Total', readonly=True)
-
     """ All functions """
 
     @api.multi
@@ -102,34 +94,20 @@ class DeliveryOrder(models.Model):
             order.line_ids.unlink()
         return super(DeliveryOrder, self).unlink()
 
+
     @api.model
     def create(self, vals):
         seq = self.env['ir.sequence'].next_by_code('delivery.order') or '/'
         vals['name'] = seq
 
-        self.update_total_info(vals)
-
         return super(DeliveryOrder, self).create(vals)
 
-
-
-    @api.one
-    def action_approve(self):
-        self.state = 'approved'
-
-        self.create_delivery_order()
-        self.action_view_delivery()
 
 
     """ DO button box action """
 
     @api.multi
     def action_view_delivery(self):
-        '''
-        This function returns an action that display existing delivery orders
-        of given sales order ids. It can either be a in a list or in a form
-        view, if there is only one delivery order to show.
-        '''
         action = self.env.ref('stock.action_picking_tree_all').read()[0]
 
         pickings = self.sale_order_id.mapped('picking_ids')
@@ -141,6 +119,7 @@ class DeliveryOrder(models.Model):
         return action
 
 
+    @api.multi
     def create_delivery_order(self):
 
         ## Show or Create DO Button
@@ -174,66 +153,10 @@ class DeliveryOrder(models.Model):
     @api.onchange('delivery_order_id')
     def onchange_sale_order_id(self):
         delivery_auth_id = self.env['delivery.authorization'].search([('id', '=', self.delivery_order_id.id)])
-
         self.set_products_info_automatically(delivery_auth_id)
-        self.set_cheque_info_automatically(delivery_auth_id)
-        self.set_payment_info_automatically(delivery_auth_id)
 
 
-    def update_total_info(self, vals):
-        sub_total = 0
-        taxed_amount = 0
-        untaxed_amount = 0
-
-        so_ids = self.env['sale.order'].search([('id', '=', vals.get('sale_order_id'))])
-
-        for so in so_ids:
-            sub_total += so.amount_untaxed
-            taxed_amount += so.amount_tax
-            untaxed_amount += so.amount_untaxed
-
-        vals['total_amount'] = sub_total
-        vals['tax_value'] = taxed_amount
-        vals['amount_untaxed'] = untaxed_amount
-
-
-
-
-    @api.one
-    def set_cheque_info_automatically(self,delivery_auth_id):
-
-        vals = []
-        if delivery_auth_id:
-            for payments in delivery_auth_id.cheque_ids:
-                vals.append((0, 0, {'account_payment_id': payments.account_payment_id.id,
-                                    'amount': payments.amount,
-                                    'bank': payments.bank,
-                                    'branch': payments.branch,
-                                    'payment_date': payments.payment_date,
-                                    'number': payments.number,
-                                    }))
-
-        self.cheque_ids = vals
-
-
-
-    @api.one
-    def set_payment_info_automatically(self,delivery_auth_id):
-        val = []
-        if delivery_auth_id:
-            for csh_id in delivery_auth_id.cash_ids:
-                val.append((0, 0, {'account_payment_id': csh_id.account_payment_id.id,
-                                   'amount': csh_id.amount,
-                                   'dep_bank': csh_id.dep_bank,
-                                   'branch': csh_id.branch,
-                                   'payment_date': csh_id.payment_date,
-                                   }))
-
-        self.cash_ids = val
-
-
-
-    @api.one
+    @api.multi
     def set_products_info_automatically(self, delivery_auth_id):
         if self.delivery_order_id:
             val = []

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+	<data>
+
+		<menuitem
+				action="stock.stock_picking_type_action"
+				id="stock.stock_picking_type_menu"
+				parent="stock.menu_stock_root" sequence="0"
+				groups="stock.delivery_user"
+				name="Dashboard"/>
+
+
+
+		<menuitem id="stock.menu_warehouse_report"
+                  name="Reports" sequence="99"
+                  parent="stock.menu_stock_root"
+                  groups="stock.delivery_user"/>
+
+
+		<menuitem name="Daily Delivery Report"
+                  groups="stock.delivery_user"
+                  action="delivery_qty_reports.action_daily_delivery_report"
+                  id="daily_delivery_report_id_extend"
+                  parent="stock.menu_warehouse_report"/>
+
+	</data>
+</odoo>

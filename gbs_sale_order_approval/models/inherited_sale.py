@@ -60,8 +60,10 @@ class SaleOrder(models.Model):
     currency_id = fields.Many2one("res.currency", related='', string="Currency", required=True)
 
     """ PI and LC """
-    pi_id = fields.Many2one('proforma.invoice', string='PI Ref. No.', domain=[('state', '=', 'confirm')])
-    lc_id = fields.Many2one('letter.credit', string='LC Ref. No.')
+    pi_id = fields.Many2one('proforma.invoice', string='PI Ref. No.', domain=[('state', '=', 'confirm')], readonly=True,
+                            states={'to_submit': [('readonly', False)]})
+    lc_id = fields.Many2one('letter.credit', string='LC Ref. No.', readonly=True,
+                            states={'to_submit': [('readonly', False)]})
 
     remaining_credit_limit = fields.Char(string="Customer's Remaining Credit Limit", track_visibility='onchange')
 
@@ -262,7 +264,7 @@ class SaleOrder(models.Model):
                     discounted_product_price = price_change_pool.new_price - price_change_pool.discount
 
                     if price_change_pool.new_price >= lines.price_unit and lines.price_unit >= discounted_product_price:
-                        return False  # Single Validation
+                        is_double_validation = False  # Single Validation
 
                     for coms in cust_commission_pool:
                         if (abs(customer_total_credit) > customer_credit_limit
@@ -275,12 +277,12 @@ class SaleOrder(models.Model):
                         else:
                             is_double_validation = False
 
+
         if is_double_validation:
             order.write({'state': 'validate'})  # Go to two level approval process
 
         else:
             self._automatic_delivery_authorization_creation()
-
             order.write({'state': 'done'})  # One level approval process
 
     @api.multi
@@ -292,35 +294,39 @@ class SaleOrder(models.Model):
 
     @api.multi
     def _automatic_delivery_authorization_creation(self):
+        # System confirms that one Sale Order will have only one DA & DO, so check with Sales Order ID
+        sale_obj = self.env['delivery.authorization'].search([('sale_order_id', '=', self.id)])
 
-        vals = {
-            'sale_order_id': self.id,
-            'deli_address': self.partner_shipping_id.name,
-            'currency_id': self.type_id.currency_id,
-            'partner_id': self.partner_id,
-            'so_type': self.credit_sales_or_lc,
-            'so_date': self.date_order,
-            # 'warehouse_id': self.warehouse_id,
-            'amount_untaxed': self.amount_untaxed,
-            'tax_value': self.amount_tax,
-            'total_amount': self.amount_total,
-        }
-
-        da_pool = self.env['delivery.authorization'].create(vals)
-
-        for record in self.order_line:
-            da_line = {
-                'parent_id': da_pool.id,
-                'product_id': record.product_id.id,
-                'quantity': record.product_uom_qty,
-                'pack_type': self.pack_type.id,
-                'uom_id': record.product_uom.id,
-                'price_unit': record.price_unit,
-                'price_subtotal': record.price_subtotal,
-                'tax_id': record.tax_id
+        if not sale_obj:
+            vals = {
+                'sale_order_id': self.id,
+                'deli_address': self.partner_shipping_id.name,
+                'currency_id': self.type_id.currency_id,
+                'partner_id': self.partner_id,
+                'so_type': self.credit_sales_or_lc,
+                'so_date': self.date_order,
+                # 'warehouse_id': self.warehouse_id,
+                'amount_untaxed': self.amount_untaxed,
+                'tax_value': self.amount_tax,
+                'total_amount': self.amount_total,
             }
 
-            self.env['delivery.authorization.line'].create(da_line)
+            da_pool = self.env['delivery.authorization'].create(vals)
+
+            for record in self.order_line:
+                da_line = {
+                    'parent_id': da_pool.id,
+                    'product_id': record.product_id.id,
+                    'quantity': record.product_uom_qty,
+                    'pack_type': self.pack_type.id,
+                    'uom_id': record.product_uom.id,
+                    'price_unit': record.price_unit,
+                    'commission_rate': record.commission_rate,
+                    'price_subtotal': record.price_subtotal,
+                    'tax_id': record.tax_id
+                }
+
+                self.env['delivery.authorization.line'].create(da_line)
 
 
     def action_view_delivery_auth(self):
@@ -340,8 +346,6 @@ class SaleOrder(models.Model):
             ],
             "domain": [('id', '=', da_pool.id)],
         }
-
-
 
     def second_approval_business_logics(self, cust_commission_pool, lines, price_change_pool):
         for coms in cust_commission_pool:

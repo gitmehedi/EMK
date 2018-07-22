@@ -9,7 +9,6 @@
                     <sheet>
                         <group>
                             <field name="report_of_day" placeholder="Select a Day..."/>
-                            <field name="product_id"/>
                             <field name="operating_unit_id"/>
                         </group>
                     </sheet>

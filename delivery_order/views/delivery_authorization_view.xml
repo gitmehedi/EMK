@@ -29,11 +29,6 @@
                                 string="Refuse"
                                 groups="gbs_application_group.group_head_account,gbs_application_group.group_cxo"/>
 
-                        <!--<button string="Tag LC" name="%(action_view_lc_wizard)d" type="action"-->
-                        <!--attrs="{'invisible':['|','|', ('pi_id', '=', False), ('state','!=','close'), ('lc_id', '!=', False)]}"-->
-                        <!--groups="account.group_account_user,gbs_application_group.group_head_account,gbs_application_group.group_cxo"-->
-                        <!--class="oe_highlight"/>-->
-
                         <field name="state" statusbar_visible="draft,validate,close, refused" widget="statusbar"/>
 
                     </header>
@@ -48,15 +43,14 @@
                             </button>
                         </div>
 
-                        <div class="oe_button_box oe_right" attrs="{'invisible': [('delivery_order_btn_hide','=',True)]}"
-                             name="button_box">
+                        <div class="oe_button_box oe_right" name="button_box">
                             <button type="object"
+                                    string="Delivery Order"
                                     name="action_view_delivery_order"
                                     class="oe_stat_button"
-                                    icon="fa-truck" string="Delivery Order"
-                                    attrs="{'invisible': [('state','!=','close')]}"
+                                    attrs="{'invisible': [('state','in',('draft','validate','approve','refused'))]}"
+                                    icon="fa-truck"
                                     groups="account.group_account_user,gbs_application_group.group_head_account,gbs_application_group.group_cxo">
-                                <!--<field name="delivery_count" widget="statinfo" string="Delivery"/>-->
                             </button>
                         </div>
 
@@ -150,17 +144,7 @@
                                         </tree>
                                     </field>
                                 </page>
-                                <!--<page string="T.T" attrs="{'invisible':[('so_type', '!=', 'cash')]}">-->
-                                    <!--<field name="tt_ids">-->
-                                        <!--<tree string="List" editable="bottom">-->
-                                            <!--<field name="ref_num"/>-->
-                                            <!--<field name="bank"/>-->
-                                            <!--<field name="branch"/>-->
-                                            <!--<field name="amount"/>-->
-                                            <!--<field name="date"/>-->
-                                        <!--</tree>-->
-                                    <!--</field>-->
-                                <!--</page>-->
+
                                 <page string="L/C" attrs="{'invisible':[('so_type', '!=', 'lc_sales')]}">
                                     <field name="lc_ids">
                                         <tree string="List" editable="bottom">
@@ -234,10 +218,6 @@
             <field name="context">{'search_default_validate':1}</field>
             <field name="view_mode">tree,form</field>
         </record>
-
-        <!--<menuitem id="delivery_order_menu" name="Delivery Authorization" parent="sales_team.menu_base_partner"-->
-                  <!--groups="account.group_account_user,gbs_application_group.group_head_account,gbs_application_group.group_cxo"-->
-                  <!--sequence="12" action="delivery_order_action"/>-->
 
         <menuitem id="delivery_order_submenu"
                   name="Delivery Authorization"

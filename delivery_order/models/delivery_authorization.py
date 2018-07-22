@@ -141,24 +141,6 @@ class DeliveryAuthorization(models.Model):
     def action_draft(self):
         self.state = 'draft'
 
-
-    """ DO button box action """
-
-    @api.multi
-    def action_view_delivery_order(self):
-
-        view = self.env.ref('delivery_order.delivery_order_layer_form')
-
-        return {
-            'name': ('Delivery Order'),
-            'view_type': 'form',
-            'view_mode': 'form',
-            'res_model': 'delivery.order',
-            'context': {'default_delivery_order_id': self.id, 'default_sale_order_id': self.sale_order_id.id},
-            'view_id': [view.id],
-            'type': 'ir.actions.act_window'
-        }
-
     """ Action for Validate Button"""
 
     @api.one
@@ -169,7 +151,8 @@ class DeliveryAuthorization(models.Model):
 
     """ Action for Approve Button"""
 
-    @api.one
+
+    @api.multi
     def action_close(self):
 
         self.approver1_id = self.env.user
@@ -178,10 +161,65 @@ class DeliveryAuthorization(models.Model):
              ('partner_id', '=', self.parent_id.id)])
         account_payment_pool.write({'is_this_payment_checked': True})
 
-        self.update_sale_order_da_qty()
+        # Automatically Create Delivery Order
+        self._automatic_delivery_order_creation()
+
         return self.write({'state': 'close', 'confirmed_date': time.strftime('%Y-%m-%d %H:%M:%S')})
 
     """ Action for Confirm button"""
+
+    @api.multi
+    def _automatic_delivery_order_creation(self):
+        # System confirms that one Sale Order will have only one DA & DO, so check with Sales Order ID
+        do_sale_pool = self.env['delivery.order'].search([('sale_order_id', '=', self.sale_order_id.id)])
+        if not do_sale_pool:
+            vals = {
+                'delivery_order_id': self.id,
+                'sale_order_id': self.sale_order_id.id,
+                'deli_address': self.sale_order_id.partner_shipping_id.name,
+                'currency_id': self.sale_order_id.type_id.currency_id,
+                'partner_id': self.sale_order_id.partner_id,
+                'so_type': self.sale_order_id.credit_sales_or_lc,
+                'so_date': self.sale_order_id.date_order,
+                'state': 'approved',
+            }
+
+            do_pool = self.env['delivery.order'].create(vals)
+
+            for record in self.sale_order_id.order_line:
+                da_line = {
+                    'parent_id': do_pool.id,
+                    'product_id': record.product_id.id,
+                    'quantity': record.product_uom_qty,
+                    'pack_type': self.sale_order_id.pack_type.id,
+                    'uom_id': record.product_uom.id,
+                }
+
+                self.env['delivery.order.line'].create(da_line)
+
+            do_pool.create_delivery_order()
+            do_pool.action_view_delivery()
+
+
+    @api.multi
+    def action_view_delivery_order(self):
+        form_view = self.env.ref('delivery_order.delivery_order_layer_form')
+        tree_view = self.env.ref('delivery_order.delivery_order_tree')
+        do_pool = self.env['delivery.order'].search([('sale_order_id', '=', self.sale_order_id.id)])
+
+        return {
+            'name': ('Delivery Order'),
+            "type": "ir.actions.act_window",
+            'res_model': 'delivery.order',
+            'view_type': 'form',
+            'view_mode': 'tree,form',
+            'views': [
+                (tree_view.id, 'tree'),
+                (form_view.id, 'form'),
+            ],
+            'domain': [('id', '=', do_pool.id)],
+        }
+
 
 
     @api.multi
@@ -195,8 +233,7 @@ class DeliveryAuthorization(models.Model):
         elif self.so_type == 'lc_sales':
             if self.lc_id and self.pi_id:
                 if self.lc_id.lc_value >= self.total_sub_total_amount():
-                    # self.create_delivery_order()
-                    self.update_sale_order_da_qty()
+                    self._automatic_delivery_order_creation()
                     self.write({'state': 'close'})  # Final Approval
                 else:
                     self.write({'state': 'approve'})  # Second approval
@@ -223,9 +260,7 @@ class DeliveryAuthorization(models.Model):
 
                         self.env['ordered.qty'].create(res)
 
-                        # self.create_delivery_order()
-                        self.update_sale_order_da_qty()
-
+                        self._automatic_delivery_order_creation()
                         self.write({'state': 'close'})  # Final Approval
                     else:
                         for orders in ordered_qty_pool:
@@ -239,9 +274,7 @@ class DeliveryAuthorization(models.Model):
                                     if res['available_qty'] > 100:
                                         res['available_qty'] = 0
 
-                                    # self.create_delivery_order()
-                                    self.update_sale_order_da_qty()
-
+                                    self._automatic_delivery_order_creation()
                                     self.write({'state': 'close'})  # Final Approval
                                     orders.create(res)
 
@@ -263,14 +296,10 @@ class DeliveryAuthorization(models.Model):
                             'context': {'delivery_order_id': self.id, 'product_name': product_pool.display_name}
                         }
             else:
-                # self.create_delivery_order()
-                self.update_sale_order_da_qty()
-
                 self.state = 'approve'  # second
 
         elif self.so_type == 'credit_sales':
-            # self.create_delivery_order()
-            self.update_sale_order_da_qty()
+            self._automatic_delivery_order_creation()
             self.state = 'close'
 
 
@@ -283,7 +312,7 @@ class DeliveryAuthorization(models.Model):
         return total_amt
 
 
-    @api.one
+    @api.multi
     def payments_amount_checking_with_products_subtotal(self):
 
         account_payment_pool = self.env['account.payment'].search(
@@ -318,8 +347,7 @@ class DeliveryAuthorization(models.Model):
         if total_cash_cheque_amount >= self.total_amount:
             account_payment_pool.write({'is_this_payment_checked': True})
             cheque_rcv_pool.write({'is_this_payment_checked': True})
-            # self.create_delivery_order()
-            self.update_sale_order_da_qty()
+            self._automatic_delivery_order_creation()
             return self.write({'state': 'close'})  # directly go to final approval level
         else:
             account_payment_pool.write({'is_this_payment_checked': True})
@@ -341,7 +369,7 @@ class DeliveryAuthorization(models.Model):
         return True
 
 
-    @api.one
+    @api.multi
     def payment_information_check(self):
         for cash_line in self.cash_ids:
 
@@ -354,14 +382,6 @@ class DeliveryAuthorization(models.Model):
                 raise UserError(
                     "Payment Information entered is already in use: %s" % (cash_line.account_payment_id.display_name))
                 break;
-
-
-    def update_sale_order_da_qty(self):
-        for da_line in self.line_ids:
-            for sale_line in self.sale_order_id.order_line:
-                if da_line.product_id.id == sale_line.product_id.id:
-                    vals = sale_line.da_qty - da_line.quantity
-                    sale_line.write({'da_qty': vals})
 
 
     @api.onchange('sale_order_id')
@@ -379,7 +399,7 @@ class DeliveryAuthorization(models.Model):
                 self.set_payment_info_automatically(account_payment_pool)
 
 
-    @api.one
+    @api.multi
     def set_cheque_info_automatically(self, account_payment_pool):
         vals = []
         for payments in account_payment_pool:
@@ -396,7 +416,7 @@ class DeliveryAuthorization(models.Model):
                 self.cheque_ids = vals
 
 
-    @api.one
+    @api.multi
     def set_payment_info_automatically(self, account_payment_pool):
 
         if account_payment_pool:
@@ -414,7 +434,7 @@ class DeliveryAuthorization(models.Model):
                         self.cash_ids = vals
 
 
-    @api.one
+    @api.multi
     def set_products_info_automatically(self):
         val = []
         if self.sale_order_id:
@@ -535,7 +555,6 @@ class DeliveryAuthorization(models.Model):
             stock_picking_id = delivery.sale_order_id.picking_ids
             stock_picking_id.write({'lc_id': delivery.lc_id.id})
 
-            ### Showing batch
 
     @api.model
     def _needaction_domain_get(self):

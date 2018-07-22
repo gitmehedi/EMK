@@ -6,6 +6,7 @@
     'version':'10.1.1.1',
     'depends': [
         'sale',
+        'gbs_application_group',
         'sale_stock',
         'product_sales_pricelist',
         'account',
@@ -16,11 +17,11 @@
         'stock',
         'amount_to_word_bd',
         'custom_report',
-        'gbs_sales_delivery_goods'
+        'delivery_challan_report',
     ],
 
     'data': [
-        'security/ir.model.access.csv',
+        'security/security.xml',
         'report/delivery_order_report.xml',
         'report/delivery_order_report_template.xml',
         'wizards/letter_of_credits_view.xml',
@@ -32,6 +33,9 @@
         'report/cash_received_report.xml',
         'report/cash_received_report_view.xml',
         'views/inherit_stock_picking_view.xml',
+        'views/stock_indent_inherit.xml',
+        'security/ir.model.access.csv',
+        'security/ir_rule.xml',
     ],
 
     'summary': 'Delivery Authorization',

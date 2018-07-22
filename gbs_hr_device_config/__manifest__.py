@@ -8,6 +8,7 @@
         'data/ir_cron.xml',
         'views/device_configuration_view.xml',
         'security/ir.model.access.csv',
+        'wizard/success_msg.xml',
     ],
     'depends': [
         'hr',

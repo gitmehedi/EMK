@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <report
+                id="action_report_daily_delivery_products"
+                string="Daily Delivery Report"
+                model="stock.picking"
+                report_type="qweb-pdf"
+                file="delivery_qty_reports.report_daily_delivery_products"
+                name="delivery_qty_reports.report_daily_delivery_products"
+                menu="False"
+        />
+
+
+        <template id="report_daily_delivery_products">
+            <t t-call="report.html_container">
+                <t t-call="custom_report.gbs_internal_layout">
+                    <div class="page">
+                        <div class="row">
+                            <center>
+                                <h3>Daily Delivered &amp; Undelivered Report</h3>
+                            </center>
+                            <h5>Date:
+                                <span t-esc="report_of_day"/>
+                            </h5>
+                            <h5>
+                                <!--<strong>Product Name:</strong>-->
+                                <!--<span t-esc="product_name_for_report"/>-->
+                            </h5>
+                            <div class="text-right">
+                                <!--<strong>Operating Unit:</strong>-->
+                                <!--<span t-esc="operating_unit_name"/>-->
+                            </div>
+                            <table class="table table-report-sm table-bordered table-striped">
+                                <thead>
+                                    <tr
+                                            style="background-color:#B4FDF0;
+												border-bottom: 1px solid #030303;">
+                                        <th>SL</th>
+                                        <th>Customer</th>
+                                        <th>D.O No.</th>
+                                        <th>D.O Date</th>
+                                        <th>UoM</th>
+                                        <th>D.O Qty.</th>
+                                        <th>Issued D.O</th>
+                                        <th>Delivered Qty.</th>
+                                        <th>Unde. Qty</th>
+                                        <th>Category</th>
+                                    </tr>
+                                </thead>
+
+                                <tbody>
+                                    <t t-foreach="do_list" t-as="k">
+                                        <tr>
+                                            <td>
+                                                <span t-esc="k_index+1"/>
+                                            </td>
+                                            <td>
+                                                <span t-esc="k['partner_id']"/>
+                                            </td>
+                                            <td style="text-align: center;">
+                                                <span t-esc="k['do_no']"/>
+                                            </td>
+                                            <td>
+                                                <span t-esc="k['do_date']"/>
+                                            </td>
+                                            <td>
+                                                <span t-esc="k['uom']"/>
+                                            </td>
+                                            <td class="text-right">
+                                                <span t-esc="'%.2f'%k['do_qty']"/>
+                                            </td>
+                                            <td class="text-right">
+                                                <span t-esc="k['issued_do_today']"/>
+                                            </td>
+                                            <td class="text-right">
+                                                <span t-esc="'%.2f'%k['delivered_qty']"/>
+                                            </td>
+                                            <td class="text-right">
+                                                <span t-esc="'%.2f'%k['un_delivered_qty']"/>
+                                            </td>
+                                            <td style="text-align: center;">
+                                                <span t-esc="k['product']"/>
+                                            </td>
+
+                                        </tr>
+                                    </t>
+
+                                    <tr style="background-color:#ebebe0;
+												border-bottom: 1px solid #030303;">
+                                        <td>
+                                            <b>Total</b>
+                                        </td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td class="text-right"><b>
+                                                <span t-esc="'%.2f'%total_do_qty"/>
+                                            </b></td>
+                                        <td class="text-right">
+                                            <b>
+                                                <span t-esc="'%.2f'%issued_do_sum_list"/>
+                                            </b>
+                                        </td>
+                                        <td class="text-right">
+                                            <b>
+                                                <span t-esc="'%.2f'%delivery_qty_sum_list"/>
+                                            </b>
+                                        </td>
+                                        <td class="text-right">
+                                            <b>
+                                                <span t-esc="'%.2f'%undelivery_qty_sum_list"/>
+                                            </b>
+                                        </td>
+                                        <td></td>
+                                    </tr>
+
+                                </tbody>
+                            </table>
+                            <t t-call="custom_report.report_signing"></t>
+                        </div>
+                    </div>
+                </t>
+            </t>
+        </template>
+    </data>
+</odoo>
