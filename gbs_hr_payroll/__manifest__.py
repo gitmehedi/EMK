@@ -9,7 +9,7 @@
         'l10n_in_hr_payroll',
         'hr_employee_seniority',
         'gbs_hr_department_sequence',
-        # 'gbs_hr_calendar',
+        'mail',
         'gbs_hr_employee',
         'hr_employee_loan_payroll',
         'custom_report',
@@ -23,6 +23,7 @@
         'views/hr_contract_view.xml',
         'views/inherited_hr_payslip_run_views.xml',
         'views/hr_payslip.xml',
+        'views/email_template.xml',
     ],
     'summary': 'Shows payslip reports',
     'description':
