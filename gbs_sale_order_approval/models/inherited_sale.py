@@ -309,6 +309,7 @@ class SaleOrder(models.Model):
                 'amount_untaxed': self.amount_untaxed,
                 'tax_value': self.amount_tax,
                 'total_amount': self.amount_total,
+                'operating_unit_id': self.operating_unit_id.id
             }
 
             da_pool = self.env['delivery.authorization'].create(vals)
