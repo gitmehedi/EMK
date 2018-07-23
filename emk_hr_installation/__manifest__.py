@@ -37,6 +37,8 @@
         'hr_payroll_arrear',
         'hr_recruitment_survey',
         'hr_short_leave',
+        'hr_experience',
+        'hr_experience_extend',
         'website_job_application',
         'gbs_employee_roster_view',
     ],
