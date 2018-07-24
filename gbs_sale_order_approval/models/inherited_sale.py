@@ -69,6 +69,14 @@ class SaleOrder(models.Model):
 
     """ Update is_commission_generated flag to False """
 
+    @api.model
+    def create(self, vals):
+        new_seq = self.env['ir.sequence'].next_by_code_new('sale.order', self.create_date) or '/'
+        if new_seq:
+            vals['name'] = new_seq
+
+        return super(SaleOrder, self).create(vals)
+
 
     @api.multi
     def action_invoice_create(self, grouped=False, final=False):

@@ -19,6 +19,7 @@
         'letter_of_credit',
         'gbs_pi_creation',
         'account',
+        'ir_sequence_operating_unit',
     ],
 
     'data': [
@@ -27,6 +28,7 @@
         'views/inherited_sale_view.xml',
         'views/menuitems.xml',
         'report/inherit_sale_order_report.xml',
+        'data/sale_order_sequence.xml',
     ],
     'installable': True,
     'application': False,
