@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="sequence_delivery_authorization_SCCL_HO" model="ir.sequence">
+            <field name="name">DA SCCL HO</field>
+            <field name="code">delivery.authorization</field>
+            <field name="prefix">DA-OU-%(year)s-</field>
+            <field eval="6" name="padding"/>
+            <field eval="1" name="number_increment"/>
+            <field eval="False" name="company_id"/>
+        </record>
+
+
+        <record id="sequence_delivery_authorization_SCCL_DF" model="ir.sequence">
+            <field name="name">DA SCCL DF</field>
+            <field name="code">delivery.authorization</field>
+            <field name="prefix">DA-OU-%(year)s-</field>
+            <field eval="6" name="padding"/>
+            <field eval="1" name="number_increment"/>
+            <field eval="False" name="company_id"/>
+        </record>
+
+        <record id="sequence_delivery_authorization_SCCL_CTG" model="ir.sequence">
+            <field name="name">DA SCCL CTG</field>
+            <field name="code">delivery.authorization</field>
+            <field name="prefix">DA-OU-%(year)s-</field>
+            <field eval="6" name="padding"/>
+            <field eval="1" name="number_increment"/>
+            <field eval="False" name="company_id"/>
+        </record>
+
+        <record id="sequence_delivery_authorization_SPL_HO" model="ir.sequence">
+            <field name="name">DA SPL HO</field>
+            <field name="code">delivery.authorization</field>
+            <field name="prefix">DA-OU-%(year)s-</field>
+            <field eval="6" name="padding"/>
+            <field eval="1" name="number_increment"/>
+            <field eval="False" name="company_id"/>
+        </record>
+
+        <record id="sequence_delivery_authorization_SPL_DF" model="ir.sequence">
+            <field name="name">DA SPL DF</field>
+            <field name="code">delivery.authorization</field>
+            <field name="prefix">DA-OU-%(year)s-</field>
+            <field eval="6" name="padding"/>
+            <field eval="1" name="number_increment"/>
+            <field eval="False" name="company_id"/>
+        </record>
+
+        <record id="sequence_delivery_authorization_SPL_CTG" model="ir.sequence">
+            <field name="name">DA SPL CTG</field>
+            <field name="code">delivery.authorization</field>
+            <field name="prefix">DA-OU-%(year)s-</field>
+            <field eval="6" name="padding"/>
+            <field eval="1" name="number_increment"/>
+            <field eval="False" name="company_id"/>
+        </record>
+
+        <record id="sequence_delivery_authorization_SSCL_HO" model="ir.sequence">
+            <field name="name">DA SSCL_HO</field>
+            <field name="code">delivery.authorization</field>
+            <field name="prefix">DA-OU-%(year)s-</field>
+            <field eval="6" name="padding"/>
+            <field eval="1" name="number_increment"/>
+            <field eval="False" name="company_id"/>
+        </record>
+
+        <record id="sequence_delivery_authorization_SSCL_CTG" model="ir.sequence">
+            <field name="name">DA SSCL CTG</field>
+            <field name="code">delivery.authorization</field>
+            <field name="prefix">DA-OU-%(year)s-</field>
+            <field eval="6" name="padding"/>
+            <field eval="1" name="number_increment"/>
+            <field eval="False" name="company_id"/>
+        </record>
+
+        <record id="sequence_delivery_authorization_SPPL_HO" model="ir.sequence">
+            <field name="name">DA SPPL HO</field>
+            <field name="code">delivery.authorization</field>
+            <field name="prefix">DA-OU-%(year)s-</field>
+            <field eval="6" name="padding"/>
+            <field eval="1" name="number_increment"/>
+            <field eval="False" name="company_id"/>
+        </record>
+
+        <record id="sequence_delivery_authorization_SPPL_CTG" model="ir.sequence">
+            <field name="name">DA SPPL CTG</field>
+            <field name="code">delivery.authorization</field>
+            <field name="prefix">DA-OU-%(year)s-</field>
+            <field eval="6" name="padding"/>
+            <field eval="1" name="number_increment"/>
+            <field eval="False" name="company_id"/>
+        </record>
+        
+    </data>
+</odoo>
