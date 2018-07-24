@@ -101,7 +101,7 @@
                                 <page string="Other Information">
                                     <group>
                                         <group>
-                                            <field name="warehouse_id"/>
+                                            <field name="operating_unit_id"/>
                                             <field name="requested_by" options="{'no_open': True, 'no_create': True}"/>
                                             <field name="requested_date"/>
                                         </group>
