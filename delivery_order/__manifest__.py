@@ -18,6 +18,7 @@
         'amount_to_word_bd',
         'custom_report',
         'delivery_challan_report',
+        'ir_sequence_operating_unit',
     ],
 
     'data': [
@@ -36,6 +37,9 @@
         'views/stock_indent_inherit.xml',
         'security/ir.model.access.csv',
         'security/ir_rule.xml',
+        'data/delivery_authorization_sequence.xml',
+        'data/delivery_order_sequence.xml',
+        'data/delivery_challan_sequence.xml',
     ],
 
     'summary': 'Delivery Authorization',

@@ -115,6 +115,14 @@ class InheritStockPicking(models.Model):
         return self.env["report"].get_action(self, 'delivery_challan_report.report_delivery_cha')
 
 
+    @api.model
+    def create(self, vals):
+        seq = self.env['ir.sequence'].next_by_code_new('stock.picking', self.create_date) or '/'
+        if seq:
+            vals['name'] = seq
+
+        return super(InheritStockPicking, self).create(vals)
+
 
 class InheritStockMove(models.Model):
     _inherit = 'stock.move'

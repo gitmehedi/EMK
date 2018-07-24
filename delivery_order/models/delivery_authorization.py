@@ -10,7 +10,7 @@ class DeliveryAuthorization(models.Model):
 
     _order = "id desc"
 
-    name = fields.Char(string='Delivery Authorization', index=True, readonly=True)
+    name = fields.Char(string='Delivery Authorization', index=True, readonly=True, default="/")
 
     def _get_sale_order_currency(self):
         self.currency_id = self.sale_order_id.currency_id
@@ -119,8 +119,10 @@ class DeliveryAuthorization(models.Model):
 
     @api.model
     def create(self, vals):
-        seq = self.env['ir.sequence'].next_by_code('delivery.authorization') or '/'
-        vals['name'] = seq
+        seq = self.env['ir.sequence'].next_by_code_new('delivery.authorization', self.requested_date) or '/'
+        if seq:
+            vals['name'] = seq
+
         return super(DeliveryAuthorization, self).create(vals)
 
     @api.multi

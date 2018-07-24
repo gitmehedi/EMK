@@ -99,7 +99,7 @@ class DeliveryOrder(models.Model):
 
     @api.model
     def create(self, vals):
-        seq = self.env['ir.sequence'].next_by_code('delivery.order') or '/'
+        seq = self.env['ir.sequence'].next_by_code_new('delivery.order', self.requested_date) or '/'
         vals['name'] = seq
 
         return super(DeliveryOrder, self).create(vals)
