@@ -38,6 +38,7 @@
         'hr_recruitment_survey',
         'hr_short_leave',
         'hr_experience',
+        'hr_contract_reference',
         'hr_experience_extend',
         'website_job_application',
         'gbs_employee_roster_view',
