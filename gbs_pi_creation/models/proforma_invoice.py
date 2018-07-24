@@ -17,12 +17,11 @@ class ProformaInvoice(models.Model):
     advising_bank_id = fields.Many2one('res.bank', string='Advising Bank', required=True, readonly=True,
                                        states={'draft': [('readonly', False)]})
     currency_id = fields.Many2one('res.currency', string='Currency', readonly=True, required=True,
-                                  states={'draft': [('readonly', False)]})
+                                  states={'draft': [('readonly', False)]}, track_visibility='onchange')
 
     beneficiary_id = fields.Many2one('res.company', string='Beneficiary', required=True, readonly=True,
                                      states={'draft': [('readonly', False)]})
-    operating_unit_id = fields.Many2one('operating.unit', string='Unit', required=True, readonly=True,
-                                        states={'draft': [('readonly', False)]})
+
     transport_by = fields.Char(string='Transport By', required=True, readonly=True,
                                states={'draft': [('readonly', False)]})
     terms_condition = fields.Text(string='Terms & Conditions', required=True, readonly=True,
@@ -52,7 +51,7 @@ class ProformaInvoice(models.Model):
     state = fields.Selection([
         ('draft', "Draft"),
         ('confirm', "Confirmed")
-    ], default='draft')
+    ], default='draft', track_visibility='onchange')
 
     sequence_id = fields.Char('Sequence', readonly=True)
 
@@ -61,8 +60,9 @@ class ProformaInvoice(models.Model):
     taxable_amount = fields.Float(string='Taxable Amount')
     untaxaed_amount = fields.Float(string='Untaxed Amount', readonly=True)
     taxed_amount = fields.Float(string='Tax', readonly=True)
-    freight_charge = fields.Float(string='Freight Charge', readonly=True, states={'draft': [('readonly', False)]})
-    total = fields.Float(string='Total', readonly=True)
+    freight_charge = fields.Float(string='Freight Charge', readonly=True, states={'draft': [('readonly', False)]},
+                                  track_visibility='onchange')
+    total = fields.Float(string='Total', readonly=True, track_visibility='onchange')
 
     """ Relational field"""
     line_ids = fields.One2many('proforma.invoice.line', 'pi_id', string="Products", readonly=True,
@@ -75,13 +75,13 @@ class ProformaInvoice(models.Model):
     pack_type = fields.Many2one('product.packaging.mode', string='Packing Mode', default=_get_pack_type,
                                 readonly=True,
                                 states={'draft': [('readonly', False)]}
-                                ,required=True)
+                                , required=True)
 
     credit_sales_or_lc = fields.Selection([
         ('cash', 'Cash'),
         ('credit_sales', 'Credit'),
         ('lc_sales', 'L/C'),
-    ], string='Sales Type', track_visibility='onchange', readonly=True,
+    ], string='Sales Type', readonly=True,
         states={'draft': [('readonly', False)]}, required=True)
 
     def _get_order_type(self):
@@ -181,14 +181,13 @@ class ProformaInvoice(models.Model):
         total = 0
 
         for line in self.line_ids:
-             sub_total+= line['price_subtotal']
-             total+= line['price_subtotal']
+            sub_total += line['price_subtotal']
+            total += line['price_subtotal']
 
         vals['sub_total'] = sub_total
         vals['total'] = total
 
         return super(ProformaInvoice, self).write(vals)
-
 
     def update_total_info(self, vals):
         sub_total = 0
@@ -346,6 +345,34 @@ class ProformaInvoice(models.Model):
         #             self.sudo(SUPERUSER_ID)._message_auto_subscribe_notify(
         #                 [approver.sudo(SUPERUSER_ID).user_id.partner_id.id])
         #     return True
+
+    #########################################
+    # PI Operating Unit related code - STARTS
+    #########################################
+    @api.model
+    def _default_operating_unit(self):
+        team = self.env['crm.team']._get_default_team_id()
+        if team.operating_unit_id:
+            return team.operating_unit_id
+
+    operating_unit_id = fields.Many2one('operating.unit',
+                                        string='Operating Unit',
+                                        required=True, readonly=True,
+                                        default=_default_operating_unit, track_visibility='onchange')
+
+    @api.model
+    def _default_sales_team(self):
+        team = self.env['crm.team']._get_default_team_id()
+        if team:
+            return team.id
+
+    sales_team_id = fields.Many2one('crm.team', string='Sales Team', readonly=True,
+                                    default=_default_sales_team, track_visibility='onchange')
+
+
+    ########################################
+    # PI Operating Unit related code - ENDS
+    ########################################
 
 
 class ProformaInvoiceLine(models.Model):
