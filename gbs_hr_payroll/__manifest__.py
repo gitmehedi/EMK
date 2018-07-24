@@ -20,6 +20,7 @@
         'wizard/inherited_hr_payroll_payslips_by_employees_views.xml',
         'report/payroll_report_view.xml',
         'report/report_payrolladvice_inherit.xml',
+        'report/report_payslip_inherit.xml',
         'views/hr_contract_view.xml',
         'views/inherited_hr_payslip_run_views.xml',
         'views/hr_payslip.xml',
