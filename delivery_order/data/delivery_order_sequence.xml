@@ -57,8 +57,8 @@
 
         <record id="sequence_delivery_order_SSCL_HO" model="ir.sequence">
             <field name="name">DO SSCL_HO</field>
-            <field name="code">delivery.authorization</field>
-            <field name="prefix">DA-OU-%(year)s-</field>
+            <field name="code">delivery.order</field>
+            <field name="prefix">DO-OU-%(year)s-</field>
             <field eval="6" name="padding"/>
             <field eval="1" name="number_increment"/>
             <field eval="False" name="company_id"/>

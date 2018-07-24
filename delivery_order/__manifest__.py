@@ -39,6 +39,7 @@
         'security/ir_rule.xml',
         'data/delivery_authorization_sequence.xml',
         'data/delivery_order_sequence.xml',
+        'data/delivery_challan_sequence.xml',
     ],
 
     'summary': 'Delivery Authorization',
