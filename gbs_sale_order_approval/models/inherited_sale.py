@@ -69,11 +69,13 @@ class SaleOrder(models.Model):
 
     """ Update is_commission_generated flag to False """
 
+
     @api.multi
     def action_invoice_create(self, grouped=False, final=False):
         res = super(SaleOrder, self).action_invoice_create()
         self.invoice_ids.write({'is_commission_generated': False})
         return res
+
 
     @api.depends('order_line.da_qty')
     def _da_button_show_hide(self):
@@ -511,3 +513,14 @@ class InheritedSaleOrderLine(models.Model):
 
         if self.da_qty > self.product_uom_qty:
             raise ValidationError('DA Qty can not be greater than Ordered Qty')
+
+
+
+class CrmTeam(models.Model):
+
+    _inherit = 'crm.team'
+
+    operating_unit_id = fields.Many2one('operating.unit', 'Operating Unit',required=True,
+                                        default=lambda self:
+                                        self.env['res.users'].
+                                        operating_unit_default_get(self._uid))
