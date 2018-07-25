@@ -54,7 +54,7 @@ class DeliveryAuthorization(models.Model):
         ('cash', 'Cash'),
         ('credit_sales', 'Credit'),
         ('lc_sales', 'L/C'),
-    ], string='Sales Type', readonly=True, states={'draft': [('readonly', False)]})
+    ], string='Sales Type', readonly=True, states={'draft': [('readonly', False)]}, track_visibility='onchange')
 
     state = fields.Selection([
         ('draft', "Submit"),
@@ -67,8 +67,8 @@ class DeliveryAuthorization(models.Model):
     company_id = fields.Many2one('res.company', string='Company', readonly=True,
                                  default=lambda self: self.env.user.company_id)
     delivery_count = fields.Integer(string='Delivery Orders', compute='_compute_picking_ids')
-    operating_unit_id = fields.Many2one('operating.unit',string='Operating Unit',readonly=True)
-
+    operating_unit_id = fields.Many2one('operating.unit', string='Operating Unit', readonly=True,
+                                        track_visibility='onchange')
 
     @api.multi
     @api.depends('sale_order_id.procurement_group_id')
@@ -79,8 +79,8 @@ class DeliveryAuthorization(models.Model):
             self.delivery_count = len(order.picking_ids)
 
     """ PI and LC """
-    pi_id = fields.Many2one('proforma.invoice', string='PI Ref. No.', compute="_calculate_pi_id", store=False)
-    lc_id = fields.Many2one('letter.credit', string='LC Ref. No.', compute="_calculate_lc_id", store=False)
+    pi_id = fields.Many2one('proforma.invoice', string='PI Ref. No.', compute="_calculate_pi_id", store=False,track_visibility='onchange')
+    lc_id = fields.Many2one('letter.credit', string='LC Ref. No.', compute="_calculate_lc_id", store=False,track_visibility='onchange')
 
     @api.multi
     def _calculate_pi_id(self):
@@ -182,7 +182,7 @@ class DeliveryAuthorization(models.Model):
                 'so_type': self.sale_order_id.credit_sales_or_lc,
                 'so_date': self.sale_order_id.date_order,
                 'state': 'approved',
-                'operating_unit_id':self.operating_unit_id.id
+                'operating_unit_id': self.operating_unit_id.id
             }
 
             do_pool = self.env['delivery.order'].create(vals)

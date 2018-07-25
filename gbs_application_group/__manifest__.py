@@ -18,10 +18,12 @@
     'depends': [
         'base',
         'gbs_res_users',
+        'operating_unit',
     ],
 
     # always loaded
     'data': [
         'security/security.xml',
+        'security/ir_rule.xml',
     ],
 }

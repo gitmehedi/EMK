@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="sequence_delivery_challan_SCCL_HO" model="ir.sequence">
+            <field name="name">Challan SCCL HO</field>
+            <field name="code">stock.picking</field>
+            <field name="prefix">DC-OU-%(year)s-</field>
+            <field eval="6" name="padding"/>
+            <field eval="1" name="number_increment"/>
+            <field eval="False" name="company_id"/>
+        </record>
+
+        <record id="sequence_delivery_challan_SCCL_DF" model="ir.sequence">
+            <field name="name">Challan SCCL DF</field>
+            <field name="code">stock.picking</field>
+            <field name="prefix">DC-OU-%(year)s-</field>
+            <field eval="6" name="padding"/>
+            <field eval="1" name="number_increment"/>
+            <field eval="False" name="company_id"/>
+        </record>
+
+        <record id="sequence_delivery_challan_SCCL_CTG" model="ir.sequence">
+            <field name="name">Challan SCCL CTG</field>
+            <field name="code">stock.picking</field>
+            <field name="prefix">DC-OU-%(year)s-</field>
+            <field eval="6" name="padding"/>
+            <field eval="1" name="number_increment"/>
+            <field eval="False" name="company_id"/>
+        </record>
+
+        <record id="sequence_delivery_challan_SPL_HO" model="ir.sequence">
+            <field name="name">Challan SPL HO</field>
+            <field name="code">stock.picking</field>
+            <field name="prefix">DC-OU-%(year)s-</field>
+            <field eval="6" name="padding"/>
+            <field eval="1" name="number_increment"/>
+            <field eval="False" name="company_id"/>
+        </record>
+
+        <record id="sequence_delivery_challan_SPL_DF" model="ir.sequence">
+            <field name="name">Challan SPL DF</field>
+            <field name="code">stock.picking</field>
+            <field name="prefix">DC-OU-%(year)s-</field>
+            <field eval="6" name="padding"/>
+            <field eval="1" name="number_increment"/>
+            <field eval="False" name="company_id"/>
+        </record>
+
+        <record id="sequence_delivery_challan_SPL_CTG" model="ir.sequence">
+            <field name="name">Challan SPL CTG</field>
+            <field name="code">stock.picking</field>
+            <field name="prefix">DC-OU-%(year)s-</field>
+            <field eval="6" name="padding"/>
+            <field eval="1" name="number_increment"/>
+            <field eval="False" name="company_id"/>
+        </record>
+
+        <record id="sequence_delivery_challan_SSCL_HO" model="ir.sequence">
+            <field name="name">Challan SSCL_HO</field>
+            <field name="code">stock.picking</field>
+            <field name="prefix">DC-OU-%(year)s-</field>
+            <field eval="6" name="padding"/>
+            <field eval="1" name="number_increment"/>
+            <field eval="False" name="company_id"/>
+        </record>
+
+        <record id="sequence_delivery_challan_SSCL_CTG" model="ir.sequence">
+            <field name="name">Challan SSCL CTG</field>
+            <field name="code">stock.picking</field>
+            <field name="prefix">DC-OU-%(year)s-</field>
+            <field eval="6" name="padding"/>
+            <field eval="1" name="number_increment"/>
+            <field eval="False" name="company_id"/>
+        </record>
+
+        <record id="sequence_delivery_challan_SPPL_HO" model="ir.sequence">
+            <field name="name">Challan SPPL HO</field>
+            <field name="code">stock.picking</field>
+            <field name="prefix">DC-OU-%(year)s-</field>
+            <field eval="6" name="padding"/>
+            <field eval="1" name="number_increment"/>
+            <field eval="False" name="company_id"/>
+        </record>
+
+        <record id="sequence_delivery_challan_SPPL_CTG" model="ir.sequence">
+            <field name="name">Challan SPPL CTG</field>
+            <field name="code">stock.picking</field>
+            <field name="prefix">DC-OU-%(year)s-</field>
+            <field eval="6" name="padding"/>
+            <field eval="1" name="number_increment"/>
+            <field eval="False" name="company_id"/>
+        </record>
+
+    </data>
+</odoo>
