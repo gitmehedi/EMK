@@ -1,42 +1,63 @@
 from odoo import api, fields, models
 from odoo.exceptions import ValidationError
+import time, datetime
 
 
 class DeliveryScheduleLine(models.Model):
     _name = 'delivery.schedules.line'
     _description = 'Delivery Schedule line'
+    _order = "id DESC"
 
     partner_id = fields.Many2one('res.partner', 'Customer', domain="([('customer','=','True')])")
-    product_id = fields.Many2one('product.product', 'Products', required=True)
-    quantity = fields.Float(string="Ordered Qty", default=1.0, required=True)
-    uom_id = fields.Many2one('product.uom', string="UoM", required=True)
-    pack_type = fields.Many2one('product.packaging.mode', string="Packing")
-    deli_address = fields.Text('Delivery Address')
-    parent_id = fields.Many2one('delivery.schedules')
-    remarks = fields.Text('Remarks')
-    state = fields.Selection([
-        ('draft', "Draft"),
-        ('approve', "Confirm"),
-    ], default='draft')
+    pending_do = fields.Many2one('stock.picking', string='Pending D.O', domain="([('state','=','assigned')])")
+    do_qty = fields.Float(string='Ordered Qty', readonly=False)
+    undelivered_qty = fields.Float(string='Undelivered Qty', readonly=False)
+    uom_id = fields.Many2one('product.uom', string="Unit of Measure", readonly=False)
+    scheduled_qty = fields.Float(string='Scheduled Qty.')
+    remarks = fields.Text('Special Instructions')
+
+    # Relational Fields
+    parent_id = fields.Many2one('delivery.schedules', ondelete='cascade')
+
+    @api.model
+    def _default_operating_unit(self):
+        team = self.env['crm.team']._get_default_team_id()
+        if team.operating_unit_id:
+            return team.operating_unit_id
+
+    operating_unit_id = fields.Many2one('operating.unit',
+                                        string='Operating Unit',
+                                        required=True,
+                                        default=_default_operating_unit)
+
+    schedule_line_date = fields.Date('Date', default=datetime.date.today(),)
+
+    # @api.model
+    # def create(self, vals):
+    #
+    #
+    #     return super(DeliveryScheduleLine, self).create(vals)
 
 
-    @api.onchange('product_id')
-    def onchange_product_id(self):
-        if self.product_id:
-            product_obj = self.env['product.product'].search([('id', '=', self.product_id.id)])
-            if product_obj:
-                self.uom_id = product_obj.uom_id.id
+
+    @api.onchange('pending_do')
+    def onchange_pending_do(self):
+        if self.pending_do.partner_id:
+            # For the time being no loop, test purpose
+            self.do_qty = self.pending_do.sale_id.order_line.product_uom_qty
+            self.undelivered_qty = self.do_qty - self.pending_do.sale_id.order_line.qty_delivered
+            self.uom_id = self.pending_do.sale_id.order_line.product_uom
 
 
     @api.onchange('partner_id')
     def onchange_partner_id(self):
-        if self.parent_id:
-            customer_obj = self.env['res.partner'].search([('id', '=', self.partner_id.id)])
-            if customer_obj:
-                self.deli_address = customer_obj.street
+        for ds in self:
+            if ds.partner_id:
+                stock_picking_obj = ds.env['stock.picking'].search(
+                    [('state', '=', 'assigned'), ('partner_id', '=', ds.partner_id.id)])
 
-    @api.one
-    @api.constrains('quantity')
-    def _check_order_qty(self):
-        if self.quantity < 0.00:
-            raise ValidationError('Order Qty can not be negative')
+                if stock_picking_obj:
+                    for s_picking in stock_picking_obj:
+                        ds.pending_do = s_picking.id
+
+
