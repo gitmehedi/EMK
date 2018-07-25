@@ -17,6 +17,7 @@
 
     'data': [
         'security/ir.model.access.csv',
+        'security/ir_rule.xml',
         'views/proforma_invoice_view.xml',
         'report/proforma_invoice_report.xml',
         'data/pi_sequence.xml',

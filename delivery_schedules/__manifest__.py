@@ -6,6 +6,7 @@
     'version':'10.0.1.0.0',
     'depends': [
         'product_sales_pricelist',
+        'sales_team',
     ],
 
     'data': [

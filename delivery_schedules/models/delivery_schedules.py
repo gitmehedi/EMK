@@ -1,25 +1,55 @@
-from odoo import api, fields, models,_
-from odoo.exceptions import UserError,ValidationError
+from odoo import api, fields, models, _
+from odoo.exceptions import UserError, ValidationError
 
+import time, datetime
 
-import time,datetime
 
 class DeliverySchedules(models.Model):
     _name = 'delivery.schedules'
     _description = 'Delivery Schedule'
     _inherit = ['mail.thread']
-    _order_by = "name,requested_date desc"
+    _order = "id DESC"
 
     name = fields.Char(string='Name', index=True, readonly=True)
+    requested_date = fields.Date('Date', default=datetime.date.today(), readonly=True)
     sequence_id = fields.Char('Sequence', readonly=True)
-    requested_date = fields.Date('Requested Date', default=datetime.date.today(), readonly=True)
-    requested_by = fields.Many2one('res.users', string='Requested By', readonly=True, default=lambda self: self.env.user)
-    line_ids = fields.One2many('delivery.schedules.line', 'parent_id', string="Products", readonly=True,states={'draft': [('readonly', False)]})
-    notes = fields.Text()
+    requested_by = fields.Many2one('res.users', string='Requested By', readonly=True,
+                                   default=lambda self: self.env.user)
+
+
+    ## Sales Person & OP Unit
+    #####################################
+    @api.model
+    def _default_operating_unit(self):
+        team = self.env['crm.team']._get_default_team_id()
+        if team.operating_unit_id:
+            return team.operating_unit_id
+
+    operating_unit_id = fields.Many2one('operating.unit',
+                                        string='Operating Unit',
+                                        required=True, readonly=True,
+                                        default=_default_operating_unit, track_visibility='onchange')
+
+    @api.model
+    def _default_sales_team(self):
+        team = self.env['crm.team']._get_default_team_id()
+        if team:
+            return team.id
+
+    sales_team_id = fields.Many2one('crm.team', string='Sales Team', readonly=True,
+                                    default=_default_sales_team, track_visibility='onchange')
+
+    ########################################
+
+
+    line_ids = fields.One2many('delivery.schedules.line', 'parent_id', string="Products", readonly=True,
+                               states={'draft': [('readonly', False)]})
+
     state = fields.Selection([
         ('draft', "Draft"),
         ('approve', "Confirm")
-    ], default='draft')
+    ], default='draft', track_visibility='onchange')
+
 
     @api.model
     def create(self, vals):
@@ -37,6 +67,7 @@ class DeliverySchedules(models.Model):
             return self.write({'state': 'approve', 'approved_date': time.strftime('%Y-%m-%d %H:%M:%S')})
         raise ValidationError("Without Product Details information, you can't confirm it.")
 
+
     @api.multi
     def unlink(self):
         for entry in self:
@@ -44,6 +75,7 @@ class DeliverySchedules(models.Model):
                 raise UserError(_('After confirmation You can not delete this.'))
             entry.line_ids.unlink()
         return super(DeliverySchedules, self).unlink()
+
 
     @api.constrains('name')
     def _check_unique_constraint(self):
