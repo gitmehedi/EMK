@@ -26,10 +26,9 @@ class SaleOrder(models.Model):
     client_order_ref = fields.Char(string='Customer Reference', copy=False, readonly=True,
                                    states={'to_submit': [('readonly', False)]})
     team_id = fields.Many2one('crm.team', 'Sales Team', change_default=True, readonly=True, default=_get_default_team,
-                              oldname='section_id', states={'to_submit': [('readonly', False)]})
+                              oldname='section_id')
     user_id = fields.Many2one('res.users', string='Salesperson', index=True, track_visibility='onchange',
-                              default=lambda self: self.env.user, readonly=True,
-                              states={'to_submit': [('readonly', False)]})
+                              default=lambda self: self.env.user, readonly=True,)
     fiscal_position_id = fields.Many2one('account.fiscal.position', oldname='fiscal_position', string='Fiscal Position',
                                          readonly=True, states={'to_submit': [('readonly', False)]})
     origin = fields.Char(string='Source Document',
