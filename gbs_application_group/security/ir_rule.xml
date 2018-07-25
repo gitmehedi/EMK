@@ -56,7 +56,7 @@
         <value eval="{'noupdate': False}"/>
     </function>
 
-     <record id="sale.sale_order_comp_rule" model="ir.rule">
+    <record id="sale.sale_order_comp_rule" model="ir.rule">
         <field name="active" eval="False"/>
     </record>
 
@@ -74,7 +74,7 @@
         <value eval="{'noupdate': False}"/>
     </function>
 
-     <record id="sale.sale_order_line_comp_rule" model="ir.rule">
+    <record id="sale.sale_order_line_comp_rule" model="ir.rule">
         <field name="active" eval="False"/>
     </record>
 
@@ -92,7 +92,7 @@
         <value eval="{'noupdate': False}"/>
     </function>
 
-     <record id="sale_operating_unit.ir_rule_sale_order_allowed_operating_units" model="ir.rule">
+    <record id="sale_operating_unit.ir_rule_sale_order_allowed_operating_units" model="ir.rule">
         <field name="active" eval="False"/>
     </record>
 
@@ -111,7 +111,7 @@
         <value eval="{'noupdate': False}"/>
     </function>
 
-     <record id="sale_operating_unit.ir_rule_sale_order_line_allowed_operating_units" model="ir.rule">
+    <record id="sale_operating_unit.ir_rule_sale_order_line_allowed_operating_units" model="ir.rule">
         <field name="active" eval="False"/>
     </record>
 
@@ -198,4 +198,26 @@
         <value eval="{'noupdate': True}"/>
     </function>
 
+    <record id="ir_rule_hr_emp_1" model="ir.rule">
+        <field name="model_id" ref="hr.model_hr_employee"/>
+        <field name="domain_force">['|',('department_id','=',False),('department_id.manager_id.user_id','in',[e.id for e in user.employee_ids])]</field>
+        <field name="name">Employee Permission For Dept Manager</field>
+        <field eval="0" name="perm_unlink"/>
+        <field eval="0" name="perm_write"/>
+        <field eval="1" name="perm_read"/>
+        <field eval="0" name="perm_create"/>
+        <field name="groups" eval="[(4,ref('gbs_application_group.group_dept_manager'))]"/>
+    </record>
+
+    <record id="ir_rule_hr_emp_3" model="ir.rule">
+        <field name="model_id" ref="hr.model_hr_employee"/>
+        <field name="domain_force">['|',('company_id','=',False),('company_id','in',[g.id for g in user.company_ids])]
+        </field>
+        <field name="name">Employee Company Permission Employee</field>
+        <field eval="0" name="perm_unlink"/>
+        <field eval="0" name="perm_write"/>
+        <field eval="1" name="perm_read"/>
+        <field eval="0" name="perm_create"/>
+        <field name="groups" eval="[(4,ref('hr.group_hr_manager')),(4,ref('gbs_application_group.group_cxo'))]"/>
+    </record>
 </odoo>
