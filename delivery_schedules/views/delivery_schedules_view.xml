@@ -31,7 +31,7 @@
                                             <field name="schedule_line_date" invisible="1"/>
 
                                             <field name="partner_id" options="{'no_open': True, 'no_create': True}"/>
-                                            <field name="pending_do"/>
+                                            <field name="pending_do" />
                                             <field name="do_qty"/>
                                             <field name="undelivered_qty"/>
                                             <field name="uom_id"
