@@ -12,6 +12,6 @@ class InheritHRPayslipsBatches(models.Model):
 class InheritHRPayslip(models.Model):
     _inherit = 'hr.payslip'
 
-    type = fields.Selection(related='payslip_run_id.type',store=True)
+    type = fields.Selection(related='payslip_run_id.type',store=True,default="0")
 
     festival_date = fields.Date('Festival Date',related='payslip_run_id.festival_date',store=True)

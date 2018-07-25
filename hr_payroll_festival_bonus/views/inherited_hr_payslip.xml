@@ -24,7 +24,7 @@
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='credit_note']" position="after">
                     <field name="type"/>
-                    <field name="festival_date" attrs="{'required': [('type','!=','0')],'invisible': [('type','=','0')]}"/>
+                    <field name="festival_date" attrs="{'required': [('type','!=','0')],'invisible': [('type','!=',('1','2'))]}"/>
                 </xpath>
             </field>
         </record>

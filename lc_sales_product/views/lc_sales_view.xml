@@ -103,13 +103,14 @@
                                 </page>
                                 <page string="Products">
                                     <field name="product_lines">
-                                         <tree string="Sale Order Lines" create="false" delete="false"
-                                               colors="grey: product_received_qty==product_qty;green: product_received_qty!=product_qty;">
+                                        <tree string="Sale Order Lines" create="false" delete="false"
+                                              colors="grey: product_received_qty==product_qty;green: product_received_qty!=product_qty;">
                                             <field name="product_id" readonly='1'/>
                                             <field name="name" readonly='1'/>
-                                            <field name="product_qty" string="LC Qty" readonly='1'/>
                                             <field name="product_uom" string="UOM" readonly='1'/>
-                                             <field name="product_received_qty" string="Shipment Qty" readonly='1'/>
+                                            <field name="product_qty" string="LC Qty" readonly='1'/>
+                                            <field name="delivered_qty" string="Delivered Qty" readonly='1'/>
+                                            <field name="product_received_qty" string="Document Qty" readonly='1'/>
                                             <field name="price_unit" readonly='1'/>
                                         </tree>
                                     </field>
@@ -182,7 +183,7 @@
             <field name="name">export.local.credit.tree</field>
             <field name="model">letter.credit</field>
             <field name="type">tree</field>
-             <!--<field name="view_id" ref="view_lc_export_form"/>-->
+            <!--<field name="view_id" ref="view_lc_export_form"/>-->
             <field name="arch" type="xml">
                 <tree string="Letter of Credit">
                     <field name="name"/>

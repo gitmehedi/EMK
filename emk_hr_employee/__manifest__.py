@@ -6,9 +6,14 @@
     'website': 'www.genweb2.com',
     'category': 'EMK HR Employee',
     'version': '10.0.1.0.0',
-    'data': [],
+    'data': [
+        'views/inherit_hr_employee.xml',
+        'views/inherit_hr_contract.xml',
+    ],
     'depends': [
-
+        'hr',
+        'hr_contract',
+        'l10n_in_hr_payroll',
     ],
     'category': 'HR',
     'summary': '',
