@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<odoo>
+    <data>
+        <!-- Inherited Form view-->
+        <record id="inherit_hr_employee_form" model="ir.ui.view">
+            <field name="name">hr.employee.view.form</field>
+            <field name="model">hr.employee</field>
+            <field name="inherit_id" ref="hr.view_employee_form"/>
+            <field name="arch" type="xml">
+                <field name="coach_id" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </field>
+                <xpath expr="//form/sheet/notebook/page[2]/group/group[2]" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+            </field>
+        </record>
+        <record id="int_hr_emp" model="ir.ui.view">
+            <field name="name">hr.employee.from.view</field>
+            <field name="model">hr.employee</field>
+            <field name="inherit_id" ref="hr_contract.hr_hr_employee_view_form2"/>
+            <field name="arch" type="xml">
+                <field name="vehicle_distance" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </field>
+            </field>
+        </record>
+        <record id="view_employee_form_inherit" model="ir.ui.view">
+            <field name="name">hr.employee.from.view</field>
+            <field name="model">hr.employee</field>
+            <field name="inherit_id" ref="hr_attendance.view_employee_form_inherit_hr_attendance"/>
+            <field name="arch" type="xml">
+                <field name="barcode" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </field>
+            </field>
+        </record>
+        <record id="hr_emp_view_form2" model="ir.ui.view">
+            <field name="name">hr.employee.view.form</field>
+            <field name="model">hr.employee</field>
+            <field name="inherit_id" ref="hr.view_employee_form"/>
+            <field name="arch" type="xml">
+            <xpath expr="//group[@name='active_group']" position="after">
+                <group string="Tax Information">
+                    <field name="tax_zone"/>
+                    <field name="tax_circle"/>
+                    <field name="tax_location"/>
+                </group>
+            </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>
