@@ -105,10 +105,19 @@ class AcceptanceReportsUtility(models.TransientModel):
                 sale_person_list = []
                 lc_objs = self.env['letter.credit'].search([('id','=',vals['lc_id'])])
                 for pi_id in lc_objs.pi_ids_temp:
-                    for so_id in pi_id.so_ids:
+                    so_ids = self.env['sale.order'].search([('pi_id', '=', pi_id.id)])
+                    for so_id in so_ids:
                         sale_person_list.append(so_id.user_id.name)
+                        # first_delivery_date = so_id.picking_ids.filtered(lambda o: o.state == 'done')[-1].date_done
+                        # last_delivery_date = so_id.picking_ids.filtered(lambda o: o.state == 'done')[0].date_done
                 sale_persons = ','.join(sale_person_list)
-                vals.update({'sale_persons': sale_persons,})
+                vals.update({'sale_persons': sale_persons, })
+                picking_ids = self.env['stock.picking'].search([('lc_id','=',lc_objs.id),('state','=','done')] , order='date_done asc')
+                if picking_ids:
+                    first_delivery_date =picking_ids[0].date_done or False
+                    last_delivery_date =picking_ids[-1].date_done or False
+                    vals.update({'first_delivery_date': first_delivery_date, })
+                    vals.update({'last_delivery_date': last_delivery_date, })
 
                 total_value['total_val'] = total_value['total_val'] + vals['value']
                 vals['value'] = formatLang(self.env, vals['value']) if vals['value'] else None
