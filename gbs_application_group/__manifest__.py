@@ -19,6 +19,9 @@
         'base',
         'gbs_res_users',
         'operating_unit',
+        'sale_operating_unit',
+        'sale',
+        'sale_order_type',
     ],
 
     # always loaded

@@ -49,4 +49,153 @@
         <value eval="{'noupdate': True}"/>
     </function>
 
+    <function name="write" model="ir.model.data">
+        <function name="search" model="ir.model.data">
+            <value eval="[('module', '=', 'sale'), ('name', '=', 'sale_order_comp_rule')]"/>
+        </function>
+        <value eval="{'noupdate': False}"/>
+    </function>
+
+     <record id="sale.sale_order_comp_rule" model="ir.rule">
+        <field name="active" eval="False"/>
+    </record>
+
+    <function name="write" model="ir.model.data">
+        <function name="search" model="ir.model.data">
+            <value eval="[('module', '=', 'sale'), ('name', '=', 'sale_order_comp_rule')]"/>
+        </function>
+        <value eval="{'noupdate': True}"/>
+    </function>
+
+    <function name="write" model="ir.model.data">
+        <function name="search" model="ir.model.data">
+            <value eval="[('module', '=', 'sale'), ('name', '=', 'sale_order_line_comp_rule')]"/>
+        </function>
+        <value eval="{'noupdate': False}"/>
+    </function>
+
+     <record id="sale.sale_order_line_comp_rule" model="ir.rule">
+        <field name="active" eval="False"/>
+    </record>
+
+    <function name="write" model="ir.model.data">
+        <function name="search" model="ir.model.data">
+            <value eval="[('module', '=', 'sale'), ('name', '=', 'sale_order_line_comp_rule')]"/>
+        </function>
+        <value eval="{'noupdate': True}"/>
+    </function>
+
+    <function name="write" model="ir.model.data">
+        <function name="search" model="ir.model.data">
+            <value eval="[('module', '=', 'sale_operating_unit'), ('name', '=', 'ir_rule_sale_order_allowed_operating_units')]"/>
+        </function>
+        <value eval="{'noupdate': False}"/>
+    </function>
+
+     <record id="sale_operating_unit.ir_rule_sale_order_allowed_operating_units" model="ir.rule">
+        <field name="active" eval="False"/>
+    </record>
+
+    <function name="write" model="ir.model.data">
+        <function name="search" model="ir.model.data">
+            <value eval="[('module', '=', 'sale_operating_unit'), ('name', '=', 'ir_rule_sale_order_allowed_operating_units')]"/>
+        </function>
+        <value eval="{'noupdate': True}"/>
+    </function>
+
+
+    <function name="write" model="ir.model.data">
+        <function name="search" model="ir.model.data">
+            <value eval="[('module', '=', 'sale_operating_unit'), ('name', '=', 'ir_rule_sale_order_line_allowed_operating_units')]"/>
+        </function>
+        <value eval="{'noupdate': False}"/>
+    </function>
+
+     <record id="sale_operating_unit.ir_rule_sale_order_line_allowed_operating_units" model="ir.rule">
+        <field name="active" eval="False"/>
+    </record>
+
+    <function name="write" model="ir.model.data">
+        <function name="search" model="ir.model.data">
+            <value eval="[('module', '=', 'sale_operating_unit'), ('name', '=', 'ir_rule_sale_order_line_allowed_operating_units')]"/>
+        </function>
+        <value eval="{'noupdate': True}"/>
+    </function>
+
+    <record id="sale_order_type.sale_order_type_comp_rule" model="ir.rule">
+        <field name="active" eval="False"/>
+    </record>
+
+    <function name="write" model="ir.model.data">
+        <function name="search" model="ir.model.data">
+            <value eval="[('module', '=', 'sale'), ('name', '=', 'sale_order_see_all')]"/>
+        </function>
+        <value eval="{'noupdate': False}"/>
+    </function>
+
+    <record id="sale.sale_order_see_all" model="ir.rule">
+        <field name="active" eval="False"/>
+    </record>
+
+    <function name="write" model="ir.model.data">
+        <function name="search" model="ir.model.data">
+            <value eval="[('module', '=', 'sale'), ('name', '=', 'sale_order_see_all')]"/>
+        </function>
+        <value eval="{'noupdate': True}"/>
+    </function>
+
+    <function name="write" model="ir.model.data">
+        <function name="search" model="ir.model.data">
+            <value eval="[('module', '=', 'sale'), ('name', '=', 'sale_order_personal_rule')]"/>
+        </function>
+        <value eval="{'noupdate': False}"/>
+    </function>
+
+    <record id="sale.sale_order_personal_rule" model="ir.rule">
+        <field name="active" eval="False"/>
+    </record>
+
+    <function name="write" model="ir.model.data">
+        <function name="search" model="ir.model.data">
+            <value eval="[('module', '=', 'sale'), ('name', '=', 'sale_order_personal_rule')]"/>
+        </function>
+        <value eval="{'noupdate': True}"/>
+    </function>
+
+    <function name="write" model="ir.model.data">
+        <function name="search" model="ir.model.data">
+            <value eval="[('module', '=', 'sale'), ('name', '=', 'sale_order_line_personal_rule')]"/>
+        </function>
+        <value eval="{'noupdate': False}"/>
+    </function>
+
+    <record id="sale.sale_order_line_personal_rule" model="ir.rule">
+        <field name="active" eval="False"/>
+    </record>
+
+    <function name="write" model="ir.model.data">
+        <function name="search" model="ir.model.data">
+            <value eval="[('module', '=', 'sale'), ('name', '=', 'sale_order_line_personal_rule')]"/>
+        </function>
+        <value eval="{'noupdate': True}"/>
+    </function>
+
+    <function name="write" model="ir.model.data">
+        <function name="search" model="ir.model.data">
+            <value eval="[('module', '=', 'sale'), ('name', '=', 'sale_order_line_see_all')]"/>
+        </function>
+        <value eval="{'noupdate': False}"/>
+    </function>
+
+    <record id="sale.sale_order_line_see_all" model="ir.rule">
+        <field name="active" eval="False"/>
+    </record>
+
+    <function name="write" model="ir.model.data">
+        <function name="search" model="ir.model.data">
+            <value eval="[('module', '=', 'sale'), ('name', '=', 'sale_order_line_see_all')]"/>
+        </function>
+        <value eval="{'noupdate': True}"/>
+    </function>
+
 </odoo>
