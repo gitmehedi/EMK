@@ -15,6 +15,7 @@
         'resource',
         'operating_unit',
         'hr_holidays_multi_levels_approval',
+        'gbs_application_group',
         ],
     'summary': 'This Module is use for OverTime Requisition.',
     'installable': True,
