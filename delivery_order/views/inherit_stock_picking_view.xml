@@ -35,9 +35,7 @@
                 <xpath expr="//field[@name='min_date']" position="after">
                     <field name="date_done"/>
                 </xpath>
-                <xpath expr="//field[@name='origin']" position="after">
-                    <field name="delivery_order_id" options="{'no_open': True, 'no_create': True}"/>/>
-                </xpath>
+
                 <xpath expr="//field[@name='origin']" position="after">
                     <field name="lc_id" options="{'no_open': True, 'no_create': True}"/>/>
                 </xpath>

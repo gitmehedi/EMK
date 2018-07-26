@@ -333,7 +333,7 @@ class SaleOrder(models.Model):
                     'price_unit': record.price_unit,
                     'commission_rate': record.commission_rate,
                     'price_subtotal': record.price_subtotal,
-                    #'tax_id': record.tax_id
+                    'tax_id': record.tax_id
                 }
 
                 self.env['delivery.authorization.line'].create(da_line)
@@ -439,6 +439,35 @@ class SaleOrder(models.Model):
                                    }))
 
             self.order_line = val
+
+
+    @api.onchange('operating_unit_id')
+    def onchange_operating_unit_id(self):
+        team = self.env['crm.team']._get_default_team_id()
+
+        self._cr.execute("""select * from stock_warehouse where operating_unit_id= %s limit 1""",
+                         (team.operating_unit_id.id,))  # Never remove the comma after the parameter
+        warehouse = self._cr.fetchall()
+
+        if warehouse:
+            self.warehouse_id = warehouse[0][0]
+
+
+    @api.model
+    def _default_warehouse_id(self):
+        team = self.env['crm.team']._get_default_team_id()
+
+        self._cr.execute("""select * from stock_warehouse where operating_unit_id= %s limit 1""",
+                         (team.operating_unit_id.id,))  # Never remove the comma after the parameter
+        warehouse = self._cr.fetchall()
+
+        return warehouse[0][0]
+
+    warehouse_id = fields.Many2one(
+        'stock.warehouse', string='Warehouse',
+        required=True, readonly=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]},
+        default=_default_warehouse_id)
+
 
 
 class InheritedSaleOrderLine(models.Model):
