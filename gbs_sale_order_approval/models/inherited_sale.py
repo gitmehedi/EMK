@@ -333,7 +333,7 @@ class SaleOrder(models.Model):
                     'price_unit': record.price_unit,
                     'commission_rate': record.commission_rate,
                     'price_subtotal': record.price_subtotal,
-                    'tax_id': record.tax_id
+                    #'tax_id': record.tax_id
                 }
 
                 self.env['delivery.authorization.line'].create(da_line)
