@@ -1,29 +1,29 @@
 # -*- coding: utf-8 -*-
 {
-    'name': "GBS Application Generic Group Package",
+    'name': "GBS Application Security Group Package",
 
     'summary': """
-        This module will install for GBS Application Generic Group.""",
+        This module will install for Security.""",
 
     'description': """
-        This module will install for GBS Application Generic Group.
+        This module will install for Security.
     """,
 
     'author': "Genweb2 Limited",
     'website': "http://www.genweb2.com",
     'category': 'Tools',
-    'version': '10.0.1.0.0',
+    'version': '0.1',
 
     # any module necessary for this one to work correctly
     'depends': [
-        'base',
-        'gbs_res_users',
-        'operating_unit',
+        'gbs_application_group',
+        'sale_operating_unit',
+        'sale',
+        'sale_order_type',
     ],
 
     # always loaded
     'data': [
-        'security/security.xml',
         'security/ir_rule.xml',
     ],
 }
