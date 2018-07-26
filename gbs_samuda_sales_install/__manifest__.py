@@ -30,6 +30,8 @@
         'gbs_sales_jar_count',
         'delivery_challan_report',
         'inventory_dashboad_inherit',
+        'gbs_application_security',
+        'stock_warehouse_extend',
     ],
 
     'data': [ ],
