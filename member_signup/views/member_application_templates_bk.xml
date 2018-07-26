@@ -54,52 +54,20 @@
                                        placeholder="Firstname"
                                        class="form-control o_website_form_input input-sm odooreq" rq="rq"/>
                             </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-group form-field o_website_form_rq_custom">
-                                <label for="lastname" class="control-label">Last Name</label>
-                                <input type="text" name="lastname" t-att-value="lastname" id="lastname" maxlength="100"
-                                       placeholder="Middle Name"
-                                       class="form-control o_website_form_input input-sm odooreq" rq="rq"/>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
                             <div class="form-group form-field o_website_form_rq_custom">
                                 <label for="email" class="control-label">Email</label>
                                 <input type="email" name="email" t-att-value="email" id="email" minlength="2"
                                        maxlength="100" placeholder="e.g. info@info.com "
                                        class="form-control o_website_form_input input-sm odooreq" rq="rq"/>
                             </div>
-                        </div>
-                        <div class="form-group form-field o_website_form_required_custom col-sm-12">
-                            <label for="gender" class="control-label">Gender</label>
-                            <div class="mar-btm">
-                                <t t-foreach="gender_ids" t-as='label'>
-                                    <t t-if="label==gender">
-                                        <label class="radio-inline">
-                                            <input type="radio" name="gender" t-att-value="label"
-                                                   checked="checked"/>
-                                            <t t-esc="label_value"/>
-                                        </label>
-                                    </t>
-                                    <t t-else="">
-                                        <label class="radio-inline">
-                                            <input type="radio" name="gender" t-att-value="label"/>
-                                            <t t-esc="label_value"/>
-                                        </label>
-                                    </t>
-                                </t>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
+
                             <div class="form-group form-field o_website_form_rq_custom">
                                 <label for="birthdate" class="control-label">Date of Birth</label>
                                 <input type="text" name="birthdate" t-att-value="birthdate" maxlength="10"
                                        minlength="10" class="form-control o_website_form_input input-sm odooreq"
                                        id="birthdate" rq="rq"/>
                             </div>
-                        </div>
-                        <div class="col-md-6">
+
                             <div class="form-group form-field o_website_form_rq_custom">
                                 <label for="street" class="control-label">Current Address</label>
                                 <input type="text" name="street" t-att-value="street" id="street"
@@ -111,58 +79,63 @@
                                 <input type="text" name="street2" t-att-value="street2" id="street2"
                                        class="form-control o_website_form_input input-sm"/>
                             </div>
-                            <div class="form-group form-field col-sm-6 o_website_form_rq_custom">
-                                <input type="text" name="city" t-att-value="city" id="city" minlength="2"
-                                       maxlength="30" rq="rq"
-                                       class="form-control o_website_form_input input-sm odooreq"/>
-                            </div>
-                            <div class="form-group form-field col-sm-6  o_website_form_rq_custom">
-                                <select class="form-control o_website_form_input input-sm odooreq"
-                                        name="per_district"
-                                        rq="rq">
-                                    <option value="">--Please Select--</option>
-                                    <t t-foreach="state_ids" t-as='label'>
-                                        <t t-if="per_district==label_value[0]">
+                            <div class="row">
+                                <div class="form-group form-field col-sm-6 o_website_form_rq_custom">
+                                    <input type="text" name="city" t-att-value="city" id="city" minlength="2"
+                                           maxlength="30" rq="rq"
+                                           class="form-control o_website_form_input input-sm odooreq"/>
+                                </div>
+                                <div class="form-group form-field col-sm-6  o_website_form_rq_custom">
+                                    <select class="form-control o_website_form_input input-sm odooreq"
+                                            name="per_district"
+                                            rq="rq">
+                                        <option value="">--Please Select--</option>
+                                        <t t-foreach="state_ids" t-as='label'>
+                                            <t t-if="per_district==label_value[0]">
 
-                                            <option t-att-value="label_value[0]" selected="selected">
-                                                <t t-esc="label_value[1]"/>
-                                            </option>
+                                                <option t-att-value="label_value[0]" selected="selected">
+                                                    <t t-esc="label_value[1]"/>
+                                                </option>
+                                            </t>
+                                            <t t-else="">
+                                                <option t-att-value="label_value[0]">
+                                                    <t t-esc="label_value[1]"/>
+                                                </option>
+                                            </t>
                                         </t>
-                                        <t t-else="">
-                                            <option t-att-value="label_value[0]">
-                                                <t t-esc="label_value[1]"/>
-                                            </option>
-                                        </t>
+                                    </select>
+                                </div>
+                                <div class="form-group form-field col-sm-6  o_website_form_rq_custom">
+                                    <select class="form-control o_website_form_input input-sm odooreq"
+                                            name="country_id"
+                                            rq="rq">
+                                        <option value="">--Please Select--</option>
+                                        <t t-foreach="country_ids" t-as='label'>
+                                            <t t-if="country_id==label_value[0]">
 
-                                    </t>
-                                </select>
-                            </div>
-                            <div class="form-group form-field col-sm-6  o_website_form_rq_custom">
-                                <select class="form-control o_website_form_input input-sm odooreq"
-                                        name="country_id"
-                                        rq="rq">
-                                    <option value="">--Please Select--</option>
-                                    <t t-foreach="country_ids" t-as='label'>
-                                        <t t-if="country_id==label_value[0]">
+                                                <option t-att-value="label_value[0]" selected="selected">
+                                                    <t t-esc="label_value[1]"/>
+                                                </option>
+                                            </t>
+                                            <t t-else="">
+                                                <option t-att-value="label_value[0]">
+                                                    <t t-esc="label_value[1]"/>
+                                                </option>
+                                            </t>
 
-                                            <option t-att-value="label_value[0]" selected="selected">
-                                                <t t-esc="label_value[1]"/>
-                                            </option>
                                         </t>
-                                        <t t-else="">
-                                            <option t-att-value="label_value[0]">
-                                                <t t-esc="label_value[1]"/>
-                                            </option>
-                                        </t>
-
-                                    </t>
-                                </select>
+                                    </select>
+                                </div>
                             </div>
                         </div>
                         <div class="col-md-6">
+                            <div class="form-group form-field o_website_form_rq_custom">
+                                <label for="lastname" class="control-label">Last Name</label>
+                                <input type="text" name="lastname" t-att-value="lastname" id="lastname" maxlength="100"
+                                       placeholder="Middle Name"
+                                       class="form-control o_website_form_input input-sm odooreq" rq="rq"/>
+                            </div>
 
-                        </div>
-                        <div class="col-md-6">
                             <div class="form-group form-field o_website_form_rq_custom">
                                 <label for="phone" class="control-label">Phone</label>
                                 <input type="text" name="phone" t-att-value="phone" id="phone"
@@ -170,16 +143,22 @@
                                        class="form-control o_website_form_input input-sm" maxlength="20" minlength="5"
                                        rq="rq"/>
                             </div>
-                        </div>
-                        <div class="col-md-6">
                             <div class="form-group form-field o_website_form_rq_custom">
-                                <label for="weburl" class="control-label">Website</label>
-                                <input type="text" name="weburl" id="weburl"
-                                       placeholder="e.g. http://www.abc.com"
+                                <label for="mobile" class="control-label">Mobile</label>
+                                <input type="text" name="mobile" t-att-value="mobile" id="mobile" maxlength="14"
+                                       placeholder="e.g. +88019130120122"
+                                       class="form-control o_website_form_input input-sm"
+                                       rq="rq"/>
+                            </div>
+
+                            <div class="form-group form-field o_website_form_rq_custom">
+                                <label for="website" class="control-label">Website</label>
+                                <input type="text" name="website" id="website"
+                                       placeholder="e.g. www.abc.com"
                                        class="form-control o_website_form_input input-sm" rq="rq"/>
                             </div>
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-12">
                             <div class="form-group form-field o_website_form_rq_custom">
                                 <label for="occupation" class="control-label">Occupation</label>
                                 <select class="form-control o_website_form_input input-sm" name="occupation"
@@ -200,8 +179,6 @@
                                     </t>
                                 </select>
                             </div>
-                        </div>
-                        <div class="col-md-6">
                             <div class="form-group form-field o_website_form_rq_custom">
                                 <label for="subject_of_interest" id="subject_of_interest" class="control-label">Subjects
                                     of Interest: (Please
@@ -209,27 +186,14 @@
                                 </label>
                                 <div class="mar-btm">
                                     <t t-foreach="subject_of_interest_ids" t-as='label'>
-                                        <t t-if="label_value[0] in subject_of_interest">
-                                            <label class="checkbox-inline">
-                                                <input type="checkbox"
-                                                       t-att-name="'subject_of_interest_%s' % (label_value[0])"
-                                                       t-att-value="label_value[0]" checked="checked"/>
-                                                <t t-esc="label_value[1]"/>
-                                            </label>
-                                        </t>
-                                        <t t-else="">
-                                            <label class="checkbox-inline">
-                                                <input type="checkbox"
-                                                       t-att-name="'subject_of_interest_%s' % (label_value[0])"
-                                                       t-att-value="label_value[0]"/>
-                                                <t t-esc="label_value[1]"/>
-                                            </label>
-                                        </t>
+                                        <label class="checkbox-inline">
+                                            <input type="checkbox" name="subject_of_interest"
+                                                   t-att-value="label_value[0]"/>
+                                            <t t-esc="label_value[1]"/>
+                                        </label>
                                     </t>
                                 </div>
                             </div>
-                        </div>
-                        <div class="col-md-6">
                             <div class="form-group form-field o_website_form_rq_custom"
                                  style="display: none;">
                                 <input type="text" name="subject_of_interest_others"
@@ -237,7 +201,6 @@
                                        class="form-control o_website_form_input input-sm odooreq"/>
                             </div>
                         </div>
-
                     </div>
                 </div>
             </div>
@@ -274,7 +237,6 @@
                                     </option>
                                 </t>
                             </t>
-
                         </select>
                     </div>
                     <div>
@@ -285,36 +247,27 @@
                                    minlength="2" maxlength="50"
                                    rq="rq"/>
                         </div>
-                    </div>
-
-                    <div class="form-group form-field o_website_form_rq_custom col-sm-6">
-                        <label for="place_of_study" class="control-label">Place of Study</label>
-                        <input type="text" name="place_of_study" t-att-value="place_of_study"
-                               class="form-control o_website_form_input input-sm" id="place_of_study"
-                               rq="rq"/>
+                        <div class="form-group form-field o_website_form_rq_custom col-sm-6">
+                            <label for="place_of_study" class="control-label">Place of Study</label>
+                            <input type="text" name="place_of_study" t-att-value="place_of_study"
+                                   class="form-control o_website_form_input input-sm" id="place_of_study"
+                                   rq="rq"/>
+                        </div>
                     </div>
                     <div class="form-group form-field o_website_form_required_custom col-sm-12">
                         <label for="usa_work_or_study" class="control-label">Have you worked, or studied in the U.S.?
                         </label>
 
                         <div class="mar-btm">
-                            <t t-foreach="usa_work_or_study_ids" t-as='label'>
-                                <t t-if="label==usa_work_or_study">
-                                    <label class="radio-inline">
-                                        <input type="radio" name="usa_work_or_study" t-att-value="label"
-                                               checked="checked"/>
-                                        <t t-esc="label_value"/>
-                                    </label>
-                                </t>
-                                <t t-else="">
-                                    <label class="radio-inline">
-                                        <input type="radio" name="usa_work_or_study" t-att-value="label"/>
-                                        <t t-esc="label_value"/>
-                                    </label>
-                                </t>
+                            <t t-foreach="config['usa_work_or_study']" t-as='label'>
+                                <label class="radio-inline">
+                                    <input type="radio" name="gender" t-att-value="label" checked="checked"/>
+                                    <t t-esc="label_value"/>
+                                </label>
                             </t>
                         </div>
                     </div>
+
                     <div class="form-group form-field o_website_form_rq_custom col-sm-12">
                         <label for="usa_work_or_study_place" class="control-label">If yes, where in the U.S. have you
                             worked, or Studied
@@ -361,26 +314,33 @@
                                rq="rq"/>
                     </div>
 
+                    <h1>Signature</h1>
+                    <div class="col-md-12 text-center margin-bottom-15">
+                        I hereby aply for membership to th EMK Center and agree to comply with its rules and regulation.
+                    </div>
 
+                    <div class="form-group form-field o_website_form_rq_custom col-sm-12">
+                        <div class="wrap_signature pull-left" id="wrap_signature">
+                            <input id="signature-image-upload" name="signature_image" class="hidden" type="file">
+                                <img id="signature_image"/>
+                            </input>
+                            <div class="signature_image_layer">
+                                <p class="img_desc text-center">Click here to upload singnature.</p>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </template>
 
     <template id="member_signup.success" name="Sign up Success">
-        <t t-call="website.layout">
-            <div class="wrap">
-                <div class="container">
-                    <t t-call="survey.back"/>
-                    <div class="jumbotron mt32">
-                        <h1>Thank you!</h1>
-                        <div>
-                            <t t-esc="config['name']"/>, your request has been submitted successfully. Check email for
-                            further processing.
-                        </div>
-                    </div>
-                </div>
-            </div>
+        <t t-call="web.login_layout">
+
+            <h1>Congratulation</h1>
+            <div></div>
+
+
         </t>
     </template>
 
@@ -390,15 +350,16 @@
             <form class="s_website_form container-fluid mt32" enctype="multipart/form-data" role="form" method="post"
                   t-if="not message">
                 <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
-                <p class="alert alert-danger" t-if="error">
-                    <t t-esc="error"/>
-                </p>
+
                 <div class="col-md-12" style="margin-bottom:10px">
                     <t t-call="member_signup.fields">
                         <t t-set="only_passwords" t-value="bool(token)"/>
                     </t>
 
 
+                    <p class="alert alert-danger" t-if="error">
+                        <t t-esc="error"/>
+                    </p>
                     <input type="hidden" name="redirect" t-att-value="redirect"/>
                     <input type="hidden" name="token" t-att-value="token"/>
 

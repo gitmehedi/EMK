@@ -12,6 +12,7 @@
             <xpath expr="//page[@name='sales_purchases']" position="attributes">
                 <attribute name="attrs">{'invisible':True}</attribute>
             </xpath>
+
             <xpath expr="//notebook/page[@autofocus='autofocus']" position="before">
                 <page name="member_personal_information" string="Personal Information" autofocus="autofocus">
                     <group>
@@ -47,38 +48,6 @@
         </field>
     </record>
 
-
     <menuitem name="General" id="menu_member_general" sequence="0" parent="membership.menu_association"/>
-
-    <record id="membership.menu_membership" model="ir.ui.menu">
-        <field name="parent_id" ref="menu_member_general"/>
-    </record>
-
-
-    <record model="ir.ui.view" id="membership_signup_products_form_">
-        <field name="name">Add membership category field</field>
-        <field name="model">product.template</field>
-        <field name="inherit_id" ref="membership.membership_products_form"/>
-        <field name="arch" type="xml">
-            <xpath expr="//form/group/group/field[@name='categ_id']" position="replace">
-                <field name="categ_id" invisible="True"/>
-            </xpath>
-
-        </field>
-    </record>
-
-    <record model="ir.ui.view" id="membership_signup_partner_form_view">
-        <field name="name">Membership Extension Form</field>
-        <field name="model">res.partner</field>
-        <field name="inherit_id" ref="membership_extension.view_partner_form"/>
-        <field name="priority" eval="999"/>
-        <field name="arch" type="xml">
-            <xpath expr="//form/group/group/field[@name='category_id']" position="attributes">
-
-                <attribute name="attrs">{'invisible':True}</attribute>
-            </xpath>
-        </field>
-    </record>
-
 
 </odoo>

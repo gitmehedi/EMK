@@ -1,16 +1,14 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import random
-import werkzeug
-import logging
-import re
-
+import random, werkzeug, logging, re
 from datetime import datetime, timedelta
 from urlparse import urljoin
-from odoo.exceptions import UserError, ValidationError, Warning
 
+from odoo.exceptions import UserError, ValidationError, Warning
 from odoo import api, fields, models, _
+
+from odoo.addons.member_signup.models.utility import UtilityClass as utility
 
 _logger = logging.getLogger(__name__)
 
@@ -32,6 +30,8 @@ def now(**kwargs):
 
 class ResPartner(models.Model):
     _inherit = 'res.partner'
+
+    member_sequence = fields.Char()
 
     signup_token = fields.Char(copy=False)
     signup_type = fields.Char(string='Signup Token Type', copy=False)
@@ -63,8 +63,8 @@ class ResPartner(models.Model):
     hightest_certification = fields.Many2one('member.certification', string='Highest Certification Achieved')
 
     state = fields.Selection(
-        [('application', 'Application'), ('invoice', 'Invoiced'), ('paid', 'Paid'),
-         ('member', 'Membership')], default='application')
+        [('application', 'Application'), ('invoice', 'Invoiced'),
+         ('member', 'Membership'), ('reject', 'Reject')], default='application')
 
     @api.onchange('birthdate')
     def validate_birthdate(self):
@@ -83,16 +83,19 @@ class ResPartner(models.Model):
     @api.onchange('email')
     def validate_email(self):
         if self.email:
-            match = re.match('^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,4})$', self.email)
-            if match == None:
-                raise ValidationError('Please provide valid email.')
+            utility.check_email(self.email)
 
     @api.constrains('email')
     def check_email(self):
         if self.email:
-            match = re.match('^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,4})$', self.email)
-            if match == None:
-                raise ValidationError('Please provide valid email.')
+            utility.check_email(self.email)
+
+    @api.model
+    def create(self, vals):
+        if vals:
+            vals['member_sequence'] = self.env['ir.sequence'].next_by_code('res.partner.member.application')
+
+        return super(ResPartner, self).create(vals)
 
     @api.multi
     def _compute_signup_valid(self):
@@ -162,13 +165,17 @@ class ResPartner(models.Model):
     @api.multi
     def member_invoiced(self):
 
-        if self.state == 'application':
-            product_id = self.env['product.product'].search([('name', '=', 'Basic Membership')])
+        if 'application' in self.state:
+            product_id = self.env['product.product'].search([('membership_status', '=', True)], order='id desc',
+                                                            limit=1)
+            if not product_id:
+                raise ValidationError(_('Please configure your default Memebership Product.'))
+
             ins_inv = self.env['account.invoice']
             journal_id = self.env['account.journal'].search([('code', '=', 'INV')])
             account_id = self.env['account.account'].search(
                 [('internal_type', '=', 'receivable'), ('deprecated', '=', False)])
-            # for record in self.line_ids:
+
             acc_invoice = {
                 'partner_id': self.id,
                 'date_invoice': datetime.now(),
@@ -185,34 +192,37 @@ class ResPartner(models.Model):
             }
             inv = ins_inv.create(acc_invoice)
             inv.action_invoice_open()
-            mail = self.env['mail.compose.message']
-            # inv.action_invoice_sent()
-            # record.write({'invoice_id': inv.id, 'account_move_id': inv.move_id.id})
 
             if inv:
-                template = self.env.ref('account.email_template_edi_invoice', False)
-                compose_form = self.env.ref('mail.email_compose_message_wizard_form', False)
-                ctx = dict(
-                    default_model='account.invoice',
-                    default_res_id=self.id,
-                    default_use_template=bool(template),
-                    default_template_id=template and template.id or False,
-                    default_composition_mode='comment',
-                    mark_invoice_as_sent=True,
-                    custom_layout="account.mail_template_data_notification_email_account_invoice"
-                )
-                return {
-                    'name': _('Compose Email'),
-                    'type': 'ir.actions.act_window',
-                    'view_type': 'form',
-                    'view_mode': 'form',
-                    'res_model': 'mail.compose.message',
-                    'views': [(compose_form.id, 'form')],
-                    'view_id': compose_form.id,
-                    'target': 'new',
-                    'context': ctx,
-                }
-                # self.state = 'invoice'
+                self.state = 'invoice'
+            # mail = self.env['mail.compose.message']
+            # # inv.action_invoice_sent()
+            # # record.write({'invoice_id': inv.id, 'account_move_id': inv.move_id.id})
+            #
+            # if inv:
+            #     template = self.env.ref('account.email_template_edi_invoice', False)
+            #     compose_form = self.env.ref('mail.email_compose_message_wizard_form', False)
+            #     ctx = dict(
+            #         default_model='account.invoice',
+            #         default_res_id=self.id,
+            #         default_use_template=bool(template),
+            #         default_template_id=template and template.id or False,
+            #         default_composition_mode='comment',
+            #         mark_invoice_as_sent=True,
+            #         custom_layout="account.mail_template_data_notification_email_account_invoice"
+            #     )
+            #     return {
+            #         'name': _('Compose Email'),
+            #         'type': 'ir.actions.act_window',
+            #         'view_type': 'form',
+            #         'view_mode': 'form',
+            #         'res_model': 'mail.compose.message',
+            #         'views': [(compose_form.id, 'form')],
+            #         'view_id': compose_form.id,
+            #         'target': 'new',
+            #         'context': ctx,
+            #     }
+            # self.state = 'invoice'
 
         # self.is_applicant = False
         # self.free_member = True
@@ -252,6 +262,103 @@ class ResPartner(models.Model):
         #         raise UserError(_("Cannot send email: user %s has no email address.") % user.name)
         #     template.with_context(lang=user.lang).send_mail(user.id, force_send=True, raise_exception=True)
         #     _logger.info("Password reset email sent for user <%s> to <%s>", user.login, user.email)
+
+    @api.one
+    def member_payment(self):
+        if 'invoice' in self.state:
+            seq = self.env['ir.sequence'].next_by_code('res.partner.member')
+            self.member_sequence = seq
+            self.state = 'invoice'
+
+        # if 'invoice' in self.state:
+        #     lines = []
+        #     pay_text = 'PAID for Membership'
+        #     invoice = self.env['account.invoice'].search([('partner_id', '=', self.id), ('state', '=', 'open')],
+        #                                                  order='create_date desc', limit=1)
+        #     move = self.env['account.move.line'].search(
+        #         [('credit', '=', '0'), ('move_id', '=', invoice.move_id.id)])
+        #
+        #     payment = {}
+        #     payment['account_id'] = move.account_id.id
+        #     payment['partner_id'] = self.id
+        #     payment['credit'] = invoice.invoice_line_ids.price_unit
+        #     payment['name'] = pay_text
+        #     payment['narration'] = pay_text
+        #
+        #     lines.append((0, 0, payment))
+        #
+        #     for rec in invoice.move_id.line_ids:
+        #         record = {}
+        #         record['payment_journal'] = rec.account_id.id
+        #         record['partner_id'] = self.id
+        #         record['debit'] = rec.debit
+        #         record['name'] = pay_text
+        #         record['narration'] = invoice.move_id.name
+        #         lines.append((0, 0, record))
+        #
+        #     journal_id = self.env['account.journal'].search([('code', '=', 'BILL')])
+        #     payment_method = self.env['account.payment.method'].search(
+        #         [('code', '=ilike', 'manual'), ('payment_type', '=', 'inbound')])
+        #     move_line = {
+        #         'journal_id': journal_id.id,
+        #         'ref': pay_text,
+        #         'narration': pay_text,
+        #         'payment_method_id': payment_method.id,
+        #         'payment_type': 'inbound',
+        #         'amount': 5000,
+        #         'line_ids': lines
+        #     }
+        #     payment = self.env['account.payment'].create(move_line)
+        #     payment.post()
+        #     # self.write({'account_move_pay_id': payment.id})
+        #
+        #     self.state = 'paid'
+
+        return True
+
+    def mail_sending(self, vals={}):
+        # vals['template'] = 'set_password_email'
+        # vals['email_to'] = 'md.mehedi.info@gmail.com'
+        # vals['email_from'] = 'erp@genweb2.com'
+        # vals['emp_id'] = 5
+        #
+        # tmpl_id = self.env.ref('member_signup.set_password_email')
+        # # tmpl_obj = self.env['mail.template'].browse(tmpl_id)
+        # if tmpl_id:
+        #     mail = tmpl_id.generate_email(vals['emp_id'])
+        #     mail['email_to'] = vals['receiver_email']
+        #     mail['email_from'] = vals['sender_email']
+        #     mail['res_id'] = False
+        #     mail_obj = self.env['mail.mail']
+        #     msg_id = mail_obj.create(mail)
+        #     if msg_id:
+        #         mail_obj.send(msg_id)
+        #     return True
+
+        template_obj = self.env['mail.mail']
+        email_server_obj = self.env['ir.mail_server'].search([], order='id DESC')
+
+        # for email in email_server_obj:
+        #     if email.smtp_user:
+        #         server = email.smtp_user
+        #         email_server_list.append(server)
+
+        template_data = {
+            'subject': 'I am good',
+            'email_from': 'erp@genweb2.com',
+            'email_to': "md.mehedi.info@gmail.com,hasan.mehedi@genweb2.com",
+            'email_cc': "nopaws_ice_iu@yahoo.com",
+            'notification': True,
+            'attachment_ids': [2,3],
+            'body_html': 'Hello Mehedi How ',
+        }
+        template_id = template_obj.create(template_data)
+        template_obj.send(template_id)
+
+    @api.one
+    def member_reject(self):
+        if 'application' in self.state:
+            self.state = 'reject'
 
     @api.multi
     def signup_cancel(self):
@@ -309,3 +416,23 @@ class ResPartner(models.Model):
         else:
             res['email'] = res['login'] = partner.email or ''
         return res
+
+    @api.one
+    def name_get(self):
+        name = self.name
+        if self.member_sequence or self.is_applicant:
+            name = '[%s] %s' % (self.member_sequence, self.name)
+        return (self.id, name)
+
+    @api.model
+    def name_search(self, name='', args=None, operator='ilike', limit=100):
+        args = list(args or [])
+        if name:
+            search_name = name
+            if operator != '=':
+                search_name = '%s%%' % name
+            member = self.search(
+                ['|', ('member_sequence', operator, search_name), ('name', operator, search_name)] + args, limit=limit)
+            if member.ids:
+                return member.name_get()
+        return super(ResPartner, self).name_search(name=name, args=args, operator=operator, limit=limit)

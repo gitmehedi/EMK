@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 {
-    'name': 'Membership SignUp',
-    'description': """ Membership signup """,
+    'name': 'Member Application',
+    'description': """ Application for Membership""",
     "author": "Genweb2 Limited",
     "website": "http://www.genweb2.com",
     'version': '1.0',
@@ -13,17 +13,21 @@
         'membership',
         'membership_extension',
         'membership_withdrawal',
+        'partner_firstname',
     ],
     'data': [
         'data/member_signup_data.xml',
+        'data/member_sequence.xml',
         'security/ir.model.access.csv',
         'security/ir_rule.xml',
+        'views/product_template_views.xml',
         'views/res_partner_views.xml',
         'views/res_config_views.xml',
         'views/res_users_views.xml',
         'views/member_application_templates.xml',
         'views/member_config_views.xml',
         'views/member_application_views.xml',
+        'views/membership_payment_views.xml',
     ],
     'bootstrap': True,
 }
