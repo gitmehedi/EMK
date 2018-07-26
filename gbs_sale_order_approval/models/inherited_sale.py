@@ -17,7 +17,8 @@ class SaleOrder(models.Model):
     type_id = fields.Many2one(comodel_name='sale.order.type', string='Type', default=_get_order_type, readonly=True,
                               states={'to_submit': [('readonly', False)]})
 
-    currency_conversion_rate = fields.Float(string='Conversion Rate')
+    currency_conversion_rate = fields.Float(string='Conversion Rate', readonly=True,
+                                            states={'to_submit': [('readonly', False)]})
 
     order_line = fields.One2many('sale.order.line', 'order_id', string='Order Lines', readonly=True, copy=True)
     incoterm = fields.Many2one('stock.incoterms', 'Incoterms', readonly=True,
@@ -28,7 +29,7 @@ class SaleOrder(models.Model):
     team_id = fields.Many2one('crm.team', 'Sales Team', change_default=True, readonly=True, default=_get_default_team,
                               oldname='section_id')
     user_id = fields.Many2one('res.users', string='Salesperson', index=True, track_visibility='onchange',
-                              default=lambda self: self.env.user, readonly=True,)
+                              default=lambda self: self.env.user, readonly=True, )
     fiscal_position_id = fields.Many2one('account.fiscal.position', oldname='fiscal_position', string='Fiscal Position',
                                          readonly=True, states={'to_submit': [('readonly', False)]})
     origin = fields.Char(string='Source Document',
@@ -39,7 +40,19 @@ class SaleOrder(models.Model):
         ('cash', 'Cash'),
         ('credit_sales', 'Credit'),
         ('lc_sales', 'L/C'),
-    ], string='Sales Type', required=True)
+    ], string='Sales Type', required=True, readonly=True,
+        states={'to_submit': [('readonly', False)]})
+
+    company_id = fields.Many2one('res.company', 'Company', required=True, readonly=True,
+                                 states={'to_submit': [('readonly', False)]},
+                                 default=lambda self: self.env['res.company']._company_default_get('sale.order'))
+
+    @api.model
+    def _default_note(self):
+        return self.env.user.company_id.sale_note
+
+    note = fields.Text('Terms and conditions', default=_default_note, readonly=True,
+                       states={'to_submit': [('readonly', False)]} )
 
     state = fields.Selection([
         ('to_submit', 'Submit'),
@@ -76,13 +89,11 @@ class SaleOrder(models.Model):
 
         return super(SaleOrder, self).create(vals)
 
-
     @api.multi
     def action_invoice_create(self, grouped=False, final=False):
         res = super(SaleOrder, self).action_invoice_create()
         self.invoice_ids.write({'is_commission_generated': False})
         return res
-
 
     @api.depends('order_line.da_qty')
     def _da_button_show_hide(self):
@@ -286,7 +297,6 @@ class SaleOrder(models.Model):
                         else:
                             is_double_validation = False
 
-
         if is_double_validation:
             order.write({'state': 'validate'})  # Go to two level approval process
 
@@ -333,11 +343,10 @@ class SaleOrder(models.Model):
                     'price_unit': record.price_unit,
                     'commission_rate': record.commission_rate,
                     'price_subtotal': record.price_subtotal,
-                    'tax_id': record.tax_id
+                    # 'tax_id': record.tax_id
                 }
 
                 self.env['delivery.authorization.line'].create(da_line)
-
 
     def action_view_delivery_auth(self):
         form_view = self.env.ref('delivery_order.delivery_order_form')
@@ -440,7 +449,6 @@ class SaleOrder(models.Model):
 
             self.order_line = val
 
-
     @api.onchange('operating_unit_id')
     def onchange_operating_unit_id(self):
         team = self.env['crm.team']._get_default_team_id()
@@ -451,7 +459,6 @@ class SaleOrder(models.Model):
 
         if warehouse:
             self.warehouse_id = warehouse[0][0]
-
 
     @api.model
     def _default_warehouse_id(self):
@@ -465,9 +472,8 @@ class SaleOrder(models.Model):
 
     warehouse_id = fields.Many2one(
         'stock.warehouse', string='Warehouse',
-        required=True, readonly=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]},
+        required=True, readonly=True, states={'to_submit': [('readonly', False)]},
         default=_default_warehouse_id)
-
 
 
 class InheritedSaleOrderLine(models.Model):
@@ -551,12 +557,10 @@ class InheritedSaleOrderLine(models.Model):
             raise ValidationError('DA Qty can not be greater than Ordered Qty')
 
 
-
 class CrmTeam(models.Model):
-
     _inherit = 'crm.team'
 
-    operating_unit_id = fields.Many2one('operating.unit', 'Operating Unit',required=True,
+    operating_unit_id = fields.Many2one('operating.unit', 'Operating Unit', required=True,
                                         default=lambda self:
                                         self.env['res.users'].
                                         operating_unit_default_get(self._uid))

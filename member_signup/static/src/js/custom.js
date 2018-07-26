@@ -38,16 +38,15 @@ $(function () {
 
     $('input[name=subject_of_interest]').change(function(){
         vals= [];
-
         $("input:checkbox[name=subject_of_interest]:checked").each(function(){
             vals.push($(this).val());
         });
-        console.log(vals);
-        if(vals.indexOf('other')>0){
 
-            $('#subject_of_interest_others').show();
+        if(vals.indexOf('other')>-1){
+            $('#subject_of_interest_others').parent().show();
         }else{
-            $('#subject_of_interest_others').hide();
+            $('#subject_of_interest_others').val('');
+            $('#subject_of_interest_others').parent().hide();
         }
     });
 

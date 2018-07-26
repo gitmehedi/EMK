@@ -81,20 +81,19 @@ class AuthSignupHome(Home):
         if not qcontext.get('token') and not qcontext.get('member_signup_enabled'):
             raise werkzeug.exceptions.NotFound()
 
-        if request.httprequest.method == 'POST':
+        if 'error' not in qcontext and request.httprequest.method == 'POST':
             try:
-                request.env['res.partner'].sudo().mail_sending()
                 auth_data = self.do_application(qcontext)
+
                 if auth_data:
                     config = {
                         'name': auth_data['name']
                     }
-
                     return request.render('member_signup.success', {'name': config})
 
 
             except (SignupError, AssertionError), e:
-                if request.env["res.users"].sudo().search([("login", "=", qcontext.get("email"))]):
+                if request.env["res.users"].sudo().search([("login", "=", qcontext.get("login"))]):
                     qcontext["error"] = _("Another user is already registered using this email address.")
                 else:
                     _logger.error(e.message)
@@ -105,73 +104,41 @@ class AuthSignupHome(Home):
 
         if 'firstname' not in qcontext:
             qcontext['firstname'] = ''
-        if 'lastname' not in qcontext:
-            qcontext['lastname'] = ''
-        if 'phone' not in qcontext:
-            qcontext['phone'] = ''
-        if 'mobile' not in qcontext:
-            qcontext['mobile'] = ''
-
-        if 'weburl' not in qcontext:
-            qcontext['weburl'] = ''
-
-        if package_price:
-            qcontext['package_price'] = package_price.list_price
-        if 'per_district' in qcontext:
-            qcontext['per_district'] = int(qcontext['per_district']) if qcontext['per_district'] else ''
-        if 'occupation' in qcontext:
-            qcontext['occupation'] = int(qcontext['occupation']) if qcontext['occupation'] else ''
-        if 'country_id' in qcontext:
-            qcontext['country_id'] = int(qcontext['country_id']) if qcontext['country_id'] else ''
-        if 'hightest_certification' in qcontext:
-            qcontext['hightest_certification'] = int(qcontext['hightest_certification']) if qcontext[
-                'hightest_certification'] else ''
-
-        if 'last_place_of_study' not in qcontext:
-            qcontext['last_place_of_study'] = ''
-
-        if 'field_of_study' not in qcontext:
-            qcontext['field_of_study'] = ''
-
-        if 'place_of_study' not in qcontext:
-            qcontext['place_of_study'] = ''
-        if 'alumni_institute' not in qcontext:
-            qcontext['alumni_institute'] = ''
-        if 'current_employee' not in qcontext:
-            qcontext['current_employee'] = ''
-        if 'work_title' not in qcontext:
-            qcontext['work_title'] = ''
-        if 'work_phone' not in qcontext:
-            qcontext['work_phone'] = ''
-        if 'info_about_emk' not in qcontext:
-            qcontext['info_about_emk'] = ''
-        if 'usa_work_or_study' not in qcontext:
-            qcontext['usa_work_or_study'] = 'yes'
-        if 'gender' not in qcontext:
-            qcontext['gender'] = 'male'
-        if 'subject_of_interest' not in qcontext:
-            qcontext['subject_of_interest'] = []
 
         if 'state_ids' not in qcontext:
             qcontext['state_ids'] = self.generateDropdown('res.country', status=False)
+        if 'per_district' in qcontext:
+            qcontext['per_district'] = int(qcontext['per_district']) if qcontext['per_district'] else 0
 
+        if 'package_price' not in qcontext:
+            qcontext['package_price'] = 5000
+        if 'firstname' not in qcontext:
+            qcontext['state_ids'] = self.generateDropdown('res.country', status=False)
         if 'country_ids' not in qcontext:
             qcontext['country_ids'] = self.generateDropdown('res.country', status=False)
-
+        if 'gender' not in qcontext:
+            qcontext['gender'] = {'male': 'Male', 'female': 'Female'}
         if 'occupation_ids' not in qcontext:
             qcontext['occupation_ids'] = self.generateDropdown('member.occupation')
-
         if 'subject_of_interest_ids' not in qcontext:
             qcontext['subject_of_interest_ids'] = self.generateDropdown('member.subject.interest')
-
         if 'hightest_certification_ids' not in qcontext:
             qcontext['hightest_certification_ids'] = self.generateDropdown('member.certification')
 
-        if 'usa_work_or_study_ids' not in qcontext:
-            qcontext['usa_work_or_study_ids'] = {'yes': 'Yes', 'no': 'No'}
-        if 'gender_ids' not in qcontext:
-            qcontext['gender_ids'] = {'male': 'Male', 'female': 'Female'}
-
+        config = {
+            'package_price': package_price.id,
+            'state_ids': self.generateDropdown('res.country', status=False),
+            'country_ids': self.generateDropdown('res.country', status=False),
+            'gender': {'male': 'Male', 'female': 'Female'},
+            'occupation': self.generateDropdown('member.occupation'),
+            'subject_of_interest': self.generateDropdown(
+                'member.subject.interest'),
+            'hightest_certification': self.generateDropdown(
+                'member.certification'),
+            'usa_work_or_study': {
+                'yes': 'Yes',
+                'no': 'No'},
+        }
         return request.render('member_signup.signup', qcontext)
 
     def get_member_signup_qcontext(self):
@@ -216,7 +183,6 @@ class AuthSignupHome(Home):
             data['membership_state'] = 'none'
             data['free_member'] = False
             data['login'] = data['email']
-            data['website'] = data['weburl']
             data['password'] = utility.token(length=8)
 
         assert values.values(), "The form was not properly filled in."
@@ -266,7 +232,7 @@ class AuthSignupHome(Home):
             'phone',
             'mobile',
             'email',
-            'weburl',
+            'website',
             'occupation',
             'subject_of_interest',
             'subject_of_interest_others',
