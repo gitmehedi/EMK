@@ -22,7 +22,8 @@ class HrPublicHolidays(models.Model):
     status = fields.Boolean(string='Status', default=True)
 
     """ many2one fields """
-    year_id = fields.Many2one('hr.leave.fiscal.year', string="Leave Year")
+    # year_id = fields.Many2one('hr.leave.fiscal.year', string="Leave Year")
+    year_id = fields.Many2one('date.range', string="Leave Year",domain ="[('type_id.holiday_year', '=', True)]")
 
     """ one2many fields """
     public_details_ids = fields.One2many('hr.holidays.public.line', 'public_type_id', string="Public Details")
@@ -69,11 +70,11 @@ class HrPublicHolidays(models.Model):
 
             if not self.year_id.date_start:
                 raise exceptions.ValidationError("Please provide start date of fiscal year")
-            if not self.year_id.date_stop:
+            if not self.year_id.date_end:
                 raise exceptions.ValidationError("Please provide end date of fiscal year")
 
             start_date = self.year_id.date_start.split('-')
-            end_date = self.year_id.date_stop.split('-')
+            end_date = self.year_id.date_end.split('-')
 
             days = datetime.datetime(int(end_date[0]), int(end_date[1]), int(end_date[2])) - datetime.datetime(
                 int(start_date[0]), int(start_date[1]), int(start_date[2]))

@@ -4,7 +4,8 @@ class HRLeaveSummary(models.TransientModel):
     _name = 'hr.leave.summary.wizard'
     _description = 'HR Leaves Summary Report'
 
-    year_id = fields.Many2one('hr.leave.fiscal.year', string='Leave Year',required=True)
+    year_id = fields.Many2one('date.range', string='Leave Year',required=True,
+                              domain="[('type_id.holiday_year', '=', True)]")
     department_id = fields.Many2one('hr.department', string='Department')
     operating_unit_id = fields.Many2one('operating.unit', 'Operating Unit', required=True,
                                         default=lambda self: self.env.user.default_operating_unit_id)

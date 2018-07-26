@@ -81,13 +81,11 @@
                                                 <t t-esc="line['tenor']"/>
                                             </td>
                                             <td class="text-left">
-                                                <!--<t t-esc="line['dispatch_to_sale']"/>-->
                                                 <t t-if="line['dispatch_to_sale']">
                                                     <t t-esc="time.strftime('%d-%b-%Y',time.strptime(line['dispatch_to_sale'],'%Y-%m-%d'))"/>
                                                 </t>
                                             </td>
                                             <td class="text-left">
-                                                <!--<t t-esc="line['dispatch_to_customer']"/>-->
                                                 <t t-if="line['dispatch_to_customer']">
                                                     <t t-esc="time.strftime('%d-%b-%Y',time.strptime(line['dispatch_to_customer'],'%Y-%m-%d'))"/>
                                                 </t>
@@ -97,11 +95,9 @@
                                                 <t t-esc="line['aging']"/>
                                             </td>
                                             <td class="text-left">
-                                                <!--<t t-esc="line['first_delivery_date']"/>-->
                                                 <t t-esc="time.strftime('%d-%b-%Y',time.strptime(line['first_delivery_date'],'%Y-%m-%d %H:%M:%S'))"/>
                                             </td>
                                             <td class="text-left">
-                                                <!--<t t-esc="line['last_delivery_date']"/>-->
                                                 <t t-esc="time.strftime('%d-%b-%Y',time.strptime(line['last_delivery_date'],'%Y-%m-%d %H:%M:%S'))"/>
                                             </td>
                                             <td class="text-left" style="white-space: nowrap; overflow: hidden;text-overflow: ellipsis;">
@@ -113,9 +109,6 @@
                                             <td class="text-left">
                                                 <t t-esc="line['customer_bank']"/>
                                             </td>
-                                            <!--<td class="text-center">-->
-                                                <!--<t t-esc="line['beneficiary_bank']"/>-->
-                                            <!--</td>-->
                                         </tr>
                                     </t>
                                 </t>

@@ -165,15 +165,18 @@ class IndentIndent(models.Model):
         for indent in self:
             if not indent.product_lines:
                 raise UserError(_('Unable to confirm an indent without product. Please add product(s).'))
+
             # Add all authorities of the indent as followers
-            followers = []
-            if indent.indentor_id and indent.indentor_id.partner_id and indent.indentor_id.partner_id.id:
-                followers.append(indent.indentor_id.partner_id.id)
+            # followers = []
+            # if indent.indentor_id and indent.indentor_id.partner_id and indent.indentor_id.partner_id.id:
+            #     followers.append(indent.indentor_id.partner_id.id)
+            # if indent.indentor_id.employee_ids[0].parent_id:
+            #     followers.append(indent.indentor_id.employee_ids[0].parent_id.user_id.partner_id.id)
             # if indent.manager_id and indent.manager_id.partner_id and indent.manager_id.partner_id.id:
             #    followers.append(indent.manager_id.partner_id.id)
-
             # for follower in followers:
             #    indent.write({'message_follower_ids': [(4, follower)]})
+
             res = {
                 'state': 'waiting_approval'
             }
