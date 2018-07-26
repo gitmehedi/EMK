@@ -19,7 +19,9 @@
         'gbs_application_group',
         'sale_operating_unit',
         'sale',
+        'stock',
         'sale_order_type',
+        'stock_operating_unit',
     ],
 
     # always loaded
