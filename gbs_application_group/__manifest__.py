@@ -17,6 +17,7 @@
     # any module necessary for this one to work correctly
     'depends': [
         'base',
+        'hr',
         'gbs_res_users',
         'operating_unit',
     ],
