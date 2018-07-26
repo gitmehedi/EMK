@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="employee_email_template" model="mail.template">
+            <field name="name">E-mail template for salary sheet</field>
+            <field name="model_id" ref="gbs_hr_payroll.model_hr_payslip"/>
+            <field name="report_template" ref="hr_payroll.action_report_payslip"/>
+            <field name="report_name">RFQ_${(object.name or '').replace('/','_')}</field>
+            <field name="auto_delete" eval="True"/>
+            <field name="body_html">
+                <![CDATA[<html>
+                <head></head>
+                <body style="margin: 0; padding: 0;">
+                Good Job!
+                <p>${object.name}</p>
+
+                </body>
+                </html>
+            ]]></field>
+        </record>
+    </data>
+</odoo>

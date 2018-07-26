@@ -5,7 +5,8 @@
     'sequence': 101,
     "category": "Human Resources",
     "depends": ["hr", "operating_unit",
-                "gbs_application_group",],
+                # "gbs_application_group",
+                ],
     "data": [
         "views/hr_views.xml",
         "security/hr_emp_security.xml",

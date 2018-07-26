@@ -67,21 +67,11 @@
                                 <page string="Other Information">
                                     <group>
                                         <group>
-                                            <!--<field name="warehouse_id"/>-->
+                                            <field name="operating_unit_id"/>
                                             <field name="requested_by" options="{'no_open': True, 'no_create': True}"/>
                                             <field name="requested_date"/>
                                         </group>
-                                        <!--<group>-->
-                                        <!--<field name="approver1_id"-->
-                                           <!--attrs="{'invisible': [('state','in',('draft','validate','approve'))]}"-->
-                                                   <!--options="{'no_open': True, 'no_create': True}"/>-->
-                                            <!--<field name="confirmed_date"-->
-                                                   <!--attrs="{'invisible': [('state','in',('draft','validate','approve'))]}"/>-->
-                                            <!--<field name="approver2_id"-->
-                                                   <!--attrs="{'invisible':['|', ('state','=','draft'),('state','=','validate')]}"-->
-                                                   <!--options="{'no_open': True, 'no_create': True}"/>-->
-                                            <!--<field name="approved_date"/>-->
-                                        <!--</group>-->
+
                                     </group>
                                 </page>
 
@@ -108,15 +98,6 @@
                 </tree>
             </field>
         </record>
-
-        <!-- Generate automated sequence -->
-        <record id="do_seqs" model="ir.sequence">
-            <field name="name">DO Sequences</field>
-            <field name="code">delivery.order</field>
-            <field name="prefix">DO</field>
-            <field name="padding">6</field>
-        </record>
-
 
         <record id="search_delivery_order" model="ir.ui.view">
             <field name="name">delivery.order.search</field>

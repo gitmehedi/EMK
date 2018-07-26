@@ -393,6 +393,9 @@
                         <field name="currency_conversion_rate" groups="base.group_multi_currency"/>
                     </xpath>
 
+                    <xpath expr="//field[@name='company_id']" position="replace">
+                        <field name="company_id"/>
+                    </xpath>
 
                 </data>
             </field>

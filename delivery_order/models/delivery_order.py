@@ -18,13 +18,15 @@ class DeliveryOrder(models.Model):
     def _get_sale_order_currency(self):
         self.currency_id = self.sale_order_id.currency_id
 
-    currency_id = fields.Many2one('res.currency', string='Currency', compute='_get_sale_order_currency',readonly=True, states={'draft': [('readonly', False)]})
-    sale_order_id = fields.Many2one('sale.order', string='Sale Order', readonly=True, states={'draft': [('readonly', False)]})
+    currency_id = fields.Many2one('res.currency', string='Currency', compute='_get_sale_order_currency', readonly=True,
+                                  states={'draft': [('readonly', False)]})
+    sale_order_id = fields.Many2one('sale.order', string='Sale Order', readonly=True,
+                                    states={'draft': [('readonly', False)]}, track_visibility='onchange')
     so_date = fields.Datetime('Order Date', readonly=True, states={'draft': [('readonly', False)]})
     deli_address = fields.Char('Delivery Address', readonly=True, states={'draft': [('readonly', False)]})
 
     parent_id = fields.Many2one('res.partner', 'Customer', ondelete='cascade', readonly=True,
-                                related='delivery_order_id.sale_order_id.partner_id',track_visibility='onchange')
+                                related='delivery_order_id.sale_order_id.partner_id', track_visibility='onchange')
     payment_term_id = fields.Many2one('account.payment.term', string='Payment Terms', readonly=True,
                                       related='delivery_order_id.sale_order_id.payment_term_id')
     warehouse_id = fields.Many2one('stock.warehouse', string='Warehouse', readonly=True,
@@ -48,17 +50,16 @@ class DeliveryOrder(models.Model):
         ('cash', 'Cash'),
         ('credit_sales', 'Credit'),
         ('lc_sales', 'L/C'),
-    ], string='Sales Type', readonly=True, states={'draft': [('readonly', False)]})
+    ], string='Sales Type', readonly=True, states={'draft': [('readonly', False)]}, track_visibility='onchange')
 
     state = fields.Selection([
         ('draft', "Submit"),
         ('approved', "Approved"),
-    ], default='draft',track_visibility='onchange')
+    ], default='draft', track_visibility='onchange')
 
     company_id = fields.Many2one('res.company', string='Company', readonly=True,
                                  default=lambda self: self.env.user.company_id)
     delivery_count = fields.Integer(string='Delivery Orders', compute='_compute_picking_ids')
-
 
     @api.multi
     @api.depends('delivery_order_id.sale_order_id.procurement_group_id')
@@ -68,16 +69,19 @@ class DeliveryOrder(models.Model):
                 [('group_id', '=', order.procurement_group_id.id)]) if order.procurement_group_id else []
             self.delivery_count = len(order.picking_ids)
 
-
     """ PI and LC """
-    pi_id = fields.Many2one('proforma.invoice', string='PI Ref. No.', compute="_calculate_pi_id", store=False)
-    lc_id = fields.Many2one('letter.credit', string='LC Ref. No.', readonly=True, compute = "_calculate_lc_id", store= False)
+    pi_id = fields.Many2one('proforma.invoice', string='PI Ref. No.', compute="_calculate_pi_id", store=False,
+                            track_visibility='onchange')
+    lc_id = fields.Many2one('letter.credit', string='LC Ref. No.', readonly=True, compute="_calculate_lc_id",
+                            store=False, track_visibility='onchange')
+
+    operating_unit_id = fields.Many2one('operating.unit', string='Operating Unit', readonly=True,
+                                        track_visibility='onchange')
 
     @api.multi
     def _calculate_pi_id(self):
         for _pi in self:
             _pi.pi_id = _pi.sale_order_id.pi_id.id
-
 
     @api.multi
     def _calculate_lc_id(self):
@@ -94,15 +98,12 @@ class DeliveryOrder(models.Model):
             order.line_ids.unlink()
         return super(DeliveryOrder, self).unlink()
 
-
     @api.model
     def create(self, vals):
-        seq = self.env['ir.sequence'].next_by_code('delivery.order') or '/'
+        seq = self.env['ir.sequence'].next_by_code_new('delivery.order', self.requested_date) or '/'
         vals['name'] = seq
 
         return super(DeliveryOrder, self).create(vals)
-
-
 
     """ DO button box action """
 
@@ -132,15 +133,18 @@ class DeliveryOrder(models.Model):
         if self.env['ir.values'].get_default('sale.config.settings', 'auto_done_setting'):
             self.sale_order_id.sudo().action_done()
 
+
+
         # Update the reference of Delivery Order and LC No to Stock Picking
         stock_picking_id = self.delivery_order_id.sale_order_id.picking_ids
-        stock_picking_id.sudo().write({'delivery_order_id': self.id})
+        stock_picking_id.sudo().write({'operating_unit_id':self.delivery_order_id.operating_unit_id.id,
+                                       'delivery_order_id': self.id})
 
         # Update the reference of PI and LC on both Stock Picking and Sale Order Obj
         if self.delivery_order_id.so_type == 'lc_sales':
             stock_picking_id.sudo().write({'lc_id': self.lc_id.id})
-            #self.delivery_order_id.sale_order_id.write({'lc_id': self.lc_id.id, 'pi_id': self.pi_id.id})
-            #As per decision, LC Id will be updated to Sale Order from LC creation menu -- rabbi
+            # self.delivery_order_id.sale_order_id.write({'lc_id': self.lc_id.id, 'pi_id': self.pi_id.id})
+            # As per decision, LC Id will be updated to Sale Order from LC creation menu -- rabbi
             self.delivery_order_id.sale_order_id.sudo().write({'pi_id': self.pi_id.id})
 
         # Update Stock Move with reference of Delivery Order
@@ -149,12 +153,10 @@ class DeliveryOrder(models.Model):
 
         return True
 
-
     @api.onchange('delivery_order_id')
     def onchange_sale_order_id(self):
         delivery_auth_id = self.env['delivery.authorization'].search([('id', '=', self.delivery_order_id.id)])
         self.set_products_info_automatically(delivery_auth_id)
-
 
     @api.multi
     def set_products_info_automatically(self, delivery_auth_id):
@@ -175,7 +177,6 @@ class DeliveryOrder(models.Model):
                 self.currency_id = delivery_auth_id.currency_id
 
                 for record in delivery_auth_id.line_ids:
-
                     val.append((0, 0, {'product_id': record.product_id.id,
                                        'quantity': record.quantity,
                                        'pack_type': record.pack_type.id,
@@ -189,22 +190,21 @@ class DeliveryOrder(models.Model):
 
             self.line_ids = val
 
-
     ### Showing batch
     @api.model
     def _needaction_domain_get(self):
         return [('state', 'in', ['draft'])]
 
 
-    ## mail notification
-    # @api.multi
-    # def _notify_approvers(self):
-    #     approvers = self.employee_id._get_employee_manager()
-    #     if not approvers:
-    #         return True
-    #     for approver in approvers:
-    #         self.sudo(SUPERUSER_ID).add_follower(approver.id)
-    #         if approver.sudo(SUPERUSER_ID).user_id:
-    #             self.sudo(SUPERUSER_ID)._message_auto_subscribe_notify(
-    #                 [approver.sudo(SUPERUSER_ID).user_id.partner_id.id])
-    #     return True
+        ## mail notification
+        # @api.multi
+        # def _notify_approvers(self):
+        #     approvers = self.employee_id._get_employee_manager()
+        #     if not approvers:
+        #         return True
+        #     for approver in approvers:
+        #         self.sudo(SUPERUSER_ID).add_follower(approver.id)
+        #         if approver.sudo(SUPERUSER_ID).user_id:
+        #             self.sudo(SUPERUSER_ID)._message_auto_subscribe_notify(
+        #                 [approver.sudo(SUPERUSER_ID).user_id.partner_id.id])
+        #     return True

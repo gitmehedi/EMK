@@ -13,6 +13,13 @@ class InheritStockPicking(models.Model):
                                                  'confirmed': [('readonly', True)], 'waiting': [('readonly', True)],
                                                  'done': [('readonly', True)], 'cancel': [('readonly', True)]})
 
+    vat_challan_id = fields.Char(string='VAT Challan Id', states={'partially_available': [('readonly', True)],
+                                                                  'confirmed': [('readonly', True)],
+                                                                  'waiting': [('readonly', True)],
+                                                                  'done': [('readonly', True)],
+                                                                  'cancel': [('readonly', True)]},
+                                 track_visibility='onchange')
+
     transport_details = fields.Selection([
         ('owned', 'Owned'),
         ('hired', 'Hired'),
@@ -27,7 +34,8 @@ class InheritStockPicking(models.Model):
     vehicle_no = fields.Char(size=100, string='Vehicle #',
                              states={'partially_available': [('readonly', True)],
                                      'confirmed': [('readonly', True)], 'waiting': [('readonly', True)],
-                                     'done': [('readonly', True)], 'cancel': [('readonly', True)]})
+                                     'done': [('readonly', True)], 'cancel': [('readonly', True)]},
+                             track_visibility='onchange')
     driver_no = fields.Char(size=100, string='Driver Name',
                             states={'partially_available': [('readonly', True)],
                                     'confirmed': [('readonly', True)], 'waiting': [('readonly', True)],
@@ -109,11 +117,17 @@ class InheritStockPicking(models.Model):
         for stock_lc in self:
             stock_lc.lc_id = stock_lc.delivery_order_id.sale_order_id.lc_id.id
 
-
     @api.multi
     def do_print_delivery_challan(self):
         return self.env["report"].get_action(self, 'delivery_challan_report.report_delivery_cha')
 
+    @api.model
+    def create(self, vals):
+        seq = self.env['ir.sequence'].next_by_code_new('stock.picking', self.create_date) or '/'
+        if seq:
+            vals['name'] = seq
+
+        return super(InheritStockPicking, self).create(vals)
 
 
 class InheritStockMove(models.Model):

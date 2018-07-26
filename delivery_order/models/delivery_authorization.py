@@ -10,7 +10,7 @@ class DeliveryAuthorization(models.Model):
 
     _order = "id desc"
 
-    name = fields.Char(string='Delivery Authorization', index=True, readonly=True)
+    name = fields.Char(string='Delivery Authorization', index=True, readonly=True, default="/")
 
     def _get_sale_order_currency(self):
         self.currency_id = self.sale_order_id.currency_id
@@ -23,7 +23,7 @@ class DeliveryAuthorization(models.Model):
     deli_address = fields.Char('Delivery Address', readonly=True, states={'draft': [('readonly', False)]})
 
     parent_id = fields.Many2one('res.partner', 'Customer', ondelete='cascade', readonly=True,
-                                related='sale_order_id.partner_id',track_visibility='onchange')
+                                related='sale_order_id.partner_id', track_visibility='onchange')
     payment_term_id = fields.Many2one('account.payment.term', string='Payment Terms', readonly=True,
                                       related='sale_order_id.payment_term_id')
     warehouse_id = fields.Many2one('stock.warehouse', string='Warehouse', readonly=True,
@@ -48,12 +48,13 @@ class DeliveryAuthorization(models.Model):
                                         'validate': [('invisible', True)],
                                         'close': [('invisible', False), ('readonly', True)],
                                         'approve': [('invisible', False), ('readonly', True)]})
-    confirmed_date = fields.Date(string="Approval Date", _defaults=lambda *a: time.strftime('%Y-%m-%d'), readonly=True,track_visibility='onchange')
+    confirmed_date = fields.Date(string="Approval Date", _defaults=lambda *a: time.strftime('%Y-%m-%d'), readonly=True,
+                                 track_visibility='onchange')
     so_type = fields.Selection([
         ('cash', 'Cash'),
         ('credit_sales', 'Credit'),
         ('lc_sales', 'L/C'),
-    ], string='Sales Type', readonly=True, states={'draft': [('readonly', False)]})
+    ], string='Sales Type', readonly=True, states={'draft': [('readonly', False)]}, track_visibility='onchange')
 
     state = fields.Selection([
         ('draft', "Submit"),
@@ -61,11 +62,13 @@ class DeliveryAuthorization(models.Model):
         ('approve', "Second Approval"),
         ('close', "Approved"),
         ('refused', 'Refused'),
-    ], default='draft',track_visibility='onchange')
+    ], default='draft', track_visibility='onchange')
 
     company_id = fields.Many2one('res.company', string='Company', readonly=True,
                                  default=lambda self: self.env.user.company_id)
     delivery_count = fields.Integer(string='Delivery Orders', compute='_compute_picking_ids')
+    operating_unit_id = fields.Many2one('operating.unit', string='Operating Unit', readonly=True,
+                                        track_visibility='onchange')
 
     @api.multi
     @api.depends('sale_order_id.procurement_group_id')
@@ -76,14 +79,13 @@ class DeliveryAuthorization(models.Model):
             self.delivery_count = len(order.picking_ids)
 
     """ PI and LC """
-    pi_id = fields.Many2one('proforma.invoice', string='PI Ref. No.', compute="_calculate_pi_id", store=False)
-    lc_id = fields.Many2one('letter.credit', string='LC Ref. No.', compute="_calculate_lc_id", store=False)
+    pi_id = fields.Many2one('proforma.invoice', string='PI Ref. No.', compute="_calculate_pi_id", store=False,track_visibility='onchange')
+    lc_id = fields.Many2one('letter.credit', string='LC Ref. No.', compute="_calculate_lc_id", store=False,track_visibility='onchange')
 
     @api.multi
     def _calculate_pi_id(self):
         for p in self:
             p.pi_id = p.sale_order_id.pi_id.id
-
 
     @api.multi
     def _calculate_lc_id(self):
@@ -92,36 +94,36 @@ class DeliveryAuthorization(models.Model):
     """ Payment information"""
     amount_untaxed = fields.Float(string='Untaxed Amount', readonly=True)
     tax_value = fields.Float(string='Taxes', readonly=True)
-    total_amount = fields.Float(string='Total', readonly=True,track_visibility='onchange')
+    total_amount = fields.Float(string='Total', readonly=True, track_visibility='onchange')
 
     sale_order_id = fields.Many2one('sale.order',
                                     string='Sale Order',
                                     readonly=True,
                                     domain=[('da_btn_show_hide', '=', False), ('state', '=', 'done')],
-                                    states={'draft': [('readonly', False)]},track_visibility='onchange')
-
+                                    states={'draft': [('readonly', False)]}, track_visibility='onchange')
 
     @api.multi
     def _compute_do_button_visibility(self):
 
         for da in self:
-            delivery_order_pool = da.env['delivery.order'].search([('delivery_order_id','=', da.id)])
+            delivery_order_pool = da.env['delivery.order'].search([('delivery_order_id', '=', da.id)])
             if delivery_order_pool:
                 da.delivery_order_btn_hide = True
             else:
                 da.delivery_order_btn_hide = False
 
-
-    delivery_order_btn_hide = fields.Boolean(string='Is DO Button Visible', store=False, compute='_compute_do_button_visibility')
+    delivery_order_btn_hide = fields.Boolean(string='Is DO Button Visible', store=False,
+                                             compute='_compute_do_button_visibility')
 
     """ All functions """
 
     @api.model
     def create(self, vals):
-        seq = self.env['ir.sequence'].next_by_code('delivery.authorization') or '/'
-        vals['name'] = seq
-        return super(DeliveryAuthorization, self).create(vals)
+        seq = self.env['ir.sequence'].next_by_code_new('delivery.authorization', self.requested_date) or '/'
+        if seq:
+            vals['name'] = seq
 
+        return super(DeliveryAuthorization, self).create(vals)
 
     @api.multi
     def unlink(self):
@@ -131,11 +133,9 @@ class DeliveryAuthorization(models.Model):
             order.line_ids.unlink()
         return super(DeliveryAuthorization, self).unlink()
 
-
     @api.one
     def action_refuse(self):
         self.state = 'refused'
-
 
     @api.one
     def action_draft(self):
@@ -151,13 +151,13 @@ class DeliveryAuthorization(models.Model):
 
     """ Action for Approve Button"""
 
-
     @api.multi
     def action_close(self):
 
         self.approver1_id = self.env.user
         account_payment_pool = self.env['account.payment'].search(
-            [('state','!=','draft'),('is_this_payment_checked', '=', False), ('sale_order_id', '=', self.sale_order_id.id),
+            [('state', '!=', 'draft'), ('is_this_payment_checked', '=', False),
+             ('sale_order_id', '=', self.sale_order_id.id),
              ('partner_id', '=', self.parent_id.id)])
         account_payment_pool.write({'is_this_payment_checked': True})
 
@@ -170,34 +170,36 @@ class DeliveryAuthorization(models.Model):
 
     @api.multi
     def _automatic_delivery_order_creation(self):
-
-        vals = {
-            'delivery_order_id': self.id,
-            'sale_order_id': self.sale_order_id.id,
-            'deli_address': self.sale_order_id.partner_shipping_id.name,
-            'currency_id': self.sale_order_id.type_id.currency_id,
-            'partner_id': self.sale_order_id.partner_id,
-            'so_type': self.sale_order_id.credit_sales_or_lc,
-            'so_date': self.sale_order_id.date_order,
-            'state': 'approved',
-        }
-
-        do_pool = self.env['delivery.order'].create(vals)
-
-        for record in self.sale_order_id.order_line:
-            da_line = {
-                'parent_id': do_pool.id,
-                'product_id': record.product_id.id,
-                'quantity': record.product_uom_qty,
-                'pack_type': self.sale_order_id.pack_type.id,
-                'uom_id': record.product_uom.id,
+        # System confirms that one Sale Order will have only one DA & DO, so check with Sales Order ID
+        do_sale_pool = self.env['delivery.order'].search([('sale_order_id', '=', self.sale_order_id.id)])
+        if not do_sale_pool:
+            vals = {
+                'delivery_order_id': self.id,
+                'sale_order_id': self.sale_order_id.id,
+                'deli_address': self.sale_order_id.partner_shipping_id.name,
+                'currency_id': self.sale_order_id.type_id.currency_id,
+                'partner_id': self.sale_order_id.partner_id,
+                'so_type': self.sale_order_id.credit_sales_or_lc,
+                'so_date': self.sale_order_id.date_order,
+                'state': 'approved',
+                'operating_unit_id': self.operating_unit_id.id
             }
 
-            self.env['delivery.order.line'].create(da_line)
+            do_pool = self.env['delivery.order'].create(vals)
 
-        do_pool.create_delivery_order()
-        do_pool.action_view_delivery()
+            for record in self.sale_order_id.order_line:
+                da_line = {
+                    'parent_id': do_pool.id,
+                    'product_id': record.product_id.id,
+                    'quantity': record.product_uom_qty,
+                    'pack_type': self.sale_order_id.pack_type.id,
+                    'uom_id': record.product_uom.id,
+                }
 
+                self.env['delivery.order.line'].create(da_line)
+
+            do_pool.create_delivery_order()
+            do_pool.action_view_delivery()
 
     @api.multi
     def action_view_delivery_order(self):
@@ -217,8 +219,6 @@ class DeliveryAuthorization(models.Model):
             ],
             'domain': [('id', '=', do_pool.id)],
         }
-
-
 
     @api.multi
     def action_validate(self):
@@ -272,7 +272,7 @@ class DeliveryAuthorization(models.Model):
                                     if res['available_qty'] > 100:
                                         res['available_qty'] = 0
 
-                                    #self._automatic_delivery_order_creation()
+                                    self._automatic_delivery_order_creation()
                                     self.write({'state': 'close'})  # Final Approval
                                     orders.create(res)
 
@@ -300,7 +300,6 @@ class DeliveryAuthorization(models.Model):
             self._automatic_delivery_order_creation()
             self.state = 'close'
 
-
     def total_sub_total_amount(self):
         total_amt = 0
         for orders in self:
@@ -309,18 +308,17 @@ class DeliveryAuthorization(models.Model):
 
         return total_amt
 
-
     @api.multi
     def payments_amount_checking_with_products_subtotal(self):
 
         account_payment_pool = self.env['account.payment'].search(
-            [('state','!=','draft'),('is_this_payment_checked', '=', False), ('sale_order_id', '=', self.sale_order_id.id),
+            [('state', '!=', 'draft'), ('is_this_payment_checked', '=', False),
+             ('sale_order_id', '=', self.sale_order_id.id),
              ('partner_id', '=', self.parent_id.id)])
 
         cheque_rcv_pool = self.env['accounting.cheque.received'].search(
             [('partner_id', '=', self.sale_order_id.partner_id.id), ('state', '=', 'honoured'),
              ('sale_order_id', '=', self.sale_order_id.id)])
-
 
         if not self.line_ids:
             return self.write({'state': 'approve'})  # Only Second level approval
@@ -352,7 +350,6 @@ class DeliveryAuthorization(models.Model):
             cheque_rcv_pool.write({'is_this_payment_checked': True})
             return self.write({'state': 'approve'})  # Only Second level approval
 
-
     def create_delivery_order(self):
         for order in self.sale_order_id:
             order.state = 'sale'
@@ -365,7 +362,6 @@ class DeliveryAuthorization(models.Model):
         if self.env['ir.values'].get_default('sale.config.settings', 'auto_done_setting'):
             self.sale_order_id.action_done()
         return True
-
 
     @api.multi
     def payment_information_check(self):
@@ -381,12 +377,11 @@ class DeliveryAuthorization(models.Model):
                     "Payment Information entered is already in use: %s" % (cash_line.account_payment_id.display_name))
                 break;
 
-
     @api.onchange('sale_order_id')
     def onchange_sale_order_id(self):
         self.set_products_info_automatically()
 
-        account_payment_pool = self.env['account.payment'].search([('state','!=','draft'),
+        account_payment_pool = self.env['account.payment'].search([('state', '!=', 'draft'),
                                                                    ('sale_order_id', '=', self.sale_order_id.id)])
 
         for payments in account_payment_pool:
@@ -395,7 +390,6 @@ class DeliveryAuthorization(models.Model):
                 self.process_cheque_payment()
             elif payments.journal_id.type == 'cash':
                 self.set_payment_info_automatically(account_payment_pool)
-
 
     @api.multi
     def set_cheque_info_automatically(self, account_payment_pool):
@@ -413,7 +407,6 @@ class DeliveryAuthorization(models.Model):
 
                 self.cheque_ids = vals
 
-
     @api.multi
     def set_payment_info_automatically(self, account_payment_pool):
 
@@ -430,7 +423,6 @@ class DeliveryAuthorization(models.Model):
                                             }))
 
                         self.cash_ids = vals
-
 
     @api.multi
     def set_products_info_automatically(self):
@@ -466,12 +458,12 @@ class DeliveryAuthorization(models.Model):
 
         self.line_ids = val
 
-
     def action_process_unattached_payments(self):
         self.process_cheque_payment()
 
         account_payment_pool = self.env['account.payment'].search(
-            [('state','!=','draft'),('is_this_payment_checked', '=', False), ('sale_order_id', '=', self.sale_order_id.id)])
+            [('state', '!=', 'draft'), ('is_this_payment_checked', '=', False),
+             ('sale_order_id', '=', self.sale_order_id.id)])
 
         for acc in account_payment_pool:
             if acc.journal_id.type == 'cash':
@@ -511,18 +503,17 @@ class DeliveryAuthorization(models.Model):
 
                 self.cheque_ids = vals_bank
 
-
     @api.multi
     def process_cheque_payment(self):
         vals = []
         for pay in self:
             cheque_rcv_pool = pay.env['accounting.cheque.received'].search(
-                [('partner_id','=',pay.sale_order_id.partner_id.id),('state', '=', 'honoured'), ('sale_order_id', '=', pay.sale_order_id.id)])
+                [('partner_id', '=', pay.sale_order_id.partner_id.id), ('state', '=', 'honoured'),
+                 ('sale_order_id', '=', pay.sale_order_id.id)])
 
             val_bank = []
             for bank_line in self.cheque_ids:
                 val_bank.append(bank_line.cheque_info_id)
-
 
             for payments in cheque_rcv_pool:
                 if payments.journal_id.type != 'cash':
@@ -536,8 +527,6 @@ class DeliveryAuthorization(models.Model):
                                             }))
 
             pay.cheque_ids = vals
-
-
 
     ################
     # 100 MT Logic
@@ -553,25 +542,23 @@ class DeliveryAuthorization(models.Model):
             stock_picking_id = delivery.sale_order_id.picking_ids
             stock_picking_id.write({'lc_id': delivery.lc_id.id})
 
-            ### Showing batch
-
     @api.model
     def _needaction_domain_get(self):
         return [('state', 'in', ['validate'])]
 
 
-    ## mail notification
-    # @api.multi
-    # def _notify_approvers(self):
-    #     approvers = self.employee_id._get_employee_manager()
-    #     if not approvers:
-    #         return True
-    #     for approver in approvers:
-    #         self.sudo(SUPERUSER_ID).add_follower(approver.id)
-    #         if approver.sudo(SUPERUSER_ID).user_id:
-    #             self.sudo(SUPERUSER_ID)._message_auto_subscribe_notify(
-    #                 [approver.sudo(SUPERUSER_ID).user_id.partner_id.id])
-    #     return True
+        ## mail notification
+        # @api.multi
+        # def _notify_approvers(self):
+        #     approvers = self.employee_id._get_employee_manager()
+        #     if not approvers:
+        #         return True
+        #     for approver in approvers:
+        #         self.sudo(SUPERUSER_ID).add_follower(approver.id)
+        #         if approver.sudo(SUPERUSER_ID).user_id:
+        #             self.sudo(SUPERUSER_ID)._message_auto_subscribe_notify(
+        #                 [approver.sudo(SUPERUSER_ID).user_id.partner_id.id])
+        #     return True
 
 
 class OrderedQty(models.Model):

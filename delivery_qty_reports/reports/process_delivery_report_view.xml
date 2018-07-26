@@ -42,7 +42,7 @@
                                         <th>D.O Qty.</th>
                                         <th>Issued D.O</th>
                                         <th>Delivered Qty.</th>
-                                        <th>Unde. Qty</th>
+                                        <th>Undelivered Qty</th>
                                         <th>Category</th>
                                     </tr>
                                 </thead>
