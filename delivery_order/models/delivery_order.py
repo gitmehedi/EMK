@@ -119,6 +119,7 @@ class DeliveryOrder(models.Model):
             action['res_id'] = pickings.id
         return action
 
+
     @api.multi
     def create_delivery_order(self):
 
@@ -132,9 +133,12 @@ class DeliveryOrder(models.Model):
         if self.env['ir.values'].get_default('sale.config.settings', 'auto_done_setting'):
             self.sale_order_id.sudo().action_done()
 
+
+
         # Update the reference of Delivery Order and LC No to Stock Picking
         stock_picking_id = self.delivery_order_id.sale_order_id.picking_ids
-        stock_picking_id.sudo().write({'delivery_order_id': self.id})
+        stock_picking_id.sudo().write({'operating_unit_id':self.delivery_order_id.operating_unit_id.id,
+                                       'delivery_order_id': self.id})
 
         # Update the reference of PI and LC on both Stock Picking and Sale Order Obj
         if self.delivery_order_id.so_type == 'lc_sales':
