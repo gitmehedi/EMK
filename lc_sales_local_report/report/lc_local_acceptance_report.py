@@ -104,11 +104,11 @@ class AcceptanceReportsUtility(models.TransientModel):
             lc_obj = self.env['letter.credit'].search([('id','=',vals['lc_id'])])
             so_ids = self.env['sale.order'].search([('lc_id', '=', lc_obj.id)])
             for so_id in so_ids:
-                sale_person_list.append(so_id.user_id.name)
+                sale_person_list.append(so_id.user_id.sudo().name)
                 picking_id_list =picking_id_list + so_id.picking_ids.ids
             sale_persons = ','.join(sale_person_list)
             vals.update({'sale_persons': sale_persons, })
-            picking_ids = self.env['stock.picking'].search([('id','in',picking_id_list),('state','=','done')] , order='date_done asc')
+            picking_ids = self.env['stock.picking'].sudo().search([('id','in',picking_id_list),('state','=','done')] , order='date_done asc')
             first_delivery_date = False
             last_delivery_date = False
             if picking_ids:
