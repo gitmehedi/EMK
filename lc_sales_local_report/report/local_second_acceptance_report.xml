@@ -39,19 +39,19 @@
                             <thead>
                                 <tr class="odo-bg-gray">
                                     <th class="text-center" style="width:3%;">SL</th>
-                                    <th class="text-center" style="width:15%;">Customer</th>
+                                    <th class="text-center" style="width:18%;">Customer</th>
                                     <th class="text-center" style="width:8%;">L/C No</th>
                                     <th class="text-center" style="width:8%;">Shipment No</th>
-                                    <th class="text-center" style="width:8%;">Value</th>
-                                    <th class="text-center" style="width:4%;">Tenor</th>
-                                    <th class="text-center" style="width:6%;">TBL Receive on</th>
-                                    <th class="text-center" style="width:6%;">Party Bank Receive</th>
-                                    <th class="text-center" style="width:4%;">Aging</th>
-                                    <th class="text-center" style="width:6%;">First Delivery</th>
-                                    <th class="text-center" style="width:6%;">Last Delivery</th>
-                                    <th class="text-center" style="width:10%;">Remarks/Status</th>
+                                    <th class="text-center" style="width:6%;">Value</th>
+                                    <th class="text-center" style="width:3%;">Tenor</th>
+                                    <th class="text-center" style="width:5%;">TBL Receive on</th>
+                                    <th class="text-center" style="width:5%;">Party Bank Receive</th>
+                                    <th class="text-center" style="width:3%;">Aging</th>
+                                    <th class="text-center" style="width:5%;">First Delivery</th>
+                                    <th class="text-center" style="width:5%;">Last Delivery</th>
+                                    <th class="text-center" style="width:18%;">Remarks/Status</th>
                                     <th class="text-center" style="width:8%;">F.P.R</th>
-                                    <th class="text-center" style="width:8%;">Customer Bank</th>
+                                    <th class="text-center" style="width:5%;">Customer Bank</th>
                                 </tr>
                             </thead>
                             <tbody>
