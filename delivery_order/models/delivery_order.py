@@ -44,7 +44,7 @@ class DeliveryOrder(models.Model):
     requested_by = fields.Many2one('res.users', string='Requested By', readonly=True,
                                    default=lambda self: self.env.user)
 
-    requested_date = fields.Date(string="Requested Date", default=datetime.date.today(), readonly=True)
+    requested_date = fields.Date(string="D.O Date", default=datetime.date.today(), readonly=True)
 
     so_type = fields.Selection([
         ('cash', 'Cash'),

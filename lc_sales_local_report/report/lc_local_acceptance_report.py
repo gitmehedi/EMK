@@ -105,7 +105,7 @@ class AcceptanceReportsUtility(models.TransientModel):
             so_ids = self.env['sale.order'].search([('lc_id', '=', lc_obj.id)])
             for so_id in so_ids:
                 sale_person_list.append(so_id.user_id.sudo().name)
-                picking_id_list =picking_id_list + so_id.picking_ids.ids
+                picking_id_list = picking_id_list + so_id.sudo().picking_ids.ids
             sale_persons = ','.join(sale_person_list)
             vals.update({'sale_persons': sale_persons, })
             picking_ids = self.env['stock.picking'].sudo().search([('id','in',picking_id_list),('state','=','done')] , order='date_done asc')
