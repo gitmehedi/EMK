@@ -95,10 +95,10 @@
         </record>
 
         <menuitem id="delivery_schedule_menu" name="Delivery" parent="sales_team.menu_base_partner"
-                  groups="delivery_schedules.group_delivery_schedule_manager,account.group_account_user"
+                  groups="delivery_schedules.group_delivery_schedule_manager,sales_team.group_sale_salesman_all_leads,gbs_application_group.group_head_sale"
                   sequence="9"/>
         <menuitem id="delivery_schedule_submenu" name="Delivery Schedules" parent="delivery_schedule_menu"
-                  groups="delivery_schedules.group_delivery_schedule_manager"
+                  groups="sales_team.group_sale_salesman_all_leads,gbs_application_group.group_head_sale"
                   action="delivery_schedule_action" sequence="5"/>
     </data>
 </odoo>

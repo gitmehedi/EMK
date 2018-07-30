@@ -12,15 +12,17 @@
     'data': [
         'security/security.xml',
         'security/ir.model.access.csv',
+        'wizards/delivery_schedule_date_view.xml',
         'views/delivery_schedules_view.xml',
         'reports/delivery_se_report.xml',
         'reports/delivery_se_report_templates.xml',
-        'data/mail_template_data.xml',
+        'views/delivery_schedules_date_wise_view.xml',
+
     ],
 
     'summary': 'Sales Delivery Schedules',
     'description':
-    """Create Sales Delivery Schedules based on specific Sales Order""",
+    """Create Sales Delivery Schedules based on undelivered Delivery Orders""",
     'installable': True,
     'application': False,
 }
