@@ -20,13 +20,8 @@ $(function () {
         }
     });
 
-//    $('#login').change(function(){
-//        vals = $(this).val();
-//        msg = 'Please provide valid email.'
-//        if (!validateEmail(vals,msg)){
-//            $(this).val('');
-//        }
-//    });
+
+    $('#memberapp').validator();
 
     $('#website').change(function(){
         vals = $(this).val();
@@ -41,12 +36,20 @@ $(function () {
         $("input:checkbox[name=subject_of_interest]:checked").each(function(){
             vals.push($(this).val());
         });
-
         if(vals.indexOf('other')>-1){
             $('#subject_of_interest_others').parent().show();
         }else{
             $('#subject_of_interest_others').val('');
             $('#subject_of_interest_others').parent().hide();
+        }
+    });
+
+    $('input[name=usa_work_or_study]').change(function(){
+        var val = $("input:checked[name=usa_work_or_study]:checked").val();
+        if (val=='yes'){
+            $('#usa_work_or_study_place').attr('required','required').addClass('odooreq').parent().show();
+        }else{
+            $('#usa_work_or_study_place').removeClass('odooreq').parent().hide();
         }
     });
 
@@ -67,7 +70,54 @@ $(function () {
     $("#signature-image-upload").change(function() {
         readURL(this,'signature_image');
     });
-});
+
+    $("#email").change(function(){
+        var email = $(this).val();
+        url="http://localhost:9000/page/checkemail"
+        data={'email': email}
+        callAjax(url,data,'GET',validateEmail,this)
+    })
+    function validateEmail(responseData,self){
+        if (responseData.email){
+            $(self).next().show();
+        }else{
+            $(self).next().hide();
+        }
+    }
+
+
+    $("#file").on('change',function(e){
+        var self = this;
+        if (self.files[0].size>307200){
+            alert('File size is larger than system accept.');
+            $(self).val('');
+        }
+    });
+    var maxAttach=10;
+    var attachNo=1;
+    $('#createAttachment').on('click',function(e){
+        e.preventDefault();
+        var self = this;
+        var val = true;
+
+        $('.attachment').each(function(){
+            if ($(this).val() ==''){
+                val=false;
+            }
+        });
+
+        if ( attachNo < maxAttach && val==true){
+            $('#uploadtable').append('<tr><td><input type="file" class="attachment" name="attachment"/></td><td><a href="#" class="remove_field btn btn-danger btn-xs">Remove</a></td></tr>');
+            attachNo++;
+        }
+    });
+    $("#uploadtable").on("click",".remove_field", function(e) {
+        e.preventDefault();
+        $(this).closest('tr').remove();
+        attachNo--;
+    })
+
+    });
 
     function readURL(input,loc) {
 
@@ -81,21 +131,14 @@ $(function () {
       }
     }
 
-    function validateEmail(email,msg) {
-        var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-        if (!re.test(String(email).toLowerCase())){
-            alert(msg)
-            return false;
-        }
-        return true;
-    }
-
-    function validateURL(url,msg){
-        var re = /^(http[s]?:\/\/){0,1}(www\.){0,1}[a-zA-Z0-9\.\-]+\.[a-zA-Z]{2,5}[\.]{0,1}/;
-        if (!re.test(url)) {
-            alert(msg);
-            return false;
-        }
-        return true;
+    function callAjax(url,data,method,callBack,event){
+        var params ={
+            url: url,
+            method: method,
+            data:data
+        };
+        $.ajax(params).done(function(responseData){
+            callBack(JSON.parse(responseData),event);
+        });
     }
 
