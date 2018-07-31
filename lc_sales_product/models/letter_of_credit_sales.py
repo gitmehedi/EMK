@@ -46,6 +46,8 @@ class LetterOfCredit(models.Model):
     @api.multi
     def action_confirm_export(self):
         for pi in self.pi_ids_temp:
+            pi.write({'lc_id': self.id})
+
             sale_obj = pi.env['sale.order'].search([('pi_id','=',pi.id)])
             if sale_obj:
                 for s_order in sale_obj:
