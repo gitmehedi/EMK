@@ -17,8 +17,9 @@
     ],
     'data': [
         'data/member_signup_data.xml',
+        'data/email_template.xml',
         'data/member_sequence.xml',
-        'security/ir.model.access.csv',
+        # 'security/ir.model.access.csv',
         'security/ir_rule.xml',
         'views/product_template_views.xml',
         'views/res_partner_views.xml',

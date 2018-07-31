@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-
+import base64
 import random, werkzeug, logging, re
 from datetime import datetime, timedelta
 from urlparse import urljoin
@@ -164,7 +164,6 @@ class ResPartner(models.Model):
 
     @api.multi
     def member_invoiced(self):
-
         if 'application' in self.state:
             product_id = self.env['product.product'].search([('membership_status', '=', True)], order='id desc',
                                                             limit=1)
@@ -195,165 +194,50 @@ class ResPartner(models.Model):
 
             if inv:
                 self.state = 'invoice'
-            # mail = self.env['mail.compose.message']
-            # # inv.action_invoice_sent()
-            # # record.write({'invoice_id': inv.id, 'account_move_id': inv.move_id.id})
-            #
-            # if inv:
-            #     template = self.env.ref('account.email_template_edi_invoice', False)
-            #     compose_form = self.env.ref('mail.email_compose_message_wizard_form', False)
-            #     ctx = dict(
-            #         default_model='account.invoice',
-            #         default_res_id=self.id,
-            #         default_use_template=bool(template),
-            #         default_template_id=template and template.id or False,
-            #         default_composition_mode='comment',
-            #         mark_invoice_as_sent=True,
-            #         custom_layout="account.mail_template_data_notification_email_account_invoice"
-            #     )
-            #     return {
-            #         'name': _('Compose Email'),
-            #         'type': 'ir.actions.act_window',
-            #         'view_type': 'form',
-            #         'view_mode': 'form',
-            #         'res_model': 'mail.compose.message',
-            #         'views': [(compose_form.id, 'form')],
-            #         'view_id': compose_form.id,
-            #         'target': 'new',
-            #         'context': ctx,
-            #     }
-            # self.state = 'invoice'
+                pdf = self.env['report'].sudo().get_pdf([inv.id], 'account.report_invoice')
+                attachment = self.env['ir.attachment'].create({
+                    'name': inv.number + '.pdf',
+                    'res_model': 'account.invoice',
+                    'res_id': inv.id,
+                    'datas_fname': inv.number + '.pdf',
+                    'type': 'binary',
+                    'datas': base64.b64encode(pdf),
+                    'mimetype': 'application/x-pdf'
+                })
+                template = self.env.ref('member_signup.member_invoice_email_template')
+                template.write({
+                    'email_cc': "nopaws_ice_iu@yahoo.com",
+                    'attachment_ids': [(6, 0, attachment.ids)],
+                })
+                user = self.env['res.users'].search([('id', '=', self.user_ids.id)])
+                template.with_context({'lang': user.lang}).send_mail(user.id, force_send=True, raise_exception=True)
 
-        # self.is_applicant = False
-        # self.free_member = True
-        # invoice_ins = self.env['account.invoice']
-        # data = {
-        #     'user_id': self.id,
-        #
-        # }
-        # invoice_ins.create(data)
-        # self.state = 'invoice'
+    def mailsend(self, vals):
+        vals['template'] = 'member_signup.member_application_email_template'
 
-        # mail_ins = self.env['mail.mail']
-        # email_server = self.env['ir.mail_server'].search([], order='id DESC', limit=1)
-        #
-        # template = {
-        #     'subject': "Test Email",
-        #     'body_html': "Test Email",
-        #     'email_from': email_server.smtp_user,
-        #     'email_to': "git.mehedi@gmail.com"
-        # }
-        # mail = mail_ins.create(template)
-        # # mail.sudo().send()
-        #
-        # self.env['mail.template'].browse(26).sudo().send_mail(mail.id)
-        #
-        # template = False
-        # try:
-        #     template = self.env.ref('member_signup.set_password_email', raise_if_not_found=False)
-        # except ValueError:
-        #     pass
-        # if not template:
-        #     template = self.env.ref('member_signup.reset_password_email')
-        # assert template._name == 'mail.template'
-        #
-        # for user in self:
-        #     if not user.email:
-        #         raise UserError(_("Cannot send email: user %s has no email address.") % user.name)
-        #     template.with_context(lang=user.lang).send_mail(user.id, force_send=True, raise_exception=True)
-        #     _logger.info("Password reset email sent for user <%s> to <%s>", user.login, user.email)
+        template = False
+        try:
+            template = self.env.ref(vals['template'], raise_if_not_found=False)
+        except ValueError:
+            pass
 
-    @api.one
-    def member_payment(self):
-        if 'invoice' in self.state:
-            seq = self.env['ir.sequence'].next_by_code('res.partner.member')
-            self.member_sequence = seq
-            self.state = 'invoice'
+        assert template._name == 'mail.template'
+        obj = self.env['res.users'].search([('email', '=', vals['email'])])
 
-        # if 'invoice' in self.state:
-        #     lines = []
-        #     pay_text = 'PAID for Membership'
-        #     invoice = self.env['account.invoice'].search([('partner_id', '=', self.id), ('state', '=', 'open')],
-        #                                                  order='create_date desc', limit=1)
-        #     move = self.env['account.move.line'].search(
-        #         [('credit', '=', '0'), ('move_id', '=', invoice.move_id.id)])
-        #
-        #     payment = {}
-        #     payment['account_id'] = move.account_id.id
-        #     payment['partner_id'] = self.id
-        #     payment['credit'] = invoice.invoice_line_ids.price_unit
-        #     payment['name'] = pay_text
-        #     payment['narration'] = pay_text
-        #
-        #     lines.append((0, 0, payment))
-        #
-        #     for rec in invoice.move_id.line_ids:
-        #         record = {}
-        #         record['payment_journal'] = rec.account_id.id
-        #         record['partner_id'] = self.id
-        #         record['debit'] = rec.debit
-        #         record['name'] = pay_text
-        #         record['narration'] = invoice.move_id.name
-        #         lines.append((0, 0, record))
-        #
-        #     journal_id = self.env['account.journal'].search([('code', '=', 'BILL')])
-        #     payment_method = self.env['account.payment.method'].search(
-        #         [('code', '=ilike', 'manual'), ('payment_type', '=', 'inbound')])
-        #     move_line = {
-        #         'journal_id': journal_id.id,
-        #         'ref': pay_text,
-        #         'narration': pay_text,
-        #         'payment_method_id': payment_method.id,
-        #         'payment_type': 'inbound',
-        #         'amount': 5000,
-        #         'line_ids': lines
-        #     }
-        #     payment = self.env['account.payment'].create(move_line)
-        #     payment.post()
-        #     # self.write({'account_move_pay_id': payment.id})
-        #
-        #     self.state = 'paid'
-
-        return True
-
-    def mail_sending(self, vals={}):
-        # vals['template'] = 'set_password_email'
-        # vals['email_to'] = 'md.mehedi.info@gmail.com'
-        # vals['email_from'] = 'erp@genweb2.com'
-        # vals['emp_id'] = 5
-        #
-        # tmpl_id = self.env.ref('member_signup.set_password_email')
-        # # tmpl_obj = self.env['mail.template'].browse(tmpl_id)
-        # if tmpl_id:
-        #     mail = tmpl_id.generate_email(vals['emp_id'])
-        #     mail['email_to'] = vals['receiver_email']
-        #     mail['email_from'] = vals['sender_email']
-        #     mail['res_id'] = False
-        #     mail_obj = self.env['mail.mail']
-        #     msg_id = mail_obj.create(mail)
-        #     if msg_id:
-        #         mail_obj.send(msg_id)
-        #     return True
-
-        template_obj = self.env['mail.mail']
-        email_server_obj = self.env['ir.mail_server'].search([], order='id DESC')
-
-        # for email in email_server_obj:
-        #     if email.smtp_user:
-        #         server = email.smtp_user
-        #         email_server_list.append(server)
-
-        template_data = {
-            'subject': 'I am good',
-            'email_from': 'erp@genweb2.com',
-            'email_to': "md.mehedi.info@gmail.com,hasan.mehedi@genweb2.com",
+        template.write({
             'email_cc': "nopaws_ice_iu@yahoo.com",
-            'notification': True,
-            'attachment_ids': [2,3],
-            'body_html': 'Hello Mehedi How ',
-        }
-        template_id = template_obj.create(template_data)
-        template_obj.send(template_id)
+            'attachment_ids': "nopaws_ice_iu@yahoo.com",
+        })
+        base_url = self.env['ir.config_parameter'].get_param('web.base.url')
+
+        for user in obj:
+            if not user.email:
+                raise UserError(_("Cannot send email: user %s has no email address.") % user.name)
+            template.with_context({'lang': user.lang, 'password': vals['password'], 'baseurl': base_url}).send_mail(
+                user.id,
+                force_send=True,
+                raise_exception=True)
+            _logger.info("Member Application confirmation email sent for user <%s> to <%s>", user.login, user.email)
 
     @api.one
     def member_reject(self):

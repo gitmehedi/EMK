@@ -14,6 +14,7 @@ class LetterOfCredit(models.Model):
     product_lines = fields.One2many('lc.product.line', 'lc_id', string='Product(s)')
     lc_document_line = fields.One2many('lc.document.line', 'lc_id', string='LC Documents')
 
+
     @api.onchange('pi_ids_temp')
     def pi_product_line(self):
         self.product_lines = []
@@ -26,12 +27,27 @@ class LetterOfCredit(models.Model):
         self.first_party_bank = None
 
         for pi_id in self.pi_ids_temp:
-            self.first_party = pi_id.beneficiary_id
-            self.second_party_applicant = pi_id.partner_id.id
-            self.currency_id = pi_id.currency_id.id
-            self.lc_value += pi_id.total
-            self.operating_unit_id = pi_id.operating_unit_id
-            self.first_party_bank = pi_id.advising_bank_id
+            so_id = self.env['sale.order'].search([('pi_id', '=', pi_id.id)])
+
+            if not so_id:
+                raise ValidationError('Please add Proforma Invoice whose have Sale Order.')
+            elif self.first_party and self.first_party != pi_id.beneficiary_id:
+                raise ValidationError('Please add Proforma Invoice whose Beneficiary are same.')
+            # elif self.operating_unit_id and self.operating_unit_id != pi_id.operating_unit_id:
+            #     raise ValidationError('Please add Proforma Invoice whose Unit are same.')
+            elif self.second_party_applicant and self.second_party_applicant != pi_id.partner_id:
+                raise ValidationError('Please add Proforma Invoice whose Applicant are same.')
+            elif self.currency_id and self.currency_id != pi_id.currency_id:
+                raise ValidationError('Please add Proforma Invoice whose Currency are same.')
+            elif self.first_party_bank and self.first_party_bank != pi_id.advising_bank_id:
+                raise ValidationError('Please add Proforma Invoice whose Bank are same.')
+            else:
+                self.first_party = pi_id.beneficiary_id
+                self.second_party_applicant = pi_id.partner_id.id
+                self.currency_id = pi_id.currency_id.id
+                self.lc_value += pi_id.total
+                self.operating_unit_id = pi_id.operating_unit_id.id
+                self.first_party_bank = pi_id.advising_bank_id
             for obj in pi_id.line_ids:
                 vals.append((0, 0, {'product_id': obj.product_id,
                                     'name': obj.product_id.name,

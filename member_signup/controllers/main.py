@@ -1,20 +1,42 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+import logging, werkzeug, base64, json
+import cStringIO
+import json
 import logging
-import werkzeug
-import base64
+import werkzeug.wrappers
+from PIL import Image, ImageFont, ImageDraw
 
-from odoo import http, _
+from odoo import http, tools, _
 from odoo.addons.member_signup.models.res_users import SignupError
 from odoo.addons.web.controllers.main import ensure_db, Home
-from odoo.http import request
+from odoo.http import request, Response
 
 from odoo.addons.member_signup.models.utility import UtilityClass as utility
 
 _logger = logging.getLogger(__name__)
 
 
-class AuthSignupHome(Home):
+class MemberApplicationContoller(Home):
+
+    @http.route()
+    def web_login(self, *args, **kw):
+        ensure_db()
+        response = super(MemberApplicationContoller, self).web_login(*args, **kw)
+        response.qcontext.update(self.get_auth_signup_config())
+        if request.httprequest.method == 'GET' and request.session.uid and request.params.get('redirect'):
+            # Redirect if already logged in and redirect param is present
+            return http.redirect_with_hash(request.params.get('redirect'))
+        return response
+
+    def get_auth_signup_config(self):
+        """retrieve the module config (which features are enabled) for the login page"""
+
+        IrConfigParam = request.env['ir.config_parameter']
+        return {
+            'member_signup_enabled': IrConfigParam.sudo().get_param('member_signup.allow_uninvited') == 'True',
+            'member_reset_password_enabled': IrConfigParam.sudo().get_param('member_signup.reset_password') == 'True',
+        }
 
     @http.route('/web/member_reset_password', type='http', auth='public', website=True)
     def web_auth_reset_password(self, *args, **kw):
@@ -27,7 +49,7 @@ class AuthSignupHome(Home):
             try:
                 if qcontext.get('token'):
                     self.do_application(qcontext)
-                    return super(AuthSignupHome, self).web_login(*args, **kw)
+                    return super(MemberApplicationContoller, self).web_login(*args, **kw)
                 else:
                     login = qcontext.get('login')
                     assert login, "No login provided."
@@ -53,28 +75,18 @@ class AuthSignupHome(Home):
             'member_reset_password_enabled': IrConfigParam.sudo().get_param('member_signup.reset_password') == 'True',
         }
 
-    # @http.route(website=True, auth="public")
-    # def web_login(self, redirect=None, *args, **kw):
-    #     response = super(Website, self).web_login(redirect=redirect, *args, **kw)
-    #     if not redirect and 'login_success' in request.params:
-    #         if request.env['res.users'].browse(request.uid).has_group('base.group_user'):
-    #             redirect = '/web?' + request.httprequest.query_string
-    #         else:
-    #             return request.render('web.login')
-    #         return http.redirect_with_hash(redirect)
-    #     return response
+    @http.route('/page/checkemail', auth='public', type='http', methods=['POST', 'GET'], csft=False)
+    def trial_check(self, **post):
+        response = {'response': 'Invalid Request'}
+        if request.httprequest.method == 'GET' and 'email' in request.params:
+            email = request.params.get('email')
+            response = {'email': 0}
+            record = request.env['res.users'].sudo().search([('email', '=', email)])
+            if len(record) > 0:
+                response['email'] = 1
+        return json.dumps(response)
 
-    @http.route('/web/success', type='http', auth='public', methods=['GET'], website=True)
-    def web_member_success(self, *args, **kw):
-
-        config = {
-            'name': request.params['name'],
-
-        }
-
-        return request.render('member_signup.success', {'config': config})
-
-    @http.route('/web/member_signup', type='http', auth='public', methods=['POST', 'GET'], website=True)
+    @http.route('/page/application', type='http', auth='public', methods=['POST', 'GET'], website=True)
     def web_member_signup(self, *args, **kw):
         qcontext = self.get_member_signup_qcontext()
 
@@ -83,16 +95,10 @@ class AuthSignupHome(Home):
 
         if request.httprequest.method == 'POST':
             try:
-                request.env['res.partner'].sudo().mail_sending()
                 auth_data = self.do_application(qcontext)
                 if auth_data:
-                    config = {
-                        'name': auth_data['name']
-                    }
-
-                    return request.render('member_signup.success', {'name': config})
-
-
+                    request.env['res.partner'].sudo().mailsend(auth_data)
+                    return request.render('member_signup.success', {'name': auth_data['name']})
             except (SignupError, AssertionError), e:
                 if request.env["res.users"].sudo().search([("login", "=", qcontext.get("email"))]):
                     qcontext["error"] = _("Another user is already registered using this email address.")
@@ -103,20 +109,25 @@ class AuthSignupHome(Home):
         package_price = request.env['product.product'].sudo().search([('membership_status', '=', True)],
                                                                      order='id desc', limit=1)
 
-        if 'firstname' not in qcontext:
-            qcontext['firstname'] = ''
-        if 'lastname' not in qcontext:
-            qcontext['lastname'] = ''
-        if 'phone' not in qcontext:
-            qcontext['phone'] = ''
-        if 'mobile' not in qcontext:
-            qcontext['mobile'] = ''
+        qcontext['firstname'] = None if 'firstname' not in qcontext else qcontext['firstname']
+        qcontext['lastname'] = None if 'lastname' not in qcontext else qcontext['lastname']
+        qcontext['phone'] = None if 'phone' not in qcontext else qcontext['phone']
+        qcontext['mobile'] = None if 'mobile' not in qcontext else qcontext['mobile']
+        qcontext['weburl'] = None if 'weburl' not in qcontext else qcontext['weburl']
+        qcontext['zip'] = None if 'zip' not in qcontext else qcontext['zip']
+        qcontext['package_price'] = package_price.list_price if package_price else 0
+        qcontext['last_place_of_study'] = None if 'last_place_of_study' not in qcontext else qcontext[
+            'last_place_of_study']
+        qcontext['field_of_study'] = None if 'field_of_study' not in qcontext else qcontext['field_of_study']
+        qcontext['place_of_study'] = None if 'place_of_study' not in qcontext else qcontext['place_of_study']
+        qcontext['alumni_institute'] = None if 'alumni_institute' not in qcontext else qcontext['alumni_institute']
+        qcontext['current_employee'] = None if 'current_employee' not in qcontext else qcontext['current_employee']
+        qcontext['work_title'] = None if 'work_title' not in qcontext else qcontext['work_title']
+        qcontext['work_phone'] = None if 'work_phone' not in qcontext else qcontext['work_phone']
+        qcontext['info_about_emk'] = None if 'info_about_emk' not in qcontext else qcontext['info_about_emk']
+        qcontext['usa_work_or_study'] = 'no' if 'usa_work_or_study' not in qcontext else qcontext['usa_work_or_study']
+        qcontext['gender'] = 'male' if 'gender' not in qcontext else qcontext['gender']
 
-        if 'weburl' not in qcontext:
-            qcontext['weburl'] = ''
-
-        if package_price:
-            qcontext['package_price'] = package_price.list_price
         if 'per_district' in qcontext:
             qcontext['per_district'] = int(qcontext['per_district']) if qcontext['per_district'] else ''
         if 'occupation' in qcontext:
@@ -127,34 +138,11 @@ class AuthSignupHome(Home):
             qcontext['hightest_certification'] = int(qcontext['hightest_certification']) if qcontext[
                 'hightest_certification'] else ''
 
-        if 'last_place_of_study' not in qcontext:
-            qcontext['last_place_of_study'] = ''
-
-        if 'field_of_study' not in qcontext:
-            qcontext['field_of_study'] = ''
-
-        if 'place_of_study' not in qcontext:
-            qcontext['place_of_study'] = ''
-        if 'alumni_institute' not in qcontext:
-            qcontext['alumni_institute'] = ''
-        if 'current_employee' not in qcontext:
-            qcontext['current_employee'] = ''
-        if 'work_title' not in qcontext:
-            qcontext['work_title'] = ''
-        if 'work_phone' not in qcontext:
-            qcontext['work_phone'] = ''
-        if 'info_about_emk' not in qcontext:
-            qcontext['info_about_emk'] = ''
-        if 'usa_work_or_study' not in qcontext:
-            qcontext['usa_work_or_study'] = 'yes'
-        if 'gender' not in qcontext:
-            qcontext['gender'] = 'male'
         if 'subject_of_interest' not in qcontext:
             qcontext['subject_of_interest'] = []
-
-        if 'state_ids' not in qcontext:
-            qcontext['state_ids'] = self.generateDropdown('res.country', status=False)
-
+        else:
+            qcontext['subject_of_interest'] = [int(val) for val in
+                                               request.httprequest.form.getlist('subject_of_interest')]
         if 'country_ids' not in qcontext:
             qcontext['country_ids'] = self.generateDropdown('res.country', status=False)
 
@@ -197,7 +185,6 @@ class AuthSignupHome(Home):
         """ Shared helper that creates a res.partner out of a token """
         # values = {key: values.get(key) for key in authorized_fields}
         for field_name, field_value in values.items():
-
             if hasattr(field_value, 'filename'):
                 field_name = field_name.rsplit('[', 1)[0]
                 field_value.field_name = field_name
@@ -217,24 +204,38 @@ class AuthSignupHome(Home):
             data['free_member'] = False
             data['login'] = data['email']
             data['website'] = data['weburl']
+            vals = [int(val) for val in request.httprequest.form.getlist('subject_of_interest')]
+            data['subject_of_interest'] = [(6, 0, vals)]
             data['password'] = utility.token(length=8)
-
+        # self.upload_attachment(request.httprequest.files.getlist('attachment'))
         assert values.values(), "The form was not properly filled in."
         supported_langs = [lang['code'] for lang in request.env['res.lang'].sudo().search_read([], ['code'])]
         if request.lang in supported_langs:
             values['lang'] = request.lang
-        auth_data = self._signup_with_values(values.get('token'), data)
-        request.env.cr.commit()
-        if auth_data:
-            return auth_data
 
-    def _signup_with_values(self, token, values):
-        db, login, password = request.env['res.users'].sudo().signup(values, token)
-        request.env.cr.commit()  # as authenticate will use its own cursor we need to commit the current transaction
-        # uid = request.session.authenticate(db, login, password)
-        # if not uid:
-        #     raise SignupError(_('Authentication Failed.'))
-        return {'name': values['name']}
+        db, login, password = request.env['res.users'].sudo().signup(data, values.get('token'))
+        if login:
+            res_id = request.env['res.users'].sudo().search([('email', '=', login)])
+            files = request.httprequest.files.getlist('attachment')
+            self.upload_attachment(files, res_id.partner_id.id)
+
+        request.env.cr.commit()
+        return {'name': data['name'], 'email': login, 'password': password}
+
+    def upload_attachment(self, files, id):
+        Attachments = request.env['ir.attachment']
+        for file in files:
+            name = file.filename
+            attachment = file.read()
+            Attachments.sudo().create({
+                'name': name,
+                'datas_fname': name,
+                'res_name': name,
+                'type': 'binary',
+                'res_model': 'res.partner',
+                'res_id': id,
+                'datas': base64.b64encode(attachment),
+            })
 
     def generateDropdown(self, model, status=False):
         data = []
@@ -259,9 +260,8 @@ class AuthSignupHome(Home):
             'street',
             'street2',
             'city',
+            'zip',
             'country_id',
-            'state_id',
-            'city',
             'gender',
             'phone',
             'mobile',

@@ -57,6 +57,7 @@
                                             <field name="product_id"
                                                    options="{'no_quick_create':True,'no_create_edit':True}"/>
                                             <field name="quantity" string="Ordered Qty"/>
+                                            <field name="qty_delivered"/>
                                             <field name="uom_id" string="UoM"
                                                    options="{'no_quick_create':True,'no_create_edit':True}"/>
                                             <field name="pack_type"/>
