@@ -1,10 +1,6 @@
 <?xml version="1.0"?>
 <odoo>
 
-    <record id="membership.menu_membership" model="ir.ui.menu">
-        <field name="parent_id" ref="menu_member_general"/>
-    </record>
-
 
     <record model="ir.ui.view" id="membership_signup_products_form_">
         <field name="name">Add membership category field</field>
