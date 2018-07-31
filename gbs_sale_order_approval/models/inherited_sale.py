@@ -52,7 +52,7 @@ class SaleOrder(models.Model):
         return self.env.user.company_id.sale_note
 
     note = fields.Text('Terms and conditions', default=_default_note, readonly=True,
-                       states={'to_submit': [('readonly', False)]} )
+                       states={'to_submit': [('readonly', False)]})
 
     state = fields.Selection([
         ('to_submit', 'Submit'),
@@ -72,7 +72,8 @@ class SaleOrder(models.Model):
     currency_id = fields.Many2one("res.currency", related='', string="Currency", required=True)
 
     """ PI and LC """
-    pi_id = fields.Many2one('proforma.invoice', string='PI Ref. No.', domain=[('state', '=', 'confirm')], readonly=True,
+    pi_id = fields.Many2one('proforma.invoice', string='PI Ref. No.',
+                            domain=[('credit_sales_or_lc', '=', 'lc_sales'), ('state', '=', 'confirm')], readonly=True,
                             states={'to_submit': [('readonly', False)]})
     lc_id = fields.Many2one('letter.credit', string='LC Ref. No.', readonly=True,
                             states={'to_submit': [('readonly', False)]})
@@ -83,7 +84,9 @@ class SaleOrder(models.Model):
 
     @api.model
     def create(self, vals):
-        new_seq = self.env['ir.sequence'].next_by_code_new('sale.order', self.create_date) or '/'
+        team = self.env['crm.team']._get_default_team_id()
+        new_seq = self.env['ir.sequence'].next_by_code_new('sale.order', self.create_date,
+                                                           team.operating_unit_id) or '/'
         if new_seq:
             vals['name'] = new_seq
 
@@ -453,7 +456,7 @@ class SaleOrder(models.Model):
     def onchange_operating_unit_id(self):
         team = self.env['crm.team']._get_default_team_id()
 
-        self._cr.execute("""select * from stock_warehouse where operating_unit_id= %s limit 1""",
+        self._cr.execute("""SELECT * FROM stock_warehouse WHERE operating_unit_id= %s LIMIT 1""",
                          (team.operating_unit_id.id,))  # Never remove the comma after the parameter
         warehouse = self._cr.fetchall()
 
@@ -464,7 +467,7 @@ class SaleOrder(models.Model):
     def _default_warehouse_id(self):
         team = self.env['crm.team']._get_default_team_id()
 
-        self._cr.execute("""select * from stock_warehouse where operating_unit_id= %s limit 1""",
+        self._cr.execute("""SELECT * FROM stock_warehouse WHERE operating_unit_id= %s LIMIT 1""",
                          (team.operating_unit_id.id,))  # Never remove the comma after the parameter
         warehouse = self._cr.fetchall()
 
@@ -564,3 +567,10 @@ class CrmTeam(models.Model):
                                         default=lambda self:
                                         self.env['res.users'].
                                         operating_unit_default_get(self._uid))
+
+
+    @api.multi
+    def unlink(self):
+        for crm in self:
+            raise UserError('You can not delete Sales Team after creation')
+        return super(CrmTeam, self).unlink()

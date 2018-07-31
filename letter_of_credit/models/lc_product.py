@@ -3,7 +3,7 @@ from odoo import api, fields, models,_
 
 class LCProduct(models.Model):
     _name = 'lc.product.line'
-    _description = 'Product'
+    _description = 'Lc Product Line'
     _order = "date_planned desc"
 
     name = fields.Text(string='Description', required=True)

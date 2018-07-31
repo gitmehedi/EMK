@@ -100,18 +100,22 @@ class AcceptanceReportsUtility(models.TransientModel):
         self.env.cr.execute(self.sql_in_tk,(current_date, current_date, current_date, current_date, product_temp_id, state_condition))
         for vals in self.env.cr.dictfetchall():
             sale_person_list = []
+            picking_id_list = []
             lc_obj = self.env['letter.credit'].search([('id','=',vals['lc_id'])])
             so_ids = self.env['sale.order'].search([('lc_id', '=', lc_obj.id)])
             for so_id in so_ids:
-                sale_person_list.append(so_id.user_id.name)
+                sale_person_list.append(so_id.user_id.sudo().name)
+                picking_id_list = picking_id_list + so_id.sudo().picking_ids.ids
             sale_persons = ','.join(sale_person_list)
             vals.update({'sale_persons': sale_persons, })
-            picking_ids = self.env['stock.picking'].search([('lc_id','=',lc_obj.id),('state','=','done')] , order='date_done asc')
+            picking_ids = self.env['stock.picking'].sudo().search([('id','in',picking_id_list),('state','=','done')] , order='date_done asc')
+            first_delivery_date = False
+            last_delivery_date = False
             if picking_ids:
-                first_delivery_date =picking_ids[0].date_done or False
-                last_delivery_date =picking_ids[-1].date_done or False
-                vals.update({'first_delivery_date': first_delivery_date, })
-                vals.update({'last_delivery_date': last_delivery_date, })
+                first_delivery_date =picking_ids[0].date_done
+                last_delivery_date =picking_ids[-1].date_done
+            vals.update({'first_delivery_date': first_delivery_date, })
+            vals.update({'last_delivery_date': last_delivery_date, })
 
             total_value['total_val'] = total_value['total_val'] + vals['value']
             vals['value'] = formatLang(self.env, vals['value']) if vals['value'] else None

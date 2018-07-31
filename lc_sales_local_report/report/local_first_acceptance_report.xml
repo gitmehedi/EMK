@@ -35,23 +35,23 @@
                             </div>
                         </div>
                         <table class="table table-bordered table-report-xs table-striped"
-                                   style="margin-bottom: 10px;table-layout: fixed;">
+                               style="margin-bottom: 10px;table-layout: fixed;">
                             <thead>
                                 <tr class="odo-bg-gray">
                                     <th class="text-center" style="width:3%;">SL</th>
-                                    <th class="text-center" style="width:15%;">Customer</th>
+                                    <th class="text-center" style="width:18%;">Customer</th>
                                     <th class="text-center" style="width:8%;">L/C No</th>
                                     <th class="text-center" style="width:8%;">Shipment No</th>
-                                    <th class="text-center" style="width:8%;">Value</th>
-                                    <th class="text-center" style="width:4%;">Tenor</th>
-                                    <th class="text-center" style="width:6%;">Dispatch To Sales</th>
-                                    <th class="text-center" style="width:6%;">Dispatch To Customer</th>
-                                    <th class="text-center" style="width:4%;">Aging</th>
-                                    <th class="text-center" style="width:6%;">First Delivery</th>
-                                    <th class="text-center" style="width:6%;">Last Delivery</th>
-                                    <th class="text-center" style="width:10%;">Remarks/Status</th>
+                                    <th class="text-center" style="width:6%;">Value</th>
+                                    <th class="text-center" style="width:3%;">Tenor</th>
+                                    <th class="text-center" style="width:5%;">Dispatch To Sales</th>
+                                    <th class="text-center" style="width:5%;">Dispatch To Customer</th>
+                                    <th class="text-center" style="width:3%;">Aging</th>
+                                    <th class="text-center" style="width:5%;">First Delivery</th>
+                                    <th class="text-center" style="width:5%;">Last Delivery</th>
+                                    <th class="text-center" style="width:18%;">Remarks/Status</th>
                                     <th class="text-center" style="width:8%;">F.P.R</th>
-                                    <th class="text-center" style="width:8%;">Customer Bank</th>
+                                    <th class="text-center" style="width:5%;">Customer Bank</th>
                                     <!--<th class="text-center">Beneficiary Bank</th>-->
                                 </tr>
                             </thead>
@@ -81,28 +81,27 @@
                                                 <t t-esc="line['tenor']"/>
                                             </td>
                                             <td class="text-left">
-                                                <!--<t t-esc="line['dispatch_to_sale']"/>-->
                                                 <t t-if="line['dispatch_to_sale']">
                                                     <t t-esc="time.strftime('%d-%b-%Y',time.strptime(line['dispatch_to_sale'],'%Y-%m-%d'))"/>
                                                 </t>
                                             </td>
                                             <td class="text-left">
-                                                <!--<t t-esc="line['dispatch_to_customer']"/>-->
                                                 <t t-if="line['dispatch_to_customer']">
                                                     <t t-esc="time.strftime('%d-%b-%Y',time.strptime(line['dispatch_to_customer'],'%Y-%m-%d'))"/>
                                                 </t>
-
                                             </td>
                                             <td class="text-right">
                                                 <t t-esc="line['aging']"/>
                                             </td>
                                             <td class="text-left">
-                                                <!--<t t-esc="line['first_delivery_date']"/>-->
-                                                <t t-esc="time.strftime('%d-%b-%Y',time.strptime(line['first_delivery_date'],'%Y-%m-%d %H:%M:%S'))"/>
+                                                <t t-if="line['first_delivery_date']">
+                                                    <t t-esc="time.strftime('%d-%b-%Y',time.strptime(line['first_delivery_date'],'%Y-%m-%d %H:%M:%S'))"/>
+                                                </t>
                                             </td>
                                             <td class="text-left">
-                                                <!--<t t-esc="line['last_delivery_date']"/>-->
-                                                <t t-esc="time.strftime('%d-%b-%Y',time.strptime(line['last_delivery_date'],'%Y-%m-%d %H:%M:%S'))"/>
+                                                <t t-if="line['last_delivery_date']">
+                                                    <t t-esc="time.strftime('%d-%b-%Y',time.strptime(line['last_delivery_date'],'%Y-%m-%d %H:%M:%S'))"/>
+                                                </t>
                                             </td>
                                             <td class="text-left" style="white-space: nowrap; overflow: hidden;text-overflow: ellipsis;">
                                                 <t t-esc="line['comment']" />
@@ -114,7 +113,7 @@
                                                 <t t-esc="line['customer_bank']"/>
                                             </td>
                                             <!--<td class="text-center">-->
-                                                <!--<t t-esc="line['beneficiary_bank']"/>-->
+                                            <!--<t t-esc="line['beneficiary_bank']"/>-->
                                             <!--</td>-->
                                         </tr>
                                     </t>

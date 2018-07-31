@@ -19,7 +19,6 @@
         'base',
         'product',
         'product_harmonized_system',
-        # 'sales_team',
         'gbs_application_group',
         'stock',
         'account',
