@@ -32,6 +32,7 @@
         'inventory_dashboad_inherit',
         'gbs_application_security',
         'stock_warehouse_extend',
+        'board',
     ],
 
     'data': [ ],
