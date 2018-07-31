@@ -567,3 +567,10 @@ class CrmTeam(models.Model):
                                         default=lambda self:
                                         self.env['res.users'].
                                         operating_unit_default_get(self._uid))
+
+
+    @api.multi
+    def unlink(self):
+        for crm in self:
+            raise UserError('You can not delete Sales Team after creation')
+        return super(CrmTeam, self).unlink()
