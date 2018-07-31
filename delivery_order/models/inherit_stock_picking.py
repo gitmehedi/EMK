@@ -1,5 +1,6 @@
 from odoo import models, fields, api
 from odoo.addons.procurement.models import procurement
+from odoo.tools.float_utils import float_round
 
 
 class InheritStockPicking(models.Model):
@@ -134,3 +135,13 @@ class InheritStockMove(models.Model):
     _inherit = 'stock.move'
 
     delivery_order_id = fields.Many2one('delivery.order', string='D.O No.', readonly=True)
+
+    undelivered_qty = fields.Float(
+        'Undelivered Quantity', compute='_get_undelivered_qty',
+        digits=0, states={'done': [('readonly', True)]},store=True)
+
+    @api.one
+    @api.depends('linked_move_operation_ids.qty')
+    def _get_undelivered_qty(self):
+        self.undelivered_qty = float_round(self.product_qty - sum(self.mapped('linked_move_operation_ids').mapped('qty')),
+                                         precision_rounding=self.product_id.uom_id.rounding)
