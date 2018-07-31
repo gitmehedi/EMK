@@ -1,0 +1,2 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_gbs_hr_holiday_hour_gbs_hr_holiday_hour,gbs_hr_holiday_hour.gbs_hr_holiday_hour,model_gbs_hr_holiday_hour_gbs_hr_holiday_hour,,1,0,0,0
