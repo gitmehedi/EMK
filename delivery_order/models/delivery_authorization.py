@@ -119,7 +119,9 @@ class DeliveryAuthorization(models.Model):
 
     @api.model
     def create(self, vals):
-        seq = self.env['ir.sequence'].next_by_code_new('delivery.authorization', self.requested_date) or '/'
+        team = self.env['crm.team']._get_default_team_id()
+
+        seq = self.env['ir.sequence'].next_by_code_new('delivery.authorization', self.requested_date, team.operating_unit_id) or '/'
         if seq:
             vals['name'] = seq
 

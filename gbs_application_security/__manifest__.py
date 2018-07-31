@@ -13,13 +13,12 @@
     'website': "http://www.genweb2.com",
     'category': 'Tools',
     'version': '0.1',
-
+    'sequence': 500,
     # any module necessary for this one to work correctly
     'depends': [
         'gbs_application_group',
         'sale_operating_unit',
         'sale',
-        'stock',
         'sale_order_type',
         'stock_operating_unit',
     ],
