@@ -282,7 +282,9 @@ class ProformaInvoice(models.Model):
 
         # self.update_Pi_to_so_obj()
         res = {'state': 'confirm'}
-        new_seq = self.env['ir.sequence'].next_by_code_new('proforma.invoice', self.invoice_date)
+        team = self.env['crm.team']._get_default_team_id()
+
+        new_seq = self.env['ir.sequence'].next_by_code_new('proforma.invoice', self.invoice_date, team.operating_unit_id)
         if new_seq:
             res['name'] = new_seq
 

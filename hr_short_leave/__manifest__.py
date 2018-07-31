@@ -12,7 +12,7 @@
         'hr',
         'calendar',
         'resource',
-        # 'product',
+        'hr_manual_attendance',
         'report',
         'gbs_application_group',
         'hr_holidays_multi_levels_approval',

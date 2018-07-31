@@ -124,7 +124,8 @@ class InheritStockPicking(models.Model):
 
     @api.model
     def create(self, vals):
-        seq = self.env['ir.sequence'].next_by_code_new('stock.picking', self.create_date) or '/'
+        so_obj = self.env['sale.order'].search([('name','=',vals['origin'])])
+        seq = self.env['ir.sequence'].next_by_code_new('stock.picking', self.create_date, so_obj.operating_unit_id) or '/'
         if seq:
             vals['name'] = seq
 
