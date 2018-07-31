@@ -100,7 +100,9 @@ class DeliveryOrder(models.Model):
 
     @api.model
     def create(self, vals):
-        seq = self.env['ir.sequence'].next_by_code_new('delivery.order', self.requested_date) or '/'
+        delivery_auth_obj = self.env['delivery.authorization'].search([('id', '=', vals['delivery_order_id'])])
+
+        seq = self.env['ir.sequence'].next_by_code_new('delivery.order', self.requested_date, delivery_auth_obj.operating_unit_id) or '/'
         vals['name'] = seq
 
         return super(DeliveryOrder, self).create(vals)
