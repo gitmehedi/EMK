@@ -29,6 +29,7 @@
         'customer_credit_limit',
         'sale',
         'gbs_procure_n_commercial_access',
+        'sales_team_operating_unit',
     ],
 
 
