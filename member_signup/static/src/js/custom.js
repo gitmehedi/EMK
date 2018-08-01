@@ -33,14 +33,17 @@ $(function () {
 
     $('input[name=subject_of_interest]').change(function(){
         vals= [];
+        var selector = $('#subject_of_interest_others');
         $("input:checkbox[name=subject_of_interest]:checked").each(function(){
-            vals.push($(this).val());
+           vals.push($(this).parent().text().trim());
         });
-        if(vals.indexOf('other')>-1){
-            $('#subject_of_interest_others').parent().show();
+        
+        if(vals.indexOf('Other')>-1){
+            selector.attr('required','required');
+            selector.parent().show();
         }else{
-            $('#subject_of_interest_others').val('');
-            $('#subject_of_interest_others').parent().hide();
+            selector.val('').removeAttr('required');
+            selector.parent().hide();
         }
     });
 
@@ -79,8 +82,11 @@ $(function () {
     })
     function validateEmail(responseData,self){
         if (responseData.email){
+            $('#exits_email').text($(self).val())
+            $(self).val('');
             $(self).next().show();
         }else{
+            $('#exits_email').text('')
             $(self).next().hide();
         }
     }

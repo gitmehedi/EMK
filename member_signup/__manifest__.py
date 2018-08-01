@@ -14,6 +14,7 @@
         'membership_extension',
         'membership_withdrawal',
         'partner_firstname',
+        'partner_second_lastname',
     ],
     'data': [
         'data/member_signup_data.xml',
