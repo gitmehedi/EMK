@@ -279,8 +279,7 @@ class DeliveryAuthorization(models.Model):
                                     orders.create(res)
 
                     if list[rec] > 100 or res['available_qty'] == 0:
-                        product_pool = self.env['product.product'].search([('id', '=', rec)])
-
+                        #product_pool = self.env['product.template'].search([('id', '=', rec)])
                         wizard_form = self.env.ref('delivery_order.max_do_without_lc_view', False)
                         view_id = self.env['max.delivery.without.lc.wizard']
 
@@ -293,7 +292,7 @@ class DeliveryAuthorization(models.Model):
                             'view_type': 'form',
                             'view_mode': 'form',
                             'target': 'new',
-                            'context': {'delivery_order_id': self.id, 'product_name': product_pool.display_name}
+                            'context': {'delivery_order_id': self.id, 'product_name': line.product_id.display_name}
                         }
             else:
                 self.state = 'approve'  # second
@@ -301,6 +300,7 @@ class DeliveryAuthorization(models.Model):
         elif self.so_type == 'credit_sales':
             self._automatic_delivery_order_creation()
             self.state = 'close'
+            
 
     def total_sub_total_amount(self):
         total_amt = 0
