@@ -62,7 +62,7 @@ class LetterOfCredit(models.Model):
     @api.multi
     def action_confirm_export(self):
         for pi in self.pi_ids_temp:
-            pi.write({'lc_id': self.id})
+            pi.sudo().write({'lc_id': self.id})
 
             sale_obj = pi.env['sale.order'].search([('pi_id','=',pi.id)])
             if sale_obj:
@@ -71,7 +71,7 @@ class LetterOfCredit(models.Model):
 
                     # Update 100 MT logic
                     da_obj = self.env['delivery.authorization'].search([('sale_order_id', '=', s_order.id)])
-                    da_obj.update_lc_id_for_houndred_mt()
+                    da_obj.sudo().update_lc_id_for_houndred_mt()
 
         self.write({'state': 'confirmed', 'last_note': Status.CONFIRM})
 
@@ -130,7 +130,7 @@ class LetterOfCredit(models.Model):
 
     @api.multi
     def action_lc_done_export(self):
-        self.write({'state': 'done', 'last_note': Status.DONE.value})
+        self.write({'state': 'done', 'last_note': Status.DONE})
 
     @api.multi
     def action_amendment(self):
