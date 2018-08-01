@@ -9,6 +9,8 @@ class CustomerCommissionConfigurationCustomer(models.Model):
     old_value = fields.Float(string="Old Value", compute='store_old_value', readonly=True, store=True)
     new_value = fields.Float(string="New Value", required=True)
     status = fields.Boolean(string='Status', default=True, required=True)
+    currency_id = fields.Many2one('res.currency', string='Currency',
+                                  default=lambda self: self.env.user.company_id.currency_id.id)
 
     """ Relational Fields """
     customer_id = fields.Many2one('res.partner', string="Customer", required=True, domain="([('customer','=','True')])")

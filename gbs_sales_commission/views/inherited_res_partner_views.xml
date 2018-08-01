@@ -14,6 +14,7 @@
                         <tree readonly="1">
                             <field name="product_id"/>
                             <field name="commission_rate"/>
+                             <field name="currency_id"/>
                         </tree>
                         <form>
                             <group>
@@ -32,6 +33,7 @@
                                         <field name="commission_rate"/>
                                         <field name="effective_date"/>
                                         <field name="status"/>
+
                                     </tree>
                                 </field>
                             </page>

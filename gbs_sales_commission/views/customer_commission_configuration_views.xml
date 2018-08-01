@@ -81,6 +81,7 @@
                                            options="{'no_open': True, 'no_create': True}"/>
                                     <field name="old_value"/>
                                     <field name="new_value"/>
+                                    <field name="currency_id"/>
                                 </tree>
                                 <form string="Customer">
                                     <group>
