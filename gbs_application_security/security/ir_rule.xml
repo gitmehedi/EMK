@@ -205,10 +205,7 @@
     </function>
 
     <record model="ir.rule" id="stock.stock_picking_rule">
-        <field name="name">stock_picking multi-company</field>
-        <field name="model_id" search="[('model','=','stock.picking')]" model="ir.model"/>
-        <field name="groups" eval="[(4,ref('base.group_user'))]"/>
-        <field name="domain_force">['|',('company_id','=',False),('company_id','child_of',[user.company_id.id])]</field>
+        <field name="active" eval="False"/>
     </record>
 
     <function name="write" model="ir.model.data">
