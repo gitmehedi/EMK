@@ -12,7 +12,9 @@ class customer_creditlimit_assign(models.Model):
     _order = 'id DESC'
 
     name = fields.Char(string='Name', index=True, readonly=True)
-    description = fields.Char(string='Description',size=50,index=True)
+    description = fields.Char(string='Description',size=50,index=True, states={'confirm': [('readonly', True)], 'validate1': [('readonly', True)],
+                                  'validate': [('readonly', True)],
+                                  'approve': [('readonly', True)]})
     sequence_id = fields.Char('Sequence', readonly=True)
     approve_date = fields.Date('Approved Date', track_visibility='onchange',
                                states={'draft': [('invisible', True)], 'confirm': [('invisible', True)],
