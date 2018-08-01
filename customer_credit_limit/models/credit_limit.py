@@ -12,6 +12,7 @@ class customer_creditlimit_assign(models.Model):
     _order = 'id DESC'
 
     name = fields.Char(string='Name', index=True, readonly=True)
+    description = fields.Char(string='Description',size=50,index=True)
     sequence_id = fields.Char('Sequence', readonly=True)
     approve_date = fields.Date('Approved Date', track_visibility='onchange',
                                states={'draft': [('invisible', True)], 'confirm': [('invisible', True)],
@@ -71,10 +72,10 @@ class customer_creditlimit_assign(models.Model):
                 raise UserError(_('You cannot delete a record which is not draft state!'))
         return super(customer_creditlimit_assign, self).unlink()
 
-    @api.constrains('credit_limit', 'days')
-    def _check_value(self):
-        if self.credit_limit <= 0 or self.days <= 0:
-            raise Warning("Limit or Days never take zero or negative value!")
+    # @api.constrains('credit_limit', 'days')
+    # def _check_value(self):
+    #     if self.credit_limit <= 0 or self.days <= 0:
+    #         raise Warning("Limit or Days never take zero or negative value!")
 
     @api.multi
     def action_confirm(self):
@@ -193,6 +194,14 @@ class res_partner_credit_limit(models.Model):
     assign_date = fields.Date(string="Credit Date", _defaults=lambda *a: time.strftime('%Y-%m-%d'))
     value = fields.Float(string='Credit Limit', default=_default_credit_limit_and_days)
     day_num = fields.Integer(string='Credit Days', )
+
+    @api.constrains('value', 'day_num')
+    def _check_value(self):
+        for lim in self:
+            if lim.value <= 0 or lim.day_num <= 0:
+                raise Warning("Limit or Days never take zero or negative value!")
+
+
 
     state = fields.Selection([
         ('draft', 'Draft'),

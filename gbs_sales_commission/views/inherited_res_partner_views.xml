@@ -9,7 +9,7 @@
         <!--<field name="groups_id" eval="[(4, ref('sales_team.group_sale_salesman'))]"/>-->
         <field name="arch" type="xml">
             <xpath expr="//page[@name='sales_purchases']" position="after">
-                <page groups="sales_team.group_sale_salesman,account.group_account_user" name="customer_commision" string="Commissions">
+                <page groups="gbs_application_group.group_sales_customer_manager,sales_team.group_sale_salesman,account.group_account_user" name="customer_commision" string="Commissions">
                     <field name="commission_ids">
                         <tree readonly="1">
                             <field name="product_id"/>

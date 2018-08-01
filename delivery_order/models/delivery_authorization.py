@@ -40,8 +40,8 @@ class DeliveryAuthorization(models.Model):
                              states={'draft': [('readonly', False)]})
     requested_by = fields.Many2one('res.users', string='Requested By', readonly=True,
                                    default=lambda self: self.env.user)
-    approver1_id = fields.Many2one('res.users', string="First Approval", readonly=True)
-    approver2_id = fields.Many2one('res.users', string="Final Approval", readonly=True)
+    approver1_id = fields.Many2one('res.users', string="Final Approval", readonly=True)
+    approver2_id = fields.Many2one('res.users', string="First Approval", readonly=True)
     requested_date = fields.Date(string="Requested Date", default=datetime.date.today(), readonly=True)
     approved_date = fields.Date(string='Final Approval Date',
                                 states={'draft': [('invisible', True)],
