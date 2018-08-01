@@ -17,7 +17,7 @@
     </template>
 
     <template id="member_signup.fields" name="Auth Signup/ResetPassword form fields">
-        <div class="col-md-6">
+        <div class="col-md-12">
             <div class="col-md-6">
                 <h1>EMK</h1>
             </div>
@@ -44,7 +44,7 @@
                             <br/>
                             (Please write in block letters)
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-4">
                             <div class="form-group form-field o_website_form_required_custom">
                                 <label for="firstname" class="control-label">First Name</label>
                                 <input type="text" name="firstname" t-att-value="firstname" id="firstname"
@@ -53,11 +53,20 @@
                                        class="form-control o_website_form_input input-sm reqfield" required="required"/>
                             </div>
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-4">
                             <div class="form-group form-field o_website_form_required_custom">
-                                <label for="lastname" class="control-label">Last Name</label>
+                                <label for="lastname" class="control-label">Middle Name</label>
                                 <input type="text" name="lastname" t-att-value="lastname" id="lastname" maxlength="100"
                                        placeholder="Middle Name"
+                                       class="form-control o_website_form_input input-sm reqfield" required="required"/>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group form-field o_website_form_required_custom">
+                                <label for="lastname2" class="control-label">Last Name</label>
+                                <input type="text" name="lastname2" t-att-value="lastname2" id="lastname2"
+                                       maxlength="100"
+                                       placeholder="Last Name"
                                        class="form-control o_website_form_input input-sm reqfield" required="required"/>
                             </div>
                         </div>
@@ -67,9 +76,10 @@
                                 <input type="email" name="email" t-att-value="email" id="email"
                                        placeholder="e.g. info@info.com "
                                        class="form-control o_website_form_input input-sm reqfield" required="required"/>
-                                <div style="display: none; color:red; font-size: 12px;">A user with that email address
-                                    already exists in the
-                                    system. Either request a forgotten password or select another email address.
+                                <div style="display: none; color:red; font-size: 12px;">A user with email
+                                    <strong id="exits_email"></strong>
+                                    already exists in the system. Either request a forgotten password or select another
+                                    email address.
                                 </div>
                             </div>
                         </div>
@@ -207,7 +217,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-md-6">
+        <div class="col-md-12">
             <div class="panel panel-success">
                 <div class="panel-heading odoobg">
                     <h3 class="panel-title text-center">Educational Information</h3>
@@ -291,7 +301,7 @@
                     </div>
                     <div class="col-md-12">
                         <div class="form-group form-field o_website_form_required_custom">
-                            <label for="current_employee" class="control-label">Current Employee</label>
+                            <label for="current_employee" class="control-label">Current Employer</label>
                             <input type="text" name="current_employee" t-att-value="current_employee"
                                    class="form-control o_website_form_input input-sm" id="current_employee"/>
                         </div>
@@ -343,7 +353,7 @@
                         <h4>Attachments</h4>
                         <div class="input_fields_wrap">
                             <div style="margin-bottom: 10px;">
-                                <a id="createAttachment" class="add_field_button btn btn-info btn-sm">
+                                <a id="createAttachment" class="add_field_button btn btn-info btn-xs">
                                     <i class="fa fa-plus"></i>
                                     Add New Attachment
                                 </a>
@@ -388,32 +398,37 @@
 
     <template id="member_signup.signup" name="Sign up login">
         <t t-call="web.login_layout">
-            <form class="s_website_form container-fluid mt32" enctype="multipart/form-data" role="form" method="post"
-                  t-if="not message" data-toggle="validator2" id="memberapp">
-                <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
-                <input type="hidden" name="redirect" t-att-value="redirect"/>
-                <input type="hidden" name="token" t-att-value="token"/>
+            <div class="container">
+                <div class="row">
+                    <form class="s_website_form container-fluid mt32" enctype="multipart/form-data" role="form"
+                          method="post"
+                          t-if="not message" data-toggle="validator2" id="memberapp">
+                        <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                        <input type="hidden" name="redirect" t-att-value="redirect"/>
+                        <input type="hidden" name="token" t-att-value="token"/>
 
-                <div class="col-md-12">
-                    <p class="alert alert-danger" t-if="error">
-                        <t t-esc="error"/>
-                    </p>
-                </div>
-                <t t-call="member_signup.fields">
-                    <t t-set="only_passwords" t-value="bool(token)"/>
-                </t>
-                <div class="col-md-4 col-md-offset-5">
-                    <div class="clearfix oe_login_buttons">
-                        <button type="submit" class="btn btn-success">Sign up</button>
-                        <a t-attf-href="/web/login?{{ keep_query() }}" class="btn btn-default">
-                            <i class="fa fa-angle-double-left"></i>
-                            Back to
-                            Login
-                        </a>
+                        <div class="col-md-12">
+                            <p class="alert alert-danger" t-if="error">
+                                <t t-esc="error"/>
+                            </p>
+                        </div>
+                        <t t-call="member_signup.fields">
+                            <t t-set="only_passwords" t-value="bool(token)"/>
+                        </t>
+                        <div class="col-md-4 col-md-offset-5">
+                            <div class="clearfix oe_login_buttons">
+                                <button type="submit" class="btn btn-success">Sign up</button>
+                                <a t-attf-href="/web/login?{{ keep_query() }}" class="btn btn-default">
+                                    <i class="fa fa-angle-double-left"></i>
+                                    Back to
+                                    Login
+                                </a>
 
-                    </div>
+                            </div>
+                        </div>
+                    </form>
                 </div>
-            </form>
+            </div>
         </t>
     </template>
 </odoo>

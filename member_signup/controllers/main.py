@@ -40,7 +40,7 @@ class MemberApplicationContoller(Home):
 
     @http.route('/web/member_reset_password', type='http', auth='public', website=True)
     def web_auth_reset_password(self, *args, **kw):
-        qcontext = self.get_member_signup_qcontext()
+        qcontext = self.get_signup_context()
 
         if not qcontext.get('token') and not qcontext.get('member_reset_password_enabled'):
             raise werkzeug.exceptions.NotFound()
@@ -48,7 +48,7 @@ class MemberApplicationContoller(Home):
         if 'error' not in qcontext and request.httprequest.method == 'POST':
             try:
                 if qcontext.get('token'):
-                    self.do_application(qcontext)
+                    self.create_applicant(qcontext)
                     return super(MemberApplicationContoller, self).web_login(*args, **kw)
                 else:
                     login = qcontext.get('login')
@@ -66,9 +66,8 @@ class MemberApplicationContoller(Home):
 
         return request.render('member_signup.reset_password', qcontext)
 
-    def get_member_signup_config(self):
+    def get_signup_config(self):
         """retrieve the module config (which features are enabled) for the login page"""
-
         IrConfigParam = request.env['ir.config_parameter']
         return {
             'member_signup_enabled': IrConfigParam.sudo().get_param('member_signup.allow_uninvited') == 'True',
@@ -76,7 +75,7 @@ class MemberApplicationContoller(Home):
         }
 
     @http.route('/page/checkemail', auth='public', type='http', methods=['POST', 'GET'], csft=False)
-    def trial_check(self, **post):
+    def email_check(self, **post):
         response = {'response': 'Invalid Request'}
         if request.httprequest.method == 'GET' and 'email' in request.params:
             email = request.params.get('email')
@@ -87,15 +86,15 @@ class MemberApplicationContoller(Home):
         return json.dumps(response)
 
     @http.route('/page/application', type='http', auth='public', methods=['POST', 'GET'], website=True)
-    def web_member_signup(self, *args, **kw):
-        qcontext = self.get_member_signup_qcontext()
+    def signup(self, *args, **kw):
+        qcontext = self.get_signup_context()
 
         if not qcontext.get('token') and not qcontext.get('member_signup_enabled'):
             raise werkzeug.exceptions.NotFound()
 
         if request.httprequest.method == 'POST':
             try:
-                auth_data = self.do_application(qcontext)
+                auth_data = self.create_applicant(qcontext)
                 if auth_data:
                     request.env['res.partner'].sudo().mailsend(auth_data)
                     return request.render('member_signup.success', {'name': auth_data['name']})
@@ -106,66 +105,70 @@ class MemberApplicationContoller(Home):
                     _logger.error(e.message)
                     qcontext['error'] = _("Could not create a new account.")
 
-        package_price = request.env['product.product'].sudo().search([('membership_status', '=', True)],
-                                                                     order='id desc', limit=1)
-
-        qcontext['firstname'] = None if 'firstname' not in qcontext else qcontext['firstname']
-        qcontext['lastname'] = None if 'lastname' not in qcontext else qcontext['lastname']
-        qcontext['phone'] = None if 'phone' not in qcontext else qcontext['phone']
-        qcontext['mobile'] = None if 'mobile' not in qcontext else qcontext['mobile']
-        qcontext['weburl'] = None if 'weburl' not in qcontext else qcontext['weburl']
-        qcontext['zip'] = None if 'zip' not in qcontext else qcontext['zip']
-        qcontext['package_price'] = package_price.list_price if package_price else 0
-        qcontext['last_place_of_study'] = None if 'last_place_of_study' not in qcontext else qcontext[
-            'last_place_of_study']
-        qcontext['field_of_study'] = None if 'field_of_study' not in qcontext else qcontext['field_of_study']
-        qcontext['place_of_study'] = None if 'place_of_study' not in qcontext else qcontext['place_of_study']
-        qcontext['alumni_institute'] = None if 'alumni_institute' not in qcontext else qcontext['alumni_institute']
-        qcontext['current_employee'] = None if 'current_employee' not in qcontext else qcontext['current_employee']
-        qcontext['work_title'] = None if 'work_title' not in qcontext else qcontext['work_title']
-        qcontext['work_phone'] = None if 'work_phone' not in qcontext else qcontext['work_phone']
-        qcontext['info_about_emk'] = None if 'info_about_emk' not in qcontext else qcontext['info_about_emk']
-        qcontext['usa_work_or_study'] = 'no' if 'usa_work_or_study' not in qcontext else qcontext['usa_work_or_study']
-        qcontext['gender'] = 'male' if 'gender' not in qcontext else qcontext['gender']
-
-        if 'per_district' in qcontext:
-            qcontext['per_district'] = int(qcontext['per_district']) if qcontext['per_district'] else ''
-        if 'occupation' in qcontext:
-            qcontext['occupation'] = int(qcontext['occupation']) if qcontext['occupation'] else ''
-        if 'country_id' in qcontext:
-            qcontext['country_id'] = int(qcontext['country_id']) if qcontext['country_id'] else ''
-        if 'hightest_certification' in qcontext:
-            qcontext['hightest_certification'] = int(qcontext['hightest_certification']) if qcontext[
-                'hightest_certification'] else ''
-
-        if 'subject_of_interest' not in qcontext:
-            qcontext['subject_of_interest'] = []
         else:
-            qcontext['subject_of_interest'] = [int(val) for val in
-                                               request.httprequest.form.getlist('subject_of_interest')]
-        if 'country_ids' not in qcontext:
-            qcontext['country_ids'] = self.generateDropdown('res.country', status=False)
+            package_price = request.env['product.product'].sudo().search([('membership_status', '=', True)],
+                                                                         order='id desc', limit=1)
+            qcontext['package_price'] = package_price.list_price if package_price else 0
 
-        if 'occupation_ids' not in qcontext:
-            qcontext['occupation_ids'] = self.generateDropdown('member.occupation')
+            qcontext['firstname'] = None if 'firstname' not in qcontext else qcontext['firstname']
+            qcontext['lastname2'] = None if 'lastname2' not in qcontext else qcontext['lastname2']
+            qcontext['lastname'] = None if 'lastname' not in qcontext else qcontext['lastname']
+            qcontext['phone'] = None if 'phone' not in qcontext else qcontext['phone']
+            qcontext['mobile'] = None if 'mobile' not in qcontext else qcontext['mobile']
+            qcontext['weburl'] = None if 'weburl' not in qcontext else qcontext['weburl']
+            qcontext['zip'] = None if 'zip' not in qcontext else qcontext['zip']
 
-        if 'subject_of_interest_ids' not in qcontext:
-            qcontext['subject_of_interest_ids'] = self.generateDropdown('member.subject.interest')
+            qcontext['last_place_of_study'] = None if 'last_place_of_study' not in qcontext else qcontext[
+                'last_place_of_study']
+            qcontext['field_of_study'] = None if 'field_of_study' not in qcontext else qcontext['field_of_study']
+            qcontext['place_of_study'] = None if 'place_of_study' not in qcontext else qcontext['place_of_study']
+            qcontext['alumni_institute'] = None if 'alumni_institute' not in qcontext else qcontext['alumni_institute']
+            qcontext['current_employee'] = None if 'current_employee' not in qcontext else qcontext['current_employee']
+            qcontext['work_title'] = None if 'work_title' not in qcontext else qcontext['work_title']
+            qcontext['work_phone'] = None if 'work_phone' not in qcontext else qcontext['work_phone']
+            qcontext['info_about_emk'] = None if 'info_about_emk' not in qcontext else qcontext['info_about_emk']
+            qcontext['usa_work_or_study'] = 'no' if 'usa_work_or_study' not in qcontext else qcontext[
+                'usa_work_or_study']
+            qcontext['gender'] = 'male' if 'gender' not in qcontext else qcontext['gender']
+            qcontext['country_id'] = int(qcontext['country_id']) if 'country_id' in qcontext else 20
 
-        if 'hightest_certification_ids' not in qcontext:
-            qcontext['hightest_certification_ids'] = self.generateDropdown('member.certification')
+            if 'per_district' in qcontext:
+                qcontext['per_district'] = int(qcontext['per_district']) if qcontext['per_district'] else ''
+            if 'occupation' in qcontext:
+                qcontext['occupation'] = int(qcontext['occupation']) if qcontext['occupation'] else ''
 
-        if 'usa_work_or_study_ids' not in qcontext:
-            qcontext['usa_work_or_study_ids'] = {'yes': 'Yes', 'no': 'No'}
-        if 'gender_ids' not in qcontext:
-            qcontext['gender_ids'] = {'male': 'Male', 'female': 'Female'}
+            if 'hightest_certification' in qcontext:
+                qcontext['hightest_certification'] = int(qcontext['hightest_certification']) if qcontext[
+                    'hightest_certification'] else ''
+
+            if 'subject_of_interest' not in qcontext:
+                qcontext['subject_of_interest'] = []
+            else:
+                qcontext['subject_of_interest'] = [int(val) for val in
+                                                   request.httprequest.form.getlist('subject_of_interest')]
+            if 'country_ids' not in qcontext:
+                qcontext['country_ids'] = self.generateDropdown('res.country', status=False)
+
+            if 'occupation_ids' not in qcontext:
+                qcontext['occupation_ids'] = self.generateDropdown('member.occupation')
+
+            if 'subject_of_interest_ids' not in qcontext:
+                qcontext['subject_of_interest_ids'] = self.generateDropdown('member.subject.interest')
+
+            if 'hightest_certification_ids' not in qcontext:
+                qcontext['hightest_certification_ids'] = self.generateDropdown('member.certification')
+
+            if 'usa_work_or_study_ids' not in qcontext:
+                qcontext['usa_work_or_study_ids'] = {'yes': 'Yes', 'no': 'No'}
+            if 'gender_ids' not in qcontext:
+                qcontext['gender_ids'] = {'male': 'Male', 'female': 'Female'}
 
         return request.render('member_signup.signup', qcontext)
 
-    def get_member_signup_qcontext(self):
+    def get_signup_context(self):
         """ Shared helper returning the rendering context for signup and reset password """
         qcontext = request.params.copy()
-        qcontext.update(self.get_member_signup_config())
+        qcontext.update(self.get_signup_config())
         if qcontext.get('token'):
             try:
                 # retrieve the user info (name, login or email) corresponding to a signup token
@@ -177,9 +180,8 @@ class MemberApplicationContoller(Home):
                 qcontext['invalid_token'] = True
         return qcontext
 
-    def do_application(self, values):
-        data = {}
-        error_fields = []
+    def create_applicant(self, values):
+        data, error_fields = {}, []
         authorized_fields = self.authorized_fields()
 
         """ Shared helper that creates a res.partner out of a token """
@@ -198,7 +200,7 @@ class MemberApplicationContoller(Home):
                     error_fields.append(field_name)
 
         if len(data) > 0:
-            data['name'] = data['firstname'] + ' ' + data['lastname']
+            data['name'] = data['firstname'] + ' ' + data['lastname'] + ' ' + data['lastname2']
             data['is_applicant'] = True
             data['membership_state'] = 'none'
             data['free_member'] = False
@@ -241,19 +243,18 @@ class MemberApplicationContoller(Home):
         data = []
         status = [('status', '=', True)] if status else []
         record = request.env[model].sudo().search(status, order='id ASC')
-
         for rec in record:
             if status:
                 val = '_'.join((rec.name).strip().lower().split())
                 data.append((val, rec.name))
             else:
                 data.append((rec.id, rec.name))
-
         return data
 
     def authorized_fields(self):
         return (
             'firstname',
+            'lastname2',
             'lastname',
             'password',
             'birthdate',
