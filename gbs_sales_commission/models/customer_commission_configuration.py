@@ -226,6 +226,7 @@ class CustomerCommissionConfiguration(models.Model):
                     vals['customer_id'] = rec.customer_id.id
                     vals['product_id'] = self.product_id.id
                     vals['commission_rate'] = rec.new_value
+                    vals['currency_id'] = rec.currency_id.id
 
                     commission = customer.commission_ids.create(vals)
                 else:
