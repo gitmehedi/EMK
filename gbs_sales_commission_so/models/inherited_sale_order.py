@@ -15,26 +15,27 @@ class InheritedSaleOrderLine(models.Model):
 
     @api.onchange('product_id')
     def onchange_customer(self):
-        self.commission_rate = 0
-        if self.product_id and self.order_id.partner_id:
-
-            commission = self.env['customer.commission'].search(
-                [('currency_id','=', self.order_id.currency_id.id), ('customer_id', '=', self.order_id.partner_id.id), ('product_id', '=', self.product_id.id),
-                 ('status', '=', True)])
-
-            if commission:
-                for coms in commission:
-                    self.commission_rate = coms.commission_rate
-            else:
-                self.commission_rate = 0
+        self._get_customer_commission_by_product()
 
 
     @api.onchange('product_uom_qty')
     def product_uom_change(self):
+        self._get_customer_commission_by_product()
+
+
+
+    def _get_customer_commission_by_product(self):
         self.commission_rate = 0
         if self.product_id and self.order_id.partner_id:
+
+            if self.product_id.product_tmpl_id.commission_type == 'fixed':
+                currency = self.order_id.currency_id.id
+            else:
+                currency = None
+
             commission = self.env['customer.commission'].search(
-                [('currency_id','=', self.order_id.currency_id.id),('customer_id', '=', self.order_id.partner_id.id), ('product_id', '=', self.product_id.id),
+                [('currency_id', '=', currency), ('customer_id', '=', self.order_id.partner_id.id),
+                 ('product_id', '=', self.product_id.id),
                  ('status', '=', True)])
 
             if commission:
@@ -42,3 +43,4 @@ class InheritedSaleOrderLine(models.Model):
                     self.commission_rate = coms.commission_rate
             else:
                 self.commission_rate = 0
+

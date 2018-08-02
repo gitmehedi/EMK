@@ -129,7 +129,7 @@ class customer_creditlimit_assign(models.Model):
 class ResPartner(models.Model):
     _inherit = 'res.partner'
 
-    limit_ids = fields.One2many('res.partner.credit.limit', 'partner_id', 'Limits', domain=[('state', '=', 'approve')])
+    limit_ids = fields.One2many('res.partner.credit.limit', 'partner_id', 'Limits', readonly=True, domain=[('state', '=', 'approve')])
     credit_limit = fields.Float(compute='_current_limit', string='Credit Limit', )
     remaining_credit_limit = fields.Float(compute='_remaining_credit_limit', string='Remaining Credit Limit')
 
