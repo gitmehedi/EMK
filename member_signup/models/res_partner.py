@@ -50,6 +50,7 @@ class ResPartner(models.Model):
     signature_image = fields.Binary(string='Signature')
     is_applicant = fields.Boolean(default=False)
     info_about_emk = fields.Text(string="How did you learn about the EMK Center?")
+    application_ref = fields.Text(string="Application Ref")
 
     gender = fields.Selection([('male', 'Male'), ('female', 'Female')], default='male', string='Gender')
     usa_work_or_study = fields.Selection([('yes', 'Yes'), ('no', 'No')], default='no',

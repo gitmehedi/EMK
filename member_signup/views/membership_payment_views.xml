@@ -7,7 +7,6 @@
         <field name="priority" eval="1"/>
         <field name="arch" type="xml">
             <form string="Membership Payment">
-
                 <header>
                     <button string='Pay' name="member_payment" type='object' class="oe_highlight"
                             states="draft"/>
@@ -39,11 +38,14 @@
         <field name="model">member.payment</field>
         <field name="priority" eval="1"/>
         <field name="arch" type="xml">
-            <tree string="Membership Payment">
+            <tree string="Membership Payment"
+                  colors="green:state=='draft'; gray:state=='paid'">
                 <field name="membership_id"/>
                 <field name="paid_amount" sum="paid_amount"/>
+                <field name="payment_ref"/>
                 <field name="journal_id"/>
                 <field name="date"/>
+                <field name="state"/>
             </tree>
         </field>
     </record>
