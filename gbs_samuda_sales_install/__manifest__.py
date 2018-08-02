@@ -33,6 +33,7 @@
         'gbs_application_security',
         'stock_warehouse_extend',
         'board',
+        'web_access_rule_button_extend',
     ],
 
     'data': [ ],
