@@ -224,7 +224,7 @@ class CustomerCommissionConfiguration(models.Model):
                     commission = customer.commission_ids.create(vals)
                 else:
                     for cust in find_cust:
-                        cust.write({'commission_rate': rec.new_value, 'coms_type': self.product_id.commission_type})
+                        cust.write({'currency_id':rec.currency_id.id, 'commission_rate': rec.new_value, 'coms_type': self.product_id.commission_type})
 
                 update = cusComLine.search(
                     [('customer_id', '=', rec.customer_id.id), ('product_id', '=', self.product_id.id)])
@@ -234,6 +234,7 @@ class CustomerCommissionConfiguration(models.Model):
                 val_line['product_id'] = self.product_id.id
                 val_line['effective_date'] = datetime.date.today()
                 val_line['commission_rate'] = rec.new_value
+                val_line['currency_id'] = rec.currency_id.id
 
                 if find_cust:
                     for custs in find_cust:

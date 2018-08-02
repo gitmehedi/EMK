@@ -10,6 +10,26 @@ class ProformaInvoice(models.Model):
     _order = 'id DESC'
     _rec_name = 'name'
 
+    @api.depends('line_ids.tax', 'line_ids.price_subtotal', 'line_ids.quantity')
+    def _amount_all(self):
+        for pi in self:
+            amount_untaxed = amount_tax = 0.0
+            for line in pi.line_ids:
+                amount_untaxed += line.price_subtotal
+                # FORWARDPORT UP TO 10.0
+                if pi.beneficiary_id.tax_calculation_rounding_method == 'round_globally':
+                    taxes = line.tax.compute_all(line.price_unit, pi.currency_id, line.quantity,
+                                                 product=line.product_id, partner=pi.partner_id)
+                    amount_tax += sum(t.get('amount', 0.0) for t in taxes.get('taxes', []))
+                else:
+                    amount_tax += line.price_tax
+
+                pi.sub_total = amount_untaxed
+                pi.untaxaed_amount= amount_untaxed
+                pi.taxed_amount= amount_tax
+                pi.total= amount_untaxed + amount_tax
+
+
     name = fields.Char(string='Name', index=True, readonly=True, default="/")
     partner_id = fields.Many2one('res.partner', string='Customer', domain=[('customer', '=', True)], required=True,
                                  readonly=True, states={'draft': [('readonly', False)]})
@@ -56,13 +76,13 @@ class ProformaInvoice(models.Model):
     sequence_id = fields.Char('Sequence', readonly=True)
 
     """ Calculations fields after """
-    sub_total = fields.Float(string='Sub Total', readonly=True)
+    sub_total = fields.Float(string='Sub Total', readonly=True,compute='_amount_all',store = True)
     taxable_amount = fields.Float(string='Taxable Amount')
-    untaxaed_amount = fields.Float(string='Untaxed Amount', readonly=True)
-    taxed_amount = fields.Float(string='Tax', readonly=True)
+    untaxaed_amount = fields.Float(string='Untaxed Amount', readonly=True ,compute='_amount_all',store = True)
+    taxed_amount = fields.Float(string='Tax', readonly=True,compute='_amount_all',store = True)
     freight_charge = fields.Float(string='Freight Charge', readonly=True, states={'draft': [('readonly', False)]},
                                   track_visibility='onchange')
-    total = fields.Float(string='Total', readonly=True, track_visibility='onchange')
+    total = fields.Float(string='Total', readonly=True, track_visibility='onchange',compute='_amount_all',store = True)
 
     """ Relational field"""
     line_ids = fields.One2many('proforma.invoice.line', 'pi_id', string="Products", readonly=True,
@@ -122,132 +142,12 @@ class ProformaInvoice(models.Model):
             str_address = self.getAddressByPartner(self.partner_id)
             self.customer_add = str_address
 
-    def _prepare_lines_by_so_ids(self, so_ids):
-        res = []
-        product_list = []
-        for so in so_ids:
-            for line in so.order_line:
-                new_prod = True
-                for prod in product_list:
-                    if line.product_id.id == prod['product_id']:
-                        new_prod = False
-                        ### Need Update
-                        total_qty = line.product_uom_qty + prod['quantity']
-                        total_price_subtotal = line.price_subtotal + prod['price_subtotal']
-                        avg_unit_price = total_price_subtotal / (
-                            total_qty * 1.0)  # to ensure flaot value multily with 1.0
-
-                        prod.update({
-                            'quantity': total_qty,
-                            'price_unit': avg_unit_price,
-                            'price_subtotal': total_price_subtotal
-                        })
-
-                if new_prod:
-                    prod_line = {'product_id': line.product_id.id,
-                                 'quantity': line.product_uom_qty,
-                                 'pack_type': so.pack_type.id,
-                                 'uom_id': line.product_uom.id,
-                                 'commission_rate': line.commission_rate,
-                                 'price_unit': line.price_unit,
-                                 'price_subtotal': line.price_subtotal,
-                                 'tax': line.tax_id.id,
-                                 }
-                    product_list.append(prod_line)
-
-        for prod in product_list:
-            res.append([0, 0, prod])
-
-        return res
-
-    @api.model
-    def create(self, vals):
-
-        sub_total = 0
-        total = 0
-
-        for v in vals.get('line_ids'):
-            sub_total += v[2]['price_unit'] * v[2]['quantity']
-            total += v[2]['price_unit'] * v[2]['quantity']
-
-        vals['sub_total'] = sub_total
-        vals['total'] = total
-
-        return super(ProformaInvoice, self).create(vals)
-
-    @api.multi
-    def write(self, vals, context=None):
-        sub_total = 0
-        total = 0
-
-        for line in self.line_ids:
-            sub_total += line['price_subtotal']
-            total += line['price_subtotal']
-
-        vals['sub_total'] = sub_total
-        vals['total'] = total
-
-        return super(ProformaInvoice, self).write(vals)
-
-    def update_total_info(self, vals):
-        sub_total = 0
-        taxed_amount = 0
-        total = 0
-        untaxed_amount = 0
-
-        so_ids = self.env['sale.order'].search([('id', 'in', vals['so_ids'][0][2])])
-
-        for so in so_ids:
-            sub_total += so.amount_untaxed
-            taxed_amount += so.amount_tax
-            total += so.amount_total
-            untaxed_amount += so.amount_untaxed
-
-        vals['sub_total'] = sub_total
-        vals['taxed_amount'] = taxed_amount
-        vals['total'] = total
-        vals['untaxed_amount'] = untaxed_amount
 
     @api.constrains('freight_charge')
     def check_freight_charge_val(self):
         if self.freight_charge < 0:
             raise UserError('Freight Charge can not be Negative')
 
-    @api.onchange('so_ids')
-    def so_product_line(self):
-
-        sub_total = 0
-        taxed_amount = 0
-        total = 0
-        untaxed_amount = 0
-
-        for so in self.so_ids:
-            if self.beneficiary_id and self.beneficiary_id != so.company_id:
-                raise ValidationError('Please add Sale Order whose Beneficiary is same.')
-            elif self.operating_unit_id and self.operating_unit_id != so.operating_unit_id:
-                raise ValidationError('Please add Sale Order whose Unit is same.')
-            elif self.partner_id and self.partner_id != so.partner_id:
-                raise ValidationError('Please add Sale Order whose Customer is same.')
-            elif self.currency_id and self.currency_id != so.currency_id:
-                raise ValidationError('Please add Sale Order whose Currency is same.')
-            else:
-                self.beneficiary_id = so.company_id
-                self.operating_unit_id = so.operating_unit_id
-                self.partner_id = so.partner_id
-                self.currency_id = so.currency_id
-                self.customer_add = self.getAddressByPartner(so.partner_id)
-
-            sub_total += so.amount_untaxed
-            taxed_amount += so.amount_tax
-            total += so.amount_total
-            untaxed_amount += so.amount_untaxed
-
-        self.line_ids = self._prepare_lines_by_so_ids(self.so_ids)
-
-        self.sub_total = sub_total
-        self.taxed_amount = taxed_amount
-        self.total = total
-        self.untaxed_amount = untaxed_amount
 
     def getAddressByPartner(self, partner):
 
@@ -299,23 +199,6 @@ class ProformaInvoice(models.Model):
         res['total'] = total
 
         self.write(res)
-
-    def update_Pi_to_so_obj(self):
-        # Update PI to SO
-        for so in self.so_ids:
-            so.pi_id = self.id
-
-            # update DA
-            da_obj = so.env['delivery.authorization'].search([('sale_order_id', '=', so.id)])
-            if da_obj:
-                for da_ in da_obj:
-                    da_.pi_id = self.id  # update PI to DA if it is already created
-
-            # update DO
-            do_obj = so.env['delivery.order'].search([('sale_order_id', '=', so.id)])
-            if do_obj:
-                for do_ in do_obj:
-                    do_.pi_id = self.id  # update PI to DO if it is already created
 
     @api.onchange('freight_charge')
     def onchange_freight_charge(self):
@@ -376,93 +259,74 @@ class ProformaInvoice(models.Model):
     # PI Operating Unit related code - ENDS
     ########################################
 
-
+# ---------------------------------------------------------------------------------------------------------------------------------
 class ProformaInvoiceLine(models.Model):
     _name = 'proforma.invoice.line'
     _description = 'Proforma Invoice Line (PI Line)'
 
     """ Line values"""
     product_id = fields.Many2one('product.product', string="Product", required=True)
-    description = fields.Char(string='Description', required=True)
-    uom_id = fields.Many2one('product.uom', string="Unit of Measure", required=True)
-    quantity = fields.Float(string="Ordered Qty")
-    price_unit = fields.Float(string="Unit Price", required=True)
+    description = fields.Char(related='product_id.name', store=True,string='Description',
+                              readonly=True)
+    uom_id = fields.Many2one('product.uom', string="Unit of Measure", store=True,related='product_id.uom_id',
+                             readonly=True)
+    quantity = fields.Float(string="Ordered Qty",default=1)
+    price_unit = fields.Float(string="Unit Price", store=True,compute='_get_product_sales_price',
+                              readonly=True)
     tax = fields.Many2one('account.tax', string='Taxes')
-    price_subtotal = fields.Float(string="Sub Total", readonly=False)
+    price_tax = fields.Float(compute='_compute_amount', store=True, string='Tax')
+    price_subtotal = fields.Float(string="Sub Total", store=True,compute='_get_price_subtotal',
+                                  readonly=True)
 
     """ Relational field"""
     pi_id = fields.Many2one('proforma.invoice', ondelete='cascade')
 
-    def _set_product_line(self):
-        if self.product_id:
-            self.price_unit = self._get_product_sales_price(self.product_id)
 
-            self.description = self.product_id.name + ' (' + self.product_id.attribute_value_ids.name + ')'
-            self.quantity = 1
-            self.price_subtotal = self.price_unit * self.quantity
-
-            self.pi_id.sub_total = self.price_subtotal
-            self.pi_id.taxed_amount = self.calculate_tax_amount(self.tax.id, self.price_subtotal)
-            self.pi_id.untaxaed_amount = self.price_subtotal
-            self.pi_id.total = self.pi_id.taxed_amount + self.price_subtotal
-
-    @api.onchange('product_id')
-    def onchange_product_id(self):
-        self._set_product_line()
-
-    @api.onchange('quantity')
+    @api.onchange('quantity','price_unit')
     def onchange_quantity(self):
         if self.quantity < 0:
             raise UserError('Quantity can not be Negative')
 
-        self.price_subtotal = self.price_unit * self.quantity
 
-        ## Set Proforma Invoice Table value
-        # self.pi_id.currency_id.id = active_prod_price_pool.currency_id.id
-        self.pi_id.sub_total = self.price_subtotal
-        self.pi_id.taxed_amount = self.calculate_tax_amount(self.tax.id, self.price_subtotal)
-        self.pi_id.untaxed_amount = self.price_subtotal
-        self.pi_id.total = self.pi_id.taxed_amount + self.price_subtotal
+    @api.depends('quantity','price_unit','price_tax')
+    def _get_price_subtotal(self):
+        for line in self:
+            if line.price_tax:
+                line.price_subtotal = line.price_unit * line.quantity * line.price_tax
+            else:
+                line.price_subtotal = line.price_unit * line.quantity
 
-    @api.onchange('uom_id')
-    def onchange_uomid(self):
-        self._set_product_line()
 
-    def calculate_tax_amount(self, tax_id, total_price):
-        if tax_id:
-            tax_pool = self.env['account.tax'].search([('id', '=', tax_id)])
-            return (tax_pool.amount / 100) * total_price
+    @api.depends('quantity', 'price_unit', 'tax')
+    def _compute_amount(self):
+        for line in self:
+            taxes = line.tax.compute_all(line.price_unit, line.pi_id.currency_id, line.quantity, product=line.product_id, partner=line.pi_id.partner_id)
+            line.price_tax= taxes['total_included'] - taxes['total_excluded']
 
-    def _get_product_sales_price(self, product):
-
-        if product:
-            if not self.uom_id:
-                self.uom_id = self.product_id.uom_id
-
+    @api.depends('product_id')
+    def _get_product_sales_price(self):
+        if not self.uom_id:
+            self.uom_id = self.product_id.uom_id
+        price_change_pool = self.env['product.sale.history.line'].search(
+            [('product_id', '=', self.product_id.id),
+             ('currency_id', '=', self.pi_id.currency_id.id),
+             ('product_package_mode', '=', self.pi_id.pack_type.id),
+             ('uom_id', '=', self.uom_id.id)])
+        if not price_change_pool:
             price_change_pool = self.env['product.sale.history.line'].search(
-                [('product_id', '=', product.id),
+                [('product_id', '=', self.product_id.id),
                  ('currency_id', '=', self.pi_id.currency_id.id),
                  ('product_package_mode', '=', self.pi_id.pack_type.id),
-                 ('uom_id', '=', self.uom_id.id)])
+                 ('category_id', '=', self.uom_id.category_id.id)])
+            if price_change_pool:
+                if not price_change_pool.uom_id.uom_type == "reference":
+                    uom_base_price = price_change_pool.new_price / price_change_pool.uom_id.factor_inv
+                else:
+                    uom_base_price = price_change_pool.new_price
 
-            if not price_change_pool:
-                price_change_pool = self.env['product.sale.history.line'].search(
-                    [('product_id', '=', product.id),
-                     ('currency_id', '=', self.pi_id.currency_id.id),
-                     ('product_package_mode', '=', self.pi_id.pack_type.id),
-                     ('category_id', '=', self.uom_id.category_id.id)])
-
-                if price_change_pool:
-                    if not price_change_pool.uom_id.uom_type == "reference":
-                        uom_base_price = price_change_pool.new_price / price_change_pool.uom_id.factor_inv
-                    else:
-                        uom_base_price = price_change_pool.new_price
-
-                    if not self.uom_id.uom_type == "reference":
-                        return uom_base_price * self.uom_id.factor_inv
-                    else:
-                        return uom_base_price
-            else:
-                return price_change_pool.new_price
-
-        return 0.00
+                if not self.uom_id.uom_type == "reference":
+                    self.price_unit = uom_base_price * self.uom_id.factor_inv
+                else:
+                    self.price_unit = uom_base_price
+        else:
+            self.price_unit = price_change_pool.new_price

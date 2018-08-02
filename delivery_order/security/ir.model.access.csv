@@ -101,5 +101,4 @@ access_do_user_pricelist,access_do_user_pricelist,product_sales_pricelist.model_
 access_do_user_stock_order_point,access_do_user_stock_order_point,stock.model_stock_warehouse_orderpoint,stock.delivery_user,1,0,0,0
 
 access_stock_user_move,access_stock_user_move,stock.model_stock_move,stock.delivery_user,1,1,1,0
-access_delivery_user_mrp,access_delivery_user_mrp,mrp.model_mrp_bom,stock.delivery_user,1,0,0,0
 access_so_type_accountanr,access_so_type_accountanr,sale_order_type.model_sale_order_type,account.group_account_user,1,1,1,0
