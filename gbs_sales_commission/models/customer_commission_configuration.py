@@ -97,9 +97,9 @@ class CustomerCommissionConfiguration(models.Model):
 
         if self.product_id:
             if self.commission_type == 'by_product':
-                prod_pool = self.env['product.template'].search([('id', '=', self.product_id.id)])
+                #prod_pool = self.env['product.template'].search([('id', '=', self.product_id.id)])
 
-                if prod_pool.commission_type == 'fixed':
+                if self.product_id.product_tmpl_id.commission_type == 'fixed':
                     for rec in self.config_customer_ids:
                         if rec.customer_id:
                             commission = self.env['customer.commission'].search(
@@ -107,6 +107,9 @@ class CustomerCommissionConfiguration(models.Model):
                                  ('customer_id', '=', rec.customer_id.id),
                                  ('coms_type', '=', 'fixed'),
                                  ('status', '=', True)])
+
+                            #self.currency_id = self.env.user.company_id.currency_id.id
+
                             if commission:
                                 for coms in commission:
                                     rec.old_value = coms.commission_rate
@@ -120,6 +123,9 @@ class CustomerCommissionConfiguration(models.Model):
                          ('customer_id', '=', rec.customer_id.id),
                          ('coms_type', '=', 'percentage'),
                          ('status', '=', True)])
+
+                    #self.currency_id = None
+
                     if commission:
                         for coms in commission:
                             rec.old_value = coms.commission_rate

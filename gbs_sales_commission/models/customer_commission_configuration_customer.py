@@ -15,15 +15,6 @@ class CustomerCommissionConfigurationCustomer(models.Model):
     customer_id = fields.Many2one('res.partner', string="Customer", required=True, domain="([('customer','=','True')])")
     config_parent_id = fields.Many2one('customer.commission.configuration', ondelete='cascade')
 
-    # def is_currency_id_readonly(self):
-    #     if self.config_parent_id.product_id.product_tmpl_id.commission_type == 'fixed':
-    #         self.is_currency_id_readonly = False
-    #     else:
-    #         self.is_currency_id_readonly = True
-
-    #is_currency_id_readonly = fields.Boolean(string='is_currency_id_readonly', compute='is_currency_id_readonly',default=False)
-
-
     @api.onchange('customer_id')
     def onchange_customer(self):
         self.old_value = 0
