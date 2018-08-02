@@ -42,16 +42,35 @@
                 </data>
             </field>
         </record>
-        <record id="view_partner_kanban2" model="ir.ui.view">
-            <field name="name">res.partner.kanban</field>
+        <record model="ir.ui.view" id="view_res_partner_kanban_contact1">
+            <field name="name">res.partner.kanban.contact</field>
             <field name="model">res.partner</field>
             <field name="inherit_id" ref="base.res_partner_kanban_view"/>
             <field name="arch" type="xml">
-                <xpath expr="//field[@name='display_name']" position="after">
-                    <field name="credit_limit" groups="sales_team.group_sale_salesman,gbs_application_group.group_sales_customer_manager"/>
-                    <field name="credit" groups="sales_team.group_sale_salesman,gbs_application_group.group_sales_customer_manager"/>
+                <field name="email" position="after">
+                    <field name="credit_limit"/>
+                    <field name="credit"/>
+                </field>
+                <xpath expr="//t[@t-name='kanban-box']//div[@class='oe_kanban_details']/ul/li[3]" position="after">
+                    <field name="credit_limit"/>
                 </xpath>
             </field>
         </record>
+        <!--<record id="res_partner_kanban_view1" model="ir.ui.view">-->
+          <!--<field name="name">res.partner.kanban</field>-->
+          <!--<field name="model">res.partner</field>-->
+          <!--<field name="inherit_id" ref="base.res_partner_kanban_view"/>-->
+          <!--<field name="arch" type="xml">-->
+              <!--<xpath expr="//field[@name='display_name']" position="after">-->
+                  <!--<field name="credit_limit"/>-->
+                  <!--<field name="credit"/>-->
+              <!--</xpath>-->
+              <!--<xpath expr="//t[@t-name='kanban-box']//div[@class='oe_kanban_details']/ul/li[3]" position="after">-->
+                    <!--<field name="credit_limit"/>-->
+                    <!--&lt;!&ndash;<field name="credit"/>&ndash;&gt;-->
+              <!--</xpath>-->
+          <!--</field>-->
+        <!--</record>-->
+
     </data>
 </odoo>
