@@ -9,6 +9,7 @@ class HrEmployee(models.Model):
     _inherit = "hr.short.leave"
 
     holiday_status_id = fields.Many2one("hr.holidays.status", string="Leave Type", required=True, readonly=True,
+                                        domain="[('short_leave_flag','=',True)]",
                                         states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]})
 
     @api.multi
@@ -29,3 +30,10 @@ class HrEmployee(models.Model):
              })
 
         return res
+
+
+
+class HrShortLeave(models.Model):
+    _inherit = 'hr.holidays.status'
+
+    short_leave_flag = fields.Boolean(string='Allow Short Leave', default=False)
