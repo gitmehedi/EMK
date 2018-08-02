@@ -13,6 +13,7 @@
     'depends': [
         'hr',
         'hr_contract',
+        'hr_short_leave',
         'l10n_in_hr_payroll',
     ],
     'category': 'HR',

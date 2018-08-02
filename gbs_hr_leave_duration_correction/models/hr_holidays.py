@@ -41,8 +41,8 @@ class HRHolidays(models.Model):
 
             date_from = values.get('date_from')
             date_to = values.get('date_to')
-            d1 = datetime.strptime(str(date_from), "%Y-%m-%d")
-            d2 = datetime.strptime(str(date_to), "%Y-%m-%d")
+            d1 = fields.Datetime.from_string(date_from)
+            d2 = fields.Datetime.from_string(date_to)
             duration = (d2 - d1).days + 1
             values['number_of_days_temp'] = duration
 
