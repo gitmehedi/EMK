@@ -506,6 +506,9 @@ class SaleOrder(models.Model):
         readonly=True, states={'to_submit': [('readonly', False)]}
     )
 
+    @api.model
+    def _needaction_domain_get(self):
+        return [('state', 'in', ['draft'])]
 
 class InheritedSaleOrderLine(models.Model):
     _inherit = 'sale.order.line'
