@@ -26,6 +26,15 @@
 				</form>
 			</field>
 		</record>
+		<record model="ir.actions.act_window" id="product_packaging_mode_action">
+            <field name="name">Packing Mode</field>
+            <field name="res_model">product.packaging.mode</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <menuitem id="product_packaging_mode_menu" name="Packing Mode" parent="sale.prod_config_main" sequence="3"
+                  action="product_packaging_mode_action"/>
+
 
     </data>
 </odoo>
