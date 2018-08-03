@@ -64,9 +64,19 @@ class DeliverySchedules(models.Model):
         if self.line_ids:
             self.state = 'approve'
             self.approved_by = self.env.user
+            for line in self.line_ids:
+                line.write({'state': 'approve',})
             return self.write({'state': 'approve', 'approved_date': time.strftime('%Y-%m-%d %H:%M:%S')})
+
         raise ValidationError("Without Product Details information, you can't confirm it.")
 
+    @api.multi
+    def action_draft(self):
+        res = {
+            'state': 'draft',
+        }
+        self.write(res)
+        self.line_ids.write({'state': 'draft'})
 
     @api.multi
     def unlink(self):
