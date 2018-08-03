@@ -6,7 +6,6 @@ class ProformaInvoice(models.Model):
     _name = 'proforma.invoice'
     _description = 'Proforma Invoice (PI)'
     _inherit = ['mail.thread', 'ir.needaction_mixin']
-
     _order = 'id DESC'
     _rec_name = 'name'
 
