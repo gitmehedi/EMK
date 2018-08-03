@@ -102,7 +102,8 @@ class DeliveryOrder(models.Model):
     def create(self, vals):
         delivery_auth_obj = self.env['delivery.authorization'].search([('id', '=', vals['delivery_order_id'])])
 
-        seq = self.env['ir.sequence'].next_by_code_new('delivery.order', self.requested_date, delivery_auth_obj.operating_unit_id) or '/'
+        seq = self.env['ir.sequence'].next_by_code_new('delivery.order', self.requested_date,
+                                                       delivery_auth_obj.operating_unit_id) or '/'
         vals['name'] = seq
 
         return super(DeliveryOrder, self).create(vals)
@@ -121,7 +122,6 @@ class DeliveryOrder(models.Model):
             action['res_id'] = pickings.id
         return action
 
-
     @api.multi
     def create_delivery_order(self):
 
@@ -135,11 +135,10 @@ class DeliveryOrder(models.Model):
         if self.env['ir.values'].get_default('sale.config.settings', 'auto_done_setting'):
             self.sale_order_id.sudo().action_done()
 
-
-
         # Update the reference of Delivery Order and LC No to Stock Picking
         stock_picking_id = self.delivery_order_id.sale_order_id.picking_ids
-        stock_picking_id.sudo().write({'operating_unit_id':self.delivery_order_id.operating_unit_id.id,
+        stock_picking_id.sudo().write({'pack_type': self.delivery_order_id.sale_order_id.pack_type.id,
+                                       'operating_unit_id': self.delivery_order_id.operating_unit_id.id,
                                        'delivery_order_id': self.id})
 
         # Update the reference of PI and LC on both Stock Picking and Sale Order Obj

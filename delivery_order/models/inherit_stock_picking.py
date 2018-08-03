@@ -7,6 +7,9 @@ class InheritStockPicking(models.Model):
     _inherit = 'stock.picking'
 
     delivery_order_id = fields.Many2one('delivery.order', string='D.O No.', readonly=True)
+
+    pack_type = fields.Many2one('product.packaging.mode', string='Packing Mode', readonly=True)
+
     lc_id = fields.Many2one('letter.credit', string='L/C No', readonly=True, compute="_calculate_lc_id", store=False)
 
     show_transport_info = fields.Boolean(string='Show Transport Info', default=False,
