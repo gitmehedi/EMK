@@ -3,6 +3,7 @@ from odoo.exceptions import UserError, ValidationError
 
 class InheritedSaleOrderType(models.Model):
     _inherit = 'sale.order.type'
+    _order = 'name'
 
     #operating_unit = fields.Many2one('operating.unit', string="Operating Unit", required=True,track_visibility='onchange')
     sale_order_type = fields.Selection([
