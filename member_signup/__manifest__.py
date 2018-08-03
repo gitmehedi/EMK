@@ -30,6 +30,8 @@
         'views/member_config_views.xml',
         'views/member_application_views.xml',
         'views/membership_payment_views.xml',
+        'views/rfid_generation_views.xml',
+        'report/rfid_print_views.xml',
     ],
     'bootstrap': True,
 }

@@ -11,7 +11,7 @@ class HrHolidays(models.Model):
     @api.model
     def create(self, vals):
         res = super(HrHolidays, self).create(vals)
-        res._notify_approvers()
+        #res._notify_approvers()
         return res
 
     @api.multi
