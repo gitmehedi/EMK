@@ -116,6 +116,39 @@ class InheritStockPicking(models.Model):
                 'cancel': [('readonly', True)]},
         help="Priority for this picking. Setting manually a value here would set it as priority for all the moves")
 
+
+    # Inherit Validate Button function
+    @api.multi
+    def do_new_transfer(self):
+        res = super(InheritStockPicking, self).do_new_transfer()
+
+        number_of_jar = self._get_number_of_jar()
+
+        # delivery_jar_count_obj = self.env['delivery.jar.count']
+        # vals = {}
+        # vals['partner_id'] =
+        # vals['product_id'] =
+        # vals['challan_id'] =
+        # vals['uom_id'] =
+        # vals['jar_count'] = number_of_jar
+        # vals['jar_type']
+
+
+
+        return res
+
+
+    def _get_number_of_jar(self):
+
+        if self.pack_type.uom_id and not self.pack_type.is_jar_bill_included:
+            for picking_line in self.pack_operation_product_ids:
+                picking_line_qty = picking_line.product_qty
+                per_uom_conversion = picking_line.product_uom_id.factor_inv
+
+                jar_count = (picking_line_qty * per_uom_conversion) / self.pack_type.uom_id.factor_inv
+                print 'number of Jar needs: ', jar_count
+
+
     @api.multi
     def _calculate_lc_id(self):
         for stock_lc in self:
