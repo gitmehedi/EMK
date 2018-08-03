@@ -323,12 +323,12 @@
                     </xpath>
                     <xpath expr="//field[@name='date_order']" position="replace">
                         <field name="date_order"
-                               attrs="{'invisible': [('state', 'in', ['sale', 'done', 'cancel'])],'readonly':[('state','in',('draft','sent','validate','done','cancel','sale'))]}"/>
+                               attrs="{'readonly':[('state','in',('draft','sent','validate','done','cancel','sale'))]}"/>
                     </xpath>
 
                     <xpath expr="//field[@name='validity_date']" position="replace">
                         <field name="validity_date"
-                               attrs="{'invisible': [('state', 'in', ['sale', 'done'])],'readonly':[('state','in',('draft','sent','validate','done','cancel','sale'))]}"/>
+                               attrs="{'readonly':[('state','in',('draft','sent','validate','done','cancel','sale'))]}"/>
                     </xpath>
 
                     <xpath expr="//field[@name='pricelist_id']" position="replace">
