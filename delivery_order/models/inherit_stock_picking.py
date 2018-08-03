@@ -7,6 +7,9 @@ class InheritStockPicking(models.Model):
     _inherit = 'stock.picking'
 
     delivery_order_id = fields.Many2one('delivery.order', string='D.O No.', readonly=True)
+
+    pack_type = fields.Many2one('product.packaging.mode', string='Packing Mode', readonly=True)
+
     lc_id = fields.Many2one('letter.credit', string='L/C No', readonly=True, compute="_calculate_lc_id", store=False)
 
     show_transport_info = fields.Boolean(string='Show Transport Info', default=False,
@@ -121,15 +124,6 @@ class InheritStockPicking(models.Model):
     @api.multi
     def do_print_delivery_challan(self):
         return self.env["report"].get_action(self, 'delivery_challan_report.report_delivery_cha')
-
-    @api.model
-    def create(self, vals):
-        so_obj = self.env['sale.order'].search([('name','=',vals['origin'])])
-        seq = self.env['ir.sequence'].next_by_code_new('stock.picking', self.create_date, so_obj.operating_unit_id) or '/'
-        if seq:
-            vals['name'] = seq
-
-        return super(InheritStockPicking, self).create(vals)
 
 
 class InheritStockMove(models.Model):

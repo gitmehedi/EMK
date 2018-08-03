@@ -184,24 +184,68 @@
             <field name="arch" type="xml">
                 <search string="Delivery Authorization">
                     <filter name="validate" string="To Validate" domain="[('state','=','validate')]"/>
+                    <filter name="submit" string="To Submit" domain="[('state','=','draft')]"/>
+                    <filter name="confirm" string="To Confirm" domain="[('state','=','approve')]"/>
                 </search>
             </field>
         </record>
 
 
-        <record model="ir.actions.act_window" id="delivery_order_action">
+        <record model="ir.actions.act_window" id="delivery_order_action_account_user">
             <field name="name">Delivery Authorization</field>
             <field name="res_model">delivery.authorization</field>
-            <field name="context">{'search_default_validate':1}</field>
+            <field name="context">{
+                'search_default_submit':1,
+                }</field>
             <field name="view_mode">tree,form</field>
         </record>
 
-        <menuitem id="delivery_order_submenu"
+
+        <record model="ir.actions.act_window" id="delivery_order_action_head_account">
+            <field name="name">Delivery Authorization</field>
+            <field name="res_model">delivery.authorization</field>
+            <field name="context">{
+                'search_default_confirm':1,
+                }</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+
+        <record model="ir.actions.act_window" id="delivery_order_action_cxo">
+            <field name="name">Delivery Authorization</field>
+            <field name="res_model">delivery.authorization</field>
+            <field name="context">{
+                'search_default_validate':1,
+                }</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <menuitem id="delivery_authorization_mainmenu"
                   name="Delivery Authorization"
                   parent="delivery_schedules.delivery_schedule_menu"
                   sequence="1"
-                  groups="account.group_account_user,gbs_application_group.group_head_account,gbs_application_group.group_cxo"
-                  action="delivery_order_action"/>
+                  groups="account.group_account_user,gbs_application_group.group_head_account,gbs_application_group.group_cxo"/>
+
+        <menuitem id="delivery_order_submenu_account_user"
+                  name="Accountant Approval"
+                  parent="delivery_authorization_mainmenu"
+                  sequence="3"
+                  groups="account.group_account_user"
+                  action="delivery_order_action_account_user"/>
+
+        <menuitem id="delivery_order_submenu_head_account"
+                  name="Head of Sale Approval"
+                  parent="delivery_authorization_mainmenu"
+                  sequence="2"
+                  groups="gbs_application_group.group_head_account"
+                  action="delivery_order_action_head_account"/>
+
+        <menuitem id="delivery_order_submenu_cxo"
+                  name="CXO Approval"
+                  parent="delivery_authorization_mainmenu"
+                  sequence="1"
+                  groups="gbs_application_group.group_cxo"
+                  action="delivery_order_action_cxo"/>
 
     </data>
 </odoo>

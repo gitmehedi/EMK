@@ -6,7 +6,6 @@ class ProformaInvoice(models.Model):
     _name = 'proforma.invoice'
     _description = 'Proforma Invoice (PI)'
     _inherit = ['mail.thread', 'ir.needaction_mixin']
-
     _order = 'id DESC'
     _rec_name = 'name'
 
@@ -292,7 +291,7 @@ class ProformaInvoiceLine(models.Model):
     def _get_price_subtotal(self):
         for line in self:
             if line.price_tax:
-                line.price_subtotal = line.price_unit * line.quantity * line.price_tax
+                line.price_subtotal = line.price_unit * line.quantity + line.price_tax
             else:
                 line.price_subtotal = line.price_unit * line.quantity
 

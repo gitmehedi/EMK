@@ -385,6 +385,9 @@ class SaleOrder(models.Model):
                 for price_history in price_change_pool:
                     discounted_product_price = price_history.new_price - price_history.discount
 
+                    if lines.commission_rate != coms.commission_rate:
+                        return True
+
                     if price_history.new_price >= lines.price_unit and lines.price_unit >= discounted_product_price:
                         return False  # Single Validation
 
@@ -503,6 +506,9 @@ class SaleOrder(models.Model):
         readonly=True, states={'to_submit': [('readonly', False)]}
     )
 
+    @api.model
+    def _needaction_domain_get(self):
+        return [('state', 'in', ['draft'])]
 
 class InheritedSaleOrderLine(models.Model):
     _inherit = 'sale.order.line'

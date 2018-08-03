@@ -50,6 +50,7 @@ class DeliveryAuthorization(models.Model):
                                         'approve': [('invisible', False), ('readonly', True)]})
     confirmed_date = fields.Date(string="Approval Date", _defaults=lambda *a: time.strftime('%Y-%m-%d'), readonly=True,
                                  track_visibility='onchange')
+
     so_type = fields.Selection([
         ('cash', 'Cash'),
         ('credit_sales', 'Credit'),
@@ -69,6 +70,7 @@ class DeliveryAuthorization(models.Model):
     delivery_count = fields.Integer(string='Delivery Orders', compute='_compute_picking_ids')
     operating_unit_id = fields.Many2one('operating.unit', string='Operating Unit', readonly=True,
                                         track_visibility='onchange')
+
 
     @api.multi
     @api.depends('sale_order_id.procurement_group_id')
@@ -546,9 +548,24 @@ class DeliveryAuthorization(models.Model):
 
     @api.model
     def _needaction_domain_get(self):
-        return [('state', 'in', ['validate'])]
+        users_obj = self.env['res.users']
+        domain = []
+        if users_obj.has_group('gbs_application_group.group_cxo'):
+            domain = [
+                ('state', 'in', ['validate'])]
+            return domain
+        elif users_obj.has_group('gbs_application_group.group_head_account'):
+            domain = [
+                ('state', 'in', ['approve'])]
+            return domain
+        elif users_obj.has_group('account.group_account_user'):
+            domain = [
+                ('state', 'in', ['draft'])]
+            return domain
+        else:
+            return False
 
-
+        return domain
         ## mail notification
         # @api.multi
         # def _notify_approvers(self):
