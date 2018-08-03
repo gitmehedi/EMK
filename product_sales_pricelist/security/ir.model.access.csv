@@ -56,4 +56,6 @@ access_partner_mode_cxo,access_partner_mode_cxo,base.model_res_partner,gbs_appli
 
 access_stock_warehouse_orderpoint_product_manager1,access_stock_warehouse_orderpoint_product_manager1,stock.model_stock_warehouse_orderpoint,gbs_application_group.group_sales_product_manager,1,1,1,0
 
+access_pkg_prod_manager,access_pkg_prod_manager,model_product_packaging_mode,gbs_application_group.group_sales_product_manager,1,1,1,0
+
 
