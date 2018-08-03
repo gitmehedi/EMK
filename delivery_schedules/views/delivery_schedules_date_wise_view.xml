@@ -49,9 +49,9 @@
             <field name="view_mode">tree</field>
         </record>
 
-        <menuitem id="delivery_schedule_menu" name="Delivery" parent="sales_team.menu_base_partner"
-                  groups="delivery_schedules.group_delivery_schedule_manager"
-                  sequence="9"/>
+        <!--<menuitem id="delivery_schedule_menu" name="Delivery" parent="sales_team.menu_base_partner"-->
+                  <!--groups="delivery_schedules.group_delivery_schedule_manager"-->
+                  <!--sequence="9"/>-->
 
         <!--<menuitem id="delivery_schedule_submenu" name="Delivery Schedules Date Wise"-->
                   <!--parent="delivery_schedule_menu"-->

@@ -7,6 +7,8 @@
     'depends': [
         'product_sales_pricelist',
         'sales_team',
+        'delivery_order',
+        'stock',
     ],
 
     'data': [
