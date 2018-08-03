@@ -213,6 +213,10 @@ class ResPartner(models.Model):
                 user = self.env['res.users'].search([('id', '=', self.user_ids.id)])
                 template.with_context({'lang': user.lang}).send_mail(user.id, force_send=True, raise_exception=True)
 
+    @api.model
+    def _needaction_domain_get(self):
+        return [('state', '=', 'application')]
+
     def mailsend(self, vals):
         vals['template'] = 'member_signup.member_application_email_template'
 

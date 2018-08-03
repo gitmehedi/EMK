@@ -71,6 +71,16 @@ class SaleOrder(models.Model):
     pack_type = fields.Many2one('product.packaging.mode', string='Packing Mode', default=_get_pack_type, required=True)
     currency_id = fields.Many2one("res.currency", related='', string="Currency", required=True)
 
+    picking_policy = fields.Selection([
+        ('direct', 'Deliver each product when available'),
+        ('one', 'Deliver all products at once')],
+        string='Shipping Policy', required=True, readonly=True, default='direct',
+        states={'to_submit': [('readonly', False)]})
+
+    project_id = fields.Many2one('account.analytic.account', 'Analytic Account', readonly=True,
+                                 states={'to_submit': [('readonly', False)]},
+                                 help="The analytic account related to a sales order.", copy=False)
+
     """ PI and LC """
     pi_id = fields.Many2one('proforma.invoice', string='PI Ref. No.',
                             domain=[('credit_sales_or_lc', '=', 'lc_sales'), ('state', '=', 'confirm')], readonly=True,
@@ -478,6 +488,21 @@ class SaleOrder(models.Model):
         required=True, readonly=True, states={'to_submit': [('readonly', False)]},
         default=_default_warehouse_id)
 
+    @api.model
+    def _default_operating_unit(self):
+        team = self.env['crm.team']._get_default_team_id()
+        if team.operating_unit_id:
+            return team.operating_unit_id
+        else:
+            return self.env.user.default_operating_unit_id
+
+    operating_unit_id = fields.Many2one(
+        comodel_name='operating.unit',
+        string='Operating Unit',
+        default=_default_operating_unit,
+        readonly=True, states={'to_submit': [('readonly', False)]}
+    )
+
 
 class InheritedSaleOrderLine(models.Model):
     _inherit = 'sale.order.line'
@@ -567,7 +592,6 @@ class CrmTeam(models.Model):
                                         default=lambda self:
                                         self.env['res.users'].
                                         operating_unit_default_get(self._uid))
-
 
     @api.multi
     def unlink(self):

@@ -10,8 +10,10 @@
     'category': 'Human Resources',
     'version': '10.0.1.0.0',
     'license': 'AGPL-3',
+    'sequence': 35,
     'depends': [
         'hr_short_leave',
+        'hr_holidays',
     ],
     'data': [
         'views/hr_holidays.xml',

@@ -5,9 +5,11 @@ class CustomerCommission(models.Model):
     _name="customer.commission"
 
 
-    commission_rate = fields.Float(string='Commission Rate', digits=(16,2), required=True)
+    commission_rate = fields.Float(string='Commission', digits=(16,2), required=True)
     status = fields.Boolean(string='Status',default=True, required=True)
     coms_type = fields.Char(string='Commission Type')
+    currency_id = fields.Many2one('res.currency',string='Currency')
+
 
     """ Relational Fields """
 

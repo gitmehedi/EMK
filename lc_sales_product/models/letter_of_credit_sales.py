@@ -1,6 +1,5 @@
 from odoo import api, fields, models,_
 from odoo.exceptions import UserError, ValidationError
-from openerp.addons.commercial.models.utility import Status, UtilityNumber
 
 class LetterOfCredit(models.Model):
     _inherit = "letter.credit"
@@ -62,7 +61,7 @@ class LetterOfCredit(models.Model):
     @api.multi
     def action_confirm_export(self):
         for pi in self.pi_ids_temp:
-            pi.write({'lc_id': self.id})
+            pi.sudo().write({'lc_id': self.id})
 
             sale_obj = pi.env['sale.order'].search([('pi_id','=',pi.id)])
             if sale_obj:
@@ -71,9 +70,9 @@ class LetterOfCredit(models.Model):
 
                     # Update 100 MT logic
                     da_obj = self.env['delivery.authorization'].search([('sale_order_id', '=', s_order.id)])
-                    da_obj.update_lc_id_for_houndred_mt()
+                    da_obj.sudo().update_lc_id_for_houndred_mt()
 
-        self.write({'state': 'confirmed', 'last_note': Status.CONFIRM})
+        self.write({'state': 'confirmed', 'last_note': 'Getting Confirmation'})
 
 
     @api.multi
@@ -86,7 +85,7 @@ class LetterOfCredit(models.Model):
         number = len(self.old_revision_ids)
 
         comm_utility_pool = self.env['commercial.utility']
-        note = comm_utility_pool.getStrNumber(number) + ' ' + Status.AMENDMENT
+        note = comm_utility_pool.getStrNumber(number) + ' ' + 'Amendment'
 
         self.write({'state': self.state, 'last_note': note})
         return {
@@ -130,7 +129,7 @@ class LetterOfCredit(models.Model):
 
     @api.multi
     def action_lc_done_export(self):
-        self.write({'state': 'done', 'last_note': Status.DONE.value})
+        self.write({'state': 'done', 'last_note': 'Close/Done the LC'})
 
     @api.multi
     def action_amendment(self):

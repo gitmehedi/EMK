@@ -1,5 +1,4 @@
 from odoo import api, fields, models,_
-from openerp.addons.commercial.models.utility import Status, UtilityNumber
 
 class AmendmentWizard(models.TransientModel):
     _name = 'lc.amendment.wizard'

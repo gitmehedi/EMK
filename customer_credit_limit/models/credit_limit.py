@@ -12,6 +12,9 @@ class customer_creditlimit_assign(models.Model):
     _order = 'id DESC'
 
     name = fields.Char(string='Name', index=True, readonly=True)
+    description = fields.Char(string='Description',size=50,index=True, states={'confirm': [('readonly', True)], 'validate1': [('readonly', True)],
+                                  'validate': [('readonly', True)],
+                                  'approve': [('readonly', True)]})
     sequence_id = fields.Char('Sequence', readonly=True)
     approve_date = fields.Date('Approved Date', track_visibility='onchange',
                                states={'draft': [('invisible', True)], 'confirm': [('invisible', True)],
@@ -71,10 +74,10 @@ class customer_creditlimit_assign(models.Model):
                 raise UserError(_('You cannot delete a record which is not draft state!'))
         return super(customer_creditlimit_assign, self).unlink()
 
-    @api.constrains('credit_limit', 'days')
-    def _check_value(self):
-        if self.credit_limit <= 0 or self.days <= 0:
-            raise Warning("Limit or Days never take zero or negative value!")
+    # @api.constrains('credit_limit', 'days')
+    # def _check_value(self):
+    #     if self.credit_limit <= 0 or self.days <= 0:
+    #         raise Warning("Limit or Days never take zero or negative value!")
 
     @api.multi
     def action_confirm(self):
@@ -126,7 +129,7 @@ class customer_creditlimit_assign(models.Model):
 class ResPartner(models.Model):
     _inherit = 'res.partner'
 
-    limit_ids = fields.One2many('res.partner.credit.limit', 'partner_id', 'Limits', domain=[('state', '=', 'approve')])
+    limit_ids = fields.One2many('res.partner.credit.limit', 'partner_id', 'Limits', readonly=True, domain=[('state', '=', 'approve')])
     credit_limit = fields.Float(compute='_current_limit', string='Credit Limit', )
     remaining_credit_limit = fields.Float(compute='_remaining_credit_limit', string='Remaining Credit Limit')
 
@@ -188,11 +191,19 @@ class res_partner_credit_limit(models.Model):
     def _default_credit_limit_and_days(self):
         return self.assign_id.credit_limit
 
-    assign_id = fields.Many2one('customer.creditlimit.assign')
+    assign_id = fields.Many2one('customer.creditlimit.assign',ondelete='cascade')
     partner_id = fields.Many2one('res.partner', "Customer", required=True, domain="[('customer', '=', True)]")
     assign_date = fields.Date(string="Credit Date", _defaults=lambda *a: time.strftime('%Y-%m-%d'))
     value = fields.Float(string='Credit Limit', default=_default_credit_limit_and_days)
     day_num = fields.Integer(string='Credit Days', )
+
+    @api.constrains('value', 'day_num')
+    def _check_value(self):
+        for lim in self:
+            if lim.value <= 0 or lim.day_num <= 0:
+                raise Warning("Limit or Days never take zero or negative value!")
+
+
 
     state = fields.Selection([
         ('draft', 'Draft'),
@@ -203,3 +214,10 @@ class res_partner_credit_limit(models.Model):
     def check_credit_days(self):
         if self.day_num <= 0.00:
             raise ValidationError('Days can not be zero or negative')
+
+    @api.multi
+    def unlink(self):
+        for limit in self:
+            if limit.state != 'draft':
+                raise UserError(_('You cannot delete credit limit which is not draft state!'))
+        return super(res_partner_credit_limit, self).unlink()

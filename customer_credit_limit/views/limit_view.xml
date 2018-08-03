@@ -24,7 +24,7 @@
             <field name="arch" type="xml">
                 <tree string="Credit Limit">
                     <field name="name"/>
-                    <!-- <field name="credit_limit"/>-->
+                     <field name="description"/>
                     <field name="approve_date"/>
                     <field name="state"/>
                 </tree>
@@ -68,12 +68,11 @@
                     <sheet>
                         <h1>
                             <field name="name"/>
+                            <group>
+                                <field name="description"/>
+                            </group>
                         </h1>
                         <group>
-                            <group>
-                                <field name="credit_limit"/>
-                                <field name="days"/>
-                            </group>
                             <group>
                                 <field name="approve_date"/>
                             </group>

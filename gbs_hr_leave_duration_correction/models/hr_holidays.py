@@ -34,19 +34,20 @@ class HRHolidays(models.Model):
 
     @api.model
     def create(self, values):
+        if (values['number_of_days_temp'] != 0.5):
+            if (values.get('type') == 'remove'
+                and values.get('date_from') is not False
+                and values.get('date_to') is not False):
 
-        if (values.get('type') == 'remove'
-            and values.get('date_from') is not False
-            and values.get('date_to') is not False):
-
-            date_from = values.get('date_from')
-            date_to = values.get('date_to')
-            d1 = datetime.strptime(str(date_from), "%Y-%m-%d")
-            d2 = datetime.strptime(str(date_to), "%Y-%m-%d")
-            duration = (d2 - d1).days + 1
-            values['number_of_days_temp'] = duration
-
-        return super(HRHolidays, self).create(values)
+                date_from = values.get('date_from')
+                date_to = values.get('date_to')
+                d1 = fields.Datetime.from_string(date_from)
+                d2 = fields.Datetime.from_string(date_to)
+                duration = (d2 - d1).days + 1
+                values['number_of_days_temp'] = duration
+            return super(HRHolidays, self).create(values)
+        else:
+            pass
 
     @api.multi
     def write(self, values):
