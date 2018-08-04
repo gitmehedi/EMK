@@ -97,6 +97,7 @@ class DeliverySchedules(models.Model):
 
     @api.multi
     def generate_schedule_letter(self):
+
         self.ensure_one()
         ir_model_data = self.env['ir.model.data']
         try:
