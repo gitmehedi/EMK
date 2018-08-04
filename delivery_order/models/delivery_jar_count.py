@@ -12,6 +12,7 @@ class DeliveryJarCount(models.Model):
     challan_id = fields.Many2one('stock.picking', string='Challan Id')
     uom_id = fields.Many2one('product.uom', string='UoM')
     jar_count = fields.Integer(string='# of Jar')
+    packing_mode_id = fields.Many2one('product.packaging.mode', string='Packaging Mode')
     jar_type = fields.Char(string='Jar Type')
 
 

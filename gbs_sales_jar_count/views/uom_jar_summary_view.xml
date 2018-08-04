@@ -52,11 +52,11 @@
                   sequence="12"
                   action="uom_jar_summary_action"/>
 
-        <menuitem id="uom_jar_summary_submenu"
-                  name="Jar Summary"
-                  parent="uom_jar_summary_menu"
-                  groups="account.group_account_user,gbs_application_group.group_head_account,gbs_application_group.group_cxo"
-                  action="uom_jar_summary_action"/>
+        <!--<menuitem id="uom_jar_summary_submenu"-->
+                  <!--name="Jar Summary"-->
+                  <!--parent="uom_jar_summary_menu"-->
+                  <!--groups="account.group_account_user,gbs_application_group.group_head_account,gbs_application_group.group_cxo"-->
+                  <!--action="uom_jar_summary_action"/>-->
 
 
     </data>
