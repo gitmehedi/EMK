@@ -60,15 +60,17 @@ class DeliveryScheduleLine(models.Model):
     @api.onchange('partner_id')
     def onchange_partner_id(self):
         for ds in self:
+            ds.pending_do = []
+            ds.product_id = []
+            do_id_list = []
             if ds.partner_id:
-                do_objs = self.env['delivery.order'].search([('parent_id','=',ds.partner_id.id),('state','=','approved')])
+                do_objs = self.env['delivery.order'].sudo().search([('parent_id','=',ds.partner_id.id),('state','=','approved')])
                 if do_objs:
                     for do_obj in do_objs:
-                        do_id_list = []
                         do_line_list =  do_obj.line_ids.filtered(lambda x: x.quantity > x.qty_delivered)
                         if do_line_list:
                             do_id_list.append(do_obj.id)
-                        return {'domain': {'pending_do': [('id', 'in', do_id_list)]}}
+                return {'domain': {'pending_do': [('id', 'in', do_id_list)]}}
 
     @api.onchange('pending_do')
     def onchange_pending_do(self):
@@ -97,3 +99,8 @@ class DeliveryScheduleLine(models.Model):
     @api.multi
     def action_approve(self):
         self.write({'state': 'done',})
+
+    @api.constrains('scheduled_qty')
+    def _check_scheduled_qty(self):
+        if self.scheduled_qty > self.do_qty:
+            raise Warning('Schedule date can not bigger then Delivery Quantity!')

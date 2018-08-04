@@ -9,12 +9,13 @@ class ProformaInvoice(models.Model):
     _order = 'id DESC'
     _rec_name = 'name'
 
-    @api.depends('line_ids.tax', 'line_ids.price_subtotal', 'line_ids.quantity')
+    @api.depends('line_ids.tax', 'line_ids.price_subtotal', 'line_ids.quantity' ,'freight_charge')
     def _amount_all(self):
         for pi in self:
-            amount_untaxed = amount_tax = 0.0
+            amount_subtotal = amount_untaxed = amount_tax = 0.0
             for line in pi.line_ids:
-                amount_untaxed += line.price_subtotal
+                amount_subtotal += line.price_subtotal
+                amount_untaxed += line.price_unit
                 # FORWARDPORT UP TO 10.0
                 if pi.beneficiary_id.tax_calculation_rounding_method == 'round_globally':
                     taxes = line.tax.compute_all(line.price_unit, pi.currency_id, line.quantity,
@@ -23,10 +24,10 @@ class ProformaInvoice(models.Model):
                 else:
                     amount_tax += line.price_tax
 
-                pi.sub_total = amount_untaxed
+                pi.sub_total = amount_subtotal
                 pi.untaxaed_amount= amount_untaxed
                 pi.taxed_amount= amount_tax
-                pi.total= amount_untaxed + amount_tax
+                pi.total= amount_untaxed + amount_tax + pi.freight_charge
 
 
     name = fields.Char(string='Name', index=True, readonly=True, default="/")
@@ -35,8 +36,6 @@ class ProformaInvoice(models.Model):
     invoice_date = fields.Date('Invoice Date', readonly=True, required=1, states={'draft': [('readonly', False)]})
     advising_bank_id = fields.Many2one('res.bank', string='Advising Bank', required=True, readonly=True,
                                        states={'draft': [('readonly', False)]})
-    currency_id = fields.Many2one('res.currency', string='Currency', readonly=True, required=True,
-                                  states={'draft': [('readonly', False)]}, track_visibility='onchange')
 
     beneficiary_id = fields.Many2one('res.company', string='Beneficiary', required=True, readonly=True,
                                      states={'draft': [('readonly', False)]})
@@ -50,7 +49,7 @@ class ProformaInvoice(models.Model):
 
     """ Shipping Address"""
     ship_freight_type = fields.Char(string='Freight Type', readonly=True, states={'draft': [('readonly', False)]})
-    ship_exp_date = fields.Char(string='Exp. Shipping Date', readonly=True, states={'draft': [('readonly', False)]})
+    ship_exp_date = fields.Date(string='Exp. Shipping Date', readonly=True, states={'draft': [('readonly', False)]})
     ship_exp_good_weight = fields.Char(string='Exp. Goods Weight', readonly=True,
                                        states={'draft': [('readonly', False)]})
     ship_exp_cubic_weight = fields.Char(string='Exp. Cubic Weight', readonly=True,
@@ -96,27 +95,27 @@ class ProformaInvoice(models.Model):
                                 states={'draft': [('readonly', False)]}
                                 , required=True)
 
+    def _get_order_type(self):
+        return self.env['sale.order.type'].search([('sale_order_type','=','lc_sales')], limit=1)
+
+    type_id = fields.Many2one(comodel_name='sale.order.type', string='Type', default=_get_order_type, readonly=True,
+                              track_visibility='onchange')
+    currency_id = fields.Many2one(comodel_name='res.currency',related='type_id.currency_id', store=True,
+                                  string='Currency',readonly=True,track_visibility='onchange')
     credit_sales_or_lc = fields.Selection([
         ('cash', 'Cash'),
         ('credit_sales', 'Credit'),
         ('lc_sales', 'L/C'),
-    ], string='Sales Type', readonly=True,
-        states={'draft': [('readonly', False)]}, required=True)
-
-    def _get_order_type(self):
-        return self.env['sale.order.type'].search([], limit=1)
-
-    type_id = fields.Many2one(comodel_name='sale.order.type', string='Type', default=_get_order_type, readonly=True,
-                              states={'draft': [('readonly', False)]}, track_visibility='onchange')
+    ], string='Sales Type', readonly=True, default='lc_sales')
 
     """On Change fucn"""
 
-    @api.onchange('type_id')
-    def onchange_type(self):
-        sale_type_pool = self.env['sale.order.type'].search([('id', '=', self.type_id.id)])
-        if self.type_id:
-            self.credit_sales_or_lc = sale_type_pool.sale_order_type
-            self.currency_id = sale_type_pool.currency_id.id
+    # @api.onchange('type_id')
+    # def onchange_type(self):
+    #     sale_type_pool = self.env['sale.order.type'].search([('id', '=', self.type_id.id)])
+    #     if self.type_id:
+    #         self.credit_sales_or_lc = sale_type_pool.sale_order_type
+    #         self.currency_id = sale_type_pool.currency_id.id
 
     @api.multi
     @api.onchange('currency_id')
@@ -203,9 +202,9 @@ class ProformaInvoice(models.Model):
     def onchange_freight_charge(self):
         if self.freight_charge < 0:
             raise UserError('Freight Charge can not be Negative')
-
-        if self.freight_charge:
-            self.total = self.total + self.freight_charge
+        #
+        # if self.freight_charge:
+        #     self.total = self.total + self.freight_charge
 
     @api.onchange('terms_id')
     def onchange_terms_id(self):
@@ -280,9 +279,8 @@ class ProformaInvoiceLine(models.Model):
     """ Relational field"""
     pi_id = fields.Many2one('proforma.invoice', ondelete='cascade')
 
-
-    @api.onchange('quantity','price_unit')
-    def onchange_quantity(self):
+    @api.constrains('quantity')
+    def check_quantity(self):
         if self.quantity < 0:
             raise UserError('Quantity can not be Negative')
 
@@ -304,28 +302,29 @@ class ProformaInvoiceLine(models.Model):
 
     @api.depends('product_id')
     def _get_product_sales_price(self):
-        if not self.uom_id:
-            self.uom_id = self.product_id.uom_id
-        price_change_pool = self.env['product.sale.history.line'].search(
-            [('product_id', '=', self.product_id.id),
-             ('currency_id', '=', self.pi_id.currency_id.id),
-             ('product_package_mode', '=', self.pi_id.pack_type.id),
-             ('uom_id', '=', self.uom_id.id)])
-        if not price_change_pool:
+        for line in self:
+            if not line.uom_id:
+                line.uom_id = line.product_id.uom_id
             price_change_pool = self.env['product.sale.history.line'].search(
-                [('product_id', '=', self.product_id.id),
-                 ('currency_id', '=', self.pi_id.currency_id.id),
-                 ('product_package_mode', '=', self.pi_id.pack_type.id),
-                 ('category_id', '=', self.uom_id.category_id.id)])
-            if price_change_pool:
-                if not price_change_pool.uom_id.uom_type == "reference":
-                    uom_base_price = price_change_pool.new_price / price_change_pool.uom_id.factor_inv
-                else:
-                    uom_base_price = price_change_pool.new_price
+                [('product_id', '=', line.product_id.id),
+                 ('currency_id', '=', line.pi_id.currency_id.id),
+                 ('product_package_mode', '=', line.pi_id.pack_type.id),
+                 ('uom_id', '=', line.uom_id.id)])
+            if not price_change_pool:
+                price_change_pool = self.env['product.sale.history.line'].search(
+                    [('product_id', '=', line.product_id.id),
+                     ('currency_id', '=', line.pi_id.currency_id.id),
+                     ('product_package_mode', '=', line.pi_id.pack_type.id),
+                     ('category_id', '=', line.uom_id.category_id.id)])
+                if price_change_pool:
+                    if not price_change_pool.uom_id.uom_type == "reference":
+                        uom_base_price = price_change_pool.new_price / price_change_pool.uom_id.factor_inv
+                    else:
+                        uom_base_price = price_change_pool.new_price
 
-                if not self.uom_id.uom_type == "reference":
-                    self.price_unit = uom_base_price * self.uom_id.factor_inv
-                else:
-                    self.price_unit = uom_base_price
-        else:
-            self.price_unit = price_change_pool.new_price
+                    if not line.uom_id.uom_type == "reference":
+                        line.price_unit = uom_base_price * self.uom_id.factor_inv
+                    else:
+                        line.price_unit = uom_base_price
+            else:
+                line.price_unit = price_change_pool.new_price
