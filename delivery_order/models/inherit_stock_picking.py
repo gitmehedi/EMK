@@ -132,9 +132,6 @@ class InheritStockPicking(models.Model):
         # vals['uom_id'] =
         # vals['jar_count'] = number_of_jar
         # vals['jar_type']
-
-
-
         return res
 
 
