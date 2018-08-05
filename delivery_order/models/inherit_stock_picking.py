@@ -2,6 +2,8 @@ from odoo import models, fields, api
 from odoo.addons.procurement.models import procurement
 from odoo.tools.float_utils import float_round
 
+import math
+
 
 class InheritStockPicking(models.Model):
     _inherit = 'stock.picking'
@@ -122,16 +124,8 @@ class InheritStockPicking(models.Model):
     def do_new_transfer(self):
         res = super(InheritStockPicking, self).do_new_transfer()
 
-        number_of_jar = self._get_number_of_jar()
+        self._get_number_of_jar()
 
-        # delivery_jar_count_obj = self.env['delivery.jar.count']
-        # vals = {}
-        # vals['partner_id'] =
-        # vals['product_id'] =
-        # vals['challan_id'] =
-        # vals['uom_id'] =
-        # vals['jar_count'] = number_of_jar
-        # vals['jar_type']
         return res
 
 
@@ -139,11 +133,21 @@ class InheritStockPicking(models.Model):
 
         if self.pack_type.uom_id and not self.pack_type.is_jar_bill_included:
             for picking_line in self.pack_operation_product_ids:
-                picking_line_qty = picking_line.product_qty
-                per_uom_conversion = picking_line.product_uom_id.factor_inv
+                jar_count = (picking_line.qty_done * picking_line.product_uom_id.factor_inv) / self.pack_type.uom_id.factor_inv
 
-                jar_count = (picking_line_qty * per_uom_conversion) / self.pack_type.uom_id.factor_inv
-                print 'number of Jar needs: ', jar_count
+                delivery_jar_count_obj = self.env['delivery.jar.count']
+
+                vals = {}
+                vals['partner_id'] = self.partner_id.id
+                vals['product_id'] = picking_line.product_id.id
+                vals['challan_id'] = self.id
+                vals['uom_id'] = picking_line.product_uom_id.id
+                vals['jar_count'] = math.ceil(jar_count)
+                vals['jar_type'] = self.pack_type.display_name
+
+                delivery_jar_count_obj.create(vals)
+
+
 
 
     @api.multi

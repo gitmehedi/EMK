@@ -234,7 +234,7 @@
                   action="delivery_order_action_account_user"/>
 
         <menuitem id="delivery_order_submenu_head_account"
-                  name="Head of Sale Approval"
+                  name="Head of Account Approval"
                   parent="delivery_authorization_mainmenu"
                   sequence="2"
                   groups="gbs_application_group.group_head_account"

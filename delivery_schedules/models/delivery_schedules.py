@@ -1,7 +1,8 @@
+import time, datetime
+
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError, ValidationError
 
-import time, datetime
 
 
 class DeliverySchedules(models.Model):
@@ -11,11 +12,10 @@ class DeliverySchedules(models.Model):
     _order = "id DESC"
 
     name = fields.Char(string='Name', index=True, readonly=True)
-    requested_date = fields.Date('Date', default=datetime.date.today(), readonly=True)
+    requested_date = fields.Date('Date', default=fields.Datetime.now)
     sequence_id = fields.Char('Sequence', readonly=True)
     requested_by = fields.Many2one('res.users', string='Requested By', readonly=True,
                                    default=lambda self: self.env.user)
-
 
     ## Sales Person & OP Unit
     #####################################
