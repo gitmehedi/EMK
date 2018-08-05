@@ -76,8 +76,8 @@ $(function () {
 
     $("#email").change(function(){
         var email = $(this).val();
-        url="http://192.168.1.30:9000/page/checkemail"
-        data={'email': email}
+        var url=config.baseurl+"/page/checkemail";
+        var data={'email': email}
         callAjax(url,data,'GET',validateEmail,this)
     })
     function validateEmail(responseData,self){

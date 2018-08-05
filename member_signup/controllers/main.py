@@ -174,12 +174,11 @@ class MemberApplicationContoller(Home):
         return request.render('member_signup.signup', qcontext)
 
     def get_signup_context(self):
-        """ Shared helper returning the rendering context for signup and reset password """
         qcontext = request.params.copy()
         qcontext.update(self.get_signup_config())
+        qcontext['baseurl'] = request.env['ir.config_parameter'].sudo().get_param('web.base.url')
         if qcontext.get('token'):
             try:
-                # retrieve the user info (name, login or email) corresponding to a signup token
                 token_infos = request.env['res.partner'].sudo().signup_retrieve_info(qcontext.get('token'))
                 for k, v in token_infos.items():
                     qcontext.setdefault(k, v)
