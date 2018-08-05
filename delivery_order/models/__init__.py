@@ -10,3 +10,4 @@ import delivery_order_line
 import cash_payment_line_layer
 import cheque_payment_line_layer
 import inherit_stock_picking
+import delivery_jar_count

@@ -1,0 +1,5 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+
+access_delivery_user_jar_rcv,access_delivery_user_jar_rcv,model_jar_received,stock.delivery_user,1,1,1,0
+access_delivery_user_jar_summary_anayls,access_delivery_user_jar_summary_anayls,model_jar_summary_analytic_report,stock.delivery_user,1,1,1,0
+access_jar_sum_del_user,access_jar_sum_del_user,model_uom_jar_summary,stock.delivery_user,1,0,0,0

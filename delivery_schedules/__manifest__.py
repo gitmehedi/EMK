@@ -7,16 +7,20 @@
     'depends': [
         'product_sales_pricelist',
         'sales_team',
+        'delivery_order',
+        'stock',
+        'ir_sequence_operating_unit',
     ],
 
     'data': [
         'security/security.xml',
         'security/ir.model.access.csv',
+        'security/ir_rule.xml',
         'views/delivery_schedules_view.xml',
         'reports/delivery_se_report.xml',
         'reports/delivery_se_report_templates.xml',
-        'views/delivery_schedules_date_wise_view.xml',
-        'wizards/delivery_schedule_date_view.xml',
+        # 'views/delivery_schedules_date_wise_view.xml',
+        # 'wizards/delivery_schedule_date_view.xml',
 
     ],
 

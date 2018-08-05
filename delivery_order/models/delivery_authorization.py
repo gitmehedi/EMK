@@ -15,12 +15,11 @@ class DeliveryAuthorization(models.Model):
     def _get_sale_order_currency(self):
         self.currency_id = self.sale_order_id.currency_id
 
-    currency_id = fields.Many2one('res.currency', string='Currency', compute='_get_sale_order_currency', readonly=True,
-                                  states={'draft': [('readonly', False)]})
+    currency_id = fields.Many2one('res.currency', string='Currency', compute='_get_sale_order_currency', readonly=True)
 
-    so_date = fields.Datetime('Order Date', readonly=True, states={'draft': [('readonly', False)]})
+    so_date = fields.Datetime('Order Date', readonly=True)
     sequence_id = fields.Char('Sequence', readonly=True)
-    deli_address = fields.Char('Delivery Address', readonly=True, states={'draft': [('readonly', False)]})
+    deli_address = fields.Char('Delivery Address', readonly=True)
 
     parent_id = fields.Many2one('res.partner', 'Customer', ondelete='cascade', readonly=True,
                                 related='sale_order_id.partner_id', track_visibility='onchange')
@@ -55,7 +54,7 @@ class DeliveryAuthorization(models.Model):
         ('cash', 'Cash'),
         ('credit_sales', 'Credit'),
         ('lc_sales', 'L/C'),
-    ], string='Sales Type', readonly=True, states={'draft': [('readonly', False)]}, track_visibility='onchange')
+    ], string='Sales Type', readonly=True,track_visibility='onchange')
 
     state = fields.Selection([
         ('draft', "Submit"),
@@ -102,7 +101,7 @@ class DeliveryAuthorization(models.Model):
                                     string='Sale Order',
                                     readonly=True,
                                     domain=[('da_btn_show_hide', '=', False), ('state', '=', 'done')],
-                                    states={'draft': [('readonly', False)]}, track_visibility='onchange')
+                                    track_visibility='onchange')
 
     @api.multi
     def _compute_do_button_visibility(self):
