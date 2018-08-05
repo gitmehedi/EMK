@@ -9,6 +9,7 @@
         'sales_team',
         'delivery_order',
         'stock',
+        'ir_sequence_operating_unit',
     ],
 
     'data': [

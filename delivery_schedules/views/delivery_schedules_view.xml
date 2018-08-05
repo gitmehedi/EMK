@@ -111,13 +111,13 @@
             <field name="model">delivery.schedules.line</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree string="Delivery Schedules">
-                    <field name="partner_id"/>
-                    <field name="pending_do"/>
+                <tree string="Delivery Schedules" editable="bottom" create="false">
+                    <field name="partner_id" readonly="True"/>
+                    <field name="pending_do" readonly="True"/>
                     <field name="do_qty"/>
                     <field name="undelivered_qty"/>
                     <field name="scheduled_qty"/>
-                    <field name="state"/>
+                    <field name="state" readonly="True"/>
                     <button name="action_approve" string="Approve" type="object"/>
                 </tree>
             </field>
@@ -148,7 +148,7 @@
         <menuitem id="main_menu_delivery_schedules_line"
                   name="Delivery"
                   parent="stock.menu_stock_root"
-                  sequence="1"
+                  sequence="2"
                   groups="stock.delivery_user"/>
 
         <menuitem id="menu_delivery_schedules_line"

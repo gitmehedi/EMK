@@ -40,11 +40,11 @@
                   <!--groups="gbs_application_group.group_head_sale" sequence="1"-->
         <!--/>-->
 
-        <menuitem name="Head Of Account Approver"
-                  id="menu_sale_hoa_approver"
-                  parent="sale.menu_sale_quotations"
-                  action="action_so_hoa_approver"
-                  groups="gbs_application_group.group_head_account" sequence="1"
+        <!--<menuitem name="Head Of Account Approver"-->
+                  <!--id="menu_sale_hoa_approver"-->
+                  <!--parent="sale.menu_sale_quotations"-->
+                  <!--action="action_so_hoa_approver"-->
+                  <!--groups="gbs_application_group.group_head_account" sequence="1"-->
         />
         <!---->
 

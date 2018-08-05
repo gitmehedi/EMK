@@ -34,6 +34,7 @@
         'board',
         'web_access_rule_button_extend',
         'delivery_jar_counting',
+        'customer_area',
     ],
 
     'data': [ ],

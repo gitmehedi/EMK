@@ -14,8 +14,10 @@
 
     'data': [
         'reports/process_delivery_report_view.xml',
+        'reports/process_deli_undeli_report_view.xml',
         'reports/process_monthly_delivery_report_view.xml',
         'wizards/daily_delivery_report_wizard_view.xml',
+        'wizards/daily_deli_undeli_report_wizard_view.xml',
         'wizards/monthly_delivery_report_wizard_view.xml',
     ],
 
