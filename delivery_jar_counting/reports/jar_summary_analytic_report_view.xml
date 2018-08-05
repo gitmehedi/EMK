@@ -6,7 +6,7 @@
             <field name="model">jar.summary.analytic.report</field>
             <field name="arch" type="xml">
                 <pivot string="Jar Summary Analysis" disable_linking="True">
-                    <field name="jar_type" type="col"/>
+                    <field name="packing_name" type="col"/>
                     <!--<field name="product_id" type="col"/>-->
                 </pivot>
             </field>
@@ -17,14 +17,15 @@
             <field name="model">jar.summary.analytic.report</field>
             <field name="arch" type="xml">
                 <graph string="Jar Summary Analysis">
-                    <field name="product_id"/>
-                    <!--<field name="jar_type"/>-->
-                    <field name="uom_id"/>
-                    <field name="challan_id"/>
+                    <!--<field name="product_id"/>-->
+                    <field name="packing_name"/>
+                    <!--<field name="uom_id"/>-->
+                    <!--<field name="challan_id"/>-->
                     <field name="partner_id"/>
-                    <field name="jar_count"/>
+                    <field name="due_jar"/>
                     <!--<field name="due_jar"/>-->
                     <field name="jar_received"/>
+                    <field name="date"/>
                 </graph>
             </field>
         </record>
@@ -43,15 +44,15 @@
             <field name="model">jar.summary.analytic.report</field>
             <field name="arch" type="xml">
                 <search string="Jar Summary Analysis">
-                    <field name="product_id"/>
-                    <field name="jar_type"/>
-                    <field name="uom_id"/>
-                    <field name="challan_id"/>
+                    <!--<field name="product_id"/>-->
+                    <field name="packing_name"/>
+                    <!--<field name="uom_id"/>-->
+                    <!--<field name="challan_id"/>-->
                     <field name="partner_id"/>
-                    <field name="jar_count"/>
+                    <field name="due_jar"/>
                     <!--<field name="due_jar"/>-->
                     <field name="jar_received"/>
-
+                    <field name="date"/>
                     <group expand="1" string="Group By">
                         <filter string="Customer" name="partner_id"
                                 context="{'group_by':'partner_id','residual_visible':True}"/>
