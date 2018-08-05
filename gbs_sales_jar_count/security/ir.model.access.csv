@@ -1,9 +1,0 @@
-id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-access_jar_summary_acc_exe,access_jar_summary_acc_exe,model_uom_jar_summary,account.group_account_user,1,1,1,0
-access_jar_summary_hoa,access_jar_summary_hoa,model_uom_jar_summary,gbs_application_group.group_head_account,1,1,1,0
-
-access_jar_recv_acc_exe,access_jar_recv_acc_exe,model_uom_jar_received,account.group_account_user,1,1,1,0
-access_jar_recv_hoa,access_jar_recv_hoa,model_uom_jar_received,gbs_application_group.group_head_account,1,1,1,0
-
-access_jar_report_exe,access_jar_report_exe,model_jar_summary_analytic_report,account.group_account_user,1,1,1,0
-access_jar_report_hoa,access_jar_report_hoa,model_jar_summary_analytic_report,gbs_application_group.group_head_account,1,1,1,0

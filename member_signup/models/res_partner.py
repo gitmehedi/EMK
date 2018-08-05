@@ -29,7 +29,8 @@ def now(**kwargs):
 
 
 class ResPartner(models.Model):
-    _inherit = 'res.partner'
+    _name = 'res.partner'
+    _inherit = ['res.partner', 'mail.thread', 'ir.needaction_mixin']
 
     member_sequence = fields.Char()
 
@@ -66,6 +67,19 @@ class ResPartner(models.Model):
     state = fields.Selection(
         [('application', 'Application'), ('invoice', 'Invoiced'),
          ('member', 'Membership'), ('reject', 'Reject')], default='application')
+
+    @api.model
+    def _needaction_domain_get(self):
+        context = self.env.context
+        if context.get('menu_count') == 'application':
+            return [('state', 'in', ['application'])]
+        elif context.get('menu_count') == 'invoice':
+            return [('state', 'in', ['invoice'])]
+        elif context.get('menu_count') == 'member':
+            return [('state', 'in', ['member'])]
+        elif context.get('menu_count') == 'reject':
+            return [('state', 'in', ['reject'])]
+
 
     @api.onchange('birthdate')
     def validate_birthdate(self):
@@ -213,13 +227,7 @@ class ResPartner(models.Model):
                 user = self.env['res.users'].search([('id', '=', self.user_ids.id)])
                 template.with_context({'lang': user.lang}).send_mail(user.id, force_send=True, raise_exception=True)
 
-    @api.model
-    def _needaction_domain_get(self):
-        return [('state', '=', 'application')]
-
     def mailsend(self, vals):
-        vals['template'] = 'member_signup.member_application_email_template'
-
         template = False
         try:
             template = self.env.ref(vals['template'], raise_if_not_found=False)
@@ -230,24 +238,44 @@ class ResPartner(models.Model):
         obj = self.env['res.users'].search([('email', '=', vals['email'])])
 
         template.write({
-            'email_cc': "nopaws_ice_iu@yahoo.com",
-            'attachment_ids': "nopaws_ice_iu@yahoo.com",
+            'email_cc': vals['email_cc'],
+            'attachment_ids': vals['attachment_ids'],
         })
         base_url = self.env['ir.config_parameter'].get_param('web.base.url')
+        context = {
+            'base_url': base_url,
+        }
+
+        for key, val in vals['context'].iteritems():
+            context[key] = val
 
         for user in obj:
+            context['lang'] = user.lang
             if not user.email:
                 raise UserError(_("Cannot send email: user %s has no email address.") % user.name)
-            template.with_context({'lang': user.lang, 'password': vals['password'], 'baseurl': base_url}).send_mail(
-                user.id,
-                force_send=True,
-                raise_exception=True)
+            template.with_context(context).send_mail(user.id, force_send=True, raise_exception=True)
             _logger.info("Member Application confirmation email sent for user <%s> to <%s>", user.login, user.email)
 
     @api.one
     def member_reject(self):
         if 'application' in self.state:
+            email_cc = ''
+            for gp in self.env['res.groups'].search([('name', '=', 'Manager')]):
+                if gp.category_id.name == 'Membership':
+                    email_cc = email_cc + ", " + gp.users.email
+
+            vals = {
+                'template': 'member_signup.member_application_rejection_email_template',
+                'email': self.email,
+                'email_to': self.email,
+                'email_cc': email_cc,
+                'attachment_ids': 'member_signup.member_application_rejection_email_template',
+                'context': {},
+            }
+            self.mailsend(vals)
             self.state = 'reject'
+            if self.user_ids.active:
+                self.user_ids.active = False
 
     @api.multi
     def signup_cancel(self):
@@ -325,3 +353,11 @@ class ResPartner(models.Model):
             if member.ids:
                 return member.name_get()
         return super(ResPartner, self).name_search(name=name, args=args, operator=operator, limit=limit)
+
+    @api.multi
+    def mailcc(self):
+        email_cc = ''
+        for gp in self.env['res.groups'].search([('name', '=', 'Manager')]):
+            if gp.category_id.name == 'Membership':
+                email_cc = email_cc + ", " + gp.users.email
+        return email_cc
