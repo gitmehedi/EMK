@@ -14,6 +14,7 @@ class PartnerWiseJarSummary(models.AbstractModel):
 
 
 
+
         if data['partner_id']:
 
             uom_summary = self.env['uom.jar.summary'].search([('partner_id', '=', data['partner_id'])])
