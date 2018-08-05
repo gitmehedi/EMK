@@ -8,12 +8,12 @@
                 <form>
                     <sheet>
                         <group>
-                            <field name="partner_id"/>
+                            <field name="date"/>
                         </group>
                     </sheet>
 
                     <footer>
-                        <button name="send_partner_id" string="Print" type="object" class="oe_highlight"/>
+                        <button name="send_date_val" string="Print" type="object" class="oe_highlight"/>
                         or
                         <button string="Cancel" class="oe_link" special="cancel"/>
                     </footer>
@@ -22,7 +22,7 @@
         </record>
 
         <record id="action_jar_summary_report" model="ir.actions.act_window">
-            <field name="name">JAR Summary</field>
+            <field name="name">Jar Summary By Date</field>
             <field name="res_model">partner.selection.report.wizard</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
@@ -31,7 +31,7 @@
         </record>
 
 
-        <menuitem name="Jar Summary Report"
+        <menuitem name="Jar Summary By Date"
                   action="action_jar_summary_report"
                   id="jar_sum_report_id"
                   parent="uom_jar_summary_menu" sequence="20"/>

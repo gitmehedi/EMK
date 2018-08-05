@@ -9,27 +9,38 @@ class JarSummaryAnalyticReport(models.Model):
     _auto = False
     _rec_name = 'partner_id'
 
-    #product_id = fields.Many2one('product.product', string='Product')
-    #jar_type = fields.Char(string='Jar Type')
-    #uom_id = fields.Many2one('product.uom', string='UoM')
-    #challan_id = fields.Many2one('stock.picking', string='Challan Id')
     partner_id = fields.Many2one('res.partner', string='Customer', domain=[('customer', '=', True)], required=True)
-    due_jar = fields.Integer(string='# of Due Jar')
-    # due_jar = fields.Integer(string='Due Jar till today', readonly=False)
-    jar_received = fields.Integer(string='# Jar Received')
-    packing_name = fields.Char(string='Packing Name')
-    date = fields.Date('Date')
-
-    # due_jar = fields.Integer(string='Due Jar till today', readonly=False, track_visibility='onchange')
-    # jar_received = fields.Integer(string='# Jar Received', )
+    jar_type = fields.Char(string='Jar Type')
+    qty1 = fields.Integer(string='# of Due Jar')
+    qty2 = fields.Integer(string='# Jar Received')
 
 
     @api.model_cr
     def init(self):
         tools.drop_view_if_exists(self.env.cr, self._table)
         self.env.cr.execute("""CREATE or REPLACE VIEW %s as (
-          SELECT id,DATE(create_date),due_jar,jar_received,partner_id,packing_mode,packing_name
-              FROM jar_received 
-              WHERE state = 'confirmed'             
-               
-               )""" % (self._table))
+                    SELECT
+                      t1.id,
+                      t1.partner_id AS partner_id,
+                      t1.jar_type AS jar_type,
+                      t1.qty1 AS qty1,
+                      t2.qty2 AS qty2
+                    FROM (SELECT
+                      id,
+                      partner_id,
+                      jar_type,
+                      SUM(jar_count) AS qty1
+                    FROM delivery_jar_count
+                    GROUP BY partner_id,jar_type,id) t1
+                    LEFT JOIN (SELECT
+                      id,
+                      partner_id,
+                      jar_type,
+                      SUM(jar_received) AS qty2
+                    FROM jar_received
+                    GROUP BY partner_id,
+                             jar_type,
+                             id) t2
+                      ON t1.partner_id = t2.partner_id
+                      AND t1.jar_type = t2.jar_type)""" % (self._table))
+
