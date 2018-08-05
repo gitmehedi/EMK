@@ -404,6 +404,11 @@
                           method="post"
                           t-if="not message" data-toggle="validator2" id="memberapp">
                         <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                        <script type="text/javascript">
+                            var config = {
+                            baseurl: "<t t-esc="baseurl"/>",
+                            };
+                        </script>
                         <input type="hidden" name="redirect" t-att-value="redirect"/>
                         <input type="hidden" name="token" t-att-value="token"/>
 
