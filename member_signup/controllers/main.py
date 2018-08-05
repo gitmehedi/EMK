@@ -96,7 +96,15 @@ class MemberApplicationContoller(Home):
             try:
                 auth_data = self.create_applicant(qcontext)
                 if auth_data:
-                    request.env['res.partner'].sudo().mailsend(auth_data)
+                    vals = {
+                        'template': 'member_signup.member_application_email_template',
+                        'email': auth_data['email'],
+                        'email_cc': 'nopaws_ice_iu@yahoo.com',
+                        'password': auth_data['password'],
+                        'attachment_ids': 'member_signup.member_application_rejection_email_template',
+                        'context': auth_data,
+                    }
+                    request.env['res.partner'].sudo().mailsend(vals)
                     return request.render('member_signup.success', {'name': auth_data['name']})
             except (SignupError, AssertionError), e:
                 if request.env["res.users"].sudo().search([("login", "=", qcontext.get("email"))]):
