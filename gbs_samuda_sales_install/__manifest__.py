@@ -34,6 +34,7 @@
         'stock_warehouse_extend',
         'board',
         'web_access_rule_button_extend',
+        'customer_area',
     ],
 
     'data': [ ],

@@ -50,6 +50,7 @@ class ResPartner(models.Model):
     signature_image = fields.Binary(string='Signature')
     is_applicant = fields.Boolean(default=False)
     info_about_emk = fields.Text(string="How did you learn about the EMK Center?")
+    application_ref = fields.Text(string="Application Ref")
 
     gender = fields.Selection([('male', 'Male'), ('female', 'Female')], default='male', string='Gender')
     usa_work_or_study = fields.Selection([('yes', 'Yes'), ('no', 'No')], default='no',
@@ -211,6 +212,10 @@ class ResPartner(models.Model):
                 })
                 user = self.env['res.users'].search([('id', '=', self.user_ids.id)])
                 template.with_context({'lang': user.lang}).send_mail(user.id, force_send=True, raise_exception=True)
+
+    @api.model
+    def _needaction_domain_get(self):
+        return [('state', '=', 'application')]
 
     def mailsend(self, vals):
         vals['template'] = 'member_signup.member_application_email_template'

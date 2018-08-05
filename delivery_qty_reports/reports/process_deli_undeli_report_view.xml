@@ -2,16 +2,16 @@
 <odoo>
     <data>
         <report
-                id="action_report_daily_delivery_products"
-                string="Daily Delivery Summary Report"
+                id="action_report_daily_deli_undeli"
+                string="Daily Delivery Report"
                 model="stock.picking"
                 report_type="qweb-pdf"
-                file="delivery_qty_reports.report_daily_delivery_products"
-                name="delivery_qty_reports.report_daily_delivery_products"
+                file="delivery_qty_reports.report_daily_deli_undeli"
+                name="delivery_qty_reports.report_daily_deli_undeli"
                 menu="False"/>
 
 
-        <template id="report_daily_delivery_products">
+        <template id="report_daily_deli_undeli">
             <t t-call="report.html_container">
                 <t t-call="custom_report.gbs_internal_layout">
                     <div class="page">
@@ -36,21 +36,24 @@
 												border-bottom: 1px solid #030303;">
 
                                         <th>Customer</th>
-                                        <th>D.O No.</th>
                                         <th>D.O Date</th>
+                                        <th>D.O No.</th>
+                                        <th>D.O Qty</th>
                                         <th>UoM</th>
-                                        <th>D.O Qty.</th>
+                                        <th>Unde Qty (Begening)</th>
                                         <th>Issued D.O</th>
-                                        <th>Delivered Qty.</th>
-                                        <th>Undelivered Qty</th>
+                                        <th>Delivered Qty</th>
+                                        <th>Delivery Challan</th>
+                                        <th>Unde Qty</th>
                                         <th>Category</th>
+                                        <th>Packing</th>
                                     </tr>
                                 </thead>
 
                                 <tbody>
                                     <t t-foreach="do_list" t-as="rec">
                                         <tr>
-                                            <td colspan="10" style="background-color: #b2beb5;">
+                                            <td colspan="12" style="background-color: #b2beb5;">
                                                 <span t-esc="rec_value['name']"/>
                                             </td>
                                         </tr>
@@ -60,17 +63,20 @@
                                                 <td>
                                                     <span t-esc="k['partner_id']"/>
                                                 </td>
+                                                <td>
+                                                    <span t-esc="k['do_date']"/>
+                                                </td>
                                                 <td style="text-align: center;">
                                                     <span t-esc="k['do_no']"/>
                                                 </td>
-                                                <td>
-                                                    <span t-esc="k['do_date']"/>
+                                                <td class="text-right">
+                                                    <span t-esc="'%.2f'%k['do_qty']"/>
                                                 </td>
                                                 <td>
                                                     <span t-esc="k['uom']"/>
                                                 </td>
                                                 <td class="text-right">
-                                                    <span t-esc="'%.2f'%k['do_qty']"/>
+                                                    <span t-esc="'%.2f'%k['begen_un_deli_qty']"/>
                                                 </td>
                                                 <td class="text-right">
                                                     <span t-esc="k['issued_do_today']"/>
@@ -78,26 +84,43 @@
                                                 <td class="text-right">
                                                     <span t-esc="'%.2f'%k['delivered_qty']"/>
                                                 </td>
+                                                <td>
+                                                    <span t-esc="k['vat_challan']"/>
+                                                </td>
                                                 <td class="text-right">
                                                     <span t-esc="'%.2f'%k['un_delivered_qty']"/>
                                                 </td>
-                                                <td style="text-align: center;">
+                                                <td style="text-align: left;">
                                                     <span t-esc="k['product']"/>
+                                                </td>
+                                                <td style="text-align: center;">
+                                                    <span t-esc="k['packing_mode']"/>
                                                 </td>
                                             </tr>
                                         </t>
                                         <tr style="background-color:#ebebe0;
 												border-bottom: 1px solid #030303;">
-                                            <td colspan="4">
+                                            <td colspan="3">
                                                 <b>Total</b>
                                             </td>
-                                            <t t-foreach="rec_value['total']" t-as="total">
-                                                <td class="text-right">
-                                                    <span t-esc="'%.2f'%total_value"/>
-
-                                                </td>
-
-                                            </t>
+                                            <td class="text-right">
+                                                <span t-esc="'%.2f'%rec_value['total']['do_qty']"/>
+                                            </td>
+                                            <td/>
+                                            <td class="text-right">
+                                                <span t-esc="'%.2f'%rec_value['total']['begen_un_deli_qty']"/>
+                                            </td>
+                                            <td class="text-right">
+                                                <span t-esc="'%.2f'%rec_value['total']['issued_do']"/>
+                                            </td>
+                                            <td class="text-right">
+                                                <span t-esc="'%.2f'%rec_value['total']['delivered_qty']"/>
+                                            </td>
+                                            <td/>
+                                            <td class="text-right">
+                                                <span t-esc="'%.2f'%rec_value['total']['un_delivered_qty']"/>
+                                            </td>
+                                            <td colspan="2"/>
                                         </tr>
                                     </t>
                                 </tbody>

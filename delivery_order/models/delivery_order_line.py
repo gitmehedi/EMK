@@ -11,6 +11,7 @@ class DOProductLineLayer(models.Model):
     quantity = fields.Float(string="Delivery Qty", required=True, default=1)
 
     qty_delivered = fields.Float('Delivered', compute='_get_delivered_qty',store = True)
+    date_done = fields.Datetime('Date of Transfer', copy=False, readonly=True, help="Completion Date of Transfer")
 
     """ Relational Fields """
     parent_id = fields.Many2one('delivery.order', ondelete='cascade')
