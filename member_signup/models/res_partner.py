@@ -221,7 +221,7 @@ class ResPartner(models.Model):
                 })
                 template = self.env.ref('member_signup.member_invoice_email_template')
                 template.write({
-                    'email_cc': "nopaws_ice_iu@yahoo.com",
+                    'email_cc': "nopaws_ice_iu@yahoo.com,mahtab.faisal@genweb2.com",
                     'attachment_ids': [(6, 0, attachment.ids)],
                 })
                 user = self.env['res.users'].search([('id', '=', self.user_ids.id)])
