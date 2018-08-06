@@ -174,7 +174,12 @@ class ProcessDeliveryUnDeliveryReport(models.AbstractModel):
     def prepareListForProduct(self,data,product_id):
 
         product = self.env['product.product'].search([('id', '=', product_id)])
-        data[product_id] = {'name': product.product_tmpl_id.name + " (" + product.attribute_value_ids.name + ")",
+
+        attribute = ""
+        if len(product.attribute_value_ids) > 0:
+            attribute = " (" + product.attribute_value_ids.name + ")"
+
+        data[product_id] = {'name': product.product_tmpl_id.name + attribute,
                                    'details': [],
                                    'total': {'do_qty': 0,
                                              'begen_un_deli_qty': 0,
