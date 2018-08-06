@@ -11,6 +11,7 @@ class UomJarSummary(models.Model):
     partner_id = fields.Many2one('res.partner', string='Customer', domain=[('customer', '=', True)], required=True)
     due_jar = fields.Integer(string='Due Jar', readonly=False)
     jar_received = fields.Integer(string='# Jar Received')
+    challan_id = fields.Many2one('stock.picking', string='Challan Id', domain=[('state','=','assigned')])
 
     state = fields.Selection([
         ('draft', "Draft"),

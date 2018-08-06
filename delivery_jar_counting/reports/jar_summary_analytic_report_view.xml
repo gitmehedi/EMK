@@ -6,8 +6,7 @@
             <field name="model">jar.summary.analytic.report</field>
             <field name="arch" type="xml">
                 <pivot string="Jar Summary Analysis" disable_linking="True">
-                    <field name="due_jar" type="row"/>
-                    <field name="jar_received" type="col"/>
+                    <field name="jar_type" type="col"/>
                 </pivot>
             </field>
         </record>
@@ -17,8 +16,9 @@
             <field name="model">jar.summary.analytic.report</field>
             <field name="arch" type="xml">
                 <graph string="Jar Summary Analysis">
-                   <field name="partner_id"/>
-                    <field name="total_jar_taken"/>
+                    <field name="partner_id"/>
+                    <field name="qty1"/>
+                    <field name="qty2"/>
                 </graph>
             </field>
         </record>
@@ -38,16 +38,11 @@
             <field name="arch" type="xml">
                 <search string="Jar Summary Analysis">
                     <field name="partner_id"/>
-                    <field name="total_jar_taken"/>
-                    <field name="jar_received"/>
-                    <field name="uom_id"/>
-                    <field name="jar_received_date"/>
-                    <field name="due_jar"/>
-
+                     <field name="qty1"/>
+                     <field name="qty2"/>
                     <group expand="1" string="Group By">
                         <filter string="Customer" name="partner_id"
                                 context="{'group_by':'partner_id','residual_visible':True}"/>
-                        <filter string="Jar Received Date" context="{'group_by':'jar_received_date'}"/>
                     </group>
                 </search>
             </field>
@@ -79,7 +74,7 @@
 
         <menuitem name="Jar Summary Analysis"
                   action="action_jar_summary_analysis"
-                  groups="account.group_account_user,gbs_application_group.group_head_account"
+                  groups="stock.delivery_user"
                   id="menu_jar_summary_report"
                   parent="uom_jar_summary_menu"
                   sequence="20"/>

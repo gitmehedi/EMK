@@ -1,6 +1,8 @@
 from odoo import models, fields, api
 from odoo.addons.procurement.models import procurement
 from odoo.tools.float_utils import float_round
+import time, datetime
+
 
 import math
 
@@ -143,7 +145,9 @@ class InheritStockPicking(models.Model):
                 vals['challan_id'] = self.id
                 vals['uom_id'] = picking_line.product_uom_id.id
                 vals['jar_count'] = math.ceil(jar_count)
-                vals['jar_type'] = self.pack_type.display_name
+                vals['packing_mode_id'] = self.pack_type.id
+                vals['jar_type'] = self.pack_type.uom_id.display_name.upper().strip()
+                vals['date'] = datetime.datetime.now().date()
 
                 delivery_jar_count_obj.create(vals)
 

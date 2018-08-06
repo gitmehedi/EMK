@@ -12,7 +12,7 @@
                 <table cellspacing="0" cellpadding="0" style="width:600px;border-collapse:collapse;background:inherit;color:inherit">
                     <tbody><tr>
                         <td valign="center" width="200" style="padding:10px 10px 10px 5px;font-size: 12px">
-                            <img src="/logo.png" style="padding: 0px; margin: 0px; height: auto; width: 80px;" alt="${user.company_id.name}">
+                            <img src="${user.company_id.logo_web}" style="padding: 0px; margin: 0px; height: auto; width: 80px;" alt="${user.company_id.name}">
                         </td>
                     </tr></tbody>
                 </table>
@@ -33,6 +33,73 @@
                 <div style="text-align: center; margin-top: 16px;">
                      <a href="${ctx['baseurl']}" style="padding: 5px 10px; font-size: 12px; line-height: 18px; color: #FFFFFF; border-color:#875A7B; text-decoration: none; display: inline-block; margin-bottom: 0px; font-weight: 400; text-align: center; vertical-align: middle; cursor: pointer; white-space: nowrap; background-image: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius:3px">View Appliction Information"</a>
                 </div>
+                <p>Best regards,</p>
+            </div>
+            <div style="padding:0px;width:600px;margin:auto; margin-top: 10px; background: #fff repeat top /100%;color:#777777">
+                ${user.signature | safe}
+                <p style="font-size: 11px; margin-top: 10px;">
+                    <strong>Sent by ${user.company_id.name}</strong>
+                </p>
+            </div>]]></field>
+        <field name="user_signature" eval="False"/>
+    </record>
+
+
+    <record id="member_application_rejection_email_template" model="mail.template">
+        <field name="name">Member Application Rejection</field>
+        <field name="model_id" ref="base.model_res_users"/>
+        <field name="subject">Membership Applicaton Rejection</field>
+        <field name="email_to">${object.email|safe}</field>
+        <field name="email_from">
+            <![CDATA["${object.company_id.name|safe}" <${(object.company_id.email or user.email)|safe}>]]></field>
+        <field name="body_html"><![CDATA[
+            <div style="padding:0px;width:600px;margin:auto;background: #FFFFFF repeat top /100%;color:#777777">
+                <table cellspacing="0" cellpadding="0" style="width:600px;border-collapse:collapse;background:inherit;color:inherit">
+                    <tbody><tr>
+                        <td valign="center" width="200" style="padding:10px 10px 10px 5px;font-size: 12px">
+                            <img src="${user.company_id.logo_web}" style="padding: 0px; margin: 0px; height: auto; width: 80px;" alt="${user.company_id.name}">
+                        </td>
+                    </tr></tbody>
+                </table>
+            </div>
+            <div style="padding:0px;width:600px;margin:auto;background: #FFFFFF repeat top /100%;color:#777777">
+            <p>Dear ${object.name},</p>
+                <p>
+                    You application is not compatible as our policy. So try for next time.
+                </p>
+                <p>Best regards,</p>
+            </div>
+            <div style="padding:0px;width:600px;margin:auto; margin-top: 10px; background: #fff repeat top /100%;color:#777777">
+                ${user.signature | safe}
+                <p style="font-size: 11px; margin-top: 10px;">
+                    <strong>Sent by ${user.company_id.name}</strong>
+                </p>
+            </div>]]></field>
+        <field name="user_signature" eval="False"/>
+    </record>
+
+    <record id="member_confirmation_email_template" model="mail.template">
+        <field name="name">Membership Confirmation</field>
+        <field name="model_id" ref="base.model_res_users"/>
+        <field name="subject">Membership Confirmation</field>
+        <field name="email_to">${object.email|safe}</field>
+        <field name="email_from">
+            <![CDATA["${object.company_id.name|safe}" <${(object.company_id.email or user.email)|safe}>]]></field>
+        <field name="body_html"><![CDATA[
+            <div style="padding:0px;width:600px;margin:auto;background: #FFFFFF repeat top /100%;color:#777777">
+                <table cellspacing="0" cellpadding="0" style="width:600px;border-collapse:collapse;background:inherit;color:inherit">
+                    <tbody><tr>
+                        <td valign="center" width="200" style="padding:10px 10px 10px 5px;font-size: 12px">
+                            <img src="${user.company_id.logo_web}" style="padding: 0px; margin: 0px; height: auto; width: 80px;" alt="${user.company_id.name}">
+                        </td>
+                    </tr></tbody>
+                </table>
+            </div>
+            <div style="padding:0px;width:600px;margin:auto;background: #FFFFFF repeat top /100%;color:#777777">
+            <p>Dear ${object.name},</p>
+                <p>
+                    Congratulation, You are a member of <strong>${user.company_id.name}</strong>.
+                </p>
                 <p>Best regards,</p>
             </div>
             <div style="padding:0px;width:600px;margin:auto; margin-top: 10px; background: #fff repeat top /100%;color:#777777">
