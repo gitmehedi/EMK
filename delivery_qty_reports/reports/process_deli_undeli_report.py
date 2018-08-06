@@ -132,12 +132,12 @@ class ProcessDeliveryUnDeliveryReport(models.AbstractModel):
                     val['un_delivered_qty'] = delivery_order[9]
                     val['issued_do_today'] = 0
 
-                if (do_date == given_date) and (delivery_order[7] + delivery_order[9] == delivery_order[4]):
+                if (do_date == given_date) and (val['delivered_qty'] + val['un_delivered_qty'] == delivery_order[4]):
                     val['issued_do_today'] = self.get_issue_do_qty(delivery_order[0], date_given, prod_id)
 
                 # If given date is DO issue date, then 'Begening of Undelivery Qty' of First delivery is set by 0.
                 # How To Check First Delivery Of DO: Condition delivered_qty + un_delivered_qty = do_qty
-                if val['issued_do_today'] > 0 and (delivery_order[7] + delivery_order[9] == delivery_order[4]):
+                if val['issued_do_today'] > 0 and (val['delivered_qty'] + val['un_delivered_qty'] == delivery_order[4]):
                     val['begen_un_deli_qty'] = 0
 
 
@@ -174,7 +174,12 @@ class ProcessDeliveryUnDeliveryReport(models.AbstractModel):
     def prepareListForProduct(self,data,product_id):
 
         product = self.env['product.product'].search([('id', '=', product_id)])
-        data[product_id] = {'name': product.product_tmpl_id.name + " (" + product.attribute_value_ids.name + ")",
+
+        attribute = ""
+        if len(product.attribute_value_ids) > 0:
+            attribute = " (" + product.attribute_value_ids.name + ")"
+
+        data[product_id] = {'name': product.product_tmpl_id.name + attribute,
                                    'details': [],
                                    'total': {'do_qty': 0,
                                              'begen_un_deli_qty': 0,
