@@ -80,7 +80,7 @@ class MemberApplicationContoller(Home):
         if request.httprequest.method == 'GET' and 'email' in request.params:
             email = request.params.get('email')
             response = {'email': 0}
-            record = request.env['res.users'].sudo().search([('email', '=', email)])
+            record = request.env['res.users'].sudo().search([('login', '=', email)])
             if len(record) > 0:
                 response['email'] = 1
         return json.dumps(response)
