@@ -4,10 +4,10 @@
         <report
                 id="action_report_jar_summary"
                 string="Jar Summary Report"
-                model="uom.jar.summary"
+                model="delivery.jar.count"
                 report_type="qweb-pdf"
-                file="gbs_sales_jar_count.report_jar_summary"
-                name="gbs_sales_jar_count.report_jar_summary"
+                file="delivery_jar_counting.report_jar_summary"
+                name="delivery_jar_counting.report_jar_summary"
                 menu="False"
         />
 
@@ -19,6 +19,7 @@
                         <div class="row">
                             <center>
                                 <h6>JAR Summary Report</h6>
+                                Date:  <span t-esc="date"/>
                             </center>
 
                             <table class="table table-report-sm table-bordered table-striped">
@@ -30,7 +31,7 @@
                                         <th>Customer</th>
                                         <th>Jar Type</th>
                                         <th># Due Jar</th>
-                                        <th># Jar Taken</th>
+                                        <th># Jar Received</th>
                                     </tr>
                                 </thead>
 
@@ -42,21 +43,18 @@
                                                 <span t-esc="k_index+1"/>
                                             </td>
                                             <td>
-                                                <span t-esc="k['partner_id']"/>
+                                                <span t-esc="k['name']"/>
                                             </td>
                                             <td>
-                                                <span t-esc="k['uom_id']"/>
-                                            </td>
-                                            <td>
-                                                <span t-esc="k['due_jar']"/>
+                                                <span t-esc="k['jar_type']"/>
                                             </td>
 
                                             <td>
-                                                <span t-esc="k['total_jar_taken']"/>
+                                                <span t-esc="k['qty1']"/>
                                             </td>
-                                            <!--<td>-->
-                                                <!--<span t-esc="k['jar_received']"/>-->
-                                            <!--</td>-->
+                                            <td>
+                                                <span t-esc="k['qty2']"/>
+                                            </td>
 
                                         </tr>
                                     </t>

@@ -83,12 +83,12 @@ class SaleOrder(models.Model):
 
     """ PI and LC """
     pi_id = fields.Many2one('proforma.invoice', string='PI Ref. No.',
-                            domain=[('credit_sales_or_lc', '=', 'lc_sales'),('state', '=', 'confirm')],
                             readonly=True,states={'to_submit': [('readonly', False)]})
+    # domain = [('credit_sales_or_lc', '=', 'lc_sales'), ('state', '=', 'confirm')],
     lc_id = fields.Many2one('letter.credit', string='LC Ref. No.', readonly=True,
                             states={'to_submit': [('readonly', False)]})
 
-    remaining_credit_limit = fields.Char(string="Customer's Remaining Credit Limit", track_visibility='onchange')
+    #remaining_credit_limit = fields.Char(string="Customer's Remaining Credit Limit", track_visibility='onchange')
 
     """ Update is_commission_generated flag to False """
 
@@ -142,10 +142,16 @@ class SaleOrder(models.Model):
 
     @api.onchange('type_id')
     def onchange_type(self):
-        sale_type_pool = self.env['sale.order.type'].search([('id', '=', self.type_id.id)])
         if self.type_id:
+            sale_type_pool = self.env['sale.order.type'].search([('id', '=', self.type_id.id)])
             self.credit_sales_or_lc = sale_type_pool.sale_order_type
             self.currency_id = sale_type_pool.currency_id.id
+            if self.type_id.sale_order_type == 'lc_sales':
+                existing_lc = self.search([('type_id', '=', self.type_id.id)])
+                return {'domain': {'pi_id': [('id', 'not in', [i.pi_id.id for i in existing_lc]),
+                                             ('credit_sales_or_lc', '=', 'lc_sales'),
+                                             ('state', '=', 'confirm')]}}
+
 
     @api.multi
     def _is_double_validation_applicable(self):
@@ -299,16 +305,16 @@ class SaleOrder(models.Model):
                     if price_change_pool.new_price >= lines.price_unit and lines.price_unit >= discounted_product_price:
                         is_double_validation = False  # Single Validation
 
-                    for coms in cust_commission_pool:
-                        if (abs(customer_total_credit) > customer_credit_limit
-                            or lines.commission_rate != coms.commission_rate
-                            or lines.price_unit < discounted_product_price or lines.price_unit > discounted_product_price):
+                    #for coms in cust_commission_pool:
+                    if (abs(customer_total_credit) > customer_credit_limit
+                        or lines.commission_rate != cust_commission_pool.commission_rate
+                        or lines.price_unit < discounted_product_price or lines.price_unit > discounted_product_price):
 
-                            is_double_validation = True
-                            break;
+                        is_double_validation = True
+                        break;
 
-                        else:
-                            is_double_validation = False
+                    else:
+                        is_double_validation = False
 
         if is_double_validation:
             order.write({'state': 'validate'})  # Go to two level approval process
@@ -598,6 +604,14 @@ class CrmTeam(models.Model):
                                         default=lambda self:
                                         self.env['res.users'].
                                         operating_unit_default_get(self._uid))
+
+
+    @api.constrains('name')
+    def _check_unique_name(self):
+        name = self.env['crm.team'].search([('name', '=', self.name)])
+        if len(name) > 1:
+            raise ValidationError('Sales Team for this given Name already exists')
+
 
     @api.multi
     def unlink(self):

@@ -4,51 +4,44 @@ import time
 from datetime import date, datetime
 
 
-class PartnerWiseJarSummary(models.AbstractModel):
-    _name = 'report.gbs_sales_jar_count.report_jar_summary'
+class JarSummaryReportByDate(models.AbstractModel):
+    _name = 'report.delivery_jar_counting.report_jar_summary'
+
+    sql = """
+        SELECT t1.date,t1.partner_id, t1.jar_type, t1.qty1, t2.qty2,customer.name FROM 
+        (SELECT date,partner_id, jar_type, sum(jar_count) AS qty1 FROM delivery_jar_count
+        GROUP BY partner_id, jar_type, date) t1
+        LEFT JOIN res_partner customer ON customer.id = t1.partner_id
+        LEFT JOIN 
+        (SELECT partner_id, jar_type, sum(jar_received) AS qty2 FROM jar_received
+        GROUP BY partner_id, jar_type) t2
+        ON t1.partner_id = t2.partner_id AND t1.jar_type = t2.jar_type
+        WHERE t1.date = %s
+    """
 
     @api.model
     def render_html(self, docids, data=None):
-
         data_list = []
 
+        date_given = data['date']
+        self._cr.execute(self.sql, (date_given,))  # Never remove the comma after the parameter
 
+        vals = self._cr.fetchall()
 
+        jar_val  = {}
 
-        if data['partner_id']:
+        jar_val['date'] = vals[0][0]
+        jar_val['qty1'] = vals[0][1]
+        jar_val['jar_type'] = vals[0][2]
+        jar_val['qty2'] = vals[0][3]
+        jar_val['name'] = vals[0][5]
 
-            uom_summary = self.env['uom.jar.summary'].search([('partner_id', '=', data['partner_id'])])
-
-            for jars in uom_summary:
-                vals = {}
-                partner_id = jars.env['res.partner'].search([('id', '=', data['partner_id'])])
-
-                vals['partner_id'] = partner_id.name
-                vals['total_jar_taken'] = jars.total_jar_taken
-                vals['jar_received'] = jars.jar_received
-                vals['jar_received_date'] = jars.jar_received_date
-                vals['uom_id'] = jars.uom_id[0].name
-                vals['due_jar'] = jars.due_jar
-
-                data_list.append(vals)
-
-        else:
-            uom_summary = self.env['uom.jar.summary'].search([])
-
-            for all_cust in uom_summary:
-                val = {}
-                val['partner_id'] = all_cust.partner_id.name
-                val['total_jar_taken'] = all_cust.total_jar_taken
-                val['jar_received'] = all_cust.jar_received
-                val['jar_received_date'] = all_cust.jar_received_date
-                val['uom_id'] = all_cust.uom_id.name
-                val['due_jar'] = all_cust.due_jar
-
-                data_list.append(val)
+        data_list.append(jar_val)
 
         docargs = \
             {
                 'data_list': data_list,
+                'date':  vals[0][0],
             }
 
-        return self.env['report'].render('gbs_sales_jar_count.report_jar_summary', docargs)
+        return self.env['report'].render('delivery_jar_counting.report_jar_summary', docargs)

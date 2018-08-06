@@ -7,7 +7,6 @@
             <field name="arch" type="xml">
                 <pivot string="Jar Summary Analysis" disable_linking="True">
                     <field name="jar_type" type="col"/>
-                    <!--<field name="product_id" type="col"/>-->
                 </pivot>
             </field>
         </record>
@@ -17,24 +16,11 @@
             <field name="model">jar.summary.analytic.report</field>
             <field name="arch" type="xml">
                 <graph string="Jar Summary Analysis">
-                    <field name="product_id"/>
-                    <!--<field name="jar_type"/>-->
-                    <field name="uom_id"/>
-                    <field name="challan_id"/>
                     <field name="partner_id"/>
-                    <field name="jar_count"/>
-                    <!--<field name="due_jar"/>-->
-                    <field name="jar_received"/>
+                    <field name="qty1"/>
+                    <field name="qty2"/>
                 </graph>
             </field>
-        </record>
-
-        <!-- Custom reports (aka filters) -->
-        <record id="filter_invoice_salespersons" model="ir.filters">
-            <field name="name">By Salespersons</field>
-            <field name="model_id">jar.summary.analytic.report</field>
-            <field name="domain">[]</field>
-            <field name="user_id" eval="False"/>
         </record>
 
 
@@ -43,19 +29,12 @@
             <field name="model">jar.summary.analytic.report</field>
             <field name="arch" type="xml">
                 <search string="Jar Summary Analysis">
-                    <field name="product_id"/>
-                    <field name="jar_type"/>
-                    <field name="uom_id"/>
-                    <field name="challan_id"/>
                     <field name="partner_id"/>
-                    <field name="jar_count"/>
-                    <!--<field name="due_jar"/>-->
-                    <field name="jar_received"/>
-
+                     <field name="qty1"/>
+                     <field name="qty2"/>
                     <group expand="1" string="Group By">
                         <filter string="Customer" name="partner_id"
                                 context="{'group_by':'partner_id','residual_visible':True}"/>
-                        <!--<filter string="Jar Received Date" context="{'group_by':'create_date'}"/>-->
                     </group>
                 </search>
             </field>

@@ -6,28 +6,24 @@
             <t t-call="report.html_container">
                 <t t-call="custom_report.gbs_internal_layout">
                     <t t-foreach="docs" t-as="o">
-                        <t t-call="report.external_layout">
-                            <div class="page" style="page-break-inside:auto">
-                                <div class="row">
-                                    <div class="col-xs-12" style="text-align:center;">
-                                        <h4>
-                                            <strong>Customer Credit Limit</strong>
-                                        </h4>
-                                    </div>
-                                    <div class="col-xs-12" style="text-align:left;">
-                                        <p>
-                                            <b>Description:</b>
-                                            <span t-field="o.name"/>
-                                        </p>
-                                        <p>
-                                            <b>Approval Date:</b>
-                                            <span t-field="o.approve_date"/>
-                                        </p>
+                        <div class="page" style="page-break-inside:auto">
+                            <div class="row">
+                                <style type="text/css">
+                                .report-title { text-align:center; }
+                                .odo-bg-gray, .odo-bg-gray > td { background-color: #f5f5f5; }
+                                </style>
+                                <div class="clearfix">
+                                    <h3 class="report-title">Customer Credit Limit Summary</h3>
+                                    <div class="row">
+                                        <div class="col-xs-12 text-left">
+                                            <h6><b>Description: </b><span t-field="o.name"/></h6>
+                                            <h6><b>Approval Date: </b><span t-field="o.approve_date"/></h6>
+                                        </div>
                                     </div>
                                 </div>
-                                <table class="table table-bordered">
+                                <table class="table table-report-xs table-bordered table-striped">
                                     <thead>
-                                        <tr style="background-color:#C0C0C0;">
+                                        <tr>
                                             <th>SL</th>
                                             <th>Customer</th>
                                             <th>Credit Limit</th>
@@ -53,26 +49,24 @@
                                         </t>
                                     </tbody>
                                 </table>
-                                <footer>
-                                    <p>
+                                <div class="row mb32" style="margin-top: 10mm;">
+                                    <div class="col-xs-6 text-left">
                                         <b>Submitted by:</b>
                                         <span t-field="o.requested_by"/>
-                                    </p>
-                                    <p>
+                                        <br/>
                                         <b>Sales Approval by:</b>
                                         <span t-field="o.approver3_id"/>
-                                    </p>
-                                    <p>
+                                    </div>
+                                    <div class="col-xs-6 text-right">
                                         <b>Accounts Approval by:</b>
                                         <span t-field="o.approver1_id"/>
-                                    </p>
-                                    <p>
+                                        <br/>
                                         <b>Final Approval by:</b>
                                         <span t-field="o.approver2_id"/>
-                                    </p>
-                                </footer>
+                                    </div>
+                                </div>
                             </div>
-                        </t>
+                        </div>
                     </t>
                 </t>
             </t>

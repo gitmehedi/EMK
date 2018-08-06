@@ -18,16 +18,42 @@ class JarReceived(models.Model):
     packing_mode = fields.Many2one('product.packaging.mode', string='Jar Type',
                                    domain=[('is_jar_bill_included', '=', False)])
 
-    #challan_id = fields.Many2one('stock.picking', string='Challan Id')
+    jar_type = fields.Char(string='Jar Type')
+    date = fields.Date(string='Date')
+
+
+
 
     state = fields.Selection([
         ('draft', "Draft"),
         ('confirmed', "Confirmed"),
     ], default='draft', track_visibility='onchange')
 
-    # @api.model
-    # def create(self, vals):
-    #     return super(JarReceived, self).create(vals)
+    @api.model
+    def create(self, vals):
+
+        pack_mode = self.env['product.packaging.mode'].search([('id','=',vals['packing_mode'])])
+        if pack_mode.uom_id:
+            vals['jar_type'] = (pack_mode.uom_id.name).upper().strip()
+        else:
+            vals['jar_type'] = pack_mode.display_name.upper().strip()
+
+        vals['date'] = datetime.datetime.now().date()
+
+        return super(JarReceived, self).create(vals)
+
+
+    @api.multi
+    def write(self, vals):
+        pack_mode = self.env['product.packaging.mode'].search([('id', '=', self.packing_mode.id)])
+        if pack_mode.uom_id:
+            vals['jar_type'] = (pack_mode.uom_id.name).upper().strip()
+        else:
+            vals['jar_type'] = pack_mode.display_name.upper().strip()
+
+        return super(JarReceived, self).write(vals)
+
+
 
     @api.onchange('packing_mode')
     def _onchange_packing_mode(self):

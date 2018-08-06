@@ -15,9 +15,9 @@
     'data': [
         'security/ir.model.access.csv',
         'views/uom_jar_summary_view.xml',
+        'wizards/partner_selection_wizard_view.xml',
         'views/jar_received_view.xml',
-        #'wizards/partner_selection_wizard_view.xml',
-        #'reports/partner_wise_jar_summary_report_view.xml',
+        'reports/partner_wise_jar_summary_report_view.xml',
         'reports/jar_summary_analytic_report_view.xml',
     ],
 
