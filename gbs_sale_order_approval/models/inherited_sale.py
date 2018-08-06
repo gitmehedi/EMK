@@ -299,16 +299,16 @@ class SaleOrder(models.Model):
                     if price_change_pool.new_price >= lines.price_unit and lines.price_unit >= discounted_product_price:
                         is_double_validation = False  # Single Validation
 
-                    for coms in cust_commission_pool:
-                        if (abs(customer_total_credit) > customer_credit_limit
-                            or lines.commission_rate != coms.commission_rate
-                            or lines.price_unit < discounted_product_price or lines.price_unit > discounted_product_price):
+                    #for coms in cust_commission_pool:
+                    if (abs(customer_total_credit) > customer_credit_limit
+                        or lines.commission_rate != cust_commission_pool.commission_rate
+                        or lines.price_unit < discounted_product_price or lines.price_unit > discounted_product_price):
 
-                            is_double_validation = True
-                            break;
+                        is_double_validation = True
+                        break;
 
-                        else:
-                            is_double_validation = False
+                    else:
+                        is_double_validation = False
 
         if is_double_validation:
             order.write({'state': 'validate'})  # Go to two level approval process
