@@ -44,7 +44,7 @@ class ProformaInvoice(models.Model):
                                states={'draft': [('readonly', False)]})
     terms_condition = fields.Text(string='Terms & Conditions', required=True, readonly=True,
                                   states={'draft': [('readonly', False)]})
-    terms_id = fields.Many2one('terms.setup', string='Terms', store=False, readonly=True,
+    terms_id = fields.Many2one('terms.setup', string='Terms', store=True, readonly=True,
                                states={'draft': [('readonly', False)]})
 
     """ Shipping Address"""
@@ -95,18 +95,18 @@ class ProformaInvoice(models.Model):
                                 states={'draft': [('readonly', False)]}
                                 , required=True)
 
-    def _get_order_type(self):
-        return self.env['sale.order.type'].search([('sale_order_type','=','lc_sales')], limit=1)
+    # def _get_order_type(self):
+    #     return self.env['sale.order.type'].search([('sale_order_type','=','lc_sales')], limit=1)
 
-    type_id = fields.Many2one(comodel_name='sale.order.type', string='Type', default=_get_order_type, readonly=True,
-                              track_visibility='onchange')
+    type_id = fields.Many2one(comodel_name='sale.order.type', string='Type', domain=[('sale_order_type', '=', 'lc_sales')], readonly=True,
+                              track_visibility='onchange',states={'draft': [('readonly', False)]})
     currency_id = fields.Many2one(comodel_name='res.currency',related='type_id.currency_id', store=True,
                                   string='Currency',readonly=True,track_visibility='onchange')
     credit_sales_or_lc = fields.Selection([
         ('cash', 'Cash'),
         ('credit_sales', 'Credit'),
         ('lc_sales', 'L/C'),
-    ], string='Sales Type', readonly=True, default='lc_sales')
+    ], string='Sales Type', readonly=True,related='type_id.sale_order_type')
 
     """On Change fucn"""
 
@@ -115,7 +115,6 @@ class ProformaInvoice(models.Model):
     #     sale_type_pool = self.env['sale.order.type'].search([('id', '=', self.type_id.id)])
     #     if self.type_id:
     #         self.credit_sales_or_lc = sale_type_pool.sale_order_type
-    #         self.currency_id = sale_type_pool.currency_id.id
 
     @api.multi
     @api.onchange('currency_id')
