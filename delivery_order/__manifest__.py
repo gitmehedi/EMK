@@ -19,7 +19,6 @@
         'custom_report',
         'delivery_challan_report',
         'ir_sequence_operating_unit',
-        'delivery_qty_reports',
     ],
 
     'data': [

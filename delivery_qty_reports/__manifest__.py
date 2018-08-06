@@ -10,6 +10,7 @@
         'sales_team',
         'custom_report',
         'stock_operating_unit',
+        'delivery_order',
     ],
 
     'data': [
@@ -19,6 +20,7 @@
         'wizards/daily_delivery_report_wizard_view.xml',
         'wizards/daily_deli_undeli_report_wizard_view.xml',
         'wizards/monthly_delivery_report_wizard_view.xml',
+        'views/menu.xml',
     ],
 
     'summary': 'Different delivered & undelivered reports of products',
