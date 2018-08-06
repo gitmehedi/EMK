@@ -1,11 +1,9 @@
 # -*- coding: utf-8 -*-
 
-import datetime
-from datetime import datetime,timedelta
-from dateutil.relativedelta import relativedelta
-import math
-from odoo import _, api, fields, models
-from odoo.exceptions import ValidationError, Warning
+from odoo import models, fields, api,SUPERUSER_ID
+import logging
+from odoo.exceptions import UserError, AccessError, ValidationError
+from odoo.tools.translate import _
 
 HOURS_PER_DAY = 8
 
@@ -14,69 +12,37 @@ class HrHolidayHour(models.Model):
     _name = 'hr.holiday.hour'
     _inherit = 'hr.holidays'
 
-    date_from = fields.Datetime('Start Date', readonly=True, index=True, copy=False,
+    def _default_employee(self):
+        return self.env.context.get('default_employee_id') or self.env['hr.employee'].search([('user_id', '=', self.env.uid)], limit=1)
+
+
+    name = fields.Char('Description')
+    employee_id = fields.Many2one('hr.employee', string='Employee', index=True, readonly=True,required=True,
+                                  states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]}, default=_default_employee)
+    date_from = fields.Datetime('Start Time', readonly=True, index=True, copy=False, required=True,
+                                track_visibility='onchange',
                                 states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]})
-    date_to = fields.Datetime('End Date', readonly=True, copy=False,
+    date_to = fields.Datetime('End Time', readonly=True, copy=False, required=True, track_visibility='onchange',
                               states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]})
+    number_of_days = fields.Float('Number of Days', compute='_compute_total_hours', readonly=True, store=True)
+    holiday_status_id = fields.Many2one("hr.holidays.status", string="Leave Type", required=True, readonly=True,
+                                        domain="[('short_leave_flag','=',True)]",
+                                        states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]})
+    check_hour = fields.Boolean(string='Half Leave', default=True)
 
-    number_of_hours_temp = fields.Float(string='Allocation in Hours',digits=(2, 2),readonly=True,
-        states={'draft': [('readonly', False)],
-                'confirm': [('readonly', False)]}
-    )
-    number_of_hours = fields.Float(
-        compute='_compute_number_of_hours',
-        store=True
-    )
+    _sql_constraints = [
+        ('date_check2', "CHECK ( (date_from <= date_to))", "The start date must be anterior to the end date."),
+        ('date_check', "CHECK ( number_of_days >= 0 )", "The number of days must be greater than 0."),
+    ]
 
-    @api.depends('number_of_hours_temp', 'state')
-    def _compute_number_of_hours(self):
-        for rec in self:
-            number_of_hours = rec.number_of_hours_temp
-            if rec.type == 'remove':
-                number_of_hours = -rec.number_of_hours_temp
-
-            rec.virtual_hours = number_of_hours
-            if rec.state not in ('validate',):
-                number_of_hours = 0.0
-            rec.number_of_hours = number_of_hours
-
-    @api.onchange('holiday_type')
-    def _onchange_type(self):
-        if self.holiday_type == 'employee' and not self.employee_id:
-            self.employee_id = self.env['hr.employee'].search([('user_id', '=', self.env.uid)], limit=1)
-        elif self.holiday_type != 'employee':
-            self.employee_id = None
-
-    @api.onchange('employee_id')
-    def _onchange_employee(self):
-        self.department_id = self.employee_id.department_id
-
-    def _get_number_of_days(self, date_from, date_to, employee_id):
-        """ Returns a float equals to the timedelta between two dates given as string."""
-        from_dt = fields.Datetime.from_string(date_from)
-        to_dt = fields.Datetime.from_string(date_to)
-        time_delta = to_dt - from_dt
-        return math.ceil(time_delta.days + float(time_delta.seconds) / 3600)
-        #return math.ceil(time_delta.days + float(time_delta.seconds) / 86400)
-
-    @api.onchange('date_from')
-    def _onchange_date_from(self):
-        """ If there are no date set for date_to, automatically set one 8 hours later than
-            the date_from. Also update the number_of_days.
-        """
-        date_from = self.date_from
-        date_to = self.date_to
-
-        # No date_to set so far: automatically compute one 8 hours later
-        if date_from and not date_to:
-            date_to_with_delta = fields.Datetime.from_string(date_from) + timedelta(hours=HOURS_PER_DAY)
-            self.date_to = str(date_to_with_delta)
-
-        # Compute and update the number of days
-        if (date_to and date_from) and (date_from <= date_to):
-            self.number_of_days_temp = self._get_number_of_days(date_from, date_to, self.employee_id.id)
-        else:
-            self.number_of_days_temp = 0
+    @api.depends('date_from', 'date_to')
+    def _compute_total_hours(self):
+        if self.date_from and self.date_to:
+            start_dt = fields.Datetime.from_string(self.date_from)
+            finish_dt = fields.Datetime.from_string(self.date_to)
+            diff = finish_dt - start_dt
+            hours = float(diff.total_seconds() / 3600)
+            self.number_of_days = hours
 
     @api.onchange('date_to')
     def _onchange_date_to(self):
@@ -84,25 +50,70 @@ class HrHolidayHour(models.Model):
         date_from = self.date_from
         date_to = self.date_to
 
-        # Compute and update the number of days
-        if (date_to and date_from) and (date_from <= date_to):
-            self.number_of_hours_temp = self._get_number_of_days(date_from, date_to, self.employee_id.id)
-        else:
-            self.number_of_hours_temp = 0
+        if date_from and date_to:
+            if (date_from[:10] == date_to[:10]):  # only date is equal
+                pass
+            else:
+                raise ValidationError('Start Date and End Date should be same')
 
     @api.multi
-    def _check_dates(self):
-        self.ensure_one()
-        # date_to has to be greater than date_from
-        if self.date_from and self.date_to:
-            if self.date_from > self.date_to:
-                raise Warning(_(
-                    'The start date must be anterior to the end date.'
-                ))
+    def add_follower(self, employee_id):
+        employee = self.env['hr.employee'].browse(employee_id)
+        if employee.user_id:
+            self.message_subscribe_users(user_ids=employee.user_id.ids)
 
     @api.multi
-    def _check_employee(self):
-        self.ensure_one()
-        employee = self.employee_id
-        if not employee and (self.date_to or self.date_from):
-            raise Warning(_('Set an employee first!'))
+    def action_confirm(self):
+        if self.filtered(lambda holiday: holiday.state != 'draft'):
+            raise UserError(_('Leave request must be in Draft state ("To Submit") in order to confirm it.'))
+        return self.write({'state': 'confirm'})
+
+    @api.multi
+    def action_approve(self):
+        return self.write({'state': 'confirm'})
+
+
+    @api.multi
+    def action_validate(self):
+        from_dt = fields.Datetime.from_string(self.date_from)
+        to_dt = fields.Datetime.from_string(self.date_to)
+        time_delta = to_dt - from_dt
+        self.env['hr.holidays'].create(
+            {'leave_ids': self.id,
+             'check_hour':True,
+             'type': 'remove',
+             'holiday_status_id': self.holiday_status_id.id,
+             'date_from': self.date_from,
+             'date_to': self.date_to,
+             'number_of_days_temp': (time_delta.seconds / 3600) / 8.0,
+             'employee_id': self.employee_id.id,
+             })
+
+        self.write({'state': 'validate'})
+        return True
+
+    @api.multi
+    def action_refuse(self):
+        return self.write({'state': 'refuse'})
+
+    @api.multi
+    def action_draft(self):
+        return self.write({'state': 'draft'})
+
+
+class HrShortLeave(models.Model):
+    _inherit = 'hr.holidays.status'
+
+    short_leave_flag = fields.Boolean(string='Allow Short Leave', default=False)
+
+
+# class HRHolidays(models.Model):
+#     _inherit = 'hr.holidays'
+#
+#     @api.model
+#     def create(self, values):
+#         res = super(HRHolidays, self).create(values)
+#         time_delta = (fields.Datetime.from_string(values['date_to']) - fields.Datetime.from_string(values['date_from']))
+#         time = ((time_delta.seconds / 3600) / 8.0)
+#         res['number_of_days_temp'] = time
+#         return res
