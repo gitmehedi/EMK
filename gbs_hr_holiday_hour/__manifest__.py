@@ -3,10 +3,11 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 
 {
-    'name': 'Leave Management in hours',
+    'name': 'Half Day Leave Management',
     'summary': 'Holidays, Allocation and Leave Requests in Hours',
     'author': 'Genweb2',
     'website': 'http://www.genweb2.com',
+    'sequence': 25,
     'category': 'Human Resources',
     'version': '10.0.1.0.0',
     'license': 'AGPL-3',

@@ -1,2 +1,3 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-access_gbs_hr_holiday_hour_gbs_hr_holiday_hour,gbs_hr_holiday_hour.gbs_hr_holiday_hour,model_gbs_hr_holiday_hour_gbs_hr_holiday_hour,,1,0,0,0
+access_hr_holiday_hour_user,access_hr_holiday_hour_user,model_hr_holiday_hour,base.group_user,1,1,1,1
+access_hr_holiday_hour_manager,access_hr_holiday_hour_hr_manager,model_hr_holiday_hour,hr_holidays.group_hr_holidays_user,1,1,1,1
