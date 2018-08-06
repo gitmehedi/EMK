@@ -11,7 +11,12 @@
                   groups="stock.delivery_user"
                   action="action_daily_delivery_undelivery_report"
                   id="daily_deli_undeli_report_id_extend"
-                  parent="stock.menu_warehouse_report"/>
+                  parent="stock.menu_warehouse_report" sequence="10"/>
 
+		<menuitem name="Monthly Delivery Report"
+                  groups="stock.delivery_user"
+                  action="action_monthly_delivery_report"
+                  id="monthly_delivery_report_id"
+                  parent="stock.menu_warehouse_report" sequence="20"/>
 	</data>
 </odoo>
