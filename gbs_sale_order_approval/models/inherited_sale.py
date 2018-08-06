@@ -83,8 +83,8 @@ class SaleOrder(models.Model):
 
     """ PI and LC """
     pi_id = fields.Many2one('proforma.invoice', string='PI Ref. No.',
-                            domain=[('credit_sales_or_lc', '=', 'lc_sales'),('state', '=', 'confirm')],
                             readonly=True,states={'to_submit': [('readonly', False)]})
+    # domain = [('credit_sales_or_lc', '=', 'lc_sales'), ('state', '=', 'confirm')],
     lc_id = fields.Many2one('letter.credit', string='LC Ref. No.', readonly=True,
                             states={'to_submit': [('readonly', False)]})
 
@@ -142,10 +142,16 @@ class SaleOrder(models.Model):
 
     @api.onchange('type_id')
     def onchange_type(self):
-        sale_type_pool = self.env['sale.order.type'].search([('id', '=', self.type_id.id)])
         if self.type_id:
+            sale_type_pool = self.env['sale.order.type'].search([('id', '=', self.type_id.id)])
             self.credit_sales_or_lc = sale_type_pool.sale_order_type
             self.currency_id = sale_type_pool.currency_id.id
+            if self.type_id.sale_order_type == 'lc_sales':
+                existing_lc = self.search([('type_id', '=', self.type_id.id)])
+                return {'domain': {'pi_id': [('id', 'not in', [i.pi_id.id for i in existing_lc]),
+                                             ('credit_sales_or_lc', '=', 'lc_sales'),
+                                             ('state', '=', 'confirm')]}}
+
 
     @api.multi
     def _is_double_validation_applicable(self):
