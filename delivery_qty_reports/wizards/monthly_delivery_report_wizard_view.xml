@@ -12,7 +12,7 @@
                             <field name="report_to"/>
                             <field name="product_id"
                                    options="{'no_quick_create':True,'no_create_edit':True,'no_open':True}"/>
-                            <field name="operating_unit_id"
+                            <field name="operating_unit_id" groups="operating_unit.group_multi_operating_unit"
                                    options="{'no_quick_create':True,'no_create_edit':True,'no_open':True}"/>
                         </group>
                     </sheet>
