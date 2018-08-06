@@ -605,6 +605,14 @@ class CrmTeam(models.Model):
                                         self.env['res.users'].
                                         operating_unit_default_get(self._uid))
 
+
+    @api.constrains('name')
+    def _check_unique_name(self):
+        name = self.env['crm.team'].search([('name', '=', self.name)])
+        if len(name) > 1:
+            raise ValidationError('Sales Team for this given Name already exists')
+
+
     @api.multi
     def unlink(self):
         for crm in self:
