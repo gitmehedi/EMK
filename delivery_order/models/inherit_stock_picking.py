@@ -127,7 +127,7 @@ class InheritStockPicking(models.Model):
         res = super(InheritStockPicking, self).do_new_transfer()
 
         self._get_number_of_jar()
-
+        self._set_date_done_do()
         return res
 
 
@@ -151,8 +151,15 @@ class InheritStockPicking(models.Model):
 
                 delivery_jar_count_obj.create(vals)
 
-
-
+    def _set_date_done_do(self):
+        for move in self.move_lines:
+            if move.undelivered_qty == 0.0:
+                do_objs = self.env['delivery.order'].search([('id','=',move.delivery_order_id.id)])
+                do_line_objs = do_objs.line_ids.filtered(lambda x: x.product_id.id == move.product_id.id)
+                if self.date_done:
+                    do_line_objs.date_done = self.date_done
+                else:
+                    do_line_objs.date_done = fields.Datetime.now()
 
     @api.multi
     def _calculate_lc_id(self):
