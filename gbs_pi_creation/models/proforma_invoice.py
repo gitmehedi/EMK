@@ -323,7 +323,7 @@ class ProformaInvoiceLine(models.Model):
                         uom_base_price = price_change_pool.new_price
 
                     if not line.uom_id.uom_type == "reference":
-                        line.price_unit = uom_base_price * self.uom_id.factor_inv
+                        line.price_unit = uom_base_price * line.uom_id.factor_inv
                     else:
                         line.price_unit = uom_base_price
             else:

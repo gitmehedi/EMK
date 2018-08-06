@@ -27,3 +27,7 @@ class RFIDGeneration(models.Model):
     @api.model
     def _needaction_domain_get(self):
         return [('state', '=', 'draft')]
+
+    @api.multi
+    def confirm(self):
+        self.state = 'generate'
