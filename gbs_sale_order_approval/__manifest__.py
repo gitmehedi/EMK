@@ -27,6 +27,7 @@
         'security/ir_rule.xml',
         'views/inherited_sale_view.xml',
         'views/menuitems.xml',
+        'views/approver_action_menus.xml',
         'report/inherit_sale_order_report.xml',
         'data/sale_order_sequence.xml',
     ],

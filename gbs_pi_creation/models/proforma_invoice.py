@@ -9,13 +9,13 @@ class ProformaInvoice(models.Model):
     _order = 'id DESC'
     _rec_name = 'name'
 
-    @api.depends('line_ids.tax', 'line_ids.price_subtotal', 'line_ids.quantity' ,'freight_charge')
+    @api.depends('line_ids.price_unit','line_ids.tax', 'line_ids.price_subtotal', 'line_ids.quantity' ,'freight_charge','currency_id')
     def _amount_all(self):
         for pi in self:
             amount_subtotal = amount_untaxed = amount_tax = 0.0
             for line in pi.line_ids:
                 amount_subtotal += line.price_subtotal
-                amount_untaxed += line.price_unit
+                amount_untaxed += line.price_unit * line.quantity
                 # FORWARDPORT UP TO 10.0
                 if pi.beneficiary_id.tax_calculation_rounding_method == 'round_globally':
                     taxes = line.tax.compute_all(line.price_unit, pi.currency_id, line.quantity,
@@ -29,6 +29,11 @@ class ProformaInvoice(models.Model):
                 pi.taxed_amount= amount_tax
                 pi.total= amount_untaxed + amount_tax + pi.freight_charge
 
+    @api.depends('partner_id')
+    def _compute_customer_address(self, context=None):
+        if self.partner_id:
+            str_address = self.getAddressByPartner(self.partner_id)
+            self.customer_add = str_address
 
     name = fields.Char(string='Name', index=True, readonly=True, default="/")
     partner_id = fields.Many2one('res.partner', string='Customer', domain=[('customer', '=', True)], required=True,
@@ -57,7 +62,8 @@ class ProformaInvoice(models.Model):
     ship_total_pkg = fields.Char(string='Total Package', readonly=True, states={'draft': [('readonly', False)]})
 
     """ Customer Address"""
-    customer_add = fields.Text(string='Customer Address', readonly=True, compute='_compute_customer_address')
+    customer_add = fields.Text(string='Customer Address',store=True, readonly=True,
+                               compute='_compute_customer_address')
 
     """ Ship To"""
     terms_condition = fields.Text(string='Terms of Condition', required=True, readonly=True,
@@ -94,12 +100,8 @@ class ProformaInvoice(models.Model):
                                 readonly=True,
                                 states={'draft': [('readonly', False)]}
                                 , required=True)
-
-    # def _get_order_type(self):
-    #     return self.env['sale.order.type'].search([('sale_order_type','=','lc_sales')], limit=1)
-
     type_id = fields.Many2one(comodel_name='sale.order.type', string='Type', domain=[('sale_order_type', '=', 'lc_sales')], readonly=True,
-                              track_visibility='onchange',states={'draft': [('readonly', False)]})
+                              required=True,track_visibility='onchange',states={'draft': [('readonly', False)]})
     currency_id = fields.Many2one(comodel_name='res.currency',related='type_id.currency_id', store=True,
                                   string='Currency',readonly=True,track_visibility='onchange')
     credit_sales_or_lc = fields.Selection([
@@ -108,43 +110,26 @@ class ProformaInvoice(models.Model):
         ('lc_sales', 'L/C'),
     ], string='Sales Type', readonly=True,related='type_id.sale_order_type')
 
-    """On Change fucn"""
-
-    # @api.onchange('type_id')
-    # def onchange_type(self):
-    #     sale_type_pool = self.env['sale.order.type'].search([('id', '=', self.type_id.id)])
-    #     if self.type_id:
-    #         self.credit_sales_or_lc = sale_type_pool.sale_order_type
-
     @api.multi
     @api.onchange('currency_id')
     def currency_id_onchange(self):
-        self._get_changed_price()
-
-    @api.multi
-    @api.onchange('pack_type')
-    def pack_type_onchange(self):
-        self._get_changed_price()
-
-    def _get_changed_price(self):
         for order in self:
             for line in order.line_ids:
                 line._set_product_line()
 
-        """On Change fucn ends"""
-
     @api.multi
-    def _compute_customer_address(self, context=None):
-        if self.partner_id:
-            str_address = self.getAddressByPartner(self.partner_id)
-            self.customer_add = str_address
+    @api.onchange('pack_type')
+    def pack_type_onchange(self):
+        for order in self:
+            for line in order.line_ids:
+                line._set_product_line()
+
 
 
     @api.constrains('freight_charge')
     def check_freight_charge_val(self):
         if self.freight_charge < 0:
             raise UserError('Freight Charge can not be Negative')
-
 
     def getAddressByPartner(self, partner):
 
@@ -176,34 +161,13 @@ class ProformaInvoice(models.Model):
 
     @api.multi
     def action_confirm(self):
-
-        # self.update_Pi_to_so_obj()
         res = {'state': 'confirm'}
         team = self.env['crm.team']._get_default_team_id()
-
         new_seq = self.env['ir.sequence'].next_by_code_new('proforma.invoice', self.invoice_date, team.operating_unit_id)
         if new_seq:
             res['name'] = new_seq
 
-        sub_total = 0
-        total = 0
-
-        for line in self.line_ids:
-            sub_total += line.price_unit * line.quantity
-            total += line.price_unit * line.quantity
-
-        res['sub_total'] = sub_total
-        res['total'] = total
-
         self.write(res)
-
-    @api.onchange('freight_charge')
-    def onchange_freight_charge(self):
-        if self.freight_charge < 0:
-            raise UserError('Freight Charge can not be Negative')
-        #
-        # if self.freight_charge:
-        #     self.total = self.total + self.freight_charge
 
     @api.onchange('terms_id')
     def onchange_terms_id(self):
@@ -268,8 +232,7 @@ class ProformaInvoiceLine(models.Model):
     uom_id = fields.Many2one('product.uom', string="Unit of Measure", store=True,related='product_id.uom_id',
                              readonly=True)
     quantity = fields.Float(string="Ordered Qty",default=1)
-    price_unit = fields.Float(string="Unit Price", store=True,compute='_get_product_sales_price',
-                              readonly=True)
+    price_unit = fields.Float(string="Unit Price")
     tax = fields.Many2one('account.tax', string='Taxes')
     price_tax = fields.Float(compute='_compute_amount', store=True, string='Tax')
     price_subtotal = fields.Float(string="Sub Total", store=True,compute='_get_price_subtotal',
@@ -299,31 +262,44 @@ class ProformaInvoiceLine(models.Model):
             taxes = line.tax.compute_all(line.price_unit, line.pi_id.currency_id, line.quantity, product=line.product_id, partner=line.pi_id.partner_id)
             line.price_tax= taxes['total_included'] - taxes['total_excluded']
 
-    @api.depends('product_id')
-    def _get_product_sales_price(self):
-        for line in self:
-            if not line.uom_id:
-                line.uom_id = line.product_id.uom_id
+    @api.onchange('product_id')
+    def onchange_product_id(self):
+        self._set_product_line()
+
+    def _set_product_line(self):
+        if self.product_id:
+            self.price_unit = self._get_product_sales_price(self.product_id)
+
+    # @api.depends('product_id','pi_id.currency_id')
+    def _get_product_sales_price(self,product):
+        if product:
+            if not self.uom_id:
+                self.uom_id = self.product_id.uom_id
+
             price_change_pool = self.env['product.sale.history.line'].search(
-                [('product_id', '=', line.product_id.id),
-                 ('currency_id', '=', line.pi_id.currency_id.id),
-                 ('product_package_mode', '=', line.pi_id.pack_type.id),
-                 ('uom_id', '=', line.uom_id.id)])
+                [('product_id', '=', product.id),
+                 ('currency_id', '=', self.pi_id.currency_id.id),
+                 ('product_package_mode', '=', self.pi_id.pack_type.id),
+                 ('uom_id', '=', self.uom_id.id)])
+
             if not price_change_pool:
                 price_change_pool = self.env['product.sale.history.line'].search(
-                    [('product_id', '=', line.product_id.id),
-                     ('currency_id', '=', line.pi_id.currency_id.id),
-                     ('product_package_mode', '=', line.pi_id.pack_type.id),
-                     ('category_id', '=', line.uom_id.category_id.id)])
+                    [('product_id', '=', product.id),
+                     ('currency_id', '=', self.pi_id.currency_id.id),
+                     ('product_package_mode', '=', self.pi_id.pack_type.id),
+                     ('category_id', '=', self.uom_id.category_id.id)])
+
                 if price_change_pool:
                     if not price_change_pool.uom_id.uom_type == "reference":
                         uom_base_price = price_change_pool.new_price / price_change_pool.uom_id.factor_inv
                     else:
                         uom_base_price = price_change_pool.new_price
 
-                    if not line.uom_id.uom_type == "reference":
-                        line.price_unit = uom_base_price * line.uom_id.factor_inv
+                    if not self.uom_id.uom_type == "reference":
+                        return uom_base_price * self.uom_id.factor_inv
                     else:
-                        line.price_unit = uom_base_price
+                        return uom_base_price
             else:
-                line.price_unit = price_change_pool.new_price
+                return price_change_pool.new_price
+
+        return 0.00

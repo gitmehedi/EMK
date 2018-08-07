@@ -8,33 +8,31 @@
                 report_type="qweb-pdf"
                 file="delivery_qty_reports.report_daily_delivery_products"
                 name="delivery_qty_reports.report_daily_delivery_products"
+                paperformat="custom_report.paperformat_backend_landscape"
                 menu="False"/>
 
 
         <template id="report_daily_delivery_products">
             <t t-call="report.html_container">
                 <t t-call="custom_report.gbs_internal_layout">
-                    <div class="page">
+                    <div class="page" style="page-break-inside:auto">
                         <div class="row">
-                            <center>
-                                <h3>Daily Delivered &amp; Undelivered Report</h3>
-                            </center>
-                            <h5>Date:
-                                <span t-esc="report_of_day"/>
-                            </h5>
-                            <h5>
-                                <!--<strong>Product Name:</strong>-->
-                                <!--<span t-esc="product_name_for_report"/>-->
-                            </h5>
-                            <div class="text-right">
-                                <!--<strong>Operating Unit:</strong>-->
-                                <!--<span t-esc="operating_unit_name"/>-->
+                            <style type="text/css">
+                            .report-title { text-align:center; }
+                            .odo-bg-gray, .odo-bg-gray > td { background-color: #f5f5f5; }
+                            </style>
+                            <div class="clearfix">
+                                <h3 class="report-title">Daily Delivered &amp; Undelivered Report</h3>
+                                <div class="row">
+                                    <div class="col-xs-12 text-left">
+                                        <h6><b>Date: </b><span t-esc="report_of_day"/></h6>
+                                    </div>
+                                </div>
                             </div>
-                            <table class="table table-report-sm table-bordered table-striped">
-                                <thead>
-                                    <tr style="background-color:#B4FDF0;
-												border-bottom: 1px solid #030303;">
-
+                            <table class="table table-bordered table-report-xs table-striped"
+                                   style="margin-bottom: 10px;">
+                                    <thead>
+                                        <tr class="odo-bg-gray">
                                         <th>Customer</th>
                                         <th>D.O No.</th>
                                         <th>D.O Date</th>
@@ -96,7 +94,6 @@
                                                     <span t-esc="'%.2f'%total_value"/>
 
                                                 </td>
-
                                             </t>
                                         </tr>
                                     </t>

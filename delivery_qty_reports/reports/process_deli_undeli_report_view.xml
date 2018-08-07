@@ -8,124 +8,125 @@
                 report_type="qweb-pdf"
                 file="delivery_qty_reports.report_daily_deli_undeli"
                 name="delivery_qty_reports.report_daily_deli_undeli"
+                paperformat="custom_report.paperformat_backend_landscape"
                 menu="False"/>
 
 
         <template id="report_daily_deli_undeli">
             <t t-call="report.html_container">
                 <t t-call="custom_report.gbs_internal_layout">
-                    <div class="page">
-                        <div class="row">
-                            <center>
-                                <h3>Daily Delivered &amp; Undelivered Report</h3>
-                            </center>
-                            <h5>Date:
-                                <span t-esc="report_of_day"/>
-                            </h5>
-                            <h5>
-                                <!--<strong>Product Name:</strong>-->
-                                <!--<span t-esc="product_name_for_report"/>-->
-                            </h5>
-                            <div class="text-right">
-                                <!--<strong>Operating Unit:</strong>-->
-                                <!--<span t-esc="operating_unit_name"/>-->
-                            </div>
-                            <table class="table table-report-sm table-bordered table-striped">
-                                <thead>
-                                    <tr style="background-color:#B4FDF0;
-												border-bottom: 1px solid #030303;">
-
-                                        <th>Customer</th>
-                                        <th>D.O Date</th>
-                                        <th>D.O No.</th>
-                                        <th>D.O Qty</th>
-                                        <th>UoM</th>
-                                        <th>Unde Qty (Begening)</th>
-                                        <th>Issued D.O</th>
-                                        <th>Delivered Qty</th>
-                                        <th>Delivery Challan</th>
-                                        <th>Unde Qty</th>
-                                        <th>Category</th>
-                                        <th>Packing</th>
-                                    </tr>
-                                </thead>
-
-                                <tbody>
-                                    <t t-foreach="do_list" t-as="rec">
-                                        <tr>
-                                            <td colspan="12" style="background-color: #b2beb5;">
-                                                <span t-esc="rec_value['name']"/>
-                                            </td>
+                    <div class="page" style="page-break-inside:auto">
+                            <div class="row">
+                                <style type="text/css">
+                                .report-title { text-align:center; }
+                                .odo-bg-gray, .odo-bg-gray > td { background-color: #f5f5f5; }
+                                </style>
+                                <div class="clearfix">
+                                    <h3 class="report-title">Daily Delivered &amp; Undelivered Report</h3>
+                                    <div class="row">
+                                        <div class="col-xs-6 text-left">
+                                            <h6><b>Date: </b><span t-esc="report_of_day"/></h6>
+                                        </div>
+                                        <div class="col-xs-6 text-right">
+                                            <h6><b>Operating Unit: </b><span t-esc="operating_unit_name"/></h6>
+                                        </div>
+                                    </div>
+                                </div>
+                                <table class="table table-bordered table-report-xs table-striped"
+                               style="margin-bottom: 10px;table-layout: fixed;">
+                                    <thead>
+                                        <tr class="odo-bg-gray">
+                                            <th class="text-center" style="width:22%;">Customer</th>
+                                            <th class="text-center" style="width:5%;">D.O Date</th>
+                                            <th class="text-center" style="width:13%;">D.O No.</th>
+                                            <th class="text-center" style="width:5%;">D.O Qty</th>
+                                            <th class="text-center" style="width:3%;">UoM</th>
+                                            <th class="text-center" style="width:5%;">Unde Qty (Begening)</th>
+                                            <th class="text-center" style="width:5%;">Issued D.O</th>
+                                            <th class="text-center" style="width:5%;">Delivered Qty</th>
+                                            <th class="text-center" style="width:13%;">Delivery Challan</th>
+                                            <th class="text-center" style="width:5%;">Unde Qty</th>
+                                            <th class="text-center" style="width:15%;">Category</th>
+                                            <th class="text-center" style="width:4%;">Packing</th>
                                         </tr>
+                                    </thead>
 
-                                        <t t-foreach="rec_value['details']" t-as="k">
-                                            <tr>
-                                                <td>
-                                                    <span t-esc="k['partner_id']"/>
-                                                </td>
-                                                <td>
-                                                    <span t-esc="k['do_date']"/>
-                                                </td>
-                                                <td style="text-align: center;">
-                                                    <span t-esc="k['do_no']"/>
-                                                </td>
-                                                <td class="text-right">
-                                                    <span t-esc="'%.2f'%k['do_qty']"/>
-                                                </td>
-                                                <td>
-                                                    <span t-esc="k['uom']"/>
-                                                </td>
-                                                <td class="text-right">
-                                                    <span t-esc="'%.2f'%k['begen_un_deli_qty']"/>
-                                                </td>
-                                                <td class="text-right">
-                                                    <span t-esc="k['issued_do_today']"/>
-                                                </td>
-                                                <td class="text-right">
-                                                    <span t-esc="'%.2f'%k['delivered_qty']"/>
-                                                </td>
-                                                <td>
-                                                    <span t-esc="k['vat_challan']"/>
-                                                </td>
-                                                <td class="text-right">
-                                                    <span t-esc="'%.2f'%k['un_delivered_qty']"/>
-                                                </td>
-                                                <td style="text-align: left;">
-                                                    <span t-esc="k['product']"/>
-                                                </td>
-                                                <td style="text-align: center;">
-                                                    <span t-esc="k['packing_mode']"/>
+                                    <tbody>
+                                        <t t-foreach="do_list" t-as="rec">
+                                            <tr style="page-break-inside: avoid">
+                                                <td colspan="12" style="background-color: #b2beb5;">
+                                                    <span t-esc="rec_value['name']"/>
                                                 </td>
                                             </tr>
+
+                                            <t t-foreach="rec_value['details']" t-as="k">
+                                                <tr>
+                                                    <td class="text-left">
+                                                        <span t-esc="k['partner_id']"/>
+                                                    </td>
+                                                    <td>
+                                                        <span t-esc="k['do_date']"/>
+                                                    </td>
+                                                    <td style="text-align: left;">
+                                                        <span t-esc="k['do_no']"/>
+                                                    </td>
+                                                    <td class="text-right">
+                                                        <span t-esc="'%.2f'%k['do_qty']"/>
+                                                    </td>
+                                                    <td>
+                                                        <span t-esc="k['uom']"/>
+                                                    </td>
+                                                    <td class="text-right">
+                                                        <span t-esc="'%.2f'%k['begen_un_deli_qty']"/>
+                                                    </td>
+                                                    <td class="text-right">
+                                                        <span t-esc="k['issued_do_today']"/>
+                                                    </td>
+                                                    <td class="text-right">
+                                                        <span t-esc="'%.2f'%k['delivered_qty']"/>
+                                                    </td>
+                                                    <td>
+                                                        <span t-esc="k['vat_challan']"/>
+                                                    </td>
+                                                    <td class="text-right">
+                                                        <span t-esc="'%.2f'%k['un_delivered_qty']"/>
+                                                    </td>
+                                                    <td style="text-align: left;">
+                                                        <span t-esc="k['product']"/>
+                                                    </td>
+                                                    <td style="text-align: left;">
+                                                        <span t-esc="k['packing_mode']"/>
+                                                    </td>
+                                                </tr>
+                                            </t>
+                                            <tr style="background-color:#ebebe0;
+                                                    border-bottom: 1px solid #030303;">
+                                                <td colspan="3">
+                                                    <b>Total</b>
+                                                </td>
+                                                <td class="text-right">
+                                                    <span t-esc="'%.2f'%rec_value['total']['do_qty']"/>
+                                                </td>
+                                                <td/>
+                                                <td class="text-right">
+                                                    <span t-esc="'%.2f'%rec_value['total']['begen_un_deli_qty']"/>
+                                                </td>
+                                                <td class="text-right">
+                                                    <span t-esc="'%.2f'%rec_value['total']['issued_do']"/>
+                                                </td>
+                                                <td class="text-right">
+                                                    <span t-esc="'%.2f'%rec_value['total']['delivered_qty']"/>
+                                                </td>
+                                                <td/>
+                                                <td class="text-right">
+                                                    <span t-esc="'%.2f'%rec_value['total']['un_delivered_qty']"/>
+                                                </td>
+                                                <td colspan="2"/>
+                                            </tr>
                                         </t>
-                                        <tr style="background-color:#ebebe0;
-												border-bottom: 1px solid #030303;">
-                                            <td colspan="3">
-                                                <b>Total</b>
-                                            </td>
-                                            <td class="text-right">
-                                                <span t-esc="'%.2f'%rec_value['total']['do_qty']"/>
-                                            </td>
-                                            <td/>
-                                            <td class="text-right">
-                                                <span t-esc="'%.2f'%rec_value['total']['begen_un_deli_qty']"/>
-                                            </td>
-                                            <td class="text-right">
-                                                <span t-esc="'%.2f'%rec_value['total']['issued_do']"/>
-                                            </td>
-                                            <td class="text-right">
-                                                <span t-esc="'%.2f'%rec_value['total']['delivered_qty']"/>
-                                            </td>
-                                            <td/>
-                                            <td class="text-right">
-                                                <span t-esc="'%.2f'%rec_value['total']['un_delivered_qty']"/>
-                                            </td>
-                                            <td colspan="2"/>
-                                        </tr>
-                                    </t>
-                                </tbody>
-                            </table>
-                            <t t-call="custom_report.report_signing"></t>
+                                    </tbody>
+                                </table>
+                                <t t-call="custom_report.report_signing"></t>
                         </div>
                     </div>
                 </t>

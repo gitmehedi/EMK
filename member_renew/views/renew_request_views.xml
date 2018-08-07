@@ -1,0 +1,63 @@
+<?xml version="1.0"?>
+<odoo>
+
+    <record id="view_renew_request_form" model="ir.ui.view">
+        <field name="name">renew.request.form</field>
+        <field name="model">renew.request</field>
+        <field name="priority" eval="1"/>
+        <field name="arch" type="xml">
+            <form string="Renew Request">
+                <header>
+                    <button string='Invoice' name="act_invoice" type='object' class="oe_highlight"
+                            states="request"/>
+                    <button string='Reject' name="act_reject" type='object'
+                            states="request"/>
+                    <button string='Done' name="act_done" type='object' class="oe_highlight"
+                            states="invoice"/>
+                    <field name="state" widget="statusbar" statusbar_visible="request,invoice,done"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="membership_id"
+                                   options="{'no_open':True,'no_create':True,'no_create_edit':True,}"/>
+                            <field name="approve_date"/>
+                        </group>
+                        <group>
+                            <field name="request_date"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_renew_request_tree" model="ir.ui.view">
+        <field name="name">renew.request.tree</field>
+        <field name="model">renew.request</field>
+        <field name="priority" eval="1"/>
+        <field name="arch" type="xml">
+            <tree string="Renew Request"
+                  colors="green:state=='request'; gray:state=='done';blue:state=='invoice';red:state=='done';">
+                <field name="membership_id"/>
+                <field name="request_date"/>
+                <field name="approve_date"/>
+                <field name="state"/>
+            </tree>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="action_renew_request">
+        <field name="name">Renew Request</field>
+        <field name="res_model">renew.request</field>
+        <field name="help" type="html">
+            <p class="oe_view_nocontent_create">
+                Create a Renew Request for Member
+            </p>
+        </field>
+    </record>
+
+    <menuitem name="Reports" id="menu_renew_request" parent="membership.menu_association"/>
+    <menuitem id="sub_renew_request" parent="menu_renew_request"
+              action="action_renew_request"/>
+</odoo>

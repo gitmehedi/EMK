@@ -446,42 +446,6 @@
             </field>
         </record>
 
-
-        <record id="search_so_hoa_approver" model="ir.ui.view">
-            <field name="name">delivery.authorization.search</field>
-            <field name="model">sale.order</field>
-            <field name="arch" type="xml">
-                <search string="Quotations">
-                    <filter name="validate" string="To Validate" domain="[('state','=','validate')]"/>
-                </search>
-            </field>
-        </record>
-
-        <record id="action_so_hoa_approver" model="ir.actions.act_window">
-            <field name="name">Quotations</field>
-            <field name="res_model">sale.order</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
-            <field name="search_view_id" ref="search_so_hoa_approver"/>
-            <field name="context">{
-                'search_default_validate':1,
-                }
-            </field>
-
-            <field name="help" type="html">
-                <p class="oe_view_nocontent_create">
-                    Create a Quotation, the first step of a new sale.
-                </p>
-                <p>
-                    Once the quotation is confirmed, it becomes a sales order.
-                    You'll be able to invoice it and collect payments.
-                    From the <i>Sales Orders</i> menu, you can track delivery
-                    orders or services.
-                </p>
-            </field>
-        </record>
-
-
         <record id="sale.action_orders" model="ir.actions.act_window">
             <field name="name">Sales Orders</field>
             <field name="type">ir.actions.act_window</field>

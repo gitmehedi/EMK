@@ -18,7 +18,8 @@ class DailyDeliveryUnDeliveryReport(models.TransientModel):
     def process_delivery_report(self):
         data = {
             'report_of_day': self.report_of_day,
-            'operating_unit_id': self.operating_unit_id.id
+            'operating_unit_id': self.operating_unit_id.id,
+            'operating_unit_name': self.operating_unit_id.name
         }
 
         return self.env['report'].get_action(self, 'delivery_qty_reports.report_daily_deli_undeli', data=data)
