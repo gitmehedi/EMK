@@ -8,43 +8,6 @@ from odoo.exceptions import UserError
 class InheritSalesCommissionGenerate(models.Model):
     _inherit = 'sales.commission.generate'
 
-    def _prepare_lines_for_invoices_products(self):
-        res = []
-        product_list = []
-        total_commission = 0
-        prod_line = {}
-
-        for sc in self:
-            for line in sc.line_ids:
-                for comm_line in line.invoice_line_ids:
-                    for inv_line in comm_line.invoice_id.invoice_line_ids:
-                        new_prod = True
-                        for prod in product_list:
-                            if inv_line.product_id.id == prod['product_id']:
-                                  #  and inv_line.operating_unit_id.id == prod['operating_unit_id']:
-                                new_prod = False
-                                total_commission += inv_line.invoice_id.generated_commission_amount
-                                # prod_line = {
-                                #     'product_id': inv_line.product_id.id,
-                                #     'generated_commission_amount': total_commission
-                                # }
-
-                        if new_prod:
-                            prod_line = {
-                                'product_id': inv_line.product_id.id,
-                                'partner_id': inv_line.partner_id.id,
-                               # 'operating_unit_id': inv_line.operating_unit_id.id,
-                                'generated_commission_amount': inv_line.invoice_id.generated_commission_amount
-                            }
-
-                        product_list.append(prod_line)
-
-            print 'total comm', total_commission
-            for prod in product_list:
-                res.append([0, 0, prod])
-
-        return res
-
 
     @api.multi
     def action_approve_sales_commission(self):
@@ -67,18 +30,13 @@ class InheritSalesCommissionGenerate(models.Model):
                         'date': date,
                     }
 
-
-                    # if line_ids:
-                    #     if line_ids[0][2]['product_id'] == invoice_line.product_id:
-                    #         amount = (line_ids[0][2]['commission_amount'] + invoice_line.commission_amount) or -(move.commission_amount + invoice_line.commission_amount)
-                    # else:
                     amount = invoice_line.commission_amount or -invoice_line.commission_amount
 
                     if float_is_zero(amount, precision_digits=precision):
                         continue
 
                     debit_account_id = p_id.product_tmpl_id.commission_expense
-                    credit_account_id = line.partner_id.property_account_receivable_id
+                    credit_account_id = line.partner_id.property_account_payable_id
 
                     if not debit_account_id:
                         raise UserError('Debit Account is not configured for: %s' % p_id.display_name)
@@ -116,9 +74,6 @@ class InheritSalesCommissionGenerate(models.Model):
 
                             line_ids.append(credit_line)
                             credit_sum += credit_line[2]['credit'] - credit_line[2]['debit']
-
-                        print 'credit sum --- ', credit_sum
-                        print 'debit sum --- ', debit_sum
 
 
         move_dict['line_ids'] = line_ids

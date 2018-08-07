@@ -31,7 +31,6 @@ class InheritedAccountInvoiceLine(models.Model):
             inv._update_commission_related_vals(sale_order_pool)
 
 
-
             commission = None
             for sale_line in sale_order_pool.order_line:
                 commission_type = sale_line.product_id.product_tmpl_id.commission_type

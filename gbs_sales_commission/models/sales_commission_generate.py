@@ -24,8 +24,11 @@ class SalesCommissionGenerate(models.Model):
 
     @api.multi
     def action_generate_sales_commission(self):
-        vals = {}
         for comm in self:
+            if self.line_ids:
+                self.line_ids.unlink()
+
+
             invoices = comm.env['account.invoice'].search(
                 [('date_invoice', '<=', comm.till_date), ('is_commission_generated', '=', False)])
 
@@ -67,11 +70,10 @@ class SalesCommissionGenerate(models.Model):
                 for cust_invoice in inv_line.invoice_line_ids:
                     account_invoice_pool = inv.env['account.invoice'].search([('id', '=', cust_invoice.invoice_id.id)])
                     if not account_invoice_pool.is_commission_generated:
-                       # account_invoice_pool.write({'is_commission_generated': True})
-                        pass
+                       account_invoice_pool.write({'is_commission_generated': True})
                     else:
                         raise UserError(
                             "Commission line is already approved. Please delete customer '%s' from line and then Generate again." % (
                             account_invoice_pool.partner_id.name))
 
-       # inv.state = 'approved'
+        inv.state = 'approved'
