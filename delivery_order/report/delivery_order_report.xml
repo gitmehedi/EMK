@@ -4,10 +4,11 @@
         <report
                 id="custom_report_of_delivery_order"
                 model="delivery.order"
-                string="Delivery Authorization"
+                string="Delivery Order"
                 report_type="qweb-pdf"
                 name="delivery_order.report_delivery_order_doc"
                 file="delivery_order.report_delivery_order_doc"
+                paperformat="custom_report.paperformat_backend_portrait"
         />
     </data>
 </odoo>
