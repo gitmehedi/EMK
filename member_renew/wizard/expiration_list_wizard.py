@@ -9,9 +9,9 @@ class ExpirationListWizard(models.Model):
     no_of_days = fields.Integer(required=True, string='No of Days')
 
     @api.multi
-    def send_mail(self):
+    def generate(self):
         if self.no_of_days:
-            start_date = (datetime.now() - timedelta(days=60)).strftime('%Y-%m-%d')
+            start_date = datetime.now().strftime('%Y-%m-%d')
             end_date = (datetime.now() + timedelta(days=self.no_of_days)).strftime('%Y-%m-%d')
 
             res = self.env['res.partner'].search(
