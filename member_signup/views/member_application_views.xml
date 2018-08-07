@@ -12,7 +12,7 @@
                             states="application"/>
                     <button string="Reject" type="object" name="member_reject" class="btn btn-sm"
                             states="application"/>
-                    <field name="state" widget="statusbar"/>
+                    <field name="state" widget="statusbar" statusbar_visible="application,invoice,member"/>
                 </header>
                 <sheet>
                     <div class="oe_button_box" name="button_box">
@@ -313,12 +313,12 @@
     </record>
 
 
-    <menuitem name="Pending Application" id="menu_membership" sequence="10" parent="menu_member_general"
+    <menuitem name="Pending Applicants" id="menu_membership" sequence="10" parent="menu_member_general"
               action="action_membership_pending_applicant"/>
 
 
     <record model="ir.actions.act_window" id="action_membership_applicant">
-        <field name="name">Application</field>
+        <field name="name">Applicants</field>
         <field name="res_model">res.partner</field>
         <field name="search_view_id" ref="membership.view_res_partner_member_filter"/>
         <field name="domain">[('is_applicant','=',True),('state','in',['invoice'])]</field>
@@ -356,7 +356,7 @@
 
 
     <record model="ir.actions.act_window" id="action_membership_applicant_reject">
-        <field name="name">Rejected</field>
+        <field name="name">Rejected Applicants</field>
         <field name="res_model">res.partner</field>
         <field name="search_view_id" ref="membership.view_res_partner_member_filter"/>
         <field name="domain">[('is_applicant','=',True),('state','=','reject')]</field>

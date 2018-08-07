@@ -319,7 +319,7 @@
     </record>
 
 
-    <menuitem name="Application" id="menu_membership" sequence="5" parent="menu_member_general"
+    <menuitem name="Applicants" id="menu_membership" sequence="5" parent="menu_member_general"
               action="action_membership_applicant"/>
 
 </odoo>
