@@ -29,6 +29,11 @@ class ProformaInvoice(models.Model):
                 pi.taxed_amount= amount_tax
                 pi.total= amount_untaxed + amount_tax + pi.freight_charge
 
+    @api.depends('partner_id')
+    def _compute_customer_address(self, context=None):
+        if self.partner_id:
+            str_address = self.getAddressByPartner(self.partner_id)
+            self.customer_add = str_address
 
     name = fields.Char(string='Name', index=True, readonly=True, default="/")
     partner_id = fields.Many2one('res.partner', string='Customer', domain=[('customer', '=', True)], required=True,
@@ -119,11 +124,7 @@ class ProformaInvoice(models.Model):
             for line in order.line_ids:
                 line._set_product_line()
 
-    @api.depends('partner_id')
-    def _compute_customer_address(self, context=None):
-        if self.partner_id:
-            str_address = self.getAddressByPartner(self.partner_id)
-            self.customer_add = str_address
+
 
     @api.constrains('freight_charge')
     def check_freight_charge_val(self):
