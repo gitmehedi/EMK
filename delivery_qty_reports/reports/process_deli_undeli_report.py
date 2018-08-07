@@ -96,6 +96,7 @@ class ProcessDeliveryUnDeliveryReport(models.AbstractModel):
         date_given = data['report_of_day']
 
         operating_unit_id = data['operating_unit_id']
+        operating_unit_name = data['operating_unit_name']
         given_date = self.getDateFromStr(date_given)
 
         datas = {}
@@ -165,6 +166,7 @@ class ProcessDeliveryUnDeliveryReport(models.AbstractModel):
         docargs = {
             'do_list': datas,
             'report_of_day': date_given,
+            'operating_unit_name':operating_unit_name
         }
 
         return self.env['report'].render('delivery_qty_reports.report_daily_deli_undeli', docargs)
