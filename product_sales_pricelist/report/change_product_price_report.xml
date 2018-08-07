@@ -31,7 +31,7 @@
                                    style="margin-bottom: 10px;table-layout:fixed;">
                                     <thead>
                                         <tr class="odo-bg-gray">
-                                            <th>Product</th>
+                                            <th class="text-center">Product</th>
                                             <th class="text-center" style="width:12%;">Packaging Mode</th>
                                             <th class="text-center" style="width:8%;">UoM</th>
                                             <th class="text-center" style="width:8%;">Currency</th>
