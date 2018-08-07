@@ -80,7 +80,6 @@ class ResPartner(models.Model):
         elif context.get('menu_count') == 'reject':
             return [('state', 'in', ['reject'])]
 
-
     @api.onchange('birthdate')
     def validate_birthdate(self):
         if self.birthdate:
@@ -177,55 +176,59 @@ class ResPartner(models.Model):
     def action_signup_prepare(self):
         return self.signup_prepare()
 
+    @api.model
+    def _create_invoice(self):
+        product_id = self.env['product.product'].search([('membership_status', '=', True)], order='id desc',
+                                                        limit=1)
+        if not product_id:
+            raise ValidationError(_('Please configure your default Memebership Product.'))
+
+        ins_inv = self.env['account.invoice']
+        journal_id = self.env['account.journal'].search([('code', '=', 'INV')])
+        account_id = self.env['account.account'].search(
+            [('internal_type', '=', 'receivable'), ('deprecated', '=', False)])
+
+        acc_invoice = {
+            'partner_id': self.id,
+            'date_invoice': datetime.now(),
+            'user_id': self.env.user.id,
+            'account_id': account_id.id,
+            'state': 'draft',
+            'invoice_line_ids': [
+                (0, 0, {
+                    'name': product_id.name,
+                    'product_id': product_id.id,
+                    'price_unit': product_id.list_price,
+                    'account_id': journal_id.default_debit_account_id.id,
+                })]
+        }
+        inv = ins_inv.create(acc_invoice)
+        inv.action_invoice_open()
+
+        if inv:
+            self.state = 'invoice'
+            pdf = self.env['report'].sudo().get_pdf([inv.id], 'account.report_invoice')
+            attachment = self.env['ir.attachment'].create({
+                'name': inv.number + '.pdf',
+                'res_model': 'account.invoice',
+                'res_id': inv.id,
+                'datas_fname': inv.number + '.pdf',
+                'type': 'binary',
+                'datas': base64.b64encode(pdf),
+                'mimetype': 'application/x-pdf'
+            })
+            template = self.env.ref('member_signup.member_invoice_email_template')
+            template.write({
+                'email_cc': "nopaws_ice_iu@yahoo.com,mahtab.faisal@genweb2.com",
+                'attachment_ids': [(6, 0, attachment.ids)],
+            })
+            user = self.env['res.users'].search([('id', '=', self.user_ids.id)])
+            template.with_context({'lang': user.lang}).send_mail(user.id, force_send=True, raise_exception=True)
+
     @api.multi
     def member_invoiced(self):
         if 'application' in self.state:
-            product_id = self.env['product.product'].search([('membership_status', '=', True)], order='id desc',
-                                                            limit=1)
-            if not product_id:
-                raise ValidationError(_('Please configure your default Memebership Product.'))
-
-            ins_inv = self.env['account.invoice']
-            journal_id = self.env['account.journal'].search([('code', '=', 'INV')])
-            account_id = self.env['account.account'].search(
-                [('internal_type', '=', 'receivable'), ('deprecated', '=', False)])
-
-            acc_invoice = {
-                'partner_id': self.id,
-                'date_invoice': datetime.now(),
-                'user_id': self.env.user.id,
-                'account_id': account_id.id,
-                'state': 'draft',
-                'invoice_line_ids': [
-                    (0, 0, {
-                        'name': product_id.name,
-                        'product_id': product_id.id,
-                        'price_unit': product_id.list_price,
-                        'account_id': journal_id.default_debit_account_id.id,
-                    })]
-            }
-            inv = ins_inv.create(acc_invoice)
-            inv.action_invoice_open()
-
-            if inv:
-                self.state = 'invoice'
-                pdf = self.env['report'].sudo().get_pdf([inv.id], 'account.report_invoice')
-                attachment = self.env['ir.attachment'].create({
-                    'name': inv.number + '.pdf',
-                    'res_model': 'account.invoice',
-                    'res_id': inv.id,
-                    'datas_fname': inv.number + '.pdf',
-                    'type': 'binary',
-                    'datas': base64.b64encode(pdf),
-                    'mimetype': 'application/x-pdf'
-                })
-                template = self.env.ref('member_signup.member_invoice_email_template')
-                template.write({
-                    'email_cc': "nopaws_ice_iu@yahoo.com,mahtab.faisal@genweb2.com",
-                    'attachment_ids': [(6, 0, attachment.ids)],
-                })
-                user = self.env['res.users'].search([('id', '=', self.user_ids.id)])
-                template.with_context({'lang': user.lang}).send_mail(user.id, force_send=True, raise_exception=True)
+            self._create_invoice()
 
     def mailsend(self, vals):
         template = False

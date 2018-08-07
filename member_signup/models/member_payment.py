@@ -75,9 +75,9 @@ class MemberPayment(models.Model):
                     payment.post()
 
                     if payment and len(payment_ref) > 0:
-                        payment_ref = payment_ref + ', ', rec.display_name
+                        payment_ref = payment_ref + ', ' + str(rec.display_name)
                     else:
-                        payment_ref = rec.display_name
+                        payment_ref = str(rec.display_name)
 
                     if not rem_amount:
                         self.state = 'paid'
