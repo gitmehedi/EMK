@@ -9,11 +9,10 @@ class DailyDeliveryUnDeliveryReport(models.TransientModel):
     product_id = fields.Many2one('product.product', string='Product', domain="([('sale_ok','=','True')])",
                                  required=False, )
 
+
     operating_unit_id = fields.Many2one('operating.unit', string='Operating Unit',
-                                        required='True',
-                                        default=lambda self: self.env['res.users'].
-                                        operating_unit_default_get(self._uid)
-                                        )
+                                        required='True', default=lambda self: self.env.user.default_operating_unit_id)
+
 
     @api.multi
     def process_delivery_report(self):
