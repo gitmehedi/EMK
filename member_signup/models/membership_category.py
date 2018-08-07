@@ -18,7 +18,7 @@ class InheritedMembershipCategory(models.Model):
 class InheritedProductTemplate(models.Model):
     _inherit = "product.template"
 
-    membership_status = fields.Boolean(string='Membership Status', default=False)
+    membership_status = fields.Boolean(string='Default Membership', default=False)
 
     @api.constrains('name')
     def _check_name(self):
