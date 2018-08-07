@@ -5,7 +5,7 @@ class InheritAccountInvoice(models.Model):
     _inherit = 'account.invoice'
 
     @api.multi
-    @api.depends('invoice_line_ids','invoice_line_ids.quantity')
+    @api.depends('invoice_line_ids.product_id','invoice_line_ids','invoice_line_ids.quantity')
     def _calculate_commission_amount(self):
         for inv in self:
             sale_order_pool = inv.env['sale.order'].search([('name', '=', inv.origin)])
@@ -24,10 +24,10 @@ class InheritAccountInvoice(models.Model):
                     for picking_line in sale_order_pool.picking_ids[0].pack_operation_ids:
                         commission = commission_percentage_amt * picking_line.qty_done
 
-                inv.generated_commission_amount = commission
+                inv.invoice_line_ids.commission_amount = commission
 
     is_commission_generated = fields.Boolean(string='Commission Generated', default=False)
-    generated_commission_amount = fields.Float(string='Commission Amount', store = True, compute='_calculate_commission_amount',)
+    generated_commission_amount = fields.Float(string='Commission Amount', store = True, )
 
     @api.multi
     @api.onchange('invoice_line_ids')
