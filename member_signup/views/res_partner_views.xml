@@ -48,6 +48,6 @@
         </field>
     </record>
 
-    <menuitem name="General" id="menu_member_general" sequence="0" parent="membership.menu_association"/>
+    <menuitem name="Applicant" id="menu_member_general" sequence="0" parent="membership.menu_association"/>
 
 </odoo>

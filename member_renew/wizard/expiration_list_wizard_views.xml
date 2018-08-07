@@ -12,7 +12,7 @@
                     </group>
                 </group>
                 <footer>
-                    <button string='Send Email' name="send_mail" type='object' class="oe_highlight"/>
+                    <button string='Generate' name="generate" type='object' class="oe_highlight"/>
                 </footer>
             </form>
         </field>
@@ -34,19 +34,5 @@
               action="action_expiration_list"/>
 
 
-    <record id="action_send_notification_for_expiration" model="ir.actions.server">
-        <field name="name">Expire Notification</field>
-        <field name="model_id" ref="model_res_partner"/>
-        <field name="state">code</field>
-        <field name="condition">True</field>
 
-        <field name="code">record.notify_expiration()</field>
-    </record>
-    <record id="action_res_partner" model="ir.values">
-        <field name="name">name</field>
-        <field name="model">res.partner</field>
-        <field name="key">action</field>
-        <field name="key2">client_action_multi</field>
-        <field name="value" eval="'ir.actions.server,%d'%action_send_notification_for_expiration"/>
-    </record>
 </odoo>
