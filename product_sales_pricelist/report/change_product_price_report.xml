@@ -5,49 +5,42 @@
                 string="Product Pricelist"
                 name="product_sales_pricelist.report_productPricelist_view"
                 file="product_sales_pricelist.report_productPricelist"
+                paperformat="custom_report.paperformat_backend_portrait"
                 report_type="qweb-pdf"/>
 
         <template id="report_productPricelist_view">
             <t t-call="report.html_container">
                 <t t-call="custom_report.gbs_internal_layout">
                     <t t-foreach="docs" t-as="doc">
-                        <t t-call="report.external_layout">
-                            <div class="page">
-                                <h2 style="padding: 25px 0px; text-align: center;">
-                                    Product Sales Pricelist
-                                </h2>
-                                <div style="margin-bottom:70px;">
-                                    <div class="col-xs-3">
-                                        <strong>Prepared By:</strong>
-                                        <p t-field="doc.requested_by"/>
-                                    </div>
-                                    <div class="col-xs-3">
-                                        <strong>First Approval By:</strong>
-                                        <p t-field="doc.approver1_id"/>
-                                    </div>
-                                    <div class="col-xs-3">
-                                        <strong>Second Approval By:</strong>
-                                        <p t-field="doc.approver2_id"/>
-                                    </div>
-                                    <div class="col-xs-3">
-                                        <strong>Effective Date:</strong>
-                                        <p t-field="doc.effective_date"/>
+                        <div class="page" style="page-break-inside:auto">
+                            <div class="row">
+                                <div class="clearfix">
+                                    <h4 class="report-title">Product Sales Pricelist</h4>
+                                    <div class="row">
+                                        <div class="col-xs-7 text-left">
+                                            <h6><b>Prepared By: </b><span t-field="doc.requested_by"/></h6>
+                                            <h6><b>First Approval By: </b><span t-field="doc.approver1_id"/></h6>
+                                        </div>
+                                        <div class="col-xs-5 text-left">
+                                            <h6><b>Second Approval By: </b><span t-field="doc.approver2_id"/></h6>
+                                            <h6><b>Effective Date: </b><span t-field="doc.effective_date" t-field-options='{"format": "Y-MM-dd"}'/></h6>
+                                        </div>
                                     </div>
                                 </div>
-
-                                <table class="table table-bordered">
+                                <table class="table table-bordered table-report-xs table-striped"
+                                   style="margin-bottom: 10px;table-layout:fixed;">
                                     <thead>
-                                        <tr style="background-color:#C0C0C0;">
+                                        <tr class="odo-bg-gray">
                                             <th>Product</th>
-                                            <th>Packaging Mode</th>
-                                            <th>UoM</th>
-                                            <th>Currency</th>
-                                            <th>Old Price</th>
-                                            <th>New Price</th>
+                                            <th class="text-center" style="width:12%;">Packaging Mode</th>
+                                            <th class="text-center" style="width:8%;">UoM</th>
+                                            <th class="text-center" style="width:8%;">Currency</th>
+                                            <th class="text-center" style="width:18%;">Old Price</th>
+                                            <th class="text-center" style="width:18%;">New Price</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr>
+                                        <tr style="page-break-inside: avoid">
                                             <td>
                                                 <span t-field="doc.product_id"/>
                                             </td>
@@ -60,17 +53,17 @@
                                             <td>
                                                 <span t-field="doc.currency_id"/>
                                             </td>
-                                            <td>
+                                            <td class="text-right">
                                                 <span t-field="doc.list_price"/>
                                             </td>
-                                            <td>
+                                            <td class="text-right">
                                                 <span t-field="doc.new_price"/>
                                             </td>
                                         </tr>
                                     </tbody>
                                 </table>
                             </div>
-                        </t>
+                        </div>
                     </t>
                 </t>
             </t>
