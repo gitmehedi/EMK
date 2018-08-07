@@ -32,5 +32,7 @@ class SalesCustomerCommissionInvoiceLine(models.Model):
     commission_amount = fields.Float(string='Commission Amount',readonly=True)
 
     """Relational Fields"""
-    invoice_id = fields.Many2one('account.invoice', string='Invoice Id',readonly=True)
+    product_id = fields.Many2one('product.product', string='Product', readonly=True)
+    invoice_id = fields.Many2one('account.invoice', string='Invoice No',readonly=True)
+    invoice_line_id = fields.Many2one('account.invoice.line', string='Invoice Line', readonly=True)
     commission_line_id = fields.Many2one('sales.customer.commission.line', string='Commission', ondelete='cascade')

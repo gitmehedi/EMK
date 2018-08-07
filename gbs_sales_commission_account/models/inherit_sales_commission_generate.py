@@ -48,111 +48,83 @@ class InheritSalesCommissionGenerate(models.Model):
 
     @api.multi
     def action_approve_sales_commission(self):
-        res = super(InheritSalesCommissionGenerate, self).action_approve_sales_commission()
-
-        precision = self.env['decimal.precision'].precision_get('Payroll')
-
-        result = self._prepare_lines_for_invoices_products()
 
         company_id = self.env['res.company']._company_default_get('gbs_sales_commission_account')
+        precision = self.env['decimal.precision'].precision_get('Payroll')
 
-        for slip in self:
-            line_ids = []
-            debit_sum = 0.0
-            credit_sum = 0.0
-            date = datetime.datetime.today().strftime('%Y-%m-%d')
+        line_ids = []
+        for line in self.line_ids:
+            for invoice_line in line.invoice_line_ids:
+                for p_id in invoice_line.product_id:
 
-            move_dict = {
-                'journal_id': company_id.commission_journal.id,
-                'date': date,
-            }
 
-            for r in result:
-                product_pool = slip.env['product.product'].search([('id','=',r[2]['product_id'])])
+                    debit_sum = 0.0
+                    credit_sum = 0.0
+                    date = datetime.datetime.today().strftime('%Y-%m-%d')
 
-                amount = r[2]['generated_commission_amount'] or -r[2]['generated_commission_amount']
-                if float_is_zero(amount, precision_digits=precision):
-                    continue
-
-                debit_account_id = product_pool.product_tmpl_id.commission_expense
-                credit_account_id = company_id.commission_journal.default_credit_account_id  # line.salary_rule_id.account_credit.id
-
-                if debit_account_id:
-                    debit_line = (0, 0, {
-                        'name': debit_account_id.name,  # line.name,
-                        'partner_id': r[2]['partner_id'],
-                        #'operating_unit_id': r[2]['operating_unit_id'],
-                        'account_id': debit_account_id.id,
+                    move_dict = {
                         'journal_id': company_id.commission_journal.id,
                         'date': date,
-                        'debit': amount > 0.0 and amount or 0.0,
-                        'credit': amount < 0.0 and -amount or 0.0,
-                        # 'analytic_account_id': line.salary_rule_id.analytic_account_id.id,
-                        # 'tax_line_id': line.salary_rule_id.account_tax_id.id,
-                    })
-                    line_ids.append(debit_line)
-                    debit_sum += debit_line[2]['debit'] - debit_line[2]['credit']
-
-                if credit_account_id:
-                    credit_line = (0, 0, {
-                        'name': credit_account_id.name,
-                        'partner_id': r[2]['partner_id'],
-                        #'operating_unit_id': r[2]['operating_unit_id'],
-                        'account_id': credit_account_id.id,
-                        'journal_id': company_id.commission_journal.id,
-                        'date': date,
-                        'debit': amount < 0.0 and -amount or 0.0,
-                        'credit': amount > 0.0 and amount or 0.0,
-                        # 'analytic_account_id': line.salary_rule_id.analytic_account_id.id,
-                        # 'tax_line_id': line.salary_rule_id.account_tax_id.id,
-                    })
-
-                    line_ids.append(credit_line)
-                    credit_sum += credit_line[2]['credit'] - credit_line[2]['debit']
-
-                if float_compare(credit_sum, debit_sum, precision_digits=precision) == -1:
-                    acc_id = company_id.commission_journal.default_credit_account_id.id
-                    if not acc_id:
-                        raise UserError(
-                            ('The Expense Journal "%s" has not properly configured the Credit Account!') % (
-                                company_id.commission_journal.name))
-                    adjust_credit = (0, 0, {
-                        'name': ('Adjustment Entry'),
-                        'partner_id': False,
-                        'account_id': acc_id,
-                        'journal_id': company_id.commission_journal.id,
-                        'date': date,
-                        'debit': 0.0,
-                        'credit': debit_sum - credit_sum,
-                    })
-                    line_ids.append(adjust_credit)
-
-                elif float_compare(debit_sum, credit_sum, precision_digits=precision) == -1:
-                    acc_id = product_pool.product_tmpl_id.commission_expense.id
-                    if not acc_id:
-                        raise UserError(
-                            ('The Expense Journal "%s" has not properly configured the Debit Account!') % (
-                                company_id.commission_journal.name))
-                    adjust_debit = (0, 0, {
-                        'name': ('Adjustment Entry'),
-                        'partner_id': False,
-                        'account_id': acc_id,
-                        'journal_id': company_id.commission_journal.id,
-                        'date': date,
-                        'debit': credit_sum - debit_sum,
-                        'credit': 0.0,
-                    })
-                    line_ids.append(adjust_debit)
+                    }
 
 
+                    # if line_ids:
+                    #     if line_ids[0][2]['product_id'] == invoice_line.product_id:
+                    #         amount = (line_ids[0][2]['commission_amount'] + invoice_line.commission_amount) or -(move.commission_amount + invoice_line.commission_amount)
+                    # else:
+                    amount = invoice_line.commission_amount or -invoice_line.commission_amount
 
-        print 'credit sum --- ', credit_sum
-        print 'debit sum --- ', debit_sum
+                    if float_is_zero(amount, precision_digits=precision):
+                        continue
+
+                    debit_account_id = p_id.product_tmpl_id.commission_expense
+                    credit_account_id = line.partner_id.property_account_receivable_id
+
+                    if not debit_account_id:
+                        raise UserError('Debit Account is not configured for: %s' % p_id.display_name)
+
+                    if not credit_account_id:
+                        raise UserError('Credit Account is not configured for Customer: %s' % line.partner_id.name)
+
+                    if debit_account_id:
+                        debit_line = (0, 0, {
+                            'name': debit_account_id.name,
+                            # 'operating_unit_id': r[2]['operating_unit_id'],
+                            'product_id': p_id.id,
+                            'account_id': debit_account_id.id,
+                            'journal_id': company_id.commission_journal.id,
+                            'date': date,
+                            'debit': amount > 0.0 and amount or 0.0,
+                            'credit': amount < 0.0 and -amount or 0.0,
+                        })
+                        line_ids.append(debit_line)
+                        debit_sum += debit_line[2]['debit'] - debit_line[2]['credit']
+
+
+                        if credit_account_id:
+                            credit_line = (0, 0, {
+                                'name': credit_account_id.name,
+                                'partner_id': line.partner_id.id,
+                                'product_id': p_id.id,
+                                 #'operating_unit_id': a
+                                'account_id': credit_account_id.id,
+                                'journal_id': company_id.commission_journal.id,
+                                'date': date,
+                                'debit': amount < 0.0 and -amount or 0.0,
+                                'credit': amount > 0.0 and amount or 0.0,
+                            })
+
+                            line_ids.append(credit_line)
+                            credit_sum += credit_line[2]['credit'] - credit_line[2]['debit']
+
+                        print 'credit sum --- ', credit_sum
+                        print 'debit sum --- ', debit_sum
 
 
         move_dict['line_ids'] = line_ids
-        move = slip.env['account.move'].create(move_dict)
-        #slip.write({'move_id': move.id, 'date': date})
+        move = line.env['account.move'].create(move_dict)
+
         move.post()
 
-        return res
+        res = super(InheritSalesCommissionGenerate, self).action_approve_sales_commission()
+
