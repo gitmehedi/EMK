@@ -26,5 +26,6 @@
     # always loaded
     'data': [
         'security/ir_rule.xml',
+        'views/stock_menu.xml',
     ],
 }

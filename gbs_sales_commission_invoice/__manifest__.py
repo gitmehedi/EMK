@@ -6,9 +6,10 @@
     'category': 'Sales',
     'depends': [
         'account',
+        'sale', # for inheriting invoice line creation method
     ],
     'data': [
-        'views/inherited_sale_order_views.xml',
+        'views/inherited_account_invoice_line_view.xml',
         ],
     'description': 'This module adds Customer Commission to Account Invoice Line',
     'installable': True,

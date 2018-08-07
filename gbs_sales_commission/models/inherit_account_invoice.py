@@ -5,7 +5,7 @@ class InheritAccountInvoice(models.Model):
     _inherit = 'account.invoice'
 
     @api.multi
-    @api.depends('invoice_line_ids','invoice_line_ids.quantity')
+    @api.depends('invoice_line_ids.product_id','invoice_line_ids','invoice_line_ids.quantity')
     def _calculate_commission_amount(self):
         for inv in self:
             sale_order_pool = inv.env['sale.order'].search([('name', '=', inv.origin)])
@@ -15,26 +15,19 @@ class InheritAccountInvoice(models.Model):
                 commission_type = sale_line.product_id.product_tmpl_id.commission_type
 
                 if commission_type == 'fixed':
-                    for invoice_line in inv.invoice_line_ids:
-                        if sale_line.product_uom_qty == invoice_line.quantity:
-                            commission = sale_line.commission_rate * sale_line.product_uom_qty
-                        else:
-                            commission = sale_line.commission_rate * invoice_line.quantity
+                    #loop it
+                    for picking_line in sale_order_pool.picking_ids[0].pack_operation_ids:
+                        commission = sale_line.commission_rate * picking_line.qty_done
 
                 elif commission_type == 'percentage':
                     commission_percentage_amt = (sale_line.commission_rate * sale_line.price_subtotal) / 100
-                    for invoice_line in inv.invoice_line_ids:
-                        if sale_line.product_uom_qty == invoice_line.quantity:
-                            commission = commission_percentage_amt * sale_line.product_uom_qty
-                        else:
-                            if commission_percentage_amt != 0:
-                                commission_per_qty = commission_percentage_amt / sale_line.product_uom_qty
-                                commission = commission_per_qty * invoice_line.quantity
+                    for picking_line in sale_order_pool.picking_ids[0].pack_operation_ids:
+                        commission = commission_percentage_amt * picking_line.qty_done
 
-                inv.generated_commission_amount = commission
+                inv.invoice_line_ids.commission_amount = commission
 
     is_commission_generated = fields.Boolean(string='Commission Generated', default=False)
-    generated_commission_amount = fields.Float(string='Commission Amount', store = True, compute='_calculate_commission_amount',)
+    generated_commission_amount = fields.Float(string='Commission Amount', store = True, )
 
     @api.multi
     @api.onchange('invoice_line_ids')

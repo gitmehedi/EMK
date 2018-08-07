@@ -22,3 +22,4 @@ class DOProductLineLayer(models.Model):
         so_id = self.env['sale.order'].search([('id', '=', self.parent_id.sale_order_id.id)])
         quantity = so_id.order_line.filtered(lambda x: x.product_id.id == self.product_id.id).qty_delivered
         self.qty_delivered = quantity
+
