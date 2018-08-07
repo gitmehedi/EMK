@@ -149,5 +149,16 @@
         <field eval="0" name="perm_create"/>
     </record>
 
+    <record id="allow_operating_unit_for_sales_activity" model="ir.rule">
+        <field name="name">Allow OU for sales activity</field>
+        <field name="model_id" ref="operating_unit.model_operating_unit"/>
+        <field name="groups" eval="[(4,ref('sales_team.group_sale_salesman')),(4,ref('account.group_account_invoice'))]"/>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_create" eval="False"/>
+        <field name="perm_write" eval="False"/>
+        <field name="perm_unlink" eval="False"/>
+        <field name="domain_force">['|',('company_id','=',False),('company_id','child_of',[user.company_id.id])]</field>
+    </record>
+
 
 </odoo>
