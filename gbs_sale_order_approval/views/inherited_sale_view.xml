@@ -374,7 +374,7 @@
                     <!--</xpath>-->
 
                     <xpath expr="//field[@name='pack_type']" position="after">
-                        <field name="pi_id" attrs="{'invisible':[('credit_sales_or_lc', '!=', 'lc_sales')]}"
+                        <field name="pi_id" attrs="{'invisible':[('credit_sales_or_lc', '!=', 'lc_sales')],'required':[('credit_sales_or_lc', '=','lc_sales')]}"
                                options="{'no_quick_create':True,'no_create_edit':True,'no_open':True}"/>
                     </xpath>
 
