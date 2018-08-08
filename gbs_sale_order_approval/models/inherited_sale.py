@@ -135,8 +135,10 @@ class SaleOrder(models.Model):
     @api.multi
     def action_to_submit(self):
         for orders in self:
-            if orders.validity_date and orders.validity_date <= orders.date_order:
-                raise UserError('Expiration Date can not be less than Order Date')
+            if orders.validity_date:
+                expiration_date = orders.validity_date  + ' 23:59:59'
+                if expiration_date <= orders.date_order:
+                    raise UserError('Expiration Date can not be less than Order Date')
 
             orders.state = 'draft'
 
@@ -533,6 +535,11 @@ class SaleOrder(models.Model):
 
         return domain
 
+
+
+################################
+# Sale Order Line Class
+################################
 class InheritedSaleOrderLine(models.Model):
     _inherit = 'sale.order.line'
 
@@ -614,6 +621,11 @@ class InheritedSaleOrderLine(models.Model):
             raise ValidationError('DA Qty can not be greater than Ordered Qty')
 
 
+
+
+########################
+# Sales team class
+#######################
 class CrmTeam(models.Model):
     _inherit = 'crm.team'
 
