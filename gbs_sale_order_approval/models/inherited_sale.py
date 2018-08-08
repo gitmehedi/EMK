@@ -636,3 +636,47 @@ class CrmTeam(models.Model):
         for crm in self:
             raise UserError('You can not delete Sales Team after creation')
         return super(CrmTeam, self).unlink()
+
+
+class ProductAttribute(models.Model):
+    _inherit = "product.attribute"
+
+
+    @api.constrains('name')
+    def _check_unique_name(self):
+        name = self.env['product.attribute'].search([('name', '=', self.name)])
+        if len(name) > 1:
+            raise ValidationError('Attribute name must be unique!')
+
+
+
+class ProductUom(models.Model):
+    _inherit = "product.uom"
+
+
+    @api.constrains('name')
+    def _check_unique_name(self):
+        name = self.env['product.uom'].search([('name', '=', self.name)])
+        if len(name) > 1:
+            raise ValidationError(" Unit of Measure's name must be unique!")
+
+
+class ProductTags(models.Model):
+    _inherit = "res.partner.category"
+
+
+    @api.constrains('name')
+    def _check_unique_name(self):
+        name = self.env['res.partner.category'].search([('name', '=', self.name)])
+        if len(name) > 1:
+            raise ValidationError(" Contact Tags's name must be unique!")
+
+
+class ProductCategory(models.Model):
+    _inherit = 'product.category'
+
+    @api.constrains('name')
+    def _check_unique_name(self):
+        name = self.env['product.category'].search([('name', '=', self.name)])
+        if len(name) > 1:
+            raise ValidationError("Product Category's name must be unique!")
