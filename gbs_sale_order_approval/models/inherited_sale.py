@@ -40,8 +40,7 @@ class SaleOrder(models.Model):
         ('cash', 'Cash'),
         ('credit_sales', 'Credit'),
         ('lc_sales', 'L/C'),
-    ], string='Sales Type', required=True, readonly=True,
-        states={'to_submit': [('readonly', False)]})
+    ], string='Sales Type', readonly=True, related='type_id.sale_order_type')
 
     company_id = fields.Many2one('res.company', 'Company', required=True, readonly=True,
                                  states={'to_submit': [('readonly', False)]},
@@ -69,7 +68,7 @@ class SaleOrder(models.Model):
         return self.env['product.packaging.mode'].search([], limit=1)
 
     pack_type = fields.Many2one('product.packaging.mode', string='Packing Mode', default=_get_pack_type, required=True)
-    currency_id = fields.Many2one("res.currency", related='', string="Currency", required=True)
+    currency_id = fields.Many2one("res.currency", related='type_id.currency_id', required=False, string="Currency")
 
     picking_policy = fields.Selection([
         ('direct', 'Deliver each product when available'),

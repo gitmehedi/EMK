@@ -294,8 +294,7 @@
                     </xpath>
 
                     <xpath expr="//field[@name='company_id']" position="after">
-                        <field name="credit_sales_or_lc"
-                               attrs="{'readonly':[('state','in',('draft','sent','validate','done','cancel','sale'))]}"/>
+                        <field name="credit_sales_or_lc"/>
                     </xpath>
 
 
@@ -343,8 +342,7 @@
                     </xpath>
 
                     <xpath expr="//field[@name='credit_sales_or_lc']" position="after">
-                        <field name="currency_id" options="{'no_open': True, 'no_create': True}"
-                               attrs="{'readonly':[('state','in',('draft','sent','validate','done','cancel','sale'))]}"/>
+                        <field name="currency_id" options="{'no_open': True, 'no_create': True}"/>
                     </xpath>
 
                     <xpath expr="//field[@name='state']" position="replace">
