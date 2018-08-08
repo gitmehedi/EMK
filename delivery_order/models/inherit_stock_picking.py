@@ -174,6 +174,10 @@ class InheritStockPicking(models.Model):
 class InheritStockMove(models.Model):
     _inherit = 'stock.move'
 
+    #below 2 fields added for Delivery related reporting
+    packing_uom_id = fields.Many2one('product.uom', string='Packing UoM ID')
+    jar_count = fields.Float(string='# of Jar')
+
     delivery_order_id = fields.Many2one('delivery.order', string='D.O No.', readonly=True)
 
     undelivered_qty = fields.Float(

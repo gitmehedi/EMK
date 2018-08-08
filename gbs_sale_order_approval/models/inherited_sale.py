@@ -1,4 +1,4 @@
-from odoo import api, fields, models
+from odoo import api, fields, models,_
 from odoo.exceptions import UserError, ValidationError, Warning
 from odoo.tools import amount_to_text_en
 import time
@@ -40,8 +40,7 @@ class SaleOrder(models.Model):
         ('cash', 'Cash'),
         ('credit_sales', 'Credit'),
         ('lc_sales', 'L/C'),
-    ], string='Sales Type', required=True, readonly=True,
-        states={'to_submit': [('readonly', False)]})
+    ], string='Sales Type', readonly=True, related='type_id.sale_order_type')
 
     company_id = fields.Many2one('res.company', 'Company', required=True, readonly=True,
                                  states={'to_submit': [('readonly', False)]},
@@ -69,7 +68,7 @@ class SaleOrder(models.Model):
         return self.env['product.packaging.mode'].search([], limit=1)
 
     pack_type = fields.Many2one('product.packaging.mode', string='Packing Mode', default=_get_pack_type, required=True)
-    currency_id = fields.Many2one("res.currency", related='', string="Currency", required=True)
+    currency_id = fields.Many2one("res.currency", related='type_id.currency_id', required=False, string="Currency")
 
     picking_policy = fields.Selection([
         ('direct', 'Deliver each product when available'),
@@ -535,6 +534,12 @@ class SaleOrder(models.Model):
 
         return domain
 
+    @api.multi
+    def unlink(self):
+        for order in self:
+            if order.state not in ('to_submit', 'cancel'):
+                raise UserError(_('You can not delete a sent quotation or a sales order! Try to cancel it before.'))
+        return super(SaleOrder, self).unlink()
 
 
 ################################
@@ -648,3 +653,65 @@ class CrmTeam(models.Model):
         for crm in self:
             raise UserError('You can not delete Sales Team after creation')
         return super(CrmTeam, self).unlink()
+
+
+class ProductAttribute(models.Model):
+    _inherit = "product.attribute"
+
+
+    @api.constrains('name')
+    def _check_unique_name(self):
+        name = self.env['product.attribute'].search([('name', '=', self.name)])
+        if len(name) > 1:
+            raise ValidationError('Attribute name must be unique!')
+
+
+
+class ProductUom(models.Model):
+    _inherit = "product.uom"
+
+
+    @api.constrains('name')
+    def _check_unique_name(self):
+        name = self.env['product.uom'].search([('name', '=', self.name)])
+        if len(name) > 1:
+            raise ValidationError(" Unit of Measure's name must be unique!")
+
+
+class ProductTags(models.Model):
+    _inherit = "res.partner.category"
+
+
+    @api.constrains('name')
+    def _check_unique_name(self):
+        name = self.env['res.partner.category'].search([('name', '=', self.name)])
+        if len(name) > 1:
+            raise ValidationError(" Contact Tags's name must be unique!")
+
+
+class ProductCategory(models.Model):
+    _inherit = 'product.category'
+
+    @api.constrains('name')
+    def _check_unique_name(self):
+        name = self.env['product.category'].search([('name', '=', self.name)])
+        if len(name) > 1:
+            raise ValidationError("Product Category's name must be unique!")
+
+class ProductUomCategory(models.Model):
+    _inherit = 'product.uom.categ'
+
+    @api.constrains('name')
+    def _check_unique_name(self):
+        name = self.env['product.uom.categ'].search([('name', '=', self.name)])
+        if len(name) > 1:
+            raise ValidationError("Product Uom Category's name must be unique!")
+
+class Bank(models.Model):
+    _inherit = 'res.bank'
+
+    @api.constrains('name')
+    def _check_unique_name(self):
+        name = self.env['res.bank'].search([('name', '=', self.name)])
+        if len(name) > 1:
+            raise ValidationError("Bank's name must be unique!")

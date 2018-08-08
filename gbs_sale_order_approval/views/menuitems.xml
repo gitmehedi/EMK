@@ -21,7 +21,7 @@
 
         <menuitem action="product.product_category_action_form"
                   groups="gbs_application_group.group_sales_product_manager,base.group_no_one"
-                  id="product.menu_product_category_action_form" parent="sale.prod_config_main" sequence="2"/>
+                  id="sale.menu_product_category_action_form" parent="sale.prod_config_main" sequence="2"/>
 
         <menuitem name="Sales Teams"
                   id="sales_team.sales_team_config"
