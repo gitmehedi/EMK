@@ -680,3 +680,21 @@ class ProductCategory(models.Model):
         name = self.env['product.category'].search([('name', '=', self.name)])
         if len(name) > 1:
             raise ValidationError("Product Category's name must be unique!")
+
+class ProductUomCategory(models.Model):
+    _inherit = 'product.uom.categ'
+
+    @api.constrains('name')
+    def _check_unique_name(self):
+        name = self.env['product.uom.categ'].search([('name', '=', self.name)])
+        if len(name) > 1:
+            raise ValidationError("Product Uom Category's name must be unique!")
+
+class Bank(models.Model):
+    _inherit = 'res.bank'
+
+    @api.constrains('name')
+    def _check_unique_name(self):
+        name = self.env['res.bank'].search([('name', '=', self.name)])
+        if len(name) > 1:
+            raise ValidationError("Bank's name must be unique!")
