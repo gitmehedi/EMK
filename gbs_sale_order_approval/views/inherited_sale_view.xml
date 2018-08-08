@@ -406,6 +406,11 @@
                                options="{'no_quick_create':True,'no_create_edit':True,'no_open':True}"/>
                     </xpath>
 
+                     <!--<xpath expr="//field[@name='partner_id']" position="replace">-->
+                        <!--<field name="partner_id" attrs="{'readonly':[('credit_sales_or_lc', '=', 'lc_sales')]}"/>-->
+                    <!--</xpath>-->
+
+
                     <xpath expr="//field[@name='pi_id']" position="after">
                         <field name="da_btn_show_hide" invisible="1"/>
                     </xpath>
