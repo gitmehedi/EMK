@@ -90,7 +90,7 @@ class MemberApplicationContoller(Home):
         qcontext = self.get_signup_context()
         package_price = request.env['product.product'].sudo().search([('membership_status', '=', True)],
                                                                      order='id desc', limit=1)
-        qcontext['package_price'] = package_price.list_price if package_price else 0
+        qcontext['package_price'] = "{0:.2f}".format(package_price.list_price) if package_price else 0
 
         if not qcontext.get('token') and not qcontext.get('member_signup_enabled'):
             raise werkzeug.exceptions.NotFound()

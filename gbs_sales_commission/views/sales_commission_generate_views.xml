@@ -35,8 +35,10 @@
                                     <field name="invoice_line_ids">
                                         <tree>
                                             <field name="invoice_id"/>
+                                            <!---->
                                             <field name="commission_amount"/>
                                             <field name="invoiced_amount"/>
+                                            <field name="product_id"/>
 
                                         </tree>
                                         <form>
@@ -46,6 +48,7 @@
                                                     <field name="commission_amount"/>
                                                 </group>
                                                 <group>
+                                                    <field name="invoice_line_id"/>
                                                     <field name="invoiced_amount"/>
                                                 </group>
                                             </group>
