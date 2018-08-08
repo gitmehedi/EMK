@@ -2,6 +2,28 @@
 <odoo>
     <data>
 
+        <record id="customized_sale_order_form_to_hide_delivery_button" model="ir.ui.view">
+            <field name="name">customized_sale_order_form_to_hide_delivery</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale_stock.view_order_form_inherit_sale_stock"/>
+            <field name="arch" type="xml">
+                <data>
+                    <xpath expr="//button[@name='action_view_delivery']" position="replace">
+                        <button type="object"
+                                name="action_view_delivery"
+                                class="oe_stat_button"
+                                icon="fa-truck"
+                                attrs="{'invisible': [('delivery_count', '=', 0)]}" groups="base.group_user"
+                                invisible="1">
+                            <!--<field name="delivery_count" widget="statinfo" string="Delivery"/>-->
+                        </button>
+                    </xpath>
+
+
+                </data>
+            </field>
+        </record>
+
         <record id="customized_sale_order_form_view" model="ir.ui.view">
             <field name="name">customized_sale_order_form</field>
             <field name="model">sale.order</field>
@@ -374,7 +396,8 @@
                     <!--</xpath>-->
 
                     <xpath expr="//field[@name='pack_type']" position="after">
-                        <field name="pi_id" attrs="{'invisible':[('credit_sales_or_lc', '!=', 'lc_sales')],'required':[('credit_sales_or_lc', '=','lc_sales')]}"
+                        <field name="pi_id"
+                               attrs="{'invisible':[('credit_sales_or_lc', '!=', 'lc_sales')],'required':[('credit_sales_or_lc', '=','lc_sales')]}"
                                options="{'no_quick_create':True,'no_create_edit':True,'no_open':True}"/>
                     </xpath>
 
@@ -453,11 +476,13 @@
             <field name="search_view_id" ref="sale.sale_order_view_search_inherit_sale"/>
             <field name="context">{}</field>
             <field name="domain">[('state', 'not in', ('to_submit','submit_quotation','validate', 'draft', 'sent',
-                'sale','cancel'))]</field>
+                'sale','cancel'))]
+            </field>
             <field name="help" type="html">
                 <p class="oe_view_nocontent_create">
                     Create a Quotation, the first step of a new sale.
-                </p><p>
+                </p>
+                <p>
                     Once the quotation is confirmed, it becomes a sales order.
                     You'll be able to invoice it and collect payments.
                     From the <i>Sales Orders</i> menu, you can track delivery
