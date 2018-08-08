@@ -237,7 +237,7 @@
 
                     <xpath expr="//button[@name='%(sale.action_view_sale_advance_payment_inv)d']" position="replace">
                         <button name="%(sale.action_view_sale_advance_payment_inv)d" string="Create Invoice"
-                                attrs="{'invisible':[('state','in',('to_submit','submit_quotation','validate', 'draft','sent','sale','cancel'))]}"
+                                invisible="1"
                                 type="action"/>
                     </xpath>
 

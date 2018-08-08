@@ -40,7 +40,7 @@ class InheritedAccountInvoiceLine(models.Model):
                     for picking_line in sale_order_pool.picking_ids[0].pack_operation_ids:
                         commission = sale_line.commission_rate * picking_line.qty_done
 
-                        if self.company_id.currency_id != sale_order_pool.currency_id:
+                        if inv.company_id.currency_id != sale_order_pool.currency_id:
                             commission = commission * sale_order_pool.currency_id.rate
 
                 elif commission_type == 'percentage':
@@ -48,7 +48,7 @@ class InheritedAccountInvoiceLine(models.Model):
                     for picking_line in sale_order_pool.picking_ids[0].pack_operation_ids:
                         commission = commission_percentage_amt * picking_line.qty_done
 
-                        if self.company_id.currency_id != sale_order_pool.currency_id:
+                        if inv.company_id.currency_id != sale_order_pool.currency_id:
                             commission = commission * sale_order_pool.currency_id.rate
 
                 inv.commission_amount = commission

@@ -1,4 +1,4 @@
-from odoo import api, fields, models
+from odoo import api, fields, models,_
 from odoo.exceptions import UserError, ValidationError, Warning
 from odoo.tools import amount_to_text_en
 import time
@@ -135,8 +135,10 @@ class SaleOrder(models.Model):
     @api.multi
     def action_to_submit(self):
         for orders in self:
-            if orders.validity_date and orders.validity_date <= orders.date_order:
-                raise UserError('Expiration Date can not be less than Order Date')
+            if orders.validity_date:
+                expiration_date = orders.validity_date  + ' 23:59:59'
+                if expiration_date <= orders.date_order:
+                    raise UserError('Expiration Date can not be less than Order Date')
 
             orders.state = 'draft'
 
@@ -533,6 +535,17 @@ class SaleOrder(models.Model):
 
         return domain
 
+    @api.multi
+    def unlink(self):
+        for order in self:
+            if order.state not in ('to_submit', 'cancel'):
+                raise UserError(_('You can not delete a sent quotation or a sales order! Try to cancel it before.'))
+        return super(SaleOrder, self).unlink()
+
+
+################################
+# Sale Order Line Class
+################################
 class InheritedSaleOrderLine(models.Model):
     _inherit = 'sale.order.line'
 
@@ -614,6 +627,11 @@ class InheritedSaleOrderLine(models.Model):
             raise ValidationError('DA Qty can not be greater than Ordered Qty')
 
 
+
+
+########################
+# Sales team class
+#######################
 class CrmTeam(models.Model):
     _inherit = 'crm.team'
 

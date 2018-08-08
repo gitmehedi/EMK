@@ -28,8 +28,8 @@
                             <field name="line_ids">
                                 <tree>
                                     <field name="partner_id"/>
-                                    <field name="total_com_amount"/>
                                     <field name="total_invoiced_amount"/>
+                                    <field name="total_com_amount"/>
                                 </tree>
                                 <form>
                                     <field name="invoice_line_ids">
@@ -48,7 +48,7 @@
                                                     <field name="commission_amount"/>
                                                 </group>
                                                 <group>
-                                                    <field name="invoice_line_id"/>
+                                                    <!--<field name="invoice_line_id"/>-->
                                                     <field name="invoiced_amount"/>
                                                 </group>
                                             </group>
