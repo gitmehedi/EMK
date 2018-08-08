@@ -3,10 +3,9 @@ from odoo.exceptions import UserError, ValidationError
 
 class InheritedSaleOrderType(models.Model):
     _inherit = 'sale.order.type'
-    #_inherit = ['sale.order.type','mail.thread', 'ir.needaction_mixin']
+    _order = 'name'
 
-
-    operating_unit = fields.Many2one('operating.unit', string="Operating Unit", required=True,track_visibility='onchange')
+    #operating_unit = fields.Many2one('operating.unit', string="Operating Unit", required=True,track_visibility='onchange')
     sale_order_type = fields.Selection([
         ('cash', 'Cash'),
         ('credit_sales', 'Credit'),
@@ -17,9 +16,9 @@ class InheritedSaleOrderType(models.Model):
 
     @api.constrains('name')
     def _check_unique_name(self):
-        name = self.env['sale.order.type'].search([('name', '=', self.name), ('operating_unit','=',self.operating_unit.id)])
+        name = self.env['sale.order.type'].search([('name', '=', self.name)])
         if len(name) > 1:
-            raise ValidationError('Sale Order Type for this Name & Operating Unit already exists')
+            raise ValidationError('Sale Order Type for this Name already exists')
 
 
 

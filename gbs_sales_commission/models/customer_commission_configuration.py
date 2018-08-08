@@ -97,9 +97,9 @@ class CustomerCommissionConfiguration(models.Model):
 
         if self.product_id:
             if self.commission_type == 'by_product':
-                prod_pool = self.env['product.template'].search([('id', '=', self.product_id.id)])
+                #prod_pool = self.env['product.template'].search([('id', '=', self.product_id.id)])
 
-                if prod_pool.commission_type == 'fixed':
+                if self.product_id.product_tmpl_id.commission_type == 'fixed':
                     for rec in self.config_customer_ids:
                         if rec.customer_id:
                             commission = self.env['customer.commission'].search(
@@ -107,6 +107,9 @@ class CustomerCommissionConfiguration(models.Model):
                                  ('customer_id', '=', rec.customer_id.id),
                                  ('coms_type', '=', 'fixed'),
                                  ('status', '=', True)])
+
+                            #self.currency_id = self.env.user.company_id.currency_id.id
+
                             if commission:
                                 for coms in commission:
                                     rec.old_value = coms.commission_rate
@@ -120,6 +123,9 @@ class CustomerCommissionConfiguration(models.Model):
                          ('customer_id', '=', rec.customer_id.id),
                          ('coms_type', '=', 'percentage'),
                          ('status', '=', True)])
+
+                    #self.currency_id = None
+
                     if commission:
                         for coms in commission:
                             rec.old_value = coms.commission_rate
@@ -220,11 +226,12 @@ class CustomerCommissionConfiguration(models.Model):
                     vals['customer_id'] = rec.customer_id.id
                     vals['product_id'] = self.product_id.id
                     vals['commission_rate'] = rec.new_value
+                    vals['currency_id'] = rec.currency_id.id
 
                     commission = customer.commission_ids.create(vals)
                 else:
                     for cust in find_cust:
-                        cust.write({'commission_rate': rec.new_value, 'coms_type': self.product_id.commission_type})
+                        cust.write({'currency_id':rec.currency_id.id, 'commission_rate': rec.new_value, 'coms_type': self.product_id.commission_type})
 
                 update = cusComLine.search(
                     [('customer_id', '=', rec.customer_id.id), ('product_id', '=', self.product_id.id)])
@@ -234,6 +241,7 @@ class CustomerCommissionConfiguration(models.Model):
                 val_line['product_id'] = self.product_id.id
                 val_line['effective_date'] = datetime.date.today()
                 val_line['commission_rate'] = rec.new_value
+                val_line['currency_id'] = rec.currency_id.id
 
                 if find_cust:
                     for custs in find_cust:

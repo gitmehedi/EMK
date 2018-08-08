@@ -6,7 +6,7 @@
             <field name="model">max.delivery.without.lc.wizard</field>
             <field name="arch" type="xml">
                 <form>
-                    <h4>Product <field name="info_text"/> 's Delivery Qty crossed 100 MT. Do you want to proceed?</h4>
+                    <h4><field name="info_text"/> 's Delivery Qty crossed 100 MT. Do you want to proceed?</h4>
 
                     <footer>
                         <button name="update_state" string="Proceed" type="object" class="oe_highlight"/>

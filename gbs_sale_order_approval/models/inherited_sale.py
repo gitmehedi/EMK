@@ -52,7 +52,7 @@ class SaleOrder(models.Model):
         return self.env.user.company_id.sale_note
 
     note = fields.Text('Terms and conditions', default=_default_note, readonly=True,
-                       states={'to_submit': [('readonly', False)]} )
+                       states={'to_submit': [('readonly', False)]})
 
     state = fields.Selection([
         ('to_submit', 'Submit'),
@@ -71,19 +71,32 @@ class SaleOrder(models.Model):
     pack_type = fields.Many2one('product.packaging.mode', string='Packing Mode', default=_get_pack_type, required=True)
     currency_id = fields.Many2one("res.currency", related='', string="Currency", required=True)
 
+    picking_policy = fields.Selection([
+        ('direct', 'Deliver each product when available'),
+        ('one', 'Deliver all products at once')],
+        string='Shipping Policy', required=True, readonly=True, default='direct',
+        states={'to_submit': [('readonly', False)]})
+
+    project_id = fields.Many2one('account.analytic.account', 'Analytic Account', readonly=True,
+                                 states={'to_submit': [('readonly', False)]},
+                                 help="The analytic account related to a sales order.", copy=False)
+
     """ PI and LC """
-    pi_id = fields.Many2one('proforma.invoice', string='PI Ref. No.', domain=[('state', '=', 'confirm')], readonly=True,
-                            states={'to_submit': [('readonly', False)]})
+    pi_id = fields.Many2one('proforma.invoice', string='PI Ref. No.',
+                            readonly=True,states={'to_submit': [('readonly', False)]})
+    # domain = [('credit_sales_or_lc', '=', 'lc_sales'), ('state', '=', 'confirm')],
     lc_id = fields.Many2one('letter.credit', string='LC Ref. No.', readonly=True,
                             states={'to_submit': [('readonly', False)]})
 
-    remaining_credit_limit = fields.Char(string="Customer's Remaining Credit Limit", track_visibility='onchange')
+    #remaining_credit_limit = fields.Char(string="Customer's Remaining Credit Limit", track_visibility='onchange')
 
     """ Update is_commission_generated flag to False """
 
     @api.model
     def create(self, vals):
-        new_seq = self.env['ir.sequence'].next_by_code_new('sale.order', self.create_date) or '/'
+        team = self.env['crm.team']._get_default_team_id()
+        new_seq = self.env['ir.sequence'].next_by_code_new('sale.order', self.create_date,
+                                                           team.operating_unit_id) or '/'
         if new_seq:
             vals['name'] = new_seq
 
@@ -122,17 +135,25 @@ class SaleOrder(models.Model):
     @api.multi
     def action_to_submit(self):
         for orders in self:
-            if orders.validity_date and orders.validity_date <= orders.date_order:
-                raise UserError('Expiration Date can not be less than Order Date')
+            if orders.validity_date:
+                expiration_date = orders.validity_date  + ' 23:59:59'
+                if expiration_date <= orders.date_order:
+                    raise UserError('Expiration Date can not be less than Order Date')
 
             orders.state = 'draft'
 
     @api.onchange('type_id')
     def onchange_type(self):
-        sale_type_pool = self.env['sale.order.type'].search([('id', '=', self.type_id.id)])
         if self.type_id:
+            sale_type_pool = self.env['sale.order.type'].search([('id', '=', self.type_id.id)])
             self.credit_sales_or_lc = sale_type_pool.sale_order_type
             self.currency_id = sale_type_pool.currency_id.id
+            if self.type_id.sale_order_type == 'lc_sales':
+                existing_lc = self.search([('type_id', '=', self.type_id.id)])
+                return {'domain': {'pi_id': [('id', 'not in', [i.pi_id.id for i in existing_lc]),
+                                             ('credit_sales_or_lc', '=', 'lc_sales'),
+                                             ('state', '=', 'confirm')]}}
+
 
     @api.multi
     def _is_double_validation_applicable(self):
@@ -286,16 +307,16 @@ class SaleOrder(models.Model):
                     if price_change_pool.new_price >= lines.price_unit and lines.price_unit >= discounted_product_price:
                         is_double_validation = False  # Single Validation
 
-                    for coms in cust_commission_pool:
-                        if (abs(customer_total_credit) > customer_credit_limit
-                            or lines.commission_rate != coms.commission_rate
-                            or lines.price_unit < discounted_product_price or lines.price_unit > discounted_product_price):
+                    #for coms in cust_commission_pool:
+                    if (abs(customer_total_credit) > customer_credit_limit
+                        or lines.commission_rate != cust_commission_pool.commission_rate
+                        or lines.price_unit < discounted_product_price or lines.price_unit > discounted_product_price):
 
-                            is_double_validation = True
-                            break;
+                        is_double_validation = True
+                        break;
 
-                        else:
-                            is_double_validation = False
+                    else:
+                        is_double_validation = False
 
         if is_double_validation:
             order.write({'state': 'validate'})  # Go to two level approval process
@@ -371,6 +392,9 @@ class SaleOrder(models.Model):
             if price_change_pool.currency_id.id == lines.currency_id.id:
                 for price_history in price_change_pool:
                     discounted_product_price = price_history.new_price - price_history.discount
+
+                    if lines.commission_rate != coms.commission_rate:
+                        return True
 
                     if price_history.new_price >= lines.price_unit and lines.price_unit >= discounted_product_price:
                         return False  # Single Validation
@@ -453,7 +477,7 @@ class SaleOrder(models.Model):
     def onchange_operating_unit_id(self):
         team = self.env['crm.team']._get_default_team_id()
 
-        self._cr.execute("""select * from stock_warehouse where operating_unit_id= %s limit 1""",
+        self._cr.execute("""SELECT * FROM stock_warehouse WHERE operating_unit_id= %s LIMIT 1""",
                          (team.operating_unit_id.id,))  # Never remove the comma after the parameter
         warehouse = self._cr.fetchall()
 
@@ -464,7 +488,7 @@ class SaleOrder(models.Model):
     def _default_warehouse_id(self):
         team = self.env['crm.team']._get_default_team_id()
 
-        self._cr.execute("""select * from stock_warehouse where operating_unit_id= %s limit 1""",
+        self._cr.execute("""SELECT * FROM stock_warehouse WHERE operating_unit_id= %s LIMIT 1""",
                          (team.operating_unit_id.id,))  # Never remove the comma after the parameter
         warehouse = self._cr.fetchall()
 
@@ -475,7 +499,47 @@ class SaleOrder(models.Model):
         required=True, readonly=True, states={'to_submit': [('readonly', False)]},
         default=_default_warehouse_id)
 
+    @api.model
+    def _default_operating_unit(self):
+        team = self.env['crm.team']._get_default_team_id()
+        if team.operating_unit_id:
+            return team.operating_unit_id
+        else:
+            return self.env.user.default_operating_unit_id
 
+    operating_unit_id = fields.Many2one(
+        comodel_name='operating.unit',
+        string='Operating Unit',
+        default=_default_operating_unit,
+        readonly=True, states={'to_submit': [('readonly', False)]}
+    )
+
+    @api.model
+    def _needaction_domain_get(self):
+        users_obj = self.env['res.users']
+        domain = []
+        if users_obj.has_group('gbs_application_group.group_cxo'):
+            domain = [
+                ('state', 'in', ['sent'])]
+            return domain
+        elif users_obj.has_group('gbs_application_group.group_head_account'):
+            domain = [
+                ('state', 'in', ['validate'])]
+            return domain
+        elif users_obj.has_group('gbs_application_group.group_head_sale'):
+            domain = [
+                ('state', 'in', ['draft'])]
+            return domain
+        else:
+            return False
+
+        return domain
+
+
+
+################################
+# Sale Order Line Class
+################################
 class InheritedSaleOrderLine(models.Model):
     _inherit = 'sale.order.line'
 
@@ -557,6 +621,11 @@ class InheritedSaleOrderLine(models.Model):
             raise ValidationError('DA Qty can not be greater than Ordered Qty')
 
 
+
+
+########################
+# Sales team class
+#######################
 class CrmTeam(models.Model):
     _inherit = 'crm.team'
 
@@ -564,3 +633,18 @@ class CrmTeam(models.Model):
                                         default=lambda self:
                                         self.env['res.users'].
                                         operating_unit_default_get(self._uid))
+    user_id = fields.Many2one('res.users', string='Team Leader',required=True)
+
+
+    @api.constrains('name')
+    def _check_unique_name(self):
+        name = self.env['crm.team'].search([('name', '=', self.name)])
+        if len(name) > 1:
+            raise ValidationError('Sales Team for this given Name already exists')
+
+
+    @api.multi
+    def unlink(self):
+        for crm in self:
+            raise UserError('You can not delete Sales Team after creation')
+        return super(CrmTeam, self).unlink()

@@ -1,16 +1,14 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-
-import random
-import werkzeug
-import logging
-import re
-
+import base64
+import random, werkzeug, logging, re
 from datetime import datetime, timedelta
 from urlparse import urljoin
-from odoo.exceptions import UserError, ValidationError, Warning
 
+from odoo.exceptions import UserError, ValidationError, Warning
 from odoo import api, fields, models, _
+
+from odoo.addons.member_signup.models.utility import UtilityClass as utility
 
 _logger = logging.getLogger(__name__)
 
@@ -31,7 +29,10 @@ def now(**kwargs):
 
 
 class ResPartner(models.Model):
-    _inherit = 'res.partner'
+    _name = 'res.partner'
+    _inherit = ['res.partner', 'mail.thread', 'ir.needaction_mixin']
+
+    member_sequence = fields.Char()
 
     signup_token = fields.Char(copy=False)
     signup_type = fields.Char(string='Signup Token Type', copy=False)
@@ -50,6 +51,7 @@ class ResPartner(models.Model):
     signature_image = fields.Binary(string='Signature')
     is_applicant = fields.Boolean(default=False)
     info_about_emk = fields.Text(string="How did you learn about the EMK Center?")
+    application_ref = fields.Text(string="Application Ref")
 
     gender = fields.Selection([('male', 'Male'), ('female', 'Female')], default='male', string='Gender')
     usa_work_or_study = fields.Selection([('yes', 'Yes'), ('no', 'No')], default='no',
@@ -63,8 +65,20 @@ class ResPartner(models.Model):
     hightest_certification = fields.Many2one('member.certification', string='Highest Certification Achieved')
 
     state = fields.Selection(
-        [('application', 'Application'), ('invoice', 'Invoiced'), ('paid', 'Paid'),
-         ('member', 'Membership')], default='application')
+        [('application', 'Application'), ('invoice', 'Invoiced'),
+         ('member', 'Membership'), ('reject', 'Reject')], default='application')
+
+    @api.model
+    def _needaction_domain_get(self):
+        context = self.env.context
+        if context.get('menu_count') == 'application':
+            return [('state', 'in', ['application'])]
+        elif context.get('menu_count') == 'invoice':
+            return [('state', 'in', ['invoice'])]
+        elif context.get('menu_count') == 'member':
+            return [('state', 'in', ['member'])]
+        elif context.get('menu_count') == 'reject':
+            return [('state', 'in', ['reject'])]
 
     @api.onchange('birthdate')
     def validate_birthdate(self):
@@ -83,16 +97,19 @@ class ResPartner(models.Model):
     @api.onchange('email')
     def validate_email(self):
         if self.email:
-            match = re.match('^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,4})$', self.email)
-            if match == None:
-                raise ValidationError('Please provide valid email.')
+            utility.check_email(self.email)
 
     @api.constrains('email')
     def check_email(self):
         if self.email:
-            match = re.match('^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,4})$', self.email)
-            if match == None:
-                raise ValidationError('Please provide valid email.')
+            utility.check_email(self.email)
+
+    @api.model
+    def create(self, vals):
+        if vals:
+            vals['member_sequence'] = self.env['ir.sequence'].next_by_code('res.partner.member.application')
+
+        return super(ResPartner, self).create(vals)
 
     @api.multi
     def _compute_signup_valid(self):
@@ -159,99 +176,109 @@ class ResPartner(models.Model):
     def action_signup_prepare(self):
         return self.signup_prepare()
 
+    @api.model
+    def _create_invoice(self):
+        product_id = self.env['product.product'].search([('membership_status', '=', True)], order='id desc',
+                                                        limit=1)
+        if not product_id:
+            raise ValidationError(_('Please configure your default Memebership Product.'))
+
+        ins_inv = self.env['account.invoice']
+        journal_id = self.env['account.journal'].search([('code', '=', 'INV')])
+        account_id = self.env['account.account'].search(
+            [('internal_type', '=', 'receivable'), ('deprecated', '=', False)])
+
+        acc_invoice = {
+            'partner_id': self.id,
+            'date_invoice': datetime.now(),
+            'user_id': self.env.user.id,
+            'account_id': account_id.id,
+            'state': 'draft',
+            'invoice_line_ids': [
+                (0, 0, {
+                    'name': product_id.name,
+                    'product_id': product_id.id,
+                    'price_unit': product_id.list_price,
+                    'account_id': journal_id.default_debit_account_id.id,
+                })]
+        }
+        inv = ins_inv.create(acc_invoice)
+        inv.action_invoice_open()
+
+        if inv:
+            self.state = 'invoice'
+            pdf = self.env['report'].sudo().get_pdf([inv.id], 'account.report_invoice')
+            attachment = self.env['ir.attachment'].create({
+                'name': inv.number + '.pdf',
+                'res_model': 'account.invoice',
+                'res_id': inv.id,
+                'datas_fname': inv.number + '.pdf',
+                'type': 'binary',
+                'datas': base64.b64encode(pdf),
+                'mimetype': 'application/x-pdf'
+            })
+            template = self.env.ref('member_signup.member_invoice_email_template')
+            template.write({
+                'email_cc': "nopaws_ice_iu@yahoo.com,mahtab.faisal@genweb2.com",
+                'attachment_ids': [(6, 0, attachment.ids)],
+            })
+            user = self.env['res.users'].search([('id', '=', self.user_ids.id)])
+            template.with_context({'lang': user.lang}).send_mail(user.id, force_send=True, raise_exception=True)
+
     @api.multi
     def member_invoiced(self):
+        if 'application' in self.state:
+            self._create_invoice()
 
-        if self.state == 'application':
-            product_id = self.env['product.product'].search([('name', '=', 'Basic Membership')])
-            ins_inv = self.env['account.invoice']
-            journal_id = self.env['account.journal'].search([('code', '=', 'INV')])
-            account_id = self.env['account.account'].search(
-                [('internal_type', '=', 'receivable'), ('deprecated', '=', False)])
-            # for record in self.line_ids:
-            acc_invoice = {
-                'partner_id': self.id,
-                'date_invoice': datetime.now(),
-                'user_id': self.env.user.id,
-                'account_id': account_id.id,
-                'state': 'draft',
-                'invoice_line_ids': [
-                    (0, 0, {
-                        'name': product_id.name,
-                        'product_id': product_id.id,
-                        'price_unit': product_id.list_price,
-                        'account_id': journal_id.default_debit_account_id.id,
-                    })]
+    def mailsend(self, vals):
+        template = False
+        try:
+            template = self.env.ref(vals['template'], raise_if_not_found=False)
+        except ValueError:
+            pass
+
+        assert template._name == 'mail.template'
+        obj = self.env['res.users'].search([('email', '=', vals['email'])])
+
+        template.write({
+            'email_cc': vals['email_cc'],
+            'attachment_ids': vals['attachment_ids'],
+        })
+        base_url = self.env['ir.config_parameter'].get_param('web.base.url')
+        context = {
+            'base_url': base_url,
+        }
+
+        for key, val in vals['context'].iteritems():
+            context[key] = val
+
+        for user in obj:
+            context['lang'] = user.lang
+            if not user.email:
+                raise UserError(_("Cannot send email: user %s has no email address.") % user.name)
+            template.with_context(context).send_mail(user.id, force_send=True, raise_exception=True)
+            _logger.info("Member Application confirmation email sent for user <%s> to <%s>", user.login, user.email)
+
+    @api.one
+    def member_reject(self):
+        if 'application' in self.state:
+            email_cc = ''
+            for gp in self.env['res.groups'].search([('name', '=', 'Manager')]):
+                if gp.category_id.name == 'Membership':
+                    email_cc = email_cc + ", " + gp.users.email
+
+            vals = {
+                'template': 'member_signup.member_application_rejection_email_template',
+                'email': self.email,
+                'email_to': self.email,
+                'email_cc': email_cc,
+                'attachment_ids': 'member_signup.member_application_rejection_email_template',
+                'context': {},
             }
-            inv = ins_inv.create(acc_invoice)
-            inv.action_invoice_open()
-            mail = self.env['mail.compose.message']
-            # inv.action_invoice_sent()
-            # record.write({'invoice_id': inv.id, 'account_move_id': inv.move_id.id})
-
-            if inv:
-                template = self.env.ref('account.email_template_edi_invoice', False)
-                compose_form = self.env.ref('mail.email_compose_message_wizard_form', False)
-                ctx = dict(
-                    default_model='account.invoice',
-                    default_res_id=self.id,
-                    default_use_template=bool(template),
-                    default_template_id=template and template.id or False,
-                    default_composition_mode='comment',
-                    mark_invoice_as_sent=True,
-                    custom_layout="account.mail_template_data_notification_email_account_invoice"
-                )
-                return {
-                    'name': _('Compose Email'),
-                    'type': 'ir.actions.act_window',
-                    'view_type': 'form',
-                    'view_mode': 'form',
-                    'res_model': 'mail.compose.message',
-                    'views': [(compose_form.id, 'form')],
-                    'view_id': compose_form.id,
-                    'target': 'new',
-                    'context': ctx,
-                }
-                # self.state = 'invoice'
-
-        # self.is_applicant = False
-        # self.free_member = True
-        # invoice_ins = self.env['account.invoice']
-        # data = {
-        #     'user_id': self.id,
-        #
-        # }
-        # invoice_ins.create(data)
-        # self.state = 'invoice'
-
-        # mail_ins = self.env['mail.mail']
-        # email_server = self.env['ir.mail_server'].search([], order='id DESC', limit=1)
-        #
-        # template = {
-        #     'subject': "Test Email",
-        #     'body_html': "Test Email",
-        #     'email_from': email_server.smtp_user,
-        #     'email_to': "git.mehedi@gmail.com"
-        # }
-        # mail = mail_ins.create(template)
-        # # mail.sudo().send()
-        #
-        # self.env['mail.template'].browse(26).sudo().send_mail(mail.id)
-        #
-        # template = False
-        # try:
-        #     template = self.env.ref('member_signup.set_password_email', raise_if_not_found=False)
-        # except ValueError:
-        #     pass
-        # if not template:
-        #     template = self.env.ref('member_signup.reset_password_email')
-        # assert template._name == 'mail.template'
-        #
-        # for user in self:
-        #     if not user.email:
-        #         raise UserError(_("Cannot send email: user %s has no email address.") % user.name)
-        #     template.with_context(lang=user.lang).send_mail(user.id, force_send=True, raise_exception=True)
-        #     _logger.info("Password reset email sent for user <%s> to <%s>", user.login, user.email)
+            self.mailsend(vals)
+            self.state = 'reject'
+            if self.user_ids.active:
+                self.user_ids.active = False
 
     @api.multi
     def signup_cancel(self):
@@ -309,3 +336,31 @@ class ResPartner(models.Model):
         else:
             res['email'] = res['login'] = partner.email or ''
         return res
+
+    @api.one
+    def name_get(self):
+        name = self.name
+        if self.member_sequence or self.is_applicant:
+            name = '[%s] %s' % (self.member_sequence, self.name)
+        return (self.id, name)
+
+    @api.model
+    def name_search(self, name='', args=None, operator='ilike', limit=100):
+        args = list(args or [])
+        if name:
+            search_name = name
+            if operator != '=':
+                search_name = '%s%%' % name
+            member = self.search(
+                ['|', ('member_sequence', operator, search_name), ('name', operator, search_name)] + args, limit=limit)
+            if member.ids:
+                return member.name_get()
+        return super(ResPartner, self).name_search(name=name, args=args, operator=operator, limit=limit)
+
+    @api.multi
+    def mailcc(self):
+        email_cc = ''
+        for gp in self.env['res.groups'].search([('name', '=', 'Manager')]):
+            if gp.category_id.name == 'Membership':
+                email_cc = email_cc + ", " + gp.users.email
+        return email_cc

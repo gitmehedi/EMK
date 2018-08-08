@@ -1,6 +1,6 @@
-from openerp import api
-from openerp import models, fields,_,SUPERUSER_ID
-from openerp.exceptions import UserError, ValidationError
+from odoo import api
+from odoo import models, fields,_,SUPERUSER_ID
+from odoo.exceptions import UserError, ValidationError
 
 
 class HROTRequisition(models.Model):

@@ -1,4 +1,7 @@
-input.odooreq {
+.error{
+    border:1px solid red !important;
+}
+input.reqfield,select.reqfield{
   background-color: #D2D2FF;
 }
 .odoobg{

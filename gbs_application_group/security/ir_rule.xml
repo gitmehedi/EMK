@@ -9,10 +9,7 @@
     </function>
 
     <record id="operating_unit.operating_unit_comp_rule" model="ir.rule">
-        <field name="name">Operating Unit Entry</field>
-        <field name="model_id" ref="operating_unit.model_operating_unit"/>
-        <field name="groups" eval="[(4, ref('base.group_user'))]"/>
-        <field name="domain_force">['|',('company_id','=',False),('company_id','child_of',[user.company_id.id])]</field>
+        <field name="active" eval="False"/>
     </record>
 
     <function name="write" model="ir.model.data">

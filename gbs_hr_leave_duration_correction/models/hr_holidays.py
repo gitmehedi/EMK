@@ -31,43 +31,43 @@ class HRHolidays(models.Model):
     employee_id = fields.Many2one('hr.employee', string='Employee', index=True, readonly=True, states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]},
                             default=_default_employee)
     department_id = fields.Many2one('hr.department', related='employee_id.department_id', string='Department', readonly=True, store=True)
+    check_hour = fields.Boolean(string='Half Leave',default= False)
 
     @api.model
     def create(self, values):
-
         if (values.get('type') == 'remove'
-            and values.get('date_from') is not False
+            and values.get('date_from') is not False and values.get('check_hour') is not True
             and values.get('date_to') is not False):
-
             date_from = values.get('date_from')
             date_to = values.get('date_to')
-            d1 = datetime.strptime(str(date_from), "%Y-%m-%d")
-            d2 = datetime.strptime(str(date_to), "%Y-%m-%d")
+            d1 = fields.Datetime.from_string(date_from)
+            d2 = fields.Datetime.from_string(date_to)
             duration = (d2 - d1).days + 1
             values['number_of_days_temp'] = duration
-
         return super(HRHolidays, self).create(values)
 
     @api.multi
     def write(self, values):
-        for holiday in self:
-            if (holiday.type == 'remove'):
-                start_date = holiday.date_from
-                end_date = holiday.date_to
+        if values.get('check_hour') is False:
+            for holiday in self:
+                if (holiday.type == 'remove'):
+                    start_date = holiday.date_from
+                    end_date = holiday.date_to
 
-                if (values.get('date_from', False) != False):
-                    start_date = values.get('date_from')
+                    if (values.get('date_from', False) != False):
+                        start_date = values.get('date_from')
 
-                if (values.get('date_to', False) != False):
-                    end_date = values.get('date_to')
+                    if (values.get('date_to', False) != False):
+                        end_date = values.get('date_to')
 
-                d1 = datetime.strptime(str(start_date), "%Y-%m-%d")
-                d2 = datetime.strptime(str(end_date), "%Y-%m-%d")
+                    d1 = fields.Datetime.from_string(start_date)
+                    d2 = fields.Datetime.from_string(end_date)
 
-                duration = (d2 - d1).days + 1
-                values['number_of_days_temp'] = duration
-
-        return super(HRHolidays, self).write(values)
+                    duration = (d2 - d1).days + 1
+                    values['number_of_days_temp'] = duration
+            return super(HRHolidays, self).write(values)
+        else:
+            return super(HRHolidays, self).write(values)
 
     """
        As we removed Datetime data type so we have added 1d with date difference

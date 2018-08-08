@@ -19,7 +19,6 @@
         'custom_report',
         'delivery_challan_report',
         'ir_sequence_operating_unit',
-        'mrp',
     ],
 
     'data': [
@@ -35,12 +34,11 @@
         'report/cash_received_report.xml',
         'report/cash_received_report_view.xml',
         'views/inherit_stock_picking_view.xml',
-        'views/stock_indent_inherit.xml',
         'security/ir.model.access.csv',
         'security/ir_rule.xml',
         'data/delivery_authorization_sequence.xml',
         'data/delivery_order_sequence.xml',
-        'data/delivery_challan_sequence.xml',
+        'views/stock_indent_inherit.xml',
     ],
 
     'summary': 'Delivery Authorization',

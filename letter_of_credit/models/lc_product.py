@@ -3,7 +3,7 @@ from odoo import api, fields, models,_
 
 class LCProduct(models.Model):
     _name = 'lc.product.line'
-    _description = 'Product'
+    _description = 'Lc Product Line'
     _order = "date_planned desc"
 
     name = fields.Text(string='Description', required=True)
@@ -18,13 +18,3 @@ class LCProduct(models.Model):
     product_uom = fields.Many2one('product.uom', string='Product Unit of Measure')
 
     lc_id = fields.Many2one('letter.credit', string='LC')
-
-    delivered_qty =  fields.Float(string='Delivered',compute = '_compute_delivered_qty',store=False)
-
-    @api.multi
-    def _compute_delivered_qty(self):
-        for product in self:
-            so_ids = self.env['sale.order'].search([('lc_id', '=', product.lc_id.id)])
-            for so_id in so_ids:
-                quantity = so_id.order_line.filtered(lambda x: x.product_id.id == product.product_id.id).qty_delivered
-                product.delivered_qty = product.delivered_qty + quantity

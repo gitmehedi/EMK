@@ -19,7 +19,6 @@
         'base',
         'product',
         'product_harmonized_system',
-        # 'sales_team',
         'gbs_application_group',
         'stock',
         'account',
@@ -30,6 +29,8 @@
         'customer_credit_limit',
         'sale',
         'gbs_procure_n_commercial_access',
+        'sales_team_operating_unit',
+        'product_sales_pricelist',
     ],
 
 

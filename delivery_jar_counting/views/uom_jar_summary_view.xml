@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+
+        <record id="uom_jar_summary_form" model="ir.ui.view">
+            <field name="name">uom.jar.summary.form</field>
+            <field name="model">uom.jar.summary</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="UoM Jar Summary" delete="false" copy='0'>
+                    <header>
+                    </header>
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="partner_id"/>
+                                <field name="total_jar_taken"/>
+                                <field name="jar_received"/>
+                                <field name="due_jar"/>
+                                <field name="uom_id"/>
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="uom_jar_summary_tree" model="ir.ui.view">
+            <field name="name">uom.jar.summary.tree</field>
+            <field name="model">uom.jar.summary</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="UoM Jar Summary">
+                    <field name="partner_id"/>
+                    <field name="total_jar_taken"/>
+                    <field name="due_jar"/>
+                </tree>
+            </field>
+        </record>
+
+
+        <record model="ir.actions.act_window" id="uom_jar_summary_action">
+            <field name="name">Jar Summary</field>
+            <field name="res_model">uom.jar.summary</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+
+        <menuitem id="uom_jar_summary_menu"
+                  name="Jar Summary"
+                  parent="stock.menu_stock_root"
+                  groups="stock.delivery_user"
+                  sequence="12"
+                  action="uom_jar_summary_action"/>
+
+
+        <!--<menuitem id="main_menu_delivery_schedules_line"-->
+                  <!--name="Delivery"-->
+                  <!--parent="stock.menu_stock_root"-->
+                  <!--sequence="1"-->
+                  <!--groups="stock.delivery_user"/>-->
+
+        <!--<menuitem id="uom_jar_summary_submenu"-->
+                  <!--name="Jar Summary"-->
+                  <!--parent="uom_jar_summary_menu"-->
+                  <!--groups="account.group_account_user,gbs_application_group.group_head_account,gbs_application_group.group_cxo"-->
+                  <!--action="uom_jar_summary_action"/>-->
+
+
+    </data>
+</odoo>

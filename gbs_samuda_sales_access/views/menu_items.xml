@@ -38,5 +38,8 @@
                 parent="gbs_procure_n_commercial_access.main_menu_lc_sales_comm"
                 sequence="5"/>
 
+        <menuitem id="delivery_schedules.delivery_schedule_menu" name="Delivery" parent="sales_team.menu_base_partner"
+                  groups="account.group_account_user"/>
+
     </data>
 </odoo>

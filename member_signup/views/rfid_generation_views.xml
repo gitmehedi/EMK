@@ -1,0 +1,59 @@
+<?xml version="1.0"?>
+<odoo>
+
+    <record id="view_rfid_generation_form" model="ir.ui.view">
+        <field name="name">rfid.generation.form</field>
+        <field name="model">rfid.generation</field>
+        <field name="priority" eval="1"/>
+        <field name="arch" type="xml">
+            <form string="RFID Generation">
+                <header>
+                    <button string='Print RFID' name="rfid_print" type='object' class="oe_highlight"
+                            states="draft"/>
+                    <field name="state" widget="statusbar"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="membership_id"
+                                   options="{'no_open':True,'no_create':True,'no_create_edit':True,}"/>
+                            <field name="ref"/>
+                        </group>
+                        <group>
+                            <field name="date"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_rfid_generation_tree" model="ir.ui.view">
+        <field name="name">rfid.generation.tree</field>
+        <field name="model">rfid.generation</field>
+        <field name="priority" eval="1"/>
+        <field name="arch" type="xml">
+            <tree string="RFID Generation"
+                  colors="green:state=='draft'; gray:state=='generate'">
+                <field name="membership_id"/>
+                <field name="ref"/>
+                <field name="date"/>
+                <field name="state"/>
+            </tree>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="action_rfid_generation">
+        <field name="name">RFID</field>
+        <field name="res_model">rfid.generation</field>
+        <field name="help" type="html">
+            <p class="oe_view_nocontent_create">
+                Click to add a new RFID for Member
+            </p>
+        </field>
+    </record>
+
+    <menuitem name="Reports" id="menu_rfid_generation" parent="membership.menu_association"/>
+    <menuitem id="sub_rfid_generation" parent="menu_rfid_generation"
+              action="action_rfid_generation"/>
+</odoo>

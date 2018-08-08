@@ -80,13 +80,49 @@
     </function>
 
     <record id="account.account_invoice_line_comp_rule" model="ir.rule">
+        <field name="name">Invoice Line company rule</field>
+        <field name="model_id" ref="account.model_account_invoice_line"/>
+        <field name="domain_force">['|',('company_id','=',False),('company_id','child_of',[user.company_id.id])]</field>
+        <field name="groups" eval="[(4,ref('base.group_user'))]"/>
         <field name="perm_read" eval="True"/>
         <field name="perm_create" eval="False"/>
         <field name="perm_write" eval="False"/>
         <field name="perm_unlink" eval="False"/>
-        <field name="domain_force">['|',('company_id','=',False),('company_id','child_of',[user.company_id.id])]</field>
     </record>
 
+    <function name="write" model="ir.model.data">
+        <function name="search" model="ir.model.data">
+            <value eval="[('module', '=', 'account'), ('name', '=', 'account_invoice_line_comp_rule')]"/>
+        </function>
+        <value eval="{'noupdate': True}"/>
+    </function>
+
+    <!---->
+    <function name="write" model="ir.model.data">
+        <function name="search" model="ir.model.data">
+            <value eval="[('module', '=', 'account'), ('name', '=', 'invoice_comp_rule')]"/>
+        </function>
+        <value eval="{'noupdate': False}"/>
+    </function>
+
+    <record id="account.invoice_comp_rule" model="ir.rule">
+        <field name="name">Invoice multi-company</field>
+        <field name="model_id" ref="account.model_account_invoice"/>
+        <field name="groups" eval="[(4,ref('base.group_user'))]"/>
+        <field name="domain_force">['|',('company_id','=',False),('company_id','child_of',[user.company_id.id])]</field>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_create" eval="False"/>
+        <field name="perm_write" eval="False"/>
+        <field name="perm_unlink" eval="False"/>
+    </record>
+
+    <function name="write" model="ir.model.data">
+        <function name="search" model="ir.model.data">
+            <value eval="[('module', '=', 'account'), ('name', '=', 'invoice_comp_rule')]"/>
+        </function>
+        <value eval="{'noupdate': True}"/>
+    </function>
+    <!---->
 
     <function name="write" model="ir.model.data">
         <function name="search" model="ir.model.data">
@@ -105,13 +141,114 @@
         <field name="domain_force">['|',('company_id','=',False),('company_id','child_of',[user.company_id.id])]</field>
     </record>
 
-
     <record id="sales_team_operating_unit.ir_rule_crm_team_allowed_operating_units" model="ir.rule">
-        <field name="active" eval="False"/>
+        <field name="model_id" ref="sales_team.model_crm_team"/>
+        <field name="domain_force">['|',('operating_unit_id','=',False),('operating_unit_id','in',[g.id for g in user.operating_unit_ids])]</field>
+        <field name="name">Employee can see all Team</field>
+        <field name="groups" eval="[(4,ref('base.group_user'))]"/>
+        <field name="active" eval="True"/>
+        <field eval="0" name="perm_unlink"/>
+        <field eval="0" name="perm_write"/>
+        <field eval="1" name="perm_read"/>
+        <field eval="0" name="perm_create"/>
     </record>
+
+
 
     <record id="sales_team.sale_team_comp_rule" model="ir.rule">
         <field name="active" eval="False"/>
     </record>
+
+
+    <!---->
+
+    <record id="ir_rule_stock_warehouse_allowed_sales_team" model="ir.rule">
+        <field name="model_id" ref="stock.model_stock_warehouse"/>
+        <field name="domain_force">[(1 ,'=', 1)]</field>
+        <field name="name">All Warehouse Read For Sales Team</field>
+        <field name="groups" eval="[(4,ref('sales_team.group_sale_salesman_all_leads'))]"/>
+        <field eval="0" name="perm_unlink"/>
+        <field eval="0" name="perm_write"/>
+        <field eval="1" name="perm_read"/>
+        <field eval="0" name="perm_create"/>
+    </record>
+
+
+    <record id="ir_rule_stock_picking_account_user" model="ir.rule">
+        <field name="model_id" ref="stock.model_stock_picking"/>
+        <field name="domain_force">[(1 ,'=', 1)]</field>
+        <field name="name">Accountent Can read all</field>
+        <field name="groups" eval="[(4,ref('account.group_account_user'))]"/>
+        <field eval="0" name="perm_unlink"/>
+        <field eval="0" name="perm_write"/>
+        <field eval="1" name="perm_read"/>
+        <field eval="0" name="perm_create"/>
+    </record>
+
+    <record id="allow_operating_unit_for_sales_activity" model="ir.rule">
+        <field name="name">Allow OU for sales activity</field>
+        <field name="model_id" ref="operating_unit.model_operating_unit"/>
+        <field name="groups" eval="[(4,ref('sales_team.group_sale_salesman')),(4,ref('account.group_account_invoice')),(4,ref('commercial.group_commercial_user_export'))]"/>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_create" eval="False"/>
+        <field name="perm_write" eval="False"/>
+        <field name="perm_unlink" eval="False"/>
+        <field name="domain_force">['|',('company_id','=',False),('company_id','child_of',[user.company_id.id])]</field>
+    </record>
+
+    <function name="write" model="ir.model.data">
+        <function name="search" model="ir.model.data">
+            <value eval="[('module', '=', 'account_operating_unit'), ('name', '=', 'ir_rule_invoice_allowed_operating_units')]"/>
+        </function>
+        <value eval="{'noupdate': False}"/>
+    </function>
+
+    <record id="account_operating_unit.ir_rule_invoice_allowed_operating_units" model="ir.rule">
+        <field name="model_id" ref="account.model_account_invoice"/>
+        <field name="domain_force">['|', ('operating_unit_id','=',False), ('operating_unit_id','in',[g.id for g in user.operating_unit_ids])]</field>
+        <field name="name">Invoices from allowed operating units</field>
+        <field name="groups" eval="[(4,ref('base.group_user'))]"/>
+        <field eval="0" name="perm_unlink"/>
+        <field eval="0" name="perm_write"/>
+        <field eval="1" name="perm_read"/>
+        <field eval="0" name="perm_create"/>
+    </record>
+
+
+    <function name="write" model="ir.model.data">
+        <function name="search" model="ir.model.data">
+            <value eval="[('module', '=', 'account_operating_unit'), ('name', '=', 'ir_rule_invoice_allowed_operating_units')]"/>
+        </function>
+        <value eval="{'noupdate': True}"/>
+    </function>
+
+    <function name="write" model="ir.model.data">
+        <function name="search" model="ir.model.data">
+            <value eval="[('module', '=', 'account_operating_unit'), ('name', '=', 'ir_rule_invoice_line_allowed_operating_units')]"/>
+        </function>
+        <value eval="{'noupdate': False}"/>
+    </function>
+
+    <record id="account_operating_unit.ir_rule_invoice_line_allowed_operating_units" model="ir.rule">
+        <field name="model_id" ref="account.model_account_invoice_line"/>
+        <field name="domain_force">['|', ('operating_unit_id','=',False), ('operating_unit_id','in',[g.id for g in user.operating_unit_ids])]</field>
+        <field name="name">Invoice lines from allowed operating units</field>
+        <field name="groups" eval="[(4,ref('base.group_user'))]"/>
+        <field eval="0" name="perm_unlink"/>
+        <field eval="0" name="perm_write"/>
+        <field eval="1" name="perm_read"/>
+        <field eval="0" name="perm_create"/>
+    </record>
+
+    <function name="write" model="ir.model.data">
+        <function name="search" model="ir.model.data">
+            <value eval="[('module', '=', 'account_operating_unit'), ('name', '=', 'ir_rule_invoice_line_allowed_operating_units')]"/>
+        </function>
+        <value eval="{'noupdate': True}"/>
+    </function>
+
+    <!---->
+
+    <!---->
 
 </odoo>

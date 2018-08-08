@@ -1,11 +1,19 @@
 from odoo import models, fields, api
 from odoo.addons.procurement.models import procurement
+from odoo.tools.float_utils import float_round
+import time, datetime
+
+
+import math
 
 
 class InheritStockPicking(models.Model):
     _inherit = 'stock.picking'
 
     delivery_order_id = fields.Many2one('delivery.order', string='D.O No.', readonly=True)
+
+    pack_type = fields.Many2one('product.packaging.mode', string='Packing Mode', readonly=True)
+
     lc_id = fields.Many2one('letter.credit', string='L/C No', readonly=True, compute="_calculate_lc_id", store=False)
 
     show_transport_info = fields.Boolean(string='Show Transport Info', default=False,
@@ -112,6 +120,47 @@ class InheritStockPicking(models.Model):
                 'cancel': [('readonly', True)]},
         help="Priority for this picking. Setting manually a value here would set it as priority for all the moves")
 
+
+    # Inherit Validate Button function
+    @api.multi
+    def do_new_transfer(self):
+        res = super(InheritStockPicking, self).do_new_transfer()
+
+        self._get_number_of_jar()
+        self._set_date_done_do()
+        return res
+
+
+    def _get_number_of_jar(self):
+
+        if self.pack_type.uom_id and not self.pack_type.is_jar_bill_included:
+            for picking_line in self.pack_operation_product_ids:
+                jar_count = (picking_line.qty_done * picking_line.product_uom_id.factor_inv) / self.pack_type.uom_id.factor_inv
+
+                delivery_jar_count_obj = self.env['delivery.jar.count']
+
+                vals = {}
+                vals['partner_id'] = self.partner_id.id
+                vals['product_id'] = picking_line.product_id.id
+                vals['challan_id'] = self.id
+                vals['uom_id'] = picking_line.product_uom_id.id
+                vals['jar_count'] = math.ceil(jar_count)
+                vals['packing_mode_id'] = self.pack_type.id
+                vals['jar_type'] = self.pack_type.uom_id.display_name.upper().strip()
+                vals['date'] = datetime.datetime.now().date()
+
+                delivery_jar_count_obj.create(vals)
+
+    def _set_date_done_do(self):
+        for move in self.move_lines:
+            if move.undelivered_qty == 0.0:
+                do_objs = self.env['delivery.order'].search([('id','=',move.delivery_order_id.id)])
+                do_line_objs = do_objs.line_ids.filtered(lambda x: x.product_id.id == move.product_id.id)
+                if self.date_done:
+                    do_line_objs.date_done = self.date_done
+                else:
+                    do_line_objs.date_done = fields.Datetime.now()
+
     @api.multi
     def _calculate_lc_id(self):
         for stock_lc in self:
@@ -121,16 +170,18 @@ class InheritStockPicking(models.Model):
     def do_print_delivery_challan(self):
         return self.env["report"].get_action(self, 'delivery_challan_report.report_delivery_cha')
 
-    @api.model
-    def create(self, vals):
-        seq = self.env['ir.sequence'].next_by_code_new('stock.picking', self.create_date) or '/'
-        if seq:
-            vals['name'] = seq
-
-        return super(InheritStockPicking, self).create(vals)
-
 
 class InheritStockMove(models.Model):
     _inherit = 'stock.move'
 
     delivery_order_id = fields.Many2one('delivery.order', string='D.O No.', readonly=True)
+
+    undelivered_qty = fields.Float(
+        'Undelivered Quantity', compute='_get_undelivered_qty',
+        digits=0, states={'done': [('readonly', True)]},store=True)
+
+    @api.one
+    @api.depends('linked_move_operation_ids.qty')
+    def _get_undelivered_qty(self):
+        self.undelivered_qty = float_round(self.product_qty - sum(self.mapped('linked_move_operation_ids').mapped('qty')),
+                                         precision_rounding=self.product_id.uom_id.rounding)

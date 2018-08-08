@@ -15,12 +15,11 @@ class DeliveryAuthorization(models.Model):
     def _get_sale_order_currency(self):
         self.currency_id = self.sale_order_id.currency_id
 
-    currency_id = fields.Many2one('res.currency', string='Currency', compute='_get_sale_order_currency', readonly=True,
-                                  states={'draft': [('readonly', False)]})
+    currency_id = fields.Many2one('res.currency', string='Currency', compute='_get_sale_order_currency', readonly=True)
 
-    so_date = fields.Datetime('Order Date', readonly=True, states={'draft': [('readonly', False)]})
+    so_date = fields.Datetime('Order Date', readonly=True)
     sequence_id = fields.Char('Sequence', readonly=True)
-    deli_address = fields.Char('Delivery Address', readonly=True, states={'draft': [('readonly', False)]})
+    deli_address = fields.Char('Delivery Address', readonly=True)
 
     parent_id = fields.Many2one('res.partner', 'Customer', ondelete='cascade', readonly=True,
                                 related='sale_order_id.partner_id', track_visibility='onchange')
@@ -40,8 +39,8 @@ class DeliveryAuthorization(models.Model):
                              states={'draft': [('readonly', False)]})
     requested_by = fields.Many2one('res.users', string='Requested By', readonly=True,
                                    default=lambda self: self.env.user)
-    approver1_id = fields.Many2one('res.users', string="First Approval", readonly=True)
-    approver2_id = fields.Many2one('res.users', string="Final Approval", readonly=True)
+    approver1_id = fields.Many2one('res.users', string="Final Approval", readonly=True)
+    approver2_id = fields.Many2one('res.users', string="First Approval", readonly=True)
     requested_date = fields.Date(string="Requested Date", default=datetime.date.today(), readonly=True)
     approved_date = fields.Date(string='Final Approval Date',
                                 states={'draft': [('invisible', True)],
@@ -50,11 +49,12 @@ class DeliveryAuthorization(models.Model):
                                         'approve': [('invisible', False), ('readonly', True)]})
     confirmed_date = fields.Date(string="Approval Date", _defaults=lambda *a: time.strftime('%Y-%m-%d'), readonly=True,
                                  track_visibility='onchange')
+
     so_type = fields.Selection([
         ('cash', 'Cash'),
         ('credit_sales', 'Credit'),
         ('lc_sales', 'L/C'),
-    ], string='Sales Type', readonly=True, states={'draft': [('readonly', False)]}, track_visibility='onchange')
+    ], string='Sales Type', readonly=True,track_visibility='onchange')
 
     state = fields.Selection([
         ('draft', "Submit"),
@@ -69,6 +69,7 @@ class DeliveryAuthorization(models.Model):
     delivery_count = fields.Integer(string='Delivery Orders', compute='_compute_picking_ids')
     operating_unit_id = fields.Many2one('operating.unit', string='Operating Unit', readonly=True,
                                         track_visibility='onchange')
+
 
     @api.multi
     @api.depends('sale_order_id.procurement_group_id')
@@ -100,7 +101,7 @@ class DeliveryAuthorization(models.Model):
                                     string='Sale Order',
                                     readonly=True,
                                     domain=[('da_btn_show_hide', '=', False), ('state', '=', 'done')],
-                                    states={'draft': [('readonly', False)]}, track_visibility='onchange')
+                                    track_visibility='onchange')
 
     @api.multi
     def _compute_do_button_visibility(self):
@@ -119,7 +120,9 @@ class DeliveryAuthorization(models.Model):
 
     @api.model
     def create(self, vals):
-        seq = self.env['ir.sequence'].next_by_code_new('delivery.authorization', self.requested_date) or '/'
+        team = self.env['crm.team']._get_default_team_id()
+
+        seq = self.env['ir.sequence'].next_by_code_new('delivery.authorization', self.requested_date, team.operating_unit_id) or '/'
         if seq:
             vals['name'] = seq
 
@@ -277,8 +280,7 @@ class DeliveryAuthorization(models.Model):
                                     orders.create(res)
 
                     if list[rec] > 100 or res['available_qty'] == 0:
-                        product_pool = self.env['product.product'].search([('id', '=', rec)])
-
+                        #product_pool = self.env['product.template'].search([('id', '=', rec)])
                         wizard_form = self.env.ref('delivery_order.max_do_without_lc_view', False)
                         view_id = self.env['max.delivery.without.lc.wizard']
 
@@ -291,7 +293,7 @@ class DeliveryAuthorization(models.Model):
                             'view_type': 'form',
                             'view_mode': 'form',
                             'target': 'new',
-                            'context': {'delivery_order_id': self.id, 'product_name': product_pool.display_name}
+                            'context': {'delivery_order_id': self.id, 'product_name': line.product_id.display_name}
                         }
             else:
                 self.state = 'approve'  # second
@@ -299,6 +301,7 @@ class DeliveryAuthorization(models.Model):
         elif self.so_type == 'credit_sales':
             self._automatic_delivery_order_creation()
             self.state = 'close'
+            
 
     def total_sub_total_amount(self):
         total_amt = 0
@@ -544,9 +547,24 @@ class DeliveryAuthorization(models.Model):
 
     @api.model
     def _needaction_domain_get(self):
-        return [('state', 'in', ['validate'])]
+        users_obj = self.env['res.users']
+        domain = []
+        if users_obj.has_group('gbs_application_group.group_cxo'):
+            domain = [
+                ('state', 'in', ['validate'])]
+            return domain
+        elif users_obj.has_group('gbs_application_group.group_head_account'):
+            domain = [
+                ('state', 'in', ['approve'])]
+            return domain
+        elif users_obj.has_group('account.group_account_user'):
+            domain = [
+                ('state', 'in', ['draft'])]
+            return domain
+        else:
+            return False
 
-
+        return domain
         ## mail notification
         # @api.multi
         # def _notify_approvers(self):

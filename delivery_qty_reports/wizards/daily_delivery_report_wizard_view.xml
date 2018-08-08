@@ -9,7 +9,7 @@
                     <sheet>
                         <group>
                             <field name="report_of_day" placeholder="Select a Day..."/>
-                            <field name="operating_unit_id"/>
+                            <field name="operating_unit_id" groups="operating_unit.group_multi_operating_unit"/>
                         </group>
                     </sheet>
 
@@ -32,11 +32,11 @@
         </record>
 
 
-        <menuitem name="Daily Delivery Report"
-                  groups="sales_team.group_sale_salesman_all_leads,gbs_application_group.group_head_sale,gbs_application_group.group_cxo"
-                  action="action_daily_delivery_report"
-                  id="daily_delivery_report_id"
-                  parent="sales_team.menu_sale_report" sequence="20"/>
+        <!--<menuitem name="Daily Delivery Summary Report"-->
+                  <!--groups="sales_team.group_sale_salesman_all_leads,gbs_application_group.group_head_sale,gbs_application_group.group_cxo"-->
+                  <!--action="action_daily_delivery_report"-->
+                  <!--id="daily_delivery_report_id"-->
+                  <!--parent="sales_team.menu_sale_report" sequence="20"/>-->
 
     </data>
 </odoo>

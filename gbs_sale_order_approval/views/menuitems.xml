@@ -29,6 +29,5 @@
                   parent="sales_team.menu_sale_config"
                   action="sales_team.sales_team_config_action"/>
 
-        <!---->
     </data>
 </odoo>
