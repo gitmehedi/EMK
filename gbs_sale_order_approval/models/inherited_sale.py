@@ -604,6 +604,7 @@ class CrmTeam(models.Model):
                                         default=lambda self:
                                         self.env['res.users'].
                                         operating_unit_default_get(self._uid))
+    user_id = fields.Many2one('res.users', string='Team Leader',required=True)
 
 
     @api.constrains('name')
