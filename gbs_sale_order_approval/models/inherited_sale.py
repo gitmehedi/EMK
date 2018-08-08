@@ -1,4 +1,4 @@
-from odoo import api, fields, models
+from odoo import api, fields, models,_
 from odoo.exceptions import UserError, ValidationError, Warning
 from odoo.tools import amount_to_text_en
 import time
@@ -535,6 +535,12 @@ class SaleOrder(models.Model):
 
         return domain
 
+    @api.multi
+    def unlink(self):
+        for order in self:
+            if order.state not in ('to_submit', 'cancel'):
+                raise UserError(_('You can not delete a sent quotation or a sales order! Try to cancel it before.'))
+        return super(SaleOrder, self).unlink()
 
 
 ################################
