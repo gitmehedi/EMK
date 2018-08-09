@@ -48,7 +48,7 @@ class ProformaInvoice(models.Model):
                                      states={'draft': [('readonly', False)]})
 
     transport_by = fields.Char(string='Transport By', required=True, readonly=True,
-                               states={'draft': [('readonly', False)]})
+                               states={'draft': [('readonly', False)]},default='By Truck')
     terms_condition = fields.Text(string='Terms & Conditions', required=True, readonly=True,
                                   states={'draft': [('readonly', False)]})
     terms_id = fields.Many2one('terms.setup', string='Terms', store=True, readonly=True,
@@ -71,8 +71,6 @@ class ProformaInvoice(models.Model):
     terms_condition = fields.Text(string='Terms of Condition', required=True, readonly=True,
                                   states={'draft': [('readonly', False)]})
     packing = fields.Char(string='Packing', readonly=True, states={'draft': [('readonly', False)]})
-    terms_of_payment = fields.Char(string='Terms Of Payment', required=True, readonly=True,
-                                   states={'draft': [('readonly', False)]})
 
     state = fields.Selection([
         ('draft', "Draft"),
