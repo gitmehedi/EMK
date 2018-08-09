@@ -11,7 +11,7 @@
                     <header>
                         <button string="Open" name="action_open" states="draft" type="object" class="oe_highlight"/>
                         <button string="Confirm" name="action_confirm" states="open" type="object" class="oe_highlight"/>
-                        <button string="Reset to Draft" name="action_draft" type="object" states="confirmed" class="oe_read_only"/>
+                        <button string="Reset to Draft" name="action_draft" type="object" states="confirmed" class="oe_read_only" groups="base_technical_features.group_technical_features"/>
                         <button string="Amendment" name="action_revision" class="oe_read_only" type="object" attrs="{'invisible': [('state', 'in', ('draft', 'open', 'done'))]}"/>
                         <button string="Cancel" name="action_cancel" class="oe_read_only" type="object" states="progress"/>
                         <field name="state" widget="statusbar" statusbar_visible="draft,open,confirmed,progress,done"/>
@@ -19,6 +19,7 @@
                     </header>
 
                     <sheet>
+                        <div class="oe_button_box" name="button_box"></div>
                         <group>
                             <group colspan="2">
                                 <group>
@@ -38,6 +39,8 @@
                                 <separator string="Applicant" colspan="2" attrs="{'invisible': [('type', '=', 'export')]}"/>
                                 <field name="first_party"/>
                                 <field name="first_party_bank"/>
+                                <field name="operating_unit_id" options="{'no_open':True,'no_quick_create':True,'no_create_edit':True}"/>
+
                             </group>
 
                             <group>
@@ -45,7 +48,6 @@
                                 <separator string="Applicant" colspan="2" attrs="{'invisible': [('type', '=', 'import')]}"/>
                                 <field name="second_party_applicant" attrs="{'invisible': [('type', '=', 'import')], 'required': [('type', '=', 'export')]}"/>
                                 <field name="second_party_beneficiary" attrs="{'invisible': [('type', '=', 'export')], 'required': [('type', '=', 'import')]}"/>
-
                                 <field name="second_party_bank"/>
                             </group>
 
@@ -139,23 +141,6 @@
             </field>
         </record>
 
-        <record id="export_letter_credit_tree_view" model="ir.ui.view">
-            <field name="name">export.local.credit.tree</field>
-            <field name="model">letter.credit</field>
-            <field name="type">tree</field>
-            <field name="arch" type="xml">
-                <tree string="Letter of Credit">
-                    <field name="name"/>
-                    <field name="second_party_applicant" string="Applicant Name"/>
-                    <field name="second_party_bank" string="Applicant Bank"/>
-                    <field name="issue_date"/>
-                    <field name="expiry_date"/>
-                    <field name="shipment_date"/>
-                    <field name="state"/>
-                </tree>
-            </field>
-        </record>
-
         <record id="import_letter_credit_tree_view" model="ir.ui.view">
             <field name="name">import.local.credit.tree</field>
             <field name="model">letter.credit</field>
@@ -172,8 +157,6 @@
                 </tree>
             </field>
         </record>
-
-
 
     </data>
 </odoo>

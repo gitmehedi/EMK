@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!--<record id="rule_gate_in_ou" model="ir.rule">-->
+        <!--<field name="name">Gate In Multi Operating Unit</field>-->
+        <!--<field name="model_id" ref="product_gate_in.model_product_gate_in"/>-->
+        <!--<field name="domain_force">[('operating_unit_id.id','in',user.operating_unit_ids.ids)]</field>-->
+        <!--<field name="perm_read" eval="True" />-->
+        <!--<field name="perm_create" eval="True"/>-->
+        <!--<field name="perm_write" eval="True"/>-->
+        <!--<field name="perm_unlink" eval="False"/>-->
+        <!--<field name="groups" eval="[(4,ref('gbs_procure_n_commercial_access.group_approve_gate_in'))]"/>-->
+    <!--</record>-->
+</odoo>

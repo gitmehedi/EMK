@@ -6,16 +6,12 @@
             <field name="model">sales.delivery.goods</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Delivery Goods">
+                <form string="Transport Information">
                     <sheet>
                         <group>
                             <group>
                                 <field name="transport_details"/>
                                 <field name="transport_name"/>
-                                <field name="product_details"/>
-                                <field name="qty"/>
-                            </group>
-                            <group>
                                 <field name="vehicle_no"/>
                                 <field name="driver_no"/>
                                 <field name="driver_mob"/>
@@ -31,11 +27,9 @@
             <field name="model">sales.delivery.goods</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree string="Delivery Goods">
+                <tree string="Transport Information">
                    <field name="transport_details"/>
                     <field name="transport_name"/>
-                    <field name="product_details"/>
-                    <field name="qty"/>
                     <field name="vehicle_no"/>
                     <field name="driver_no"/>
                 </tree>
@@ -43,14 +37,14 @@
         </record>
 
         <record model="ir.actions.act_window" id="delivery_goods_action">
-            <field name="name">Delivery Goods</field>
+            <field name="name">Transport Information</field>
             <field name="res_model">sales.delivery.goods</field>
             <field name="view_mode">tree,form</field>
         </record>
 
-        <menuitem id="delievry_goods_menu" name="Delivery Goods" parent="sales_team.menu_base_partner"
-            sequence="11" action="delivery_goods_action"/>
-        <menuitem id="mrp_daily_production_submenu" name="Delivery Goods" parent="delievry_goods_menu"
-                  action="delivery_goods_action"/>
+        <!--<menuitem id="delievry_goods_menu" name="Transport Information" parent="sales_team.menu_base_partner"-->
+            <!--sequence="11" action="delivery_goods_action"/>-->
+        <!--<menuitem id="mrp_daily_production_submenu" name="Transport Information" parent="delivery_schedules.delivery_schedule_menu"-->
+                  <!--action="delivery_goods_action"/>-->
     </data>
 </odoo>

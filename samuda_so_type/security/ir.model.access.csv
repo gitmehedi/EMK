@@ -1,0 +1,5 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_so_type_product_manager,access_so_type_product_manager,sale_order_type.model_sale_order_type,gbs_application_group.group_sales_product_manager,1,1,1,0
+access_op_unit_product_manager,access_op_unit_product_manager,operating_unit.model_operating_unit,gbs_application_group.group_sales_product_manager,1,0,0,0
+
+access_product_uom_product_manager,access_product_uom_product_manager,product.model_product_uom,gbs_application_group.group_sales_product_manager,1,1,1,0

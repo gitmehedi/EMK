@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <record model="ir.ui.view" id="inherit_stock_picking_for_delivery_order">
+            <field name="name">Stock.picking.form.view</field>
+            <field name="model">stock.picking</field>
+            <field name="inherit_id" ref="stock.view_picking_form"/>
+            <field name="arch" type="xml">
+
+                <xpath expr="//field[@name='origin']" position="after">
+                    <field name="delivery_order_id" options="{'no_open': True, 'no_create': True}"/>/>
+                </xpath>
+                <xpath expr="//field[@name='delivery_order_id']" position="after">
+                    <field name="vat_challan_id"/>
+                </xpath>
+
+                <xpath expr="//field[@name='vat_challan_id']" position="after">
+                    <field name="pack_type"/>
+                </xpath>
+
+                <xpath expr="//field[@name='partner_id']" position="after">
+                    <field name="show_transport_info"/>
+                </xpath>
+                <xpath expr="//field[@name='show_transport_info']" position="after">
+                    <field name="transport_details" widget="radio" options="{'horizontal': true}"
+                           attrs="{'invisible': [('show_transport_info','=', False)]}"/>
+                </xpath>
+                <xpath expr="//field[@name='transport_details']" position="after">
+                    <field name="vehicle_no" attrs="{'invisible': [('show_transport_info','=', False)]}"/>
+                </xpath>
+                <xpath expr="//field[@name='vehicle_no']" position="after">
+                    <field name="driver_no" attrs="{'invisible': [('show_transport_info','=', False)]}"/>
+                </xpath>
+                <xpath expr="//field[@name='driver_no']" position="after">
+                    <field name="driver_mob" attrs="{'invisible': [('show_transport_info','=', False)]}"/>
+                </xpath>
+                <xpath expr="//field[@name='driver_mob']" position="after">
+                    <field name="transport_name" attrs="{'invisible': [('show_transport_info','=', False)]}"/>
+                </xpath>
+                <xpath expr="//field[@name='min_date']" position="after">
+                    <field name="date_done"/>
+                </xpath>
+
+                <xpath expr="//field[@name='origin']" position="after">
+                    <field name="lc_id" options="{'no_open': True, 'no_create': True}"/>/>
+                </xpath>
+                <xpath expr="//field[@name='partner_id']" position="replace">
+                    <field name="partner_id" options="{'no_open': True, 'no_create': True}"/>/>
+                </xpath>
+                <xpath expr="//button[@name='%(stock.action_report_delivery)d']" position="replace">
+                    <button name="%(stock.action_report_delivery)d" string="Print" states="done" type="action"
+                            groups="base.group_user" invisible="1"/>
+                </xpath>
+
+                <xpath expr="//button[@name='do_print_picking']" position="replace">
+                    <button name="do_print_delivery_challan" string="Print"
+                            groups="stock.delivery_user,stock.group_stock_user"
+                            type="object"
+                            attrs="{'invisible': [('state', 'in', ('assigned', 'confirmed','waiting','cancel'))]}"/>
+                </xpath>
+
+                <xpath expr="//button[@name='do_new_transfer']" position="replace">
+                    <button name="do_new_transfer"
+                            states="draft,partially_available,assigned"
+                            string="Validate"
+                            groups="stock.delivery_user,stock.group_stock_user,account.group_account_user"
+                            type="object" class="oe_highlight"/>
+                </xpath>
+
+                <xpath expr="//button[@name='force_assign']" position="replace">
+                    <button name="force_assign" states="confirmed,waiting,partially_available"
+                            string="Force Availability"
+                            type="object"
+                            groups="stock.delivery_user,stock.group_stock_user,stock.group_stock_manager,account.group_account_user"/>
+
+                </xpath>
+
+                <xpath expr="//button[@name='button_scrap']" position="replace">
+                    <button name="button_scrap" type="object" string="Scrap" invisible="1"/>
+                </xpath>
+
+            </field>
+        </record>
+
+
+        <record model="ir.ui.view" id="inherit_stock_move_for_delivery_order">
+            <field name="name">Stock.move.form.view</field>
+            <field name="model">stock.move</field>
+            <field name="inherit_id" ref="stock.view_move_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='origin']" position="after">
+                    <field name="delivery_order_id"/>
+                </xpath>
+            </field>
+        </record>
+
+    </data>
+</odoo>

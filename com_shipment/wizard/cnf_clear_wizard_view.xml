@@ -7,43 +7,15 @@
             <field name="type">form</field>
             <field name="arch" type="xml" >
                 <form string="Please Enter The Information" create="false" edit="false">
-                    <sheet>
+                    <group>
                         <group>
-                            <group>
-                                <field name="arrival_date"/>
-                            </group>
+                            <field name="arrival_date"/>
                         </group>
-                        <group string="Transport Information">
-                            <group>
-                                <field name="transport_by"/>
-                                <field name="vehical_no"/>
-                            </group>
+                        <group>
+                            <field name="transport_by"/>
+                            <field name="vehical_no"/>
                         </group>
-                        <group string="Employee's">
-                           <field name="employee_ids" widget="many2many_tags" nolabel="1" />
-                        </group>
-                        <group string="Notes">
-                           <field name="notes" nolabel="1" />
-                        </group>
-                    </sheet>
-                    <!--<group>-->
-                        <!--<group>-->
-                            <!--<field name="arrival_date"/>-->
-                            <!--<separator string="Transport Information"/>-->
-                            <!---->
-                        <!--</group>-->
-
-                        <!--<field name="employee_ids" nolevel= "false"/>-->
-
-                        <!--&lt;!&ndash;<group>&ndash;&gt;-->
-                            <!--&lt;!&ndash;<group string="Transport Information">&ndash;&gt;-->
-                                <!--&lt;!&ndash;<field name="transport_by"/>&ndash;&gt;-->
-                                <!--&lt;!&ndash;<field name="vehical_no"/>&ndash;&gt;-->
-                                <!--&lt;!&ndash;<field name="employee_ids"/>&ndash;&gt;-->
-                            <!--&lt;!&ndash;</group>&ndash;&gt;-->
-                        <!--&lt;!&ndash;</group>&ndash;&gt;-->
-
-                    <!--</group>-->
+                    </group>
                     <footer>
                         <button string="Save" name="save_cnf_clear" type="object" class="oe_highlight"  />
                         <button special="cancel" string="Close" type="object"/>

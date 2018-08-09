@@ -1,4 +1,5 @@
 from odoo import api, fields, models
+from odoo.exceptions import ValidationError
 
 
 class InheritProductTemplate(models.Model):
@@ -10,7 +11,7 @@ class InheritProductTemplate(models.Model):
     @api.multi
     def _calculate_available_qty(self):
         for prod in self:
-            ordered_qty_pool = self.env['ordered.qty'].search([('lc_no', '=', False),
+            ordered_qty_pool = self.env['ordered.qty'].search([('lc_id', '=', False),
                                                                ('company_id', '=', prod.company_id.id),
                                                                ('product_id', '=', prod.id)])
             if not ordered_qty_pool:
@@ -18,7 +19,7 @@ class InheritProductTemplate(models.Model):
                 #return;
 
             for ord_qty in ordered_qty_pool:
-                if not ord_qty.lc_no:
+                if not ord_qty.lc_id:
                     prod.available_qty = ord_qty.available_qty
                 else:
                     prod.available_qty = 100
@@ -48,3 +49,8 @@ class InheritProductTemplate(models.Model):
             name = self.search(filters)
             if len(name) > 1:
                 raise Warning('[Unique Error] Name must be unique!')
+
+    @api.constrains('sale_delay')
+    def _check_negative_value_sale_delay(self):
+        if self.sale_delay < 0.00:
+            raise ValidationError('Customer Lead Time can not be negative')

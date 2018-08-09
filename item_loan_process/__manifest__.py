@@ -17,14 +17,19 @@ the loan to other company. System will handle the both case mentioned above.
     'website': "www.genweb2.com",
 
     'category': 'Inventory',
-    'version': '10.0.0.1',
+    'version': '10.0.1',
 
-    'depends': ['base','mail','product','gbs_application_group'],
+    'depends': [
+        'stock_operating_unit',
+        'gbs_application_group',
+        'ir_sequence_operating_unit'],
 
     'data': [
+        'data/sequence.xml',
         'security/ir.model.access.csv',
-        'views/item_loan_borrowing_process_views.xml',
+        'security/ir_rule.xml',
         'views/item_loan_lending_process_views.xml',
+        'views/item_loan_borrowing_process_views.xml',
     ],
 
 }

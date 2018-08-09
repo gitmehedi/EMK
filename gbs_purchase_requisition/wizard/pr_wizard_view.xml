@@ -6,7 +6,7 @@
             <field name="model">purchase.requisition.type.wizard</field>
             <field name="type">form</field>
             <field name="arch" type="xml" >
-                <form string="Please Select LC Region Type and Purchase By before approve" create="false" edit="false">
+                <form string="Please Select Region Type and Purchase By before approve" create="false" edit="false">
                     <group>
                         <group>
                             <field name="region_type" placeholder="Please Select"/>

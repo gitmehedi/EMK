@@ -5,7 +5,6 @@ from odoo.exceptions import UserError
 class InheritResPartnerBank(models.Model):
     _inherit = 'res.partner.bank'
 
-    is_payroll_account = fields.Boolean(string='Payroll A/C', default=False)
 
 
 class HrPayrollAdvice(models.Model):
@@ -43,6 +42,20 @@ class HrPayslipRun(models.Model):
 
         for payslip in self.slip_ids:
             payslip.action_payslip_done()
+
+        email_server_obj = self.env['ir.mail_server'].search([], order='id ASC', limit=1)
+        payslip_line = self.env['hr.payslip'].search([('payslip_run_id','=',self.id)])
+        emailto = []
+        for eml in payslip_line:
+            login = eml.employee_id.user_id.login
+            emailto.append(login)
+            for email in emailto:
+                template = self.env.ref('gbs_hr_payroll.employee_email_template')
+                template.write({
+                    'subject': "Employee Salary Sheet",
+                    'email_from': email_server_obj.name,
+                    'email_to': email})
+                self.env['mail.template'].browse(template.id).send_mail(eml.id)
 
         return res
 

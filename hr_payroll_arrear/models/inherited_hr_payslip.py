@@ -24,7 +24,6 @@ class InheritHRPayslipInput(models.Model):
 
     @api.onchange('employee_id', 'date_from', 'date_to')
     def onchange_employee(self):
-
         if self.employee_id:
             self.input_line_ids = 0
             super(InheritHRPayslipInput, self).onchange_employee()

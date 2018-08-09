@@ -12,16 +12,17 @@ class InheritStockPicking(models.Model):
 
         for record in self.move_lines:
             sum = 0
-            if record.purchase_line_id:
+            if record.location_dest_id.name == 'Stock':
+                # get sum of previous quantity
                 for rec in self.env['stock.move'].search(
-                        [('product_id', '=', record.product_id.id), ('state', '=', 'done')]):
+                        [('product_id', '=', record.product_id.id),('id','!=',record.id)]):
 
-                    if rec.purchase_line_id:
+                    if rec.location_dest_id.name == 'Stock':
                         sum = sum + rec.product_qty
-                    else:
-                        sum = sum - rec.product_qty
+                    # else:
+                    #     sum = sum - rec.product_qty
 
-                avg_price = self.env['product.variant.history'].search([('product_id', '=', rec.product_id.id)],
+                avg_price = self.env['product.variant.history'].search([('product_id', '=', record.product_id.id)],
                                                                        order='effective_datetime DESC', limit=1)
 
                 avg = (sum * avg_price.value + record.ordered_qty * record.price_unit) / (sum + record.ordered_qty)

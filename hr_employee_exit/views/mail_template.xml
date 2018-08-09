@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="example_exit_req_email_template" model="mail.template">
+          <field name="name">E-mail template For exit request</field>
+          <field name="lang">${object.lang}</field>
+          <field name="model_id" ref="hr_employee_exit.model_hr_emp_exit_req"/>
+          <field name="auto_delete" eval="True"/>
+          <field name="body_html">
+              <![CDATA[<html>
+                <head></head>
+                <body style="margin: 0; padding: 0;">
+                    <p>${object.employee_id.name} Request for Exit</p>
+                    Regards,
+                    <p>${object.employee_id.company_id.name}</p>
+                </body>
+                </html>
+            ]]></field>
+        </record>
+
+        <record id="email_template_exit_req_approved" model="mail.template">
+          <field name="name">E-mail template For exit request approval</field>
+          <field name="lang">${object.lang}</field>
+          <field name="model_id" ref="hr_employee_exit.model_hr_emp_exit_req"/>
+          <field name="auto_delete" eval="True"/>
+          <field name="body_html">
+              <![CDATA[<html>
+                <head></head>
+                <body style="margin: 0; padding: 0;">
+                    <p>${object.employee_id.name}'s exit request has been approved</p>
+                    Regards,
+                    <p>${object.employee_id.company_id.name}</p>
+                </body>
+                </html>
+            ]]></field>
+        </record>
+
+        <record id="send_mail_exit_request_cancel" model="mail.template">
+          <field name="name">E-mail template For exit request cancel</field>
+          <field name="lang">${object.lang}</field>
+          <field name="model_id" ref="hr_employee_exit.model_hr_emp_exit_req"/>
+          <field name="auto_delete" eval="True"/>
+          <field name="body_html">
+              <![CDATA[<html>
+                <head></head>
+                <body style="margin: 0; padding: 0;">
+                    <p>${object.employee_id.name}'s exit request has been cancelled</p>
+                    Regards,
+                    <p>${object.employee_id.company_id.name}</p>
+                </body>
+                </html>
+            ]]></field>
+        </record>
+        <record id="email_template_received_item" model="mail.template">
+          <field name="name">E-mail template For checklist</field>
+          <field name="lang">${object.lang}</field>
+          <field name="model_id" ref="hr_employee_exit.model_pendding_checklists_line"/>
+          <field name="auto_delete" eval="True"/>
+          <field name="body_html">
+              <![CDATA[<html>
+                <head></head>
+                <body style="margin: 0; padding: 0;">
+                    <p>Received Items from ${object.employee_id.name}</p>
+                    Regards,
+                    <p>${object.employee_id.company_id.name}</p>
+                </body>
+                </html>
+            ]]></field>
+        </record>
+    </data>
+</odoo>

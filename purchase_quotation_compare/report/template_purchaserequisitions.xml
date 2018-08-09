@@ -9,53 +9,29 @@
         </style>
         <t t-call="report.html_container">
             <t t-foreach="docs" t-as="o">
-                <t t-call="report.external_layout">
-                    <div class="page">
-                        <br></br>
+                <t t-call="custom_report.gbs_internal_layout">
+                    <div class="page" style="page-break-inside:auto">
                         <t t-as="batch_start">
-                            <!-- ensure title is not cut -->
-                            <br/>
-                            <br/>
-                            <h3 class="text-center">Comparative Bid analysis</h3>
-                            <hr></hr>
+                            <div class="clearfix">
+                                <h3 class="report-title">Comparative Bid analysis</h3>
+                            </div>
                             <t>
                                 <t t-set="bid_batch" t-value="o.purchase_ids"/>
                             </t>
-                            <small>
-                                <div class="row mt32">
-                                    <div class="col-xs-6">
-                                        <strong class="col-xs-6">Purchase Requisition (PR) No</strong>
-                                        <span class="col-xs-6 bg-info text-center" t-field="o.name"/>
-                                    </div>
-                                    <div class="col-xs-6">
-                                        <strong class="col-xs-6 ">Requisition Date</strong>
-                                        <span class="col-xs-6 bg-info text-center" t-field="o.requisition_date"/>
-                                    </div>
+                            <div class=" text-left">
+                                <div>
+                                    <strong>Requisition Date : </strong>
+                                    <span t-field="o.requisition_date"  t-field-options='{"format": "d-MMM-y"}'/>
                                 </div>
-                                <div class="row mt4">
-                                    <div class="col-xs-6">
-                                        <strong class="col-xs-6">Number of Suppliers invited</strong>
-                                        <span class="col-xs-6 bg-info text-center" t-esc="len(o.purchase_ids)"/>
-                                    </div>
-                                    <div class="col-xs-6">
-                                        <strong class="col-xs-6">Report date</strong>
-                                        <span class="col-xs-6 bg-info text-center" t-esc="time.strftime('%m/%d/%Y')"/>
-                                    </div>
+                                <div>
+                                    <strong>PR No :</strong>
+                                    <span t-field="o.name"/>
                                 </div>
-                                <div class="row mt4 mb32">
-                                    <div class="col-xs-6">
-                                        <strong class="col-xs-6">Company</strong>
-                                        <span class="col-xs-6 bg-info text-center" t-field="o.company_id"/>
-                                    </div>
-                                    <div class="col-xs-6">
-                                        <strong class="col-xs-6">Operating Unit</strong>
-                                        <span class="col-xs-6 bg-info text-center" t-field="o.operating_unit_id"/>
-                                    </div>
-                                </div>
+                            </div>
                                 <small>
                                     <small>
                                         <small>
-                                            <table id="bids-info" class="table table-condensed table-bordered" width="100%">
+                                            <table class="table table-bordered table-report-xs table-striped" style="margin-bottom: 10px;">
                                                 <thead>
                                                     <tr>
                                                         <t t-foreach="bid_batch" t-as="bid">
@@ -92,7 +68,7 @@
                                                                 </td>
                                                             </t>
                                                             <td colspan="5" class="text-center col-separator">
-                                                                Bid <span t-field="bid.name"/> / Quotation Date :<span t-field="bid.date_order"/>
+                                                                Bid <span t-field="bid.name"/> / Quotation Date : <span t-field="bid.date_order" t-field-options='{"format": "d-MMM-y"}'/>
                                                             </td>
                                                             <t t-if="bid_last">
                                                                 <th colspan="2" class="col-xs-3 info text-center col-separator">
@@ -570,10 +546,9 @@
                                     <!--</div>-->
                                     <!--</t>-->
                                 </small>
-                            </small>
-                            <p style="page-break-after:always;">   </p>
-                            <div class="oe_structure"/>
+                            <div/>
                         </t>
+                        <t t-call="custom_report.report_signing"></t>
                     </div>
                 </t>
             </t>

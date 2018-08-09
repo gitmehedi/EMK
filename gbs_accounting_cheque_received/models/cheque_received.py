@@ -5,10 +5,11 @@ import datetime
 
 
 class ChequeReceived(models.Model):
-    _inherit = 'account.payment'
     _name = 'accounting.cheque.received'
-    # _inherit = ['mail.thread', 'ir.needaction_mixin']
-    _rec_name = 'name'
+    _inherit = ['mail.thread']
+    _order = 'id DESC'
+    _description = "Cheque Info"
+
 
     state = fields.Selection([
         ('draft', 'Cheque Entry'),
@@ -28,18 +29,23 @@ class ChequeReceived(models.Model):
         for n in self:
             n.name = 'Customer Payments'
 
+
     name = fields.Char(string='Name', compute='_get_name')
-    partner_id = fields.Many2one('res.partner', string="Customer", required=True)
-    bank_name = fields.Many2one('res.bank', string='Bank', required=True)
-    branch_name = fields.Char(string='Branch Name', required=True, )
-    date_on_cheque = fields.Date('Date On Cheque', required=True)
-    cheque_amount = fields.Float(string='Amount', required=True, )
-    sale_order_id = fields.Many2one('sale.order', string='Sale Order')
+    partner_id = fields.Many2one('res.partner', domain=[('active', '=', True), ('customer', '=', True)], string="Customer", required=True, states = {'returned': [('readonly', True)],'dishonoured': [('readonly', True)],'honoured': [('readonly', True)],'received': [('readonly', True)],'deposited': [('readonly', True)]})
+    bank_name = fields.Many2one('res.bank', string='Bank', required=True,states = {'returned': [('readonly', True)],'dishonoured': [('readonly', True)],'honoured': [('readonly', True)],'received': [('readonly', True)],'deposited': [('readonly', True)]})
+    branch_name = fields.Char(string='Branch Name', required=True, states = {'returned': [('readonly', True)],'dishonoured': [('readonly', True)],'honoured': [('readonly', True)],'received': [('readonly', True)],'deposited': [('readonly', True)]})
+    date_on_cheque = fields.Date('Date On Cheque', required=True, states = {'returned': [('readonly', True)],'dishonoured': [('readonly', True)],'honoured': [('readonly', True)],'received': [('readonly', True)],'deposited': [('readonly', True)]})
+    cheque_amount = fields.Float(string='Amount', required=True, states = {'returned': [('readonly', True)],'dishonoured': [('readonly', True)],'honoured': [('readonly', True)],'received': [('readonly', True)],'deposited': [('readonly', True)]})
+    sale_order_id = fields.Many2one('sale.order', string='Sale Order', states = {'returned': [('readonly', True)],'dishonoured': [('readonly', True)],'honoured': [('readonly', True)],'received': [('readonly', True)],'deposited': [('readonly', True)]})
     is_cheque_payment = fields.Boolean(string='Cheque Payment', default=True)
     company_id = fields.Many2one('res.company', string='Company', ondelete='cascade',
-                                 default=lambda self: self.env.user.company_id, readonly='True')
+                                 default=lambda self: self.env.user.company_id, readonly='True', states = {'returned': [('readonly', True)],'dishonoured': [('readonly', True)],'honoured': [('readonly', True)],'received': [('readonly', True)],'deposited': [('readonly', True)]})
 
-    payment_date = fields.Date(string='Payment Date', default=fields.Date.context_today, required=True, copy=False)
+    payment_date = fields.Date(string='Payment Date', default=fields.Date.context_today, required=True, copy=False, states = {'returned': [('readonly', True)],'dishonoured': [('readonly', True)],'honoured': [('readonly', True)],'received': [('readonly', True)],'deposited': [('readonly', True)]})
+
+    #@todo : Update this field
+    is_this_payment_checked = fields.Boolean(string='is_this_payment_checked', default=False)
+    cheque_no = fields.Integer(string='Cheque No')
 
     @api.multi
     def _get_payment_method(self):
@@ -49,11 +55,17 @@ class ChequeReceived(models.Model):
 
 
     payment_method_id = fields.Many2one('account.payment.method', string='Payment Method Type',
-                                    compute='_get_payment_method')
-    currency_id = fields.Many2one('res.currency', string='Currency', )
+                                   )
+    currency_id = fields.Many2one('res.currency', string='Currency', states = {'returned': [('readonly', True)],'dishonoured': [('readonly', True)],'honoured': [('readonly', True)],'received': [('readonly', True)],'deposited': [('readonly', True)]})
 
     payment_type = fields.Selection([('outbound', 'Send Money'), ('inbound', 'Receive Money')],
                                 string='Payment Type', required=True, default='inbound')
+
+    @api.onchange('partner_id')
+    def _on_change_partner_id(self):
+        for pay in self:
+            pay_method_pool = pay.env['account.payment.method'].search([('payment_type', '=', 'inbound')], limit=1)
+            pay.payment_method_id = pay_method_pool.id
 
 
     @api.multi
@@ -70,6 +82,9 @@ class ChequeReceived(models.Model):
         if self.cheque_amount < 0:
             raise ValidationError('The payment amount must be strictly positive.')
 
+        if self.cheque_amount == 0:
+            raise ValidationError('The payment amount must be greater than zero')
+
 
     # Update customer's Credit Limit. Basically plus cheque amount with Customer Credit Limit
     @api.multi
@@ -77,7 +92,7 @@ class ChequeReceived(models.Model):
         for cust in self:
             res_partner_credit_limit = cust.env['res.partner.credit.limit'].search(
                 [('partner_id', '=', cust.partner_id.id),
-                 ('state', '=', 'approve')], order='assign_id DESC', limit=1)
+                 ('state', '=', 'approve')], order='id DESC', limit=1)
 
             # Cheque Amount with Credit limit of customer; it should not exceed customer's original Credit Limit.
             if cust.sale_order_id.credit_sales_or_lc == 'credit_sales' \
@@ -91,37 +106,70 @@ class ChequeReceived(models.Model):
                     res_partner_credit_limit.write({'remaining_credit_limit': update_cust_credits})
 
 
-    # Decrese Customers Receivable amount when cheque is honored
-    # @todo below method has some bugs, fix it
-    @api.multi
-    def updateCustomersReceivableAmount(self):
-        for cust in self:
-            res_partner_pool = cust.env['res.partner'].search([('id', '=', cust.partner_id.id)])
-
-            if cust.sale_order_id.credit_sales_or_lc == 'credit_sales':
-                # Customer's Receivable amount is actually minus value
-                update_cust_receivable_amount = res_partner_pool.credit + cust.cheque_amount
-                res_partner_pool.property_account_payable_id.write({'credit': update_cust_receivable_amount})
-
-
     @api.multi
     def action_honoured(self):
-        for cash_rcv in self:
-            # cash_rcv.cheque_amount = 0 # Test val
-            cash_rcv._create_payment_entry(cash_rcv.cheque_amount)
+        for cash in self:
+            cash.action_journal_entry_bank()
+            #cash.updateCustomersCreditLimit()
 
-            # Update Customer's Credit Limit & Receilable Amount
-            cash_rcv.updateCustomersCreditLimit()
-            cash_rcv.updateCustomersReceivableAmount()
+            cash.state = 'honoured'
 
-            cash_rcv.state = 'honoured'
+
+    @api.multi
+    def action_journal_entry_bank(self):
+
+        for cr in self:
+            line_ids = []
+            debit_sum = 0.0
+            credit_sum = 0.0
+            date = cr.date_on_cheque
+
+            move_dict = {
+                'journal_id': cr.journal_id.id,
+                'date': date,
+            }
+
+            amount = cr.cheque_amount
+
+            debit_account_id = cr.partner_id.property_account_receivable_id
+            credit_account_id = cr.journal_id.default_credit_account_id
+
+            if debit_account_id:
+                debit_line = (0, 0, {
+                    'name': debit_account_id.name,
+                    'partner_id': cr.partner_id.id,
+                    'account_id': debit_account_id.id,
+                    'journal_id': cr.journal_id.id,
+                    'date': date,
+                    'debit': amount > 0.0 and amount or 0.0,
+                    'credit': amount < 0.0 and -amount or 0.0,
+                })
+
+                line_ids.append(debit_line)
+                debit_sum += debit_line[2]['debit'] - debit_line[2]['credit']
+
+            if credit_account_id:
+                credit_line = (0, 0, {
+                    'name': credit_account_id.name,
+                    'partner_id': cr.partner_id.id,
+                    'account_id': credit_account_id.id,
+                    'journal_id': cr.journal_id.id,
+                    'date': date,
+                    'debit': amount < 0.0 and -amount or 0.0,
+                    'credit': amount > 0.0 and amount or 0.0,
+                })
+                line_ids.append(credit_line)
+                credit_sum += credit_line[2]['credit'] - credit_line[2]['debit']
+
+        move_dict['line_ids'] = line_ids
+        move = self.env['account.move'].create(move_dict)
+        move.post()
 
 
     @api.model
     def create(self, vals):
         seq = self.env['ir.sequence'].next_by_code('accounting.cheque.received') or '/'
         vals['name'] = seq
-        vals['amount'] = 12
         return super(ChequeReceived, self).create(vals)
 
 

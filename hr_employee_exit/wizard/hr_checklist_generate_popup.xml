@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="view_hr_checklist_employees" model="ir.ui.view">
+            <field name="name">hr_checklist_employees</field>
+            <field name="model">hr.checklist.generate.popup</field>
+            <field name="arch" type="xml">
+                <form string="Employee Checklist">
+                    <header>
+                        <button icon="gtk-execute" string="Generate" name="compute_sheet" type="object" class="oe_highlight"  />
+                    </header>
+                    <group>
+                        <label colspan="4" nolabel="1" string="This wizard will generate checklist." />
+                    </group>
+                    <group colspan="4" >
+                        <separator string="Checklist" colspan="4"/>
+                        <newline/>
+                        <field name="checklist_item_ids" nolabel="1"/>
+                    </group>
+               </form>
+            </field>
+        </record>
+
+        <record id="action_hr_checklist_popup" model="ir.actions.act_window">
+            <field name="name">Generate Checklist</field>
+            <field name="res_model">hr.checklist.generate.popup</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="view_hr_checklist_employees"/>
+            <field name="target">new</field>
+        </record>
+
+    </data>
+</odoo>

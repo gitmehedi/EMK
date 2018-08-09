@@ -4,7 +4,7 @@
     'website': 'www.genweb2.com',
     'category': 'HR Employee Loan',
     'version':'1.0',
-    'depends': ['hr'],
+    'depends': ['hr','custom_report'],
     'data': [
         'security/ir.model.access.csv',
         'security/security.xml',
@@ -15,6 +15,7 @@
         'views/hr_employee_loan_proof_view.xml',
         'views/hr_employee_loan_view.xml',
         'views/hr_employee_loan_type_view.xml',
+        'reports/hr_employee_loan_report.xml',
     ],
     
     'summary': 'Calculates Employees Loan',

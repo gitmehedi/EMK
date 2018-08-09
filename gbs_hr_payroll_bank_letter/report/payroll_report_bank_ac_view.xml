@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<openerp>
+<odoo>
 	<data>
 		<template id="report_individual_payslip1">
 			<t t-call="report.html_container">
@@ -37,21 +37,23 @@
 									<t t-foreach="docs" t-as="k">
 										<t t-if="k['val']">
 											<t t-foreach="k['val']" t-as="o">
-												<tr>
-													<td><span t-esc="o['sn']"/></td>
-													<td><span t-esc="o['emp_name']"/></td>
-													<td><span t-esc="o['acc_no']"/></td>
+												<t t-if="o['BNET'] != '0.00'">
+													<tr>
+														<td><span t-esc="o['sn']"/></td>
+														<td><span t-esc="o['emp_name']"/></td>
+														<td><span t-esc="o['acc_no']"/></td>
 
-													<td class="text-right">
-														<span t-esc="'%.2f'% o['BNET']"/>
-													</td>
-												</tr>
+														<td class="text-right">
+															<span t-esc="o['BNET']"/>
+														</td>
+													</tr>
+												</t>
 											</t>
 										</t>
 									</t>
 									<td style="background-color:#B4FDF0; text-align:center; border-bottom: 1px solid #030303; color:#000000;" t-att-colspan="docs_len">
 										<h5 style="float:right;">
-											<b> Total: <span t-esc="'%.2f'% total_net"/></b>
+											<b> Total: <span t-esc="total_net"/></b>
 										</h5>
 									</td>
 								</tbody>
@@ -72,4 +74,4 @@
 			</t>
 		</template>
 	</data>
-</openerp>
+</odoo>

@@ -7,15 +7,15 @@
         <field name="arch" type="xml">
             <form string="Cheque Received Form">
                 <header>
-                    <button name="action_received" type="object" states="draft" string="Received" class="oe_highlight"/>
-                    <button name="action_deposited" type="object" states="received" string="Deposited"
+                    <button name="action_received" groups="account.group_account_user,gbs_application_group.group_head_account,gbs_application_group.group_cxo" type="object" states="draft" string="Received" class="oe_highlight"/>
+                    <button name="action_deposited" groups="account.group_account_user,gbs_application_group.group_head_account,gbs_application_group.group_cxo" type="object" states="received" string="Deposited"
                             class="oe_highlight"/>
-                    <button name="action_honoured" type="object" states="deposited" string="Honoured"
+                    <button name="action_honoured" groups="account.group_account_user,gbs_application_group.group_head_account,gbs_application_group.group_cxo" type="object" states="deposited" string="Honoured"
                             class="oe_highlight"/>
-                    <button name="action_dishonoured" type="object" states="deposited" string="Dishonoured"/>
-                    <button name="action_deposited" type="object" states="dishonoured" string="Deposited"
+                    <button name="action_dishonoured" groups="account.group_account_user,gbs_application_group.group_head_account,gbs_application_group.group_cxo" type="object" states="deposited" string="Dishonoured"/>
+                    <button name="action_deposited" groups="account.group_account_user,gbs_application_group.group_head_account,gbs_application_group.group_cxo" type="object" states="dishonoured" string="Deposited"
                             class="oe_highlight"/>
-                    <button name="action_returned_to_customer" type="object" states="dishonoured"
+                    <button name="action_returned_to_customer" groups="account.group_account_user,gbs_application_group.group_head_account,gbs_application_group.group_cxo" type="object" states="dishonoured"
                             string="Returned to Customer"/>
 
 
@@ -30,11 +30,13 @@
                             <field name="partner_id" options="{'no_open': True, 'no_create': True}"/>
                             <field name="bank_name" options="{'no_open': True, 'no_create': True}"/>
                             <field name="branch_name"/>
+                            <field name="cheque_no"/>
                             <field name="is_cheque_payment" invisible="1"/>
                             <field name="currency_id"/>
                             <field name="payment_date" invisible="1"/>
                             <field name="payment_method_id" invisible="1"/>
                             <field name="payment_type" invisible="1"/>
+                            <field name="is_this_payment_checked" invisible="1"/>
                         </group>
 
                         <group>
@@ -46,10 +48,10 @@
                     </group>
 
                 </sheet>
-                <!--<div class="oe_chatter">-->
-                    <!--<field name="message_follower_ids" widget="mail_followers"/>-->
-                    <!--<field name="message_ids" widget="mail_thread"/>-->
-                <!--</div>-->
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers"/>
+                    <field name="message_ids" widget="mail_thread"/>
+                </div>
             </form>
         </field>
     </record>
@@ -94,12 +96,14 @@
     <!--Inherit Accounting Menus-->
     <menuitem id="menu_finance_receivables"
               name="Sales"
+              groups="account.group_account_user,gbs_application_group.group_head_account,gbs_application_group.group_cxo"
               parent="account.menu_finance"
               sequence="2"/>
 
     <menuitem action="accounting_cheque_received_action"
               id="menu_accounting_cheque_received"
               parent="account.menu_finance_receivables"
+              groups="account.group_account_user,gbs_application_group.group_head_account,gbs_application_group.group_cxo"
               name="Cheque Received"
               sequence="17"/>
 </odoo>

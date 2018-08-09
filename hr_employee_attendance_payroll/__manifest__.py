@@ -12,7 +12,7 @@
         'hr',
         'hr_payroll',
         'l10n_in_hr_payroll',
-        'hr_employee_loan',
+        # 'hr_employee_loan',
         'hr_attendance_and_ot_summary',
     ],
     'data': [

@@ -9,7 +9,6 @@
     'depends': ['hr',
                 'hr_holidays',
                 'gbs_hr_package',
-                'hr_public_holidays',
                 'hr_employee_operating_unit',
                 ],
     'data': [

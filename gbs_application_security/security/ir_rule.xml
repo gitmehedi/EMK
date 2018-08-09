@@ -1,0 +1,247 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <function name="write" model="ir.model.data">
+        <function name="search" model="ir.model.data">
+            <value eval="[('module', '=', 'sale'), ('name', '=', 'sale_order_comp_rule')]"/>
+        </function>
+        <value eval="{'noupdate': False}"/>
+    </function>
+
+    <record id="sale.sale_order_comp_rule" model="ir.rule">
+        <field name="active" eval="False"/>
+    </record>
+
+    <function name="write" model="ir.model.data">
+        <function name="search" model="ir.model.data">
+            <value eval="[('module', '=', 'sale'), ('name', '=', 'sale_order_comp_rule')]"/>
+        </function>
+        <value eval="{'noupdate': True}"/>
+    </function>
+
+    <function name="write" model="ir.model.data">
+        <function name="search" model="ir.model.data">
+            <value eval="[('module', '=', 'sale'), ('name', '=', 'sale_order_line_comp_rule')]"/>
+        </function>
+        <value eval="{'noupdate': False}"/>
+    </function>
+
+    <record id="sale.sale_order_line_comp_rule" model="ir.rule">
+        <field name="active" eval="False"/>
+    </record>
+
+    <function name="write" model="ir.model.data">
+        <function name="search" model="ir.model.data">
+            <value eval="[('module', '=', 'sale'), ('name', '=', 'sale_order_line_comp_rule')]"/>
+        </function>
+        <value eval="{'noupdate': True}"/>
+    </function>
+
+    <function name="write" model="ir.model.data">
+        <function name="search" model="ir.model.data">
+            <value eval="[('module', '=', 'sale_operating_unit'), ('name', '=', 'ir_rule_sale_order_allowed_operating_units')]"/>
+        </function>
+        <value eval="{'noupdate': False}"/>
+    </function>
+
+    <record id="sale_operating_unit.ir_rule_sale_order_allowed_operating_units" model="ir.rule">
+        <field name="active" eval="False"/>
+    </record>
+
+    <function name="write" model="ir.model.data">
+        <function name="search" model="ir.model.data">
+            <value eval="[('module', '=', 'sale_operating_unit'), ('name', '=', 'ir_rule_sale_order_allowed_operating_units')]"/>
+        </function>
+        <value eval="{'noupdate': True}"/>
+    </function>
+
+
+    <function name="write" model="ir.model.data">
+        <function name="search" model="ir.model.data">
+            <value eval="[('module', '=', 'sale_operating_unit'), ('name', '=', 'ir_rule_sale_order_line_allowed_operating_units')]"/>
+        </function>
+        <value eval="{'noupdate': False}"/>
+    </function>
+
+    <record id="sale_operating_unit.ir_rule_sale_order_line_allowed_operating_units" model="ir.rule">
+        <field name="active" eval="False"/>
+    </record>
+
+    <function name="write" model="ir.model.data">
+        <function name="search" model="ir.model.data">
+            <value eval="[('module', '=', 'sale_operating_unit'), ('name', '=', 'ir_rule_sale_order_line_allowed_operating_units')]"/>
+        </function>
+        <value eval="{'noupdate': True}"/>
+    </function>
+
+    <record id="sale_order_type.sale_order_type_comp_rule" model="ir.rule">
+        <field name="active" eval="False"/>
+    </record>
+
+    <function name="write" model="ir.model.data">
+        <function name="search" model="ir.model.data">
+            <value eval="[('module', '=', 'sale'), ('name', '=', 'sale_order_see_all')]"/>
+        </function>
+        <value eval="{'noupdate': False}"/>
+    </function>
+
+    <record id="sale.sale_order_see_all" model="ir.rule">
+        <field name="active" eval="False"/>
+    </record>
+
+    <function name="write" model="ir.model.data">
+        <function name="search" model="ir.model.data">
+            <value eval="[('module', '=', 'sale'), ('name', '=', 'sale_order_see_all')]"/>
+        </function>
+        <value eval="{'noupdate': True}"/>
+    </function>
+
+    <function name="write" model="ir.model.data">
+        <function name="search" model="ir.model.data">
+            <value eval="[('module', '=', 'sale'), ('name', '=', 'sale_order_personal_rule')]"/>
+        </function>
+        <value eval="{'noupdate': False}"/>
+    </function>
+
+    <record id="sale.sale_order_personal_rule" model="ir.rule">
+        <field name="active" eval="False"/>
+    </record>
+
+    <function name="write" model="ir.model.data">
+        <function name="search" model="ir.model.data">
+            <value eval="[('module', '=', 'sale'), ('name', '=', 'sale_order_personal_rule')]"/>
+        </function>
+        <value eval="{'noupdate': True}"/>
+    </function>
+
+    <function name="write" model="ir.model.data">
+        <function name="search" model="ir.model.data">
+            <value eval="[('module', '=', 'sale'), ('name', '=', 'sale_order_line_personal_rule')]"/>
+        </function>
+        <value eval="{'noupdate': False}"/>
+    </function>
+
+    <record id="sale.sale_order_line_personal_rule" model="ir.rule">
+        <field name="active" eval="False"/>
+    </record>
+
+    <function name="write" model="ir.model.data">
+        <function name="search" model="ir.model.data">
+            <value eval="[('module', '=', 'sale'), ('name', '=', 'sale_order_line_personal_rule')]"/>
+        </function>
+        <value eval="{'noupdate': True}"/>
+    </function>
+
+    <function name="write" model="ir.model.data">
+        <function name="search" model="ir.model.data">
+            <value eval="[('module', '=', 'sale'), ('name', '=', 'sale_order_line_see_all')]"/>
+        </function>
+        <value eval="{'noupdate': False}"/>
+    </function>
+
+    <record id="sale.sale_order_line_see_all" model="ir.rule">
+        <field name="active" eval="False"/>
+    </record>
+
+    <function name="write" model="ir.model.data">
+        <function name="search" model="ir.model.data">
+            <value eval="[('module', '=', 'sale'), ('name', '=', 'sale_order_line_see_all')]"/>
+        </function>
+        <value eval="{'noupdate': True}"/>
+    </function>
+
+    <function name="write" model="ir.model.data">
+        <function name="search" model="ir.model.data">
+            <value eval="[('module', '=', 'stock_operating_unit'), ('name', '=', 'ir_rule_stock_warehouse_allowed_operating_units')]"/>
+        </function>
+        <value eval="{'noupdate': False}"/>
+    </function>
+
+    <record id="stock_operating_unit.ir_rule_stock_warehouse_allowed_operating_units" model="ir.rule">
+        <field name="model_id" ref="stock.model_stock_warehouse"/>
+        <field name="domain_force">['|',('operating_unit_id','=',False),('operating_unit_id','in',[g.id for g in user.operating_unit_ids])]</field>
+        <field name="name">Warehouses from allowed operating units</field>
+        <field name="groups" eval="[(4,ref('base.group_user'))]"/>
+        <field eval="0" name="perm_unlink"/>
+        <field eval="0" name="perm_write"/>
+        <field eval="1" name="perm_read"/>
+        <field eval="0" name="perm_create"/>
+    </record>
+
+    <function name="write" model="ir.model.data">
+        <function name="search" model="ir.model.data">
+            <value eval="[('module', '=', 'stock_operating_unit'), ('name', '=', 'ir_rule_stock_warehouse_allowed_operating_units')]"/>
+        </function>
+        <value eval="{'noupdate': True}"/>
+    </function>
+
+    <function name="write" model="ir.model.data">
+        <function name="search" model="ir.model.data">
+            <value eval="[('module', '=', 'stock'), ('name', '=', 'stock_warehouse_comp_rule')]"/>
+        </function>
+        <value eval="{'noupdate': False}"/>
+    </function>
+
+    <record model="ir.rule" id="stock.stock_warehouse_comp_rule">
+        <field name="name">Warehouse multi-company</field>
+        <field name="model_id" ref="stock.model_stock_warehouse"/>
+        <field name="groups" eval="[(4,ref('base.group_user'))]"/>
+        <field name="domain_force">['|',('company_id','=',False),('company_id','child_of',[user.company_id.id])]</field>
+    </record>
+
+
+    <function name="write" model="ir.model.data">
+        <function name="search" model="ir.model.data">
+            <value eval="[('module', '=', 'stock'), ('name', '=', 'stock_warehouse_comp_rule')]"/>
+        </function>
+        <value eval="{'noupdate': True}"/>
+    </function>
+
+    <function name="write" model="ir.model.data">
+        <function name="search" model="ir.model.data">
+            <value eval="[('module', '=', 'stock'), ('name', '=', 'stock_picking_rule')]"/>
+        </function>
+        <value eval="{'noupdate': False}"/>
+    </function>
+
+    <record model="ir.rule" id="stock.stock_picking_rule">
+        <field name="active" eval="False"/>
+    </record>
+
+    <function name="write" model="ir.model.data">
+        <function name="search" model="ir.model.data">
+            <value eval="[('module', '=', 'stock'), ('name', '=', 'stock_picking_rule')]"/>
+        </function>
+        <value eval="{'noupdate': True}"/>
+    </function>
+
+
+    <function name="write" model="ir.model.data">
+        <function name="search" model="ir.model.data">
+            <value eval="[('module', '=', 'stock_operating_unit'), ('name', '=', 'ir_rule_stock_picking_allowed_operating_units')]"/>
+        </function>
+        <value eval="{'noupdate': False}"/>
+    </function>
+
+    <record id="stock_operating_unit.ir_rule_stock_picking_allowed_operating_units" model="ir.rule">
+        <field name="model_id" ref="stock.model_stock_picking"/>
+        <field name="domain_force">['|',('operating_unit_id','=',False),('operating_unit_id','in',[g.id for g in user.operating_unit_ids])]</field>
+        <field name="name">Stock pickings from allowed operating units</field>
+        <field name="global" eval="False"/>
+        <field name="groups" eval="[(4,ref('base.group_user'))]"/>
+        <field eval="0" name="perm_unlink"/>
+        <field eval="0" name="perm_write"/>
+        <field eval="1" name="perm_read"/>
+        <field eval="0" name="perm_create"/>
+    </record>
+
+    <function name="write" model="ir.model.data">
+        <function name="search" model="ir.model.data">
+            <value eval="[('module', '=', 'stock_operating_unit'), ('name', '=', 'ir_rule_stock_picking_allowed_operating_units')]"/>
+        </function>
+        <value eval="{'noupdate': True}"/>
+    </function>
+
+
+
+</odoo>

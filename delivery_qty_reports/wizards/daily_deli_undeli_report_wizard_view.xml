@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <record id="daily_delivery_undelivery_date_wizard_view" model="ir.ui.view">
+            <field name="name">daily.delivery.undelivery.report.wizard</field>
+            <field name="model">daily.delivery.undelivery.report.wizard</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <group>
+                            <field name="report_of_day" placeholder="Select a Day..."/>
+                            <field name="operating_unit_id" groups="operating_unit.group_multi_operating_unit"/>
+                        </group>
+                    </sheet>
+
+                    <footer>
+                        <button name="process_delivery_report" string="Print" type="object" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_daily_delivery_undelivery_report" model="ir.actions.act_window">
+            <field name="name">Daily Delivered &amp; Undelivered Report</field>
+            <field name="res_model">daily.delivery.undelivery.report.wizard</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="daily_delivery_undelivery_date_wizard_view"/>
+            <field name="target">new</field>
+        </record>
+
+    </data>
+</odoo>

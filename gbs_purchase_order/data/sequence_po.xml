@@ -1,46 +1,186 @@
 <odoo>
-    <data>
+    <data noupdate="1">
+
         <!-- Sequences for purchase.quotation -->
-        <record id="sequence_purchase_quotation" model="ir.sequence">
-            <field name="name">Purchase Order</field>
+        <record id="pq_sequence_SCCL_HO" model="ir.sequence">
+            <field name="name">PQ SCCL HO</field>
             <field name="code">purchase.quotation</field>
-            <field name="prefix">PQ</field>
-            <field name="padding">6</field>
-            <field name="company_id" eval="False"/>
+            <field name="prefix">PQ-OU-%(year)s-</field>
+            <field eval="6" name="padding"/>
+            <field eval="1" name="number_increment"/>
+            <field eval="False" name="company_id"/>
         </record>
+
+        <record id="pq_sequence_SCCL_DF" model="ir.sequence">
+            <field name="name">PQ SCCL DF</field>
+            <field name="code">purchase.quotation</field>
+            <field name="prefix">PQ-OU-%(year)s-</field>
+            <field eval="6" name="padding"/>
+            <field eval="1" name="number_increment"/>
+            <field eval="False" name="company_id"/>
+        </record>
+
+        <record id="pq_sequence_SCCL_CTG" model="ir.sequence">
+            <field name="name">PQ SCCL CTG</field>
+            <field name="code">purchase.quotation</field>
+            <field name="prefix">PQ-OU-%(year)s-</field>
+            <field eval="6" name="padding"/>
+            <field eval="1" name="number_increment"/>
+            <field eval="False" name="company_id"/>
+        </record>
+
+        <record id="pq_sequence_SPL_HO" model="ir.sequence">
+            <field name="name">PQ SPL HO</field>
+            <field name="code">purchase.quotation</field>
+            <field name="prefix">PQ-OU-%(year)s-</field>
+            <field eval="6" name="padding"/>
+            <field eval="1" name="number_increment"/>
+            <field eval="False" name="company_id"/>
+        </record>
+
+        <record id="pq_sequence_SPL_DF" model="ir.sequence">
+            <field name="name">PQ SPL DF</field>
+            <field name="code">purchase.quotation</field>
+            <field name="prefix">PQ-OU-%(year)s-</field>
+            <field eval="6" name="padding"/>
+            <field eval="1" name="number_increment"/>
+            <field eval="False" name="company_id"/>
+        </record>
+
+        <record id="pq_sequence_SPL_CTG" model="ir.sequence">
+            <field name="name">PQ SPL CTG</field>
+            <field name="code">purchase.quotation</field>
+            <field name="prefix">PQ-OU-%(year)s-</field>
+            <field eval="6" name="padding"/>
+            <field eval="1" name="number_increment"/>
+            <field eval="False" name="company_id"/>
+        </record>
+
+        <record id="pq_sequence_SSCL_HO" model="ir.sequence">
+            <field name="name">PQ SSCL_HO</field>
+            <field name="code">purchase.quotation</field>
+            <field name="prefix">PQ-OU-%(year)s-</field>
+            <field eval="6" name="padding"/>
+            <field eval="1" name="number_increment"/>
+            <field eval="False" name="company_id"/>
+        </record>
+
+        <record id="pq_sequence_SSCL_CTG" model="ir.sequence">
+            <field name="name">PQ SSCL CTG</field>
+            <field name="code">purchase.quotation</field>
+            <field name="prefix">PQ-OU-%(year)s-</field>
+            <field eval="6" name="padding"/>
+            <field eval="1" name="number_increment"/>
+            <field eval="False" name="company_id"/>
+        </record>
+
+        <record id="pq_sequence_SPPL_HO" model="ir.sequence">
+            <field name="name">PQ SPPL HO</field>
+            <field name="code">purchase.quotation</field>
+            <field name="prefix">PQ-OU-%(year)s-</field>
+            <field eval="6" name="padding"/>
+            <field eval="1" name="number_increment"/>
+            <field eval="False" name="company_id"/>
+        </record>
+
+        <record id="pq_sequence_SPPL_CTG" model="ir.sequence">
+            <field name="name">PQ SPPL CTG</field>
+            <field name="code">purchase.quotation</field>
+            <field name="prefix">PQ-OU-%(year)s-</field>
+            <field eval="6" name="padding"/>
+            <field eval="1" name="number_increment"/>
+            <field eval="False" name="company_id"/>
+        </record>
+
         <!-- Sequences for purchase.order -->
-        <record id="sequence_purchase_order" model="ir.sequence">
-            <field name="name">Purchase Quotation</field>
+        <record id="po_sequence_SCCL_HO" model="ir.sequence">
+            <field name="name">PO SCCL HO</field>
             <field name="code">purchase.order</field>
-            <field name="prefix">PO</field>
-            <field name="padding">6</field>
-            <field name="company_id" eval="False"/>
+            <field name="prefix">PO-OU-%(year)s-</field>
+            <field eval="6" name="padding"/>
+            <field eval="1" name="number_increment"/>
+            <field eval="False" name="company_id"/>
         </record>
-        <!--  -->
-        <!--   <record id="object0" model="gbs_purchase_order.gbs_purchase_order"> -->
-        <!--     <field name="name">Object 0</field> -->
-        <!--     <field name="value">0</field> -->
-        <!--   </record> -->
-        <!--  -->
-        <!--   <record id="object1" model="gbs_purchase_order.gbs_purchase_order"> -->
-        <!--     <field name="name">Object 1</field> -->
-        <!--     <field name="value">10</field> -->
-        <!--   </record> -->
-        <!--  -->
-        <!--   <record id="object2" model="gbs_purchase_order.gbs_purchase_order"> -->
-        <!--     <field name="name">Object 2</field> -->
-        <!--     <field name="value">20</field> -->
-        <!--   </record> -->
-        <!--  -->
-        <!--   <record id="object3" model="gbs_purchase_order.gbs_purchase_order"> -->
-        <!--     <field name="name">Object 3</field> -->
-        <!--     <field name="value">30</field> -->
-        <!--   </record> -->
-        <!--  -->
-        <!--   <record id="object4" model="gbs_purchase_order.gbs_purchase_order"> -->
-        <!--     <field name="name">Object 4</field> -->
-        <!--     <field name="value">40</field> -->
-        <!--   </record> -->
-        <!--  -->
+
+        <record id="po_sequence_SCCL_DF" model="ir.sequence">
+            <field name="name">PO SCCL DF</field>
+            <field name="code">purchase.order</field>
+            <field name="prefix">PO-OU-%(year)s-</field>
+            <field eval="6" name="padding"/>
+            <field eval="1" name="number_increment"/>
+            <field eval="False" name="company_id"/>
+        </record>
+
+        <record id="po_sequence_SCCL_CTG" model="ir.sequence">
+            <field name="name">PO SCCL CTG</field>
+            <field name="code">purchase.order</field>
+            <field name="prefix">PO-OU-%(year)s-</field>
+            <field eval="6" name="padding"/>
+            <field eval="1" name="number_increment"/>
+            <field eval="False" name="company_id"/>
+        </record>
+
+        <record id="po_sequence_SPL_HO" model="ir.sequence">
+            <field name="name">PO SPL HO</field>
+            <field name="code">purchase.order</field>
+            <field name="prefix">PO-OU-%(year)s-</field>
+            <field eval="6" name="padding"/>
+            <field eval="1" name="number_increment"/>
+            <field eval="False" name="company_id"/>
+        </record>
+
+        <record id="po_sequence_SPL_DF" model="ir.sequence">
+            <field name="name">PO SPL DF</field>
+            <field name="code">purchase.order</field>
+            <field name="prefix">PO-OU-%(year)s-</field>
+            <field eval="6" name="padding"/>
+            <field eval="1" name="number_increment"/>
+            <field eval="False" name="company_id"/>
+        </record>
+
+        <record id="po_sequence_SPL_CTG" model="ir.sequence">
+            <field name="name">PO SPL CTG</field>
+            <field name="code">purchase.order</field>
+            <field name="prefix">PO-OU-%(year)s-</field>
+            <field eval="6" name="padding"/>
+            <field eval="1" name="number_increment"/>
+            <field eval="False" name="company_id"/>
+        </record>
+
+        <record id="po_sequence_SSCL_HO" model="ir.sequence">
+            <field name="name">PO SSCL_HO</field>
+            <field name="code">purchase.order</field>
+            <field name="prefix">PO-OU-%(year)s-</field>
+            <field eval="6" name="padding"/>
+            <field eval="1" name="number_increment"/>
+            <field eval="False" name="company_id"/>
+        </record>
+
+        <record id="po_sequence_SSCL_CTG" model="ir.sequence">
+            <field name="name">PO SSCL CTG</field>
+            <field name="code">purchase.order</field>
+            <field name="prefix">PO-OU-%(year)s-</field>
+            <field eval="6" name="padding"/>
+            <field eval="1" name="number_increment"/>
+            <field eval="False" name="company_id"/>
+        </record>
+
+        <record id="po_sequence_SPPL_HO" model="ir.sequence">
+            <field name="name">PO SPPL HO</field>
+            <field name="code">purchase.order</field>
+            <field name="prefix">PO-OU-%(year)s-</field>
+            <field eval="6" name="padding"/>
+            <field eval="1" name="number_increment"/>
+            <field eval="False" name="company_id"/>
+        </record>
+
+        <record id="po_sequence_SPPL_CTG" model="ir.sequence">
+            <field name="name">PO SPPL CTG</field>
+            <field name="code">purchase.order</field>
+            <field name="prefix">PO-OU-%(year)s-</field>
+            <field eval="6" name="padding"/>
+            <field eval="1" name="number_increment"/>
+            <field eval="False" name="company_id"/>
+        </record>
     </data>
 </odoo>

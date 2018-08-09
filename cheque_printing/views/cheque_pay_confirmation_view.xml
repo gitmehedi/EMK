@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+
+        <record id="cheque_pay_confirm_form" model="ir.ui.view">
+            <field name="name">cheque.pay.confirmation.form</field>
+            <field name="model">cheque.pay.confirmation</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Cheque Pay Confirm" delete="false" copy='0'>
+                    <header>
+                        <button name="action_approved" type="object" states="draft" string="Confirm"
+                                groups="cheque_printing.group_cheque_prepare_user"
+                                class="oe_highlight"/>
+
+                        <button string="Generate" states="draft" name="%(cheque_info_wizard_actions)d" type="action"
+                                class="oe_highlight"/>
+
+                        <field name="state" widget="statusbar"/>
+
+                    </header>
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="name"/>
+                            </group>
+                        </group>
+
+                        <notebook colspan="4">
+                            <page string="Cheque Information">
+                                <field name="line_ids" attrs="{'readonly': [('state', 'in', ('approved'))]}">
+                                    <tree string="List" editable="bottom" nolabel="1">
+                                        <field name="partner_id"/>
+                                        <field name="cheque_number"/>
+                                        <field name="amount"/>
+                                        <field name="cheque_date"/>
+                                    </tree>
+                                </field>
+                            </page>
+                        </notebook>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <record id="cheque_pay_confirm_tree" model="ir.ui.view">
+            <field name="name">cheque.pay.confirmation.tree</field>
+            <field name="model">cheque.pay.confirmation</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Cheque Pay">
+                    <field name="name"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- Generate automated sequence -->
+        <record id="cheque_seqs" model="ir.sequence">
+            <field name="name">Cheque Sequences</field>
+            <field name="code">cheque.pay.confirmation</field>
+            <field name="prefix">CP-</field>
+            <field name="padding">4</field>
+        </record>
+
+        <record model="ir.actions.act_window" id="cheque_pay_confirmation_action">
+            <field name="name">Cheque Pay Confirmation</field>
+            <field name="res_model">cheque.pay.confirmation</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <menuitem id="cheque_pay_confirm_sub_menu" parent="cheque_info_entry_menu"
+                  name="Cheque Pay Confirmation"
+                  groups="account.group_account_user,cheque_printing.group_cheque_prepare_user,cheque_printing.group_cheque_approval_user"
+                  action="cheque_pay_confirmation_action"/>
+
+    </data>
+</odoo>

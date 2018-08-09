@@ -18,10 +18,14 @@
             <field name="model">sale.order.type</field>
             <field name="inherit_id" ref="sale_order_type.sot_sale_order_type_form_view"/>
             <field name="arch" type="xml">
-                <xpath expr="//field[@name='sequence_id']" position="after">
-                    <field name="operating_unit"/>
+                <xpath expr="//field[@name='sequence_id']" position="replace">
+                    <field name="sequence_id" invisible="1"/>
                 </xpath>
-                 <xpath expr="//field[@name='operating_unit']" position="after">
+                <xpath expr="//field[@name='warehouse_id']" position="replace">
+                    <field name="warehouse_id" invisible="1"/>
+                </xpath>
+
+                <xpath expr="//field[@name='sequence_id']" position="after">
                     <field name="sale_order_type"/>
                 </xpath>
                 <xpath expr="//field[@name='sale_order_type']" position="after">
@@ -31,5 +35,15 @@
             </field>
 
         </record>
+
+        <record id="sales_team.menu_sale_config" model="ir.ui.menu">
+            <field name="groups_id"
+                   eval="[(4,ref('gbs_application_group.group_sales_product_manager'))]"/>
+        </record>
+
+        <menuitem id="sale_order_type.sot_sale_order_type_menu" parent="sales_team.menu_sale_config"
+                  groups="gbs_application_group.group_sales_product_manager"
+                  action="sale_order_type.sot_sale_order_type_action" sequence="21"/>
+
     </data>
 </odoo>

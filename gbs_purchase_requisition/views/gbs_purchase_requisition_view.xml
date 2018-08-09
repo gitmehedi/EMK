@@ -4,7 +4,7 @@
         <!-- Inherited menuitem-->
         <menuitem name="Purchases"
                   id="purchase.menu_purchase_root"
-                  groups="purchase.group_purchase_manager,purchase.group_purchase_user,stock.group_stock_user"
+                  groups="purchase.group_purchase_manager,purchase.group_purchase_user,stock.group_stock_user,gbs_purchase_requisition.group_purchase_requisition_validator,gbs_purchase_requisition.group_purchase_requisition_approver"
                   web_icon="purchase,static/description/icon.png"
                   sequence="25"/>
         <!-- Inherited tree view-->
@@ -88,6 +88,9 @@
                     <xpath expr="//field[@name='ordering_date']" position="replace">
                         <field name="required_date" attrs="{'readonly': [('state','!=','draft')]}"/>
                     </xpath>
+                    <xpath expr="//field[@name='required_date']" position="after">
+                        <field name="purchase_from" placeholder="Please Select" attrs="{'readonly': [('state','!=','draft')]}"/>
+                    </xpath>
                     <xpath expr="//field[@name='picking_type_id']" position="attributes">
                         <attribute name="invisible">1</attribute>
                     </xpath>
@@ -123,6 +126,9 @@
                     </xpath>
                     <xpath expr="//field[@name='qty_ordered']" position="replace" type="object">
                         <field name="product_ordered_qty"/>
+                    </xpath>
+                    <xpath expr="//field[@name='product_ordered_qty']" position="before" type="object">
+                        <field name="store_code"/>
                     </xpath>
                     <xpath expr="//field[@name='price_unit']" position="attributes" type="object">
                         <attribute name="readonly">1</attribute>
@@ -164,20 +170,26 @@
                 </data>
             </field>
         </record>
-        <!--Inherited view for field access-->
-        <!--<record id="inherit_indent_pr_view_form" model="ir.ui.view">-->
-        <!--<field name="name">indent.pr.view.form.inherit</field>-->
-        <!--<field name="model">purchase.requisition</field>-->
-        <!--<field name="inherit_id" ref="indent_pr_view_form" />-->
-        <!--<field name="groups_id" eval="[(6, 0, [ref('gbs_purchase_requisition.group_purchase_requisition_approver') ])]" />-->
-        <!--<field name="arch" type="xml">-->
-        <!--<field name="buying_type" position="attributes">-->
-        <!--<attribute name="readonly">0</attribute>-->
-        <!--</field>-->
-        <!--<field name="purchase_by" position="attributes">-->
-        <!--<attribute name="readonly">0</attribute>-->
-        <!--</field>-->
-        <!--</field>-->
+        <record id="inherit_pr_filter_view_form" model="ir.ui.view">
+            <field name="name">purchase.requisition.filter.view.form</field>
+            <field name="model">purchase.requisition</field>
+            <field name="inherit_id" ref="purchase_requisition.view_purchase_requisition_filter"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='user_id']" position="replace" type="object">
+                    <filter name="my_approval_draft" string="To Confirm" domain="[('state','=','draft')]"/>
+                    <filter name="my_approval_in_progress" string="To Validate" domain="[('state','=','in_progress')]"/>
+                    <filter name="my_approval_wait_for_done" string="To Approve" domain="[('state','=','approve_head_procurement')]"/>
+                </xpath>
+            </field>
+        </record>
+
+        <!--<record id="inherit_pr_filter_view_form_to_approve" model="ir.ui.view">-->
+            <!--<field name="name">purchase.requisition.filter.view.form</field>-->
+            <!--<field name="model">purchase.requisition</field>-->
+            <!--<field name="inherit_id" ref="purchase_requisition.view_purchase_requisition_filter"/>-->
+            <!--<field name="arch" type="xml">-->
+                <!--<filter name="my_approval_wait_for_done" string="To Approve" domain="[('state','=','approve_head_procurement')]"/>-->
+            <!--</field>-->
         <!--</record>-->
 
         <record model="ir.actions.act_window" id="purchase_requisition.action_purchase_requisition">
@@ -205,8 +217,24 @@
             </p>
             </field>
         </record>
+        <record model="ir.actions.act_window" id="purchase_requisition.action_purchase_requisition">
+            <field name="name">Purchase Requisition</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">purchase.requisition</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="gbs_purchase_requisition.inherit_pr_filter_view_form"/>
+        </record>
 
-
+        <record model="ir.actions.act_window" id="purchase_requisition.action_purchase_requisition_to_approve">
+            <field name="name">Purchase Requisition</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">purchase.requisition</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('purchase_from','=','ho')]</field>
+            <field name="search_view_id" ref="gbs_purchase_requisition.inherit_pr_filter_view_form"/>
+        </record>
 
         <menuitem
                 id="purchase_requisition.menu_purchase_requisition_pro_mgt"
@@ -214,6 +242,15 @@
                 name="Purchase Requisition"
                 parent="purchase.menu_procurement_management"
                 action="purchase_requisition.action_purchase_requisition"
-                groups="gbs_purchase_requisition.group_purchase_requisition_validator,gbs_purchase_requisition.group_purchase_requisition_approver,stock.group_stock_user"/>
+                groups="stock.group_stock_user,gbs_purchase_requisition.group_purchase_requisition_validator"/>
+
+        <menuitem
+                id="purchase_requisition.menu_purchase_requisition_pending_approval"
+                sequence="11"
+                name="Pending Purchase Requisition"
+                parent="purchase.menu_procurement_management"
+                action="purchase_requisition.action_purchase_requisition_to_approve"
+                groups="gbs_purchase_requisition.group_purchase_requisition_approver"/>
+
     </data>
 </odoo>

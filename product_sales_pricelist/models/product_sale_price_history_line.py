@@ -1,4 +1,5 @@
 from odoo import api, fields, models
+from odoo.exceptions import UserError
 import time
 
 
@@ -6,17 +7,24 @@ class ProductSalePriceHistiryLine(models.Model):
     _name = 'product.sale.history.line'
     _description = "Sale Price History"
     _rec_name = 'product_id'
-    _order = "approve_price_date desc"
+    _order = "approve_price_date,id desc"
 
-    product_id = fields.Many2one('product.product', string="Product", required=True, domain=[('sale_ok', '=', True)],readonly=True)
-    list_price = fields.Float(string='Old Price', readonly=True)
-    new_price = fields.Float(string='Price', required=True,readonly=True)
-    approve_price_date = fields.Date(string='Approved Date',readonly=True)
-    effective_price_date = fields.Date(string='Effective Date',readonly=True)
-    currency_id = fields.Many2one('res.currency', string="Currency", readonly=True)
-    product_package_mode = fields.Many2one('product.packaging.mode', string= 'Packaging Mode', readonly=True)
-    category_id = fields.Many2one(string='UoM Category',related="uom_id.category_id",store=True)
-    uom_id = fields.Many2one('product.uom', string="UoM", readonly=True)
+    product_id = fields.Many2one('product.product', string="Product", required=True, domain=[('sale_ok', '=', True)])
+    list_price = fields.Float(string='Old Price',required=True)
+    new_price = fields.Float(string='Approved Price', required=True)
+    approve_price_date = fields.Date(string='Approved Date')
+    #effective_price_date = fields.Date(string='Effective Date')
+    currency_id = fields.Many2one('res.currency', string="Currency",required=True)
+    product_package_mode = fields.Many2one('product.packaging.mode', string='Packaging Mode',required=True)
+    category_id = fields.Many2one(string='UoM Category', related="uom_id.category_id")
+    uom_id = fields.Many2one('product.uom', string="UoM",required=True)
+    discount = fields.Float(string='Max Discount Limit')
+
+    @api.multi
+    def unlink(self):
+        raise UserError('You can not delete Price from here')
+        return super(ProductSalePriceHistiryLine, self).unlink()
+
 
     @api.model
     def pull_automation(self):
@@ -43,13 +51,16 @@ class ProductSalePriceHistiryLine(models.Model):
                 vals['product_package_mode'] = price_pool.product_package_mode.id
                 vals['uom_id'] = price_pool.uom_id.id
                 vals['category_id'] = price_pool.uom_id.category_id.id
+                vals['discount'] = price_pool.discount
 
                 price_history_pool.create(vals)
             else:
                 price_history_pool.write({'product_id':price_pool.product_id.id, 'approve_price_date':price_pool.effective_date,
-                                          'new_price':price_pool.new_price})
+                                          'new_price':price_pool.new_price, 'discount':price_pool.discount})
 
             #Update Products Sales Price also
             product_pool = self.env['product.product'].search([('id', '=', price_pool.product_id.ids)])
 
-            product_pool.write({'list_price': price_pool.new_price})
+            product_pool.write({'list_price': price_pool.new_price, 'fix_price':price_pool.new_price})
+
+            product_pool.write({'discount': price_pool.discount})

@@ -9,9 +9,10 @@ class ChequePaymentLine(models.Model):
     branch = fields.Char("Branch")
     amount = fields.Float("Amount")
     payment_date = fields.Date('Date')
-    account_payment_id = fields.Many2one('account.payment', string='Payment Information')
+    account_payment_id = fields.Many2one('account.payment', string='Online Payment Information')
+    cheque_info_id = fields.Integer(string='Cheque Info')
 
     """ Relational Fields """
-    pay_cash_id = fields.Many2one('delivery.order', ondelete='cascade')
+    pay_cash_id = fields.Many2one('delivery.authorization', ondelete='cascade')
 
 

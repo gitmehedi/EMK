@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+	<data>
+		<!-- Employee Exit Search Form Views -->
+		<record id="employee_exit_search_popup_form_view" model="ir.ui.view">
+			<field name="name">employee.exit.search.popup</field>
+			<field name="model">hr.exit.employee.exit.search.popup</field>
+			<field name="priority" eval="16" />
+			<field name="arch" type="xml">
+				<form string="Employee Exit Search">
+					<sheet>
+						<group>
+							<field name="employee_id"
+								options='{"no_open": True,"no_create": 1, "no_create_edit":1}' />
+						</group>
+					</sheet>
+					<footer>
+						<button name="action_search_employee_exit" type="object"
+							string="Submit" class="oe_highlight" />
+						<button string="Cancel" special="cancel" class="oe_link" />
+					</footer>
+				</form>
+			</field>
+		</record>
+
+		<!-- Employee Exit Search Action Views -->
+		<record id="action_search_employee_exit_view" model="ir.actions.act_window">
+			<field name="name">Employee Exit Search Wizard</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="src_model">employee.exit.req</field>
+			<field name="res_model">hr.exit.employee.exit.search.popup</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">form</field>
+			<field name="view_id" ref="employee_exit_search_popup_form_view" />
+			<field name="target">new</field>
+		</record>
+
+		<!-- Post Dated Cheque Menu -->
+		<menuitem id="employee_exit_search_menu" name="Exit Report"
+			parent="menu_exit_management" sequence="10" action="action_search_employee_exit_view" />
+	</data>
+</odoo>

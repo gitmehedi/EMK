@@ -1,19 +1,24 @@
+# -*- coding: utf-8 -*-
 {
-    'name': 'GBS USERS',
-    'version': '10.0.1',
-    'author': 'Genweb2 Limited',
-    'website': 'https://www.genweb2.com',
+    'name': "Update User",
 
-    'depends': [
-        'base',
-        'stock',
-    ],
+    'summary': """
+        Update Res User For Samuda""",
+
+    'description': """
+        By this moduel customer value of res.user set by False at User Creation. 
+    """,
+
+    'author': "Genweb2",
+    'website': "www.genweb2.com",
+
+    'category': 'Inventory',
+    'version': '10.0.1',
+
+    'depends': ['base'],
 
     'data': [
-        'views/res_users_view.xml'
+        'views/gbs_res_users_views.xml',
     ],
-    'summary': 'This module handles custom ir sequence',
-    'description':"Complete Solution for operating unit wise sequence",
-    'installable': True,
-    'application': True,
+
 }

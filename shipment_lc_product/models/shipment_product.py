@@ -3,7 +3,7 @@ from odoo import api, fields, models,_
 
 class ShipmentProductLine(models.Model):
     _name = 'shipment.product.line'
-    _description = 'Product'
+    _description = 'Shipment Product Line'
     _order = "date_planned desc"
 
     name = fields.Text(string='Description', required=True)
@@ -14,7 +14,7 @@ class ShipmentProductLine(models.Model):
     product_uom = fields.Many2one('product.uom', string='Product Unit of Measure')
     product_received_qty = fields.Float(string='Received Quantity')
     product_qty = fields.Float(string='Quantity')
-    # price_unit = fields.Float(string='Unit Price')
+    price_unit = fields.Float(string='Unit Price')
     shipment_id = fields.Many2one('purchase.shipment', string='Purchase Shipment')
 
 

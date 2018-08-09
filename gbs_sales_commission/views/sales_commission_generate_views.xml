@@ -28,15 +28,17 @@
                             <field name="line_ids">
                                 <tree>
                                     <field name="partner_id"/>
-                                    <field name="total_com_amount"/>
                                     <field name="total_invoiced_amount"/>
+                                    <field name="total_com_amount"/>
                                 </tree>
                                 <form>
                                     <field name="invoice_line_ids">
                                         <tree>
                                             <field name="invoice_id"/>
+                                            <!---->
                                             <field name="commission_amount"/>
                                             <field name="invoiced_amount"/>
+                                            <field name="product_id"/>
 
                                         </tree>
                                         <form>
@@ -46,6 +48,7 @@
                                                     <field name="commission_amount"/>
                                                 </group>
                                                 <group>
+                                                    <!--<field name="invoice_line_id"/>-->
                                                     <field name="invoiced_amount"/>
                                                 </group>
                                             </group>
@@ -85,9 +88,4 @@
         <field name="view_mode">tree,form</field>
     </record>
 
-
-    <menuitem id="sales_commission_generate_menu"
-              parent="sales_team.menu_sales" sequence="12"
-              groups="gbs_application_group.group_head_account,gbs_application_group.group_cxo"
-              action="action_sales_commission_generate"/>
 </odoo>

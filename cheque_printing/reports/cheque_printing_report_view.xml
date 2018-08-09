@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <report
+                id="cheque_print_report"
+                model="cheque.info.entry"
+                string="Cheque Print"
+                report_type="qweb-pdf"
+                name="cheque_printing.report_cheque_prints_gbs"
+                file="cheque_printing.report_cheque_prints_gbs"
+                paperformat="cheque_printing.cheque_paper_format"
+        />
+
+        <template id="report_cheque_prints_gbs">
+                <t t-foreach="docs" t-as="o">
+                    <div class="page">
+                        <div class="row text-left">
+                                <span t-field="o.cheque_date"/>
+                            </div>
+
+                        <div class="row">
+                            <div  class="col-xs-8">
+                                <span t-field="o.partner_id"/>
+                                <p style="padding: 15px 5px 5px 30px;">Six Thousand Tk only</p>
+                            </div>
+
+                            <div class="col-xs-4" style="padding-top:40px;padding-left:20px;">
+                                <span t-field="o.amount"/>
+                            </div>
+
+                        </div>
+                    </div>
+                </t>
+        </template>
+    </data>
+</odoo>

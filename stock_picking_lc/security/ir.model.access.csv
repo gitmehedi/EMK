@@ -1,0 +1,4 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_purchase_shipment_stock_user,access_purchase_shipment_stock_user,com_shipment.model_purchase_shipment,stock.group_stock_user,1,0,0,0
+access_letter_credit_stock_user,access_letter_credit_stock_user,letter_of_credit.model_letter_credit,stock.group_stock_user,1,0,0,0
+access_shipment_product_line_stock_user,access_shipment_product_line_stock_user,shipment_lc_product.model_shipment_product_line,stock.group_stock_user,1,1,1,1

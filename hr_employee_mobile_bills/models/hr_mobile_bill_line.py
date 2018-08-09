@@ -8,16 +8,17 @@ class HrEmpMobileBillLine(models.Model):
     _name = 'hr.mobile.bill.line'
     _description = 'HR mobile bill line'    
 
-    bill_amount = fields.Float(string="Bill Amount", required=True)
-    amount = fields.Float(string="Exceed Amount", required=True)
-    emp_mobile_phone = fields.Char('Mobile Number', required=True)
+    bill_amount = fields.Float(string="Bill Amount", required=True,
+                               readonly= True, states={'draft': [('readonly', False)]})
+    amount = fields.Float(string="Exceed Amount", required=True, readonly= True, states={'draft': [('readonly', False)]})
+    emp_mobile_phone = fields.Char('Mobile Number', required=True, readonly= True, states={'draft': [('readonly', False)]})
 
     """ Relational Fields """
 
     
     parent_id = fields.Many2one(comodel_name='hr.mobile.bill',ondelete='cascade')
     employee_id = fields.Many2one('hr.employee', string="Employee", store=True,ondelete='cascade',
-                                  compute='onchange_emp_mobile_phone')
+                                  compute='onchange_emp_mobile_phone',readonly= True, states={'draft': [('readonly', False)]})
 
     """ All Selection fields """
 
