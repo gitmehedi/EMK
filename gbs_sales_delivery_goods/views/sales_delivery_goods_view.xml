@@ -44,7 +44,7 @@
 
         <!--<menuitem id="delievry_goods_menu" name="Transport Information" parent="sales_team.menu_base_partner"-->
             <!--sequence="11" action="delivery_goods_action"/>-->
-        <!--<menuitem id="mrp_daily_production_submenu" name="Transport Information" parent="delivery_schedules.delivery_schedule_menu"-->
+        <!--<menuitem id="mrp_daily_production_submenu" name="Transport Information" parent="delivery_order.delivery_menu"-->
                   <!--action="delivery_goods_action"/>-->
     </data>
 </odoo>

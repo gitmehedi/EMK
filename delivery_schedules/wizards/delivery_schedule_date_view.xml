@@ -36,7 +36,7 @@
                   groups="sales_team.group_sale_salesman_all_leads,gbs_application_group.group_head_sale,gbs_application_group.group_cxo"
                   action="action_delivery_schedule_date"
                   id="delivery_schedule_date_id"
-                  parent="delivery_schedule_menu" sequence="20"/>
+                  parent="delivery_order.delivery_menu" sequence="20"/>
 
     </data>
 </odoo>
