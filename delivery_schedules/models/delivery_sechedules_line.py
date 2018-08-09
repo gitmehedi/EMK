@@ -64,7 +64,9 @@ class DeliveryScheduleLine(models.Model):
             ds.product_id = []
             do_id_list = []
             if ds.partner_id:
-                do_objs = self.env['delivery.order'].sudo().search([('parent_id','=',ds.partner_id.id),('state','=','approved')])
+                do_objs = self.env['delivery.order'].sudo().search([('parent_id','=',ds.partner_id.id),
+                                                                    ('operating_unit_id','=',self.operating_unit_id.id),
+                                                                    ('state','=','approved')])
                 if do_objs:
                     for do_obj in do_objs:
                         do_line_list =  do_obj.line_ids.filtered(lambda x: x.quantity > x.qty_delivered)
