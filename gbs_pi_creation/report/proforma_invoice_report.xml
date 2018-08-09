@@ -98,7 +98,7 @@
                                 </div>
                                 <div class="col-xs-6 text-left">
                                     <p><b>Packing : </b><span t-esc="data['packing']"/> <br/>
-                                        <b>Terms of Payment : </b><span t-esc="data['terms_of_payment']"/></p>
+                                        <b>Terms of Payment : </b><span t-esc="data['terms_str']"/></p>
                                 </div>
                             </div>
                             <hr class="hr-xxs m-0"/>
