@@ -31,8 +31,6 @@
         </record>
 
 
-        <menuitem id="letter_of_credit.lc_report_menu_root" parent="commercial.menu_commercial_root"
-            sequence="7" name="Reports" />
         <menuitem
                 name="Letter of Credit Report"
                 parent="letter_of_credit.lc_report_menu_root"
