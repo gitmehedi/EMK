@@ -111,14 +111,16 @@
             <field name="model">delivery.schedules.line</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree string="Delivery Schedules" editable="bottom" create="false">
+                <tree string="Delivery Instruction" editable="bottom" create="false">
                     <field name="partner_id" readonly="True"/>
-                    <field name="pending_do" readonly="True"/>
+                    <field name="pending_do" readonly="True" string="D.O."/>
                     <field name="do_qty"/>
                     <field name="undelivered_qty"/>
-                    <field name="scheduled_qty"/>
-                    <field name="state" readonly="True"/>
-                    <button name="action_approve" string="Approve" type="object"/>
+                    <field name="scheduled_qty" readonly="True"/>
+                    <field name="remarks" readonly="True"/>
+                    <field name="state" readonly="True" invisible="1"/>
+                    <button name="action_approve" string="Done"
+                            type="object" attrs="{'invisible': [('state', '!=', 'approve')]}"/>
                 </tree>
             </field>
         </record>
@@ -136,7 +138,7 @@
         </record>
 
         <record model="ir.actions.act_window" id="action_delivery_schedules_line">
-            <field name="name">Delivery Schedules Line</field>
+            <field name="name">Delivery Instruction</field>
             <field name="res_model">delivery.schedules.line</field>
             <field name="context">{
                 'search_default_today':1,
@@ -152,7 +154,7 @@
                   groups="stock.delivery_user"/>
 
         <menuitem id="menu_delivery_schedules_line"
-                  name="Delivery Schedules"
+                  name="Delivery Instruction"
                   parent="main_menu_delivery_schedules_line"
                   sequence="1"
                   groups="stock.delivery_user"
