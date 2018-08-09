@@ -108,13 +108,6 @@
 
 
         <menuitem
-                 id="letter_of_credit_report.lc_report_menu_root"
-                 parent="commercial.menu_commercial_root"
-                 name="Reports"
-                 sequence="7"
-                 groups="commercial.group_commercial_user"/>
-
-        <menuitem
                 id="letter_of_credit_report.lc_report_menu"
                 name="Letter of Credit Report"
                 parent="letter_of_credit.lc_report_menu_root"

@@ -446,6 +446,7 @@ class SaleOrder(models.Model):
         if pi_pool:
             val = []
             self.partner_id = pi_pool.partner_id
+            self.pack_type = pi_pool.pack_type
 
             for record in pi_pool.line_ids:
                 commission = self.env['customer.commission'].search(

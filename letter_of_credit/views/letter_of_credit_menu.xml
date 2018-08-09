@@ -45,6 +45,12 @@
         <menuitem id="lc_commercial_creation_menu" parent="commercial.menu_commercial_root"
             sequence="1" name="Letter of Credit" />
 
+        <menuitem
+                 id="lc_report_menu_root"
+                 parent="commercial.menu_commercial_root"
+                 name="Reports"
+                 sequence="7"/>
+
         <menuitem id="lc_commercial_import_foreign_creation_submenu" name="Import LC(Foreign)" parent="lc_commercial_creation_menu"
                   sequence="2" action="lc_import_foreign_creation_action"/>
 
