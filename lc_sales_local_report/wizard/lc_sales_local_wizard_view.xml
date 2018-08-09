@@ -35,6 +35,14 @@
             <field name="target">new</field>
         </record>
 
+        <menuitem
+                 id="letter_of_credit.lc_report_menu_root"
+                 parent="commercial.menu_commercial_root"
+                 name="Reports"
+                 groups="commercial.group_commercial_user_export"
+                 sequence="7"/>
+
+
         <menuitem action="action_wizard_local_first_acceptance"
                   id="menu_wizard_local_first_acceptance"
                   parent="letter_of_credit.lc_report_menu_root"
