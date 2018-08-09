@@ -38,11 +38,13 @@ class ProformaInvoice(models.Model):
     name = fields.Char(string='Name', index=True, readonly=True, default="/")
     partner_id = fields.Many2one('res.partner', string='Customer', domain=[('customer', '=', True)], required=True,
                                  readonly=True, states={'draft': [('readonly', False)]})
-    invoice_date = fields.Date('Invoice Date', readonly=True, required=1, states={'draft': [('readonly', False)]})
+    invoice_date = fields.Date('PI Date', readonly=True, required=1,
+                               states={'draft': [('readonly', False)]},default=fields.Datetime.now())
     advising_bank_id = fields.Many2one('res.bank', string='Advising Bank', required=True, readonly=True,
                                        states={'draft': [('readonly', False)]})
 
     beneficiary_id = fields.Many2one('res.company', string='Beneficiary', required=True, readonly=True,
+                                     default=lambda self: self.env['res.company']._company_default_get(),
                                      states={'draft': [('readonly', False)]})
 
     transport_by = fields.Char(string='Transport By', required=True, readonly=True,
@@ -68,7 +70,7 @@ class ProformaInvoice(models.Model):
     """ Ship To"""
     terms_condition = fields.Text(string='Terms of Condition', required=True, readonly=True,
                                   states={'draft': [('readonly', False)]})
-    packing = fields.Char(string='Packing', required=True, readonly=True, states={'draft': [('readonly', False)]})
+    packing = fields.Char(string='Packing', readonly=True, states={'draft': [('readonly', False)]})
     terms_of_payment = fields.Char(string='Terms Of Payment', required=True, readonly=True,
                                    states={'draft': [('readonly', False)]})
 
