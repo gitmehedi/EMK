@@ -31,13 +31,6 @@
             id="sale.menu_sale_order_upselling" parent="sale.menu_sale_invoicing"
             sequence="5"/>
 
-        <menuitem
-                action="action_comm_invoice"
-                groups="commercial.group_commercial_user_export"
-                id="menu_comm_invoice"
-                parent="gbs_procure_n_commercial_access.main_menu_lc_sales_comm"
-                sequence="5"/>
-
         <menuitem id="delivery_order.delivery_menu" name="Delivery" parent="sales_team.menu_base_partner"
                   groups="account.group_account_user"/>
 
