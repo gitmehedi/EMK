@@ -60,9 +60,11 @@
         </field>
     </record>
 
-    <menuitem name="Payments" id="menu_member_payments" parent="membership.menu_association"/>
+    <menuitem name="Payments" id="menu_member_payments" parent="membership.menu_association"
+              groups="membership_user.group_mem_user_officer,membership_extension.group_membership_manager"/>
     <menuitem name="Payment" id="sub_member_general" parent="menu_member_payments"
-              action="action_membership_payment"/>
+              action="action_membership_payment"
+              groups="membership_user.group_mem_user_officer,membership_extension.group_membership_manager"/>
 
 
 </odoo>

@@ -31,6 +31,13 @@ $(function () {
         }
     });
 
+    $('#memberapp input').keyup(function() {
+        var vals=['email','website'];
+        if (vals.indexOf(this.name)<0){
+            this.value = this.value.toLocaleUpperCase();
+        }
+    });
+
     $('input[name=subject_of_interest]').change(function(){
         vals= [];
         var selector = $('#subject_of_interest_others');

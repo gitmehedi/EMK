@@ -8,6 +8,7 @@
     'category': 'Extra Tools',
     'depends': [
         'mail',
+        'membership_user',
         'member_signup',
     ],
     'data': [
