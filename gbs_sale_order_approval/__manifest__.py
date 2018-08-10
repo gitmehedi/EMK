@@ -20,6 +20,9 @@
         'gbs_pi_creation',
         'account',
         'ir_sequence_operating_unit',
+        'custom_report',
+        'gbs_purchase_requisition',
+        'sale_stock', ## to hide delivery menu. it is inherited on this module
     ],
 
     'data': [
@@ -27,6 +30,7 @@
         'security/ir_rule.xml',
         'views/inherited_sale_view.xml',
         'views/menuitems.xml',
+        'views/approver_action_menus.xml',
         'report/inherit_sale_order_report.xml',
         'data/sale_order_sequence.xml',
     ],

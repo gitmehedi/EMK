@@ -151,15 +151,17 @@ class InheritStockPicking(models.Model):
 
                 delivery_jar_count_obj.create(vals)
 
+
     def _set_date_done_do(self):
         for move in self.move_lines:
             if move.undelivered_qty == 0.0:
-                do_objs = self.env['delivery.order'].search([('id','=',move.delivery_order_id.id)])
+                do_objs = self.env['delivery.order'].search([('id','=',self.delivery_order_id.id)])
                 do_line_objs = do_objs.line_ids.filtered(lambda x: x.product_id.id == move.product_id.id)
-                if self.date_done:
-                    do_line_objs.date_done = self.date_done
-                else:
-                    do_line_objs.date_done = fields.Datetime.now()
+                if do_line_objs:
+                    if self.date_done:
+                        do_line_objs.date_done = self.date_done
+                    else:
+                        do_line_objs.date_done = fields.Datetime.now()
 
     @api.multi
     def _calculate_lc_id(self):
@@ -173,6 +175,10 @@ class InheritStockPicking(models.Model):
 
 class InheritStockMove(models.Model):
     _inherit = 'stock.move'
+
+    #below 2 fields added for Delivery related reporting
+    packing_uom_id = fields.Many2one('product.uom', string='Packing UoM ID')
+    jar_count = fields.Float(string='# of Jar')
 
     delivery_order_id = fields.Many2one('delivery.order', string='D.O No.', readonly=True)
 

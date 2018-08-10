@@ -12,7 +12,8 @@ class DeliverySchedules(models.Model):
     _order = "id DESC"
 
     name = fields.Char(string='Name', index=True, readonly=True)
-    requested_date = fields.Date('Date', default=fields.Datetime.now)
+    requested_date = fields.Date('Date', default=fields.Datetime.now,readonly=True,
+                                 states={'draft': [('readonly', False)]})
     sequence_id = fields.Char('Sequence', readonly=True)
     requested_by = fields.Many2one('res.users', string='Requested By', readonly=True,
                                    default=lambda self: self.env.user)

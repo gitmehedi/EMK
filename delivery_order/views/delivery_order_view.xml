@@ -118,12 +118,18 @@
             <field name="view_mode">tree,form</field>
         </record>
 
+
+        <!--Parent Menu-->
+        <menuitem id="delivery_menu" name="Delivery" parent="sales_team.menu_base_partner"
+                  groups="sales_team.group_sale_salesman_all_leads,gbs_application_group.group_head_sale"
+                  sequence="9"/>
+        <!---->
         <!--<menuitem id="delivery_order_layer_menu" name="Delivery Order" parent="sales_team.menu_base_partner"-->
                   <!--groups="account.group_account_user,gbs_application_group.group_head_account,gbs_application_group.group_cxo"-->
                   <!--sequence="12" action="delivery_order_layer_action"/>-->
 
-        <menuitem id="delivery_order_layer_submenu" name="Delivery Order" parent="delivery_schedules.delivery_schedule_menu"
-                  groups="gbs_application_group.group_cxo,account.group_account_user,gbs_application_group.group_head_account,gbs_application_group.group_cxo"
+        <menuitem id="delivery_order_layer_submenu" name="Delivery Order" parent="delivery_menu"
+                  groups="account.group_account_user,gbs_application_group.group_head_account,gbs_application_group.group_cxo"
                   action="delivery_order_layer_action" sequence="3"/>
 
 

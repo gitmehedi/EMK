@@ -21,32 +21,13 @@
 
         <menuitem action="product.product_category_action_form"
                   groups="gbs_application_group.group_sales_product_manager,base.group_no_one"
-                  id="product.menu_product_category_action_form" parent="sale.prod_config_main" sequence="2"/>
+                  id="sale.menu_product_category_action_form" parent="sale.prod_config_main" sequence="2"/>
 
         <menuitem name="Sales Teams"
                   id="sales_team.sales_team_config"
                   groups="gbs_application_group.group_head_sale,gbs_application_group.group_cxo,sales_team.group_sale_salesman,sales_team.group_sale_manager,account.group_account_user"
                   parent="sales_team.menu_sale_config"
                   action="sales_team.sales_team_config_action"/>
-
-        <!---->
-
-        <!--Approver Menu-->
-
-        <!--<menuitem name="Head Of Sale Approver"-->
-                  <!--id="menu_sale_hos_approver"-->
-                  <!--parent="sale.menu_sale_order"-->
-                  <!--action="sale.action_quotations"-->
-                  <!--groups="gbs_application_group.group_head_sale" sequence="1"-->
-        <!--/>-->
-
-        <!--<menuitem name="Head Of Account Approver"-->
-                  <!--id="menu_sale_hoa_approver"-->
-                  <!--parent="sale.menu_sale_quotations"-->
-                  <!--action="action_so_hoa_approver"-->
-                  <!--groups="gbs_application_group.group_head_account" sequence="1"-->
-        />
-        <!---->
 
     </data>
 </odoo>

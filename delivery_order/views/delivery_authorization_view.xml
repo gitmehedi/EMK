@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
     <data>
-
         <record id="delivery_order_form" model="ir.ui.view">
             <field name="name">delivery.authorization.form</field>
             <field name="model">delivery.authorization</field>
@@ -178,74 +177,38 @@
             </field>
         </record>
 
-        <record id="search_delivery_auth" model="ir.ui.view">
+        <record id="search_delivery_auth_acc_ex" model="ir.ui.view">
             <field name="name">delivery.authorization.search</field>
             <field name="model">delivery.authorization</field>
             <field name="arch" type="xml">
                 <search string="Delivery Authorization">
-                    <filter name="validate" string="To Validate" domain="[('state','=','validate')]"/>
                     <filter name="submit" string="To Submit" domain="[('state','=','draft')]"/>
-                    <filter name="confirm" string="To Confirm" domain="[('state','=','approve')]"/>
                 </search>
             </field>
         </record>
 
-
-        <record model="ir.actions.act_window" id="delivery_order_action_account_user">
+        <record model="ir.actions.act_window" id="delivery_order_action">
             <field name="name">Delivery Authorization</field>
             <field name="res_model">delivery.authorization</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="search_delivery_auth_acc_ex"/>
             <field name="context">{
                 'search_default_submit':1,
                 }</field>
-            <field name="view_mode">tree,form</field>
-        </record>
-
-
-        <record model="ir.actions.act_window" id="delivery_order_action_head_account">
-            <field name="name">Delivery Authorization</field>
-            <field name="res_model">delivery.authorization</field>
-            <field name="context">{
-                'search_default_confirm':1,
-                }</field>
-            <field name="view_mode">tree,form</field>
-        </record>
-
-
-        <record model="ir.actions.act_window" id="delivery_order_action_cxo">
-            <field name="name">Delivery Authorization</field>
-            <field name="res_model">delivery.authorization</field>
-            <field name="context">{
-                'search_default_validate':1,
-                }</field>
-            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Click to create a new DA.
+                </p>
+            </field>
         </record>
 
         <menuitem id="delivery_authorization_mainmenu"
                   name="Delivery Authorization"
-                  parent="delivery_schedules.delivery_schedule_menu"
+                  parent="delivery_menu"
                   sequence="1"
+                  action="delivery_order_action"
                   groups="account.group_account_user,gbs_application_group.group_head_account,gbs_application_group.group_cxo"/>
-
-        <menuitem id="delivery_order_submenu_account_user"
-                  name="Accountant Approval"
-                  parent="delivery_authorization_mainmenu"
-                  sequence="3"
-                  groups="account.group_account_user"
-                  action="delivery_order_action_account_user"/>
-
-        <menuitem id="delivery_order_submenu_head_account"
-                  name="Head of Account Approval"
-                  parent="delivery_authorization_mainmenu"
-                  sequence="2"
-                  groups="gbs_application_group.group_head_account"
-                  action="delivery_order_action_head_account"/>
-
-        <menuitem id="delivery_order_submenu_cxo"
-                  name="CXO Approval"
-                  parent="delivery_authorization_mainmenu"
-                  sequence="1"
-                  groups="gbs_application_group.group_cxo"
-                  action="delivery_order_action_cxo"/>
 
     </data>
 </odoo>
