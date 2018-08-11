@@ -46,6 +46,17 @@ class SaleOrder(models.Model):
                                  states={'to_submit': [('readonly', False)]},
                                  default=lambda self: self.env['res.company']._company_default_get('sale.order'))
 
+    # inherited fields from sale
+    partner_id = fields.Many2one('res.partner', string='Customer',required=True,
+                                 change_default=True, index=True, track_visibility='always')
+    partner_invoice_id = fields.Many2one('res.partner', string='Invoice Address', required=True,
+                                         domain="[('parent_id','=',partner_id),('type','=','invoice')]",
+                                         help="Invoice address for current sales order.")
+    partner_shipping_id = fields.Many2one('res.partner', string='Delivery Address', required=True,
+                                          domain="[('parent_id','=',partner_id),('type','=','delivery')]",
+                                          help="Delivery address for current sales order.")
+    # ..............................
+
     @api.model
     def _default_note(self):
         return self.env.user.company_id.sale_note
@@ -89,6 +100,8 @@ class SaleOrder(models.Model):
 
     #remaining_credit_limit = fields.Char(string="Customer's Remaining Credit Limit", track_visibility='onchange')
 
+    fields_readonly = fields.Boolean('Fields Readonly or not?',default=False)
+
     """ Update is_commission_generated flag to False """
 
     @api.model
@@ -99,7 +112,23 @@ class SaleOrder(models.Model):
         if new_seq:
             vals['name'] = new_seq
 
+        if vals['pi_id']:
+            pi_pool = self.env['proforma.invoice'].search([('id', '=', vals['pi_id'])])
+            vals['partner_id'] = pi_pool.partner_id.id
+            vals['partner_invoice_id'] = pi_pool.partner_id.child_ids.filtered(lambda x: x.type == 'invoice').id or pi_pool.partner_id.id
+            vals['partner_shipping_id'] = pi_pool.partner_id.child_ids.filtered(lambda x: x.type == 'delivery').id or pi_pool.partner_id.id
+
+
         return super(SaleOrder, self).create(vals)
+
+    @api.multi
+    def write(self, vals):
+        if self.pi_id:
+            vals['partner_id'] = self.pi_id.partner_id.id
+            vals['partner_invoice_id'] = self.pi_id.partner_id.child_ids.filtered(lambda x: x.type == 'invoice').id or self.pi_id.partner_id.id
+            vals['partner_shipping_id'] = self.pi_id.partner_id.child_ids.filtered(lambda x: x.type == 'delivery').id or self.pi_id.partner_id.id
+
+        return super(SaleOrder, self).write(vals)
 
     @api.multi
     def action_invoice_create(self, grouped=False, final=False):
@@ -152,7 +181,8 @@ class SaleOrder(models.Model):
                 return {'domain': {'pi_id': [('id', 'not in', [i.pi_id.id for i in existing_lc]),
                                              ('credit_sales_or_lc', '=', 'lc_sales'),
                                              ('state', '=', 'confirm')]}}
-
+            else:
+                self.fields_readonly = False
 
     @api.multi
     def _is_double_validation_applicable(self):
@@ -472,6 +502,7 @@ class SaleOrder(models.Model):
                                    }))
 
             self.order_line = val
+            self.fields_readonly = True
 
     @api.onchange('operating_unit_id')
     def onchange_operating_unit_id(self):
