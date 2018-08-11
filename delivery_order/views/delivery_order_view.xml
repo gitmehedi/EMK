@@ -100,15 +100,15 @@
             </field>
         </record>
 
-        <record id="search_delivery_order" model="ir.ui.view">
-            <field name="name">delivery.order.search</field>
-            <field name="model">delivery.order</field>
-            <field name="arch" type="xml">
-                <search string="Delivery Order">
-                    <filter name="draft" string="To Confirm" domain="[('state','=','draft')]"/>
-                </search>
-            </field>
-        </record>
+        <!--<record id="search_delivery_order" model="ir.ui.view">-->
+            <!--<field name="name">delivery.order.search</field>-->
+            <!--<field name="model">delivery.order</field>-->
+            <!--<field name="arch" type="xml">-->
+                <!--<search string="Delivery Order">-->
+                    <!--<filter name="draft" string="To Confirm" domain="[('state','=','draft')]"/>-->
+                <!--</search>-->
+            <!--</field>-->
+        <!--</record>-->
 
 
         <record model="ir.actions.act_window" id="delivery_order_layer_action">

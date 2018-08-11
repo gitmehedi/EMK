@@ -313,6 +313,7 @@ class SaleOrder(models.Model):
                      ('product_package_mode', '=', order.pack_type.id),
                      ('uom_id', '=', lines.product_uom.id)])
 
+
                 if order.credit_sales_or_lc == 'cash' or order.credit_sales_or_lc == 'lc_sales':
 
                     is_double_validation = order.second_approval_business_logics(cust_commission_pool, lines,
@@ -321,6 +322,12 @@ class SaleOrder(models.Model):
                         break;
 
                 elif order.credit_sales_or_lc == 'credit_sales':
+
+                    if not price_change_pool and lines.price_unit:
+                        return True # second approval
+
+                    if not cust_commission_pool and lines.commission_rate:
+                        return True # second approval
 
                     account_receivable = partner_pool.credit
                     sales_order_amount_total = order.amount_total
@@ -417,6 +424,13 @@ class SaleOrder(models.Model):
         }
 
     def second_approval_business_logics(self, cust_commission_pool, lines, price_change_pool):
+
+        if not price_change_pool and lines.price_unit:
+            return True  # second approval
+
+        if not cust_commission_pool and lines.commission_rate:
+            return True
+
         for coms in cust_commission_pool:
             if price_change_pool.currency_id.id == lines.currency_id.id:
                 for price_history in price_change_pool:
