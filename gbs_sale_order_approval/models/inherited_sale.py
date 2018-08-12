@@ -115,18 +115,37 @@ class SaleOrder(models.Model):
         if vals['pi_id']:
             pi_pool = self.env['proforma.invoice'].search([('id', '=', vals['pi_id'])])
             vals['partner_id'] = pi_pool.partner_id.id
-            vals['partner_invoice_id'] = pi_pool.partner_id.child_ids.filtered(lambda x: x.type == 'invoice').id or pi_pool.partner_id.id
-            vals['partner_shipping_id'] = pi_pool.partner_id.child_ids.filtered(lambda x: x.type == 'delivery').id or pi_pool.partner_id.id
+            invoice_ids = pi_pool.partner_id.child_ids.filtered(lambda x: x.type == 'invoice')
+            shipping_ids = pi_pool.partner_id.child_ids.filtered(lambda x: x.type == 'delivery')
+            if invoice_ids:
+                vals['partner_invoice_id'] = invoice_ids[0].id
+            else:
+                vals['partner_invoice_id'] = pi_pool.partner_id.id
+            if shipping_ids:
+                vals['partner_shipping_id'] = shipping_ids[0].id
+            else:
+                vals['partner_shipping_id'] = pi_pool.partner_id.id
 
+            # vals['partner_invoice_id'] = pi_pool.partner_id.child_ids.filtered(lambda x: x.type == 'invoice').id or pi_pool.partner_id.id
+            # vals['partner_shipping_id'] = pi_pool.partner_id.child_ids.filtered(lambda x: x.type == 'delivery').id or pi_pool.partner_id.id
 
         return super(SaleOrder, self).create(vals)
 
     @api.multi
     def write(self, vals):
-        if self.pi_id:
-            vals['partner_id'] = self.pi_id.partner_id.id
-            vals['partner_invoice_id'] = self.pi_id.partner_id.child_ids.filtered(lambda x: x.type == 'invoice').id or self.pi_id.partner_id.id
-            vals['partner_shipping_id'] = self.pi_id.partner_id.child_ids.filtered(lambda x: x.type == 'delivery').id or self.pi_id.partner_id.id
+        if vals['pi_id']:
+            pi_pool = self.env['proforma.invoice'].search([('id', '=', vals['pi_id'])])
+            vals['partner_id'] = pi_pool.partner_id.id
+            invoice_ids = pi_pool.partner_id.child_ids.filtered(lambda x: x.type == 'invoice')
+            shipping_ids = pi_pool.partner_id.child_ids.filtered(lambda x: x.type == 'delivery')
+            if invoice_ids:
+                vals['partner_invoice_id'] = invoice_ids[0].id
+            else:
+                vals['partner_invoice_id'] = pi_pool.partner_id.id
+            if shipping_ids:
+                vals['partner_shipping_id'] = shipping_ids[0].id
+            else:
+                vals['partner_shipping_id'] = pi_pool.partner_id.id
 
         return super(SaleOrder, self).write(vals)
 
