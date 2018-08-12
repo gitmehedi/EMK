@@ -30,6 +30,7 @@
         'views/inherited_sale_view.xml',
         'views/menuitems.xml',
         'views/approver_action_menus.xml',
+        'views/res_partner_views.xml',
         'report/inherit_sale_order_report.xml',
         'data/sale_order_sequence.xml',
     ],
