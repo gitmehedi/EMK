@@ -13,12 +13,10 @@ class InheritHRPayslip(models.Model):
     _inherit = 'hr.payslip'
 
     def _get_default_type(self):
-        active_id = self._context['active_id']
-        if active_id:
-            payslip_run_pool = self.env['hr.payslip.run']
-            payslip_run = payslip_run_pool.search([('id','=',active_id)])
-            if payslip_run:
-                return payslip_run.type
+        if self.payslip_run_id:
+            self.type = self.payslip_run_id
+            data = self.type
+            return data
 
         return "0"
 
@@ -27,4 +25,4 @@ class InheritHRPayslip(models.Model):
                              ("2", "Salary With Bonus")], "Type",
                             required=True, default=_get_default_type)
 
-    festival_date = fields.Date('Festival Date',related='payslip_run_id.festival_date',store=True)
+    festival_date = fields.Date('Festival Date', related='payslip_run_id.festival_date', store=True)

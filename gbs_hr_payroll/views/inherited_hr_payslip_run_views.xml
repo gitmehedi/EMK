@@ -14,6 +14,16 @@
                 </xpath>
             </field>
         </record>
+        <record id="email_hr_payslip_run_view" model="ir.ui.view">
+            <field name="name">Inherited HR Payslip Batches</field>
+            <field name="model">hr.payslip.run</field>
+            <field name="inherit_id" ref="hr_payroll.hr_payslip_run_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='credit_note']" position="after">
+                    <field name="send_email"/>
+                </xpath>
+            </field>
+        </record>
         <record id="inherited_view_hr_bank_advice_form" model="ir.ui.view">
             <field name="name">Inherited HR Payslip Advice</field>
             <field name="model">hr.payroll.advice</field>

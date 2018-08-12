@@ -1,0 +1,59 @@
+<?xml version="1.0"?>
+<odoo>
+    <record id="view_due_invoice_tree" model="ir.ui.view">
+        <field name="name">account.invoice.tree</field>
+        <field name="model">account.invoice</field>
+        <field name="priority" eval="1"/>
+        <field name="arch" type="xml">
+            <tree string="Due Invoice">
+                <field name="partner_id" groups="base.group_user" string="Customer"/>
+                <field name="date_invoice"/>
+                <field name="number"/>
+                <field name="commercial_partner_id" invisible="1"/>
+                <field name="reference" invisible="1"/>
+                <field name="name" invisible="1"/>
+                <field name="journal_id" invisible="1"/>
+                <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
+                <field name="user_id"/>
+                <field name="date_due"/>
+                <field name="origin"/>
+                <field name="amount_total_signed" string="Total" sum="Total"/>
+                <field name="residual_signed" string="Amount Due" sum="Amount Due"/>
+                <field name="currency_id" invisible="1"/>
+                <field name="company_currency_id" invisible="1"/>
+                <field name="state"/>
+                <field name="type" invisible="context.get('type',True)"/>
+            </tree>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="act_invoice_due">
+        <field name="name">Due Invoice</field>
+        <field name="res_model">account.invoice</field>
+        <field name="domain">[('state','=','open')]</field>
+        <field name="help" type="html">
+            <p class="oe_view_nocontent_create">
+                No Due Invoice
+            </p>
+        </field>
+    </record>
+
+
+    <menuitem id="sub_due_invoice" parent="member_signup.menu_member_payments"
+              action="act_invoice_due"/>
+
+    <record id="server_act_notify_due_invoice" model="ir.actions.server">
+        <field name="name">Due Invoice</field>
+        <field name="model_id" ref="account.model_account_invoice"/>
+        <field name="state">code</field>
+        <field name="condition">True</field>
+        <field name="code">record.act_due_invoice()</field>
+    </record>
+    <record id="server_vals_notify_due_invoice" model="ir.values">
+        <field name="name">name</field>
+        <field name="model">account.invoice</field>
+        <field name="key">action</field>
+        <field name="key2">client_action_multi</field>
+        <field name="value" eval="'ir.actions.server,%d'%server_act_notify_due_invoice"/>
+    </record>
+</odoo>
