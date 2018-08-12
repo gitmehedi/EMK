@@ -32,8 +32,9 @@
         'views/member_application_views.xml',
         'views/membership_payment_views.xml',
         'views/rfid_generation_views.xml',
-        # 'views/applicant_readonly_views.xml',
+        'views/applicant_views.xml',
         'report/rfid_print_views.xml',
     ],
-    'bootstrap': True,
+    'installable': True,
+    'application': True,
 }
