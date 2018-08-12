@@ -24,8 +24,10 @@
                 </p>
                 <h2>Sign in Credential:</h2>
                 <p>
-                    <strong>Application ID:</strong> ${object.partner_id.member_sequence}<br/>
+                    <strong>Login Email:</strong> ${object.email|safe}<br/>
                     <strong>Temporary Password:</strong> ${ctx['password']}
+                    <strong>Application ID:</strong> ${object.partner_id.member_sequence}<br/>
+
                 </p>
                 <p>
                     To view your application, click on the following link:

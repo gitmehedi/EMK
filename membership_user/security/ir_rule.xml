@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding='utf-8'?>
+<odoo>
+
+    <record id="group_mem_user_officer" model="res.groups">
+        <field name="name">Officer</field>
+        <field name="category_id" ref="membership_extension.module_category_membership_management"/>
+    </record>
+    <record id="group_mem_user_applicant" model="res.groups">
+        <field name="name">Applicants</field>
+        <field name="category_id" ref="membership_extension.module_category_membership_management"/>
+    </record>
+
+</odoo>

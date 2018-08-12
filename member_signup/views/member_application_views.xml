@@ -1,11 +1,5 @@
 <?xml version="1.0"?>
 <odoo>
-
-    <record id="membership.action_membership_members" model="ir.actions.act_window">
-        <field name="domain">[('free_member','=',True)]</field>
-        <field name="context">{}</field>
-    </record>
-
     <record id="view_member_application_form" model="ir.ui.view">
         <field name="name">res.partner.form</field>
         <field name="model">res.partner</field>
@@ -129,27 +123,35 @@
                     <notebook colspan="4">
                         <page name="member_personal_information" string="Personal Information" autofocus="autofocus">
                             <group>
-                                <group>
+                                <group string="Basic Informaiton">
                                     <field name="gender" widget="radio" options="{'horizontal': true}"/>
+                                    <field name="birthdate"/>
                                     <field name="occupation"
                                            options="{'no_create_edit':True,'no_open':True}"/>
                                     <field name="subject_of_interest" widget="many2many_tags"
                                            options="{'no_create_edit':True,'no_open':True}"/>
+                                </group>
+                                <group string="Educational Informaiton">
+                                    <field name="last_place_of_study"/>
                                     <field name="hightest_certification"
                                            options="{'no_create_edit':True,'no_open':True}"/>
-                                    <field name="usa_work_or_study" widget="radio" options="{'horizontal': true}"/>
-                                    <field name="usa_work_or_study_yes"
-                                           attrs="{'invisible':[('usa_work_or_study','=','no')],'required':[('usa_work_or_study','=','yes')]}"/>
-                                    <field name="last_place_of_study"/>
                                     <field name="field_of_study"/>
-                                </group>
-                                <group>
+                                    <field name="place_of_study"/>
+                                    <field name="usa_work_or_study" widget="radio" options="{'horizontal': true}"/>
                                     <field name="usa_work_or_study_place"/>
                                     <field name="alumni_institute"/>
+                                    <field name="usa_work_or_study_yes"
+                                           attrs="{'invisible':[('usa_work_or_study','=','no')],'required':[('usa_work_or_study','=','yes')]}"/>
+                                </group>
+                            </group>
+                            <group>
+                                <group string="Additional Informaiton">
                                     <field name="current_employee"/>
                                     <field name="work_title"/>
                                     <field name="work_phone"/>
-                                    <field name="birthdate"/>
+                                    <field name="info_about_emk"/>
+                                </group>
+                                <group string="Signature">
                                     <field name="signature_image" widget='image' class="oe_avatar"
                                            options='{"preview_signature_image": "image_medium", "size": [90, 90]}'/>
 
@@ -321,8 +323,9 @@
     </record>
 
 
-    <menuitem name="Pending Applicants" id="menu_membership" sequence="10" parent="menu_member_general"
-              action="action_membership_pending_applicant"/>
+    <menuitem id="menu_membership" sequence="10" parent="menu_member_general"
+              action="action_membership_pending_applicant"
+              groups="membership_user.group_mem_user_officer,membership_extension.group_membership_manager"/>
 
 
     <record model="ir.actions.act_window" id="action_membership_applicant">
@@ -360,7 +363,8 @@
 
 
     <menuitem id="menu_membership_applicant" sequence="5" parent="menu_member_general"
-              action="action_membership_applicant"/>
+              action="action_membership_applicant"
+              groups="membership_user.group_mem_user_officer,membership_extension.group_membership_manager"/>
 
 
     <record model="ir.actions.act_window" id="action_membership_applicant_reject">
@@ -399,6 +403,7 @@
 
 
     <menuitem id="menu_membership_applicant_reject" sequence="10" parent="menu_member_general"
-              action="action_membership_applicant_reject"/>
+              action="action_membership_applicant_reject"
+              groups="membership_user.group_mem_user_officer,membership_extension.group_membership_manager"/>
 
 </odoo>

@@ -42,6 +42,7 @@ class ResPartner(models.Model):
     birthdate = fields.Date("Birth Date")
 
     last_place_of_study = fields.Char(string='Last or Current Place of Study')
+    place_of_study = fields.Char(string='Last or Current Place of Study')
     field_of_study = fields.Char(string='Field of Study')
     usa_work_or_study_place = fields.Char(string='Work Place')
     alumni_institute = fields.Char(string='Alumni Institute')
@@ -110,6 +111,11 @@ class ResPartner(models.Model):
             vals['member_sequence'] = self.env['ir.sequence'].next_by_code('res.partner.member.application')
 
         return super(ResPartner, self).create(vals)
+
+    def _membership_member_states(self):
+        state = super(ResPartner, self)._membership_member_states()
+        return state
+        return state.remove('invoiced')
 
     @api.multi
     def _compute_signup_valid(self):

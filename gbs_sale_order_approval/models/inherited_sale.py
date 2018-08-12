@@ -40,12 +40,22 @@ class SaleOrder(models.Model):
         ('cash', 'Cash'),
         ('credit_sales', 'Credit'),
         ('lc_sales', 'L/C'),
-    ], string='Sales Type', required=True, readonly=True,
-        states={'to_submit': [('readonly', False)]})
+    ], string='Sales Type', readonly=True, related='type_id.sale_order_type')
 
     company_id = fields.Many2one('res.company', 'Company', required=True, readonly=True,
                                  states={'to_submit': [('readonly', False)]},
                                  default=lambda self: self.env['res.company']._company_default_get('sale.order'))
+
+    # inherited fields from sale
+    partner_id = fields.Many2one('res.partner', string='Customer',required=True,
+                                 change_default=True, index=True, track_visibility='always')
+    partner_invoice_id = fields.Many2one('res.partner', string='Invoice Address', required=True,
+                                         domain="[('parent_id','=',partner_id),('type','=','invoice')]",
+                                         help="Invoice address for current sales order.")
+    partner_shipping_id = fields.Many2one('res.partner', string='Delivery Address', required=True,
+                                          domain="[('parent_id','=',partner_id),('type','=','delivery')]",
+                                          help="Delivery address for current sales order.")
+    # ..............................
 
     @api.model
     def _default_note(self):
@@ -69,7 +79,7 @@ class SaleOrder(models.Model):
         return self.env['product.packaging.mode'].search([], limit=1)
 
     pack_type = fields.Many2one('product.packaging.mode', string='Packing Mode', default=_get_pack_type, required=True)
-    currency_id = fields.Many2one("res.currency", related='', string="Currency", required=True)
+    currency_id = fields.Many2one("res.currency", related='type_id.currency_id', required=False, string="Currency")
 
     picking_policy = fields.Selection([
         ('direct', 'Deliver each product when available'),
@@ -90,6 +100,8 @@ class SaleOrder(models.Model):
 
     #remaining_credit_limit = fields.Char(string="Customer's Remaining Credit Limit", track_visibility='onchange')
 
+    fields_readonly = fields.Boolean('Fields Readonly or not?',default=False)
+
     """ Update is_commission_generated flag to False """
 
     @api.model
@@ -100,7 +112,42 @@ class SaleOrder(models.Model):
         if new_seq:
             vals['name'] = new_seq
 
+        if vals['pi_id']:
+            pi_pool = self.env['proforma.invoice'].search([('id', '=', vals['pi_id'])])
+            vals['partner_id'] = pi_pool.partner_id.id
+            invoice_ids = pi_pool.partner_id.child_ids.filtered(lambda x: x.type == 'invoice')
+            shipping_ids = pi_pool.partner_id.child_ids.filtered(lambda x: x.type == 'delivery')
+            if invoice_ids:
+                vals['partner_invoice_id'] = invoice_ids[0].id
+            else:
+                vals['partner_invoice_id'] = pi_pool.partner_id.id
+            if shipping_ids:
+                vals['partner_shipping_id'] = shipping_ids[0].id
+            else:
+                vals['partner_shipping_id'] = pi_pool.partner_id.id
+
+            # vals['partner_invoice_id'] = pi_pool.partner_id.child_ids.filtered(lambda x: x.type == 'invoice').id or pi_pool.partner_id.id
+            # vals['partner_shipping_id'] = pi_pool.partner_id.child_ids.filtered(lambda x: x.type == 'delivery').id or pi_pool.partner_id.id
+
         return super(SaleOrder, self).create(vals)
+
+    @api.multi
+    def write(self, vals):
+        if vals['pi_id']:
+            pi_pool = self.env['proforma.invoice'].search([('id', '=', vals['pi_id'])])
+            vals['partner_id'] = pi_pool.partner_id.id
+            invoice_ids = pi_pool.partner_id.child_ids.filtered(lambda x: x.type == 'invoice')
+            shipping_ids = pi_pool.partner_id.child_ids.filtered(lambda x: x.type == 'delivery')
+            if invoice_ids:
+                vals['partner_invoice_id'] = invoice_ids[0].id
+            else:
+                vals['partner_invoice_id'] = pi_pool.partner_id.id
+            if shipping_ids:
+                vals['partner_shipping_id'] = shipping_ids[0].id
+            else:
+                vals['partner_shipping_id'] = pi_pool.partner_id.id
+
+        return super(SaleOrder, self).write(vals)
 
     @api.multi
     def action_invoice_create(self, grouped=False, final=False):
@@ -153,7 +200,8 @@ class SaleOrder(models.Model):
                 return {'domain': {'pi_id': [('id', 'not in', [i.pi_id.id for i in existing_lc]),
                                              ('credit_sales_or_lc', '=', 'lc_sales'),
                                              ('state', '=', 'confirm')]}}
-
+            else:
+                self.fields_readonly = False
 
     @api.multi
     def _is_double_validation_applicable(self):
@@ -284,6 +332,7 @@ class SaleOrder(models.Model):
                      ('product_package_mode', '=', order.pack_type.id),
                      ('uom_id', '=', lines.product_uom.id)])
 
+
                 if order.credit_sales_or_lc == 'cash' or order.credit_sales_or_lc == 'lc_sales':
 
                     is_double_validation = order.second_approval_business_logics(cust_commission_pool, lines,
@@ -292,6 +341,12 @@ class SaleOrder(models.Model):
                         break;
 
                 elif order.credit_sales_or_lc == 'credit_sales':
+
+                    if not price_change_pool and lines.price_unit:
+                        return True # second approval
+
+                    if not cust_commission_pool and lines.commission_rate:
+                        return True # second approval
 
                     account_receivable = partner_pool.credit
                     sales_order_amount_total = order.amount_total
@@ -388,6 +443,13 @@ class SaleOrder(models.Model):
         }
 
     def second_approval_business_logics(self, cust_commission_pool, lines, price_change_pool):
+
+        if not price_change_pool and lines.price_unit:
+            return True  # second approval
+
+        if not cust_commission_pool and lines.commission_rate:
+            return True
+
         for coms in cust_commission_pool:
             if price_change_pool.currency_id.id == lines.currency_id.id:
                 for price_history in price_change_pool:
@@ -447,6 +509,7 @@ class SaleOrder(models.Model):
         if pi_pool:
             val = []
             self.partner_id = pi_pool.partner_id
+            self.pack_type = pi_pool.pack_type
 
             for record in pi_pool.line_ids:
                 commission = self.env['customer.commission'].search(
@@ -472,6 +535,7 @@ class SaleOrder(models.Model):
                                    }))
 
             self.order_line = val
+            self.fields_readonly = True
 
     @api.onchange('operating_unit_id')
     def onchange_operating_unit_id(self):

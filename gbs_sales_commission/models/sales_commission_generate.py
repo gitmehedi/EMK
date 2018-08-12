@@ -8,6 +8,7 @@ class SalesCommissionGenerate(models.Model):
     _inherit = ['mail.thread']
     _rec_name = 'name'
     _description = 'Generate Commission'
+    _order = 'id DESC'
 
     name = fields.Char(string='Name', required=True)
     till_date = fields.Date(string='Till Date', required=True)

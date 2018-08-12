@@ -21,7 +21,8 @@
         'account',
         'ir_sequence_operating_unit',
         'custom_report',
-        'gbs_purchase_requisition'
+        'gbs_purchase_requisition',
+        'sale_stock', ## to hide delivery menu. it is inherited on this module
     ],
 
     'data': [

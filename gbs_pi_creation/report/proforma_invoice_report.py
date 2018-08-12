@@ -26,9 +26,9 @@ class GbsProformaInvoice(models.AbstractModel):
         data['advising_bank'] = pi_obj.advising_bank_id.name
         data['bank_add'] = report_utility_pool.getBankAddress(pi_obj.advising_bank_id)
         data['currency'] = pi_obj.currency_id.name
-        data['packing'] = pi_obj.packing
-        data['terms_of_payment'] = "By Equivalent Letter Of Credit"
-        # pi_obj.terms_of_payment
+        data['packing'] = pi_obj.pack_type.packaging_mode
+        data['terms_str'] = "By Equivalent Letter Of Credit"
+
         data['unit_address'] = report_utility_pool.getAddressByUnit(pi_obj.operating_unit_id)
 
 
