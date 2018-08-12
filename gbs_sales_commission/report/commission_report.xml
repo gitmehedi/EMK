@@ -51,6 +51,7 @@
                                                 <th class="text-center">Customer</th>
                                                 <th class="text-center" style="width:15%;">Old Value</th>
                                                 <th class="text-center" style="width:15%;">New Value</th>
+                                                <th class="text-center" style="width:15%;">Currency</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -67,6 +68,9 @@
                                                     </td>
                                                     <td class="text-right">
                                                         <span t-esc="'%.2f'%(p.new_value)"/>
+                                                    </td>
+                                                    <td>
+                                                        <span t-esc="p.currency_id.name"/>
                                                     </td>
                                                 </tr>
                                             </t>
@@ -105,6 +109,7 @@
                                                 <th>Product</th>
                                                 <th class="text-center" style="width:15%;">Old Value</th>
                                                 <th class="text-center" style="width:15%;">New Value</th>
+                                                <th class="text-center" style="width:15%;">Currency</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -121,6 +126,9 @@
                                                     </td>
                                                     <td class="text-right">
                                                         <span t-esc="p.new_value"/>
+                                                    </td>
+                                                    <td class="text-right">
+                                                        <span t-esc="p.currency_id.name"/>
                                                     </td>
                                                 </tr>
                                             </t>
