@@ -231,6 +231,29 @@ class ResPartner(models.Model):
             user = self.env['res.users'].search([('id', '=', self.user_ids.id)])
             template.with_context({'lang': user.lang}).send_mail(user.id, force_send=True, raise_exception=True)
 
+    @api.model
+    def sendinvoice(self, inv):
+        pdf = self.env['report'].get_pdf([inv.id], 'account.report_invoice')
+        attachment = self.env['ir.attachment'].create({
+            'name': inv.number + '.pdf',
+            'res_model': 'account.invoice',
+            'res_id': inv.id,
+            'datas_fname': inv.number + '.pdf',
+            'type': 'binary',
+            'datas': base64.b64encode(pdf),
+            'mimetype': 'application/x-pdf'
+        })
+        template = self.env.ref('member_signup.member_invoice_email_template')
+        template.write({
+            'email_cc': "nopaws_ice_iu@yahoo.com,mahtab.faisal@genweb2.com",
+            'attachment_ids': [(6, 0, attachment.ids)],
+        })
+        user = self.env['res.partner'].search([('id', '=', inv.partner_id.id)])
+        if not user.email:
+            raise ValueError(_('Configure e-mail properly.'))
+
+        template.with_context({'lang': user.lang}).send_mail(user.id, force_send=True, raise_exception=True)
+
     @api.multi
     def member_invoiced(self):
         if 'application' in self.state:

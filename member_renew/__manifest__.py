@@ -8,6 +8,7 @@
     'category': 'Extra Tools',
     'depends': [
         'mail',
+        'account',
         'membership_user',
         'member_signup',
     ],
@@ -17,6 +18,7 @@
         'data/ir_actions_server.xml',
         'views/expiration_list_views.xml',
         'views/renew_request_views.xml',
+        'views/invoice_due.xml',
         'wizard/expiration_list_wizard_views.xml',
     ],
     'installable': True,
