@@ -1,20 +1,20 @@
 <?xml version="1.0"?>
 <odoo>
 
-    <record id="view_renew_request_form" model="ir.ui.view">
-        <field name="name">renew.request.form</field>
-        <field name="model">renew.request</field>
+    <record id="view_card_replacement_form" model="ir.ui.view">
+        <field name="name">member.card.replacement.form</field>
+        <field name="model">member.card.replacement</field>
         <field name="priority" eval="1"/>
         <field name="arch" type="xml">
-            <form string="Renew Request">
+            <form string="Card Replacement">
                 <header>
-                    <button string='Invoice' name="act_invoice" type='object' class="oe_highlight"
+                    <button string='Authenticate' name="act_invoice" type='object' class="oe_highlight"
                             states="request"/>
                     <button string='Reject' name="act_reject" type='object'
                             states="request"/>
                     <button string='Done' name="act_done" type='object' class="oe_highlight"
-                            states="invoice"/>
-                    <field name="state" widget="statusbar" statusbar_visible="request,invoice,done"/>
+                            states="approve"/>
+                    <field name="state" widget="statusbar" statusbar_visible="request,authenticate,approve,paid"/>
                 </header>
                 <sheet>
                     <group>
@@ -32,13 +32,13 @@
         </field>
     </record>
 
-    <record id="view_renew_request_tree" model="ir.ui.view">
-        <field name="name">renew.request.tree</field>
-        <field name="model">renew.request</field>
+    <record id="view_card_replacement_tree" model="ir.ui.view">
+        <field name="name">member.card.replacement.tree</field>
+        <field name="model">member.card.replacement</field>
         <field name="priority" eval="1"/>
         <field name="arch" type="xml">
-            <tree string="Renew Request"
-                  colors="green:state=='request'; gray:state=='done';blue:state=='invoice';red:state=='done';">
+            <tree string="Card Replacement"
+                  colors="green:state=='request'; gray:state=='paid';blue:state=='authenticate';red:state=='approve';">
                 <field name="membership_id"/>
                 <field name="request_date"/>
                 <field name="approve_date"/>
@@ -47,17 +47,16 @@
         </field>
     </record>
 
-    <record model="ir.actions.act_window" id="action_renew_request">
-        <field name="name">Renew Request</field>
-        <field name="res_model">renew.request</field>
+    <record model="ir.actions.act_window" id="action_card_replacement">
+        <field name="name">Card Replacement</field>
+        <field name="res_model">member.card.replacement</field>
         <field name="help" type="html">
             <p class="oe_view_nocontent_create">
-                Create a Renew Request for Member
+                Create a Card Replacement for Member
             </p>
         </field>
     </record>
 
-    <menuitem name="General" id="menu_general" sequence="3" parent="membership.menu_association"/>
-    <menuitem id="sub_renew_request" parent="menu_general"
-              action="action_renew_request"/>
+    <menuitem id="sub_card_replacement" parent="member_renew.menu_general"
+              action="action_card_replacement"/>
 </odoo>
