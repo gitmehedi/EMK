@@ -1,0 +1,6 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+
+acc_renew_request_app,renew_request_app,model_renew_request,membership_user.group_mem_user_applicant,1,0,0,0
+acc_renew_request_off,renew_request_off,model_renew_request,membership_user.group_mem_user_officer,1,1,1,1
+acc_renew_request_mang,renew_request_mang,model_renew_request,membership_extension.group_membership_manager,1,1,1,1
+
