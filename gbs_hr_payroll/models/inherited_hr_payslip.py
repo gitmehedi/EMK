@@ -6,7 +6,6 @@ class InheritResPartnerBank(models.Model):
     _inherit = 'res.partner.bank'
 
 
-
 class HrPayrollAdvice(models.Model):
 
     _inherit = 'hr.payroll.advice'
@@ -25,6 +24,7 @@ class HrPayslipEmployees(models.TransientModel):
 
         payslip_run = self.env['hr.payslip.run'].browse(active_id)
         for payslip in payslip_run.slip_ids:
+            payslip.type = payslip_run.type
             payslip.onchange_employee()
             payslip.compute_sheet()
             if not payslip.contract_id:
