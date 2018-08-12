@@ -8,7 +8,8 @@
     <field name="arch" type="xml">
       <xpath expr="//form/sheet" position="before">
         <header>
-            <button string="Create login"  name="%(create_partner_user.act_createa_user_partner)d"  type="action" class="oe_highlight"/>
+            <button string="Create login"  name="%(create_partner_user.act_createa_user_partner)d"  type="action" class="oe_highlight"
+            groups="membership_user.group_mem_user_officer,membership_extension.group_membership_manager"/>
         </header>
       </xpath>
     </field>

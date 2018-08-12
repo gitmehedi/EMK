@@ -404,6 +404,6 @@
 
     <menuitem id="menu_membership_applicant_reject" sequence="10" parent="menu_member_general"
               action="action_membership_applicant_reject"
-              groups="membership_user.group_mem_user_officer,membership_extension.group_membership_manager"/>
+              groups="membership_user.group_mem_user_officer,membership_user.group_user_member,membership_extension.group_membership_manager"/>
 
 </odoo>
