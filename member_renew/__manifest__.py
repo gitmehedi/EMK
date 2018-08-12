@@ -12,6 +12,7 @@
         'member_signup',
     ],
     'data': [
+        'security/ir.model.access.csv',
         'data/email_template.xml',
         'data/ir_actions_server.xml',
         'views/expiration_list_views.xml',

@@ -133,7 +133,7 @@ class SaleOrder(models.Model):
 
     @api.multi
     def write(self, vals):
-        if vals['pi_id']:
+        if 'pi_id' in vals:
             pi_pool = self.env['proforma.invoice'].search([('id', '=', vals['pi_id'])])
             vals['partner_id'] = pi_pool.partner_id.id
             invoice_ids = pi_pool.partner_id.child_ids.filtered(lambda x: x.type == 'invoice')
