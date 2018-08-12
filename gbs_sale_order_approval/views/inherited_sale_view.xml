@@ -307,6 +307,11 @@
                                 help="If the sale is locked, you can not modify it anymore. However, you will still be able to invoice or deliver."/>
                     </xpath>
 
+
+                    <xpath expr="//sheet/group/group/field[@name='partner_id']" position="before">
+                        <field name="fields_readonly" invisible="1"/>
+                    </xpath>
+
                     <xpath expr="//field[@name='order_line']/tree/field[@name='product_uom_qty']" position="after">
                         <field name="da_qty" invisible="1"/>
                     </xpath>
@@ -326,7 +331,7 @@
 
                     <xpath expr="//group/group/field[@name='payment_term_id']" position="before">
                         <field name="pack_type" options="{'no_open': True, 'no_create': False}"
-                               attrs="{'readonly':[('state','in',('draft','sent','validate','done','cancel','sale'))]}"/>
+                               attrs="{'readonly':['|',('state','in',('draft','sent','validate','done','cancel','sale'))]}"/>
                     </xpath>
 
                     <xpath expr="//field[@name='payment_term_id']" position="replace">
@@ -337,10 +342,18 @@
 
                     <xpath expr="//field[@name='partner_id']" position="replace">
                         <field name="partner_id"
-                               attrs="{'readonly':[('state','in',('draft','sent','validate','done','cancel','sale'))]}"
-                               domain="[('customer','=',True)]"
+                               attrs="{'readonly':['|',('state','in',('draft','sent','validate','done','cancel','sale')),('fields_readonly','=', True)]}"
+                               domain="[('customer','=',True),('parent_id','=',False)]"
                                context="{'search_default_customer':1, 'show_address': 1}"
                                options='{"always_reload": True}'/>
+                    </xpath>
+                    <xpath expr="//field[@name='partner_invoice_id']" position="replace">
+                        <field name="partner_invoice_id"
+                               attrs="{'readonly':['|',('state','in',('draft','sent','validate','done','cancel','sale')),('fields_readonly','=', True)]}"/>
+                    </xpath>
+                    <xpath expr="//field[@name='partner_shipping_id']" position="replace">
+                        <field name="partner_shipping_id"
+                               attrs="{'readonly':['|',('state','in',('draft','sent','validate','done','cancel','sale')),('fields_readonly','=', True)]}"/>
                     </xpath>
                     <xpath expr="//field[@name='date_order']" position="replace">
                         <field name="date_order"
@@ -354,7 +367,7 @@
 
                     <xpath expr="//field[@name='pricelist_id']" position="replace">
                         <field name="pricelist_id" groups="product.group_sale_pricelist"
-                               attrs="{'readonly':[('state','in',('draft','sent','validate','done','cancel','sale'))]}"/>
+                               attrs="{'readonly':['|',('state','in',('draft','sent','validate','done','cancel','sale'))]}"/>
                     </xpath>
 
                     <xpath expr="//field[@name='price_subtotal']" position="replace">
@@ -379,16 +392,6 @@
 
                     <xpath expr="//field[@name='confirmation_date']" position="replace">
                         <field name="confirmation_date" invisible="1"/>
-                    </xpath>
-
-                    <xpath expr="//field[@name='partner_invoice_id']" position="replace">
-                        <field name="partner_invoice_id"
-                               attrs="{'readonly':[('state','in',('draft','sent','validate','done','cancel','sale'))]}"/>
-                    </xpath>
-
-                    <xpath expr="//field[@name='partner_shipping_id']" position="replace">
-                        <field name="partner_shipping_id"
-                               attrs="{'readonly':[('state','in',('draft','sent','validate','done','cancel','sale'))]}"/>
                     </xpath>
 
                     <!--<xpath expr="//field[@name='payment_term_id']" position="replace">-->
@@ -507,5 +510,9 @@
                    eval="[(4,ref('gbs_application_group.group_cxo')),(4,ref('gbs_application_group.group_head_account'))]"/>
         </record>
 
+        <!--hide unused menu-->
+        <!--<menuitem action="sale.action_orders_to_invoice"-->
+            <!--id="sale.menu_sale_order_invoice" parent="sale.menu_sale_invoicing"-->
+            <!--sequence="2" groups="base.group_system"/>-->
     </data>
 </odoo>

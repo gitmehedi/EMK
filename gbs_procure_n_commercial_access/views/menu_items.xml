@@ -146,20 +146,6 @@
                 action="question_set.action_lc_criteria"
                 groups="commercial.group_commercial_manager"/>
 
-        <menuitem id="main_menu_lc_sales_comm"
-                  parent="commercial.menu_commercial_root"
-                  sequence="1" name="Sales" groups="commercial.group_commercial_user_export"/>
-
-        <menuitem id="menu_lc_sales_comm"
-                  parent="main_menu_lc_sales_comm"
-                  sequence="1" name="Sale Order"
-                  action="lc_sales_product.action_sale_order_comm" groups="commercial.group_commercial_user_export"/>
-
-        <menuitem id="menu_lc_pi_comm"
-                  parent="main_menu_lc_sales_comm"
-                  sequence="2" name="Proforma Invoice"
-                  action="lc_sales_product.action_sale_pi_comm" groups="commercial.group_commercial_user_export"/>
-
         <menuitem id="terms_setup_com_menu"
                   parent="gbs_purchase_requisition.menu_commercial_configuration"
                   action="terms_setup.terms_setup_action"

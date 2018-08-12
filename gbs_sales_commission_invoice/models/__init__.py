@@ -1,2 +1,1 @@
-import inherited_sale_order_line
 import inherited_account_invoice_line

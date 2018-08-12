@@ -21,16 +21,15 @@
         'product_harmonized_system',
         'gbs_application_group',
         'stock',
-        'account',
         'gbs_sales_commission',
         'delivery_order',
         'sales_team',
         'gbs_sales_delivery_goods',
         'customer_credit_limit',
         'sale',
-        'gbs_procure_n_commercial_access',
         'sales_team_operating_unit',
         'product_sales_pricelist',
+        'hidden_admin',
     ],
 
 
@@ -38,7 +37,6 @@
     'data': [
         'security/ir.model.access.csv',
         'security/ir_rule.xml',
-        'views/lc_sales_comm_acc.xml',
         'views/menu_items.xml',
 
     ],

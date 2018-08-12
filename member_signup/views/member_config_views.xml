@@ -25,7 +25,7 @@
     <menuitem id="menu_membership_occupation" sequence="150"
               parent="membership.menu_marketing_config_association"
               action="action_membership_occupation"
-              groups="membership_extension.group_membership_manager"/>
+              groups="membership_user.group_mem_user_officer,membership_extension.group_membership_manager"/>
 
     <record id="view_member_subject_of_interest_tree" model="ir.ui.view">
         <field name="name">member.subject.interest.tree</field>
@@ -52,7 +52,7 @@
     <menuitem id="menu_membership_subject_of_interest" sequence="155"
               parent="membership.menu_marketing_config_association"
               action="action_membership_subject_of_interest"
-              groups="membership_extension.group_membership_manager"/>
+              groups="membership_user.group_mem_user_officer,membership_extension.group_membership_manager"/>
 
 
     <record id="view_member_certification_tree" model="ir.ui.view">
@@ -79,6 +79,7 @@
 
     <menuitem id="menu_membership_certification" sequence="160"
               parent="membership.menu_marketing_config_association"
-              action="action_membership_certification" groups="membership_extension.group_membership_manager"/>
+              action="action_membership_certification"
+              groups="membership_user.group_mem_user_officer,membership_extension.group_membership_manager"/>
 
 </odoo>

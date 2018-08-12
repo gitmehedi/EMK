@@ -32,7 +32,6 @@
                 'com_shipment',
                 'gbs_application_group',
                 'shipment_lc_product',
-                'lc_sales_product',
                 'product_gate_in',
                 'letter_of_credit_report',
                 'gbs_document_type',

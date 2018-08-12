@@ -9,13 +9,13 @@
                 report_type="qweb-pdf"
                 file="gbs_pi_creation.report_proforma_invoice"
                 name="gbs_pi_creation.report_proforma_invoice"
-                paperformat="custom_report.custom_pad_paperformat"
+                paperformat="custom_report.custom_a4_pad_paperformat"
 
         />
 
         <template id="report_proforma_invoice">
             <t t-call="report.html_container">
-                <t t-call="custom_report.gbs_custom_pad_report_template">
+                <t t-call="custom_report.gbs_custom_pad_with_system_sig_report_template">
                     <div class="page clearfix" style="page-break-inside: auto">
                         <style>
                             .proforma-terms p, .proforma-terms li {
@@ -112,11 +112,8 @@
                             <p>For and on behalf of <br/>
                                 <span t-esc="data['beneficiary_id']"/>
                             </p>
-                            <br/>
-                            <br/>
-                            <br/>
-                            <br/>
-                            <p class="auth-signature">Authorized Signature</p>
+
+
                         </div>
                     </div>
                 </t>

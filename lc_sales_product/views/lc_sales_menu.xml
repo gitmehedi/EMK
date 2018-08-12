@@ -74,5 +74,26 @@
         <menuitem id="lc_commercial_export_local_creation_submenu" name="Export LC(Local)" parent="letter_of_credit.lc_commercial_creation_menu"
                 sequence="3" action="lc_export_local_creation_action" groups="gbs_application_group.group_export_local_lc"/>
 
+        <menuitem id="main_menu_lc_sales_comm"
+                  parent="commercial.menu_commercial_root"
+                  sequence="1" name="Sales" groups="commercial.group_commercial_user_export"/>
+
+        <menuitem id="menu_lc_sales_comm"
+                  parent="main_menu_lc_sales_comm"
+                  sequence="1" name="Sale Order"
+                  action="lc_sales_product.action_sale_order_comm" groups="commercial.group_commercial_user_export"/>
+
+        <menuitem id="menu_lc_pi_comm"
+                  parent="main_menu_lc_sales_comm"
+                  sequence="2" name="Proforma Invoice"
+                  action="lc_sales_product.action_sale_pi_comm" groups="commercial.group_commercial_user_export"/>
+
+        <menuitem
+                action="action_comm_invoice"
+                groups="commercial.group_commercial_user_export"
+                id="menu_comm_invoice"
+                parent="main_menu_lc_sales_comm"
+                sequence="5"/>
+
     </data>
 </odoo>
