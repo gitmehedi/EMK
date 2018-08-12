@@ -9,6 +9,8 @@ class CustomerCommissionConfigurationProduct(models.Model):
     old_value= fields.Float(string="Old Value", compute='store_old_value',digits=(16,2), readonly = True, store=True)
     new_value= fields.Float(string="New Value", digits=(16,2), required=True)
     status = fields.Boolean(string='Status',default=True, required=True)
+    currency_id = fields.Many2one('res.currency', string='Currency')
+
 
     """ Relational Fields """
     product_id = fields.Many2one('product.product', string="Product", required=True,
@@ -23,6 +25,11 @@ class CustomerCommissionConfigurationProduct(models.Model):
             commission = self.env['customer.commission'].search(
                 [('product_id', '=', self.product_id.id), ('customer_id', '=', self.config_parent_id.customer_id.id),
                  ('status', '=', True)])
+
+            if self.product_id.product_tmpl_id.commission_type == 'fixed':
+                self.currency_id = self.env.user.company_id.currency_id.id
+            else:
+                self.currency_id = None
 
             if commission:
                 for coms in commission:
