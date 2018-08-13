@@ -12,7 +12,7 @@ from odoo.addons.member_signup.models.res_users import SignupError
 from odoo.addons.web.controllers.main import ensure_db, Home
 from odoo.http import request, Response
 
-from odoo.addons.member_signup.models.utility import UtilityClass as utility
+from odoo.addons.opa_utility.models.utility import Utility as utility
 
 _logger = logging.getLogger(__name__)
 

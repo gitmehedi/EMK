@@ -14,6 +14,7 @@
     ],
     'data': [
         'security/ir.model.access.csv',
+        'security/ir_rule.xml',
         'data/email_template.xml',
         'data/ir_actions_server.xml',
         'views/expiration_list_views.xml',

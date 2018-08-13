@@ -3,7 +3,7 @@ from odoo import models, fields, api, _
 
 class RenewRequest(models.Model):
     _name = 'renew.request'
-    _inherit = ['mail.thread', 'ir.needaction_mixin']
+    _inherit = ['ir.needaction_mixin']
     _rec_name = 'membership_id'
     _order = 'id desc'
 
