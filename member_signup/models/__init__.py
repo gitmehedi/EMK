@@ -5,8 +5,4 @@ import res_config
 import res_users
 import res_partner
 import membership_category
-import utility
-import member_payment
 import rfid_generation
-import ir_ui_menu
-
