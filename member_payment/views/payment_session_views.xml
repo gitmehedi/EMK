@@ -1,0 +1,67 @@
+<?xml version="1.0"?>
+<odoo>
+
+    <record id="view_payment_session_form" model="ir.ui.view">
+        <field name="name">payment.session.form</field>
+        <field name="model">payment.session</field>
+        <field name="priority" eval="1"/>
+        <field name="arch" type="xml">
+            <form string="Membership Payment">
+                <header>
+                    <button string='Pay' name="payment_session" type='object' class="oe_highlight"
+                            states="draft"/>
+                    <field name="state" widget="statusbar"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="membership_id"
+                                   options="{'no_open':True,'no_create':True,'no_create_edit':True,}"/>
+                            <field name="due_amount" widget="monetary" options="{'currency_field': 'currency_id'}"
+                                   readonly="True"/>
+                            <field name="paid_amount" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                        </group>
+                        <group>
+                            <field name="journal_id"
+                                   options="{'no_open':True,'no_create':True,'no_create_edit':True,}"/>
+                            <field name="date"/>
+                            <field name="payment_ref"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_payment_session_tree" model="ir.ui.view">
+        <field name="name">payment.session.tree</field>
+        <field name="model">payment.session</field>
+        <field name="priority" eval="1"/>
+        <field name="arch" type="xml">
+            <tree string="Membership Payment"
+                  colors="green:state=='draft'; gray:state=='paid'">
+                <field name="membership_id"/>
+                <field name="paid_amount" sum="paid_amount"/>
+                <field name="payment_ref"/>
+                <field name="journal_id"/>
+                <field name="date"/>
+                <field name="state"/>
+            </tree>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="action_membership_payment">
+        <field name="name">Session</field>
+        <field name="res_model">payment.session</field>
+        <field name="help" type="html">
+            <p class="oe_view_nocontent_create">
+                Click to add a new Member's Payment
+            </p>
+        </field>
+    </record>
+
+    <menuitem id="sub_member_general" parent="sub_pay_daily_operations"
+              action="action_membership_payment" sequence="5"
+              groups="membership_user.group_mem_user_officer"/>
+
+</odoo>
