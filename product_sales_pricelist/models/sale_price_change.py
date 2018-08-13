@@ -58,13 +58,13 @@ class SalePriceChange(models.Model):
                                          'validate': [('readonly', True)]}, required=True)
 
     state = fields.Selection([
-        ('draft', 'To Submit'),
-        ('cancel', 'Cancelled'),
-        ('confirm', 'To Approve'),
-        ('validate2', 'Sales Approval'),
+        ('draft', 'Draft'),
+        ('confirm', 'Sales Approval'),
+        ('validate2', 'Accounts Approval'),
+        ('validate1', 'CXO Approval'),
+        ('validate', 'Approved'),
         ('refuse', 'Refused'),
-        ('validate1', 'Accounts Approval'),
-        ('validate', 'Approved')
+        ('cancel', 'Cancelled')
     ], string='State', readonly=True, track_visibility='onchange', copy=False, default='draft')
 
     currency_id = fields.Many2one('res.currency', string="Currency",

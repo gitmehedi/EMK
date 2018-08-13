@@ -52,10 +52,10 @@ class CustomerCommissionConfiguration(models.Model):
 
     """ State fields for containing various states """
     state = fields.Selection([
-        ('draft', "To Submit"),
-        ('validate', "To Approve"),
-        ('validate2', "Sales Approval"),
-        ('approve', "Accounts Approval"),
+        ('draft', "Draft"),
+        ('validate', "Sales Approval"),
+        ('validate2', "Accounts Approval"),
+        ('approve', "CXO Approval"),
         ('close', "Approved"),
         ('refused', 'Refused')
     ], readonly=True, track_visibility='onchange', copy=False, default='draft')
