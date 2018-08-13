@@ -69,7 +69,7 @@ class SaleOrder(models.Model):
         ('draft', 'Quotation'),
         ('submit_quotation', 'Validate'),
         ('validate', 'Accounts Approval'),
-        ('sent', 'Quotation Sent'),
+        ('sent', 'CXO Approval'),
         ('sale', 'Sales Order'),
         ('done', 'Done'),
         ('cancel', 'Cancelled')

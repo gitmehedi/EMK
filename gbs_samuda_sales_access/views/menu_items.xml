@@ -34,5 +34,55 @@
         <menuitem id="delivery_order.delivery_menu" name="Delivery" parent="sales_team.menu_base_partner"
                   groups="account.group_account_user"/>
 
+        <menuitem
+                name="Commercial"
+                id="commercial.menu_commercial_root"
+                sequence="23"
+                groups="commercial.group_commercial_user_export"/>
+
+
+        <menuitem
+                id="gbs_purchase_requisition.menu_commercial_configuration"
+                parent="commercial.menu_commercial_root"
+                sequence="100"
+                name="Configuration"
+                groups="commercial.group_commercial_manager_export"/>
+
+        <menuitem
+                id="gbs_purchase_requisition.submenu_commercial_customer"
+                name="Customers/Suppliers"
+                parent="gbs_purchase_requisition.menu_commercial_configuration"
+                sequence="1"
+                action="base.action_partner_customer_form"
+                groups="commercial.group_commercial_manager_export"/>
+
+        <menuitem
+                id="gbs_purchase_requisition.submenu_commercial_products"
+                name="Products"
+                parent="gbs_purchase_requisition.menu_commercial_configuration"
+                sequence="2"
+                action="product.product_template_action"
+                groups="commercial.group_commercial_manager_export"/>
+
+        <menuitem id="terms_setup_com_menu"
+                  parent="gbs_purchase_requisition.menu_commercial_configuration"
+                  action="terms_setup.terms_setup_action"
+                  groups="commercial.group_commercial_manager_export"
+                  sequence="25"/>
+
+        <menuitem id="gbs_document_type.hr_do_type_menu"
+				name="Document Type"
+                parent="gbs_purchase_requisition.menu_commercial_configuration"
+				sequence="21" groups="commercial.group_commercial_manager_export"
+                action="gbs_document_type.action_document_type"/>
+
+        <menuitem
+                id="letter_of_credit.lc_commercial_creation_menu"
+                parent="commercial.menu_commercial_root"
+                sequence="4"
+                name="Letter of Credit"
+                groups="commercial.group_commercial_user_export"/>
+
+
     </data>
 </odoo>
