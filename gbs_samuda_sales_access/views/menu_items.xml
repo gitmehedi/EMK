@@ -83,6 +83,28 @@
                 name="Letter of Credit"
                 groups="commercial.group_commercial_user_export"/>
 
+        <menuitem
+                id="letter_of_credit.lc_commercial_import_foreign_creation_submenu"
+                name="Import LC(Foreign)"
+                parent="letter_of_credit.lc_commercial_creation_menu"
+                sequence="2"
+                action="letter_of_credit.lc_import_foreign_creation_action"
+                groups="base.group_no_one"/>
+
+        <menuitem
+                id="letter_of_credit.lc_commercial_import_local_creation_submenu"
+                name="Import LC(Local)"
+                parent="letter_of_credit.lc_commercial_creation_menu"
+                sequence="4"
+                action="letter_of_credit.lc_import_local_creation_action"
+                groups="base.group_no_one"/>
+
+        <menuitem
+                id="com_shipment.lc_shipment_creation_menu"
+                parent="commercial.menu_commercial_root"
+                sequence="5"
+                name="Shipment"
+                groups="base.group_no_one"/>
 
     </data>
 </odoo>
