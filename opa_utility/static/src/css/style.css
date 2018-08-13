@@ -1,0 +1,130 @@
+.error{
+    border:1px solid red !important;
+}
+input.reqfield,select.reqfield{
+  background-color: #D2D2FF;
+}
+.odoobg{
+    background-color: #7c7bad !important ;
+    font-weight: bold;
+    color: white !important;
+}
+
+#img_wrap{
+          position: relative;
+          height:160px;
+          width:130px;
+          display:block;
+          margin: 0 auto;
+}
+#member_image {
+          background-image: url('/member_signup/static/src/images/default_picture.jpg');
+          background-repeat:no-repeat;
+          background-size:contain;
+          height:160px;
+          width:130px;
+          display:block;
+          float:right;
+          border-style: solid;
+          border-width: 5px;
+          border-color: #D2D2FF;
+}
+.member_image_layer {
+          position: absolute;
+          top: 0;
+          bottom: 0;
+          left: 0;
+          right: 0;
+          background: rgba(36, 62, 206, 0.6);
+          color: #fff;
+          visibility: hidden;
+          opacity: 0;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          transition: opacity .2s, visibility .2s;
+}
+
+.img__wrap:hover .member_image_layer {
+          visibility: visible;
+          opacity: 1;
+          cursor:pointer;
+}
+
+
+#wrap_signature{
+          position: relative;
+          height:120px;
+          width:120px;
+          display:block;
+          margin: 0 auto;
+}
+
+#signature_image {
+          background-repeat:no-repeat;
+          background-size:contain;
+          height:120px;
+          width:120px;
+          display:block;
+          float:right;
+          border-style: solid;
+          border-width: 5px;
+          border-color: #D2D2FF;
+}
+.signature_image_layer {
+          position: absolute;
+          top: 0;
+          bottom: 0;
+          left: 0;
+          right: 0;
+          background: rgba(36, 62, 206, 0.6);
+          color: #fff;
+          visibility: hidden;
+          opacity: 0;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          transition: opacity .2s, visibility .2s;
+}
+
+.wrap_signature:hover .signature_image_layer {
+          visibility: visible;
+          opacity: 1;
+          cursor:pointer;
+}
+
+.img_desc {
+          transition: .2s;
+          transform: translateY(1em);
+
+}
+
+.img__wrap:hover .img_desc{
+          transform: translateY(0);
+
+}
+
+.table-default {
+    background: #fff;
+}
+
+
+/* Utility Classes */
+.margin-0 { margin: 0!important; }
+.margin-top-10 { margin-top: 10px; }
+.margin-top-15 { margin-top: 15px; }
+.margin-top-15 { margin-top: 20px; }
+
+.margin-right-10 { margin-right: 10px; }
+.margin-right-15 { margin-right: 15px; }
+.margin-right-15 { margin-right: 20px; }
+
+.margin-bottom-10 { margin-bottom: 10px; }
+.margin-bottom-15 { margin-bottom: 15px; }
+.margin-bottom-15 { margin-bottom: 20px; }
+
+.margin-left-10 { margin-left: 10px; }
+.margin-left-15 { margin-left: 15px; }
+.margin-left-15 { margin-left: 20px; }
+
+.mar-btm{ margin-bottom: 24px;}
