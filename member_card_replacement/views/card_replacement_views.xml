@@ -8,12 +8,14 @@
         <field name="arch" type="xml">
             <form string="Card Replacement">
                 <header>
-                    <button string='Authenticate' name="act_invoice" type='object' class="oe_highlight"
-                            states="request"/>
+                    <button string='Authenticate' name="act_authenticate" type='object' class="oe_highlight"
+                            states="request" groups="membership_user.group_mem_user_officer"/>
+                    <button string='Approve' name="act_approve" type='object' class="oe_highlight"
+                            states="authenticate" groups="membership_user.group_mem_user_officer"/>
                     <button string='Reject' name="act_reject" type='object'
-                            states="request"/>
+                            states="request" groups="membership_user.group_mem_user_officer"/>
                     <button string='Done' name="act_done" type='object' class="oe_highlight"
-                            states="approve"/>
+                            states="approve" groups="membership_user.group_mem_user_officer"/>
                     <field name="state" widget="statusbar" statusbar_visible="request,authenticate,approve,paid"/>
                 </header>
                 <sheet>
@@ -50,6 +52,7 @@
     <record model="ir.actions.act_window" id="action_card_replacement">
         <field name="name">Card Replacement</field>
         <field name="res_model">member.card.replacement</field>
+        <field name="context">{'mcount':'request'}</field>
         <field name="help" type="html">
             <p class="oe_view_nocontent_create">
                 Create a Card Replacement for Member
@@ -58,5 +61,6 @@
     </record>
 
     <menuitem id="sub_card_replacement" parent="member_renew.menu_general"
-              action="action_card_replacement"/>
+              action="action_card_replacement"
+              groups="membership_user.group_mem_user_officer,membership_user.group_user_member,membership_extension.group_membership_manager"/>
 </odoo>

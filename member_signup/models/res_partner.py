@@ -8,7 +8,7 @@ from urlparse import urljoin
 from odoo.exceptions import UserError, ValidationError, Warning
 from odoo import api, fields, models, _
 
-from odoo.addons.member_signup.models.utility import UtilityClass as utility
+from odoo.addons.opa_utility.models.utility import Utility as utility
 
 _logger = logging.getLogger(__name__)
 
@@ -72,13 +72,13 @@ class ResPartner(models.Model):
     @api.model
     def _needaction_domain_get(self):
         context = self.env.context
-        if context.get('menu_count') == 'application':
+        if context.get('mcount') == 'application':
             return [('state', 'in', ['application'])]
-        elif context.get('menu_count') == 'invoice':
+        elif context.get('mcount') == 'invoice':
             return [('state', 'in', ['invoice'])]
-        elif context.get('menu_count') == 'member':
+        elif context.get('mcount') == 'member':
             return [('state', 'in', ['member'])]
-        elif context.get('menu_count') == 'reject':
+        elif context.get('mcount') == 'reject':
             return [('state', 'in', ['reject'])]
 
     @api.onchange('birthdate')
