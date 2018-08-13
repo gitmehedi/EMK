@@ -17,6 +17,6 @@ class IrUiMenu(models.Model):
                     new_context.update(self.env.context)
                 except:
                     new_context = self.env.context
-            res.update(super(IrUiMenu, menu.with_context(new_context)).get_needaction_data())
+                res.update(super(IrUiMenu, menu.with_context(new_context)).get_needaction_data())
 
         return res

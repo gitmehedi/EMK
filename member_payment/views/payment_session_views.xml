@@ -1,14 +1,14 @@
 <?xml version="1.0"?>
 <odoo>
 
-    <record id="view_member_payment_form" model="ir.ui.view">
-        <field name="name">member.payment.form</field>
-        <field name="model">member.payment</field>
+    <record id="view_payment_session_form" model="ir.ui.view">
+        <field name="name">payment.session.form</field>
+        <field name="model">payment.session</field>
         <field name="priority" eval="1"/>
         <field name="arch" type="xml">
             <form string="Membership Payment">
                 <header>
-                    <button string='Pay' name="member_payment" type='object' class="oe_highlight"
+                    <button string='Pay' name="payment_session" type='object' class="oe_highlight"
                             states="draft"/>
                     <field name="state" widget="statusbar"/>
                 </header>
@@ -33,9 +33,9 @@
         </field>
     </record>
 
-    <record id="view_member_payment_tree" model="ir.ui.view">
-        <field name="name">member.payment.tree</field>
-        <field name="model">member.payment</field>
+    <record id="view_payment_session_tree" model="ir.ui.view">
+        <field name="name">payment.session.tree</field>
+        <field name="model">payment.session</field>
         <field name="priority" eval="1"/>
         <field name="arch" type="xml">
             <tree string="Membership Payment"
@@ -51,8 +51,8 @@
     </record>
 
     <record model="ir.actions.act_window" id="action_membership_payment">
-        <field name="name">Member Payment</field>
-        <field name="res_model">member.payment</field>
+        <field name="name">Session</field>
+        <field name="res_model">payment.session</field>
         <field name="help" type="html">
             <p class="oe_view_nocontent_create">
                 Click to add a new Member's Payment
@@ -60,11 +60,8 @@
         </field>
     </record>
 
-    <menuitem name="Payments" id="menu_member_payments" parent="membership.menu_association"
-              groups="membership_user.group_mem_user_officer,membership_extension.group_membership_manager"/>
-    <menuitem name="Payment" id="sub_member_general" parent="menu_member_payments"
-              action="action_membership_payment"
-              groups="membership_user.group_mem_user_officer,membership_extension.group_membership_manager"/>
-
+    <menuitem id="sub_member_general" parent="sub_pay_daily_operations"
+              action="action_membership_payment" sequence="5"
+              groups="membership_user.group_mem_user_officer"/>
 
 </odoo>
