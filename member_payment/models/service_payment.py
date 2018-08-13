@@ -1,15 +1,14 @@
 # -*- coding: utf-8 -*-
 
 from odoo import api, fields, models, _
-
 from odoo.exceptions import ValidationError
 
 
-class MemberPayment(models.Model):
-    _name = 'member.payment'
+class ServicePayment(models.Model):
+    _name = 'service.payment'
     _inherit = ['mail.thread', 'ir.needaction_mixin']
     _rec_name = 'membership_id'
-    _order = 'date desc'
+    _order = 'collection_date desc'
 
     @api.model
     def _get_session(self):
@@ -18,21 +17,21 @@ class MemberPayment(models.Model):
             raise ValidationError(_('Session is not opened. Please open a session.'))
         return session
 
-    due_amount = fields.Integer(string='Due Amount', compute='_compute_due_amount', store=True,
-                                readonly=True, states={'draft': [('readonly', False)]})
     paid_amount = fields.Integer(string='Paid Amount', required=True,
                                  readonly=True, states={'draft': [('readonly', False)]})
-    payment_ref = fields.Text(string='Payment Ref', readonly=True, states={'draft': [('readonly', False)]})
-    date = fields.Date(default=fields.Datetime.now(), string='Date', readonly=True,
-                       states={'draft': [('readonly', False)]})
-    membership_id = fields.Many2one('res.partner', string='Applicant/Member', required=True,
-                                    domain=['&', ('is_applicant', '=', True), ('credit', '>', 0)],
+    comments = fields.Text(string='Comments', readonly=True, states={'draft': [('readonly', False)]})
+    collection_date = fields.Date(default=fields.Datetime.now(), string='Date', required=True, readonly=True,
+                                  states={'draft': [('readonly', False)]})
+    membership_id = fields.Many2one('res.partner', string='Member Name', required=True,
                                     readonly=True, states={'draft': [('readonly', False)]})
     journal_id = fields.Many2one('account.journal', string='Payment Method', required=True,
                                  domain=[('type', 'in', ['bank', 'cash'])],
                                  readonly=True, states={'draft': [('readonly', False)]})
 
     session_id = fields.Many2one('payment.session', string="Session Name", required=True, default=_get_session)
+
+    payment_type = fields.Selection([('card_replacement', 'Card Replacement'), ('photocopy', 'Photocopy')],
+                                    string='Payment Type', required=True)
     state = fields.Selection([('draft', 'Draft'), ('paid', 'Paid')], default='draft', string='State')
 
     @api.onchange('membership_id')
