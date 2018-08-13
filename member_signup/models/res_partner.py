@@ -8,7 +8,7 @@ from urlparse import urljoin
 from odoo.exceptions import UserError, ValidationError, Warning
 from odoo import api, fields, models, _
 
-from odoo.addons.member_signup.models.utility import UtilityClass as utility
+from odoo.addons.opa_utility.models.utility import Utility as utility
 
 _logger = logging.getLogger(__name__)
 
@@ -42,6 +42,7 @@ class ResPartner(models.Model):
     birthdate = fields.Date("Birth Date")
 
     last_place_of_study = fields.Char(string='Last or Current Place of Study')
+    place_of_study = fields.Char(string='Last or Current Place of Study')
     field_of_study = fields.Char(string='Field of Study')
     usa_work_or_study_place = fields.Char(string='Work Place')
     alumni_institute = fields.Char(string='Alumni Institute')
@@ -71,13 +72,13 @@ class ResPartner(models.Model):
     @api.model
     def _needaction_domain_get(self):
         context = self.env.context
-        if context.get('menu_count') == 'application':
+        if context.get('mcount') == 'application':
             return [('state', 'in', ['application'])]
-        elif context.get('menu_count') == 'invoice':
+        elif context.get('mcount') == 'invoice':
             return [('state', 'in', ['invoice'])]
-        elif context.get('menu_count') == 'member':
+        elif context.get('mcount') == 'member':
             return [('state', 'in', ['member'])]
-        elif context.get('menu_count') == 'reject':
+        elif context.get('mcount') == 'reject':
             return [('state', 'in', ['reject'])]
 
     @api.onchange('birthdate')
@@ -110,6 +111,11 @@ class ResPartner(models.Model):
             vals['member_sequence'] = self.env['ir.sequence'].next_by_code('res.partner.member.application')
 
         return super(ResPartner, self).create(vals)
+
+    def _membership_member_states(self):
+        state = super(ResPartner, self)._membership_member_states()
+        return state
+        return state.remove('invoiced')
 
     @api.multi
     def _compute_signup_valid(self):
@@ -224,6 +230,29 @@ class ResPartner(models.Model):
             })
             user = self.env['res.users'].search([('id', '=', self.user_ids.id)])
             template.with_context({'lang': user.lang}).send_mail(user.id, force_send=True, raise_exception=True)
+
+    @api.model
+    def sendinvoice(self, inv):
+        pdf = self.env['report'].get_pdf([inv.id], 'account.report_invoice')
+        attachment = self.env['ir.attachment'].create({
+            'name': inv.number + '.pdf',
+            'res_model': 'account.invoice',
+            'res_id': inv.id,
+            'datas_fname': inv.number + '.pdf',
+            'type': 'binary',
+            'datas': base64.b64encode(pdf),
+            'mimetype': 'application/x-pdf'
+        })
+        template = self.env.ref('member_signup.member_invoice_email_template')
+        template.write({
+            'email_cc': "nopaws_ice_iu@yahoo.com,mahtab.faisal@genweb2.com",
+            'attachment_ids': [(6, 0, attachment.ids)],
+        })
+        user = self.env['res.partner'].search([('id', '=', inv.partner_id.id)])
+        if not user.email:
+            raise ValueError(_('Configure e-mail properly.'))
+
+        template.with_context({'lang': user.lang}).send_mail(user.id, force_send=True, raise_exception=True)
 
     @api.multi
     def member_invoiced(self):

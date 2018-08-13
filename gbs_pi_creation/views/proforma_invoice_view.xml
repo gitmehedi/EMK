@@ -24,15 +24,13 @@
                                 <field name="invoice_date"/>
                                 <field name="advising_bank_id" options="{'no_open':True,'no_quick_create':True,'no_create_edit':True}"/>
                                 <field name="terms_id"/>
-                                <field name="terms_of_payment"/>
+                                <field name="transport_by"/>
                             </group>
                             <group>
                                 <field name="partner_id" options="{'no_open':True,'no_quick_create':True,'no_create_edit':True}"/>
-                                <field name="transport_by"/>
                                 <field name="customer_add"/>
-                                <field name="packing"/>
-                                <field name="type_id" options="{'no_open':True,'no_quick_create':True,'no_create_edit':True}"/>
                                 <field name="pack_type"/>
+                                <field name="type_id" options="{'no_open':True,'no_quick_create':True,'no_create_edit':True}"/>
                             </group>
 
                             <notebook colspan="4">
@@ -53,19 +51,19 @@
                                 <page string="Terms &amp; Condition">
                                     <field name="terms_condition" widget="html" options="{'style-inline': true}"/>
                                 </page>
-                                <page string="Shipping Details">
-                                    <group>
-                                        <group>
-                                            <field name="ship_freight_type"/>
-                                            <field name="ship_exp_date"/>
-                                            <field name="ship_exp_good_weight"/>
-                                        </group>
-                                        <group>
-                                            <field name="ship_exp_cubic_weight"/>
-                                            <field name="ship_total_pkg"/>
-                                        </group>
-                                    </group>
-                                </page>
+                                <!--<page string="Shipping Details">-->
+                                    <!--<group>-->
+                                        <!--<group>-->
+                                            <!--<field name="ship_freight_type"/>-->
+                                            <!--<field name="ship_exp_date"/>-->
+                                            <!--<field name="ship_exp_good_weight"/>-->
+                                        <!--</group>-->
+                                        <!--<group>-->
+                                            <!--<field name="ship_exp_cubic_weight"/>-->
+                                            <!--<field name="ship_total_pkg"/>-->
+                                        <!--</group>-->
+                                    <!--</group>-->
+                                <!--</page>-->
                                 <page string="Other Information">
                                     <group>
                                         <group>

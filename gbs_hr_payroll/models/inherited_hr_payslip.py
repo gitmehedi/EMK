@@ -6,7 +6,6 @@ class InheritResPartnerBank(models.Model):
     _inherit = 'res.partner.bank'
 
 
-
 class HrPayrollAdvice(models.Model):
 
     _inherit = 'hr.payroll.advice'
@@ -25,6 +24,7 @@ class HrPayslipEmployees(models.TransientModel):
 
         payslip_run = self.env['hr.payslip.run'].browse(active_id)
         for payslip in payslip_run.slip_ids:
+            payslip.type = payslip_run.type
             payslip.onchange_employee()
             payslip.compute_sheet()
             if not payslip.contract_id:
@@ -36,9 +36,12 @@ class HrPayslipEmployees(models.TransientModel):
 class HrPayslipRun(models.Model):
     _inherit = 'hr.payslip.run'
 
+    send_email = fields.Boolean('Send Email',default=False)
+
     @api.multi
     def confirm_payslip(self):
         res = super(HrPayslipRun, self).close_payslip_run()
+
 
         for payslip in self.slip_ids:
             payslip.action_payslip_done()
@@ -46,16 +49,17 @@ class HrPayslipRun(models.Model):
         email_server_obj = self.env['ir.mail_server'].search([], order='id ASC', limit=1)
         payslip_line = self.env['hr.payslip'].search([('payslip_run_id','=',self.id)])
         emailto = []
-        for eml in payslip_line:
-            login = eml.employee_id.user_id.login
-            emailto.append(login)
-            for email in emailto:
-                template = self.env.ref('gbs_hr_payroll.employee_email_template')
-                template.write({
-                    'subject': "Employee Salary Sheet",
-                    'email_from': email_server_obj.name,
-                    'email_to': email})
-                self.env['mail.template'].browse(template.id).send_mail(eml.id)
+        if self.send_email == True:
+            for eml in payslip_line:
+                login = eml.employee_id.user_id.login
+                emailto.append(login)
+                for email in emailto:
+                    template = self.env.ref('gbs_hr_payroll.employee_email_template')
+                    template.write({
+                        'subject': "Employee Salary Sheet",
+                        'email_from': email_server_obj.name,
+                        'email_to': email})
+                    self.env['mail.template'].browse(template.id).send_mail(eml.id)
 
         return res
 

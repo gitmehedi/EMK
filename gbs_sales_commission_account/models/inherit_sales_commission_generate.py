@@ -25,6 +25,10 @@ class InheritSalesCommissionGenerate(models.Model):
                     credit_sum = 0.0
                     date = datetime.datetime.today().strftime('%Y-%m-%d')
 
+                    if not company_id.commission_journal:
+                        raise UserError('Commission Journal is not set for company : %s' % company_id.display_name)
+
+
                     move_dict = {
                         'journal_id': company_id.commission_journal.id,
                         'date': date,

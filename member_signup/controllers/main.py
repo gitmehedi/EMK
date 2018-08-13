@@ -12,7 +12,7 @@ from odoo.addons.member_signup.models.res_users import SignupError
 from odoo.addons.web.controllers.main import ensure_db, Home
 from odoo.http import request, Response
 
-from odoo.addons.member_signup.models.utility import UtilityClass as utility
+from odoo.addons.opa_utility.models.utility import Utility as utility
 
 _logger = logging.getLogger(__name__)
 
@@ -122,7 +122,7 @@ class MemberApplicationContoller(Home):
         qcontext['phone'] = None if 'phone' not in qcontext else qcontext['phone']
         qcontext['mobile'] = None if 'mobile' not in qcontext else qcontext['mobile']
         qcontext['weburl'] = None if 'weburl' not in qcontext else qcontext['weburl']
-        qcontext['zip'] = None if 'zip' not in qcontext else qcontext['zip']
+        qcontext['zipcode'] = None if 'zipcode' not in qcontext else qcontext['zipcode']
 
         qcontext['last_place_of_study'] = None if 'last_place_of_study' not in qcontext else qcontext[
             'last_place_of_study']
@@ -211,6 +211,7 @@ class MemberApplicationContoller(Home):
             data['free_member'] = False
             data['login'] = data['email']
             data['website'] = data['weburl']
+            data['zip'] = data['zipcode']
             vals = [int(val) for val in request.httprequest.form.getlist('subject_of_interest')]
             data['subject_of_interest'] = [(6, 0, vals)]
             data['password'] = utility.token(length=8)
@@ -266,7 +267,7 @@ class MemberApplicationContoller(Home):
             'street',
             'street2',
             'city',
-            'zip',
+            'zipcode',
             'country_id',
             'gender',
             'phone',

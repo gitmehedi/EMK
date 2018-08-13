@@ -18,11 +18,11 @@
                 </data>
 
                 <xpath expr="//field[@name='company_id']" position="after">
-                    <field name="max_ordering_qty"/>
+                    <field name="max_ordering_qty" invisible="1"/>
                 </xpath>
 
                 <xpath expr="//field[@name='max_ordering_qty']" position="after">
-                    <field name="available_qty"/>
+                    <field name="available_qty" invisible="1"/>
                 </xpath>
 
 
@@ -59,7 +59,7 @@
             <field name="inherit_id" ref="product.product_template_kanban_view"/>
             <field name="arch" type="xml">
                 <xpath expr="//div/div/ul/li/field[@name='lst_price']" position="after">
-                    <li>Available Qty: <field name="available_qty"></field></li>
+                    <!--<li>Available Qty: <field name="available_qty" invisible="1"></field></li>-->
                 </xpath>
             </field>
         </record>

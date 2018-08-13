@@ -5,8 +5,8 @@ import datetime
 class GenerateMonthlyDeliveryReport(models.TransientModel):
     _name = 'monthly.delivery.report.wizard'
 
-    report_to = fields.Datetime(string="Report To", required=True,)
-    report_from = fields.Datetime(string="Report From", required=True, )
+    report_to = fields.Date(string="Report To", required=True,)
+    report_from = fields.Date(string="Report From", required=True, )
     product_id = fields.Many2one('product.product', string='Product',required=True,domain="([('sale_ok','=','True')])",)
     operating_unit_id = fields.Many2one('operating.unit', string='Operating Unit',
                                         required='True', default=lambda self: self.env.user.default_operating_unit_id)

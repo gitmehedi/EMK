@@ -1,0 +1,18 @@
+<odoo>
+  <data>
+  <!-- Inherit Form view -->
+  <record id="res_partner" model="ir.ui.view">
+    <field name="name">res.partner.form</field>
+    <field name="model">res.partner</field>
+    <field name="inherit_id" ref="base.view_partner_form"/>
+    <field name="arch" type="xml">
+      <xpath expr="//form/sheet" position="before">
+        <header>
+            <button string="Create login"  name="%(create_partner_user.act_createa_user_partner)d"  type="action" class="oe_highlight"
+            groups="membership_user.group_mem_user_officer,membership_extension.group_membership_manager"/>
+        </header>
+      </xpath>
+    </field>
+  </record>
+  </data>
+</odoo>

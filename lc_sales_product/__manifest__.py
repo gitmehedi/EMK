@@ -13,12 +13,12 @@
         'gbs_document_type',
         'custom_report',
         'amount_to_word_bd',
-        'product_harmonized_system'
+        'product_harmonized_system',
+        'account',
     ],
 
     'data': [
         'views/lc_sales_view.xml',
-        'views/lc_sales_menu.xml',
         'views/shipment_sale_view.xml',
         'views/lc_sales_commercial.xml',
         'views/commercial_sales.xml',
@@ -38,6 +38,8 @@
         'wizard/buyer_bank_export_wizard_view.xml',
         'wizard/maturity_export_wizard_view.xml',
         'wizard/lc_amendment_wizard_view.xml',
+        'views/lc_sales_comm_acc.xml',
+        'views/lc_sales_menu.xml',
     ],
 
     'summary': 'Sale By LC',
