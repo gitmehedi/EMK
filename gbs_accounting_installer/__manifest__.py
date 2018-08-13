@@ -23,6 +23,8 @@
                 'account_journal_report',
                 'custom_amount_conversion',
                 'cheque_printing',
+                'account_invoice_merge',
+                'account_invoice_merge_operating_unit',
                 ],
 
     'data': [ ],
