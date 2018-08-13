@@ -6,12 +6,16 @@
     'version': '1.0',
     'category': 'Extra Tools',
     'depends': [
+        'opa_utility',
         'member_renew',
+        'membership_user',
     ],
     'data': [
+        'security/ir.model.access.csv',
+        'security/ir_rule.xml',
         'views/card_replacement_views.xml',
     ],
     'installable': True,
-    'application': True,
+    'application': False,
 }
 # -*- coding: utf-8 -*-

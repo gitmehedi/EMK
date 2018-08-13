@@ -8,9 +8,9 @@
             <form string="Partners">
                 <header>
                     <button string="Approve" type="object" name="member_invoiced" class="btn btn-sm oe_highlight"
-                            states="application"/>
+                            states="application" groups="membership_user.group_mem_user_officer"/>
                     <button string="Reject" type="object" name="member_reject" class="btn btn-sm"
-                            states="application"/>
+                            states="application" groups="membership_user.group_mem_user_officer"/>
                     <field name="state" widget="statusbar" statusbar_visible="application,invoice,member"/>
                 </header>
                 <div class="alert alert-danger" role="alert" style="margin-bottom:0px;" invisible="True">
@@ -154,7 +154,6 @@
                                 <group string="Signature">
                                     <field name="signature_image" widget='image' class="oe_avatar"
                                            options='{"preview_signature_image": "image_medium", "size": [90, 90]}'/>
-
                                 </group>
                             </group>
                         </page>
@@ -294,7 +293,7 @@
         <field name="res_model">res.partner</field>
         <field name="search_view_id" ref="membership.view_res_partner_member_filter"/>
         <field name="domain">[('is_applicant','=',True),('state','=','application')]</field>
-        <field name="context">{'menu_count':'application'}</field>
+        <field name="context">{'mcount':'application'}</field>
         <field name="help" type="html">
             <p class="oe_view_nocontent_create">
                 Click to add a new Applicant
@@ -322,18 +321,16 @@
         <field name="act_window_id" ref="action_membership_pending_applicant"/>
     </record>
 
-
     <menuitem id="menu_membership" sequence="10" parent="menu_member_general"
               action="action_membership_pending_applicant"
               groups="membership_user.group_mem_user_officer,membership_extension.group_membership_manager"/>
-
 
     <record model="ir.actions.act_window" id="action_membership_applicant">
         <field name="name">Applicants</field>
         <field name="res_model">res.partner</field>
         <field name="search_view_id" ref="membership.view_res_partner_member_filter"/>
         <field name="domain">[('is_applicant','=',True),('state','in',['invoice'])]</field>
-        <field name="context">{'menu_count':'invoice'}</field>
+        <field name="context">{'mcount':'invoice'}</field>
         <field name="help" type="html">
             <p class="oe_view_nocontent_create">
                 Click to add a new Applicant
@@ -361,25 +358,22 @@
         <field name="act_window_id" ref="action_membership_applicant"/>
     </record>
 
-
     <menuitem id="menu_membership_applicant" sequence="5" parent="menu_member_general"
               action="action_membership_applicant"
               groups="membership_user.group_mem_user_officer,membership_extension.group_membership_manager"/>
-
 
     <record model="ir.actions.act_window" id="action_membership_applicant_reject">
         <field name="name">Rejected Applicants</field>
         <field name="res_model">res.partner</field>
         <field name="search_view_id" ref="membership.view_res_partner_member_filter"/>
         <field name="domain">[('is_applicant','=',True),('state','=','reject')]</field>
-        <field name="context">{'menu_count':'reject'}</field>
+        <field name="context">{'mcount':'reject'}</field>
         <field name="help" type="html">
             <p class="oe_view_nocontent_create">
                 Click to add a new Applicant
             </p>
         </field>
     </record>
-
 
     <record model="ir.actions.act_window.view" id="action_membership_members_reject_view_tree">
         <field name="sequence" eval="2"/>
@@ -401,9 +395,7 @@
         <field name="act_window_id" ref="action_membership_applicant_reject"/>
     </record>
 
-
     <menuitem id="menu_membership_applicant_reject" sequence="10" parent="menu_member_general"
               action="action_membership_applicant_reject"
               groups="membership_user.group_mem_user_officer,membership_user.group_user_member,membership_extension.group_membership_manager"/>
-
 </odoo>

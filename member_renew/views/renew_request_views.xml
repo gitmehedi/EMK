@@ -9,11 +9,11 @@
             <form string="Renew Request">
                 <header>
                     <button string='Invoice' name="act_invoice" type='object' class="oe_highlight"
-                            states="request"/>
+                            states="request" groups="membership_user.group_mem_user_officer"/>
                     <button string='Reject' name="act_reject" type='object'
-                            states="request"/>
+                            states="request" groups="membership_user.group_mem_user_officer"/>
                     <button string='Done' name="act_done" type='object' class="oe_highlight"
-                            states="invoice"/>
+                            states="invoice" groups="membership_user.group_mem_user_officer"/>
                     <field name="state" widget="statusbar" statusbar_visible="request,invoice,done"/>
                 </header>
                 <sheet>
@@ -57,7 +57,11 @@
         </field>
     </record>
 
-    <menuitem name="General" id="menu_general" sequence="3" parent="membership.menu_association"/>
+    <menuitem name="General" id="menu_general" sequence="3" parent="membership.menu_association"
+              groups="membership_user.group_mem_user_officer,membership_user.group_user_member,membership_extension.group_membership_manager"/>
+    />
     <menuitem id="sub_renew_request" parent="menu_general"
-              action="action_renew_request"/>
+              action="action_renew_request"
+              groups="membership_user.group_mem_user_officer,membership_user.group_user_member,membership_extension.group_membership_manager"/>
+    />
 </odoo>

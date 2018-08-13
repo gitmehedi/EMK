@@ -35,14 +35,14 @@
                 name="Commercial"
                 id="commercial.menu_commercial_root"
                 sequence="23"
-                groups="commercial.group_commercial_user,commercial.group_commercial_user_export,group_approve_pr_foreign,group_approve_pr_local,group_imoprt_lc_local,group_imoprt_lc_foreign,gbs_application_group.group_export_local_lc,gbs_application_group.group_export_foreign_lc"/>
+                groups="commercial.group_commercial_user,group_approve_pr_foreign,group_approve_pr_local,group_imoprt_lc_local,group_imoprt_lc_foreign"/>
 
         <menuitem
                 id="letter_of_credit.lc_commercial_creation_menu"
                 parent="commercial.menu_commercial_root"
                 sequence="4"
                 name="Letter of Credit"
-                groups="group_imoprt_lc_local,group_imoprt_lc_foreign,gbs_application_group.group_export_local_lc,gbs_application_group.group_export_foreign_lc"/>
+                groups="group_imoprt_lc_local,group_imoprt_lc_foreign"/>
 
         <menuitem
                 id="letter_of_credit.lc_commercial_import_local_creation_submenu"
@@ -120,7 +120,7 @@
                 parent="commercial.menu_commercial_root"
                 sequence="100"
                 name="Configuration"
-                groups="commercial.group_commercial_manager,commercial.group_commercial_manager_export"/>
+                groups="commercial.group_commercial_manager"/>
 
         <menuitem
                 id="gbs_purchase_requisition.submenu_commercial_customer"
@@ -128,7 +128,7 @@
                 parent="gbs_purchase_requisition.menu_commercial_configuration"
                 sequence="1"
                 action="base.action_partner_customer_form"
-                groups="commercial.group_commercial_manager,commercial.group_commercial_manager_export"/>
+                groups="commercial.group_commercial_manager"/>
 
         <menuitem
                 id="gbs_purchase_requisition.submenu_commercial_products"
@@ -136,7 +136,7 @@
                 parent="gbs_purchase_requisition.menu_commercial_configuration"
                 sequence="2"
                 action="product.product_template_action"
-                groups="commercial.group_commercial_manager,commercial.group_commercial_manager_export"/>
+                groups="commercial.group_commercial_manager"/>
 
         <menuitem
 				name="Question Set"
@@ -146,17 +146,7 @@
                 action="question_set.action_lc_criteria"
                 groups="commercial.group_commercial_manager"/>
 
-        <menuitem id="terms_setup_com_menu"
-                  parent="gbs_purchase_requisition.menu_commercial_configuration"
-                  action="terms_setup.terms_setup_action"
-                  groups="commercial.group_commercial_manager_export"
-                  sequence="25"/>
 
-        <menuitem id="gbs_document_type.hr_do_type_menu"
-				name="Document Type"
-                parent="gbs_purchase_requisition.menu_commercial_configuration"
-				sequence="21" groups="commercial.group_commercial_manager_export"
-                action="gbs_document_type.action_document_type"/>
 
     </data>
 </odoo>

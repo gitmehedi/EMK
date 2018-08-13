@@ -8,7 +8,7 @@ from odoo import api, fields, models, _
 from odoo.exceptions import UserError, ValidationError, Warning
 
 
-class UtilityClass:
+class Utility:
     message = {
         'email': 'Please provide valid email',
     }
