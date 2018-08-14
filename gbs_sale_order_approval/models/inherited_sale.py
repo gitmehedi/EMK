@@ -95,8 +95,7 @@ class SaleOrder(models.Model):
     pi_id = fields.Many2one('proforma.invoice', string='PI Ref. No.',
                             readonly=True,states={'to_submit': [('readonly', False)]})
     # domain = [('credit_sales_or_lc', '=', 'lc_sales'), ('state', '=', 'confirm')],
-    lc_id = fields.Many2one('letter.credit', string='LC Ref. No.', readonly=True,
-                            states={'to_submit': [('readonly', False)]})
+    lc_id = fields.Many2one('letter.credit', string='LC Ref. No.', readonly=True)
 
     #remaining_credit_limit = fields.Char(string="Customer's Remaining Credit Limit", track_visibility='onchange')
 
