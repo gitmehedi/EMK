@@ -7,26 +7,22 @@
         <field name="arch" type="xml">
             <form string="Sessions">
                 <header>
-                    <button name="open_cb" type="object" string="Validate &amp; Open Session" states="opening_control"
+                    <button name="act_validate" type="object" string="Validate Session" states="opened"
                             class="oe_highlight"/>
-                    <button name="open_frontend_cb" type="object" string="Continue Selling" states="opened"
-                            class="oe_highlight"/>
-
-                    <button name="close" type="workflow" string="Validate Closing &amp; Post Entries"
-                            states="closing_control" class="oe_highlight"/>
-
+                    <button name="act_close" type="object" string="Validate Closing"
+                            states="validate" class="oe_highlight"/>
+                    <button name="act_open" type="object" string="Continue Session" states="validate"/>
                     <field name="state" widget="statusbar"
-                           statusbar_visible="opening_control,opened,closing_control,closed" nolabel="1"/>
-
+                           statusbar_visible="opened,validate,closed" nolabel="1"/>
                 </header>
                 <sheet>
                     <div class="oe_right oe_button_box">
-                        <button class="oe_stat_button" name="408" type="action" states="opened,closing_control"
+                        <button class="oe_stat_button" name="408" type="action" states="opened,validate,closed"
                                 icon="fa-level-down">
                             <div>Put<br/>Money In
                             </div>
                         </button>
-                        <button class="oe_stat_button" name="409" type="action" states="opened,closing_control"
+                        <button class="oe_stat_button" name="409" type="action" states="opened,validate,closed"
                                 icon="fa-level-up">
                             <div>Take<br/>Money Out
                             </div>
@@ -50,8 +46,8 @@
                     <notebook>
                         <page string="Membership Fee">
                             <field name="member_fee_ids">
-                                <tree string="Membership Payment"
-                                      colors="green:state=='draft'; gray:state=='paid'">
+                                <tree string="Membership Payment" decoration-bf="state == 'draft'"
+                                      decoration-success="state == 'draft'" decoration-muted="state == 'paid'">
                                     <field name="membership_id"/>
                                     <field name="payment_ref"/>
                                     <field name="journal_id"/>
@@ -63,8 +59,8 @@
                         </page>
                         <page string="Service Fee">
                             <field name="service_fee_ids">
-                                <tree string="Service Payment"
-                                      colors="green:state=='draft'; gray:state=='paid'">
+                                <tree string="Service Payment" decoration-bf="state == 'draft'"
+                                      decoration-success="state == 'draft'" decoration-muted="state == 'paid'">
                                     <field name="membership_id"/>
                                     <field name="journal_id"/>
                                     <field name="collection_date"/>
@@ -84,8 +80,9 @@
         <field name="model">payment.session</field>
         <field name="priority" eval="1"/>
         <field name="arch" type="xml">
-            <tree string="Sessions"
-                  colors="green:state=='opened'; gray:state=='closed'">
+            <tree string="Sessions" decoration-bf="state in ['opened','validate']"
+                  decoration-success="state == 'opened'" decoration-info="state == 'validate'"
+                  decoration-muted="state == 'closed'">
                 <field name="name" string="Session ID"/>
                 <field name="user_id"/>
                 <field name="start_at"/>

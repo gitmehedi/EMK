@@ -40,14 +40,15 @@
         <field name="model">member.payment</field>
         <field name="priority" eval="1"/>
         <field name="arch" type="xml">
-            <tree string="Membership Payment"
-                  colors="green:state=='draft'; gray:state=='paid'">
+            <tree string="Membership Payment" decoration-bf="state == 'draft'"
+                  decoration-success="state == 'draft'" decoration-muted="state == 'paid'">
+                <field name="session_id"/>
                 <field name="membership_id"/>
-                <field name="paid_amount" sum="paid_amount"/>
                 <field name="payment_ref"/>
                 <field name="journal_id"/>
                 <field name="date"/>
                 <field name="state"/>
+                <field name="paid_amount" sum="paid_amount"/>
             </tree>
         </field>
     </record>

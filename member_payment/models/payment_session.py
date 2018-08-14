@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from odoo import api, fields, models, _
+from odoo.exceptions import ValidationError
 
 
 class PaymentSession(models.Model):
@@ -23,13 +24,14 @@ class PaymentSession(models.Model):
     open = fields.Boolean(default=True)
 
     state = fields.Selection(
-        [('opening_control', 'Opening Control'), ('opened', 'Opened'), ('closing_control', 'Closing Control'),
-         ('closed', 'Closed')], default='opening_control', string='State')
+        [('opened', 'Opened'), ('validate', 'Validate'), ('closed', 'Closed')], default='opened', string='State')
 
     @api.depends('member_fee_ids', 'service_fee_ids')
     def _compute_total_amount(self):
         for rec in self:
-            return 10
+            mem_coll = sum([val.paid_amount for val in rec.member_fee_ids])
+            ser_coll = sum([val.paid_amount for val in rec.service_fee_ids])
+            rec.total_amount = mem_coll + ser_coll
 
     @api.model
     def create(self, vals):
@@ -41,4 +43,32 @@ class PaymentSession(models.Model):
     def unique_session(self):
         vals = self.search([('open', '=', True)])
         if len(vals) > 1:
-            raise ValueError(_('Session already Open. Please close session before open another.'))
+            raise ValidationError(_('Session already Open. Please close session before open another.'))
+
+    @api.one
+    def act_open(self):
+        if self.state == 'validate':
+            self.state = 'opened'
+
+    @api.one
+    def act_validate(self):
+        if self.state == 'opened':
+            mstates, sstates = 0, 0
+
+            for rec in self.member_fee_ids:
+                if rec.state != 'paid':
+                    mstates = mstates + 1
+            for rec in self.service_fee_ids:
+                if rec.state != 'paid':
+                    sstates = sstates + 1
+            if mstates > 0:
+                raise ValidationError(_('Membership payment not paid properly.'))
+            if sstates > 0:
+                raise ValidationError(_('Service payment not paid properly.'))
+            self.state = 'validate'
+
+    @api.one
+    def act_close(self):
+        if self.state == 'validate':
+            self.open = False
+            self.state = 'closed'
