@@ -7,6 +7,7 @@
     'version': '1.0',
     'category': 'Payments',
     'depends': [
+        'account_accountant',
         'member_signup',
     ],
     'data': [
@@ -15,6 +16,7 @@
         'views/menu_views.xml',
         'views/payment_session_views.xml',
         'views/membership_fee_views.xml',
+        'views/invoice_due.xml',
         'views/service_payment_views.xml',
     ],
     'installable': True,

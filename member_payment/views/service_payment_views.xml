@@ -8,9 +8,12 @@
         <field name="arch" type="xml">
             <form string="Service Fee">
                 <header>
-                    <button string='Pay' name="service_payment" type='object' class="oe_highlight"
-                            states="draft"/>
-                    <field name="state" widget="statusbar" statusbar_visible=""/>
+                    <button string='Paymemt Register' name="act_payment_register" type='object' class="oe_highlight"
+                            states="open"/>
+
+                    <button string='Cancel' name="act_cancel" type='object'
+                            states="open"/>
+                    <field name="state" widget="statusbar" statusbar_visible="open,paid"/>
                 </header>
                 <sheet>
                     <h1 class="oe_title">
@@ -21,9 +24,9 @@
                         <group>
                             <field name="membership_id"
                                    options="{'no_open':True,'no_create':True,'no_create_edit':True,}"/>
-                            <field name="paid_amount" widget="monetary" options="{'currency_field': 'currency_id'}"/>
-                            <field name="payment_type"
+                            <field name="payment_type_id"
                                    options="{'no_open':True,'no_create':True,'no_create_edit':True,}"/>
+                            <field name="paid_amount" widget="monetary" options="{'currency_field': 'currency_id'}"/>
                         </group>
                         <group>
                             <field name="journal_id"
@@ -42,12 +45,13 @@
         <field name="model">service.payment</field>
         <field name="priority" eval="1"/>
         <field name="arch" type="xml">
-            <tree string="Service Payment" decoration-bf="state == 'draft'"
-                  decoration-success="state == 'draft'" decoration-muted="state == 'paid'">
+            <tree string="Service Payment" decoration-bf="state in ['open','paid']"
+                  decoration-success="state == 'open'" decoration-muted="state in ['paid','cancel']">
                 <field name="session_id"/>
                 <field name="membership_id"/>
                 <field name="journal_id"/>
                 <field name="collection_date"/>
+                <field name="payment_type_id"/>
                 <field name="state"/>
                 <field name="paid_amount" sum="paid_amount"/>
             </tree>
@@ -59,7 +63,7 @@
         <field name="res_model">service.payment</field>
         <field name="help" type="html">
             <p class="oe_view_nocontent_create">
-                Click to add a new Member's Fee
+                Click to add a new Service Fee
             </p>
         </field>
     </record>
