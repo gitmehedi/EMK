@@ -15,6 +15,8 @@ class HrHolidayHour(models.Model):
     def _default_employee(self):
         return self.env.context.get('default_employee_id') or self.env['hr.employee'].search([('user_id', '=', self.env.uid)], limit=1)
 
+    leave_year_id = fields.Many2one('date.range', string="Leave Year",
+                                    domain="[('type_id.holiday_year', '=', True)]")
 
     name = fields.Char('Description')
     employee_id = fields.Many2one('hr.employee', string='Employee', index=True, readonly=True,required=True,
@@ -87,6 +89,7 @@ class HrHolidayHour(models.Model):
              'date_to': self.date_to,
              'number_of_days_temp': (time_delta.seconds / 3600) / 8.0,
              'employee_id': self.employee_id.id,
+             'leave_year_id': self.leave_year_id.id
              })
 
         self.write({'state': 'validate'})
@@ -100,20 +103,17 @@ class HrHolidayHour(models.Model):
     def action_draft(self):
         return self.write({'state': 'draft'})
 
+    @api.constrains('number_of_days')
+    def _check_number_of_days(self):
+        if self.number_of_days:
+            if self.number_of_days > 5.00 or self.number_of_days < 4.00:
+                raise ValidationError('Half day leave takes only 4 hours!')
+            else:
+                pass
+
 
 class HrShortLeave(models.Model):
     _inherit = 'hr.holidays.status'
 
     short_leave_flag = fields.Boolean(string='Allow Short Leave', default=False)
 
-
-# class HRHolidays(models.Model):
-#     _inherit = 'hr.holidays'
-#
-#     @api.model
-#     def create(self, values):
-#         res = super(HRHolidays, self).create(values)
-#         time_delta = (fields.Datetime.from_string(values['date_to']) - fields.Datetime.from_string(values['date_from']))
-#         time = ((time_delta.seconds / 3600) / 8.0)
-#         res['number_of_days_temp'] = time
-#         return res

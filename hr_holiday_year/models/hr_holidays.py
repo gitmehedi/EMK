@@ -10,7 +10,11 @@ from odoo.exceptions import ValidationError
 class HrHolidays(models.Model):
     _inherit = 'hr.holidays'
 
-    leave_year_id = fields.Many2one('date.range', string="Leave Year",
+    def _default_leave_year_id(self):
+        return self.env.context.get('leave_year_id')
+
+
+    leave_year_id = fields.Many2one('date.range', string="Leave Year",default=_default_leave_year_id,
                                     domain ="[('type_id.holiday_year', '=', True)]")
 
     @api.constrains('date_from', 'date_to')
