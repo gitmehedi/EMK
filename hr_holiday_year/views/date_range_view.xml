@@ -82,6 +82,19 @@
             <field name="domain">[('type_id.holiday_month', '=', 1)]</field>
         </record>
 
+        <!-- holiday type -->
+        <record id="view_date_range_type_tree1" model="ir.ui.view">
+            <field name="name">date.range.type.inherit.tree</field>
+            <field name="model">date.range.type</field>
+            <field name="inherit_id" ref="date_range.view_date_range_type_tree" />
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='active']" position="after">
+                    <field name="holiday_year"/>
+                    <field name="holiday_month"/>
+                </xpath>
+            </field>
+        </record>
+
         <menuitem
                 action="holiday_date_range_action1"
                 id="menu_holiday_month_date_range"
