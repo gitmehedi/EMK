@@ -93,7 +93,7 @@
                                                 </td>
                                                 <td class="text-right">
                                                     <span t-field="l.price_unit"
-                                                          t-options='{"widget": "monetary", "display_currency": doc.pricelist_id.currency_id}'/>
+                                                          t-options='{"widget": "monetary", "display_currency": doc.currency_id}'/>
                                                 </td>
                                                 <td t-if="display_discount" class="text-right" groups="sale.group_discount_per_so_line">
                                                     <span t-field="l.discount"/>

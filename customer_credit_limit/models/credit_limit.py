@@ -42,10 +42,10 @@ class customer_creditlimit_assign(models.Model):
 
     """ State fields for containing various states """
     state = fields.Selection(
-        [('draft', 'To Submit'),
-         ('confirm', 'To Approve'),
-         ('validate', 'Validate'),
-         ('validate1', 'Accounts Approval'),
+        [('draft', 'Draft'),
+         ('confirm', 'Sales Approval'),
+         ('validate', 'Accounts Approval'),
+         ('validate1', 'CXO Approval'),
          ('approve', 'Approved'),
          ('refuse', 'Refused'),
          ('cancel', 'Cancelled'), ],
