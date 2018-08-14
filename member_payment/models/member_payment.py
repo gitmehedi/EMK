@@ -18,9 +18,9 @@ class MemberPayment(models.Model):
             raise ValidationError(_('Session is not opened. Please open a session.'))
         return session
 
-    due_amount = fields.Integer(string='Due Amount', compute='_compute_due_amount', store=True,
+    due_amount = fields.Float(string='Due Amount', compute='_compute_due_amount', store=True,
                                 readonly=True, states={'draft': [('readonly', False)]})
-    paid_amount = fields.Integer(string='Paid Amount', required=True,
+    paid_amount = fields.Float(string='Paid Amount', required=True,
                                  readonly=True, states={'draft': [('readonly', False)]})
     payment_ref = fields.Text(string='Payment Ref', readonly=True, states={'draft': [('readonly', False)]})
     date = fields.Date(default=fields.Datetime.now(), string='Date', readonly=True,

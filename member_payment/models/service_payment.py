@@ -17,8 +17,8 @@ class ServicePayment(models.Model):
             raise ValidationError(_('Session is not opened. Please open a session.'))
         return session
 
-    paid_amount = fields.Integer(string='Paid Amount', required=True,
-                                 readonly=True, states={'draft': [('readonly', False)]})
+    paid_amount = fields.Float(string='Paid Amount', required=True,
+                               readonly=True, states={'draft': [('readonly', False)]})
     comments = fields.Text(string='Comments', readonly=True, states={'draft': [('readonly', False)]})
     collection_date = fields.Date(default=fields.Datetime.now(), string='Date', required=True, readonly=True,
                                   states={'draft': [('readonly', False)]})
@@ -28,7 +28,8 @@ class ServicePayment(models.Model):
                                  domain=[('type', 'in', ['bank', 'cash'])],
                                  readonly=True, states={'draft': [('readonly', False)]})
 
-    session_id = fields.Many2one('payment.session', string="Session Name", required=True, default=_get_session)
+    session_id = fields.Many2one('payment.session', compute='_compute_session', string="Session Name", store=True,
+                                 required=True, default=_get_session)
 
     payment_type = fields.Selection([('card_replacement', 'Card Replacement'), ('photocopy', 'Photocopy')],
                                     string='Payment Type', required=True)
@@ -41,9 +42,9 @@ class ServicePayment(models.Model):
             self.paid_amount = self.membership_id.credit
 
     @api.depends('membership_id')
-    def _compute_due_amount(self):
-        if self.membership_id:
-            self.due_amount = self.membership_id.credit
+    def _compute_session(self):
+        for rec in self:
+            rec.session_id = self._get_session()
 
     @api.model
     def _needaction_domain_get(self):
