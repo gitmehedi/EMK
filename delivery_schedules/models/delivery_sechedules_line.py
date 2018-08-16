@@ -102,6 +102,8 @@ class DeliveryScheduleLine(models.Model):
                 self.do_qty = self.pending_do.line_ids[0].quantity
                 self.undelivered_qty = self.pending_do.line_ids[0].quantity - self.pending_do.line_ids[0].qty_delivered
                 self.uom_id = self.pending_do.line_ids[0].uom_id
+
+                return {'domain': {'product_id': [('id', '=', self.product_id.id)]}}
             else:
                 product_list = []
                 for line in self.pending_do.line_ids:
