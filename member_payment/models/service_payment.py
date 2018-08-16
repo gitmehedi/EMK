@@ -21,7 +21,8 @@ class ServicePayment(models.Model):
     comments = fields.Text(string='Comments', readonly=True, states={'open': [('readonly', False)]})
     collection_date = fields.Date(default=fields.Datetime.now(), string='Date', required=True, readonly=True,
                                   states={'open': [('readonly', False)]})
-    membership_id = fields.Many2one('res.partner', string='Member Name', required=True)
+    membership_id = fields.Many2one('res.partner', string='Member Name', required=True,
+                                    readonly=True, states={'open': [('readonly', False)]})
     journal_id = fields.Many2one('account.journal', string='Payment Method', required=True,
                                  domain=[('type', 'in', ['bank', 'cash'])],
                                  readonly=True, states={'open': [('readonly', False)]})
