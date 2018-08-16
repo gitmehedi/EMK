@@ -121,7 +121,7 @@ class DeliveryAuthorization(models.Model):
     @api.model
     def create(self, vals):
 
-        if 'sale_oder_id' in vals:
+        if 'sale_order_id' in vals:
             ou = self.env['sale.order'].search([('id', '=', vals['sale_order_id'])]).operating_unit_id
             seq = self.env['ir.sequence'].next_by_code_new('delivery.authorization', self.requested_date, ou) or '/'
             vals['name'] = seq

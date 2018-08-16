@@ -5,7 +5,7 @@
         <field name="model">account.invoice</field>
         <field name="priority" eval="1"/>
         <field name="arch" type="xml">
-            <tree string="Due Invoice">
+            <tree string="Due Invoice" create="0">
                 <field name="partner_id" groups="base.group_user" string="Customer"/>
                 <field name="date_invoice"/>
                 <field name="number"/>
@@ -38,9 +38,8 @@
         </field>
     </record>
 
-
-    <menuitem id="sub_due_invoice" parent="member_signup.menu_member_payments"
-              action="act_invoice_due"/>
+    <menuitem id="sub_due_invoice" parent="sub_pay_daily_operations"
+              action="act_invoice_due" groups="membership_user.group_mem_user_officer"/>
 
     <record id="server_act_notify_due_invoice" model="ir.actions.server">
         <field name="name">Due Invoice</field>

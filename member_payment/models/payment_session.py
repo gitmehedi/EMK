@@ -7,19 +7,21 @@ from odoo.exceptions import ValidationError
 class PaymentSession(models.Model):
     _name = 'payment.session'
     _inherit = ['mail.thread', 'ir.needaction_mixin']
-    _order = 'start_at desc'
+    _order = 'id desc'
 
     @api.model
     def get_default_user(self):
         return self.env.user.partner_id
 
     name = fields.Char(string='Name')
-    start_at = fields.Date(default=fields.Datetime.now(), string='Opening Date', required=True, readonly=True)
-    stop_at = fields.Date(string='Closing Date', readonly=True, states={'draft': [('readonly', False)]})
+    start_at = fields.Datetime(default=fields.Datetime.now(), string='Opening Date', required=True, readonly=True)
+    stop_at = fields.Datetime(string='Closing Date', readonly=True, states={'draft': [('readonly', False)]})
     total_amount = fields.Float(string="Total Amount", digits=(10, 2), compute="_compute_total_amount")
 
-    member_fee_ids = fields.One2many('member.payment', 'session_id', string='Membership Fee')
-    service_fee_ids = fields.One2many('service.payment', 'session_id', string='Service Fee')
+    member_fee_ids = fields.One2many('member.payment', 'session_id', domain=[('state', 'in', ['draft', 'paid'])],
+                                     string='Membership Fee')
+    service_fee_ids = fields.One2many('service.payment', 'session_id', domain=[('state', 'in', ['draft', 'paid'])],
+                                      string='Service Fee')
     user_id = fields.Many2one('res.partner', string='Responsible', required=True, default=get_default_user)
     open = fields.Boolean(default=True)
 
@@ -56,19 +58,20 @@ class PaymentSession(models.Model):
             mstates, sstates = 0, 0
 
             for rec in self.member_fee_ids:
-                if rec.state != 'paid':
+                if rec.state == 'open':
                     mstates = mstates + 1
             for rec in self.service_fee_ids:
-                if rec.state != 'paid':
+                if rec.state == 'open':
                     sstates = sstates + 1
             if mstates > 0:
-                raise ValidationError(_('Membership payment not paid properly.'))
+                raise ValidationError(_('Membership payment not posting properly.'))
             if sstates > 0:
-                raise ValidationError(_('Service payment not paid properly.'))
+                raise ValidationError(_('Service payment not posting properly.'))
             self.state = 'validate'
 
     @api.one
     def act_close(self):
         if self.state == 'validate':
             self.open = False
+            self.stop_at = fields.Datetime.now()
             self.state = 'closed'

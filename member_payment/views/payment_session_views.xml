@@ -16,18 +16,6 @@
                            statusbar_visible="opened,validate,closed" nolabel="1"/>
                 </header>
                 <sheet>
-                    <div class="oe_right oe_button_box">
-                        <button class="oe_stat_button" name="408" type="action" states="opened,validate,closed"
-                                icon="fa-level-down">
-                            <div>Put<br/>Money In
-                            </div>
-                        </button>
-                        <button class="oe_stat_button" name="409" type="action" states="opened,validate,closed"
-                                icon="fa-level-up">
-                            <div>Take<br/>Money Out
-                            </div>
-                        </button>
-                    </div>
                     <h1 class="oe_title">
                         Session:
                         <field name="name" attrs="{'invisible': [('name','=',False)]}" class="oe_inline"/>
