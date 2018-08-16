@@ -341,11 +341,11 @@ class SaleOrder(models.Model):
 
                 elif order.credit_sales_or_lc == 'credit_sales':
 
-                    if len(price_change_pool) == 0 and lines.price_unit is not None:
+                    if len(price_change_pool) == 0 and lines.price_unit:
                         is_double_validation = True
                         break; # second approval
 
-                    if len(cust_commission_pool) == 0 and lines.commission_rate is not None:
+                    if len(cust_commission_pool) == 0 and lines.commission_rate:
                         is_double_validation = True
                         break;  # second approval
 
@@ -445,10 +445,10 @@ class SaleOrder(models.Model):
 
     def second_approval_business_logics(self, cust_commission_pool, lines, price_change_pool):
 
-        if len(price_change_pool) == 0 and lines.price_unit is not None:
+        if len(price_change_pool) == 0 and lines.price_unit:
             return True  # second approval
 
-        if len(cust_commission_pool) == 0 and lines.commission_rate is not None:
+        if len(cust_commission_pool) == 0 and lines.commission_rate:
             return True  # second approval
 
         for coms in cust_commission_pool:
