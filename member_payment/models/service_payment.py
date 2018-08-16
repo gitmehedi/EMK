@@ -33,12 +33,42 @@ class ServicePayment(models.Model):
                                       domain=[('type', '=', 'service'), ('purchase_ok', '=', False),
                                               ('sale_ok', '=', False)],
                                       readonly=True, states={'open': [('readonly', False)]})
+    check_type = fields.Char()
+    card_replacement_id = fields.Many2one('member.card.replacement', string='Card Replacement',
+                                          domain=[('state', '=', 'approve')], readonly=True,
+                                          states={'open': [('readonly', False)]})
     state = fields.Selection([('open', 'Open'), ('paid', 'Paid'), ('cancel', 'Cancel')], default='open',
                              string='State')
 
     def _compute_session(self):
         for rec in self:
             rec.session_id = self._get_session()
+
+    @api.onchange('payment_type_id')
+    def _onchage_payment_type(self):
+        self.membership_id = False
+        self.check_type = self.payment_type_id.service_type
+        if self.payment_type_id.service_type != 'card':
+            res = {}
+            self.card_replacement_id = False
+            partner = self.env['res.partner'].search([])
+            res['domain'] = {
+                'membership_id': [('id', 'in', partner.ids)],
+            }
+            return res
+
+    @api.onchange('card_replacement_id')
+    def _onchage_card_replacement(self):
+        if self.card_replacement_id:
+            res, ids = {}, []
+            self.membership_id = False
+            for rec in self.env['member.card.replacement'].search([('state', '=', 'approve')]):
+                if rec.membership_id:
+                    ids.append(rec.membership_id.id)
+            res['domain'] = {
+                'membership_id': [('id', 'in', ids)],
+            }
+            return res
 
     @api.depends('payment_type_id')
     def _compute_paid_amount(self):

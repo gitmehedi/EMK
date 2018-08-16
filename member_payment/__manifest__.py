@@ -9,6 +9,7 @@
     'depends': [
         'account_accountant',
         'member_signup',
+        'member_card_replacement',
     ],
     'data': [
         'security/ir.model.access.csv',

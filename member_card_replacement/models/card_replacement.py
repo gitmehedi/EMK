@@ -5,7 +5,9 @@ class MemberCardReplacement(models.Model):
     _name = 'member.card.replacement'
     _inherit = ['ir.needaction_mixin']
     _description = 'Member Card Replacement'
-    _rec_name = 'membership_id'
+    _rec_name = 'name'
+
+    name = fields.Char(string='Name', readonly=True)
 
     membership_id = fields.Many2one("res.partner", string="Membership", required=True,
                                     readonly=True, states={'request': [('readonly', '=', False)]})
@@ -15,6 +17,8 @@ class MemberCardReplacement(models.Model):
                                  readonly=True, states={'authenticate': [('readonly', '=', False)]})
     approve_date = fields.Date(string="Approve Date",
                                readonly=True, states={'approve': [('readonly', '=', False)]})
+    rejected_date = fields.Date(string="Rejected Date",
+                                readonly=True, states={'approve': [('readonly', '=', False)]})
     state = fields.Selection(
         [('request', 'Request'), ('authenticate', 'Authenticate'), ('approve', 'Approve'), ('paid', 'Paid'),
          ('reject', 'Reject')],
@@ -28,25 +32,20 @@ class MemberCardReplacement(models.Model):
     @api.one
     def act_authenticate(self):
         if 'request' in self.state:
+            self.name = self.env['ir.sequence'].next_by_code('member.card.replacement.seq')
+            self.authorize_date = fields.Date.today()
             self.state = 'authenticate'
 
     @api.one
     def act_approve(self):
         if 'authenticate' in self.state:
+            self.approve_date = fields.Date.today()
             self.state = 'approve'
-
-    @api.one
-    def act_paid(self):
-        if 'approve' in self.state:
-            self.state = 'paid'
 
     @api.one
     def act_reject(self):
         if 'request' in self.state:
-            # implement mail functionality for mail
-            # mailobj={
-            #
-            # }
+            self.rejected_date = fields.Date.today()
             self.state = 'reject'
 
     @api.model
