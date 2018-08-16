@@ -179,7 +179,12 @@ class ProcessDeliveryUnDeliveryReport(models.AbstractModel):
 
         attribute = ""
         if len(product.attribute_value_ids) > 0:
-            attribute = " (" + product.attribute_value_ids.name + ")"
+            attribute = " ("
+            for attr in product.attribute_value_ids:
+                attribute += attr.name + ","
+
+            attribute = attribute[:-1]
+            attribute += ")"
 
         data[product_id] = {'name': product.product_tmpl_id.name + attribute,
                                    'details': [],
