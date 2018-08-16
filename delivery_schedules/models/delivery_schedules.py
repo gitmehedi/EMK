@@ -1,5 +1,3 @@
-import time, datetime
-
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError, ValidationError
 
@@ -13,10 +11,17 @@ class DeliverySchedules(models.Model):
 
     name = fields.Char(string='Name', index=True, readonly=True)
     requested_date = fields.Date('Date', default=fields.Datetime.now,readonly=True,
-                                 states={'draft': [('readonly', False)]})
+                                 states={'draft': [('readonly', False)]},
+                                 track_visibility='onchange')
     sequence_id = fields.Char('Sequence', readonly=True)
     requested_by = fields.Many2one('res.users', string='Requested By', readonly=True,
                                    default=lambda self: self.env.user)
+    revision = fields.Integer(string='Revision',readonly = True,
+                              help="Used to keep track of changes")
+    origin = fields.Char('Origin', copy=False,help="Origin Name of the document.")
+    approve_date = fields.Datetime('Approve Date', readonly=True,track_visibility='onchange')
+    approved_by = fields.Many2one('res.users', string='Approver', readonly=True,
+                                  help="who have approve.",track_visibility='onchange')
 
     ## Sales Person & OP Unit
     #####################################
@@ -44,7 +49,7 @@ class DeliverySchedules(models.Model):
 
 
     line_ids = fields.One2many('delivery.schedules.line', 'parent_id', string="Products", readonly=True,
-                               states={'draft': [('readonly', False)]})
+                               states={'draft': [('readonly', False)]},track_visibility='onchange')
 
     state = fields.Selection([
         ('draft', "Draft"),
@@ -54,36 +59,47 @@ class DeliverySchedules(models.Model):
 
     @api.model
     def create(self, vals):
-        seq = self.env['ir.sequence'].next_by_code('delivery.schedules') or '/'
+        team = self.env['crm.team']._get_default_team_id()
+        seq = self.env['ir.sequence'].next_by_code_new('delivery.schedule', self.requested_date,
+                                                           team.operating_unit_id) or '/'
         vals['name'] = seq
+        vals['origin'] = seq
         return super(DeliverySchedules, self).create(vals)
 
 
     @api.multi
     def action_approve(self):
-
-        if self.line_ids:
-            self.state = 'approve'
-            self.approved_by = self.env.user
-            for line in self.line_ids:
+        if not self.line_ids:
+            raise ValidationError("Without Product Details information, you can't confirm it.")
+        res = {
+            'state': 'approve',
+            'approve_date': fields.Datetime.now(),
+            'approved_by': self.env.user.id,
+        }
+        for line in self.line_ids:
+            if line.state in ['draft','revision']:
                 line.write({'state': 'approve',})
-            return self.write({'state': 'approve', 'approved_date': time.strftime('%Y-%m-%d %H:%M:%S')})
-
-        raise ValidationError("Without Product Details information, you can't confirm it.")
+        return self.write(res)
 
     @api.multi
     def action_draft(self):
         res = {
             'state': 'draft',
+            'revision': self.revision + 01,
         }
         self.write(res)
-        self.line_ids.write({'state': 'draft'})
+        for line in self.line_ids:
+            if line.state != 'done':
+                line.write({'state': 'revision',})
+        self.write({'name':self.origin+'-'+str(self.revision)})
 
     @api.multi
     def unlink(self):
         for entry in self:
             if entry.state != 'draft':
                 raise UserError(_('After confirmation You can not delete this.'))
+            elif entry.line_ids.filtered(lambda x: x.state == 'done'):
+                raise UserError(_('You can not delete ,after Schedule line are done.'))
             entry.line_ids.unlink()
         return super(DeliverySchedules, self).unlink()
 

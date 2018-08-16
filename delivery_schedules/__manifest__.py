@@ -13,6 +13,7 @@
     ],
 
     'data': [
+        'data/delivery_schedule_sequence.xml',
         'security/security.xml',
         'security/ir.model.access.csv',
         'security/ir_rule.xml',
