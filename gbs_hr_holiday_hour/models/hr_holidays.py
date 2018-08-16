@@ -106,7 +106,7 @@ class HrHolidayHour(models.Model):
     @api.constrains('number_of_days')
     def _check_number_of_days(self):
         if self.number_of_days:
-            if self.number_of_days > 5.00 or self.number_of_days < 4.00:
+            if self.number_of_days != 4.00:
                 raise ValidationError('Half day leave takes only 4 hours!')
             else:
                 pass
