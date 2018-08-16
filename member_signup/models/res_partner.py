@@ -271,7 +271,7 @@ class ResPartner(models.Model):
 
         template.write({
             'email_cc': vals['email_cc'],
-            'attachment_ids': vals['attachment_ids'],
+            'attachment_ids': vals['attachment_ids'] if 'attachment_ids' in vals['attachment_ids'] else [],
         })
         base_url = self.env['ir.config_parameter'].get_param('web.base.url')
         context = {
@@ -288,13 +288,18 @@ class ResPartner(models.Model):
             template.with_context(context).send_mail(user.id, force_send=True, raise_exception=True)
             _logger.info("Member Application confirmation email sent for user <%s> to <%s>", user.login, user.email)
 
+    @api.model
+    def email_group(self, val):
+        email = ''
+        for gp in self.env['res.groups'].search([('name', 'in', val['group'])]):
+            if gp.category_id.name == val['category']:
+                email_cc = email_cc + ", " + gp.users.email
+        return email
+
     @api.one
     def member_reject(self):
         if 'application' in self.state:
-            email_cc = ''
-            for gp in self.env['res.groups'].search([('name', '=', 'Manager')]):
-                if gp.category_id.name == 'Membership':
-                    email_cc = email_cc + ", " + gp.users.email
+            email_cc = self.email_group({'group': ['Manager'], 'category': 'Membership'})
 
             vals = {
                 'template': 'member_signup.member_application_rejection_email_template',

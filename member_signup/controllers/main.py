@@ -102,12 +102,21 @@ class MemberApplicationContoller(Home):
                     vals = {
                         'template': 'member_signup.member_application_email_template',
                         'email': auth_data['email'],
-                        'email_cc': 'nopaws_ice_iu@yahoo.com,mahtab.faisal@genweb2.com',
                         'password': auth_data['password'],
                         'attachment_ids': 'member_signup.member_application_rejection_email_template',
                         'context': auth_data,
                     }
+                    off_email = request.env['res.partner'].sudo().email_cc = self.email_group(
+                        {'group': ['Manager'], 'category': 'Membership'})
+
+                    officer = {
+                        'template': 'member_signup.mem_app_email_to_officer_tmpl',
+                        'email': off_email,
+                        'attachment_ids': 'member_signup.member_application_rejection_email_template',
+                        'context': {'applicant_id': auth_data['email']},
+                    }
                     request.env['res.partner'].sudo().mailsend(vals)
+                    request.env['res.partner'].sudo().mailsend(officer)
                     return request.render('member_signup.success', {'name': auth_data['name']})
             except (SignupError, AssertionError), e:
                 if request.env["res.users"].sudo().search([("login", "=", qcontext.get("email"))]):
