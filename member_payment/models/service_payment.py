@@ -21,8 +21,8 @@ class ServicePayment(models.Model):
     comments = fields.Text(string='Comments', readonly=True, states={'open': [('readonly', False)]})
     collection_date = fields.Date(default=fields.Datetime.now(), string='Date', required=True, readonly=True,
                                   states={'open': [('readonly', False)]})
-    membership_id = fields.Many2one('res.partner', string='Member Name', required=True,
-                                    readonly=True, states={'open': [('readonly', False)]})
+    membership_id = fields.Many2one('res.partner', string='Member Name', required=True, compute="_set_member",
+                                    store=True)
     journal_id = fields.Many2one('account.journal', string='Payment Method', required=True,
                                  domain=[('type', 'in', ['bank', 'cash'])],
                                  readonly=True, states={'open': [('readonly', False)]})
@@ -33,12 +33,21 @@ class ServicePayment(models.Model):
                                       domain=[('type', '=', 'service'), ('purchase_ok', '=', False),
                                               ('sale_ok', '=', False)],
                                       readonly=True, states={'open': [('readonly', False)]})
+    card_replacement_id = fields.Many2one('member.card.replacement', string='Card Replacement', required=True,
+                                          domain=[('state', '=', 'approve')], readonly=True,
+                                          states={'open': [('readonly', False)]})
     state = fields.Selection([('open', 'Open'), ('paid', 'Paid'), ('cancel', 'Cancel')], default='open',
                              string='State')
 
     def _compute_session(self):
         for rec in self:
             rec.session_id = self._get_session()
+
+    @api.depends('card_replacement_id')
+    def _set_member(self):
+        for rec in self:
+            if rec.card_replacement_id:
+                rec.membership_id = rec.card_replacement_id.membership_id.id
 
     @api.depends('payment_type_id')
     def _compute_paid_amount(self):

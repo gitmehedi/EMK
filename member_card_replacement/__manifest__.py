@@ -13,6 +13,8 @@
     'data': [
         'security/ir.model.access.csv',
         'security/ir_rule.xml',
+        'data/sequence.xml',
+        'data/default_product.xml',
         'views/card_replacement_views.xml',
     ],
     'installable': True,

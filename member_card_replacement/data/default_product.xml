@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="product_card_replacements" model="product.product">
+        <field name="name">Card Replacements</field>
+        <field name="type">service</field>
+        <field name="list_price">200</field>
+        <field name="sale_ok">False</field>
+        <field name="purchase_ok">False</field>
+    </record>
+</odoo>
