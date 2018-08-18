@@ -2,17 +2,6 @@
 <odoo>
     <data>
 
-        <!--<record id="view_letter_credit_export_filter" model="ir.ui.view">-->
-            <!--<field name="name">letter.credit.filter</field>-->
-            <!--<field name="model">letter.credit</field>-->
-            <!--<field name="arch" type="xml">-->
-                <!--<search string="Search Letter of Credit">-->
-                    <!--<field name="name"/>-->
-                    <!--<filter name="active" string="Active" domain="[('state', 'in', ('draft','open','confirmed','amendment','progress'))]"/>-->
-                <!--</search>-->
-            <!--</field>-->
-        <!--</record>-->
-
         <record id="view_letter_credit_export_filter" model="ir.ui.view">
             <field name="name">letter.credit.filter</field>
             <field name="model">letter.credit</field>
