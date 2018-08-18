@@ -1,26 +1,38 @@
-from odoo import api, fields, models
-from odoo.exceptions import ValidationError
-import time, datetime
+import datetime
+from odoo import api, fields, models, _
+from odoo.exceptions import UserError, ValidationError
+
 
 
 class DeliveryScheduleLine(models.Model):
     _name = 'delivery.schedules.line'
+    _inherit = ['mail.thread']
     _description = 'Delivery Schedule line'
 
-    partner_id = fields.Many2one('res.partner', 'Customer', domain="([('customer','=','True')])")
+    partner_id = fields.Many2one('res.partner', 'Customer', domain=[('customer', '=', True),('parent_id', '=', False)],
+                                 readonly=True, states={'draft': [('readonly', False)]})
     # pending_picking = fields.Many2one('stock.picking', string='Pending Picking')
-    pending_do = fields.Many2one('delivery.order', ondelete='cascade', string='Pending D.O')
-    product_id = fields.Many2one('product.product', string='Product')
+    pending_do = fields.Many2one('delivery.order', ondelete='cascade',
+                                 readonly=True, states={'draft': [('readonly', False)]},
+                                 string='Pending D.O',track_visibility='onchange')
+    product_id = fields.Many2one('product.product', string='Product',
+                                 readonly=True, states={'draft': [('readonly', False)]},
+                                 track_visibility='onchange')
     do_qty = fields.Float(string='Ordered Qty', readonly=True ,store=True,compute='onchange_product_id')
     undelivered_qty = fields.Float(string='Undelivered Qty', readonly=True)
     uom_id = fields.Many2one('product.uom', string="Unit of Measure", readonly=True)
-    scheduled_qty = fields.Float(string='Scheduled Qty.')
-    remarks = fields.Text('Special Instructions')
+    scheduled_qty = fields.Float(string='Scheduled Qty.', readonly=True,
+                                 states={'draft': [('readonly', False)],'revision': [('readonly', False)]},
+                                 track_visibility='onchange')
+    remarks = fields.Text('Special Instructions', readonly=True,
+                          states={'draft': [('readonly', False)],'revision': [('readonly', False)]},
+                          track_visibility='onchange')
     requested_date = fields.Date('Date', default=datetime.date.today(), readonly=True)
     # Relational Fields
     parent_id = fields.Many2one('delivery.schedules', ondelete='cascade')
     state = fields.Selection([
         ('draft', "Draft"),
+        ('revision', "Revision"),
         ('approve', "Confirm"),
         ('done', "Done"),
     ], default='draft', track_visibility='onchange')
@@ -57,6 +69,13 @@ class DeliveryScheduleLine(models.Model):
         vals['uom_id'] = line_obj.uom_id.id
         return super(DeliveryScheduleLine, self).write(vals)
 
+    @api.multi
+    def unlink(self):
+        for entry in self:
+            if entry.state != 'draft':
+                raise UserError(_('After confirmation You can not delete this.'))
+        return super(DeliveryScheduleLine, self).unlink()
+
     @api.onchange('partner_id')
     def onchange_partner_id(self):
         for ds in self:
@@ -83,6 +102,8 @@ class DeliveryScheduleLine(models.Model):
                 self.do_qty = self.pending_do.line_ids[0].quantity
                 self.undelivered_qty = self.pending_do.line_ids[0].quantity - self.pending_do.line_ids[0].qty_delivered
                 self.uom_id = self.pending_do.line_ids[0].uom_id
+
+                return {'domain': {'product_id': [('id', '=', self.product_id.id)]}}
             else:
                 product_list = []
                 for line in self.pending_do.line_ids:
@@ -91,6 +112,11 @@ class DeliveryScheduleLine(models.Model):
 
     @api.onchange('product_id')
     def onchange_product_id(self):
+        self.do_qty = False
+        self.undelivered_qty = False
+        self.uom_id = False
+        self.scheduled_qty = False
+        self.remarks = False
         if self.product_id:
             line_obj = self.env['delivery.order.line'].search(
                 [('parent_id', '=', self.pending_do.id), ('product_id', '=', self.product_id.id)])[0]

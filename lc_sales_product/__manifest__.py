@@ -19,6 +19,7 @@
 
     'data': [
         'views/lc_sales_view.xml',
+        'views/sales_tree_view.xml',
         'views/shipment_sale_view.xml',
         'views/lc_sales_commercial.xml',
         'views/commercial_sales.xml',

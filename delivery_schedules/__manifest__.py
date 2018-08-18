@@ -13,12 +13,13 @@
     ],
 
     'data': [
+        'data/delivery_schedule_sequence.xml',
         'security/security.xml',
         'security/ir.model.access.csv',
         'security/ir_rule.xml',
         'views/delivery_schedules_view.xml',
-        'reports/delivery_se_report.xml',
-        'reports/delivery_se_report_templates.xml',
+        #'reports/delivery_se_report.xml',
+        #'reports/delivery_se_report_templates.xml',
         # 'views/delivery_schedules_date_wise_view.xml',
         # 'wizards/delivery_schedule_date_view.xml',
 
