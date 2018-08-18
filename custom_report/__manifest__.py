@@ -11,6 +11,7 @@
         'views/templates.xml',
         'views/gbs_internal_layout.xml',
         'views/gbs_external_layout.xml',
+        'views/external_layout_address.xml',
         'views/gbs_custom_pad_report_template.xml',
         'views/gbs_custom_pad_report_with_system_sig_template.xml',
     ],

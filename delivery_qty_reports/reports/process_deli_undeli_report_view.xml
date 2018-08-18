@@ -36,18 +36,18 @@
                                style="margin-bottom: 10px;table-layout: fixed;">
                                     <thead>
                                         <tr class="odo-bg-gray">
-                                            <th class="text-center" style="width:22%;">Customer</th>
+                                            <th class="text-center" style="width:21%;">Customer</th>
                                             <th class="text-center" style="width:5%;">D.O Date</th>
-                                            <th class="text-center" style="width:13%;">D.O No.</th>
+                                            <th class="text-center" style="width:11%;">D.O No.</th>
                                             <th class="text-center" style="width:5%;">D.O Qty</th>
                                             <th class="text-center" style="width:3%;">UoM</th>
                                             <th class="text-center" style="width:5%;">Unde Qty (Begening)</th>
                                             <th class="text-center" style="width:5%;">Issued D.O</th>
                                             <th class="text-center" style="width:5%;">Delivered Qty</th>
-                                            <th class="text-center" style="width:13%;">Delivery Challan</th>
+                                            <th class="text-center" style="width:11%;">Delivery Challan</th>
                                             <th class="text-center" style="width:5%;">Unde Qty</th>
                                             <th class="text-center" style="width:15%;">Category</th>
-                                            <th class="text-center" style="width:4%;">Packing</th>
+                                            <th class="text-center" style="width:9%;">Packing</th>
                                         </tr>
                                     </thead>
 
