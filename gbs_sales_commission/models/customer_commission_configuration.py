@@ -36,7 +36,7 @@ class CustomerCommissionConfiguration(models.Model):
                                  domain="([('sale_ok','=','True')])",
                                  readonly=True, states={'draft': [('readonly', False)]})
 
-    customer_id = fields.Many2one('res.partner', string="Customer", domain="([('customer','=','True')])",
+    customer_id = fields.Many2one('res.partner', string="Customer", domain="[('customer', '=', True),('parent_id', '=', False)]",
                                   readonly=True, states={'draft': [('readonly', False)]})
     requested_by = fields.Many2one('res.users', string="Requested By", default=lambda self: self.env.user,
                                    readonly=True, track_visibility='onchange')

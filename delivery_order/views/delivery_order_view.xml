@@ -95,6 +95,7 @@
                 <tree string="Delivery Orders ">
                     <field name="name" string="Delivery Order"/>
                     <field name="delivery_order_id"/>
+                    <field name="parent_id"/>
                     <field name="state"/>
                 </tree>
             </field>

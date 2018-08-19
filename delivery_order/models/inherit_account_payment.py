@@ -14,7 +14,7 @@ class InheritAccountPayment(models.Model):
     ## if cash
     deposited_bank = fields.Char(string='Deposited Bank', readonly=True, states={'draft': [('readonly', False)]})
     bank_branch = fields.Char(string='Branch', readonly=True,states={'draft': [('readonly', False)]})
-    deposit_slip = fields.Integer(string='Deposit Slip',readonly=True,states={'draft': [('readonly', False)]})
+    deposit_slip = fields.Integer(string='Deposit Slip No.',readonly=True,states={'draft': [('readonly', False)]})
 
     # if Bank
     cheque_no = fields.Char(string='Cheque No',readonly=True,states={'draft': [('readonly', False)]})

@@ -12,7 +12,7 @@ class CustomerCommissionConfigurationCustomer(models.Model):
     currency_id = fields.Many2one('res.currency', string='Currency')
 
     """ Relational Fields """
-    customer_id = fields.Many2one('res.partner', string="Customer", required=True, domain="([('customer','=','True')])")
+    customer_id = fields.Many2one('res.partner', string="Customer", required=True, domain="[('customer', '=', True),('parent_id', '=', False)]")
     config_parent_id = fields.Many2one('customer.commission.configuration', ondelete='cascade')
 
     @api.onchange('customer_id')
