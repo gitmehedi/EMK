@@ -49,7 +49,7 @@
 
                             <group>
                                 <separator string="Customer" colspan="2"/>
-                                <field name="second_party_applicant" required="1" string="Applicant"/>
+                                <field name="second_party_applicant" required="1"/>
                                 <field name="second_party_bank"/>
                             </group>
 
