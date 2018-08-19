@@ -6,3 +6,6 @@ access_pi_line_head_of_sales,access_pi_line_head_of_sales,gbs_pi_creation.model_
 access_pi_head_of_sales,access_pi_head_of_sales,gbs_pi_creation.model_proforma_invoice,gbs_application_group.group_head_sale,1,1,1,0
 access_pi_cxo,access_pi_cxo,gbs_pi_creation.model_proforma_invoice,gbs_application_group.group_cxo,1,1,1,0
 access_pi_line_cxo,access_pi_line_cxo,gbs_pi_creation.model_proforma_invoice_line,gbs_application_group.group_cxo,1,1,1,0
+
+access_pi_hoa,access_pi_hoa,gbs_pi_creation.model_proforma_invoice_line,gbs_application_group.group_head_account,1,0,0,0
+access_pi_accountant,access_pi_accountant,gbs_pi_creation.model_proforma_invoice_line,account.group_account_user,1,0,0,0
