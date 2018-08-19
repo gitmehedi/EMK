@@ -31,7 +31,8 @@
 
                 <field name="partner_type" position="replace">
                     <field name="partner_type" nolabel="1" widget="selection" string="" attrs="{'required': [('payment_type', 'in', ('inbound', 'outbound'))],
-                    'invisible': [('payment_type', 'not in', ('inbound', 'outbound'))], 'readonly': [('state', '=', 'draft'), ('my_menu_check','=',True)]}"/>
+                    'invisible': [('payment_type', 'not in', ('inbound', 'outbound'))],
+                     'readonly': [('state', 'in', ('draft','posted')), ('my_menu_check','=',True)]}"/>
                 </field>
 
                 <field name="journal_id" position="after">

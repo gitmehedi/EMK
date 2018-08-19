@@ -401,7 +401,7 @@
                     <xpath expr="//field[@name='pack_type']" position="after">
                         <field name="pi_id"
                                attrs="{'invisible':[('credit_sales_or_lc', '!=', 'lc_sales')],'required':[('credit_sales_or_lc', '=','lc_sales')]}"
-                               options="{'no_quick_create':True,'no_create_edit':True,'no_open':True}"/>
+                               options="{'no_quick_create':True,'no_create_edit':True}"/>
                     </xpath>
 
                     <xpath expr="//field[@name='pi_id']" position="after">
@@ -409,8 +409,8 @@
                                options="{'no_quick_create':True,'no_create_edit':True,'no_open':True}"/>
                     </xpath>
 
-                     <!--<xpath expr="//field[@name='partner_id']" position="replace">-->
-                        <!--<field name="partner_id" attrs="{'readonly':[('credit_sales_or_lc', '=', 'lc_sales')]}"/>-->
+                    <!--<xpath expr="//field[@name='partner_id']" position="replace">-->
+                    <!--<field name="partner_id" attrs="{'readonly':[('credit_sales_or_lc', '=', 'lc_sales')]}"/>-->
                     <!--</xpath>-->
 
 
@@ -510,9 +510,16 @@
                    eval="[(4,ref('gbs_application_group.group_cxo')),(4,ref('gbs_application_group.group_head_account'))]"/>
         </record>
 
+
+        <!--<menuitem action="base.action_country_group"-->
+                  <!--id="sales_team.menu_country_group"-->
+                  <!--groups="gbs_application_group.group_cxo"-->
+                  <!--name="Country Group"-->
+                  <!--parent="sales_team.menu_localisation" sequence="3"/>-->
+
         <!--hide unused menu-->
         <!--<menuitem action="sale.action_orders_to_invoice"-->
-            <!--id="sale.menu_sale_order_invoice" parent="sale.menu_sale_invoicing"-->
-            <!--sequence="2" groups="base.group_system"/>-->
+        <!--id="sale.menu_sale_order_invoice" parent="sale.menu_sale_invoicing"-->
+        <!--sequence="2" groups="base.group_system"/>-->
     </data>
 </odoo>

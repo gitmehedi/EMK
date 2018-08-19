@@ -109,7 +109,24 @@ class customer_creditlimit_assign(models.Model):
     ### Showing batch
     @api.model
     def _needaction_domain_get(self):
-        return [('state', 'in', ['confirm'])]
+        users_obj = self.env['res.users']
+        domain = []
+        if users_obj.has_group('gbs_application_group.group_cxo'):
+            domain = [
+                ('state', 'in', ['validate1'])]
+            return domain
+        elif users_obj.has_group('gbs_application_group.group_head_account'):
+            domain = [
+                ('state', 'in', ['validate'])]
+            return domain
+        elif users_obj.has_group('gbs_application_group.group_head_sale'):
+            domain = [
+                ('state', 'in', ['confirm'])]
+            return domain
+        else:
+            return False
+
+        return domain
 
 
         ## mail notification
@@ -237,7 +254,9 @@ class res_partner_credit_limit(models.Model):
         return self.assign_id.credit_limit
 
     assign_id = fields.Many2one('customer.creditlimit.assign',ondelete='cascade')
-    partner_id = fields.Many2one('res.partner', "Customer", required=True, domain="[('customer', '=', True)]")
+    partner_id = fields.Many2one('res.partner', "Customer", required=True,domain="[('customer', '=', True),('parent_id', '=', False)]")
+
+    #domain = [('customer', '=', True), ('parent_id', '=', False)]
     assign_date = fields.Date(string="Credit Date", _defaults=lambda *a: time.strftime('%Y-%m-%d'))
     value = fields.Float(string='Credit Limit', default=_default_credit_limit_and_days)
     day_num = fields.Integer(string='Credit Days', )

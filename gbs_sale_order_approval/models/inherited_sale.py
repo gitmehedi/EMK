@@ -65,13 +65,13 @@ class SaleOrder(models.Model):
                        states={'to_submit': [('readonly', False)]})
 
     state = fields.Selection([
-        ('to_submit', 'Submit'),
-        ('draft', 'Quotation'),
+        ('to_submit', 'Draft'),
+        ('draft', 'Sales Approval'),
         ('submit_quotation', 'Validate'),
         ('validate', 'Accounts Approval'),
         ('sent', 'CXO Approval'),
         ('sale', 'Sales Order'),
-        ('done', 'Done'),
+        ('done', 'Approved'),
         ('cancel', 'Cancelled')
     ], string='Status', readonly=True, copy=False, index=True, track_visibility='onchange', default='to_submit')
 
