@@ -109,7 +109,24 @@ class customer_creditlimit_assign(models.Model):
     ### Showing batch
     @api.model
     def _needaction_domain_get(self):
-        return [('state', 'in', ['confirm'])]
+        users_obj = self.env['res.users']
+        domain = []
+        if users_obj.has_group('gbs_application_group.group_cxo'):
+            domain = [
+                ('state', 'in', ['validate1'])]
+            return domain
+        elif users_obj.has_group('gbs_application_group.group_head_account'):
+            domain = [
+                ('state', 'in', ['validate'])]
+            return domain
+        elif users_obj.has_group('gbs_application_group.group_head_sale'):
+            domain = [
+                ('state', 'in', ['confirm'])]
+            return domain
+        else:
+            return False
+
+        return domain
 
 
         ## mail notification
