@@ -99,6 +99,8 @@ class MemberApplicationContoller(Home):
             try:
                 auth_data = self.create_applicant(qcontext)
                 if auth_data:
+                    res_obj = request.env['res.partner'].sudo()
+                    off_email = res_obj.email_group({'group': ['Officer'], 'category': 'Membership'})
                     vals = {
                         'template': 'member_signup.member_application_email_template',
                         'email': auth_data['email'],
@@ -106,8 +108,6 @@ class MemberApplicationContoller(Home):
                         'attachment_ids': 'member_signup.member_application_rejection_email_template',
                         'context': auth_data,
                     }
-                    off_email = request.env['res.partner'].sudo().email_cc = self.email_group(
-                        {'group': ['Manager'], 'category': 'Membership'})
 
                     officer = {
                         'template': 'member_signup.mem_app_email_to_officer_tmpl',
@@ -115,8 +115,8 @@ class MemberApplicationContoller(Home):
                         'attachment_ids': 'member_signup.member_application_rejection_email_template',
                         'context': {'applicant_id': auth_data['email']},
                     }
-                    request.env['res.partner'].sudo().mailsend(vals)
-                    request.env['res.partner'].sudo().mailsend(officer)
+                    res_obj.mailsend(vals)
+                    res_obj.mailsend(officer)
                     return request.render('member_signup.success', {'name': auth_data['name']})
             except (SignupError, AssertionError), e:
                 if request.env["res.users"].sudo().search([("login", "=", qcontext.get("email"))]):

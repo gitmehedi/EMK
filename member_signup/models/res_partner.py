@@ -86,7 +86,7 @@ class ResPartner(models.Model):
         if self.birthdate:
             today = str(datetime.now().date())
             if self.birthdate > today:
-                raise ValidationError(
+                raise UserError(
                     _('Birth Date should not greater than current date.'))
 
     @api.constrains('birthdate')
@@ -187,7 +187,7 @@ class ResPartner(models.Model):
         product_id = self.env['product.product'].search([('membership_status', '=', True)], order='id desc',
                                                         limit=1)
         if not product_id:
-            raise ValidationError(_('Please configure your default Memebership Product.'))
+            raise UserError(_('Please configure your default Memebership Product.'))
 
         ins_inv = self.env['account.invoice']
         journal_id = self.env['account.journal'].search([('code', '=', 'INV')])
@@ -270,7 +270,7 @@ class ResPartner(models.Model):
         obj = self.env['res.users'].search([('email', '=', vals['email'])])
 
         template.write({
-            'email_cc': vals['email_cc'],
+            'email_cc': vals['email_cc'] if 'email_cc' in vals else '',
             'attachment_ids': vals['attachment_ids'] if 'attachment_ids' in vals['attachment_ids'] else [],
         })
         base_url = self.env['ir.config_parameter'].get_param('web.base.url')
@@ -287,14 +287,6 @@ class ResPartner(models.Model):
                 raise UserError(_("Cannot send email: user %s has no email address.") % user.name)
             template.with_context(context).send_mail(user.id, force_send=True, raise_exception=True)
             _logger.info("Member Application confirmation email sent for user <%s> to <%s>", user.login, user.email)
-
-    @api.model
-    def email_group(self, val):
-        email = ''
-        for gp in self.env['res.groups'].search([('name', 'in', val['group'])]):
-            if gp.category_id.name == val['category']:
-                email_cc = email_cc + ", " + gp.users.email
-        return email
 
     @api.one
     def member_reject(self):
@@ -391,10 +383,13 @@ class ResPartner(models.Model):
                 return member.name_get()
         return super(ResPartner, self).name_search(name=name, args=args, operator=operator, limit=limit)
 
-    @api.multi
-    def mailcc(self):
-        email_cc = ''
-        for gp in self.env['res.groups'].search([('name', '=', 'Manager')]):
-            if gp.category_id.name == 'Membership':
-                email_cc = email_cc + ", " + gp.users.email
-        return email_cc
+    @api.model
+    def email_group(self, val):
+        email = ''
+        groups = self.env['res.groups'].search([('name', 'in', val['group'])])
+        for gp in groups:
+            if gp.category_id.name == val['category']:
+                for mail in gp.users:
+                    if mail.create_uid:
+                        email = email + ", " + mail.email if len(email) > 0 else mail.email
+        return email

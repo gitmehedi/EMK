@@ -33,7 +33,7 @@
                     To view your application, click on the following link:
                 </p>
                 <div style="text-align: center; margin-top: 16px;">
-                     <a href="${ctx['baseurl']}" style="padding: 5px 10px; font-size: 12px; line-height: 18px; color: #FFFFFF; border-color:#875A7B; text-decoration: none; display: inline-block; margin-bottom: 0px; font-weight: 400; text-align: center; vertical-align: middle; cursor: pointer; white-space: nowrap; background-image: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius:3px">View Appliction Information"</a>
+                     <a href="${ctx['baseurl']}" style="padding: 5px 10px; font-size: 12px; line-height: 18px; color: #FFFFFF; border-color:#875A7B; text-decoration: none; display: inline-block; margin-bottom: 0px; font-weight: 400; text-align: center; vertical-align: middle; cursor: pointer; white-space: nowrap; background-image: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius:3px">View Application</a>
                 </div>
                 <p>Best regards,</p>
             </div>
@@ -66,7 +66,7 @@
             <div style="padding:0px;width:600px;margin:auto;background: #FFFFFF repeat top /100%;color:#777777">
             <p>Dear ${object.name},</p>
                 <p>
-                    You are request to verify applicant </strong> ${object.partner_id.member_sequence}.
+                    You are request to verify applicantion <strong> ${object.partner_id.member_sequence}</strong>.
                 </p>
                 <p>Best regards,</p>
             </div>
@@ -150,7 +150,7 @@
     <record id="member_invoice_email_template" model="mail.template">
         <field name="name">Member Invoice Template</field>
         <field name="model_id" ref="base.model_res_partner"/>
-        <field name="subject">Membership Invoice</field>
+        <field name="subject">Payment Invoice</field>
         <field name="email_to">${object.email|safe}</field>
         <field name="email_from">
             <![CDATA["${object.company_id.name|safe}" <${(object.company_id.email or user.email)|safe}>]]></field>
@@ -167,7 +167,7 @@
             <div style="padding:0px;width:600px;margin:auto;background: #FFFFFF repeat top /100%;color:#777777">
             <p>Dear ${object.name},</p>
                 <p>
-                    You have been invited to connect to "${object.company_id.name}" in order to get access to your documents.
+                    Your request of membership is processing. Membership Invoice attach with email. Please take a look and payment your fee as soon as possible..
                 </p>
                 <p>Best regards,</p>
             </div>

@@ -2,7 +2,7 @@
 
 from odoo import api, fields, models, _
 
-from odoo.exceptions import ValidationError
+from odoo.exceptions import ValidationError, UserError
 
 
 class MemberPayment(models.Model):
@@ -15,7 +15,7 @@ class MemberPayment(models.Model):
     def _get_session(self):
         session = self.env['payment.session'].search([('open', '=', True)])
         if not session:
-            raise ValidationError(_('Session is not opened. Please open a session.'))
+            raise UserError(_('Session is not opened. Please open a session.'))
         return session
 
     due_amount = fields.Float(string='Due Amount', compute='_compute_due_amount', store=True)
@@ -34,7 +34,6 @@ class MemberPayment(models.Model):
     session_id = fields.Many2one('payment.session', compute='_compute_session', string="Session Name", store=True,
                                  required=True, default=_get_session)
     state = fields.Selection([('open', 'Open'), ('paid', 'Paid')], default='open', string='State')
-
 
     def onchange_membership(self):
         if self.membership_id:
@@ -59,7 +58,7 @@ class MemberPayment(models.Model):
         invoice = self.env['account.invoice'].search(
             [('partner_id', '=', self.membership_id.id), ('state', '=', 'open')],
             order='create_date desc')
-        pay_text = 'PAID for Membership'
+        pay_text = 'Payment for Membership'
         rem_amount = self.paid_amount
 
         if self.state == 'open' and invoice:
@@ -74,7 +73,10 @@ class MemberPayment(models.Model):
                     inv_amount = rem_amount
                     rem_amount = 0
 
-                if inv_amount > 0:
+                if not inv_amount:
+                    raise UserError(_('Paid amount should have a value.'))
+
+                if inv_amount>0:
                     record = {}
                     record['payment_type'] = 'inbound'
                     record['payment_method_id'] = payment_method_id.id
@@ -107,13 +109,11 @@ class MemberPayment(models.Model):
                                   }
                         self.membership_id.write(member)
 
-                        emailcc = self.env['res.partner'].mailcc()
                         vals = {
-                            'template': 'member_signup.member_confirmation_email_template',
+                            'template': 'member_payment.member_payment_confirmation_tmpl',
                             'email': self.membership_id.email,
                             'email_to': self.membership_id.email,
-                            'email_cc': emailcc,
-                            'attachment_ids': 'member_signup.member_confirmation_email_template',
+                            'attachment_ids': '',
                             'context': {},
                         }
 
