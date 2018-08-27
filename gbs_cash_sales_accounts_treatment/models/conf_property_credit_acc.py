@@ -6,6 +6,6 @@ class ConfPopertyCreditAcc(models.Model):
     _description = 'Cash Payment Terms line'
 
 
-    cash_suspense_account = fields.Many2one('account.account', string='Cash Suspense A/C', required=False)
+    cash_suspense_account = fields.Many2one('account.account', string='Cash Suspense A/C', required=True)
 
 

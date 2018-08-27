@@ -39,6 +39,7 @@
             action="action_suspense_cash_ac"
             id="menu_suspense_cash_ac"
             parent="account.account_account_menu"
+            groups="account.group_account_user,gbs_application_group.group_head_account,gbs_application_group.group_cxo"
             sequence="1"
     />
 

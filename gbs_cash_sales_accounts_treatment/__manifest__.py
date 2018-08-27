@@ -10,7 +10,7 @@
     ],
 
     'data': [
-        #'security/ir.model.access.csv',
+        'security/ir.model.access.csv',
         'views/conf_property_credit_acc_view.xml',
     ],
 
