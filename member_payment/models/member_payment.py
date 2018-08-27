@@ -8,7 +8,6 @@ from odoo.exceptions import ValidationError, UserError
 class MemberPayment(models.Model):
     _name = 'member.payment'
     _inherit = ['mail.thread', 'ir.needaction_mixin']
-    _rec_name = 'membership_id'
     _order = 'id desc'
 
     @api.model
@@ -49,10 +48,6 @@ class MemberPayment(models.Model):
         for rec in self:
             rec.session_id = self._get_session()
 
-    @api.model
-    def _needaction_domain_get(self):
-        return [('state', '=', 'open')]
-
     @api.one
     def member_payment(self):
         invoice = self.env['account.invoice'].search(
@@ -76,18 +71,18 @@ class MemberPayment(models.Model):
                 if not inv_amount:
                     raise UserError(_('Paid amount should have a value.'))
 
-                if inv_amount>0:
-                    record = {}
-                    record['payment_type'] = 'inbound'
-                    record['payment_method_id'] = payment_method_id.id
-                    record['partner_type'] = 'customer'
-                    record['invoice_ids'] = [(6, 0, [rec.id])]
-                    record['partner_id'] = self.membership_id.id
-                    record['amount'] = inv_amount
-                    record['journal_id'] = rec.journal_id.id
-                    record['payment_date'] = self.date
-                    record['communication'] = pay_text
-                    payment = rec.payment_ids.create(record)
+                if inv_amount > 0:
+                    payment = rec.payment_ids.create({
+                        'payment_type': 'inbound',
+                        'payment_method_id': payment_method_id.id,
+                        'partner_type': 'customer',
+                        'invoice_ids': [(6, 0, [rec.id])],
+                        'partner_id': self.membership_id.id,
+                        'amount': inv_amount,
+                        'journal_id': rec.journal_id.id,
+                        'payment_date': self.date,
+                        'communication': pay_text,
+                    })
                     payment.post()
 
                     if payment and len(payment_ref) > 0:
@@ -101,13 +96,20 @@ class MemberPayment(models.Model):
 
                     if rec.state and self.membership_id.state == 'invoice':
                         seq = self.env['ir.sequence'].next_by_code('res.partner.member')
-                        member = {'state': 'member',
-                                  'member_sequence': seq,
-                                  'application_ref': self.membership_id.member_sequence,
-                                  'free_member': self.membership_id.member_sequence,
-                                  'membership_state': 'free'
-                                  }
-                        self.membership_id.write(member)
+                        self.membership_id.write({'state': 'member',
+                                                  'member_sequence': seq,
+                                                  'application_ref': self.membership_id.member_sequence,
+                                                  'free_member': self.membership_id.member_sequence,
+                                                  'membership_state': 'free'
+                                                  })
+                        for inv_line in invoice.invoice_line_ids:
+                            mem_inv = self.env['membership.membership_line'].search([
+                                ('account_invoice_line', '=', inv_line.id)])
+                            if mem_inv:
+                                self.env['membership.membership_line'].write({
+                                    'date': mem_inv.membership_id.membership_date_from,
+                                    'date_from': mem_inv.membership_id.membership_date_from,
+                                    'date_to': mem_inv.membership_id.membership_date_to})
 
                         vals = {
                             'template': 'member_payment.member_payment_confirmation_tmpl',
@@ -119,3 +121,14 @@ class MemberPayment(models.Model):
 
                         self.env['res.partner'].mailsend(vals)
                         self.env['rfid.generation'].create({'membership_id': self.membership_id.id})
+
+    @api.model
+    def _needaction_domain_get(self):
+        return [('state', '=', 'open')]
+
+    @api.one
+    def name_get(self):
+        name = self.membership_id.name
+        if self.membership_id:
+            name = '[%s] %s' % (self.membership_id.member_sequence, self.membership_id.name)
+        return (self.id, name)
