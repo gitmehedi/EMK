@@ -10,8 +10,6 @@
     ],
 
     'data': [
-        'security/ir.model.access.csv',
-        'views/conf_property_credit_acc_view.xml',
     ],
 
     'summary': 'Cash Sales Accounts Treatment',
