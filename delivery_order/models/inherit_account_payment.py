@@ -4,8 +4,8 @@ from odoo import api, fields, models
 class InheritAccountPayment(models.Model):
     _inherit = 'account.payment'
 
-    sale_order_id = fields.Many2one('sale.order', string='Sale Order',
-                                    domain=[('state', '=', 'done')], readonly=True,
+    sale_order_id = fields.Many2many('sale.order', string='Sale Order',
+                                    readonly=True,
                                     states={'draft': [('readonly', False)]})
     is_this_payment_checked = fields.Boolean(string='Is This Payment checked with SO', default=False)
     my_menu_check = fields.Boolean(string='Check')
@@ -30,11 +30,18 @@ class InheritAccountPayment(models.Model):
     #         ('supplier', 'Vendor')
     #     ],readonly=True,states={'draft': [('readonly', False)]})
 
+
     @api.onchange('partner_id')
-    def _onchange_partner_id(self):
+    def onchange_partner_id(self):
+        for ds in self:
+            so_id_list = []
+            if ds.partner_id:
+                so_objs = self.env['sale.order'].sudo().search([('partner_id', '=', ds.partner_id.id),
+                                                                    ('state', '=', 'done')])
+                if so_objs:
+                    for so_obj in so_objs:
+                        so_id_list.append(so_obj.id)
 
-        if (self.partner_type == 'customer'):
-            so_pool = self.env['sale.order'].search([('partner_id', '=', self.partner_id.id)])
+                return {'domain': {'sale_order_id': [('id', 'in', so_id_list)]}}
 
-            for order in so_pool:
-                self.sale_order_id = order.id
+

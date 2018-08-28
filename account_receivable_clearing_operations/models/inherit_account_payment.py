@@ -21,14 +21,15 @@ class InheritAccountPayment(models.Model):
                     self.destination_account_id = credit_account.id
 
 
-    ## Overriding Lable for Credit account
+    # Overriding Lable for Credit account
     # def _get_counterpart_move_line_vals(self, invoice=False):
-    #     super(InheritAccountPayment, self)._get_counterpart_move_line_vals(invoice=invoice)
+    #     res = super(InheritAccountPayment, self)._get_counterpart_move_line_vals(invoice=invoice)
     #
     #     if self.partner_type == 'customer':
     #         if self.payment_type == 'inbound':
-    #             self.name += _("rabbi payment")
-
+    #             self.name = self.sale_order_id.name
+    #
+    #     return res
     #
     # def _get_move_vals(self, journal=None):
     #     super(InheritAccountPayment, self)._get_move_vals(journal=journal)

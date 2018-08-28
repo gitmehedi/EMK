@@ -36,7 +36,7 @@ class ChequeReceived(models.Model):
     branch_name = fields.Char(string='Branch Name', required=True, states = {'returned': [('readonly', True)],'dishonoured': [('readonly', True)],'honoured': [('readonly', True)],'received': [('readonly', True)],'deposited': [('readonly', True)]})
     date_on_cheque = fields.Date('Date On Cheque', required=True, states = {'returned': [('readonly', True)],'dishonoured': [('readonly', True)],'honoured': [('readonly', True)],'received': [('readonly', True)],'deposited': [('readonly', True)]})
     cheque_amount = fields.Float(string='Amount', required=True, states = {'returned': [('readonly', True)],'dishonoured': [('readonly', True)],'honoured': [('readonly', True)],'received': [('readonly', True)],'deposited': [('readonly', True)]})
-    sale_order_id = fields.Many2one('sale.order', domain=[('state','=','done')], string='Sale Order', states = {'returned': [('readonly', True)],'dishonoured': [('readonly', True)],'honoured': [('readonly', True)],'received': [('readonly', True)],'deposited': [('readonly', True)]})
+    sale_order_id = fields.Many2many('sale.order', string='Sale Order', states = {'returned': [('readonly', True)],'dishonoured': [('readonly', True)],'honoured': [('readonly', True)],'received': [('readonly', True)],'deposited': [('readonly', True)]})
     is_cheque_payment = fields.Boolean(string='Cheque Payment', default=True)
     company_id = fields.Many2one('res.company', string='Company', ondelete='cascade',
                                  default=lambda self: self.env.user.company_id, readonly='True', states = {'returned': [('readonly', True)],'dishonoured': [('readonly', True)],'honoured': [('readonly', True)],'received': [('readonly', True)],'deposited': [('readonly', True)]})
@@ -46,6 +46,20 @@ class ChequeReceived(models.Model):
     #@todo : Update this field
     is_this_payment_checked = fields.Boolean(string='is_this_payment_checked', default=False)
     cheque_no = fields.Integer(string='Cheque No', states = {'returned': [('readonly', True)],'dishonoured': [('readonly', True)],'honoured': [('readonly', True)],'received': [('readonly', True)],'deposited': [('readonly', True)]})
+
+    @api.onchange('partner_id')
+    def onchange_partner_id(self):
+        for ds in self:
+            so_id_list = []
+            if ds.partner_id:
+                so_objs = self.env['sale.order'].sudo().search([('partner_id', '=', ds.partner_id.id),
+                                                                ('state', '=', 'done')])
+                if so_objs:
+                    for so_obj in so_objs:
+                        so_id_list.append(so_obj.id)
+
+                return {'domain': {'sale_order_id': [('id', 'in', so_id_list)]}}
+
 
     @api.multi
     def _get_payment_method(self):
@@ -136,7 +150,8 @@ class ChequeReceived(models.Model):
 
                 debit_account_id = cr.journal_id.default_debit_account_id
                 credit_account_id = company_id.cash_suspense_account
-                name = self.sale_order_id.name
+                for so_id in self.sale_order_id:
+                    name = so_id.name
             else:
                 debit_account_id = cr.partner_id.property_account_receivable_id
                 credit_account_id = cr.journal_id.default_credit_account_id

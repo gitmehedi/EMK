@@ -42,7 +42,7 @@
                         <group>
                             <field name="date_on_cheque"/>
                             <field name="cheque_amount"/>
-                            <field name="sale_order_id" options="{'no_open': True, 'no_create': True}"/>
+                            <field name="sale_order_id" widget="many2many_tags" options="{'no_open': True, 'no_create': True}"/>
                         </group>
 
                     </group>
