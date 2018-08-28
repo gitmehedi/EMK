@@ -16,7 +16,6 @@ class LoanReport(models.AbstractModel):
         data['job_id'] = exit_obj.job_id.name
         data['emp_code'] = exit_obj.employee_id.device_employee_acc
 
-        # checklist=[]
         sql = '''SELECT p.state as state,
                         item.name as item_name,
                         p.remarks as remarks,

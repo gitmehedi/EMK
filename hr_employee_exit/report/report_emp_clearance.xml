@@ -5,7 +5,7 @@
         <report
                 id="action_report_employee_clearance"
                 model="hr.emp.exit.req"
-                string="Print Employee Clearance"
+                string="Employee Clearance"
                 report_type="qweb-pdf"
                 name="hr_employee_exit.report_employee_clearance"
                 file="hr_employee_exit.report_employee_clearance"
