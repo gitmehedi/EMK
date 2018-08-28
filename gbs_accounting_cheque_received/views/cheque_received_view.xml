@@ -32,7 +32,7 @@
                             <field name="branch_name"/>
                             <field name="cheque_no"/>
                             <field name="is_cheque_payment" invisible="1"/>
-                            <field name="currency_id"/>
+                            <field name="currency_id" options="{'no_open': True, 'no_create': True}"/>
                             <field name="payment_date" invisible="1"/>
                             <field name="payment_method_id" invisible="1"/>
                             <field name="payment_type" invisible="1"/>
@@ -42,7 +42,7 @@
                         <group>
                             <field name="date_on_cheque"/>
                             <field name="cheque_amount"/>
-                            <field name="sale_order_id"/>
+                            <field name="sale_order_id" options="{'no_open': True, 'no_create': True}"/>
                         </group>
 
                     </group>

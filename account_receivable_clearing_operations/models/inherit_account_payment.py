@@ -1,4 +1,4 @@
-from odoo import api, fields, models
+from odoo import api, fields, models,_
 
 
 class InheritAccountPayment(models.Model):
@@ -17,6 +17,19 @@ class InheritAccountPayment(models.Model):
             credit_account = company_id.cash_suspense_account
 
             if credit_account:
-                if self.partner_type == 'customer':
+                if self.partner_type == 'customer' and self.payment_type == 'inbound':
                     self.destination_account_id = credit_account.id
 
+
+    ## Overriding Lable for Credit account
+    # def _get_counterpart_move_line_vals(self, invoice=False):
+    #     super(InheritAccountPayment, self)._get_counterpart_move_line_vals(invoice=invoice)
+    #
+    #     if self.partner_type == 'customer':
+    #         if self.payment_type == 'inbound':
+    #             self.name += _("rabbi payment")
+
+    #
+    # def _get_move_vals(self, journal=None):
+    #     super(InheritAccountPayment, self)._get_move_vals(journal=journal)
+    #     return {'name':'rabbi'}
