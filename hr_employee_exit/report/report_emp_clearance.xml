@@ -1,22 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--Custom report. -->
 <odoo>
-	<data>
-		<report
-			id="action_report_employee_clearance"
-			model="hr.emp.exit.req"
-			string="Print Employee Clearance"
-			report_type="qweb-pdf"
-			name="hr_employee_exit.report_employee_clearance"
-			file="hr_employee_exit.report_employee_clearance"
-            paperformat="custom_report.paperformat_backend_portrait"
-		/>
+    <data>
+        <report
+                id="action_report_employee_clearance"
+                model="hr.emp.exit.req"
+                string="Print Employee Clearance"
+                report_type="qweb-pdf"
+                name="hr_employee_exit.report_employee_clearance"
+                file="hr_employee_exit.report_employee_clearance"
+                paperformat="custom_report.paperformat_backend_portrait"
+        />
 
-		<template id="report_employee_clearance">
-			<t t-call="report.html_container">
-				<t t-call="custom_report.gbs_internal_layout">
-					<div class="page" style="page-break-inside:auto">
-						<div class="row" style="padding-top:5px;">
+        <template id="report_employee_clearance">
+            <t t-call="report.html_container">
+                <t t-call="custom_report.gbs_internal_layout">
+                    <div class="page" style="page-break-inside:auto">
+                        <div class="row" style="padding-top:5px;">
                             <style type="text/css">
                                 .report-title { text-align:center; }
                                 .odo-bg-gray, .odo-bg-gray > td { background-color: #f5f5f5; }
@@ -27,13 +27,13 @@
 
                                 <h4>Employee Details</h4>
                                 <div class="row">
-                                    <div class="col-xs-9 text-left">
+                                    <div class="col-xs-8 text-left">
                                         <h6><b>Employee Name :  </b><span t-esc="data['employee_id']"/></h6>
                                         <h6><b>Department :  </b><span t-esc="data['department_id']"/></h6>
                                         <h6><b>Job Title :  </b><span t-esc="data['job_id']"/></h6>
                                         <h6><b>Employee code :  </b><span t-esc="data['emp_code']"/></h6>
                                     </div>
-                                    <div class="col-xs-3 text-left">
+                                    <div class="col-xs-4 text-left">
                                         <h6><b>Date of Joining :  </b><span t-esc="data['initial_employment_date']"  t-options='{"widget": "date"}'/></h6>
                                         <h6><b>Date of Resignation :  </b><span t-esc="data['req_date']" t-options='{"widget": "date"}'/></h6>
                                         <h6><b>Date of Leaving :  </b><span t-esc="data['last_date']" t-options='{"widget": "date"}'/></h6>
@@ -41,50 +41,79 @@
                                 </div>
                             </div>
                             <t t-foreach="lists" t-as="l">
-                                <div>
-                                    <h4>
-                                        <span t-esc="l['responsible_department']"/>
-                                    </h4>
-                                    <table class="table table-report-xs table-bordered table-striped">
-                                        <thead>
-                                            <tr class="odo-bg-gray">
-                                                <th>Checklist Item</th>
-                                                <th>Remarks</th>
-                                                <th>State</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr style="page-break-inside: avoid">
-                                                <td><span t-esc="l['user']['checklist_item']"/></td>
-                                                <td><span t-esc="l['user']['remarks']"/></td>
-                                                <t t-if="l['user']['state'] == 'received'"><td>Received</td></t>
-                                                <t t-elif="l['user']['state'] == 'not_received'"><td>Not Received</td></t>
-                                                <t t-else=""><td></td></t>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
+                                <t t-if="l">
+                                    <div>
+                                        <h4>
+                                            <span t-esc="l"/>
+                                        </h4>
+                                        <table class="table table-report-xs table-bordered table-striped">
+                                            <thead>
+                                                <tr class="odo-bg-gray">
+                                                    <th>Checklist Item</th>
+                                                    <th>Remarks</th>
+                                                    <th>State</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <t t-foreach="l_value['item_list']" t-as="line">
+                                                    <tr style="page-break-inside: avoid">
+                                                        <td><span t-esc="line['item_name']"/></td>
+                                                        <td><span t-esc="line['remarks']"/></td>
+                                                        <t t-if="line['state'] == 'received'"><td>Received</td></t>
+                                                        <t t-elif="line['state'] == 'not_received'"><td>Not Received</td></t>
+                                                        <t t-else=""><td></td></t>
+                                                    </tr>
+                                                </t>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </t>
+                                <!--<t t-if ="l['responsible_employee']">-->
+                                <!--<div>-->
+                                <!--<h4>-->
+                                <!--<span t-esc="l['responsible_employee']"/>-->
+                                <!--</h4>-->
+                                <!--<table class="table table-report-xs table-bordered table-striped">-->
+                                <!--<thead>-->
+                                <!--<tr class="odo-bg-gray">-->
+                                <!--<th>Checklist Item</th>-->
+                                <!--<th>Remarks</th>-->
+                                <!--<th>State</th>-->
+                                <!--</tr>-->
+                                <!--</thead>-->
+                                <!--<tbody>-->
+                                <!--<tr style="page-break-inside: avoid">-->
+                                <!--<td><span t-esc="l['user']['checklist_item']"/></td>-->
+                                <!--<td><span t-esc="l['user']['remarks']"/></td>-->
+                                <!--<t t-if="l['user']['state'] == 'received'"><td>Received</td></t>-->
+                                <!--<t t-elif="l['user']['state'] == 'not_received'"><td>Not Received</td></t>-->
+                                <!--<t t-else=""><td></td></t>-->
+                                <!--</tr>-->
+                                <!--</tbody>-->
+                                <!--</table>-->
+                                <!--</div>-->
+                                <!--</t>-->
                             </t>
                         </div>
                         <!--<div class="row">-->
-                            <!--<div class="col-xs-6 text-left">-->
-                                <!--<span class="signed-by"><b>Employee Signature and Date : </b></span>-->
-                            <!--</div>-->
-                            <!--<div class="col-xs-6 text-right">-->
-                                <!--<span class="signed-by"><b>HR Signature and Date : </b></span>-->
-                            <!--</div>-->
+                        <!--<div class="col-xs-6 text-left">-->
+                        <!--<span class="signed-by"><b>Employee Signature and Date : </b></span>-->
+                        <!--</div>-->
+                        <!--<div class="col-xs-6 text-right">-->
+                        <!--<span class="signed-by"><b>HR Signature and Date : </b></span>-->
+                        <!--</div>-->
                         <!--</div>-->
                         <!--<div class="row">-->
-                            <!--<div class="col-xs-6 text-left">-->
-                                <!--<span class="signed-by"><b>Reporting Signature and Date : </b></span>-->
-                            <!--</div>-->
-                            <!--<div class="col-xs-6 text-right">-->
-                                <!--<span class="signed-by"><b>Accounte Signature and Date : </b></span>-->
-                            <!--</div>-->
+                        <!--<div class="col-xs-6 text-left">-->
+                        <!--<span class="signed-by"><b>Reporting Signature and Date : </b></span>-->
                         <!--</div>-->
-					</div>
-				</t>
-			</t>
-		</template>
-	</data>
+                        <!--<div class="col-xs-6 text-right">-->
+                        <!--<span class="signed-by"><b>Accounte Signature and Date : </b></span>-->
+                        <!--</div>-->
+                        <!--</div>-->
+                    </div>
+                </t>
+            </t>
+        </template>
+    </data>
 </odoo>
