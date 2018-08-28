@@ -32,7 +32,6 @@ class ResPartner(models.Model):
     _name = 'res.partner'
     _inherit = ['res.partner', 'mail.thread', 'ir.needaction_mixin']
 
-
     member_sequence = fields.Char()
 
     signup_token = fields.Char(copy=False)
@@ -235,7 +234,7 @@ class ResPartner(models.Model):
         })
         template = self.env.ref('member_signup.member_invoice_email_template')
         template.write({
-            'email_cc': "nopaws_ice_iu@yahoo.com,mahtab.faisal@genweb2.com",
+            'email_cc': "",
             'attachment_ids': [(6, 0, attachment.ids)],
         })
         user = self.env['res.partner'].search([('id', '=', inv.partner_id.id)])
@@ -324,12 +323,11 @@ class ResPartner(models.Model):
             res['email'] = res['login'] = partner.email or ''
         return res
 
-
     @api.multi
     def name_get(self):
         result = []
         for rec in self:
-            name=''
+            name = ''
             if rec.member_sequence or rec.is_applicant:
                 name = '[%s] %s' % (rec.member_sequence, rec.name)
             result.append((rec.id, name))
@@ -378,15 +376,19 @@ class ResPartner(models.Model):
 
         assert template._name == 'mail.template'
 
-        obj = self.env['res.users'].search([('email', '=', vals['email'])])
+        if 'email' in vals:
+            obj = self.env['res.users'].search([('email', '=', vals['email'])])
+        else:
+            obj = self.env['res.users'].search([('create_uid', '=', False)])
 
         template.write({
             'email_cc': vals['email_cc'] if 'email_cc' in vals else '',
+            'email_to': vals['email_to'] if 'email_to' in vals else '',
             'attachment_ids': vals['attachment_ids'] if 'attachment_ids' in vals['attachment_ids'] else [],
         })
-        base_url = self.env['ir.config_parameter'].get_param('web.base.url')
+
         context = {
-            'base_url': base_url,
+            'base_url': self.env['ir.config_parameter'].get_param('web.base.url'),
         }
 
         for key, val in vals['context'].iteritems():
@@ -394,10 +396,8 @@ class ResPartner(models.Model):
 
         for user in obj:
             context['lang'] = user.lang
-            if not user.email:
-                raise UserError(_("Cannot send email: user %s has no email address.") % user.name)
             template.with_context(context).send_mail(user.id, force_send=True, raise_exception=True)
-            _logger.info("Email sending status of user <%s> to <%s>", user.login, user.email)
+            _logger.info("Email sending status of user.")
 
     @api.model
     def email_group(self, val):
@@ -406,6 +406,6 @@ class ResPartner(models.Model):
         for gp in groups:
             if gp.category_id.name == val['category']:
                 for mail in gp.users:
-                    if mail.create_uid:
+                    if len(mail.create_uid) > 0:
                         email = email + ", " + mail.email if len(email) > 0 else mail.email
         return email

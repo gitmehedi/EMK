@@ -111,8 +111,9 @@ class MemberApplicationContoller(Home):
 
                     officer = {
                         'template': 'member_signup.mem_app_email_to_officer_tmpl',
-                        'email': off_email,
-                        'attachment_ids': 'member_signup.member_application_rejection_email_template',
+                        'email': auth_data['email'],
+                        'email_to': off_email,
+                        'attachment_ids': '',
                         'context': {'applicant_id': auth_data['email']},
                     }
                     res_obj.mailsend(vals)
@@ -233,6 +234,8 @@ class MemberApplicationContoller(Home):
         db, login, password = request.env['res.users'].sudo().signup(data, values.get('token'))
         if login:
             res_id = request.env['res.users'].sudo().search([('email', '=', login)])
+            groups = request.env['res.groups'].sudo().search([('name','=','Applicants')])
+            groups.write({'users': [(6, 0, [res_id.id])]})
             files = request.httprequest.files.getlist('attachment')
             self.upload_attachment(files, res_id.partner_id.id)
 

@@ -105,11 +105,11 @@ class MemberPayment(models.Model):
                         for inv_line in invoice.invoice_line_ids:
                             mem_inv = self.env['membership.membership_line'].search([
                                 ('account_invoice_line', '=', inv_line.id)])
-                            if mem_inv:
-                                self.env['membership.membership_line'].write({
-                                    'date': mem_inv.membership_id.membership_date_from,
-                                    'date_from': mem_inv.membership_id.membership_date_from,
-                                    'date_to': mem_inv.membership_id.membership_date_to})
+                            if len(mem_inv) > 0:
+                                mem_inv.write({
+                                    'date': fields.Date.today(),
+                                    'date_from': inv_line.product_id.membership_date_from,
+                                    'date_to': inv_line.product_id.membership_date_to})
 
                         vals = {
                             'template': 'member_payment.member_payment_confirmation_tmpl',

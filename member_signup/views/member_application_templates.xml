@@ -218,7 +218,7 @@
                     <div class="col-md-6">
                         <div class="form-group form-field"
                              style="display: none;">
-                            <input type="text" name="subject_of_interest_others" required="required"
+                            <input type="text" name="subject_of_interest_others"
                                    t-att-value="subject_of_interest_others" id="subject_of_interest_others"
                                    class="form-control input-sm reqfield"/>
                         </div>
