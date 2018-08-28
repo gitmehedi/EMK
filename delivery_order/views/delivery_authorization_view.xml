@@ -171,8 +171,9 @@
                     <field name="name" string="Delivery Authorization"/>
                     <field name="sale_order_id" string="Sale Order"/>
                     <field name="so_type"/>
+                    <field name="parent_id"/>
                     <field name="state"/>
-                    <field name="approved_date"/>
+                    <!--<field name="approved_date"/>-->
                 </tree>
             </field>
         </record>

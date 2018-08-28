@@ -13,7 +13,6 @@ class InheritResCompany(models.Model):
 
     commission_journal = fields.Many2one('account.journal', string='Commission Journal')
 
-
-
+    cash_suspense_account = fields.Many2one('account.account', string='Cash Suspense A/C', required=False)
 
 

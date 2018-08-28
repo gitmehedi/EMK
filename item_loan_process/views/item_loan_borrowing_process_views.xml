@@ -123,8 +123,12 @@
             </field>
         </record>
         <!-- Item Borrowing Menu -->
+        <menuitem name="Item Borrowing"
+                  parent="main_menu_item_loan" id="main_menu_item_borrowing" sequence="1"
+                  groups="stock.group_stock_user"/>
+
         <menuitem action="action_item_borrowing" name="Item Borrowing"
-                  parent="menu_item_loan_lending_main" id="menu_item_borrowing" sequence="2"
+                  parent="main_menu_item_borrowing" id="menu_item_borrowing" sequence="1"
                   groups="stock.group_stock_user"/>
 
         <!-- Item Borrowing Pending Approval Window Action -->
@@ -142,7 +146,7 @@
         </record>
         <!-- Item Borrowing Pending Approval Menu -->
         <menuitem action="action_pending_item_borrowing" name="Pending Approval"
-                  parent="menu_item_borrowing" id="menu_pending_item_borrowing" sequence="1"
+                  parent="main_menu_item_borrowing" id="menu_pending_item_borrowing" sequence="2"
                   groups="stock.group_stock_user"/>
 
     </data>
