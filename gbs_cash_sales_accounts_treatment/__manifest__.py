@@ -10,6 +10,7 @@
     ],
 
     'data': [
+        'views/inherited_account_payment_view.xml',
     ],
 
     'summary': 'Cash Sales Accounts Treatment',
