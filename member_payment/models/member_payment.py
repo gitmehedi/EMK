@@ -107,9 +107,10 @@ class MemberPayment(models.Model):
                                 ('account_invoice_line', '=', inv_line.id)])
                             if len(mem_inv) > 0:
                                 mem_inv.write({
-                                    'date': fields.Date.today(),
-                                    'date_from': inv_line.product_id.membership_date_from,
-                                    'date_to': inv_line.product_id.membership_date_to})
+                                    'date': self.date,
+                                    'date_from': self.date,
+                                    'date_to': inv_line.product_id.product_tmpl_id._get_next_date(self.date)
+                                })
 
                         vals = {
                             'template': 'member_payment.member_payment_confirmation_tmpl',
