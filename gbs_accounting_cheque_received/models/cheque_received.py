@@ -47,17 +47,25 @@ class ChequeReceived(models.Model):
     is_this_payment_checked = fields.Boolean(string='is_this_payment_checked', default=False)
     cheque_no = fields.Integer(string='Cheque No', states = {'returned': [('readonly', True)],'dishonoured': [('readonly', True)],'honoured': [('readonly', True)],'received': [('readonly', True)],'deposited': [('readonly', True)]})
 
+
     @api.onchange('partner_id')
     def onchange_partner_id(self):
         for ds in self:
             so_id_list = []
             if ds.partner_id:
-                so_objs = self.env['sale.order'].sudo().search([('partner_id', '=', ds.partner_id.id),
+                so_objs = self.env['sale.order'].sudo().search([('is_this_so_payment_check','=',False),('partner_id', '=', ds.partner_id.id),
                                                                 ('state', '=', 'done')])
                 if so_objs:
                     for so_obj in so_objs:
                         so_id_list.append(so_obj.id)
 
+
+                existing_so_ids = self.search([('partner_id', '=', ds.partner_id.id),
+                                               ('sale_order_id', 'in', so_id_list)])
+
+                #z = [[f(item_a, item_b) for item_b in b] for item_a in a]
+
+                #return {'domain': {'sale_order_id': [('id', 'not in', [i.sale_order_id.id for i in existing_so_ids]),('id', 'in', so_id_list)]}}
                 return {'domain': {'sale_order_id': [('id', 'in', so_id_list)]}}
 
 
@@ -124,7 +132,12 @@ class ChequeReceived(models.Model):
     def action_honoured(self):
         for cash in self:
             cash.action_journal_entry_bank()
-            #cash.updateCustomersCreditLimit()
+
+            for s_id in cash.sale_order_id:
+                so_objs = cash.env['sale.order'].search([('id','=',s_id.id)])
+
+                for so_id in so_objs:
+                    so_id.write({'is_this_so_payment_check':True})
 
             cash.state = 'honoured'
 
@@ -150,17 +163,14 @@ class ChequeReceived(models.Model):
 
                 debit_account_id = cr.journal_id.default_debit_account_id
                 credit_account_id = company_id.cash_suspense_account
-                for so_id in self.sale_order_id:
-                    name = so_id.name
+
             else:
                 debit_account_id = cr.partner_id.property_account_receivable_id
                 credit_account_id = cr.journal_id.default_credit_account_id
 
             if debit_account_id:
-                if not self.sale_order_id:
-                    name = debit_account_id.name
                 debit_line = (0, 0, {
-                    'name': name,
+                    'name': debit_account_id.name,
                     'partner_id': cr.partner_id.id,
                     'account_id': debit_account_id.id,
                     'journal_id': cr.journal_id.id,
@@ -173,10 +183,8 @@ class ChequeReceived(models.Model):
                 debit_sum += debit_line[2]['debit'] - debit_line[2]['credit']
 
             if credit_account_id:
-                if not self.sale_order_id:
-                    name = credit_account_id.name
                 credit_line = (0, 0, {
-                    'name': name,
+                    'name': credit_account_id.name,
                     'partner_id': cr.partner_id.id,
                     'account_id': credit_account_id.id,
                     'journal_id': cr.journal_id.id,

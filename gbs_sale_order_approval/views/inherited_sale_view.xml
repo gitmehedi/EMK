@@ -330,6 +330,11 @@
                     </xpath>
 
                     <xpath expr="//group/group/field[@name='payment_term_id']" position="before">
+                        <field name="is_this_so_payment_check" invisible="1"/>
+                    </xpath>
+
+
+                    <xpath expr="//group/group/field[@name='payment_term_id']" position="before">
                         <field name="pack_type" options="{'no_open': True, 'no_create': False}"
                                attrs="{'readonly':['|',('state','in',('draft','sent','validate','done','cancel','sale'))]}"/>
                     </xpath>

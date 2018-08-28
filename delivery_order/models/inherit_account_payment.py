@@ -30,17 +30,34 @@ class InheritAccountPayment(models.Model):
     #         ('supplier', 'Vendor')
     #     ],readonly=True,states={'draft': [('readonly', False)]})
 
+    @api.multi
+    def post(self):
+        res = super(InheritAccountPayment, self).post()
+
+        for s_id in self.sale_order_id:
+            so_objs = self.env['sale.order'].search([('id', '=', s_id.id)])
+
+            for so_id in so_objs:
+                so_id.write({'is_this_so_payment_check': True})
+
+
+        return res
+
+
 
     @api.onchange('partner_id')
     def onchange_partner_id(self):
         for ds in self:
             so_id_list = []
             if ds.partner_id:
-                so_objs = self.env['sale.order'].sudo().search([('partner_id', '=', ds.partner_id.id),
+                so_objs = self.env['sale.order'].sudo().search([('is_this_so_payment_check','=',False),('partner_id', '=', ds.partner_id.id),
                                                                     ('state', '=', 'done')])
                 if so_objs:
                     for so_obj in so_objs:
                         so_id_list.append(so_obj.id)
+
+                # existing_so_ids = self.search([('partner_id', '=', ds.partner_id.id),
+                #                                ('sale_order_id', 'in', so_id_list)])
 
                 return {'domain': {'sale_order_id': [('id', 'in', so_id_list)]}}
 
