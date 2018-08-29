@@ -36,10 +36,10 @@
                 </field>
 
                 <field name="journal_id" position="after">
-                    <field name="deposited_bank" attrs="{'invisible':[('my_menu_check','=',False)]}" />
+                    <field name="deposited_bank" options="{'no_open': True, 'no_create': True}" attrs="{'invisible':[('my_menu_check','=',False)]}" />
                 </field>
 
-                <field name="journal_id" position="after">
+                <field name="deposited_bank" position="after">
                     <field name="bank_branch" attrs="{'invisible':[('my_menu_check','=',False)]}"/>
                 </field>
 

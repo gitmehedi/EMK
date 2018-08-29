@@ -1,1 +1,2 @@
+import inherited_res_company
 import inherit_account_payment

@@ -6,7 +6,7 @@ import datetime
 
 class ChequeReceived(models.Model):
     _name = 'accounting.cheque.received'
-    _inherit = ['mail.thread']
+    _inherit = ['mail.thread', 'ir.needaction_mixin']
     _order = 'id DESC'
     _description = "Cheque Info"
 
@@ -36,7 +36,8 @@ class ChequeReceived(models.Model):
     branch_name = fields.Char(string='Branch Name', required=True, states = {'returned': [('readonly', True)],'dishonoured': [('readonly', True)],'honoured': [('readonly', True)],'received': [('readonly', True)],'deposited': [('readonly', True)]})
     date_on_cheque = fields.Date('Date On Cheque', required=True, states = {'returned': [('readonly', True)],'dishonoured': [('readonly', True)],'honoured': [('readonly', True)],'received': [('readonly', True)],'deposited': [('readonly', True)]})
     cheque_amount = fields.Float(string='Amount', required=True, states = {'returned': [('readonly', True)],'dishonoured': [('readonly', True)],'honoured': [('readonly', True)],'received': [('readonly', True)],'deposited': [('readonly', True)]})
-    sale_order_id = fields.Many2many('sale.order', string='Sale Order', states = {'returned': [('readonly', True)],'dishonoured': [('readonly', True)],'honoured': [('readonly', True)],'received': [('readonly', True)],'deposited': [('readonly', True)]})
+    sale_order_id = fields.Many2many('sale.order', string='Sale Order',
+                                     states = {'returned': [('readonly', True)],'dishonoured': [('readonly', True)],'honoured': [('readonly', True)],'received': [('readonly', True)],'deposited': [('readonly', True)]}) #domain=[('partner_id', '=', partner_id.id),('is_this_so_payment_check','=',False),('state', '=', 'done')]
     is_cheque_payment = fields.Boolean(string='Cheque Payment', default=True)
     company_id = fields.Many2one('res.company', string='Company', ondelete='cascade',
                                  default=lambda self: self.env.user.company_id, readonly='True', states = {'returned': [('readonly', True)],'dishonoured': [('readonly', True)],'honoured': [('readonly', True)],'received': [('readonly', True)],'deposited': [('readonly', True)]})
@@ -45,7 +46,7 @@ class ChequeReceived(models.Model):
 
     #@todo : Update this field
     is_this_payment_checked = fields.Boolean(string='is_this_payment_checked', default=False)
-    cheque_no = fields.Integer(string='Cheque No', states = {'returned': [('readonly', True)],'dishonoured': [('readonly', True)],'honoured': [('readonly', True)],'received': [('readonly', True)],'deposited': [('readonly', True)]})
+    cheque_no = fields.Char(string='Cheque No', states = {'returned': [('readonly', True)],'dishonoured': [('readonly', True)],'honoured': [('readonly', True)],'received': [('readonly', True)],'deposited': [('readonly', True)]})
 
 
     @api.onchange('partner_id')
@@ -59,13 +60,6 @@ class ChequeReceived(models.Model):
                     for so_obj in so_objs:
                         so_id_list.append(so_obj.id)
 
-
-                existing_so_ids = self.search([('partner_id', '=', ds.partner_id.id),
-                                               ('sale_order_id', 'in', so_id_list)])
-
-                #z = [[f(item_a, item_b) for item_b in b] for item_a in a]
-
-                #return {'domain': {'sale_order_id': [('id', 'not in', [i.sale_order_id.id for i in existing_so_ids]),('id', 'in', so_id_list)]}}
                 return {'domain': {'sale_order_id': [('id', 'in', so_id_list)]}}
 
 
@@ -158,15 +152,10 @@ class ChequeReceived(models.Model):
 
             amount = cr.cheque_amount
 
-            if self.sale_order_id:
-                company_id = self.env['res.company']._company_default_get('gbs_accounting_cheque_received')
-
+            if cr.company_id:
                 debit_account_id = cr.journal_id.default_debit_account_id
-                credit_account_id = company_id.cash_suspense_account
+                credit_account_id = cr.company_id.cash_clearing_account
 
-            else:
-                debit_account_id = cr.partner_id.property_account_receivable_id
-                credit_account_id = cr.journal_id.default_credit_account_id
 
             if debit_account_id:
                 debit_line = (0, 0, {

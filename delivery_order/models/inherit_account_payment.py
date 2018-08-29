@@ -12,9 +12,9 @@ class InheritAccountPayment(models.Model):
     is_cash_payment = fields.Boolean(string='Cash Payment', default=True)
 
     ## if cash
-    deposited_bank = fields.Char(string='Deposited Bank', readonly=True, states={'draft': [('readonly', False)]})
+    deposited_bank = fields.Many2one('res.bank',string='Deposited Bank', readonly=True, states={'draft': [('readonly', False)]})
     bank_branch = fields.Char(string='Branch', readonly=True,states={'draft': [('readonly', False)]})
-    deposit_slip = fields.Integer(string='Deposit Slip No.',readonly=True,states={'draft': [('readonly', False)]})
+    deposit_slip = fields.Char(string='Deposit Slip No.',readonly=True,states={'draft': [('readonly', False)]})
 
     # if Bank
     cheque_no = fields.Char(string='Cheque No',readonly=True,states={'draft': [('readonly', False)]})
@@ -25,10 +25,7 @@ class InheritAccountPayment(models.Model):
     ], string='Payment Type', default='inbound')
 
     payment_transaction_id = fields.Many2one('payment.transaction', string="Payment Transaction",readonly=True,states={'draft': [('readonly', False)]})
-    # partner_type = fields.Selection([
-    #         ('customer', 'Customer'),
-    #         ('supplier', 'Vendor')
-    #     ],readonly=True,states={'draft': [('readonly', False)]})
+
 
     @api.multi
     def post(self):
@@ -56,8 +53,6 @@ class InheritAccountPayment(models.Model):
                     for so_obj in so_objs:
                         so_id_list.append(so_obj.id)
 
-                # existing_so_ids = self.search([('partner_id', '=', ds.partner_id.id),
-                #                                ('sale_order_id', 'in', so_id_list)])
 
                 return {'domain': {'sale_order_id': [('id', 'in', so_id_list)]}}
 
