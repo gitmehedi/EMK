@@ -26,9 +26,7 @@ class ResPartner(models.Model):
         for rec in record:
             vals = {
                 'template': 'member_renew.member_renew_notification_email_template',
-                'email': rec['email'],
-                'email_cc': 'nopaws_ice_iu@yahoo.com,mahtab.faisal@genweb2.com',
-                'attachment_ids': 'member_renew.member_renew_notification_email_template',
+                'email_to': rec['email'],
                 'context': {},
             }
             self.mailsend(vals)

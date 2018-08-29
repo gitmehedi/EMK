@@ -18,7 +18,7 @@ class ServicePayment(models.Model):
             raise UserError(_('Session is not opened. Please open a session.'))
         return session
 
-    paid_amount = fields.Float(string='Payment Amount', required=True, compute='_compute_paid_amount', store=True)
+    paid_amount = fields.Float(string='Payment Amount',  compute='_compute_paid_amount', store=True)
     comments = fields.Text(string='Comments', readonly=True, states={'open': [('readonly', False)]})
     collection_date = fields.Date(default=fields.Datetime.now(), string='Date', required=True, readonly=True,
                                   states={'open': [('readonly', False)]})
