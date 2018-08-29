@@ -52,6 +52,7 @@
                                                     <th>Checklist Item</th>
                                                     <th>Remarks</th>
                                                     <th>State</th>
+                                                    <th>Signature</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -62,55 +63,83 @@
                                                         <t t-if="line['state'] == 'received'"><td>Received</td></t>
                                                         <t t-elif="line['state'] == 'not_received'"><td>Not Received</td></t>
                                                         <t t-else=""><td></td></t>
+                                                        <t><td></td></t>
                                                     </tr>
                                                 </t>
                                             </tbody>
                                         </table>
                                     </div>
                                 </t>
-                                <!--<t t-if ="l['responsible_employee']">-->
-                                <!--<div>-->
-                                <!--<h4>-->
-                                <!--<span t-esc="l['responsible_employee']"/>-->
-                                <!--</h4>-->
-                                <!--<table class="table table-report-xs table-bordered table-striped">-->
-                                <!--<thead>-->
-                                <!--<tr class="odo-bg-gray">-->
-                                <!--<th>Checklist Item</th>-->
-                                <!--<th>Remarks</th>-->
-                                <!--<th>State</th>-->
-                                <!--</tr>-->
-                                <!--</thead>-->
-                                <!--<tbody>-->
-                                <!--<tr style="page-break-inside: avoid">-->
-                                <!--<td><span t-esc="l['user']['checklist_item']"/></td>-->
-                                <!--<td><span t-esc="l['user']['remarks']"/></td>-->
-                                <!--<t t-if="l['user']['state'] == 'received'"><td>Received</td></t>-->
-                                <!--<t t-elif="l['user']['state'] == 'not_received'"><td>Not Received</td></t>-->
-                                <!--<t t-else=""><td></td></t>-->
-                                <!--</tr>-->
-                                <!--</tbody>-->
-                                <!--</table>-->
-                                <!--</div>-->
-                                <!--</t>-->
+                            </t>
+                            <t t-foreach="checklist" t-as="l">
+                                <t t-if="l">
+                                    <div>
+                                        <h4>
+                                            <span t-esc="l"/>
+                                        </h4>
+                                        <table class="table table-report-xs table-bordered table-striped">
+                                            <thead>
+                                                <tr class="odo-bg-gray">
+                                                    <th>Checklist Item</th>
+                                                    <th>Remarks</th>
+                                                    <th>State</th>
+                                                    <th>Signature</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <t t-foreach="l_value['item']" t-as="line">
+                                                    <tr style="page-break-inside: avoid">
+                                                        <td><span t-esc="line['item_name']"/></td>
+                                                        <td><span t-esc="line['remarks']"/></td>
+                                                        <t t-if="line['state'] == 'received'"><td>Received</td></t>
+                                                        <t t-elif="line['state'] == 'not_received'"><td>Not Received</td></t>
+                                                        <t t-else=""><td></td></t>
+                                                        <t><td></td></t>
+                                                    </tr>
+                                                </t>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </t>
                             </t>
                         </div>
-                        <!--<div class="row">-->
-                        <!--<div class="col-xs-6 text-left">-->
-                        <!--<span class="signed-by"><b>Employee Signature and Date : </b></span>-->
-                        <!--</div>-->
-                        <!--<div class="col-xs-6 text-right">-->
-                        <!--<span class="signed-by"><b>HR Signature and Date : </b></span>-->
-                        <!--</div>-->
-                        <!--</div>-->
-                        <!--<div class="row">-->
-                        <!--<div class="col-xs-6 text-left">-->
-                        <!--<span class="signed-by"><b>Reporting Signature and Date : </b></span>-->
-                        <!--</div>-->
-                        <!--<div class="col-xs-6 text-right">-->
-                        <!--<span class="signed-by"><b>Accounte Signature and Date : </b></span>-->
-                        <!--</div>-->
-                        <!--</div>-->
+                        <br/>
+                        <div class="row">
+                        <div class="col-xs-8 text-left">
+                        <span class="signed-by"><b>Employee Signature and Date : </b></span>
+                            <br/>
+                            <br/>
+                            <br/>
+                            <br/>
+                            <p>-------------------------------------------</p>
+                        </div>
+                        <div class="col-xs-4 text-left" style="padding-left:35px;">
+                        <span class="signed-by"><b>HR Signature and Date : </b></span>
+                            <br/>
+                            <br/>
+                            <br/>
+                            <br/>
+                            <p>-------------------------------------------</p>
+                        </div>
+                        </div>
+                        <div class="row">
+                        <div class="col-xs-8 text-left">
+                        <span class="signed-by"><b>Reporting Signature and Date : </b></span>
+                            <br/>
+                            <br/>
+                            <br/>
+                            <br/>
+                            <p>-------------------------------------------</p>
+                        </div>
+                        <div class="col-xs-4 text-left" style="padding-left:35px;">
+                        <span class="signed-by"><b>Accounte Signature and Date : </b></span>
+                            <br/>
+                            <br/>
+                            <br/>
+                            <br/>
+                            <p>-------------------------------------------</p>
+                        </div>
+                        </div>
                     </div>
                 </t>
             </t>

@@ -5,7 +5,7 @@
 		<report
 			id="action_report_employee_exit"
 			model="hr.emp.exit.req"
-			string="Print Exit Report"
+			string="Exit Report"
 			report_type="qweb-pdf"
 			name="hr_employee_exit.report_employee_exit"
 			file="hr_employee_exit.report_employee_exit"
