@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>
-        <template id="report_stock_issue_temp" inherit_id="custom_report.gbs_external_layout" primary="True">
-            <xpath expr="//t[@t-call='custom_report.gbs_external_layout_header']" position="attributes">
-                <attribute name="t-call">stock_issue_report.external_layout_header_sir</attribute>
+        <template id="report_stock_issue_temp" inherit_id="custom_report.gbs_internal_layout" primary="True">
+            <xpath expr="//t[@t-call='custom_report.gbs_internal_layout_header']" position="attributes">
+                <attribute name="t-call">stock_issue_report.internal_layout_header_sir</attribute>
             </xpath>
         </template>
-        <template id="external_layout_header_sir" inherit_id="custom_report.gbs_external_layout_header" primary="True">
+        <template id="internal_layout_header_sir" inherit_id="custom_report.gbs_internal_layout_header" primary="True">
             <xpath expr="//div[@class='company-info']" position="after">
                 <div name="company_address">
                     <h5><span t-esc="address"/></h5>
