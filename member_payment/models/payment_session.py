@@ -43,9 +43,9 @@ class PaymentSession(models.Model):
 
     @api.constrains('name')
     def unique_session(self):
-        vals = self.search([('open', '=', True)])
+        vals = self.search([('open', '=', True),('user_id', '=', self.user_id.id)])
         if len(vals) > 1:
-            raise UserError(_('Session already Open. Please close session before open another.'))
+            raise UserError(_('Session already open. Please close session before open another.'))
 
     @api.one
     def act_open(self):

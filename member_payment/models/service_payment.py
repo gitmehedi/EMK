@@ -12,7 +12,8 @@ class ServicePayment(models.Model):
 
     @api.model
     def _get_session(self):
-        session = self.env['payment.session'].search([('open', '=', True)])
+        session = self.env['payment.session'].search(
+            [('open', '=', True), ('user_id', '=', self.env.user.partner_id.id)])
         if not session:
             raise UserError(_('Session is not opened. Please open a session.'))
         return session

@@ -330,16 +330,10 @@ class ResPartner(models.Model):
             name = ''
             if rec.member_sequence or rec.is_applicant:
                 name = '[%s] %s' % (rec.member_sequence, rec.name)
+            else:
+                name = rec.name
             result.append((rec.id, name))
         return result
-
-    # @api.multi
-    # def name_get(self):
-    #     for rec in self:
-    #         name = super(ResPartner, rec).name_get()
-    #         if rec.member_sequence or rec.is_applicant:
-    #             name = '[%s] %s' % (rec.member_sequence, rec.name)
-    #     return (self.id, name)
 
     @api.model
     def name_search(self, name='', args=None, operator='ilike', limit=100):
