@@ -214,9 +214,9 @@ class ResPartner(models.Model):
             user = self.env['res.users'].search([('id', '=', self.user_ids.id)])
             vals = {
                 'template': 'member_signup.member_invoice_email_template',
-                'email': user.email if user else self.email,
+                'email_to': user.email if user else self.email,
                 'attachment_ids': [(6, 0, attachment.ids)],
-                'context': {'lang': user.lang},
+                'context': {'name': self.name},
             }
             self.mailsend(vals)
 
@@ -376,36 +376,25 @@ class ResPartner(models.Model):
 
         assert template._name == 'mail.template'
 
-        if 'email' in vals:
-            obj = self.env['res.users'].search([('email', '=', vals['email'])])
-        else:
-            obj = self.env['res.users'].search([('create_uid', '=', False)])
-
         template.write({
-            'email_cc': vals['email_cc'] if 'email_cc' in vals else '',
             'email_to': vals['email_to'] if 'email_to' in vals else '',
-            'attachment_ids': vals['attachment_ids'] if 'attachment_ids' in vals['attachment_ids'] else [],
+            'attachment_ids': vals['attachment_ids'] if 'attachment_ids' in vals else [],
         })
 
         context = {
             'base_url': self.env['ir.config_parameter'].get_param('web.base.url'),
+            'lang': self.env.user.lang,
         }
 
         for key, val in vals['context'].iteritems():
             context[key] = val
 
-        for user in obj:
-            context['lang'] = user.lang
-            template.with_context(context).send_mail(user.id, force_send=True, raise_exception=True)
-            _logger.info("Email sending status of user.")
+        template.with_context(context).send_mail(self.env.user.id, force_send=True, raise_exception=True)
+        _logger.info("Email sending status of user.")
 
     @api.model
-    def email_group(self, val):
-        email = ''
-        groups = self.env['res.groups'].search([('name', 'in', val['group'])])
-        for gp in groups:
-            if gp.category_id.name == val['category']:
-                for mail in gp.users:
-                    if len(mail.create_uid) > 0:
-                        email = email + ", " + mail.email if len(email) > 0 else mail.email
-        return email
+    def groupmail(self, val):
+        groups = self.env['res.groups'].search(
+            [('name', 'in', val['group']), ('category_id.name', '=', val['category'])])
+        emails = [str(rec.email) for rec in groups.users if len(rec.create_uid) > 0]
+        return ", ".join(emails)

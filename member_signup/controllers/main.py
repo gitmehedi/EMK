@@ -100,21 +100,17 @@ class MemberApplicationContoller(Home):
                 auth_data = self.create_applicant(qcontext)
                 if auth_data:
                     res_obj = request.env['res.partner'].sudo()
-                    off_email = res_obj.email_group({'group': ['Officer'], 'category': 'Membership'})
+                    recipient_email = res_obj.groupmail({'group': ['Officer'], 'category': 'Membership'})
                     vals = {
                         'template': 'member_signup.member_application_email_template',
-                        'email': auth_data['email'],
-                        'password': auth_data['password'],
-                        'attachment_ids': 'member_signup.member_application_rejection_email_template',
+                        'email_to': auth_data['email'],
                         'context': auth_data,
                     }
 
                     officer = {
                         'template': 'member_signup.mem_app_email_to_officer_tmpl',
-                        'email': auth_data['email'],
-                        'email_to': off_email,
-                        'attachment_ids': '',
-                        'context': {'applicant_id': auth_data['email']},
+                        'email_to': recipient_email,
+                        'context': auth_data,
                     }
                     res_obj.mailsend(vals)
                     res_obj.mailsend(officer)
@@ -234,13 +230,18 @@ class MemberApplicationContoller(Home):
         db, login, password = request.env['res.users'].sudo().signup(data, values.get('token'))
         if login:
             res_id = request.env['res.users'].sudo().search([('email', '=', login)])
-            groups = request.env['res.groups'].sudo().search([('name','=','Applicants')])
+            groups = request.env['res.groups'].sudo().search(
+                [('name', '=', 'Applicants'), ('category_id.name', '=', 'Membership')])
             groups.write({'users': [(6, 0, [res_id.id])]})
             files = request.httprequest.files.getlist('attachment')
             self.upload_attachment(files, res_id.partner_id.id)
 
         request.env.cr.commit()
-        return {'name': data['name'], 'email': login, 'password': password}
+        return {'name': data['name'],
+                'email': login,
+                'password': password,
+                'res_id': res_id.id,
+                'member_seq': res_id.partner_id.member_sequence}
 
     def upload_attachment(self, files, id):
         Attachments = request.env['ir.attachment']

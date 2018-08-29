@@ -112,11 +112,16 @@ class MemberPayment(models.Model):
                                     'date_to': inv_line.product_id.product_tmpl_id._get_next_date(self.date)
                                 })
 
+                        rm_grp = self.env['res.groups'].sudo().search(
+                            [('name', '=', 'Applicants'), ('category_id.name', '=', 'Membership')])
+                        rm_grp.write({'users': [(3, self.membership_id.id)]})
+                        add_grp = self.env['res.groups'].sudo().search(
+                            [('name', '=', 'Membership User'), ('category_id.name', '=', 'Membership')])
+                        add_grp.write({'users': [(6,0, [self.membership_id.id])]})
+
                         vals = {
                             'template': 'member_payment.member_payment_confirmation_tmpl',
-                            'email': self.membership_id.email,
                             'email_to': self.membership_id.email,
-                            'attachment_ids': '',
                             'context': {},
                         }
 
