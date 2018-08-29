@@ -288,7 +288,6 @@
             </form>
         </field>
     </record>
-
     <record model="ir.actions.act_window" id="action_membership_pending_applicant">
         <field name="name">Pending Application</field>
         <field name="res_model">res.partner</field>
@@ -301,14 +300,12 @@
             </p>
         </field>
     </record>
-
     <record model="ir.actions.act_window.view" id="action_membership_pending_applicant_view_tree">
         <field name="sequence" eval="2"/>
         <field name="view_mode">tree</field>
         <field name="view_id" ref="membership.membership_members_tree"/>
         <field name="act_window_id" ref="action_membership_pending_applicant"/>
     </record>
-
     <record model="ir.actions.act_window.view" id="action_membership_pending_applicant_view_form">
         <field name="sequence" eval="3"/>
         <field name="view_mode">form</field>
@@ -321,11 +318,9 @@
         <field name="view_id" ref="base.res_partner_kanban_view"/>
         <field name="act_window_id" ref="action_membership_pending_applicant"/>
     </record>
-
     <menuitem id="menu_membership" sequence="10" parent="menu_member_general"
               action="action_membership_pending_applicant"
               groups="membership_user.group_mem_user_officer,membership_extension.group_membership_manager"/>
-
     <record model="ir.actions.act_window" id="action_membership_applicant">
         <field name="name">Applicants</field>
         <field name="res_model">res.partner</field>
@@ -338,14 +333,12 @@
             </p>
         </field>
     </record>
-
     <record model="ir.actions.act_window.view" id="action_membership_members_view_tree">
         <field name="sequence" eval="2"/>
         <field name="view_mode">tree</field>
         <field name="view_id" ref="membership.membership_members_tree"/>
         <field name="act_window_id" ref="action_membership_applicant"/>
     </record>
-
     <record model="ir.actions.act_window.view" id="action_membership_members_view_form">
         <field name="sequence" eval="3"/>
         <field name="view_mode">form</field>
@@ -358,11 +351,9 @@
         <field name="view_id" ref="base.res_partner_kanban_view"/>
         <field name="act_window_id" ref="action_membership_applicant"/>
     </record>
-
     <menuitem id="menu_membership_applicant" sequence="5" parent="menu_member_general"
               action="action_membership_applicant"
               groups="membership_user.group_mem_user_officer,membership_extension.group_membership_manager"/>
-
     <record model="ir.actions.act_window" id="action_membership_applicant_reject">
         <field name="name">Rejected Applicants</field>
         <field name="res_model">res.partner</field>
@@ -375,14 +366,12 @@
             </p>
         </field>
     </record>
-
     <record model="ir.actions.act_window.view" id="action_membership_members_reject_view_tree">
         <field name="sequence" eval="2"/>
         <field name="view_mode">tree</field>
         <field name="view_id" ref="membership.membership_members_tree"/>
         <field name="act_window_id" ref="action_membership_applicant_reject"/>
     </record>
-
     <record model="ir.actions.act_window.view" id="action_membership_members_reject_view_form">
         <field name="sequence" eval="3"/>
         <field name="view_mode">form</field>
@@ -395,7 +384,6 @@
         <field name="view_id" ref="base.res_partner_kanban_view"/>
         <field name="act_window_id" ref="action_membership_applicant_reject"/>
     </record>
-
     <menuitem id="menu_membership_applicant_reject" sequence="10" parent="menu_member_general"
               action="action_membership_applicant_reject"
               groups="membership_user.group_mem_user_officer,membership_user.group_user_member,membership_extension.group_membership_manager"/>

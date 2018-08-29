@@ -2,7 +2,8 @@
 <odoo>
 
     <record id="membership.menu_association" model="ir.ui.menu">
-        <field name="groups_id" eval="[(4, ref('membership_user.group_mem_user_officer'))]"/>
+        <field name="groups_id"
+               eval="[(4, ref('membership_user.group_mem_user_officer')),(4, ref('membership_user.group_user_member'))]"/>
     </record>
     <record id="membership.menu_marketing_config_association" model="ir.ui.menu">
         <field name="groups_id" eval="[(4, ref('membership_user.group_mem_user_officer'))]"/>
