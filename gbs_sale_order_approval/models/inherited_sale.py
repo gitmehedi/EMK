@@ -608,6 +608,15 @@ class SaleOrder(models.Model):
         return super(SaleOrder, self).unlink()
 
 
+    @api.multi
+    def _prepare_invoice(self):
+        res = super(SaleOrder, self)._prepare_invoice()
+
+        res['currency_id'] = self.currency_id.id
+
+        return res
+
+
 ################################
 # Sale Order Line Class
 ################################

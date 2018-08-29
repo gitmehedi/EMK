@@ -18,7 +18,7 @@ class InheritedAccountInvoiceLine(models.Model):
         }
 
         # update this field to ensure same currency on invoice line and invoice obj
-        self.invoice_id.write({'currency_id': so_obj.currency_id.id})
+        #self.invoice_id.write({'currency_id': so_obj.currency_id.id})
 
         self.write(vals)
 
