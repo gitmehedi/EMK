@@ -251,14 +251,9 @@ class ResPartner(models.Model):
     @api.one
     def member_reject(self):
         if 'application' in self.state:
-            email_cc = self.email_group({'group': ['Manager'], 'category': 'Membership'})
-
             vals = {
                 'template': 'member_signup.member_application_rejection_email_template',
-                'email': self.email,
                 'email_to': self.email,
-                'email_cc': email_cc,
-                'attachment_ids': 'member_signup.member_application_rejection_email_template',
                 'context': {},
             }
             self.mailsend(vals)
