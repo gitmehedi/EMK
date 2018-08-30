@@ -167,7 +167,8 @@
             <field name="model">delivery.authorization</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree string="Delivery Order">
+                <tree string="Delivery Order"
+                colors="blue:state == 'validate'">
                     <field name="name" string="Delivery Authorization"/>
                     <field name="sale_order_id" string="Sale Order"/>
                     <field name="so_type"/>
