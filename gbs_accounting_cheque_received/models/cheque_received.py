@@ -45,7 +45,7 @@ class ChequeReceived(models.Model):
 
     #@todo : Update this field
     is_this_payment_checked = fields.Boolean(string='is_this_payment_checked', default=False)
-    cheque_no = fields.Integer(string='Cheque No',states = {'returned': [('readonly', True)],'dishonoured': [('readonly', True)],'honoured': [('readonly', True)],'received': [('readonly', True)],'deposited': [('readonly', True)]})
+    cheque_no = fields.Char(string='Cheque No',states = {'returned': [('readonly', True)],'dishonoured': [('readonly', True)],'honoured': [('readonly', True)],'received': [('readonly', True)],'deposited': [('readonly', True)]})
 
     @api.multi
     def _get_payment_method(self):
