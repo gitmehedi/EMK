@@ -40,6 +40,7 @@ class ResPartner(models.Model):
     signup_valid = fields.Boolean(compute='_compute_signup_valid', string='Signup Token is Valid')
     signup_url = fields.Char(compute='_compute_signup_url', string='Signup URL')
     birthdate = fields.Date("Birth Date")
+    auto_renew = fields.Boolean(string='Auto Renew', default=False)
 
     last_place_of_study = fields.Char(string='Last or Current Place of Study')
     place_of_study = fields.Char(string='Last or Current Place of Study')

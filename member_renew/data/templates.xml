@@ -18,9 +18,9 @@
                 </table>
             </div>
             <div style="padding:0px;width:600px;margin:auto;background: #FFFFFF repeat top /100%;color:#777777">
-            <p>Dear ${object.name},</p>
+            <p>Dear ${ctx['name']|safe},</p>
                 <p>
-                    Your membership will expire very soon. Please take a visit and consult with EMK for continue membership.
+                    Your membership will expire after <strong>${ctx['expire_date']|safe}</strong>. Please take a visit and consult with EMK for continue membership.
                 </p>
                 <p>Best regards,</p>
             </div>

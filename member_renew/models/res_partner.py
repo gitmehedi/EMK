@@ -12,9 +12,7 @@ class ResPartner(models.Model):
         for rec in record:
             vals = {
                 'template': 'member_renew.member_renew_notification_email_template',
-                'email': rec['email'],
-                'email_cc': 'nopaws_ice_iu@yahoo.com,mahtab.faisal@genweb2.com',
-                'attachment_ids': 'member_renew.member_renew_notification_email_template',
+                'email_to': rec['email'],
                 'context': {},
             }
             self.mailsend(vals)
@@ -24,17 +22,21 @@ class ResPartner(models.Model):
     def renew_requst(self):
         record = self.browse(self._context.get('active_ids'))
         for rec in record:
-            vals = {
-                'template': 'member_renew.member_renew_notification_email_template',
-                'email_to': rec['email'],
-                'context': {},
-            }
-            self.mailsend(vals)
-            rec.mail_notification = True
+            if rec['auto_renew']:
+                self._create_invoice()
+                rec.mail_notification = True
+            else:
+                vals = {
+                    'template': 'member_renew.member_renew_notification_email_template',
+                    'email_to': rec['email'],
+                    'context': {'name': rec['name'], 'expire_date': rec['membership_stop']},
+                }
+                self.mailsend(vals)
+                rec.mail_notification = True
 
-            object = {
-                'membership_id': self.id,
-                'request_date': fields.Date.today(),
-                'state': 'request',
-            }
-            self.env['renew.request'].create(object)
+                object = {
+                    'membership_id': self.id,
+                    'request_date': fields.Date.today(),
+                    'state': 'request',
+                }
+                self.env['renew.request'].create(object)
