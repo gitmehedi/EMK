@@ -3,7 +3,7 @@ from datetime import datetime, timedelta
 from odoo import models, fields, api, _
 
 
-class ExpirationListWizard(models.Model):
+class ExpirationListWizard(models.TransientModel):
     _name = 'expiration.list.wizard'
 
     no_of_days = fields.Integer(required=True, string='No of Days')
