@@ -123,7 +123,8 @@
         <field name="model">customer.commission.configuration</field>
         <field name="type">tree</field>
         <field name="arch" type="xml">
-            <tree string="Customer Commission Configuration Tree">
+            <tree string="Customer Commission Configuration Tree"
+            colors="blue:state == 'validate';red:state == 'approve'">
                 <field name="name"/>
                 <field name="product_id"/>
                 <field name="customer_id"/>

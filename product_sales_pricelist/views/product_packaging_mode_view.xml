@@ -19,9 +19,14 @@
 				<form string="Product Packaging Mode">
 					<sheet>
 						<group>
-							<field name="packaging_mode"/>
-							<field name="uom_id"/>
-							<field name="is_jar_bill_included"/>
+							<group>
+								<field name="packaging_mode"/>
+								<field name="uom_id"/>
+							</group>
+							<group>
+								<field name="sequence"/>
+								<field name="is_jar_bill_included"/>
+							</group>
 						</group>
 	                </sheet>
 				</form>
