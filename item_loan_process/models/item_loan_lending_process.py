@@ -5,7 +5,6 @@ from datetime import datetime
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
 
-
 class ItemLoanLending(models.Model):
     _name = 'item.loan.lending'
     _description = "Item Loan Lending"
@@ -14,7 +13,7 @@ class ItemLoanLending(models.Model):
 
 
     def _get_default_item_loan_location_id(self):
-        return self.env['stock.location'].search([('usage', '=', 'customer')], limit=1).id
+        return self.env['stock.location'].search([('usage', '=', 'customer'),('can_loan_request', '=', True)], limit=1).id
 
     def _get_default_location_id(self):
         return self.env['stock.location'].search([('operating_unit_id', '=', self.env.user.default_operating_unit_id.id),('name','=','Stock')], limit=1).id
@@ -26,6 +25,7 @@ class ItemLoanLending(models.Model):
     issuer_id = fields.Many2one('res.users', string='Issue By', required=True, readonly=True,
                                   default=lambda self: self.env.user,states={'draft': [('readonly', False)]})
     borrower_id = fields.Many2one('res.partner', string="Request By" ,readonly=True, required=True,
+                                  domain="[('parent_id', '=', False)]",
                                   states={'draft': [('readonly', False)]})
     approved_date = fields.Datetime('Approved Date', readonly=True)
     approver_id = fields.Many2one('res.users', string='Authority', readonly=True,
@@ -35,7 +35,7 @@ class ItemLoanLending(models.Model):
     operating_unit_id = fields.Many2one('operating.unit', 'Operating Unit', required=True,readonly=True,
                                         states={'draft': [('readonly', False)]},
                                         default=lambda self: self.env.user.default_operating_unit_id)
-    location_id = fields.Many2one('stock.location', 'Location', default=_get_default_location_id,
+    location_id = fields.Many2one('stock.location', 'Source Location', default=_get_default_location_id,
                                   domain="[('usage', '=', 'internal'),('operating_unit_id', '=',operating_unit_id)]",
                                   required=True,
                                   states={'draft': [('readonly', False)]})
@@ -104,9 +104,10 @@ class ItemLoanLending(models.Model):
             if line.product_id:
                 if not picking_id:
                     picking_type = self.env['stock.picking.type'].search(
-                        [('default_location_src_id', '=', self.location_id.id),('code', '=', 'outgoing')])
+                        [('default_location_src_id', '=', self.location_id.id),('code', '=', 'outgoing'),
+                         ('default_location_dest_id', '=', self.item_loan_location_id.id)])
                     if not picking_type:
-                        raise UserError(_('Please create picking type for Item Landing.'))
+                        raise UserError(_('Please create "Outgoing" picking type for Item Landing.'))
                     # pick_name = self.env['ir.sequence'].next_by_code('stock.picking')
                     res = {
                         'picking_type_id': picking_type.id,
@@ -149,7 +150,6 @@ class ItemLoanLending(models.Model):
                 }
                 move = move_obj.create(moves)
                 # move.action_done()
-                self.write({'move_id': move.id})
 
         return picking_id
 
@@ -191,7 +191,13 @@ class ItemLoanLending(models.Model):
 
     @api.model
     def _needaction_domain_get(self):
-        return [('state', 'in', ['waiting_approval'])]
+        users_obj = self.env['res.users']
+        if users_obj.has_group('stock.group_stock_manager'):
+            domain = [
+                ('state', 'in', ['waiting_approval'])]
+            return domain
+        else:
+            return False
 
 class ItemLoanLendingLines(models.Model):
     _name = 'item.loan.lending.line'

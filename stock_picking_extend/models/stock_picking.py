@@ -15,7 +15,7 @@ class Picking(models.Model):
             return picking_type_objs[0].id
 
     transfer_type = fields.Selection([
-        ('receive', 'Receive')])
+        ('receive', 'Receive'),('loan', 'Loan')])
     receive_type = fields.Selection([
         ('loan', 'Loan'),
         ('other', 'Other')],

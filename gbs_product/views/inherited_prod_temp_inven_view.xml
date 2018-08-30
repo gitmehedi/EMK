@@ -59,10 +59,10 @@
             <field name="inherit_id" ref="procurement.product_template_view_form_procurement_button"/>
             <field name="arch" type="xml">
                 <xpath expr="//button[@name='%(procurement.procurement_order_action_product_template_stat)d']" position="replace">
-                   <button class="oe_stat_button" name="%(procurement.procurement_order_action_product_template_stat)d"
-                           icon="fa-truck" string="Procurements" type="action"
-                           groups="base.group_no_one"
-                           attrs="{'invisible': ['|',('purchase_ok', '=', False),('type', '=', 'service')]}"/>
+                    <button class="oe_stat_button" name="%(procurement.procurement_order_action_product_template_stat)d"
+                            icon="fa-truck" string="Procurements" type="action"
+                            groups="base.group_no_one"
+                            attrs="{'invisible': ['|',('purchase_ok', '=', False),('type', '=', 'service')]}"/>
                 </xpath>
             </field>
         </record>
@@ -74,10 +74,21 @@
             <field name="inherit_id" ref="purchase.view_product_template_purchase_buttons_from"/>
             <field name="arch" type="xml">
                 <xpath expr="//button[@name='%(purchase.action_purchase_line_product_tree)d']" position="replace">
-                   <button class="oe_stat_button" name="%(purchase.action_purchase_line_product_tree)d"
-                       type="action" attrs="{'invisible': [('purchase_ok', '=', False)]}" icon="fa-shopping-cart">
-                       <field string="Purchases" name="purchase_count" widget="statinfo"/>
-                   </button>
+                    <button class="oe_stat_button" name="%(purchase.action_purchase_line_product_tree)d"
+                            type="action" attrs="{'invisible': [('purchase_ok', '=', False)]}" icon="fa-shopping-cart">
+                        <field string="Purchases" name="purchase_count" widget="statinfo"/>
+                    </button>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="product_template_toggle_active_view" model="ir.ui.view">
+            <field name="name">product.template.toggle.active.view</field>
+            <field name="model">product.template</field>
+            <field name="inherit_id" ref="product.product_template_form_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="//button[@name='toggle_active']" position="attributes">
+                    <attribute name="groups">base.group_system</attribute>
                 </xpath>
             </field>
         </record>
