@@ -325,7 +325,7 @@ class DeliveryAuthorization(models.Model):
              ('sale_order_id', '=', self.sale_order_id.id)])
 
         if not self.line_ids:
-            return self.write({'state': 'approve'})  # Only Second level approval
+            return self.write({'state': 'validate'})  # Only Second level approval
 
         ## Sum of cash amount
         cash_line_total_amount = 0
@@ -342,7 +342,7 @@ class DeliveryAuthorization(models.Model):
         if not total_cash_cheque_amount or total_cash_cheque_amount == 0:
             account_payment_pool.write({'is_this_payment_checked': True})
             cheque_rcv_pool.write({'is_this_payment_checked': True})
-            return self.write({'state': 'approve'})  # Only Second level approval
+            return self.write({'state': 'validate'})  # Only Second level approval
 
         if total_cash_cheque_amount >= self.total_amount:
             account_payment_pool.write({'is_this_payment_checked': True})
@@ -352,7 +352,7 @@ class DeliveryAuthorization(models.Model):
         else:
             account_payment_pool.write({'is_this_payment_checked': True})
             cheque_rcv_pool.write({'is_this_payment_checked': True})
-            return self.write({'state': 'approve'})  # Only Second level approval
+            return self.write({'state': 'validate'})  # Only Second level approval
 
     def create_delivery_order(self):
         for order in self.sale_order_id:
@@ -480,18 +480,14 @@ class DeliveryAuthorization(models.Model):
                 if bank_payments.id not in val_bank:
                     vals_bank.append((0, 0, {'account_payment_id': bank_payments.id,
                                              'amount': bank_payments.amount,
-                                             'bank': bank_payments.deposited_bank,
-                                             'dep_bank': bank_payments.bank_branch,
+                                             'dep_bank': bank_payments.deposited_bank,
+                                             'branch': bank_payments.bank_branch,
                                              'payment_date': bank_payments.payment_date,
                                              'number': bank_payments.cheque_no
                                              }))
 
             self.cash_ids = vals_bank
 
-        self._process_total_payment_received_amount()
-
-
-    def _process_total_payment_received_amount(self):
         # process total payment received amount
         ## Sum of cash amount
         cash_line_total_amount = 0
@@ -548,13 +544,13 @@ class DeliveryAuthorization(models.Model):
     def _needaction_domain_get(self):
         users_obj = self.env['res.users']
         domain = []
-        if users_obj.has_group('gbs_application_group.group_cxo'):
+        # if users_obj.has_group('gbs_application_group.group_cxo'):
+        #     domain = [
+        #         ('state', 'in', ['validate'])]
+        #     return domain
+        if users_obj.has_group('gbs_application_group.group_head_account'):
             domain = [
                 ('state', 'in', ['validate'])]
-            return domain
-        elif users_obj.has_group('gbs_application_group.group_head_account'):
-            domain = [
-                ('state', 'in', ['approve'])]
             return domain
         elif users_obj.has_group('account.group_account_user'):
             domain = [

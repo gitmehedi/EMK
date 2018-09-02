@@ -86,7 +86,7 @@
             <field name="arch" type="xml">
                 <search string="Delivery Authorization">
                     <filter name="validate" string="To Validate" domain="[('state','=','validate')]"/>
-                    <filter name="confirm" string="To Confirm" domain="[('state','=','approve')]"/>
+                    <filter name="confirm" string="To Validate" domain="[('state','=','validate')]"/>
                 </search>
             </field>
         </record>
