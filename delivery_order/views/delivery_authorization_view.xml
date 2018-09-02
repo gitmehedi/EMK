@@ -148,6 +148,10 @@
                             <group class="oe_subtotal_footer oe_right" colspan="2" name="sale_total">
                                 <field name="amount_untaxed" widget='monetary'
                                        options="{'currency_field': 'currency_id'}"/>
+
+                                <field name="total_payment_received" widget='monetary'
+                                       options="{'currency_field': 'currency_id'}"/>
+
                                 <field name="tax_value" widget='monetary' options="{'currency_field': 'currency_id'}"/>
                                 <field name="total_amount" class="oe_subtotal_footer_separator" widget='monetary'
                                        options="{'currency_field': 'currency_id'}"/>

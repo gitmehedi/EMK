@@ -96,6 +96,7 @@ class DeliveryAuthorization(models.Model):
     amount_untaxed = fields.Float(string='Untaxed Amount', readonly=True)
     tax_value = fields.Float(string='Taxes', readonly=True)
     total_amount = fields.Float(string='Total', readonly=True, track_visibility='onchange')
+    total_payment_received = fields.Float(string='Total Payment Received', readonly=True, track_visibility='onchange')
 
     sale_order_id = fields.Many2one('sale.order',
                                     string='Sale Order',
@@ -505,6 +506,24 @@ class DeliveryAuthorization(models.Model):
                                              }))
 
             self.cash_ids = vals_bank
+
+            #process total payment received amount
+
+        ## Sum of cash amount
+        cash_line_total_amount = 0
+        for do_cash_line in self.cash_ids:
+            cash_line_total_amount = cash_line_total_amount + do_cash_line.amount
+
+        ## Sum of cheques amount
+        cheque_line_total_amount = 0
+        for do_cheque_line in self.cheque_ids:
+            cheque_line_total_amount = cheque_line_total_amount + do_cheque_line.amount
+
+        self.total_payment_received = cash_line_total_amount + cheque_line_total_amount
+
+
+
+
 
     @api.multi
     def process_cheque_payment(self):
