@@ -19,6 +19,10 @@
                     <field name="country_id" placeholder="Country" class="o_address_country" options='{"no_open": True}'/>
                 </div>
             </xpath>
+            <xpath expr="//field[@name='branch_code']" position="after">
+                <field name="is_company_account"/>
+            </xpath>
+
         </field>
     </record>
 </odoo>
