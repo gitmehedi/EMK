@@ -24,10 +24,12 @@ class LoanLending(models.Model):
             result = self.env.ref('stock.action_picking_tree_all').read()[0]
             result['domain'] = [('id','in', stock_picking_objs.ids)]
         else:
-            picking_type_objs = self.env['stock.picking.type'].search(
-                [('warehouse_id.operating_unit_id', '=', self.env.user.default_operating_unit_id.id),
-                 ('code', '=', 'incoming')])
-            location_id = self.env['stock.location'].search([('usage', '=', 'supplier')], limit=1).id
+            location_id = self.env['stock.location'].search(
+                [('operating_unit_id', '=', self.operating_unit_id.id), ('name', '=', 'Input')],limit=1).id
+            picking_type_objs = self.env['stock.picking.type'].search([
+                ('default_location_src_id', '=', self.item_loan_location_id.id),
+                ('default_location_dest_id', '=', location_id),
+                ('code', '=', 'incoming')],limit=1)
 
             res = self.env.ref('stock_picking_extend.view_stock_picking_form1')
 
