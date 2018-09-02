@@ -105,9 +105,10 @@ class SaleOrder(models.Model):
 
     @api.model
     def create(self, vals):
-        team = self.env['crm.team']._get_default_team_id()
+        sales_channel_obj = self.env['sales.channel'].search([('id', '=', vals['sales_channel'])])
+
         new_seq = self.env['ir.sequence'].next_by_code_new('sale.order', self.create_date,
-                                                           team.operating_unit_id) or '/'
+                                                           sales_channel_obj.operating_unit_id) or '/'
         if new_seq:
             vals['name'] = new_seq
 
@@ -173,6 +174,11 @@ class SaleOrder(models.Model):
         else:
             currency = self.currency_id.name.encode('ascii', 'ignore')
             return amount_to_text_en.amount_to_text(number, 'en', currency)
+
+
+    @api.multi
+    def action_reset(self):
+        self.state = 'to_submit'
 
     @api.multi
     def action_validate(self):
@@ -538,31 +544,32 @@ class SaleOrder(models.Model):
             self.order_line = val
             self.fields_readonly = True
 
-    @api.onchange('operating_unit_id')
-    def onchange_operating_unit_id(self):
-        team = self.env['crm.team']._get_default_team_id()
+    # @api.onchange('operating_unit_id')
+    # def onchange_operating_unit_id(self):
+    #     #Fetch OP Unit from Sales Channel
+    #     sales_channel_obj = self.env['sales.channel'].search([('id','=',self.sales_channel.id)])
+    #
+    #     self._cr.execute("""SELECT * FROM stock_warehouse WHERE operating_unit_id= %s LIMIT 1""",
+    #                      (sales_channel_obj.operating_unit_id.id,))  # Never remove the comma after the parameter
+    #     warehouse = self._cr.fetchall()
+    #
+    #     if warehouse:
+    #         self.warehouse_id = warehouse[0][0]
 
-        self._cr.execute("""SELECT * FROM stock_warehouse WHERE operating_unit_id= %s LIMIT 1""",
-                         (team.operating_unit_id.id,))  # Never remove the comma after the parameter
-        warehouse = self._cr.fetchall()
+    # @api.model
+    # def _default_warehouse_id(self):
+    #     sales_channel_obj = self.env['sales.channel'].search([('id', '=', self.sales_channel.id)])
+    #
+    #     self._cr.execute("""SELECT * FROM stock_warehouse WHERE operating_unit_id= %s LIMIT 1""",
+    #                      (sales_channel_obj.operating_unit_id.id,))  # Never remove the comma after the parameter
+    #     warehouse = self._cr.fetchall()
+    #
+    #     return warehouse[0][0]
 
-        if warehouse:
-            self.warehouse_id = warehouse[0][0]
 
-    @api.model
-    def _default_warehouse_id(self):
-        team = self.env['crm.team']._get_default_team_id()
+    def _get_sales_channel(self):
+        return self.env['sales.channel'].search([], limit=1)
 
-        self._cr.execute("""SELECT * FROM stock_warehouse WHERE operating_unit_id= %s LIMIT 1""",
-                         (team.operating_unit_id.id,))  # Never remove the comma after the parameter
-        warehouse = self._cr.fetchall()
-
-        return warehouse[0][0]
-
-    warehouse_id = fields.Many2one(
-        'stock.warehouse', string='Warehouse',
-        required=True, readonly=True, states={'to_submit': [('readonly', False)]},
-        default=_default_warehouse_id)
 
     @api.model
     def _default_operating_unit(self):
@@ -572,12 +579,35 @@ class SaleOrder(models.Model):
         else:
             return self.env.user.default_operating_unit_id
 
+
+    sales_channel = fields.Many2one('sales.channel', string='Sales Channel', readonly=True,
+                                    states={'to_submit': [('readonly', False)]}, required=True)
+
+    warehouse_id = fields.Many2one(
+        'stock.warehouse', string='Warehouse',
+        required=True, readonly=True, states={'to_submit': [('readonly', False)]},
+        related='sales_channel.warehouse_id')
+
     operating_unit_id = fields.Many2one(
         comodel_name='operating.unit',
         string='Operating Unit',
-        default=_default_operating_unit,
+        related='sales_channel.operating_unit_id',
         readonly=True, states={'to_submit': [('readonly', False)]}
     )
+
+    approver_manager_id = fields.Many2one('hr.employee', string='Approver Manager', readonly=True,
+                                          related='sales_channel.employee_id',
+                                          states={'to_submit': [('readonly', False)]}, required=True)
+
+    # Ovrride this entire mentod and did not call super.
+    # Where ever this method is called, not impact on business
+    @api.multi
+    @api.constrains('team_id', 'operating_unit_id')
+    def _check_team_operating_unit(self):
+        for rec in self:
+            if (rec.team_id and
+                        rec.team_id.operating_unit_id != rec.operating_unit_id):
+                continue;
 
     @api.model
     def _needaction_domain_get(self):
