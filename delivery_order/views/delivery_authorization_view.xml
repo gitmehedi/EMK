@@ -10,23 +10,23 @@
                     <header>
                         <button name="action_validate" type="object" states="draft" string="Confirm"
                                 class="oe_highlight"
-                                groups="account.group_account_user,gbs_application_group.group_head_account,gbs_application_group.group_cxo"/>
+                                groups="account.group_account_user,gbs_application_group.group_head_account"/>
 
                         <button name="action_draft" type="object"
                                 states="validate" string="Reset to Draft"
-                                groups="gbs_application_group.group_head_account,gbs_application_group.group_cxo"/>
+                                groups="gbs_application_group.group_head_account"/>
 
                         <button name="action_approve" type="object" states="approve"
                                 string="Validate" class="oe_highlight"
-                                groups="gbs_application_group.group_cxo,gbs_application_group.group_head_account"/>
+                                groups="gbs_application_group.group_head_account"/>
 
                         <button name="action_close" type="object" states="validate"
                                 string="Approve" class="oe_highlight"
-                                groups="gbs_application_group.group_cxo"/>
+                                groups="gbs_application_group.group_head_account"/>
 
                         <button name="action_refuse" type="object" states="approve,validate"
                                 string="Refuse"
-                                groups="gbs_application_group.group_head_account,gbs_application_group.group_cxo"/>
+                                groups="gbs_application_group.group_head_account"/>
 
                         <field name="state" statusbar_visible="draft,validate,close, refused" widget="statusbar"/>
 
@@ -125,7 +125,7 @@
                                             <field name="amount"/>
                                             <field name="dep_bank"/>
                                             <field name="branch"/>
-                                            <field name="validity"/>
+                                            <!--<field name="validity"/>-->
                                             <field name="account_payment_id"/>
                                         </tree>
                                     </field>
@@ -148,6 +148,10 @@
                             <group class="oe_subtotal_footer oe_right" colspan="2" name="sale_total">
                                 <field name="amount_untaxed" widget='monetary'
                                        options="{'currency_field': 'currency_id'}"/>
+
+                                <field name="total_payment_received" widget='monetary'
+                                       options="{'currency_field': 'currency_id'}" attrs="{'invisible':[('so_type', '!=', 'cash')]}"/>
+
                                 <field name="tax_value" widget='monetary' options="{'currency_field': 'currency_id'}"/>
                                 <field name="total_amount" class="oe_subtotal_footer_separator" widget='monetary'
                                        options="{'currency_field': 'currency_id'}"/>
@@ -167,7 +171,8 @@
             <field name="model">delivery.authorization</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree string="Delivery Order">
+                <tree string="Delivery Order"
+                colors="blue:state == 'validate'">
                     <field name="name" string="Delivery Authorization"/>
                     <field name="sale_order_id" string="Sale Order"/>
                     <field name="so_type"/>

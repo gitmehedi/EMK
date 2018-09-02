@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <record id="exit_interview_form_view" model="ir.ui.view">
+            <field name="name">exit_interview_form_view</field>
+            <field name="model">employee.exit.interview</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Employee Exit Interview">
+                    <header>
+                        <button name="action_submit" states="draft" type="object" string="Aply" groups ="hr.group_hr_manager" class="oe_highlight"/>
+
+                        <button string="Reset to Draft" name="action_reset"
+                                attrs="{'invisible': [('state', 'in', ['draft','submit'])]}"
+                                type="object"/>
+                        <button string="Submit" name="action_validate"
+                                attrs="{'invisible': [('state', 'not in', ['submit'])]}"
+                                type="object" class="oe_highlight"/>
+                        <button string="Validate" name="action_approved" groups="gbs_application_group.group_dept_manager"
+                                attrs="{'invisible': [('state','not in',['validate'])]}"
+                                type="object" class="oe_highlight"/>
+                        <button string="Approved" name="action_done"
+                                attrs="{'invisible': [('state','not in',['approved'])]}" groups ="hr.group_hr_manager"
+                                type="object" class="oe_highlight"/>
+                        <field name="state" widget="statusbar"
+                               statusbar_visible="draft,submit,validate,approved,done"/>
+                    </header>
+                    <sheet>
+                        <group>
+                            <separator string="Employee Details" colspan="2"/>
+                            <group>
+                                <field name="employee_id"/>
+                                <field name="employee_code"/>
+                                <field name="emp_designation"/>
+                                <field name="emp_department"/>
+                                <field name="supervisor_id"/>
+                            </group>
+                            <group>
+                                <field name="location"/>
+                                <field name="joining_date"/>
+                                <field name="resignation_date"/>
+                                <field name="leaving_date"/>
+                                <field name="supervisor_designation"/>
+                            </group>
+                        </group>
+                        <p><b>The Information you give here would be helpful to us to create a better working environment</b></p>
+                        <p><b>SECTION A: </b></p>
+                        <p>a) Please Indicate below the reasons for your decision by distributing 100 points over the
+                        factors given below indicating % contribution to your decision.</p>
+                        <p>b) Also cite critical incidents/example to support your rating.</p>
+                        <p><b>For example,</b> if only one major factor lead to your decision wright 100 against that factor,if two equally important factors give
+                        50 each, if one major factor and one minor factor give 70 or 80 depending on their importance.</p>
+                        <field name="line_ids" nolabel="1">
+                            <tree editable="bottom">
+                                <field name="factor"/>
+                                <field name="critical_incidents"/>
+                                <field name="point"/>
+                            </tree>
+                        </field>
+                        <p><b>SECTION B: </b></p>
+                        <p>In your opinion: </p>
+                        <field name="question_set_ids" nolabel="1">
+                            <tree editable="bottom">
+                                <field name="question"/>
+                                <field name="answer"/>
+                            </tree>
+                        </field>
+                        <p><b>Would you recommend the company to a friend as a good
+                            organization to work for? </b></p>
+                        <group>
+                            <field name="check_box1"/>
+                            <field name="check_box2"/>
+                            <field name="check_box3"/>
+                        </group>
+                        <p><b>Your contract address for all further correspondence is: </b></p>
+                        <field name="contract_add" nolabel="1"/>
+                    </sheet>
+
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+        <record id="emp_req_tree_view" model="ir.ui.view">
+            <field name="name">employee.exit.interview.tree</field>
+            <field name="model">employee.exit.interview</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Employee Exit Interview">
+                    <field name="employee_id"/>
+                    <field name="emp_designation"/>
+                    <field name="resignation_date"/>
+                    <field name="leaving_date"/>
+                </tree>
+            </field>
+        </record>
+
+
+        <!--<record id="action_exit_interview" model="ir.actions.act_window">-->
+			<!--<field name="name">Exit Interview</field>-->
+			<!--<field name="res_model">employee.exit.interview</field>-->
+			<!--<field name="view_mode">tree,form</field>-->
+		<!--</record>-->
+        <record id="action_exit_interview" model="ir.actions.act_window">
+            <field name="name">Exit Interview</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">employee.exit.interview</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+        <menuitem
+				name="Exit Interview"
+				id="exit_interview_menu"
+                parent="menu_exit_management"
+				sequence="20"
+                action="action_exit_interview"
+        />
+
+    </data>
+</odoo>
