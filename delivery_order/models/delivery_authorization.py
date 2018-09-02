@@ -470,25 +470,6 @@ class DeliveryAuthorization(models.Model):
              ('sale_order_id', '=', self.sale_order_id.id)])
 
         for acc in account_payment_pool:
-            #if acc.journal_id.type == 'cash':
-                # val = []
-                # for cash_line in self.cash_ids:
-                #     val.append(cash_line.account_payment_id.id)
-                #
-                # vals = []
-                # for payments in acc:
-                #     if payments.id not in val:
-                #         vals.append((0, 0, {'account_payment_id': payments.id,
-                #                             'amount': payments.amount,
-                #                             'dep_bank': payments.deposited_bank,
-                #                             'branch': payments.bank_branch,
-                #                             'payment_date': payments.payment_date,
-                #                             }))
-                #
-                # self.cash_ids = vals
-
-            #elif acc.journal_id.type == 'bank':
-
             val_bank = []
             for bank_line in self.cash_ids:
                 val_bank.append(bank_line.account_payment_id.id)
@@ -507,8 +488,11 @@ class DeliveryAuthorization(models.Model):
 
             self.cash_ids = vals_bank
 
-            #process total payment received amount
+        self._process_total_payment_received_amount()
 
+
+    def _process_total_payment_received_amount(self):
+        # process total payment received amount
         ## Sum of cash amount
         cash_line_total_amount = 0
         for do_cash_line in self.cash_ids:
@@ -518,11 +502,7 @@ class DeliveryAuthorization(models.Model):
         cheque_line_total_amount = 0
         for do_cheque_line in self.cheque_ids:
             cheque_line_total_amount = cheque_line_total_amount + do_cheque_line.amount
-
         self.total_payment_received = cash_line_total_amount + cheque_line_total_amount
-
-
-
 
 
     @api.multi
