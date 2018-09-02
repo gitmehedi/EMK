@@ -7,6 +7,14 @@ from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
 class ItemBorrowing(models.Model):
     _inherit = 'item.borrowing'
 
+    @api.model
+    def _create_pickings_and_moves(self):
+        res = super(ItemBorrowing, self)._create_pickings_and_moves()
+        if res:
+            picking_objs = self.env['stock.picking'].search([('id', '=', res)])
+            picking_objs.write({'transfer_type': 'loan','receive_type': 'loan'})
+        return res
+
     # return_picking_ids = fields.Many2many('stock.picking','picking_loan_rel','loan_id','picking_id','Picking(s)')
     return_picking_id = fields.Many2one('stock.picking','Return Picking')
 
@@ -17,8 +25,8 @@ class ItemBorrowing(models.Model):
 
         if not product_list:
             raise UserError('No Due so no need any adjustment!!!')
-        else:
-            self.write({'return_picking_id': False})
+        # else:
+        #     self.write({'return_picking_id': False})
 
         if not self.return_picking_id:
             self._create_return_pickings_and_moves(product_list)
@@ -52,23 +60,24 @@ class ItemBorrowing(models.Model):
         for line in product_list:
             date_planned = datetime.strptime(self.request_date, DEFAULT_SERVER_DATETIME_FORMAT)
             location_id = self.env['stock.location'].search(
-                [('operating_unit_id', '=', self.env.user.default_operating_unit_id.id), ('name', '=', 'Stock')],
+                [('operating_unit_id', '=', self.operating_unit_id.id), ('name', '=', 'Stock')],
                 limit=1).id
-            location_dest_id = self.env['stock.location'].search([('usage', '=', 'customer')], limit=1).id
+            location_dest_id = self.location_id.id
             if line.product_id:
                 if not picking_id:
                     picking_type = self.env['stock.picking.type'].search(
                         [('default_location_src_id', '=', location_id),
-                         ('code', '=', 'outgoing')])
+                         ('default_location_dest_id', '=', location_dest_id),
+                         ('code', '=', 'outgoing')], limit=1)
                     if not picking_type:
-                        raise UserError(_('Please create picking type for Item Borrowing.'))
-                    # pick_name = self.env['ir.sequence'].next_by_code('stock.picking')
+                        raise UserError(_('Please create picking type for Returning.'))
                     pick_name = self.env['stock.picking.type'].browse(picking_type.id).sequence_id.next_by_id()
                     res = {
                         'picking_type_id': picking_type.id,
+                        'transfer_type': 'loan',
                         'priority': '1',
                         'move_type': 'direct',
-                        'company_id': self.env.user['company_id'].id,
+                        'company_id': self.company_id.id,
                         'operating_unit_id': self.operating_unit_id.id,
                         'state': 'draft',
                         'invoice_state': 'none',
@@ -79,10 +88,7 @@ class ItemBorrowing(models.Model):
                         'location_id': location_id,
                         'location_dest_id': location_dest_id,
                     }
-                    if self.company_id:
-                        vals = dict(res, company_id=self.company_id.id)
-
-                    picking = picking_obj.create(vals)
+                    picking = picking_obj.create(res)
                     if picking:
                         picking_id = picking.id
 
@@ -101,10 +107,7 @@ class ItemBorrowing(models.Model):
                     'state': 'draft',
 
                 }
-                move = move_obj.create(moves)
-                self.write({'move_id': move.id})
-
-
+                move_obj.create(moves)
         self.return_picking_id = picking_id
 
         return True

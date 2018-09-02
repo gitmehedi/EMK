@@ -105,14 +105,14 @@ class ItemBorrowing(models.Model):
                 if not picking_id:
                     picking_type = self.env['stock.picking.type'].search(
                         [('default_location_dest_id', '=', self.item_loan_borrow_location_id.id),('code', '=', 'incoming'),
-                         ('default_location_src_id', '=', self.location_id.id)])
+                         ('default_location_src_id', '=', self.location_id.id)],limit=1)
                     if not picking_type:
                         raise UserError(_('Please create picking type for Item Borrowing.'))
                     res = {
                         'picking_type_id': picking_type.id,
                         'priority': '1',
                         'move_type': 'direct',
-                        'company_id': self.env.user['company_id'].id,
+                        'company_id': self.company_id.id,
                         'operating_unit_id': self.operating_unit_id.id,
                         'state': 'draft',
                         'invoice_state': 'none',
@@ -123,10 +123,8 @@ class ItemBorrowing(models.Model):
                         'location_id': self.location_id.id,
                         'location_dest_id': self.item_loan_borrow_location_id.id,
                     }
-                    if self.company_id:
-                        vals = dict(res, company_id=self.company_id.id)
-
-                    picking = picking_obj.create(vals)
+                    self.picking_type_id = picking_type.id
+                    picking = picking_obj.create(res)
                     if picking:
                         picking_id = picking.id
 
@@ -148,8 +146,6 @@ class ItemBorrowing(models.Model):
 
                 }
                 move = move_obj.create(moves)
-                # move.action_done()
-                self.write({'move_id': move.id})
 
         return picking_id
 
