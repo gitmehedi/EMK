@@ -8,4 +8,5 @@ import configure_checklists_line
 import hr_emp_master_checklists
 import hr_checklist_generate_popup
 import employee_exit_req
+import exit_interview
 
