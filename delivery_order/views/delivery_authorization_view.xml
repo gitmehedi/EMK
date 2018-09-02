@@ -150,7 +150,7 @@
                                        options="{'currency_field': 'currency_id'}"/>
 
                                 <field name="total_payment_received" widget='monetary'
-                                       options="{'currency_field': 'currency_id'}"/>
+                                       options="{'currency_field': 'currency_id'}" attrs="{'invisible':[('so_type', '!=', 'cash')]}"/>
 
                                 <field name="tax_value" widget='monetary' options="{'currency_field': 'currency_id'}"/>
                                 <field name="total_amount" class="oe_subtotal_footer_separator" widget='monetary'
