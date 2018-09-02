@@ -116,12 +116,12 @@
                   groups="gbs_application_group.group_head_account"
                   action="delivery_order_action_head_account"/>
 
-        <menuitem id="delivery_order_submenu_cxo"
-                  name="Pending DA"
-                  parent="menu_cxo_approval"
-                  sequence="2"
-                  groups="gbs_application_group.group_cxo"
-                  action="delivery_order_action_cxo"/>
+        <!--<menuitem id="delivery_order_submenu_cxo"-->
+                  <!--name="Pending DA"-->
+                  <!--parent="menu_cxo_approval"-->
+                  <!--sequence="2"-->
+                  <!--groups="gbs_application_group.group_cxo"-->
+                  <!--action="delivery_order_action_cxo"/>-->
         <!--........................................................................................................-->
 
         <!--Customer Credit Limit-->
