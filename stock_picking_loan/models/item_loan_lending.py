@@ -4,6 +4,14 @@ from odoo.exceptions import UserError
 class LoanLending(models.Model):
     _inherit = 'item.loan.lending'
 
+    @api.model
+    def _create_pickings_and_moves(self):
+        res = super(LoanLending, self)._create_pickings_and_moves()
+        if res:
+            picking_objs = self.env['stock.picking'].search([('id', '=', res)])
+            picking_objs.write({'transfer_type': 'loan'})
+        return res
+
     @api.multi
     def action_view_picking(self):
         product_list = self.item_lines.filtered(lambda o: o.due_qty > 0.0)

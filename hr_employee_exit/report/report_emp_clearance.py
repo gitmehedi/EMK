@@ -16,27 +16,50 @@ class LoanReport(models.AbstractModel):
         data['job_id'] = exit_obj.job_id.name
         data['emp_code'] = exit_obj.employee_id.device_employee_acc
 
+        sql_dept = '''SELECT p.state as state,
+                        item.name as item_name,
+                        p.remarks as remarks,
+                        dept.name as responsible_dept
+                FROM 
+                    hr_exit_checklists_line as p 
+                left join 
+                    hr_exit_checklist_item as item 
+                on item.id = p.checklist_item_id
+                left join 
+                    hr_department as dept 
+                on dept.id = p.responsible_department'''
+        self.env.cr.execute(sql_dept)
+        data_list = self.env.cr.dictfetchall()
+        item_checklist = {vals['responsible_dept']: {'item_list': [], }
+                    for vals in data_list}
+        for vals in data_list:
+            if vals:
+                item_checklist[vals['responsible_dept']]['item_list'].append(vals)
 
-        checklist=[]
-        if exit_obj.checklists_ids:
-            for line in exit_obj.checklists_ids:
-                dept_list=[]
-                dept= line.responsible_department
-                dept_list.append(dept)
-                for dept in dept_list:
-                    if dept == line.responsible_department:
-                        list_obj={}
-                        list_obj['responsible_department'] = line.responsible_department.name
-                        list_obj['user'] = {}
-                        list_obj['user']['checklist_item'] = line.checklist_item_id.name
-                        list_obj['user']['remarks']  = line.remarks
-                        list_obj['user']['state']  = line.state
+        sql_emp = '''SELECT p.state AS state,
+                        item.name AS item_name,
+                        p.remarks AS remarks,
+                        emp.name_related as responsible_emp
+                    FROM
+                        hr_exit_checklists_line AS p
+                    LEFT JOIN
+                        hr_exit_checklist_item as item
+                    ON item.id = p.checklist_item_id
+                    LEFT JOIN
+                        hr_employee as emp
+                    ON emp.id = p.responsible_emp'''
+        self.env.cr.execute(sql_emp)
+        data_list = self.env.cr.dictfetchall()
+        checklist = {vals['responsible_emp']:{'item':[],}for vals in data_list}
+        for vals in data_list:
+            if vals:
+                checklist[vals['responsible_emp']]['item'].append(vals)
 
-                checklist.append(list_obj)
 
         docargs = {
             'data': data,
-            'lists': checklist
+            'lists': item_checklist,
+            'checklist': checklist
         }
 
         return self.env['report'].render('hr_employee_exit.report_employee_clearance',docargs)

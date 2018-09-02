@@ -323,7 +323,7 @@ class SaleOrder(models.Model):
             for lines in order.order_line:
 
                 cust_commission_pool = order.env['customer.commission'].search(
-                    [('customer_id', '=', order.partner_id.id), ('product_id', '=', lines.product_id.ids)])
+                    [('currency_id','=',order.currency_id.id),('customer_id', '=', order.partner_id.id), ('product_id', '=', lines.product_id.ids)])
 
                 price_change_pool = order.env['product.sale.history.line'].search(
                     [('product_id', '=', lines.product_id.id),
@@ -606,6 +606,15 @@ class SaleOrder(models.Model):
             if order.state not in ('to_submit', 'cancel'):
                 raise UserError(_('You can not delete a sent quotation or a sales order! Try to cancel it before.'))
         return super(SaleOrder, self).unlink()
+
+
+    @api.multi
+    def _prepare_invoice(self):
+        res = super(SaleOrder, self)._prepare_invoice()
+
+        res['currency_id'] = self.currency_id.id
+
+        return res
 
 
 ################################
