@@ -94,7 +94,7 @@ class MemberPayment(models.Model):
                         self.state = 'paid'
                         self.payment_ref = payment_ref
 
-                    if rec.state and self.membership_id.state == 'invoice':
+                    if rec.state=='paid' and self.membership_id.state == 'invoice':
                         seq = self.env['ir.sequence'].next_by_code('res.partner.member')
                         self.membership_id.write({'state': 'member',
                                                   'member_sequence': seq,

@@ -10,6 +10,7 @@
         'base',
         'mail',
         'website',
+        'account',
         'opa_utility',
         'membership',
         'membership_extension',

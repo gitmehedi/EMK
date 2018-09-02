@@ -11,6 +11,13 @@
     <record id="mail.mail_channel_menu_root_chat" model="ir.ui.menu">
         <field name="groups_id" eval="[(3, ref('membership_user.group_mem_user_applicant'))]"/>
     </record>
+    <record id="membership_card.membership_card_report" model="ir.actions.report.xml">
+        <field name="groups_id" eval="[(4, ref('membership_user.group_user_member'))]"/>
+    </record>
+    <record id="account.action_report_print_overdue" model="ir.actions.report.xml">
+        <field name="groups_id" eval="[(4, ref('membership_user.group_mem_user_officer'))]"/>
+    </record>
+
 
     <record model="ir.rule" id="rule_mem_app">
         <field name="name">Applicant</field>
