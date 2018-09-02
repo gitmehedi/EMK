@@ -323,7 +323,7 @@ class SaleOrder(models.Model):
             for lines in order.order_line:
 
                 cust_commission_pool = order.env['customer.commission'].search(
-                    [('customer_id', '=', order.partner_id.id), ('product_id', '=', lines.product_id.ids)])
+                    [('currency_id','=',order.currency_id.id),('customer_id', '=', order.partner_id.id), ('product_id', '=', lines.product_id.ids)])
 
                 price_change_pool = order.env['product.sale.history.line'].search(
                     [('product_id', '=', lines.product_id.id),
