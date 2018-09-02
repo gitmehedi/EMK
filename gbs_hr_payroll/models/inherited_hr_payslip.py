@@ -42,23 +42,21 @@ class HrPayslipRun(models.Model):
     def confirm_payslip(self):
         res = super(HrPayslipRun, self).close_payslip_run()
 
-
         for payslip in self.slip_ids:
             payslip.action_payslip_done()
 
         email_server_obj = self.env['ir.mail_server'].search([], order='id ASC', limit=1)
         payslip_line = self.env['hr.payslip'].search([('payslip_run_id','=',self.id)])
-        emailto = []
         if self.send_email == True:
+            template = self.env.ref('gbs_hr_payroll.employee_email_template')
+            template.write({
+                'subject': "Employee Salary Sheet",
+                'email_from': email_server_obj.name,
+                })
             for eml in payslip_line:
-                login = eml.employee_id.user_id.login
-                emailto.append(login)
-                for email in emailto:
-                    template = self.env.ref('gbs_hr_payroll.employee_email_template')
+                if eml.employee_id.work_email:
                     template.write({
-                        'subject': "Employee Salary Sheet",
-                        'email_from': email_server_obj.name,
-                        'email_to': email})
+                        'email_to': eml.employee_id.work_email})
                     self.env['mail.template'].browse(template.id).send_mail(eml.id)
 
         return res
