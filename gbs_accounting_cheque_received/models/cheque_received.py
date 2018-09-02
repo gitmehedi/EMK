@@ -45,7 +45,7 @@ class ChequeReceived(models.Model):
 
     #@todo : Update this field
     is_this_payment_checked = fields.Boolean(string='is_this_payment_checked', default=False)
-    cheque_no = fields.Integer(string='Cheque No')
+    cheque_no = fields.Char(string='Cheque No',states = {'returned': [('readonly', True)],'dishonoured': [('readonly', True)],'honoured': [('readonly', True)],'received': [('readonly', True)],'deposited': [('readonly', True)]})
 
     @api.multi
     def _get_payment_method(self):
@@ -68,13 +68,10 @@ class ChequeReceived(models.Model):
             pay.payment_method_id = pay_method_pool.id
 
 
-    @api.multi
-    def _compute_journal(self):
-        for jour in self:
-            jour.journal_id = jour.env.user.company_id.bank_journal_ids.id
-
-
-    journal_id = fields.Many2one('account.journal', compute='_compute_journal')
+    journal_id = fields.Many2one('account.journal', string='Payment Journal',
+                                 states={'returned': [('readonly', True)], 'dishonoured': [('readonly', True)],
+                                         'honoured': [('readonly', True)], 'received': [('readonly', True)],
+                                         'deposited': [('readonly', True)]},domain=[('type', '=', 'bank')], required=True)
 
 
     @api.constrains('cheque_amount')

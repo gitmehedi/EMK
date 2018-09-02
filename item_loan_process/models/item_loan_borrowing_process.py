@@ -5,7 +5,6 @@ from odoo.addons import decimal_precision as dp
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
 
-
 class ItemBorrowing(models.Model):
     _name = 'item.borrowing'
     _description = "Item Borrowing"
@@ -16,7 +15,7 @@ class ItemBorrowing(models.Model):
         return self.env['stock.location'].search([('operating_unit_id', '=', self.env.user.default_operating_unit_id.id),('name','=','Input')], limit=1).id
 
     def _get_default_location_id(self):
-        return self.env['stock.location'].search([('usage', '=', 'supplier')], limit=1).id
+        return self.env['stock.location'].search([('usage', '=', 'supplier'),('can_loan_request', '=', True)], limit=1).id
 
     name = fields.Char('Issue #', size=100, readonly=True, default="/")
     request_date = fields.Datetime('Request Date', required=True, readonly=True,
@@ -25,6 +24,7 @@ class ItemBorrowing(models.Model):
                                 default=lambda self: self.env.user,
                                 states={'draft': [('readonly', False)]})
     partner_id = fields.Many2one('res.partner', string="Partner Company" ,readonly=True, required=True,
+                                 domain="[('parent_id', '=', False)]",
                                  states={'draft': [('readonly', False)]})
     company_id = fields.Many2one('res.company', 'Company', readonly=True, states={'draft': [('readonly', False)]},
                                  default=lambda self: self.env.user.company_id, required=True)
@@ -34,8 +34,7 @@ class ItemBorrowing(models.Model):
     description = fields.Text('Description', readonly=True, states={'draft': [('readonly', False)]})
     item_lines = fields.One2many('item.borrowing.line', 'item_borrowing_id', 'Items', readonly=True,
                                  states={'draft': [('readonly', False)]})
-
-    location_id = fields.Many2one('stock.location', 'Location', default=_get_default_location_id,
+    location_id = fields.Many2one('stock.location', 'Source Location', default=_get_default_location_id,
                                   readonly = True,required=True,help="source location. from where item is borrowing.",
                                   states={'draft': [('readonly', False)]})
     item_loan_borrow_location_id = fields.Many2one('stock.location', 'Destination Location',required=True,
@@ -105,10 +104,10 @@ class ItemBorrowing(models.Model):
             if line.product_id:
                 if not picking_id:
                     picking_type = self.env['stock.picking.type'].search(
-                        [('default_location_dest_id', '=', self.item_loan_borrow_location_id.id),('code', '=', 'incoming')])
+                        [('default_location_dest_id', '=', self.item_loan_borrow_location_id.id),('code', '=', 'incoming'),
+                         ('default_location_src_id', '=', self.location_id.id)])
                     if not picking_type:
                         raise UserError(_('Please create picking type for Item Borrowing.'))
-                    # pick_name = self.env['ir.sequence'].next_by_code('stock.picking')
                     res = {
                         'picking_type_id': picking_type.id,
                         'priority': '1',
@@ -192,7 +191,13 @@ class ItemBorrowing(models.Model):
 
     @api.model
     def _needaction_domain_get(self):
-        return [('state', 'in', ['waiting_approval'])]
+        users_obj = self.env['res.users']
+        if users_obj.has_group('stock.group_stock_manager'):
+            domain = [
+                ('state', 'in', ['waiting_approval'])]
+            return domain
+        else:
+            return False
 
 class ItemBorrowingLines(models.Model):
     _name = 'item.borrowing.line'

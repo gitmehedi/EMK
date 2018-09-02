@@ -54,13 +54,11 @@
                 </field>
 
                 <field name="journal_id" position="after">
-                    <field name="deposit_slip"
-                           attrs="{'invisible':['|',('my_menu_check','=',False),('journal_id','=',12)]}"/>
+                    <field name="deposit_slip" invisible="1"/>
                 </field>
 
                 <field name="journal_id" position="after">
-                    <field name="cheque_no"
-                           attrs="{'invisible':['|',('my_menu_check','=',False),('journal_id','=',12)]}"/>
+                    <field name="cheque_no" invisible="1"/>
                 </field>
 
             </field>
