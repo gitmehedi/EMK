@@ -416,16 +416,16 @@ class DeliveryAuthorization(models.Model):
         if account_payment_pool:
             vals = []
             for payments in account_payment_pool:
-                if payments.journal_id.type == 'cash':
-                    if payments.sale_order_id and not payments.is_this_payment_checked:
-                        vals.append((0, 0, {'account_payment_id': payments.id,
-                                            'amount': payments.amount,
-                                            'dep_bank': payments.deposited_bank,
-                                            'branch': payments.bank_branch,
-                                            'payment_date': payments.payment_date,
-                                            }))
+                #if payments.journal_id.type == 'cash':
+                if payments.sale_order_id and not payments.is_this_payment_checked:
+                    vals.append((0, 0, {'account_payment_id': payments.id,
+                                        'amount': payments.amount,
+                                        'dep_bank': payments.deposited_bank,
+                                        'branch': payments.bank_branch,
+                                        'payment_date': payments.payment_date,
+                                        }))
 
-                        self.cash_ids = vals
+                    self.cash_ids = vals
 
     @api.multi
     def set_products_info_automatically(self):
@@ -469,42 +469,42 @@ class DeliveryAuthorization(models.Model):
              ('sale_order_id', '=', self.sale_order_id.id)])
 
         for acc in account_payment_pool:
-            if acc.journal_id.type == 'cash':
-                val = []
-                for cash_line in self.cash_ids:
-                    val.append(cash_line.account_payment_id.id)
+            #if acc.journal_id.type == 'cash':
+                # val = []
+                # for cash_line in self.cash_ids:
+                #     val.append(cash_line.account_payment_id.id)
+                #
+                # vals = []
+                # for payments in acc:
+                #     if payments.id not in val:
+                #         vals.append((0, 0, {'account_payment_id': payments.id,
+                #                             'amount': payments.amount,
+                #                             'dep_bank': payments.deposited_bank,
+                #                             'branch': payments.bank_branch,
+                #                             'payment_date': payments.payment_date,
+                #                             }))
+                #
+                # self.cash_ids = vals
 
-                vals = []
-                for payments in acc:
-                    if payments.id not in val:
-                        vals.append((0, 0, {'account_payment_id': payments.id,
-                                            'amount': payments.amount,
-                                            'dep_bank': payments.deposited_bank,
-                                            'branch': payments.bank_branch,
-                                            'payment_date': payments.payment_date,
-                                            }))
+            #elif acc.journal_id.type == 'bank':
 
-                self.cash_ids = vals
+            val_bank = []
+            for bank_line in self.cash_ids:
+                val_bank.append(bank_line.account_payment_id.id)
 
-            elif acc.journal_id.type == 'bank':
+            vals_bank = []
 
-                val_bank = []
-                for bank_line in self.cheque_ids:
-                    val_bank.append(bank_line.account_payment_id.id)
+            for bank_payments in acc:
+                if bank_payments.id not in val_bank:
+                    vals_bank.append((0, 0, {'account_payment_id': bank_payments.id,
+                                             'amount': bank_payments.amount,
+                                             'bank': bank_payments.deposited_bank,
+                                             'dep_bank': bank_payments.bank_branch,
+                                             'payment_date': bank_payments.payment_date,
+                                             'number': bank_payments.cheque_no
+                                             }))
 
-                vals_bank = []
-
-                for bank_payments in acc:
-                    if bank_payments.id not in val_bank:
-                        vals_bank.append((0, 0, {'account_payment_id': bank_payments.id,
-                                                 'amount': bank_payments.amount,
-                                                 'bank': bank_payments.deposited_bank,
-                                                 'branch': bank_payments.bank_branch,
-                                                 'payment_date': bank_payments.payment_date,
-                                                 'number': bank_payments.cheque_no
-                                                 }))
-
-                self.cheque_ids = vals_bank
+            self.cash_ids = vals_bank
 
     @api.multi
     def process_cheque_payment(self):

@@ -125,7 +125,7 @@
                                             <field name="amount"/>
                                             <field name="dep_bank"/>
                                             <field name="branch"/>
-                                            <field name="validity"/>
+                                            <!--<field name="validity"/>-->
                                             <field name="account_payment_id"/>
                                         </tree>
                                     </field>
