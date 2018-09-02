@@ -36,10 +36,6 @@
                                 states="waiting_approval" type="object"
                                 groups="stock.group_stock_manager"/>
 
-                        <button string="Loan Adjustment" name="action_view_picking"
-                                groups="stock.group_stock_user" class="oe_highlight"
-                                states="approved" type="object"/>
-
                         <field name="state" widget="statusbar"
                                statusbar_visible="draft,waiting_approval,approved"
                                statusbar_colors='{"reject":"red"}' />

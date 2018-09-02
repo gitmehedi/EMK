@@ -16,7 +16,7 @@ class GBSStockScrap(models.Model):
         return self.env['stock.location'].search([('scrap_location', '=', True)], limit=1).id
 
     def _get_default_location_id(self):
-        return self.env['stock.location'].search([('operating_unit_id', '=', self.env.user.default_operating_unit_id.id)], limit=1).id
+        return self.env['stock.location'].search([('operating_unit_id', '=', self.env.user.default_operating_unit_id.id),('name','=','Stock')], limit=1).id
 
     name = fields.Char('Reference',  default=lambda self: _('New'),copy=False,
                        readonly=True, required=True,
@@ -104,14 +104,14 @@ class GBSStockScrap(models.Model):
                     picking_type = self.env['stock.picking.type'].search(
                         [('default_location_dest_id', '=', self.scrap_location_id.id),('operating_unit_id', '=', self.operating_unit_id.id)])
                     if not picking_type:
-                        raise UserError(_('Please create picking type for product scraping.'))
+                        raise UserError(_('Please create picking type for scraping.'))
 
-                    pick_name = self.env['ir.sequence'].next_by_code('stock.picking')
+                    pick_name = self.env['stock.picking.type'].browse(picking_type.id).sequence_id.next_by_id()
                     res = {
                         'picking_type_id': picking_type.id,
                         'priority': '1',
                         'move_type': 'direct',
-                        'company_id': self.env.user['company_id'].id,
+                        'company_id': self.company_id.id,
                         'operating_unit_id': self.operating_unit_id.id,
                         'state': 'done',
                         'invoice_state': 'none',
@@ -122,13 +122,10 @@ class GBSStockScrap(models.Model):
                         'location_id': self.location_id.id,
                         'location_dest_id': self.scrap_location_id.id,
                     }
-                    if self.company_id:
-                        vals = dict(res, company_id=self.company_id.id)
-
-                    picking = picking_obj.create(vals)
+                    self.picking_type_id = picking_type.id
+                    picking = picking_obj.create(res)
                     if picking:
                         picking_id = picking.id
-
 
                 location_id = self.location_id.id
 
@@ -147,9 +144,7 @@ class GBSStockScrap(models.Model):
                     'picking_type_id': picking_type.id,
 
                 }
-                move = move_obj.create(moves)
-                # move.action_done()
-                self.write({'move_id': move.id})
+                move_obj.create(moves)
 
         return picking_id
 
@@ -192,6 +187,16 @@ class GBSStockScrap(models.Model):
             if indent.state != 'draft':
                 raise ValidationError(_('You cannot delete this !!'))
         return super(GBSStockScrap, self).unlink()
+
+    @api.model
+    def _needaction_domain_get(self):
+        users_obj = self.env['res.users']
+        if users_obj.has_group('stock.group_stock_manager'):
+            domain = [
+                ('state', 'in', ['waiting_approval'])]
+            return domain
+        else:
+            return False
 
 class GBSStockScrapLines(models.Model):
     _name = 'gbs.stock.scrap.line'

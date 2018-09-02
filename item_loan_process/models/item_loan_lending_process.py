@@ -148,8 +148,7 @@ class ItemLoanLending(models.Model):
                     'state': 'draft',
 
                 }
-                move = move_obj.create(moves)
-                # move.action_done()
+                move_obj.create(moves)
 
         return picking_id
 

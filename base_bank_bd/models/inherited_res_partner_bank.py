@@ -14,3 +14,4 @@ class InheritedResPartner(models.Model):
     zip = fields.Char(change_default=True)
     city = fields.Char()
     country_id = fields.Many2one('res.country', string='Country', ondelete='restrict')
+    is_company_account = fields.Boolean('Company Account', default=False)
