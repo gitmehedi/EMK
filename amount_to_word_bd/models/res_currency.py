@@ -5,7 +5,7 @@ class Currency(models.Model):
     _inherit = "res.currency"
 
     @api.model
-    def amount_to_word(self, number, is_add_currency=True):
+    def amount_to_word(self, number, is_add_currency=True,currency='BDT'):
         dev = {100: "Hundred", 1000: "Thousand", 100000: "Lac", 10000000: "Crore", 1000000000: "Billion"}
         result = ""
         # Split amount for decimal value
@@ -45,16 +45,36 @@ class Currency(models.Model):
                 result = result + ' ' + (res if res != 'Zero' else '')
 
         if is_add_currency == True:
-
-            if int(end_word) > 0:
-                end_word = int(end_word) if len(end_word) > 1 else int(end_word) * 10
-                paisa = self.handel_upto_99(end_word)
-                if start_word > 0:
-                    result = result + ' Taka and ' + paisa + ' Paisa'
+            if currency == 'USD':
+                if int(end_word) > 0:
+                    end_word = int(end_word) if len(end_word) > 1 else int(end_word) * 10
+                    paisa = self.handel_upto_99(end_word)
+                    if start_word > 0:
+                        result = result + ' Dollars and ' + paisa + ' Cents'
+                    else:
+                        result = paisa + ' Cents'
                 else:
-                    result = paisa + ' Paisa'
+                    result = result + ' Dollars'
+            elif currency == 'EUR':
+                if int(end_word) > 0:
+                    end_word = int(end_word) if len(end_word) > 1 else int(end_word) * 10
+                    paisa = self.handel_upto_99(end_word)
+                    if start_word > 0:
+                        result = result + ' Euro and ' + paisa + ' Cents'
+                    else:
+                        result = paisa + ' Cents'
+                else:
+                    result = result + ' Euro'
             else:
-                result = result + ' Taka'
+                if int(end_word) > 0:
+                    end_word = int(end_word) if len(end_word) > 1 else int(end_word) * 10
+                    paisa = self.handel_upto_99(end_word)
+                    if start_word > 0:
+                        result = result + ' Taka and ' + paisa + ' Paisa'
+                    else:
+                        result = paisa + ' Paisa'
+                else:
+                    result = result + ' Taka'
 
         return result
 
