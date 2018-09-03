@@ -9,8 +9,20 @@
             <field name="inherit_id" ref="base.view_partner_form"/>
             <field name="arch" type="xml">
                 <data>
+                    <xpath expr="//field[@name='debit']" position="replace">
+                        <field name="debit" groups="base.group_no_one,account.group_account_user,gbs_application_group.group_head_account"/>
+                    </xpath>
+
+                    <xpath expr="//field[@name='credit']" position="replace">
+                        <field name="credit" groups="base.group_no_one,account.group_account_user,gbs_application_group.group_head_account"/>
+                    </xpath>
+
+
+
+
                     <xpath expr="//page[@name='sales_purchases']" position="after">
-                        <page groups="sales_team.group_sale_salesman,account.group_account_user,gbs_application_group.group_sales_customer_manager" string="Credit Limit" attrs="{'invisible': [('customer', '=', False)]}">
+                        <page groups="sales_team.group_sale_salesman,account.group_account_user,gbs_application_group.group_sales_customer_manager"
+                              string="Credit Limit" attrs="{'invisible': [('customer', '=', False)]}">
                             <group>
                                 <field name="credit_limit"/>
                                 <field name="remaining_credit_limit" invisible="1"/>
@@ -36,8 +48,10 @@
             <field name="arch" type="xml">
                 <data>
                     <xpath expr="//field[@name='email']" position="after">
-                        <field name="credit_limit" groups="sales_team.group_sale_salesman,gbs_application_group.group_sales_customer_manager"/>
-                        <field name="credit" groups="sales_team.group_sale_salesman,gbs_application_group.group_sales_customer_manager"/>
+                        <field name="credit_limit"
+                               groups="sales_team.group_sale_salesman,gbs_application_group.group_sales_customer_manager"/>
+                        <field name="credit"
+                               groups="sales_team.group_sale_salesman,gbs_application_group.group_sales_customer_manager"/>
                     </xpath>
                 </data>
             </field>
@@ -57,19 +71,19 @@
             </field>
         </record>
         <!--<record id="res_partner_kanban_view1" model="ir.ui.view">-->
-          <!--<field name="name">res.partner.kanban</field>-->
-          <!--<field name="model">res.partner</field>-->
-          <!--<field name="inherit_id" ref="base.res_partner_kanban_view"/>-->
-          <!--<field name="arch" type="xml">-->
-              <!--<xpath expr="//field[@name='display_name']" position="after">-->
-                  <!--<field name="credit_limit"/>-->
-                  <!--<field name="credit"/>-->
-              <!--</xpath>-->
-              <!--<xpath expr="//t[@t-name='kanban-box']//div[@class='oe_kanban_details']/ul/li[3]" position="after">-->
-                    <!--<field name="credit_limit"/>-->
-                    <!--&lt;!&ndash;<field name="credit"/>&ndash;&gt;-->
-              <!--</xpath>-->
-          <!--</field>-->
+        <!--<field name="name">res.partner.kanban</field>-->
+        <!--<field name="model">res.partner</field>-->
+        <!--<field name="inherit_id" ref="base.res_partner_kanban_view"/>-->
+        <!--<field name="arch" type="xml">-->
+        <!--<xpath expr="//field[@name='display_name']" position="after">-->
+        <!--<field name="credit_limit"/>-->
+        <!--<field name="credit"/>-->
+        <!--</xpath>-->
+        <!--<xpath expr="//t[@t-name='kanban-box']//div[@class='oe_kanban_details']/ul/li[3]" position="after">-->
+        <!--<field name="credit_limit"/>-->
+        <!--&lt;!&ndash;<field name="credit"/>&ndash;&gt;-->
+        <!--</xpath>-->
+        <!--</field>-->
         <!--</record>-->
 
     </data>
