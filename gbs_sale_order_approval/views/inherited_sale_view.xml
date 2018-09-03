@@ -561,9 +561,5 @@
         <!--name="Country Group"-->
         <!--parent="sales_team.menu_localisation" sequence="3"/>-->
 
-        <!--hide unused menu-->
-        <!--<menuitem action="sale.action_orders_to_invoice"-->
-        <!--id="sale.menu_sale_order_invoice" parent="sale.menu_sale_invoicing"-->
-        <!--sequence="2" groups="base.group_system"/>-->
     </data>
 </odoo>
