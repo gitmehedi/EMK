@@ -28,10 +28,12 @@
         'security/ir.model.access.csv',
         'security/ir_rule.xml',
         'views/inherited_sale_view.xml',
+        'views/sales_channel_view.xml',
         'views/menuitems.xml',
         'views/res_partner_views.xml',
         'report/inherit_sale_order_report.xml',
         'data/sale_order_sequence.xml',
+
     ],
     'installable': True,
     'application': False,
