@@ -626,8 +626,9 @@ class SaleOrder(models.Model):
                 ('state', 'in', ['validate'])]
             return domain
         elif users_obj.has_group('gbs_application_group.group_head_sale'):
+
             domain = [
-                ('state', 'in', ['draft'])]
+                ('state', 'in', ['draft']), ('approver_manager_id','=',self.env.user.employee_ids.id)]
             return domain
         else:
             return False
