@@ -18,21 +18,6 @@
     </template>
 
     <template id="member_signup.fields" name="Auth Signup/ResetPassword form fields">
-
-        <div class="col-md-6">
-            <strong></strong>
-        </div>
-        <div class="col-md-6">
-            <div class="img__wrap  pull-right" id="img_wrap">
-                <input id="member-image-upload" class="hidden" type="file" name="image">
-                    <img id="member_image"/>
-                </input>
-                <div class="member_image_layer">
-                    <p class="img_desc text-center">Click here to upload image.</p>
-                </div>
-            </div>
-        </div>
-
         <div class="col-md-12 margin-top-15">
             <div class="panel panel-success">
                 <div class="panel-heading odoobg">
@@ -365,7 +350,7 @@
         <div class="col-md-12">
             <div class="panel panel-success">
                 <div class="panel-heading odoobg">
-                    <h3 class="panel-title text-center">Signature</h3>
+                    <h3 class="panel-title text-center">Signature &amp; Image</h3>
                 </div>
                 <div class="panel-body">
                     <div class="col-md-12">
@@ -373,9 +358,10 @@
                             I hereby apply for membership to the EMK Center and agree to comply with its rules and
                             regulation.
                         </div>
-                        <div class="form-group form-field o_website_form_rq_custom">
+                        <div class="col-md-6">
                             <div class="wrap_signature pull-left" id="wrap_signature">
-                                <input id="signature-image-upload" name="signature_image" class="hidden" type="file">
+                                <input id="signature-image-upload" name="signature_image" class="hidden"
+                                       type="file">
                                     <img id="signature_image"/>
                                 </input>
                                 <div class="signature_image_layer">
@@ -383,8 +369,27 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
+                        <div class="col-md-6">
+                            <div class="img__wrap  pull-right" id="img_wrap">
+                                <input id="member-image-upload" class="hidden" type="file" name="image">
+                                    <img id="member_image"/>
+                                </input>
+                                <div class="member_image_layer">
+                                    <p class="img_desc text-center">Click here to upload image.</p>
+                                </div>
+                            </div>
+                        </div>
 
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-12">
+            <div class="panel panel-success">
+                <div class="panel-heading odoobg">
+                    <h3 class="panel-title text-center">Attachments</h3>
+                </div>
+                <div class="panel-body">
                     <div class="col-md-12">
                         <h4>Attachments</h4>
                         <div class="input_fields_wrap">
