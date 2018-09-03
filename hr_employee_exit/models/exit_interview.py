@@ -44,12 +44,13 @@ class EmployeeEixtInterview(models.Model):
         self.state = 'submit'
         self.line_ids.write({'state':'submit'})
         self.question_set_ids.write({'state':'submit'})
+        vals = []
         factor_pool = self.env['factors.set'].search([])
-        # for fac in factor_pool:
-        #     self.line_ids.create({
-        #         'factor': fac.id,
-        #     })
-        # return
+        for fac in factor_pool:
+            vals.append((0, 0, {
+                'factor': fac.id,
+            }))
+        self.line_ids = vals
 
     @api.one
     def action_validate(self):
