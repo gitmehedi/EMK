@@ -192,6 +192,12 @@
                         </page>
                     </xpath>
                     <header>
+
+                        <button name="action_reset"
+                                states="draft"
+                                type="object"
+                                string="Reset to Draft"/>
+
                         <button name="action_to_submit"
                                 groups="sales_team.group_sale_salesman_all_leads,gbs_application_group.group_head_sale,gbs_application_group.group_head_account,gbs_application_group.group_cxo"
                                 states="to_submit"
@@ -426,6 +432,22 @@
                         <field name="company_id"/>
                     </xpath>
 
+                    <!--<xpath expr="//field[@name='company_id']" position="after">-->
+                        <!--<field name="operating_unit_id"/>-->
+                    <!--</xpath>-->
+
+
+                    <xpath expr="//field[@name='company_id']" position="after">
+                        <field name="approver_manager_id"
+                               options="{'no_quick_create':True,'no_create_edit':True,'no_open':True}"/>
+                    </xpath>
+
+                    <xpath expr="//field[@name='pack_type']" position="after">
+                        <field name="sales_channel"
+                               options="{'no_quick_create':True,'no_create_edit':True,'no_open':True}"/>
+                    </xpath>
+
+
                 </data>
             </field>
         </record>
@@ -534,14 +556,10 @@
 
 
         <!--<menuitem action="base.action_country_group"-->
-                  <!--id="sales_team.menu_country_group"-->
-                  <!--groups="gbs_application_group.group_cxo"-->
-                  <!--name="Country Group"-->
-                  <!--parent="sales_team.menu_localisation" sequence="3"/>-->
+        <!--id="sales_team.menu_country_group"-->
+        <!--groups="gbs_application_group.group_cxo"-->
+        <!--name="Country Group"-->
+        <!--parent="sales_team.menu_localisation" sequence="3"/>-->
 
-        <!--hide unused menu-->
-        <!--<menuitem action="sale.action_orders_to_invoice"-->
-        <!--id="sale.menu_sale_order_invoice" parent="sale.menu_sale_invoicing"-->
-        <!--sequence="2" groups="base.group_system"/>-->
     </data>
 </odoo>

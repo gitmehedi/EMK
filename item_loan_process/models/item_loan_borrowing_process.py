@@ -145,7 +145,7 @@ class ItemBorrowing(models.Model):
                     'state': 'draft',
 
                 }
-                move = move_obj.create(moves)
+                move_obj.create(moves)
 
         return picking_id
 
