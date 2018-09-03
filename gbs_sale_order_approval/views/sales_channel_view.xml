@@ -21,7 +21,7 @@
                                options="{'no_quick_create':True,'no_create_edit':True,'no_open':True}"/>
                         <field name="employee_id"
                                options="{'no_quick_create':True,'no_create_edit':True,'no_open':True}"/>
-                        <field name="warehouse_id" invisible="1"/>
+                        <field name="warehouse_id" options="{'no_quick_create':True,'no_create_edit':True,'no_open':True}"/>
                     </group>
 
                 </sheet>
@@ -35,6 +35,7 @@
         <field name="type">tree</field>
         <field name="arch" type="xml">
             <tree string="Sales Channel Tree">
+                <field name="name"/>
                 <field name="operating_unit_id"/>
                 <field name="employee_id"/>
             </tree>
