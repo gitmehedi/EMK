@@ -45,7 +45,7 @@ class GbsProformaInvoice(models.AbstractModel):
                 line_list.append(list_obj)
 
         total = sum(total_amount)
-        amt_to_word = self.env['res.currency'].amount_to_word(float(total),False)
+        amt_to_word = self.env['res.currency'].amount_to_word(float(total),True,data['currency'])
 
 
         docargs = {
