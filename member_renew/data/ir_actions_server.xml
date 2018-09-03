@@ -7,7 +7,7 @@
         <field name="condition">True</field>
         <field name="code">record.notify_expiration()</field>
     </record>
-    <record id="action_res_partner" model="ir.values">
+    <record id="action_notificationres_partner" model="ir.values">
         <field name="name">name</field>
         <field name="model">res.partner</field>
         <field name="key">action</field>
@@ -29,4 +29,5 @@
         <field name="key2">client_action_multi</field>
         <field name="value" eval="'ir.actions.server,%d'%server_code_membership_renew_request"/>
     </record>
+
 </odoo>

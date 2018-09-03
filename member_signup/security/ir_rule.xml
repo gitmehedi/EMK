@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding='utf-8'?>
 <odoo>
-
     <record id="membership.menu_association" model="ir.ui.menu">
         <field name="groups_id"
                eval="[(4, ref('membership_user.group_mem_user_officer')),(4, ref('membership_user.group_user_member'))]"/>
@@ -15,6 +14,25 @@
         <field name="groups_id" eval="[(4, ref('membership_user.group_user_member'))]"/>
     </record>
     <record id="account.action_report_print_overdue" model="ir.actions.report.xml">
+        <field name="groups_id" eval="[(4, ref('membership_user.group_mem_user_officer'))]"/>
+    </record>
+
+    <record id="account.act_account_partner_ledger_payable" model="ir.actions.act_window">
+        <field name="groups_id" eval="[(4, ref('membership_user.group_mem_user_officer'))]"/>
+    </record>
+    <record id="account.act_account_partner_ledger_payable_no_partner" model="ir.actions.act_window">
+        <field name="groups_id" eval="[(4, ref('membership_user.group_mem_user_officer'))]"/>
+    </record>
+    <record id="account.act_account_partner_ledger_receivable" model="ir.actions.act_window">
+        <field name="groups_id" eval="[(4, ref('membership_user.group_mem_user_officer'))]"/>
+    </record>
+    <record id="account.act_account_partner_ledger_receivable_no_partner" model="ir.actions.act_window">
+        <field name="groups_id" eval="[(4, ref('membership_user.group_mem_user_officer'))]"/>
+    </record>
+    <record id="account.act_account_acount_move_line_open_unreconciled" model="ir.actions.act_window">
+        <field name="groups_id" eval="[(4, ref('membership_user.group_mem_user_officer'))]"/>
+    </record>
+    <record id="account.action_move_line_select_by_partner" model="ir.actions.act_window">
         <field name="groups_id" eval="[(4, ref('membership_user.group_mem_user_officer'))]"/>
     </record>
 

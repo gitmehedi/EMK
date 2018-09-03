@@ -13,4 +13,13 @@
         <field name="groups" eval="[(4,ref('membership_user.group_mem_user_officer'))]"></field>
         <field name="domain_force">[(1,'=',1)]</field>
     </record>
+
+
+    <record id="server_code_membership_renew_request" model="ir.actions.server">
+        <field name="groups_id" eval="[(4, ref('membership_user.group_mem_user_officer'))]"/>
+    </record>
+
+    <record id="action_send_notification_for_expiration" model="ir.actions.server">
+        <field name="groups_id" eval="[(4, ref('membership_user.group_mem_user_officer'))]"/>
+    </record>
 </odoo>
