@@ -8,7 +8,7 @@
             <field name="arch" type="xml">
                 <form string="Employee Exit Interview">
                     <header>
-                        <button name="action_submit" states="draft" type="object" string="Aply" groups ="hr.group_hr_manager" class="oe_highlight"/>
+                        <button name="action_submit" states="draft" type="object" string="Apply" groups ="hr.group_hr_manager" class="oe_highlight"/>
 
                         <button string="Reset to Draft" name="action_reset"
                                 attrs="{'invisible': [('state', 'in', ['draft','submit'])]}"
@@ -33,13 +33,14 @@
                                 <field name="employee_code"/>
                                 <field name="emp_designation"/>
                                 <field name="emp_department"/>
-                                <field name="supervisor_id"/>
+                                <field name="location"/>
+
                             </group>
                             <group>
-                                <field name="location"/>
                                 <field name="joining_date"/>
                                 <field name="resignation_date"/>
                                 <field name="leaving_date"/>
+                                <field name="supervisor_id"/>
                                 <field name="supervisor_designation"/>
                             </group>
                         </group>
@@ -68,12 +69,14 @@
                         <p><b>Would you recommend the company to a friend as a good
                             organization to work for? </b></p>
                         <group>
-                            <field name="check_box1"/>
-                            <field name="check_box2"/>
-                            <field name="check_box3"/>
+                            <field name="recommend" widget="radio"/>
                         </group>
                         <p><b>Your contract address for all further correspondence is: </b></p>
                         <field name="contract_add" nolabel="1"/>
+                        <separator string="Comment By Supervisor"/>
+                        <field name="comment_supervisor" nolabel="1"/>
+                        <separator string="Comment By HR"/>
+                        <field name="comment_hr" nolabel="1"/>
                     </sheet>
 
                     <div class="oe_chatter">
@@ -83,7 +86,7 @@
                 </form>
             </field>
         </record>
-        <record id="emp_req_tree_view" model="ir.ui.view">
+        <record id="emp_interview_tree_view" model="ir.ui.view">
             <field name="name">employee.exit.interview.tree</field>
             <field name="model">employee.exit.interview</field>
             <field name="type">tree</field>
@@ -97,12 +100,6 @@
             </field>
         </record>
 
-
-        <!--<record id="action_exit_interview" model="ir.actions.act_window">-->
-			<!--<field name="name">Exit Interview</field>-->
-			<!--<field name="res_model">employee.exit.interview</field>-->
-			<!--<field name="view_mode">tree,form</field>-->
-		<!--</record>-->
         <record id="action_exit_interview" model="ir.actions.act_window">
             <field name="name">Exit Interview</field>
             <field name="type">ir.actions.act_window</field>
@@ -117,6 +114,40 @@
 				sequence="20"
                 action="action_exit_interview"
         />
+        <record id="factor_form" model="ir.ui.view" >
+			<field name="name">factor.form</field>
+			<field name="model">factors.set</field>
+			<field name="type">form</field>
+			<field name="priority" eval="16"/>
+			<field name="arch" type="xml">
+				<form string="Factors">
+                    <group>
+                        <group>
+                            <field name="name" />
+                        </group>
+                    </group>
+				</form>
+			</field>
+		</record>
+		<record id="factor_tree_view" model="ir.ui.view">
+			<field name="name">factor.tree</field>
+			<field name="model">factors.set</field>
+			<field name="type">tree</field>
+			<field name="arch" type="xml">
+				<form string="Factors">
+					<field name="name" />
+				</form>
+			</field>
+		</record>
+        <record  id="factor_action" model="ir.actions.act_window">
+            <field name="name">Factors</field>
+            <field name="res_model">factors.set</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
 
+
+        <menuitem id="factor_menu" name="Factors" parent="hr.menu_human_resources_configuration" sequence="82"
+                  action="factor_action"  />
     </data>
 </odoo>

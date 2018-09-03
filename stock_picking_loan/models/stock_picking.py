@@ -51,8 +51,8 @@ class StockPicking(models.Model):
         res = super(StockPicking, self).do_transfer()
         if res:
             picking = self.browse(self.ids)[0]
-            origin_picking_objs = self.search([('name', '=', picking.origin)])
-            if picking.transfer_type == 'loan' or picking.receive_type=='loan' or origin_picking_objs[0].receive_type == 'loan':
+            origin_picking_objs = self.search([('name', '=', picking.origin)],limit=1)
+            if picking.transfer_type == 'loan' or picking.receive_type=='loan' or origin_picking_objs.receive_type == 'loan':
                 loan_borrowing_obj = self.env['item.borrowing']
                 loan_lending_obj = self.env['item.loan.lending']
                 if picking.location_dest_id.name == 'Stock':
@@ -63,7 +63,7 @@ class StockPicking(models.Model):
                             for move in moves:
                                 product_line.write({'received_qty': product_line.received_qty + move.product_qty})
                     if self.transfer_type == 'receive':
-                        loan_lending_ids = loan_lending_obj.search([('id', '=', origin_picking_objs[0].loan_id.id)])
+                        loan_lending_ids = loan_lending_obj.search([('id', '=', origin_picking_objs.loan_id.id)])
                         if loan_lending_ids:
                             for product_line in loan_lending_ids[0].item_lines:
                                 move = picking.move_lines.filtered(lambda o: o.product_id == product_line.product_id)

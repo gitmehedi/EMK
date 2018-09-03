@@ -1,4 +1,4 @@
-from odoo import api, fields, models,_
+from odoo import api, fields, models, _
 from odoo.exceptions import UserError, ValidationError, Warning
 from odoo.tools import amount_to_text_en
 import time
@@ -47,7 +47,7 @@ class SaleOrder(models.Model):
                                  default=lambda self: self.env['res.company']._company_default_get('sale.order'))
 
     # inherited fields from sale
-    partner_id = fields.Many2one('res.partner', string='Customer',required=True,
+    partner_id = fields.Many2one('res.partner', string='Customer', required=True,
                                  change_default=True, index=True, track_visibility='always')
     partner_invoice_id = fields.Many2one('res.partner', string='Invoice Address', required=True,
                                          domain="[('parent_id','=',partner_id),('type','=','invoice')]",
@@ -55,6 +55,7 @@ class SaleOrder(models.Model):
     partner_shipping_id = fields.Many2one('res.partner', string='Delivery Address', required=True,
                                           domain="[('parent_id','=',partner_id),('type','=','delivery')]",
                                           help="Delivery address for current sales order.")
+
     # ..............................
 
     @api.model
@@ -93,21 +94,22 @@ class SaleOrder(models.Model):
 
     """ PI and LC """
     pi_id = fields.Many2one('proforma.invoice', string='PI Ref. No.',
-                            readonly=True,states={'to_submit': [('readonly', False)]})
+                            readonly=True, states={'to_submit': [('readonly', False)]})
     # domain = [('credit_sales_or_lc', '=', 'lc_sales'), ('state', '=', 'confirm')],
     lc_id = fields.Many2one('letter.credit', string='LC Ref. No.', readonly=True)
 
-    #remaining_credit_limit = fields.Char(string="Customer's Remaining Credit Limit", track_visibility='onchange')
+    # remaining_credit_limit = fields.Char(string="Customer's Remaining Credit Limit", track_visibility='onchange')
 
-    fields_readonly = fields.Boolean('Fields Readonly or not?',default=False)
+    fields_readonly = fields.Boolean('Fields Readonly or not?', default=False)
 
     """ Update is_commission_generated flag to False """
 
     @api.model
     def create(self, vals):
-        team = self.env['crm.team']._get_default_team_id()
+        sales_channel_obj = self.env['sales.channel'].search([('id', '=', vals['sales_channel'])])
+
         new_seq = self.env['ir.sequence'].next_by_code_new('sale.order', self.create_date,
-                                                           team.operating_unit_id) or '/'
+                                                           sales_channel_obj.operating_unit_id) or '/'
         if new_seq:
             vals['name'] = new_seq
 
@@ -125,13 +127,24 @@ class SaleOrder(models.Model):
             else:
                 vals['partner_shipping_id'] = pi_pool.partner_id.id
 
-            # vals['partner_invoice_id'] = pi_pool.partner_id.child_ids.filtered(lambda x: x.type == 'invoice').id or pi_pool.partner_id.id
-            # vals['partner_shipping_id'] = pi_pool.partner_id.child_ids.filtered(lambda x: x.type == 'delivery').id or pi_pool.partner_id.id
+                # vals['partner_invoice_id'] = pi_pool.partner_id.child_ids.filtered(lambda x: x.type == 'invoice').id or pi_pool.partner_id.id
+                # vals['partner_shipping_id'] = pi_pool.partner_id.child_ids.filtered(lambda x: x.type == 'delivery').id or pi_pool.partner_id.id
 
         return super(SaleOrder, self).create(vals)
 
+
     @api.multi
     def write(self, vals):
+
+        if 'sales_channel' in vals:
+            sales_channel_obj = self.env['sales.channel'].search([('id','=',vals['sales_channel'])])
+            if self.sales_channel.operating_unit_id != sales_channel_obj.operating_unit_id:
+                new_seq = self.env['ir.sequence'].next_by_code_new('sale.order', self.create_date,
+                                                                   sales_channel_obj.operating_unit_id) or '/'
+                if new_seq:
+                    vals['name'] = new_seq
+
+
         if 'pi_id' in vals:
             pi_pool = self.env['proforma.invoice'].search([('id', '=', vals['pi_id'])])
             vals['partner_id'] = pi_pool.partner_id.id
@@ -175,6 +188,10 @@ class SaleOrder(models.Model):
             return amount_to_text_en.amount_to_text(number, 'en', currency)
 
     @api.multi
+    def action_reset(self):
+        self.state = 'to_submit'
+
+    @api.multi
     def action_validate(self):
         self.state = 'sent'
 
@@ -182,7 +199,7 @@ class SaleOrder(models.Model):
     def action_to_submit(self):
         for orders in self:
             if orders.validity_date:
-                expiration_date = orders.validity_date  + ' 23:59:59'
+                expiration_date = orders.validity_date + ' 23:59:59'
                 if expiration_date <= orders.date_order:
                     raise UserError('Expiration Date can not be less than Order Date')
 
@@ -323,14 +340,14 @@ class SaleOrder(models.Model):
             for lines in order.order_line:
 
                 cust_commission_pool = order.env['customer.commission'].search(
-                    [('currency_id','=',order.currency_id.id),('customer_id', '=', order.partner_id.id), ('product_id', '=', lines.product_id.ids)])
+                    [('currency_id', '=', order.currency_id.id), ('customer_id', '=', order.partner_id.id),
+                     ('product_id', '=', lines.product_id.ids)])
 
                 price_change_pool = order.env['product.sale.history.line'].search(
                     [('product_id', '=', lines.product_id.id),
                      ('currency_id', '=', lines.currency_id.id),
                      ('product_package_mode', '=', order.pack_type.id),
                      ('uom_id', '=', lines.product_uom.id)])
-
 
                 if order.credit_sales_or_lc == 'cash' or order.credit_sales_or_lc == 'lc_sales':
 
@@ -343,7 +360,7 @@ class SaleOrder(models.Model):
 
                     if len(price_change_pool) == 0 and lines.price_unit:
                         is_double_validation = True
-                        break; # second approval
+                        break;  # second approval
 
                     if len(cust_commission_pool) == 0 and lines.commission_rate:
                         is_double_validation = True
@@ -363,7 +380,7 @@ class SaleOrder(models.Model):
                     if price_change_pool.new_price >= lines.price_unit and lines.price_unit >= discounted_product_price:
                         is_double_validation = False  # Single Validation
 
-                    #for coms in cust_commission_pool:
+                    # for coms in cust_commission_pool:
                     if (abs(customer_total_credit) > customer_credit_limit
                         or lines.commission_rate != cust_commission_pool.commission_rate
                         or lines.price_unit < discounted_product_price or lines.price_unit > discounted_product_price):
@@ -538,31 +555,27 @@ class SaleOrder(models.Model):
             self.order_line = val
             self.fields_readonly = True
 
-    @api.onchange('operating_unit_id')
-    def onchange_operating_unit_id(self):
-        team = self.env['crm.team']._get_default_team_id()
+    # @api.onchange('operating_unit_id')
+    # def onchange_operating_unit_id(self):
+    #     #Fetch OP Unit from Sales Channel
+    #     sales_channel_obj = self.env['sales.channel'].search([('id','=',self.sales_channel.id)])
+    #
+    #     self._cr.execute("""SELECT * FROM stock_warehouse WHERE operating_unit_id= %s LIMIT 1""",
+    #                      (sales_channel_obj.operating_unit_id.id,))  # Never remove the comma after the parameter
+    #     warehouse = self._cr.fetchall()
+    #
+    #     if warehouse:
+    #         self.warehouse_id = warehouse[0][0]
 
-        self._cr.execute("""SELECT * FROM stock_warehouse WHERE operating_unit_id= %s LIMIT 1""",
-                         (team.operating_unit_id.id,))  # Never remove the comma after the parameter
-        warehouse = self._cr.fetchall()
-
-        if warehouse:
-            self.warehouse_id = warehouse[0][0]
-
-    @api.model
-    def _default_warehouse_id(self):
-        team = self.env['crm.team']._get_default_team_id()
-
-        self._cr.execute("""SELECT * FROM stock_warehouse WHERE operating_unit_id= %s LIMIT 1""",
-                         (team.operating_unit_id.id,))  # Never remove the comma after the parameter
-        warehouse = self._cr.fetchall()
-
-        return warehouse[0][0]
-
-    warehouse_id = fields.Many2one(
-        'stock.warehouse', string='Warehouse',
-        required=True, readonly=True, states={'to_submit': [('readonly', False)]},
-        default=_default_warehouse_id)
+    # @api.model
+    # def _default_warehouse_id(self):
+    #     sales_channel_obj = self.env['sales.channel'].search([('id', '=', self.sales_channel.id)])
+    #
+    #     self._cr.execute("""SELECT * FROM stock_warehouse WHERE operating_unit_id= %s LIMIT 1""",
+    #                      (sales_channel_obj.operating_unit_id.id,))  # Never remove the comma after the parameter
+    #     warehouse = self._cr.fetchall()
+    #
+    #     return warehouse[0][0]
 
     @api.model
     def _default_operating_unit(self):
@@ -572,12 +585,33 @@ class SaleOrder(models.Model):
         else:
             return self.env.user.default_operating_unit_id
 
+    sales_channel = fields.Many2one('sales.channel', string='Sales Channel', readonly=True,
+                                    states={'to_submit': [('readonly', False)]}, required=True)
+
+    warehouse_id = fields.Many2one(
+        'stock.warehouse', string='Warehouse',
+        required=True, readonly=True, states={'to_submit': [('readonly', False)]},
+        related='sales_channel.warehouse_id')
+
     operating_unit_id = fields.Many2one(
         comodel_name='operating.unit',
         string='Operating Unit',
-        default=_default_operating_unit,
-        readonly=True, states={'to_submit': [('readonly', False)]}
+        related='sales_channel.operating_unit_id',
+        readonly=True, required=True
     )
+
+    approver_manager_id = fields.Many2one('hr.employee', string='Approver Manager', readonly=True,
+                                          related='sales_channel.employee_id', required=True)
+
+    # Ovrride this entire mentod and did not call super.
+    # Where ever this method is called, not impact on business
+    @api.multi
+    @api.constrains('team_id', 'operating_unit_id')
+    def _check_team_operating_unit(self):
+        for rec in self:
+            if (rec.team_id and
+                        rec.team_id.operating_unit_id != rec.operating_unit_id):
+                continue;
 
     @api.model
     def _needaction_domain_get(self):
@@ -606,7 +640,6 @@ class SaleOrder(models.Model):
             if order.state not in ('to_submit', 'cancel'):
                 raise UserError(_('You can not delete a sent quotation or a sales order! Try to cancel it before.'))
         return super(SaleOrder, self).unlink()
-
 
     @api.multi
     def _prepare_invoice(self):
@@ -701,8 +734,6 @@ class InheritedSaleOrderLine(models.Model):
             raise ValidationError('DA Qty can not be greater than Ordered Qty')
 
 
-
-
 ########################
 # Sales team class
 #######################
@@ -713,15 +744,13 @@ class CrmTeam(models.Model):
                                         default=lambda self:
                                         self.env['res.users'].
                                         operating_unit_default_get(self._uid))
-    user_id = fields.Many2one('res.users', string='Team Leader',required=True)
-
+    user_id = fields.Many2one('res.users', string='Team Leader', required=True)
 
     @api.constrains('name')
     def _check_unique_name(self):
         name = self.env['crm.team'].search([('name', '=', self.name)])
         if len(name) > 1:
             raise ValidationError('Sales Team for this given Name already exists')
-
 
     @api.multi
     def unlink(self):
@@ -733,7 +762,6 @@ class CrmTeam(models.Model):
 class ProductAttribute(models.Model):
     _inherit = "product.attribute"
 
-
     @api.constrains('name')
     def _check_unique_name(self):
         name = self.env['product.attribute'].search([('name', '=', self.name)])
@@ -741,10 +769,8 @@ class ProductAttribute(models.Model):
             raise ValidationError('Attribute name must be unique!')
 
 
-
 class ProductUom(models.Model):
     _inherit = "product.uom"
-
 
     @api.constrains('name')
     def _check_unique_name(self):
@@ -755,7 +781,6 @@ class ProductUom(models.Model):
 
 class ProductTags(models.Model):
     _inherit = "res.partner.category"
-
 
     @api.constrains('name')
     def _check_unique_name(self):
@@ -773,6 +798,7 @@ class ProductCategory(models.Model):
         if len(name) > 1:
             raise ValidationError("Product Category's name must be unique!")
 
+
 class ProductUomCategory(models.Model):
     _inherit = 'product.uom.categ'
 
@@ -781,6 +807,7 @@ class ProductUomCategory(models.Model):
         name = self.env['product.uom.categ'].search([('name', '=', self.name)])
         if len(name) > 1:
             raise ValidationError("Product Uom Category's name must be unique!")
+
 
 class Bank(models.Model):
     _inherit = 'res.bank'
