@@ -20,7 +20,7 @@ class GoodsReceiveMatrix(models.Model):
     quantity = fields.Float(size=17, digits=(15, 2), string='Order Quantity', readonly=True)
     receive_qty = fields.Float(size=17, digits=(15, 2), string='Received Quantity', readonly=True)
     price_unit = fields.Float(size=17, digits=(15, 2), string='Unit Price')
-    receive_date = fields.Datetime(default=datetime.now(), string='Recieved Date')
+    receive_date = fields.Datetime(default=fields.Datetime.now, string='Recieved Date')
 
     """ Relational Fields """
     po_no = fields.Many2one('purchase.order', string="Order Number", required=True,
@@ -60,7 +60,7 @@ class GoodsReceiveMatrix(models.Model):
         vals['quantity'] = purchase_order_line.product_qty
         vals['receive_qty'] = purchase_order_line.receive_qty
         vals['price_unit'] = purchase_order_line.price_unit
-        vals['receive_date'] = datetime.now()
+        vals['receive_date'] = fields.Datetime.now
         res = super(GoodsReceiveMatrix, self).write(vals)
         self.action_submit(vals)
 
@@ -191,7 +191,7 @@ class GoodsReceiveMatrix(models.Model):
                     'picking_type_id': self.warehouse_id.in_type_id.id,
                     'state': 'done',
                     'partner_id': po_no_info.partner_id.id,
-                    'date': fields.Datetime.now(),
+                    'date': fields.Datetime.now,
                 }
                 picking_id = picking_pool.create(pick_vals)
 

@@ -8,7 +8,7 @@ class ProductUsageSummaryWizard(models.TransientModel):
 
     @api.model
     def get_current_period(self):
-        time = datetime.now()
+        time = fields.Datetime.now
         next_month = "{0}-{1}-01".format(time.year, time.month, time.day)
         next_period = self.env['account.period'].search(
             [('date_start', '>=', next_month), ('special', '=', False), ('state', '=', 'draft')], order='id ASC',

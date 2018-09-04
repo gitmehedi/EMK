@@ -13,7 +13,7 @@ class PurchaseRequisitionModel(models.Model):
     quantity = fields.Integer(string='Minumum Stock Leve in Day\'s Usage',
                               related='operating_unit_id.min_stock_days',
                               readonly=True, states={'generate': [('readonly', False)]})
-    date = fields.Date(string='Requisition Preparation Date', required=True, default=datetime.now())
+    date = fields.Date(string='Requisition Preparation Date', required=True, default=fields.Datetime.now)
 
     """ Relational Filds """
 

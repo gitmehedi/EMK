@@ -10,7 +10,7 @@ class ProductRequisitionModel(models.Model):
 
     @api.model
     def get_current_period(self):
-        time = datetime.now()
+        time = fields.Datetime.now
         next_month = "{0}-{1}-01".format(time.year, time.month, time.day)
         next_period = self.env['account.period'].search(
             [('date_start', '>=', next_month), ('special', '=', False), ('state', '=', 'draft')], order='id ASC',
@@ -26,7 +26,7 @@ class ProductRequisitionModel(models.Model):
     quantity = fields.Integer(string='Minumum Stock Level in Day\'s Usage', required=True,
                               related='operating_unit_id.min_stock_days',
                               readonly=True)
-    date = fields.Date(string='Requisition Preparation Date', required=True, default=datetime.now())
+    date = fields.Date(string='Requisition Preparation Date', required=True, default=fields.Datetime.now)
 
     """ Relational Filds """
     period_id = fields.Many2one('account.period', string='Requisition For the Period', required=True,
