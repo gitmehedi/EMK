@@ -110,6 +110,8 @@ class SaleOrder(models.Model):
         sales_channel_obj = self.env['sales.channel'].search([('id', '=', vals['sales_channel'])])
 
         vals['approver_manager_id'] = sales_channel_obj.employee_id.id
+        vals['warehouse_id'] = sales_channel_obj.warehouse_id.id
+        vals['operating_unit_id'] = sales_channel_obj.operating_unit_id.id
 
         new_seq = self.env['ir.sequence'].next_by_code_new('sale.order', self.create_date,
                                                            sales_channel_obj.operating_unit_id) or '/'
@@ -147,6 +149,8 @@ class SaleOrder(models.Model):
                     vals['name'] = new_seq
 
             vals['approver_manager_id'] = sales_channel_obj.employee_id.id
+            vals['warehouse_id'] = sales_channel_obj.warehouse_id.id
+            vals['operating_unit_id'] = sales_channel_obj.operating_unit_id.id
 
         if 'pi_id' in vals:
             pi_pool = self.env['proforma.invoice'].search([('id', '=', vals['pi_id'])])
