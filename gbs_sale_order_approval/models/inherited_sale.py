@@ -208,13 +208,14 @@ class SaleOrder(models.Model):
     @api.multi
     def action_to_submit(self):
         for orders in self:
+
             # Check seq needs to re-generate or not
             if orders.operating_unit_id.name not in orders.name:
-                new_seq = self.env['ir.sequence'].next_by_code_new('sale.order', self.create_date,
+                new_seq = orders.env['ir.sequence'].next_by_code_new('sale.order', self.create_date,
                                                                    orders.operating_unit_id) or '/'
 
-            if new_seq:
-                self.name = new_seq
+                if new_seq:
+                    orders.name = new_seq
 
             if orders.validity_date:
                 expiration_date = orders.validity_date + ' 23:59:59'
