@@ -106,7 +106,10 @@ class SaleOrder(models.Model):
 
     @api.model
     def create(self, vals):
+
         sales_channel_obj = self.env['sales.channel'].search([('id', '=', vals['sales_channel'])])
+
+        vals['approver_manager_id'] = sales_channel_obj.employee_id.id
 
         new_seq = self.env['ir.sequence'].next_by_code_new('sale.order', self.create_date,
                                                            sales_channel_obj.operating_unit_id) or '/'
@@ -132,18 +135,18 @@ class SaleOrder(models.Model):
 
         return super(SaleOrder, self).create(vals)
 
-
     @api.multi
     def write(self, vals):
 
         if 'sales_channel' in vals:
-            sales_channel_obj = self.env['sales.channel'].search([('id','=',vals['sales_channel'])])
+            sales_channel_obj = self.env['sales.channel'].search([('id', '=', vals['sales_channel'])])
             if self.sales_channel.operating_unit_id != sales_channel_obj.operating_unit_id:
                 new_seq = self.env['ir.sequence'].next_by_code_new('sale.order', self.create_date,
                                                                    sales_channel_obj.operating_unit_id) or '/'
                 if new_seq:
                     vals['name'] = new_seq
 
+            vals['approver_manager_id'] = sales_channel_obj.employee_id.id
 
         if 'pi_id' in vals:
             pi_pool = self.env['proforma.invoice'].search([('id', '=', vals['pi_id'])])
@@ -585,23 +588,33 @@ class SaleOrder(models.Model):
         else:
             return self.env.user.default_operating_unit_id
 
+    def _get_sales_channel(self):
+        return self.env['sales.channel'].search([], limit=1)
+
     sales_channel = fields.Many2one('sales.channel', string='Sales Channel', readonly=True,
                                     states={'to_submit': [('readonly', False)]}, required=True)
 
+
     warehouse_id = fields.Many2one(
         'stock.warehouse', string='Warehouse',
-        required=True, readonly=True, states={'to_submit': [('readonly', False)]},
-        related='sales_channel.warehouse_id')
+        required=True, states={'to_submit': [('readonly', True)],
+        'draft': [('readonly', True)],'submit_quotation': [('readonly', True)]},
+    )
 
     operating_unit_id = fields.Many2one(
         comodel_name='operating.unit',
         string='Operating Unit',
-        related='sales_channel.operating_unit_id',
-        readonly=True, required=True
-    )
+        required=True, states={'to_submit': [('readonly', True)],
+        'draft': [('readonly', True)],'submit_quotation': [('readonly', True)]},)
 
-    approver_manager_id = fields.Many2one('hr.employee', string='Approver Manager', readonly=True,
-                                          related='sales_channel.employee_id', required=True)
+    approver_manager_id = fields.Many2one('hr.employee', string='Approver Manager', readonly=True,)
+
+    @api.onchange('sales_channel')
+    def _onchange_sales_channel(self):
+        self.warehouse_id = self.sales_channel.warehouse_id.id
+        self.operating_unit_id = self.sales_channel.operating_unit_id.id
+        self.approver_manager_id = self.sales_channel.employee_id.id
+
 
     # Ovrride this entire mentod and did not call super.
     # Where ever this method is called, not impact on business
@@ -628,7 +641,7 @@ class SaleOrder(models.Model):
         elif users_obj.has_group('gbs_application_group.group_head_sale'):
 
             domain = [
-                ('state', 'in', ['draft']), ('approver_manager_id','=',self.env.user.employee_ids.id)]
+                ('state', 'in', ['draft']), ('approver_manager_id', '=', self.env.user.employee_ids.id)]
             return domain
         else:
             return False
