@@ -14,6 +14,10 @@ class SaleOrder(models.Model):
     def _get_default_team(self):
         return self.env['crm.team']._get_default_team_id()
 
+
+    name = fields.Char(string='Order Reference', required=True, copy=False, readonly=True,track_visibility = 'onchange',
+                       states={'draft': [('readonly', False)]}, index=True, default=lambda self: _('New'))
+
     type_id = fields.Many2one(comodel_name='sale.order.type', string='Type', default=_get_order_type, readonly=True,
                               states={'to_submit': [('readonly', False)]})
 
@@ -600,7 +604,7 @@ class SaleOrder(models.Model):
 
 
     warehouse_id = fields.Many2one(
-        'stock.warehouse', string='Warehouse',
+        'stock.warehouse', string='Warehouse',track_visibility='onchange',
         required=True, states={'to_submit': [('readonly', True)],
         'draft': [('readonly', True)],'submit_quotation': [('readonly', True)]},
     )
@@ -611,7 +615,7 @@ class SaleOrder(models.Model):
         required=True, states={'to_submit': [('readonly', True)],
         'draft': [('readonly', True)],'submit_quotation': [('readonly', True)]},)
 
-    approver_manager_id = fields.Many2one('hr.employee', string='Approver Manager', readonly=True,)
+    approver_manager_id = fields.Many2one('hr.employee', string='Approver Manager', readonly=True,track_visibility='onchange')
 
     @api.onchange('sales_channel')
     def _onchange_sales_channel(self):
