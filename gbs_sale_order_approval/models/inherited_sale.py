@@ -622,7 +622,7 @@ class SaleOrder(models.Model):
         required=True, states={'to_submit': [('readonly', True)],
                                'draft': [('readonly', True)], 'submit_quotation': [('readonly', True)]}, )
 
-    approver_manager_id = fields.Many2one('hr.employee', string='Approver Manager', readonly=True,
+    approver_manager_id = fields.Many2one('res.users', string='Approver Manager', readonly=True,
                                           track_visibility='onchange')
 
     @api.onchange('sales_channel')
@@ -657,7 +657,7 @@ class SaleOrder(models.Model):
         elif users_obj.has_group('gbs_application_group.group_head_sale'):
 
             domain = [
-                ('state', 'in', ['draft']), ('approver_manager_id', '=', self.env.user.employee_ids.id)]
+                ('state', 'in', ['draft']), ('approver_manager_id', '=', self.env.user.id)]
             return domain
         else:
             return False
