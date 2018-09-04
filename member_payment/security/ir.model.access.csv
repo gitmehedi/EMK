@@ -7,6 +7,9 @@ acc_mem_payment_session_mang,mem_payment_session_mang,model_payment_session,memb
 acc_mem_payment_session_off,mem_payment_session_off,model_payment_session,membership_user.group_mem_user_officer,1,1,1,1
 
 
+acc_mem_service_payment_mang,mem_service_payment_mang,model_service_payment,membership_extension.group_membership_manager,1,1,1,1
+acc_mem_service_payment_off,mem_service_payment_off,model_service_payment,membership_user.group_mem_user_officer,1,1,1,1
+
 
 
 

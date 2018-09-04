@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from odoo import api, fields, models, _
-from odoo.exceptions import ValidationError
+from odoo.exceptions import ValidationError,UserError
 
 
 class PaymentSession(models.Model):
@@ -43,9 +43,9 @@ class PaymentSession(models.Model):
 
     @api.constrains('name')
     def unique_session(self):
-        vals = self.search([('open', '=', True)])
+        vals = self.search([('open', '=', True),('user_id', '=', self.user_id.id)])
         if len(vals) > 1:
-            raise ValidationError(_('Session already Open. Please close session before open another.'))
+            raise UserError(_('Session already open. Please close session before open another.'))
 
     @api.one
     def act_open(self):
@@ -64,9 +64,9 @@ class PaymentSession(models.Model):
                 if rec.state == 'open':
                     sstates = sstates + 1
             if mstates > 0:
-                raise ValidationError(_('Membership payment not posting properly.'))
+                raise UserError(_('Membership payment not posting properly.'))
             if sstates > 0:
-                raise ValidationError(_('Service payment not posting properly.'))
+                raise UserError(_('Service payment not posting properly.'))
             self.state = 'validate'
 
     @api.one

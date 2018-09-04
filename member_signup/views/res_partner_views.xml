@@ -11,9 +11,21 @@
             <xpath expr="//page[@name='sales_purchases']" position="attributes">
                 <attribute name="attrs">{'invisible':True}</attribute>
             </xpath>
+            <xpath expr="//form/sheet" position="before">
+                <div class="alert alert-danger" role="alert" style="margin-bottom:0px;"
+                     attrs="{'invisible': [('membership_days_remaining','&gt;',7)]}">
+                    Your Membership will expire very soon. Please request for renew membership or inform emk personel
+                </div>
+            </xpath>
 
             <xpath expr="//notebook/page[@autofocus='autofocus']" position="before">
                 <page name="member_personal_information" string="Personal Information" autofocus="autofocus">
+                    <group>
+                        <group>
+                            <field name="auto_renew"/>
+                        </group>
+                    </group>
+
                     <group>
                         <group string="Basic Informaiton">
                             <field name="gender" widget="radio" options="{'horizontal': true}"/>

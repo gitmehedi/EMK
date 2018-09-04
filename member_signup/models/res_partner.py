@@ -40,6 +40,7 @@ class ResPartner(models.Model):
     signup_valid = fields.Boolean(compute='_compute_signup_valid', string='Signup Token is Valid')
     signup_url = fields.Char(compute='_compute_signup_url', string='Signup URL')
     birthdate = fields.Date("Birth Date")
+    auto_renew = fields.Boolean(string='Auto Renew', default=False)
 
     last_place_of_study = fields.Char(string='Last or Current Place of Study')
     place_of_study = fields.Char(string='Last or Current Place of Study')
@@ -69,24 +70,12 @@ class ResPartner(models.Model):
         [('application', 'Application'), ('invoice', 'Invoiced'),
          ('member', 'Membership'), ('reject', 'Reject')], default='application')
 
-    @api.model
-    def _needaction_domain_get(self):
-        context = self.env.context
-        if context.get('mcount') == 'application':
-            return [('state', 'in', ['application'])]
-        elif context.get('mcount') == 'invoice':
-            return [('state', 'in', ['invoice'])]
-        elif context.get('mcount') == 'member':
-            return [('state', 'in', ['member'])]
-        elif context.get('mcount') == 'reject':
-            return [('state', 'in', ['reject'])]
-
     @api.onchange('birthdate')
     def validate_birthdate(self):
         if self.birthdate:
             today = str(datetime.now().date())
             if self.birthdate > today:
-                raise ValidationError(
+                raise UserError(
                     _('Birth Date should not greater than current date.'))
 
     @api.constrains('birthdate')
@@ -187,7 +176,7 @@ class ResPartner(models.Model):
         product_id = self.env['product.product'].search([('membership_status', '=', True)], order='id desc',
                                                         limit=1)
         if not product_id:
-            raise ValidationError(_('Please configure your default Memebership Product.'))
+            raise UserError(_('Please configure your default Memebership.'))
 
         ins_inv = self.env['account.invoice']
         journal_id = self.env['account.journal'].search([('code', '=', 'INV')])
@@ -223,13 +212,14 @@ class ResPartner(models.Model):
                 'datas': base64.b64encode(pdf),
                 'mimetype': 'application/x-pdf'
             })
-            template = self.env.ref('member_signup.member_invoice_email_template')
-            template.write({
-                'email_cc': "nopaws_ice_iu@yahoo.com,mahtab.faisal@genweb2.com",
-                'attachment_ids': [(6, 0, attachment.ids)],
-            })
             user = self.env['res.users'].search([('id', '=', self.user_ids.id)])
-            template.with_context({'lang': user.lang}).send_mail(user.id, force_send=True, raise_exception=True)
+            vals = {
+                'template': 'member_signup.member_invoice_email_template',
+                'email_to': user.email if user else self.email,
+                'attachment_ids': [(6, 0, attachment.ids)],
+                'context': {'name': self.name},
+            }
+            self.mailsend(vals)
 
     @api.model
     def sendinvoice(self, inv):
@@ -245,7 +235,7 @@ class ResPartner(models.Model):
         })
         template = self.env.ref('member_signup.member_invoice_email_template')
         template.write({
-            'email_cc': "nopaws_ice_iu@yahoo.com,mahtab.faisal@genweb2.com",
+            'email_cc': "",
             'attachment_ids': [(6, 0, attachment.ids)],
         })
         user = self.env['res.partner'].search([('id', '=', inv.partner_id.id)])
@@ -259,49 +249,12 @@ class ResPartner(models.Model):
         if 'application' in self.state:
             self._create_invoice()
 
-    def mailsend(self, vals):
-        template = False
-        try:
-            template = self.env.ref(vals['template'], raise_if_not_found=False)
-        except ValueError:
-            pass
-
-        assert template._name == 'mail.template'
-        obj = self.env['res.users'].search([('email', '=', vals['email'])])
-
-        template.write({
-            'email_cc': vals['email_cc'],
-            'attachment_ids': vals['attachment_ids'],
-        })
-        base_url = self.env['ir.config_parameter'].get_param('web.base.url')
-        context = {
-            'base_url': base_url,
-        }
-
-        for key, val in vals['context'].iteritems():
-            context[key] = val
-
-        for user in obj:
-            context['lang'] = user.lang
-            if not user.email:
-                raise UserError(_("Cannot send email: user %s has no email address.") % user.name)
-            template.with_context(context).send_mail(user.id, force_send=True, raise_exception=True)
-            _logger.info("Member Application confirmation email sent for user <%s> to <%s>", user.login, user.email)
-
     @api.one
     def member_reject(self):
         if 'application' in self.state:
-            email_cc = ''
-            for gp in self.env['res.groups'].search([('name', '=', 'Manager')]):
-                if gp.category_id.name == 'Membership':
-                    email_cc = email_cc + ", " + gp.users.email
-
             vals = {
                 'template': 'member_signup.member_application_rejection_email_template',
-                'email': self.email,
                 'email_to': self.email,
-                'email_cc': email_cc,
-                'attachment_ids': 'member_signup.member_application_rejection_email_template',
                 'context': {},
             }
             self.mailsend(vals)
@@ -366,12 +319,17 @@ class ResPartner(models.Model):
             res['email'] = res['login'] = partner.email or ''
         return res
 
-    @api.one
+    @api.multi
     def name_get(self):
-        name = self.name
-        if self.member_sequence or self.is_applicant:
-            name = '[%s] %s' % (self.member_sequence, self.name)
-        return (self.id, name)
+        result = []
+        for rec in self:
+            name = ''
+            if rec.member_sequence or rec.is_applicant:
+                name = '[%s] %s' % (rec.member_sequence, rec.name)
+            else:
+                name = rec.name
+            result.append((rec.id, name))
+        return result
 
     @api.model
     def name_search(self, name='', args=None, operator='ilike', limit=100):
@@ -386,10 +344,47 @@ class ResPartner(models.Model):
                 return member.name_get()
         return super(ResPartner, self).name_search(name=name, args=args, operator=operator, limit=limit)
 
-    @api.multi
-    def mailcc(self):
-        email_cc = ''
-        for gp in self.env['res.groups'].search([('name', '=', 'Manager')]):
-            if gp.category_id.name == 'Membership':
-                email_cc = email_cc + ", " + gp.users.email
-        return email_cc
+    @api.model
+    def _needaction_domain_get(self):
+        context = self.env.context
+        if context.get('mcount') == 'application':
+            return [('state', 'in', ['application'])]
+        elif context.get('mcount') == 'invoice':
+            return [('state', 'in', ['invoice'])]
+        elif context.get('mcount') == 'member':
+            return [('state', 'in', ['member'])]
+        elif context.get('mcount') == 'reject':
+            return [('state', 'in', ['reject'])]
+
+    @api.model
+    def mailsend(self, vals):
+        template = False
+        try:
+            template = self.env.ref(vals['template'], raise_if_not_found=False)
+        except ValueError:
+            pass
+
+        assert template._name == 'mail.template'
+
+        template.write({
+            'email_to': vals['email_to'] if 'email_to' in vals else '',
+            'attachment_ids': vals['attachment_ids'] if 'attachment_ids' in vals else [],
+        })
+
+        context = {
+            'base_url': self.env['ir.config_parameter'].get_param('web.base.url'),
+            'lang': self.env.user.lang,
+        }
+
+        for key, val in vals['context'].iteritems():
+            context[key] = val
+
+        template.with_context(context).send_mail(self.env.user.id, force_send=True, raise_exception=True)
+        _logger.info("Email sending status of user.")
+
+    @api.model
+    def groupmail(self, val):
+        groups = self.env['res.groups'].search(
+            [('name', 'in', val['group']), ('category_id.name', '=', val['category'])])
+        emails = [str(rec.email) for rec in groups.users if len(rec.create_uid) > 0]
+        return ", ".join(emails)

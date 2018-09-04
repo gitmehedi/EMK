@@ -2,20 +2,19 @@
 
 from odoo import api, fields, models, _
 
-from odoo.exceptions import ValidationError
+from odoo.exceptions import ValidationError, UserError
 
 
 class MemberPayment(models.Model):
     _name = 'member.payment'
     _inherit = ['mail.thread', 'ir.needaction_mixin']
-    _rec_name = 'membership_id'
     _order = 'id desc'
 
     @api.model
     def _get_session(self):
-        session = self.env['payment.session'].search([('open', '=', True)])
+        session = self.env['payment.session'].search([('open', '=', True),('user_id', '=', self.env.user.partner_id.id)])
         if not session:
-            raise ValidationError(_('Session is not opened. Please open a session.'))
+            raise UserError(_('Session is not opened. Please open a session.'))
         return session
 
     due_amount = fields.Float(string='Due Amount', compute='_compute_due_amount', store=True)
@@ -35,7 +34,6 @@ class MemberPayment(models.Model):
                                  required=True, default=_get_session)
     state = fields.Selection([('open', 'Open'), ('paid', 'Paid')], default='open', string='State')
 
-
     def onchange_membership(self):
         if self.membership_id:
             self.due_amount = self.membership_id.credit
@@ -50,16 +48,12 @@ class MemberPayment(models.Model):
         for rec in self:
             rec.session_id = self._get_session()
 
-    @api.model
-    def _needaction_domain_get(self):
-        return [('state', '=', 'open')]
-
     @api.one
     def member_payment(self):
         invoice = self.env['account.invoice'].search(
             [('partner_id', '=', self.membership_id.id), ('state', '=', 'open')],
             order='create_date desc')
-        pay_text = 'PAID for Membership'
+        pay_text = 'Payment for Membership'
         rem_amount = self.paid_amount
 
         if self.state == 'open' and invoice:
@@ -74,18 +68,21 @@ class MemberPayment(models.Model):
                     inv_amount = rem_amount
                     rem_amount = 0
 
+                if not inv_amount:
+                    raise UserError(_('Paid amount should have a value.'))
+
                 if inv_amount > 0:
-                    record = {}
-                    record['payment_type'] = 'inbound'
-                    record['payment_method_id'] = payment_method_id.id
-                    record['partner_type'] = 'customer'
-                    record['invoice_ids'] = [(6, 0, [rec.id])]
-                    record['partner_id'] = self.membership_id.id
-                    record['amount'] = inv_amount
-                    record['journal_id'] = rec.journal_id.id
-                    record['payment_date'] = self.date
-                    record['communication'] = pay_text
-                    payment = rec.payment_ids.create(record)
+                    payment = rec.payment_ids.create({
+                        'payment_type': 'inbound',
+                        'payment_method_id': payment_method_id.id,
+                        'partner_type': 'customer',
+                        'invoice_ids': [(6, 0, [rec.id])],
+                        'partner_id': self.membership_id.id,
+                        'amount': inv_amount,
+                        'journal_id': rec.journal_id.id,
+                        'payment_date': self.date,
+                        'communication': pay_text,
+                    })
                     payment.post()
 
                     if payment and len(payment_ref) > 0:
@@ -97,25 +94,47 @@ class MemberPayment(models.Model):
                         self.state = 'paid'
                         self.payment_ref = payment_ref
 
-                    if rec.state and self.membership_id.state == 'invoice':
+                    if rec.state=='paid' and self.membership_id.state == 'invoice':
                         seq = self.env['ir.sequence'].next_by_code('res.partner.member')
-                        member = {'state': 'member',
-                                  'member_sequence': seq,
-                                  'application_ref': self.membership_id.member_sequence,
-                                  'free_member': self.membership_id.member_sequence,
-                                  'membership_state': 'free'
-                                  }
-                        self.membership_id.write(member)
+                        self.membership_id.write({'state': 'member',
+                                                  'member_sequence': seq,
+                                                  'application_ref': self.membership_id.member_sequence,
+                                                  'free_member': self.membership_id.member_sequence,
+                                                  'membership_state': 'free'
+                                                  })
+                        for inv_line in invoice.invoice_line_ids:
+                            mem_inv = self.env['membership.membership_line'].search([
+                                ('account_invoice_line', '=', inv_line.id)])
+                            if len(mem_inv) > 0:
+                                mem_inv.write({
+                                    'date': self.date,
+                                    'date_from': self.date,
+                                    'date_to': inv_line.product_id.product_tmpl_id._get_next_date(self.date)
+                                })
 
-                        emailcc = self.env['res.partner'].mailcc()
+                        rm_grp = self.env['res.groups'].sudo().search(
+                            [('name', '=', 'Applicants'), ('category_id.name', '=', 'Membership')])
+                        rm_grp.write({'users': [(3, self.membership_id.user_ids.id)]})
+                        add_grp = self.env['res.groups'].sudo().search(
+                            [('name', '=', 'Membership User'), ('category_id.name', '=', 'Membership')])
+                        add_grp.write({'users': [(6,0, [self.membership_id.user_ids.id])]})
+
                         vals = {
-                            'template': 'member_signup.member_confirmation_email_template',
-                            'email': self.membership_id.email,
+                            'template': 'member_payment.member_payment_confirmation_tmpl',
                             'email_to': self.membership_id.email,
-                            'email_cc': emailcc,
-                            'attachment_ids': 'member_signup.member_confirmation_email_template',
                             'context': {},
                         }
 
                         self.env['res.partner'].mailsend(vals)
                         self.env['rfid.generation'].create({'membership_id': self.membership_id.id})
+
+    @api.model
+    def _needaction_domain_get(self):
+        return [('state', '=', 'open')]
+
+    @api.one
+    def name_get(self):
+        name = self.membership_id.name
+        if self.membership_id:
+            name = '[%s] %s' % (self.membership_id.member_sequence, self.membership_id.name)
+        return (self.id, name)

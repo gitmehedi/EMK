@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from odoo import api, fields, models, _
-from odoo.exceptions import ValidationError
+from odoo.exceptions import ValidationError, UserError
 
 
 class ServicePayment(models.Model):
@@ -12,12 +12,13 @@ class ServicePayment(models.Model):
 
     @api.model
     def _get_session(self):
-        session = self.env['payment.session'].search([('open', '=', True)])
+        session = self.env['payment.session'].search(
+            [('open', '=', True), ('user_id', '=', self.env.user.partner_id.id)])
         if not session:
-            raise ValidationError(_('Session is not opened. Please open a session.'))
+            raise UserError(_('Session is not opened. Please open a session.'))
         return session
 
-    paid_amount = fields.Float(string='Payment Amount', required=True, compute='_compute_paid_amount', store=True)
+    paid_amount = fields.Float(string='Payment Amount',  compute='_compute_paid_amount', store=True)
     comments = fields.Text(string='Comments', readonly=True, states={'open': [('readonly', False)]})
     collection_date = fields.Date(default=fields.Datetime.now(), string='Date', required=True, readonly=True,
                                   states={'open': [('readonly', False)]})

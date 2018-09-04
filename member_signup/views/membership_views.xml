@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="membership.action_membership_members" model="ir.actions.act_window">
+        <field name="domain">[('free_member','=',True)]</field>
+        <field name="context">{}
+        </field>
+    </record>
+</odoo>

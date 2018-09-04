@@ -16,6 +16,9 @@ acc_mem_res_partner_member,mem_res_partner_member,base.model_res_partner,members
 acc_mem_res_partner_officer,mem_res_partner_officer,base.model_res_partner,membership_user.group_mem_user_officer,1,1,1,0
 acc_mem_res_partner_manager,mem_res_partner_manager,base.model_res_partner,membership_extension.group_membership_manager,1,1,1,1
 
+acc_mem_res_users_officer,mem_res_users_officer,base.model_res_users,membership_user.group_mem_user_officer,1,1,1,0
+acc_mem_res_users_manager,mem_res_users_manager,base.model_res_users,membership_extension.group_membership_manager,1,1,1,1
+
 acc_mem_product_template_manager,mem_pro_template_manager,model_product_template,membership_extension.group_membership_manager,1,1,1,1
 acc_mem_product_product_manager,mem_pro_product_manager,product.model_product_product,membership_extension.group_membership_manager,1,1,1,1
 
