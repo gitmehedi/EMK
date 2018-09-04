@@ -1,0 +1,7 @@
+Name,Company,Code,Active,Prefix,Number Padding,number_next_actual,number_next,Increment Number_,Implementation
+CARD,__export__.res_company_4,,True,CARD/%(year)s/,4,4,4,1,No gap
+CASH,__export__.res_company_4,,True,BANK/%(year)s/,4,4,4,1,No gap
+IWH Stock Transfer,__export__.res_company_4,stock.transfer.request,True,TM/CN/,5,1,1,1,Standard
+Product,__export__.res_company_4,product.product,True,,5,2,1,1,Standard
+Purchase Order,__export__.res_company_4,purchase.order,True,PO,5,3,1,1,Standard
+Warehouse to Shop Distribution,__export__.res_company_4,warehouse_to_shop_distribution,True,CHN-,10,3,1,1,Standard

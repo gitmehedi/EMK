@@ -17,6 +17,11 @@ class WarehouseToShopDistribution(models.Model):
     def default_warehouse(self):
         return self.env['stock.warehouse'].search([], order='id asc', limit=1)
 
+    @api.model
+    def _company_default_get(self):
+        if self.env.user.company_id:
+            return self.env.user.company_id
+
     name = fields.Char('Distribution', readonly=True)
     distribute_date = fields.Date(string='Distribute Date', default=fields.Date.today, required=True, readonly=True,
                                   states={'draft': [('readonly', False)]})
@@ -36,6 +41,7 @@ class WarehouseToShopDistribution(models.Model):
 
     shop_id = fields.Many2one('operating.unit', string='Shop Name', required=True, readonly=True,
                               states={'draft': [('readonly', False)]})
+    company_id = fields.Many2one('res.company', string='Company', default=_company_default_get)
 
     state = fields.Selection([
         ('draft', 'Draft'),
@@ -123,8 +129,10 @@ class WarehouseToShopDistribution(models.Model):
         move_new_obj = self.env['stock.move']
 
         warehouse_loc = self.env['stock.location'].search(
-            [('operating_unit_id', '=', self.warehouse_id.operating_unit_id.id)], limit=1)
-        transit_loc = self.env['stock.location'].search([('name', 'ilike', 'Inter Company Transit')])
+            [('operating_unit_id', '=', self.warehouse_id.operating_unit_id.id),
+             ('company_id', '=', self.company_id.id)], limit=1)
+        transit_loc = self.env['stock.location'].search(
+            [('usage', '=', 'transit'), ('active', '=', True), ('company_id', '=', self.company_id.id)])
 
         picking = self.get_picking(src_loc=warehouse_loc, dest_loc=transit_loc)
 
@@ -155,7 +163,8 @@ class WarehouseToShopDistribution(models.Model):
 
         move_new_obj = self.env['stock.move']
 
-        transit_location = self.env['stock.location'].search([('name', 'ilike', 'Inter Company Transit')])
+        transit_location = self.env['stock.location'].search(
+            [('usage', '=', 'transit'), ('active', '=', True), ('company_id', '=', self.company_id.id)])
         dest_loc = self.env['stock.location'].search([('operating_unit_id', '=', self.shop_id.id)])
 
         picking = self.get_picking(src_loc=transit_location, dest_loc=dest_loc)

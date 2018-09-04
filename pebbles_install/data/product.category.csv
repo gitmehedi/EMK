@@ -1,0 +1,5 @@
+Name,Parent Category,Code,Category Type,Company,Stock Journal
+All,,COSMETIC ITEMS,Normal,FEEEL BEAUTY,Stock Journal (BDT)
+Cosmetics,__export__.product_category_251,COSMETICS,Normal,FEEEL BEAUTY,Stock Journal (BDT)
+Cosmetics Own,,Own,Normal,FEEEL BEAUTY,Stock Journal (BDT)
+Cosmetics Others,__export__.product_category_259,Own ,Normal,FEEEL BEAUTY,Stock Journal (BDT)

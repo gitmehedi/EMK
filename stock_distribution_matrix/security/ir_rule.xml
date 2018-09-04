@@ -27,7 +27,6 @@
             <field name="perm_write" eval="1"/>
             <field name="perm_create" eval="1"/>
             <field name="perm_unlink" eval="1"/>
-            <field name="domain_force">[('warehouse_id.operating_unit_id','in', [rec.id for rec in user.operating_unit_ids])]</field>
         </record>
 
         <record id="rule_warehouse_to_shop_distribution_line_by_warehouse" model="ir.rule">
@@ -35,6 +34,22 @@
             <field name="model_id" ref="model_warehouse_to_shop_distribution_line"/>
             <field name="groups" eval="[(4,ref('stock.group_stock_manager'))]"/>
             <field name="domain_force">[(1,'=',1)]</field>
+        </record>
+
+        <record model="ir.rule" id="stock_distribution_to_shop_request_comp_rule">
+            <field name="name">Stock Distribution to Shop multi-company</field>
+            <field name="model_id" ref="model_stock_distribution_to_shop"/>
+            <field name="global" eval="True"/>
+            <field name="domain_force">['|',('company_id','=',False),('company_id','child_of',[user.company_id.id])]
+            </field>
+        </record>
+
+        <record model="ir.rule" id="warehouse_to_shop_distribution_request_comp_rule">
+            <field name="name">Warehouse to Shop Distribution multi-company</field>
+            <field name="model_id" ref="model_warehouse_to_shop_distribution"/>
+            <field name="global" eval="True"/>
+            <field name="domain_force">['|',('company_id','=',False),('company_id','child_of',[user.company_id.id])]
+            </field>
         </record>
     </data>
 </openerp>

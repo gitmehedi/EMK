@@ -1,0 +1,6 @@
+Picking Type Name,Reference Sequence,Warehouse,Type of Operation,Default Source Location,Default Destination Location
+Warehouse To Transit,IM-Warehouse Sequence internal,IM-Warehouse,Internal,IWH/Stock,Physical Locations/FEEEL BEAUTY: Transit Location
+Transit To Warehouse,IM-Warehouse Sequence internal,IM-Warehouse,Internal,Physical Locations/FEEEL BEAUTY: Transit Location,IWH/Stock
+Nasirabad To Transit,Warehouse to Shop Distribution,IM-Warehouse,Internal,IWH/Nasirabad,Physical Locations/FEEEL BEAUTY: Transit Location
+Transit To Nasirabad,Warehouse to Shop Distribution,IM-Warehouse,Internal,Physical Locations/FEEEL BEAUTY: Transit Location,IWH/Nasirabad
+PoS Orders,Nasirabad POS,IM-Warehouse,Customers,IWH/Nasirabad,Partner Locations/Customers

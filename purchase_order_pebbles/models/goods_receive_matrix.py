@@ -9,6 +9,11 @@ class GoodsReceiveMatrix(models.Model):
     _name = 'goods.receive.matrix'
     _order = 'id desc'
 
+    @api.model
+    def _company_default_get(self):
+        if self.env.user.company_id:
+            return self.env.user.company_id
+
     """ Required and Optional Fields """
     readonly_check = fields.Boolean(default=False)
     receive_visible = fields.Boolean(default=False)
@@ -29,6 +34,7 @@ class GoodsReceiveMatrix(models.Model):
 
     matrix_line_ids = fields.One2many('goods.receive.matrix.line', 'matrix_id',
                                       string="Matrix Line")
+    company_id = fields.Many2one('res.company', string='Company',default=_company_default_get)
 
     state = fields.Selection([('draft', 'Draft'), ('waiting', 'Waiting For Approval'), ('adjustment', 'Adjustment'),
                               ('approved', 'Approved'), ('received', 'Received'), ('cancelled', 'Cancelled')],

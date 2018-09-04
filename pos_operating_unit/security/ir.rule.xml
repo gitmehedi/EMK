@@ -11,6 +11,14 @@
             <field name="groups" eval="[(4, ref('point_of_sale.group_pos_user'))]"/>
         </record>
 
+        <record id="inherited_pos_config_company_rule" model="ir.rule">
+            <field name="name">PoS Config multi-company</field>
+            <field name="model_id" ref="model_pos_config"/>
+            <field name="global" eval="True"/>
+            <field name="domain_force">['|',('company_id','=',False),('company_id','child_of',[user.company_id.id])]
+            </field>
+        </record>
+
         <record id="inherited_pos_order_operating_unit" model="ir.rule">
             <field name="name">Inherited Pos Order Operating Unit</field>
             <field name="model_id" ref="model_pos_order"/>
@@ -21,6 +29,14 @@
             <field name="groups" eval="[(4, ref('point_of_sale.group_pos_user'))]"/>
         </record>
 
+        <record model="ir.rule" id="inherited_pos_order_company_rule">
+            <field name="name">PoS Order multi-company</field>
+            <field name="model_id" ref="model_pos_order"/>
+            <field name="global" eval="True"/>
+            <field name="domain_force">['|',('company_id','=',False),('company_id','child_of',[user.company_id.id])]
+            </field>
+        </record>
+
         <record id="inherited_pos_session_operating_unit" model="ir.rule">
             <field name="name">Inherited Pos Session Operating Unit</field>
             <field name="model_id" ref="model_pos_session"/>
@@ -29,6 +45,14 @@
             <field name="perm_create" eval="False"/>
             <field name="perm_unlink" eval="False"/>
             <field name="groups" eval="[(4, ref('point_of_sale.group_pos_user'))]"/>
+        </record>
+
+        <record model="ir.rule" id="inherited_pos_session_company_rule">
+            <field name="name">PoS Session multi-company</field>
+            <field name="model_id" ref="model_pos_session"/>
+            <field name="global" eval="True"/>
+            <field name="domain_force">['|',('company_id','=',False),('company_id','child_of',[user.company_id.id])]
+            </field>
         </record>
     </data>
 </openerp>

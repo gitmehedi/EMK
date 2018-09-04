@@ -46,6 +46,13 @@ class InheritedPosOrder(models.Model):
 class InheritedPosSession(models.Model):
     _inherit = 'pos.session'
 
+    @api.model
+    def _company_default_get(self):
+        if self.env.user.company_id:
+            return self.env.user.company_id
+
+    company_id = fields.Many2one('res.company', string='Company', default=_company_default_get)
+
 
     """ Relational Fields"""
 
