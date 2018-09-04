@@ -142,11 +142,11 @@ class SaleOrder(models.Model):
 
         if 'sales_channel' in vals:
             sales_channel_obj = self.env['sales.channel'].search([('id', '=', vals['sales_channel'])])
-            if self.sales_channel.operating_unit_id != sales_channel_obj.operating_unit_id:
-                new_seq = self.env['ir.sequence'].next_by_code_new('sale.order', self.create_date,
-                                                                   sales_channel_obj.operating_unit_id) or '/'
-                if new_seq:
-                    vals['name'] = new_seq
+            # if self.sales_channel.operating_unit_id != sales_channel_obj.operating_unit_id:
+            #     new_seq = self.env['ir.sequence'].next_by_code_new('sale.order', self.create_date,
+            #                                                        sales_channel_obj.operating_unit_id) or '/'
+            #     if new_seq:
+            #         vals['name'] = new_seq
 
             vals['approver_manager_id'] = sales_channel_obj.employee_id.id
             vals['warehouse_id'] = sales_channel_obj.warehouse_id.id
@@ -615,6 +615,7 @@ class SaleOrder(models.Model):
 
     @api.onchange('sales_channel')
     def _onchange_sales_channel(self):
+        self.warehouse_id = self.sales_channel.warehouse_id.id
         self.warehouse_id = self.sales_channel.warehouse_id.id
         self.operating_unit_id = self.sales_channel.operating_unit_id.id
         self.approver_manager_id = self.sales_channel.employee_id.id
