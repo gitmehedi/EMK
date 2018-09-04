@@ -74,13 +74,13 @@
 			<field name="view_mode">tree,form</field>
 		</record>
 
-		<menuitem
-                name="Holidays Exception"
-                id="menu_holidays_exception_batch"
-			    parent="hr_rostering.main_menu_hr_shifting"
-                sequence="2" action="action_hr_holidays_exception_batch"
-				groups="hr.group_hr_user"
-        />
+		<!--<menuitem-->
+                <!--name="Holidays Exception"-->
+                <!--id="menu_holidays_exception_batch"-->
+			    <!--parent="hr_rostering.main_menu_hr_shifting"-->
+                <!--sequence="2" action="action_hr_holidays_exception_batch"-->
+				<!--groups="hr.group_hr_user"-->
+        <!--/>-->
 
 	</data>
 </odoo>
