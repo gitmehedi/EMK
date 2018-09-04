@@ -6,7 +6,7 @@
             <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Warehouse To Shop Distribution Tree"
-                      colors="blue:state == 'draft';red:state == 'waiting';green:state == 'transfer';gray:state == 'received'">
+                      colors="blue:state=='draft';red:state=='waiting';green:state=='transfer';gray:state=='received'">
                     <field name="name"/>
                     <field name="warehouse_id"/>
                     <field name="shop_id"/>
