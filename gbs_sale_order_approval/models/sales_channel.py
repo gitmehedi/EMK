@@ -6,7 +6,7 @@ class SalesChannel(models.Model):
 
     name = fields.Char(string='Name', required=True)
     operating_unit_id = fields.Many2one('operating.unit', string='Operating Unit', required=True)
-    employee_id = fields.Many2one('hr.employee', string='Approver Manager', required=True)
+    employee_id = fields.Many2one('res.users', string='Approver Manager', required=False)
     warehouse_id = fields.Many2one('stock.warehouse', string='Warehouse', required=True,)
 
     @api.onchange('operating_unit_id')

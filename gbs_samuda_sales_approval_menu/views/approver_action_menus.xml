@@ -17,7 +17,7 @@
             <field name="model">sale.order</field>
             <field name="arch" type="xml">
                 <search string="Quotations">
-                    <filter name="approvehos" string="To Approve" domain="[('approver_manager_id.user_id','=',uid),('state','=','draft')]"/>
+                    <filter name="approvehos" string="To Approve" domain="[('approver_manager_id','=',uid),('state','=','draft')]"/>
                     <filter name="approvehoa" string="To Approve" domain="[('state','=','validate')]"/>
                     <filter name="approvecxo" string="To Approve" domain="[('state','=','sent')]"/>
                 </search>
