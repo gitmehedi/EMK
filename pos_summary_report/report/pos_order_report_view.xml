@@ -45,9 +45,9 @@
                                     </h4>
                                 </p>
                                 <br/>
-                                <span t-esc="data['start_date']"/>
+                                <span t-esc="data['start_date'][:10]"/>
                                 to
-                                <span t-esc="data['end_date']"/>
+                                <span t-esc="data['end_date'][:10]"/>
                             </div>
                         </div>
                         <table class="table table-bordered">

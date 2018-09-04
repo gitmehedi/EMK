@@ -14,9 +14,9 @@
         'stock'
     ],
     'data': [
-        'wizard/category_wise_product_report_wizard_view.xml',
         'wizard/pos_summary_report_wizard_view.xml',
         'wizard/warehouse_to_shop_distribution_report_wizard_view.xml',
+	'wizard/category_wise_product_report_wizard_view.xml',
         'report/category_wise_product_report_view.xml',
         'report/pos_order_report_view.xml',
         'report/warehouse_to_shop_distribution_report_view.xml',

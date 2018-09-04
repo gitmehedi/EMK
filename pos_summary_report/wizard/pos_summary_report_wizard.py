@@ -8,8 +8,8 @@ class PosSummaryReportWizard(models.TransientModel):
     def _default_operating_unit(self):
         return self.env.user.default_operating_unit_id.id
 
-    start_date = fields.Date('Start Date', required=True)
-    end_date = fields.Date('End Date', default=fields.Date.today(), required=True)
+    start_date = fields.Datetime('Start Date', required=True)
+    end_date = fields.Datetime('End Date', default=fields.Datetime.now(), required=True)
     operating_unit_id = fields.Many2one('operating.unit', string='Shop', default=_default_operating_unit, required=True)
     point_of_sale_id = fields.Many2one('pos.config', string='Point of Sale')
 

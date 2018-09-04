@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timedelta
 
 from openerp import api, models
 
@@ -15,14 +15,13 @@ class DailyCreditSettlementReport(models.AbstractModel):
         domain = []
         if data['operating_unit_id']:
             domain.append(('operating_unit_id', '=', data['operating_unit_id']))
-        # if data['point_of_sale_id']:
-        #     domain.append(('point_of_sale_id', '=', data['point_of_sale_id']))
+
         if data['start_date']:
             domain.append(('date_order', '>=', data['start_date']))
         if data['end_date']:
             domain.append(('date_order', '<=', data['end_date']))
 
-        order_list = self.env['pos.order'].search(domain, order="date_order asc")
+        order_list = self.env['pos.order'].search(domain, order="date_order DESC")
 
         grand_total = {
             'sales_value': 0,
@@ -65,7 +64,7 @@ class DailyCreditSettlementReport(models.AbstractModel):
             grand_total['card'] = grand_total['card'] + card
             grand_total['total'] = grand_total['total'] + cash + card
             if data['point_of_sale_id']:
-                if record.session_id.config_id.id== data['point_of_sale_id']:
+                if record.session_id.config_id.id == data['point_of_sale_id']:
                     lines.append(rec)
             else:
                 lines.append(rec)
@@ -110,3 +109,5 @@ class DailyCreditSettlementReport(models.AbstractModel):
 
     def decimal(self, val):
         return "{:,}".format(round(val, 0))
+
+
