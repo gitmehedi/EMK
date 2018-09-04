@@ -153,7 +153,7 @@ class StockTransferRequest(models.Model):
 
         move_obj = self.env['stock.move']
         transit_location = self.env['stock.location'].search(
-            [('usage', '=', 'transit'), ('active', '=', True), ('company_id', '=', self.company_id.id)])
+            [('usage', '=', 'transit'), ('active', '=', True), ('name', 'ilike', 'Inter Company Transit')])
         shop_location = self.get_location(self.my_shop_id.id)
         picking = self.get_picking(source_loc=shop_location, dest_loc=transit_location.id)
 
@@ -179,7 +179,11 @@ class StockTransferRequest(models.Model):
         self.state = 'transfer'
         self.transfer_date = self.get_current_date()
         self.transfer_user_id = self.get_login_user()
+
         self.is_transfer = True
+        if self.is_transfer:
+            for rec in self.product_line_ids:
+                rec.write({'receive_quantity': rec.quantity})
 
     @api.one
     def action_receive(self):
@@ -188,7 +192,7 @@ class StockTransferRequest(models.Model):
 
         move_obj = self.env['stock.move']
         transit_location = self.env['stock.location'].search(
-            [('usage', '=', 'transit'), ('active', '=', True), ('company_id', '=', self.company_id.id)])
+            [('usage', '=', 'transit'), ('active', '=', True), ('name', 'ilike', 'Inter Company Transit')])
         shop_location = self.get_location(self.transfer_shop_id.id)
         picking = self.get_picking(source_loc=transit_location.id, dest_loc=shop_location)
 
