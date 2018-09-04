@@ -607,7 +607,7 @@ class SaleOrder(models.Model):
 
     operating_unit_id = fields.Many2one(
         comodel_name='operating.unit',
-        string='Operating Unit',
+        string='Operating Unit',track_visibility='onchange',
         required=True, states={'to_submit': [('readonly', True)],
         'draft': [('readonly', True)],'submit_quotation': [('readonly', True)]},)
 
