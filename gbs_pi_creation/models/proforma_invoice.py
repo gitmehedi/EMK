@@ -220,6 +220,13 @@ class ProformaInvoice(models.Model):
     # PI Operating Unit related code - ENDS
     ########################################
 
+    @api.constrains('line_ids')
+    def _check_multiple_products_line(self):
+        if len(self.line_ids) > 1:
+            raise ValidationError("You can't add multiple products")
+
+
+
 # ---------------------------------------------------------------------------------------------------------------------------------
 class ProformaInvoiceLine(models.Model):
     _name = 'proforma.invoice.line'

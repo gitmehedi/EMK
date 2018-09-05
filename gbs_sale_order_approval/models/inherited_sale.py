@@ -622,8 +622,8 @@ class SaleOrder(models.Model):
         required=True, states={'to_submit': [('readonly', True)],
                                'draft': [('readonly', True)], 'submit_quotation': [('readonly', True)]}, )
 
-    approver_manager_id = fields.Many2one('res.users', string='Approver Manager', readonly=True,
-                                          track_visibility='onchange')
+    approver_manager_id = fields.Many2one('res.users', string='Approver Manager', track_visibility='onchange')
+
 
     @api.onchange('sales_channel')
     def _onchange_sales_channel(self):
@@ -663,6 +663,13 @@ class SaleOrder(models.Model):
             return False
 
         return domain
+
+
+    @api.constrains('order_line')
+    def _check_multiple_products_line(self):
+        if len(self.order_line) > 1:
+            raise ValidationError("You can't add multiple products")
+
 
     @api.multi
     def unlink(self):
