@@ -42,10 +42,8 @@
 
 					</style>
                     <header>
-                        <button name="action_approve" type="object" states="draft" string="Confirm" class="oe_highlight"
+                        <button name="action_approve" type="object" states="draft,revision" string="Confirm" class="oe_highlight"
                                 groups="delivery_schedules.group_delivery_schedule_manager"/>
-                        <!--<button name="generate_schedule_letter" string="Send by Email" type="object" states="approve"-->
-                        <!--class="btn-primary" groups="delivery_schedules.group_delivery_schedule_manager"/>-->
                         <button string="Revised" name="action_draft"
                                 groups="delivery_schedules.group_delivery_schedule_manager"
                                 states="approve" type="object"/>
@@ -60,20 +58,23 @@
                             <group>
                                 <field name="requested_date"/>
                             </group>
+                            <group>
+                                <field name="operating_unit_id" options="{'no_open': True, 'no_create': True}"/>
+                            </group>
                             <notebook colspan="4">
                                 <page string="Products">
                                     <field name="line_ids">
                                         <tree string="List" editable="bottom">
                                             <field name="operating_unit_id" invisible="1"/>
                                             <field name="schedule_line_date" invisible="1"/>
+                                            <field name="requested_date" invisible="1"/>
 
                                             <field name="partner_id" options="{'no_open': True, 'no_create': True}"/>
                                             <field name="pending_do" options="{'no_open': True, 'no_create': True}"/>
                                             <field name="product_id" options="{'no_open': True, 'no_create': True}"/>
                                             <field name="do_qty"/>
                                             <field name="undelivered_qty"/>
-                                            <field name="uom_id"
-                                                   options="{'no_open': True, 'no_create': True}"/>
+                                            <field name="uom_id" options="{'no_open': True, 'no_create': True}"/>
                                             <field name="scheduled_qty"/>
                                             <field name="remarks"/>
                                             <field name="state" readonly="1"/>
@@ -100,16 +101,14 @@
                                         </form>
                                     </field>
                                 </page>
-
                                 <page string="Other Information">
                                     <group>
-                                        <field name="operating_unit_id"/>
-                                        <field name="sales_team_id"/>
                                         <field name="requested_by" options="{'no_open': True, 'no_create': True}"/>
+                                        <field name="approved_by"/>
+                                        <field name="approve_date"/>
+                                        <field name="scheduled_qty" invisible="1"/>
                                     </group>
-
                                 </page>
-
                             </notebook>
                         </group>
                     </sheet>
@@ -212,7 +211,7 @@
             <field name="name">delivery.schedules.line.search</field>
             <field name="model">delivery.schedules.line</field>
             <field name="arch" type="xml">
-                <search string="Delivery Authorization">
+                <search string="Delivery Instruction">
                     <filter name="today" string="Today" domain="[('requested_date','&gt;=',time.strftime('%%Y-%%m-%%d'))]"/>
                     <separator/>
                     <filter name="pending" string="Pending" domain="[('state','=','approve')]"/>
