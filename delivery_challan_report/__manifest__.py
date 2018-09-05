@@ -6,11 +6,12 @@
     'version':'1.1.1',
     'depends': [
         'stock',
+        'amount_to_word_bd',
     ],
 
     'data': [
-        'reports/delivery_challan_report_view.xml',
         'reports/inherit_stock_picking_report.xml',
+        'reports/delivery_challan_reporting_view.xml',
     ],
 
     'summary': 'Reports printing for Delivery Challan',

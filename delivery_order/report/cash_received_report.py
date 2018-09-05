@@ -24,17 +24,16 @@ class CashReceivedReport(models.AbstractModel):
         data['payment_date'] = docs.payment_date
         data['mr_sl_no'] = seq
         data['company_id'] = docs.company_id.name
+        data['currency_id'] = docs.currency_id.name
 
-
-        #locale.setlocale(locale.LC_ALL, 'bn_BD.UTF-8')
-        #thousand_separated_total_sum = locale.currency(docs.amount, grouping=True)
+        amt_to_word = self.env['res.currency'].amount_to_word(float(docs.amount),True,data['currency_id'])
 
         thousand_separated_total_sum = formatLang(self.env, docs.amount)
 
         docargs = {
             'doc_model': 'account.payment',
             'thousand_separated_total_sum': thousand_separated_total_sum,
-            'amount_to_words': self.env['res.currency'].amount_to_word(float(docs.amount)),
+            'amount_to_words': amt_to_word,
             'data': data,
         }
         
