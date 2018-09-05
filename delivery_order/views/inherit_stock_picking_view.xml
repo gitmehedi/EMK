@@ -37,9 +37,14 @@
                 <xpath expr="//field[@name='driver_mob']" position="after">
                     <field name="transport_name" attrs="{'invisible': [('show_transport_info','=', False)]}"/>
                 </xpath>
-                <!--<xpath expr="//field[@name='min_date']" position="after">-->
-                    <!--<field name="date_done"/>-->
-                <!--</xpath>-->
+
+                <xpath expr="//field[@name='partner_id']" position="after">
+                    <field name="customer_name"/>
+                </xpath>
+
+                <xpath expr="//field[@name='customer_name']" position="after">
+                    <field name="shipping_address_print"/>
+                </xpath>
 
                 <xpath expr="//field[@name='origin']" position="after">
                     <field name="lc_id" options="{'no_open': True, 'no_create': True}"/>/>

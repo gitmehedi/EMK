@@ -75,6 +75,18 @@ class Currency(models.Model):
                         result = paisa + ' Paisa'
                 else:
                     result = result + ' Taka'
+        else:
+            if int(end_word) > 0:
+                end_word = int(end_word) if len(end_word) > 1 else int(end_word) * 10
+                paisa = self.handel_upto_99(end_word)
+                if start_word > 0:
+                    result = result + ' Point ' + paisa + ' '
+                else:
+                    result = ' Point '+paisa
+            else:
+                result = result
+
+
 
         return result
 
