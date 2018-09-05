@@ -201,7 +201,8 @@ class ProformaInvoice(models.Model):
     # PI Operating Unit related code - STARTS
     #########################################
     operating_unit_id = fields.Many2one('operating.unit',
-                                        string='Operating Unit',
+                                        string='Operating Unit',readonly=True,
+                                        states={'draft': [('readonly', False)]},
                                         required=True,track_visibility='onchange')
 
     @api.model
