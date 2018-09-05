@@ -112,7 +112,7 @@ class SaleOrder(models.Model):
 
         sales_channel_obj = self.env['sales.channel'].search([('id', '=', vals['sales_channel'])])
 
-        vals['approver_manager_id'] = sales_channel_obj.employee_id.id
+        vals['approver_user_id'] = sales_channel_obj.user_id.id
         vals['warehouse_id'] = sales_channel_obj.warehouse_id.id
         vals['operating_unit_id'] = sales_channel_obj.operating_unit_id.id
 
@@ -145,13 +145,8 @@ class SaleOrder(models.Model):
 
         if 'sales_channel' in vals:
             sales_channel_obj = self.env['sales.channel'].search([('id', '=', vals['sales_channel'])])
-            # if self.sales_channel.operating_unit_id != sales_channel_obj.operating_unit_id:
-            #     new_seq = self.env['ir.sequence'].next_by_code_new('sale.order', self.create_date,
-            #                                                        sales_channel_obj.operating_unit_id) or '/'
-            #     if new_seq:
-            #         vals['name'] = new_seq
 
-            vals['approver_manager_id'] = sales_channel_obj.employee_id.id
+            vals['approver_user_id'] = sales_channel_obj.user_id.id
             vals['warehouse_id'] = sales_channel_obj.warehouse_id.id
             vals['operating_unit_id'] = sales_channel_obj.operating_unit_id.id
 
@@ -622,7 +617,7 @@ class SaleOrder(models.Model):
         required=True, states={'to_submit': [('readonly', True)],
                                'draft': [('readonly', True)], 'submit_quotation': [('readonly', True)]}, )
 
-    approver_manager_id = fields.Many2one('res.users', string='Approver Manager', track_visibility='onchange')
+    approver_user_id = fields.Many2one('res.users', string='Approver Manager', track_visibility='onchange')
 
 
     @api.onchange('sales_channel')
@@ -630,7 +625,7 @@ class SaleOrder(models.Model):
         self.warehouse_id = self.sales_channel.warehouse_id.id
         self.warehouse_id = self.sales_channel.warehouse_id.id
         self.operating_unit_id = self.sales_channel.operating_unit_id.id
-        self.approver_manager_id = self.sales_channel.employee_id.id
+        self.approver_user_id = self.sales_channel.user_id.id
 
     # Ovrride this entire mentod and did not call super.
     # Where ever this method is called, not impact on business
@@ -638,9 +633,16 @@ class SaleOrder(models.Model):
     @api.constrains('team_id', 'operating_unit_id')
     def _check_team_operating_unit(self):
         for rec in self:
-            if (rec.team_id and
-                        rec.team_id.operating_unit_id != rec.operating_unit_id):
+            if rec.pi_id:
+                if rec.operating_unit_id != rec.pi_id.operating_unit_id:
+                    raise ValidationError(_('Configuration error\n'
+                                            'The Operating Unit of the Proforma Invoice (PI) '
+                                            'must match with that of the '
+                                            'Quotation/Sales Order'))
+
+            if (rec.team_id and rec.team_id.operating_unit_id != rec.operating_unit_id):
                 continue;
+
 
     @api.model
     def _needaction_domain_get(self):
@@ -657,7 +659,7 @@ class SaleOrder(models.Model):
         elif users_obj.has_group('gbs_application_group.group_head_sale'):
 
             domain = [
-                ('state', 'in', ['draft']), ('approver_manager_id', '=', self.env.user.id)]
+                ('state', 'in', ['draft']), ('approver_user_id', '=', self.env.user.id)]
             return domain
         else:
             return False
