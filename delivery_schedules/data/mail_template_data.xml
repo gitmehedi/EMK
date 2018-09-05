@@ -12,7 +12,7 @@
             <field name="report_name">${(object.name or '').replace('/','_')}${object.state == 'approved' and '_approved' or ''}</field>
             <field name="lang">${object.line_ids.partner_id.lang}</field>
             <field name="body_html"><![CDATA[
-<p>Dear ${object.line_ids.partner_name}</p>
+<p>Please Find the attachment below</p>
 
 ]]></field>
         </record>

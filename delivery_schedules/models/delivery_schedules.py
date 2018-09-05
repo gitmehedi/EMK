@@ -51,8 +51,6 @@ class DeliverySchedules(models.Model):
         ('approve', "Confirm"),
     ], default='draft', track_visibility='onchange')
 
-    send_email = fields.Boolean('Send Email', default=False)
-
     @api.onchange('operating_unit_id')
     def onchange_operating_unit_id(self):
         if self.state == 'draft':
@@ -80,16 +78,25 @@ class DeliverySchedules(models.Model):
             if line.state in ['draft','revision']:
                 line.write({'state': 'approve',})
         # email....................................................................
-        #     if self.send_email == True:
-        #     email_server_obj = self.env['ir.mail_server'].search([], order='id ASC', limit=1)
-        #     template = self.env.ref('delivery_schedules.delivery_schedule_email_template')
-        #     template.write({
-        #         'subject': "Delivery Instruction",
-        #         'email_from': email_server_obj.name,
-        #     })
-        #     template.write({
-        #         'email_to': self.env.user.email})
-        #     self.env['mail.template'].browse(template.id).send_mail
+        email_server_obj = self.env['ir.mail_server'].search([], order='id ASC', limit=1)
+        template = self.env.ref('delivery_schedules.schedule_email_template')
+        template.write({
+            'subject': "Delivery Instruction",
+            'email_from': email_server_obj.name,
+        })
+
+        operation_groups_users = self.env['res.groups'].search([('name', '=', 'Delivery Operation')]).users
+        operation_user_list = operation_groups_users.filtered(lambda x: x.default_operating_unit_id == self.operating_unit_id)
+        if operation_user_list:
+            for i in operation_user_list:
+                if i.email:
+                    template.write({
+                        'email_to': i.email})
+                    self.env['mail.template'].browse(template.id).send_mail(self.id)
+
+        # template.write({
+        #     'email_to': self.env.user.email})
+        # self.env['mail.template'].browse(template.id).send_mail(self.id)
         #      .............................................................................
         return self.write(res)
 
