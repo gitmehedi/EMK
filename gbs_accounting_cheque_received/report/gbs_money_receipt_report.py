@@ -1,5 +1,6 @@
 from odoo import api, exceptions, fields, models
-import locale
+from odoo.tools.misc import formatLang
+
 
 class PayrollReportPivotal(models.AbstractModel):
     _name = 'report.gbs_accounting_cheque_received.report_money_receipt'
@@ -25,8 +26,7 @@ class PayrollReportPivotal(models.AbstractModel):
         data['date_on_cheque'] = docs.date_on_cheque
         data['mr_sl_no'] = seq
 
-        locale.setlocale(locale.LC_ALL, 'bn_BD.UTF-8')
-        thousand_separated_total_sum = locale.currency(docs.cheque_amount, grouping=True)
+        thousand_separated_total_sum = formatLang(self.env, docs.cheque_amount)
 
         docargs = {
             'doc_ids': self.ids,
