@@ -36,7 +36,6 @@ class DeliverySchedules(models.Model):
     operating_unit_id = fields.Many2one('operating.unit',
                                         string='Operating Unit',
                                         required=True, readonly=True, states={'draft': [('readonly', False)]},
-                                        default=lambda self: self.env.user.default_operating_unit_id,
                                         track_visibility='onchange')
 
     line_ids = fields.One2many('delivery.schedules.line', 'parent_id', string="Products",
