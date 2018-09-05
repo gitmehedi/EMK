@@ -438,7 +438,7 @@
 
 
                     <xpath expr="//field[@name='company_id']" position="after">
-                        <field name="approver_manager_id"
+                        <field name="approver_user_id" readonly="1"
                                options="{'no_quick_create':True,'no_create_edit':True,'no_open':True}"/>
                     </xpath>
 

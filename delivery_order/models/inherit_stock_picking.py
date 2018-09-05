@@ -3,7 +3,6 @@ from odoo.addons.procurement.models import procurement
 from odoo.tools.float_utils import float_round
 import time, datetime
 
-
 import math
 
 
@@ -120,6 +119,18 @@ class InheritStockPicking(models.Model):
                 'cancel': [('readonly', True)]},
         help="Priority for this picking. Setting manually a value here would set it as priority for all the moves")
 
+    customer_name = fields.Char(string='Partner (Print)',
+                                states={'partially_available': [('readonly', True)],
+                                        'confirmed': [('readonly', True)],
+                                        'waiting': [('readonly', True)],
+                                        'done': [('readonly', True)],
+                                        'cancel': [('readonly', True)]})
+
+    shipping_address_print = fields.Text(string='Address (Print)', states={'partially_available': [('readonly', True)],
+                                                                            'confirmed': [('readonly', True)],
+                                                                            'waiting': [('readonly', True)],
+                                                                            'done': [('readonly', True)],
+                                                                            'cancel': [('readonly', True)]})
 
     # Inherit Validate Button function
     @api.multi
@@ -130,12 +141,12 @@ class InheritStockPicking(models.Model):
         self._set_date_done_do()
         return res
 
-
     def _get_number_of_jar(self):
 
         if self.pack_type.uom_id and not self.pack_type.is_jar_bill_included:
             for picking_line in self.pack_operation_product_ids:
-                jar_count = (picking_line.qty_done * picking_line.product_uom_id.factor_inv) / self.pack_type.uom_id.factor_inv
+                jar_count = (
+                                picking_line.qty_done * picking_line.product_uom_id.factor_inv) / self.pack_type.uom_id.factor_inv
 
                 delivery_jar_count_obj = self.env['delivery.jar.count']
 
@@ -151,11 +162,10 @@ class InheritStockPicking(models.Model):
 
                 delivery_jar_count_obj.create(vals)
 
-
     def _set_date_done_do(self):
         for move in self.move_lines:
             if move.undelivered_qty == 0.0:
-                do_objs = self.env['delivery.order'].search([('id','=',self.delivery_order_id.id)])
+                do_objs = self.env['delivery.order'].search([('id', '=', self.delivery_order_id.id)])
                 do_line_objs = do_objs.line_ids.filtered(lambda x: x.product_id.id == move.product_id.id)
                 if do_line_objs:
                     if self.date_done:
@@ -170,13 +180,16 @@ class InheritStockPicking(models.Model):
 
     @api.multi
     def do_print_delivery_challan(self):
-        return self.env["report"].get_action(self, 'delivery_challan_report.report_delivery_cha')
+
+        data = {}
+        data['picking_id'] = self.id
+        return self.env["report"].get_action(self, 'delivery_challan_report.report_top_sheet', data)
 
 
 class InheritStockMove(models.Model):
     _inherit = 'stock.move'
 
-    #below 2 fields added for Delivery related reporting
+    # below 2 fields added for Delivery related reporting
     packing_uom_id = fields.Many2one('product.uom', string='Packing UoM ID')
     jar_count = fields.Float(string='# of Jar')
 
@@ -184,10 +197,11 @@ class InheritStockMove(models.Model):
 
     undelivered_qty = fields.Float(
         'Undelivered Quantity', compute='_get_undelivered_qty',
-        digits=0, states={'done': [('readonly', True)]},store=True)
+        digits=0, states={'done': [('readonly', True)]}, store=True)
 
     @api.one
     @api.depends('linked_move_operation_ids.qty')
     def _get_undelivered_qty(self):
-        self.undelivered_qty = float_round(self.product_qty - sum(self.mapped('linked_move_operation_ids').mapped('qty')),
-                                         precision_rounding=self.product_id.uom_id.rounding)
+        self.undelivered_qty = float_round(
+            self.product_qty - sum(self.mapped('linked_move_operation_ids').mapped('qty')),
+            precision_rounding=self.product_id.uom_id.rounding)

@@ -122,6 +122,37 @@ class DeliveryOrder(models.Model):
             action['res_id'] = pickings.id
         return action
 
+
+    # do not want to load res.partner obj to call this method, so copied it
+    def getAddressByPartner(self, partner):
+
+        address = partner.address_get(['delivery', 'invoice'])
+        delivery_address = self.env['res.partner'].browse(address['delivery'])
+
+        address = []
+        if delivery_address.street:
+            address.append(delivery_address.street)
+
+        if delivery_address.street2:
+            address.append(delivery_address.street2)
+
+        if delivery_address.zip_id:
+            address.append(delivery_address.zip_id.name)
+
+        if delivery_address.city:
+            address.append(delivery_address.city)
+
+        if delivery_address.state_id:
+            address.append(delivery_address.state_id.name)
+
+        if delivery_address.country_id:
+            address.append(delivery_address.country_id.name)
+
+        str_address = '\n '.join(address)
+
+        return str_address
+
+
     @api.multi
     def create_delivery_order(self):
 
@@ -136,8 +167,14 @@ class DeliveryOrder(models.Model):
             self.sale_order_id.sudo().action_done()
 
         # Update the reference of Delivery Order and LC No to Stock Picking
+        shipping_address = self.getAddressByPartner(self.parent_id)
+
+
         stock_picking_id = self.delivery_order_id.sale_order_id.picking_ids
-        stock_picking_id.sudo().write({'pack_type': self.delivery_order_id.sale_order_id.pack_type.id,
+        stock_picking_id.sudo().write({
+            'customer_name':self.parent_id.name,
+            'shipping_address_print':shipping_address,
+            'pack_type': self.delivery_order_id.sale_order_id.pack_type.id,
                                        'operating_unit_id': self.delivery_order_id.operating_unit_id.id,
                                        'delivery_order_id': self.id})
 
