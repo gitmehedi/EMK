@@ -12,9 +12,3 @@ class DOMaxOrderQtyWithoutLc(models.Model):
         if context['delivery_order_id']:
             delivery_order_pool = self.env['delivery.authorization'].search([('id', '=', context['delivery_order_id'])])
             delivery_order_pool.write({'state': 'validate'})
-
-
-    def action_cancel(self,context=None):
-        if context['delivery_order_id']:
-            delivery_order_pool = self.env['delivery.authorization'].search([('id', '=', context['delivery_order_id'])])
-            delivery_order_pool.write({'state': 'draft'})
