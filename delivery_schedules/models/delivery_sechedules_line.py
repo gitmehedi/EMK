@@ -86,11 +86,11 @@ class DeliveryScheduleLine(models.Model):
                         if do_line_list:
                             do_id_list.append(do_obj.id)
 
-                    if len(do_id_list) == 1:
-                        self.pending_do = self.env['delivery.order'].sudo().search([('id','=',do_id_list)])
-                        return {'domain': {'pending_do': [('id', '=', do_id_list)]}}
-                    else:
-                        return {'domain': {'pending_do': [('id', 'in', do_id_list)]}}
+                if len(do_id_list) == 1:
+                    self.pending_do = self.env['delivery.order'].sudo().search([('id','=',do_id_list)])
+                    return {'domain': {'pending_do': [('id', '=', do_id_list)]}}
+                else:
+                    return {'domain': {'pending_do': [('id', 'in', do_id_list)]}}
 
     @api.onchange('pending_do')
     def onchange_pending_do(self):
@@ -133,4 +133,4 @@ class DeliveryScheduleLine(models.Model):
     def _check_scheduled_qty(self):
         for ds in self:
             if ds.scheduled_qty > ds.do_qty:
-                raise Warning('Schedule date can not bigger then Delivery Quantity!')
+                raise Warning('Schedule qty can not larger than Undelivered Qty.!')
