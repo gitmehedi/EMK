@@ -93,9 +93,6 @@ class DeliverySchedules(models.Model):
                         'email_to': i.email})
                     self.env['mail.template'].browse(template.id).send_mail(self.id)
 
-        # template.write({
-        #     'email_to': self.env.user.email})
-        # self.env['mail.template'].browse(template.id).send_mail(self.id)
         #      .............................................................................
         return self.write(res)
 
