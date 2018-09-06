@@ -126,34 +126,64 @@ class ChequeReceived(models.Model):
                 'date': date,
             }
 
-            amount = cr.cheque_amount
-
             debit_account_id = cr.partner_id.property_account_receivable_id
             credit_account_id = cr.journal_id.default_credit_account_id
 
             if debit_account_id:
+
+                amount_currency = 0
+                debit_amount = cr.cheque_amount > 0.0 and cr.cheque_amount or 0.0
+                credit_amount = cr.cheque_amount < 0.0 and -cr.cheque_amount or 0.0
+                currency_id = cr.journal_id.currency_id.id
+
+                if cr.currency_id:
+                    if cr.currency_id != cr.company_id.currency_id:
+                        amount_currency = cr.cheque_amount
+                        amount = amount_currency / cr.currency_id.rate
+                        debit_amount = amount > 0.0 and amount or 0.0
+                        credit_amount = amount < 0.0 and -amount or 0.0
+                        currency_id = cr.currency_id.id
+
                 debit_line = (0, 0, {
                     'name': debit_account_id.name,
                     'partner_id': cr.partner_id.id,
                     'account_id': debit_account_id.id,
                     'journal_id': cr.journal_id.id,
+                    'currency_id': currency_id,
+                    'amount_currency': amount_currency,
                     'date': date,
-                    'debit': amount > 0.0 and amount or 0.0,
-                    'credit': amount < 0.0 and -amount or 0.0,
+                    'debit': debit_amount,
+                    'credit': credit_amount,
                 })
 
                 line_ids.append(debit_line)
                 debit_sum += debit_line[2]['debit'] - debit_line[2]['credit']
 
             if credit_account_id:
+
+                amount_currency = 0
+                debit_amount = cr.cheque_amount < 0.0 and -cr.cheque_amount or 0.0
+                credit_amount = cr.cheque_amount > 0.0 and cr.cheque_amount or 0.0
+                currency_id = cr.journal_id.currency_id.id
+
+                if cr.currency_id:
+                    if cr.currency_id != cr.company_id.currency_id:
+                        amount_currency = cr.cheque_amount
+                        amount = amount_currency / cr.currency_id.rate
+                        debit_amount = amount < 0.0 and -amount or 0.0
+                        credit_amount = amount > 0.0 and amount or 0.0
+                        currency_id = cr.currency_id.id
+
                 credit_line = (0, 0, {
                     'name': credit_account_id.name,
                     'partner_id': cr.partner_id.id,
                     'account_id': credit_account_id.id,
                     'journal_id': cr.journal_id.id,
+                    'currency_id': currency_id,
+                    'amount_currency': -amount_currency, # amount_currency is negative when it is in credit
                     'date': date,
-                    'debit': amount < 0.0 and -amount or 0.0,
-                    'credit': amount > 0.0 and amount or 0.0,
+                    'debit': debit_amount,
+                    'credit': credit_amount,
                 })
                 line_ids.append(credit_line)
                 credit_sum += credit_line[2]['credit'] - credit_line[2]['debit']
