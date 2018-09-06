@@ -214,7 +214,7 @@
                   parent="delivery_menu"
                   sequence="1"
                   action="delivery_order_action"
-                  groups="account.group_account_user,gbs_application_group.group_head_account,gbs_application_group.group_cxo"/>
+                  groups="account.group_account_user,gbs_application_group.group_head_account"/>
 
     </data>
 </odoo>
