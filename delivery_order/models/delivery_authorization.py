@@ -33,6 +33,11 @@ class DeliveryAuthorization(models.Model):
                                states={'draft': [('readonly', False)]})
     cheque_ids = fields.One2many('cheque.payment.line', 'pay_cash_id', string="Cheque", readonly=True,
                                  states={'draft': [('readonly', False)]})
+
+    cheque_rcv_all_ids = fields.One2many('cheque.entry.line', 'pay_all_cq_id', string="Cheque Received", readonly=True,
+                                 states={'draft': [('readonly', False)]})
+
+
     tt_ids = fields.One2many('tt.payment.line', 'pay_tt_id', string="T.T", readonly=True,
                              states={'draft': [('readonly', False)]})
     lc_ids = fields.One2many('lc.payment.line', 'pay_lc_id', string="L/C", readonly=True,
@@ -98,6 +103,7 @@ class DeliveryAuthorization(models.Model):
     tax_value = fields.Float(string='Taxes', readonly=True)
     total_amount = fields.Float(string='Total', readonly=True, track_visibility='onchange')
     total_payment_received = fields.Float(string='Total Payment Received', readonly=True, track_visibility='onchange')
+    total_cheque_rcv_amount_not_honored = fields.Float(string='Total Cheque Received (Not Honored)', readonly=True, track_visibility='onchange')
 
     sale_order_id = fields.Many2one('sale.order',
                                     string='Sale Order',
@@ -229,7 +235,7 @@ class DeliveryAuthorization(models.Model):
     def action_validate(self):
 
         if self.so_type == 'cash':
-            #self.payment_information_check()
+            # self.payment_information_check()
             cash_check = self.payments_amount_checking_with_products_subtotal()
             return cash_check
 
@@ -367,20 +373,6 @@ class DeliveryAuthorization(models.Model):
             self.sale_order_id.action_done()
         return True
 
-    @api.multi
-    def payment_information_check(self):
-        for cash_line in self.cash_ids:
-
-            if cash_line.account_payment_id.sale_order_id.id != self.sale_order_id.id:
-                raise UserError("%s Payment Information is of a different Sale Order!" % (
-                    cash_line.account_payment_id.display_name))
-                break;
-
-            if cash_line.account_payment_id.is_this_payment_checked == True:
-                raise UserError(
-                    "Payment Information entered is already in use: %s" % (cash_line.account_payment_id.display_name))
-                break;
-
     @api.onchange('sale_order_id')
     def onchange_sale_order_id(self):
         self.set_products_info_automatically()
@@ -465,9 +457,50 @@ class DeliveryAuthorization(models.Model):
     def action_process_unattached_payments(self):
         self.process_cheque_payment()
         self.process_cash_payment()
+        self.process_all_cheque_received_entry()
 
         # process total payment received amount
         self.process_total_payment_received_amount()
+
+
+    # Process all the entered Cheque Received entry
+    def process_all_cheque_received_entry(self):
+        if self.cheque_rcv_all_ids:
+            self.cheque_rcv_all_ids.unlink()
+
+        for pay in self:
+            cheque_rcv_pool = pay.env['accounting.cheque.received'].search(
+                [('partner_id', '=', pay.sale_order_id.partner_id.id), ('state', '!=', 'honoured'),
+                 ('sale_order_id', '=', pay.sale_order_id.id)])
+
+            val_bank = []
+            for bank_line in self.cheque_rcv_all_ids:
+                val_bank.append(bank_line.cheque_info_id)
+
+            vals = []
+
+            for payments in cheque_rcv_pool:
+                if not payments.is_this_payment_checked and payments.id not in val_bank:
+                    vals.append((0, 0, {'cheque_info_id': payments.id,
+                                        'amount': payments.cheque_amount,
+                                        'bank': payments.bank_name.name,
+                                        'branch': payments.branch_name,
+                                        'payment_date': payments.payment_date,
+                                        'number': payments.cheque_no,
+                                        'currency_id': payments.currency_id.id,
+                                        'state':payments.state,
+                                        }))
+
+
+            pay.cheque_rcv_all_ids = vals
+
+            ## Sum of cheques amount
+            cheque_line_total_amount = 0
+            for do_cheque_line in pay.cheque_rcv_all_ids:
+                cheque_line_total_amount = cheque_line_total_amount + do_cheque_line.amount
+
+            pay.total_cheque_rcv_amount_not_honored  = cheque_line_total_amount
+
 
     def process_total_payment_received_amount(self):
         cash_line_total_amount = 0

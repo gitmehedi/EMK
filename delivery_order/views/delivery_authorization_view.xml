@@ -139,9 +139,26 @@
                                             <field name="bank"/>
                                             <field name="branch"/>
                                             <field name="number"/>
-                                             <field name="currency_id"/>
+                                            <field name="currency_id"/>
                                             <field name="account_payment_id"/>
                                             <field name="cheque_info_id" invisible="1"/>
+                                        </tree>
+                                    </field>
+                                </page>
+
+                                <page string="Cheque Received" attrs="{'invisible':[('so_type', '!=', 'cash')]}">
+                                    <field name="cheque_rcv_all_ids">
+                                        <tree string="List" editable="bottom">
+                                            <field name="payment_date" string="Payment Date"/>
+                                            <field name="amount"/>
+                                            <field name="bank"/>
+                                            <field name="branch"/>
+                                            <field name="number"/>
+                                            <field name="currency_id"/>
+                                            <field name="state"/>
+                                            <field name="account_payment_id"/>
+                                            <field name="cheque_info_id" invisible="1"/>
+
                                         </tree>
                                     </field>
                                 </page>
@@ -152,7 +169,12 @@
                                        options="{'currency_field': 'currency_id'}"/>
 
                                 <field name="total_payment_received" widget='monetary'
-                                       options="{'currency_field': 'currency_id'}" attrs="{'invisible':[('so_type', '!=', 'cash')]}"/>
+                                       options="{'currency_field': 'currency_id'}"
+                                       attrs="{'invisible':[('so_type', '!=', 'cash')]}"/>
+
+                                <field name="total_cheque_rcv_amount_not_honored" widget='monetary'
+                                       options="{'currency_field': 'currency_id'}"
+                                       attrs="{'invisible':[('so_type', '!=', 'cash')]}"/>
 
                                 <field name="tax_value" widget='monetary' options="{'currency_field': 'currency_id'}"/>
                                 <field name="total_amount" class="oe_subtotal_footer_separator" widget='monetary'
@@ -174,7 +196,7 @@
             <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Delivery Order"
-                colors="blue:state == 'validate'">
+                      colors="blue:state == 'validate'">
                     <field name="name" string="Delivery Authorization"/>
                     <field name="sale_order_id" string="Sale Order"/>
                     <field name="so_type"/>
@@ -203,7 +225,8 @@
             <field name="search_view_id" ref="search_delivery_auth_acc_ex"/>
             <field name="context">{
                 'search_default_submit':1,
-                }</field>
+                }
+            </field>
             <field name="help" type="html">
                 <p class="oe_view_nocontent_create">
                     Click to create a new DA.
