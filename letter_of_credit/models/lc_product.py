@@ -21,3 +21,4 @@ class LCProduct(models.Model):
     # Check test for foreign sales
 
     # Another test for foreign sales
+    # Againg commit from foreign sales
