@@ -127,6 +127,7 @@
                                             <field name="branch"/>
                                             <!--<field name="validity"/>-->
                                             <field name="account_payment_id"/>
+                                            <field name="currency_id"/>
                                         </tree>
                                     </field>
                                 </page>
@@ -138,6 +139,7 @@
                                             <field name="bank"/>
                                             <field name="branch"/>
                                             <field name="number"/>
+                                             <field name="currency_id"/>
                                             <field name="account_payment_id"/>
                                             <field name="cheque_info_id" invisible="1"/>
                                         </tree>

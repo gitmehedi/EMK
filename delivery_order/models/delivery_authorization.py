@@ -54,7 +54,7 @@ class DeliveryAuthorization(models.Model):
         ('cash', 'Cash'),
         ('credit_sales', 'Credit'),
         ('lc_sales', 'L/C'),
-    ], string='Sales Type', readonly=True,track_visibility='onchange')
+    ], string='Sales Type', readonly=True, track_visibility='onchange')
 
     state = fields.Selection([
         ('draft', "Submit"),
@@ -70,7 +70,6 @@ class DeliveryAuthorization(models.Model):
     operating_unit_id = fields.Many2one('operating.unit', string='Operating Unit', readonly=True,
                                         track_visibility='onchange')
 
-
     @api.multi
     @api.depends('sale_order_id.procurement_group_id')
     def _compute_picking_ids(self):
@@ -80,8 +79,10 @@ class DeliveryAuthorization(models.Model):
             self.delivery_count = len(order.picking_ids)
 
     """ PI and LC """
-    pi_id = fields.Many2one('proforma.invoice', string='PI Ref. No.', compute="_calculate_pi_id", store=False,track_visibility='onchange')
-    lc_id = fields.Many2one('letter.credit', string='LC Ref. No.', compute="_calculate_lc_id", store=False,track_visibility='onchange')
+    pi_id = fields.Many2one('proforma.invoice', string='PI Ref. No.', compute="_calculate_pi_id", store=False,
+                            track_visibility='onchange')
+    lc_id = fields.Many2one('letter.credit', string='LC Ref. No.', compute="_calculate_lc_id", store=False,
+                            track_visibility='onchange')
 
     @api.multi
     def _calculate_pi_id(self):
@@ -228,7 +229,7 @@ class DeliveryAuthorization(models.Model):
     def action_validate(self):
 
         if self.so_type == 'cash':
-            self.payment_information_check()
+            #self.payment_information_check()
             cash_check = self.payments_amount_checking_with_products_subtotal()
             return cash_check
 
@@ -281,7 +282,7 @@ class DeliveryAuthorization(models.Model):
                                     orders.create(res)
 
                     if list[rec] > 100 or res['available_qty'] == 0:
-                        #product_pool = self.env['product.template'].search([('id', '=', rec)])
+                        # product_pool = self.env['product.template'].search([('id', '=', rec)])
                         wizard_form = self.env.ref('delivery_order.max_do_without_lc_view', False)
                         view_id = self.env['max.delivery.without.lc.wizard']
 
@@ -302,7 +303,6 @@ class DeliveryAuthorization(models.Model):
         elif self.so_type == 'credit_sales':
             self._automatic_delivery_order_creation()
             self.state = 'close'
-            
 
     def total_sub_total_amount(self):
         total_amt = 0
@@ -417,7 +417,7 @@ class DeliveryAuthorization(models.Model):
         if account_payment_pool:
             vals = []
             for payments in account_payment_pool:
-                #if payments.journal_id.type == 'cash':
+                # if payments.journal_id.type == 'cash':
                 if payments.sale_order_id and not payments.is_this_payment_checked:
                     vals.append((0, 0, {'account_payment_id': payments.id,
                                         'amount': payments.amount,
@@ -464,32 +464,12 @@ class DeliveryAuthorization(models.Model):
 
     def action_process_unattached_payments(self):
         self.process_cheque_payment()
-
-        account_payment_pool = self.env['account.payment'].search(
-            [('state', '!=', 'draft'), ('is_this_payment_checked', '=', False),
-             ('sale_order_id', '=', self.sale_order_id.id)])
-
-        for acc in account_payment_pool:
-            val_bank = []
-            for bank_line in self.cash_ids:
-                val_bank.append(bank_line.account_payment_id.id)
-
-            vals_bank = []
-
-            for bank_payments in acc:
-                if bank_payments.id not in val_bank:
-                    vals_bank.append((0, 0, {'account_payment_id': bank_payments.id,
-                                             'amount': bank_payments.amount,
-                                             'dep_bank': bank_payments.deposited_bank,
-                                             'branch': bank_payments.bank_branch,
-                                             'payment_date': bank_payments.payment_date,
-                                             'number': bank_payments.cheque_no
-                                             }))
-
-            self.cash_ids = vals_bank
+        self.process_cash_payment()
 
         # process total payment received amount
-        ## Sum of cash amount
+        self.process_total_payment_received_amount()
+
+    def process_total_payment_received_amount(self):
         cash_line_total_amount = 0
         for do_cash_line in self.cash_ids:
             cash_line_total_amount = cash_line_total_amount + do_cash_line.amount
@@ -498,80 +478,115 @@ class DeliveryAuthorization(models.Model):
         cheque_line_total_amount = 0
         for do_cheque_line in self.cheque_ids:
             cheque_line_total_amount = cheque_line_total_amount + do_cheque_line.amount
+
         self.total_payment_received = cash_line_total_amount + cheque_line_total_amount
 
+    def process_cash_payment(self):
+        if self.cash_ids:
+            self.cash_ids.unlink()
+
+        account_payment_pool = self.env['account.payment'].search(
+            [('state', '!=', 'draft'), ('is_this_payment_checked', '=', False),
+             ('sale_order_id', '=', self.sale_order_id.id)])
+
+        for acc in account_payment_pool:
+
+            acc_move_line_cash = self.env['account.move.line'].search(
+                [('credit', '=', 0.00), ('payment_id', '=', acc.id)])
+
+            vals_bank = []
+
+            for bank_payments in acc_move_line_cash:
+                vals_bank.append((0, 0, {'id': bank_payments.id,
+                                         'amount': bank_payments.debit,
+                                         'dep_bank': acc.deposited_bank,
+                                         'branch': acc.bank_branch,
+                                         'payment_date': bank_payments.date,
+                                         # 'number': acc.cheque_no,
+                                         'currency_id': bank_payments.move_id.currency_id.id,
+                                         'account_payment_id': bank_payments.name
+                                         }))
+
+            self.cash_ids = vals_bank
 
     @api.multi
     def process_cheque_payment(self):
-        vals = []
+        if self.cheque_ids:
+            self.cheque_ids.unlink()
+
         for pay in self:
             cheque_rcv_pool = pay.env['accounting.cheque.received'].search(
                 [('partner_id', '=', pay.sale_order_id.partner_id.id), ('state', '=', 'honoured'),
                  ('sale_order_id', '=', pay.sale_order_id.id)])
 
-            val_bank = []
-            for bank_line in self.cheque_ids:
-                val_bank.append(bank_line.cheque_info_id)
+            for cq_obj in cheque_rcv_pool:
+                acc_move_line_cheque = pay.env['account.move.line'].search(
+                    [('cheque_received_id', '=', cq_obj.id), ('credit', '=', 0.00)])
 
-            for payments in cheque_rcv_pool:
-                if payments.journal_id.type != 'cash':
-                    if not payments.is_this_payment_checked and payments.id not in val_bank:
-                        vals.append((0, 0, {'cheque_info_id': payments.id,
-                                            'amount': payments.cheque_amount,
-                                            'bank': payments.bank_name.name,
-                                            'branch': payments.branch_name,
-                                            'payment_date': payments.payment_date,
-                                            'number': payments.cheque_no,
+                vals = []
+
+                for payments in acc_move_line_cheque:
+                    if not cq_obj.is_this_payment_checked:
+                        vals.append((0, 0, {'id': payments.id,
+                                            'amount': payments.debit,
+                                            'bank': cq_obj.bank_name.name,
+                                            'branch': cq_obj.branch_name,
+                                            'payment_date': cq_obj.payment_date,
+                                            'number': cq_obj.cheque_no,
+                                            'label': payments.name,
+                                            'currency_id': payments.move_id.currency_id.id,
                                             }))
 
-            pay.cheque_ids = vals
+                pay.cheque_ids = vals
 
-    ################
-    # 100 MT Logic
-    ###############
-    @api.multi
-    def update_lc_id_for_houndred_mt(self):
-        for delivery in self:
-            ordered_qty_pool = delivery.env['ordered.qty'].search([('delivery_auth_no', '=', delivery.id)])
-            if ordered_qty_pool:
-                ordered_qty_pool.write({'lc_id': delivery.lc_id.id})
 
-            ## Update LC No to Stock Picking Obj
-            stock_picking_id = delivery.sale_order_id.picking_ids
-            stock_picking_id.write({'lc_id': delivery.lc_id.id})
+################
+# 100 MT Logic
+###############
+@api.multi
+def update_lc_id_for_houndred_mt(self):
+    for delivery in self:
+        ordered_qty_pool = delivery.env['ordered.qty'].search([('delivery_auth_no', '=', delivery.id)])
+        if ordered_qty_pool:
+            ordered_qty_pool.write({'lc_id': delivery.lc_id.id})
 
-    @api.model
-    def _needaction_domain_get(self):
-        users_obj = self.env['res.users']
-        domain = []
-        # if users_obj.has_group('gbs_application_group.group_cxo'):
-        #     domain = [
-        #         ('state', 'in', ['validate'])]
-        #     return domain
-        if users_obj.has_group('gbs_application_group.group_head_account'):
-            domain = [
-                ('state', 'in', ['validate'])]
-            return domain
-        elif users_obj.has_group('account.group_account_user'):
-            domain = [
-                ('state', 'in', ['draft'])]
-            return domain
-        else:
-            return False
+        ## Update LC No to Stock Picking Obj
+        stock_picking_id = delivery.sale_order_id.picking_ids
+        stock_picking_id.write({'lc_id': delivery.lc_id.id})
 
+
+@api.model
+def _needaction_domain_get(self):
+    users_obj = self.env['res.users']
+    domain = []
+    # if users_obj.has_group('gbs_application_group.group_cxo'):
+    #     domain = [
+    #         ('state', 'in', ['validate'])]
+    #     return domain
+    if users_obj.has_group('gbs_application_group.group_head_account'):
+        domain = [
+            ('state', 'in', ['validate'])]
         return domain
-        ## mail notification
-        # @api.multi
-        # def _notify_approvers(self):
-        #     approvers = self.employee_id._get_employee_manager()
-        #     if not approvers:
-        #         return True
-        #     for approver in approvers:
-        #         self.sudo(SUPERUSER_ID).add_follower(approver.id)
-        #         if approver.sudo(SUPERUSER_ID).user_id:
-        #             self.sudo(SUPERUSER_ID)._message_auto_subscribe_notify(
-        #                 [approver.sudo(SUPERUSER_ID).user_id.partner_id.id])
-        #     return True
+    elif users_obj.has_group('account.group_account_user'):
+        domain = [
+            ('state', 'in', ['draft'])]
+        return domain
+    else:
+        return False
+
+    return domain
+    ## mail notification
+    # @api.multi
+    # def _notify_approvers(self):
+    #     approvers = self.employee_id._get_employee_manager()
+    #     if not approvers:
+    #         return True
+    #     for approver in approvers:
+    #         self.sudo(SUPERUSER_ID).add_follower(approver.id)
+    #         if approver.sudo(SUPERUSER_ID).user_id:
+    #             self.sudo(SUPERUSER_ID)._message_auto_subscribe_notify(
+    #                 [approver.sudo(SUPERUSER_ID).user_id.partner_id.id])
+    #     return True
 
 
 class OrderedQty(models.Model):
