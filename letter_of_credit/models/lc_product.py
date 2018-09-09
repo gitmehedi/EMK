@@ -19,3 +19,5 @@ class LCProduct(models.Model):
 
     lc_id = fields.Many2one('letter.credit', string='LC')
     # Check test for foreign sales
+
+    # Another test for foreign sales
