@@ -18,3 +18,4 @@ class LCProduct(models.Model):
     product_uom = fields.Many2one('product.uom', string='Product Unit of Measure')
 
     lc_id = fields.Many2one('letter.credit', string='LC')
+    # Check test for foreign sales
