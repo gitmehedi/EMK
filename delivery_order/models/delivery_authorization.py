@@ -35,8 +35,7 @@ class DeliveryAuthorization(models.Model):
                                  states={'draft': [('readonly', False)]})
 
     cheque_rcv_all_ids = fields.One2many('cheque.entry.line', 'pay_all_cq_id', string="Cheque Received", readonly=True,
-                                 states={'draft': [('readonly', False)]})
-
+                                         states={'draft': [('readonly', False)]})
 
     tt_ids = fields.One2many('tt.payment.line', 'pay_tt_id', string="T.T", readonly=True,
                              states={'draft': [('readonly', False)]})
@@ -103,7 +102,8 @@ class DeliveryAuthorization(models.Model):
     tax_value = fields.Float(string='Taxes', readonly=True)
     total_amount = fields.Float(string='Total', readonly=True, track_visibility='onchange')
     total_payment_received = fields.Float(string='Total Payment Received', readonly=True, track_visibility='onchange')
-    total_cheque_rcv_amount_not_honored = fields.Float(string='Total Cheque Received (Not Honored)', readonly=True, track_visibility='onchange')
+    total_cheque_rcv_amount_not_honored = fields.Float(string='Total Cheque Received (Not Honored)', readonly=True,
+                                                       track_visibility='onchange')
 
     sale_order_id = fields.Many2one('sale.order',
                                     string='Sale Order',
@@ -166,11 +166,11 @@ class DeliveryAuthorization(models.Model):
     def action_close(self):
 
         self.approver1_id = self.env.user
-        account_payment_pool = self.env['account.payment'].search(
-            [('state', '!=', 'draft'), ('is_this_payment_checked', '=', False),
-             ('sale_order_id', '=', self.sale_order_id.id),
-             ('partner_id', '=', self.parent_id.id)])
-        account_payment_pool.write({'is_this_payment_checked': True})
+        # account_payment_pool = self.env['account.payment'].search(
+        #     [('state', '!=', 'draft'), ('is_this_payment_checked', '=', False),
+        #      ('sale_order_id', '=', self.sale_order_id.id),
+        #      ('partner_id', '=', self.parent_id.id)])
+        # account_payment_pool.write({'is_this_payment_checked': True})
 
         # Automatically Create Delivery Order
         self._automatic_delivery_order_creation()
@@ -322,8 +322,7 @@ class DeliveryAuthorization(models.Model):
     def payments_amount_checking_with_products_subtotal(self):
 
         account_payment_pool = self.env['account.payment'].search(
-            [('state', '!=', 'draft'), ('is_this_payment_checked', '=', False),
-             ('sale_order_id', '=', self.sale_order_id.id),
+            [('state', '!=', 'draft'), ('sale_order_id', '=', self.sale_order_id.id),
              ('partner_id', '=', self.parent_id.id)])
 
         cheque_rcv_pool = self.env['accounting.cheque.received'].search(
@@ -346,18 +345,18 @@ class DeliveryAuthorization(models.Model):
         total_cash_cheque_amount = cash_line_total_amount + cheque_line_total_amount
 
         if not total_cash_cheque_amount or total_cash_cheque_amount == 0:
-            account_payment_pool.write({'is_this_payment_checked': True})
-            cheque_rcv_pool.write({'is_this_payment_checked': True})
+            # account_payment_pool.write({'is_this_payment_checked': True})
+            # cheque_rcv_pool.write({'is_this_payment_checked': True})
             return self.write({'state': 'validate'})  # Only Second level approval
 
         if total_cash_cheque_amount >= self.total_amount:
-            account_payment_pool.write({'is_this_payment_checked': True})
-            cheque_rcv_pool.write({'is_this_payment_checked': True})
+            # account_payment_pool.write({'is_this_payment_checked': True})
+            # cheque_rcv_pool.write({'is_this_payment_checked': True})
             self._automatic_delivery_order_creation()
             return self.write({'state': 'close'})  # directly go to final approval level
         else:
-            account_payment_pool.write({'is_this_payment_checked': True})
-            cheque_rcv_pool.write({'is_this_payment_checked': True})
+            # account_payment_pool.write({'is_this_payment_checked': True})
+            # cheque_rcv_pool.write({'is_this_payment_checked': True})
             return self.write({'state': 'validate'})  # Only Second level approval
 
     def create_delivery_order(self):
@@ -462,7 +461,6 @@ class DeliveryAuthorization(models.Model):
         # process total payment received amount
         self.process_total_payment_received_amount()
 
-
     # Process all the entered Cheque Received entry
     def process_all_cheque_received_entry(self):
         if self.cheque_rcv_all_ids:
@@ -480,7 +478,7 @@ class DeliveryAuthorization(models.Model):
             vals = []
 
             for payments in cheque_rcv_pool:
-                if not payments.is_this_payment_checked and payments.id not in val_bank:
+                if payments.id not in val_bank:
                     vals.append((0, 0, {'cheque_info_id': payments.id,
                                         'amount': payments.cheque_amount,
                                         'bank': payments.bank_name.name,
@@ -488,9 +486,8 @@ class DeliveryAuthorization(models.Model):
                                         'payment_date': payments.payment_date,
                                         'number': payments.cheque_no,
                                         'currency_id': payments.currency_id.id,
-                                        'state':payments.state,
+                                        'state': payments.state,
                                         }))
-
 
             pay.cheque_rcv_all_ids = vals
 
@@ -499,8 +496,7 @@ class DeliveryAuthorization(models.Model):
             for do_cheque_line in pay.cheque_rcv_all_ids:
                 cheque_line_total_amount = cheque_line_total_amount + do_cheque_line.amount
 
-            pay.total_cheque_rcv_amount_not_honored  = cheque_line_total_amount
-
+            pay.total_cheque_rcv_amount_not_honored = cheque_line_total_amount
 
     def process_total_payment_received_amount(self):
         cash_line_total_amount = 0
@@ -519,8 +515,7 @@ class DeliveryAuthorization(models.Model):
             self.cash_ids.unlink()
 
         account_payment_pool = self.env['account.payment'].search(
-            [('state', '!=', 'draft'), ('is_this_payment_checked', '=', False),
-             ('sale_order_id', '=', self.sale_order_id.id)])
+            [('state', '!=', 'draft'), ('sale_order_id', '=', self.sale_order_id.id)])
 
         for acc in account_payment_pool:
 
@@ -559,16 +554,16 @@ class DeliveryAuthorization(models.Model):
                 vals = []
 
                 for payments in acc_move_line_cheque:
-                    if not cq_obj.is_this_payment_checked:
-                        vals.append((0, 0, {'id': payments.id,
-                                            'amount': payments.debit,
-                                            'bank': cq_obj.bank_name.name,
-                                            'branch': cq_obj.branch_name,
-                                            'payment_date': cq_obj.payment_date,
-                                            'number': cq_obj.cheque_no,
-                                            'label': payments.name,
-                                            'currency_id': payments.move_id.currency_id.id,
-                                            }))
+                    # if not cq_obj.is_this_payment_checked:
+                    vals.append((0, 0, {'id': payments.id,
+                                        'amount': payments.debit,
+                                        'bank': cq_obj.bank_name.name,
+                                        'branch': cq_obj.branch_name,
+                                        'payment_date': cq_obj.payment_date,
+                                        'number': cq_obj.cheque_no,
+                                        'label': payments.name,
+                                        'currency_id': payments.move_id.currency_id.id,
+                                        }))
 
                 pay.cheque_ids = vals
 

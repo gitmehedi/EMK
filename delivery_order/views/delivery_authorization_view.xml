@@ -35,9 +35,9 @@
                         <div class="oe_button_box" name="button_box">
                             <button type="object" string="Process Payments"
                                     name="action_process_unattached_payments"
-                                    groups="account.group_account_user,gbs_application_group.group_head_account,gbs_application_group.group_cxo"
+                                    groups="account.group_account_user,gbs_application_group.group_head_account"
                                     class="oe_stat_button"
-                                    attrs="{'invisible':['|', ('state','=','close'), ('so_type', '!=', 'cash')]}"
+                                    attrs="{'invisible':[('so_type', '!=', 'cash')]}"
                                     icon="fa-usd">
                             </button>
                         </div>
