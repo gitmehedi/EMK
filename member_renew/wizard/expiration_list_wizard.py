@@ -15,8 +15,7 @@ class ExpirationListWizard(models.TransientModel):
             end_date = (datetime.now() + timedelta(days=self.no_of_days)).strftime('%Y-%m-%d')
 
             res = self.env['res.partner'].search(
-                [('membership_stop', '>=', start_date), ('membership_stop', '<=', end_date),
-                 ('mail_notification', '=', False)], order='id desc')
+                [('membership_stop', '>=', start_date), ('membership_stop', '<=', end_date)], order='membership_days_remaining desc')
 
             view_id = self.env.ref('member_renew.view_res_partner_expiration_tree')
 

@@ -5,8 +5,17 @@
         <field name="model">res.partner</field>
         <field name="priority" eval="1"/>
         <field name="arch" type="xml">
-            <tree>
+            <tree decoration-success="auto_renew==True" decoration-bf="auto_renew==True">
+                <field name="member_sequence" string="Membership ID"/>
                 <field name="name"/>
+                <field name="email"/>
+                <field name="mobile"/>
+                <field name="current_membership"/>
+                <field name="membership_start"/>
+                <field name="membership_stop"/>
+                <field name="membership_days_remaining"/>
+                <field name="auto_renew"/>
+                <field name="mail_notification"/>
             </tree>
         </field>
     </record>

@@ -4,7 +4,16 @@ from odoo import models, fields, api, _
 class ResPartner(models.Model):
     _inherit = 'res.partner'
 
-    mail_notification = fields.Boolean(string='Mail Notification', default=False)
+    mail_notification = fields.Boolean(string='Send Mail', default=False)
+    current_membership = fields.Char(string='Current Membership',compute="_compute_current_membership")
+
+    @api.multi
+    def _compute_current_membership(self):
+        for rec in self:
+            if len(rec.member_lines) > 0:
+                for mem in rec.member_lines:
+                    if rec.membership_stop == mem.date_to:
+                        rec.current_membership = mem.membership_id.name
 
     @api.multi
     def notify_expiration(self):
