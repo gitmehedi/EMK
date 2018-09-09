@@ -60,7 +60,7 @@ class GoodsReceiveMatrix(models.Model):
         vals['quantity'] = purchase_order_line.product_qty
         vals['receive_qty'] = purchase_order_line.receive_qty
         vals['price_unit'] = purchase_order_line.price_unit
-        vals['receive_date'] = fields.Datetime.now
+        vals['receive_date'] = fields.Datetime.now()
         res = super(GoodsReceiveMatrix, self).write(vals)
         self.action_submit(vals)
 
