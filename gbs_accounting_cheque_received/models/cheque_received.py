@@ -154,6 +154,7 @@ class ChequeReceived(models.Model):
                     'date': date,
                     'debit': debit_amount,
                     'credit': credit_amount,
+                    'cheque_received_id':cr.id, # update only to debit leg
                 })
 
                 line_ids.append(debit_line)

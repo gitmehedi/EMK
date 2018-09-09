@@ -1,8 +1,8 @@
 from odoo import fields, models
 
 class ChequePaymentLine(models.Model):
-    _name = 'cheque.payment.line'
-    _description = 'Cash Cheque Payment line'
+    _name = 'cheque.entry.line'
+    _description = 'All Cheque Entry Line'
 
     number = fields.Char("Cheque No.")
     bank = fields.Char("Deposit Bank")
@@ -15,6 +15,7 @@ class ChequePaymentLine(models.Model):
     currency_id = fields.Many2one('res.currency', string='Currency')
 
     """ Relational Fields """
-    pay_cash_id = fields.Many2one('delivery.authorization', ondelete='cascade')
+    pay_all_cq_id = fields.Many2one('delivery.authorization', ondelete='cascade')
+    state = fields.Char(string='State')
 
 
