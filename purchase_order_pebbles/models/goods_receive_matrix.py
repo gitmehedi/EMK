@@ -191,7 +191,7 @@ class GoodsReceiveMatrix(models.Model):
                     'picking_type_id': self.warehouse_id.in_type_id.id,
                     'state': 'done',
                     'partner_id': po_no_info.partner_id.id,
-                    'date': fields.Datetime.now,
+                    'date': fields.Datetime.now(),
                 }
                 picking_id = picking_pool.create(pick_vals)
 
