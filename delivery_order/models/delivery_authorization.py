@@ -332,6 +332,16 @@ class DeliveryAuthorization(models.Model):
         if not self.line_ids:
             return self.write({'state': 'validate'})  # Only Second level approval
 
+        if self.currency_id.name != 'BDT':
+            payment_received_converted = self.total_payment_received * self.currency_id.rate
+
+            if payment_received_converted >= self.total_amount:
+                self._automatic_delivery_order_creation()
+                return self.write({'state': 'close'})  # directly go to final approval level
+            else:
+                return self.write({'state': 'validate'})  # Only Second level approval
+
+
         ## Sum of cash amount
         cash_line_total_amount = 0
         for do_cash_line in self.cash_ids:
@@ -345,19 +355,14 @@ class DeliveryAuthorization(models.Model):
         total_cash_cheque_amount = cash_line_total_amount + cheque_line_total_amount
 
         if not total_cash_cheque_amount or total_cash_cheque_amount == 0:
-            # account_payment_pool.write({'is_this_payment_checked': True})
-            # cheque_rcv_pool.write({'is_this_payment_checked': True})
             return self.write({'state': 'validate'})  # Only Second level approval
 
         if total_cash_cheque_amount >= self.total_amount:
-            # account_payment_pool.write({'is_this_payment_checked': True})
-            # cheque_rcv_pool.write({'is_this_payment_checked': True})
             self._automatic_delivery_order_creation()
             return self.write({'state': 'close'})  # directly go to final approval level
         else:
-            # account_payment_pool.write({'is_this_payment_checked': True})
-            # cheque_rcv_pool.write({'is_this_payment_checked': True})
             return self.write({'state': 'validate'})  # Only Second level approval
+
 
     def create_delivery_order(self):
         for order in self.sale_order_id:

@@ -37,7 +37,7 @@
                                     name="action_process_unattached_payments"
                                     groups="account.group_account_user,gbs_application_group.group_head_account"
                                     class="oe_stat_button"
-                                    attrs="{'invisible':[('so_type', '!=', 'cash')]}"
+                                    attrs="{'invisible':['|', ('state','=','close'), ('so_type', '!=', 'cash')]}"
                                     icon="fa-usd">
                             </button>
                         </div>
@@ -169,7 +169,7 @@
                                        options="{'currency_field': 'currency_id'}"/>
 
                                 <field name="total_payment_received" widget='monetary'
-                                       options="{'currency_field': 'currency_id'}"
+                                       options="{'currency_field': 'cheque_ids[0].currency_id'}"
                                        attrs="{'invisible':[('so_type', '!=', 'cash')]}"/>
 
                                 <field name="total_cheque_rcv_amount_not_honored" widget='monetary'
