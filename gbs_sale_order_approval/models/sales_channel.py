@@ -1,4 +1,5 @@
 from odoo import api, fields, models, _
+from odoo.exceptions import ValidationError
 
 
 class SalesChannel(models.Model):
@@ -13,3 +14,9 @@ class SalesChannel(models.Model):
     def _onchange_OP_unit(self):
         return {'domain': {'warehouse_id': [('operating_unit_id', '=', self.operating_unit_id.id)]}}
 
+    @api.constrains('name')
+    def _check_unique_name(self):
+        name = self.env['sales.channel'].search([('name', '=', self.name)])
+        if len(name) > 1:
+            raise ValidationError("Sales Channel name must be unique!")
+        
