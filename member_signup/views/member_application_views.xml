@@ -13,9 +13,7 @@
                             states="application" groups="membership_user.group_mem_user_officer"/>
                     <field name="state" widget="statusbar" statusbar_visible="application,invoice,member"/>
                 </header>
-                <div class="alert alert-danger" role="alert" style="margin-bottom:0px;" invisible="True">
-                    Your Membership will expire very soon. Please request for renew membership or inform emk personel
-                </div>
+
                 <sheet>
                     <div class="oe_button_box" name="button_box">
                         <button type="object"

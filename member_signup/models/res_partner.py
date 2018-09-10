@@ -298,6 +298,15 @@ class ResPartner(models.Model):
             return False
         return partner
 
+
+    @api.one
+    def toggle_auto_renew(self):
+        if self.auto_renew:
+            self.auto_renew = False
+        else:
+            self.auto_renew = True
+
+
     @api.model
     def signup_retrieve_info(self, token):
         """ retrieve the user info about the token

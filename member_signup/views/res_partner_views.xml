@@ -17,15 +17,20 @@
                     Your Membership will expire very soon. Please request for renew membership or inform emk personel
                 </div>
             </xpath>
+            <xpath expr="//form/sheet/div/button[@name='toggle_active']" position="before">
+                <button name="toggle_auto_renew" type="object" class="oe_stat_button" icon="fa-check-square"
+                        groups="membership_user.group_user_member,membership_user.group_mem_user_officer">
+                    <field name="auto_renew" widget="boolean_button"
+                           options='{"terminology": {
+                                            "string_true": "Active Renew",
+                                            "hover_true": "Inactive Renew",
+                                            "string_false": "Inactive Renew",
+                                            "hover_false": "Active Renew"}}'/>
+                </button>
+            </xpath>
 
             <xpath expr="//notebook/page[@autofocus='autofocus']" position="before">
                 <page name="member_personal_information" string="Personal Information" autofocus="autofocus">
-                    <group>
-                        <group>
-                            <field name="auto_renew"/>
-                        </group>
-                    </group>
-
                     <group>
                         <group string="Basic Informaiton">
                             <field name="gender" widget="radio" options="{'horizontal': true}"/>
@@ -65,6 +70,12 @@
             </xpath>
         </field>
     </record>
+    <record id="membership.action_membership_members" model="ir.actions.act_window">
+        <field name="domain">[('free_member','=',True)]</field>
+        <field name="context">{}
+        </field>
+    </record>
+
     <menuitem name="Applicant" id="menu_member_general" sequence="0" parent="membership.menu_association"
               groups="membership_user.group_mem_user_officer,membership_extension.group_membership_manager"/>
 </odoo>

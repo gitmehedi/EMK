@@ -9,6 +9,14 @@
                 <field name="state" invisible="True"/>
                 <sheet>
                     <div class="oe_button_box" name="button_box">
+                        <button name="toggle_auto_renew" type="object" class="oe_stat_button" icon="fa-check-square">
+                            <field name="auto_renew" widget="boolean_button"
+                                   options='{"terminology": {
+                                            "string_true": "Active Renew",
+                                            "hover_true": "Inactive Renew",
+                                            "string_false": "Inactive Renew",
+                                            "hover_false": "Active Renew"}}'/>
+                        </button>
                         <button type="object"
                                 class="oe_stat_button"
                                 id="invoice_button"
