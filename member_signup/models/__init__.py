@@ -7,3 +7,4 @@ import res_partner
 import membership_category
 import rfid_generation
 import account_invoice
+import member_config_settings
