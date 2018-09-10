@@ -169,12 +169,12 @@
                                        options="{'currency_field': 'currency_id'}"/>
 
                                 <field name="total_payment_received" widget='monetary'
-                                       options="{'currency_field': 'cheque_ids[0].currency_id'}"
                                        attrs="{'invisible':[('so_type', '!=', 'cash')]}"/>
+                                <!--options="{'currency_field': 'cheque_ids[0].currency_id'}"-->
 
                                 <field name="total_cheque_rcv_amount_not_honored" widget='monetary'
-                                       options="{'currency_field': 'currency_id'}"
                                        attrs="{'invisible':[('so_type', '!=', 'cash')]}"/>
+                                <!--options="{'currency_field': 'currency_id'}"-->
 
                                 <field name="tax_value" widget='monetary' options="{'currency_field': 'currency_id'}"/>
                                 <field name="total_amount" class="oe_subtotal_footer_separator" widget='monetary'
