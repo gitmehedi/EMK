@@ -39,7 +39,7 @@
             <field name="model">proforma.invoice</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree string="PI">
+                <tree string="PI" colors="red:state == 'draft'">
                     <field name="name"/>
                     <field name="invoice_date"/>
                     <field name="partner_id"/>

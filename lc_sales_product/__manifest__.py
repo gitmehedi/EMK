@@ -31,6 +31,8 @@
         'reports/packing_list_report_view.xml',
         'reports/certificate_of_origin.xml',
         'reports/inspection_certificate.xml',
+        'reports/delivery_challan_report.xml',
+        'reports/truck_receipt_report.xml',
         'wizard/doc_receive_wizard_view.xml',
         'wizard/lc_sales_report_wizard.xml',
         'wizard/sales_export_wizard_view.xml',

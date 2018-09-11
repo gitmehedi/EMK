@@ -40,11 +40,12 @@
         'gbs_sales_commission_invoice',
         'gbs_sales_commission_account',
         'gbs_samuda_sales_approval_menu',
+        'gbs_customize_accountant_view',
         'gbs_samuda_stock',
     ],
 
     'data': [ ],
     'description': 'Install all modules which is related with sales',
     'installable': True,
-    'application' : True,
+    'application' : False,
 }
