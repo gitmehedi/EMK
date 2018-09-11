@@ -11,6 +11,7 @@
         'account',
         'membership_user',
         'member_signup',
+        'server_action_permission',
     ],
     'data': [
         'security/ir.model.access.csv',

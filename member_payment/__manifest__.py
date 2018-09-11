@@ -7,6 +7,7 @@
     'version': '1.0',
     'category': 'Payments',
     'depends': [
+        'account',
         'account_accountant',
         'member_signup',
         'member_card_replacement',

@@ -7,6 +7,7 @@
             <field name="state">code</field>
             <field name="condition">True</field>
             <field name="code">record.notify_expiration()</field>
+            <field name="groups_id" eval="[(4, ref('membership_user.group_mem_user_officer'))]"/>
         </record>
         <record id="action_notificationres_partner" model="ir.values">
             <field name="name">name</field>
@@ -24,8 +25,7 @@
             <field name="interval_type">hours</field>
             <field name="numbercall">-1</field>
             <field name="nextcall"
-                   eval="(datetime.now() + timedelta(hours=1)).strftime('%Y-%m-%d 02:00:00')"
-            />
+                   eval="(datetime.now() + timedelta(hours=1)).strftime('%Y-%m-%d 02:00:00')"/>
             <field name="model">res_partner</field>
             <field name="function">renew_requst</field>
         </record>
