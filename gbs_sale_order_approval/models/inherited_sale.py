@@ -602,7 +602,7 @@ class SaleOrder(models.Model):
     def _get_sales_channel(self):
         return self.env['sales.channel'].search([], limit=1)
 
-    sales_channel = fields.Many2one('sales.channel', string='Sales Channel', readonly=True,
+    sales_channel = fields.Many2one('sales.channel', string='Sales Channel', readonly=True,track_visibility='onchange',
                                     states={'to_submit': [('readonly', False)]}, required=True)
 
     warehouse_id = fields.Many2one(

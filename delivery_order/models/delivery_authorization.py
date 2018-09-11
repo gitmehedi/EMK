@@ -98,11 +98,11 @@ class DeliveryAuthorization(models.Model):
         self.lc_id = self.sale_order_id.lc_id.id
 
     """ Payment information"""
-    amount_untaxed = fields.Float(string='Untaxed Amount', readonly=True)
+    amount_untaxed = fields.Float(string='Ordered Amount', readonly=True, track_visibility='onchange')
     tax_value = fields.Float(string='Taxes', readonly=True)
     total_amount = fields.Float(string='Total', readonly=True, track_visibility='onchange')
-    total_payment_received = fields.Float(string='Total Payment Received', readonly=True, track_visibility='onchange')
-    total_cheque_rcv_amount_not_honored = fields.Float(string='Total Cheque Received (Not Honored)', readonly=True,
+    total_payment_received = fields.Float(string='Payment Received', readonly=True, track_visibility='onchange')
+    total_cheque_rcv_amount_not_honored = fields.Float(string='Cheque Received', readonly=True,
                                                        track_visibility='onchange')
 
     sale_order_id = fields.Many2one('sale.order',
@@ -321,43 +321,15 @@ class DeliveryAuthorization(models.Model):
     @api.multi
     def payments_amount_checking_with_products_subtotal(self):
 
-        # account_payment_pool = self.env['account.payment'].search(
-        #     [('state', '!=', 'draft'), ('sale_order_id', '=', self.sale_order_id.id),
-        #      ('partner_id', '=', self.parent_id.id)])
-        #
-        # cheque_rcv_pool = self.env['accounting.cheque.received'].search(
-        #     [('partner_id', '=', self.sale_order_id.partner_id.id), ('state', '=', 'honoured'),
-        #      ('sale_order_id', '=', self.sale_order_id.id)])
-
         if not self.line_ids:
             return self.write({'state': 'validate'})  # Only Second level approval
 
-        if self.currency_id.name != 'BDT':
-            payment_received_converted = self.total_payment_received * self.currency_id.rate
+        payment_received_converted = self.total_payment_received * self.currency_id.rate
 
-            if payment_received_converted >= self.total_amount:
-                self._automatic_delivery_order_creation()
-                return self.write({'state': 'close'})  # directly go to final approval level
-            else:
-                return self.write({'state': 'validate'})  # Only Second level approval
-
-
-        ## Sum of cash amount
-        cash_line_total_amount = 0
-        for do_cash_line in self.cash_ids:
-            cash_line_total_amount = cash_line_total_amount + do_cash_line.amount
-
-        ## Sum of cheques amount
-        cheque_line_total_amount = 0
-        for do_cheque_line in self.cheque_ids:
-            cheque_line_total_amount = cheque_line_total_amount + do_cheque_line.amount
-
-        total_cash_cheque_amount = cash_line_total_amount + cheque_line_total_amount
-
-        if not total_cash_cheque_amount or total_cash_cheque_amount == 0:
+        if not payment_received_converted or payment_received_converted == 0:
             return self.write({'state': 'validate'})  # Only Second level approval
 
-        if total_cash_cheque_amount >= self.total_amount:
+        if payment_received_converted >= self.total_amount:
             self._automatic_delivery_order_creation()
             return self.write({'state': 'close'})  # directly go to final approval level
         else:
@@ -504,6 +476,8 @@ class DeliveryAuthorization(models.Model):
             pay.total_cheque_rcv_amount_not_honored = cheque_line_total_amount
 
     def process_total_payment_received_amount(self):
+
+        # Sum of cash amount
         cash_line_total_amount = 0
         for do_cash_line in self.cash_ids:
             cash_line_total_amount = cash_line_total_amount + do_cash_line.amount
@@ -513,7 +487,10 @@ class DeliveryAuthorization(models.Model):
         for do_cheque_line in self.cheque_ids:
             cheque_line_total_amount = cheque_line_total_amount + do_cheque_line.amount
 
-        self.total_payment_received = cash_line_total_amount + cheque_line_total_amount
+        total_rcv = cash_line_total_amount + cheque_line_total_amount
+
+        # Convert Toal Payment Received to Sale Order Currency
+        self.total_payment_received = total_rcv * self.currency_id.rate
 
     def process_cash_payment(self):
         if self.cash_ids:
@@ -535,7 +512,8 @@ class DeliveryAuthorization(models.Model):
                                          'dep_bank': acc.deposited_bank,
                                          'branch': acc.bank_branch,
                                          'payment_date': bank_payments.date,
-                                         # 'number': acc.cheque_no,
+                                         'amount_currency': bank_payments.currency_id.id,
+                                         'amount_in_diff_currency': bank_payments.amount_currency,
                                          'currency_id': bank_payments.move_id.currency_id.id,
                                          'account_payment_id': bank_payments.name
                                          }))
@@ -567,6 +545,8 @@ class DeliveryAuthorization(models.Model):
                                         'payment_date': cq_obj.payment_date,
                                         'number': cq_obj.cheque_no,
                                         'label': payments.name,
+                                        'amount_currency': payments.currency_id.id,
+                                        'amount_in_diff_currency': payments.amount_currency,
                                         'currency_id': payments.move_id.currency_id.id,
                                         }))
 
