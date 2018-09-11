@@ -5,9 +5,6 @@ class Shipment(models.Model):
 
     _inherit = 'purchase.shipment'
 
-    # invoice_id = fields.Many2one("account.invoice", string='Invoice Number', ondelete='cascade',
-    #                              domain=[('sale_type_id.sale_order_type', '=','lc_sales'),
-    #                                      ('state', '=', 'open')])
     invoice_id = fields.Many2one("account.invoice", string='Invoice Number', ondelete='cascade')
 
     to_sales_date = fields.Date('Dispatch to Sales', track_visibility='onchange')
@@ -39,7 +36,7 @@ class Shipment(models.Model):
     @api.onchange('lc_id')
     def _onchange_lc_id(self):
         if self.lc_id:
-            return {'domain': {'invoice_id': [('id','not in',self.search([]).invoice_id.ids or False),
+            return {'domain': {'invoice_id': [('id','not in',[i.invoice_id.id for i in self.search([])]),
                                          ('partner_id', '=', self.lc_id.second_party_applicant.id),
                                          ('sale_type_id.sale_order_type', '=', 'lc_sales'),
                                          ('state', '=', 'open')]}}
