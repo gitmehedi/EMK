@@ -335,7 +335,6 @@ class DeliveryAuthorization(models.Model):
         else:
             return self.write({'state': 'validate'})  # Only Second level approval
 
-
     def create_delivery_order(self):
         for order in self.sale_order_id:
             order.state = 'sale'
@@ -349,86 +348,86 @@ class DeliveryAuthorization(models.Model):
             self.sale_order_id.action_done()
         return True
 
-    @api.onchange('sale_order_id')
-    def onchange_sale_order_id(self):
-        self.set_products_info_automatically()
+    # @api.onchange('sale_order_id')
+    # def onchange_sale_order_id(self):
+    #     self.set_products_info_automatically()
+    #
+    #     account_payment_pool = self.env['account.payment'].search([('state', '!=', 'draft'),
+    #                                                                ('sale_order_id', '=', self.sale_order_id.id)])
+    #
+    #     for payments in account_payment_pool:
+    #         if payments.journal_id.type == 'bank':
+    #             self.set_cheque_info_automatically(account_payment_pool)
+    #             self.process_cheque_payment()
+    #         elif payments.journal_id.type == 'cash':
+    #             self.set_payment_info_automatically(account_payment_pool)
 
-        account_payment_pool = self.env['account.payment'].search([('state', '!=', 'draft'),
-                                                                   ('sale_order_id', '=', self.sale_order_id.id)])
+    # @api.multi
+    # def set_cheque_info_automatically(self, account_payment_pool):
+    #     vals = []
+    #     for payments in account_payment_pool:
+    #         if payments.journal_id.type != 'cash':
+    #             if not payments.is_this_payment_checked:
+    #                 vals.append((0, 0, {'account_payment_id': payments.id,
+    #                                     'amount': payments.amount,
+    #                                     'bank': payments.deposited_bank,
+    #                                     'branch': payments.bank_branch,
+    #                                     'payment_date': payments.payment_date,
+    #                                     'number': payments.cheque_no,
+    #                                     }))
+    #
+    #             self.cheque_ids = vals
 
-        for payments in account_payment_pool:
-            if payments.journal_id.type == 'bank':
-                self.set_cheque_info_automatically(account_payment_pool)
-                self.process_cheque_payment()
-            elif payments.journal_id.type == 'cash':
-                self.set_payment_info_automatically(account_payment_pool)
-
-    @api.multi
-    def set_cheque_info_automatically(self, account_payment_pool):
-        vals = []
-        for payments in account_payment_pool:
-            if payments.journal_id.type != 'cash':
-                if not payments.is_this_payment_checked:
-                    vals.append((0, 0, {'account_payment_id': payments.id,
-                                        'amount': payments.amount,
-                                        'bank': payments.deposited_bank,
-                                        'branch': payments.bank_branch,
-                                        'payment_date': payments.payment_date,
-                                        'number': payments.cheque_no,
-                                        }))
-
-                self.cheque_ids = vals
-
-    @api.multi
-    def set_payment_info_automatically(self, account_payment_pool):
-
-        if account_payment_pool:
-            vals = []
-            for payments in account_payment_pool:
-                # if payments.journal_id.type == 'cash':
-                if payments.sale_order_id and not payments.is_this_payment_checked:
-                    vals.append((0, 0, {'account_payment_id': payments.id,
-                                        'amount': payments.amount,
-                                        'dep_bank': payments.deposited_bank,
-                                        'branch': payments.bank_branch,
-                                        'payment_date': payments.payment_date,
-                                        }))
-
-                    self.cash_ids = vals
-
-    @api.multi
-    def set_products_info_automatically(self):
-        val = []
-        if self.sale_order_id:
-            # sale_order_obj = self.env['sale.order'].search([('id', '=', self.sale_order_id.id)])
-
-            self.warehouse_id = self.sale_order_id.warehouse_id.id
-            self.so_type = self.sale_order_id.credit_sales_or_lc
-            self.so_date = self.sale_order_id.date_order
-            self.deli_address = self.sale_order_id.partner_shipping_id.name
-            self.pi_id = self.sale_order_id.pi_id.id
-            self.lc_id = self.sale_order_id.lc_id.id
-            self.currency_id = self.sale_order_id.type_id.currency_id
-
-            for record in self.sale_order_id.order_line:
-                if record.da_qty != record.product_uom_qty \
-                        and record.da_qty != 0:
-                    record.product_uom_qty = record.da_qty
-
-                val.append((0, 0, {'product_id': record.product_id.id,
-                                   'quantity': record.product_uom_qty,
-                                   'pack_type': self.sale_order_id.pack_type.id,
-                                   'uom_id': record.product_uom.id,
-                                   'commission_rate': record.commission_rate,
-                                   'price_unit': record.price_unit,
-                                   'price_subtotal': record.price_subtotal,
-                                   'tax_id': record.tax_id.id
-                                   }))
-            self.amount_untaxed = self.sale_order_id.amount_untaxed
-            self.tax_value = self.sale_order_id.amount_tax
-            self.total_amount = self.sale_order_id.amount_total
-
-        self.line_ids = val
+    # @api.multi
+    # def set_payment_info_automatically(self, account_payment_pool):
+    #
+    #     if account_payment_pool:
+    #         vals = []
+    #         for payments in account_payment_pool:
+    #             # if payments.journal_id.type == 'cash':
+    #             if payments.sale_order_id and not payments.is_this_payment_checked:
+    #                 vals.append((0, 0, {'account_payment_id': payments.id,
+    #                                     'amount': payments.amount,
+    #                                     'dep_bank': payments.deposited_bank,
+    #                                     'branch': payments.bank_branch,
+    #                                     'payment_date': payments.payment_date,
+    #                                     }))
+    #
+    #                 self.cash_ids = vals
+    #
+    # @api.multi
+    # def set_products_info_automatically(self):
+    #     val = []
+    #     if self.sale_order_id:
+    #         # sale_order_obj = self.env['sale.order'].search([('id', '=', self.sale_order_id.id)])
+    #
+    #         self.warehouse_id = self.sale_order_id.warehouse_id.id
+    #         self.so_type = self.sale_order_id.credit_sales_or_lc
+    #         self.so_date = self.sale_order_id.date_order
+    #         self.deli_address = self.sale_order_id.partner_shipping_id.name
+    #         self.pi_id = self.sale_order_id.pi_id.id
+    #         self.lc_id = self.sale_order_id.lc_id.id
+    #         self.currency_id = self.sale_order_id.type_id.currency_id
+    #
+    #         for record in self.sale_order_id.order_line:
+    #             if record.da_qty != record.product_uom_qty \
+    #                     and record.da_qty != 0:
+    #                 record.product_uom_qty = record.da_qty
+    #
+    #             val.append((0, 0, {'product_id': record.product_id.id,
+    #                                'quantity': record.product_uom_qty,
+    #                                'pack_type': self.sale_order_id.pack_type.id,
+    #                                'uom_id': record.product_uom.id,
+    #                                'commission_rate': record.commission_rate,
+    #                                'price_unit': record.price_unit,
+    #                                'price_subtotal': record.price_subtotal,
+    #                                'tax_id': record.tax_id.id
+    #                                }))
+    #         self.amount_untaxed = self.sale_order_id.amount_untaxed
+    #         self.tax_value = self.sale_order_id.amount_tax
+    #         self.total_amount = self.sale_order_id.amount_total
+    #
+    #     self.line_ids = val
 
     def action_process_unattached_payments(self):
         self.process_cheque_payment()
@@ -454,7 +453,9 @@ class DeliveryAuthorization(models.Model):
 
             vals = []
 
+
             for payments in cheque_rcv_pool:
+
                 if payments.id not in val_bank:
                     vals.append((0, 0, {'cheque_info_id': payments.id,
                                         'amount': payments.cheque_amount,
@@ -462,7 +463,7 @@ class DeliveryAuthorization(models.Model):
                                         'branch': payments.branch_name,
                                         'payment_date': payments.payment_date,
                                         'number': payments.cheque_no,
-                                        'currency_id': payments.currency_id.id,
+                                        'currency_id': payments.company_id.currency_id.id,
                                         'state': payments.state,
                                         }))
 
@@ -470,10 +471,19 @@ class DeliveryAuthorization(models.Model):
 
             ## Sum of cheques amount
             cheque_line_total_amount = 0
+            converted_amount = 0
+
             for do_cheque_line in pay.cheque_rcv_all_ids:
                 cheque_line_total_amount = cheque_line_total_amount + do_cheque_line.amount
 
-            pay.total_cheque_rcv_amount_not_honored = cheque_line_total_amount
+                if do_cheque_line.currency_id != self.currency_id:
+                    converted_amount = cheque_line_total_amount * self.currency_id.rate
+                else:
+                    converted_amount = cheque_line_total_amount
+
+            pay.total_cheque_rcv_amount_not_honored = converted_amount
+
+
 
     def process_total_payment_received_amount(self):
 
@@ -491,6 +501,9 @@ class DeliveryAuthorization(models.Model):
 
         # Convert Toal Payment Received to Sale Order Currency
         self.total_payment_received = total_rcv * self.currency_id.rate
+
+
+
 
     def process_cash_payment(self):
         if self.cash_ids:

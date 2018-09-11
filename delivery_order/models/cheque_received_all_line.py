@@ -19,3 +19,4 @@ class ChequePaymentLine(models.Model):
     state = fields.Char(string='State')
 
 
+
