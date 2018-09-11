@@ -3,20 +3,19 @@ from odoo import api, fields, models, _
 from odoo.exceptions import UserError, ValidationError
 
 
-
 class DeliveryScheduleLine(models.Model):
     _name = 'delivery.schedules.line'
     _inherit = ['mail.thread']
     _description = 'Delivery Schedule line'
 
     partner_id = fields.Many2one('res.partner', 'Customer', domain=[('customer', '=', True),('parent_id', '=', False)],
-                                 readonly=True,required=True, states={'draft': [('readonly', False)]})
+                                 readonly=True,required=True, states={'draft': [('readonly', False)]},ondelete="cascade")
     pending_do = fields.Many2one('delivery.order', ondelete='cascade',required=True,
                                  readonly=True, states={'draft': [('readonly', False)]},
                                  string='Pending D.O',track_visibility='onchange')
     product_id = fields.Many2one('product.product', string='Product',required=True,
                                  readonly=True, states={'draft': [('readonly', False)]},
-                                 track_visibility='onchange')
+                                 track_visibility='onchange', ondelete='cascade')
     do_qty = fields.Float(string='Ordered Qty', readonly=True ,store=True,compute='onchange_product_id')
     undelivered_qty = fields.Float(string='Undelivered Qty', readonly=True)
     uom_id = fields.Many2one('product.uom', string="Unit of Measure", readonly=True)
@@ -38,11 +37,10 @@ class DeliveryScheduleLine(models.Model):
 
     operating_unit_id = fields.Many2one('operating.unit',
                                         related='parent_id.operating_unit_id',
-                                        string='Operating Unit',store=True)
+                                        string='Operating Unit',store=True, ondelete='cascade')
 
     # create date.................
     schedule_line_date = fields.Date('Date',default=datetime.date.today())
-
 
     @api.model
     def create(self, vals):
@@ -52,7 +50,6 @@ class DeliveryScheduleLine(models.Model):
         vals['undelivered_qty'] = line_obj.quantity - line_obj.qty_delivered
         vals['uom_id'] = line_obj.uom_id.id
         return super(DeliveryScheduleLine, self).create(vals)
-
 
     @api.multi
     def write(self, vals):

@@ -321,13 +321,13 @@ class DeliveryAuthorization(models.Model):
     @api.multi
     def payments_amount_checking_with_products_subtotal(self):
 
-        account_payment_pool = self.env['account.payment'].search(
-            [('state', '!=', 'draft'), ('sale_order_id', '=', self.sale_order_id.id),
-             ('partner_id', '=', self.parent_id.id)])
-
-        cheque_rcv_pool = self.env['accounting.cheque.received'].search(
-            [('partner_id', '=', self.sale_order_id.partner_id.id), ('state', '=', 'honoured'),
-             ('sale_order_id', '=', self.sale_order_id.id)])
+        # account_payment_pool = self.env['account.payment'].search(
+        #     [('state', '!=', 'draft'), ('sale_order_id', '=', self.sale_order_id.id),
+        #      ('partner_id', '=', self.parent_id.id)])
+        #
+        # cheque_rcv_pool = self.env['accounting.cheque.received'].search(
+        #     [('partner_id', '=', self.sale_order_id.partner_id.id), ('state', '=', 'honoured'),
+        #      ('sale_order_id', '=', self.sale_order_id.id)])
 
         if not self.line_ids:
             return self.write({'state': 'validate'})  # Only Second level approval

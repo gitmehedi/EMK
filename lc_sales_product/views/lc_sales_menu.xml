@@ -19,6 +19,7 @@
             <field name="arch" type="xml">
                 <search string="Search Letter of Credit">
                     <field name="name"/>
+                    <field name="second_party_applicant" string="Customer"/>
                     <filter name="active" string="Active" domain="[('state', 'in', ('draft','open','confirmed','amendment','progress'))]"/>
                     <filter string="Beneficiary" name="first_party" context="{'group_by':'first_party'}"/>
                 </search>
