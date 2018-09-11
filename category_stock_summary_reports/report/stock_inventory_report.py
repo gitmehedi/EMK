@@ -12,6 +12,13 @@ class StockInventoryReport(models.AbstractModel):
         report = report_obj._get_report_from_name(
             'category_stock_summary_reports.stock_inventory_report_qweb')
 
+
+        cost_group = self.env['res.groups'].search(
+            [('name', 'in', ['Manager', 'Warehouse Admin']), ('category_id.name', '=', 'Warehouse')])
+        users = []
+        for gp in cost_group:
+            users = users + gp.users.ids
+
         get_data = self.get_report_data(data)
 
         docargs = {
@@ -19,6 +26,7 @@ class StockInventoryReport(models.AbstractModel):
             'doc_model': report.model,
             'docs': self,
             'record': data,
+            'cost_group': self.env.user.id in users ,
             'lines': get_data['category'],
             'total': get_data['total'],
         }

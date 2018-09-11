@@ -40,10 +40,15 @@
             <field name="view_mode">form</field>
             <field name="target">new</field>
         </record>
+
+        <menuitem name="Inventory"
+                  id="menu_inventory_report_main_menu"
+                  parent="base.menu_reporting" sequence="2"
+                  groups="stock.group_stock_manager,pebbles_transfer_user.group_requisition_transfer_approval_manager"/>
         <menuitem action="action_wizard_stock_inventory_report"
                   id="menu_action_wizard_sale_report_inventory"
-                  parent="stock.next_id_61" sequence="2"/>
-
+                  parent="menu_inventory_report_main_menu" sequence="1"
+                  groups="stock.group_stock_manager,pebbles_transfer_user.group_requisition_transfer_approval_manager"/>
 
     </data>
 </openerp>
