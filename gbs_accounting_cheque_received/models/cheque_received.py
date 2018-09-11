@@ -71,7 +71,13 @@ class ChequeReceived(models.Model):
     journal_id = fields.Many2one('account.journal', string='Payment Journal',
                                  states={'returned': [('readonly', True)], 'dishonoured': [('readonly', True)],
                                          'honoured': [('readonly', True)], 'received': [('readonly', True)],
-                                         'deposited': [('readonly', True)]},domain=[('type', '=', 'bank')], required=True)
+                                         'deposited': [('readonly', True)]},domain=[('type', '=', 'bank')])
+
+    @api.constrains('currency_id')
+    def _check_currency_with_companys_currency(self):
+        if self.journal_id and self.currency_id:
+            if self.currency_id != self.journal_id.company_id.currency_id:
+                raise ValidationError('Payment Journal Currency and Cheque Received Currency must be same')
 
 
     @api.constrains('cheque_amount')
@@ -136,13 +142,14 @@ class ChequeReceived(models.Model):
                 credit_amount = cr.cheque_amount < 0.0 and -cr.cheque_amount or 0.0
                 currency_id = cr.journal_id.currency_id.id
 
-                if cr.currency_id:
-                    if cr.currency_id != cr.company_id.currency_id:
+
+                if cr.journal_id.currency_id:
+                    if cr.journal_id.currency_id != cr.company_id.currency_id:
                         amount_currency = cr.cheque_amount
-                        amount = amount_currency / cr.currency_id.rate
+                        amount = amount_currency / cr.journal_id.currency_id.rate
                         debit_amount = amount > 0.0 and amount or 0.0
                         credit_amount = amount < 0.0 and -amount or 0.0
-                        currency_id = cr.currency_id.id
+
 
                 debit_line = (0, 0, {
                     'name': debit_account_id.name,
@@ -167,13 +174,12 @@ class ChequeReceived(models.Model):
                 credit_amount = cr.cheque_amount > 0.0 and cr.cheque_amount or 0.0
                 currency_id = cr.journal_id.currency_id.id
 
-                if cr.currency_id:
-                    if cr.currency_id != cr.company_id.currency_id:
+                if cr.journal_id.currency_id:
+                    if cr.journal_id.currency_id != cr.company_id.currency_id:
                         amount_currency = cr.cheque_amount
-                        amount = amount_currency / cr.currency_id.rate
+                        amount = amount_currency / cr.journal_id.currency_id.rate
                         debit_amount = amount < 0.0 and -amount or 0.0
                         credit_amount = amount > 0.0 and amount or 0.0
-                        currency_id = cr.currency_id.id
 
                 credit_line = (0, 0, {
                     'name': credit_account_id.name,

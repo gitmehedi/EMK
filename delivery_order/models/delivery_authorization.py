@@ -503,8 +503,6 @@ class DeliveryAuthorization(models.Model):
         self.total_payment_received = total_rcv * self.currency_id.rate
 
 
-
-
     def process_cash_payment(self):
         if self.cash_ids:
             self.cash_ids.unlink()
