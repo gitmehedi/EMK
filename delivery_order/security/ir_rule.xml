@@ -15,7 +15,7 @@
     <record id="rule_for_stock_delivery_user_dashboard" model="ir.rule">
         <field name="name">For Delivery Operation (Only Get Delivery Order In Dashboard)</field>
         <field name="model_id" ref="stock.model_stock_picking_type"/>
-        <field name="domain_force">[('code', '=', 'outgoing')]</field>
+        <field name="domain_force">['|',('code', '=', 'outgoing'),('code', '=', 'outgoing_return')]</field>
         <field name="perm_read" eval="True" />
         <field name="perm_create" eval="False"/>
         <field name="perm_write" eval="False"/>

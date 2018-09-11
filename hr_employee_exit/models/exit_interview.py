@@ -7,8 +7,8 @@ class EmployeeEixtInterview(models.Model):
     _description = 'Employee Exit Interview'
 
 
-    employee_code = fields.Char('Employee Code',related='employee_id.code',required=True,readonly=True)
-    location = fields.Char('Location',related='employee_id.work_location', required=True,readonly=True)
+    employee_code = fields.Char('Employee Code',related='employee_id.code',readonly=True)
+    location = fields.Char('Location',related='employee_id.work_location', readonly=True)
     joining_date = fields.Date(string='Date of Joining',required=True)
     resignation_date = fields.Date(string='Date of Resignation',required=True)
     leaving_date = fields.Date(string='Date of Leaving',required=True)
