@@ -373,7 +373,10 @@ class DeliveryAuthorization(models.Model):
                     c = 0
                     if payments.currency_id:
                         if payments.currency_id != self.currency_id:
-                            c = self.currency_id.rate * payments.cheque_amount
+                            if self.currency_id.rate == 1:
+                                c = payments.cheque_amount / payments.currency_id.rate
+                            else:
+                                c = self.currency_id.rate * payments.cheque_amount
                         else:
                             c = payments.cheque_amount
 
