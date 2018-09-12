@@ -433,7 +433,7 @@ class SaleOrder(models.Model):
                 'so_type': self.credit_sales_or_lc,
                 'so_date': self.date_order,
                 # 'warehouse_id': self.warehouse_id,
-                'amount_untaxed': self.amount_untaxed,
+                'amount_untaxed': self.amount_total,
                 'tax_value': self.amount_tax,
                 'total_amount': self.amount_total,
                 'operating_unit_id': self.operating_unit_id.id
@@ -450,8 +450,8 @@ class SaleOrder(models.Model):
                     'uom_id': record.product_uom.id,
                     'price_unit': record.price_unit,
                     'commission_rate': record.commission_rate,
-                    'price_subtotal': record.price_subtotal,
-                    # 'tax_id': record.tax_id
+                    'price_subtotal': record.price_total,
+                    'tax_id': record.tax_id.id,
                 }
 
                 self.env['delivery.authorization.line'].create(da_line)
