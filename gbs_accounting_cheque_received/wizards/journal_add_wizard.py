@@ -1,7 +1,7 @@
 from odoo import models, fields, api
 
 
-class JournalAddingWizard(models.Model):
+class JournalAddingWizard(models.TransientModel):
     _name = 'journal.adding.wizard'
 
     journal_id = fields.Many2one('account.journal', string='Payment Journal', domain=[('type', '=', 'bank')],required=True)
