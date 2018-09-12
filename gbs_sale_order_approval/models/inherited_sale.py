@@ -460,23 +460,20 @@ class SaleOrder(models.Model):
 
                 self.env['delivery.authorization.line'].create(da_line)
 
+
     def action_view_delivery_auth(self):
         form_view = self.env.ref('delivery_order.delivery_order_form')
-        tree_view = self.env.ref('delivery_order.delivery_authorization_tree_view')
+        action = self.env.ref('delivery_order.delivery_order_action').read()[0]
         da_pool = self.env['delivery.authorization'].search([('sale_order_id', '=', self.id)])
 
-        return {
-            'name': ('Delivery Authorization'),
-            "type": "ir.actions.act_window",
-            'res_model': 'delivery.authorization',
-            'view_type': 'form',
-            'view_mode': 'tree,form',
-            'views': [
-                (tree_view.id, 'tree'),
-                (form_view.id, 'form'),
-            ],
-            "domain": [('id', '=', da_pool.id)],
-        }
+        if len(da_pool) > 1:
+            action['domain'] = [('id', 'in', da_pool.ids)]
+        elif da_pool:
+            action['views'] = [(form_view.id, 'form')]
+            action['res_id'] = da_pool.id
+
+        return action
+
 
     def second_approval_business_logics(self, cust_commission_pool, lines, price_change_pool):
 

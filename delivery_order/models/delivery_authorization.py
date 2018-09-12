@@ -215,25 +215,18 @@ class DeliveryAuthorization(models.Model):
     @api.multi
     def action_view_delivery_order(self):
         form_view = self.env.ref('delivery_order.delivery_order_layer_form')
-        tree_view = self.env.ref('delivery_order.delivery_order_tree')
+        action = self.env.ref('delivery_order.delivery_order_layer_action').read()[0]
         do_pool = self.env['delivery.order'].search([('sale_order_id', '=', self.sale_order_id.id)])
 
-        return {
-            'name': ('Delivery Order'),
-            "type": "ir.actions.act_window",
-            'res_model': 'delivery.order',
-            'view_type': 'form',
-            'view_mode': 'tree,form',
-            'views': [
-                (tree_view.id, 'tree'),
-                (form_view.id, 'form'),
-            ],
-            'domain': [('id', '=', do_pool.id)],
-        }
+        if len(do_pool) > 1:
+            action['domain'] = [('id', 'in', do_pool.ids)]
+        elif do_pool:
+            action['views'] = [(form_view.id, 'form')]
+            action['res_id'] = do_pool.id
+        return action
 
     @api.multi
     def action_validate(self):
-
         if self.so_type == 'cash':
             # self.payment_information_check()
             cash_check = self.payments_amount_checking_with_products_subtotal()
@@ -310,6 +303,7 @@ class DeliveryAuthorization(models.Model):
             self._automatic_delivery_order_creation()
             self.state = 'close'
 
+
     def total_sub_total_amount(self):
         total_amt = 0
         for orders in self:
@@ -318,9 +312,9 @@ class DeliveryAuthorization(models.Model):
 
         return total_amt
 
+
     @api.multi
     def payments_amount_checking_with_products_subtotal(self):
-
         if not self.line_ids:
             return self.write({'state': 'validate'})  # Only Second level approval
 
@@ -332,6 +326,7 @@ class DeliveryAuthorization(models.Model):
             return self.write({'state': 'close'})  # directly go to final approval level
         else:
             return self.write({'state': 'validate'})  # Only Second level approval
+
 
     def create_delivery_order(self):
         for order in self.sale_order_id:
@@ -346,6 +341,7 @@ class DeliveryAuthorization(models.Model):
             self.sale_order_id.action_done()
         return True
 
+
     def action_process_unattached_payments(self):
         self.process_cheque_payment()
         self.process_cash_payment()
@@ -353,6 +349,7 @@ class DeliveryAuthorization(models.Model):
 
         # process total payment received amount
         self.process_total_payment_received_amount()
+
 
     # Process all the entered Cheque Received entry
     def process_all_cheque_received_entry(self):
@@ -369,7 +366,6 @@ class DeliveryAuthorization(models.Model):
                 val_bank.append(bank_line.cheque_info_id)
 
             vals = []
-
 
             for payments in cheque_rcv_pool:
 
@@ -401,9 +397,7 @@ class DeliveryAuthorization(models.Model):
             pay.total_cheque_rcv_amount_not_honored = converted_amount
 
 
-
     def process_total_payment_received_amount(self):
-
         # Sum of cash amount
         cash_line_total_amount = 0
         for do_cash_line in self.cash_ids:
@@ -448,6 +442,7 @@ class DeliveryAuthorization(models.Model):
 
             self.cash_ids = vals_bank
 
+
     @api.multi
     def process_cheque_payment(self):
         if self.cheque_ids:
@@ -480,6 +475,7 @@ class DeliveryAuthorization(models.Model):
 
                 pay.cheque_ids = vals
 
+
     @api.model
     def _needaction_domain_get(self):
         users_obj = self.env['res.users']
@@ -498,6 +494,7 @@ class DeliveryAuthorization(models.Model):
         else:
             return False
 
+
     ################
     # 100 MT Logic
     ###############
@@ -511,19 +508,6 @@ class DeliveryAuthorization(models.Model):
             ## Update LC No to Stock Picking Obj
             stock_picking_id = delivery.sale_order_id.picking_ids
             stock_picking_id.write({'lc_id': delivery.lc_id.id})
-
-    ## mail notification
-    # @api.multi
-    # def _notify_approvers(self):
-    #     approvers = self.employee_id._get_employee_manager()
-    #     if not approvers:
-    #         return True
-    #     for approver in approvers:
-    #         self.sudo(SUPERUSER_ID).add_follower(approver.id)
-    #         if approver.sudo(SUPERUSER_ID).user_id:
-    #             self.sudo(SUPERUSER_ID)._message_auto_subscribe_notify(
-    #                 [approver.sudo(SUPERUSER_ID).user_id.partner_id.id])
-    #     return True
 
 
 class OrderedQty(models.Model):
