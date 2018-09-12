@@ -103,8 +103,14 @@ class ChequeReceived(models.Model):
     @api.constrains('currency_id')
     def _check_currency_with_companys_currency(self):
         if self.journal_id and self.currency_id:
-            if self.currency_id != self.journal_id.company_id.currency_id:
-                raise ValidationError('Payment Journal Currency and Cheque Received Currency must be same')
+            if self.journal_id.currency_id:
+                if self.currency_id != self.journal_id.currency_id:
+                    raise ValidationError('Payment Journal Currency and Cheque Received Currency must be same')
+            else:
+                if self.currency_id != self.journal_id.company_id.currency_id:
+                    raise ValidationError('Payment Journal Currency and Cheque Received Currency must be same')
+
+
 
     @api.constrains('cheque_amount')
     def _check_negative_amount_value(self):
