@@ -25,80 +25,37 @@
                                 </div>
                             </div>
                             <table class="table table-report-xs table-bordered table-striped">
-                            <thead>
-                                <tr class="odo-bg-gray">
-                                    <th class="text-center">SL</th>
-                                    <th>Customer</th>
-                                    <th>Pending D.O </th>
-                                    <th>Product</th>
-                                    <th>Ordered Qty</th>
-                                    <th>Undelivered Qty</th>
-                                    <th>Unit of Measure</th>
-                                    <th>Scheduled Qty</th>
-                                    <th>Special instructions</th>
-                                    <th>State</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <t t-foreach="o.line_ids" t-as="l">
-                                    <tr style="page-break-inside: avoid" class="text-center">
-                                        <td><span t-esc="l_index+1"/></td>
-                                        <td class="text-left"><span t-esc="l.partner_id.name"/></td>
-                                        <td class="text-left"><span t-esc="l.pending_do.name"/></td>
-                                        <td class="text-left"><span t-esc="l.product_id.name"/></td>
-                                        <td class="text-left"><span t-esc="l.do_qty"/></td>
-                                        <td class="text-left"><span t-esc="l.undelivered_qty"/></td>
-                                        <td class="text-left"><span t-esc="l.uom_id"/></td>
-                                        <td class="text-left"><span t-esc="l.scheduled_qty"/></td>
-                                        <td class="text-left"><span t-esc="l.remarks"/></td>
-                                        <td class="text-left"><span t-esc="l.state"/></td>
+                                <thead>
+                                    <tr class="odo-bg-gray">
+                                        <th class="text-center">SL</th>
+                                        <th>Customer</th>
+                                        <th>Pending D.O </th>
+                                        <th>Product</th>
+                                        <th>Ordered Qty</th>
+                                        <th>Undelivered Qty</th>
+                                        <th>Unit of Measure</th>
+                                        <th>Scheduled Qty</th>
+                                        <th>Special instructions</th>
                                     </tr>
-                                </t>
-                            </tbody>
-                        </table>
-
-
-                            <!--<table class="table table-bordered" style="padding: 15px 0px;">-->
-                                <!--<thead>-->
-                                    <!--<tr style="background-color:#C0C0C0;">-->
-                                        <!--<th>Customer</th>-->
-                                        <!--<th>Product</th>-->
-                                        <!--<th>Quantity</th>-->
-                                        <!--<th>UOM</th>-->
-                                        <!--<th>Packing Mod</th>-->
-                                        <!--<th>Delivery Address</th>-->
-                                        <!--<th>Remarks</th>-->
-                                    <!--</tr>-->
-                                <!--</thead>-->
-                                <!--<tbody>-->
-                                    <!--<t t-foreach="o.line_ids" t-as="l">-->
-                                        <!--<tr>-->
-                                            <!--<td>-->
-                                                <!--<span t-esc="l.partner_id.name"/>-->
-                                            <!--</td>-->
-                                            <!--<td>-->
-                                                <!--<span t-esc="l.product_id.name"/>-->
-                                            <!--</td>-->
-                                            <!--<td>-->
-                                                <!--<span t-esc="l.quantity"/>-->
-                                            <!--</td>-->
-                                            <!--<td>-->
-                                                <!--<span t-esc="l.uom_id.name"/>-->
-                                            <!--</td>-->
-                                            <!--<td>-->
-                                                <!--<span t-esc="l.pack_type.id"/>-->
-                                            <!--</td>-->
-                                            <!--<td>-->
-                                                <!--<span t-esc="l.deli_address"/>-->
-                                            <!--</td>-->
-                                            <!--<td>-->
-                                                <!--<span t-esc="l.remarks"/>-->
-                                            <!--</td>-->
-                                        <!--</tr>-->
-                                    <!--</t>-->
-
-                                <!--</tbody>-->
-                            <!--</table>-->
+                                </thead>
+                                <tbody>
+                                    <t t-foreach="o.line_ids" t-as="l">
+                                        <t t-if="l.state == 'approve'">
+                                            <tr style="page-break-inside: avoid" class="text-center">
+                                                <td><span t-esc="l_index+1"/></td>
+                                                <td class="text-left"><span t-esc="l.partner_id.name"/></td>
+                                                <td class="text-left"><span t-esc="l.pending_do.name"/></td>
+                                                <td class="text-left"><span t-esc="l.product_id.name"/></td>
+                                                <td class="text-left"><span t-esc="l.do_qty"/></td>
+                                                <td class="text-left"><span t-esc="l.undelivered_qty"/></td>
+                                                <td class="text-left"><span t-esc="l.uom_id.name"/></td>
+                                                <td class="text-left"><span t-esc="l.scheduled_qty"/></td>
+                                                <td class="text-left"><span t-esc="l.remarks"/></td>
+                                            </tr>
+                                        </t>
+                                    </t>
+                                </tbody>
+                            </table>
                         </div>
                     </t>
                 </t>

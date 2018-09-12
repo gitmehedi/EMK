@@ -1,5 +1,5 @@
 {
-    'name': 'Customized Accounts View',
+    'name': 'Customized Accounts ',
     'version': '10.0.1.0.0',
     'author': 'Genweb2 Limited',
     'website': 'http://www.genweb2.com',
@@ -11,7 +11,7 @@
         'views/partner_inherit_view.xml',
 
     ],
-    'summary': 'Customized Accounts View',
+    'summary': 'Customized view Accountant user',
     'description':"Customized Accounts View",
     'application': False,
     'installable': True,

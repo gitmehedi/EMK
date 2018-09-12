@@ -62,13 +62,9 @@
                                 <field name="operating_unit_id" options="{'no_open': True, 'no_create': True}"/>
                             </group>
                             <notebook colspan="4">
-                                <page string="Products">
+                                <page string="Customers">
                                     <field name="line_ids">
                                         <tree string="List" editable="bottom">
-                                            <field name="operating_unit_id" invisible="1"/>
-                                            <field name="schedule_line_date" invisible="1"/>
-                                            <field name="requested_date" invisible="1"/>
-
                                             <field name="partner_id" options="{'no_open': True, 'no_create': True}"/>
                                             <field name="pending_do" options="{'no_open': True, 'no_create': True}"/>
                                             <field name="product_id" options="{'no_open': True, 'no_create': True}"/>
@@ -150,43 +146,9 @@
             <field name="view_mode">tree,form</field>
         </record>
 
-        <!--<menuitem id="delivery_schedule_menu" name="Delivery" parent="sales_team.menu_base_partner"-->
-        <!--groups="sales_team.group_sale_salesman_all_leads,gbs_application_group.group_head_sale"-->
-        <!--sequence="9"/>-->
-            <menuitem id="delivery_schedule_submenu" name="Delivery Schedules" parent="delivery_order.delivery_menu"
-                  groups="sales_team.group_sale_salesman_all_leads,gbs_application_group.group_head_sale"
-                  action="delivery_schedule_action" sequence="5"/>
-
-        <!--Line View For delivery Operations -->
-        <!--<record id="delivery_schedules_line_form" model="ir.ui.view">-->
-            <!--<field name="name">delivery.schedules.line.form</field>-->
-            <!--<field name="model">delivery.schedules.line</field>-->
-            <!--<field name="type">form</field>-->
-            <!--<field name="arch" type="xml">-->
-                <!--<form string="Delivery Instruction" edit="false" create="false" delete="false">-->
-                    <!--<sheet>-->
-                        <!--<group>-->
-                            <!--<group>-->
-                                <!--<field name="operating_unit_id"/>-->
-                                <!--<field name="partner_id"/>-->
-                                <!--<field name="pending_do"/>-->
-                                <!--<field name="state"/>-->
-                            <!--</group>-->
-                            <!--<group>-->
-                                <!--<field name="product_id"/>-->
-                                <!--<field name="do_qty"/>-->
-                                <!--<field name="undelivered_qty"/>-->
-                                <!--<field name="uom_id"/>-->
-                                <!--<field name="scheduled_qty"/>-->
-                            <!--</group>-->
-                        <!--</group>-->
-                    <!--</sheet>-->
-                    <!--<div class="oe_chatter">-->
-                        <!--<field name="message_ids" widget="mail_thread" nolabel="1"/>-->
-                    <!--</div>-->
-                <!--</form>-->
-            <!--</field>-->
-        <!--</record>-->
+        <menuitem id="delivery_schedule_submenu" name="Delivery Schedules" parent="delivery_order.delivery_menu"
+              groups="sales_team.group_sale_salesman_all_leads,gbs_application_group.group_head_sale"
+              action="delivery_schedule_action" sequence="5"/>
 
         <record id="delivery_schedules_line_tree" model="ir.ui.view">
             <field name="name">delivery.schedules.line.tree</field>
@@ -201,7 +163,7 @@
                     <field name="scheduled_qty" readonly="True"/>
                     <field name="remarks" readonly="True"/>
                     <field name="state" readonly="True" invisible="1"/>
-                    <button name="action_approve" string="Done"
+                    <button name="action_approve" class="oe_highlight" icon="fa-check-square"
                             type="object" attrs="{'invisible': [('state', '!=', 'approve')]}"/>
                 </tree>
             </field>
@@ -212,7 +174,7 @@
             <field name="model">delivery.schedules.line</field>
             <field name="arch" type="xml">
                 <search string="Delivery Instruction">
-                    <filter name="today" string="Today" domain="[('requested_date','&gt;=',time.strftime('%%Y-%%m-%%d'))]"/>
+                    <filter name="today" string="Today" domain="[('requested_date','=',time.strftime('%%Y-%%m-%%d'))]"/>
                     <separator/>
                     <filter name="pending" string="Pending" domain="[('state','=','approve')]"/>
                 </search>

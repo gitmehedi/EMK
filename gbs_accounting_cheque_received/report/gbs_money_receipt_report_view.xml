@@ -38,18 +38,21 @@
 							<div class="row">
 								<div class="col-xs-6">
                                     <h4><label>Cheque Payment</label> : Yes</h4>
+									<h4><label>Cheque No</label> : <span t-esc="data['cheque_no']"/></h4>
                                 </div>
+
 								<div class="col-xs-6 text-right">
                                     <h4><label>Date on Cheque</label> : <span t-esc="data['date_on_cheque']"/></h4>
+									<h4><label>Branch Name</label> : <span t-esc="data['branch_name']"/></h4>
                                 </div>
 							</div>
 							<div class="row">
 								<div class="col-xs-6">
                                     <h4><label>Bank Name</label> : <span t-esc="data['bank_name']"/></h4>
                                 </div>
-								<div class="col-xs-6 text-right">
-                                    <h4><label>Branch Name</label> : <span t-esc="data['branch_name']"/></h4>
-                                </div>
+								<!--<div class="col-xs-6 text-right">-->
+                                    <!--&lt;!&ndash;<h4><label>Branch Name</label> : <span t-esc="data['branch_name']"/></h4>&ndash;&gt;-->
+                                <!--</div>-->
 							</div>
 							<div class="row">
 								<div class="col-xs-6">

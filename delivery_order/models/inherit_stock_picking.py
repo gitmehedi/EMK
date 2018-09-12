@@ -8,6 +8,7 @@ import math
 
 class InheritStockPicking(models.Model):
     _inherit = 'stock.picking'
+    _order = 'id DESC'
 
     delivery_order_id = fields.Many2one('delivery.order', string='D.O No.', readonly=True)
 

@@ -22,7 +22,7 @@
         'reports/delivery_se_report.xml',
         'reports/delivery_se_report_templates.xml',
         'data/mail_template_data.xml',
-
+        'views/inherited_stock_picking_views.xml',
         # 'views/delivery_schedules_date_wise_view.xml',
         # 'wizards/delivery_schedule_date_view.xml',
 

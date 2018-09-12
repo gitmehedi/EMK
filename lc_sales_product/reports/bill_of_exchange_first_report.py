@@ -29,7 +29,7 @@ class BillExchangeFirst(models.AbstractModel):
         data['terms_condition'] = shipment_obj.lc_id.terms_condition
         data['tenure'] = shipment_obj.lc_id.tenure
         data['lc_id'] = shipment_obj.lc_id.unrevisioned_name
-        data['issue_date'] = shipment_obj.lc_id.issue_date
+        data['issue_date'] = report_utility_pool.getERPDateFormat(report_utility_pool.getDateFromStr(shipment_obj.lc_id.issue_date))
 
         price =[]
         uom = []
@@ -49,11 +49,11 @@ class BillExchangeFirst(models.AbstractModel):
             for pi in shipment_obj.lc_id.pi_ids_temp:
                 pi_obj = {}
                 pi_obj['number'] = pi.name
-                pi_obj['date'] = pi.invoice_date
+                pi_obj['date'] = report_utility_pool.getERPDateFormat(report_utility_pool.getDateFromStr(pi.invoice_date))
                 pi_list.append(pi_obj)
 
         for revision in shipment_obj.lc_id.old_revision_ids:
-            lc_revision_list.append({'no': revision.revision_number + 1, 'date': revision.amendment_date})
+            lc_revision_list.append({'no': revision.revision_number + 1, 'date': report_utility_pool.getERPDateFormat(report_utility_pool.getDateFromStr(revision.amendment_date))})
 
         price_total = sum(price)
         total= shipment_obj.invoice_value
