@@ -81,7 +81,7 @@ class ChequeReceived(models.Model):
             pay.payment_method_id = pay_method_pool.id
 
     payment_method_id = fields.Many2one('account.payment.method', string='Payment Method Type', )
-    currency_id = fields.Many2one('res.currency', string='Currency',
+    currency_id = fields.Many2one('res.currency', string='Currency', required=True,
                                   states={'returned': [('readonly', True)], 'dishonoured': [('readonly', True)],
                                           'honoured': [('readonly', True)], 'received': [('readonly', True)],
                                           'deposited': [('readonly', True)]})

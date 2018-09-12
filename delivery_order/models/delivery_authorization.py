@@ -370,11 +370,17 @@ class DeliveryAuthorization(models.Model):
             for payments in cheque_rcv_pool:
 
                 if payments.id not in val_bank:
+                    c = 0
+                    if payments.currency_id:
+                        if payments.currency_id != self.currency_id:
+                            c = self.currency_id.rate * payments.cheque_amount
+                        else:
+                            c = payments.cheque_amount
 
-                    if payments.journal_id.currency_id:
-                        currency = payments.journal_id.currency_id.id
-                    else:
-                        currency = payments.company_id.currency_id.id
+                    # if payments.journal_id.currency_id:
+                    #     currency = payments.journal_id.currency_id.id
+                    # else:
+                    #     currency = payments.company_id.currency_id.id
 
                     vals.append((0, 0, {'cheque_info_id': payments.id,
                                         'amount': payments.cheque_amount,
@@ -382,8 +388,9 @@ class DeliveryAuthorization(models.Model):
                                         'branch': payments.branch_name,
                                         'payment_date': payments.payment_date,
                                         'number': payments.cheque_no,
-                                        'currency_id': currency,
+                                        'currency_id': payments.currency_id.id,
                                         'state': payments.state,
+                                        'converted_amount':c,
                                         }))
 
             pay.cheque_rcv_all_ids = vals
@@ -393,14 +400,15 @@ class DeliveryAuthorization(models.Model):
             converted_amount = 0
 
             for do_cheque_line in pay.cheque_rcv_all_ids:
-                cheque_line_total_amount = cheque_line_total_amount + do_cheque_line.amount
+                cheque_line_total_amount = cheque_line_total_amount + do_cheque_line.converted_amount
 
-                if do_cheque_line.currency_id != self.currency_id:
-                    converted_amount = cheque_line_total_amount * self.currency_id.rate
-                else:
-                    converted_amount = cheque_line_total_amount
+                #converted_amount = cheque_line_total_amount
+                # if do_cheque_line.currency_id != self.currency_id:
+                #     converted_amount = cheque_line_total_amount * self.currency_id.rate
+                # else:
+                #     converted_amount = cheque_line_total_amount
 
-            pay.total_cheque_rcv_amount_not_honored = converted_amount
+            pay.total_cheque_rcv_amount_not_honored = cheque_line_total_amount
 
 
     def process_total_payment_received_amount(self):
