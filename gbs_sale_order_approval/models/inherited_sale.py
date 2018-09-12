@@ -14,6 +14,9 @@ class SaleOrder(models.Model):
     def _get_default_team(self):
         return self.env['crm.team']._get_default_team_id()
 
+    name = fields.Char(string='Order Reference', required=True, copy=False, readonly=True, track_visibility='onchange',
+                       states={'draft': [('readonly', False)]}, index=True, default=lambda self: _('New'))
+
     type_id = fields.Many2one(comodel_name='sale.order.type', string='Type', default=_get_order_type, readonly=True,
                               states={'to_submit': [('readonly', False)]})
 
@@ -106,10 +109,15 @@ class SaleOrder(models.Model):
 
     @api.model
     def create(self, vals):
+
         sales_channel_obj = self.env['sales.channel'].search([('id', '=', vals['sales_channel'])])
 
-        new_seq = self.env['ir.sequence'].next_by_code_new('sale.order', self.create_date,
-                                                           sales_channel_obj.operating_unit_id) or '/'
+        vals['approver_user_id'] = sales_channel_obj.user_id.id
+        vals['warehouse_id'] = sales_channel_obj.warehouse_id.id
+        vals['operating_unit_id'] = sales_channel_obj.operating_unit_id.id
+
+        #to call the Draft SO Seq
+        new_seq = self.env['ir.sequence'].next_by_code('sale.order') or '/'
         if new_seq:
             vals['name'] = new_seq
 
@@ -132,18 +140,15 @@ class SaleOrder(models.Model):
 
         return super(SaleOrder, self).create(vals)
 
-
     @api.multi
     def write(self, vals):
 
         if 'sales_channel' in vals:
-            sales_channel_obj = self.env['sales.channel'].search([('id','=',vals['sales_channel'])])
-            if self.sales_channel.operating_unit_id != sales_channel_obj.operating_unit_id:
-                new_seq = self.env['ir.sequence'].next_by_code_new('sale.order', self.create_date,
-                                                                   sales_channel_obj.operating_unit_id) or '/'
-                if new_seq:
-                    vals['name'] = new_seq
+            sales_channel_obj = self.env['sales.channel'].search([('id', '=', vals['sales_channel'])])
 
+            vals['approver_user_id'] = sales_channel_obj.user_id.id
+            vals['warehouse_id'] = sales_channel_obj.warehouse_id.id
+            vals['operating_unit_id'] = sales_channel_obj.operating_unit_id.id
 
         if 'pi_id' in vals:
             pi_pool = self.env['proforma.invoice'].search([('id', '=', vals['pi_id'])])
@@ -198,6 +203,15 @@ class SaleOrder(models.Model):
     @api.multi
     def action_to_submit(self):
         for orders in self:
+
+            # Check seq needs to re-generate or not
+            if orders.operating_unit_id.name not in orders.name:
+                new_seq = orders.env['ir.sequence'].next_by_code_new('sale.order', self.create_date,
+                                                                   orders.operating_unit_id) or '/'
+
+                if new_seq:
+                    orders.name = new_seq
+
             if orders.validity_date:
                 expiration_date = orders.validity_date + ' 23:59:59'
                 if expiration_date <= orders.date_order:
@@ -585,23 +599,33 @@ class SaleOrder(models.Model):
         else:
             return self.env.user.default_operating_unit_id
 
+    def _get_sales_channel(self):
+        return self.env['sales.channel'].search([], limit=1)
+
     sales_channel = fields.Many2one('sales.channel', string='Sales Channel', readonly=True,
                                     states={'to_submit': [('readonly', False)]}, required=True)
 
     warehouse_id = fields.Many2one(
-        'stock.warehouse', string='Warehouse',
-        required=True, readonly=True, states={'to_submit': [('readonly', False)]},
-        related='sales_channel.warehouse_id')
+        'stock.warehouse', string='Warehouse', track_visibility='onchange',
+        required=True, states={'to_submit': [('readonly', True)],
+                               'draft': [('readonly', True)], 'submit_quotation': [('readonly', True)]},
+    )
 
     operating_unit_id = fields.Many2one(
         comodel_name='operating.unit',
-        string='Operating Unit',
-        related='sales_channel.operating_unit_id',
-        readonly=True, required=True
-    )
+        string='Operating Unit', track_visibility='onchange',
+        required=True, states={'to_submit': [('readonly', True)],
+                               'draft': [('readonly', True)], 'submit_quotation': [('readonly', True)]}, )
 
-    approver_manager_id = fields.Many2one('hr.employee', string='Approver Manager', readonly=True,
-                                          related='sales_channel.employee_id', required=True)
+    approver_user_id = fields.Many2one('res.users', string='Approver Manager', track_visibility='onchange')
+
+
+    @api.onchange('sales_channel')
+    def _onchange_sales_channel(self):
+        self.warehouse_id = self.sales_channel.warehouse_id.id
+        self.warehouse_id = self.sales_channel.warehouse_id.id
+        self.operating_unit_id = self.sales_channel.operating_unit_id.id
+        self.approver_user_id = self.sales_channel.user_id.id
 
     # Ovrride this entire mentod and did not call super.
     # Where ever this method is called, not impact on business
@@ -609,9 +633,16 @@ class SaleOrder(models.Model):
     @api.constrains('team_id', 'operating_unit_id')
     def _check_team_operating_unit(self):
         for rec in self:
-            if (rec.team_id and
-                        rec.team_id.operating_unit_id != rec.operating_unit_id):
+            if rec.pi_id:
+                if rec.operating_unit_id != rec.pi_id.operating_unit_id:
+                    raise ValidationError(_('Configuration error\n'
+                                            'The Operating Unit of the Proforma Invoice (PI) '
+                                            'must match with that of the '
+                                            'Quotation/Sales Order'))
+
+            if (rec.team_id and rec.team_id.operating_unit_id != rec.operating_unit_id):
                 continue;
+
 
     @api.model
     def _needaction_domain_get(self):
@@ -626,13 +657,21 @@ class SaleOrder(models.Model):
                 ('state', 'in', ['validate'])]
             return domain
         elif users_obj.has_group('gbs_application_group.group_head_sale'):
+
             domain = [
-                ('state', 'in', ['draft'])]
+                ('state', 'in', ['draft']), ('approver_user_id', '=', self.env.user.id)]
             return domain
         else:
             return False
 
         return domain
+
+
+    @api.constrains('order_line')
+    def _check_multiple_products_line(self):
+        if len(self.order_line) > 1:
+            raise ValidationError("You can't add multiple products")
+
 
     @api.multi
     def unlink(self):

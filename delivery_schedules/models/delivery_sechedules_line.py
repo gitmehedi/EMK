@@ -3,21 +3,19 @@ from odoo import api, fields, models, _
 from odoo.exceptions import UserError, ValidationError
 
 
-
 class DeliveryScheduleLine(models.Model):
     _name = 'delivery.schedules.line'
     _inherit = ['mail.thread']
     _description = 'Delivery Schedule line'
 
     partner_id = fields.Many2one('res.partner', 'Customer', domain=[('customer', '=', True),('parent_id', '=', False)],
-                                 readonly=True, states={'draft': [('readonly', False)]})
-    # pending_picking = fields.Many2one('stock.picking', string='Pending Picking')
-    pending_do = fields.Many2one('delivery.order', ondelete='cascade',
+                                 readonly=True,required=True, states={'draft': [('readonly', False)]},ondelete="cascade")
+    pending_do = fields.Many2one('delivery.order', ondelete='cascade',required=True,
                                  readonly=True, states={'draft': [('readonly', False)]},
                                  string='Pending D.O',track_visibility='onchange')
-    product_id = fields.Many2one('product.product', string='Product',
+    product_id = fields.Many2one('product.product', string='Product',required=True,
                                  readonly=True, states={'draft': [('readonly', False)]},
-                                 track_visibility='onchange')
+                                 track_visibility='onchange', ondelete='cascade')
     do_qty = fields.Float(string='Ordered Qty', readonly=True ,store=True,compute='onchange_product_id')
     undelivered_qty = fields.Float(string='Undelivered Qty', readonly=True)
     uom_id = fields.Many2one('product.uom', string="Unit of Measure", readonly=True)
@@ -27,7 +25,7 @@ class DeliveryScheduleLine(models.Model):
     remarks = fields.Text('Special Instructions', readonly=True,
                           states={'draft': [('readonly', False)],'revision': [('readonly', False)]},
                           track_visibility='onchange')
-    requested_date = fields.Date('Date', default=datetime.date.today(), readonly=True)
+    requested_date = fields.Date('Date',related='parent_id.requested_date',store=True)
     # Relational Fields
     parent_id = fields.Many2one('delivery.schedules', ondelete='cascade')
     state = fields.Selection([
@@ -37,18 +35,12 @@ class DeliveryScheduleLine(models.Model):
         ('done', "Done"),
     ], default='draft', track_visibility='onchange')
 
-    @api.model
-    def _default_operating_unit(self):
-        team = self.env['crm.team']._get_default_team_id()
-        if team.operating_unit_id:
-            return team.operating_unit_id
-
     operating_unit_id = fields.Many2one('operating.unit',
-                                        string='Operating Unit',
-                                        required=True,
-                                        default=_default_operating_unit)
+                                        related='parent_id.operating_unit_id',
+                                        string='Operating Unit',store=True, ondelete='cascade')
 
-    schedule_line_date = fields.Date('Date', default=datetime.date.today(),)
+    # create date.................
+    schedule_line_date = fields.Date('Date',default=datetime.date.today())
 
     @api.model
     def create(self, vals):
@@ -58,7 +50,6 @@ class DeliveryScheduleLine(models.Model):
         vals['undelivered_qty'] = line_obj.quantity - line_obj.qty_delivered
         vals['uom_id'] = line_obj.uom_id.id
         return super(DeliveryScheduleLine, self).create(vals)
-
 
     @api.multi
     def write(self, vals):
@@ -84,51 +75,59 @@ class DeliveryScheduleLine(models.Model):
             do_id_list = []
             if ds.partner_id:
                 do_objs = self.env['delivery.order'].sudo().search([('parent_id','=',ds.partner_id.id),
-                                                                    ('operating_unit_id','=',self.operating_unit_id.id),
+                                                                    ('operating_unit_id','=',ds.parent_id.operating_unit_id.id),
                                                                     ('state','=','approved')])
                 if do_objs:
                     for do_obj in do_objs:
                         do_line_list =  do_obj.line_ids.filtered(lambda x: x.quantity > x.qty_delivered)
                         if do_line_list:
                             do_id_list.append(do_obj.id)
-                return {'domain': {'pending_do': [('id', 'in', do_id_list)]}}
+
+                if len(do_id_list) == 1:
+                    self.pending_do = self.env['delivery.order'].sudo().search([('id','=',do_id_list)])
+                    return {'domain': {'pending_do': [('id', '=', do_id_list)]}}
+                else:
+                    return {'domain': {'pending_do': [('id', 'in', do_id_list)]}}
 
     @api.onchange('pending_do')
     def onchange_pending_do(self):
-        if self.pending_do:
-            # For the time being no loop, test purpose
-            if len(self.pending_do.line_ids) == 1:
-                self.product_id = self.pending_do.line_ids[0].product_id
-                self.do_qty = self.pending_do.line_ids[0].quantity
-                self.undelivered_qty = self.pending_do.line_ids[0].quantity - self.pending_do.line_ids[0].qty_delivered
-                self.uom_id = self.pending_do.line_ids[0].uom_id
+        for ds in self:
+            if ds.pending_do:
+                if len(ds.pending_do.line_ids) == 1:
+                    ds.product_id = ds.pending_do.line_ids[0].product_id
+                    ds.do_qty = ds.pending_do.line_ids[0].quantity
+                    ds.undelivered_qty = ds.pending_do.line_ids[0].quantity - ds.pending_do.line_ids[0].qty_delivered
+                    ds.uom_id = ds.pending_do.line_ids[0].uom_id
 
-                return {'domain': {'product_id': [('id', '=', self.product_id.id)]}}
-            else:
-                product_list = []
-                for line in self.pending_do.line_ids:
-                    product_list.append(line.product_id.id)
-                return {'domain': {'product_id': [('id', 'in', product_list)]}}
+                    return {'domain': {'product_id': [('id', '=', ds.product_id.id)]}}
+                else:
+                    product_list = []
+                    for line in ds.pending_do.line_ids:
+                        product_list.append(line.product_id.id)
+                    return {'domain': {'product_id': [('id', 'in', product_list)]}}
 
     @api.onchange('product_id')
     def onchange_product_id(self):
-        self.do_qty = False
-        self.undelivered_qty = False
-        self.uom_id = False
-        self.scheduled_qty = False
-        self.remarks = False
-        if self.product_id:
-            line_obj = self.env['delivery.order.line'].search(
-                [('parent_id', '=', self.pending_do.id), ('product_id', '=', self.product_id.id)])[0]
-            self.do_qty = line_obj.quantity
-            self.undelivered_qty = line_obj.quantity - line_obj.qty_delivered
-            self.uom_id = line_obj.uom_id
+        for ds in self:
+            ds.do_qty = False
+            ds.undelivered_qty = False
+            ds.uom_id = False
+            ds.scheduled_qty = False
+            ds.remarks = False
+            if ds.product_id:
+                line_obj = self.env['delivery.order.line'].search(
+                    [('parent_id', '=', ds.pending_do.id), ('product_id', '=', ds.product_id.id)])[0]
+                ds.do_qty = line_obj.quantity
+                ds.undelivered_qty = line_obj.quantity - line_obj.qty_delivered
+                ds.uom_id = line_obj.uom_id
 
     @api.multi
     def action_approve(self):
-        self.write({'state': 'done',})
+        for ds in self:
+            ds.write({'state': 'done',})
 
     @api.constrains('scheduled_qty')
     def _check_scheduled_qty(self):
-        if self.scheduled_qty > self.do_qty:
-            raise Warning('Schedule date can not bigger then Delivery Quantity!')
+        for ds in self:
+            if ds.scheduled_qty > ds.do_qty:
+                raise Warning('Schedule qty can not larger than Undelivered Qty.!')

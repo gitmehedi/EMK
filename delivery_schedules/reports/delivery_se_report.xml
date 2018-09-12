@@ -8,7 +8,8 @@
             report_type="qweb-pdf"
             file="delivery_schedules.report_delivery_schedules"
             name="delivery_schedules.report_delivery_schedules"
-            menu="False"
+            paperformat="custom_report.paperformat_backend_landscape"
+            menu="True"
         />
     </data>
 </odoo>

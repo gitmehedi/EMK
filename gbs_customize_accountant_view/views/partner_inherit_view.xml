@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <data>
+
+        <record id="view_partner_for1m" model="ir.ui.view">
+            <field name="name">partner.form.view1</field>
+            <field name="model">res.partner</field>
+            <field name="priority">3</field>
+            <field name="inherit_id" ref="account.view_partner_property_form"/>
+            <field name="arch" type="xml">
+                <data>
+                    <xpath expr="//field[@name='debit']" position="replace">
+                        <field name="debit" groups="base.group_no_one,account.group_account_user,gbs_application_group.group_head_account"/>
+                    </xpath>
+
+                    <xpath expr="//field[@name='credit']" position="replace">
+                        <field name="credit" groups="base.group_no_one,account.group_account_user,gbs_application_group.group_head_account"/>
+                    </xpath>
+
+                </data>
+            </field>
+        </record>
+
+    </data>
+</odoo>

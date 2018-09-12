@@ -21,9 +21,9 @@
                     <field name="max_ordering_qty" invisible="1"/>
                 </xpath>
 
-                <xpath expr="//field[@name='max_ordering_qty']" position="after">
-                    <field name="available_qty" invisible="1"/>
-                </xpath>
+                <!--<xpath expr="//field[@name='max_ordering_qty']" position="after">-->
+                    <!--<field name="available_qty" invisible="1"/>-->
+                <!--</xpath>-->
 
 
             </field>
