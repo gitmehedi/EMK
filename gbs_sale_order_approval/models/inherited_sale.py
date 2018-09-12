@@ -225,6 +225,10 @@ class SaleOrder(models.Model):
             sale_type_pool = self.env['sale.order.type'].search([('id', '=', self.type_id.id)])
             self.credit_sales_or_lc = sale_type_pool.sale_order_type
             self.currency_id = sale_type_pool.currency_id.id
+
+            if self.type_id.sale_order_type != 'lc_sales':
+                self.pi_id = None
+
             if self.type_id.sale_order_type == 'lc_sales':
                 existing_lc = self.search([('type_id', '=', self.type_id.id)])
                 return {'domain': {'pi_id': [('id', 'not in', [i.pi_id.id for i in existing_lc]),
