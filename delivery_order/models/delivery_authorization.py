@@ -563,42 +563,38 @@ class DeliveryAuthorization(models.Model):
 
                 pay.cheque_ids = vals
 
+    @api.model
+    def _needaction_domain_get(self):
+        users_obj = self.env['res.users']
+        # if users_obj.has_group('gbs_application_group.group_cxo'):
+        #     domain = [
+        #         ('state', 'in', ['validate'])]
+        #     return domain
+        if users_obj.has_group('gbs_application_group.group_head_account'):
+            domain = [
+                ('state', 'in', ['validate'])]
+            return domain
+        elif users_obj.has_group('account.group_account_user'):
+            domain = [
+                ('state', 'in', ['draft'])]
+            return domain
+        else:
+            return False
 
-################
-# 100 MT Logic
-###############
-@api.multi
-def update_lc_id_for_houndred_mt(self):
-    for delivery in self:
-        ordered_qty_pool = delivery.env['ordered.qty'].search([('delivery_auth_no', '=', delivery.id)])
-        if ordered_qty_pool:
-            ordered_qty_pool.write({'lc_id': delivery.lc_id.id})
+    ################
+    # 100 MT Logic
+    ###############
+    @api.multi
+    def update_lc_id_for_houndred_mt(self):
+        for delivery in self:
+            ordered_qty_pool = delivery.env['ordered.qty'].search([('delivery_auth_no', '=', delivery.id)])
+            if ordered_qty_pool:
+                ordered_qty_pool.write({'lc_id': delivery.lc_id.id})
 
-        ## Update LC No to Stock Picking Obj
-        stock_picking_id = delivery.sale_order_id.picking_ids
-        stock_picking_id.write({'lc_id': delivery.lc_id.id})
+            ## Update LC No to Stock Picking Obj
+            stock_picking_id = delivery.sale_order_id.picking_ids
+            stock_picking_id.write({'lc_id': delivery.lc_id.id})
 
-
-@api.model
-def _needaction_domain_get(self):
-    users_obj = self.env['res.users']
-    domain = []
-    # if users_obj.has_group('gbs_application_group.group_cxo'):
-    #     domain = [
-    #         ('state', 'in', ['validate'])]
-    #     return domain
-    if users_obj.has_group('gbs_application_group.group_head_account'):
-        domain = [
-            ('state', 'in', ['validate'])]
-        return domain
-    elif users_obj.has_group('account.group_account_user'):
-        domain = [
-            ('state', 'in', ['draft'])]
-        return domain
-    else:
-        return False
-
-    return domain
     ## mail notification
     # @api.multi
     # def _notify_approvers(self):
