@@ -324,12 +324,10 @@ class DeliveryAuthorization(models.Model):
         if not self.line_ids:
             return self.write({'state': 'validate'})  # Only Second level approval
 
-        payment_received_converted = self.total_payment_received * self.currency_id.rate
-
-        if not payment_received_converted or payment_received_converted == 0:
+        if not self.total_payment_received or self.total_payment_received == 0:
             return self.write({'state': 'validate'})  # Only Second level approval
 
-        if payment_received_converted >= self.total_amount:
+        if self.total_payment_received >= self.total_amount:
             self._automatic_delivery_order_creation()
             return self.write({'state': 'close'})  # directly go to final approval level
         else:
