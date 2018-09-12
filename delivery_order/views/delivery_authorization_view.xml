@@ -163,7 +163,7 @@
                                             <field name="state"/>
                                             <field name="account_payment_id"/>
                                             <field name="cheque_info_id" invisible="1"/>
-                                            <field name="converted_amount" invisible="0"/>
+                                            <field name="converted_amount" invisible="1"/>
 
                                         </tree>
                                     </field>
