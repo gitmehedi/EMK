@@ -11,7 +11,7 @@
                         <group>
                             <field name="date_from"/>
                             <field name="date_to"/>
-                            <field name="shop_id"
+                            <field name="shop_id" groups="operating_unit.group_multi_operating_unit"
                                    options="{'no_open': 1,'no_create': 1, 'no_create_edit': 1}"/>
                         </group>
                         <group>
