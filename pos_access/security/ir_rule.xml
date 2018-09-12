@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <record id="point_of_sale.menu_pos_session_all" model="ir.ui.menu">
+            <field name="groups_id" eval="[(4, ref('point_of_sale.group_pos_user'))]"/>
+        </record>
+    </data>
+</openerp>
