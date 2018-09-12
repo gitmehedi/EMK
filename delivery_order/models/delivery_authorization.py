@@ -370,13 +370,19 @@ class DeliveryAuthorization(models.Model):
             for payments in cheque_rcv_pool:
 
                 if payments.id not in val_bank:
+
+                    if payments.journal_id.currency_id:
+                        currency = payments.journal_id.currency_id.id
+                    else:
+                        currency = payments.company_id.currency_id.id
+
                     vals.append((0, 0, {'cheque_info_id': payments.id,
                                         'amount': payments.cheque_amount,
                                         'bank': payments.bank_name.name,
                                         'branch': payments.branch_name,
                                         'payment_date': payments.payment_date,
                                         'number': payments.cheque_no,
-                                        'currency_id': payments.company_id.currency_id.id,
+                                        'currency_id': currency,
                                         'state': payments.state,
                                         }))
 

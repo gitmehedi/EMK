@@ -7,13 +7,19 @@ class PayrollReportPivotal(models.AbstractModel):
     
     @api.model
     def render_html(self, docids, data=None):
-        payslip_run_pool = self.env['accounting.cheque.received']
-        docs = payslip_run_pool.browse(docids[0])
+        cheque_rcv_pool = self.env['accounting.cheque.received']
+        docs = cheque_rcv_pool.browse(docids[0])
         data = {}
 
         account_conf_pool = self.env['account.config.settings'].search([], order='id desc', limit=1)
 
         seq = account_conf_pool.money_receipt_seq_id.next_by_code('account.money.receipt') or '/'
+
+        if docs.journal_id.currency_id:
+            currency = docs.journal_id.currency_id
+        else:
+            currency = docs.company_id.currency_id
+
 
         data['sale_order_id'] = docs.sale_order_id.name
         data['partner_id'] = docs.partner_id.name
@@ -25,7 +31,8 @@ class PayrollReportPivotal(models.AbstractModel):
         data['company_id'] = docs.company_id.name
         data['date_on_cheque'] = docs.date_on_cheque
         data['mr_sl_no'] = seq
-        data['currency'] = docs.currency_id.name
+        data['currency'] = currency.name
+        data['cheque_no'] = docs.cheque_no
 
         thousand_separated_total_sum = formatLang(self.env, docs.cheque_amount)
 
@@ -34,7 +41,7 @@ class PayrollReportPivotal(models.AbstractModel):
         docargs = {
             'doc_ids': self.ids,
             'doc_model': 'accounting.cheque.received',
-            'amount_to_words': amt_to_word ,
+            'amount_to_words': amt_to_word,
             'thousand_separated_total_sum': thousand_separated_total_sum,
             'data': data,
         }
