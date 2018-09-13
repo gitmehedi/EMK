@@ -13,8 +13,12 @@
     'license': 'AGPL-3',
     'depends': [
         'hr_holidays',
+        'date_range',
+
     ],
     'data': [
+        'security/ir.model.access.csv',
+        'security/security.xml',
         'views/hr_holidays.xml',
     ],
     'installable': True,

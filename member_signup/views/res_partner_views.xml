@@ -1,0 +1,80 @@
+<?xml version="1.0"?>
+<odoo>
+    <record model="ir.ui.view" id="inherited_view_partner_form_member">
+        <field name="name">res.partner.form.inherit</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//button[@name='open_parent']" position="attributes">
+                <attribute name="attrs">{'invisible':True}</attribute>
+            </xpath>
+            <xpath expr="//page[@name='sales_purchases']" position="attributes">
+                <attribute name="attrs">{'invisible':True}</attribute>
+            </xpath>
+            <xpath expr="//form/sheet" position="before">
+                <div class="alert alert-danger" role="alert" style="margin-bottom:0px;"
+                     attrs="{'invisible': [('membership_days_remaining','&gt;',7)]}">
+                    Your Membership will expire very soon. Please request for renew membership or inform emk personel
+                </div>
+            </xpath>
+            <xpath expr="//form/sheet/div/button[@name='toggle_active']" position="before">
+                <button name="toggle_auto_renew" type="object" class="oe_stat_button" icon="fa-check-square"
+                        groups="membership_user.group_user_member,membership_user.group_mem_user_officer">
+                    <field name="auto_renew" widget="boolean_button"
+                           options='{"terminology": {
+                                            "string_true": "Active Renew",
+                                            "hover_true": "Inactive Renew",
+                                            "string_false": "Inactive Renew",
+                                            "hover_false": "Active Renew"}}'/>
+                </button>
+            </xpath>
+
+            <xpath expr="//notebook/page[@autofocus='autofocus']" position="before">
+                <page name="member_personal_information" string="Personal Information" autofocus="autofocus">
+                    <group>
+                        <group string="Basic Information">
+                            <field name="gender" widget="radio" options="{'horizontal': true}"/>
+                            <field name="birthdate"/>
+                            <field name="occupation"
+                                   options="{'no_create_edit':True,'no_open':True}"/>
+                            <field name="subject_of_interest" widget="many2many_tags"
+                                   options="{'no_create_edit':True,'no_open':True}"/>
+                        </group>
+                        <group string="Educational Information">
+                            <field name="last_place_of_study"/>
+                            <field name="hightest_certification"
+                                   options="{'no_create_edit':True,'no_open':True}"/>
+                            <field name="field_of_study"/>
+                            <field name="place_of_study"/>
+                            <field name="usa_work_or_study" widget="radio" options="{'horizontal': true}"/>
+                            <field name="usa_work_or_study_place"
+                                   attrs="{'invisible':[('usa_work_or_study','=','no')],'required':[('usa_work_or_study','=','yes')]}"/>
+                            <field name="alumni_institute"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group string="Additional Information">
+                            <field name="current_employee"/>
+                            <field name="work_title"/>
+                            <field name="work_phone"/>
+                            <field name="info_about_emk"/>
+                        </group>
+                        <group string="Signature">
+                            <field name="signature_image" widget='image' class="oe_avatar"
+                                   options='{"preview_signature_image": "image_medium", "size": [90, 90]}'/>
+
+                        </group>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+    <record id="membership.action_membership_members" model="ir.actions.act_window">
+        <field name="domain">[('free_member','=',True)]</field>
+        <field name="context">{}
+        </field>
+    </record>
+
+    <menuitem name="Applicant" id="menu_member_general" sequence="0" parent="membership.menu_association"
+              groups="membership_user.group_mem_user_officer,membership_extension.group_membership_manager"/>
+</odoo>

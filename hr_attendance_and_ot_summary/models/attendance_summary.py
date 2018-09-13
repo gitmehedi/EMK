@@ -8,7 +8,8 @@ class AttendanceSummary(models.Model):
     _description = 'Attendance and over time summary'    
 
     name = fields.Char(size=100, string='Title', required='True')
-    period = fields.Many2one("account.period", "Period", required=True)
+    period = fields.Many2one("date.range", "Period", required=True,
+                             domain="[('type_id.holiday_month', '=', True)]")
     company_id = fields.Many2one('res.company', string='Company', required='True',
                                  default=lambda self: self.env['res.company']._company_default_get())
     operating_unit_id = fields.Many2one('operating.unit', string='Operating Unit',
