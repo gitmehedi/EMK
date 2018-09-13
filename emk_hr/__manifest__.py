@@ -15,6 +15,7 @@
         'hr_contract',
         'hr_short_leave',
         'l10n_in_hr_payroll',
+        'survey',
     ],
     'category': 'HR',
     'summary': '',
