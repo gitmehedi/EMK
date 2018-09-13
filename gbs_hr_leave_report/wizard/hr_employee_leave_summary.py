@@ -11,7 +11,8 @@ class HREmpLeaveSummary(models.TransientModel):
                              domain=[('operating_unit_id', '=', 'self.operating_unit_id')])
     from_date = fields.Date('From')
     to_date = fields.Date('To')
-    year_id = fields.Many2one('hr.leave.fiscal.year', string='Leave Year', required=True)
+    year_id = fields.Many2one('date.range', string='Leave Year', required=True,
+                              domain="[('type_id.holiday_year', '=', True)]")
     operating_unit_id = fields.Many2one('operating.unit', 'Operating Unit', required=True,
                                         default=lambda self: self.env.user.default_operating_unit_id)
 
@@ -51,7 +52,7 @@ class HREmpLeaveSummary(models.TransientModel):
     @api.constrains('to_date','from_date','year_id')
     def _check_year(self):
         if self.to_date and self.from_date:
-            if self.from_date >= self.year_id.date_start and self.to_date <= self.year_id.date_stop:
+            if self.from_date >= self.year_id.date_start and self.to_date <= self.year_id.date_end:
                 pass
             else:
                 raise ValidationError(_('Leave duration starting date and ending date should be same year!!'))

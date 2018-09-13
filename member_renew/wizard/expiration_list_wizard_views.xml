@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<odoo>
+    <record id="view_expiration_list_form" model="ir.ui.view">
+        <field name="name">expiration.list.wizard.form</field>
+        <field name="model">expiration.list.wizard</field>
+        <field name="priority" eval="1"/>
+        <field name="arch" type="xml">
+            <form string="Expiration Lists">
+                <group>
+                    <group>
+                        <field name="no_of_days"/>
+                    </group>
+                </group>
+                <footer>
+                    <button string='Generate' name="generate" type='object' class="oe_highlight"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_expiration_list" model="ir.actions.act_window">
+        <field name="name">Expiration</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">expiration.list.wizard</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+    <menuitem name="Expiration" id="menu_expiration_list" parent="membership.menu_association"
+              groups="membership_user.group_mem_user_officer"/>
+    <menuitem id="sub_expiration_list" parent="menu_expiration_list"
+              action="action_expiration_list"
+              groups="membership_user.group_mem_user_officer"/>
+</odoo>

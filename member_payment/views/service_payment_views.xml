@@ -1,0 +1,78 @@
+<?xml version="1.0"?>
+<odoo>
+
+    <record id="view_service_payment_form" model="ir.ui.view">
+        <field name="name">service.payment.form</field>
+        <field name="model">service.payment</field>
+        <field name="priority" eval="1"/>
+        <field name="arch" type="xml">
+            <form string="Service Fee">
+                <header>
+                    <button string='Paymemt Register' name="act_payment_register" type='object' class="oe_highlight"
+                            states="open"/>
+
+                    <button string='Cancel' name="act_cancel" type='object'
+                            states="open"/>
+                    <field name="state" widget="statusbar" statusbar_visible="open,paid"/>
+                </header>
+                <sheet>
+                    <h1 class="oe_title">
+                        Session:
+                        <field name="session_id" options="{'no_open':True,'no_create':True,'no_create_edit':True,}"/>
+                    </h1>
+                    <group>
+                        <group>
+                            <field name="payment_type_id"
+                                   options="{'no_open':True,'no_create':True,'no_create_edit':True,}"/>
+                            <field name="paid_amount" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                            <field name="card_replacement_id"
+                                   attrs="{'invisible':[('check_type','!=','card')],'required':[('check_type','=','card')]}"
+                                   options="{'no_open':True,'no_create':True,'no_create_edit':True,}"/>
+                            <field name="membership_id"
+                                   options="{'no_open':True,'no_create':True,'no_create_edit':True,}"/>
+                            <field name="check_type" invisible="True"/>
+                        </group>
+                        <group>
+                            <field name="journal_id"
+                                   options="{'no_open':True,'no_create':True,'no_create_edit':True,}"/>
+                            <field name="collection_date"/>
+                            <field name="comments"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_service_payment_tree" model="ir.ui.view">
+        <field name="name">service.payment.tree</field>
+        <field name="model">service.payment</field>
+        <field name="priority" eval="1"/>
+        <field name="arch" type="xml">
+            <tree string="Service Payment" decoration-bf="state in ['open','paid']"
+                  decoration-success="state == 'open'" decoration-muted="state in ['paid','cancel']">
+                <field name="session_id"/>
+                <field name="membership_id"/>
+                <field name="journal_id"/>
+                <field name="collection_date"/>
+                <field name="payment_type_id"/>
+                <field name="state"/>
+                <field name="paid_amount" sum="paid_amount"/>
+            </tree>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="action_service_payment">
+        <field name="name">Service Fee</field>
+        <field name="res_model">service.payment</field>
+        <field name="help" type="html">
+            <p class="oe_view_nocontent_create">
+                Click to add a new Service Fee
+            </p>
+        </field>
+    </record>
+
+    <menuitem id="menu_service_payment" parent="sub_pay_daily_operations"
+              action="action_service_payment" sequence="10"
+              groups="membership_user.group_mem_user_officer"/>
+</odoo>

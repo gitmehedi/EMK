@@ -1,0 +1,388 @@
+<?xml version="1.0"?>
+<odoo>
+    <record id="view_member_application_form" model="ir.ui.view">
+        <field name="name">res.partner.form</field>
+        <field name="model">res.partner</field>
+        <field name="priority" eval="1"/>
+        <field name="arch" type="xml">
+            <form string="Partners">
+                <header>
+                    <button string="Approve" type="object" name="member_invoiced" class="btn btn-sm oe_highlight"
+                            states="application" groups="membership_user.group_mem_user_officer"/>
+                    <button string="Reject" type="object" name="member_reject" class="btn btn-sm"
+                            states="application" groups="membership_user.group_mem_user_officer"/>
+                    <field name="state" widget="statusbar" statusbar_visible="application,invoice,member"/>
+                </header>
+
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button type="object"
+                                class="oe_stat_button"
+                                id="invoice_button"
+                                icon="fa-pencil-square-o"
+                                name="open_partner_history"
+                                context="{'default_partner_id': active_id}"
+                                attrs="{'invisible':[('state','=','application')]}">
+                            <div class="o_form_field o_stat_info">
+                                <span class="o_stat_value">
+                                    <field name="total_invoiced" widget='monetary'
+                                           options="{'currency_field': 'currency_id'}"/>
+                                </span>
+                                <span class="o_stat_text">Invoiced</span>
+                            </div>
+                        </button>
+                    </div>
+
+                    <field name="image" widget='image' class="oe_avatar"
+                           options='{"preview_image": "image_medium", "size": [90, 90]}'/>
+                    <div class="oe_title">
+                        <field name="is_company" invisible="1"/>
+                        <field name="commercial_partner_id" invisible="1"/>
+                        <field name="company_type" widget="radio" invisible="True"
+                               class="oe_edit_only"
+                               options="{'horizontal': true}"/>
+
+                        <h1>
+                            <field name="member_sequence" readonly="True"
+                                   attrs="{'invisible':[('member_sequence','=',False)]}"/>
+                            <br/>
+                            <field name="name" default_focus="1" placeholder="Name"
+                                   attrs="{'required' : [('is_company', '=',True)],
+                                   'readonly' : [('is_company', '=',False)]}"/>
+                        </h1>
+                        <group attrs="{'invisible': [('is_company', '=', True)]}">
+                            <field name="lastname" attrs="{'required': [('firstname', '=', False),
+                            ('is_company', '=', False),('type', '=', 'contact')]}"/>
+                            <field name="lastname2"
+                                   attrs="{'required': [('firstname', '=', False), ('lastname', '=', False), ('is_company', '=', False)]}"/>
+                            <field name="firstname" attrs="{'required': [('lastname', '=', False),
+                            ('is_company', '=', False),('type', '=', 'contact')]}"/>
+
+                        </group>
+
+                        <div class="o_row">
+                            <field name="parent_id" invisible="True"
+                                   placeholder="Company"
+                                   domain="[('is_company', '=', True)]"
+                                   context="{'default_is_company': True, 'default_supplier': supplier, 'default_customer': customer}"
+                                   attrs="{'invisible': ['|', '&amp;', ('is_company','=', True),('parent_id', '=', False),('company_name', '!=', False),('company_name', '!=', '')]}"/>
+                            <field name="company_name"
+                                   attrs="{'invisible': ['|', '|', ('company_name', '=', False), ('company_name', '=', ''), ('is_company', '=', True)]}"/>
+                            <button name="create_company" type="object" string="Create company"
+                                    class="btn btn-sm oe_edit_only fa fa-external-link btn btn-link "
+                                    attrs="{'invisible': ['|', '|', ('is_company','=', True), ('company_name', '=', ''), ('company_name', '=', False)]}"/>
+                        </div>
+                    </div>
+
+                    <group>
+                        <group>
+                            <field name="is_applicant" invisible="True"/>
+                            <field name="type" attrs="{'invisible': [('parent_id','=', False)]}"
+                                   groups="base.group_no_one"/>
+                            <label for="street" string="Address"/>
+                            <div class="o_address_format">
+                                <div class="oe_edit_only">
+                                    <button name="open_parent" type="object" string="(edit)" class="oe_link"
+                                            attrs="{'invisible': ['|', ('parent_id', '=', False), ('type', '!=', 'contact')]}"/>
+                                </div>
+                                <field name="street" placeholder="Street..." class="o_address_street"
+                                       attrs="{'readonly': [('type', '=', 'contact'),('parent_id', '!=', False)]}"/>
+                                <field name="street2" placeholder="Street 2..." class="o_address_street"
+                                       attrs="{'readonly': [('type', '=', 'contact'),('parent_id', '!=', False)]}"/>
+                                <field name="city" placeholder="City" class="o_address_city"
+                                       attrs="{'readonly': [('type', '=', 'contact'),('parent_id', '!=', False)]}"/>
+                                <field name="state_id" class="o_address_state" placeholder="State"
+                                       options='{"no_open": True}'
+                                       attrs="{'readonly': [('type', '=', 'contact'),('parent_id', '!=', False)]}"
+                                       context="{'country_id': country_id, 'zip': zip}"/>
+                                <field name="zip" placeholder="ZIP" class="o_address_zip"
+                                       attrs="{'readonly': [('type', '=', 'contact'),('parent_id', '!=', False)]}"/>
+                                <field name="country_id" placeholder="Country" class="o_address_country"
+                                       options='{"no_open": True, "no_create": True}'
+                                       attrs="{'readonly': [('type', '=', 'contact'),('parent_id', '!=', False)]}"/>
+                            </div>
+                            <field name="website" widget="url" placeholder="e.g. www.odoo.com"/>
+                            <field name="category_id" widget="many2many_tags" placeholder="Tags..."
+                                   options="{'no_create_edit': True}" invisible="True"/>
+                        </group>
+                        <group>
+                            <field name="function" placeholder="e.g. Sales Director" invisible="True"
+                                   attrs="{'invisible': [('is_company','=', True)]}"/>
+                            <field name="phone" widget="phone"/>
+                            <field name="mobile" widget="phone"/>
+                            <field name="fax" invisible="True"/>
+                            <field name="user_ids" invisible="1"/>
+                            <field name="email" widget="email" attrs="{'required': [('user_ids','!=', [])]}"/>
+                            <field name="title" options='{"no_open": True}' invisible="True"
+                                   attrs="{'invisible': [('is_company', '=', True)]}"/>
+                            <field name="lang" invisible="True"/>
+                        </group>
+                    </group>
+
+                    <notebook colspan="4">
+                        <page name="member_personal_information" string="Personal Information" autofocus="autofocus">
+                            <group>
+                                <group string="Basic Information">
+                                    <field name="gender" widget="radio" options="{'horizontal': true}"/>
+                                    <field name="birthdate"/>
+                                    <field name="occupation"
+                                           options="{'no_create_edit':True,'no_open':True}"/>
+                                    <field name="subject_of_interest" widget="many2many_tags"
+                                           options="{'no_create_edit':True,'no_open':True}"/>
+                                    <field name="subject_of_interest_others"/>
+                                </group>
+                                <group string="Educational Information">
+                                    <field name="last_place_of_study"/>
+                                    <field name="hightest_certification"
+                                           options="{'no_create_edit':True,'no_open':True}"/>
+                                    <field name="field_of_study"/>
+                                    <field name="place_of_study"/>
+                                    <field name="usa_work_or_study" widget="radio" options="{'horizontal': true}"/>
+                                    <field name="usa_work_or_study_place"
+                                           attrs="{'invisible':[('usa_work_or_study','=','no')],'required':[('usa_work_or_study','=','yes')]}"/>
+                                    <field name="alumni_institute"/>
+                                </group>
+                            </group>
+                            <group>
+                                <group string="Additional Information">
+                                    <field name="current_employee"/>
+                                    <field name="work_title"/>
+                                    <field name="work_phone"/>
+                                    <field name="info_about_emk"/>
+                                </group>
+                                <group string="Signature">
+                                    <field name="signature_image" widget='image' class="oe_avatar"
+                                           options='{"preview_signature_image": "image_medium", "size": [90, 90]}'/>
+                                </group>
+                            </group>
+                        </page>
+                        <page string="Contacts &amp; Addresses">
+                            <field name="child_ids" mode="kanban"
+                                   context="{'default_parent_id': active_id, 'default_street': street, 'default_street2': street2, 'default_city': city, 'default_state_id': state_id, 'default_zip': zip, 'default_country_id': country_id, 'default_supplier': supplier, 'default_customer': customer, 'default_lang': lang,}">
+                                <kanban>
+                                    <field name="color"/>
+                                    <field name="name"/>
+                                    <field name="title"/>
+                                    <field name="type"/>
+                                    <field name="email"/>
+                                    <field name="parent_id"/>
+                                    <field name="is_company"/>
+                                    <field name="function"/>
+                                    <field name="phone"/>
+                                    <field name="street"/>
+                                    <field name="street2"/>
+                                    <field name="zip"/>
+                                    <field name="city"/>
+                                    <field name="country_id"/>
+                                    <field name="mobile"/>
+                                    <field name="fax"/>
+                                    <field name="state_id"/>
+                                    <field name="image"/>
+                                    <field name="lang"/>
+                                    <!-- fields in form x2many view to diminish requests -->
+                                    <field name="comment"/>
+                                    <field name="customer"/>
+                                    <field name="display_name"/>
+                                    <field name="supplier"/>
+                                    <templates>
+                                        <t t-name="kanban-box">
+                                            <t t-set="color" t-value="kanban_color(record.color.raw_value)"/>
+                                            <div t-att-class="color + (record.title.raw_value == 1 ? ' oe_kanban_color_alert' : '') + ' oe_kanban_global_click'">
+                                                <a t-if="!read_only_mode" type="delete" class="fa fa-times pull-right"/>
+                                                <div class="o_kanban_image">
+                                                    <img t-if="record.image.raw_value"
+                                                         t-att-src="'data:image/png;base64,'+record.image.raw_value"/>
+                                                    <t t-if="!record.image.raw_value">
+                                                        <img t-if="record.type.raw_value === 'delivery'"
+                                                             t-att-src='_s + "/base/static/src/img/truck.png"'/>
+                                                        <img t-if="record.type.raw_value === 'invoice'"
+                                                             t-att-src='_s + "/base/static/src/img/money.png"'/>
+                                                        <t t-if="record.type.raw_value !== 'invoice' &amp;&amp; record.type.raw_value !== 'delivery'">
+                                                            <img t-if="record.is_company.raw_value === true"
+                                                                 t-att-src='_s + "/base/static/src/img/company_image.png"'/>
+                                                            <img t-if="record.is_company.raw_value === false"
+                                                                 t-att-src='_s + "/base/static/src/img/avatar.png"'/>
+                                                        </t>
+                                                    </t>
+                                                </div>
+                                                <div class="oe_kanban_details">
+                                                    <field name="name"/>
+                                                    <div t-if="record.function.raw_value">
+                                                        <field name="function"/>
+                                                    </div>
+                                                    <div t-if="record.email.raw_value">
+                                                        <field name="email"/>
+                                                    </div>
+                                                    <div t-if="record.type.raw_value != 'contact'">
+                                                        <div>
+                                                            <field name="zip"/>
+                                                            <field name="city"/>
+                                                        </div>
+                                                        <field t-if="record.state_id.raw_value" name="state_id"/>
+                                                        <field name="country_id"/>
+                                                    </div>
+                                                    <div t-if="record.phone.raw_value">Phone:
+                                                        <field name="phone"/>
+                                                    </div>
+                                                    <div t-if="record.mobile.raw_value">Mobile:
+                                                        <field name="mobile"/>
+                                                    </div>
+                                                    <div t-if="record.fax.raw_value">Fax:
+                                                        <field name="fax"/>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </t>
+                                    </templates>
+                                </kanban>
+                                <form string="Contact / Address">
+                                    <sheet>
+                                        <field name="type" required="1" widget="radio" options="{'horizontal': true}"/>
+                                        <hr/>
+                                        <group>
+                                            <group attrs="{'invisible': [('type','=', 'contact')]}">
+                                                <label for="street" string="Address"/>
+                                                <div>
+                                                    <div class="o_address_format" name="div_address">
+                                                        <field name="street" placeholder="Street..."
+                                                               class="o_address_street"/>
+                                                        <field name="street2" placeholder="Street 2..."
+                                                               class="o_address_street"/>
+                                                        <field name="city" placeholder="City" class="o_address_city"/>
+                                                        <field name="state_id" class="o_address_state"
+                                                               placeholder="State" options='{"no_open": True}'
+                                                               context="{'country_id': country_id, 'zip': zip}"/>
+                                                        <field name="zip" placeholder="ZIP" class="o_address_zip"/>
+                                                        <field name="country_id" placeholder="Country"
+                                                               class="o_address_country"
+                                                               options='{"no_open": True, "no_create": True}'/>
+                                                    </div>
+                                                </div>
+                                            </group>
+                                            <group>
+                                                <field name="name" string="Contact Name"
+                                                       attrs="{'required' : [('type', '=', 'contact')]}"/>
+                                                <field name="title" placeholder="e.g. Mr."
+                                                       attrs="{'invisible': [('type','&lt;&gt;', 'contact')]}"/>
+                                                <field name="function" placeholder="e.g. Sales Director"
+                                                       attrs="{'invisible': [('type','&lt;&gt;', 'contact')]}"/>
+                                                <field name="email"/>
+                                                <field name="phone" widget="phone"/>
+                                                <field name="mobile" widget="phone"/>
+                                                <field name="comment" placeholder="internal note..."/>
+                                            </group>
+                                        </group>
+                                        <field name="supplier" invisible="True"/>
+                                        <field name="customer" invisible="True"/>
+                                        <field name="lang" invisible="True"/>
+                                        <field name="image" invisible="True"/>
+                                    </sheet>
+                                </form>
+                            </field>
+                        </page>
+
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record model="ir.actions.act_window" id="action_membership_pending_applicant">
+        <field name="name">Pending Applications</field>
+        <field name="res_model">res.partner</field>
+        <field name="search_view_id" ref="membership.view_res_partner_member_filter"/>
+        <field name="domain">[('is_applicant','=',True),('state','=','application')]</field>
+        <field name="context">{'mcount':'application','default_is_applicant':True}</field>
+        <field name="help" type="html">
+            <p class="oe_view_nocontent_create">
+                Click to add a new Applicant
+            </p>
+        </field>
+    </record>
+    <record model="ir.actions.act_window.view" id="action_membership_pending_applicant_view_tree">
+        <field name="sequence" eval="2"/>
+        <field name="view_mode">tree</field>
+        <field name="view_id" ref="membership.membership_members_tree"/>
+        <field name="act_window_id" ref="action_membership_pending_applicant"/>
+    </record>
+    <record model="ir.actions.act_window.view" id="action_membership_pending_applicant_view_form">
+        <field name="sequence" eval="3"/>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="view_member_application_form"/>
+        <field name="act_window_id" ref="action_membership_pending_applicant"/>
+    </record>
+    <record model="ir.actions.act_window.view" id="action_membership_pending_applicant_view_kanban">
+        <field name="sequence" eval="1"/>
+        <field name="view_mode">kanban</field>
+        <field name="view_id" ref="base.res_partner_kanban_view"/>
+        <field name="act_window_id" ref="action_membership_pending_applicant"/>
+    </record>
+    <menuitem id="menu_membership" sequence="10" parent="menu_member_general"
+              action="action_membership_pending_applicant"
+              groups="membership_user.group_mem_user_officer,membership_extension.group_membership_manager"/>
+    <record model="ir.actions.act_window" id="action_membership_applicant">
+        <field name="name">Applicants</field>
+        <field name="res_model">res.partner</field>
+        <field name="search_view_id" ref="membership.view_res_partner_member_filter"/>
+        <field name="domain">[('free_member','=',False),('state','in',['invoice','member'])]</field>
+        <field name="context">{'mcount':'invoice'}</field>
+        <field name="help" type="html">
+            <p class="oe_view_nocontent_create">
+                Click to add a new Applicant
+            </p>
+        </field>
+    </record>
+    <record model="ir.actions.act_window.view" id="action_membership_members_view_tree">
+        <field name="sequence" eval="2"/>
+        <field name="view_mode">tree</field>
+        <field name="view_id" ref="membership.membership_members_tree"/>
+        <field name="act_window_id" ref="action_membership_applicant"/>
+    </record>
+    <record model="ir.actions.act_window.view" id="action_membership_members_view_form">
+        <field name="sequence" eval="3"/>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="view_member_application_form"/>
+        <field name="act_window_id" ref="action_membership_applicant"/>
+    </record>
+    <record model="ir.actions.act_window.view" id="action_membership_members_view_kanban">
+        <field name="sequence" eval="1"/>
+        <field name="view_mode">kanban</field>
+        <field name="view_id" ref="base.res_partner_kanban_view"/>
+        <field name="act_window_id" ref="action_membership_applicant"/>
+    </record>
+    <menuitem id="menu_membership_applicant" sequence="5" parent="menu_member_general"
+              action="action_membership_applicant"
+              groups="membership_user.group_mem_user_officer,membership_extension.group_membership_manager"/>
+    <record model="ir.actions.act_window" id="action_membership_applicant_reject">
+        <field name="name">Rejected Applicants</field>
+        <field name="res_model">res.partner</field>
+        <field name="search_view_id" ref="membership.view_res_partner_member_filter"/>
+        <field name="domain">[('is_applicant','=',True),('state','=','reject')]</field>
+        <field name="context">{'mcount':'reject'}</field>
+        <field name="help" type="html">
+            <p class="oe_view_nocontent_create">
+                Click to add a new Applicant
+            </p>
+        </field>
+    </record>
+    <record model="ir.actions.act_window.view" id="action_membership_members_reject_view_tree">
+        <field name="sequence" eval="2"/>
+        <field name="view_mode">tree</field>
+        <field name="view_id" ref="membership.membership_members_tree"/>
+        <field name="act_window_id" ref="action_membership_applicant_reject"/>
+    </record>
+    <record model="ir.actions.act_window.view" id="action_membership_members_reject_view_form">
+        <field name="sequence" eval="3"/>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="view_member_application_form"/>
+        <field name="act_window_id" ref="action_membership_applicant_reject"/>
+    </record>
+    <record model="ir.actions.act_window.view" id="action_membership_members_reject_view_kanban">
+        <field name="sequence" eval="1"/>
+        <field name="view_mode">kanban</field>
+        <field name="view_id" ref="base.res_partner_kanban_view"/>
+        <field name="act_window_id" ref="action_membership_applicant_reject"/>
+    </record>
+    <menuitem id="menu_membership_applicant_reject" sequence="10" parent="menu_member_general"
+              action="action_membership_applicant_reject"
+              groups="membership_user.group_mem_user_officer,membership_user.group_user_member,membership_extension.group_membership_manager"/>
+</odoo>

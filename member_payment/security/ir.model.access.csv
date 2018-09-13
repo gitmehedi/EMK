@@ -1,0 +1,16 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+
+acc_mem_payment_mang,mem_payment_mang,model_member_payment,membership_extension.group_membership_manager,1,1,1,1
+acc_mem_payment_off,mem_payment_off,model_member_payment,membership_user.group_mem_user_officer,1,1,1,1
+
+acc_mem_payment_session_mang,mem_payment_session_mang,model_payment_session,membership_extension.group_membership_manager,1,1,1,1
+acc_mem_payment_session_off,mem_payment_session_off,model_payment_session,membership_user.group_mem_user_officer,1,1,1,1
+
+
+acc_mem_service_payment_mang,mem_service_payment_mang,model_service_payment,membership_extension.group_membership_manager,1,1,1,1
+acc_mem_service_payment_off,mem_service_payment_off,model_service_payment,membership_user.group_mem_user_officer,1,1,1,1
+
+
+
+
+

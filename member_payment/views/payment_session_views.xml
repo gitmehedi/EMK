@@ -1,0 +1,98 @@
+<?xml version="1.0"?>
+<odoo>
+    <record id="view_payment_session_form" model="ir.ui.view">
+        <field name="name">payment.session.form</field>
+        <field name="model">payment.session</field>
+        <field name="priority" eval="1"/>
+        <field name="arch" type="xml">
+            <form string="Sessions">
+                <header>
+                    <button name="act_validate" type="object" string="Validate Session" states="opened"
+                            class="oe_highlight"/>
+                    <button name="act_close" type="object" string="Validate Closing"
+                            states="validate" class="oe_highlight"/>
+                    <button name="act_open" type="object" string="Continue Session" states="validate"/>
+                    <field name="state" widget="statusbar"
+                           statusbar_visible="opened,validate,closed" nolabel="1"/>
+                </header>
+                <sheet>
+                    <h1 class="oe_title">
+                        Session:
+                        <field name="name" attrs="{'invisible': [('name','=',False)]}" class="oe_inline"/>
+                    </h1>
+                    <group>
+                        <group>
+                            <field name="user_id"
+                                   options="{'no_open':True,'no_create':True,'no_create_edit':True,}"/>
+                        </group>
+                        <group>
+                            <field name="start_at"/>
+                            <field name="stop_at" attrs="{'invisible' : [('state', '!=', 'closed')]}"/>/>
+                            <field name="total_amount" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Membership Fee">
+                            <field name="member_fee_ids">
+                                <tree string="Membership Payment" decoration-bf="state == 'draft'"
+                                      decoration-success="state == 'draft'" decoration-muted="state == 'paid'">
+                                    <field name="membership_id"/>
+                                    <field name="payment_ref"/>
+                                    <field name="journal_id"/>
+                                    <field name="date"/>
+                                    <field name="state"/>
+                                    <field name="paid_amount" sum="paid_amount"/>
+                                </tree>
+                            </field>
+                        </page>
+                        <page string="Service Fee">
+                            <field name="service_fee_ids">
+                                <tree string="Service Payment" decoration-bf="state == 'draft'"
+                                      decoration-success="state == 'draft'" decoration-muted="state == 'paid'">
+                                    <field name="membership_id"/>
+                                    <field name="journal_id"/>
+                                    <field name="collection_date"/>
+                                    <field name="state"/>
+                                    <field name="paid_amount" sum="paid_amount"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_payment_session_tree" model="ir.ui.view">
+        <field name="name">payment.session.tree</field>
+        <field name="model">payment.session</field>
+        <field name="priority" eval="1"/>
+        <field name="arch" type="xml">
+            <tree string="Sessions" decoration-bf="state in ['opened','validate']"
+                  decoration-success="state == 'opened'" decoration-info="state == 'validate'"
+                  decoration-muted="state == 'closed'">
+                <field name="name" string="Session ID"/>
+                <field name="user_id"/>
+                <field name="start_at"/>
+                <field name="stop_at"/>
+                <field name="total_amount" sum="total_amount"/>
+                <field name="state" string="Status"/>
+            </tree>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="action_payment_session">
+        <field name="name">Sessions</field>
+        <field name="res_model">payment.session</field>
+        <field name="help" type="html">
+            <p class="oe_view_nocontent_create">
+                Click to add a new Payment Session
+            </p>
+        </field>
+    </record>
+
+    <menuitem id="menu_payment_session" parent="sub_pay_daily_operations"
+              action="action_payment_session" sequence="5"
+              groups="membership_user.group_mem_user_officer"/>
+
+</odoo>
