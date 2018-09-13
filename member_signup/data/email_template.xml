@@ -25,7 +25,7 @@
                 <p>
                     <strong>Login Email:</strong> ${ctx['email']|safe}</br>
                     <strong>Temporary Password:</strong> ${ctx['password']|safe}</br>
-                    <strong>Temporary Password:</strong> ${ctx['member_seq']|safe}</br>
+                    <strong>Application ID:</strong> ${ctx['member_seq']|safe}</br>
 
                 </p>
                 <p>

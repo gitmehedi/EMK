@@ -28,7 +28,7 @@
 Add permissions to server actions using groups. The implementation are 
 similar to Reports permissions.
 """,
-    'author': 'gitmehedi',
+    'author': 'gitmehedi@gmail.com',
     'website': 'https://angrybite.wordpress.com/',
     'depends': ['base', ],
     'data': [

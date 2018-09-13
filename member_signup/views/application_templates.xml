@@ -45,7 +45,7 @@
                             <label for="lastname" class="control-label">Middle Name</label>
                             <input type="text" name="lastname" t-att-value="lastname" id="lastname" maxlength="100"
                                    placeholder="Middle Name"
-                                   class="form-control input-sm reqfield" required="required"/>
+                                   class="form-control input-sm"/>
                         </div>
                     </div>
                     <div class="col-md-4">
@@ -359,10 +359,10 @@
                             regulation.
                         </div>
                         <div class="col-md-6">
-                            <div class="wrap_signature pull-left" id="wrap_signature">
+                            <div class="wrap_signature pull-left" id="img_wrap">
                                 <input id="signature-image-upload" name="signature_image" class="hidden"
                                        type="file">
-                                    <img id="signature_image"/>
+                                    <img id="member_image"/>
                                 </input>
                                 <div class="signature_image_layer">
                                     <p class="img_desc text-center">Click here to upload singnature.</p>
@@ -379,7 +379,6 @@
                                 </div>
                             </div>
                         </div>
-
                     </div>
                 </div>
             </div>
