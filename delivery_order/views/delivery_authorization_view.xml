@@ -37,12 +37,8 @@
                                     name="action_process_unattached_payments"
                                     groups="account.group_account_user,gbs_application_group.group_head_account"
                                     class="oe_stat_button"
-                                    attrs="{'invisible':['|', ('state','=','close'), ('so_type', '!=', 'cash')]}"
+                                    attrs="{'invisible':[('so_type', '!=', 'cash')]}"
                                     icon="fa-usd">
-                            </button>
-                        </div>
-
-                        <div class="oe_button_box oe_right" name="button_box">
                             <button type="object"
                                     string="Delivery Order"
                                     name="action_view_delivery_order"
@@ -51,7 +47,20 @@
                                     icon="fa-truck"
                                     groups="account.group_account_user,gbs_application_group.group_head_account,gbs_application_group.group_cxo">
                             </button>
+
+                            </button>
                         </div>
+
+                        <!--<div class="oe_button_box"  style="text-align:right;" name="button_box">-->
+                        <!--<button type="object"-->
+                        <!--string="Delivery Order"-->
+                        <!--name="action_view_delivery_order"-->
+                        <!--class="oe_stat_button"-->
+                        <!--attrs="{'invisible': [('state','in',('draft','validate','approve','refused'))]}"-->
+                        <!--icon="fa-truck"-->
+                        <!--groups="account.group_account_user,gbs_application_group.group_head_account,gbs_application_group.group_cxo">-->
+                        <!--</button>-->
+                        <!--</div>-->
 
                         <h1>
                             <field name="name"/>
