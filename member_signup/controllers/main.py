@@ -300,6 +300,7 @@ class MemberApplicationContoller(Home):
             'current_employee',
             'work_title',
             'work_phone',
+            'info_about_emk',
             'image',
             'signature_image',
         )

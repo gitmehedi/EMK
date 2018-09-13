@@ -33,7 +33,7 @@
         'views/res_users_views.xml',
         'views/application_templates.xml',
         'views/member_config_views.xml',
-        'views/member_application_views.xml',
+        'views/pending_application_views.xml',
         'views/rfid_generation_views.xml',
         'views/member_config_settings_view.xml',
         'report/rfid_print_views.xml',

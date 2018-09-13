@@ -47,10 +47,9 @@
                             <field name="field_of_study"/>
                             <field name="place_of_study"/>
                             <field name="usa_work_or_study" widget="radio" options="{'horizontal': true}"/>
-                            <field name="usa_work_or_study_place"/>
-                            <field name="alumni_institute"/>
-                            <field name="usa_work_or_study_yes"
+                            <field name="usa_work_or_study_place"
                                    attrs="{'invisible':[('usa_work_or_study','=','no')],'required':[('usa_work_or_study','=','yes')]}"/>
+                            <field name="alumni_institute"/>
                         </group>
                     </group>
                     <group>

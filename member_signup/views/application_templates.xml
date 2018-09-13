@@ -151,8 +151,7 @@
                             <div class="col-md-12">
                                 <div class="form-group form-field">
                                     <select class="form-control input-sm reqfield"
-                                            name="country_id" disabled="disabled"
-                                            required="required">
+                                            name="country_id">
                                         <option value="">--Please Select--</option>
                                         <t t-foreach="country_ids" t-as='label'>
                                             <option t-att-value="label_value[0]"

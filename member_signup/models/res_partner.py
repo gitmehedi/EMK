@@ -45,7 +45,6 @@ class ResPartner(models.Model):
     last_place_of_study = fields.Char(string='Last or Current Place of Study')
     place_of_study = fields.Char(string='Last or Current Place of Study')
     field_of_study = fields.Char(string='Field of Study')
-    usa_work_or_study_place = fields.Char(string='Work Place')
     alumni_institute = fields.Char(string='Alumni Institute')
     current_employee = fields.Char(string='Current Employer')
     work_title = fields.Char(string='Work Title')
@@ -58,12 +57,12 @@ class ResPartner(models.Model):
     gender = fields.Selection([('male', 'Male'), ('female', 'Female')], default='male', string='Gender')
     usa_work_or_study = fields.Selection([('yes', 'Yes'), ('no', 'No')], default='no',
                                          string="Have you worked, or studied in the U.S?")
-    usa_work_or_study_yes = fields.Char(string="If yes, where in the U.S have you worked, or studied?")
-    subject_of_interest_others = fields.Char()
+    usa_work_or_study_place = fields.Text(string="If yes, where in the U.S have you worked, or studied?")
 
     nationality_id = fields.Many2one("res.country", "Nationality")
     occupation = fields.Many2one('member.occupation', string='Occupation')
-    subject_of_interest = fields.Many2many('member.subject.interest', string='Subject of Interest')
+    subject_of_interest = fields.Many2many('member.subject.interest', string='Subjects of Interest')
+    subject_of_interest_others = fields.Char()
     hightest_certification = fields.Many2one('member.certification', string='Highest Certification Achieved')
 
     state = fields.Selection(
@@ -298,14 +297,12 @@ class ResPartner(models.Model):
             return False
         return partner
 
-
     @api.one
     def toggle_auto_renew(self):
         if self.auto_renew:
             self.auto_renew = False
         else:
             self.auto_renew = True
-
 
     @api.model
     def signup_retrieve_info(self, token):
