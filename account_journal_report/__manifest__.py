@@ -8,7 +8,7 @@
     'website': 'www.genweb2.com',
     'depends': [
         'account',
-        'custom_report',
+        'report_layout',
     ],
 
     'data': [

@@ -21,7 +21,7 @@
     'depends': [
         'hr_holidays',
         'report',
-        'custom_report',
+        'report_layout',
     ],
     'description': """This module enables HR Manager to generate leave related reports in PDF format""",
     'installable': True,

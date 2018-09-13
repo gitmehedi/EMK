@@ -12,7 +12,7 @@
         />
 		<template id="report_money_receipt">
 			<t t-call="report.html_container">
-				<t t-call="custom_report.gbs_internal_layout">
+				<t t-call="report_layout.gbs_internal_layout">
 					<div class="page" style="page-break-inside:auto">
 						<div class="row">
 							<div class="row">

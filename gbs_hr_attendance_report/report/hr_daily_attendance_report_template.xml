@@ -9,11 +9,11 @@
                 report_type="qweb-pdf"
                 name="gbs_hr_attendance_report.report_daily_att_doc"
                 file="gbs_hr_attendance_report.report_daily_att_doc"
-                paperformat="custom_report.paperformat_backend_portrait"
+                paperformat="report_layout.paperformat_backend_portrait"
         />
         <template id="report_daily_att_doc">
             <t t-call="report.html_container">
-                <t t-call="custom_report.gbs_internal_layout">
+                <t t-call="report_layout.gbs_internal_layout">
                     <!--<t t-foreach="docs" t-as="o">-->
                     <div class="page" style="page-break-inside: auto">
                         <style>
@@ -236,7 +236,7 @@
                                 </div>
                             </t>
                         </t>
-                        <t t-call="custom_report.report_signing"></t>
+                        <t t-call="report_layout.report_signing"></t>
                     </div>
                 </t>
             </t>

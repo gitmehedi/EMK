@@ -9,7 +9,7 @@
                 report_type="qweb-pdf"
                 file="delivery_challan_report.report_top_sheet"
                 name="delivery_challan_report.report_top_sheet"
-                paperformat="custom_report.custom_pad_paperformat"
+                paperformat="report_layout.custom_pad_paperformat"
                 menu="False"
 
         />

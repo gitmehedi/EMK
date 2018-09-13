@@ -8,7 +8,7 @@
             report_type="qweb-pdf"
             file="hr_attendance_and_ot_summary.report_att_summary"
             name="hr_attendance_and_ot_summary.report_att_summary"
-            paperformat="custom_report.paperformat_backend_landscape"
+            paperformat="report_layout.paperformat_backend_landscape"
         />
 
          <!--<record id="report_individual_paslips" model="ir.actions.report.xml">-->

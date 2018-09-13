@@ -8,13 +8,13 @@
                 report_type="qweb-pdf"
                 file="delivery_qty_reports.report_daily_deli_undeli"
                 name="delivery_qty_reports.report_daily_deli_undeli"
-                paperformat="custom_report.paperformat_backend_landscape"
+                paperformat="report_layout.paperformat_backend_landscape"
                 menu="False"/>
 
 
         <template id="report_daily_deli_undeli">
             <t t-call="report.html_container">
-                <t t-call="custom_report.gbs_internal_layout">
+                <t t-call="report_layout.gbs_internal_layout">
                     <div class="page" style="page-break-inside:auto">
                             <div class="row">
                                 <style type="text/css">
@@ -126,7 +126,7 @@
                                         </t>
                                     </tbody>
                                 </table>
-                                <t t-call="custom_report.report_signing"></t>
+                                <t t-call="report_layout.report_signing"></t>
                         </div>
                     </div>
                 </t>

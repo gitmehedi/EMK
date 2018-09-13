@@ -9,7 +9,7 @@
         'gbs_application_group',
         'sales_team',
         'terms_setup',
-        'custom_report',
+        'report_layout',
         'ir_sequence_operating_unit',
         'product_sales_pricelist',
         'samuda_so_type',

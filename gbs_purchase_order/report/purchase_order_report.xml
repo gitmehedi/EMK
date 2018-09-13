@@ -20,12 +20,12 @@
                 name="gbs_purchase_order.report_purchase_order"
                 file="gbs_purchase_order.report_purchase_order"
                 menu = "True"
-                paperformat="custom_report.paperformat_backend_portrait"
+                paperformat="report_layout.paperformat_backend_portrait"
         />
 
         <template id="report_purchase_order">
             <t t-call="report.html_container">
-                <t t-call="custom_report.gbs_internal_layout">
+                <t t-call="report_layout.gbs_internal_layout">
                     <div class="page" style="page-break-inside: auto">
                         <style>
                             .signed-by { display: inline-block; border-top: 1px solid #333; padding: 5px; margin-top: 60px; }

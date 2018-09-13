@@ -17,7 +17,7 @@
     'category': 'Stock',
     'version': '10.0.0.1',
 
-    'depends': ['stock_picking_extend','product_gate_in'],
+    'depends': ['stock_picking_extend','product_gate_in','report_layout'],
 
     'data': [
         'security/ir.model.access.csv',

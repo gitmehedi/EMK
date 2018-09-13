@@ -2,7 +2,7 @@
 <openerp>
 	<data>
 		<template id="report_att_summary">
-			<t t-call="custom_report.gbs_internal_layout">
+			<t t-call="report_layout.gbs_internal_layout">
 				<t t-call="report.html_container">
 					<div class="page">
 						<div class="row">
@@ -120,7 +120,7 @@
 								</tbody>
 							</table>
 						</div>
-						<t t-call="custom_report.report_signing"></t>
+						<t t-call="report_layout.report_signing"></t>
 					</div>
 				</t>
 			</t>
