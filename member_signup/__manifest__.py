@@ -26,7 +26,7 @@
         'data/member_signup_data.xml',
         'data/email_template.xml',
         'data/member_sequence.xml',
-        'views/applicant_views.xml',
+        'views/applicant_application_views.xml',
         'views/product_template_views.xml',
         'views/res_partner_views.xml',
         'views/res_config_views.xml',
