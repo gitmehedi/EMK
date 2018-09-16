@@ -10,6 +10,7 @@
         'base',
         'mail',
         'website',
+        'document',
         'account',
         'account_accountant',
         'opa_utility',
@@ -17,8 +18,7 @@
         'membership_extension',
         'membership_user',
         'membership_withdrawal',
-        'partner_firstname',
-        'partner_second_lastname',
+        'partner_fullname',
     ],
     'data': [
         'security/ir_rule.xml',

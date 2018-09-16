@@ -68,7 +68,6 @@
         'partner_contact_nationality',
         'partner_contact_personal_information_page',
         'partner_firstname',
-        'partner_second_lastname',
         'payment',
         'payment_transfer',
         'portal',

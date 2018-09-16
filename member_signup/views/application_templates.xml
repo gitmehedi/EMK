@@ -50,8 +50,8 @@
                     </div>
                     <div class="col-md-4">
                         <div class="form-group form-field">
-                            <label for="lastname2" class="control-label">Last Name</label>
-                            <input type="text" name="lastname2" t-att-value="lastname2" id="lastname2"
+                            <label for="middlename" class="control-label">Last Name</label>
+                            <input type="text" name="middlename" t-att-value="middlename" id="middlename"
                                    maxlength="100"
                                    placeholder="Last Name"
                                    class="form-control input-sm reqfield" required="required"/>

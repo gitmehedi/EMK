@@ -54,13 +54,9 @@
                                    'readonly' : [('is_company', '=',False)]}"/>
                         </h1>
                         <group attrs="{'invisible': [('is_company', '=', True)]}">
-                            <field name="lastname" attrs="{'required': [('firstname', '=', False),
-                            ('is_company', '=', False),('type', '=', 'contact')]}"/>
-                            <field name="lastname2"
-                                   attrs="{'required': [('firstname', '=', False), ('lastname', '=', False), ('is_company', '=', False)]}"/>
-                            <field name="firstname" attrs="{'required': [('lastname', '=', False),
-                            ('is_company', '=', False),('type', '=', 'contact')]}"/>
-
+                            <field name="firstname" required="True"/>
+                            <field name="middlename"/>
+                            <field name="lastname" required="True"/>
                         </group>
 
                         <div class="o_row">

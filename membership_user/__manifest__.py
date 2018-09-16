@@ -8,7 +8,6 @@
     'depends': [
         'membership',
         'partner_firstname',
-        'partner_second_lastname',
         'membership_card',
         'membership_extension',
         'membership_variable_period',

@@ -123,7 +123,7 @@ class MemberApplicationContoller(Home):
                     qcontext['error'] = _("Could not create a new account.")
 
         qcontext['firstname'] = None if 'firstname' not in qcontext else qcontext['firstname']
-        qcontext['lastname2'] = None if 'lastname2' not in qcontext else qcontext['lastname2']
+        qcontext['middlename'] = None if 'middlename' not in qcontext else qcontext['middlename']
         qcontext['lastname'] = None if 'lastname' not in qcontext else qcontext['lastname']
         qcontext['phone'] = None if 'phone' not in qcontext else qcontext['phone']
         qcontext['mobile'] = None if 'mobile' not in qcontext else qcontext['mobile']
@@ -211,7 +211,8 @@ class MemberApplicationContoller(Home):
                     error_fields.append(field_name)
 
         if len(data) > 0:
-            data['name'] = data['firstname'] + ' ' + data['lastname'] + ' ' + data['lastname2']
+            fullname = data['firstname'] + ' ' + data['middlename'] + ' ' + data['lastname']
+            data['name'] = ' '
             data['is_applicant'] = True
             data['membership_state'] = 'none'
             data['free_member'] = False
@@ -237,7 +238,7 @@ class MemberApplicationContoller(Home):
             self.upload_attachment(files, res_id.partner_id.id)
 
         request.env.cr.commit()
-        return {'name': data['name'],
+        return {'name': fullname,
                 'email': login,
                 'password': password,
                 'res_id': res_id.id,
@@ -273,7 +274,7 @@ class MemberApplicationContoller(Home):
     def authorized_fields(self):
         return (
             'firstname',
-            'lastname2',
+            'middlename',
             'lastname',
             'password',
             'birthdate',
