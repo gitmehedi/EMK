@@ -14,7 +14,7 @@
                 'account_move_fiscal_year',
                 'account_move_fiscal_month',
                 'account_operating_unit',
-                'buff_partner_bank_branch',
+                'base_bank_bd',
                 'account_check_printing',
                 'account_invoice_supplier_ref_unique',
                 'account_financial_report_qweb',
