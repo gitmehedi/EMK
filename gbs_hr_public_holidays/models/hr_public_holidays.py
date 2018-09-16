@@ -1,11 +1,8 @@
-# -*- coding: utf-8 -*-
-# ©  2016 Md Mehedi Hasan <md.mehedi.info@gmail.com>
 import datetime
 import time
 
 from datetime import date
-from odoo import fields, models, api
-from odoo import exceptions
+from odoo import fields, models, api,exceptions
 
 
 class HrPublicHolidays(models.Model):
