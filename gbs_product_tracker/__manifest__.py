@@ -9,7 +9,7 @@
                 ],
     "data": [
         "views/inherit_product_category.xml",
-        #"views/inherit_product_attribute.xml",
+        "views/inherit_product_attribute.xml",
     ],
 
     'installable': True,

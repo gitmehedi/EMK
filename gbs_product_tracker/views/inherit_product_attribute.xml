@@ -1,15 +1,11 @@
 <odoo>
     <data>
-        <record id="attribute_tree_view_inherit" model="ir.ui.view">
-            <field name="name">attribute.tree.view.inherit</field>
-            <field name="model">product.attribute</field>
-            <field name="inherit_id" ref="product.attribute_tree_view" />
-            <!--<xpath expr="//tree" position="after">-->
-                <!--<div class="oe_chatter">-->
-                    <!--<field name="message_follower_ids" widget="mail_followers"/>-->
-                    <!--<field name="message_ids" widget="mail_thread"/>-->
-                <!--</div>-->
-            <!--</xpath>-->
-		</record>
+        <record id="product.attribute_action" model="ir.actions.act_window">
+            <field name="name">Attribute</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">product.attribute</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
     </data>
 </odoo>

@@ -1,2 +1,3 @@
 import inherit_product_category
 import inherit_product_attribute
+import inherit_product
