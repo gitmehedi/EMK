@@ -7,7 +7,7 @@
     'category': 'Extra Tools',
     'depends': [
         'membership',
-        'partner_firstname',
+        'partner_fullname',
         'membership_card',
         'membership_extension',
         'membership_variable_period',
