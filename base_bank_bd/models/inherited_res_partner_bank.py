@@ -15,3 +15,14 @@ class InheritedResPartner(models.Model):
     city = fields.Char()
     country_id = fields.Many2one('res.country', string='Country', ondelete='restrict')
     is_company_account = fields.Boolean('Company Account', default=False)
+
+    @api.multi
+    def name_get(self):
+
+        result = []
+        for record in self:
+            name = record.acc_number
+            if record.bank_id and record.currency_id:
+                name = name + ' ('+record.bank_id.bic+' - ' + record.currency_id.name + ')'
+            result.append((record.id, name))
+        return result
