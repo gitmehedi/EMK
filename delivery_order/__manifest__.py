@@ -14,11 +14,11 @@
         'gbs_pi_creation',
         'letter_of_credit',
         'gbs_sales_commission_so',
-        'stock',
         'amount_to_word_bd',
         'custom_report',
         'delivery_challan_report',
         'ir_sequence_operating_unit',
+        'gbs_samuda_stock',
     ],
 
     'data': [

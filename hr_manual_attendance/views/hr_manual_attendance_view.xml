@@ -125,9 +125,9 @@
 		<!-- Menu Item -->
 		<menuitem id="menu_hr_manual_attendance" name="Manual Attendances" parent="hr_attendance.menu_hr_attendance_root"
 				  sequence="15"/>
-		<menuitem id="menu_my_attendance" name="My Attendances" parent="menu_hr_manual_attendance"
-				  sequence="5" action="hr_my_attendance"/>
-		<menuitem id="menu_pending_attendance" name="Pending Approvals" parent="menu_hr_manual_attendance"
+		<!--<menuitem id="menu_my_attendance" name="My Attendances" parent="menu_hr_manual_attendance"-->
+				  <!--sequence="5" action="hr_my_attendance"/>-->
+		<!--<menuitem id="menu_pending_attendance" name="Pending Approvals" parent="menu_hr_manual_attendance"-->
 				  sequence="10" action="hr_pandding_attendance" groups="base.group_user"/>
 		<menuitem id="menu_manual_attendance" name="Manual Attendances" parent="menu_hr_manual_attendance"
 				  sequence="15" action="hr_manual_attendance" groups="gbs_application_group.group_dept_manager" />

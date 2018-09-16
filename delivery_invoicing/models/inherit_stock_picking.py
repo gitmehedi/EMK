@@ -67,7 +67,7 @@ class Picking(models.Model):
                         if invoice_line:
                             res_invoice_line = invoice_line[0]
                             aval_qty = res_invoice_line.quantity - pack_quantity
-                            res_invoice_line.write({'quantity': aval_qty})
+                            res_invoice_line.sudo().write({'quantity': aval_qty})
             else:
                 raise UserError(_('Unable to return the product because \
                                     there are no invoice in draft stage for this Sale Order.'))

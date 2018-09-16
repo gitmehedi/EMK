@@ -1,4 +1,3 @@
-import datetime
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError, ValidationError
 
@@ -8,14 +7,15 @@ class DeliveryScheduleLine(models.Model):
     _inherit = ['mail.thread']
     _description = 'Delivery Schedule line'
 
+    parent_id = fields.Many2one('delivery.schedules', 'Delivery Schedule')
     partner_id = fields.Many2one('res.partner', 'Customer', domain=[('customer', '=', True),('parent_id', '=', False)],
-                                 readonly=True,required=True, states={'draft': [('readonly', False)]},ondelete="cascade")
-    pending_do = fields.Many2one('delivery.order', ondelete='cascade',required=True,
+                                 readonly=True,required=True, states={'draft': [('readonly', False)]})
+    pending_do = fields.Many2one('delivery.order',required=True,
                                  readonly=True, states={'draft': [('readonly', False)]},
                                  string='Pending D.O',track_visibility='onchange')
     product_id = fields.Many2one('product.product', string='Product',required=True,
                                  readonly=True, states={'draft': [('readonly', False)]},
-                                 track_visibility='onchange', ondelete='cascade')
+                                 track_visibility='onchange')
     do_qty = fields.Float(string='Ordered Qty', readonly=True ,store=True,compute='onchange_product_id')
     undelivered_qty = fields.Float(string='Undelivered Qty', readonly=True)
     uom_id = fields.Many2one('product.uom', string="Unit of Measure", readonly=True)
@@ -25,22 +25,19 @@ class DeliveryScheduleLine(models.Model):
     remarks = fields.Text('Special Instructions', readonly=True,
                           states={'draft': [('readonly', False)],'revision': [('readonly', False)]},
                           track_visibility='onchange')
-    requested_date = fields.Date('Date',related='parent_id.requested_date',store=True)
-    # Relational Fields
-    parent_id = fields.Many2one('delivery.schedules', ondelete='cascade')
+    requested_date = fields.Date('Date',default=fields.Datetime.now)
     state = fields.Selection([
         ('draft', "Draft"),
         ('revision', "Revision"),
         ('approve', "Confirm"),
         ('done', "Done"),
     ], default='draft', track_visibility='onchange')
-
     operating_unit_id = fields.Many2one('operating.unit',
                                         related='parent_id.operating_unit_id',
-                                        string='Operating Unit',store=True, ondelete='cascade')
+                                        string='Operating Unit',store=True)
 
     # create date.................
-    schedule_line_date = fields.Date('Date',default=datetime.date.today())
+    schedule_line_date = fields.Date('Date',default=fields.Datetime.now)
 
     @api.model
     def create(self, vals):
@@ -129,5 +126,7 @@ class DeliveryScheduleLine(models.Model):
     @api.constrains('scheduled_qty')
     def _check_scheduled_qty(self):
         for ds in self:
-            if ds.scheduled_qty > ds.do_qty:
-                raise Warning('Schedule qty can not larger than Undelivered Qty.!')
+            if ds.scheduled_qty > ds.undelivered_qty:
+                raise Warning('Schedule quantity can not larger than Undelivered Qty.!')
+            elif self.scheduled_qty <= 0:
+                raise ValueError(_('Schedule quantity has to be strictly positive.'))

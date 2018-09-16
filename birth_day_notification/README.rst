@@ -18,3 +18,8 @@ Cybrosys Techno Solutions
 Author
 ======
 * Cybrosys Techno Solutions <http://www.cybrosys.com>
+
+
+Process>>>>
+1. Employee >> Employee >> Personal Information >> Fill the fields Date of Birth and Work Email
+2. If you want to email template go Setting>>Email>Template

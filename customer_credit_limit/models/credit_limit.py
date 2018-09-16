@@ -55,8 +55,8 @@ class customer_creditlimit_assign(models.Model):
 
     @api.model
     def create(self, vals):
-        seq = self.env['ir.sequence'].next_by_code('customer.creditlimit.assign') or '/'
-        vals['name'] = seq
+        # seq = self.env['ir.sequence'].next_by_code('customer.creditlimit.assign') or '/'
+        # vals['name'] = seq
         return super(customer_creditlimit_assign, self).create(vals)
 
     @api.multi
@@ -81,6 +81,9 @@ class customer_creditlimit_assign(models.Model):
 
     @api.multi
     def action_confirm(self):
+        seq = self.env['ir.sequence'].next_by_code('customer.creditlimit.assign') or '/'
+        self.name = seq
+
         val_id = []
         for line in self.limit_ids:
             if val_id != []:

@@ -7,12 +7,15 @@ class ChequePaymentLine(models.Model):
     number = fields.Char("Cheque No.")
     bank = fields.Char("Deposit Bank")
     branch = fields.Char("Branch")
-    amount = fields.Float("Amount")
     payment_date = fields.Date('Date')
     account_payment_id = fields.Many2one('account.payment', string='Online Payment Information')
     cheque_info_id = fields.Integer(string='Cheque Info')
 
-    currency_id = fields.Many2one('res.currency', string='Currency')
+    # JOurnal related info showing
+    currency_id = fields.Many2one('res.currency', string='Currency')  # Company Currency
+    amount_currency = fields.Many2one('res.currency', string='Currency')  # Journal Currency
+    amount_in_diff_currency = fields.Float(string='Amount in diff Currency')
+    amount = fields.Float(string="Amount")  # Converted amount
 
     """ Relational Fields """
     pay_cash_id = fields.Many2one('delivery.authorization', ondelete='cascade')

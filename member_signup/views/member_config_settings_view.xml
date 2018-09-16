@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_memeber_config_settings" model="ir.ui.view">
+            <field name="name">account settings</field>
+            <field name="model">memeber.config.settings</field>
+            <field name="arch" type="xml">
+                <form string="Configure Accounting" class="oe_form_configuration">
+                    <header>
+                        <button string="Apply" type="object" name="execute" class="oe_highlight"/>
+                        <button string="Cancel" type="object" name="cancel" class="oe_link" special="cancel"/>
+                    </header>
+                    <group string="Membership Settings" groups="">
+                        <label for="id" string="Membership Expire Days"/>
+                        <div>
+                            <field name="membership_expire" class="oe_inline"/>
+
+                        </div>
+
+                    </group>
+
+                    <!-- Invisible section which is inherited in other modules -->
+
+                </form>
+            </field>
+        </record>
+
+        <record id="action_member_config_settings" model="ir.actions.act_window">
+            <field name="name">Configure Membership</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">memeber.config.settings</field>
+            <field name="view_mode">form</field>
+            <field name="target">inline</field>
+        </record>
+
+        <menuitem id="menu_member_config_settings" name="Settings" parent="membership.menu_marketing_config_association"
+                  sequence="0" action="action_member_config_settings" />
+    </data>
+</odoo>
