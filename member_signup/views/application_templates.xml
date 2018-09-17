@@ -370,16 +370,17 @@
                             regulation.
                         </div>
                         <div class="col-md-6">
-                            <div class="wrap_signature pull-left" id="img_wrap">
+                            <div class="wrap_signature pull-left" id="wrap_signature">
                                 <input id="signature-image-upload" name="signature_image" class="hidden"
                                        type="file">
-                                    <img id="img_wrap"/>
+                                    <img id="signature_image"/>
                                 </input>
                                 <div class="signature_image_layer">
                                     <p class="img_desc text-center">Click here to upload singnature.</p>
                                 </div>
                             </div>
                         </div>
+
                         <div class="col-md-6">
                             <div class="img__wrap  pull-right" id="img_wrap">
                                 <input id="member-image-upload" class="hidden" type="file" name="image">

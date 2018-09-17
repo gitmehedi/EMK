@@ -9,11 +9,11 @@ $(function () {
     $('#birthdate').datepicker("option", "dateFormat", dateformat);
 
     $('#birthdate').change(function(){
-     currDate = $(this).val();
+     var currDate = $(this).val();
      if (currDate){
-        serverDate = new Date().toLocaleDateString();
-        birthDate = new Date(currDate).toLocaleDateString();
-        if (birthDate > serverDate){
+        var serverDate = new Date().getTime();
+        var birthDate = new Date(currDate).getTime();
+        if (birthDate >= serverDate){
             $(this).val('');
             alert('Birth Date should not greater than current date.');
         }

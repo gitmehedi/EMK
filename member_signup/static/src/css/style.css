@@ -54,8 +54,8 @@ input.reqfield,select.reqfield{
 
 #wrap_signature{
           position: relative;
-          height:120px;
-          width:120px;
+          height:160px;
+          width:130px;
           display:block;
           margin: 0 auto;
 }
@@ -63,8 +63,8 @@ input.reqfield,select.reqfield{
 #signature_image {
           background-repeat:no-repeat;
           background-size:contain;
-          height:120px;
-          width:120px;
+          height:160px;
+          width:130px;
           display:block;
           float:right;
           border-style: solid;
