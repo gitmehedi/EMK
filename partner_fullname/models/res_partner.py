@@ -27,10 +27,8 @@ class ResPartner(models.Model):
 
         if name is not None:
             # Calculate the splitted fields
-            inverted = self._get_inverse_name(
-                self._get_whitespace_cleaned_name(name),
-                vals.get("is_company",
-                         self.default_get(["is_company"])["is_company"]))
+            inverted = self._get_inverse_name(name,
+                vals.get("is_company",self.default_get(["is_company"])["is_company"]))
 
             for key, value in inverted.iteritems():
                 if not vals.get(key) or context.get("copy"):
@@ -65,9 +63,7 @@ class ResPartner(models.Model):
         if not result.get('name'):
             return result
 
-        inverted = self._get_inverse_name(
-            self._get_whitespace_cleaned_name(result["name"]),
-            result.get("is_company", False))
+        inverted = self._get_inverse_name(result["name"],result.get("is_company", False))
 
         for field in inverted:
             if field in fields_list and field not in result:
@@ -92,13 +88,7 @@ class ResPartner(models.Model):
         """Compute the 'name' field according to splitted data.
         You can override this method to change the order of lastname and
         firstname the computed name"""
-        order = self._get_names_order()
-        if order == 'last_first_comma':
-            return u" ".join((p for p in (firstname, middlename, lastname) if p))
-        elif order == 'first_last':
-            return u" ".join((p for p in (firstname, middlename, lastname) if p))
-        else:
-            return u" ".join((p for p in (firstname, middlename, lastname) if p))
+        return u" ".join((p for p in (firstname, middlename, lastname) if p))
 
     @api.multi
     @api.depends("firstname", "middlename", "lastname")
@@ -107,79 +97,9 @@ class ResPartner(models.Model):
         for record in self:
             record.name = record._get_computed_name(record.lastname, record.firstname, record.middlename)
 
-    @api.multi
-    def _inverse_name_after_cleaning_whitespace(self):
-        """Clean whitespace in :attr:`~.name` and split it.
-
-        The splitting logic is stored separately in :meth:`~._inverse_name`, so
-        submodules can extend that method and get whitespace cleaning for free.
-        """
-        for record in self:
-            # Remove unneeded whitespace
-            clean = record._get_whitespace_cleaned_name(record.name)
-
-            # Clean name avoiding infinite recursion
-            if record.name != clean:
-                record.name = clean
-
-            # Save name in the real fields
-            else:
-                record._inverse_name()
-
-    @api.model
-    def _get_whitespace_cleaned_name(self, name, comma=False):
-        """Remove redundant whitespace from :param:`name`.
-
-        Removes leading, trailing and duplicated whitespace.
-        """
-        try:
-            name = u" ".join(name.split()) if name else name
-        except UnicodeDecodeError:
-            # with users coming from LDAP, name can be a str encoded as utf-8
-            # this happens with ActiveDirectory for instance, and in that case
-            # we get a UnicodeDecodeError during the automatic ASCII -> Unicode
-            # conversion that Python does for us.
-            # In that case we need to manually decode the string to get a
-            # proper unicode string.
-            name = u' '.join(name.decode('utf-8').split()) if name else name
-
-        if comma:
-            name = name.replace(" ,", ",")
-            name = name.replace(", ", ",")
-        return name
-
     @api.model
     def _get_inverse_name(self, name, is_company=False):
-        """Compute the inverted name.
-
-        - If the partner is a company, save it in the lastname.
-        - Otherwise, make a guess.
-
-        This method can be easily overriden by other submodules.
-        You can also override this method to change the order of name's
-        attributes
-
-        When this method is called, :attr:`~.name` already has unified and
-        trimmed whitespace.
-        """
-        # Company name goes to the lastname
-        if is_company or not name:
-            parts = [name or False, False, False]
-        # Guess name splitting
-        else:
-            order = self._get_names_order()
-            # Remove redundant spaces
-            name = self._get_whitespace_cleaned_name(
-                name, comma=(order == 'last_first_comma'))
-            parts = name.split("," if order == 'last_first_comma' else " ", 1)
-            if len(parts) > 1:
-                if order == 'first_last':
-                    parts = [u" ".join(parts[1:]), parts[0]]
-                else:
-                    parts = [parts[0], u" ".join(parts[1:])]
-            else:
-                while len(parts) < 2:
-                    parts.append(False)
+        parts = [name or False, False, False]
 
         return {"firstname": parts[0], "middlename": parts[1], "lastname": parts[2]}
 
@@ -188,9 +108,9 @@ class ResPartner(models.Model):
         """Try to revert the effect of :meth:`._compute_name`."""
         for record in self:
             parts = record._get_inverse_name(record.name, record.is_company)
-            record.lastname = parts['lastname']
             record.firstname = parts['firstname']
             record.middlename = parts['middlename']
+            record.lastname = parts['lastname']
 
     @api.multi
     @api.constrains("firstname", "lastname", "middlename")

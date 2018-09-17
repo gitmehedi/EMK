@@ -18,9 +18,7 @@ class ResUser(models.Model):
         result = super(ResUser, self).default_get(fields_list)
 
         partner_model = self.env['res.partner']
-        inverted = partner_model._get_inverse_name(
-            partner_model._get_whitespace_cleaned_name(result.get("name", "")),
-            result.get("is_company", False))
+        inverted = partner_model._get_inverse_name(result.get("name", ""), result.get("is_company", False))
 
         for field in inverted.keys():
             if field in fields_list:
