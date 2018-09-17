@@ -141,8 +141,8 @@ class ResPartner(models.Model):
             # Do not skip next onchange
             self.env.context = (
                 self.with_context(skip_onchange=False).env.context)
-        else:
-            self._inverse_name_after_cleaning_whitespace()
+        # else:
+        #     self._inverse_name_after_cleaning_whitespace()
 
     @api.model
     def _install_partner_fullname(self):
