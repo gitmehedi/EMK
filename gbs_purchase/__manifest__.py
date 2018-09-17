@@ -13,6 +13,6 @@
     
     'description': 
     "This module are compatible for PO",
-    'installable': True,
-    'application': True,
+    'installable': False,
+    'application': False,
 }
