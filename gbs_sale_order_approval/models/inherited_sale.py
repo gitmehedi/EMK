@@ -694,6 +694,27 @@ class InheritedSaleOrderLine(models.Model):
 
     da_qty = fields.Float(string='DA Qty.', default=0)
 
+    #
+    # @api.multi
+    # def _prepare_order_line_procurement(self, group_id=False):
+    #     vals = super(InheritedSaleOrderLine, self)._prepare_order_line_procurement(group_id=group_id)
+    #
+    #     vals.update({
+    #         'product_qty': 20,
+    #
+    #     })
+    #     return vals
+
+    # @api.multi
+    # def _action_procurement_create(self):
+    #
+    #     res = super(InheritedSaleOrderLine, self)._action_procurement_create()
+    #     res['product_qty'] = 20
+    #     return res
+
+
+
+
     @api.one
     @api.constrains('product_uom_qty', 'commission_rate')
     def _check_order_line_inputs(self):
@@ -752,7 +773,7 @@ class InheritedSaleOrderLine(models.Model):
     @api.onchange('product_uom', 'product_uom_qty')
     def product_uom_change(self):
         res = super(InheritedSaleOrderLine, self).product_uom_change()
-        self.da_qty = self.product_uom_qty
+        #self.da_qty = self.product_uom_qty
 
         vals = {}
         if self.product_id:
@@ -761,13 +782,13 @@ class InheritedSaleOrderLine(models.Model):
 
         return res
 
-    @api.constrains('da_qty')
-    def check_da_qty_val(self):
-        # if self.da_qty < 0.00:
-        #     raise ValidationError('DA Qty can not be negative')
-
-        if self.da_qty > self.product_uom_qty:
-            raise ValidationError('DA Qty can not be greater than Ordered Qty')
+    # @api.constrains('da_qty')
+    # def check_da_qty_val(self):
+    #     # if self.da_qty < 0.00:
+    #     #     raise ValidationError('DA Qty can not be negative')
+    #
+    #     if self.da_qty > self.product_uom_qty:
+    #         raise ValidationError('DA Qty can not be greater than Ordered Qty')
 
 
 ########################

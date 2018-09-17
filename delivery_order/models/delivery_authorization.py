@@ -284,6 +284,7 @@ class DeliveryAuthorization(models.Model):
                 self.env['delivery.authorization.line'].create(da_line2)
 
 
+
     @api.multi
     def action_view_delivery_order(self):
         form_view = self.env.ref('delivery_order.delivery_order_layer_form')
@@ -302,7 +303,7 @@ class DeliveryAuthorization(models.Model):
     def action_validate(self):
         if self.so_type == 'cash':
             cash_check = self.payments_amount_checking_with_products_subtotal()
-            self._create_delivery_authorization_back_order()
+            #self._create_delivery_authorization_back_order()
             return cash_check
 
         elif self.so_type == 'lc_sales':
