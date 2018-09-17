@@ -19,7 +19,7 @@
                 </table>
             </div>
             <div style="padding:0px;width:600px;margin:auto;background: #FFFFFF repeat top /100%;color:#777777">
-            <p>Dear ${object.name},</p>
+            <p>Dear ${ctx['name']},</p>
                 <p>
                     Congratulation, your payment has been successfully completed. Now You are a honourable member of
                     <strong>${user.company_id.name}</strong>. Please stay connect with <strong>${user.company_id.name}</strong>.
