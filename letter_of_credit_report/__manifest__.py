@@ -11,7 +11,7 @@
     ],
     'depends': [
         'com_shipment',
-        'custom_report',
+        'report_layout',
     ],
     'description': """ """,
     'installable': True,

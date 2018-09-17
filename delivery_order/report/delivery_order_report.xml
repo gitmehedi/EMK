@@ -8,7 +8,7 @@
                 report_type="qweb-pdf"
                 name="delivery_order.report_delivery_order_doc"
                 file="delivery_order.report_delivery_order_doc"
-                paperformat="custom_report.paperformat_backend_portrait"
+                paperformat="report_layout.paperformat_backend_portrait"
         />
     </data>
 </odoo>

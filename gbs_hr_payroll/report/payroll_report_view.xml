@@ -3,7 +3,7 @@
     <data>
         <template id="report_individual_payslip">
             <t t-call="report.html_container">
-                <t t-call="custom_report.gbs_internal_layout">
+                <t t-call="report_layout.gbs_internal_layout">
                     <div class="page" style="page-break-inside:auto">
                         <div class="row">
                             <div class="clearfix">
@@ -118,7 +118,7 @@
                                 <strong t-esc="amt_to_word"></strong>
                             </p>
                         </div>
-                        <t t-call="custom_report.report_signing"></t>
+                        <t t-call="report_layout.report_signing"></t>
                     </div>
                 </t>
             </t>
@@ -130,7 +130,7 @@
                 report_type="qweb-pdf"
                 file="gbs_hr_payroll.report_individual_payslip"
                 name="gbs_hr_payroll.report_individual_payslip"
-                paperformat="custom_report.paperformat_backend_landscape"
+                paperformat="report_layout.paperformat_backend_landscape"
         />
     </data>
 </odoo>

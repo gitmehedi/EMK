@@ -10,7 +10,7 @@
         'sales_team',
         'report',
         'account',
-        'custom_report',
+        'report_layout',
         #'gbs_sales_commission_so',
     ],
 

@@ -17,14 +17,14 @@
                 report_type="qweb-pdf"
                 name="gbs_purchase_requisition.report_purchase_requisition"
                 file="gbs_purchase_requisition.report_purchase_requisition"
-                paperformat="custom_report.paperformat_backend_landscape"
+                paperformat="report_layout.paperformat_backend_landscape"
         />
-        <template id="report_purchase_order_temp" inherit_id="custom_report.gbs_external_layout" primary="True">
-            <xpath expr="//t[@t-call='custom_report.gbs_external_layout_header']" position="attributes">
+        <template id="report_purchase_order_temp" inherit_id="report_layout.gbs_external_layout" primary="True">
+            <xpath expr="//t[@t-call='report_layout.gbs_external_layout_header']" position="attributes">
                 <attribute name="t-call">gbs_purchase_requisition.external_layout_header_po</attribute>
             </xpath>
         </template>
-        <template id="external_layout_header_po" inherit_id="custom_report.gbs_external_layout_header" primary="True">
+        <template id="external_layout_header_po" inherit_id="report_layout.gbs_external_layout_header" primary="True">
             <xpath expr="//div[@class='company-info']" position="after">
                 <div class="w100 text-center" style="position:absolute; bottom:2px; " name="company_address">
                     <span t-esc="address"/>

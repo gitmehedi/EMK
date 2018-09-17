@@ -6,7 +6,7 @@
             string="Comparative Bid Analysis"
             name="purchase_quotation_compare.template_purchaserequisitions_doc"
             file="purchase_quotation_compare.template_purchaserequisitions_doc"
-            paperformat="custom_report.paperformat_backend_landscape"
+            paperformat="report_layout.paperformat_backend_landscape"
             report_type="qweb-pdf"/>
 
 </odoo>

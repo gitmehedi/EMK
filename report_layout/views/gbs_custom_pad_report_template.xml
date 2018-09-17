@@ -2,11 +2,11 @@
 <odoo>
     <template id="custom_report_gbs_internal" name="report assets" inherit_id="web.layout">
         <xpath expr="//head" position="inside">
-            <link href="/custom_report/static/src/css/report.css" rel="stylesheet"/>
+            <link href="/report_layout/static/src/css/report.css" rel="stylesheet"/>
         </xpath>
     </template>
 
-    <template id="gbs_custom_pad_with_system_sig_report_template">
+    <template id="gbs_custom_pad_report_template">
         <t t-if="not o and doc">
         <t t-set="o" t-value="doc"/>
         </t>
@@ -17,12 +17,12 @@
             <t t-set="company" t-value="res_company"></t>
         </t>
 
-        <t t-call="custom_report.gbs_layout_pad_header" />
+        <t t-call="report_layout.gbs_layout_header" />
         <t t-raw="0" />
-        <t t-call="custom_report.gbs_layout_pad_footer" />
+        <t t-call="report_layout.gbs_layout_footer" />
     </template>
 
-    <template id="gbs_layout_pad_header">
+    <template id="gbs_layout_header">
         <div class="header clearfix">
             <style>
                 .header-content { position: relative; }
@@ -67,11 +67,8 @@
         </div>
     </template>
 
-    <template id="gbs_layout_pad_footer">
+    <template id="gbs_layout_footer">
         <div class="footer clearfix">
-            <div class="footer-content text-center">
-                <p style="font:'Courier New', Courier; padding: 10px;">This is a computer-generated copy, hence no signature is required.</p>
-            </div>
             <div class="footer-content text-center">
                 <t t-if="company.partner_id.name">
                     <span t-field="company.partner_id.name"/>,

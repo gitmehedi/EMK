@@ -4,7 +4,7 @@
     'website': 'www.genweb2.com',
     'category': 'Employee Mobile Bills',
     'version':'1.0',
-    'depends': ['hr','custom_report'],
+    'depends': ['hr','report_layout'],
     'data': [
         'security/ir.model.access.csv',
         #'security/ir_rule.xml',

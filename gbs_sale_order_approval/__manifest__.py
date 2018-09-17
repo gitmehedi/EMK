@@ -20,7 +20,7 @@
         'gbs_pi_creation',
         'account',
         'ir_sequence_operating_unit',
-        'custom_report',
+        'report_layout',
         'sale_stock', ## to hide delivery menu. it is inherited on this module
     ],
 

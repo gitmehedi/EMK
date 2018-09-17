@@ -19,7 +19,7 @@ class PurchaseReportWizard(models.TransientModel):
     @api.multi
     def report_print(self):
         location = self.env['stock.location'].search(
-            [('operating_unit_id', '=', self.operating_unit_id.id), ('name', '=', 'Stock')])
+            [('operating_unit_id', '=', self.operating_unit_id.id),('name', '=', 'Stock')])
 
         data = {}
         data['date_from'] = self.date_from
