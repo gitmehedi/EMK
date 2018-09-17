@@ -14,7 +14,7 @@
                            options="{'no_create': True, 'no_open': True}"
                            groups="base.group_multi_currency"
                            attrs="{'readonly': [('state', '!=', 'draft')]}"
-                           invisible="0"
+                           invisible="1"
                     />
                 </xpath>
 

@@ -9,9 +9,14 @@ class CashPaymentLine(models.Model):
     branch = fields.Char(string="Branch")
     validity = fields.Integer(string="Validity (Days)")
     account_payment_id = fields.Char(string='Payment Information')
-    amount = fields.Float(string="Amount")
     payment_date = fields.Date('Date')
-    currency_id = fields.Many2one('res.currency', string='Currency')
+
+    # JOurnal related info showing
+    currency_id = fields.Many2one('res.currency', string='Currency') # Company Currency
+    amount_currency = fields.Many2one('res.currency', string='Currency') # Journal Currency
+    amount_in_diff_currency = fields.Float(string='Amount in diff Currency')
+    amount = fields.Float(string="Amount") #Converted amount
+
 
 
     """ Relational Fields """

@@ -20,6 +20,7 @@
     ],
     'depends': [
         'hr_holidays',
+        'hr_holiday_year',
         'report',
         'report_layout',
     ],

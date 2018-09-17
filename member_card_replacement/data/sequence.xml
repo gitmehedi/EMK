@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="seq_card_replacement" model="ir.sequence">
+            <field name="name">Card Replacement Sequence</field>
+            <field name="code">member.card.replacement.seq</field>
+            <field name="prefix">CR/%(year)s/</field>
+            <field name="padding">2</field>
+            <field eval="1" name="number_increment"/>
+            <field name="company_id" eval="False"/>
+        </record>
+    </data>
+</odoo>

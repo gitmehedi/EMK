@@ -37,12 +37,8 @@
                                     name="action_process_unattached_payments"
                                     groups="account.group_account_user,gbs_application_group.group_head_account"
                                     class="oe_stat_button"
-                                    attrs="{'invisible':['|', ('state','=','close'), ('so_type', '!=', 'cash')]}"
+                                    attrs="{'invisible':[('so_type', '!=', 'cash')]}"
                                     icon="fa-usd">
-                            </button>
-                        </div>
-
-                        <div class="oe_button_box oe_right" name="button_box">
                             <button type="object"
                                     string="Delivery Order"
                                     name="action_view_delivery_order"
@@ -50,6 +46,8 @@
                                     attrs="{'invisible': [('state','in',('draft','validate','approve','refused'))]}"
                                     icon="fa-truck"
                                     groups="account.group_account_user,gbs_application_group.group_head_account,gbs_application_group.group_cxo">
+                            </button>
+
                             </button>
                         </div>
 
@@ -123,11 +121,14 @@
                                         <tree string="List" editable="bottom">
                                             <field name="payment_date" string="Payment Date"/>
                                             <field name="amount"/>
+                                            <field name="currency_id"/>
+                                            <field name="amount_in_diff_currency"/>
+                                            <field name="amount_currency"/>
                                             <field name="dep_bank"/>
                                             <field name="branch"/>
                                             <!--<field name="validity"/>-->
                                             <field name="account_payment_id"/>
-                                            <field name="currency_id"/>
+
                                         </tree>
                                     </field>
                                 </page>
@@ -136,10 +137,12 @@
                                         <tree string="List" editable="bottom">
                                             <field name="payment_date" string="Payment Date"/>
                                             <field name="amount"/>
+                                            <field name="currency_id"/>
+                                            <field name="amount_in_diff_currency"/>
+                                            <field name="amount_currency"/>
                                             <field name="bank"/>
                                             <field name="branch"/>
                                             <field name="number"/>
-                                            <field name="currency_id"/>
                                             <field name="account_payment_id"/>
                                             <field name="cheque_info_id" invisible="1"/>
                                         </tree>
@@ -158,6 +161,7 @@
                                             <field name="state"/>
                                             <field name="account_payment_id"/>
                                             <field name="cheque_info_id" invisible="1"/>
+                                            <field name="converted_amount" invisible="1"/>
 
                                         </tree>
                                     </field>
@@ -169,16 +173,17 @@
                                        options="{'currency_field': 'currency_id'}"/>
 
                                 <field name="total_payment_received" widget='monetary'
+                                       options="{'currency_field': 'currency_id'}"
                                        attrs="{'invisible':[('so_type', '!=', 'cash')]}"/>
-                                <!--options="{'currency_field': 'cheque_ids[0].currency_id'}"-->
 
                                 <field name="total_cheque_rcv_amount_not_honored" widget='monetary'
+                                       options="{'currency_field': 'currency_id'}"
                                        attrs="{'invisible':[('so_type', '!=', 'cash')]}"/>
-                                <!--options="{'currency_field': 'currency_id'}"-->
 
-                                <field name="tax_value" widget='monetary' options="{'currency_field': 'currency_id'}"/>
-                                <field name="total_amount" class="oe_subtotal_footer_separator" widget='monetary'
-                                       options="{'currency_field': 'currency_id'}"/>
+
+                                <!--<field name="tax_value" widget='monetary' options="{'currency_field': 'currency_id'}"/>-->
+                                <!--<field name="total_amount" class="oe_subtotal_footer_separator" widget='monetary'-->
+                                <!--options="{'currency_field': 'currency_id'}"/>-->
                             </group>
                         </group>
                     </sheet>

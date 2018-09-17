@@ -142,6 +142,11 @@ class InheritStockPicking(models.Model):
         self._set_date_done_do()
         return res
 
+    def _set_report_related_vals_to_move(self):
+        pass
+
+
+
     def _get_number_of_jar(self):
 
         if self.pack_type.uom_id and not self.pack_type.is_jar_bill_included:
@@ -162,6 +167,11 @@ class InheritStockPicking(models.Model):
                 vals['date'] = datetime.datetime.now().date()
 
                 delivery_jar_count_obj.create(vals)
+
+                #Update stock Move for reporting purpose
+                self.move_lines.write({'packing_uom_id':self.pack_type.uom_id.id, 'jar_count':math.ceil(jar_count)})
+
+
 
     def _set_date_done_do(self):
         for move in self.move_lines:

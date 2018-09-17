@@ -18,4 +18,7 @@ class ChequePaymentLine(models.Model):
     pay_all_cq_id = fields.Many2one('delivery.authorization', ondelete='cascade')
     state = fields.Char(string='State')
 
+    converted_amount = fields.Float(string='Converted amount')
+
+
 

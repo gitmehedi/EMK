@@ -1,8 +1,4 @@
-# -*- coding: utf-8 -*-
-# ©  2016 Md Mehedi Hasan <md.mehedi.info@gmail.com>
-
 from openerp import fields, models, api
-from openerp.exceptions import Warning as UserError
 
 
 class HrPublicHolidaysLine(models.Model):

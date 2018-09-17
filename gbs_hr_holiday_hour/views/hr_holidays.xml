@@ -10,8 +10,8 @@
                     <header>
                         <button string="Confirm" name="action_confirm" states="draft"
                                 type="object" class="oe_highlight"/>
-                        <button string="Approve" name="action_approve" type="object" class="oe_highlight"
-                                groups="hr_holidays.group_hr_holidays_user"/>
+                        <!--<button string="Approve" name="action_approve" type="object" class="oe_highlight"-->
+                                <!--groups="hr_holidays.group_hr_holidays_user"/>-->
                         <button string="Validate" name="action_validate" states="confirm" class="oe_highlight" type="object"
                                 groups="hr_holidays.group_hr_holidays_user"/>
                         <button string="Refuse" name="action_refuse" type="object"
@@ -35,6 +35,7 @@
                                     </div>
                                     <div>
                                         <field name="number_of_days" widget="float_time" class="oe_inline"/> Hour(s)
+
                                     </div>
                                 </div>
                             </group>
@@ -42,6 +43,7 @@
                                 <field name="employee_id" attrs="{'readonly':[('state','!=','draft'),('state','!=','confirm')]}"
                                        options="{'no_quick_create':True,'no_create_edit':True,'no_open': True}"/>
                                 <field name="department_id"/>
+                                <field name="leave_year_id" invisible="1"/>
                             </group>
                             <group colspan="2">
                                 <group><field name="notes" nolabel="1" placeholder="Add a reason..." /></group>
@@ -133,5 +135,8 @@
                 </data>
             </field>
         </record>
+        <menuitem action="hr_holidays.open_view_holiday_status" id="menu_hr_holidays_type" name="Leave Types"
+			parent="hr_holidays.menu_hr_holidays_configuration" sequence="5" />
+
     </data>
 </odoo>

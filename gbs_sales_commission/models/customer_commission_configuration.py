@@ -104,8 +104,8 @@ class CustomerCommissionConfiguration(models.Model):
 
     @api.model
     def create(self, vals):
-        seq = self.env['ir.sequence'].next_by_code('customer.commission.configuration') or '/'
-        vals['name'] = seq
+        # seq = self.env['ir.sequence'].next_by_code('customer.commission.configuration') or '/'
+        # vals['name'] = seq
         return super(CustomerCommissionConfiguration, self).create(vals)
 
 
@@ -207,6 +207,9 @@ class CustomerCommissionConfiguration(models.Model):
 
     @api.one
     def action_validate(self):
+        seq = self.env['ir.sequence'].next_by_code('customer.commission.configuration') or '/'
+        self.name = seq
+
         self.state = 'validate'
 
 
