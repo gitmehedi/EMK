@@ -9,7 +9,6 @@
                 ],
     "data": [
         "views/inherit_sale_order_type.xml",
-        #"views/inherit_product_attribute.xml",
     ],
 
     'installable': True,
