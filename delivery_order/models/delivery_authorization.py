@@ -98,7 +98,18 @@ class DeliveryAuthorization(models.Model):
         self.lc_id = self.sale_order_id.lc_id.id
 
     """ Payment information"""
-    amount_untaxed = fields.Float(string='Ordered Amount', readonly=True, track_visibility='onchange')
+    amount_untaxed = fields.Float(string='Ordered Amount', compute='_compute_amount_untaxed',
+                                  track_visibility='onchange')
+
+
+    @api.depends('line_ids.delivery_qty')
+    def _compute_amount_untaxed(self):
+        for rec in self:
+            for line in rec.line_ids:
+                rec.amount_untaxed = line.price_unit * line.delivery_qty
+                rec.line_ids.price_subtotal = line.price_unit * line.delivery_qty
+
+
     tax_value = fields.Float(string='Taxes', readonly=True)
     total_amount = fields.Float(string='Total', readonly=True, track_visibility='onchange')
     total_payment_received = fields.Float(string='Payment Received', readonly=True, track_visibility='onchange')
@@ -166,51 +177,112 @@ class DeliveryAuthorization(models.Model):
     def action_close(self):
 
         self.approver1_id = self.env.user
-        # account_payment_pool = self.env['account.payment'].search(
-        #     [('state', '!=', 'draft'), ('is_this_payment_checked', '=', False),
-        #      ('sale_order_id', '=', self.sale_order_id.id),
-        #      ('partner_id', '=', self.parent_id.id)])
-        # account_payment_pool.write({'is_this_payment_checked': True})
 
         # Automatically Create Delivery Order
+        self._create_delivery_authorization_back_order()
         self._automatic_delivery_order_creation()
 
         return self.write({'state': 'close', 'confirmed_date': time.strftime('%Y-%m-%d %H:%M:%S')})
 
     """ Action for Confirm button"""
 
+
+
     @api.multi
     def _automatic_delivery_order_creation(self):
         # System confirms that one Sale Order will have only one DA & DO, so check with Sales Order ID
         do_sale_pool = self.env['delivery.order'].search([('sale_order_id', '=', self.sale_order_id.id)])
-        if not do_sale_pool:
-            vals = {
-                'delivery_order_id': self.id,
+        #if not do_sale_pool:
+        vals = {
+            'delivery_order_id': self.id,
+            'sale_order_id': self.sale_order_id.id,
+            'deli_address': self.sale_order_id.partner_shipping_id.name,
+            'currency_id': self.sale_order_id.type_id.currency_id,
+            'partner_id': self.sale_order_id.partner_id,
+            'so_type': self.sale_order_id.credit_sales_or_lc,
+            'so_date': self.sale_order_id.date_order,
+            'state': 'approved',
+            'operating_unit_id': self.operating_unit_id.id
+        }
+
+        do_pool = self.env['delivery.order'].create(vals)
+
+        for record in self.line_ids:
+            qty = 0
+            if record.delivery_qty < record.quantity:
+                qty = record.delivery_qty
+            else:
+                qty = record.quantity
+
+            da_line = {
+                'parent_id': do_pool.id,
+                'product_id': record.product_id.id,
+                'quantity': qty,
+                'delivery_qty': record.delivery_qty,
+                'pack_type': self.sale_order_id.pack_type.id,
+                'uom_id': record.uom_id.id,
+            }
+
+            self.env['delivery.order.line'].create(da_line)
+
+
+        do_pool.create_delivery_order()
+        do_pool.action_view_delivery()
+
+
+    # -----------------------
+    # DA Back Order
+    # -----------------------
+    def _create_delivery_authorization_back_order(self):
+        daa_pool = self.search([('sale_order_id','=',self.sale_order_id.id)])
+
+
+        if self.line_ids.delivery_qty < self.line_ids.quantity:
+
+            vals2 = {
                 'sale_order_id': self.sale_order_id.id,
                 'deli_address': self.sale_order_id.partner_shipping_id.name,
                 'currency_id': self.sale_order_id.type_id.currency_id,
                 'partner_id': self.sale_order_id.partner_id,
                 'so_type': self.sale_order_id.credit_sales_or_lc,
                 'so_date': self.sale_order_id.date_order,
-                'state': 'approved',
-                'operating_unit_id': self.operating_unit_id.id
+                'amount_untaxed': self.sale_order_id.amount_total,
+                'tax_value': self.sale_order_id.amount_tax,
+                'total_amount': self.sale_order_id.amount_total,
+                'operating_unit_id': self.operating_unit_id.id,
+                'state': 'draft',
             }
 
-            do_pool = self.env['delivery.order'].create(vals)
+            # Update DA Qty
+            self.line_ids.write({'quantity': self.line_ids.delivery_qty})
 
-            for record in self.sale_order_id.order_line:
-                da_line = {
-                    'parent_id': do_pool.id,
-                    'product_id': record.product_id.id,
-                    'quantity': record.product_uom_qty,
+            da_pool = self.env['delivery.authorization'].create(vals2)
+
+            sum_delivery_qty = 0
+
+            for d in daa_pool:
+                for d_line in d.line_ids:
+                    sum_delivery_qty += d_line.delivery_qty
+
+
+            for recs in self.line_ids:
+
+                da_line2 = {
+                    'parent_id': da_pool.id,
+                    'product_id': recs.product_id.id,
+                    'quantity': self.sale_order_id.order_line.product_uom_qty - sum_delivery_qty,
                     'pack_type': self.sale_order_id.pack_type.id,
-                    'uom_id': record.product_uom.id,
+                    'uom_id': recs.uom_id.id,
+                    'price_unit': recs.price_unit,
+                    'commission_rate': recs.commission_rate,
+                    'price_subtotal': recs.price_subtotal,
+                    'tax_id': recs.tax_id.id,
+                    'delivery_qty': self.sale_order_id.order_line.product_uom_qty - sum_delivery_qty,
+                    'sale_order_id': self.id,
                 }
 
-                self.env['delivery.order.line'].create(da_line)
+                self.env['delivery.authorization.line'].create(da_line2)
 
-            do_pool.create_delivery_order()
-            do_pool.action_view_delivery()
 
     @api.multi
     def action_view_delivery_order(self):
@@ -225,17 +297,21 @@ class DeliveryAuthorization(models.Model):
             action['res_id'] = do_pool.id
         return action
 
+
     @api.multi
     def action_validate(self):
         if self.so_type == 'cash':
-            # self.payment_information_check()
             cash_check = self.payments_amount_checking_with_products_subtotal()
+            self._create_delivery_authorization_back_order()
             return cash_check
 
         elif self.so_type == 'lc_sales':
             if self.lc_id and self.pi_id:
                 if self.lc_id.lc_value >= self.total_sub_total_amount():
+
+                    self._create_delivery_authorization_back_order()
                     self._automatic_delivery_order_creation()
+
                     self.write({'state': 'close'})  # Final Approval
                 else:
                     self.write({'state': 'approve'})  # Second approval
@@ -262,6 +338,7 @@ class DeliveryAuthorization(models.Model):
 
                         self.env['ordered.qty'].create(res)
 
+                        self._create_delivery_authorization_back_order()
                         self._automatic_delivery_order_creation()
                         self.write({'state': 'close'})  # Final Approval
                     else:
@@ -276,6 +353,7 @@ class DeliveryAuthorization(models.Model):
                                     if res['available_qty'] > 100:
                                         res['available_qty'] = 0
 
+                                    self._create_delivery_authorization_back_order()
                                     self._automatic_delivery_order_creation()
                                     self.write({'state': 'close'})  # Final Approval
                                     orders.create(res)
@@ -300,9 +378,9 @@ class DeliveryAuthorization(models.Model):
                 self.state = 'approve'  # second
 
         elif self.so_type == 'credit_sales':
+            self._create_delivery_authorization_back_order()
             self._automatic_delivery_order_creation()
             self.state = 'close'
-
 
     def total_sub_total_amount(self):
         total_amt = 0
@@ -311,7 +389,6 @@ class DeliveryAuthorization(models.Model):
                 total_amt = total_amt + do_line.price_subtotal
 
         return total_amt
-
 
     @api.multi
     def payments_amount_checking_with_products_subtotal(self):
@@ -322,11 +399,11 @@ class DeliveryAuthorization(models.Model):
             return self.write({'state': 'validate'})  # Only Second level approval
 
         if self.total_payment_received >= self.total_amount:
+            self._create_delivery_authorization_back_order()
             self._automatic_delivery_order_creation()
             return self.write({'state': 'close'})  # directly go to final approval level
         else:
             return self.write({'state': 'validate'})  # Only Second level approval
-
 
     def create_delivery_order(self):
         for order in self.sale_order_id:
@@ -341,7 +418,6 @@ class DeliveryAuthorization(models.Model):
             self.sale_order_id.action_done()
         return True
 
-
     def action_process_unattached_payments(self):
         self.process_cheque_payment()
         self.process_cash_payment()
@@ -349,7 +425,6 @@ class DeliveryAuthorization(models.Model):
 
         # process total payment received amount
         self.process_total_payment_received_amount()
-
 
     # Process all the entered Cheque Received entry
     def process_all_cheque_received_entry(self):
@@ -393,7 +468,7 @@ class DeliveryAuthorization(models.Model):
                                         'number': payments.cheque_no,
                                         'currency_id': payments.currency_id.id,
                                         'state': payments.state,
-                                        'converted_amount':c,
+                                        'converted_amount': c,
                                         }))
 
             pay.cheque_rcv_all_ids = vals
@@ -405,14 +480,13 @@ class DeliveryAuthorization(models.Model):
             for do_cheque_line in pay.cheque_rcv_all_ids:
                 cheque_line_total_amount = cheque_line_total_amount + do_cheque_line.converted_amount
 
-                #converted_amount = cheque_line_total_amount
+                # converted_amount = cheque_line_total_amount
                 # if do_cheque_line.currency_id != self.currency_id:
                 #     converted_amount = cheque_line_total_amount * self.currency_id.rate
                 # else:
                 #     converted_amount = cheque_line_total_amount
 
             pay.total_cheque_rcv_amount_not_honored = cheque_line_total_amount
-
 
     def process_total_payment_received_amount(self):
         # Sum of cash amount
@@ -429,7 +503,6 @@ class DeliveryAuthorization(models.Model):
 
         # Convert Toal Payment Received to Sale Order Currency
         self.total_payment_received = total_rcv * self.currency_id.rate
-
 
     def process_cash_payment(self):
         if self.cash_ids:
@@ -458,7 +531,6 @@ class DeliveryAuthorization(models.Model):
                                          }))
 
             self.cash_ids = vals_bank
-
 
     @api.multi
     def process_cheque_payment(self):
@@ -492,7 +564,6 @@ class DeliveryAuthorization(models.Model):
 
                 pay.cheque_ids = vals
 
-
     @api.model
     def _needaction_domain_get(self):
         users_obj = self.env['res.users']
@@ -510,7 +581,6 @@ class DeliveryAuthorization(models.Model):
             return domain
         else:
             return False
-
 
     ################
     # 100 MT Logic

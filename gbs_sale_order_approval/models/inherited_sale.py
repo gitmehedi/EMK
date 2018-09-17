@@ -116,7 +116,7 @@ class SaleOrder(models.Model):
         vals['warehouse_id'] = sales_channel_obj.warehouse_id.id
         vals['operating_unit_id'] = sales_channel_obj.operating_unit_id.id
 
-        #to call the Draft SO Seq
+        # to call the Draft SO Seq
         new_seq = self.env['ir.sequence'].next_by_code('sale.order') or '/'
         if new_seq:
             vals['name'] = new_seq
@@ -207,7 +207,7 @@ class SaleOrder(models.Model):
             # Check seq needs to re-generate or not
             if orders.operating_unit_id.name not in orders.name:
                 new_seq = orders.env['ir.sequence'].next_by_code_new('sale.order', self.create_date,
-                                                                   orders.operating_unit_id) or '/'
+                                                                     orders.operating_unit_id) or '/'
 
                 if new_seq:
                     orders.name = new_seq
@@ -456,10 +456,11 @@ class SaleOrder(models.Model):
                     'commission_rate': record.commission_rate,
                     'price_subtotal': record.price_total,
                     'tax_id': record.tax_id.id,
+                    'delivery_qty': record.product_uom_qty,
+                    'sale_order_id': self.id,
                 }
 
                 self.env['delivery.authorization.line'].create(da_line)
-
 
     def action_view_delivery_auth(self):
         form_view = self.env.ref('delivery_order.delivery_order_form')
@@ -473,7 +474,6 @@ class SaleOrder(models.Model):
             action['res_id'] = da_pool.id
 
         return action
-
 
     def second_approval_business_logics(self, cust_commission_pool, lines, price_change_pool):
 
@@ -603,7 +603,7 @@ class SaleOrder(models.Model):
     def _get_sales_channel(self):
         return self.env['sales.channel'].search([], limit=1)
 
-    sales_channel = fields.Many2one('sales.channel', string='Sales Channel', readonly=True,track_visibility='onchange',
+    sales_channel = fields.Many2one('sales.channel', string='Sales Channel', readonly=True, track_visibility='onchange',
                                     states={'to_submit': [('readonly', False)]}, required=True)
 
     warehouse_id = fields.Many2one(
@@ -619,7 +619,6 @@ class SaleOrder(models.Model):
                                'draft': [('readonly', True)], 'submit_quotation': [('readonly', True)]}, )
 
     approver_user_id = fields.Many2one('res.users', string='Approver Manager', track_visibility='onchange')
-
 
     @api.onchange('sales_channel')
     def _onchange_sales_channel(self):
@@ -644,7 +643,6 @@ class SaleOrder(models.Model):
             if (rec.team_id and rec.team_id.operating_unit_id != rec.operating_unit_id):
                 continue;
 
-
     @api.model
     def _needaction_domain_get(self):
         users_obj = self.env['res.users']
@@ -667,12 +665,10 @@ class SaleOrder(models.Model):
 
         return domain
 
-
     @api.constrains('order_line')
     def _check_multiple_products_line(self):
         if len(self.order_line) > 1:
             raise ValidationError("You can't add multiple products")
-
 
     @api.multi
     def unlink(self):

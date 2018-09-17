@@ -9,7 +9,7 @@ class DeliveryAuthorizationLine(models.Model):
     product_id = fields.Many2one('product.product', string="Product", readonly=True, ondelete='cascade')
     uom_id = fields.Many2one('product.uom', string="UoM", ondelete='cascade', readonly=True)
     pack_type = fields.Many2one('product.packaging.mode', string="Packing", ondelete='cascade', readonly=True)
-    quantity = fields.Float(string="Delivery Qty", required=True, default=1)
+    quantity = fields.Float(string="Ordered Qty", readonly=True, required=True, default=1)
     price_unit = fields.Float(string="Price Unit", readonly=True)
     commission_rate = fields.Float(string="Commission", readonly=True)
     price_subtotal = fields.Float(string="Subtotal", readonly=True)
@@ -30,39 +30,51 @@ class DeliveryAuthorizationLine(models.Model):
         ('vat', 'VAT'),
     ], string='Delivery Mode')
 
+    delivery_qty = fields.Float(string='Delivery Qty')
+
+    sale_order_id = fields.Many2one('sale.order',string='Sale Order',readonly=True,)
+
+
     @api.multi
-    @api.constrains('quantity')
-    def check_quantity(self):
-        for da in self:
-            if da.quantity < 0.00:
-                raise ValidationError('Quantity can not be negative')
+    @api.constrains('delivery_qty')
+    def check_delivery_qty(self):
+        self._check_delivery_qty_validation()
 
-            for sale_line in da.parent_id.sale_order_id.order_line:
-                if da.product_id.id == sale_line.product_id.id:
-                    if da.quantity > sale_line.product_uom_qty:
-                        raise ValidationError('Delivery Qty can not be greater than Ordered Qty')
 
-                    # if da.quantity > sale_line.da_qty:
-                    #     raise ValidationError('You can Deliver {0} {1} for {2}'.format((sale_line.da_qty), (sale_line.product_uom.name), (sale_line.product_id.display_name)))
+    @api.onchange('delivery_qty')
+    def onchange_delivery_qty(self):
+        self._check_delivery_qty_validation()
 
-            #da.set_da_amounts_automatically()
+        if self.delivery_qty:
+            self.price_subtotal = self.price_unit * self.delivery_qty
 
-    @api.onchange('quantity')
-    def onchange_quantity(self):
-        pass
-        #self.set_da_amounts_automatically()
 
-    @api.one
-    def set_da_amounts_automatically(self):
-        if self.quantity:
-            self.price_subtotal = self.price_unit * self.quantity
-            self.parent_id.amount_untaxed = self.price_subtotal
-            self.parent_id.tax_value = self.price_subtotal * (self.tax_id.amount / 100)
-            self.parent_id.total_amount = self.parent_id.tax_value + self.price_subtotal
+    @api.multi
+    def write(self, vals):
+        if 'delivery_qty' in vals:
+            self.price_subtotal = self.price_unit * vals['delivery_qty']
 
-    @api.onchange('product_id')
-    def onchange_product_id(self):
-        if self.product_id:
-            product_obj = self.env['product.template'].search([('id', '=', self.product_id.id)])
-            if product_obj:
-                self.uom_id = product_obj.uom_id.id
+        return super(DeliveryAuthorizationLine, self).write(vals)
+
+
+
+    def _check_delivery_qty_validation(self):
+        if self.delivery_qty < 0:
+            raise ValidationError('Delivery Qty can not be negative')
+
+        da_pool = self.env['delivery.authorization.line'].search([('sale_order_id', '=', self.sale_order_id.id)])
+        sum_delivery_qty = 0
+        sum_ordered_qty = 0
+
+        if len(da_pool) > 1:
+
+            for da in da_pool:
+                sum_delivery_qty += da.delivery_qty
+                sum_ordered_qty += da.quantity
+
+            if sum_delivery_qty > sum_ordered_qty:
+                raise ValidationError('Delivery Qty can not be greater than Ordered Qty')
+
+        else:
+            if self.delivery_qty > self.quantity:
+                raise ValidationError('Delivery Qty can not be greater than Ordered Qty')
