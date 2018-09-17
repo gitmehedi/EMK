@@ -433,7 +433,7 @@ class SaleOrder(models.Model):
                 'sale_order_id': self.id,
                 'deli_address': self.partner_shipping_id.name,
                 'currency_id': self.type_id.currency_id,
-                'partner_id': self.partner_id,
+                'parent_id': self.partner_id,
                 'so_type': self.credit_sales_or_lc,
                 'so_date': self.date_order,
                 # 'warehouse_id': self.warehouse_id,

@@ -198,7 +198,7 @@ class DeliveryAuthorization(models.Model):
             'sale_order_id': self.sale_order_id.id,
             'deli_address': self.sale_order_id.partner_shipping_id.name,
             'currency_id': self.sale_order_id.type_id.currency_id,
-            'partner_id': self.sale_order_id.partner_id,
+            'parent_id': self.sale_order_id.partner_id,
             'so_type': self.sale_order_id.credit_sales_or_lc,
             'so_date': self.sale_order_id.date_order,
             'state': 'approved',
@@ -243,7 +243,7 @@ class DeliveryAuthorization(models.Model):
                 'sale_order_id': self.sale_order_id.id,
                 'deli_address': self.sale_order_id.partner_shipping_id.name,
                 'currency_id': self.sale_order_id.type_id.currency_id,
-                'partner_id': self.sale_order_id.partner_id,
+                'parent_id': self.sale_order_id.partner_id,
                 'so_type': self.sale_order_id.credit_sales_or_lc,
                 'so_date': self.sale_order_id.date_order,
                 'amount_untaxed': self.sale_order_id.amount_total,
@@ -320,7 +320,7 @@ class DeliveryAuthorization(models.Model):
                 res = {}
                 list = dict.fromkeys(set([val.product_id.product_tmpl_id.id for val in self.line_ids]), 0)
                 for line in self.line_ids:
-                    list[line.product_id.product_tmpl_id.id] = list[line.product_id.product_tmpl_id.id] + line.quantity
+                    list[line.product_id.product_tmpl_id.id] = list[line.product_id.product_tmpl_id.id] + line.delivery_qty
 
                 for rec in list:
                     ordered_qty_pool = self.env['ordered.qty'].search([('lc_id', '=', False),
