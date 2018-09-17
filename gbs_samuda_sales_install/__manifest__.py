@@ -20,7 +20,6 @@
         'delivery_schedules',
         'gbs_application_group',
         'delivery_invoicing',
-        #'sale_revision_history'
         'accounting_report',
         'gbs_accounting_cheque_received',
         'delivery_qty_reports',
@@ -40,12 +39,11 @@
         'gbs_sales_commission_invoice',
         'gbs_sales_commission_account',
         'gbs_samuda_sales_approval_menu',
-        'gbs_customize_accountant_view',
+        'gbs_customize_accountant',
         'gbs_samuda_stock',
     ],
-
-    'data': [ ],
+    'data': [],
     'description': 'Install all modules which is related with sales',
     'installable': True,
-    'application' : False,
+    'application': False,
 }

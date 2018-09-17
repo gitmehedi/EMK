@@ -19,7 +19,7 @@ class DeliverySchedules(models.Model):
 
             ds.scheduled_qty = amount_total
 
-    name = fields.Char(string='Name', index=True, readonly=True)
+    name = fields.Char(string='Name',readonly=True,default='/')
     requested_date = fields.Date('Date', default=fields.Datetime.now,readonly=True,
                                  states={'draft': [('readonly', False)]},
                                  track_visibility='onchange')
@@ -38,10 +38,9 @@ class DeliverySchedules(models.Model):
                                         required=True, readonly=True, states={'draft': [('readonly', False)]},
                                         track_visibility='onchange')
 
-    line_ids = fields.One2many('delivery.schedules.line', 'parent_id', string="Products",
-                               states={'approve': [('readonly', True)]},track_visibility='onchange')
+    line_ids = fields.One2many('delivery.schedules.line', 'parent_id', string="Delivery Schedule Line")
 
-    scheduled_qty = fields.Float(string='Total Scheduled Qty.',readonly=True,
+    scheduled_qty = fields.Float(string='Total Scheduled Qty.',
                                  compute='_amount_all',store=True,
                                  track_visibility='onchange')
     state = fields.Selection([
@@ -55,19 +54,13 @@ class DeliverySchedules(models.Model):
         if self.state == 'draft':
             self.line_ids=[]
 
-    @api.model
-    def create(self, vals):
-        requested_date = vals['requested_date']
-        operating_unit = self.env['operating.unit'].search([('id','=',vals['operating_unit_id'])])
-        seq = self.env['ir.sequence'].next_by_code_new('delivery.schedule', requested_date,operating_unit) or '/'
-        vals['name'] = seq
-        vals['origin'] = seq
-        return super(DeliverySchedules, self).create(vals)
-
     @api.multi
     def action_approve(self):
         if not self.line_ids:
             raise ValidationError("Without Product Details information, you can't confirm it.")
+        if self.name == '/':
+            seq = self.env['ir.sequence'].next_by_code_new('delivery.schedule', self.requested_date, self.operating_unit_id)
+            self.write({'name' : seq, 'origin' : seq,})
         res = {
             'state': 'approve',
             'approve_date': fields.Datetime.now(),
@@ -75,7 +68,7 @@ class DeliverySchedules(models.Model):
         }
         for line in self.line_ids:
             if line.state in ['draft','revision']:
-                line.write({'state': 'approve',})
+                line.write({'state': 'approve','requested_date':self.requested_date})
         # email....................................................................
         email_server_obj = self.env['ir.mail_server'].search([], order='id ASC', limit=1)
         template = self.env.ref('delivery_schedules.schedule_email_template')
@@ -122,20 +115,13 @@ class DeliverySchedules(models.Model):
     @api.constrains('requested_date')
     def _check_requested_date(self):
         if self.requested_date < fields.Date.today():
-            raise ValidationError(_("Can't give Previous date"))
+            raise ValidationError(_("Requested date can't be back date entry"))
         elif self.requested_date > fields.Date.to_string(datetime.date.today() + relativedelta(days=7)):
-            raise ValidationError(_("Can't give bigger then 7 days"))
+            raise ValidationError(_("Requested date can't bigger then 7 days"))
         else:
             pass
 
-    @api.constrains('name')
-    def _check_unique_constraint(self):
-        if self.name:
-            filters = [['name', '=ilike', self.name]]
-            name = self.search(filters)
-            if len(name) > 1:
-                raise Warning('[Unique Error] Name must be unique!')
-
+    # ----------------------------------------------------------------------------------------------------------------------------
     @api.multi
     def generate_schedule_letter(self):
 

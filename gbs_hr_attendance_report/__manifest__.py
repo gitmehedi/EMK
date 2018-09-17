@@ -7,7 +7,6 @@
     'depends': [
         'hr_attendance',
         'hr',
-        'gbs_hr_calendar',
         'gbs_operating_unit',
         'gbs_hr_employee',
         'hr_employee_operating_unit',

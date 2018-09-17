@@ -48,7 +48,7 @@
                                                 <td class="text-left"><span t-esc="l.product_id.name"/></td>
                                                 <td class="text-left"><span t-esc="l.do_qty"/></td>
                                                 <td class="text-left"><span t-esc="l.undelivered_qty"/></td>
-                                                <td class="text-left"><span t-esc="l.uom_id"/></td>
+                                                <td class="text-left"><span t-esc="l.uom_id.name"/></td>
                                                 <td class="text-left"><span t-esc="l.scheduled_qty"/></td>
                                                 <td class="text-left"><span t-esc="l.remarks"/></td>
                                             </tr>

@@ -1,14 +1,6 @@
-# -*- coding: utf-8 -*-
-# ©  2016 Md Mehedi Hasan <md.mehedi.info@gmail.com>
-
-
 import datetime
 import time
-
-from openerp import api
-from openerp import exceptions
-from openerp import fields
-from openerp import models
+from odoo import fields, models, api,exceptions
 
 
 class CalendarHolidayType(models.Model):
@@ -54,11 +46,11 @@ class CalendarHolidayType(models.Model):
 
             if not self.year_id.date_start:
                 raise exceptions.ValidationError("Please provide start date of fiscal year")
-            if not self.year_id.date_stop:
+            if not self.year_id.date_end:
                 raise exceptions.ValidationError("Please provide end date of fiscal year")
 
             start_date = self.year_id.date_start.split('-')
-            end_date = self.year_id.date_stop.split('-')
+            end_date = self.year_id.date_end.split('-')
 
             days = datetime.datetime(int(end_date[0]), int(end_date[1]), int(end_date[2]))-datetime.datetime(int(start_date[0]), int(start_date[1]), int(start_date[2]))
 

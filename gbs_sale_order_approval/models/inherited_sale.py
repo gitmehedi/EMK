@@ -225,6 +225,10 @@ class SaleOrder(models.Model):
             sale_type_pool = self.env['sale.order.type'].search([('id', '=', self.type_id.id)])
             self.credit_sales_or_lc = sale_type_pool.sale_order_type
             self.currency_id = sale_type_pool.currency_id.id
+
+            if self.type_id.sale_order_type != 'lc_sales':
+                self.pi_id = None
+
             if self.type_id.sale_order_type == 'lc_sales':
                 existing_lc = self.search([('type_id', '=', self.type_id.id)])
                 return {'domain': {'pi_id': [('id', 'not in', [i.pi_id.id for i in existing_lc]),
@@ -433,7 +437,7 @@ class SaleOrder(models.Model):
                 'so_type': self.credit_sales_or_lc,
                 'so_date': self.date_order,
                 # 'warehouse_id': self.warehouse_id,
-                'amount_untaxed': self.amount_untaxed,
+                'amount_untaxed': self.amount_total,
                 'tax_value': self.amount_tax,
                 'total_amount': self.amount_total,
                 'operating_unit_id': self.operating_unit_id.id
@@ -450,29 +454,26 @@ class SaleOrder(models.Model):
                     'uom_id': record.product_uom.id,
                     'price_unit': record.price_unit,
                     'commission_rate': record.commission_rate,
-                    'price_subtotal': record.price_subtotal,
-                    # 'tax_id': record.tax_id
+                    'price_subtotal': record.price_total,
+                    'tax_id': record.tax_id.id,
                 }
 
                 self.env['delivery.authorization.line'].create(da_line)
 
+
     def action_view_delivery_auth(self):
         form_view = self.env.ref('delivery_order.delivery_order_form')
-        tree_view = self.env.ref('delivery_order.delivery_authorization_tree_view')
+        action = self.env.ref('delivery_order.delivery_order_action').read()[0]
         da_pool = self.env['delivery.authorization'].search([('sale_order_id', '=', self.id)])
 
-        return {
-            'name': ('Delivery Authorization'),
-            "type": "ir.actions.act_window",
-            'res_model': 'delivery.authorization',
-            'view_type': 'form',
-            'view_mode': 'tree,form',
-            'views': [
-                (tree_view.id, 'tree'),
-                (form_view.id, 'form'),
-            ],
-            "domain": [('id', '=', da_pool.id)],
-        }
+        if len(da_pool) > 1:
+            action['domain'] = [('id', 'in', da_pool.ids)]
+        elif da_pool:
+            action['views'] = [(form_view.id, 'form')]
+            action['res_id'] = da_pool.id
+
+        return action
+
 
     def second_approval_business_logics(self, cust_commission_pool, lines, price_change_pool):
 
@@ -602,7 +603,7 @@ class SaleOrder(models.Model):
     def _get_sales_channel(self):
         return self.env['sales.channel'].search([], limit=1)
 
-    sales_channel = fields.Many2one('sales.channel', string='Sales Channel', readonly=True,
+    sales_channel = fields.Many2one('sales.channel', string='Sales Channel', readonly=True,track_visibility='onchange',
                                     states={'to_submit': [('readonly', False)]}, required=True)
 
     warehouse_id = fields.Many2one(

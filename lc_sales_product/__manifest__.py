@@ -15,6 +15,7 @@
         'amount_to_word_bd',
         'product_harmonized_system',
         'account',
+        'gbs_sale_order_approval',
     ],
 
     'data': [

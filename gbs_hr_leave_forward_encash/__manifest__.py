@@ -17,10 +17,10 @@
     'depends': [
         'hr',
         'hr_holidays',
-        'hr_holidays_leave_year',
         'hr_attendance',
         'gbs_hr_attendance',
         'hr_employee_seniority',
+        'hr_holiday_year',
         ],
     'summary': 'Leave carry forward process is calculated ',
     'description': 

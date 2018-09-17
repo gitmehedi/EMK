@@ -10,6 +10,7 @@
             <xpath expr="//field[@name='lang']" position="after">
                 <field name="tax"/>
                 <field name="vat"/>
+                <field name="bin"/>
             </xpath>
         </field>
     </record>

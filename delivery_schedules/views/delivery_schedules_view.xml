@@ -62,13 +62,9 @@
                                 <field name="operating_unit_id" options="{'no_open': True, 'no_create': True}"/>
                             </group>
                             <notebook colspan="4">
-                                <page string="Products">
+                                <page string="Customers">
                                     <field name="line_ids">
                                         <tree string="List" editable="bottom">
-                                            <field name="operating_unit_id" invisible="1"/>
-                                            <field name="schedule_line_date" invisible="1"/>
-                                            <field name="requested_date" invisible="1"/>
-
                                             <field name="partner_id" options="{'no_open': True, 'no_create': True}"/>
                                             <field name="pending_do" options="{'no_open': True, 'no_create': True}"/>
                                             <field name="product_id" options="{'no_open': True, 'no_create': True}"/>
@@ -178,7 +174,7 @@
             <field name="model">delivery.schedules.line</field>
             <field name="arch" type="xml">
                 <search string="Delivery Instruction">
-                    <filter name="today" string="Today" domain="[('requested_date','&gt;=',time.strftime('%%Y-%%m-%%d'))]"/>
+                    <filter name="today" string="Today" domain="[('requested_date','=',time.strftime('%%Y-%%m-%%d'))]"/>
                     <separator/>
                     <filter name="pending" string="Pending" domain="[('state','=','approve')]"/>
                 </search>

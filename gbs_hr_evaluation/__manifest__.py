@@ -24,6 +24,7 @@ Manages several types of evaluations: bottom-up, top-down, self-evaluations and 
         'operating_unit',
         'question_set',
         'hr_employee_seniority',
+        'date_range',
     ],
     'data': [
         'security/ir.model.access.csv',

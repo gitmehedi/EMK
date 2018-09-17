@@ -1,7 +1,7 @@
 from odoo import models, fields, api
 
 
-class DOMaxOrderQtyWithoutLc(models.Model):
+class DOMaxOrderQtyWithoutLc(models.TransientModel):
     _name = 'max.delivery.without.lc.wizard'
 
     info_text = fields.Char(string='Info Text', default=lambda self: self.env.context.get('product_name'),

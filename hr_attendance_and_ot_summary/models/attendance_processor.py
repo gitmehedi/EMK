@@ -15,10 +15,16 @@ class AttendanceProcessor(models.Model):
 
     # salary_deduction_late_day = 3
 
-    period_query = """SELECT ap.date_start, ap.date_stop
-                       FROM hr_attendance_summary ac
-                       JOIN account_period ap ON ap.id = ac.period
-                       WHERE ac.id = %s LIMIT 1"""
+    period_query = """SELECT dr.date_start, dr.date_end 
+                      FROM hr_attendance_summary ac
+                      JOIN date_range dr ON dr.id = ac.period
+                      JOIN date_range_type dt ON dr.type_id = dt.id
+                      WHERE dt.holiday_month = True AND ac.id = %s LIMIT 1"""
+
+    # period_query = """SELECT ap.date_start, ap.date_stop
+    #                        FROM hr_attendance_summary ac
+    #                        JOIN account_period ap ON ap.id = ac.period
+    #                        WHERE ac.id = %s LIMIT 1"""
 
 
     # attendance_query = """SELECT (check_in + interval '6h') AS check_in, (check_out + interval '6h') AS check_out, worked_hours

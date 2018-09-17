@@ -1,4 +1,4 @@
-from openerp import api, exceptions, fields, models
+from odoo import api, exceptions, fields, models
 
 class HrCalendarCloneWizard(models.TransientModel):
     _name = "hr.calendar.clone.wizard"
