@@ -1,9 +1,9 @@
 {
-    'name': 'Customer Report',
+    'name': 'Report Layout',
     'category': 'Reprot',
     'summary': 'Add custom header and footer',
-    'author': 'Md. Mehedi Hasan',
-    'website': 'https://github.com/gitmehedi',
+    'author': 'Genweb2',
+    'website': 'genweb2.com',
     'depends': ['web','report'],
     'data': [
         'data/paperformat.xml',
