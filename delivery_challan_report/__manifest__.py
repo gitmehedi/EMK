@@ -7,6 +7,7 @@
     'depends': [
         'stock',
         'amount_to_word_bd',
+        'report_layout',
     ],
 
     'data': [

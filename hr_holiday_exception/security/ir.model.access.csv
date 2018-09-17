@@ -1,0 +1,5 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+
+access_hr_holidays_exception_employee_batch,access_hr_holidays_exception_employee_batch,model_hr_holidays_exception_employee_batch,hr.group_hr_user,1,1,1,1
+access_hr_exception_compensatory_leave,access_hr_exception_compensatory_leave,model_hr_exception_compensatory_leave,hr.group_hr_user,1,1,1,1
+access_hr_exception_overtime_duty,access_hr_exception_overtime_duty,model_hr_exception_overtime_duty,hr.group_hr_user,1,1,1,1

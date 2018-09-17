@@ -1,4 +1,4 @@
-from openerp import models, fields, api, exceptions
+from odoo import models, fields, api, exceptions
 
 class CalendarHoliday(models.Model):
     _name='calendar.holiday'

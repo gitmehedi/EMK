@@ -1,14 +1,6 @@
-# -*- coding: utf-8 -*-
-# ©  2016 Md Mehedi Hasan <md.mehedi.info@gmail.com>
-
-
 import datetime
 import time
-
-from openerp import api
-from openerp import exceptions
-from openerp import fields
-from openerp import models
+from odoo import fields, models, api,exceptions
 
 
 class CalendarHolidayType(models.Model):

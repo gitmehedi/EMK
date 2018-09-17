@@ -1,5 +1,5 @@
-from openerp import fields, models, api,_
-from openerp.exceptions import Warning as UserError
+from odoo import fields, models, api,_
+from odoo.exceptions import Warning as UserError
 
 
 class HrEmployeeExceptionHolidaysBatch(models.Model):
@@ -32,12 +32,8 @@ class HrEmployeeExceptionHolidaysBatch(models.Model):
     @api.onchange('public_holidays_title')
     def onchange_public_holidays_title(self):
         self.public_holidays_line=[]
-        if self.public_holidays_title:
-            return {'domain': {'public_holidays_line': [('public_type_id', '=', self.public_holidays_title.id)]}}
-            # if self.operating_unit_id:
-            #
-            # else:
-            #     raise UserError(_('Select Operating Unit!!'))
+        return {'domain': {'public_holidays_line': [('public_type_id', '=', self.public_holidays_title.id)]}}
+
 
     _sql_constraints = [
         ('name_uniq', 'unique(name)', 'This Name is already in use'),
@@ -105,7 +101,7 @@ class HrEmployeeExceptionHolidaysBatch(models.Model):
                 emp_ids.append(ot_obj.employee_id.id)
 
 
-        res = self.env.ref('hr_public_holidays.view_hr_compensatory_leave_wizard_form')
+        res = self.env.ref('hr_holiday_exception.view_hr_compensatory_leave_wizard_form')
         result = {
             'name': _('Exception Compensatory Leave'),
             'view_type': 'form',
@@ -137,7 +133,7 @@ class HrEmployeeExceptionHolidaysBatch(models.Model):
             for ot_obj in ot_pool:
                 emp_ids.append(ot_obj.employee_id.id)
 
-        res = self.env.ref('hr_public_holidays.view_hr_exception_overtime_wizard_form')
+        res = self.env.ref('hr_holiday_exception.view_hr_exception_overtime_wizard_form')
         result = {
             'name': _('Exception Overtime'),
             'view_type': 'form',
@@ -155,7 +151,7 @@ class HrEmployeeExceptionHolidaysBatch(models.Model):
     @api.multi
     def unlink(self):
         for excep in self:
-            if excep.state=='approved':
+            if excep.state!='draft':
                 raise UserError(_('You can not delete in this state!!'))
             else:
                 return super(HrEmployeeExceptionHolidaysBatch, self).unlink()
