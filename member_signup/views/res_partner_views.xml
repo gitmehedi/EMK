@@ -50,6 +50,8 @@
                             <field name="last_place_of_study"/>
                             <field name="hightest_certification"
                                    options="{'no_create_edit':True,'no_open':True}"/>
+                            <field name="hightest_certification_other"
+                                   options="{'no_create_edit':True,'no_open':True}"/>
                             <field name="field_of_study"/>
                             <field name="place_of_study"/>
                             <field name="usa_work_or_study" widget="radio" options="{'horizontal': true}"/>
