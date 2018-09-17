@@ -2,8 +2,9 @@ from odoo import fields, models, api,_
 
 class TermsSetup(models.Model):
     _name = "terms.setup"
+    _inherit = ['mail.thread', 'ir.needaction_mixin']
 
-    name = fields.Char(string = 'Name',required=True)
+    name = fields.Char(string = 'Name',required=True,track_visibility='onchange')
     terms_condition = fields.Text(string='Terms & Conditions', required=True)
 
 

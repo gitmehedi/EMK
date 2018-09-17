@@ -106,7 +106,7 @@ class EmployeeExitReq(models.Model):
                             }))
         self.checklists_ids = vals
         self.confirm_by = self.env.user
-        self.send_mail_exit_request_confirm()
+        #self.send_mail_exit_request_confirm()
         return self.write({'state': 'confirm','confirm_date': time.strftime('%Y-%m-%d %H:%M:%S')})
 
     @api.multi
@@ -132,7 +132,7 @@ class EmployeeExitReq(models.Model):
     @api.multi
     def exit_validate(self):
         self.approver1_by = self.env.user
-        self.send_mail_template()
+        #self.send_mail_template()
         return self.write({'state': 'validate1', 'approved1_date': time.strftime('%Y-%m-%d %H:%M:%S')})
 
     @api.multi
@@ -182,7 +182,7 @@ class EmployeeExitReq(models.Model):
                 self.write({'state': 'refuse'})
             else:
                 self.write({'state': 'refuse'})
-        self.send_mail_exit_request_cancel()
+        #self.send_mail_exit_request_cancel()
         return True
 
     @api.multi
@@ -259,7 +259,7 @@ class PendingChecklistsLine(models.Model):
                     exit_line.write({'state': 'received'})
             else:
                 pass
-        self.send_mail_received_item()
+        #self.send_mail_received_item()
         return self.write({'status': 'verify', 'state': 'received'})
 
     @api.multi

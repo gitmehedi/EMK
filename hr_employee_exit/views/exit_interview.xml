@@ -147,7 +147,7 @@
         </record>
 
 
-        <menuitem id="factor_menu" name="Factors" parent="hr.menu_human_resources_configuration" sequence="82"
+        <menuitem id="factor_menu" name="Factors" parent="hr.menu_human_resources_configuration" sequence="82" groups ="gbs_application_group.group_dept_manager,hr.group_hr_manager"
                   action="factor_action"  />
     </data>
 </odoo>
