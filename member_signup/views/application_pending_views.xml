@@ -123,6 +123,7 @@
                                     <field name="birthdate"/>
                                     <field name="occupation"
                                            options="{'no_create_edit':True,'no_open':True}"/>
+                                    <field name="occupation_other"/>
                                     <field name="subject_of_interest" widget="many2many_tags"
                                            options="{'no_create_edit':True,'no_open':True}"/>
                                     <field name="subject_of_interest_others"/>
@@ -131,6 +132,7 @@
                                     <field name="last_place_of_study"/>
                                     <field name="hightest_certification"
                                            options="{'no_create_edit':True,'no_open':True}"/>
+                                    <field name="hightest_certification_other"/>
                                     <field name="field_of_study"/>
                                     <field name="place_of_study"/>
                                     <field name="usa_work_or_study" widget="radio" options="{'horizontal': true}"/>

@@ -43,9 +43,10 @@ class ResPartner(models.Model):
     auto_renew = fields.Boolean(string='Auto Renew', default=False)
 
     last_place_of_study = fields.Char(string='Last or Current Place of Study')
-    place_of_study = fields.Char(string='Last or Current Place of Study')
+    place_of_study = fields.Char(string='Place of Study')
     field_of_study = fields.Char(string='Field of Study')
-    alumni_institute = fields.Char(string='Alumni Institute')
+    alumni_institute = fields.Char(
+        string='If you are an alumni of an American institution, which school did you attend?')
     current_employee = fields.Char(string='Current Employer')
     work_title = fields.Char(string='Work Title')
     work_phone = fields.Char(string='Work Phone')
@@ -61,9 +62,11 @@ class ResPartner(models.Model):
 
     nationality_id = fields.Many2one("res.country", "Nationality")
     occupation = fields.Many2one('member.occupation', string='Occupation')
+    occupation_other = fields.Char(string='Occupation Others')
     subject_of_interest = fields.Many2many('member.subject.interest', string='Subjects of Interest')
     subject_of_interest_others = fields.Char()
     hightest_certification = fields.Many2one('member.certification', string='Highest Certification Achieved')
+    hightest_certification_other = fields.Char(string='Highest Certification Achieved Others')
 
     state = fields.Selection(
         [('application', 'Application'), ('invoice', 'Invoiced'),

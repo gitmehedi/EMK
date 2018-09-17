@@ -99,8 +99,17 @@
                     </div>
                     <div class="col-md-6">
                         <div class="form-group form-field">
+                            <label for="weburl" class="control-label">Website</label>
+                            <input type="text" name="weburl" id="weburl"
+                                   placeholder="www.abc.com"
+                                   pattern="^(www\.){0,1}[a-zA-Z0-9\.\-]+\.[a-zA-Z]{2,5}[\.]{0,1}$"
+                                   class="form-control input-sm"/>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group form-field">
                             <label for="occupation" class="control-label">Occupation</label>
-                            <select class="form-control input-sm reqfield" name="occupation"
+                            <select class="form-control input-sm reqfield" name="occupation" id="occupation"
                                     required="required">
                                 <option value="">--Please Select--</option>
                                 <t t-foreach="occupation_ids" t-as='label'>
@@ -111,16 +120,15 @@
                                 </t>
                             </select>
                         </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="form-group form-field">
-                            <label for="weburl" class="control-label">Website</label>
-                            <input type="text" name="weburl" id="weburl"
-                                   placeholder="www.abc.com"
-                                   pattern="^(www\.){0,1}[a-zA-Z0-9\.\-]+\.[a-zA-Z]{2,5}[\.]{0,1}$"
-                                   class="form-control input-sm"/>
+                        <div class="form-group form-field" style="display:none;">
+                            <input type="text" name="occupation_other"
+                                   t-att-value="occupation_other" id="occupation_other"
+                                   class="form-control input-sm reqfield"/>
                         </div>
+
                     </div>
+
+
                     <div class="col-md-6">
                         <div class="form-group form-field">
                             <label for="street" class="control-label">Current Address</label>
@@ -230,9 +238,9 @@
                     </div>
                     <div class="col-sm-12">
                         <div class="form-group form-field">
-                            <label for="hightest_certification" class="control-label">Highest Certification Achieved
+                            <label for="hightest_certification"  class="control-label">Highest Certification Achieved
                             </label>
-                            <select class="form-control input-sm" name="hightest_certification">
+                            <select class="form-control input-sm" name="hightest_certification" id="hightest_certification">
                                 <option value="">--Please Select--</option>
                                 <t t-foreach="hightest_certification_ids" t-as='label'>
                                     <option t-att-value="label_value[0]"
@@ -241,6 +249,11 @@
                                     </option>
                                 </t>
                             </select>
+                        </div>
+                        <div class="form-group form-field" style="display:none;">
+                            <input type="text" name="hightest_certification_other"
+                                   t-att-value="hightest_certification_other" id="hightest_certification_other"
+                                   class="form-control input-sm reqfield"/>
                         </div>
                     </div>
                     <div class="col-sm-6">
@@ -280,12 +293,11 @@
                     <div class="col-md-12">
                         <div class="form-group form-field" style="display: none;">
                             <label for="usa_work_or_study_place" class="control-label">If yes, where in the U.S. have
-                                you
-                                worked, or Studied
+                                you worked, or Studied
                             </label>
                             <input type="text" name="usa_work_or_study_place" t-att-value="usa_work_or_study_place"
                                    placeholder="Institute Name or Company Name"
-                                   id="usa_work_or_study_place" class="form-control input-sm"/>
+                                   id="usa_work_or_study_place" class="form-control input-sm reqfield"/>
                         </div>
                     </div>
                     <div class="col-md-12">
@@ -361,7 +373,7 @@
                             <div class="wrap_signature pull-left" id="img_wrap">
                                 <input id="signature-image-upload" name="signature_image" class="hidden"
                                        type="file">
-                                    <img id="member_image"/>
+                                    <img id="img_wrap"/>
                                 </input>
                                 <div class="signature_image_layer">
                                     <p class="img_desc text-center">Click here to upload singnature.</p>

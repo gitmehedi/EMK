@@ -54,6 +54,33 @@ $(function () {
         }
     });
 
+
+
+
+    $('#hightest_certification').change(function(){
+        var val = $('#hightest_certification option:selected').text().trim().toLowerCase();
+        var selector = $('#hightest_certification_other');
+        if (val=="other"){
+            selector.attr('required','required');
+            selector.parent().show();
+        }else{
+            selector.val('').removeAttr('required');
+            selector.parent().hide();
+        }
+    });
+
+    $('#occupation').change(function(){
+        var val = $('#occupation option:selected').text().trim().toLowerCase();
+        var selector = $('#occupation_other');
+        if (val=="other"){
+            selector.attr('required','required');
+            selector.parent().show();
+        }else{
+            selector.val('').removeAttr('required');
+            selector.parent().hide();
+        }
+    });
+
     $('input[name=usa_work_or_study]').change(function(){
         var val = $("input:checked[name=usa_work_or_study]:checked").val();
         if (val=='yes'){
