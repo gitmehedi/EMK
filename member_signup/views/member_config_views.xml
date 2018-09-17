@@ -5,7 +5,7 @@
         <field name="model">member.occupation</field>
         <field name="priority" eval="1"/>
         <field name="arch" type="xml">
-            <form string="Occupation" delete="false">
+            <form string="Occupation">
                 <sheet>
                     <group>
                         <group>
@@ -26,7 +26,7 @@
         <field name="model">member.occupation</field>
         <field name="priority" eval="1"/>
         <field name="arch" type="xml">
-            <tree string="Occupation" delete="false">
+            <tree string="Occupation">
                 <field name="name"/>
                 <field name="status"/>
             </tree>
@@ -53,7 +53,7 @@
         <field name="model">member.subject.interest</field>
         <field name="priority" eval="1"/>
         <field name="arch" type="xml">
-            <form string="Subject of Interest" delete="false">
+            <form string="Subject of Interest">
                 <sheet>
                     <group>
                         <group>
@@ -75,7 +75,7 @@
         <field name="model">member.subject.interest</field>
         <field name="priority" eval="1"/>
         <field name="arch" type="xml">
-            <tree string="Subject of Interest" delete="false">
+            <tree string="Subject of Interest">
                 <field name="name"/>
                 <field name="status"/>
             </tree>
@@ -103,7 +103,7 @@
         <field name="model">member.certification</field>
         <field name="priority" eval="1"/>
         <field name="arch" type="xml">
-            <form string="Certification" delete="false">
+            <form string="Certification" >
                 <sheet>
                     <group>
                         <group>
@@ -124,7 +124,7 @@
         <field name="model">member.certification</field>
         <field name="priority" eval="1"/>
         <field name="arch" type="xml">
-            <tree string="Certification" delete="false">
+            <tree string="Certification">
                 <field name="name"/>
                 <field name="status"/>
             </tree>

@@ -257,7 +257,7 @@ class ResPartner(models.Model):
             vals = {
                 'template': 'member_signup.member_application_rejection_email_template',
                 'email_to': self.email,
-                'context': {},
+                'context': {'name': self.name},
             }
             self.mailsend(vals)
             self.state = 'reject'

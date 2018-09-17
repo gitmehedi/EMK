@@ -16,9 +16,16 @@ class InheritedMembershipCategory(models.Model):
 
 
 class InheritedProductTemplate(models.Model):
-    _inherit = "product.template"
+    _name = 'product.template'
+    _inherit = ['product.template', 'mail.thread', 'ir.needaction_mixin']
 
-    membership_status = fields.Boolean(string='Default Membership', default=False)
+    list_price = fields.Float(track_visibility='onchange')
+    membership_status = fields.Boolean(string='Default Membership', default=False, track_visibility='onchange')
+    membership = fields.Boolean(help='Check if the product is eligible for membership.',track_visibility='onchange')
+    membership_date_from = fields.Date(string='Membership Start Date',
+                                       help='Date from which membership becomes active.',track_visibility='onchange')
+    membership_date_to = fields.Date(string='Membership End Date',
+                                     help='Date until which membership remains active.',track_visibility='onchange')
 
     @api.constrains('name')
     def _check_name(self):

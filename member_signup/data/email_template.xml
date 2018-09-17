@@ -129,7 +129,7 @@
                 </table>
             </div>
             <div style="padding:0px;width:600px;margin:auto;background: #FFFFFF repeat top /100%;color:#777777">
-            <p>Dear ${object.name},</p>
+            <p>Dear ${ctx['name']},</p>
                 <p>
                     You application is not compatible as our policy. So try for next time.
                 </p>

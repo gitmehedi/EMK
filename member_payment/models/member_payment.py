@@ -121,7 +121,7 @@ class MemberPayment(models.Model):
                     vals = {
                         'template': 'member_payment.member_payment_confirmation_tmpl',
                         'email_to': self.membership_id.email,
-                        'context': {},
+                        'context': {'name': self.membership_id.name},
                     }
 
                     self.env['res.partner'].mailsend(vals)
