@@ -116,6 +116,7 @@
                                     <field name="birthdate"/>
                                     <field name="occupation"
                                            options="{'no_create_edit':True,'no_open':True}"/>
+                                    <field name="occupation_other"/>
                                     <field name="subject_of_interest" widget="many2many_tags"
                                            options="{'no_create_edit':True,'no_open':True}"/>
                                     <field name="subject_of_interest_others"/>
