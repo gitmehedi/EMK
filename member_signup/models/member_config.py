@@ -6,11 +6,12 @@ from odoo import api, fields, models, _
 
 class MemberOccupation(models.Model):
     _name = 'member.occupation'
+    _inherit = ['mail.thread', 'ir.needaction_mixin']
     _description = "Members Occupation"
     _order = 'id ASC'
 
-    name = fields.Char(string='Title', required=True, size=50)
-    status = fields.Boolean(string='Status', default=True)
+    name = fields.Char(string='Title', required=True, size=50, track_visibility='onchange')
+    status = fields.Boolean(string='Status', default=True, track_visibility='onchange')
 
     @api.constrains('name')
     def _check_name(self):
@@ -21,11 +22,12 @@ class MemberOccupation(models.Model):
 
 class MemberSubjectOfInterest(models.Model):
     _name = 'member.subject.interest'
+    _inherit = ['mail.thread', 'ir.needaction_mixin']
     _description = "Members Subject of Interest"
     _order = 'id ASC'
 
-    name = fields.Char(string='Title', required=True, size=50)
-    status = fields.Boolean(string='Status', default=True)
+    name = fields.Char(string='Title', required=True, size=50, track_visibility='onchange')
+    status = fields.Boolean(string='Status', default=True, track_visibility='onchange')
 
     @api.constrains('name')
     def _check_name(self):
@@ -36,11 +38,12 @@ class MemberSubjectOfInterest(models.Model):
 
 class MemberCertification(models.Model):
     _name = 'member.certification'
+    _inherit = ['mail.thread', 'ir.needaction_mixin']
     _description = "Members Certification"
-    _order='id ASC'
+    _order = 'id ASC'
 
-    name = fields.Char(string='Title', required=True, size=50)
-    status = fields.Boolean(string='Status', default=True)
+    name = fields.Char(string='Title', required=True, size=50, track_visibility='onchange')
+    status = fields.Boolean(string='Status', default=True, track_visibility='onchange')
 
     @api.constrains('name')
     def _check_name(self):

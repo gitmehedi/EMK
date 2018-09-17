@@ -1,11 +1,32 @@
 <?xml version="1.0"?>
 <odoo>
+    <record id="view_member_occupation_form" model="ir.ui.view">
+        <field name="name">member.occupation.form</field>
+        <field name="model">member.occupation</field>
+        <field name="priority" eval="1"/>
+        <field name="arch" type="xml">
+            <form string="Occupation" delete="false">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="status"/>
+                        </group>
+                    </group>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers"/>
+                    <field name="message_ids" widget="mail_thread"/>
+                </div>
+            </form>
+        </field>
+    </record>
     <record id="view_member_occupation_tree" model="ir.ui.view">
         <field name="name">member.occupation.tree</field>
         <field name="model">member.occupation</field>
         <field name="priority" eval="1"/>
         <field name="arch" type="xml">
-            <tree string="Occupation" editable="bottom">
+            <tree string="Occupation" delete="false">
                 <field name="name"/>
                 <field name="status"/>
             </tree>
@@ -27,12 +48,34 @@
               action="action_membership_occupation"
               groups="membership_user.group_mem_user_officer,membership_extension.group_membership_manager"/>
 
+    <record id="view_member_subject_of_interest_form" model="ir.ui.view">
+        <field name="name">member.subject.interest.form</field>
+        <field name="model">member.subject.interest</field>
+        <field name="priority" eval="1"/>
+        <field name="arch" type="xml">
+            <form string="Subject of Interest" delete="false">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="status"/>
+                        </group>
+                    </group>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers"/>
+                    <field name="message_ids" widget="mail_thread"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
     <record id="view_member_subject_of_interest_tree" model="ir.ui.view">
         <field name="name">member.subject.interest.tree</field>
         <field name="model">member.subject.interest</field>
         <field name="priority" eval="1"/>
         <field name="arch" type="xml">
-            <tree string="Subject of Interest" editable="bottom">
+            <tree string="Subject of Interest" delete="false">
                 <field name="name"/>
                 <field name="status"/>
             </tree>
@@ -55,12 +98,33 @@
               groups="membership_user.group_mem_user_officer,membership_extension.group_membership_manager"/>
 
 
+    <record id="view_member_certification_form" model="ir.ui.view">
+        <field name="name">member.certification.form</field>
+        <field name="model">member.certification</field>
+        <field name="priority" eval="1"/>
+        <field name="arch" type="xml">
+            <form string="Certification" delete="false">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="status"/>
+                        </group>
+                    </group>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers"/>
+                    <field name="message_ids" widget="mail_thread"/>
+                </div>
+            </form>
+        </field>
+    </record>
     <record id="view_member_certification_tree" model="ir.ui.view">
         <field name="name">member.certification.tree</field>
         <field name="model">member.certification</field>
         <field name="priority" eval="1"/>
         <field name="arch" type="xml">
-            <tree string="Certification" editable="bottom">
+            <tree string="Certification" delete="false">
                 <field name="name"/>
                 <field name="status"/>
             </tree>
