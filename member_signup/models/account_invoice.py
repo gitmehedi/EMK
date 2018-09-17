@@ -15,5 +15,5 @@ class AccountInvoiceLine(models.Model):
         if invoice_line.invoice_id.type == 'out_invoice' and \
                 invoice_line.product_id.membership:
             inv = MemberLine.search([('account_invoice_line', '=', invoice_line.id)])
-            inv.write({'date': '', 'date_from': '', 'date_to': ''})
+            inv.write({'date': None, 'date_from': None, 'date_to': None})
         return invoice_line
