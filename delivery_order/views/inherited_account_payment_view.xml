@@ -9,6 +9,15 @@
             <field name="inherit_id" ref="account.view_account_payment_form"/>
             <field name="arch" type="xml">
 
+                <xpath expr="//field[@name='currency_id']" position="replace">
+                    <field name="currency_id"
+                           options="{'no_create': True, 'no_open': True}"
+                           groups="base.group_multi_currency"
+                           attrs="{'readonly': [('state', '!=', 'draft')]}"
+                           invisible="1"
+                    />
+                </xpath>
+
                 <field name="payment_type" position="before">
                     <field name="my_menu_check" invisible="1"/>
                 </field>
@@ -22,7 +31,7 @@
                 </field>
 
                 <field name="payment_type" position="replace">
-                    <field name="payment_type" widget="radio" attrs="{'invisible':[('my_menu_check','=',True)]}" />
+                    <field name="payment_type" widget="radio" attrs="{'invisible':[('my_menu_check','=',True)]}"/>
                 </field>
 
                 <field name="payment_type" position="after">
@@ -44,11 +53,11 @@
                 </field>
 
                 <field name="journal_id" position="after">
-                    <field name="deposit_slip" attrs="{'invisible':['|',('my_menu_check','=',False),('journal_id','=',12)]}"/>
+                    <field name="deposit_slip" invisible="1"/>
                 </field>
 
                 <field name="journal_id" position="after">
-                    <field name="cheque_no" attrs="{'invisible':['|',('my_menu_check','=',False),('journal_id','=',12)]}"/>
+                    <field name="cheque_no" invisible="1"/>
                 </field>
 
             </field>
@@ -65,25 +74,28 @@
             <field name="res_model">account.payment</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,graph</field>
-            <field name="context">{'default_my_menu_check': True, 'default_payment_type': 'inbound', 'default_partner_type': 'customer'}</field>
+            <field name="context">{'default_my_menu_check': True, 'default_payment_type': 'inbound',
+                'default_partner_type': 'customer'}
+            </field>
             <field name="domain">[('partner_type', '=', 'customer')]</field>
             <field name="view_id" ref="account.view_account_payment_tree"/>
             <field name="help" type="html">
                 <p class="oe_view_nocontent_create">
-                  Click to register a payment
-                </p><p>
-                  Payments are used to register liquidity movements (send, collect or transfer money).
-                  You can then process those payments by your own means or by using installed facilities.
+                    Click to register a payment
+                </p>
+                <p>
+                    Payments are used to register liquidity movements (send, collect or transfer money).
+                    You can then process those payments by your own means or by using installed facilities.
                 </p>
             </field>
         </record>
 
         <!--Inherit Accounting Menus-->
-         <menuitem id="menu_finance_receivables"
-                   name="Sales"
-                   groups="account.group_account_user,gbs_application_group.group_head_account,gbs_application_group.group_cxo"
-                   parent="account.menu_finance"
-                   sequence="2"/>
+        <menuitem id="menu_finance_receivables"
+                  name="Sales"
+                  groups="account.group_account_user,gbs_application_group.group_head_account,gbs_application_group.group_cxo"
+                  parent="account.menu_finance"
+                  sequence="2"/>
 
         <menuitem action="action_account_payments_new"
                   id="menu_action_account_payments_receivable_new"

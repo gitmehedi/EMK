@@ -20,6 +20,7 @@
                 'item_loan_process'],
     'data': [
         'views/stock_picking_views.xml',
+        'views/item_loan_borrowing_views.xml',
         'views/item_loan_lending_views.xml',
     ],
 }

@@ -17,7 +17,7 @@
     'category': 'Product',
     'version': '10.0.1',
 
-    'depends': ['stock','custom_report'],
+    'depends': ['stock','report_layout'],
 
     'data': [
         # 'security/ir.model.access.csv',

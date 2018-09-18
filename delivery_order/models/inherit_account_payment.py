@@ -42,6 +42,14 @@ class InheritAccountPayment(models.Model):
 
 
 
+    @api.onchange('partner_type')
+    def _onchange_partner_type(self):
+        res = super(InheritAccountPayment, self)._onchange_partner_type()
+
+        if self.partner_type:
+            return {'domain': {'partner_id': [(self.partner_type, '=', True),('parent_id', '=', False)]}}
+
+
     @api.onchange('partner_id')
     def onchange_partner_id(self):
         for ds in self:

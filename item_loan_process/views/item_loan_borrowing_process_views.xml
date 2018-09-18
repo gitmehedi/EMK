@@ -36,10 +36,6 @@
                                 states="waiting_approval" type="object"
                                 groups="stock.group_stock_manager"/>
 
-                        <button string="Loan Adjustment" name="action_view_picking"
-                                groups="stock.group_stock_user" class="oe_highlight"
-                                states="approved" type="object"/>
-
                         <field name="state" widget="statusbar"
                                statusbar_visible="draft,waiting_approval,approved"
                                statusbar_colors='{"reject":"red"}' />
@@ -89,15 +85,15 @@
                             <page string="Other">
                                 <group>
                                     <group>
+                                        <field name="location_id" readonly="1"/>
+                                        <field name="item_loan_borrow_location_id" options="{'no_create': True,'no_open':True}"/>
+                                        <field name="picking_type_id" invisible="1"/>
+                                    </group>
+                                    <group>
                                         <field name="company_id" groups="base.group_multi_company"
                                                options="{'no_create': True,'no_open':True}"/>
                                         <field name="operating_unit_id" options="{'no_create': True,'no_open':True}"
                                                groups="operating_unit.group_multi_operating_unit" />
-                                    </group>
-                                    <group>
-                                        <field name="location_id" readonly="1"/>
-                                        <field name="item_loan_borrow_location_id" options="{'no_create': True,'no_open':True}"/>
-                                        <field name="picking_type_id" invisible="1"/>
                                     </group>
                                 </group>
                             </page>
@@ -123,27 +119,45 @@
             </field>
         </record>
         <!-- Item Borrowing Menu -->
-        <menuitem action="action_item_borrowing" name="Item Borrowing"
-                  parent="menu_item_loan_lending_main" id="menu_item_borrowing" sequence="2"
+        <menuitem name="Item Borrowing"
+                  parent="main_menu_item_loan" id="main_menu_item_borrowing" sequence="1"
+                  groups="stock.group_stock_user"/>
+
+        <menuitem action="action_item_borrowing" name="All Records"
+                  parent="main_menu_item_borrowing" id="menu_item_borrowing" sequence="1"
                   groups="stock.group_stock_user"/>
 
         <!-- Item Borrowing Pending Approval Window Action -->
+        <record id="search_item_borrowing" model="ir.ui.view">
+            <field name="name">item.borrowing.search</field>
+            <field name="model">item.borrowing</field>
+            <field name="arch" type="xml">
+                <search string="Loan">
+                    <filter name="approve_manager" string="To Approve" domain="[('state','=','waiting_approval')]"/>
+                </search>
+            </field>
+        </record>
+
         <record id='action_pending_item_borrowing' model='ir.actions.act_window'>
             <field name="name">Pending Approval</field>
             <field name="res_model">item.borrowing</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
-            <field name="domain">[('state','=','waiting_approval')]</field>
+            <field name="context">{
+                'search_default_approve_manager':1,
+                }
+            </field>
             <field name="help" type="html">
                 <p class="oe_view_nocontent_create">
                     Nothing to approve.
                 </p>
             </field>
+            <field name="search_view_id" ref="search_item_borrowing"/>
         </record>
         <!-- Item Borrowing Pending Approval Menu -->
-        <menuitem action="action_pending_item_borrowing" name="Pending Approval"
-                  parent="menu_item_borrowing" id="menu_pending_item_borrowing" sequence="1"
-                  groups="stock.group_stock_user"/>
+        <menuitem action="action_pending_item_borrowing" name="Pending"
+                  parent="main_menu_item_borrowing" id="menu_pending_item_borrowing" sequence="2"
+                  groups="stock.group_stock_manager"/>
 
     </data>
 </odoo>

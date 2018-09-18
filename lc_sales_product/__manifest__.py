@@ -5,16 +5,17 @@
     'category': 'Commercial',
     'version':'10.0.1.0.0',
     'depends': [
-        'sale',
+        'gbs_sale_order_approval',
         'letter_of_credit',
         'com_shipment',
         'shipment_lc_product',
         'gbs_pi_creation',
         'gbs_document_type',
-        'custom_report',
+        'report_layout',
         'amount_to_word_bd',
         'product_harmonized_system',
         'account',
+        'gbs_sale_order_approval',
     ],
 
     'data': [
@@ -31,6 +32,8 @@
         'reports/packing_list_report_view.xml',
         'reports/certificate_of_origin.xml',
         'reports/inspection_certificate.xml',
+        'reports/delivery_challan_report.xml',
+        'reports/truck_receipt_report.xml',
         'wizard/doc_receive_wizard_view.xml',
         'wizard/lc_sales_report_wizard.xml',
         'wizard/sales_export_wizard_view.xml',

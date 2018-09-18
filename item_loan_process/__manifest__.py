@@ -26,8 +26,10 @@ the loan to other company. System will handle the both case mentioned above.
 
     'data': [
         'data/sequence.xml',
+        'data/location_data.xml',
         'security/ir.model.access.csv',
         'security/ir_rule.xml',
+        'views/stock_location_view.xml',
         'views/item_loan_lending_process_views.xml',
         'views/item_loan_borrowing_process_views.xml',
     ],

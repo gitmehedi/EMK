@@ -1,2 +1,1 @@
 import hr_calendar_clone_wizard
-import hr_holidays_exception_wizard

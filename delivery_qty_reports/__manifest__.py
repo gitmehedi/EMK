@@ -8,7 +8,7 @@
         'stock',
         'sale',
         'sales_team',
-        'custom_report',
+        'report_layout',
         'stock_operating_unit',
         'delivery_order',
     ],

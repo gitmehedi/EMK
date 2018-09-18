@@ -23,7 +23,7 @@
                 'hr',
                 'hr_holidays',
                 'hr_recruitment',
-                'gbs_hr_calendar',
+                # 'gbs_hr_calendar',
                 #'hr_experience',
                 'gbs_hr_department_sequence',
                 'gbs_application_group',

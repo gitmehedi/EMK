@@ -83,15 +83,15 @@
                             <page string="Others">
                                 <group>
                                     <group>
+                                        <field name="location_id" options="{'no_create': True,'no_open':True}"/>
+                                        <field name="item_loan_location_id" />
+                                        <field name="picking_type_id" invisible="1"/>
+                                    </group>
+                                    <group>
                                         <field name="company_id" groups="base.group_multi_company"
                                                options="{'no_create': True,'no_open':True}"/>
                                         <field name="operating_unit_id" options="{'no_create': True,'no_open':True}"
                                                groups="operating_unit.group_multi_operating_unit" />
-                                    </group>
-                                    <group>
-                                        <field name="location_id" options="{'no_create': True,'no_open':True}"/>
-                                        <field name="item_loan_location_id" />
-                                        <field name="picking_type_id" invisible="1"/>
                                     </group>
                                 </group>
                             </page>
@@ -106,7 +106,7 @@
         </record>
 
         <!-- Item Loan Main Menu -->
-        <menuitem name="Item Loan Process" parent="stock.menu_stock_root" id="menu_item_loan_lending_main"
+        <menuitem name="Item Loan Process" parent="stock.menu_stock_root" id="main_menu_item_loan"
                   sequence="4" groups="stock.group_stock_user"/>
 
         <!-- Item Loan Lending Window Action -->
@@ -122,27 +122,45 @@
             </field>
         </record>
         <!-- Item Loan Lending Menu -->
-        <menuitem action="action_item_loan_lending" name="Item Loan Lending"
-                  parent="menu_item_loan_lending_main" id="menu_item_loan_lending" sequence="1"
+        <menuitem name="Item Loan Lending"
+                  parent="main_menu_item_loan" id="main_menu_item_loan_lending" sequence="1"
+                  groups="stock.group_stock_user"/>
+
+        <menuitem action="action_item_loan_lending" name="All Records"
+                  parent="main_menu_item_loan_lending" id="menu_item_loan_lending" sequence="1"
                   groups="stock.group_stock_user"/>
 
         <!-- Item Loan Lending Pending Approval Window Action -->
+        <record id="search_item_loan_lending" model="ir.ui.view">
+            <field name="name">item.loan.lending.search</field>
+            <field name="model">item.loan.lending</field>
+            <field name="arch" type="xml">
+                <search string="Loan">
+                    <filter name="approve_manager" string="To Approve" domain="[('state','=','waiting_approval')]"/>
+                </search>
+            </field>
+        </record>
+
         <record id='action_pending_item_loan_lending' model='ir.actions.act_window'>
             <field name="name">Pending Approval</field>
             <field name="res_model">item.loan.lending</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
-            <field name="domain">[('state','=','waiting_approval')]</field>
+            <field name="context">{
+                'search_default_approve_manager':1,
+                }
+            </field>
             <field name="help" type="html">
                 <p class="oe_view_nocontent_create">
                     Nothing to approve.
                 </p>
             </field>
+            <field name="search_view_id" ref="search_item_loan_lending"/>
         </record>
         <!-- Item Loan Lending Pending Approval Menu -->
-        <menuitem action="action_pending_item_loan_lending" name="Pending Approval"
-                  parent="menu_item_loan_lending" id="menu_pending_item_loan_lending" sequence="1"
-                  groups="stock.group_stock_user"/>
+        <menuitem action="action_pending_item_loan_lending" name="Pending"
+                  parent="main_menu_item_loan_lending" id="menu_pending_item_loan_lending" sequence="2"
+                  groups="stock.group_stock_manager"/>
 
     </data>
 </odoo>

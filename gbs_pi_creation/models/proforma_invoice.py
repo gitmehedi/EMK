@@ -38,8 +38,8 @@ class ProformaInvoice(models.Model):
     name = fields.Char(string='Name', index=True, readonly=True, default="/")
     partner_id = fields.Many2one('res.partner', string='Customer', domain=[('customer', '=', True),('parent_id', '=', False)], required=True,
                                  readonly=True, states={'draft': [('readonly', False)]})
-    invoice_date = fields.Date('PI Date', readonly=True, required=1,
-                               states={'draft': [('readonly', False)]},default=fields.Datetime.now())
+    invoice_date = fields.Date('PI Date', readonly=True, required=True,
+                               states={'draft': [('readonly', False)]},default=fields.Datetime.now)
     advising_bank_id = fields.Many2one('res.bank', string='Advising Bank', required=True, readonly=True,
                                        states={'draft': [('readonly', False)]})
 
@@ -162,11 +162,17 @@ class ProformaInvoice(models.Model):
     @api.multi
     def action_confirm(self):
         res = {'state': 'confirm'}
-        team = self.env['crm.team']._get_default_team_id()
-        new_seq = self.env['ir.sequence'].next_by_code_new('proforma.invoice', self.invoice_date, team.operating_unit_id)
-        if new_seq:
-            res['name'] = new_seq
+        if self.name == "/":
+            new_seq = self.env['ir.sequence'].next_by_code_new('proforma.invoice', self.invoice_date, self.operating_unit_id)
+            if new_seq:
+                res['name'] = new_seq
+        self.write(res)
 
+    @api.multi
+    def action_draft(self):
+        res = {
+            'state': 'draft',
+        }
         self.write(res)
 
     @api.onchange('terms_id')
@@ -177,7 +183,6 @@ class ProformaInvoice(models.Model):
     @api.model
     def _needaction_domain_get(self):
         return [('state', 'in', ['draft'])]
-
 
         ## mail notification
         # @api.multi
@@ -195,16 +200,10 @@ class ProformaInvoice(models.Model):
     #########################################
     # PI Operating Unit related code - STARTS
     #########################################
-    @api.model
-    def _default_operating_unit(self):
-        team = self.env['crm.team']._get_default_team_id()
-        if team.operating_unit_id:
-            return team.operating_unit_id
-
     operating_unit_id = fields.Many2one('operating.unit',
-                                        string='Operating Unit',
-                                        required=True, readonly=True,
-                                        default=_default_operating_unit, track_visibility='onchange')
+                                        string='Operating Unit',readonly=True,
+                                        states={'draft': [('readonly', False)]},
+                                        required=True,track_visibility='onchange')
 
     @api.model
     def _default_sales_team(self):
@@ -219,6 +218,13 @@ class ProformaInvoice(models.Model):
     ########################################
     # PI Operating Unit related code - ENDS
     ########################################
+
+    @api.constrains('line_ids')
+    def _check_multiple_products_line(self):
+        if len(self.line_ids) > 1:
+            raise ValidationError("You can't add multiple products")
+
+
 
 # ---------------------------------------------------------------------------------------------------------------------------------
 class ProformaInvoiceLine(models.Model):

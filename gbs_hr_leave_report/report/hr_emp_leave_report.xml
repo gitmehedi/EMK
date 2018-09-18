@@ -3,7 +3,7 @@
     <data>
         <template id="hr_emp_leave_report">
             <t t-call="report.html_container">
-                <t t-call="custom_report.gbs_internal_layout">
+                <t t-call="report_layout.gbs_internal_layout">
                     <div class="page" style="page-break-inside: auto">
                         <style>
                             .leave-type-title {
@@ -123,7 +123,7 @@
                                 </tbody>
                             </table>
                         </t>
-                        <t t-call="custom_report.report_signing"></t>
+                        <t t-call="report_layout.report_signing"></t>
                     </div>
                 </t>
             </t>
@@ -135,7 +135,7 @@
                 name="gbs_hr_leave_report.hr_emp_leave_report"
                 file="gbs_hr_leave_report.hr_emp_leave_report"
                 menu="False"
-                paperformat="custom_report.paperformat_backend_portrait"
+                paperformat="report_layout.paperformat_backend_portrait"
         />
     </data>
 </odoo>

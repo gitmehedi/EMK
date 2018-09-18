@@ -504,8 +504,8 @@ class AttendanceUtility(models.TransientModel):
         holidays_query = """select t1.id,t1.date from hr_holidays_public_line as t1
                             join hr_holidays_public as t2 on t2.id=t1.public_type_id
                             join public_holiday_operating_unit_rel as t3 on t3.public_holiday_id=t2.id
-                            join hr_leave_fiscal_year as t4 on t4.id=t2.year_id
-                            where t3.operating_unit_id=%s and %s between t4.date_start and t4.date_stop"""
+                            join date_range as t4 on t4.id=t2.year_id
+                            where t3.operating_unit_id=%s and %s between t4.date_start and t4.date_end"""
         # key date value id from
         self._cr.execute(holidays_query, (unitId,requested_date))
         holidaysLines = self._cr.fetchall()
@@ -519,8 +519,8 @@ class AttendanceUtility(models.TransientModel):
         holidays_query = """select t1.id,t1.date from hr_holidays_public_line as t1
                             join hr_holidays_public as t2 on t2.id=t1.public_type_id
                             join public_holiday_operating_unit_rel as t3 on t3.public_holiday_id=t2.id
-                            join hr_leave_fiscal_year as t4 on t4.id=t2.year_id
-                            where t3.operating_unit_id=%s and %s >= t4.date_start and %s <= t4.date_stop"""
+                            join date_range as t4 on t4.id=t2.year_id
+                            where t3.operating_unit_id=%s and %s >= t4.date_start and %s <= t4.date_end"""
 
         self._cr.execute(holidays_query, (unitId, from_date, to_date))
         holidaysLines = self._cr.fetchall()

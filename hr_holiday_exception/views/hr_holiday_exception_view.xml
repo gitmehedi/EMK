@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+	<data>
+		<record id="view_holidays_exception_tree" model="ir.ui.view">
+			<field name="name">hr_emp_holidays_batch_tree</field>
+			<field name="model">hr.holidays.exception.employee.batch</field>
+			<field name="arch" type="xml">
+				<tree string="Holiday Exception">
+					<field name="name" />
+					<field name="operating_unit_id" />
+					<field name="public_holidays_title" />
+					<field name="public_holidays_line" />
+					<field name="state" />
+				</tree>
+			</field>
+		</record>
+
+		<record id="view_holidays_exception_form" model="ir.ui.view">
+			<field name="name">hr_holidays_public_form</field>
+			<field name="model">hr.holidays.exception.employee.batch</field>
+			<field name="arch" type="xml">
+				<form string="Holiday Exception">
+					<header>
+						<button string="Confirm" name="action_confirm" states="draft" type="object" class="oe_highlight"
+								groups="hr_holidays.group_hr_holidays_user"/>
+						<button string="Approve" name="action_approve" states="confirmed" type="object" class="oe_highlight"
+								groups="hr_holidays.group_hr_holidays_manager" />
+						<button string="Refuse" name="action_refuse" states="confirmed" type="object"
+								groups="hr_holidays.group_hr_holidays_manager"/>
+						<button string="Reset to Draft" name="action_draft" type="object" states="confirmed"
+								groups="hr_holidays.group_hr_holidays_manager"/>
+						<field name="state" widget="statusbar" statusbar_visible="draft,confirmed,approved"/>
+					</header>
+					<sheet>
+						<group>
+							<group>
+								<field name="name" attrs="{'readonly':[('state','=','approved')]}"/>
+								<field name="public_holidays_title" options='{"no_open": True,"no_create": 1, "no_create_edit":1}' attrs="{'readonly':[('state','=','approved')]}"/>
+							</group>
+							<group>
+								<field name="operating_unit_id" options='{"no_open": True,"no_create": 1, "no_create_edit":1}' attrs="{'readonly':[('state','=','approved')]}"/>
+								<field name="public_holidays_line" options='{"no_open": True,"no_create": 1, "no_create_edit":1}' attrs="{'readonly':[('state','=','approved')]}"/>
+							</group>
+						</group>
+						<notebook colspan="2">
+							<page string="Compensatory Leave">
+								<field name="compensatory_leave_ids" attrs="{'readonly':[('state','=','approved')]}">
+									<tree string="Employees" create='false' editable='bottom'>
+										<field name='employee_id' readonly='1'/>
+									</tree>
+								</field>
+								<button name="action_assign_compensatory" type="object" string="Assign Employee For Compensatory"
+										class="oe_highlight" attrs="{'invisible':[('state','=','approved')]}"/>
+							</page>
+							<page string="Overtime">
+								<field name="overtime_duty_ids" attrs="{'readonly':[('state','=','approved')]}">
+									<tree string="Employees" create='false' editable='bottom'>
+										<field name='employee_id' readonly='1'/>
+									</tree>
+								</field>
+								<button name="action_assign_overtime" type="object" string="Assign Employee For OT"
+										class="oe_highlight" attrs="{'invisible':[('state','=','approved')]}"/>
+							</page>
+						</notebook>
+					</sheet>
+				</form>
+			</field>
+		</record>
+
+		<record id="action_hr_holidays_exception_batch" model="ir.actions.act_window">
+			<field name="name">Holiday Exception</field>
+			<field name="res_model">hr.holidays.exception.employee.batch</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+			<field name="help" type="html">
+				<p>
+					Press Create button to create the records.
+				</p>
+			</field>
+		</record>
+
+		<menuitem
+				name="Holiday Exception"
+				id="menu_holidays_exception_batch"
+				parent="hr_rostering.main_menu_hr_shifting"
+				sequence="2" action="action_hr_holidays_exception_batch"
+				groups="hr.group_hr_user"
+		/>
+
+	</data>
+</odoo>

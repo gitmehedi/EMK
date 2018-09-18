@@ -9,3 +9,4 @@ class InheritedResPartner(models.Model):
 
     tax = fields.Char(string='Trade License')
     vat = fields.Char(string='VAT Registration')
+    bin = fields.Char(string='BIN Number')

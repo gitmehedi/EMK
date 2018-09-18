@@ -3,7 +3,7 @@ from openerp import models, fields, api
 class HrBankSelectionWizard(models.TransientModel):
     _name = 'hr.attendance.duration.wizard'
 
-    period = fields.Many2one("account.period", string="Select Period", required=True)
+    period = fields.Many2one("date.range", string="Select Period", required=True)
 
     @api.multi
     def process_report(self):

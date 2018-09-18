@@ -6,3 +6,5 @@ import bill_of_exchange_second_report
 import beneficiary_certificate
 import certificate_of_origin
 import inspection_certificate
+import delivery_challan_report
+import truck_receipt_report

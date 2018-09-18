@@ -8,7 +8,7 @@
                 report_type="qweb-pdf"
                 name="hr_employee_meal_bills.report_meal_bill"
                 file="hr_employee_meal_bills.report_meal_bill"
-                paperformat="custom_report.paperformat_backend_portrait"
+                paperformat="report_layout.paperformat_backend_portrait"
         />
     </data>
 </odoo>

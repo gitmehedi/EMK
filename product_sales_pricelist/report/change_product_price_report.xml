@@ -5,12 +5,12 @@
                 string="Product Pricelist"
                 name="product_sales_pricelist.report_productPricelist_view"
                 file="product_sales_pricelist.report_productPricelist"
-                paperformat="custom_report.paperformat_backend_portrait"
+                paperformat="report_layout.paperformat_backend_portrait"
                 report_type="qweb-pdf"/>
 
         <template id="report_productPricelist_view">
             <t t-call="report.html_container">
-                <t t-call="custom_report.gbs_internal_layout">
+                <t t-call="report_layout.gbs_internal_layout">
                     <t t-foreach="docs" t-as="doc">
                         <div class="page" style="page-break-inside:auto">
                             <div class="row">

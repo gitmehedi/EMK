@@ -165,15 +165,18 @@ class IndentIndent(models.Model):
         for indent in self:
             if not indent.product_lines:
                 raise UserError(_('Unable to confirm an indent without product. Please add product(s).'))
+
             # Add all authorities of the indent as followers
-            followers = []
-            if indent.indentor_id and indent.indentor_id.partner_id and indent.indentor_id.partner_id.id:
-                followers.append(indent.indentor_id.partner_id.id)
+            # followers = []
+            # if indent.indentor_id and indent.indentor_id.partner_id and indent.indentor_id.partner_id.id:
+            #     followers.append(indent.indentor_id.partner_id.id)
+            # if indent.indentor_id.employee_ids[0].parent_id:
+            #     followers.append(indent.indentor_id.employee_ids[0].parent_id.user_id.partner_id.id)
             # if indent.manager_id and indent.manager_id.partner_id and indent.manager_id.partner_id.id:
             #    followers.append(indent.manager_id.partner_id.id)
-
             # for follower in followers:
             #    indent.write({'message_follower_ids': [(4, follower)]})
+
             res = {
                 'state': 'waiting_approval'
             }
@@ -184,66 +187,8 @@ class IndentIndent(models.Model):
 
             indent.write(res)
 
-    def _prepare_indent_line_move(self, line, picking_id, date_planned):
-        location_id = self.warehouse_id.sudo().lot_stock_id.id
-
-        res = {
-            'name': line.name,
-            'indent_id': self.id,
-            'picking_id': picking_id,
-            'picking_type_id': self.picking_type_id.id or False,
-            'product_id': line.product_id.id,
-            'date': date_planned,
-            'date_expected': date_planned,
-            'product_uom_qty': line.issue_qty,
-            'product_uom': line.product_uom.id,
-            'location_id': location_id,
-            'location_dest_id': self.stock_location_id.id,
-            'origin': self.name,
-            'state': 'draft',
-            'price_unit': line.product_id.standard_price or 0.0
-        }
-
-        if line.product_id.type in ('service'):
-            if not line.original_product_id:
-                raise models.except_osv(_("Warning !"),
-                                        _("You must define material or parts that you are going to repair !"))
-
-            upd_res = {
-                'product_id': line.original_product_id.id,
-                'product_uom': line.original_product_id.uom_id.id,
-                'product_uos': line.original_product_id.uom_id.id
-            }
-            res.update(upd_res)
-
-        # if self.company_id:
-        #     res = dict(res, company_id = .company_id.id)
-        return res
-
-    def _prepare_indent_picking(self):
-        pick_name = self.env['ir.sequence'].next_by_code('stock.picking')
-        location_id = self.warehouse_id.sudo().lot_stock_id.id
-        res = {
-            'invoice_state': 'none',
-            'picking_type_id': self.picking_type_id.id,
-            'priority': self.requirement,
-            'name': pick_name,
-            'origin': self.name,
-            'date': self.indent_date,
-            # 'type': 'internal',
-            'state':'draft',
-            'move_type': self.move_type,
-            'partner_id': self.indentor_id.partner_id.id or False,
-            'location_id': location_id,
-            'location_dest_id': self.stock_location_id.id,
-        }
-        if self.company_id:
-            res = dict(res, company_id=self.company_id.id)
-        return res
-
-
     @api.model
-    def _create_pickings_and_procurements(self):
+    def _create_picking_and_moves(self):
         move_obj = self.env['stock.move']
         picking_obj = self.env['stock.picking']
         picking_id = False
@@ -252,20 +197,53 @@ class IndentIndent(models.Model):
 
             if line.product_id:
                 if not picking_id:
-                    vals = self._prepare_indent_picking()
+                    pick_name = self.env['stock.picking.type'].browse(self.picking_type_id.id).sequence_id.next_by_id()
+                    location_id = self.warehouse_id.sudo().lot_stock_id.id
+                    vals = {
+                        'invoice_state': 'none',
+                        'picking_type_id': self.picking_type_id.id,
+                        'priority': self.requirement,
+                        'name': pick_name,
+                        'origin': self.name,
+                        'date': self.indent_date,
+                        'state': 'draft',
+                        'move_type': self.move_type,
+                        'partner_id': self.indentor_id.partner_id.id or False,
+                        'location_id': location_id,
+                        'location_dest_id': self.stock_location_id.id,
+                        'company_id': self.company_id.id
+                    }
+
                     picking = picking_obj.create(vals)
                     if picking:
                         picking_id = picking.id
 
-                move_obj.create(self._prepare_indent_line_move(line, picking_id, date_planned))
-        return picking_id
+                moves = {
+                    'name': line.name,
+                    'indent_id': self.id,
+                    'picking_id': picking_id,
+                    'picking_type_id': self.picking_type_id.id or False,
+                    'product_id': line.product_id.id,
+                    'date': date_planned,
+                    'date_expected': date_planned,
+                    'product_uom_qty': line.issue_qty,
+                    'product_uom': line.product_uom.id,
+                    'location_id': location_id,
+                    'location_dest_id': self.stock_location_id.id,
+                    'origin': self.name,
+                    'state': 'draft',
+                    'price_unit': line.product_id.standard_price or 0.0,
+                    'company_id' : self.company_id.id
+                }
 
+                move_obj.create(moves)
+        return picking_id
 
     @api.one
     def action_picking_create(self):
         picking_id = False
         if self.product_lines:
-            picking_id = self._create_pickings_and_procurements()
+            picking_id = self._create_picking_and_moves()
         self.write({'picking_id': picking_id})
         return picking_id
 

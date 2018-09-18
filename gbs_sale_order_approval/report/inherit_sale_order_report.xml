@@ -3,7 +3,7 @@
     <data>
         <template id="report_quotation_inherit_add_property" inherit_id="sale.report_saleorder_document">
             <xpath expr="//t[@t-call='report.external_layout']" position="replace">
-                 <t t-call="custom_report.gbs_external_layout_with_address">
+                 <t t-call="report_layout.gbs_external_layout_with_address">
                     <t t-set="doc" t-value="doc.with_context({'lang':doc.partner_id.lang})" />
                      <div class="page">
                         <div class="oe_structure"/>

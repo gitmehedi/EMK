@@ -53,7 +53,7 @@ class HrAttendanceSummaryReport(models.AbstractModel):
             dpt_att_summary['val'] = emp_sort_list
             dpt_att_summary_list.append(dpt_att_summary)
 
-        pool_period = self.env['account.period'].search([('name','=',docs.period.name)])
+        pool_period = self.env['date.range'].search([('name','=',docs.period.name)])
 
         docargs = {
             'doc_ids': self.ids,
@@ -61,7 +61,7 @@ class HrAttendanceSummaryReport(models.AbstractModel):
             'docs': dpt_att_summary_list,
             'doc_name': docs.name,
             'period_from': pool_period.date_start,
-            'period_to': pool_period.date_stop,
+            'period_to': pool_period.date_end,
             'docs_len': 20,
             'state': docs.state,
         }

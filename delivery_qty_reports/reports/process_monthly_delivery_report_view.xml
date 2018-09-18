@@ -9,13 +9,13 @@
                 file="delivery_qty_reports.report_monthly_delivery_products"
                 name="delivery_qty_reports.report_monthly_delivery_products"
                 menu="False"
-                paperformat="custom_report.paperformat_backend_landscape"
+                paperformat="report_layout.paperformat_backend_landscape"
         />
 
 
         <template id="report_monthly_delivery_products">
             <t t-call="report.html_container">
-                <t t-call="custom_report.gbs_internal_layout">
+                <t t-call="report_layout.gbs_internal_layout">
                     <div class="page" style="page-break-inside:auto">
                             <div class="row">
                                 <style type="text/css">
@@ -121,7 +121,7 @@
 
                                     </tbody>
                                 </table>
-                                <t t-call="custom_report.report_signing"></t>
+                                <t t-call="report_layout.report_signing"></t>
                         </div>
                     </div>
                 </t>

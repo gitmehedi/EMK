@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<odoo>
+    <data>
+        <report
+                id="action_top_sheet"
+                string="Delivery Challan"
+                model="stock.picking"
+                report_type="qweb-pdf"
+                file="delivery_challan_report.report_top_sheet"
+                name="delivery_challan_report.report_top_sheet"
+                paperformat="report_layout.custom_pad_paperformat"
+                menu="False"
+
+        />
+
+        <template id="report_top_sheet">
+            <t t-call="report.html_container">
+                <div class="page" style="page-break-inside: auto">
+                    <div class="row">
+
+                        <div class="bank-letter">
+                            <span t-esc="data['challan_no']"/><br/>
+                             <span t-esc="data['challan_creation_system_date']"/><br/>
+                            <span t-esc="data['vehicle_no']"/><br/>
+                            <span t-esc="data['partner_id']"/><br/>
+                            <span t-esc="data['shipping_address']"/>
+
+                            <br/>
+                            <br/>
+                            <br/>
+
+                            <table class="bank-letter_doclist table table-condensed">
+                                <tbody>
+                                    <t t-foreach="lists" t-as="l">
+                                        <td>
+                                            <span t-esc="data['do_no']"/>
+                                        </td>
+                                          <td>
+                                            <span t-esc="data['do_date']" t-options='{"widget": "date"}'/>
+                                        </td>
+
+                                        <td>
+                                            <span t-esc="l['product_id']"/>
+                                        </td>
+                                        <td>
+                                            <t t-if="l['jar_count']">
+                                                <span t-esc="l['jar_count']"/>
+                                                Pc(s)
+                                            </t>
+                                            <span t-esc="l['jar_type']"/>
+
+                                            <br/>
+                                            <span t-esc="l['quantity']"/>
+                                            <span t-esc="l['uom']"/>
+                                        </td>
+                                        <td>
+                                            <span t-esc="l['number_to_words']"/>
+                                            <span t-esc="l['uom']"/>
+                                        </td>
+                                    </t>
+
+
+                                </tbody>
+                            </table>
+                            <span t-esc="data['vat_challan_id']"/>
+                            <span t-esc="data['challan_creation_system_date']"/>
+
+                        </div>
+                    </div>
+                </div>
+            </t>
+        </template>
+    </data>
+</odoo>

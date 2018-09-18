@@ -2,7 +2,7 @@ from odoo import fields, models
 
 class ChequePaymentLine(models.Model):
     _name = 'cheque.payment.line.layer'
-    _description = 'DO Cash Payment Terms line'
+    _description = 'DO Cash Payment line'
 
     number = fields.Char("Cheque No.")
     bank = fields.Char("Deposit Bank")

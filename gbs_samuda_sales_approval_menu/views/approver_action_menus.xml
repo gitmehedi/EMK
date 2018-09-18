@@ -17,7 +17,7 @@
             <field name="model">sale.order</field>
             <field name="arch" type="xml">
                 <search string="Quotations">
-                    <filter name="approvehos" string="To Approve" domain="[('state','=','draft')]"/>
+                    <filter name="approvehos" string="To Approve" domain="[('approver_user_id','=',uid),('state','=','draft')]"/>
                     <filter name="approvehoa" string="To Approve" domain="[('state','=','validate')]"/>
                     <filter name="approvecxo" string="To Approve" domain="[('state','=','sent')]"/>
                 </search>
@@ -85,8 +85,7 @@
             <field name="model">delivery.authorization</field>
             <field name="arch" type="xml">
                 <search string="Delivery Authorization">
-                    <filter name="validate" string="To Validate" domain="[('state','=','validate')]"/>
-                    <filter name="confirm" string="To Confirm" domain="[('state','=','approve')]"/>
+                    <filter name="confirm" string="To Validate" domain="[('state','=','validate')]"/>
                 </search>
             </field>
         </record>
@@ -116,12 +115,12 @@
                   groups="gbs_application_group.group_head_account"
                   action="delivery_order_action_head_account"/>
 
-        <menuitem id="delivery_order_submenu_cxo"
-                  name="Pending DA"
-                  parent="menu_cxo_approval"
-                  sequence="2"
-                  groups="gbs_application_group.group_cxo"
-                  action="delivery_order_action_cxo"/>
+        <!--<menuitem id="delivery_order_submenu_cxo"-->
+                  <!--name="Pending DA"-->
+                  <!--parent="menu_cxo_approval"-->
+                  <!--sequence="2"-->
+                  <!--groups="gbs_application_group.group_cxo"-->
+                  <!--action="delivery_order_action_cxo"/>-->
         <!--........................................................................................................-->
 
         <!--Customer Credit Limit-->

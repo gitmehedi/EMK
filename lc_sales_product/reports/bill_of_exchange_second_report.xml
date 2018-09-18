@@ -9,14 +9,14 @@
                 report_type="qweb-pdf"
                 file="lc_sales_product.report_bill_exchange_second"
                 name="lc_sales_product.report_bill_exchange_second"
-                paperformat="custom_report.custom_pad_paperformat"
+                paperformat="report_layout.custom_pad_paperformat"
                 menu="False"
 
         />
 
         <template id="report_bill_exchange_second">
             <t t-call="report.html_container">
-                <t t-call="custom_report.gbs_custom_pad_report_template">
+                <t t-call="report_layout.gbs_custom_pad_report_template">
                     <div class="page" style="page-break-inside: auto">
                         <style>
                             .auth-signature { padding: 5px 0; border-top: 1px dashed #333; float: right; }
@@ -84,7 +84,7 @@
                             </table>
                             <div class="mt-10">Proforma Invoice No:
                                 <t t-foreach="pi_list" t-as="p">
-                                    <strong t-esc="p['number']"/> Date: <strong t-esc="p['date']" t-options='{"widget": "date"}'/>
+                                    <strong t-esc="p['number']"/> Date: <strong t-esc="p['date']"/>
                                 </t>
                             </div>
                         </div>
@@ -99,10 +99,10 @@
                             </div>
                             <div class="col-xs-5">
                                 Drawn under the Document Credit No: <br/>
-                                <strong t-esc="data['lc_id']"/> Date: <strong t-esc="data['issue_date']" t-options='{"widget": "date"}'/> <br/>
+                                <strong t-esc="data['lc_id']"/> Date: <strong t-esc="data['issue_date']"/> <br/>
                                 <t t-foreach="lc_revision_list" t-as="r">
                                     <strong>
-                                        Number of Amendment :<span t-esc="r['no']"/> &amp; Date :<span t-esc="r['date']" t-options='{"widget": "date"}'/> <br/>
+                                        Number of Amendment :<span t-esc="r['no']"/> &amp; Date :<span t-esc="r['date']"/> <br/>
                                     </strong>
                                 </t>
                                 <span style="padding-left:30%;">of</span> <br/>
