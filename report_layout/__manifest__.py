@@ -16,6 +16,6 @@
         'views/gbs_custom_pad_report_with_system_sig_template.xml',
     ],
     'installable': True,
-    'auto_install': False,
+    'auto_install': True,
     'application': True,
 }
