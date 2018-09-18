@@ -19,12 +19,15 @@ class GbsProformaInvoice(models.AbstractModel):
         data['pi_date'] = report_utility_pool.getERPDateFormat(report_utility_pool.getDateFromStr(pi_obj.invoice_date))
         data['beneficiary_id'] = pi_obj.beneficiary_id.name
         data['vat'] = pi_obj.operating_unit_id.partner_id.vat
+        data['bin'] = pi_obj.operating_unit_id.partner_id.bin
         data['customer'] = pi_obj.partner_id.name
         data['customer_add'] = report_utility_pool.getCoustomerAddress(delivery_address)
         data['transport_by'] = pi_obj.transport_by
         data['terms_condition'] = pi_obj.terms_condition
-        data['advising_bank'] = pi_obj.advising_bank_id.name
-        data['bank_add'] = report_utility_pool.getBankAddress(pi_obj.advising_bank_id)
+        data['advising_bank'] = pi_obj.advising_bank_acc_id.bank_id.name
+        data['bank_add'] = report_utility_pool.getBranchAddress(pi_obj.advising_bank_acc_id)
+        data['acc_number'] = pi_obj.advising_bank_acc_id.acc_number
+        data['swift_code'] = pi_obj.advising_bank_acc_id.bank_swift_code
         data['currency'] = pi_obj.currency_id.name
         data['packing'] = pi_obj.pack_type.packaging_mode
         data['terms_str'] = "By Equivalent Letter Of Credit"

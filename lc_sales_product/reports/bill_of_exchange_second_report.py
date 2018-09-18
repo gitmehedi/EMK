@@ -16,11 +16,11 @@ class BillExchangeFirst(models.AbstractModel):
         invoice_address = self.env['res.partner'].browse(address['invoice'])
         data['delivery_address'] = report_utility_pool.getCoustomerAddress(delivery_address)
         data['invoice_address'] = report_utility_pool.getCoustomerAddress(invoice_address)
-        data['first_party_bank'] = shipment_obj.lc_id.first_party_bank.name
+        data['first_party_bank'] = shipment_obj.lc_id.first_party_bank_acc.bank_id.name
         data['second_party_bank'] = shipment_obj.lc_id.second_party_bank
         data['first_party'] = shipment_obj.lc_id.first_party.name
         data['second_party_applicant'] = shipment_obj.lc_id.second_party_applicant.name
-        data['first_party_bank_add'] = report_utility_pool.getBankAddress(shipment_obj.lc_id.first_party_bank)
+        data['first_party_bank_add'] = report_utility_pool.getBranchAddress(shipment_obj.lc_id.first_party_bank_acc)
         data['company'] = shipment_obj.company_id.name
         data['currency_id'] = shipment_obj.lc_id.currency_id.name
         data['invoice_value'] = shipment_obj.invoice_value
@@ -64,7 +64,7 @@ class BillExchangeFirst(models.AbstractModel):
             'price_total': price_total,
             'amt_to_word': amt_to_word,
             'pi_list': pi_list,
-            'uom': uom[0],
+            'uom': uom[0] if len(uom)>0 else 0,
             'lc_revision_list': lc_revision_list,
 
         }

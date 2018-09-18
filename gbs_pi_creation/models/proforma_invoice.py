@@ -40,8 +40,14 @@ class ProformaInvoice(models.Model):
                                  readonly=True, states={'draft': [('readonly', False)]})
     invoice_date = fields.Date('PI Date', readonly=True, required=True,
                                states={'draft': [('readonly', False)]},default=fields.Datetime.now)
-    advising_bank_id = fields.Many2one('res.bank', string='Advising Bank', required=True, readonly=True,
-                                       states={'draft': [('readonly', False)]})
+    # advising_bank_id = fields.Many2one('res.bank', string='Advising Bank', readonly=True,
+    #                                    states={'draft': [('readonly', False)]})
+
+    advising_bank_acc_id = fields.Many2one('res.partner.bank', string='Advising Bank Acc', domain=[('is_company_account', '=', True)],
+                                           required=True, readonly=True, states={'draft': [('readonly', False)]})
+
+    region_type = fields.Selection([('local', "Local"),('foreign', "Foreign")], readonly=True,)
+
 
     beneficiary_id = fields.Many2one('res.company', string='Beneficiary', required=True, readonly=True,
                                      default=lambda self: self.env['res.company']._company_default_get(),
