@@ -15,7 +15,7 @@
         'letter_of_credit',
         'gbs_sales_commission_so',
         'amount_to_word_bd',
-        'custom_report',
+        'report_layout',
         'delivery_challan_report',
         'ir_sequence_operating_unit',
         'gbs_samuda_stock',

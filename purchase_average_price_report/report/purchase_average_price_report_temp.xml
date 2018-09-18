@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <openerp>
     <data>
-        <template id="report_purchase_avg_temp" inherit_id="custom_report.gbs_external_layout" primary="True">
-            <xpath expr="//t[@t-call='custom_report.gbs_external_layout_header']" position="attributes">
+        <template id="report_purchase_avg_temp" inherit_id="report_layout.gbs_external_layout" primary="True">
+            <xpath expr="//t[@t-call='report_layout.gbs_external_layout_header']" position="attributes">
                 <attribute name="t-call">purchase_average_price_report.external_layout_header_papr</attribute>
             </xpath>
         </template>
-        <template id="external_layout_header_papr" inherit_id="custom_report.gbs_external_layout_header" primary="True">
+        <template id="external_layout_header_papr" inherit_id="report_layout.gbs_external_layout_header" primary="True">
             <xpath expr="//div[@class='company-info']" position="after">
                 <div name="company_address">
                     <h5><span t-esc="address"/></h5>
@@ -95,7 +95,7 @@
                 report_type="qweb-pdf"/>
 
         <record id="report_purchase_average_price" model="ir.actions.report.xml">
-            <field name="paperformat_id" ref="custom_report.paperformat_backend_portrait"/>
+            <field name="paperformat_id" ref="report_layout.paperformat_backend_portrait"/>
         </record>
     </data>
 </openerp>

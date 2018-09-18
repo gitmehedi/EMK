@@ -5,7 +5,7 @@
     'category': 'payroll',
     'version': '10.0.1.0.0',
     'depends': [
-        'custom_report',
+        'report_layout',
         'amount_to_word_bd',
         'gbs_hr_payroll',
     ],

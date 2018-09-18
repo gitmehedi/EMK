@@ -10,7 +10,7 @@
         'delivery_order',
         'stock',
         'ir_sequence_operating_unit',
-        'custom_report',
+        'report_layout',
     ],
 
     'data': [

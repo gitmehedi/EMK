@@ -10,12 +10,12 @@
                 name="stock_picking_mrr.report_mrr_doc"
                 file="stock_picking_mrr.report_mrr_doc"
                 menu = "False"
-                paperformat="custom_report.paperformat_backend_portrait"
+                paperformat="report_layout.paperformat_backend_portrait"
         />
 
         <template id="report_mrr_doc">
             <t t-call="report.html_container">
-                <t t-call="custom_report.gbs_internal_layout">
+                <t t-call="report_layout.gbs_internal_layout">
 
                     <div class="page" style="page-break-inside: auto">
                         <style>

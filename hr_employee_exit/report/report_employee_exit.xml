@@ -9,12 +9,12 @@
 			report_type="qweb-pdf"
 			name="hr_employee_exit.report_employee_exit"
 			file="hr_employee_exit.report_employee_exit"
-            paperformat="custom_report.paperformat_backend_portrait"
+            paperformat="report_layout.paperformat_backend_portrait"
 		/>
 
 		<template id="report_employee_exit">
 			<t t-call="report.html_container">
-				<t t-call="custom_report.gbs_internal_layout">
+				<t t-call="report_layout.gbs_internal_layout">
 					<div class="page" style="page-break-inside:auto">
 						<div class="row" style="padding-top:5px;">
                             <style type="text/css">

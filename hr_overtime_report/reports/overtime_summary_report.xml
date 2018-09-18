@@ -3,7 +3,7 @@
     <data>
         <template id="overtime_summary_report">
             <t t-call="report.html_container">
-                <t t-call="custom_report.gbs_internal_layout">
+                <t t-call="report_layout.gbs_internal_layout">
                     <style>
                         .table th {
                         padding: 2px !important;
@@ -104,7 +104,7 @@
                             </table>
                         </div>
 
-                        <t t-call="custom_report.report_signing"></t>
+                        <t t-call="report_layout.report_signing"></t>
                     </div>
                 </t>
             </t>
@@ -116,7 +116,7 @@
                 name="hr_overtime_report.overtime_summary_report"
                 file="hr_overtime_report.overtime_summary_report"
                 menu="False"
-                paperformat="custom_report.paperformat_backend_portrait"
+                paperformat="report_layout.paperformat_backend_portrait"
         />
     </data>
 </odoo>

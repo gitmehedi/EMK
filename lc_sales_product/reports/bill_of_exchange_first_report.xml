@@ -9,14 +9,14 @@
                 report_type="qweb-pdf"
                 file="lc_sales_product.report_bill_exchange"
                 name="lc_sales_product.report_bill_exchange"
-                paperformat="custom_report.custom_pad_paperformat"
+                paperformat="report_layout.custom_pad_paperformat"
                 menu="False"
 
         />
 
         <template id="report_bill_exchange">
             <t t-call="report.html_container">
-                <t t-call="custom_report.gbs_custom_pad_report_template">
+                <t t-call="report_layout.gbs_custom_pad_report_template">
                     <div class="page" style="page-break-inside: auto">
                         <style>
                             .auth-signature { padding: 5px 0; border-top: 1px dashed #333; float: right; }

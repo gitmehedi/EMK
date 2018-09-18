@@ -12,7 +12,7 @@
         'mail',
         'gbs_hr_employee',
         'hr_employee_loan_payroll',
-        'custom_report',
+        'report_layout',
         'amount_to_word_bd',
         'hr_payroll_festival_bonus'
     ],
