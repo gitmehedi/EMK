@@ -11,6 +11,7 @@
                 'gbs_application_group',
                 'mail',
                 'hr_employee_seniority',
+                'hr_payroll',
                 ],
     'data': [
         'views/hr_exit_menu.xml',
@@ -19,6 +20,7 @@
         'views/configure_checklists_view.xml',
         'views/employee_exit_req_view.xml',
         'views/emp_exit_checklist_line.xml',
+        'views/final_settlement_view.xml',
         'wizard/hr_checklist_generate_popup.xml',
         'views/mail_template.xml',
         'views/exit_interview.xml',
