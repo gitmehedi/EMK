@@ -7,7 +7,11 @@
     "author": "Genweb2 Limited",
     "website": "http://www.genweb2.com",
     'category': 'Human Resources',
-    'depends': ['hr','gbs_application_group','mail'],
+    'depends': ['hr',
+                'gbs_application_group',
+                'mail',
+                'hr_employee_seniority',
+                ],
     'data': [
         'views/hr_exit_menu.xml',
         'views/checklist_type_view.xml',

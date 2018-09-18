@@ -69,13 +69,28 @@
                         <p><b>Would you recommend the company to a friend as a good
                             organization to work for? </b></p>
                         <group>
-                            <field name="recommend" widget="radio"/>
+                            <field name="recommend" widget="radio" nolabel="1"/>
                         </group>
                         <p><b>Your contract address for all further correspondence is: </b></p>
                         <field name="contract_add" nolabel="1"/>
-                        <separator string="Comment By Supervisor"/>
+                        <!--<separator string="Comment By Supervisor"/>-->
+                        <!--<field name="comment_supervisor" nolabel="1"/>-->
+                        <!--<separator string="Comment By HR"/>-->
+                        <!--<field name="comment_hr" nolabel="1"/>-->
+                        <p><b>SECTION C: </b></p>
+                        <p>To be filled by the Administration Department 7 days before the last working day.: </p>
+                        <p>(With input from the immediate supervisor of the employee)</p>
+                        <p><b>Details of any mentionable incident during the notice period of the person.</b></p>
                         <field name="comment_supervisor" nolabel="1"/>
-                        <separator string="Comment By HR"/>
+                        <p><b>Can a good character be issued to the person?</b></p>
+                        <group>
+                            <field name="permission" widget="radio" nolabel="1"/>
+                        </group>
+                        <p><b>Can the person be reconsidered for re-employment?</b></p>
+                        <group>
+                            <field name="permission" widget="radio" nolabel="1"/>
+                        </group>
+                        <p><b>Any other comments?</b></p>
                         <field name="comment_hr" nolabel="1"/>
                     </sheet>
 

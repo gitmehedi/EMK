@@ -7,9 +7,9 @@ class EmployeeEixtInterview(models.Model):
     _description = 'Employee Exit Interview'
 
 
-    employee_code = fields.Char('Employee Code',related='employee_id.code',readonly=True)
+    employee_code = fields.Char('Employee Code',related='employee_id.employee_number',readonly=True)
     location = fields.Char('Location',related='employee_id.work_location', readonly=True)
-    joining_date = fields.Date(string='Date of Joining',required=True)
+    joining_date = fields.Date(related='employee_id.initial_employment_date', string='Date Of Join', readonly=True)
     resignation_date = fields.Date(string='Date of Resignation',required=True)
     leaving_date = fields.Date(string='Date of Leaving',required=True)
     employee_id = fields.Many2one('hr.employee',string = 'Employee',required=True)
@@ -22,6 +22,8 @@ class EmployeeEixtInterview(models.Model):
     recommend = fields.Selection([('one', 'Most Definitely'),
                                    ('two', 'With Reservations'),
                                    ('three', 'No')], 'Syllabus')
+    permission = fields.Selection([('yes','Yes'),
+                                   ('no','No')])
     contract_add = fields.Text(string='Contact Address')
     comment_supervisor = fields.Text(string='Comment By Supervisor')
     comment_hr = fields.Text(string='Comment By HR')
@@ -32,6 +34,19 @@ class EmployeeEixtInterview(models.Model):
         ('approved', ' HR Approved'),
         ('done', ' Done'),
     ], string='Status', default='draft', track_visibility='onchange')
+
+    @api.onchange('employee_id')
+    def onchange_employee(self):
+        self.leaving_date = ''
+        self.resignation_date = ''
+        emp = self.env['hr.emp.exit.req'].search([('employee_id', '=', self.employee_id.id)],limit =1)
+        if emp:
+            self.leaving_date = emp.last_date
+            self.resignation_date = emp.req_date
+        else:
+            pass
+
+
 
     @api.multi
     def action_reset(self):
