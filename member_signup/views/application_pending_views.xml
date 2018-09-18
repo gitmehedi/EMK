@@ -108,7 +108,7 @@
                             <field name="mobile" widget="phone"/>
                             <field name="fax" invisible="True"/>
                             <field name="user_ids" invisible="1"/>
-                            <field name="email" widget="email" attrs="{'required': [('user_ids','!=', [])]}"/>
+                            <field name="email" readonly="True" widget="email" attrs="{'required': [('user_ids','!=', [])]}"/>
                             <field name="title" options='{"no_open": True}' invisible="True"
                                    attrs="{'invisible': [('is_company', '=', True)]}"/>
                             <field name="lang" invisible="True"/>
@@ -172,7 +172,7 @@
                     <field name="color"/>
                     <field name="display_name"/>
                     <field name="title"/>
-                    <field name="email"/>
+                    <field name="email" readonly="True"/>
                     <field name="parent_id"/>
                     <field name="is_company"/>
                     <field name="function"/>
@@ -221,7 +221,7 @@
                                         <li t-if="record.city.raw_value and !record.country_id.raw_value"><field name="city"/></li>
                                         <li t-if="!record.city.raw_value and record.country_id.raw_value"><field name="country_id"/></li>
                                         <li t-if="record.city.raw_value and record.country_id.raw_value"><field name="city"/>, <field name="country_id"/></li>
-                                        <li t-if="record.email.raw_value" class="o_text_overflow"><field name="email"/></li>
+                                        <li t-if="record.email.raw_value" class="o_text_overflow"><field name="email" readonly="True"/></li>
                                     </ul>
                                     <div class="oe_kanban_partner_links"/>
                                 </div>

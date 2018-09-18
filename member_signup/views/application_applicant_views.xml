@@ -104,7 +104,7 @@
                             <field name="phone" widget="phone"/>
                             <field name="mobile" widget="phone"/>
                             <field name="user_ids" invisible="1"/>
-                            <field name="email" widget="email" attrs="{'required': [('user_ids','!=', [])]}"/>
+                            <field name="email" readonly="True" widget="email" attrs="{'required': [('user_ids','!=', [])]}"/>
                         </group>
                     </group>
 

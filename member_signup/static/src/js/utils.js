@@ -1,18 +1,34 @@
 $(function()
 {
+//    $(document).on("keydown", '.number', function(e) {
+//
+//        var key = e.charCode || e.keyCode || 0;
+//        debugger;
+//        // allow backspace, tab, delete, arrows, numbers and keypad numbers ONLY
+//        return (
+//                key == 8 ||
+//                key == 9 ||
+//                key == 46 ||
+//                key == 110 ||
+//                key == 190 ||
+//                (key >= 37 && key <= 40) ||
+//                (key >= 48 && key <= 57) ||
+//                (key >= 96 && key <= 105));
+//    });
     $(document).on("keydown", '.number', function(e) {
-        var key = e.charCode || e.keyCode || 0;
-        // allow backspace, tab, delete, arrows, numbers and keypad numbers ONLY
-        return (
-                key == 8 ||
-                key == 9 ||
-                key == 46 ||
-                key == 110 ||
-                key == 190 ||
-                (key >= 37 && key <= 40) ||
-                (key >= 48 && key <= 57) ||
-                (key >= 96 && key <= 105))
-                ;
+
+        var isModifierkeyPressed = (e.metaKey || e.ctrlKey || e.shiftKey);
+        var isCursorMoveOrDeleteAction = ([46,8,9,37,38,39,40].indexOf(e.keyCode) != -1);
+        var isNumKeyPressed = (e.keyCode >= 48 && e.keyCode <= 58) || (e.keyCode >=96 && e.keyCode <= 105);
+        var vKey = 86, cKey = 67,aKey = 65;
+        switch(true){
+            case isCursorMoveOrDeleteAction:
+            case isModifierkeyPressed == false && isNumKeyPressed:
+            case (e.metaKey || e.ctrlKey) && ([vKey,cKey,aKey].indexOf(e.keyCode) != -1):
+                break;
+            default:
+                e.preventDefault();
+        }
     });
     /*  =================== This part written by Md. Mehedi Hasan ======================*/
 

@@ -90,11 +90,11 @@
                     </div>
                     <div class="col-md-6">
                         <div class="form-group form-field">
-                            <label for="phone" class="control-label">Mobile</label>
+                            <label for="mobile" class="control-label">Mobile</label>
                             <input type="text" name="mobile" t-att-value="mobile" id="mobile"
                                    placeholder="01900000000"
-                                   class="form-control input-sm reqfield number"
-                                   data-maxlength="14" data-minlength="11" required="required"/>
+                                   class="form-control input-sm number" data-minlength="11"
+                                   data-maxlength="14" />
                         </div>
                     </div>
                     <div class="col-md-6">
@@ -152,8 +152,8 @@
                             <div class="col-md-6">
                                 <div class="form-group form-field">
                                     <input type="text" name="zipcode" t-att-value="zipcode" id="zipcode" minlength="2"
-                                           maxlength="30" required="required" placeholder="Zip"
-                                           class="form-control input-sm reqfield"/>
+                                           maxlength="30"  placeholder="Zip"
+                                           class="form-control input-sm "/>
                                 </div>
                             </div>
                             <div class="col-md-12">
@@ -341,8 +341,7 @@
                             <label for="work_phone" class="control-label">Work Phone</label>
                             <input type="text" name="work_phone" t-att-value="work_phone" id="work_phone"
                                    placeholder="01900000000"
-                                   class="form-control input-sm number" data-maxlength="14"
-                                   data-minlength="11"/>
+                                   class="form-control input-sm number" data-minlength="11" data-maxlength="14"/>
                         </div>
                     </div>
                     <div class="col-md-12">
