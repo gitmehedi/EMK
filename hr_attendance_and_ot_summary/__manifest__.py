@@ -30,7 +30,7 @@
         'hr_overtime_requisition',
         'hr_employee_seniority',
         'hr_attendance_settings',
-        'custom_report'
+        'report_layout'
     ],
     
     'description': 

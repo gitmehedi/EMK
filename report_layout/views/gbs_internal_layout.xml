@@ -2,11 +2,11 @@
 <odoo>
     <template id="custom_report_gbs_internal" name="report assets" inherit_id="web.layout">
         <xpath expr="//head" position="inside">
-            <link href="/custom_report/static/src/css/report.css" rel="stylesheet"/>
+            <link href="/report_layout/static/src/css/report.css" rel="stylesheet"/>
         </xpath>
     </template>
 
-    <template id="gbs_external_layout">
+    <template id="gbs_internal_layout">
         <t t-if="not o and doc">
         <t t-set="o" t-value="doc"/>
         </t>
@@ -17,12 +17,12 @@
             <t t-set="company" t-value="res_company"></t>
         </t>
 
-        <t t-call="custom_report.gbs_external_layout_header" />
+        <t t-call="report_layout.gbs_internal_layout_header" />
         <t t-raw="0" />
-        <t t-call="custom_report.gbs_external_layout_footer" />
+        <t t-call="report_layout.gbs_internal_layout_footer" />
     </template>
 
-    <template id="gbs_external_layout_header">
+    <template id="gbs_internal_layout_header">
         <div class="header">
                 <style type="text/css">
                     .header-content {
@@ -56,7 +56,7 @@
 
 
 
-    <template id="gbs_external_layout_footer">
+    <template id="gbs_internal_layout_footer">
         <div class="footer">
             <div class="text-left" style="font-size: 10px; color: ash;">
                 <div class="row">

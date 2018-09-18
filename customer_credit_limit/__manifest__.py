@@ -11,7 +11,7 @@
         'sales_team',
         'account',
         'stock',
-        'custom_report',
+        'report_layout',
     ],
     'data': [
         'security/ir.model.access.csv',

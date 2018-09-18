@@ -9,7 +9,7 @@
         </style>
         <t t-call="report.html_container">
             <t t-foreach="docs" t-as="o">
-                <t t-call="custom_report.gbs_internal_layout">
+                <t t-call="report_layout.gbs_internal_layout">
                     <div class="page" style="page-break-inside:auto">
                         <t t-as="batch_start">
                             <div class="clearfix">
@@ -548,7 +548,7 @@
                                 </small>
                             <div/>
                         </t>
-                        <t t-call="custom_report.report_signing"></t>
+                        <t t-call="report_layout.report_signing"></t>
                     </div>
                 </t>
             </t>

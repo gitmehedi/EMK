@@ -39,7 +39,7 @@ class Shipment(models.Model):
             return {'domain': {'invoice_id': [('id','not in',[i.invoice_id.id for i in self.search([])]),
                                          ('partner_id', '=', self.lc_id.second_party_applicant.id),
                                          ('sale_type_id.sale_order_type', '=', 'lc_sales'),
-                                         ('state', '=', 'open')]}}
+                                         ('state', 'in', ['open','paid'])]}}
 
 
     @api.onchange('invoice_id')

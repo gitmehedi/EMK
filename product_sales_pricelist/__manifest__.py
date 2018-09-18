@@ -12,7 +12,7 @@
         'sales_team',
         'account',
         'stock',
-        'custom_report',
+        'report_layout',
         'product_variant_sale_price',
         'account',
     ],

@@ -16,7 +16,7 @@
     'category': 'Stock',
     'version': '10.0.1',
 
-    'depends': ['stock_indent','custom_report'],
+    'depends': ['stock_indent','report_layout'],
 
     'data': [
         # 'security/ir.model.access.csv',
