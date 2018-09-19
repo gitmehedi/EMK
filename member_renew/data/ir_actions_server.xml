@@ -18,29 +18,27 @@
 
     <record id="ir_mail_notification_and_invoice" model="ir.cron">
         <field name="name">Send Invoice or Mail Notification</field>
-        <field name="active">0</field>
+        <field name="active">1</field>
         <field name="user_id" ref="base.user_root"/>
         <field name="interval_number">1</field>
         <field name="interval_type">hours</field>
-        <field name="active">True</field>
         <field name="numbercall">-1</field>
         <field name="nextcall"
                eval="(datetime.now() + timedelta(hours=1)).strftime('%Y-%m-%d 02:00:00')"/>
-        <field name="model">res_partner</field>
+        <field name="model">res.partner</field>
         <field name="function">send_invoice_mail_notify</field>
     </record>
 
     <record id="ir_mail_notification_after_grace_period" model="ir.cron">
         <field name="name">Membership Inactive after Grace Period</field>
-        <field name="active">0</field>
+        <field name="active">1</field>
         <field name="user_id" ref="base.user_root"/>
         <field name="interval_number">1</field>
         <field name="interval_type">hours</field>
         <field name="numbercall">-1</field>
-        <field name="active">True</field>
         <field name="nextcall"
                eval="(datetime.now() + timedelta(hours=1)).strftime('%Y-%m-%d 02:00:00')"/>
-        <field name="model">res_partner</field>
+        <field name="model">res.partner</field>
         <field name="function">inactive_user</field>
     </record>
 

@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-    <record id="member_payment_confirmation_tmpl" model="mail.template">
-        <field name="name">Membership Payment Confirmation</field>
+    <record id="member_card_replacement_approval_tmpl" model="mail.template">
+        <field name="name">Member Card Replacement Approval</field>
         <field name="model_id" ref="base.model_res_users"/>
-        <field name="subject">Membership Payment Confirmation</field>
+        <field name="subject">Membership Card Replacement Approval Confirmation</field>
         <field name="email_to">${object.email|safe}</field>
         <field name="email_from">
             <![CDATA["${object.company_id.name|safe}" <${(object.company_id.email or user.email)|safe}>]]></field>
@@ -21,8 +21,8 @@
             <div style="padding:0px;width:600px;margin:auto;background: #FFFFFF repeat top /100%;color:#777777">
             <p>Dear ${ctx['name']},</p>
                 <p>
-                    Congratulation, your payment has been successfully completed. Now You are a honourable member of
-                    <strong>${user.company_id.name}</strong>. Please stay connect with <strong>${user.company_id.name}</strong>.
+                    Congratulation, your card replacement request approve. You should contact with responsible person of
+                    <strong>${user.company_id.name}</strong>.
                 </p>
                 <p>Best regards,</p>
             </div>
@@ -35,10 +35,10 @@
         <field name="user_signature" eval="False"/>
     </record>
 
-    <record id="member_notification_for_due_invoice" model="mail.template">
-        <field name="name">Due Invoice</field>
+    <record id="member_card_replacement_cancel_tmpl" model="mail.template">
+        <field name="name">Member Card Replacement Cancel</field>
         <field name="model_id" ref="base.model_res_users"/>
-        <field name="subject">Notification for Due Invoice Payment</field>
+        <field name="subject">Membership Card Replacement Request Cancel</field>
         <field name="email_to">${object.email|safe}</field>
         <field name="email_from">
             <![CDATA["${object.company_id.name|safe}" <${(object.company_id.email or user.email)|safe}>]]></field>
@@ -53,9 +53,10 @@
                 </table>
             </div>
             <div style="padding:0px;width:600px;margin:auto;background: #FFFFFF repeat top /100%;color:#777777">
-            <p>Dear ${ctx['name']|safe},</p>
+            <p>Dear ${ctx['name']},</p>
                 <p>
-                    Your invoice is in pending status. Please pay invoice amount within short time..
+                    Your card replacement request cancel. You should contact with responsible person of
+                    <strong>${user.company_id.name}</strong>.
                 </p>
                 <p>Best regards,</p>
             </div>

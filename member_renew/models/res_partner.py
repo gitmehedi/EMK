@@ -24,12 +24,12 @@ class ResPartner(models.Model):
             vals = {
                 'template': 'member_renew.member_renew_notification_email_template',
                 'email_to': rec['email'],
-                'context': {},
+                'context': {'name': rec['name']},
             }
             self.mailsend(vals)
             rec.mail_notification = True
 
-    @api.multi
+    @api.model
     def send_invoice_mail_notify(self):
         expire_days = self.env.user.company_id.expire_notification_days
         start_date = datetime.now().strftime('%Y-%m-%d')
@@ -40,39 +40,38 @@ class ResPartner(models.Model):
             order='membership_days_remaining desc')
 
         for rec in record:
-            if not rec.mail_notification:
-                if rec['auto_renew']:
-                    self._create_invoice()
-                    rec.mail_notification = True
-                else:
-                    vals = {
-                        'template': 'member_renew.member_renew_notification_email_template',
-                        'email_to': rec['email'],
-                        'context': {'name': rec['name'], 'expire_date': rec['membership_stop']},
-                    }
-                    self.mailsend(vals)
-                    rec.mail_notification = True
+            # if not rec.mail_notification:
+            if rec['auto_renew']:
+                rec._create_invoice()
+                rec.mail_notification = True
+            else:
+                vals = {
+                    'template': 'member_renew.member_renew_notification_email_template',
+                    'email_to': rec['email'],
+                    'context': {'name': rec['name'], 'expire_date': rec['membership_stop']},
+                }
+                self.mailsend(vals)
+                rec.mail_notification = True
 
-    @api.multi
+    @api.model
     def inactive_user(self):
         self.env.cr.execute("""
-                            SELECT 'm.*',
-                                   CURRENT_DATE-m.membership_stop AS difference
+                            SELECT *
                             FROM res_partner m
                             INNER JOIN res_users u
 	                            ON(u.partner_id=m.id)
                             WHERE CURRENT_DATE-m.membership_stop >%s AND u.active=True
-                            ORDER BY difference ASC
                             """, (self.env.user.company_id.expire_grace_period,))
 
         for rec in self.env.cr.dictfetchall():
-            if rec.mail_notification:
+            if rec['mail_notification']:
                 vals = {
-                    'template': 'member_signup.member_application_rejection_email_template',
+                    'template': 'member_renew.member_inactive_notification_template',
                     'email_to': rec['email'],
-                    'context': {'name': rec['email']},
+                    'context': {'name': rec['name']},
                 }
                 self.mailsend(vals)
                 user = self.env['res.users'].search([('id', '=', rec['id'])])
                 if user:
                     user.active = False
+                    user.partner_id.active = False

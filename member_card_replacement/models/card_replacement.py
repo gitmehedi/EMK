@@ -47,14 +47,26 @@ class MemberCardReplacement(models.Model):
 
     @api.one
     def act_approve(self):
-        if 'authenticate' in self.state:
+        if self.state=='authenticate':
             self.approve_date = fields.Date.today()
+            vals = {
+                'template': 'member_card_replacement.member_card_replacement_approval_tmpl',
+                'email_to': self.membership_id.email,
+                'context': {'name': self.membership_id.name},
+            }
+            self.membership_id.mailsend(vals)
             self.state = 'approve'
 
     @api.one
     def act_reject(self):
-        if 'request' in self.state:
+        if self.state=='request':
             self.rejected_date = fields.Date.today()
+            vals = {
+                'template': 'member_card_replacement.member_card_replacement_cancel_tmpl',
+                'email_to': self.membership_id.email,
+                'context': {'name': self.membership_id.name},
+            }
+            self.membership_id.mailsend(vals)
             self.state = 'reject'
 
     @api.model
