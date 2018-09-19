@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
-import member_config
+import res_company
+import member_configuration
 import res_config
 import res_users
 import res_partner

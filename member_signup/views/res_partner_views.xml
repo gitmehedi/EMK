@@ -14,6 +14,9 @@
             <xpath expr="//page[@name='sales_purchases']" position="attributes">
                 <attribute name="attrs">{'invisible':True}</attribute>
             </xpath>
+            <xpath expr="//field[@name='email']" position="attributes">
+                <attribute name="attrs">{'readonly':True}</attribute>
+            </xpath>
             <xpath expr="//form/sheet" position="before">
                 <field name="state" invisible="True"/>
                 <div class="alert alert-danger" role="alert" style="margin-bottom:0px;"
