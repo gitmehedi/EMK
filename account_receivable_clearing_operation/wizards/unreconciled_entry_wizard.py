@@ -31,7 +31,7 @@ class UnReconciledJournalEntryWizard(models.TransientModel):
         for rec in self:
             ids = []
 
-            move_lines = rec.env['account.move.line'].search([
+            move_lines = rec.env['account.move.line'].search([('reconciled','=',False),
                                                               ('date', '=', self.date),
                                                               ('partner_id', '=', self.partner_id.id),
                                                               ])

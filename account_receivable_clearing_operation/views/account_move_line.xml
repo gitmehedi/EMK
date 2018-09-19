@@ -7,12 +7,14 @@
             <field name="model">account.move.line</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree string="Account Move Line">
+                <tree string="Account Move Line" edit="false" create="false" delete="false">
                     <button name="action_reconcile_journal_entry" class="oe_highlight" icon="fa-check-square"
                             type="object" />
 
                     <field name="date"/>
                     <field name="partner_id"/>
+                    <field name="journal_id"/>
+                    <field name="move_id"/>
                     <field name="credit" string="Reconcile Amount"/>
 
                 </tree>
