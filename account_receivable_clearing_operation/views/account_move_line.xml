@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+
+        <record id="unreconciled_acc_move_line_tree" model="ir.ui.view">
+            <field name="name">account.move.line.tree</field>
+            <field name="model">account.move.line</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Account Move Line">
+                    <button name="action_reconcile_journal_entry" class="oe_highlight" icon="fa-check-square"
+                            type="object" />
+
+                    <field name="date"/>
+                    <field name="partner_id"/>
+                    <field name="credit" string="Reconcile Amount"/>
+
+                </tree>
+            </field>
+        </record>
+
+    </data>
+</odoo>

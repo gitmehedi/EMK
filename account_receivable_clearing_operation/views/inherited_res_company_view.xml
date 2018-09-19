@@ -9,7 +9,8 @@
             <field name="arch" type="xml">
                 <xpath expr="//group[@name='general']" position="before">
                     <group>
-                        <field name="cash_clearing_account"/>
+                        <field name="account_receive_clearing_acc" options="{'no_quick_create':True,'no_create_edit':True,'no_open':True}"/>
+                        <field name="journal_id" options="{'no_quick_create':True,'no_create_edit':True,'no_open':True}"/>
                     </group>
                 </xpath>
 

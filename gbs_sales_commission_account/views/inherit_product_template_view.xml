@@ -21,7 +21,7 @@
         <field name="arch" type="xml">
             <xpath expr="//group[@name='general']" position="after">
                 <group>
-                    <field name="commission_journal"/>
+                    <field name="commission_journal" options="{'no_quick_create':True,'no_create_edit':True,'no_open':True}"/>
                 </group>
             </xpath>
 

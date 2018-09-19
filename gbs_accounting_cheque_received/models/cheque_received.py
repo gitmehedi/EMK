@@ -187,7 +187,7 @@ class ChequeReceived(models.Model):
             }
 
             debit_account_id = cr.partner_id.property_account_receivable_id
-            credit_account_id = cr.company_id.cash_clearing_account
+            credit_account_id = cr.company_id.account_receive_clearing_acc
 
             if debit_account_id:
 

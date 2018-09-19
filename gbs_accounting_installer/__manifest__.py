@@ -21,10 +21,11 @@
                 'customer_activity_statement',
                 'customer_outstanding_statement',
                 'account_journal_report',
-                #'custom_amount_conversion',
                 'cheque_printing',
                 'account_invoice_merge',
                 'account_invoice_merge_operating_unit',
+                'account_receivable_clearing_operation',
+                'gbs_account',
                 ],
 
     'data': [ ],

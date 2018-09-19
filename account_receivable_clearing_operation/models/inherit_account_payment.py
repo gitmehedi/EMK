@@ -10,6 +10,6 @@ class InheritAccountPayment(models.Model):
 
         super(InheritAccountPayment, self)._compute_destination_account_id()
 
-        if self.company_id and self.company_id.cash_suspense_account:
+        if self.company_id and self.company_id.account_receive_clearing_acc:
             if self.partner_type == 'customer' and self.payment_type == 'inbound':
-                self.destination_account_id = self.company_id.cash_clearing_account.id
+                self.destination_account_id = self.company_id.account_receive_clearing_acc.id
