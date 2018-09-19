@@ -8,7 +8,10 @@
             <form string="Expiration Lists">
                 <group>
                     <group>
-                        <field name="no_of_days"/>
+                        <label id="no_of_days" string="No of days after membership will expire"/>
+                        <div>
+                            <field name="no_of_days"/>
+                        </div>
                     </group>
                 </group>
                 <footer>

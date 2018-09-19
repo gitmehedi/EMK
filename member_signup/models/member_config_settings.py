@@ -13,7 +13,7 @@ class MemberConfigSettings(models.TransientModel):
         default=lambda self: self.env.user.company_id)
 
     expire_notification_days = fields.Integer(
-        string='Notification Days before Expire',
+        string='Notification Days Before Expire',
         related='company_id.expire_notification_days',
         help="Number of Days before notification send for membership expiration.",
         required=True

@@ -13,11 +13,11 @@
                     <group string="Membership Settings" groups="">
                         <field name="company_id" invisible="True"/>
 
-                        <label for="expire_notification_days" string="Membership Expire Days"/>
+                        <label for="expire_notification_days"/>
                         <div>
                             <field name="expire_notification_days" class="oe_inline"/>
                         </div>
-                        <label for="expire_grace_period" string="Membership Expire Days"/>
+                        <label for="expire_grace_period"/>
                         <div>
                             <field name="expire_grace_period" class="oe_inline"/>
                         </div>

@@ -3,26 +3,35 @@ from odoo import models, fields, api, _
 
 class MemberCardReplacement(models.Model):
     _name = 'member.card.replacement'
-    _inherit = ['ir.needaction_mixin']
+    _inherit = ['mail.thread', 'ir.needaction_mixin']
     _description = 'Member Card Replacement'
     _rec_name = 'name'
 
     name = fields.Char(string='Name', readonly=True)
 
+    card_replacement_reason_id = fields.Many2one('member.card.replacement.reason', string='Card Replacement Reason',
+                                                 required=True, track_visibility="onchange")
     membership_id = fields.Many2one("res.partner", string="Membership", required=True,
-                                    readonly=True, states={'request': [('readonly', '=', False)]})
+                                    readonly=True, states={'request': [('readonly', '=', False)]},
+                                    track_visibility="onchange")
     request_date = fields.Date(string="Request Date", default=fields.Date.today(), required=True,
-                               readonly=True, states={'request': [('readonly', '=', False)]})
+                               readonly=True, states={'request': [('readonly', '=', False)]},
+                               track_visibility="onchange")
     authorize_date = fields.Date(string="Authenticate Date",
-                                 readonly=True, states={'authenticate': [('readonly', '=', False)]})
+                                 readonly=True, states={'authenticate': [('readonly', '=', False)]},
+                                 track_visibility="onchange")
     approve_date = fields.Date(string="Approve Date",
-                               readonly=True, states={'approve': [('readonly', '=', False)]})
+                               readonly=True, states={'approve': [('readonly', '=', False)]},
+                               track_visibility="onchange")
     rejected_date = fields.Date(string="Rejected Date",
-                                readonly=True, states={'approve': [('readonly', '=', False)]})
+                                readonly=True, states={'approve': [('readonly', '=', False)]},
+                                track_visibility="onchange")
+    comments = fields.Text(string='Comments')
+
     state = fields.Selection(
         [('request', 'Request'), ('authenticate', 'Authenticate'), ('approve', 'Approve'), ('paid', 'Paid'),
          ('reject', 'Reject')],
-        string="State", default='request')
+        string="State", default='request', track_visibility="onchange")
 
     @api.one
     def act_request(self):

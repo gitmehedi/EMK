@@ -1,0 +1,53 @@
+<?xml version="1.0"?>
+<odoo>
+    <data>
+        <record id="view_card_replacement_reason_form" model="ir.ui.view">
+            <field name="name">member.card.replacement.reason.form</field>
+            <field name="model">member.card.replacement.reason</field>
+            <field name="priority" eval="1"/>
+            <field name="arch" type="xml">
+                <form string="Card Replacements Reason">
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="name"/>
+                                <field name="status"/>
+                            </group>
+                        </group>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+        <record id="view_card_replacement_reason_tree" model="ir.ui.view">
+            <field name="name">member.card.replacement.reason.tree</field>
+            <field name="model">member.card.replacement.reason</field>
+            <field name="priority" eval="1"/>
+            <field name="arch" type="xml">
+                <tree string="Card Replacements Reason">
+                    <field name="name"/>
+                    <field name="status"/>
+                </tree>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="action_card_replacement_reason">
+            <field name="name">Card Replacements Reasons</field>
+            <field name="res_model">member.card.replacement.reason</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Click to add a new Member's Card Replacements Reason
+                </p>
+            </field>
+        </record>
+
+        <menuitem id="menu_card_replacement_reason" sequence="150"
+                  parent="membership.menu_marketing_config_association"
+                  action="action_card_replacement_reason"
+                  groups="membership_user.group_mem_user_officer,membership_extension.group_membership_manager"/>
+
+    </data>
+</odoo>

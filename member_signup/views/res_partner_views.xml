@@ -19,9 +19,10 @@
             </xpath>
             <xpath expr="//form/sheet" position="before">
                 <field name="state" invisible="True"/>
-                <div class="alert alert-danger" role="alert" style="margin-bottom:0px;"
-                     attrs="{'invisible': [('membership_days_remaining','&gt;',7),('state','=','member')]}">
-                    Your Membership will expire very soon. Please request for renew membership or inform emk personel
+                <div class="alert alert-info" role="alert" style="margin-bottom:0px; text-align:center;"
+                     attrs="{'invisible': [('membership_days_remaining','&gt;','company_id.expire_notification_days'),('state','=','member')]}">
+                    Your Membership will expire very soon, see
+                    <strong>Membership tab</strong>. Please request for renew membership or active auto-renew feature.
                 </div>
             </xpath>
             <xpath expr="//form/sheet/div/button[@name='toggle_active']" position="before">

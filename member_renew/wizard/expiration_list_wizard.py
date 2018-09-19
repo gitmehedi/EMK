@@ -6,7 +6,8 @@ from odoo import models, fields, api, _
 class ExpirationListWizard(models.TransientModel):
     _name = 'expiration.list.wizard'
 
-    no_of_days = fields.Integer(required=True, string='No of Days')
+    no_of_days = fields.Integer(required=True, string='No of Days',
+                                default= lambda self: self.env.user.company_id.expire_notification_days)
 
     @api.multi
     def generate(self):

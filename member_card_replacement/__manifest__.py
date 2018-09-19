@@ -15,6 +15,7 @@
         'security/ir_rule.xml',
         'data/sequence.xml',
         'data/default_product.xml',
+        'views/card_replacement_reason_views.xml',
         'views/card_replacement_views.xml',
     ],
     'installable': True,
