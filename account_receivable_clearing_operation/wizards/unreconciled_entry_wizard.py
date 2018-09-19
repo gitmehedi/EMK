@@ -13,28 +13,27 @@ class UnReconciledJournalEntryWizard(models.TransientModel):
     fiscal_month = fields.Many2one('date.range.type', string='Fiscal Month')
     amount = fields.Float(string='Amount')
 
-    # [action] = self.env.ref('account.action_account_moves_all_a').read()
-    # ids = []
-    # for aml in self:
-    #     if aml.account_id.reconcile:
-    #         ids.extend(
-    #             [r.debit_move_id.id for r in aml.matched_debit_ids] if aml.credit > 0 else [r.credit_move_id.id for
-    #                                                                                         r in
-    #                                                                                         aml.matched_credit_ids])
-    #         ids.append(aml.id)
-    # action['domain'] = [('id', 'in', ids)]
-    # return action
-    #
-
     @api.multi
     def get_all_unreconciled_credit_entries(self):
         for rec in self:
             ids = []
 
-            move_lines = rec.env['account.move.line'].search([('reconciled','=',False),
-                                                              ('date', '=', self.date),
+            move_lines = rec.env['account.move.line'].search([('reconciled','=',True),
+                                                              ('full_reconcile_id', '=', False), ('balance', '!=', 0),
+                                                              ('date', '>=', self.date),
                                                               ('partner_id', '=', self.partner_id.id),
+                                                              ('is_clearing_journal_entry','=',False),
+                                                              ('credit','>=',self.amount)
                                                               ])
+
+            # Account Module - account_view.xml 
+
+            # < filter
+            # string = "Unreconciled"
+            # domain = "[('full_reconcile_id', '=', False), ('balance','!=', 0), ('account_id.reconcile','=',True)]"
+            # help = "Journal items where matching number isn't set"
+            # name = "unreconciled" / >
+
             if move_lines:
                 for mv_line in move_lines:
                     ids.append(mv_line.id)

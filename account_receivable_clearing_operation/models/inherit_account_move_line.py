@@ -4,10 +4,14 @@ from odoo import api, fields, models, _
 class InheritAccountMoveLine(models.Model):
     _inherit = 'account.move.line'
 
+    is_clearing_journal_entry = fields.Boolean(string='is clearing journal entry done', default=False)
 
 
     def action_reconcile_journal_entry(self):
         for mv_line in self:
+
+            mv_line.write({'is_clearing_journal_entry': True})
+
             line_ids = []
             debit_sum = 0.0
             credit_sum = 0.0
@@ -46,6 +50,7 @@ class InheritAccountMoveLine(models.Model):
                     'date': date,
                     'debit':  amount < 0.0 and -amount or 0.0,
                     'credit':  amount > 0.0 and amount or 0.0,
+                    'is_clearing_journal_entry': True,
                 })
 
                 line_ids.append(credit_line)
@@ -55,13 +60,4 @@ class InheritAccountMoveLine(models.Model):
         move_dict['line_ids'] = line_ids
         move = self.env['account.move'].create(move_dict)
         move.post()
-
-        #@todo Update the reconcile flag TRUE after Journal Entry is successful
-        self.write({'reconciled': True})
-
-
-
-
-
-
 
