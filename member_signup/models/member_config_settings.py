@@ -24,3 +24,9 @@ class MemberConfigSettings(models.TransientModel):
         help="Membership grace period before cancel membership.",
         required=True
     )
+    expire_grace_period = fields.Integer(
+        string='Membership Grace Period',
+        related='company_id.expire_grace_period',
+        help="Membership grace period before cancel membership.",
+        required=True
+    )

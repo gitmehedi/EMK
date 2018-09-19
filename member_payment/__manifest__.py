@@ -16,6 +16,7 @@
         'security/ir.model.access.csv',
         'data/sequence.xml',
         'data/template.xml',
+        'data/ir_actions_server.xml',
         'views/menu_views.xml',
         'views/payment_session_views.xml',
         'views/membership_fee_views.xml',

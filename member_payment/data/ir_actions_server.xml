@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="action_send_email_for_due_invoice" model="ir.actions.server">
+        <field name="name">Notify Due Invoice</field>
+        <field name="model_id" ref="model_account_invoice"/>
+        <field name="state">code</field>
+        <field name="condition">True</field>
+        <field name="code">record.notify_due_invoice()</field>
+        <field name="groups_id" eval="[(4, ref('membership_user.group_mem_user_officer'))]"/>
+    </record>
+    <record id="action_send_email_for_due_invoice_value" model="ir.values">
+        <field name="name">name</field>
+        <field name="model">account.invoice</field>
+        <field name="key">action</field>
+        <field name="key2">client_action_multi</field>
+        <field name="value" eval="'ir.actions.server,%d'%action_send_email_for_due_invoice"/>
+    </record>
+</odoo>
