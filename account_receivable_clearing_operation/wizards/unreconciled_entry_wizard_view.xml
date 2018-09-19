@@ -8,11 +8,11 @@
                 <form>
                     <sheet>
                         <group>
-                            <field name="date"/>
                             <field name="partner_id"/>
-                            <field name="ref"/>
-                            <field name="fiscal_month"/>
+                            <field name="date"/>
+                            <field name="date_range_fm_id"/>
                             <field name="amount"/>
+                            <field name="company_id" invisible="1"/>
                         </group>
                     </sheet>
 

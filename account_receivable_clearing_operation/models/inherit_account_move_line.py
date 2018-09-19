@@ -10,7 +10,7 @@ class InheritAccountMoveLine(models.Model):
     def action_reconcile_journal_entry(self):
         for mv_line in self:
 
-            mv_line.write({'is_clearing_journal_entry': True})
+            mv_line.write({'reconciled':True, 'is_clearing_journal_entry': True})
 
             line_ids = []
             debit_sum = 0.0
@@ -51,6 +51,7 @@ class InheritAccountMoveLine(models.Model):
                     'debit':  amount < 0.0 and -amount or 0.0,
                     'credit':  amount > 0.0 and amount or 0.0,
                     'is_clearing_journal_entry': True,
+                    'reconciled': True
                 })
 
                 line_ids.append(credit_line)

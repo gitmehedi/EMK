@@ -9,7 +9,7 @@
             <field name="arch" type="xml">
 
                 <xpath expr="//field[@name='partner_id']" position="after">
-                    <field name="is_clearing_journal_entry" invisible="1"/>
+                    <field name="is_clearing_journal_entry" invisible="0"/>
                 </xpath>
 
             </field>
@@ -33,6 +33,10 @@
                 </tree>
             </field>
         </record>
+
+         <!--<field name="domain">[-->
+        <!--('my_flag', '=', True)-->
+    <!--]</field>-->
 
     </data>
 </odoo>
