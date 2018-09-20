@@ -172,6 +172,7 @@ class EmployeeExitReq(models.Model):
                 }))
         self.pen_checklists_ids = vals
         self.approver2_by = self.env.user
+        self.employee_id.write({'state': 'relieved'})
         return self.write({'state': 'validate','approved2_date': time.strftime('%Y-%m-%d %H:%M:%S')})
 
     # Exit request cancel
