@@ -25,11 +25,6 @@ class IndentIndent(models.Model):
     def _get_required_date(self):
         return datetime.strftime(datetime.today() + timedelta(days=7), DEFAULT_SERVER_DATETIME_FORMAT)
 
-    @api.multi
-    def _default_department(self):
-        emp_pool_obj = self.env['hr.employee'].search([('user_id', '=', self.env.uid)], limit=1)
-        return emp_pool_obj.department_id.id
-
     name = fields.Char('Indent #', size=30, readonly=True, default="/")
     approve_date = fields.Datetime('Approve Date', readonly=True)
     indent_date = fields.Datetime('Indent Date', required=True, readonly=True,
@@ -39,10 +34,9 @@ class IndentIndent(models.Model):
     indentor_id = fields.Many2one('res.users', string='Indentor', required=True, readonly=True,
                                   default=lambda self: self.env.user,
                                   states={'draft': [('readonly', False)]})
-    department_id = fields.Many2one('hr.department', string='Department', readonly=True,default=_default_department)
-    stock_location_id = fields.Many2one('stock.location', string='Stock Location', readonly=True,required=True,
+    stock_location_id = fields.Many2one('stock.location', string='Department', readonly=True,required=True,
                                         states={'draft': [('readonly', False)]},
-                                        help="Default User Location.Destination location.",
+                                        help="Default User Location.Which consider as Destination location.",
                                         default=lambda self: self.env.user.default_location_id)
     # manager_id = fields.Many2one('res.users', string='Department Manager', related='department_id.manager_id', store=True)
     analytic_account_id = fields.Many2one('account.analytic.account', string='Project', ondelete="cascade",
@@ -68,7 +62,7 @@ class IndentIndent(models.Model):
                                    help="Default Warehouse.Source location.",
                                    states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]})
     picking_type_id = fields.Many2one('stock.picking.type',string='Picking Type',compute = '_compute_default_picking_type',
-                                      readonly=True, store = True)
+                                      readonly=True,required=True, store = True)
     move_type = fields.Selection([('direct', 'Partial'), ('one', 'All at once')], 'Receive Method',
                                  readonly=True, required=True, default='direct',
                                  states={'draft': [('readonly', False)], 'cancel': [('readonly', True)]},
@@ -97,9 +91,8 @@ class IndentIndent(models.Model):
 
     @api.onchange('warehouse_id')
     def onchange_warehouse_id(self):
-        # if self.warehouse_id:
-        #     self.stock_location_id = []
-        return {'domain': {'stock_location_id': [('id', 'in', self.env.user.location_ids.ids)]}}
+        if self.warehouse_id:
+            return {'domain': {'stock_location_id': [('id', 'in', self.env.user.location_ids.ids),('can_request','=',True)]}}
 
     @api.one
     @api.constrains('required_date')
@@ -118,10 +111,9 @@ class IndentIndent(models.Model):
             # if picking_type_id:
             #     indent.picking_type_id = picking_type_id
             # else:
-            #     raise ValidationError(_('No Picking Type For this location.'
-            #                             'Please Create a picking type with '
-            #                             'source location (%s) and destination location (%s)./n Or contract with your system Admin'
-            #                             %(indent.warehouse_id.sudo().lot_stock_id.name,indent.stock_location_id.name)))
+            #     raise UserError(_('No Picking Type For this Department.'
+            #                     'Please Create a picking type or contact with system Admin.'))
+
 
     @api.onchange('requirement')
     def onchange_requirement(self):

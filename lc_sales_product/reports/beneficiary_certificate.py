@@ -63,7 +63,7 @@ class BeneficiaryCertificate(models.AbstractModel):
             'data': data,
             'lists': prod_list,
             'total_qty': total_qty,
-            'uom': uom[0],
+            'uom': uom[0] if len(uom)>0 else 0,
             'pi_list': pi_list,
             'lc_revision_list': lc_revision_list
         }

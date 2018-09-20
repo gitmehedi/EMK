@@ -31,10 +31,12 @@
                             <div class="row">
                                 <div class="col-xs-6">
                                     <p><b><u>Beneficiary:</u></b></p>
-                                    <p class="m-0"><strong t-esc="data['beneficiary_id']"/> <br/>
+                                    <p class="mb-5"><strong t-esc="data['beneficiary_id']"/> <br/>
                                         Factory: <span t-esc="data['unit_address']"/></p>
                                     <p><b>Vat Registration No:</b>
-                                        <span t-esc="data['vat']"/></p>
+                                        <span t-esc="data['vat']"/><br/>
+                                        <b>Bin No:</b>
+                                        <span t-esc="data['bin']"/></p>
                                 </div>
                                 <div class="col-xs-6 text-left">
                                     <p><b>Proforma Invoice No &amp; Date : </b><br/>
@@ -50,7 +52,7 @@
                                         Factory: <span t-esc="data['customer_add']" /></p>
                                 </div>
                                 <div class="col-xs-6 text-left">
-                                    <p><b>Transport : </b><span t-esc="data['transport_by']"/> <br/>
+                                    <p><b>Mode of Shipment : </b><span t-esc="data['transport_by']"/> <br/>
                                         <b>Place of Loading : </b>From Factory Premises of Beneficiary. <br/>
                                         <b>Final Destination : </b>Applicant's Factory.</p>
                                 </div>
@@ -93,12 +95,16 @@
                         <div class="clearfix">
                             <div class="row">
                                 <div class="col-xs-6">
-                                    <p><b>Advising Bank : </b><span t-esc="data['advising_bank']"/> <br/>
-                                        <b>Bank Address : </b><span t-esc="data['bank_add']"/></p>
+                                    <p>
+                                       <b>Advising Bank : </b><span t-esc="data['advising_bank']"/><br/>
+                                       <b>Account Number : </b><span t-esc="data['acc_number']"/><br/>
+                                       <b>Swift Code : </b><span t-esc="data['swift_code']"/><br/>
+                                       <b>Address : </b><span t-esc="data['bank_add']"/>
+                                    </p>
                                 </div>
                                 <div class="col-xs-6 text-left">
                                     <p><b>Packing : </b><span t-esc="data['packing']"/> <br/>
-                                        <b>Terms of Payment : </b><span t-esc="data['terms_str']"/></p>
+                                       <b>Terms of Payment : </b><span t-esc="data['terms_str']"/></p>
                                 </div>
                             </div>
                             <hr class="hr-xxs m-0"/>
