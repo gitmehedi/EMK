@@ -10,7 +10,7 @@ class FinalSettlement(models.Model):
     employee_id = fields.Many2one('hr.employee',string = 'Employee',required=True, track_visibility='onchange')
     emp_designation = fields.Many2one('hr.job', string='Designation', related='employee_id.job_id',readonly=True)
     joining_date = fields.Date(related='employee_id.initial_employment_date', string='Date of Join', readonly=True)
-    leaving_date = fields.Date(string='Date of Leaving',readonly=True, store=True)
+    leaving_date = fields.Date(string='Date of Leaving',readonly=True)
     emp_payslip_ids = fields.One2many('final.settlement.line','final_settlement_id', string='Salary')
     payment_ids = fields.One2many('final.settlement.payments','payment_id', string='Salary',track_visibility='onchange')
     deduction_ids = fields.One2many('final.settlement.deduction','deduction_id', string='Salary',track_visibility='onchange')
@@ -43,26 +43,25 @@ class FinalSettlement(models.Model):
     def onchange_employee(self):
         self.leaving_date = ''
         emp = self.env['hr.emp.exit.req'].search([('employee_id', '=', self.employee_id.id)], limit=1)
-        if emp:
+        if emp and emp.last_date:
             self.leaving_date = emp.last_date
-        else:
-            pass
 
     @api.model
     def create(self, vals):
-        vals['leaving_date'] = ''
         emp = self.env['hr.emp.exit.req'].search([('employee_id', '=', vals['employee_id'])], limit=1)
-        if emp:
+        if emp and emp.last_date:
             vals['leaving_date'] = emp.last_date
         res = super(FinalSettlement, self).create(vals)
         return res
 
     @api.multi
     def write(self, vals):
-        vals['leaving_date'] = ''
-        emp = self.env['hr.emp.exit.req'].search([('employee_id', '=', vals['employee_id'])], limit=1)
-        if emp:
-            vals['leaving_date'] = emp.last_date
+        if vals.get('employee_id'):
+            emp = self.env['hr.emp.exit.req'].search([('employee_id', '=', vals['employee_id'])], limit=1)
+            if emp and emp.last_date:
+                vals['leaving_date'] = emp.last_date
+            elif emp.last_date == False:
+                vals['leaving_date'] = ''
         res = super(FinalSettlement, self).write(vals)
         return res
 

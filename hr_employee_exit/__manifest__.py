@@ -29,6 +29,7 @@
         'report/report_employee_exit.xml',
         'report/report_emp_clearance.xml',
         'report/report_exit_interview.xml',
+        'report/final_settlement_report.xml',
         'security/ir.model.access.csv',
         'security/ir_rule.xml'
     ],
