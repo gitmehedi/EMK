@@ -8,21 +8,18 @@
             <field name="arch" type="xml">
                 <form string="Full &amp; Final Settlement">
                     <header>
-                        <button name="action_submit" states="draft" type="object" string="Apply" groups ="hr.group_hr_manager" class="oe_highlight"/>
-                        <!--<button string="Reset to Draft" name="action_reset"-->
-                                <!--attrs="{'invisible': [('state', 'in', ['draft','submit'])]}"-->
-                                <!--type="object"/>-->
-                        <!--<button string="Submit" name="action_validate"-->
-                                <!--attrs="{'invisible': [('state', 'not in', ['submit'])]}"-->
-                                <!--type="object" class="oe_highlight"/>-->
-                        <!--<button string="Validate" name="action_approved" groups="gbs_application_group.group_dept_manager"-->
-                                <!--attrs="{'invisible': [('state','not in',['validate'])]}"-->
-                                <!--type="object" class="oe_highlight"/>-->
-                        <!--<button string="Approved" name="action_done"-->
-                                <!--attrs="{'invisible': [('state','not in',['approved'])]}" groups ="hr.group_hr_manager"-->
-                                <!--type="object" class="oe_highlight"/>-->
+                        <button name="action_confirm" states="draft" type="object" string="Confirm" class="oe_highlight"/>
+                        <button string="Reset to Draft" name="action_reset"
+                                attrs="{'invisible': [('state', 'in', ['draft','done'])]}"
+                                type="object"/>
+                        <button string="Validate" name="action_approved"
+                                attrs="{'invisible': [('state','not in',['validate'])]}"
+                                type="object" class="oe_highlight"/>
+                        <button string="Approved" name="action_done"
+                                attrs="{'invisible': [('state','not in',['approved'])]}"
+                                type="object" class="oe_highlight"/>
                         <field name="state" widget="statusbar"
-                               statusbar_visible="draft,submit,validate,approved,done"/>
+                               statusbar_visible="draft,validate,approved,done"/>
                     </header>
                     <sheet>
                         <group>
@@ -37,14 +34,14 @@
                                 <field name="leaving_date"/>
                             </group>
                         </group>
-                        <field name="emp_payslip_ids" nolabel="1">
+                        <field name="emp_payslip_ids" readonly = "1" nolabel="1">
                             <tree editable="bottom">
                                 <field name="name"/>
                                 <field name="code"/>
                                 <field name="total"/>
                             </tree>
                         </field>
-                        <notebook>
+                        <notebook attrs="{'invisible': [('state','in',['draft'])],'readonly': [('state','in',['done'])]}">
                             <page string ="Payments">
                                 <field name="payment_ids" nolabel="1">
                                     <tree editable="bottom">
@@ -62,6 +59,13 @@
                                 </field>
                             </page>
                         </notebook>
+                        <group>
+                            <group class="oe_subtotal_footer oe_right" name="sale_total">
+                                <field name="payment_total_amount" widget='monetary' options="{'currency_field': 'currency_id'}"/>
+                                <field name="deduction_total_amount" class="oe_right" widget='monetary' options="{'currency_field': 'currency_id'}"/>
+                                <field name="total_amount" class="oe_subtotal_footer_separator" widget='monetary' options="{'currency_field': 'currency_id'}"/>
+                            </group>
+                        </group>
                     </sheet>
 
                     <div class="oe_chatter">
