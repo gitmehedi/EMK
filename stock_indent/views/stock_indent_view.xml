@@ -81,17 +81,16 @@
 								<field name="product_lines">
 									<tree string="Products" editable="bottom">
 										<field name="sequence" widget="handle"/>
-										<field name="product_id" domain="[('type','!=','service')]"/>
+										<field name="product_id" domain="[('type','!=','service')]" options="{'no_create': True,'no_open':True}"/>
 										<field name="name" readonly="1" />
-										<field name="qty_available" readonly="1" groups="stock.group_stock_user" />
+										<field name="qty_available" invisible="1"/>
+										<field name="qty_available_now" readonly="1" groups="stock.group_stock_user" />
 										<field name="product_uom" string="UOM"/>
 										<field name="product_uom_qty" sum="Total Qty"/>
 										<field name="received_qty" sum="Total Receive Qty" readonly="1"/>
 										<field name="issue_qty" invisible="1"/>
 										<field name="price_unit" invisible="1"/>
 										<field name="remarks"/>
-										<!--groups="stock.group_stock_user"-->
-
 										<!--<field name="price_subtotal" sum="Total Price"/>-->
 									</tree>
 								</field>

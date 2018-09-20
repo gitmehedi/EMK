@@ -100,13 +100,13 @@ class StockPurchaseReport(models.AbstractModel):
                                            sm.product_qty                           AS qty_in_tk, 
                                            sm.product_qty * Coalesce((SELECT ph.cost
                                              FROM   product_price_history ph
-                                             WHERE  ph.datetime + interval'6h' <= '%s'
+                                             WHERE  ph.datetime <= sm.date 
                                                     AND pp.id = ph.product_id
                                              ORDER  BY ph.datetime DESC,ph.id DESC
                                              LIMIT  1), 0) AS val_in_tk,
                                            Coalesce((SELECT ph.cost
                                              FROM   product_price_history ph
-                                             WHERE  ph.datetime + interval'6h' <= '%s'
+                                             WHERE  ph.datetime <= sm.date
                                                     AND pp.id = ph.product_id
                                              ORDER  BY ph.datetime DESC,ph.id DESC
                                              LIMIT  1), 0)          AS cost_val
@@ -138,7 +138,7 @@ class StockPurchaseReport(models.AbstractModel):
                                             %s
                                    )tbl 
                                    ORDER BY m_date
-                        ''' % (date_end,date_end,location_input,location_input,date_start, date_end, location_outsource, location_outsource,_where)
+                        ''' % (location_input,location_input,date_start, date_end, location_outsource, location_outsource,_where)
 
         self.env.cr.execute(sql_in_tk)
         for vals in self.env.cr.dictfetchall():
@@ -156,3 +156,22 @@ class StockPurchaseReport(models.AbstractModel):
 
 
         return {'supplier': supplier, 'total': grand_total}
+
+    # Coalesce((SELECT
+    # ph.cost
+    # FROM
+    # product_price_history
+    # ph
+    # WHERE
+    # ph.datetime + interval
+    # '6h' <= sm.date + interval
+    # '6h'
+    # AND
+    # pp.id = ph.product_id
+    # ORDER
+    # BY
+    # ph.datetime
+    # DESC, ph.id
+    # DESC
+    # LIMIT
+    # 1), 0)
