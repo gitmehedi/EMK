@@ -4,17 +4,19 @@ from odoo import models, fields, api, _
 class MemberCardReplacement(models.Model):
     _name = 'member.card.replacement'
     _inherit = ['mail.thread', 'ir.needaction_mixin']
-    _description = 'Member Card Replacement'
+    _description = 'Card Replacement Reason'
     _rec_name = 'name'
 
     name = fields.Char(string='Name', readonly=True)
 
     card_replacement_reason_id = fields.Many2one('member.card.replacement.reason', string='Card Replacement Reason',
-                                                 required=True, track_visibility="onchange")
+                                                 required=True, readonly=True,
+                                                 states={'request': [('readonly', '=', False)]},
+                                                 track_visibility="onchange")
     membership_id = fields.Many2one("res.partner", string="Membership", required=True,
                                     readonly=True, states={'request': [('readonly', '=', False)]},
                                     track_visibility="onchange")
-    request_date = fields.Date(string="Request Date", default=fields.Date.today(), required=True,
+    request_date = fields.Date(string="Request Date", default=fields.Date.today, required=True,
                                readonly=True, states={'request': [('readonly', '=', False)]},
                                track_visibility="onchange")
     authorize_date = fields.Date(string="Authenticate Date",
@@ -26,7 +28,11 @@ class MemberCardReplacement(models.Model):
     rejected_date = fields.Date(string="Rejected Date",
                                 readonly=True, states={'approve': [('readonly', '=', False)]},
                                 track_visibility="onchange")
-    comments = fields.Text(string='Comments')
+    gb_upload = fields.Binary(string="GD Upload", readonly=True, attachment=True,
+                              required=True, states={'request': [('readonly', '=', False)]},
+                              track_visibility="onchange")
+    comments = fields.Text(string='Comments', readonly=True, states={'request': [('readonly', '=', False)]},
+                           track_visibility="onchange")
 
     state = fields.Selection(
         [('request', 'Request'), ('authenticate', 'Authenticate'), ('approve', 'Approve'), ('paid', 'Paid'),
@@ -47,7 +53,7 @@ class MemberCardReplacement(models.Model):
 
     @api.one
     def act_approve(self):
-        if self.state=='authenticate':
+        if self.state == 'authenticate':
             self.approve_date = fields.Date.today()
             vals = {
                 'template': 'member_card_replacement.member_card_replacement_approval_tmpl',
@@ -59,7 +65,7 @@ class MemberCardReplacement(models.Model):
 
     @api.one
     def act_reject(self):
-        if self.state=='request':
+        if self.state == 'request':
             self.rejected_date = fields.Date.today()
             vals = {
                 'template': 'member_card_replacement.member_card_replacement_cancel_tmpl',

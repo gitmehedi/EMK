@@ -18,17 +18,23 @@ class MemberPayment(models.Model):
             raise UserError(_('Session is not opened. Please open a session.'))
         return session
 
+    @api.model
+    def default_journal(self):
+        journal = self.env['account.journal'].search([('type', 'in', ['cash'])], limit=1)
+        if len(journal) > 0:
+            return journal
+
     due_amount = fields.Float(string='Due Amount', compute='_compute_due_amount', store=True)
     paid_amount = fields.Float(string='Paid Amount', required=True,
                                readonly=True, states={'open': [('readonly', False)]})
     payment_ref = fields.Text(string='Payment Ref', readonly=True, states={'open': [('readonly', False)]})
-    date = fields.Date(default=fields.Datetime.now(), string='Payment Date', readonly=True,
+    date = fields.Date(default=fields.Datetime.now, string='Payment Date', readonly=True,
                        states={'open': [('readonly', False)]})
     membership_id = fields.Many2one('res.partner', string='Applicant/Member', required=True,
                                     domain=['&', ('is_applicant', '=', True), ('credit', '>', 0)],
                                     readonly=True, states={'open': [('readonly', False)]})
     journal_id = fields.Many2one('account.journal', string='Payment Method', required=True,
-                                 domain=[('type', 'in', ['bank', 'cash'])],
+                                 domain=[('type', 'in', ['bank', 'cash'])], default=default_journal,
                                  readonly=True, states={'open': [('readonly', False)]})
 
     session_id = fields.Many2one('payment.session', compute='_compute_session', string="Session Name", store=True,

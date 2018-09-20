@@ -18,14 +18,20 @@ class ServicePayment(models.Model):
             raise UserError(_('Session is not opened. Please open a session.'))
         return session
 
-    paid_amount = fields.Float(string='Payment Amount',  compute='_compute_paid_amount', store=True)
+    @api.model
+    def default_journal(self):
+        journal = self.env['account.journal'].search([('type', 'in', ['cash'])], limit=1)
+        if len(journal) > 0:
+            return journal
+
+    paid_amount = fields.Float(string='Payment Amount', compute='_compute_paid_amount', store=True)
     comments = fields.Text(string='Comments', readonly=True, states={'open': [('readonly', False)]})
-    collection_date = fields.Date(default=fields.Datetime.now(), string='Date', required=True, readonly=True,
+    collection_date = fields.Date(default=fields.Datetime.now, string='Date', required=True, readonly=True,
                                   states={'open': [('readonly', False)]})
     membership_id = fields.Many2one('res.partner', string='Member Name', required=True,
                                     readonly=True, states={'open': [('readonly', False)]})
     journal_id = fields.Many2one('account.journal', string='Payment Method', required=True,
-                                 domain=[('type', 'in', ['bank', 'cash'])],
+                                 domain=[('type', 'in', ['bank', 'cash'])], default=default_journal,
                                  readonly=True, states={'open': [('readonly', False)]})
 
     session_id = fields.Many2one('payment.session', compute='_compute_session', string="Session Name", store=True,

@@ -14,7 +14,7 @@ class PaymentSession(models.Model):
         return self.env.user.partner_id
 
     name = fields.Char(string='Name')
-    start_at = fields.Datetime(default=fields.Datetime.now(), string='Opening Date', required=True, readonly=True)
+    start_at = fields.Datetime(default=fields.Datetime.now, string='Opening Date', required=True, readonly=True)
     stop_at = fields.Datetime(string='Closing Date', readonly=True, states={'draft': [('readonly', False)]})
     total_amount = fields.Float(string="Total Amount", digits=(10, 2), compute="_compute_total_amount")
 
