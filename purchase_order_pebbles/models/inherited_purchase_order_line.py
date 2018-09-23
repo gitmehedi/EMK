@@ -5,8 +5,8 @@ class InheritedPurchaseOrderLine(models.Model):
     _inherit = 'purchase.order.line'
 
     product_id = fields.Many2one('product.template', 'Product', domain=[('type', '!=', 'service')], required=True)
-    receive_qty = fields.Float(string='Receive Quantity', default="0.0")
-    product_qty = fields.Float('Quantity', required=True)
+    receive_qty = fields.Float(string='Receive Quantity', default="0.0", track_visibility='onchange')
+    product_qty = fields.Float('Order Quantity', required=True)
     price_unit = fields.Float('Unit Price', required=True)
     product_uom = fields.Many2one('product.uom', 'UoM', required=True)
 

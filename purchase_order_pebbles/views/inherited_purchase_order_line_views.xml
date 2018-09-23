@@ -30,7 +30,8 @@
                 </xpath>
                 <xpath expr="//form/sheet/notebook/page/field[@name='order_line']" position="replace">
                     <field name="order_line">
-                        <tree string="Purchase Order Lines" editable="bottom">
+                        <tree string="Purchase Order Lines" editable="bottom" fonts="bold:product_qty!=receive_qty"
+                              colors="green:product_qty!=receive_qty;grey:product_qty==receive_qty;">
                             <field name="product_id" options="{'no_create_edit':True,'no_create':True,'no_open':True}"
                                    on_change="onchange_product_id(parent.pricelist_id,product_id,0,False,parent.partner_id, parent.date_order,parent.fiscal_position,date_planned,False,False,parent.state,context)"/>
                             <field name="name"/>
@@ -40,6 +41,7 @@
                                    domain="[('type','not in',('view','template'))]"/>
                             <field name="product_qty"
                                    on_change="onchange_product_id(parent.pricelist_id,product_id,product_qty,product_uom,parent.partner_id,parent.date_order,parent.fiscal_position,date_planned,name,False,parent.state,context)"/>
+                            <field name="receive_qty" readonly="True"/>
                             <field name="product_uom" groups="product.group_uom"
                                    on_change="onchange_product_uom(parent.pricelist_id,product_id,product_qty,product_uom,parent.partner_id, parent.date_order,parent.fiscal_position,date_planned,name,False,parent.state,context)"/>
                             <field name="price_unit"/>
