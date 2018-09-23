@@ -1,4 +1,5 @@
 from odoo import api, fields, models, _
+from odoo.exceptions import ValidationError
 
 
 class InheritAccountMoveLine(models.Model):
@@ -9,6 +10,9 @@ class InheritAccountMoveLine(models.Model):
 
     def action_reconcile_journal_entry(self):
         for mv_line in self:
+            if mv_line.reconciled is True:
+                raise ValidationError(_('You just reconciled this entry!'))
+
 
             mv_line.write({'reconciled':True, 'is_clearing_journal_entry': True})
 
