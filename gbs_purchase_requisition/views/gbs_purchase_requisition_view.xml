@@ -94,12 +94,8 @@
                     <xpath expr="//field[@name='picking_type_id']" position="attributes">
                         <attribute name="invisible">1</attribute>
                     </xpath>
-                    <xpath expr="//field[@name='user_id']" position="after" type="object">
-                        <field name="department_id" attrs="{'readonly': [('state','!=','draft')]}"
-                               options='{"no_open": True,"no_create": 1, "no_create_edit":1}'/>
-                        <!--<field name="operating_unit_id" groups="operating_unit.group_multi_operating_unit"-->
+                    <!--<field name="operating_unit_id" groups="operating_unit.group_multi_operating_unit"-->
                                <!--options='{"no_open": True,"no_create": 1, "no_create_edit":1}' attrs="{'readonly': [('state','!=','draft')]}"/>-->
-                    </xpath>
                     <!--<xpath expr="//field[@name='vendor_id']" position="attributes">-->
                         <!--<attribute name="attrs">{'readonly': [('state','in',('done'))]}</attribute>-->
                     <!--</xpath>-->
