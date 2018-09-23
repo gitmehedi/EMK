@@ -6,8 +6,8 @@ class MrrReport(models.AbstractModel):
     @api.multi
     def render_html(self, docids, data=None):
         report_utility_pool = self.env['report.utility']
-        origin_picking_objs = self.env['stock.picking'].search([('name', '=', data['origin'])])
-        this_picking_objs = self.env['stock.picking'].search([('id', '=', data['self_picking_id'])])
+        picking = self.env['stock.picking'].search(['|',('name', '=', data['origin']),('origin','=',data['origin'])],limit=1 ,order='id asc')
+        new_picking = self.env['stock.picking'].search([('id', '=', data['self_picking_id'])])
         mrr_date = report_utility_pool.getERPDateFormat(report_utility_pool.getDateFromStr(data['mrr_date']))
         pack_list = []
         total_amount = []
@@ -18,32 +18,35 @@ class MrrReport(models.AbstractModel):
         po_date = False
         pr_no = False
 
-        for picking in origin_picking_objs:
-            if picking.shipment_id:
-                if picking.shipment_id.lc_id.po_ids:
-                    for po in picking.shipment_id.lc_id.po_ids:
-                        po_no = po.name
-                        po_date = report_utility_pool.getERPDateFormat(report_utility_pool.getDateTimeFromStr(po.date_order))
-                        customer = po.partner_id.name
-                        pr_no = po.requisition_id.name
+        if picking.shipment_id:
+            if picking.shipment_id.lc_id.po_ids:
+                for po in picking.shipment_id.lc_id.po_ids:
+                    po_no = po.name
+                    po_date = report_utility_pool.getERPDateFormat(report_utility_pool.getDateTimeFromStr(po.date_order))
+                    customer = po.partner_id.name
+                    pr_no = po.requisition_id.name
+            if picking.shipment_id.gate_in_ids:
+                for gate in picking.shipment_id.gate_in_ids:
+                    challan = gate.challan_bill_no
+                    challan_date = report_utility_pool.getERPDateFormat(report_utility_pool.getDateFromStr(gate.date))
 
-                if picking.shipment_id.gate_in_ids:
-                    for gate in picking.shipment_id.gate_in_ids:
-                        challan = gate.challan_bill_no
-                        challan_date = report_utility_pool.getERPDateFormat(report_utility_pool.getDateFromStr(gate.date))
+        elif picking.purchase_id:
+            po_no = picking.purchase_id.name
+            po_date = report_utility_pool.getERPDateFormat(report_utility_pool.getDateTimeFromStr(picking.purchase_id.date_order))
+            customer = picking.purchase_id.partner_id.name
+            pr_no = picking.purchase_id.requisition_id.name
 
-        for new_picking in this_picking_objs:
-            if new_picking.pack_operation_product_ids:
-                for pack in new_picking.pack_operation_product_ids:
-                    pack_obj = {}
-                    pack_obj['product_id'] = pack.product_id.name
-                    #pack_obj['pr_no'] = pr_no
-                    pack_obj['mrr_quantity'] = pack.qty_done
-                    pack_obj['product_uom_id'] = pack.product_uom_id.name
-                    pack_obj['price_unit'] = pack.linked_move_operation_ids[0].move_id.price_unit
-                    pack_obj['amount'] = pack.qty_done*pack.linked_move_operation_ids[0].move_id.price_unit
-                    total_amount.append(pack_obj['amount'])
-                    pack_list.append(pack_obj)
+        if new_picking.pack_operation_product_ids:
+            for pack in new_picking.pack_operation_product_ids:
+                pack_obj = {}
+                pack_obj['product_id'] = pack.product_id.name
+                #pack_obj['pr_no'] = pr_no
+                pack_obj['mrr_quantity'] = pack.qty_done
+                pack_obj['product_uom_id'] = pack.product_uom_id.name
+                pack_obj['price_unit'] = pack.linked_move_operation_ids[0].move_id.price_unit
+                pack_obj['amount'] = pack.qty_done*pack.linked_move_operation_ids[0].move_id.price_unit
+                total_amount.append(pack_obj['amount'])
+                pack_list.append(pack_obj)
 
 
         total = sum(total_amount)
