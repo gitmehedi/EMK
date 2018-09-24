@@ -16,10 +16,13 @@
                             .oe_title { width: 100% !important; }
 
                         </style>
-                        <div class="alert alert-success" role="alert" attrs="{'invisible':[('state', 'in', ['draft', 'done', 'cancel'])]}">
-                            <i class="glyphicon glyphicon-info-sign"></i>
-                            <field name="comment" readonly="1" widget="html" attrs="{'invisible':[('state', 'in', ['draft', 'done', 'cancel'])]}"/>
-                        </div>
+
+                        <field name="comment" class="alert alert-success" readonly="1" widget="html" attrs="{'invisible':[('state', 'in', ['draft', 'done', 'cancel'])]}"/>
+
+                        <!--<div class="alert alert-success" role="alert" attrs="{'invisible':[('state', 'in', ['done', 'draft', 'cancel'])]}">-->
+                            <!--&lt;!&ndash;<i class="glyphicon glyphicon-info-sign"></i>&ndash;&gt;-->
+                            <!--&lt;!&ndash;<field name="comment" readonly="1" widget="html" attrs="{'invisible':[('state', 'in', ['draft', 'done', 'cancel'])]}"/>&ndash;&gt;-->
+                        <!--</div>-->
                     </xpath>
 
                     <xpath expr="//page[1]" position="replace">
