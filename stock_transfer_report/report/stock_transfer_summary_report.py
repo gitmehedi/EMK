@@ -41,16 +41,17 @@ class StockTransferSummaryReport(models.AbstractModel):
                         FROM   (SELECT pp.id AS product_id,                               
                                     pc.name AS category,     
                                     sl1.name AS dest_location,
-                                    sum(sm.product_qty) AS qty_out_tk,
-                                    sum(sm.product_qty) * Coalesce((SELECT ph.current_price
+                                    sm.product_qty AS qty_out_tk,
+                                    sm.date,
+                                    sm.product_qty * Coalesce((SELECT ph.current_price
                                              FROM   product_cost_price_history ph
-                                             WHERE  ph.modified_datetime + interval'6h' <= '%s'
+                                             WHERE  to_char(ph.modified_datetime, 'YYYY-MM-DD HH24:MI') <= to_char(sm.date, 'YYYY-MM-DD HH24:MI')
                                                     AND pp.id = ph.product_id
                                              ORDER  BY ph.modified_datetime DESC,ph.id DESC
                                              LIMIT  1), 0) AS val_out_tk,
                                     Coalesce((SELECT ph.current_price
                                      FROM   product_cost_price_history ph
-                                     WHERE  ph.modified_datetime + interval'6h' <= '%s'
+                                     WHERE  to_char(ph.modified_datetime, 'YYYY-MM-DD HH24:MI') <= to_char(sm.date, 'YYYY-MM-DD HH24:MI')
                                             AND pp.id = ph.product_id
                                      ORDER  BY ph.modified_datetime DESC,ph.id DESC
                                      LIMIT  1), 0)  AS cost_price,
@@ -74,10 +75,10 @@ class StockTransferSummaryReport(models.AbstractModel):
                                        AND sm.state = 'done'
                                        AND sm.location_id = %s
                                        AND sm.location_dest_id <> %s
-                                       group by pp.id,category,dest_location,pt.list_price,pc.id
+                                       group by pp.id,category,dest_location,sm.product_qty,sm.date,pc.id
                                    )tbl
                                 GROUP  BY category,destination,cetegory_id
-                                ''' % (date_end,date_end, date_start, date_end, location_outsource, location_outsource)
+                                ''' % (date_start, date_end, location_outsource, location_outsource)
 
         self.env.cr.execute(sql_out_tk)
 

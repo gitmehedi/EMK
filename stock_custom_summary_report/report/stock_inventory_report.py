@@ -229,13 +229,13 @@ class StockInventoryReport(models.AbstractModel):
                                            sm.product_qty                           AS qty_in_tk, 
                                            sm.product_qty * Coalesce((SELECT ph.current_price
                                              FROM   product_cost_price_history ph
-                                             WHERE  ph.modified_datetime + interval'6h' <= '%s'
+                                             WHERE  to_char(ph.modified_datetime, 'YYYY-MM-DD HH24:MI') <= to_char(sm.date, 'YYYY-MM-DD HH24:MI')
                                                     AND pp.id = ph.product_id
                                              ORDER  BY ph.modified_datetime DESC,ph.id DESC
                                              LIMIT  1), 0) AS val_in_tk,
                                            Coalesce((SELECT ph.current_price
                                              FROM   product_cost_price_history ph
-                                             WHERE  ph.modified_datetime + interval'6h' <= '%s'
+                                             WHERE  to_char(ph.modified_datetime, 'YYYY-MM-DD HH24:MI') <= to_char(sm.date, 'YYYY-MM-DD HH24:MI')
                                                     AND pp.id = ph.product_id
                                              ORDER  BY ph.modified_datetime DESC,ph.id DESC
                                              LIMIT  1), 0)          AS cost_val
@@ -267,7 +267,7 @@ class StockInventoryReport(models.AbstractModel):
                                       uom_name,
                                       category,
                                       cost_val 
-                        ''' % (date_end,date_end,date_start, date_end, location_outsource, location_outsource, category_param,product_param)
+                        ''' % (date_start, date_end, location_outsource, location_outsource, category_param,product_param)
 
         sql_out_tk = '''SELECT product_id,
                            name,
