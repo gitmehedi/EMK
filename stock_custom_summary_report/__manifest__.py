@@ -8,6 +8,7 @@
         'report_layout',
         'stock_operating_unit',
         'gbs_stock_product',
+        'gbs_product_cost_price_history',
     ],
     'summary': "This module generate custom report for stock summary",
     'description': """
