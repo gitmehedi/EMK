@@ -119,3 +119,14 @@ class HrShortLeave(models.Model):
 
     short_leave_flag = fields.Boolean(string='Allow Short Leave', default=False)
 
+class EmployeeLeaves(models.Model):
+    _name = "hr.employee"
+    _inherit = "hr.employee"
+
+    @api.multi
+    def _compute_leaves_count(self):
+        super(EmployeeLeaves, self)._compute_leaves_count()
+
+    leaves_count = fields.Float('Number of Leaves', compute='_compute_leaves_count',readonly=0)
+    
+    

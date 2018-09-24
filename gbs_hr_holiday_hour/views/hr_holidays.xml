@@ -83,7 +83,7 @@
                 <search string="Search Short Leave">
                     <field name="employee_id"/>
                     <field name="department_id"/>
-                    <filter name="my_approval" string="My Approval" domain="[('pending_approver.user_id','=',uid)]"/>
+                    <filter name="my_approval" string="My Approval" domain="[('employee_id.user_id','=',uid)]"/>
                     <separator/>
                     <filter name="to_approval" string="To Approval" domain="[('state','=','confirm')]"/>
                     <separator/>
