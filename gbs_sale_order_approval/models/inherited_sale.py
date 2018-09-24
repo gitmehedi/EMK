@@ -385,12 +385,12 @@ class SaleOrder(models.Model):
                     customer_credit_limit = partner_pool.credit_limit
 
                     if abs(customer_total_credit) > customer_credit_limit:
-                        causes.append("Customer crossed his Credit Limit. Current Credit Limit is" + str(abs(customer_total_credit)))
+                        causes.append("Customer crossed his Credit Limit. Current Credit Limit is " + str(abs(customer_credit_limit)))
                         is_double_validation = True
 
 
         if is_double_validation:
-            comment_str = "<br/>".join(causes)
+            comment_str = "\n".join(causes)
             order.write({'state': 'validate', 'comment':comment_str})  # Go to two level approval process
 
         else:
