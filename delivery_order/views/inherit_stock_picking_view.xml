@@ -63,7 +63,7 @@
                     <button name="do_print_delivery_challan" string="Print"
                             groups="stock.delivery_user,stock.group_stock_user"
                             type="object"
-                            attrs="{'invisible': [('state', 'in', ('assigned', 'confirmed','waiting','cancel'))]}"/>
+                            attrs="{'invisible': ['|',('state', 'in', ('assigned', 'confirmed','waiting','cancel')),('picking_type_code', '!=', 'outgoing')]}"/>
                 </xpath>
 
                 <xpath expr="//button[@name='do_new_transfer']" position="replace">
