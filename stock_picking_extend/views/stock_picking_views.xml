@@ -14,7 +14,7 @@
                     <button name="do_prepare_partial" attrs="{'invisible': ['|', ('launch_pack_operations', '=', True), '|', ('state', 'not in', ('assigned', 'partially_available')), ('pack_operation_ids', '!=', [])]}"
                             string="Reset Operations" type="object"/>
                     <field name="launch_pack_operations" invisible="1"/>
-                    <field name="state" widget="statusbar" statusbar_visible="draft,assigned,done" />
+                    <field name="state" widget="statusbar" statusbar_visible="draft,done" />
                 </header>
                 <sheet>
                     <div class="oe_button_box" name="button_box">
@@ -354,9 +354,9 @@
                 </button>
             </xpath>
             <!--<xpath expr="//header/button[@name='do_new_transfer']" position="replace">-->
-                <!--<button name="do_new_transfer" string="Receive" groups="stock.group_stock_user"-->
-                        <!--states="draft,partially_available,assigned"-->
-                        <!--type="object" class="oe_highlight"/>-->
+            <!--<button name="do_new_transfer" string="Receive" groups="stock.group_stock_user"-->
+            <!--states="draft,partially_available,assigned"-->
+            <!--type="object" class="oe_highlight"/>-->
             <!--</xpath>-->
             <xpath expr="//header/button[@name='force_assign']" position="attributes">
                 <attribute name="groups">base_technical_features.group_technical_features</attribute>
@@ -365,7 +365,7 @@
                 <attribute name="groups">base_technical_features.group_technical_features</attribute>
             </xpath>
             <!--<xpath expr="//header/button[@name='do_print_picking']" position="attributes">-->
-                <!--<attribute name="invisible">1</attribute>-->
+            <!--<attribute name="invisible">1</attribute>-->
             <!--</xpath>-->
 
             <xpath expr="//header/button[@name='%(stock.action_report_delivery)d']" position="attributes">
@@ -404,6 +404,16 @@
             <xpath expr="//field[@name='priority']" position="attributes">
                 <attribute name="readonly">1</attribute>
             </xpath>
+
+            <xpath expr="//field[@name='partner_id']" position="replace">
+                <field name="partner_id" options="{'no_open': True, 'no_create': True}"
+                       attrs="{'invisible': [('picking_type_code', '=', 'internal')]}"/>
+            </xpath>
+
+            <xpath expr="//field[@name='partner_id']" position="after">
+                <field name="challan_bill_no" attrs="{'invisible': [('picking_type_code', '!=', 'incoming')]}"/>
+            </xpath>
+
         </field>
     </record>
 

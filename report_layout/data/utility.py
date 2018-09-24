@@ -100,6 +100,26 @@ class ReportUtility(models.TransientModel):
             str_address = ', '.join(address)
             return str_address
 
+    def getBranchAddress(self,branch):
+            address = []
+            if branch.street:
+                address.append(branch.street)
+
+            if branch.street2:
+                address.append(branch.street2)
+
+            if branch.zip:
+                address.append(branch.zip)
+
+            if branch.city:
+                address.append(branch.city)
+
+            if branch.country_id:
+                address.append(branch.country_id.name)
+
+            str_address = ', '.join(address)
+            return str_address
+
     def getBankAddress2(self,bank):
             address = []
             if bank.street:
@@ -119,6 +139,26 @@ class ReportUtility(models.TransientModel):
 
             if bank.country:
                 address.append('<p>'+bank.country.name+'</p>')
+
+            str_address = ''.join(address)
+            return str_address
+
+    def getBranchAddress2(self,branch):
+            address = []
+            if branch.street:
+                address.append('<p>'+branch.street+'</p>')
+
+            if branch.street2:
+                address.append('<p>'+branch.street2+'</p>')
+
+            if branch.zip:
+                address.append('<p>'+branch.zip+'</p>')
+
+            if branch.city:
+                address.append('<p>'+branch.city+'</p>')
+
+            if branch.country_id:
+                address.append('<p>'+branch.country_id.name+'</p>')
 
             str_address = ''.join(address)
             return str_address

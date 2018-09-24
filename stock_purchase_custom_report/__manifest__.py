@@ -15,7 +15,11 @@
     'category': 'Stock',
     'version': '10.0.1',
 
-    'depends': ['stock_picking_mrr','report_layout'],
+    'depends': [
+        'stock_picking_mrr',
+        'gbs_product_cost_price_history',
+        'report_layout',
+    ],
 
     'data': [
         # 'security/ir.model.access.csv',

@@ -8,6 +8,20 @@
             <field name="inherit_id" ref="sale.view_order_form"/>
             <field name="arch" type="xml">
                 <data>
+                    <xpath expr="//field[@name='name']" position="before">
+                        <style>
+                            .alert { padding: 5px 30px 5px 5px; position: relative; font-size: 13px; font-weight: normal; }
+                            .alert .glyphicon { position: absolute; top: 5px; right: 5px; font-size: 24px;}
+                            .alert p:last-child { margin:0; }
+                            .oe_title { width: 100% !important; }
+
+                        </style>
+                        <div class="alert alert-success" role="alert" attrs="{'invisible':[('state', 'in', ['draft', 'done', 'cancel'])]}">
+                            <i class="glyphicon glyphicon-info-sign"></i>
+                            <field name="comment" readonly="1" widget="html" attrs="{'invisible':[('state', 'in', ['draft', 'done', 'cancel'])]}"/>
+                        </div>
+                    </xpath>
+
                     <xpath expr="//page[1]" position="replace">
                         <page string="Order Lines">
                             <field name="order_line" mode="tree,kanban"

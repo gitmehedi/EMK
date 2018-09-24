@@ -28,7 +28,8 @@ class LetterOfCredit(models.Model):
              "Foreign: Foreign LC.")
 
     first_party = fields.Many2one('res.company', string='Candidate', required=True)
-    first_party_bank = fields.Many2one('res.bank', string='Bank', required=True)
+    # first_party_bank = fields.Many2one('res.bank', string='Bank')
+    first_party_bank_acc = fields.Many2one('res.partner.bank', string='Bank Account', domain=[('is_company_account', '=', True)], required=True)
 
     second_party_applicant = fields.Many2one('res.partner', string='Applicant', domain = "[('customer', '=', True)]")
     second_party_beneficiary = fields.Many2one('res.partner', string='Candidate', domain="[('supplier', '=', True)]")

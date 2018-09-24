@@ -8,49 +8,51 @@
             <field name="arch" type="xml">
 
                 <xpath expr="//field[@name='origin']" position="after">
-                    <field name="delivery_order_id" options="{'no_open': True, 'no_create': True}"/>/>
+                    <field name="delivery_order_id" options="{'no_open': True, 'no_create': True}"
+                           attrs="{'invisible': [('picking_type_code', '!=', 'outgoing')]}"/>
                 </xpath>
                 <xpath expr="//field[@name='delivery_order_id']" position="after">
-                    <field name="vat_challan_id"/>
+                    <field name="vat_challan_id" attrs="{'invisible': [('picking_type_code', '!=', 'outgoing')]}"/>
                 </xpath>
 
                 <xpath expr="//field[@name='vat_challan_id']" position="after">
-                    <field name="pack_type"/>
+                    <field name="pack_type" attrs="{'invisible': [('picking_type_code', '!=', 'outgoing')]}"/>
                 </xpath>
 
                 <xpath expr="//field[@name='partner_id']" position="after">
-                    <field name="show_transport_info"/>
+                    <field name="show_transport_info" attrs="{'invisible': [('picking_type_code', '!=', 'outgoing')]}"/>
                 </xpath>
                 <xpath expr="//field[@name='show_transport_info']" position="after">
                     <field name="transport_details" widget="radio" options="{'horizontal': true}"
-                           attrs="{'invisible': [('show_transport_info','=', False)]}"/>
+                           attrs="{'invisible': [('show_transport_info','=', False),('picking_type_code', '!=', 'outgoing')]}"/>
                 </xpath>
                 <xpath expr="//field[@name='transport_details']" position="after">
-                    <field name="vehicle_no" attrs="{'invisible': [('show_transport_info','=', False)]}"/>
+                    <field name="vehicle_no" attrs="{'invisible': [('show_transport_info','=', False),('picking_type_code', '!=', 'outgoing')]}"/>
                 </xpath>
                 <xpath expr="//field[@name='vehicle_no']" position="after">
-                    <field name="driver_no" attrs="{'invisible': [('show_transport_info','=', False)]}"/>
+                    <field name="driver_no" attrs="{'invisible': [('show_transport_info','=', False),('picking_type_code', '!=', 'outgoing')]}"/>
                 </xpath>
                 <xpath expr="//field[@name='driver_no']" position="after">
-                    <field name="driver_mob" attrs="{'invisible': [('show_transport_info','=', False)]}"/>
+                    <field name="driver_mob" attrs="{'invisible': [('show_transport_info','=', False),('picking_type_code', '!=', 'outgoing')]}"/>
                 </xpath>
                 <xpath expr="//field[@name='driver_mob']" position="after">
-                    <field name="transport_name" attrs="{'invisible': [('show_transport_info','=', False)]}"/>
+                    <field name="transport_name" attrs="{'invisible': [('show_transport_info','=', False),('picking_type_code', '!=', 'outgoing')]}"/>
                 </xpath>
 
                 <xpath expr="//field[@name='partner_id']" position="after">
-                    <field name="customer_name"/>
+                    <field name="customer_name" attrs="{'invisible': [('picking_type_code', '!=', 'outgoing')]}"/>
                 </xpath>
 
                 <xpath expr="//field[@name='customer_name']" position="after">
-                    <field name="shipping_address_print"/>
+                    <field name="shipping_address_print" attrs="{'invisible': [('picking_type_code', '!=', 'outgoing')]}"/>
                 </xpath>
 
                 <xpath expr="//field[@name='origin']" position="after">
-                    <field name="lc_id" options="{'no_open': True, 'no_create': True}"/>/>
+                    <field name="lc_id" options="{'no_open': True, 'no_create': True}"
+                           attrs="{'invisible': [('picking_type_code', '!=', 'outgoing')]}"/>
                 </xpath>
                 <xpath expr="//field[@name='partner_id']" position="replace">
-                    <field name="partner_id" options="{'no_open': True, 'no_create': True}"/>/>
+                    <field name="partner_id" options="{'no_open': True, 'no_create': True}"/>
                 </xpath>
                 <xpath expr="//button[@name='%(stock.action_report_delivery)d']" position="replace">
                     <button name="%(stock.action_report_delivery)d" string="Print" states="done" type="action"

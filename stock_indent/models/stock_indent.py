@@ -25,13 +25,8 @@ class IndentIndent(models.Model):
     def _get_required_date(self):
         return datetime.strftime(datetime.today() + timedelta(days=7), DEFAULT_SERVER_DATETIME_FORMAT)
 
-    @api.multi
-    def _default_department(self):
-        emp_pool_obj = self.env['hr.employee'].search([('user_id', '=', self.env.uid)], limit=1)
-        return emp_pool_obj.department_id.id
-
     name = fields.Char('Indent #', size=30, readonly=True, default="/")
-    approve_date = fields.Datetime('Approve Date', readonly=True)
+    approve_date = fields.Datetime('Approve Date', readonly=True,track_visibility='onchange')
     indent_date = fields.Datetime('Indent Date', required=True, readonly=True,
                                   default = fields.Datetime.now)
     required_date = fields.Date('Required Date', required=True,readonly=True,states={'draft': [('readonly', False)]},
@@ -39,10 +34,9 @@ class IndentIndent(models.Model):
     indentor_id = fields.Many2one('res.users', string='Indentor', required=True, readonly=True,
                                   default=lambda self: self.env.user,
                                   states={'draft': [('readonly', False)]})
-    department_id = fields.Many2one('hr.department', string='Department', readonly=True,default=_default_department)
-    stock_location_id = fields.Many2one('stock.location', string='Stock Location', readonly=True,required=True,
+    stock_location_id = fields.Many2one('stock.location', string='Department', readonly=True,required=True,
                                         states={'draft': [('readonly', False)]},
-                                        help="Default User Location.Destination location.",
+                                        help="Default User Location.Which consider as Destination location.",
                                         default=lambda self: self.env.user.default_location_id)
     # manager_id = fields.Many2one('res.users', string='Department Manager', related='department_id.manager_id', store=True)
     analytic_account_id = fields.Many2one('account.analytic.account', string='Project', ondelete="cascade",
@@ -51,8 +45,7 @@ class IndentIndent(models.Model):
                                    default="1", required=True, states={'draft': [('readonly', False)]})
     indent_type = fields.Many2one('indent.type',string='Type',readonly=True, required = True, states={'draft': [('readonly', False)]})
     product_lines = fields.One2many('indent.product.lines', 'indent_id', 'Products', readonly=True, required = True,
-                                    states={'draft': [('readonly', False)],
-                                            'waiting_approval': [('readonly', False)]})
+                                    states={'draft': [('readonly', False)]})
     picking_id = fields.Many2one('stock.picking', 'Picking')
     in_picking_id = fields.Many2one('stock.picking', 'Picking')
     description = fields.Text('Additional Information', readonly=True, states={'draft': [('readonly', False)]})
@@ -61,12 +54,12 @@ class IndentIndent(models.Model):
                                  default=lambda self: self.env.user.company_id,required=True)
     active = fields.Boolean('Active', default=True)
     # amount_total = fields.Float(string='Total', compute=_compute_amount, store=True)
-    approver_id = fields.Many2one('res.users', string='Authority', readonly=True, help="who have approve or reject indent.")
-    closer_id = fields.Many2one('res.users', string='Authority', readonly=True, help="who have close indent.")
+    approver_id = fields.Many2one('res.users', string='Authority', readonly=True, help="who have approve or reject indent.",track_visibility='onchange')
+    closer_id = fields.Many2one('res.users', string='Authority', readonly=True, help="who have close indent.",track_visibility='onchange')
     warehouse_id = fields.Many2one('stock.warehouse', 'Warehouse', readonly=True,required=True,
                                    default=lambda self: self._get_default_warehouse(),
                                    help="Default Warehouse.Source location.",
-                                   states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]})
+                                   states={'draft': [('readonly', False)]})
     picking_type_id = fields.Many2one('stock.picking.type',string='Picking Type',compute = '_compute_default_picking_type',
                                       readonly=True, store = True)
     move_type = fields.Selection([('direct', 'Partial'), ('one', 'All at once')], 'Receive Method',
@@ -83,7 +76,6 @@ class IndentIndent(models.Model):
 
     state = fields.Selection([
         ('draft', 'Draft'),
-        ('confirm', 'Confirm'),
         ('waiting_approval', 'Waiting for Approval'),
         ('inprogress', 'In Progress'),
         ('received', 'Received'),
@@ -97,9 +89,8 @@ class IndentIndent(models.Model):
 
     @api.onchange('warehouse_id')
     def onchange_warehouse_id(self):
-        # if self.warehouse_id:
-        #     self.stock_location_id = []
-        return {'domain': {'stock_location_id': [('id', 'in', self.env.user.location_ids.ids)]}}
+        if self.warehouse_id:
+            return {'domain': {'stock_location_id': [('id', 'in', self.env.user.location_ids.ids),('can_request','=',True)]}}
 
     @api.one
     @api.constrains('required_date')
@@ -115,13 +106,14 @@ class IndentIndent(models.Model):
             picking_type_ids = picking_type_obj.search([('default_location_src_id', '=', indent.warehouse_id.sudo().lot_stock_id.id),('default_location_dest_id', '=', indent.stock_location_id.id)])
             picking_type_id = picking_type_ids and picking_type_ids[0] or False
             indent.picking_type_id = picking_type_id
-            # if picking_type_id:
-            #     indent.picking_type_id = picking_type_id
-            # else:
-            #     raise ValidationError(_('No Picking Type For this location.'
-            #                             'Please Create a picking type with '
-            #                             'source location (%s) and destination location (%s)./n Or contract with your system Admin'
-            #                             %(indent.warehouse_id.sudo().lot_stock_id.name,indent.stock_location_id.name)))
+
+
+    @api.one
+    @api.constrains('picking_type_id')
+    def _check_picking_type(self):
+        if not self.picking_type_id:
+            raise ValidationError(_('No Picking Type For this Department.'
+                                'Please Create a picking type or contact with system Admin.'))
 
     @api.onchange('requirement')
     def onchange_requirement(self):
@@ -266,10 +258,10 @@ class IndentIndent(models.Model):
         When only one found, show the picking immediately.
         '''
         for product in self.product_lines:
-            if product.qty_available <= 0:
+            if product.qty_available_now <= 0:
                 raise UserError('Stock not available!!!')
-            elif product.qty_available < product.product_uom_qty:
-                product.issue_qty = product.qty_available
+            elif product.qty_available_now < product.product_uom_qty:
+                product.issue_qty = product.qty_available_now
             else:
                 product.issue_qty = product.product_uom_qty
         if self.picking_id:
@@ -325,7 +317,10 @@ class IndentProductLines(models.Model):
                               help="Price computed based on the last purchase order approved.")
     price_subtotal = fields.Float(string='Subtotal', compute='_compute_amount_subtotal', digits=dp.get_precision('Account'),
                                   store=True)
-    qty_available = fields.Float(string='In Stock',compute = '_compute_product_qty')
+    qty_available = fields.Float(string='On Hand',compute = '_compute_product_qty',store=True
+                                 ,help = "Quantity on hand when indent issued")
+    qty_available_now = fields.Float(string='In Stock Now',compute = '_compute_product_qty'
+                                     , help="Always updated Quantity")
     name = fields.Char(related='product_id.name',string='Specification',store=True)
     remarks = fields.Text('Remarks')
     sequence = fields.Integer('Sequence')
@@ -354,3 +349,4 @@ class IndentProductLines(models.Model):
                                                         ('location_id', '=', location_id)])
             quantity = sum([val.qty for val in product_quant])
             product.qty_available = quantity
+            product.qty_available_now = quantity
