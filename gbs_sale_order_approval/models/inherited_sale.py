@@ -390,7 +390,8 @@ class SaleOrder(models.Model):
 
 
         if is_double_validation:
-            comment_str = "\n".join(causes)
+            comment_str = "Acceptance needs for " + str(len(causes)) + " cause(s) which are: "
+            comment_str += " & ".join(causes)
             order.write({'state': 'validate', 'comment':comment_str})  # Go to two level approval process
 
         else:
