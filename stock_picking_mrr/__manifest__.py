@@ -17,7 +17,12 @@
     'category': 'Stock',
     'version': '10.0.0.1',
 
-    'depends': ['stock_picking_extend','product_gate_in','report_layout'],
+    'depends': [
+        'stock_picking_extend',
+        'product_gate_in',
+        'gbs_product_cost_price_history',
+        'report_layout',
+    ],
 
     'data': [
         'security/ir.model.access.csv',

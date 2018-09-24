@@ -17,7 +17,6 @@
 
     'depends': [
         'stock_picking_mrr',
-        'gbs_product_cost_price_history',
         'report_layout',
     ],
 
