@@ -387,8 +387,7 @@ class SaleOrder(models.Model):
                     if abs(customer_total_credit) > customer_credit_limit:
                         causes.append("Customer crossed his Credit Limit. Current Credit Limit is" + str(abs(customer_total_credit)))
                         is_double_validation = True
-                    else:
-                        is_double_validation = False
+
 
         if is_double_validation:
             comment_str = "<br/>".join(causes)
@@ -481,9 +480,6 @@ class SaleOrder(models.Model):
                 causes.append(
                     "Existing Approve Price is " + str(price_history.new_price) + ", but requested Price is " + str(lines.price_unit) + ". Which may not cover with discounted price.")
                 is_double_validation = True
-            else:
-                is_double_validation = False
-
 
         return is_double_validation
 
