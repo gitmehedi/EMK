@@ -70,7 +70,7 @@
             <field name="inherit_id" ref="product.product_normal_form_view" />
             <field name="arch" type="xml">
                 <xpath expr="//notebook//page[4]" position="after">
-                    <page string="Cost Price History" groups="stock.group_stock_user">
+                    <page string="Cost Price History" groups="stock.group_stock_user" attrs="{'invisible': [('purchase_ok', '!=', True)]}">
                         <field name="cost_price_history_ids">
                             <tree editable="bottom" string="Price History">
                                 <field name="modified_datetime"/>
