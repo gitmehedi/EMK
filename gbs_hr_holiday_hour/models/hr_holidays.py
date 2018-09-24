@@ -64,15 +64,15 @@ class HrHolidayHour(models.Model):
         if employee.user_id:
             self.message_subscribe_users(user_ids=employee.user_id.ids)
 
-    @api.multi
-    def action_confirm(self):
-        if self.filtered(lambda holiday: holiday.state != 'draft'):
-            raise UserError(_('Leave request must be in Draft state ("To Submit") in order to confirm it.'))
-        return self.write({'state': 'confirm'})
-
-    @api.multi
-    def action_approve(self):
-        return self.write({'state': 'confirm'})
+    # @api.multi
+    # def action_confirm(self):
+    #     if self.filtered(lambda holiday: holiday.state != 'draft'):
+    #         raise UserError(_('Leave request must be in Draft state ("To Submit") in order to confirm it.'))
+    #     return self.write({'state': 'confirm'})
+    #
+    # @api.multi
+    # def action_approve(self):
+    #     return self.write({'state': 'confirm'})
 
 
     @api.multi
@@ -80,6 +80,7 @@ class HrHolidayHour(models.Model):
         from_dt = fields.Datetime.from_string(self.date_from)
         to_dt = fields.Datetime.from_string(self.date_to)
         time_delta = to_dt - from_dt
+        self.write({'state': 'validate'})
         self.env['hr.holidays'].create(
             {'leave_ids': self.id,
              'check_hour':True,
@@ -89,18 +90,19 @@ class HrHolidayHour(models.Model):
              'date_to': self.date_to,
              'number_of_days_temp': (time_delta.seconds / 3600) / 8.0,
              'employee_id': self.employee_id.id,
-             'leave_year_id': self.leave_year_id.id
+             'leave_year_id': self.leave_year_id.id,
+             'state':self.state
              })
 
         self.write({'state': 'validate'})
         return True
 
+    # @api.multi
+    # def action_refuse(self):
+    #     return self.write({'state': 'refuse'})
+    #
     @api.multi
-    def action_refuse(self):
-        return self.write({'state': 'refuse'})
-
-    @api.multi
-    def action_draft(self):
+    def action_draft1(self):
         return self.write({'state': 'draft'})
 
     @api.constrains('number_of_days')
