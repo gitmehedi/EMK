@@ -33,6 +33,9 @@ class DeliveryChallan(models.AbstractModel):
         data['count_qty'] = shipment_obj.count_qty
         data['count_uom'] = shipment_obj.count_uom.name
 
+        data['freight'] = shipment_obj.freight
+        data['goods_condition'] = shipment_obj.goods_condition
+
         for pi_id in shipment_obj.lc_id.pi_ids:
             pi_id_list.append({'pi_id':pi_id.name,'pi_date':report_utility_pool.getERPDateFormat(report_utility_pool.getDateTimeFromStr(pi_id.create_date))})
 

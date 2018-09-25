@@ -13,6 +13,8 @@ class Shipment(models.Model):
     to_buyer_bank_date = fields.Date('Buyer Bank Receive', track_visibility='onchange')
     to_maturity_date = fields.Date('Maturity Date', track_visibility='onchange')
     bill_id = fields.Char('Bill ID', track_visibility='onchange')
+    freight = fields.Char('Freight')
+    goods_condition = fields.Text('Goods Condition')
 
     # Existing state override
     state = fields.Selection(
