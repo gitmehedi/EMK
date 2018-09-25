@@ -36,11 +36,12 @@ class Shipment(models.Model):
     @api.onchange('lc_id')
     def _onchange_lc_id(self):
         if self.lc_id:
-            return {'domain': {'invoice_id': [('id','not in',[i.invoice_id.id for i in self.search([])]),
-                                         ('partner_id', '=', self.lc_id.second_party_applicant.id),
-                                         ('sale_type_id.sale_order_type', '=', 'lc_sales'),
-                                         ('state', 'in', ['open','paid'])]}}
-
+            invoice_objs = self.env['account.invoice'].search([('sale_type_id.sale_order_type', '=', 'lc_sales'),
+                                                           ('state', 'in', ['open', 'paid']),
+                                                           ('id', 'not in', [i.invoice_id.id for i in self.search([])])])
+            domain_id = invoice_objs.search(['|',('partner_id', '=', self.lc_id.second_party_applicant.id),
+                                             ('partner_id', 'in', self.lc_id.second_party_applicant.child_ids.ids)]).ids
+            return {'domain': {'invoice_id': [('id','in',domain_id)]}}
 
     @api.onchange('invoice_id')
     def _onchange_invoice_id(self):

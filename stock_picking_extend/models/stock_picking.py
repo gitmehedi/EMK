@@ -30,7 +30,7 @@ class Picking(models.Model):
     challan_bill_no = fields.Char(
         string='Challan Bill No',
         readonly=True,
-        states={'draft': [('readonly', False)]})
+        states={'draft': [('readonly', False)],'assigned':[('readonly', False)]})
 
     @api.constrains('challan_bill_no')
     def _check_unique_constraint(self):

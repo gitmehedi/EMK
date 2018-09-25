@@ -1,3 +1,4 @@
+import datetime
 from odoo import api, exceptions, fields, models
 
 class MrrReport(models.AbstractModel):
@@ -35,16 +36,19 @@ class MrrReport(models.AbstractModel):
             po_date = report_utility_pool.getERPDateFormat(report_utility_pool.getDateTimeFromStr(picking.purchase_id.date_order))
             customer = picking.purchase_id.partner_id.name
             pr_no = picking.purchase_id.requisition_id.name
+            challan = picking.challan_bill_no
+            challan_date = report_utility_pool.getERPDateFormat(report_utility_pool.getDateTimeFromStr(picking.date_done))
 
-        if new_picking.pack_operation_product_ids:
-            for pack in new_picking.pack_operation_product_ids:
+        if new_picking.move_lines:
+            for move in new_picking.move_lines:
                 pack_obj = {}
-                pack_obj['product_id'] = pack.product_id.name
-                #pack_obj['pr_no'] = pr_no
-                pack_obj['mrr_quantity'] = pack.qty_done
-                pack_obj['product_uom_id'] = pack.product_uom_id.name
-                pack_obj['price_unit'] = pack.linked_move_operation_ids[0].move_id.price_unit
-                pack_obj['amount'] = pack.qty_done*pack.linked_move_operation_ids[0].move_id.price_unit
+                pack_obj['product_id'] = move.product_id.name
+                pack_obj['mrr_quantity'] = move.product_uom_qty
+                pack_obj['product_uom_id'] = move.product_uom.name
+                pack_obj['price_unit'] = self.env['product.cost.price.history'].search([('product_id','=',move.product_id.id),
+                                                                                        ('modified_datetime', '<=' ,move.date)],
+                                                                                       limit=1,order='modified_datetime desc').current_price or 0.0
+                pack_obj['amount'] = move.product_uom_qty*pack_obj['price_unit']
                 total_amount.append(pack_obj['amount'])
                 pack_list.append(pack_obj)
 
