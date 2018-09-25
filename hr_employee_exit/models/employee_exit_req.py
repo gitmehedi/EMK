@@ -159,6 +159,7 @@ class EmployeeExitReq(models.Model):
     @api.multi
     def exit_done(self):
         self.pen_checklists_ids = []
+        self.employee_id.stages_history = []
         vals = []
         line_obj = self.env['hr.exit.checklists.line'].search(
             [('checklist_id', '=', self.id)])
@@ -172,6 +173,13 @@ class EmployeeExitReq(models.Model):
                 }))
         self.pen_checklists_ids = vals
         self.approver2_by = self.env.user
+        vals.append((0, 0, {
+            'start_date': datetime.date.today(),
+            'end_date': self.last_date,
+            'duration':0,
+            'state': 'relieved'
+        }))
+        self.employee_id.stages_history = vals
         self.employee_id.write({'state': 'relieved'})
         return self.write({'state': 'validate','approved2_date': time.strftime('%Y-%m-%d %H:%M:%S')})
 

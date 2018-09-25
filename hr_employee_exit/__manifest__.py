@@ -12,6 +12,7 @@
                 'mail',
                 'hr_employee_seniority',
                 'hr_payroll',
+                'employee_stages'
                 ],
     'data': [
         'views/hr_exit_menu.xml',
@@ -25,7 +26,6 @@
         'views/mail_template.xml',
         'views/exit_interview.xml',
         'workflow/emp_exit_req_workflow.xml',
-        # 'wizard/employee_exit_search_popup.xml',
         'report/report_employee_exit.xml',
         'report/report_emp_clearance.xml',
         'report/report_exit_interview.xml',
