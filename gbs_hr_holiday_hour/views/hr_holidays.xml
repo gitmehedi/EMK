@@ -128,6 +128,7 @@
                 <data>
                     <xpath expr="//form/group/group/field[@name='limit']" position="after">
                         <field name="short_leave_flag" />
+                        <field name="compensatory_flag" />
                     </xpath>
                 </data>
             </field>

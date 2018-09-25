@@ -107,17 +107,19 @@ class HrHolidayHour(models.Model):
 
     @api.constrains('number_of_days')
     def _check_number_of_days(self):
-        if self.number_of_days:
-            if self.number_of_days != 4.00:
-                raise ValidationError('Half day leave takes only 4 hours!')
-            else:
-                pass
+        if self.holiday_status_id.compensatory_flag == False:
+            if self.holiday_status_id.short_leave_flag and self.number_of_days:
+               if self.number_of_days != 4.00 :
+                   raise ValidationError('Half day leave takes only 4 hours!')
+               else:
+                   pass
 
 
 class HrShortLeave(models.Model):
     _inherit = 'hr.holidays.status'
 
     short_leave_flag = fields.Boolean(string='Allow Short Leave', default=False)
+    compensatory_flag = fields.Boolean(string='Allow Compensatory Leave', default=False)
 
 class EmployeeLeaves(models.Model):
     _name = "hr.employee"
