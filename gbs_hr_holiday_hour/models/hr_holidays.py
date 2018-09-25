@@ -1,9 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from odoo import models, fields, api,SUPERUSER_ID
-import logging
 from odoo.exceptions import UserError, AccessError, ValidationError
-from odoo.tools.translate import _
 
 HOURS_PER_DAY = 8
 
@@ -14,6 +12,7 @@ class HrHolidayHour(models.Model):
 
     def _default_employee(self):
         return self.env.context.get('default_employee_id') or self.env['hr.employee'].search([('user_id', '=', self.env.uid)], limit=1)
+
 
     leave_year_id = fields.Many2one('date.range', string="Leave Year",
                                     domain="[('type_id.holiday_year', '=', True)]")
@@ -114,8 +113,21 @@ class HrHolidayHour(models.Model):
                else:
                    pass
 
+    @api.constrains('date_to')
+    def _compute_date(self):
 
-class HrShortLeave(models.Model):
+        date_from = self.date_from
+        date_to = self.date_to
+        holidays = self.env['hr.holidays'].search([])
+        for i in holidays:
+            if i.expire_date:
+                if date_from > i.expire_date or date_to > i.expire_date:
+                    raise ValidationError('Your Allocation date is expired!!')
+                else:
+                    pass
+
+
+class HrHolidayStatus(models.Model):
     _inherit = 'hr.holidays.status'
 
     short_leave_flag = fields.Boolean(string='Allow Short Leave', default=False)
@@ -130,5 +142,9 @@ class EmployeeLeaves(models.Model):
         super(EmployeeLeaves, self)._compute_leaves_count()
 
     leaves_count = fields.Float('Number of Leaves', compute='_compute_leaves_count',readonly=0)
-    
-    
+
+
+class HrHoliday(models.Model):
+    _inherit = 'hr.holidays'
+
+    expire_date = fields.Date(string='Expiration Date')

@@ -134,6 +134,20 @@
             </field>
         </record>
 
+        <record id="edit_holidays_views" model="ir.ui.view">
+            <field name="name">hr.holidays.form</field>
+            <field name="model">hr.holidays</field>
+            <field name="inherit_id" ref="hr_holidays.edit_holiday_new" />
+            <field name="arch" type="xml">
+                <data>
+                    <xpath expr="//field[@name='employee_id']" position="after">
+                        <field name="expire_date"
+                        attrs="{'invisible':[('type','=','remove')],'readonly':[('state','=','validate')]}"/>
+                    </xpath>
+                </data>
+            </field>
+        </record>
+
         <menuitem action="hr_holidays.open_view_holiday_status" id="menu_hr_holidays_type" name="Leave Types"
 			parent="hr_holidays.menu_hr_holidays_configuration" sequence="5" />
 
