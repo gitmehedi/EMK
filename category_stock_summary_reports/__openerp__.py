@@ -45,10 +45,12 @@
         # 'security/security.xml',
         'data/default_data.xml',
         'wizard/print_report_view.xml',
+        'wizard/purchase_order_wizard_views.xml',
         'views/inherite_layout.xml',
         'views/inherited_product_template_views.xml',
         'views/inherited_product_category_view.xml',
         'report/stock_inventory_report_view.xml',
+        'report/purchase_order_report_views.xml',
 
     ],
     'installable': True,

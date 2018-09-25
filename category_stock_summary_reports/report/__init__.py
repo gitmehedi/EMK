@@ -19,3 +19,4 @@
 #
 ##############################################################################
 import stock_inventory_report
+import purchase_order_report

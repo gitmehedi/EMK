@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+        <template id="purchase_order_report_qweb">
+            <style>
+                .table th {
+                padding: 2px !important;
+                }
+                .table td {
+                padding: 2px !important;
+                font-size: 12px !important;
+                }
+            </style>
+            <t t-call="report.html_container">
+                <t t-call="report.external_layout">
+                    <div class="page">
+                        <div class="row mb32">
+                            <div class="col-xs-12">
+                                <h2 class="text-center">Purchase Order Summary</h2>
+                                <p class="text-center">
+                                    <span t-esc="record['date_from']"/>
+                                    <strong>To</strong>
+                                    <span t-esc="record['date_to']"/>
+                                </p>
+                            </div>
+                        </div>
+
+                        <table class="table table-bordered" style="padding: 0px;">
+                            <thead>
+                                <tr style="background-color: #EFECEB;">
+                                    <th class="text-center" rowspan="2">Date</th>
+                                    <th class="text-center" rowspan="2">Product Name</th>
+                                    <th class="text-center" rowspan="2">UoM</th>
+                                    <th class="text-center" rowspan="2">Price</th>
+                                    <th class="text-center" colspan="2">Order</th>
+                                    <th class="text-center" colspan="2">Receive</th>
+                                    <th class="text-center" colspan="2">Remain</th>
+                                </tr>
+                                <tr style="background-color: #EFECEB;">
+                                    <th class="text-center">Qty</th>
+                                    <th class="text-center">Value</th>
+                                    <th class="text-center">Qty</th>
+                                    <th class="text-center">Value</th>
+                                    <th class="text-center">Qty</th>
+                                    <th class="text-center">Value</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <t t-foreach="lines" t-as="line">
+                                    <tr style="background-color: #D3CDCD">
+                                        <td colspan="4">
+                                            <strong>
+                                                <t t-esc="line"/>
+                                            </strong>
+                                        </td>
+                                        <td class="text-right">
+                                            <strong>
+                                                <span t-esc="'%.2f'% line_value['order_qty']"/>
+                                            </strong>
+                                        </td>
+                                        <td class="text-right">
+                                            <strong>
+                                                <span t-esc="'%.2f'% line_value['order_value']"/>
+                                            </strong>
+                                        </td>
+                                        <td class="text-right">
+                                            <strong>
+                                                <span t-esc="'%.2f'% line_value['receive_qty']"/>
+                                            </strong>
+                                        </td>
+                                        <td class="text-right">
+                                            <strong>
+                                                <span t-esc="'%.2f'% line_value['receive_value']"/>
+                                            </strong>
+                                        </td>
+                                        <td class="text-right">
+                                            <strong>
+                                                <span t-esc="'%.2f'% line_value['remain_qty']"/>
+                                            </strong>
+                                        </td>
+                                        <td class="text-right">
+                                            <strong>
+                                                <span t-esc="'%.2f'% line_value['remain_value']"/>
+                                            </strong>
+                                        </td>
+                                    </tr>
+                                    <t t-foreach="line_value['values']" t-as="rec">
+                                        <tr>
+                                            <td>
+                                                <t t-esc="rec['date'][:10]"/>
+                                            </td>
+                                            <td>
+                                                <t t-esc="rec['product_name']"/>
+                                            </td>
+                                            <td>
+                                                <t t-esc="rec['uom_name']"/>
+                                            </td>
+                                            <td>
+                                                <span t-esc="'%.2f'% rec['price']"/>
+                                            </td>
+                                            <td class="text-right">
+                                                <span t-esc="'%.2f'% rec['order_qty']"/>
+                                            </td>
+                                            <td class="text-right">
+                                                <span t-esc="'%.2f'% rec['order_value']"/>
+                                            </td>
+                                            <td class="text-right">
+                                                <span t-esc="'%.2f'% rec['receive_qty']"/>
+                                            </td>
+                                            <td class="text-right">
+                                                <span t-esc="'%.2f'% rec['receive_value']"/>
+                                            </td>
+                                            <td class="text-right">
+                                                <span t-esc="'%.2f'% rec['remain_qty']"/>
+                                            </td>
+                                            <td class="text-right">
+                                                <span t-esc="'%.2f'% rec['remain_value']"/>
+                                            </td>
+                                        </tr>
+
+                                    </t>
+                                </t>
+                            </tbody>
+                        </table>
+                        <t t-call="custom_report.report_signing"></t>
+                    </div>
+                </t>
+            </t>
+        </template>
+
+        <report id="report_purchase_order_report"
+                model="stock.move"
+                string="Purchase Order Summary"
+                name="category_stock_summary_reports.purchase_order_report_qweb"
+                file="category_stock_summary_reports.purchase_order_report_qweb"
+                multi="True"
+                menu="False"
+                report_type="qweb-pdf"/>
+
+        <record id="report_purchase_order_report" model="ir.actions.report.xml">
+            <field name="paperformat_id" ref="custom_report.paperformat_pebbles_backend"/>
+        </record>
+    </data>
+</openerp>
