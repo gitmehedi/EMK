@@ -287,6 +287,12 @@ class IndentIndent(models.Model):
             result['res_id'] = pick_ids and pick_ids[0] or False
         return result
 
+    @api.multi
+    def action_print(self):
+        data = {}
+        # data['picking_id'] = self.id
+        return self.env["report"].get_action(self, 'stock_indent.report_stock_indent_view', data)
+
     ####################################################
     # ORM Overrides methods
     ####################################################
