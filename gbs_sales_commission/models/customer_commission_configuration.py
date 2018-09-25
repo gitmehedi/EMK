@@ -36,7 +36,7 @@ class CustomerCommissionConfiguration(models.Model):
                                  domain="([('sale_ok','=','True')])",
                                  readonly=True, states={'draft': [('readonly', False)]})
 
-    customer_id = fields.Many2one('res.partner', string="Customer", domain="([('customer','=','True')])",
+    customer_id = fields.Many2one('res.partner', string="Customer", domain="[('customer', '=', True),('parent_id', '=', False)]",
                                   readonly=True, states={'draft': [('readonly', False)]})
     requested_by = fields.Many2one('res.users', string="Requested By", default=lambda self: self.env.user,
                                    readonly=True, track_visibility='onchange')
@@ -70,7 +70,24 @@ class CustomerCommissionConfiguration(models.Model):
     ### Showing batch
     @api.model
     def _needaction_domain_get(self):
-        return [('state', 'in', ['validate'])]
+        users_obj = self.env['res.users']
+        domain = []
+        if users_obj.has_group('gbs_application_group.group_cxo'):
+            domain = [
+                ('state', 'in', ['approve'])]
+            return domain
+        elif users_obj.has_group('gbs_application_group.group_head_account'):
+            domain = [
+                ('state', 'in', ['validate2'])]
+            return domain
+        elif users_obj.has_group('gbs_application_group.group_head_sale'):
+            domain = [
+                ('state', 'in', ['validate'])]
+            return domain
+        else:
+            return False
+
+        return domain
 
     ## mail notification
     # @api.multi
@@ -87,8 +104,8 @@ class CustomerCommissionConfiguration(models.Model):
 
     @api.model
     def create(self, vals):
-        seq = self.env['ir.sequence'].next_by_code('customer.commission.configuration') or '/'
-        vals['name'] = seq
+        # seq = self.env['ir.sequence'].next_by_code('customer.commission.configuration') or '/'
+        # vals['name'] = seq
         return super(CustomerCommissionConfiguration, self).create(vals)
 
 
@@ -190,6 +207,9 @@ class CustomerCommissionConfiguration(models.Model):
 
     @api.one
     def action_validate(self):
+        seq = self.env['ir.sequence'].next_by_code('customer.commission.configuration') or '/'
+        self.name = seq
+
         self.state = 'validate'
 
 

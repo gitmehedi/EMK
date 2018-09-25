@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-    <template id="report_purchase_temp" inherit_id="custom_report.gbs_external_layout" primary="True">
-        <xpath expr="//t[@t-call='custom_report.gbs_external_layout_header']" position="attributes">
-            <attribute name="t-call">stock_purchase_custom_report.external_layout_header_pcr</attribute>
+    <template id="report_purchase_temp" inherit_id="report_layout.gbs_internal_layout" primary="True">
+        <xpath expr="//t[@t-call='report_layout.gbs_internal_layout_header']" position="attributes">
+            <attribute name="t-call">stock_purchase_custom_report.internal_layout_header_pcr</attribute>
         </xpath>
     </template>
-    <template id="external_layout_header_pcr" inherit_id="custom_report.gbs_external_layout_header" primary="True">
+    <template id="internal_layout_header_pcr" inherit_id="report_layout.gbs_internal_layout_header" primary="True">
         <xpath expr="//div[@class='company-info']" position="after">
             <div name="company_address">
                 <h5><span t-esc="address"/></h5>
@@ -129,7 +129,7 @@
                                 </tr>
                             </tbody>
                         </table>
-                        <t t-call="custom_report.report_signing"></t>
+                        <t t-call="report_layout.report_signing"></t>
                     </div>
                 </div>
             </t>
@@ -146,6 +146,6 @@
             report_type="qweb-pdf"/>
 
     <record id="report_stock_purchase" model="ir.actions.report.xml">
-        <field name="paperformat_id" ref="custom_report.paperformat_backend_landscape"/>
+        <field name="paperformat_id" ref="report_layout.paperformat_backend_landscape"/>
     </record>
 </odoo>

@@ -1,8 +1,7 @@
-import time, datetime
-
+import datetime
+from dateutil.relativedelta import relativedelta
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError, ValidationError
-
 
 
 class DeliverySchedules(models.Model):
@@ -11,91 +10,118 @@ class DeliverySchedules(models.Model):
     _inherit = ['mail.thread']
     _order = "id DESC"
 
-    name = fields.Char(string='Name', index=True, readonly=True)
+    @api.depends('line_ids.scheduled_qty')
+    def _amount_all(self):
+        for ds in self:
+            amount_total = 0.0
+            for line in ds.line_ids:
+                amount_total += line.scheduled_qty
+
+            ds.scheduled_qty = amount_total
+
+    name = fields.Char(string='Name',readonly=True,default='/')
     requested_date = fields.Date('Date', default=fields.Datetime.now,readonly=True,
-                                 states={'draft': [('readonly', False)]})
+                                 states={'draft': [('readonly', False)]},
+                                 track_visibility='onchange')
     sequence_id = fields.Char('Sequence', readonly=True)
     requested_by = fields.Many2one('res.users', string='Requested By', readonly=True,
                                    default=lambda self: self.env.user)
-
-    ## Sales Person & OP Unit
-    #####################################
-    @api.model
-    def _default_operating_unit(self):
-        team = self.env['crm.team']._get_default_team_id()
-        if team.operating_unit_id:
-            return team.operating_unit_id
+    revision = fields.Integer(string='Revision',readonly = True,
+                              help="Used to keep track of changes")
+    origin = fields.Char('Origin', copy=False,help="Origin Name of the document.")
+    approve_date = fields.Datetime('Approve Date', readonly=True,track_visibility='onchange')
+    approved_by = fields.Many2one('res.users', string='Approver', readonly=True,
+                                  help="who have approve.",track_visibility='onchange')
 
     operating_unit_id = fields.Many2one('operating.unit',
                                         string='Operating Unit',
-                                        required=True, readonly=True,
-                                        default=_default_operating_unit, track_visibility='onchange')
+                                        required=True, readonly=True, states={'draft': [('readonly', False)]},
+                                        track_visibility='onchange')
 
-    @api.model
-    def _default_sales_team(self):
-        team = self.env['crm.team']._get_default_team_id()
-        if team:
-            return team.id
+    line_ids = fields.One2many('delivery.schedules.line', 'parent_id', string="Delivery Schedule Line")
 
-    sales_team_id = fields.Many2one('crm.team', string='Sales Team', readonly=True,
-                                    default=_default_sales_team, track_visibility='onchange')
-
-    ########################################
-
-
-    line_ids = fields.One2many('delivery.schedules.line', 'parent_id', string="Products", readonly=True,
-                               states={'draft': [('readonly', False)]})
-
+    scheduled_qty = fields.Float(string='Total Scheduled Qty.',
+                                 compute='_amount_all',store=True,
+                                 track_visibility='onchange')
     state = fields.Selection([
         ('draft', "Draft"),
-        ('approve', "Confirm")
+        ('revision', "Revised"),
+        ('approve', "Confirm"),
     ], default='draft', track_visibility='onchange')
 
-
-    @api.model
-    def create(self, vals):
-        seq = self.env['ir.sequence'].next_by_code('delivery.schedules') or '/'
-        vals['name'] = seq
-        return super(DeliverySchedules, self).create(vals)
-
+    @api.onchange('operating_unit_id')
+    def onchange_operating_unit_id(self):
+        if self.state == 'draft':
+            self.line_ids=[]
 
     @api.multi
     def action_approve(self):
+        if not self.line_ids:
+            raise ValidationError("Without Product Details information, you can't confirm it.")
+        if self.name == '/':
+            seq = self.env['ir.sequence'].next_by_code_new('delivery.schedule', self.requested_date, self.operating_unit_id)
+            self.write({'name' : seq, 'origin' : seq,})
+        res = {
+            'state': 'approve',
+            'approve_date': fields.Datetime.now(),
+            'approved_by': self.env.user.id,
+        }
+        for line in self.line_ids:
+            if line.state in ['draft','revision']:
+                line.write({'state': 'approve','requested_date':self.requested_date})
+        # email....................................................................
+        email_server_obj = self.env['ir.mail_server'].search([], order='id ASC', limit=1)
+        template = self.env.ref('delivery_schedules.schedule_email_template')
+        template.write({
+            'subject': "Delivery Instruction",
+            'email_from': email_server_obj.name,
+        })
 
-        if self.line_ids:
-            self.state = 'approve'
-            self.approved_by = self.env.user
-            for line in self.line_ids:
-                line.write({'state': 'approve',})
-            return self.write({'state': 'approve', 'approved_date': time.strftime('%Y-%m-%d %H:%M:%S')})
+        operation_groups_users = self.env['res.groups'].search([('name', '=', 'Delivery Operation')]).users
+        operation_user_list = operation_groups_users.filtered(lambda x: x.default_operating_unit_id == self.operating_unit_id)
+        if operation_user_list:
+            for i in operation_user_list:
+                if i.email:
+                    template.write({
+                        'email_to': i.email})
+                    self.env['mail.template'].browse(template.id).send_mail(self.id)
 
-        raise ValidationError("Without Product Details information, you can't confirm it.")
+        #      .............................................................................
+        return self.write(res)
 
     @api.multi
     def action_draft(self):
         res = {
-            'state': 'draft',
+            'state': 'revision',
+            'revision': self.revision + 01,
         }
         self.write(res)
-        self.line_ids.write({'state': 'draft'})
+        for line in self.line_ids:
+            if line.state != 'done':
+                line.write({'state': 'revision',})
+        self.write({'name':self.origin+'/'+str(self.revision)})
 
     @api.multi
     def unlink(self):
         for entry in self:
             if entry.state != 'draft':
                 raise UserError(_('After confirmation You can not delete this.'))
+            elif entry.line_ids.filtered(lambda x: x.state == 'done'):
+                raise UserError(_('You can not delete ,after Schedule line are done.'))
             entry.line_ids.unlink()
         return super(DeliverySchedules, self).unlink()
 
+    @api.one
+    @api.constrains('requested_date')
+    def _check_requested_date(self):
+        if self.requested_date < fields.Date.today():
+            raise ValidationError(_("Requested date can't be back date entry"))
+        elif self.requested_date > fields.Date.to_string(datetime.date.today() + relativedelta(days=7)):
+            raise ValidationError(_("Requested date can't bigger then 7 days"))
+        else:
+            pass
 
-    @api.constrains('name')
-    def _check_unique_constraint(self):
-        if self.name:
-            filters = [['name', '=ilike', self.name]]
-            name = self.search(filters)
-            if len(name) > 1:
-                raise Warning('[Unique Error] Name must be unique!')
-
+    # ----------------------------------------------------------------------------------------------------------------------------
     @api.multi
     def generate_schedule_letter(self):
 
@@ -129,3 +155,22 @@ class DeliverySchedules(models.Model):
             'target': 'new',
             'context': ctx,
         }
+
+
+        ## Sales Person
+        #####################################
+        # @api.model
+        # def _default_operating_unit(self):
+        #     team = self.env['crm.team']._get_default_team_id()
+        #     if team.operating_unit_id:
+        #         return team.operating_unit_id
+        # @api.model
+        # def _default_sales_team(self):
+        #     team = self.env['crm.team']._get_default_team_id()
+        #     if team:
+        #         return team.id
+        #
+        # sales_team_id = fields.Many2one('crm.team', string='Sales Team', readonly=True,
+        #                                 default=_default_sales_team, track_visibility='onchange')
+
+        ########################################

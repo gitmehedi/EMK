@@ -8,13 +8,13 @@
                 report_type="qweb-pdf"
                 file="delivery_qty_reports.report_daily_deli_undeli"
                 name="delivery_qty_reports.report_daily_deli_undeli"
-                paperformat="custom_report.paperformat_backend_landscape"
+                paperformat="report_layout.paperformat_backend_landscape"
                 menu="False"/>
 
 
         <template id="report_daily_deli_undeli">
             <t t-call="report.html_container">
-                <t t-call="custom_report.gbs_internal_layout">
+                <t t-call="report_layout.gbs_internal_layout">
                     <div class="page" style="page-break-inside:auto">
                             <div class="row">
                                 <style type="text/css">
@@ -36,18 +36,18 @@
                                style="margin-bottom: 10px;table-layout: fixed;">
                                     <thead>
                                         <tr class="odo-bg-gray">
-                                            <th class="text-center" style="width:22%;">Customer</th>
+                                            <th class="text-center" style="width:21%;">Customer</th>
                                             <th class="text-center" style="width:5%;">D.O Date</th>
-                                            <th class="text-center" style="width:13%;">D.O No.</th>
+                                            <th class="text-center" style="width:11%;">D.O No.</th>
                                             <th class="text-center" style="width:5%;">D.O Qty</th>
                                             <th class="text-center" style="width:3%;">UoM</th>
                                             <th class="text-center" style="width:5%;">Unde Qty (Begening)</th>
                                             <th class="text-center" style="width:5%;">Issued D.O</th>
                                             <th class="text-center" style="width:5%;">Delivered Qty</th>
-                                            <th class="text-center" style="width:13%;">Delivery Challan</th>
+                                            <th class="text-center" style="width:11%;">Delivery Challan</th>
                                             <th class="text-center" style="width:5%;">Unde Qty</th>
                                             <th class="text-center" style="width:15%;">Category</th>
-                                            <th class="text-center" style="width:4%;">Packing</th>
+                                            <th class="text-center" style="width:9%;">Packing</th>
                                         </tr>
                                     </thead>
 
@@ -126,7 +126,7 @@
                                         </t>
                                     </tbody>
                                 </table>
-                                <t t-call="custom_report.report_signing"></t>
+                                <t t-call="report_layout.report_signing"></t>
                         </div>
                     </div>
                 </t>

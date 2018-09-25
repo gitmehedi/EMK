@@ -5,7 +5,7 @@
     'website': 'www.genweb2.com',
     'category': 'Warehouse Management',
     'depends': [
-        'custom_report',
+        'report_layout',
         'stock_operating_unit',
         'gbs_stock_product',
     ],

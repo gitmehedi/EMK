@@ -3,7 +3,7 @@
     <data>
         <template id="report_top_sheet">
             <t t-call="report.html_container">
-                <t t-call="custom_report.gbs_internal_layout">
+                <t t-call="report_layout.gbs_internal_layout">
                     <div class="page" style="page-break-inside:auto">
                         <div class="row">
                             <p>
@@ -95,7 +95,7 @@
                 report_type="qweb-pdf"
                 file="gbs_hr_payroll_top_sheet.report_top_sheet"
                 name="gbs_hr_payroll_top_sheet.report_top_sheet"
-                paperformat="custom_report.paperformat_backend_landscape"/>
+                paperformat="report_layout.paperformat_backend_landscape"/>
 
     </data>
 </odoo>

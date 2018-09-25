@@ -11,7 +11,7 @@
         'ir_sequence_operating_unit',
         'commercial',
         'gbs_application_group',
-        'custom_report',
+        'report_layout',
     ],
     'data': [
         'data/pr_sequence.xml',

@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+        <record id="rule_manager_hr_holidays_exception_employee_batch" model="ir.rule">
+            <field name="name">HR Holidays Exceptions(Manager)</field>
+            <field name="model_id" ref="model_hr_holidays_exception_employee_batch" />
+            <field name="domain_force">[(1,'=',1)]</field>
+            <field name="perm_read" eval="True" />
+            <field name="perm_create" eval="True" />
+            <field name="perm_write" eval="True" />
+            <field name="perm_unlink" eval="False" />
+            <field name="groups" eval="[(4,ref('hr_holidays.group_hr_holidays_manager'))]" />
+        </record>
+
+        <record id="rule_user_hr_holidays_exception_employee_batch" model="ir.rule">
+            <field name="name">HR Holidays Exceptions(Multi Operating Unit)</field>
+            <field name="model_id" ref="model_hr_holidays_exception_employee_batch"/>
+            <field name="domain_force">[('operating_unit_id','in',user.operating_unit_ids.ids)]</field>
+            <field name="perm_read" eval="True" />
+            <field name="perm_create" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_unlink" eval="False"/>
+            <field name="groups" eval="[(4,ref('hr_holidays.group_hr_holidays_user'))]"/>
+        </record>
+
+    </data>
+</openerp>

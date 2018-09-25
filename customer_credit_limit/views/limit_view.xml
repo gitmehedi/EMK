@@ -22,7 +22,8 @@
             <field name="name">customer.creditlimit.assign.tree</field>
             <field name="model">customer.creditlimit.assign</field>
             <field name="arch" type="xml">
-                <tree string="Credit Limit">
+                <tree string="Credit Limit"
+                colors="blue:state == 'confirm';red:state == 'validate1'">
                     <field name="name"/>
                      <field name="description"/>
                     <field name="approve_date"/>

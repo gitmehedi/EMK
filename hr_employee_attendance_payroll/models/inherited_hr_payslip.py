@@ -19,7 +19,7 @@ class InheritedHrAttendancePayslip(models.Model):
             Insert attendance data
             """
             periods = self.env['date.range'].search(
-                [('date_start', '<=', self.date_from), ('date_end', '>=', self.date_to)], limit=1)
+                [('date_start', '<=', self.date_from), ('date_end', '>=', self.date_to),('type_id.holiday_month','=',1)], limit=1)
 
             if periods.id == False:
                 return

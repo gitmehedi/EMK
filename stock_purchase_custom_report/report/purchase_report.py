@@ -31,7 +31,7 @@ class StockPurchaseReport(models.AbstractModel):
         date_end = date_to + ' 23:59:59'
         location_outsource = data['location_id']
         location_input =  self.env['stock.location'].search(
-            [('operating_unit_id', '=', data['operating_unit_id']),('name', '=', 'Input')])[0].id
+            [('operating_unit_id', '=', data['operating_unit_id']),('name', '=', 'Input')],limit=1).id
         supplier_id = data['partner_id']
         supplier_pool = self.env['res.partner']
         picking_pool = self.env['stock.picking'].search([])

@@ -9,7 +9,7 @@
             <field name="arch" type="xml">
                 <form string="Exit Request">
                     <header>
-                        <button name="send_mail_template" string="Send e-mail" type="object" class="oe_highlight"/>
+                        <!--<button name="send_mail_template" string="Send e-mail" type="object" class="oe_highlight"/>-->
                         <button string="Confirm" name="exit_confirm" states="draft" type="object" class="oe_highlight"/>
                         <button string="Approve" name="exit_validate"
                                 states="confirm"  type="object" class="oe_highlight"/>

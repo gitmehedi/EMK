@@ -3,7 +3,7 @@ from odoo.exceptions import UserError, ValidationError
 
 class CashPaymentLine(models.Model):
     _name = 'cash.payment.line.layer'
-    _description = 'DO Cash Payment Terms line Layer'
+    _description = 'DO Cash Payment line'
 
     dep_bank = fields.Char(string="Deposited Bank")
     branch = fields.Char(string="Branch")

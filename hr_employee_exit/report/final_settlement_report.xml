@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--Custom report. -->
+<odoo>
+	<data>
+		<report
+			id="action_report_final_settlement"
+			model="final.settlement"
+			string="Full &amp; Final Report"
+			report_type="qweb-pdf"
+			name="hr_employee_exit.report_final_settlement"
+			file="hr_employee_exit.report_final_settlement"
+            paperformat="report_layout.paperformat_backend_portrait"
+		/>
+
+		<template id="report_final_settlement">
+			<t t-call="report.html_container">
+				<t t-call="report_layout.gbs_internal_layout">
+                    <t t-foreach="docs" t-as="o">
+                        <div class="page" style="page-break-inside:auto">
+                            <div class="row" style="padding-top:5px;">
+                                <style type="text/css">
+                                    .report-title { text-align:center; }
+                                    .odo-bg-gray, .odo-bg-gray > td { background-color: #f5f5f5; }
+                                </style>
+                                <div class="clearfix">
+                                    <h3 class="report-title">Employee Exit Interview Report</h3>
+                                    <br/>
+
+                                    <h4>Employee Details</h4>
+                                    <div class="row">
+                                        <div class="col-xs-6 text-left">
+                                            <h6><b>Employee :  </b><span t-esc="o.employee_id.name"/></h6>
+                                            <h6><b>Designation :  </b><span t-esc="o.emp_designation.name"/></h6>
+                                            <h6><b>Date of Joining :  </b><span t-esc="o.joining_date"/></h6>
+                                        </div>
+                                        <div class="col-xs-6 text-left">
+                                            <h6><b>Employee Code :  </b><span t-esc="o.employee_code"/></h6>
+                                            <h6><b>Date of Leaving :  </b><span t-esc="o.leaving_date"/></h6>
+                                        </div>
+                                    </div>
+                                </div>
+                                <br/>
+                                <h4>Salary Details:</h4>
+                                <table class="table table-report-xs table-bordered table-striped">
+                                    <thead>
+                                        <tr class="odo-bg-gray">
+                                            <t t-foreach="o.emp_payslip_ids" t-as="slip">
+                                                <th class="text-center"><span t-esc="slip.name"/></th>
+                                            </t>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <t t-foreach="o.emp_payslip_ids" t-as="slip">
+                                            <td class="text-center"><span t-esc="'%.2f' %slip.total"/></td>
+                                        </t>
+                                    </tbody>
+                                </table>
+                                <h4>Payment Details:</h4>
+                                <table class="table table-report-xs table-bordered table-striped">
+                                    <thead>
+                                        <tr class="odo-bg-gray">
+                                            <t t-foreach="o.payment_ids" t-as="pay">
+                                                <th class="text-center"><span t-esc="pay.name"/></th>
+                                            </t>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <t t-foreach="o.payment_ids" t-as="pay">
+                                            <td class="text-center"><span t-esc="'%.2f' %pay.amount"/></td>
+                                        </t>
+                                    </tbody>
+                                </table>
+                                <h4>Deduction Details:</h4>
+                                <table class="table table-report-xs table-bordered table-striped">
+                                    <thead>
+                                        <tr class="odo-bg-gray">
+                                            <t t-foreach="o.deduction_ids" t-as="deduction">
+                                                <th class="text-center"><span t-esc="deduction.name"/></th>
+                                            </t>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <t t-foreach="o.deduction_ids" t-as="deduction">
+                                            <td class="text-center"><span t-esc="'%.2f' %deduction.amount"/></td>
+                                        </t>
+                                    </tbody>
+                                </table>
+                                <hr/>
+                                <div class="text-right">
+                                    <h5>Total Payment: <span t-esc="'%.2f' %o.payment_total_amount"/></h5>
+                                    <h5>Total Deduction: <span t-esc="'%.2f' %o.deduction_total_amount"/></h5>
+                                    <h5>Total Amount: <span t-esc="'%.2f' %o.total_amount"/></h5>
+                                </div>
+                                <hr/>
+                                <div>
+                                    <div class="col-xs-6 text-left">
+                                        <h6><b>Name:</b></h6>
+                                        <h6><b>Signature:</b></h6>
+                                        <h6><b>Designation:</b></h6>
+                                        <h6><b>Date:</b></h6>
+                                    </div>
+                                    <div class="col-xs-6 text-left">
+                                        <h6><b>Name:</b></h6>
+                                        <h6><b>Signature:</b></h6>
+                                        <h6><b>Designation:</b></h6>
+                                        <h6><b>Date:</b></h6>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+				</t>
+			</t>
+		</template>
+	</data>
+</odoo>

@@ -9,14 +9,14 @@
                 report_type="qweb-pdf"
                 file="lc_sales_product.report_packing_list"
                 name="lc_sales_product.report_packing_list"
-                paperformat="custom_report.custom_pad_paperformat"
+                paperformat="report_layout.custom_pad_paperformat"
                 menu="False"
 
         />
 
         <template id="report_packing_list">
             <t t-call="report.html_container">
-                <t t-call="custom_report.gbs_custom_pad_report_template">
+                <t t-call="report_layout.gbs_custom_pad_report_template">
                     <div class="page" style="page-break-inside: auto">
                         <style>
                             .auth-signature { padding: 5px 0; border-top: 1px dashed #333; float: right; }
@@ -44,7 +44,7 @@
                                                     Invoice No: <strong t-esc="data['invoice_id']"/>
                                                 </td>
                                                 <td class="w50 bt-0">
-                                                    Date: <strong t-esc="data['invoice_date']" t-options='{"widget": "date"}'/>
+                                                    Date: <strong t-esc="data['invoice_date']"/>
                                                 </td>
                                             </tr>
                                             <tr class="odo-bg-gray">
@@ -53,7 +53,7 @@
                                                         As per Proforma Invoice No:
                                                         <t t-foreach="pi_id_list" t-as="r">
                                                             <strong t-esc="r['pi_id']"/>
-                                                            Date: <strong t-esc="r['pi_date']" t-options='{"widget": "date"}'/>
+                                                            Date: <strong t-esc="r['pi_date']"/>
                                                         </t>
                                                     </p>
                                                 </td>
@@ -86,10 +86,10 @@
                                         <div>
                                             <p>
                                                 Drawn under the Documentary Credit No.: <br/>
-                                                <strong t-esc="data['lc_id']"/> Date: <strong t-esc="data['lc_date']" t-options='{"widget": "date"}'/> <br/>
+                                                <strong t-esc="data['lc_id']"/> Date: <strong t-esc="data['lc_date']"/> <br/>
                                                 <t t-foreach="lc_revision_list" t-as="r">
                                                     <strong>
-                                                        Number of Amendment :<span t-esc="r['no']"/> &amp; Date :<span t-esc="r['date']" t-options='{"widget": "date"}'/> <br/>
+                                                        Number of Amendment :<span t-esc="r['no']"/> &amp; Date :<span t-esc="r['date']"/> <br/>
                                                     </strong>
                                                 </t>
                                                 <span style="padding-left:25%">of</span> <br/>
@@ -107,7 +107,7 @@
                                                 in accordance with the Proforma Invoice No.
                                             <t t-foreach="pi_id_list" t-as="r">
                                                 <strong t-esc="r['pi_id']"/>
-                                                Date: <strong t-esc="r['pi_date']" t-options='{"widget": "date"}'/>
+                                                Date: <strong t-esc="r['pi_date']"/>
                                             </t></p>
                                         </div>
                                     </td>

@@ -16,4 +16,3 @@ class InheritResCompany(models.Model):
 
 
 
-

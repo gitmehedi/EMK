@@ -9,7 +9,7 @@
             file="gbs_hr_payroll_bank_letter.report_individual_payslip1"
             name="gbs_hr_payroll_bank_letter.report_individual_payslip1"
             menu="False"
-            paperformat="custom_report.custom_pad_paperformat"
+            paperformat="report_layout.custom_pad_paperformat"
         />
     </data>
 </odoo>

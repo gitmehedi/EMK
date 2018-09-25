@@ -51,19 +51,19 @@ class StockPicking(models.Model):
         res = super(StockPicking, self).do_transfer()
         if res:
             picking = self.browse(self.ids)[0]
-            loan_borrowing_obj = self.env['item.borrowing']
-            loan_lending_obj = self.env['item.loan.lending']
-            if picking.location_dest_id.name == 'Stock':
-                loan_borrowing_ids = loan_borrowing_obj.search([('name', '=', picking.origin)])
-                if loan_borrowing_ids:
-                    for product_line in loan_borrowing_ids[0].item_lines:
-                        moves = picking.move_lines.filtered(lambda o: o.product_id == product_line.product_id)
-                        for move in moves:
-                            product_line.write({'received_qty': product_line.received_qty + move.product_qty})
-                if self.transfer_type == 'receive':
-                    origin_picking_objs = self.search([('name', '=', self.origin)])
-                    if origin_picking_objs[0].receive_type == 'loan':
-                        loan_lending_ids = loan_lending_obj.search([('id', '=', origin_picking_objs[0].loan_id.id)])
+            origin_picking_objs = self.search([('name', '=', picking.origin)],limit=1)
+            if picking.transfer_type == 'loan' or picking.receive_type=='loan' or origin_picking_objs.receive_type == 'loan':
+                loan_borrowing_obj = self.env['item.borrowing']
+                loan_lending_obj = self.env['item.loan.lending']
+                if picking.location_dest_id.name == 'Stock':
+                    loan_borrowing_ids = loan_borrowing_obj.search([('name', '=', picking.origin)])
+                    if loan_borrowing_ids:
+                        for product_line in loan_borrowing_ids[0].item_lines:
+                            moves = picking.move_lines.filtered(lambda o: o.product_id == product_line.product_id)
+                            for move in moves:
+                                product_line.write({'received_qty': product_line.received_qty + move.product_qty})
+                    if self.transfer_type == 'receive':
+                        loan_lending_ids = loan_lending_obj.search([('id', '=', origin_picking_objs.loan_id.id)])
                         if loan_lending_ids:
                             for product_line in loan_lending_ids[0].item_lines:
                                 move = picking.move_lines.filtered(lambda o: o.product_id == product_line.product_id)
@@ -80,25 +80,26 @@ class StockPicking(models.Model):
                             if not receiveable_line_list:
                                 loan_lending_ids[0].write({'state': 'received'})
 
-            if picking.location_dest_id.name == 'Customers':
-                loan_lending_ids = loan_lending_obj.search([('name', '=', picking.origin)])
-                if loan_lending_ids:
-                    for product_line in loan_lending_ids[0].item_lines:
-                        move = picking.move_lines.filtered(lambda o: o.product_id == product_line.product_id)
+                if picking.location_dest_id.name == 'Borrowers':
+                    loan_lending_ids = loan_lending_obj.search([('name', '=', picking.origin)])
+                    if loan_lending_ids:
+                        for product_line in loan_lending_ids[0].item_lines:
+                            move = picking.move_lines.filtered(lambda o: o.product_id == product_line.product_id)
                         if picking.backorder_id:
                             product_line.write({'given_qty': product_line.given_qty + move.product_qty})
                         else:
                             product_line.write({'given_qty': move.product_qty})
 
-                loan_borrowing_ids = loan_borrowing_obj.search([('return_picking_id', '=', self.id)])
-                loan_borrowing_back_ids = loan_borrowing_obj.search([('return_picking_id', '=', self.backorder_id.id)])
-                if loan_borrowing_ids:
-                    for product_line in loan_borrowing_ids[0].item_lines:
-                        move = picking.move_lines.filtered(lambda o: o.product_id == product_line.product_id)
-                        product_line.write({'given_qty': product_line.given_qty + move.product_qty})
-                elif loan_borrowing_back_ids:
-                    for product_line in loan_borrowing_back_ids[0].item_lines:
-                        move = picking.move_lines.filtered(lambda o: o.product_id == product_line.product_id)
-                        product_line.write({'given_qty': product_line.given_qty + move.product_qty})
+                if picking.location_dest_id.name == 'Lenders':
+                    loan_borrowing_ids = loan_borrowing_obj.search([('return_picking_id', '=', self.id)])
+                    loan_borrowing_back_ids = loan_borrowing_obj.search([('return_picking_id', '=', self.backorder_id.id)])
+                    if loan_borrowing_ids:
+                        for product_line in loan_borrowing_ids[0].item_lines:
+                            move = picking.move_lines.filtered(lambda o: o.product_id == product_line.product_id)
+                            product_line.write({'given_qty': product_line.given_qty + move.product_qty})
+                    elif loan_borrowing_back_ids:
+                        for product_line in loan_borrowing_back_ids[0].item_lines:
+                            move = picking.move_lines.filtered(lambda o: o.product_id == product_line.product_id)
+                            product_line.write({'given_qty': product_line.given_qty + move.product_qty})
 
         return res

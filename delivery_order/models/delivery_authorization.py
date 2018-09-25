@@ -33,6 +33,10 @@ class DeliveryAuthorization(models.Model):
                                states={'draft': [('readonly', False)]})
     cheque_ids = fields.One2many('cheque.payment.line', 'pay_cash_id', string="Cheque", readonly=True,
                                  states={'draft': [('readonly', False)]})
+
+    cheque_rcv_all_ids = fields.One2many('cheque.entry.line', 'pay_all_cq_id', string="Cheque Received", readonly=True,
+                                         states={'draft': [('readonly', False)]})
+
     tt_ids = fields.One2many('tt.payment.line', 'pay_tt_id', string="T.T", readonly=True,
                              states={'draft': [('readonly', False)]})
     lc_ids = fields.One2many('lc.payment.line', 'pay_lc_id', string="L/C", readonly=True,
@@ -54,7 +58,7 @@ class DeliveryAuthorization(models.Model):
         ('cash', 'Cash'),
         ('credit_sales', 'Credit'),
         ('lc_sales', 'L/C'),
-    ], string='Sales Type', readonly=True,track_visibility='onchange')
+    ], string='Sales Type', readonly=True, track_visibility='onchange')
 
     state = fields.Selection([
         ('draft', "Submit"),
@@ -70,7 +74,6 @@ class DeliveryAuthorization(models.Model):
     operating_unit_id = fields.Many2one('operating.unit', string='Operating Unit', readonly=True,
                                         track_visibility='onchange')
 
-
     @api.multi
     @api.depends('sale_order_id.procurement_group_id')
     def _compute_picking_ids(self):
@@ -80,8 +83,10 @@ class DeliveryAuthorization(models.Model):
             self.delivery_count = len(order.picking_ids)
 
     """ PI and LC """
-    pi_id = fields.Many2one('proforma.invoice', string='PI Ref. No.', compute="_calculate_pi_id", store=False,track_visibility='onchange')
-    lc_id = fields.Many2one('letter.credit', string='LC Ref. No.', compute="_calculate_lc_id", store=False,track_visibility='onchange')
+    pi_id = fields.Many2one('proforma.invoice', string='PI Ref. No.', compute="_calculate_pi_id", store=False,
+                            track_visibility='onchange')
+    lc_id = fields.Many2one('letter.credit', string='LC Ref. No.', compute="_calculate_lc_id", store=False,
+                            track_visibility='onchange')
 
     @api.multi
     def _calculate_pi_id(self):
@@ -93,9 +98,12 @@ class DeliveryAuthorization(models.Model):
         self.lc_id = self.sale_order_id.lc_id.id
 
     """ Payment information"""
-    amount_untaxed = fields.Float(string='Untaxed Amount', readonly=True)
+    amount_untaxed = fields.Float(string='Ordered Amount', readonly=True, track_visibility='onchange')
     tax_value = fields.Float(string='Taxes', readonly=True)
     total_amount = fields.Float(string='Total', readonly=True, track_visibility='onchange')
+    total_payment_received = fields.Float(string='Payment Received', readonly=True, track_visibility='onchange')
+    total_cheque_rcv_amount_not_honored = fields.Float(string='Cheque Received', readonly=True,
+                                                       track_visibility='onchange')
 
     sale_order_id = fields.Many2one('sale.order',
                                     string='Sale Order',
@@ -158,11 +166,11 @@ class DeliveryAuthorization(models.Model):
     def action_close(self):
 
         self.approver1_id = self.env.user
-        account_payment_pool = self.env['account.payment'].search(
-            [('state', '!=', 'draft'), ('is_this_payment_checked', '=', False),
-             ('sale_order_id', '=', self.sale_order_id.id),
-             ('partner_id', '=', self.parent_id.id)])
-        account_payment_pool.write({'is_this_payment_checked': True})
+        # account_payment_pool = self.env['account.payment'].search(
+        #     [('state', '!=', 'draft'), ('is_this_payment_checked', '=', False),
+        #      ('sale_order_id', '=', self.sale_order_id.id),
+        #      ('partner_id', '=', self.parent_id.id)])
+        # account_payment_pool.write({'is_this_payment_checked': True})
 
         # Automatically Create Delivery Order
         self._automatic_delivery_order_creation()
@@ -207,27 +215,20 @@ class DeliveryAuthorization(models.Model):
     @api.multi
     def action_view_delivery_order(self):
         form_view = self.env.ref('delivery_order.delivery_order_layer_form')
-        tree_view = self.env.ref('delivery_order.delivery_order_tree')
+        action = self.env.ref('delivery_order.delivery_order_layer_action').read()[0]
         do_pool = self.env['delivery.order'].search([('sale_order_id', '=', self.sale_order_id.id)])
 
-        return {
-            'name': ('Delivery Order'),
-            "type": "ir.actions.act_window",
-            'res_model': 'delivery.order',
-            'view_type': 'form',
-            'view_mode': 'tree,form',
-            'views': [
-                (tree_view.id, 'tree'),
-                (form_view.id, 'form'),
-            ],
-            'domain': [('id', '=', do_pool.id)],
-        }
+        if len(do_pool) > 1:
+            action['domain'] = [('id', 'in', do_pool.ids)]
+        elif do_pool:
+            action['views'] = [(form_view.id, 'form')]
+            action['res_id'] = do_pool.id
+        return action
 
     @api.multi
     def action_validate(self):
-
         if self.so_type == 'cash':
-            self.payment_information_check()
+            # self.payment_information_check()
             cash_check = self.payments_amount_checking_with_products_subtotal()
             return cash_check
 
@@ -280,7 +281,7 @@ class DeliveryAuthorization(models.Model):
                                     orders.create(res)
 
                     if list[rec] > 100 or res['available_qty'] == 0:
-                        #product_pool = self.env['product.template'].search([('id', '=', rec)])
+                        # product_pool = self.env['product.template'].search([('id', '=', rec)])
                         wizard_form = self.env.ref('delivery_order.max_do_without_lc_view', False)
                         view_id = self.env['max.delivery.without.lc.wizard']
 
@@ -301,7 +302,7 @@ class DeliveryAuthorization(models.Model):
         elif self.so_type == 'credit_sales':
             self._automatic_delivery_order_creation()
             self.state = 'close'
-            
+
 
     def total_sub_total_amount(self):
         total_amt = 0
@@ -311,47 +312,21 @@ class DeliveryAuthorization(models.Model):
 
         return total_amt
 
+
     @api.multi
     def payments_amount_checking_with_products_subtotal(self):
-
-        account_payment_pool = self.env['account.payment'].search(
-            [('state', '!=', 'draft'), ('is_this_payment_checked', '=', False),
-             ('sale_order_id', '=', self.sale_order_id.id),
-             ('partner_id', '=', self.parent_id.id)])
-
-        cheque_rcv_pool = self.env['accounting.cheque.received'].search(
-            [('partner_id', '=', self.sale_order_id.partner_id.id), ('state', '=', 'honoured'),
-             ('sale_order_id', '=', self.sale_order_id.id)])
-
         if not self.line_ids:
-            return self.write({'state': 'approve'})  # Only Second level approval
+            return self.write({'state': 'validate'})  # Only Second level approval
 
-        ## Sum of cash amount
-        cash_line_total_amount = 0
-        for do_cash_line in self.cash_ids:
-            cash_line_total_amount = cash_line_total_amount + do_cash_line.amount
+        if not self.total_payment_received or self.total_payment_received == 0:
+            return self.write({'state': 'validate'})  # Only Second level approval
 
-        ## Sum of cheques amount
-        cheque_line_total_amount = 0
-        for do_cheque_line in self.cheque_ids:
-            cheque_line_total_amount = cheque_line_total_amount + do_cheque_line.amount
-
-        total_cash_cheque_amount = cash_line_total_amount + cheque_line_total_amount
-
-        if not total_cash_cheque_amount or total_cash_cheque_amount == 0:
-            account_payment_pool.write({'is_this_payment_checked': True})
-            cheque_rcv_pool.write({'is_this_payment_checked': True})
-            return self.write({'state': 'approve'})  # Only Second level approval
-
-        if total_cash_cheque_amount >= self.total_amount:
-            account_payment_pool.write({'is_this_payment_checked': True})
-            cheque_rcv_pool.write({'is_this_payment_checked': True})
+        if self.total_payment_received >= self.total_amount:
             self._automatic_delivery_order_creation()
             return self.write({'state': 'close'})  # directly go to final approval level
         else:
-            account_payment_pool.write({'is_this_payment_checked': True})
-            cheque_rcv_pool.write({'is_this_payment_checked': True})
-            return self.write({'state': 'approve'})  # Only Second level approval
+            return self.write({'state': 'validate'})  # Only Second level approval
+
 
     def create_delivery_order(self):
         for order in self.sale_order_id:
@@ -366,170 +341,176 @@ class DeliveryAuthorization(models.Model):
             self.sale_order_id.action_done()
         return True
 
-    @api.multi
-    def payment_information_check(self):
-        for cash_line in self.cash_ids:
-
-            if cash_line.account_payment_id.sale_order_id.id != self.sale_order_id.id:
-                raise UserError("%s Payment Information is of a different Sale Order!" % (
-                    cash_line.account_payment_id.display_name))
-                break;
-
-            if cash_line.account_payment_id.is_this_payment_checked == True:
-                raise UserError(
-                    "Payment Information entered is already in use: %s" % (cash_line.account_payment_id.display_name))
-                break;
-
-    @api.onchange('sale_order_id')
-    def onchange_sale_order_id(self):
-        self.set_products_info_automatically()
-
-        account_payment_pool = self.env['account.payment'].search([('state', '!=', 'draft'),
-                                                                   ('sale_order_id', '=', self.sale_order_id.id)])
-
-        for payments in account_payment_pool:
-            if payments.journal_id.type == 'bank':
-                self.set_cheque_info_automatically(account_payment_pool)
-                self.process_cheque_payment()
-            elif payments.journal_id.type == 'cash':
-                self.set_payment_info_automatically(account_payment_pool)
-
-    @api.multi
-    def set_cheque_info_automatically(self, account_payment_pool):
-        vals = []
-        for payments in account_payment_pool:
-            if payments.journal_id.type != 'cash':
-                if not payments.is_this_payment_checked:
-                    vals.append((0, 0, {'account_payment_id': payments.id,
-                                        'amount': payments.amount,
-                                        'bank': payments.deposited_bank,
-                                        'branch': payments.bank_branch,
-                                        'payment_date': payments.payment_date,
-                                        'number': payments.cheque_no,
-                                        }))
-
-                self.cheque_ids = vals
-
-    @api.multi
-    def set_payment_info_automatically(self, account_payment_pool):
-
-        if account_payment_pool:
-            vals = []
-            for payments in account_payment_pool:
-                if payments.journal_id.type == 'cash':
-                    if payments.sale_order_id and not payments.is_this_payment_checked:
-                        vals.append((0, 0, {'account_payment_id': payments.id,
-                                            'amount': payments.amount,
-                                            'dep_bank': payments.deposited_bank,
-                                            'branch': payments.bank_branch,
-                                            'payment_date': payments.payment_date,
-                                            }))
-
-                        self.cash_ids = vals
-
-    @api.multi
-    def set_products_info_automatically(self):
-        val = []
-        if self.sale_order_id:
-            # sale_order_obj = self.env['sale.order'].search([('id', '=', self.sale_order_id.id)])
-
-            self.warehouse_id = self.sale_order_id.warehouse_id.id
-            self.so_type = self.sale_order_id.credit_sales_or_lc
-            self.so_date = self.sale_order_id.date_order
-            self.deli_address = self.sale_order_id.partner_shipping_id.name
-            self.pi_id = self.sale_order_id.pi_id.id
-            self.lc_id = self.sale_order_id.lc_id.id
-            self.currency_id = self.sale_order_id.type_id.currency_id
-
-            for record in self.sale_order_id.order_line:
-                if record.da_qty != record.product_uom_qty \
-                        and record.da_qty != 0:
-                    record.product_uom_qty = record.da_qty
-
-                val.append((0, 0, {'product_id': record.product_id.id,
-                                   'quantity': record.product_uom_qty,
-                                   'pack_type': self.sale_order_id.pack_type.id,
-                                   'uom_id': record.product_uom.id,
-                                   'commission_rate': record.commission_rate,
-                                   'price_unit': record.price_unit,
-                                   'price_subtotal': record.price_subtotal,
-                                   'tax_id': record.tax_id.id
-                                   }))
-            self.amount_untaxed = self.sale_order_id.amount_untaxed
-            self.tax_value = self.sale_order_id.amount_tax
-            self.total_amount = self.sale_order_id.amount_total
-
-        self.line_ids = val
 
     def action_process_unattached_payments(self):
         self.process_cheque_payment()
+        self.process_cash_payment()
+        self.process_all_cheque_received_entry()
+
+        # process total payment received amount
+        self.process_total_payment_received_amount()
+
+
+    # Process all the entered Cheque Received entry
+    def process_all_cheque_received_entry(self):
+        if self.cheque_rcv_all_ids:
+            self.cheque_rcv_all_ids.unlink()
+
+        for pay in self:
+            cheque_rcv_pool = pay.env['accounting.cheque.received'].search(
+                [('partner_id', '=', pay.sale_order_id.partner_id.id), ('state', '!=', 'honoured'),
+                 ('sale_order_id', '=', pay.sale_order_id.id)])
+
+            val_bank = []
+            for bank_line in self.cheque_rcv_all_ids:
+                val_bank.append(bank_line.cheque_info_id)
+
+            vals = []
+
+            for payments in cheque_rcv_pool:
+
+                if payments.id not in val_bank:
+                    c = 0
+                    if payments.currency_id:
+                        if payments.currency_id != self.currency_id:
+                            if self.currency_id.rate == 1:
+                                c = payments.cheque_amount / payments.currency_id.rate
+                            else:
+                                c = self.currency_id.rate * payments.cheque_amount
+                        else:
+                            c = payments.cheque_amount
+
+                    # if payments.journal_id.currency_id:
+                    #     currency = payments.journal_id.currency_id.id
+                    # else:
+                    #     currency = payments.company_id.currency_id.id
+
+                    vals.append((0, 0, {'cheque_info_id': payments.id,
+                                        'amount': payments.cheque_amount,
+                                        'bank': payments.bank_name.name,
+                                        'branch': payments.branch_name,
+                                        'payment_date': payments.payment_date,
+                                        'number': payments.cheque_no,
+                                        'currency_id': payments.currency_id.id,
+                                        'state': payments.state,
+                                        'converted_amount':c,
+                                        }))
+
+            pay.cheque_rcv_all_ids = vals
+
+            ## Sum of cheques amount
+            cheque_line_total_amount = 0
+            converted_amount = 0
+
+            for do_cheque_line in pay.cheque_rcv_all_ids:
+                cheque_line_total_amount = cheque_line_total_amount + do_cheque_line.converted_amount
+
+                #converted_amount = cheque_line_total_amount
+                # if do_cheque_line.currency_id != self.currency_id:
+                #     converted_amount = cheque_line_total_amount * self.currency_id.rate
+                # else:
+                #     converted_amount = cheque_line_total_amount
+
+            pay.total_cheque_rcv_amount_not_honored = cheque_line_total_amount
+
+
+    def process_total_payment_received_amount(self):
+        # Sum of cash amount
+        cash_line_total_amount = 0
+        for do_cash_line in self.cash_ids:
+            cash_line_total_amount = cash_line_total_amount + do_cash_line.amount
+
+        ## Sum of cheques amount
+        cheque_line_total_amount = 0
+        for do_cheque_line in self.cheque_ids:
+            cheque_line_total_amount = cheque_line_total_amount + do_cheque_line.amount
+
+        total_rcv = cash_line_total_amount + cheque_line_total_amount
+
+        # Convert Toal Payment Received to Sale Order Currency
+        self.total_payment_received = total_rcv * self.currency_id.rate
+
+
+    def process_cash_payment(self):
+        if self.cash_ids:
+            self.cash_ids.unlink()
 
         account_payment_pool = self.env['account.payment'].search(
-            [('state', '!=', 'draft'), ('is_this_payment_checked', '=', False),
-             ('sale_order_id', '=', self.sale_order_id.id)])
+            [('state', '!=', 'draft'), ('sale_order_id', '=', self.sale_order_id.id)])
 
         for acc in account_payment_pool:
-            if acc.journal_id.type == 'cash':
-                val = []
-                for cash_line in self.cash_ids:
-                    val.append(cash_line.account_payment_id.id)
 
-                vals = []
-                for payments in acc:
-                    if payments.id not in val:
-                        vals.append((0, 0, {'account_payment_id': payments.id,
-                                            'amount': payments.amount,
-                                            'dep_bank': payments.deposited_bank,
-                                            'branch': payments.bank_branch,
-                                            'payment_date': payments.payment_date,
-                                            }))
+            acc_move_line_cash = self.env['account.move.line'].search(
+                [('credit', '=', 0.00), ('payment_id', '=', acc.id)])
 
-                self.cash_ids = vals
+            vals_bank = []
 
-            elif acc.journal_id.type == 'bank':
+            for bank_payments in acc_move_line_cash:
+                vals_bank.append((0, 0, {'id': bank_payments.id,
+                                         'amount': bank_payments.debit,
+                                         'dep_bank': acc.deposited_bank,
+                                         'branch': acc.bank_branch,
+                                         'payment_date': bank_payments.date,
+                                         'amount_currency': bank_payments.currency_id.id,
+                                         'amount_in_diff_currency': bank_payments.amount_currency,
+                                         'currency_id': bank_payments.move_id.currency_id.id,
+                                         'account_payment_id': bank_payments.name
+                                         }))
 
-                val_bank = []
-                for bank_line in self.cheque_ids:
-                    val_bank.append(bank_line.account_payment_id.id)
+            self.cash_ids = vals_bank
 
-                vals_bank = []
-
-                for bank_payments in acc:
-                    if bank_payments.id not in val_bank:
-                        vals_bank.append((0, 0, {'account_payment_id': bank_payments.id,
-                                                 'amount': bank_payments.amount,
-                                                 'bank': bank_payments.deposited_bank,
-                                                 'branch': bank_payments.bank_branch,
-                                                 'payment_date': bank_payments.payment_date,
-                                                 'number': bank_payments.cheque_no
-                                                 }))
-
-                self.cheque_ids = vals_bank
 
     @api.multi
     def process_cheque_payment(self):
-        vals = []
+        if self.cheque_ids:
+            self.cheque_ids.unlink()
+
         for pay in self:
             cheque_rcv_pool = pay.env['accounting.cheque.received'].search(
                 [('partner_id', '=', pay.sale_order_id.partner_id.id), ('state', '=', 'honoured'),
                  ('sale_order_id', '=', pay.sale_order_id.id)])
 
-            val_bank = []
-            for bank_line in self.cheque_ids:
-                val_bank.append(bank_line.cheque_info_id)
+            for cq_obj in cheque_rcv_pool:
+                acc_move_line_cheque = pay.env['account.move.line'].search(
+                    [('cheque_received_id', '=', cq_obj.id), ('credit', '=', 0.00)])
 
-            for payments in cheque_rcv_pool:
-                if payments.journal_id.type != 'cash':
-                    if not payments.is_this_payment_checked and payments.id not in val_bank:
-                        vals.append((0, 0, {'cheque_info_id': payments.id,
-                                            'amount': payments.cheque_amount,
-                                            'bank': payments.bank_name.name,
-                                            'branch': payments.branch_name,
-                                            'payment_date': payments.payment_date,
-                                            'number': payments.cheque_no,
-                                            }))
+                vals = []
 
-            pay.cheque_ids = vals
+                for payments in acc_move_line_cheque:
+                    # if not cq_obj.is_this_payment_checked:
+                    vals.append((0, 0, {'id': payments.id,
+                                        'amount': payments.debit,
+                                        'bank': cq_obj.bank_name.name,
+                                        'branch': cq_obj.branch_name,
+                                        'payment_date': cq_obj.payment_date,
+                                        'number': cq_obj.cheque_no,
+                                        'label': payments.name,
+                                        'amount_currency': payments.currency_id.id,
+                                        'amount_in_diff_currency': payments.amount_currency,
+                                        'currency_id': payments.move_id.currency_id.id,
+                                        }))
+
+                pay.cheque_ids = vals
+
+
+    @api.model
+    def _needaction_domain_get(self):
+        users_obj = self.env['res.users']
+        # if users_obj.has_group('gbs_application_group.group_cxo'):
+        #     domain = [
+        #         ('state', 'in', ['validate'])]
+        #     return domain
+        if users_obj.has_group('gbs_application_group.group_head_account'):
+            domain = [
+                ('state', 'in', ['validate'])]
+            return domain
+        elif users_obj.has_group('account.group_account_user'):
+            domain = [
+                ('state', 'in', ['draft'])]
+            return domain
+        else:
+            return False
+
 
     ################
     # 100 MT Logic
@@ -544,39 +525,6 @@ class DeliveryAuthorization(models.Model):
             ## Update LC No to Stock Picking Obj
             stock_picking_id = delivery.sale_order_id.picking_ids
             stock_picking_id.write({'lc_id': delivery.lc_id.id})
-
-    @api.model
-    def _needaction_domain_get(self):
-        users_obj = self.env['res.users']
-        domain = []
-        if users_obj.has_group('gbs_application_group.group_cxo'):
-            domain = [
-                ('state', 'in', ['validate'])]
-            return domain
-        elif users_obj.has_group('gbs_application_group.group_head_account'):
-            domain = [
-                ('state', 'in', ['approve'])]
-            return domain
-        elif users_obj.has_group('account.group_account_user'):
-            domain = [
-                ('state', 'in', ['draft'])]
-            return domain
-        else:
-            return False
-
-        return domain
-        ## mail notification
-        # @api.multi
-        # def _notify_approvers(self):
-        #     approvers = self.employee_id._get_employee_manager()
-        #     if not approvers:
-        #         return True
-        #     for approver in approvers:
-        #         self.sudo(SUPERUSER_ID).add_follower(approver.id)
-        #         if approver.sudo(SUPERUSER_ID).user_id:
-        #             self.sudo(SUPERUSER_ID)._message_auto_subscribe_notify(
-        #                 [approver.sudo(SUPERUSER_ID).user_id.partner_id.id])
-        #     return True
 
 
 class OrderedQty(models.Model):

@@ -9,14 +9,14 @@
                 report_type="qweb-pdf"
                 file="lc_sales_product.report_beneficiary_certificate"
                 name="lc_sales_product.report_beneficiary_certificate"
-                paperformat="custom_report.custom_pad_paperformat"
+                paperformat="report_layout.custom_pad_paperformat"
                 menu="False"
 
         />
 
         <template id="report_beneficiary_certificate">
             <t t-call="report.html_container">
-                <t t-call="custom_report.gbs_custom_pad_report_template">
+                <t t-call="report_layout.gbs_custom_pad_report_template">
                     <div class="page" style="page-break-inside: auto">
                         <style>
                             .auth-signature { padding: 5px; border-top: 1px dashed #333; float: right; }
@@ -54,7 +54,7 @@
                                                         As per Proforma Invoice No:
                                                         <t t-foreach="pi_list" t-as="p">
                                                             <strong t-esc="p['number']"/>
-                                                            Date: <strong t-esc="p['date']" t-options='{"widget": "date"}'/>
+                                                            Date: <strong t-esc="p['date']" />
                                                         </t>
                                                     </p>
                                                 </td>
@@ -85,10 +85,10 @@
                                     <td class="bl-1 bl-r">
                                         <p>
                                             Drawn under the Documentary Credit No.: <br/>
-                                            <strong t-esc="data['lc_id']"/> Date: <strong t-esc="data['lc_date']" t-options='{"widget": "date"}'/> <br/>
+                                            <strong t-esc="data['lc_id']"/> Date: <strong t-esc="data['lc_date']"/> <br/>
                                             <t t-foreach="lc_revision_list" t-as="r">
                                                 <strong>
-                                                    Number of Amendment :<span t-esc="r['no']"/> &amp; Date :<span t-esc="r['date']" t-options='{"widget": "date"}'/> <br/>
+                                                    Number of Amendment :<span t-esc="r['no']"/> &amp; Date :<span t-esc="r['date']" /> <br/>
                                                 </strong>
                                             </t>
                                             <span style="padding-left:25%">of</span> <br/>
@@ -104,7 +104,7 @@
 
                                             <t t-foreach="pi_list" t-as="p">
                                                 <strong t-esc="p['number']"/>
-                                                Date: <strong t-esc="p['date']" t-options='{"widget": "date"}'/>
+                                                Date: <strong t-esc="p['date']"/>
                                             </t>
                                         </p>
                                     </td>

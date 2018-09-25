@@ -45,11 +45,12 @@ class DeliveryAuthorizationLine(models.Model):
                     # if da.quantity > sale_line.da_qty:
                     #     raise ValidationError('You can Deliver {0} {1} for {2}'.format((sale_line.da_qty), (sale_line.product_uom.name), (sale_line.product_id.display_name)))
 
-            da.set_da_amounts_automatically()
+            #da.set_da_amounts_automatically()
 
     @api.onchange('quantity')
     def onchange_quantity(self):
-        self.set_da_amounts_automatically()
+        pass
+        #self.set_da_amounts_automatically()
 
     @api.one
     def set_da_amounts_automatically(self):

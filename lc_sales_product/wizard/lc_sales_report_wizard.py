@@ -52,3 +52,15 @@ class LcSalesReportWizard(models.TransientModel):
         data = {}
         data['shipment_id'] = self.env.context.get('active_id')
         return self.env['report'].get_action(self, 'lc_sales_product.report_certificate_origin', data)
+
+    @api.multi
+    def process_delivery_challan(self):
+        data = {}
+        data['shipment_id'] = self.env.context.get('active_id')
+        return self.env['report'].get_action(self, 'lc_sales_product.report_delivery_challan', data)
+
+    @api.multi
+    def process_truck(self):
+        data = {}
+        data['shipment_id'] = self.env.context.get('active_id')
+        return self.env['report'].get_action(self, 'lc_sales_product.report_truck_receipt', data)

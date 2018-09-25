@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--Custom report. -->
+<odoo>
+	<data>
+		<report
+			id="action_report_exit_interview"
+			model="employee.exit.interview"
+			string="Exit Interview Report"
+			report_type="qweb-pdf"
+			name="hr_employee_exit.report_exit_interview"
+			file="hr_employee_exit.report_exit_interview"
+            paperformat="report_layout.paperformat_backend_portrait"
+		/>
+
+		<template id="report_exit_interview">
+			<t t-call="report.html_container">
+				<t t-call="report_layout.gbs_internal_layout">
+                    <t t-foreach="docs" t-as="o">
+                        <div class="page" style="page-break-inside:auto">
+                            <div class="row" style="padding-top:5px;">
+                                <style type="text/css">
+                                    .report-title { text-align:center; }
+                                    .odo-bg-gray, .odo-bg-gray > td { background-color: #f5f5f5; }
+                                </style>
+                                <div class="clearfix">
+                                    <h3 class="report-title">Employee Exit Interview Report</h3>
+                                    <br/>
+
+                                    <h4>Employee Details</h4>
+                                    <div class="row">
+                                        <div class="col-xs-6 text-left">
+                                            <h6><b>Employee :  </b><span t-esc="o.employee_id.name"/></h6>
+                                            <h6><b>Department :  </b><span t-esc="o.emp_department.name"/></h6>
+                                            <h6><b>Job Title :  </b><span t-esc="o.emp_designation.name"/></h6>
+                                            <h6><b>Employee Code :  </b><span t-esc="o.employee_code"/></h6>
+                                            <h6><b>Location :  </b><span t-esc="o.location"/></h6>
+                                        </div>
+                                        <div class="col-xs-6 text-left">
+                                            <h6><b>Supervisor :  </b><span t-esc="o.supervisor_id.name"/></h6>
+                                            <h6><b>Supervisor Designation :  </b><span t-esc="o.supervisor_designation.name"/></h6>
+                                            <h6><b>Date of Joining :  </b><span t-esc="o.joining_date"  t-options='{"widget": "date"}'/></h6>
+                                            <h6><b>Date of Resignation :  </b><span t-esc="o.resignation_date"/></h6>
+                                            <h6><b>Date of Leaving :  </b><span t-esc="o.leaving_date"/></h6>
+                                        </div>
+                                    </div>
+                                </div>
+                                <br/>
+                                <h5><b><u>The Information you give here would be helpful to us to create a better working environment</u></b></h5>
+                                <h4><u>SECTION A:</u></h4>
+                                <p>a) Please Indicate below the reasons for your decision by distributing 100 points over the
+                                factors given below indicating % contribution to your decision.</p>
+                                <p>b) Also cite critical incidents/example to support your rating.</p>
+                                <p><b>For example,</b> if only one major factor lead to your decision wright 100 against that factor,if two equally important factors give
+                                50 each, if one major factor and one minor factor give 70 or 80 depending on their importance.</p>
+
+                                <table class="table table-report-xs table-bordered table-striped">
+                                    <thead>
+                                        <tr class="odo-bg-gray">
+                                            <th>Factors</th>
+                                            <th>Critical Incidents</th>
+                                            <th>Points</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <t t-foreach="o.line_ids" t-as="l">
+                                            <tr style="page-break-inside: avoid">
+                                                <td><span t-esc="l.factor.name"/></td>
+                                                <td><span t-esc="l.critical_incidents"/></td>
+                                                <td><span t-esc="l.point"/></td>
+                                            </tr>
+                                        </t>
+                                    </tbody>
+                                </table>
+                                <h4><u>SECTION B: </u></h4>
+                                <p>In your opinion: </p>
+                                <table class="table table-report-xs table-bordered table-striped" style="table-layout: fixed;">
+                                    <thead>
+                                        <tr class="odo-bg-gray">
+                                            <th style="width:40%;">Questions</th>
+                                            <th style="width:60%;">Answers</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <t t-foreach="o.question_set_ids" t-as="que_set">
+                                            <tr style="page-break-inside: avoid">
+                                                <td><span t-esc="que_set.question"/></td>
+                                                <td><span t-esc="que_set.answer"/></td>
+                                            </tr>
+                                        </t>
+                                    </tbody>
+                                </table>
+                                <h4><b>Would you recommend the company to a friend as a good organization to work for?</b></h4>
+                                <t t-if="o.recommend == 'one'"><td>Most Definitely</td></t>
+                                <t t-elif="o.recommend == 'two'"><td>With Reservations</td></t>
+                                <t t-elif="o.recommend == 'three'"><td>Syllabus</td></t>
+                                <t t-else=""><td></td></t>
+                                <h4><b>Your contract address for all further correspondence is: </b></h4>
+                                <h6><span t-esc="o.contract_add"/></h6>
+                                <h4><u>SECTION C: </u></h4>
+                                <p>To be filled by the Administration Department 7 days before the last working day.: </p>
+                                <p>(With input from the immediate supervisor of the employee)</p>
+                                <h4><b>Details of any mentionable incident during the notice period of the person.</b></h4>
+                                <h6><span t-esc="o.comment_supervisor"/></h6>
+                                <h4><b>Can a good character be issued to the person?</b></h4>
+                                <t t-if="o.permission == 'yes'"><td>Yes</td></t>
+                                <t t-elif="o.permission == 'no'"><td>No</td></t>
+                                <t t-else=""><td></td></t>
+                                <h4><b>Can the person be reconsidered for re-employment?</b></h4>
+                                <t t-if="o.permission == 'yes'"><td>Yes</td></t>
+                                <t t-elif="o.permission == 'no'"><td>No</td></t>
+                                <t t-else=""><td></td></t>
+                                <h4><b>Any other comments?</b></h4>
+                                <h6><span t-esc="o.comment_hr"/></h6>
+                                <br/>
+                                <br/>
+                                <h6><b>Signature and Date:</b></h6>
+                            </div>
+                        </div>
+                    </t>
+				</t>
+			</t>
+		</template>
+	</data>
+</odoo>

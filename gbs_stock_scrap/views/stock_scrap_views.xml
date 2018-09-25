@@ -43,9 +43,6 @@
                                     string="Stock Operation" type="object"
                                     attrs="{'invisible':[('picking_id','=',False)]}" icon="fa-cogs"/>
                             <field name="picking_id" invisible="1"/>
-                            <button class="oe_stat_button" name="action_get_stock_move"
-                                    string="Inventory Move" type="object"
-                                    attrs="{'invisible':[('move_id','=',False)]}" icon="fa-arrows-v"/>
                             <field name="move_id" invisible="1"/>
                         </div>
                         <group>
@@ -94,12 +91,26 @@
             </field>
         </record>
 
-        <!-- Indent Window Action -->
+        <record id="search_stock_scrap" model="ir.ui.view">
+            <field name="name">gbs.stock.scrap.search</field>
+            <field name="model">gbs.stock.scrap</field>
+            <field name="arch" type="xml">
+                <search string="Scrap">
+                    <filter name="approve_manager" string="To Approve" domain="[('state','=','waiting_approval')]"/>
+                </search>
+            </field>
+        </record>
+        <!-- Scrap Window Action -->
         <record id='action_gbs_stock_scrap' model='ir.actions.act_window'>
             <field name="name">Scrap</field>
             <field name="res_model">gbs.stock.scrap</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="search_stock_scrap"/>
+            <field name="context">{
+                'search_default_approve_manager':1,
+                }
+            </field>
             <field name="help" type="html">
                 <p class="oe_view_nocontent_create">
                     Click to scrap products.

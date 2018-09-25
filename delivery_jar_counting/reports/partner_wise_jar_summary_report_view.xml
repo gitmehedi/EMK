@@ -14,7 +14,7 @@
 
         <template id="report_jar_summary">
             <t t-call="report.html_container">
-                <t t-call="custom_report.gbs_internal_layout">
+                <t t-call="report_layout.gbs_internal_layout">
                     <div class="page">
                         <div class="row">
                             <center>

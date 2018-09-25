@@ -16,7 +16,7 @@ class GbsProformaInvoice(models.AbstractModel):
         delivery_address = self.env['res.partner'].browse(address['delivery'])
 
         data['name'] = pi_obj.name
-        data['pi_date'] = pi_obj.invoice_date
+        data['pi_date'] = report_utility_pool.getERPDateFormat(report_utility_pool.getDateFromStr(pi_obj.invoice_date))
         data['beneficiary_id'] = pi_obj.beneficiary_id.name
         data['vat'] = pi_obj.operating_unit_id.partner_id.vat
         data['customer'] = pi_obj.partner_id.name
@@ -45,7 +45,7 @@ class GbsProformaInvoice(models.AbstractModel):
                 line_list.append(list_obj)
 
         total = sum(total_amount)
-        amt_to_word = self.env['res.currency'].amount_to_word(float(total),False)
+        amt_to_word = self.env['res.currency'].amount_to_word(float(total),True,data['currency'])
 
 
         docargs = {
