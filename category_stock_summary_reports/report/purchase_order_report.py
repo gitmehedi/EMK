@@ -32,6 +32,7 @@ class PurchaseOrderReport(models.AbstractModel):
                         po.name AS po_name,
                         pt.name AS product_name,
                         pu.name AS uom_name,
+                        po.state AS state,
                         pol.price_unit AS price,
                         po.date_order AS date,
                         pol.product_qty AS order_qty,
@@ -47,7 +48,8 @@ class PurchaseOrderReport(models.AbstractModel):
                         ON pol.product_id = pt.id 
                     LEFT JOIN product_uom pu 
                         ON(pu.id = pt.uom_id ) 
-                WHERE date_order BETWEEN '%s' AND '%s' 
+                WHERE date_order BETWEEN '%s' AND '%s'
+                        AND po.state in ('approved','confirmed','done')
                         AND pol.product_qty > pol.receive_qty
                 ORDER BY po.id ASC
               ''' % (date_start, date_end)
@@ -67,15 +69,17 @@ class PurchaseOrderReport(models.AbstractModel):
                                        'receive_qty': 0,
                                        'receive_value': 0,
                                        'remain_qty': 0,
-                                       'remain_value': 0
+                                       'remain_value': 0,
+                                       'state': vals['state']
                                        }
                     values[po_name]['values'].append(vals)
-                    
+
                 values[po_name]['order_qty'] = values[po_name]['order_qty'] + vals['order_qty']
                 values[po_name]['order_value'] = values[po_name]['order_value'] + vals['order_value']
                 values[po_name]['receive_qty'] = values[po_name]['receive_qty'] + vals['receive_qty']
                 values[po_name]['receive_value'] = values[po_name]['receive_value'] + vals['receive_value']
                 values[po_name]['remain_qty'] = values[po_name]['remain_qty'] + vals['remain_qty']
                 values[po_name]['remain_value'] = values[po_name]['remain_value'] + vals['remain_value']
+                
 
         return values

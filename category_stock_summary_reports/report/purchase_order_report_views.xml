@@ -24,7 +24,6 @@
                                 </p>
                             </div>
                         </div>
-
                         <table class="table table-bordered" style="padding: 0px;">
                             <thead>
                                 <tr style="background-color: #EFECEB;">
@@ -51,7 +50,8 @@
                                         <td colspan="4">
                                             <strong>
                                                 <t t-esc="line"/>
-                                            </strong>
+                                            </strong> (<span t-esc="line_value['state']"/>)
+
                                         </td>
                                         <td class="text-right">
                                             <strong>
@@ -127,7 +127,6 @@
                 </t>
             </t>
         </template>
-
         <report id="report_purchase_order_report"
                 model="stock.move"
                 string="Purchase Order Summary"
