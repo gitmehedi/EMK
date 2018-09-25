@@ -7,7 +7,7 @@ class FinalSettlement(models.Model):
     _description = 'Employee Exit Full & Final Settlement'
 
     employee_code = fields.Char('Employee Code',related='employee_id.employee_number',readonly=True)
-    employee_id = fields.Many2one('hr.employee',string = 'Employegfhjje',required=True, track_visibility='onchange',domain = [('state', '=', 'relieved')])
+    employee_id = fields.Many2one('hr.employee',string = 'Employee',required=True, track_visibility='onchange',domain = [('state', '=', 'relieved')])
     emp_designation = fields.Many2one('hr.job', string='Designation', related='employee_id.job_id',readonly=True)
     joining_date = fields.Date(related='employee_id.initial_employment_date', string='Date of Join', readonly=True)
     leaving_date = fields.Date(string='Date of Leaving',readonly=True)
@@ -97,7 +97,7 @@ class FinalSettlement(models.Model):
         self.state = 'approved'
         self.payment_ids.write({'state': 'approved'})
         self.deduction_ids.write({'state': 'approved'})
-        self.emp_payslip_ids.write({'state': 'approved'})\
+        self.emp_payslip_ids.write({'state': 'approved'})
 
     @api.multi
     def action_done(self):
@@ -112,7 +112,7 @@ class FinalSettlementLine(models.Model):
     name = fields.Char(string='Name')
     code = fields.Char(string='Code')
     total = fields.Float(string='Total')
-    final_settlement_id = fields.Many2one('final.settlement','Final Settlement')\
+    final_settlement_id = fields.Many2one('final.settlement','Final Settlement')
 
     state = fields.Selection([
         ('draft', 'Draft'),

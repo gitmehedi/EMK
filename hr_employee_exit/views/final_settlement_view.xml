@@ -9,15 +9,15 @@
                 <form string="Full &amp; Final Settlement">
                     <header>
                         <button name="action_confirm" states="draft" type="object" string="Confirm" class="oe_highlight"/>
-                        <button string="Reset to Draft" name="action_reset"
-                                attrs="{'invisible': [('state', 'in', ['draft','done'])]}"
-                                type="object"/>
                         <button string="Validate" name="action_approved"
                                 attrs="{'invisible': [('state','not in',['validate'])]}"
                                 type="object" class="oe_highlight"/>
                         <button string="Approved" name="action_done"
                                 attrs="{'invisible': [('state','not in',['approved'])]}"
                                 type="object" class="oe_highlight"/>
+                        <button string="Reset to Draft" name="action_reset"
+                                attrs="{'invisible': [('state', 'in', ['draft','done'])]}"
+                                type="object"/>
                         <field name="state" widget="statusbar"
                                statusbar_visible="draft,validate,approved,done"/>
                     </header>
@@ -25,7 +25,8 @@
                         <group>
                             <separator string="Employee Details" colspan="2"/>
                             <group>
-                                <field name="employee_id"/>
+                                <field name="employee_id" attrs="{'readonly':[('state','!=','draft')]}"
+                                       options='{"no_open": True,"no_create": 1, "no_create_edit": 1}'/>
                                 <field name="emp_designation"/>
                                 <field name="joining_date"/>
                             </group>
@@ -41,9 +42,9 @@
                                 <field name="total"/>
                             </tree>
                         </field>
-                        <notebook attrs="{'invisible': [('state','in',['draft'])],'readonly': [('state','in',['done'])]}">
+                        <notebook attrs="{'invisible': [('state','in',['draft'])]}">
                             <page string ="Payments">
-                                <field name="payment_ids" nolabel="1">
+                                <field name="payment_ids" nolabel="1" attrs="{'readonly':[('state','=','done')]}">
                                     <tree editable="bottom">
                                         <field name="name"/>
                                         <field name="amount"/>
@@ -51,7 +52,7 @@
                                 </field>
                             </page>
                             <page string ="Deductions">
-                                <field name="deduction_ids" nolabel="1">
+                                <field name="deduction_ids" nolabel="1" attrs="{'readonly':[('state','=','done')]}">
                                     <tree editable="bottom">
                                         <field name="name"/>
                                         <field name="amount"/>
@@ -97,7 +98,7 @@
             <field name="view_mode">tree,form</field>
         </record>
         <menuitem
-				name="Full &amp; Final Settlement"
+				name="Full &amp; Final Settlement" groups ="hr.group_hr_manager"
 				id="final_settlement_menu"
                 parent="menu_exit_management"
 				sequence="21"

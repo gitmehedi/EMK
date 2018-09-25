@@ -10,13 +10,13 @@ class EmployeeEixtInterview(models.Model):
     employee_code = fields.Char('Employee Code',related='employee_id.employee_number',readonly=True)
     location = fields.Char('Location',related='employee_id.work_location', readonly=True)
     joining_date = fields.Date(related='employee_id.initial_employment_date', string='Date Of Join', readonly=True)
-    resignation_date = fields.Date(string='Date of Resignation',required=True)
-    leaving_date = fields.Date(string='Date of Leaving',required=True)
+    resignation_date = fields.Date(string='Date of Resignation',readonly=True)
+    leaving_date = fields.Date(string='Date of Leaving',readonly=True)
     employee_id = fields.Many2one('hr.employee',string = 'Employee',required=True)
-    emp_department = fields.Many2one('hr.department', string='Department', related='employee_id.department_id',readonly=True, required=True)
-    emp_designation = fields.Many2one('hr.job', string='Designation', related='employee_id.job_id',readonly=True, required=True)
+    emp_department = fields.Many2one('hr.department', string='Department', related='employee_id.department_id',readonly=True)
+    emp_designation = fields.Many2one('hr.job', string='Designation', related='employee_id.job_id',readonly=True)
     supervisor_id = fields.Many2one('hr.employee',string = 'Supervisor',required=True)
-    supervisor_designation = fields.Many2one('hr.job', string='Supervisor Designation',readonly=True, related='supervisor_id.job_id', required=True)
+    supervisor_designation = fields.Many2one('hr.job', string='Supervisor Designation',readonly=True, related='supervisor_id.job_id')
     line_ids = fields.One2many('employee.exit.interview.line','exit_interview_id','rel_exit_interview')
     question_set_ids = fields.One2many('question.set','interview_id','rel_question_set')
     recommend = fields.Selection([('one', 'Most Definitely'),
@@ -94,7 +94,7 @@ class EmployeeEixtInterview(models.Model):
     #         })
 
 
-class EmployeeEixtInterview(models.Model):
+class EmployeeEixtInterviewLine(models.Model):
     _name = 'employee.exit.interview.line'
 
 
