@@ -5,7 +5,7 @@ class Shipment(models.Model):
 
     _inherit = 'purchase.shipment'
 
-    invoice_id = fields.Many2one("account.invoice", string='Invoice Number', ondelete='cascade')
+    invoice_id = fields.Many2one("account.invoice", string='Invoice Number')
 
     to_sales_date = fields.Date('Dispatch to Sales', track_visibility='onchange')
     to_buyer_date = fields.Date('Dispatch to Party', track_visibility='onchange')
@@ -27,6 +27,7 @@ class Shipment(models.Model):
          ('approve_cnf_quotation', "Approve"),
          ('cnf_clear', "C&F Clear"),
          ('gate_in', "Gate In"),
+         ('add_invoice', "Invoice"),
          ('to_sales',"To Sales"),
          ('to_buyer',"To Buyer"),
          ('to_seller_bank',"To Seller Bank"),
@@ -35,15 +36,24 @@ class Shipment(models.Model):
          ('done', "Done"),
          ('cancel', "Cancel")], default='draft', track_visibility='onchange')
 
-    @api.onchange('lc_id')
-    def _onchange_lc_id(self):
-        if self.lc_id:
-            invoice_objs = self.env['account.invoice'].search([('sale_type_id.sale_order_type', '=', 'lc_sales'),
-                                                           ('state', 'in', ['open', 'paid']),
-                                                           ('id', 'not in', [i.invoice_id.id for i in self.search([])])])
-            domain_id = invoice_objs.search(['|',('partner_id', '=', self.lc_id.second_party_applicant.id),
-                                             ('partner_id', 'in', self.lc_id.second_party_applicant.child_ids.ids)]).ids
-            return {'domain': {'invoice_id': [('id','in',domain_id)]}}
+    # @api.onchange('lc_id')
+    # def _onchange_lc_id(self):
+    #     if self.lc_id:
+    #
+    #         # invoice_objs = self.env['account.invoice'].search([('sale_type_id.sale_order_type', '=', 'lc_sales'),
+    #         #                                                ('state', 'in', ['open', 'paid']),
+    #         #                                                ('id', 'not in', [i.invoice_id.id for i in self.search([])])])
+    #         # domain_id = invoice_objs.search(['|',('partner_id', '=', self.lc_id.second_party_applicant.id),
+    #         #                                  ('partner_id', 'in', self.lc_id.second_party_applicant.child_ids.ids)]).ids
+    #
+    #         invoice_objs = self.env['account.invoice'].search([('sale_type_id.sale_order_type', '=', 'lc_sales'),
+    #                                                            ('state', 'in', ['open', 'paid']), ])
+    #
+    #         domain_id = invoice_objs.search(['&', '|', ('partner_id', '=', self.lc_id.second_party_applicant.id),
+    #                                          ('partner_id', 'in', self.lc_id.second_party_applicant.child_ids.ids),
+    #                                          ('id', 'not in', [i.invoice_id.id for i in self.search([])])]).ids
+    #
+    #         return {'domain': {'invoice_id': [('id','in',domain_id)]}}
 
     @api.onchange('invoice_id')
     def _onchange_invoice_id(self):
@@ -117,6 +127,21 @@ class Shipment(models.Model):
     # State Change Actions
 
 #########################################################################################
+    @api.multi
+    def action_add_invoice_export(self):
+        res = self.env.ref('lc_sales_product.invoice_export_wizard')
+        result = {
+            'name': _('Please Enter The Information'),
+            'view_type': 'form',
+            'view_mode': 'form',
+            'view_id': res and res.id or False,
+            'res_model': 'invoice.export.wizard',
+            'type': 'ir.actions.act_window',
+            'nodestroy': True,
+            'target': 'new',
+        }
+        return result
+
     @api.multi
     def action_to_sales_export(self):
         res = self.env.ref('lc_sales_product.to_sales_export_wizard')

@@ -28,14 +28,15 @@
                         <button string="To Draft" name="action_draft" type="object" attrs="{'invisible': [('state', 'in', ('draft'))]}" groups="base_technical_features.group_technical_features"/>
                         <button string="To Email" name="action_email_temp" type="object" class="oe_read_only"/>
                         <button string="Delivery" name="action_doc_receive_export" states="draft" type="object" class="oe_highlight"/>
-                        <button string="To Sales" name="action_to_sales_export" states="receive_doc" type="object" class="oe_highlight"/>
+                        <button string="Add Invoice" name="action_add_invoice_export" states="receive_doc" type="object" class="oe_highlight"/>
+                        <button string="To Sales" name="action_to_sales_export" states="add_invoice" type="object" class="oe_highlight"/>
                         <button string="To Buyer" name="action_to_buyer_export" states="to_sales" type="object" class="oe_highlight"/>
                         <button string="To Seller Bank" name="action_to_seller_bank_export" states="to_buyer" type="object" class="oe_highlight"/>
                         <button string="To Buyer Bank" name="action_to_buyer_bank_export" states="to_seller_bank" type="object" class="oe_highlight"/>
                         <button string="To Maturity" name="action_to_maturity_export" states="to_buyer_bank" type="object" class="oe_highlight"/>
                         <button string="Done" name="action_done_export" states="to_maturity" type="object" class="oe_highlight"/>
                         <button string="Cancel" name="action_cancel" class="oe_read_only" type="object" states="draft"/>
-                        <field name="state" widget="statusbar" statusbar_visible="draft,receive_doc,to_sales,to_buyer,to_seller_bank,to_buyer_bank,to_maturity,done"/>
+                        <field name="state" widget="statusbar" statusbar_visible="draft,receive_doc,add_invoice,to_sales,to_buyer,to_seller_bank,to_buyer_bank,to_maturity,done"/>
                     </header>
                     <sheet>
                         <div class="oe_button_box" name="button_box"></div>
@@ -69,7 +70,7 @@
                             </group>
                             <!---->
                             <group string="Invoice">
-                                <field name="invoice_id" required="1" attrs="{'readonly': [('state','=','done')]}" options="{'no_open':True,'no_quick_create':True,'no_create_edit':True}"/>
+                                <field name="invoice_id" readonly="1" options="{'no_open':True,'no_quick_create':True,'no_create_edit':True}"/>
                                 <field name="invoice_value" required="1" attrs="{'readonly': [('state','=','done')]}"/>
                             </group>
                             <!--<group>-->
