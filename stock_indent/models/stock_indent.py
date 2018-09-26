@@ -179,12 +179,20 @@ class IndentIndent(models.Model):
 
             indent.write(res)
 
-    @api.model
-    def _create_picking_and_moves(self):
+    @api.one
+    def action_picking_create(self,products):
+        picking_id = False
+        if products:
+            picking_id = self.create_picking_and_moves(products)
+        self.write({'picking_id': picking_id})
+        return picking_id
+
+    @api.multi
+    def create_picking_and_moves(self,products):
         move_obj = self.env['stock.move']
         picking_obj = self.env['stock.picking']
         picking_id = False
-        for line in self.product_lines:
+        for line in products:
             date_planned = datetime.strptime(self.indent_date, DEFAULT_SERVER_DATETIME_FORMAT)
 
             if line.product_id:
@@ -231,13 +239,6 @@ class IndentIndent(models.Model):
                 move_obj.create(moves)
         return picking_id
 
-    @api.one
-    def action_picking_create(self):
-        picking_id = False
-        if self.product_lines:
-            picking_id = self._create_picking_and_moves()
-        self.write({'picking_id': picking_id})
-        return picking_id
 
     @api.multi
     def _get_picking_id(self):
@@ -253,21 +254,20 @@ class IndentIndent(models.Model):
 
     @api.multi
     def action_view_picking(self):
-        '''
-        This function returns an action that display existing picking orders of given purchase order ids.
-        When only one found, show the picking immediately.
-        '''
-        for product in self.product_lines:
-            if product.qty_available_now <= 0:
-                raise UserError('Stock not available!!!')
-            elif product.qty_available_now < product.product_uom_qty:
+        products = self.product_lines.filtered(lambda x: x.qty_available_now > 0)
+        if not products:
+            raise UserError('Stock not available for any products!!!')
+        for product in products:
+            # if product.qty_available_now <= 0:
+            #     raise UserError('Stock not available!!!')
+            if product.qty_available_now < product.product_uom_qty:
                 product.issue_qty = product.qty_available_now
             else:
                 product.issue_qty = product.product_uom_qty
         if self.picking_id:
             pass
         else:
-            self.action_picking_create()
+            self.action_picking_create(products)
             self.picking_id.action_confirm()
             self.picking_id.force_assign()
 

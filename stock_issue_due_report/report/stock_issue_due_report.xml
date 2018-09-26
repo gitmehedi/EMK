@@ -47,7 +47,7 @@
                                         <tr class="odo-bg-gray">
                                             <th class="text-center">SL#</th>
                                             <th class="text-center">Product</th>
-                                            <th class="text-center">Issued Quantity</th>
+                                            <th class="text-center">Indent Quantity</th>
                                             <th class="text-center">Due Quantity</th>
                                         </tr>
                                     </thead>
@@ -70,12 +70,16 @@
                                                         </td>
                                                         <td class="text-left">
                                                             <t t-esc="line['pt_name']"/>
+                                                            <t t-if="line['variant_name']">(<t t-esc="line['variant_name']"/>)</t>
                                                         </td>
+                                                        <!--<t t-else="">-->
+                                                            <!--<t t-esc="line['pt_name']"/>-->
+                                                        <!--</t>-->
                                                         <td class="text-right">
                                                             <t t-esc="line['quantity']"/>
                                                         </td>
                                                         <td class="text-right">
-                                                            <t t-esc="line['receive_quantity']"/>
+                                                            <t t-esc="line['due_qty']"/>
                                                         </td>
                                                     </tr>
                                                 </t>
