@@ -24,8 +24,8 @@ class BillExchangeFirst(models.AbstractModel):
         data['company'] = shipment_obj.company_id.name
         data['currency_id'] = shipment_obj.lc_id.currency_id.name
         data['invoice_value'] = shipment_obj.invoice_value
-        data['invoice_id'] = shipment_obj.invoice_id.display_name
-        data['invoice_date'] = report_utility_pool.getERPDateFormat(report_utility_pool.getDateFromStr(shipment_obj.invoice_id.date_invoice))
+        data['invoice_id'] = "" if shipment_obj.invoice_id.id == False else shipment_obj.invoice_id.display_name
+        data['invoice_date'] = "" if shipment_obj.invoice_id.id == False else report_utility_pool.getERPDateFormat(report_utility_pool.getDateFromStr(shipment_obj.invoice_id.date_invoice))
         data['terms_condition'] = shipment_obj.lc_id.terms_condition
         data['tenure'] = shipment_obj.lc_id.tenure
         data['lc_id'] = shipment_obj.lc_id.unrevisioned_name
