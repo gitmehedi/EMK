@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <template id="report_issue_due_temp" inherit_id="report_layout.gbs_internal_layout" primary="True">
+            <xpath expr="//t[@t-call='report_layout.gbs_internal_layout_header']" position="attributes">
+                <attribute name="t-call">stock_issue_due_report.layout_header_issue_due</attribute>
+            </xpath>
+        </template>
+        <template id="layout_header_issue_due" inherit_id="report_layout.gbs_internal_layout_header" primary="True">
+            <xpath expr="//div[@class='company-info']" position="after">
+                <div name="company_address">
+                    <h5><span t-esc="address"/></h5>
+                </div>
+            </xpath>
+        </template>
+        <template id="report_stock_issue_due">
+            <t t-call="report.html_container">
+                <t t-call="stock_issue_due_report.report_issue_due_temp">
+                    <div class="page" style="page-break-inside: auto">
+                        <div class="row" style="padding-top:25px;">
+                            <style type="text/css">
+                                .report-title { text-align:center; }
+                                .odo-bg-gray, .odo-bg-gray > td { background-color: #f5f5f5; }
+                            </style>
+                            <div class="clearfix">
+                                <h4 class="report-title">Stock Issue Due Report</h4>
+                                <div class="row" style="padding-top:10px;">
+                                    <div class="col-xs-6" style="padding-bottom:10px;">
+                                        <t t-if="record['from_date']">
+                                            <strong>Date : </strong>
+                                            <span t-esc="record['from_date']"/>
+                                        </t>
+                                        <t t-if="record['to_date']">
+                                            <strong style="padding-left:5px;">To : </strong>
+                                            <span t-esc="record['to_date']"/>
+                                        </t>
+                                    </div>
+                                    <div class="col-xs-6 text-right">
+                                        <t t-if="record['operating_unit_name']">
+                                            <strong>Department : </strong>
+                                            <span t-esc="record['stock_location_name']"/>
+                                        </t>
+                                    </div>
+                                </div>
+                                <table class="table table-report-xs table-bordered table-striped">
+                                    <thead>
+                                        <tr class="odo-bg-gray">
+                                            <th class="text-center">SL#</th>
+                                            <th class="text-center">Product</th>
+                                            <th class="text-center">Issued Quantity</th>
+                                            <th class="text-center">Due Quantity</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <t t-if="product_lines">
+                                            <t t-foreach="product_lines" t-as="data">
+                                                <t t-if="data_value['product']">
+                                                    <tr style="background-color: #ebebe0; text-align:left;">
+                                                        <td colspan="4" style="padding: 0px;">
+                                                            <strong>
+                                                                <t t-esc="data"/>
+                                                            </strong>
+                                                        </td>
+                                                    </tr>
+                                                </t>
+                                                <t t-foreach="data_value['product']" t-as="line">
+                                                    <tr>
+                                                        <td class="text-left"  style="width:25px;">
+                                                            <t t-esc="line_index+1"/>
+                                                        </td>
+                                                        <td class="text-left">
+                                                            <t t-esc="line['pt_name']"/>
+                                                        </td>
+                                                        <td class="text-right">
+                                                            <t t-esc="line['quantity']"/>
+                                                        </td>
+                                                        <td class="text-right">
+                                                            <t t-esc="line['receive_quantity']"/>
+                                                        </td>
+                                                    </tr>
+                                                </t>
+
+                                                <t t-if="data_value['product']">
+                                                    <tr style="font-weight: bold; background-color: #E4E4E4; border-bottom: 1px solid black;">
+                                                        <td colspan="2" class="text-left">
+                                                            <t t-esc="data_value['sub-total']['title']"/>
+                                                        </td>
+                                                        <td class="text-right">
+                                                            <t t-esc="data_value['sub-total']['total_issue_qty']"/>
+                                                        </td>
+                                                        <td class="text-right">
+                                                            <t t-esc="data_value['sub-total']['total_due_qty']"/>
+                                                        </td>
+                                                    </tr>
+                                                </t>
+                                            </t>
+                                        </t>
+                                        <tr style="font-weight: bold; background-color: #897d79; border-bottom: 1px solid black;">
+                                            <td colspan="2" class="text-left">
+                                                <t t-esc="total['title']"/>
+                                            </td>
+                                            <td class="text-right">
+                                                <t t-esc="total['total_issue_qty']"/>
+                                            </td>
+                                            <td class="text-right">
+                                                <t t-esc="total['total_due_qty']"/>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <t t-call="report_layout.report_signing"></t>
+                        </div>
+                    </div>
+                </t>
+            </t>
+        </template>
+        <report id="action_stock_issue_due_report"
+                string="Stock Issue Due Report"
+                model="indent.indent"
+                report_type="qweb-pdf"
+                name="stock_issue_due_report.report_stock_issue_due"
+                file="stock_issue_due_report.report_stock_issue_due"
+                menu="False"
+                paperformat="report_layout.paperformat_backend_portrait"
+        />
+    </data>
+</odoo>

@@ -21,6 +21,7 @@
         'stock_picking_extend',
         'product_gate_in',
         'gbs_product_cost_price_history',
+        'gbs_application_group',
         'report_layout',
     ],
 

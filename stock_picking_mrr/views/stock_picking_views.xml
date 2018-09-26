@@ -12,13 +12,13 @@
                 <field name="check_ac_approve_button" invisible="1"/>
 
                 <button name="button_approve" string="Approve" attrs="{'invisible': [('check_approve_button','=',False)]}"
-                        type="object" class="oe_highlight"/>
+                        type="object" class="oe_highlight" groups="gbs_application_group.group_head_of_plant"/>
 
                 <button name="button_ac_approve" string="AC Approve" attrs="{'invisible': [('check_ac_approve_button','=',False)]}"
-                        type="object" class="oe_highlight"/>
+                        type="object" class="oe_highlight" groups="account.group_account_user"/>
 
                 <button name="button_print_mrr" string="Print MRR" attrs="{'invisible': [('check_mrr_button', '=', False)]}"
-                        type="object" class="oe_highlight"/>
+                        type="object" class="oe_highlight" groups="gbs_application_group.group_head_of_plant"/>
             </xpath>
 
             <!--<xpath expr="//field[@name='origin']" position="after">-->
@@ -47,13 +47,13 @@
                 <field name="check_ac_approve_button" invisible="1"/>
 
                 <button name="button_approve" string="Approve" attrs="{'invisible': [('check_approve_button','=',False)]}"
-                        type="object" class="oe_highlight"/>
+                        type="object" class="oe_highlight" groups="gbs_application_group.group_head_of_plant"/>
 
                 <button name="button_ac_approve" string="AC Approve" attrs="{'invisible': [('check_ac_approve_button','=',False)]}"
-                        type="object" class="oe_highlight"/>
+                        type="object" class="oe_highlight" groups="account.group_account_user"/>
 
                 <button name="button_print_mrr" string="Print MRR" attrs="{'invisible': [('check_mrr_button', '=', False)]}"
-                        type="object" class="oe_highlight"/>
+                        type="object" class="oe_highlight" groups="gbs_application_group.group_head_of_plant"/>
             </xpath>
 
         </field>
