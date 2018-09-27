@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 {
     'name': 'Event Management Users',
     'description': """ All types of users whom are related to activities of event management""",
@@ -13,4 +14,4 @@
     ],
     'installable': True,
 }
-# -*- coding: utf-8 -*-
+

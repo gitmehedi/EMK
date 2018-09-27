@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding='utf-8'?>
 <odoo>
-    <data noupdate="0">
+    <data>
         <record id="group_event_organizer" model="res.groups">
             <field name="name">Event Organizer</field>
             <field name="category_id" ref="base.module_category_event_management"/>

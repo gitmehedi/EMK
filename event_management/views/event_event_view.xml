@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record model="ir.ui.view" id="inherited_view_event_form">
+            <field name="model">event.event</field>
+            <field name="inherit_id" ref="event.view_event_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//form/header/button[@name='button_confirm']" position="attributes">
+                    <attribute name="groups">event_user.group_event_administration</attribute>
+                </xpath>
+                <xpath expr="//form/header/button[@name='button_done']" position="attributes">
+                    <attribute name="groups">event_user.group_event_administration</attribute>
+                </xpath>
+                <xpath expr="//form/header/button[@name='button_draft']" position="attributes">
+                    <attribute name="groups">event_user.group_event_administration</attribute>
+                </xpath>
+                <xpath expr="//form/header/button[@name='button_cancel']" position="attributes">
+                    <attribute name="groups">event_user.group_event_administration</attribute>
+                </xpath>
+                <xpath expr="//button[@name='toggle_active']" position="attributes">
+                    <attribute name="groups">event_user.group_event_administration</attribute>
+                </xpath>
+                <xpath expr="//field[@name='address_id']" position="attributes">
+                    <attribute name="attrs">{'no_open':True,'no_create':True,'no_create_edit':True}</attribute>
+                </xpath>
+
+            </field>
+        </record>
+        <record model="ir.ui.view" id="view_event_sale_form">
+            <field name="model">event.event</field>
+            <field name="inherit_id" ref="website_event.view_event_sale_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//button[@name='action_open_badge_editor']" position="attributes">
+                    <attribute name="groups">event_user.group_event_administration</attribute>
+                </xpath>
+                <xpath expr="//button[@name='website_publish_button']" position="attributes">
+                    <attribute name="groups">event_user.group_event_administration</attribute>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

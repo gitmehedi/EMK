@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
 
-from . import event_management
+from . import res_partner
 from . import event_type
+# from . import event_service_line

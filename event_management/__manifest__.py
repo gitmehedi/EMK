@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 {
     'name': 'Event Management',
     'summary': """Core Module for Managing Different Types Of Events.""",
@@ -11,18 +10,20 @@
         'product',
         'account',
         'event',
+        'event_user',
+        'website_event',
     ],
     'data': [
-        'security/event_security.xml',
+        'data/ir_sequence.xml',
+        'data/menu_view.xml',
+        'security/security.xml',
         'security/ir.model.access.csv',
-        'views/event_management_view.xml',
-        'views/event_type_view.xml',
+        'security/ir_rule.xml',
+        'security/security.xml',
         'views/dashboard.xml',
-        'data/event_management.xml',
+        'views/event_type_view.xml',
+        'views/event_event_view.xml',
     ],
-    'demo': [
-    ],
-    'images': ['static/description/banner.jpg'],
     'installable': True,
     'application': True,
 }

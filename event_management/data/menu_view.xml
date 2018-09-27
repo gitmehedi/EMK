@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <data>
+        <record id="event.event_main_menu" model="ir.ui.menu">
+            <field name="groups_id"
+                   eval="[(4, ref('event_user.group_event_organizer'))]"/>
+        </record>
+
+        <menuitem id="menu_event_general" name="General" parent="event.event_main_menu"
+                  groups="event_user.group_event_organizer,event.group_event_user"/>
+
+        <record id="event.menu_event_event" model="ir.ui.menu">
+            <field name="parent_id" eval="ref('menu_event_general')"/>
+            <field name="sequence">10</field>
+            <field name="groups_id"
+                   eval="[(4, ref('event_user.group_event_organizer')),(4, ref('event_user.group_event_administration'))]"/>
+        </record>
+
+        <record id="event.menu_action_registration" model="ir.ui.menu">
+            <field name="parent_id" eval="ref('menu_event_general')"/>
+            <field name="sequence">20</field>
+        </record>
+    </data>
+</odoo>

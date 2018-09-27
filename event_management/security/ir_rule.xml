@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="rule_res_partner_event_organizer" model="ir.rule">
+            <field name="name">Rule Partner Event Organizer </field>
+            <field name="model_id" ref="event.model_event_event"></field>
+            <field name="groups" eval="[(4,ref('event_user.group_event_organizer'))]"></field>
+            <field name="domain_force">[('organizer_id','=',user.partner_id.id)]</field>
+            <field eval="1" name="perm_read"></field>
+            <field eval="1" name="perm_write"></field>
+            <field eval="1" name="perm_unlink"></field>
+            <field eval="1" name="perm_create"></field>
+        </record>
+    </data>
+</odoo>

@@ -51,7 +51,6 @@
             </field>
         </record>
 
-        <!-- Form Views -->
 
         <record id="event_management_form_view" model="ir.ui.view">
             <field name="name">event_management_form_view.form</field>
