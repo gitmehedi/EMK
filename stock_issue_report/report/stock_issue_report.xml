@@ -23,7 +23,7 @@
                                 .odo-bg-gray, .odo-bg-gray > td { background-color: #f5f5f5; }
                             </style>
                             <div class="clearfix">
-                                <h4 class="report-title">Stock Issue Summary</h4>
+                                <h4 class="report-title">Stock Issue Due Report</h4>
                                 <div class="row" style="padding-top:10px;">
                                     <div class="col-xs-6" style="padding-bottom:10px;">
                                         <t t-if="record['from_date']">
@@ -37,8 +37,8 @@
                                     </div>
                                     <div class="col-xs-6 text-right">
                                         <t t-if="record['operating_unit_name']">
-                                            <strong>Operating Unit : </strong>
-                                            <span t-esc="record['operating_unit_name']"/>
+                                            <strong>Department : </strong>
+                                            <span t-esc="record['stock_location_name']"/>
                                         </t>
                                     </div>
                                 </div>
@@ -46,45 +46,65 @@
                                     <thead>
                                         <tr class="odo-bg-gray">
                                             <th class="text-center">SL#</th>
-                                            <th class="text-center">Name of Heads</th>
-                                            <th class="text-center">Quantity</th>
-                                            <th class="text-center">Unit</th>
-                                            <th class="text-center">Rate</th>
-                                            <th class="text-center">Amount</th>
+                                            <th class="text-center">Product</th>
+                                            <th class="text-center">Indent Quantity</th>
+                                            <th class="text-center">Receive Quantity</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         <t t-if="product_lines">
-                                            <t t-foreach="product_lines" t-as="line">
-                                                <tr>
-                                                    <td class="text-left"  style="width:25px;">
-                                                        <t t-esc="line_index+1"/>
-                                                    </td>
-                                                    <td class="text-left">
-                                                        <t t-esc="line['pt_name']"/>
-                                                    </td>
-                                                    <td class="text-right">
-                                                        <t t-esc="line['receive_quantity']"/>
-                                                    </td>
-                                                    <td class="text-left">
-                                                        <t class="text-center" t-esc="line['unit_name']"/>
-                                                    </td>
-                                                    <td class="text-right">
-                                                        <t t-esc="line['price']"/>
-                                                    </td>
-                                                    <td class="text-right">
-                                                        <span t-esc="line['total_val']"/>
-                                                    </td>
+                                            <t t-foreach="product_lines" t-as="data">
+                                                <t t-if="data_value['product']">
+                                                    <tr style="background-color: #ebebe0; text-align:left;">
+                                                        <td colspan="4" style="padding: 0px;">
+                                                            <strong>
+                                                                <t t-esc="data"/>
+                                                            </strong>
+                                                        </td>
+                                                    </tr>
+                                                </t>
+                                                <t t-foreach="data_value['product']" t-as="line">
+                                                    <tr>
+                                                        <td class="text-left"  style="width:25px;">
+                                                            <t t-esc="line_index+1"/>
+                                                        </td>
+                                                        <td class="text-left">
+                                                            <t t-esc="line['pt_name']"/>
+                                                            <t t-if="line['variant_name']">(<t t-esc="line['variant_name']"/>)</t>
+                                                        </td>
+                                                        <td class="text-right">
+                                                            <t t-esc="line['quantity']"/>
+                                                        </td>
+                                                        <td class="text-right">
+                                                            <t t-esc="line['received_qty']"/>
+                                                        </td>
+                                                    </tr>
+                                                </t>
 
-                                                </tr>
+                                                <t t-if="data_value['product']">
+                                                    <tr style="font-weight: bold; background-color: #E4E4E4; border-bottom: 1px solid black;">
+                                                        <td colspan="2" class="text-left">
+                                                            <t t-esc="data_value['sub-total']['title']"/>
+                                                        </td>
+                                                        <td class="text-right">
+                                                            <t t-esc="data_value['sub-total']['total_issue_qty']"/>
+                                                        </td>
+                                                        <td class="text-right">
+                                                            <t t-esc="data_value['sub-total']['total_due_qty']"/>
+                                                        </td>
+                                                    </tr>
+                                                </t>
                                             </t>
                                         </t>
                                         <tr style="font-weight: bold; background-color: #897d79; border-bottom: 1px solid black;">
-                                            <td colspan="5" class="text-left">
+                                            <td colspan="2" class="text-left">
                                                 <t t-esc="total['title']"/>
                                             </td>
                                             <td class="text-right">
-                                                <t t-esc="total['total_out_val']"/>
+                                                <t t-esc="total['total_issue_qty']"/>
+                                            </td>
+                                            <td class="text-right">
+                                                <t t-esc="total['total_due_qty']"/>
                                             </td>
                                         </tr>
                                     </tbody>

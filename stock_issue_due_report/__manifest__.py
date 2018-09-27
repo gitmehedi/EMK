@@ -19,9 +19,8 @@
     'depends': ['stock_indent','report_layout'],
 
     'data': [
-        'report/stock_issue_due_report.xml',
         'wizard/stock_issue_due_wizard.xml',
-
+        'report/stock_issue_due_report.xml',
     ],
 
 }

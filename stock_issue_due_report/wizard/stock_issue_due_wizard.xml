@@ -39,7 +39,7 @@
                 name="Stock Issue Due Report"
                 parent="stock.menu_warehouse_report"
                 action="action_stock_issue_due_wizard"
-                id="menu_stock_issue_due" groups="stock.group_stock_user"
+                id="menu_wizard_stock_issue_due" groups="stock.group_stock_user"
                 sequence="18"/>
     </data>
 </odoo>
