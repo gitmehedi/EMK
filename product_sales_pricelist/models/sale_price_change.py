@@ -79,6 +79,11 @@ class SalePriceChange(models.Model):
                                     'validate': [('readonly', True)]}, )
 
 
+    #-------------------------
+    country_id = fields.Many2one('res.country', string='Country')
+
+
+
     @api.constrains('discount')
     def _max_discount_limit_validation(self):
         if self.discount < 0.00:

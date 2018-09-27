@@ -744,6 +744,7 @@ class InheritedSaleOrderLine(models.Model):
                 [('product_id', '=', product.id),
                  ('currency_id', '=', self.order_id.currency_id.id),
                  ('product_package_mode', '=', self.order_id.pack_type.id),
+                 ('country_id','=', self.order_id.partner_id.country_id.id),
                  ('uom_id', '=', self.product_uom.id)])
 
             if not price_change_pool:
@@ -751,6 +752,7 @@ class InheritedSaleOrderLine(models.Model):
                     [('product_id', '=', product.id),
                      ('currency_id', '=', self.order_id.currency_id.id),
                      ('product_package_mode', '=', self.order_id.pack_type.id),
+                     ('country_id', '=', self.order_id.partner_id.country_id.id),
                      ('category_id', '=', self.product_uom.category_id.id)])
 
                 if price_change_pool:

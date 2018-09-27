@@ -14,7 +14,6 @@
         'stock',
         'report_layout',
         'product_variant_sale_price',
-        'account',
     ],
     'data': [
         'security/ir.model.access.csv',

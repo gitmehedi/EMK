@@ -17,6 +17,7 @@
                             <field name="new_price"/>
                             <field name="discount"/>
                             <field name="currency_id"/>
+                            <field name="country_id"/>
                             <field name="approve_price_date" string="Effective Date"/>
                             <field name="category_id" invisible="1"/>
                         </group>
@@ -37,6 +38,7 @@
                     <field name="new_price"/>
                     <field name="discount"/>
                     <field name="currency_id"/>
+                     <field name="country_id"/>
                     <field name="approve_price_date" string="Effective Date"/>
                 </tree>
             </field>
