@@ -4,6 +4,7 @@ class TermsSetup(models.Model):
     _name = "terms.setup"
 
     name = fields.Char(string = 'Name',required=True)
+    days = fields.Integer(string='Days')
     terms_condition = fields.Text(string='Terms & Conditions', required=True)
 
 

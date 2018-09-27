@@ -12,6 +12,8 @@
                     <field name="list_price"/>
                     <field name="new_price"/>
 					<field name="currency_id"/>
+					<field name="terms_setup_id"/>
+					<field name="freight_mode"/>
 					<field name="approve_price_date"/>
 					<field name="country_id"/>
 				</tree>
@@ -35,6 +37,8 @@
 							<field name="discount"/>
 							<field name="product_package_mode"/>
 							<field name="country_id"/>
+							<field name="terms_setup_id"/>
+							<field name="freight_mode"/>
 							<field name="approve_price_date"/>
 							<field name="category_id" invisible="1"/>
 						</group>

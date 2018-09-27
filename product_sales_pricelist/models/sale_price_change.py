@@ -80,7 +80,18 @@ class SalePriceChange(models.Model):
 
 
     #-------------------------
-    country_id = fields.Many2one('res.country', string='Country')
+    country_id = fields.Many2one('res.country', string='Country', states={'confirm': [('readonly', True)], 'validate1': [('readonly', True)],'validate2': [('readonly', True)],'validate2': [('readonly', True)],
+                                    'validate': [('readonly', True)]},)
+
+    terms_setup_id = fields.Many2one('terms.setup', string='Payment Days', states={'confirm': [('readonly', True)], 'validate1': [('readonly', True)],'validate2': [('readonly', True)],'validate2': [('readonly', True)],
+                                    'validate': [('readonly', True)]})
+
+    freight_mode = fields.Selection([
+        ('fob', 'FOB'),
+        ('c&f', 'C&F')
+    ], string='Freight Mode',default='fob', states={'confirm': [('readonly', True)], 'validate1': [('readonly', True)],'validate2': [('readonly', True)],'validate2': [('readonly', True)],
+                                    'validate': [('readonly', True)]})
+
 
 
 

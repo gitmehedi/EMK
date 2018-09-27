@@ -14,6 +14,7 @@
         'stock',
         'report_layout',
         'product_variant_sale_price',
+        'terms_setup',
     ],
     'data': [
         'security/ir.model.access.csv',

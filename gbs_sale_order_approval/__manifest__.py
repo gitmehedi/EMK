@@ -22,6 +22,7 @@
         'ir_sequence_operating_unit',
         'report_layout',
         'sale_stock', ## to hide delivery menu. it is inherited on this module
+        'terms_setup',
     ],
 
     'data': [

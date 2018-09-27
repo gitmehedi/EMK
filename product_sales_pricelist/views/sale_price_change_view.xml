@@ -64,6 +64,8 @@
                                 <field name="new_price"/>
                                 <field name="discount"/>
                                 <field name="country_id" options="{'no_open':True,'no_create_edit': True}"/>
+                                <field name="terms_setup_id" options="{'no_open':True,'no_create_edit': True}"/>
+                                <field name="freight_mode"/>
                                 <field name="effective_date"/>
                             </group>
                         </group>

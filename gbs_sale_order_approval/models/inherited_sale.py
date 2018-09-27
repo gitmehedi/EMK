@@ -60,7 +60,18 @@ class SaleOrder(models.Model):
                                           help="Delivery address for current sales order.")
 
     comment = fields.Char(string='Approval Causes', track_visibility='onchange')
+
     # ..............................
+    terms_setup_id = fields.Many2one('terms.setup', string='Payment Days', readonly=True, track_visibility='onchange',
+                                    states={'to_submit': [('readonly', False)]})
+
+    freight_mode = fields.Selection([
+        ('fob', 'FOB'),
+        ('c&f', 'C&F')
+    ], string='Freight Mode', default='fob', readonly=True, track_visibility='onchange',
+                                    states={'to_submit': [('readonly', False)]})
+
+
 
     @api.model
     def _default_note(self):
@@ -705,26 +716,6 @@ class InheritedSaleOrderLine(models.Model):
 
     da_qty = fields.Float(string='DA Qty.', default=0)
 
-    #
-    # @api.multi
-    # def _prepare_order_line_procurement(self, group_id=False):
-    #     vals = super(InheritedSaleOrderLine, self)._prepare_order_line_procurement(group_id=group_id)
-    #
-    #     vals.update({
-    #         'product_qty': 20,
-    #
-    #     })
-    #     return vals
-
-    # @api.multi
-    # def _action_procurement_create(self):
-    #
-    #     res = super(InheritedSaleOrderLine, self)._action_procurement_create()
-    #     res['product_qty'] = 20
-    #     return res
-
-
-
 
     @api.one
     @api.constrains('product_uom_qty', 'commission_rate')
@@ -745,6 +736,8 @@ class InheritedSaleOrderLine(models.Model):
                  ('currency_id', '=', self.order_id.currency_id.id),
                  ('product_package_mode', '=', self.order_id.pack_type.id),
                  ('country_id','=', self.order_id.partner_id.country_id.id),
+                 ('terms_setup_id.days','=',self.order_id.terms_setup_id.days),
+                 ('freight_mode', '=', self.order_id.freight_mode),
                  ('uom_id', '=', self.product_uom.id)])
 
             if not price_change_pool:
@@ -753,6 +746,8 @@ class InheritedSaleOrderLine(models.Model):
                      ('currency_id', '=', self.order_id.currency_id.id),
                      ('product_package_mode', '=', self.order_id.pack_type.id),
                      ('country_id', '=', self.order_id.partner_id.country_id.id),
+                     ('terms_setup_id.days', '=', self.order_id.terms_setup_id.days),
+                     ('freight_mode','=',self.order_id.freight_mode),
                      ('category_id', '=', self.product_uom.category_id.id)])
 
                 if price_change_pool:

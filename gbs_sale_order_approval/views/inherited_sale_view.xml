@@ -432,6 +432,18 @@
                                options="{'no_quick_create':True,'no_create_edit':True,'no_open':True}"/>
                     </xpath>
 
+                    <xpath expr="//field[@name='sales_channel']" position="after">
+                        <field name="terms_setup_id"
+                               options="{'no_quick_create':True,'no_create_edit':True,'no_open':True}"/>
+                    </xpath>
+
+                    <xpath expr="//field[@name='terms_setup_id']" position="after">
+                        <field name="freight_mode"/>
+                    </xpath>
+
+
+
+
 
                 </data>
             </field>
