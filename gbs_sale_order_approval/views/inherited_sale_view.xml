@@ -19,10 +19,6 @@
 
                         <field name="comment" class="alert alert-success"  nolabel="1" readonly="1" attrs="{'invisible':[('state', 'in', ['draft', 'done', 'cancel'])]}"/>
 
-                        <!--<div class="alert alert-success" role="alert" attrs="{'invisible':[('state', 'in', ['done', 'draft', 'cancel'])]}">-->
-                            <!--&lt;!&ndash;<i class="glyphicon glyphicon-info-sign"></i>&ndash;&gt;-->
-                            <!--&lt;!&ndash;<field name="comment" readonly="1" widget="html" attrs="{'invisible':[('state', 'in', ['draft', 'done', 'cancel'])]}"/>&ndash;&gt;-->
-                        <!--</div>-->
                     </xpath>
 
                     <xpath expr="//page[1]" position="replace">
@@ -338,14 +334,17 @@
                                context="{'search_default_customer':1, 'show_address': 1}"
                                options='{"always_reload": True}'/>
                     </xpath>
+
                     <xpath expr="//field[@name='partner_invoice_id']" position="replace">
                         <field name="partner_invoice_id"
                                attrs="{'readonly':['|',('state','in',('draft','sent','validate','done','cancel','sale')),('fields_readonly','=', True)]}"/>
                     </xpath>
+
                     <xpath expr="//field[@name='partner_shipping_id']" position="replace">
                         <field name="partner_shipping_id"
                                attrs="{'readonly':['|',('state','in',('draft','sent','validate','done','cancel','sale')),('fields_readonly','=', True)]}"/>
                     </xpath>
+
                     <xpath expr="//field[@name='date_order']" position="replace">
                         <field name="date_order"
                                attrs="{'readonly':[('state','in',('draft','sent','validate','done','cancel','sale'))]}"/>
@@ -385,10 +384,6 @@
                         <field name="confirmation_date" invisible="1"/>
                     </xpath>
 
-                    <!--<xpath expr="//field[@name='payment_term_id']" position="replace">-->
-                    <!--<field name="payment_term_id" invisible="1"/>-->
-                    <!--</xpath>-->
-
                     <xpath expr="//field[@name='pack_type']" position="after">
                         <field name="pi_id"
                                attrs="{'invisible':[('credit_sales_or_lc', '!=', 'lc_sales')],'required':[('credit_sales_or_lc', '=','lc_sales')]}"
@@ -399,11 +394,6 @@
                         <field name="lc_id" attrs="{'invisible':[('credit_sales_or_lc', '!=', 'lc_sales')]}"
                                options="{'no_quick_create':True,'no_create_edit':True,'no_open':True}"/>
                     </xpath>
-
-                    <!--<xpath expr="//field[@name='partner_id']" position="replace">-->
-                    <!--<field name="partner_id" attrs="{'readonly':[('credit_sales_or_lc', '=', 'lc_sales')]}"/>-->
-                    <!--</xpath>-->
-
 
                     <xpath expr="//field[@name='pi_id']" position="after">
                         <field name="da_btn_show_hide" invisible="1"/>
@@ -416,11 +406,6 @@
                     <xpath expr="//field[@name='company_id']" position="replace">
                         <field name="company_id"/>
                     </xpath>
-
-                    <!--<xpath expr="//field[@name='company_id']" position="after">-->
-                        <!--<field name="operating_unit_id"/>-->
-                    <!--</xpath>-->
-
 
                     <xpath expr="//field[@name='company_id']" position="after">
                         <field name="approver_user_id" readonly="1"
@@ -441,9 +426,9 @@
                         <field name="freight_mode"/>
                     </xpath>
 
-
-
-
+                    <xpath expr="//field[@name='payment_term_id']" position="replace">
+                        <field name="payment_term_id" invisible="1"/>
+                    </xpath>
 
                 </data>
             </field>

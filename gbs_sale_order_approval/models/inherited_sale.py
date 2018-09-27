@@ -49,6 +49,8 @@ class SaleOrder(models.Model):
                                  states={'to_submit': [('readonly', False)]},
                                  default=lambda self: self.env['res.company']._company_default_get('sale.order'))
 
+    payment_term_id = fields.Many2one('account.payment.term', string='Payment Terms', oldname='payment_term')
+
     # inherited fields from sale
     partner_id = fields.Many2one('res.partner', string='Customer', required=True,
                                  change_default=True, index=True, track_visibility='always')
@@ -592,27 +594,6 @@ class SaleOrder(models.Model):
             self.order_line = val
             self.fields_readonly = True
 
-    # @api.onchange('operating_unit_id')
-    # def onchange_operating_unit_id(self):
-    #     #Fetch OP Unit from Sales Channel
-    #     sales_channel_obj = self.env['sales.channel'].search([('id','=',self.sales_channel.id)])
-    #
-    #     self._cr.execute("""SELECT * FROM stock_warehouse WHERE operating_unit_id= %s LIMIT 1""",
-    #                      (sales_channel_obj.operating_unit_id.id,))  # Never remove the comma after the parameter
-    #     warehouse = self._cr.fetchall()
-    #
-    #     if warehouse:
-    #         self.warehouse_id = warehouse[0][0]
-
-    # @api.model
-    # def _default_warehouse_id(self):
-    #     sales_channel_obj = self.env['sales.channel'].search([('id', '=', self.sales_channel.id)])
-    #
-    #     self._cr.execute("""SELECT * FROM stock_warehouse WHERE operating_unit_id= %s LIMIT 1""",
-    #                      (sales_channel_obj.operating_unit_id.id,))  # Never remove the comma after the parameter
-    #     warehouse = self._cr.fetchall()
-    #
-    #     return warehouse[0][0]
 
     @api.model
     def _default_operating_unit(self):
@@ -626,7 +607,7 @@ class SaleOrder(models.Model):
         return self.env['sales.channel'].search([], limit=1)
 
     sales_channel = fields.Many2one('sales.channel', string='Sales Channel', readonly=True, track_visibility='onchange',
-                                    states={'to_submit': [('readonly', False)]}, required=True)
+                                    states={'to_submit': [('readonly', False)]}, required=True, default=_get_sales_channel)
 
     warehouse_id = fields.Many2one(
         'stock.warehouse', string='Warehouse', track_visibility='onchange',
@@ -789,14 +770,6 @@ class InheritedSaleOrderLine(models.Model):
             self.update(vals)
 
         return res
-
-    # @api.constrains('da_qty')
-    # def check_da_qty_val(self):
-    #     # if self.da_qty < 0.00:
-    #     #     raise ValidationError('DA Qty can not be negative')
-    #
-    #     if self.da_qty > self.product_uom_qty:
-    #         raise ValidationError('DA Qty can not be greater than Ordered Qty')
 
 
 ########################
