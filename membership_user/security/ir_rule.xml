@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding='utf-8'?>
+<odoo>
+
+    <record id="group_mem_user_applicant" model="res.groups">
+        <field name="name">Applicants</field>
+        <field name="category_id" ref="membership_extension.module_category_membership_management"/>
+        <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
+        <field name="comment">User will have an access application form which shows only readonly mode.
+        </field>
+    </record>
+
+    <record id="group_user_member" model="res.groups">
+        <field name="name">Membership User</field>
+        <field name="category_id" ref="membership_extension.module_category_membership_management"/>
+        <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
+        <field name="comment">User will have an access application form which shows only readonly mode.
+        </field>
+    </record>
+
+    <record id="group_mem_user_officer" model="res.groups">
+        <field name="name">Officer</field>
+        <field name="category_id" ref="membership_extension.module_category_membership_management"/>
+        <field name="implied_ids" eval="[(4, ref('group_user_member'))]"/>
+        <field name="comment">User will have an access application form which shows only readonly mode.
+        </field>
+    </record>
+
+    <record id="membership_extension.group_membership_manager" model="res.groups">
+        <field name="implied_ids" eval="[(4, ref('group_mem_user_officer'))]"/>
+    </record>
+
+</odoo>
