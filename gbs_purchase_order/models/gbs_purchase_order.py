@@ -30,7 +30,7 @@ class PurchaseOrder(models.Model):
                                    help="Local: Local LC.\n""Foreign: Foreign LC.")
     purchase_by = fields.Selection([('cash', 'Cash'), ('credit', 'Credit'), ('lc', 'LC'), ('tt', 'TT')],
                                    string="Purchase By")
-    attachment_ids = fields.One2many('ir.attachment', 'res_id', string='Attachments')
+    attachment_ids = fields.Many2many('ir.attachment','attachment_po_rel','po_id','attachment_id', string='Attachments')
     check_po_action_button = fields.Boolean('Check PO Action Button', default=False)
     disable_new_revision_button = fields.Boolean('Disable New Revision Button', default=False)
 
@@ -135,6 +135,15 @@ class PurchaseOrder(models.Model):
                     'db_datas': attachment_line.db_datas,
                 }))
             self.attachment_ids = attachments_lines
+
+        # link way
+        # attachments_lines = []
+        # for attachment_line in requisition.attachment_ids:
+        #     attachments_lines.append((4,attachment_line.id))
+        # self.attachment_ids = attachments_lines
+        # (replace way)
+        # self.attachment_ids = [(6,0,requisition.attachment_ids.ids)]
+
         if requisition.region_type:
             self.region_type = requisition.region_type
         if requisition.purchase_by:
