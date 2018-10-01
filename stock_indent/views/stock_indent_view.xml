@@ -28,7 +28,7 @@
 					  colors="gray:state=='received';green:state=='waiting_approval';blue:state=='inprogress';red:state=='reject';">
 					<field name="name" />
 					<field name="indentor_id" />
-					<field name="department_id" />
+					<field name="stock_location_id" />
 					<field name="indent_date" />
 					<field name="required_date" />
 					<field name="approve_date" />
@@ -54,6 +54,8 @@
 								states="inprogress" class="oe_highlight" groups="stock_indent.group_stock_indent_issuer"/>
 						<button name="action_close_indent" string="Close" type="object"
 								states="inprogress" groups="stock.group_stock_user"/>
+						<button name="action_print" string="Print" type="object"
+								states="received" groups="stock.group_stock_user"/>
 						<field name="state" widget="statusbar"
 							   statusbar_visible="draft,waiting_approval,inprogress,received"
 							   statusbar_colors='{"reject":"red"}' />
@@ -63,7 +65,7 @@
 							<group>
 								<field name="indentor_id" readonly="1" />
 								<field name="requirement"/>
-								<field name="department_id"/>
+								<field name="stock_location_id" options="{'no_create': True,'no_open':True}"/>
 							</group>
 							<group>
 								<field name="indent_date" />
@@ -81,16 +83,16 @@
 								<field name="product_lines">
 									<tree string="Products" editable="bottom">
 										<field name="sequence" widget="handle"/>
-										<field name="product_id" domain="[('type','!=','service')]"/>
+										<field name="product_id" domain="[('type','!=','service')]" options="{'no_create': True,'no_open':True}"/>
 										<field name="name" readonly="1" />
-										<field name="qty_available" readonly="1" groups="stock.group_stock_user" />
+										<field name="qty_available" invisible="1"/>
+										<field name="qty_available_now" readonly="1" groups="stock.group_stock_user" />
 										<field name="product_uom" string="UOM"/>
 										<field name="product_uom_qty" sum="Total Qty"/>
 										<field name="received_qty" sum="Total Receive Qty" readonly="1"/>
 										<field name="issue_qty" invisible="1"/>
+										<field name="price_unit" invisible="1"/>
 										<field name="remarks"/>
-										<!--groups="stock.group_stock_user"-->
-										<!--<field name="price_unit" sum="Total Price"/>-->
 										<!--<field name="price_subtotal" sum="Total Price"/>-->
 									</tree>
 								</field>
@@ -115,11 +117,8 @@
 										<field name="pr_indent_check" invisible="1"/>
 									</group>
 									<group>
-										<!--<field name="manager_id" readonly="1" />-->
-										<field name="warehouse_id" groups="stock.group_stock_multi_locations" options="{'no_create': True,'no_open':True}"/>
-										<field name="stock_location_id" groups="stock.group_stock_multi_locations" options="{'no_create': True,'no_open':True}"/>
-										<field name="picking_type_id"/>
-										<!--groups="stock.group_stock_manager"-->
+										<field name="warehouse_id" groups="stock.group_stock_user" options="{'no_create': True,'no_open':True}"/>
+										<field name="picking_type_id" groups="stock.group_stock_user"/>
 									</group>
 								</group>
 							</page>

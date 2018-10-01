@@ -23,8 +23,8 @@ class BeneficiaryCertificate(models.AbstractModel):
         data['factory'] = report_utility_pool.getAddressByUnit(shipment_obj.operating_unit_id)
         data['buyer'] = shipment_obj.lc_id.second_party_applicant.name
         data['buyer_address'] = report_utility_pool.getCoustomerAddress(shipment_obj.lc_id.second_party_applicant)
-        data['invoice_id'] = shipment_obj.invoice_id.display_name
-        data['invoice_date'] = report_utility_pool.getERPDateFormat(report_utility_pool.getDateFromStr(shipment_obj.invoice_id.date_invoice))
+        data['invoice_id'] =  "" if shipment_obj.invoice_id.display_name == False else shipment_obj.invoice_id.display_name
+        data['invoice_date'] = "" if shipment_obj.invoice_id.id == False else report_utility_pool.getERPDateFormat(report_utility_pool.getDateFromStr(shipment_obj.invoice_id.date_invoice))
         data['arrival_date'] = report_utility_pool.getERPDateFormat(report_utility_pool.getDateFromStr(shipment_obj.arrival_date))
         data['terms_condition'] = shipment_obj.lc_id.terms_condition
         data['lc_id'] = shipment_obj.lc_id.unrevisioned_name
@@ -63,7 +63,7 @@ class BeneficiaryCertificate(models.AbstractModel):
             'data': data,
             'lists': prod_list,
             'total_qty': total_qty,
-            'uom': uom[0],
+            'uom': uom[0] if len(uom)>0 else 0,
             'pi_list': pi_list,
             'lc_revision_list': lc_revision_list
         }

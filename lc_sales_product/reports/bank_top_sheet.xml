@@ -38,8 +38,8 @@
                             <div class="bank-letter_head">
                                 <p>To, <br/>
                                     The Manager <br/>
-                                    <span t-esc="data['first_party_bank']"/> <br/>
-                                    <span t-raw="data['first_party_bank_add']"/>
+                                    <span t-esc="data['first_party_branch_bank']"/> <br/>
+                                    <span t-raw="data['first_party_branch_add']"/>
                                 </p>
                             </div>
                             <div class="bank-letter_subject">

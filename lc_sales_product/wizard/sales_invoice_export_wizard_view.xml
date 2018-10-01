@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <data>
+        <record id="invoice_export_wizard" model="ir.ui.view">
+            <field name="name">invoice.export.wizard</field>
+            <field name="model">invoice.export.wizard</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml" >
+                <form string="Please Enter The Information" create="false" edit="false">
+                    <group>
+                        <group>
+                            <field name="invoice_id" required="1" options="{'no_open':True,'no_quick_create':True,'no_create_edit':True}"/>
+                            <field name="invoice_value" required="1"/>
+                            <field name="shipment_id" invisible="1"/>
+                        </group>
+                    </group>
+                    <footer>
+                        <button string="Save" name="save_action" type="object" class="oe_highlight"  />
+                        <button special="cancel" string="Close" type="object"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+    </data>
+</odoo>

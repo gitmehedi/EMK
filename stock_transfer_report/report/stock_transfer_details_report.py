@@ -43,9 +43,9 @@ class StockTransferDetailsReport(models.AbstractModel):
                                category,
                                move_date AS m_date,
                                move_origin AS reference,
-                               COALESCE(list_price,0) AS rate_out,
+                               cost_val AS rate_out,
                                COALESCE(qty_out_tk,0)             AS qty_out_tk,
-                               COALESCE((qty_out_tk * list_price),0) AS val_out_tk
+                               val_out_tk AS val_out_tk
                                FROM (SELECT sm.product_id,
                                            pt.name,
                                            pp.default_code         AS code,
@@ -54,7 +54,18 @@ class StockTransferDetailsReport(models.AbstractModel):
                                            sm.date + interval'6h'  AS move_date,
                                            sm.origin               AS move_origin,
                                            sm.product_qty          AS qty_out_tk,
-                                           pt.list_price
+                                           Coalesce((SELECT ph.current_price
+                                             FROM   product_cost_price_history ph
+                                             WHERE  to_char(ph.modified_datetime, 'YYYY-MM-DD HH24:MI') <= to_char(sm.date, 'YYYY-MM-DD HH24:MI')
+                                                    AND pp.id = ph.product_id
+                                             ORDER  BY ph.modified_datetime DESC,ph.id DESC
+                                             LIMIT  1), 0) AS cost_val,
+                                           sm.product_qty * Coalesce((SELECT ph.current_price
+                                             FROM   product_cost_price_history ph
+                                             WHERE  to_char(ph.modified_datetime, 'YYYY-MM-DD HH24:MI') <= to_char(sm.date, 'YYYY-MM-DD HH24:MI')
+                                                    AND pp.id = ph.product_id
+                                             ORDER  BY ph.modified_datetime DESC,ph.id DESC
+                                             LIMIT  1), 0) AS val_out_tk
                                     FROM   stock_move sm 
                                            LEFT JOIN stock_picking sp 
                                                   ON sm.picking_id = sp.id
