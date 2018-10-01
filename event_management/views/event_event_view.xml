@@ -30,6 +30,9 @@
                 <xpath expr="//field[@name='user_id']" position="attributes">
                     <attribute name="options">{'no_open':True,'no_create':True,'no_create_edit':True}</attribute>
                 </xpath>
+                <xpath expr="//field[@name='event_type_id']" position="attributes">
+                    <attribute name="options">{'no_open':True,'no_create':True,'no_create_edit':True}</attribute>
+                </xpath>
             </field>
         </record>
         <record model="ir.ui.view" id="view_event_sale_form">
@@ -44,6 +47,10 @@
                 </xpath>
                 <xpath expr="//field[@name='twitter_hashtag']" position="attributes">
                     <attribute name="invisible">True</attribute>
+                </xpath>
+                <xpath expr="//field[@name='twitter_hashtag']" position="after">
+                    <field name="event_loc_ids" widget="many2many_tags"
+                           options="{'no_open':True,'no_create':True,'no_create_edit':True}"/>
                 </xpath>
             </field>
         </record>

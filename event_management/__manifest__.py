@@ -12,6 +12,7 @@
         'event',
         'event_user',
         'website_event',
+        'event_session',
     ],
     'data': [
         'data/ir_sequence.xml',
@@ -22,6 +23,7 @@
         'security/security.xml',
         'views/dashboard.xml',
         'views/event_type_view.xml',
+        'views/event_room_view.xml',
         'views/event_event_view.xml',
         'views/event_registration_view.xml',
     ],

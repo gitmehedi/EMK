@@ -11,3 +11,6 @@ class EventEvent(models.Model):
         'event.type', string='Category',
         readonly=False, states={'done': [('readonly', True)]},
         oldname='type', required=True)
+
+    event_loc_ids = fields.Many2many(
+        'event.room', string='Event Location')
