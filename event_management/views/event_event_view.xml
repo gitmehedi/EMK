@@ -20,10 +20,16 @@
                 <xpath expr="//button[@name='toggle_active']" position="attributes">
                     <attribute name="groups">event_user.group_event_administration</attribute>
                 </xpath>
-                <xpath expr="//field[@name='address_id']" position="attributes">
-                    <attribute name="attrs">{'no_open':True,'no_create':True,'no_create_edit':True}</attribute>
-                </xpath>
 
+                <xpath expr="//field[@name='address_id']" position="attributes">
+                    <attribute name="options">{'no_open':True,'no_create':True,'no_create_edit':True}</attribute>
+                </xpath>
+                <xpath expr="//field[@name='organizer_id']" position="attributes">
+                    <attribute name="options">{'no_open':True,'no_create':True,'no_create_edit':True}</attribute>
+                </xpath>
+                <xpath expr="//field[@name='user_id']" position="attributes">
+                    <attribute name="options">{'no_open':True,'no_create':True,'no_create_edit':True}</attribute>
+                </xpath>
             </field>
         </record>
         <record model="ir.ui.view" id="view_event_sale_form">
@@ -35,6 +41,9 @@
                 </xpath>
                 <xpath expr="//button[@name='website_publish_button']" position="attributes">
                     <attribute name="groups">event_user.group_event_administration</attribute>
+                </xpath>
+                <xpath expr="//field[@name='twitter_hashtag']" position="attributes">
+                    <attribute name="invisible">True</attribute>
                 </xpath>
             </field>
         </record>

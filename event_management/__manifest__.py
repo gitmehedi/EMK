@@ -23,6 +23,7 @@
         'views/dashboard.xml',
         'views/event_type_view.xml',
         'views/event_event_view.xml',
+        'views/event_registration_view.xml',
     ],
     'installable': True,
     'application': True,
