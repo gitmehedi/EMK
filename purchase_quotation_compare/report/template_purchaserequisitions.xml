@@ -174,7 +174,7 @@
                                                                             <t t-set="last_bid_line" t-value="[l for l in last_bid.order_line if l.product_id == req_line.product_id]"/>
                                                                             <t t-if="last_bid_line">
                                                                                 <t t-foreach="last_bid_line" t-as="last_bid_pro">
-                                                                                    <t t-if="last_bid_pro.state in ['confirmed','purchase']">
+                                                                                    <t t-if="last_bid_pro.state in ['done']">
                                                                                         <td class="text-right bg-success">
                                                                                             <span t-esc="'{:,.2f}'.format(last_bid_pro.price_unit)"/>
                                                                                         </td>
