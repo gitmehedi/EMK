@@ -35,11 +35,10 @@
             <field name="target">new</field>
         </record>
 
-        <menuitem
-                name="Stock Issue Report"
-                parent="stock.menu_warehouse_report"
-                action="action_stock_issue_wizard"
-                id="menu_stock_issue" groups="stock.group_stock_user"
-                sequence="17"/>
+        <menuitem id="menu_stock_issue"
+                  parent="stock.menu_warehouse_report"
+                  action="action_stock_issue_wizard"
+                  groups="stock.group_stock_user"
+                  sequence="17"/>
     </data>
 </odoo>

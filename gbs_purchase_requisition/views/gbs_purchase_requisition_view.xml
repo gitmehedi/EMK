@@ -142,7 +142,7 @@
 
                     <xpath expr="//notebook/page[1]" position="after">
                         <page string="Attachments">
-                            <field name="attachment_ids" widget="one2many" >
+                            <field name="attachment_ids" widget="one2many_list" >
                                 <tree string="Attachments" editable="top">
                                     <field name="name" string="Title"/>
                                     <field name="datas_fname" invisible="1"/>
