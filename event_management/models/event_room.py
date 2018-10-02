@@ -18,7 +18,7 @@ class EventRoom(models.Model):
     @api.multi
     def event_count_calculation(self):
         for records in self:
-            events = self.env['event.event'].search([('event_loc_ids', '=', records.id)])
+            events = self.env['event.event'].search([('state', '=', 'done')])
             records.event_count = len(events)
 
     @api.constrains('name')
