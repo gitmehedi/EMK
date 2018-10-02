@@ -217,7 +217,7 @@ class PurchaseOrder(models.Model):
             if indent.state != 'draft':
                 raise ValidationError(_('You cannot delete in this state'))
             else:
-                query = """ delete from ir_attachment where res_id=%s"""
+                query = """ delete from attachment_po_rel where po_id=%s"""
                 for att in self.attachment_ids:
                     self._cr.execute(query, tuple([att.res_id]))
                 return super(PurchaseOrder, self).unlink()
