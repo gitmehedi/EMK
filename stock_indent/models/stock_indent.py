@@ -298,7 +298,17 @@ class IndentIndent(models.Model):
     ####################################################
     @api.model
     def _needaction_domain_get(self):
-        return [('state', 'in', ['waiting_approval'])]
+        users_obj = self.env['res.users']
+        if users_obj.has_group('stock_indent.group_stock_indent_approver'):
+            domain = [
+                ('state', 'in', ['waiting_approval'])]
+            return domain
+        elif users_obj.has_group('stock.group_stock_user'):
+            domain = [
+                ('state', 'in', ['inprogress'])]
+            return domain
+        else:
+            return False
 
     def unlink(self):
         for indent in self:

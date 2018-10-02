@@ -125,5 +125,10 @@
             </field>
         </record>
 
+
+        <menuitem action="purchase.purchase_rfq" id="purchase.menu_purchase_rfq"
+            parent="purchase.menu_procurement_management"
+            sequence="2"/>
+
     </data>
 </odoo>

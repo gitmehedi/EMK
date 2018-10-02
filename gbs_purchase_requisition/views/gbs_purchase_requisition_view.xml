@@ -171,7 +171,14 @@
             <field name="model">purchase.requisition</field>
             <field name="inherit_id" ref="purchase_requisition.view_purchase_requisition_filter"/>
             <field name="arch" type="xml">
+                <xpath expr="//field[@name='name']" position="replace">
+                    <field name="name" string="Purchase Requisition" filter_domain="['|', ('name','ilike',self), ('origin','ilike',self)]"/>
+                </xpath>
+                <xpath expr="//field[@name='type_id']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
                 <xpath expr="//field[@name='user_id']" position="replace" type="object">
+                    <field name="indent_ids" />
                     <filter name="my_approval_draft" string="To Confirm" domain="[('state','=','draft')]"/>
                     <filter name="my_approval_in_progress" string="To Validate" domain="[('state','=','in_progress')]"/>
                     <filter name="my_approval_wait_for_done" string="To Approve" domain="[('state','=','approve_head_procurement')]"/>
@@ -234,7 +241,7 @@
 
         <menuitem
                 id="purchase_requisition.menu_purchase_requisition_pro_mgt"
-                sequence="10"
+                sequence="1"
                 name="Purchase Requisition"
                 parent="purchase.menu_procurement_management"
                 action="purchase_requisition.action_purchase_requisition"
