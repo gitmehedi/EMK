@@ -11,7 +11,6 @@ class PurchaseRequisition(models.Model):
     _order = "requisition_date desc"
 
     name = fields.Char(string='Purchase Requisition',default='/')
-    department_id = fields.Many2one('hr.department',string='Department', store=True)
     operating_unit_id = fields.Many2one('operating.unit', 'Operating Unit', required=True,
                                         default=lambda self: self.env.user.default_operating_unit_id)
 
@@ -34,7 +33,8 @@ class PurchaseRequisition(models.Model):
                              copy=False, default='draft')
 
     indent_ids = fields.Many2many('indent.indent','pr_indent_rel','pr_id','indent_id',string='Indent')
-    attachment_ids = fields.One2many('ir.attachment', 'res_id', string='Attachments')
+    # attachment_ids = fields.Many2many('ir.attachment','attachment_pr_rel','pr_id','attachment_id', string='Attachments')
+    attachment_ids = fields.One2many('ir.attachment','res_id', string='Attachments', domain=[('res_model', '=', 'purchase.requisition')])
 
     @api.multi
     def action_in_progress(self):

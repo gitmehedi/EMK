@@ -133,10 +133,10 @@ class StockInventoryReport(models.AbstractModel):
                                     pu.name AS uom_name,
                                     pc.name AS category,
                                     Coalesce(Sum(sm.product_qty), 0) AS product_qty_in,
-                                    Coalesce((SELECT ph.cost FROM   product_price_history ph
-                            WHERE  Date_trunc('day', ph.datetime) < '%s'
-                                  AND pp.id = ph.product_id
-                            ORDER  BY ph.datetime DESC LIMIT  1), 0) AS cost_val,
+                                    Coalesce((SELECT ph.current_price FROM   product_cost_price_history ph
+                                              WHERE  Date_trunc('day', ph.modified_datetime+ interval'6h') < '%s'
+                                              AND pp.id = ph.product_id
+                                              ORDER  BY ph.modified_datetime DESC LIMIT  1), 0) AS cost_val,
                             0 AS product_qty_out
                             FROM stock_move sm  
                             LEFT JOIN stock_picking sp 
@@ -169,11 +169,11 @@ class StockInventoryReport(models.AbstractModel):
                                    pu.name                          AS uom_name,
                                    pc.name         				    AS category,
                                    0                                AS product_qty_in,
-                                   Coalesce((SELECT ph.cost
-                                             FROM   product_price_history ph
-                                             WHERE  Date_trunc('day', ph.datetime) < '%s'
+                                   Coalesce((SELECT ph.current_price
+                                             FROM   product_cost_price_history ph
+                                             WHERE  Date_trunc('day', ph.modified_datetime + interval'6h') < '%s'
                                                     AND pp.id = ph.product_id
-                                             ORDER  BY ph.datetime DESC
+                                             ORDER  BY ph.modified_datetime DESC
                                              LIMIT  1), 0)          AS cost_val,
                                    Coalesce(Sum(sm.product_qty), 0) AS product_qty_out
                             FROM   stock_move sm
@@ -227,17 +227,17 @@ class StockInventoryReport(models.AbstractModel):
                                            pu.name                                  AS uom_name, 
                                            pc.name                                  AS category, 
                                            sm.product_qty                           AS qty_in_tk, 
-                                           sm.product_qty * Coalesce((SELECT ph.cost
-                                             FROM   product_price_history ph
-                                             WHERE  ph.datetime + interval'6h' <= '%s'
+                                           sm.product_qty * Coalesce((SELECT ph.current_price
+                                             FROM   product_cost_price_history ph
+                                             WHERE  ph.modified_datetime + interval'6h' <= '%s'
                                                     AND pp.id = ph.product_id
-                                             ORDER  BY ph.datetime DESC,ph.id DESC
+                                             ORDER  BY ph.modified_datetime DESC,ph.id DESC
                                              LIMIT  1), 0) AS val_in_tk,
-                                           Coalesce((SELECT ph.cost
-                                             FROM   product_price_history ph
-                                             WHERE  ph.datetime + interval'6h' <= '%s'
+                                           Coalesce((SELECT ph.current_price
+                                             FROM   product_cost_price_history ph
+                                             WHERE  ph.modified_datetime + interval'6h' <= '%s'
                                                     AND pp.id = ph.product_id
-                                             ORDER  BY ph.datetime DESC,ph.id DESC
+                                             ORDER  BY ph.modified_datetime DESC,ph.id DESC
                                              LIMIT  1), 0)          AS cost_val
                                     FROM   stock_move sm 
                                            LEFT JOIN stock_picking sp 
@@ -276,14 +276,25 @@ class StockInventoryReport(models.AbstractModel):
                            category,
                            list_price AS rate_out,
                            Sum(qty_out_tk)              AS qty_out_tk,
-                           Sum(qty_out_tk) * list_price AS val_out_tk
+                           Sum(val_out_tk)              AS val_out_tk
                     FROM   (SELECT sm.product_id,
                                    pt.name,
                                    pp.default_code         AS code,
                                    pu.name                 AS uom_name,
                                    pc.name                 AS category,
                                    sm.product_qty          AS qty_out_tk,
-                                   pt.list_price
+                                   Coalesce((SELECT ph.current_price
+                                             FROM   product_cost_price_history ph
+                                             WHERE  ph.modified_datetime + interval'6h' <= '%s'
+                                                    AND pp.id = ph.product_id
+                                             ORDER  BY ph.modified_datetime DESC,ph.id DESC
+                                             LIMIT  1), 0) AS list_price,
+                                   sm.product_qty * Coalesce((SELECT ph.current_price
+                                             FROM   product_cost_price_history ph
+                                             WHERE  ph.modified_datetime + interval'6h' <= '%s'
+                                                    AND pp.id = ph.product_id
+                                             ORDER  BY ph.modified_datetime DESC,ph.id DESC
+                                             LIMIT  1), 0) AS val_out_tk
                             FROM   stock_move sm
                                    LEFT JOIN stock_picking sp
                                           ON sm.picking_id = sp.id
@@ -310,7 +321,7 @@ class StockInventoryReport(models.AbstractModel):
                               uom_name,
                               category,
                               list_price
-                        ''' % (date_start, date_end, location_outsource, location_outsource, category_param,product_param)
+                        ''' % (date_end,date_end,date_start, date_end, location_outsource, location_outsource, category_param,product_param)
 
         sql_ck = '''
                   SELECT product_id,
@@ -327,13 +338,13 @@ class StockInventoryReport(models.AbstractModel):
                            pu.name                          AS uom_name,
                            pc.name                          AS category,
                            Coalesce(Sum(sm.product_qty), 0) AS product_qty_in,
-                           Coalesce((SELECT ph.cost
-                                             FROM   product_price_history ph
-                                             WHERE  ph.datetime + interval'6h' <= '%s'
+                           Coalesce((SELECT ph.current_price
+                                             FROM   product_cost_price_history ph
+                                             WHERE  ph.modified_datetime + interval'6h' <= '%s'
                                                     AND pp.id = ph.product_id
-                                             ORDER  BY ph.datetime DESC,ph.id DESC
-                                             LIMIT  1), 0)          AS cost_val,
-                           0                                AS product_qty_out
+                                             ORDER  BY ph.modified_datetime DESC,ph.id DESC
+                                             LIMIT  1), 0)    AS cost_val,
+                           0 AS product_qty_out
                     FROM   stock_move sm
                            LEFT JOIN stock_picking sp
                                   ON sm.picking_id = sp.id
@@ -349,12 +360,10 @@ class StockInventoryReport(models.AbstractModel):
                                   ON( pu.id = pt.uom_id )
                     WHERE  sm.date + interval'6h' <= '%s'
                            AND sm.state = 'done'
-                           --AND sp.location_type = 'outsource_out'
                            AND sm.location_id <> %s
                            AND sm.location_dest_id = %s
                            AND pc.id IN %s
                            AND pp.id IN %s
-                    --AND usage like 'internal'
                     GROUP  BY sm.product_id,
                               pt.name,
                               pp.default_code,
@@ -368,11 +377,11 @@ class StockInventoryReport(models.AbstractModel):
                            pu.name                          AS uom_name,
                            pc.name                          AS category,
                            0                                AS product_qty_in,
-                           Coalesce((SELECT ph.cost
-                                     FROM   product_price_history ph
-                                     WHERE  ph.datetime + interval'6h' <= '%s'
+                           Coalesce((SELECT ph.current_price
+                                     FROM   product_cost_price_history ph
+                                     WHERE  ph.modified_datetime + interval'6h' <= '%s'
                                             AND pp.id = ph.product_id
-                                     ORDER  BY ph.datetime DESC,ph.id DESC
+                                     ORDER  BY ph.modified_datetime DESC,ph.id DESC
                                      LIMIT  1), 0)          AS cost_val,
                            Coalesce(Sum(sm.product_qty), 0) AS product_qty_out
                     FROM   stock_move sm
@@ -390,12 +399,10 @@ class StockInventoryReport(models.AbstractModel):
                                   ON( pu.id = pt.uom_id )
                     WHERE  sm.date + interval'6h' <= '%s'
                            AND sm.state = 'done'
-                           --AND sp.location_type = 'outsource_in'
                            AND sm.location_id = %s
                            AND sm.location_dest_id <> %s
                            AND pc.id IN %s
                            AND pp.id IN %s
-                    --AND usage like 'internal'
                     GROUP  BY sm.product_id,
                               pt.name,
                               pp.default_code,

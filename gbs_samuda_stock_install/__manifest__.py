@@ -36,6 +36,7 @@
         'stock_purchase_custom_report',
         'stock_loan_analysis_report',
         'stock_transfer_report',
+        'stock_issue_due_report',
         'stock_issue_report',
         'stock_inventory_extend',
         'stock_picking_loan',

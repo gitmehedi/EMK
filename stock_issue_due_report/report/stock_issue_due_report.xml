@@ -1,21 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>
-        <template id="report_stock_issue_temp" inherit_id="report_layout.gbs_internal_layout" primary="True">
+        <template id="report_issue_due_temp" inherit_id="report_layout.gbs_internal_layout" primary="True">
             <xpath expr="//t[@t-call='report_layout.gbs_internal_layout_header']" position="attributes">
-                <attribute name="t-call">stock_issue_report.internal_layout_header_sir</attribute>
+                <attribute name="t-call">stock_issue_due_report.layout_header_issue_due</attribute>
             </xpath>
         </template>
-        <template id="internal_layout_header_sir" inherit_id="report_layout.gbs_internal_layout_header" primary="True">
+        <template id="layout_header_issue_due" inherit_id="report_layout.gbs_internal_layout_header" primary="True">
             <xpath expr="//div[@class='company-info']" position="after">
                 <div name="company_address">
                     <h5><span t-esc="address"/></h5>
                 </div>
             </xpath>
         </template>
-        <template id="report_stock_issue">
+        <template id="report_stock_issue_due">
             <t t-call="report.html_container">
-                <t t-call="stock_issue_report.report_stock_issue_temp">
+                <t t-call="stock_issue_due_report.report_issue_due_temp">
                     <div class="page" style="page-break-inside: auto">
                         <div class="row" style="padding-top:25px;">
                             <style type="text/css">
@@ -23,7 +23,7 @@
                                 .odo-bg-gray, .odo-bg-gray > td { background-color: #f5f5f5; }
                             </style>
                             <div class="clearfix">
-                                <h4 class="report-title">Stock Issue Report</h4>
+                                <h4 class="report-title">Stock Issue Due Report</h4>
                                 <div class="row" style="padding-top:10px;">
                                     <div class="col-xs-6" style="padding-bottom:10px;">
                                         <t t-if="record['from_date']">
@@ -48,7 +48,7 @@
                                             <th class="text-center" style="width:6%;">SL#</th>
                                             <th class="text-center" style="width:60%;">Product</th>
                                             <th class="text-center" style="width:17%;">Indent Quantity</th>
-                                            <th class="text-center" style="width:17%;">Received Quantity</th>
+                                            <th class="text-center" style="width:17%;">Due Quantity</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -72,11 +72,14 @@
                                                             <t t-esc="line['pt_name']"/>
                                                             <t t-if="line['variant_name']">(<t t-esc="line['variant_name']"/>)</t>
                                                         </td>
+                                                        <!--<t t-else="">-->
+                                                            <!--<t t-esc="line['pt_name']"/>-->
+                                                        <!--</t>-->
                                                         <td class="text-right">
                                                             <t t-esc="line['quantity']"/>
                                                         </td>
                                                         <td class="text-right">
-                                                            <t t-esc="line['received_qty']"/>
+                                                            <t t-esc="line['due_qty']"/>
                                                         </td>
                                                     </tr>
                                                 </t>
@@ -116,12 +119,12 @@
                 </t>
             </t>
         </template>
-        <report id="action_stock_issue_report"
-                string="Stock Issue Report"
+        <report id="action_stock_issue_due_report"
+                string="Stock Issue Due Report"
                 model="indent.indent"
                 report_type="qweb-pdf"
-                name="stock_issue_report.report_stock_issue"
-                file="stock_issue_report.report_stock_issue"
+                name="stock_issue_due_report.report_stock_issue_due"
+                file="stock_issue_due_report.report_stock_issue_due"
                 menu="False"
                 paperformat="report_layout.paperformat_backend_portrait"
         />

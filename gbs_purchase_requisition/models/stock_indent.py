@@ -57,7 +57,6 @@ class StockIndent(models.Model):
 
         values = {
             'user_id': self.env.user.id,
-            'department_id': self.department_id.id,
             'operating_unit_id': self.operating_unit_id.id,
             'required_date': self.required_date,
             'picking_type_id': self.picking_type_id.id,

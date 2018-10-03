@@ -30,7 +30,7 @@ class PurchaseOrder(models.Model):
                                    help="Local: Local LC.\n""Foreign: Foreign LC.")
     purchase_by = fields.Selection([('cash', 'Cash'), ('credit', 'Credit'), ('lc', 'LC'), ('tt', 'TT')],
                                    string="Purchase By")
-    attachment_ids = fields.One2many('ir.attachment', 'res_id', string='Attachments')
+    attachment_ids = fields.One2many('ir.attachment','res_id', string='Attachments', domain=[('res_model', '=', 'purchase.order')])
     check_po_action_button = fields.Boolean('Check PO Action Button', default=False)
     disable_new_revision_button = fields.Boolean('Disable New Revision Button', default=False)
 
@@ -133,8 +133,18 @@ class PurchaseOrder(models.Model):
                     'name': attachment_line.name,
                     'datas_fname': attachment_line.datas_fname,
                     'db_datas': attachment_line.db_datas,
+                    'res_model': 'purchase.order',
                 }))
             self.attachment_ids = attachments_lines
+
+        # link way
+        # attachments_lines = []
+        # for attachment_line in requisition.attachment_ids:
+        #     attachments_lines.append((4,attachment_line.id))
+        # self.attachment_ids = attachments_lines
+        # (replace way)
+        # self.attachment_ids = [(6,0,requisition.attachment_ids.ids)]
+
         if requisition.region_type:
             self.region_type = requisition.region_type
         if requisition.purchase_by:
@@ -208,7 +218,7 @@ class PurchaseOrder(models.Model):
             if indent.state != 'draft':
                 raise ValidationError(_('You cannot delete in this state'))
             else:
-                query = """ delete from ir_attachment where res_id=%s"""
+                query = """ delete from attachment_po_rel where po_id=%s"""
                 for att in self.attachment_ids:
                     self._cr.execute(query, tuple([att.res_id]))
                 return super(PurchaseOrder, self).unlink()

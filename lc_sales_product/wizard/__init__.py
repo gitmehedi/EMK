@@ -6,3 +6,4 @@ import seller_bank_export_wizard
 import buyer_bank_export_wizard
 import maturity_export_wizard
 import lc_amendment_wizard
+import sales_invoice_wizard

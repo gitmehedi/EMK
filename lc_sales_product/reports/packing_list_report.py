@@ -20,8 +20,8 @@ class PackingList(models.AbstractModel):
         data['factory'] = report_utility_pool.getAddressByUnit(shipment_obj.operating_unit_id)
         data['buyer'] = shipment_obj.lc_id.second_party_applicant.name
         data['buyer_address'] = report_utility_pool.getCoustomerAddress(shipment_obj.lc_id.second_party_applicant)
-        data['invoice_id'] = shipment_obj.invoice_id.display_name
-        data['invoice_date'] = report_utility_pool.getERPDateFormat(report_utility_pool.getDateFromStr(shipment_obj.invoice_id.date_invoice))
+        data['invoice_id'] = "" if shipment_obj.invoice_id.id == False else shipment_obj.invoice_id.display_name
+        data['invoice_date'] = "" if shipment_obj.invoice_id.id == False else report_utility_pool.getERPDateFormat(report_utility_pool.getDateFromStr(shipment_obj.invoice_id.date_invoice))
         data['terms_condition'] = shipment_obj.lc_id.terms_condition
         # data['pi_id'] = shipment_obj.lc_id.pi_ids_temp.name
         # data['pi_date'] = shipment_obj.lc_id.pi_ids_temp.create_date

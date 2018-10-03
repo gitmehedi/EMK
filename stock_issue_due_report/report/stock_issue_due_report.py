@@ -1,8 +1,8 @@
 from odoo import api, fields, models, _
 
 
-class StockIssueReport(models.AbstractModel):
-    _name = 'report.stock_issue_report.report_stock_issue'
+class StockIssueDueReport(models.AbstractModel):
+    _name = 'report.stock_issue_due_report.report_stock_issue_due'
 
     @api.multi
     def render_html(self, docids, data=None):
@@ -21,7 +21,7 @@ class StockIssueReport(models.AbstractModel):
             'total': get_data['total'],
             'address': data['address'],
         }
-        return self.env['report'].render('stock_issue_report.report_stock_issue', docargs)
+        return self.env['report'].render('stock_issue_due_report.report_stock_issue_due', docargs)
 
 
     def get_report_data(self, data):
@@ -55,8 +55,8 @@ class StockIssueReport(models.AbstractModel):
 			                    ON pv.id = pr.product_attribute_value_id
                             WHERE pr.product_product_id = ipl.product_id
                             GROUP BY pr.product_product_id)  AS variant_name,
-                        sum(COALESCE((ipl.product_uom_qty),0)) AS quantity,
-                        sum(COALESCE((ipl.received_qty),0)) AS received_qty
+                        sum(ipl.product_uom_qty) AS quantity,
+                        sum(COALESCE((ipl.product_uom_qty),0) - COALESCE((ipl.received_qty), 0)) AS due_qty
                  FROM indent_indent AS ii
                  LEFT JOIN indent_product_lines AS ipl
                       ON ii.id = ipl.indent_id
@@ -67,7 +67,7 @@ class StockIssueReport(models.AbstractModel):
 				          LEFT JOIN product_category pc
                       ON pt.categ_id = pc.id
                  WHERE
-                    COALESCE((ipl.received_qty),0) > 0
+                    (COALESCE((ipl.product_uom_qty),0) - COALESCE((ipl.received_qty), 0)) > 0
                  AND
                     ii.stock_location_id ='%s'
                  AND
@@ -82,8 +82,8 @@ class StockIssueReport(models.AbstractModel):
                 total = category[vals['category']]['sub-total']
                 total['name'] = vals['category']
                 total['total_issue_qty'] = total['total_issue_qty'] + vals['quantity']
-                total['total_due_qty'] = total['total_due_qty'] + vals['received_qty']
+                total['total_due_qty'] = total['total_due_qty'] + vals['due_qty']
                 grand_total['total_issue_qty'] = grand_total['total_issue_qty'] + vals['quantity']
-                grand_total['total_due_qty'] = grand_total['total_due_qty'] + vals['received_qty']
+                grand_total['total_due_qty'] = grand_total['total_due_qty'] + vals['due_qty']
 
         return {'category': category, 'total': grand_total}
