@@ -1,5 +1,6 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
 
+evm_ett_user,evm_ett_user,model_event_task_type,event.group_event_user,1,0,0,0
 evm_ett_org,evm_ett_org,model_event_task_type,event_user.group_event_organizer,1,0,0,0
 evm_ett_adm,evm_ett_adm,model_event_task_type,event_user.group_event_administration,1,1,1,0
 
@@ -24,8 +25,10 @@ evm_rer_org,evm_rer_org,event.model_report_event_registration,event_user.group_e
 
 evm_emr_org,evm_emr_org,event.model_event_mail_registration,event_user.group_event_organizer,1,0,0,0
 
+evm_etl_user,evm_etl_user,model_event_task_list,event.group_event_user,1,1,0,0
 evm_etl_org,evm_etl_org,model_event_task_list,event_user.group_event_organizer,1,0,0,0
 evm_etl_adm,evm_etl_adm,model_event_task_list,event_user.group_event_administration,1,1,1,0
+
 
 
 
