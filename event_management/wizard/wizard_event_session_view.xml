@@ -1,0 +1,47 @@
+<?xml version="1.0"?>
+<odoo>
+
+
+    <record id="generator_view_form" model="ir.ui.view">
+        <field name="inherit_id" ref="event_session.generator_view_form"/>
+        <field name="model">wizard.event.session</field>
+        <field name="arch" type="xml">
+            <xpath expr="//form/group[@name='main']" position="replace">
+                <group name="main" string="Event Information">
+                    <group>
+                        <field name="event_id" readonly="True" string="Event Name" required="True"/>
+                        <field name="event_date_tz" readonly="True" invisible="1"/>
+                        <field name="event_date_begin" readonly="True"/>
+                        <field name="event_date_end" readonly="True"/>
+                        <field name="name" invisible="1"/>
+                    </group>
+                </group>
+                <group>
+                    <group string="Weekdays">
+                        <field name="mondays"/>
+                        <field name="tuesdays"/>
+                        <field name="wednesdays"/>
+                        <field name="thursdays"/>
+                        <field name="fridays"/>
+                        <field name="saturdays"/>
+                        <field name="sundays"/>
+                    </group>
+                    <group string="Schedule">
+                        <field name="session_hour_ids" nolabel="1">
+                            <tree string="Hours" editable="top">
+                                <field name="start_time" widget="float_time"/>
+                                <field name="end_time" widget="float_time"/>
+                            </tree>
+                        </field>
+                    </group>
+                </group>
+                <group>
+                    <group string="Other Options">
+                        <field name="delete_existing_sessions"/>
+                        <field name="event_mail_template_id"/>
+                    </group>
+                </group>
+            </xpath>
+        </field>
+    </record>
+</odoo>

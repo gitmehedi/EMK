@@ -28,5 +28,10 @@
             <field name="parent_id" eval="ref('menu_event_general')"/>
             <field name="sequence">20</field>
         </record>
+
+        <record id="event_session.event_session_menu" model="ir.ui.menu">
+            <field name="parent_id" eval="ref('menu_event_general')"/>
+            <field name="sequence">30</field>
+        </record>
     </data>
 </odoo>
