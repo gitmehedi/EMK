@@ -142,8 +142,10 @@
 
                     <xpath expr="//notebook/page[1]" position="after">
                         <page string="Attachments">
-                            <field name="attachment_ids" widget="one2many_list" >
+                            <field name="attachment_ids" widget="one2many_list" context="{'default_res_id': id, 'default_res_model': 'purchase.requisition'}">
                                 <tree string="Attachments" editable="top">
+                                    <field name="res_id" invisible="1"/>
+                                    <field name="res_model" invisible="1"/>
                                     <field name="name" string="Title"/>
                                     <field name="datas_fname" invisible="1"/>
                                     <field name="db_datas" filename="datas_fname" string="File"/>
@@ -177,7 +179,7 @@
                 <xpath expr="//field[@name='type_id']" position="attributes">
                     <attribute name="invisible">1</attribute>
                 </xpath>
-                <xpath expr="//field[@name='user_id']" position="replace" type="object">
+                <xpath expr="//field[@name='user_id']" position="after" type="object">
                     <field name="indent_ids" />
                     <filter name="my_approval_draft" string="To Confirm" domain="[('state','=','draft')]"/>
                     <filter name="my_approval_in_progress" string="To Validate" domain="[('state','=','in_progress')]"/>
