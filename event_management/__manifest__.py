@@ -27,6 +27,7 @@
         'views/event_event_view.xml',
         'views/event_registration_view.xml',
         'views/event_task_list_view.xml',
+        'views/event_session_view.xml',
         'wizard/wizard_event_session_view.xml',
     ],
     'installable': True,

@@ -1,9 +1,6 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <odoo>
     <data>
-
-        <!-- Tree Views -->
-
         <record id="event_management_tree_view" model="ir.ui.view">
             <field name="name">event_management_tree_view.tree</field>
             <field name="model">event.management</field>
@@ -19,8 +16,6 @@
                 </tree>
             </field>
         </record>
-
-        <!-- Kanban Views -->
 
         <record id="event_management_kanban_view" model="ir.ui.view">
             <field name="name">event_management_kanban_view.kanban</field>
@@ -50,7 +45,6 @@
                 </kanban>
             </field>
         </record>
-
 
         <record id="event_management_form_view" model="ir.ui.view">
             <field name="name">event_management_form_view.form</field>
@@ -130,8 +124,6 @@
             </field>
         </record>
 
-        <!-- Search Views -->
-
         <record id="event_management_search_view" model="ir.ui.view">
             <field name="name">event_management_view.search</field>
             <field name="model">event.management</field>
@@ -149,8 +141,6 @@
             </field>
         </record>
 
-        <!-- Calendar View -->
-
         <record id="event_management_calender_view" model="ir.ui.view">
             <field name="name">event_management_view.calendar</field>
             <field name="model">event.management</field>
@@ -163,8 +153,6 @@
             </field>
         </record>
 
-        <!-- Graph View -->
-
         <record id="event_management_graph_view" model="ir.ui.view">
             <field name="name">event_management_view.graph</field>
             <field name="model">event.management</field>
@@ -176,7 +164,6 @@
                 </graph>
             </field>
         </record>
-
 
         <record id="event_management_action" model="ir.actions.act_window">
             <field name="name">Event Management</field>
@@ -199,7 +186,6 @@
         <menuitem id="event_management_sub_menu2" name="Event Management" parent="event_management_sub_menu1"
                   action="event_management_action" sequence="2"/>
         <menuitem id="event_management_service" name="Service" parent="event_management_sub_menu1" sequence="4"/>
-
 
     </data>
 </odoo>

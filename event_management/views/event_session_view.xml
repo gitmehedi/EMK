@@ -1,0 +1,51 @@
+<?xml version="1.0"?>
+<odoo>
+    <record id="view_event_session_form" model="ir.ui.view">
+        <field name="name">event.session.form</field>
+        <field name="model">event.session</field>
+        <field name="inherit_id" ref="event_session.view_event_session_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//form/sheet" position="before">
+                <header>
+                    <button name="act_unconfirmed" string="Unconfirmed" type="object" states="confirmed"
+                            class="oe_highlight"/>
+                    <button name="act_confirmed" string="Confirmed" type="object" states="unconfirmed"
+                            class="oe_highlight" groups="event.group_event_user"/>
+                    <button name="act_done" string="Done" type="object" states="confirmed"
+                            groups="event_user.group_event_administration"/>
+                    <field name="state" widget="statusbar" statusbar_visible="unconfirmed,confirmed,done"/>
+                </header>
+            </xpath>
+            <xpath expr="//form/sheet/group" position="replace">
+                <group>
+                    <group>
+                        <field name="event_id" required="True"
+                               options="{'no_open':True,'no_create':True,'no_create_edit':True}"/>
+                        <field name="name"/>
+                    </group>
+                    <group>
+                        <field name="date_begin"/>
+                        <field name="date_end"/>
+                    </group>
+                </group>
+                <group string="Seats Information">
+                    <group>
+                        <field name="seats_min"/>
+                        <field name="seats_availability"/>
+                        <field name="seats_max"
+                               attrs="{'invisible':[('seats_availability', '=', 'unlimited')]}"/>
+                        <field name="seats_reserved"/>
+                    </group>
+                    <group>
+                        <field name="seats_available"
+                               attrs="{'invisible':[('seats_availability', '=', 'unlimited')]}"/>
+                        <field name="seats_unconfirmed"/>
+                        <field name="seats_used"/>
+                        <field name="seats_available_expected"
+                               attrs="{'invisible':[('seats_availability', '=', 'unlimited')]}"/>
+                    </group>
+                </group>
+            </xpath>
+        </field>
+    </record>
+</odoo>

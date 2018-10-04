@@ -48,10 +48,28 @@
                 <xpath expr="//field[@name='twitter_hashtag']" position="attributes">
                     <attribute name="invisible">True</attribute>
                 </xpath>
-                <xpath expr="//field[@name='twitter_hashtag']" position="after">
-                    <field name="total_seat_available"/>
+
+                <xpath expr="//field[@name='date_tz']" position="attributes">
+                    <attribute name="invisible">True</attribute>
                 </xpath>
-                <xpath expr="//form/sheet/notebook/page[@name='registrations']" position="before">
+                <xpath expr="//group[@name='main_field_group']" position="after">
+                    <group string="Seats Information">
+                        <group>
+                            <field name="total_seat_available"/>
+                            <field name="seats_min"/>
+                            <field name="seats_availability"/>
+                            <field name="seats_max"/>
+                            <field name="seats_reserved"/>
+                        </group>
+                        <group>
+                            <field name="seats_available"/>
+                            <field name="seats_unconfirmed"/>
+                            <field name="seats_used"/>
+                            <field name="auto_confirm"/>
+                        </group>
+                    </group>
+                </xpath>
+                <xpath expr="//form/sheet/notebook/page[@name='registrations']" position="replace">
                     <page string="Room Booking">
                         <field name="event_book_ids">
                             <tree editable="bottom">
