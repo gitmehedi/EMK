@@ -14,6 +14,9 @@
                     <xpath expr="//field[@name='amount_total']" position="replace">
                         <field name="amount_total" widget="monetary"/>
                     </xpath>
+                    <xpath expr="//field[@name='partner_id']" position="attributes">
+                        <attribute name="string">Supplier</attribute>
+                    </xpath>
                 </data>
             </field>
         </record>

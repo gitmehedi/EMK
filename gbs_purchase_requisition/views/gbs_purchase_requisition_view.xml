@@ -179,7 +179,7 @@
                 <xpath expr="//field[@name='type_id']" position="attributes">
                     <attribute name="invisible">1</attribute>
                 </xpath>
-                <xpath expr="//field[@name='user_id']" position="after" type="object">
+                <xpath expr="//field[@name='user_id']" position="after">
                     <field name="indent_ids" />
                     <filter name="my_approval_draft" string="To Confirm" domain="[('state','=','draft')]"/>
                     <filter name="my_approval_in_progress" string="To Validate" domain="[('state','=','in_progress')]"/>

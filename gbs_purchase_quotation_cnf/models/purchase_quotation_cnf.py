@@ -11,9 +11,6 @@ class PurchaseCNFQuotation(models.Model):
                                   ondelete='cascade',default=lambda self: self.env.context.get('shipment_id') or False)
     lc_id = fields.Many2one('letter.credit',string='LC Name',ondelete = 'cascade',related = 'shipment_id.lc_id')
 
-    partner_id = fields.Many2one('res.partner', string='C&F Vendor', required=True, track_visibility='always',
-                                 default=lambda self: self.env.context.get('partner_id') or False)
-
     @api.model
     def create(self, vals):
         if vals.get('cnf_quotation'):

@@ -219,7 +219,6 @@
             <tree string="Receive Transfers" create="false" edit="false">
                 <field name="name"/>
                 <field name="location_dest_id"/>
-                <field name="partner_id"/>
                 <field name="date" invisible="1"/>
                 <field name="min_date"/>
                 <field name="origin"/>
@@ -232,24 +231,26 @@
         </field>
     </record>
 
-    <!--<record id="view_stock_picking_filter1" model="ir.ui.view">-->
-    <!--<field name="name">view.picking.filter1</field>-->
-    <!--<field name="model">stock.picking</field>-->
-    <!--<field name="arch" type="xml">-->
-    <!--<search string="Receive">-->
-    <!--<filter name="receive_filter" string="Received" domain="[('picking_type_code', '=', 'incoming')]"/>-->
-    <!--<filter name="picking_type" string="Picking Type" domain="[]" context="{'group_by':'picking_type_id'}"/>-->
-    <!--</search>-->
-    <!--</field>-->
-    <!--</record>-->
     <!--Search View-->
-    <record id="search_stock_picking" model="ir.ui.view">
-        <field name="name">stock.picking.search</field>
+    <record id="search_stock_picking1" model="ir.ui.view">
+        <field name="name">stock.picking.search1</field>
         <field name="model">stock.picking</field>
         <field name="arch" type="xml">
-            <search string="Picking">
+            <search string="Receipts Picking">
+                <field name="partner_id"/>
+                <field name="origin"/>
                 <filter name="draft" string="Draft" domain="[('state','=','draft')]"/>
                 <separator/>
+                <filter name="ready" string="Ready" domain="[('state','=','assigned')]"/>
+            </search>
+        </field>
+    </record>
+    <!--Search View-->
+    <record id="search_stock_picking2" model="ir.ui.view">
+        <field name="name">stock.picking.search2</field>
+        <field name="model">stock.picking</field>
+        <field name="arch" type="xml">
+            <search string="Internal Picking">
                 <filter name="ready" string="Ready" domain="[('state','=','assigned')]"/>
             </search>
         </field>
@@ -262,12 +263,7 @@
         <field name="res_model">stock.picking</field>
         <field name="view_type">form</field>
         <field name="view_id" ref="view_stock_picking_tree1"/>
-        <!--<field name="search_view_id" ref="view_stock_picking_filter1"/>-->
-        <!--<field name="context">{-->
-        <!--'search_default_receive_filter': 1,}</field>-->
-        <!--<field name="domain">[('transfer_type', '=', 'receive')]</field>-->
-        <!--<field name="context">{'default_transfer_type': 'receive'}</field>-->
-        <field name="search_view_id" ref="search_stock_picking"/>
+        <field name="search_view_id" ref="search_stock_picking1"/>
         <field name="context">{
             'search_default_ready':1,
             }
@@ -278,6 +274,10 @@
                 Here you can see Received Goods list.
             </p>
         </field>
+        <!--<field name="context">{-->
+        <!--'search_default_receive_filter': 1,}</field>-->
+        <!--<field name="domain">[('transfer_type', '=', 'receive')]</field>-->
+        <!--<field name="context">{'default_transfer_type': 'receive'}</field>-->
     </record>
 
     <!--Accounts Approver Action -->
@@ -298,7 +298,7 @@
         <field name="view_type">form</field>
         <field name="view_id" ref="view_stock_picking_tree2"/>
         <field name="domain">[('location_dest_id.name','=','Quality Control')]</field>
-        <field name="search_view_id" ref="search_stock_picking"/>
+        <field name="search_view_id" ref="search_stock_picking2"/>
         <field name="context">{
             'search_default_ready':1,
             }
@@ -314,7 +314,7 @@
         <field name="view_type">form</field>
         <field name="view_id" ref="view_stock_picking_tree2"/>
         <field name="domain">[('location_dest_id.name','=','Stock')]</field>
-        <field name="search_view_id" ref="search_stock_picking"/>
+        <field name="search_view_id" ref="search_stock_picking2"/>
         <field name="context">{
             'search_default_ready':1,
             }
