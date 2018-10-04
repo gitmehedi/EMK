@@ -5,6 +5,17 @@
         <field name="model">event.session</field>
         <field name="inherit_id" ref="event_session.view_event_session_form"/>
         <field name="arch" type="xml">
+            <xpath expr="//form/sheet" position="before">
+                <header>
+                    <button name="act_unconfirmed" string="Unconfirmed" type="object" states="confirmed"
+                            class="oe_highlight"/>
+                    <button name="act_confirmed" string="Confirmed" type="object" states="unconfirmed"
+                            class="oe_highlight" groups="event.group_event_user"/>
+                    <button name="act_done" string="Done" type="object" states="confirmed"
+                            groups="event_user.group_event_administration"/>
+                    <field name="state" widget="statusbar" statusbar_visible="unconfirmed,confirmed,done"/>
+                </header>
+            </xpath>
             <xpath expr="//form/sheet/group" position="replace">
                 <group>
                     <group>
