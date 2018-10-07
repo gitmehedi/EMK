@@ -64,7 +64,7 @@ class ItemBorrowing(models.Model):
     def button_confirm(self):
         for loan in self:
             if not loan.item_lines:
-                raise UserError(_('You cannot confirm %s which has no line.' % (loan.name)))
+                raise UserError(_('You cannot confirm this without product.'))
             res = {
                 'state': 'waiting_approval',
             }

@@ -19,6 +19,10 @@ class PurchaseRequisitionTypeWizard(models.TransientModel):
         order = self.env['purchase.order'].search([('id', '=', form_id)])
         order._add_supplier_to_product()
         # Deal with double validation process
+        requested_date = datetime.strptime(order.date_order, "%Y-%m-%d %H:%M:%S").date()
+        new_seq = self.env['ir.sequence'].next_by_code_new('purchase.order', requested_date)
+        if new_seq:
+            order.write({'name': new_seq})
         if self.purchase_by not in ['lc']:
             if order.company_id.po_double_validation == 'one_step'\
                     or (order.company_id.po_double_validation == 'two_step'\
@@ -44,11 +48,6 @@ class PurchaseRequisitionTypeWizard(models.TransientModel):
                         'move_dest_id': po.requisition_id.procurement_id.move_dest_id.id,
                     })
             po.check_po_action_button = False
-
-            requested_date = datetime.strptime(order.date_order, "%Y-%m-%d %H:%M:%S").date()
-            new_seq = self.env['ir.sequence'].next_by_code_new('purchase.order',requested_date)
-            if new_seq:
-                po.write({'name':new_seq})
         return {'type': 'ir.actions.act_window_close'}
 
 
