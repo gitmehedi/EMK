@@ -131,6 +131,16 @@
 				</form>
 			</field>
 		</record>
+		<!--Search View-->
+		<record id="search_stock_indent" model="ir.ui.view">
+            <field name="name">indent.indent.search</field>
+            <field name="model">indent.indent</field>
+            <field name="arch" type="xml">
+                <search string="Indents">
+                    <filter name="inprogress" string="In Progress" domain="[('state','=','inprogress')]"/>
+                </search>
+            </field>
+        </record>
 		<!-- Indent Window Action -->
 		<record id='action_indent_indent' model='ir.actions.act_window'>
 			<field name="name">Indents</field>
@@ -142,6 +152,11 @@
 					Click to create a new indent.
 				</p>
 			</field>
+			<field name="search_view_id" ref="search_stock_indent"/>
+            <field name="context">{
+                'search_default_inprogress':1,
+                }
+            </field>
 		</record>
 		<!-- Indent Approval Window Action -->
 		<record id='action_indent_waiting_for_approval' model='ir.actions.act_window'>

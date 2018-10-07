@@ -30,7 +30,7 @@ class PurchaseOrder(models.Model):
                                    help="Local: Local LC.\n""Foreign: Foreign LC.")
     purchase_by = fields.Selection([('cash', 'Cash'), ('credit', 'Credit'), ('lc', 'LC'), ('tt', 'TT')],
                                    string="Purchase By")
-    attachment_ids = fields.Many2many('ir.attachment','attachment_po_rel','po_id','attachment_id', string='Attachments')
+    attachment_ids = fields.One2many('ir.attachment','res_id', string='Attachments', domain=[('res_model', '=', 'purchase.order')])
     check_po_action_button = fields.Boolean('Check PO Action Button', default=False)
     disable_new_revision_button = fields.Boolean('Disable New Revision Button', default=False)
 
@@ -133,6 +133,7 @@ class PurchaseOrder(models.Model):
                     'name': attachment_line.name,
                     'datas_fname': attachment_line.datas_fname,
                     'db_datas': attachment_line.db_datas,
+                    'res_model': 'purchase.order',
                 }))
             self.attachment_ids = attachments_lines
 
@@ -217,7 +218,7 @@ class PurchaseOrder(models.Model):
             if indent.state != 'draft':
                 raise ValidationError(_('You cannot delete in this state'))
             else:
-                query = """ delete from ir_attachment where res_id=%s"""
+                query = """ delete from attachment_po_rel where po_id=%s"""
                 for att in self.attachment_ids:
                     self._cr.execute(query, tuple([att.res_id]))
                 return super(PurchaseOrder, self).unlink()

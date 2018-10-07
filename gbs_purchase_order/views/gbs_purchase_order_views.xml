@@ -65,8 +65,8 @@
                         <field name="purchase_by" attrs="{'readonly': [('state','=','purchase')],'invisible': [('state','!=','purchase')]}"/>
                         <field name="disable_new_revision_button" invisible="1" />
                     </xpath>
-                    <xpath expr="//field[@name='partner_id']" position="attributes">
-                        <attribute name="string">Supplier</attribute>
+                    <xpath expr="//field[@name='partner_id']" position="replace">
+                        <field name="partner_id" context="{'search_default_supplier':1, 'default_supplier':1, 'default_customer':0}" domain="[('supplier','=',True),('parent_id', '=', False)]" string="Supplier"/>
                     </xpath>
                     <xpath expr="//field[@name='partner_ref']" position="attributes">
                         <attribute name="string">Supplier Reference</attribute>
@@ -101,8 +101,10 @@
                     </xpath>
                     <xpath expr="//page[1]" position="after">
                         <page string="Attachments">
-                            <field name="attachment_ids" widget="one2many_list" >
+                            <field name="attachment_ids" widget="one2many_list" context="{'default_res_id': id, 'default_res_model': 'purchase.order'}">
                                 <tree string="Attachments" editable="top">
+                                    <field name="res_id" invisible="1"/>
+                                    <field name="res_model" invisible="1"/>
                                     <field name="name" string="Title"/>
                                     <field name="datas_fname" invisible="1"/>
                                     <field name="db_datas" filename="datas_fname" string="File"/>
@@ -124,6 +126,11 @@
                 </button>
             </field>
         </record>
+
+
+        <menuitem action="purchase.purchase_rfq" id="purchase.menu_purchase_rfq"
+            parent="purchase.menu_procurement_management"
+            sequence="2"/>
 
     </data>
 </odoo>
