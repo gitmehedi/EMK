@@ -237,6 +237,7 @@
         <field name="model">stock.picking</field>
         <field name="arch" type="xml">
             <search string="Receipts Picking">
+                <field name="name"/>
                 <field name="partner_id"/>
                 <field name="origin"/>
                 <filter name="draft" string="Draft" domain="[('state','=','draft')]"/>
@@ -251,6 +252,8 @@
         <field name="model">stock.picking</field>
         <field name="arch" type="xml">
             <search string="Internal Picking">
+                <field name="name"/>
+                <field name="origin"/>
                 <filter name="ready" string="Ready" domain="[('state','=','assigned')]"/>
             </search>
         </field>
