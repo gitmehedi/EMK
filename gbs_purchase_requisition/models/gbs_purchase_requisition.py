@@ -100,13 +100,14 @@ class PurchaseRequisition(models.Model):
     # ORM Overrides methods
     ####################################################
 
+    @api.multi
     def unlink(self):
         for indent in self:
             if indent.state != 'draft':
                 raise ValidationError(_('You cannot delete in this state'))
             else:
                 query = """ delete from ir_attachment where res_id=%s"""
-                for att in self.attachment_ids:
+                for att in indent.attachment_ids:
                     self._cr.execute(query, tuple([att.res_id]))
                 return super(PurchaseRequisition, self).unlink()
 
