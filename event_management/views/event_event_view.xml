@@ -21,7 +21,7 @@
                     <attribute name="groups">event_user.group_event_administration</attribute>
                 </xpath>
                 <xpath expr="//form/header/button[@name='button_cancel']" position="after">
-                    <button name="data_import.data_import_wizard_action_view"
+                    <button name="data_import.data_import_wizard_action_view" class="oe_highlight"
                             states="draft,confirm" type="action" string="Import"/>
                 </xpath>
 
