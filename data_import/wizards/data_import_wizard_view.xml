@@ -7,12 +7,15 @@
       <field name="model">data.import.wizard</field>
       <field name="priority">1</field>
       <field name="arch" type="xml">
-        <form string="Import File">
-          <group col="4">
-            <separator string="SELECT YOUR FILE" colspan="4"/>
-            <field name="aml_data" filename="aml_fname"/>
-            <field name="aml_fname" readonly="1"/>
-            <newline/>
+        <form string="Select Your File">
+          <group>
+            <group>
+                <field name="aml_data" filename="aml_fname"/>
+            </group>
+            <group>
+                <field name="aml_fname" readonly="1"/>
+            </group>
+
             <field name="csv_separator" invisible="1"/>
             <field name="decimal_separator" invisible="1"/>
             <field name="codepage" invisible="1"/>
