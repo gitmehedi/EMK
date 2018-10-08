@@ -8,3 +8,4 @@ from . import event_task_list
 from . import event_task_type
 from . import event_type
 from . import event_session
+from . import event_session_attend

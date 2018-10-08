@@ -7,20 +7,9 @@ from odoo.exceptions import UserError, ValidationError
 class EventSession(models.Model):
     _inherit = 'event.session'
 
-    registration_ids = fields.One2many(
-        comodel_name='event.session.attend',
-        inverse_name='session_id',
-        string='Attendees',
-        state={'done': [('readonly', True)]},
-    )
-
+    attendee_ids = fields.One2many('event.session.attend', 'session_id', string='Attendees')
     state = fields.Selection([('unconfirmed', 'Unconfirmed'), ('confirmed', 'Confirmed'), ('done', 'Done')],
                              default='unconfirmed', string="State", track_visibility='onchange')
-
-    @api.depends('event_book_ids')
-    def compute_total_seat(self):
-        for record in self:
-            record.total_seat_available = sum([rec.seat_no for rec in record.event_book_ids])
 
     @api.one
     def register_participant(self):

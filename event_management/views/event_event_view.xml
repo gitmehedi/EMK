@@ -55,16 +55,16 @@
                 <xpath expr="//group[@name='main_field_group']" position="after">
                     <group string="Seats Information">
                         <group>
-                            <field name="total_seat_available"/>
-                            <field name="seats_min"/>
                             <field name="seats_availability"/>
+                            <field name="seats_min"/>
                             <field name="seats_max"/>
-                            <field name="seats_reserved"/>
+                            <field name="seats_available"/>
                         </group>
                         <group>
-                            <field name="seats_available"/>
-                            <field name="seats_unconfirmed"/>
+                            <field name="total_seat_available"/>
                             <field name="seats_used"/>
+                            <field name="seats_reserved"/>
+                            <field name="seats_unconfirmed"/>
                             <field name="auto_confirm"/>
                         </group>
                     </group>
