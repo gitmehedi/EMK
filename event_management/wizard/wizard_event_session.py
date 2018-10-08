@@ -7,13 +7,20 @@ from datetime import datetime, timedelta
 from pytz import timezone, utc
 
 
-class WizardEventSession(models.TransientModel):
-    _name = "wizard.event.session.inherit"
+class WizardEventSessionModel(models.TransientModel):
     _inherit = "wizard.event.session"
+    # _name = "wizard.event.session.model"
 
     @api.multi
     def action_generate_sessions(self):
-        """Here's where magic is triggered"""
+        active_id =self.env.context['active_id']
+        super(WizardEventSessionModel,self).action_generate_sessions()
+        session=self.env['event.session'].search([('event_id', '=', active_id)])
+        for ses in session:
+            for rec in self.event_id.registration_ids:
+                self
+
+        return False
         weekdays = self.weekdays()
         if not any(weekdays):
             raise ValidationError(_("You must select at least one weekday"))

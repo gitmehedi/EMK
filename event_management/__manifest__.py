@@ -10,8 +10,8 @@
         'product',
         'account',
         'event',
-        'event_user',
         'website_event',
+        'event_user',
         'event_session',
     ],
     'data': [

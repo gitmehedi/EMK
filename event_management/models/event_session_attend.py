@@ -4,8 +4,8 @@ from odoo import models, fields, api, _
 from odoo.exceptions import UserError, ValidationError
 
 
-class EventSession(models.Model):
-    _inherit = 'event.session'
+class EventSessionAttend(models.Model):
+    _inherit = 'event.session.attend'
 
     registration_ids = fields.One2many(
         comodel_name='event.session.attend',
