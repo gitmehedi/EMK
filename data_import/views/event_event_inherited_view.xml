@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record model="ir.ui.view" id="event_event_inherited_form">
+            <field name="model">event.event</field>
+            <field name="inherit_id" ref="event.view_event_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//form/header/button[@name='button_cancel']" position="after">
+                    <button name="data_import.data_import_wizard_action_view"
+							states="draft,confirm" type="action" string="Import" />
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>
