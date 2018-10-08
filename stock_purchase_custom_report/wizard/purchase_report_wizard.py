@@ -1,5 +1,5 @@
 from odoo import api, exceptions, fields, models, _
-from odoo.exceptions import ValidationError
+from odoo.exceptions import ValidationError,UserError
 
 
 class PurchaseReportWizard(models.TransientModel):
@@ -20,6 +20,10 @@ class PurchaseReportWizard(models.TransientModel):
     def report_print(self):
         location = self.env['stock.location'].search(
             [('operating_unit_id', '=', self.operating_unit_id.id),('name', '=', 'Stock')])
+
+        if not location:
+            raise UserError(_("There are no stock location for this unit. "
+                          "\nPlease create stock location for this unit."))
 
         data = {}
         data['date_from'] = self.date_from

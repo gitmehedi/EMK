@@ -1,6 +1,5 @@
-# -*- coding: utf-8 -*-
 from odoo import api, fields, models , _
-from odoo.exceptions import ValidationError
+from odoo.exceptions import ValidationError,UserError
 
 
 class StockInventoryWizard(models.TransientModel):
@@ -22,6 +21,11 @@ class StockInventoryWizard(models.TransientModel):
     @api.multi
     def report_print(self):
         location = self.env['stock.location'].search([('operating_unit_id', '=', self.operating_unit_id.id),('name', '=', 'Stock')])
+
+        if not location:
+            raise UserError(_("There are no stock location for this unit. "
+                          "\nPlease create stock location for this unit."))
+
         report_type = [val.code for val in self.env['report.type.selection'].search([])]
         selected_type = [val.code for val in self.report_type_ids]
 
