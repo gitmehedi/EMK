@@ -4,20 +4,11 @@ except ImportError:
     import StringIO
 import base64
 import csv
-import time
 from datetime import datetime
-from sys import exc_info
-from traceback import format_exception
-
 from openerp import api, fields, models, _
-from openerp.exceptions import Warning
-
 import logging
 _logger = logging.getLogger(__name__)
-
 from odoo.exceptions import ValidationError,Warning
-
-from datetime import timedelta
 import datetime
 
 
@@ -32,7 +23,7 @@ class DataImportWizard(models.TransientModel):
         compute='_compute_dialect', string='Dialect')
     csv_separator = fields.Selection(
         [(',', ', (comma)'), (';', '; (semicolon)')],
-        string='CSV Separator', required=True)
+        string='CSV Separator', default=',', required=True)
     decimal_separator = fields.Selection(
         [('.', '. (dot)'), (',', ', (comma)')],
         string='Decimal Separator',
@@ -124,7 +115,7 @@ class DataImportWizard(models.TransientModel):
             'analytic account': {'method': self._handle_analytic_account},
         }
         return res
-  
+#
     def _process_header(self, header_fields):
 
         self._field_methods = self._input_fields()
@@ -156,71 +147,9 @@ class DataImportWizard(models.TransientModel):
 
             if hf in self._field_methods:
                 continue
-          
+
         return header_fields
 
-    def _log_line_error(self, line, msg):
-        data = self.csv_separator.join(
-            [line[hf] for hf in self._header_fields])
-        self._err_log += _(
-            "Error when processing line '%s'") % data + ':\n' + msg + '\n\n'
-
-    def _handle_orm_char(self, field, line, move, aml_vals,
-                         orm_field=False):
-        orm_field = orm_field or field
-        if not aml_vals.get(orm_field):
-            aml_vals[orm_field] = line[field]
-
-    def _handle_orm_integer(self, field, line, move, aml_vals,
-                            orm_field=False):
-        orm_field = orm_field or field
-        if not aml_vals.get(orm_field):
-            val = str2int(
-                line[field], self.decimal_separator)
-            if val is False:
-                msg = _(
-                    "Incorrect value '%s' "
-                    "for field '%s' of type Integer !"
-                    ) % (line[field], field)
-                self._log_line_error(line, msg)
-            else:
-                aml_vals[orm_field] = val
-
-    def _handle_orm_float(self, field, line, move, aml_vals,
-                          orm_field=False):
-        orm_field = orm_field or field
-        if not aml_vals.get(orm_field):
-            aml_vals[orm_field] = str2float(
-                line[field], self.decimal_separator)
-
-            val = str2float(
-                line[field], self.decimal_separator)
-            if val is False:
-                msg = _(
-                    "Incorrect value '%s' "
-                    "for field '%s' of type Numeric !"
-                    ) % (line[field], field)
-                self._log_line_error(line, msg)
-            else:
-                aml_vals[orm_field] = val
-
-    def _handle_orm_many2one(self, field, line, move, aml_vals,
-                             orm_field=False):
-        orm_field = orm_field or field
-        if not aml_vals.get(orm_field):
-            val = str2int(
-                line[field], self.decimal_separator)
-            if val is False:
-                msg = _(
-                    "Incorrect value '%s' "
-                    "for field '%s' of type Many2One !"
-                    "\nYou should specify the database key "
-                    "or contact your IT department "
-                    "to add support for this field."
-                    ) % (line[field], field)
-                self._log_line_error(line, msg)
-            else:
-                aml_vals[orm_field] = val
 
     def _handle_account(self, field, line, move, aml_vals):
         if not aml_vals.get('account_id'):
@@ -357,55 +286,11 @@ class DataImportWizard(models.TransientModel):
                         "that match with '%s' !") % input
                 self._log_line_error(line, msg)
 
-    def _process_line_vals(self, line, move, aml_vals):
-        """
-        Use this method if you want to check/modify the
-        line input values dict before calling the move write() method
-        """
-        if 'name' not in aml_vals:
-            aml_vals['name'] = '/'
-
-        if 'debit' not in aml_vals:
-            aml_vals['debit'] = 0.0
-
-        if 'credit' not in aml_vals:
-            aml_vals['credit'] = 0.0
-
-        if 'partner_id' not in aml_vals:
-            # required since otherwise the partner_id
-            # of the previous entry is added
-            aml_vals['partner_id'] = False
-
-        all_fields = self._field_methods
-        required_fields = [x for x in all_fields
-                           if all_fields[x].get('required')]
-        for rf in required_fields:
-            if rf not in aml_vals:
-                msg = _("The '%s' field is a required field "
-                        "that must be correctly set.") % rf
-                self._log_line_error(line, msg)
-
-    def _process_vals(self, move, vals):
-        """
-        Use this method if you want to check/modify the
-        input values dict before calling the move write() method
-        """
-        dp = self.env['decimal.precision'].precision_get('Account')
-        if round(self._sum_debit, dp) != round(self._sum_credit, dp):
-            self._err_log += '\n' + _(
-                "Error in CSV file, Total Debit (%s) is "
-                "different from Total Credit (%s) !"
-                ) % (self._sum_debit, self._sum_credit) + '\n'
-        return vals
-
     @api.multi
     def aml_import(self):
-
-        time_start = time.time()
         self._err_log = ''
-        move = self.env['hr.holidays.import'].browse(self._context['active_id'])
+        event = self.env['event.event'].browse(self._context['active_id'])
         self._sum_debit = self._sum_credit = 0.0
-        #self._get_orm_fields()
         lines, header = self._remove_leading_lines(self.lines)
         header_fields = csv.reader(
             StringIO.StringIO(header), dialect=self.dialect).next()
@@ -413,52 +298,21 @@ class DataImportWizard(models.TransientModel):
         reader = csv.DictReader(
             StringIO.StringIO(lines), fieldnames=self._header_fields,
             dialect=self.dialect)
-        
-        is_success = False
-        
+
+        temp_pool = self.env['event.registration']
+        temp_vals = {}
         for line in reader:
-            temp_vals = {}
             temp_vals['name'] = line['name']
-            temp_vals['employee_id'] = line['employee_id']
-            temp_vals['holiday_status_id'] = line['holiday_status_id']
-            temp_vals['number_of_days'] = line['number_of_days']
-            temp_vals['type'] = line['type']
-            temp_vals['import_id'] = move.id
-             
-            temp_pool = self.env['hr.holidays.import.temp']
-            temp_pool.create(temp_vals)
-             
-            """ search employee model with employee ID """
-            vals = {}
-            vals['name'] = line['name']
-            vals['holiday_status_id'] = line['holiday_status_id']
-            vals['number_of_days'] = line['number_of_days']
-            vals['type'] = line['type']
-            vals['import_id'] = move.id
+            temp_vals['phone'] = line['phone']
+            temp_vals['email'] = line['name']
+            temp_vals['event_id'] = line['event_id']
+            temp_vals['partner_id'] = line['partner_id']
+            temp_vals['date_open'] = line['date_open']
+            temp_vals['date_closed'] = line['date_closed']
+            temp_vals['import_id'] = event.id
+            if temp_vals:
+                temp_pool.create(temp_vals)
 
-            emp_pool = self.env['hr.employee'].search([('id','=',line['employee_id'])])
-            attendance_line_obj = self.env['hr.holidays.import.line']
-            attendance_error_obj = self.env['hr.holidays.import.error']
-             
-            if emp_pool.id is not False:                
-                vals['employee_id'] = emp_pool.id
-                attendance_line_obj.create(vals)                
-            else:
-
-                error_vals = {}
-                error_vals['name'] = line['name']
-                error_vals['holiday_status_id'] = line['holiday_status_id']
-                error_vals['number_of_days'] = line['number_of_days']
-                error_vals['type'] = line['type']
-                error_vals['import_id'] = move.id
-
-                error_vals['employee_id'] = line['employee_id']
-                attendance_error_obj.create(error_vals)
-            
-            is_success = True
-            
-        if is_success is True:
-            move.action_confirm()
 
 def str2float(amount, decimal_separator):
     if not amount:

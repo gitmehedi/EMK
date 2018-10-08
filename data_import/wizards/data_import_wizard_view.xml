@@ -9,13 +9,13 @@
       <field name="arch" type="xml">
         <form string="Import File">
           <group col="4">
-            <separator string="Select your file :" colspan="4"/>
+            <separator string="SELECT YOUR FILE" colspan="4"/>
             <field name="aml_data" filename="aml_fname"/>
             <field name="aml_fname" readonly="1"/>
             <newline/>
-            <field name="csv_separator"/>
-            <field name="decimal_separator"/>
-            <field name="codepage"/>
+            <field name="csv_separator" invisible="1"/>
+            <field name="decimal_separator" invisible="1"/>
+            <field name="codepage" invisible="1"/>
           </group>
           <footer>
             <button name="aml_import" string="_Import" type="object" class="oe_highlight"/>
@@ -41,7 +41,7 @@
       </field>
     </record> 
 
-	<record id="data_wizard_action_view" model="ir.actions.act_window">
+    <record id="data_import_wizard_action_view" model="ir.actions.act_window">
 			<field name="name">Import Data</field>
 			<field name="type">ir.actions.act_window</field>
 			<field name="res_model">data.import.wizard</field>
@@ -49,12 +49,6 @@
 			<field name="view_mode">form</field>
 			<field name="target">new</field>
 	</record>
-
-    <menuitem
-            name="Data Import"
-            action="data_wizard_action_view"
-            parent="event.event_main_menu" sequence="81"
-            id="menu_data_import"/>
 
   </data>
 </odoo>

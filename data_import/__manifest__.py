@@ -7,6 +7,7 @@
     'summary': """Manage all kind of csv file upload and import data""",
     'description': """To data import easily and manage data properly by csv file format this module will help.""",
     'data': [
+        'views/event_event_inherited_view.xml',
         'wizards/data_import_wizard_view.xml',
     ],
     
