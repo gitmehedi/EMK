@@ -10,7 +10,7 @@
     'website': "www.genweb2.com",
     'category': 'Stock',
     'version': '10.0.0.1',
-    'depends': ['stock_operating_unit','account'],
+    'depends': ['stock_operating_unit_extend','account'],
     'data': [
         'security/ir.model.access.csv',
         'security/ir_rule.xml',

@@ -242,7 +242,7 @@
                 <field name="origin"/>
                 <filter name="draft" string="Draft" domain="[('state','=','draft')]"/>
                 <separator/>
-                <filter name="ready" string="Ready" domain="[('state','=','assigned')]"/>
+                <filter name="ready" string="Ready" domain="[('state','in',('assigned', 'partially_available'))]"/>
             </search>
         </field>
     </record>
@@ -254,7 +254,7 @@
             <search string="Internal Picking">
                 <field name="name"/>
                 <field name="origin"/>
-                <filter name="ready" string="Ready" domain="[('state','=','assigned')]"/>
+                <filter name="ready" string="Ready" domain="[('state','in',('assigned', 'partially_available'))]"/>
             </search>
         </field>
     </record>
@@ -269,6 +269,7 @@
         <field name="search_view_id" ref="search_stock_picking1"/>
         <field name="context">{
             'search_default_ready':1,
+            'default_transfer_type': 'receive',
             }
         </field>
         <field name="domain">[('location_dest_id.name','=','Input')]</field>

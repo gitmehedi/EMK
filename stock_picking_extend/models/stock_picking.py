@@ -10,7 +10,7 @@ class Picking(models.Model):
     def _get_default_picking_type(self):
         if self.env.context.get('default_transfer_type') == 'receive':
             picking_type_objs = self.env['stock.picking.type'].search(
-                    [('warehouse_id.operating_unit_id', '=', self.env.user.default_operating_unit_id.id),
+                    [('operating_unit_id', '=', self.env.user.default_operating_unit_id.id),
                      ('code', '=', 'incoming')])
             return picking_type_objs[0].id
 
