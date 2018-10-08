@@ -2,14 +2,14 @@ try:
     import cStringIO as StringIO
 except ImportError:
     import StringIO
-import base64
-import csv
-from datetime import datetime
-from openerp import api, fields, models, _
+
+import base64, datetime, csv
 import logging
+from datetime import datetime
+from odoo import api, fields, models, _
+from odoo.exceptions import ValidationError, Warning
+
 _logger = logging.getLogger(__name__)
-from odoo.exceptions import ValidationError,Warning
-import datetime
 
 
 class DataImportWizard(models.TransientModel):
@@ -115,7 +115,7 @@ class DataImportWizard(models.TransientModel):
             'analytic account': {'method': self._handle_analytic_account},
         }
         return res
-#
+
     def _process_header(self, header_fields):
 
         self._field_methods = self._input_fields()
@@ -139,7 +139,7 @@ class DataImportWizard(models.TransientModel):
                 raise Warning(_(
                     "Duplicate header field '%s' found !"
                     "\nPlease correct the input file.")
-                    % hf)
+                              % hf)
             else:
                 header_fields2.append(hf)
 
@@ -149,7 +149,6 @@ class DataImportWizard(models.TransientModel):
                 continue
 
         return header_fields
-
 
     def _handle_account(self, field, line, move, aml_vals):
         if not aml_vals.get('account_id'):
@@ -299,19 +298,19 @@ class DataImportWizard(models.TransientModel):
             StringIO.StringIO(lines), fieldnames=self._header_fields,
             dialect=self.dialect)
 
-        temp_pool = self.env['event.registration']
-        temp_vals = {}
+        obj = self.env['event.registration']
+        partner = self.env['res.partner'].search([('name', '=', 'Public user'),('active','=',False)])
         for line in reader:
-            temp_vals['name'] = line['name']
-            temp_vals['phone'] = line['phone']
-            temp_vals['email'] = line['name']
-            temp_vals['event_id'] = line['event_id']
-            temp_vals['partner_id'] = line['partner_id']
-            temp_vals['date_open'] = line['date_open']
-            temp_vals['date_closed'] = line['date_closed']
-            temp_vals['import_id'] = event.id
-            if temp_vals:
-                temp_pool.create(temp_vals)
+            vals = {}
+            vals['name'] = line['name']
+            vals['phone'] = line['phone']
+            vals['email'] = line['email']
+            vals['event_id'] = event.id
+            vals['date_open'] = line['date_open']
+            vals['date_closed'] = line['date_closed']
+            vals['partner_id'] = partner.id if partner else None
+            vals['import_id'] = event.id
+            obj.create(vals)
 
 
 def str2float(amount, decimal_separator):

@@ -1,1 +1,1 @@
-import wizards
+import wizard

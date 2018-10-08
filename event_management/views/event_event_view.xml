@@ -20,6 +20,10 @@
                 <xpath expr="//button[@name='toggle_active']" position="attributes">
                     <attribute name="groups">event_user.group_event_administration</attribute>
                 </xpath>
+                <xpath expr="//form/header/button[@name='button_cancel']" position="after">
+                    <button name="data_import.data_import_wizard_action_view"
+                            states="draft,confirm" type="action" string="Import"/>
+                </xpath>
 
                 <xpath expr="//field[@name='address_id']" position="attributes">
                     <attribute name="options">{'no_open':True,'no_create':True,'no_create_edit':True}</attribute>
