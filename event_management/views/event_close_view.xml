@@ -23,8 +23,8 @@
                 <form>
                     <header>
                         <button name="event_colse_confirm"  string="Confirm" type="object" class="oe_highlight" states="draft"/>
-                        <button name="event_cancel" string="Cancel"  type="object" states="draft"/>
-                        <button name="event_approve" string="Approve" type="object" states="confirm"/>
+                        <button name="event_close_cancel" string="Cancel"  type="object" states="draft"/>
+                        <button name="event_close_approve" string="Approve" type="object" states="confirm"/>
                         <field name="state" widget="statusbar" statusbar_visible="draft,confirm,approve"/>
                     </header>
                     <sheet>
@@ -42,31 +42,33 @@
                             </group>
                             <group>
                                 <field name="moderator_id"/>
-                                <!--<field name="designation_id"/>-->
-                                <!--<field name="company_id"/>-->
-                                <!--<field name="mobile_phone"/>-->
-                                <!--<field name="work_email"/>-->
-                                <!--<field name="date" attrs="{'readonly': [('state', 'not in', ['draft'])]}"/>-->
+                                <field name="designation_id"/>
+                                <field name="company_id"/>
+                                <field name="mobile_phone"/>
+                                <field name="work_email"/>
                             </group>
                         </group>
                         <notebook>
                             <page string="Others">
-                                <tree string="Service Lines Tree" editable="bottom" colors="#10993b:state=='done';#f20b07:state=='pending'">
-                                    <field name="theme_id"/>
-                                    <field name="audience_id"/>
-                                    <field name="total_participants"/>
-                                    <field name="male_participants"/>
-                                    <field name="female_participants"/>
-                                </tree>
-                                <tree string="Service Lines Tree" editable="bottom" colors="#10993b:state=='done';#f20b07:state=='pending'">
-                                    <field name="age_group" widget="redio"/>
-                                    Did you collaborate with any non-USG organization to carry out this activity?
-                                    <field name="non_usg" widget="redio"/>
-                                    <field name="event_summary"/>
-                                    <field name="website"/>
-                                    <field name="attach_file"/>
-                                    <field name="comment"/>
-                                </tree>
+                                <group>
+                                    <group>
+                                        <field name="theme_id"/>
+                                        <field name="audience_id"/>
+                                        <field name="total_participants"/>
+                                        <field name="male_participants"/>
+                                        <field name="female_participants"/>
+                                    </group>
+                                    <group>
+                                        <field name="event_summary"/>
+                                        <field name="website"/>
+                                        <field name="attach_file"/>
+                                        <field name="comment"/>
+                                    </group>
+                                </group>
+                                <p><b>Age Group</b></p>
+                                <field name="age_group" widget="radio" nolabel="1"/>
+                                <p><b>Did you collaborate with any non-USG organization to carry out this activity?</b></p>
+                                <field name="non_usg" widget="radio" nolabel="1"/>
                             </page>
                         </notebook>
                     </sheet>
@@ -76,16 +78,14 @@
         <record id="event_close_action" model="ir.actions.act_window">
             <field name="name">Event Close</field>
             <field name="res_model">event.close</field>
-            <field name="type">ir.actions.act_window</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree</field>
-            <field name="help" type="html">
-              <p class="oe_view_nocontent_create">
-                Click to add an event order.
-              </p><p>
-                Here you can create and manage your events.
-              </p>
-            </field>
+            <field name="view_mode">tree,form</field>
         </record>
+
+        <!-- Menu items -->
+        <menuitem id="event_close_menu" name="Event Close" sequence="82"
+                  parent="menu_event_general" action="event_close_action"
+                  />
+
     </data>
 </odoo>
