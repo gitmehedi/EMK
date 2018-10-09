@@ -15,6 +15,7 @@
         'data_import',
         'event_session',
         'mail',
+        'report_layout'
     ],
     'data': [
         'security/security.xml',
@@ -32,6 +33,7 @@
         'views/event_session_view.xml',
         'views/event_close_view.xml',
         'views/res_partner_views.xml',
+        'report/report_event_completion_form.xml',
         'wizard/wizard_event_session_view.xml',
     ],
     'installable': True,

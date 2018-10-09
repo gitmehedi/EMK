@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--Custom report. -->
+<odoo>
+	<data>
+		<report
+			id="action_report_event_completion"
+			model="event.close"
+			string="Event Completion Form"
+			report_type="qweb-pdf"
+			name="event_management.report_event_completion"
+			file="event_management.report_event_completion"
+            paperformat="report_layout.paperformat_backend_portrait"
+		/>
+
+		<template id="report_event_completion">
+			<t t-call="report.html_container">
+				<t t-call="report_layout.gbs_internal_layout">
+                    <t t-foreach="docs" t-as="o">
+                        <div class="page" style="page-break-inside:auto">
+                            <div class="row" style="padding-top:5px;">
+                                <style type="text/css">
+                                    .report-title { text-align:center; }
+                                    .odo-bg-gray, .odo-bg-gray > td { background-color: #f5f5f5; }
+                                </style>
+                                <div class="clearfix">
+                                    <h3 class="report-title">Event Completion Form</h3>
+                                    <br/>
+                                    <div class="row">
+                                        <div class="col-xs-6 text-left">
+                                            <h6><b>Program Ttle :  </b><span t-esc="o.event_id.name"/></h6>
+                                            <h6><b>Program Type :  </b><span t-esc="o.event_type_id.name"/></h6>
+                                        </div>
+                                        <div class="col-xs-6 text-left">
+                                            <h6><b>Start Date :  </b><span t-esc="o.start_date" t-options='{"widget": "date"}'/></h6>
+                                            <h6><b>End date :  </b><span t-esc="o.end_date" t-options='{"widget": "date"}'/></h6>
+                                        </div>
+                                    </div>
+                                    <br/>
+                                    <div class="row">
+                                        <div class="col-xs-6 text-left">
+                                            <h6><b>Theme :  </b><span t-esc="o.theme_id.name"/></h6>
+                                            <h6><b>Total Participants :  </b><span t-esc="o.total_participants"/></h6>
+                                            <h6><b>Total Male Participants :  </b><span t-esc="o.male_participants"/></h6>
+                                            <h6><b>Total Female Participants :  </b><span t-esc="o.female_participants"/></h6>
+                                        </div>
+                                        <div class="col-xs-6 text-left">
+                                            <h6><b>Key Audience :  </b><span t-esc="o.audience_id.name"/></h6>
+                                            <h6><b>Age Group :  </b><span t-esc="o.age_group"/></h6>
+                                            <h6><b>Space Used :  </b><span t-esc="o.audience_id.name"/></h6>
+                                        </div>
+                                    </div>
+                                </div>
+                                <br/>
+                                <h3>Moderator of the event</h3>
+                                <div class="row">
+                                    <div class="col-xs-6 text-left">
+                                        <h6><b>Moderator Name :  </b><span t-esc="o.organizer_id.name"/></h6>
+                                        <h6><b>Designation :  </b><span t-esc="o.designation"/></h6>
+                                        <h6><b>Organization :  </b><span t-esc="o.company_id.name"/></h6>
+                                    </div>
+                                    <div class="col-xs-6 text-left">
+                                        <h6><b>Contract Number :  </b><span t-esc="o.contract_number"/></h6>
+                                        <h6><b>Email Address :  </b><span t-esc="o.work_email"/></h6>
+                                    </div>
+                                </div>
+                                <br/>
+                                <div class="row">
+                                    <div class="col-xs-12 text-left">
+                                        <p>
+                                            <b>Did you collaborate with any non-USG organization to carry out this activity?</b>
+                                            <br/>
+                                            <span t-esc="o.non_usg"/></p>
+                                        <h6><span t-esc="o.website"/></h6>
+                                        <h6> <span t-esc="o.attach_file"/></h6>
+                                    </div>
+                                </div>
+                                <!--<div class="row">-->
+                                    <!--<div class="col-xs-12 text-left">-->
+                                        <!--<span t-esc="o.event_summary"/>-->
+                                        <!--<span t-esc="o.comment"/>-->
+                                    <!--</div>-->
+                                <!--</div>-->
+                            </div>
+                        </div>
+                    </t>
+				</t>
+			</t>
+		</template>
+	</data>
+</odoo>

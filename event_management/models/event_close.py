@@ -16,9 +16,9 @@ class EventClose(models.Model):
                                  related='organizer_id.company_id')
     theme_id = fields.Many2one('res.users', string='Theme')
     audience_id = fields.Many2one('res.users', string='Key Audience')
-    mobile_phone = fields.Char(string="Contract Number", readonly=True,
+    contract_number = fields.Char(string="Contract Number", readonly=True,
                                related='organizer_id.mobile')
-    designation_id = fields.Char(string="Designation",readonly=True,related='organizer_id.function')
+    designation = fields.Char(string="Designation",readonly=True,related='organizer_id.function')
     work_email = fields.Char(string="Email", readonly=True, related='organizer_id.email')
     start_date = fields.Datetime(string='Start Date', readonly=True, related='event_id.date_begin')
     end_date = fields.Datetime(string='End Date', related='event_id.date_end', readonly=True)
