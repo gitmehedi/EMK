@@ -16,7 +16,7 @@
                     <field name="state" widget="statusbar" statusbar_visible="unconfirmed,confirmed,done"/>
                 </header>
             </xpath>
-            <xpath expr="//notebook/page[@name='registrations']" position="replace">
+            <xpath expr="//notebook/page[@name='registrations']" position="before">
 
             </xpath>
             <xpath expr="//notebook/page[1]" position="before">

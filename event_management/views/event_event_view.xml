@@ -73,7 +73,7 @@
                         </group>
                     </group>
                 </xpath>
-                <xpath expr="//form/sheet/notebook/page[@name='registrations']" position="replace">
+                <xpath expr="//form/sheet/notebook/page[@name='registrations']" position="before">
                     <page string="Room Booking">
                         <field name="event_book_ids">
                             <tree editable="bottom">
