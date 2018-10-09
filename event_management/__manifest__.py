@@ -14,6 +14,7 @@
         'event_user',
         'data_import',
         'event_session',
+        'mail',
     ],
     'data': [
         'security/security.xml',

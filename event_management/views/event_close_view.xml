@@ -8,7 +8,7 @@
                 <tree>
                     <field name="event_id"/>
                     <field name="event_type_id"/>
-                    <field name="moderator_id"/>
+                    <field name="organizer_id"/>
                     <field name="start_date"/>
                     <field name="end_date"/>
                     <field name="activity_duration"/>
@@ -22,10 +22,11 @@
             <field name="arch" type="xml">
                 <form>
                     <header>
-                        <button name="event_colse_confirm" string="Confirm" type="object" class="oe_highlight"
+                        <button name="act_confirm" string="Confirm" type="object" class="oe_highlight"
                                 states="draft"/>
-                        <button name="event_close_cancel" string="Cancel" type="object" states="draft"/>
-                        <button name="event_close_approve" string="Approve" type="object" states="confirm"/>
+                        <button name="act_approve" string="Approve" type="object" states="confirm"
+                                class="oe_highlight"/>
+                        <button name="act_cancel" string="Cancel" type="object" states="draft"/>
                         <field name="state" widget="statusbar" statusbar_visible="draft,confirm,approve"/>
                     </header>
                     <sheet>
@@ -36,22 +37,17 @@
                             <group>
                                 <field name="event_type_id"
                                        options="{'no_open':True,'no_create':True,'no_create_edit':True}"/>
-                                <field name="location_id"
-                                       options="{'no_open':True,'no_create':True,'no_create_edit':True}"/>
-
+                                <field name="activity_duration"/>
                             </group>
                             <group>
-                                <field name="organizer_id"
-                                       options="{'no_open':True,'no_create':True,'no_create_edit':True}"/>
                                 <field name="start_date"/>
                                 <field name="end_date"/>
-                                <field name="activity_duration"/>
                             </group>
                         </group>
 
                         <group string="Moderator of the event">
                             <group>
-                                <field name="moderator_id"
+                                <field name="organizer_id"
                                        options="{'no_open':True,'no_create':True,'no_create_edit':True}"/>
                                 <field name="designation_id"
                                        options="{'no_open':True,'no_create':True,'no_create_edit':True}"/>
@@ -65,22 +61,20 @@
                         </group>
                     
                         <notebook>
-                            <page string="Others">
+                            <page string="Information">
                                 <group>
                                     <group>
-                                        <field name="theme_id"
-                                               options="{'no_open':True,'no_create':True,'no_create_edit':True}"/>
-                                        <field name="audience_id"
-                                               options="{'no_open':True,'no_create':True,'no_create_edit':True}"/>
                                         <field name="total_participants"/>
                                         <field name="male_participants"/>
                                         <field name="female_participants"/>
                                     </group>
                                     <group>
-                                        <field name="event_summary"/>
+                                        <field name="theme_id"
+                                               options="{'no_open':True,'no_create':True,'no_create_edit':True}"/>
+                                        <field name="audience_id"
+                                               options="{'no_open':True,'no_create':True,'no_create_edit':True}"/>
                                         <field name="website"/>
                                         <field name="attach_file"/>
-                                        <field name="comment"/>
                                     </group>
                                 </group>
                                 <p>
@@ -91,9 +85,19 @@
                                     <b>Did you collaborate with any non-USG organization to carry out this activity?</b>
                                 </p>
                                 <field name="non_usg" widget="radio" nolabel="1"/>
+                                <group string="Summary of Event">
+                                    <field name="event_summary" nolabel="1" widget="html"/>
+                                </group>
+                                <group string="Comment">
+                                    <field name="comment" nolabel="1" widget="html"/>
+                                </group>
                             </page>
                         </notebook>
                     </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
                 </form>
             </field>
         </record>
