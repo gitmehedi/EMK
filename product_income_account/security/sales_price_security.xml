@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="sale_price_change_permission_head_of_sales" model="ir.rule">
+        <field name="name">Product Sales Price Permission HOS</field>
+        <field name="model_id" ref="model_product_sales_pricelist"/>
+        <field name="domain_force">[(1,'=',1)]</field>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_create" eval="False"/>
+        <field name="perm_write" eval="False"/>
+        <field name="perm_unlink" eval="False"/>
+        <field name="groups" eval="[(4,ref('gbs_application_group.group_head_sale'))]"/>
+    </record>
+
+    <record id="sale_price_change_permission_head_of_accounts" model="ir.rule">
+        <field name="name">Product Sales Price Permission HOA</field>
+        <field name="model_id" ref="model_product_sales_pricelist"/>
+        <field name="domain_force">[(1,'=',1)]</field>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_create" eval="False"/>
+        <field name="perm_write" eval="False"/>
+        <field name="perm_unlink" eval="False"/>
+        <field name="groups" eval="[(4,ref('gbs_application_group.group_head_account'))]"/>
+    </record>
+
+    <record id="sale_price_change_permission_director" model="ir.rule">
+        <field name="name">Product Sales Price Permission For CXO/M.D/Director</field>
+        <field name="model_id" ref="model_product_sales_pricelist"/>
+        <field name="domain_force">[(1,'=',1)]</field>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_create" eval="False"/>
+        <field name="perm_write" eval="False"/>
+        <field name="perm_unlink" eval="False"/>
+        <field name="groups" eval="[(4,ref('gbs_application_group.group_cxo'))]"/>
+    </record>
+
+    <record id="sale_price_change_permission_sales_product_manager" model="ir.rule">
+        <field name="name">Product Sales Price Permission For Sales Product Manager</field>
+        <field name="model_id" ref="model_product_sales_pricelist"/>
+        <!--<field name="domain_force">[('sale_ok','=',1)]</field>-->
+        <field name="perm_read" eval="True"/>
+        <field name="perm_create" eval="False"/>
+        <field name="perm_write" eval="False"/>
+        <field name="perm_unlink" eval="False"/>
+        <field name="groups" eval="[(4,ref('gbs_application_group.group_sales_product_manager'))]"/>
+    </record>
+
+
+</odoo>
