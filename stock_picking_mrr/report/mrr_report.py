@@ -1,4 +1,3 @@
-import datetime
 from odoo import api, exceptions, fields, models
 
 class MrrReport(models.AbstractModel):

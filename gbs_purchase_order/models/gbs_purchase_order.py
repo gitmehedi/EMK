@@ -46,6 +46,12 @@ class PurchaseOrder(models.Model):
 
     ref_date = fields.Date('Ref.Date')
 
+    currency_id = fields.Many2one(related='partner_id.property_purchase_currency_id',required=True, store=True,
+                                  string='Currency', readonly=True)
+
+    # currency_id = fields.Many2one('res.currency', 'Currency', required=True, readonly=True,
+    #                               default=lambda self: self.partner_id.currency_id.id)
+
     @api.onchange('requisition_id')
     def _onchange_requisition_id(self):
         if not self.requisition_id:
