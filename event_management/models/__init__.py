@@ -9,4 +9,4 @@ from . import event_task_type
 from . import event_type
 from . import event_session
 from . import event_session_attend
-
+from . import event_close
