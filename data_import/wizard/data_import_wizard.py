@@ -5,7 +5,7 @@ except ImportError:
 
 import base64, datetime, csv
 import logging
-from datetime import datetime
+
 from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError, Warning
 
@@ -17,22 +17,15 @@ class DataImportWizard(models.TransientModel):
 
     aml_data = fields.Binary(string='File')
     aml_fname = fields.Char(string='Filename')
-    lines = fields.Binary(
-        compute='_compute_lines', string='Input Lines')
-    dialect = fields.Binary(
-        compute='_compute_dialect', string='Dialect')
-    csv_separator = fields.Selection(
-        [(',', ', (comma)'), (';', '; (semicolon)')],
-        string='CSV Separator', default=',', required=True)
-    decimal_separator = fields.Selection(
-        [('.', '. (dot)'), (',', ', (comma)')],
-        string='Decimal Separator',
-        default='.')
-    codepage = fields.Char(
-        string='Code Page',
-        default=lambda self: self._default_codepage(),
-        help="Code Page of the system that has generated the csv file."
-             "\nE.g. Windows-1252, utf-8")
+    lines = fields.Binary(compute='_compute_lines', string='Input Lines')
+    dialect = fields.Binary(compute='_compute_dialect', string='Dialect')
+    csv_separator = fields.Selection([(',', ', (comma)'), (';', '; (semicolon)')],
+                                     string='CSV Separator', default=',', required=True)
+    decimal_separator = fields.Selection([('.', '. (dot)'), (',', ', (comma)')],
+                                         string='Decimal Separator', default='.')
+    codepage = fields.Char(string='Code Page', default=lambda self: self._default_codepage(),
+                           help="Code Page of the system that has generated the csv file."
+                                "\nE.g. Windows-1252, utf-8")
     note = fields.Text('Log')
 
     @api.model
@@ -80,6 +73,9 @@ class DataImportWizard(models.TransientModel):
 
     def _remove_leading_lines(self, lines):
         """ remove leading blank or comment lines """
+        if not lines:
+            raise Warning(_('Please Select Data File to Import.'))
+
         input = StringIO.StringIO(lines)
         header = False
         while not header:
@@ -94,31 +90,9 @@ class DataImportWizard(models.TransientModel):
         output = input.read()
         return output, header
 
-    def _input_fields(self):
-        """
-        Extend this dictionary if you want to add support for
-        fields requiring pre-processing before being added to
-        the move line values dict.
-        """
-        res = {
-            'account': {'method': self._handle_account},
-            'account_id': {'required': True},
-            'debit': {'method': self._handle_debit, 'required': True},
-            'credit': {'method': self._handle_credit, 'required': True},
-            'partner': {'method': self._handle_partner},
-            'product': {'method': self._handle_product},
-            'date_maturity': {'method': self._handle_date_maturity},
-            'due date': {'method': self._handle_date_maturity},
-            'currency': {'method': self._handle_currency},
-            'tax account': {'method': self._handle_tax_code},
-            'tax_code': {'method': self._handle_tax_code},
-            'analytic account': {'method': self._handle_analytic_account},
-        }
-        return res
-
     def _process_header(self, header_fields):
 
-        self._field_methods = self._input_fields()
+        self._field_methods = {}
         self._skip_fields = []
 
         # header fields after blank column are considered as comments
@@ -150,166 +124,28 @@ class DataImportWizard(models.TransientModel):
 
         return header_fields
 
-    def _handle_account(self, field, line, move, aml_vals):
-        if not aml_vals.get('account_id'):
-            code = line[field]
-            if code in self._accounts_dict:
-                aml_vals['account_id'] = self._accounts_dict[code]
-            else:
-                msg = _("Account with code '%s' not found !") % code
-                self._log_line_error(line, msg)
-
-    def _handle_debit(self, field, line, move, aml_vals):
-        if 'debit' not in aml_vals:
-            debit = str2float(line[field], self.decimal_separator)
-            aml_vals['debit'] = debit
-            self._sum_debit += debit
-
-    def _handle_credit(self, field, line, move, aml_vals):
-        if 'credit' not in aml_vals:
-            credit = str2float(line[field], self.decimal_separator)
-            aml_vals['credit'] = credit
-            self._sum_credit += credit
-
-    def _handle_partner(self, field, line, move, aml_vals):
-        if not aml_vals.get('partner_id'):
-            input = line[field]
-            part_mod = self.env['res.partner']
-            dom = ['|', ('parent_id', '=', False), ('is_company', '=', True)]
-            dom_ref = dom + [('ref', '=', input)]
-            partners = part_mod.search(dom_ref)
-            if not partners:
-                dom_name = dom + [('name', '=', input)]
-                partners = part_mod.search(dom_name)
-            if not partners:
-                msg = _("Partner '%s' not found !") % input
-                self._log_line_error(line, msg)
-                return
-            elif len(partners) > 1:
-                msg = _("Multiple partners with Reference "
-                        "or Name '%s' found !") % input
-                self._log_line_error(line, msg)
-                return
-            else:
-                partner = partners[0]
-                aml_vals['partner_id'] = partner.id
-
-    def _handle_product(self, field, line, move, aml_vals):
-        if not aml_vals.get('product_id'):
-            input = line[field]
-            prod_mod = self.env['product.product']
-            products = prod_mod.search([
-                ('default_code', '=', input)])
-            if not products:
-                products = prod_mod.search(
-                    [('name', '=', input)])
-            if not products:
-                msg = _("Product '%s' not found !") % input
-                self._log_line_error(line, msg)
-                return
-            elif len(products) > 1:
-                msg = _("Multiple products with Internal Reference "
-                        "or Name '%s' found !") % input
-                self._log_line_error(line, msg)
-                return
-            else:
-                product = products[0]
-                aml_vals['product_id'] = product.id
-
-    def _handle_date_maturity(self, field, line, move, aml_vals):
-        if not aml_vals.get('date_maturity'):
-            due = line[field]
-            try:
-                datetime.strptime(due, '%Y-%m-%d')
-                aml_vals['date_maturity'] = due
-            except:
-                msg = _("Incorrect data format for field '%s' "
-                        "with value '%s', "
-                        " should be YYYY-MM-DD") % (field, due)
-                self._log_line_error(line, msg)
-
-    def _handle_currency(self, field, line, move, aml_vals):
-        if not aml_vals.get('currency_id'):
-            name = line[field]
-            curr = self.env['res.currency'].search([
-                ('name', '=ilike', name)])
-            if curr:
-                aml_vals['currency_id'] = curr[0].id
-            else:
-                msg = _("Currency '%s' not found !") % name
-                self._log_line_error(line, msg)
-
-    def _handle_tax_code(self, field, line, move, aml_vals):
-        if not aml_vals.get('tax_code_id'):
-            input = line[field]
-            tc_mod = self.env['account.tax.code']
-            codes = tc_mod.search([
-                ('code', '=', input)])
-            if not codes:
-                codes = tc_mod.search(
-                    [('name', '=', input)])
-            if not codes:
-                msg = _("%s '%s' not found !") % (field, input)
-                self._log_line_error(line, msg)
-                return
-            elif len(codes) > 1:
-                msg = _("Multiple %s entries with Code "
-                        "or Name '%s' found !") % (field, input)
-                self._log_line_error(line, msg)
-                return
-            else:
-                code = codes[0]
-                aml_vals['tax_code_id'] = code.id
-
-    def _handle_analytic_account(self, field, line, move, aml_vals):
-        if not aml_vals.get('analytic_account_id'):
-            ana_mod = self.env['account.analytic.account']
-            input = line[field]
-            domain = [('type', '!=', 'view'),
-                      ('company_id', '=', move.company_id.id),
-                      ('state', 'not in', ['close', 'cancelled'])]
-            analytic_accounts = ana_mod.search(
-                domain + [('code', '=', input)])
-            if len(analytic_accounts) == 1:
-                aml_vals['analytic_account_id'] = analytic_accounts.id
-            else:
-                analytic_accounts = ana_mod.search(
-                    domain + [('name', '=', input)])
-                if len(analytic_accounts) == 1:
-                    aml_vals['analytic_account_id'] = analytic_accounts.id
-            if not analytic_accounts:
-                msg = _("Invalid Analytic Account '%s' !") % input
-                self._log_line_error(line, msg)
-            elif len(analytic_accounts) > 1:
-                msg = _("Multiple Analytic Accounts found "
-                        "that match with '%s' !") % input
-                self._log_line_error(line, msg)
-
     @api.multi
     def aml_import(self):
         self._err_log = ''
-        event = self.env['event.event'].browse(self._context['active_id'])
+        event = self.env[self._context['active_model']].browse(self._context['active_id'])
         self._sum_debit = self._sum_credit = 0.0
         lines, header = self._remove_leading_lines(self.lines)
         header_fields = csv.reader(
             StringIO.StringIO(header), dialect=self.dialect).next()
         self._header_fields = self._process_header(header_fields)
-        reader = csv.DictReader(
-            StringIO.StringIO(lines), fieldnames=self._header_fields,
-            dialect=self.dialect)
+        reader = csv.DictReader(StringIO.StringIO(lines), fieldnames=self._header_fields, dialect=self.dialect)
 
         obj = self.env['event.registration']
-        partner = self.env['res.partner'].search([('name', '=', 'Public user'),('active','=',False)])
+        partner = self.env['res.partner'].search([('name', '=', 'Public user'), ('active', '=', False)])
         for line in reader:
             vals = {}
-            vals['name'] = line['name']
-            vals['phone'] = line['phone']
-            vals['email'] = line['email']
-            vals['event_id'] = event.id
-            vals['date_open'] = line['date_open']
-            vals['date_closed'] = line['date_closed']
+            vals['name'] = line['name'] if 'name' in line else None
+            vals['email'] = line['email'] if 'email' in line else None
+            vals['phone'] = line['phone'] if 'phone' in line else None
+            vals['date_open'] = line['date_open'] if 'date_open' in line else None
+            vals['date_closed'] = line['date_closed'] if 'date_closed' in line else None
             vals['partner_id'] = partner.id if partner else None
-            vals['import_id'] = event.id
+            vals['event_id'] = event.id
             obj.create(vals)
 
 
