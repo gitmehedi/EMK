@@ -14,7 +14,6 @@
         'event_user',
         'data_import',
         'event_session',
-
     ],
     'data': [
         'security/security.xml',
