@@ -59,6 +59,16 @@
                                 <field name="work_email"/>
                             </group>
                         </group>
+                        <group string="Key US and non-US people associate with this activity">
+                            <field name="event_associate_ids" nolabel="1">
+                                <tree editable="bottom">
+                                    <field name="associate_id"
+                                           options="{'no_open':True,'no_create':True,'no_create_edit':True}"/>
+                                    <field name="job_title"/>
+                                    <field name="organization_id"/>
+                                </tree>
+                            </field>
+                        </group>
                     
                         <notebook>
                             <page string="Information">
@@ -73,23 +83,36 @@
                                                options="{'no_open':True,'no_create':True,'no_create_edit':True}"/>
                                         <field name="audience_id"
                                                options="{'no_open':True,'no_create':True,'no_create_edit':True}"/>
-                                        <field name="website"/>
-                                        <field name="attach_file"/>
+                                        <field name="space_id"
+                                               options="{'no_open':True,'no_create':True,'no_create_edit':True}"/>
                                     </group>
                                 </group>
                                 <p>
                                     <b>Age Group</b>
                                 </p>
-                                <field name="age_group" widget="radio" nolabel="1"/>
+                                <field name="non_usg" widget="radio" nolabel="1"/>
+                                <group string="One sentence summary about your company ">
+                                    <field name="event_summary" nolabel="1" widget="html"/>
+                                </group>
                                 <p>
                                     <b>Did you collaborate with any non-USG organization to carry out this activity?</b>
                                 </p>
-                                <field name="non_usg" widget="radio" nolabel="1"/>
+                                <group string="If yes,please mention">
+                                    <field name="comment" nolabel="1" widget="html"/>
+                                </group>
                                 <group string="Summary of Event">
                                     <field name="event_summary" nolabel="1" widget="html"/>
                                 </group>
+                                <group string="Please the URL of your organization's websites and social media accounts">
+                                    <field name="comment" nolabel="1" widget="html"/>
+                                </group>
                                 <group string="Comment">
                                     <field name="comment" nolabel="1" widget="html"/>
+                                </group>
+                            </page>
+                            <page string="Attachment">
+                                <group>
+                                     <field name="attachment_id_1" widget="many2many_binary" />
                                 </group>
                             </page>
                         </notebook>
