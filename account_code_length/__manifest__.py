@@ -6,6 +6,7 @@
     'category': 'accounting',
     'depends': [
         'account',
+        'account_accountant'
     ],
 
     'data': [

@@ -5,15 +5,16 @@ from odoo.exceptions import Warning
 class InheritedAccountAccount(models.Model):
     _inherit = "account.account"
 
-    @api.constrains('code')
-    def _add_code_suffix(self):
-        if self.code and self.code.isalnum():
-            raise Warning('Code must be a Number')
+
+    @api.model
+    def create(self, vals):
+        vals['code'] = vals['code'].upper()
+        return super(InheritedAccountAccount, self).create(vals)
 
 
+    @api.multi
+    def write(self, vals):
 
-
-
-
-
-
+        if 'code' in vals:
+            vals['code'] = vals['code'].upper()
+            return super(InheritedAccountAccount, self).write(vals)
