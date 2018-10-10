@@ -1,5 +1,4 @@
 from odoo import api, fields, models
-from openerp.exceptions import Warning
 
 
 class InheritedAccountAccount(models.Model):

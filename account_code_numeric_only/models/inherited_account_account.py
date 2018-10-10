@@ -1,6 +1,6 @@
 from odoo import api, fields, models
-from odoo.exceptions import Warning
-import re
+from odoo.exceptions import ValidationError
+
 
 class InheritedAccountAccount(models.Model):
     _inherit = "account.account"
@@ -9,4 +9,4 @@ class InheritedAccountAccount(models.Model):
     def _check_code_number(self):
 
         if self.code and not self.code.isdecimal():
-            raise Warning('Code must be a Number')
+            raise ValidationError('Code must be a Number')
