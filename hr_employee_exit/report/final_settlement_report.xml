@@ -59,7 +59,7 @@
                                 <table class="table table-report-xs table-bordered table-striped">
                                     <thead>
                                         <tr class="odo-bg-gray">
-                                            <t t-foreach="o.payment_ids" t-as="pay">
+                                            <t t-foreach="o.event_associate_ids" t-as="pay">
                                                 <th class="text-center"><span t-esc="pay.name"/></th>
                                             </t>
                                         </tr>
