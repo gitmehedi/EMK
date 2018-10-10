@@ -12,12 +12,13 @@
         Event Registration
         """,
     'depends': [
+        'website',
         'website_event',
         'event_management',
     ],
     'data': [
         'views/website_event_templates.xml',
-        # 'views/website_event_views.xml',
     ],
+    'installable': True,
     'application': True,
 }
