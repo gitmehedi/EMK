@@ -25,7 +25,7 @@
                                 <div class="clearfix">
                                     <h3 class="report-title">Event Completion Form</h3>
                                     <br/>
-                                    <h4>General Information:</h4>
+                                    <h4><strong>General Information:</strong></h4>
                                     <div class="row">
                                         <div class="col-xs-6 text-left">
                                             <h6><b>Program Ttle :  </b><span t-esc="o.event_id.name"/></h6>
@@ -50,7 +50,8 @@
                                         </div>
                                     </div>
                                     <br/>
-                                    <h4>Moderator of the event:</h4>
+
+                                    <h4><strong>Moderator of the event:</strong></h4>
                                     <div class="row">
                                         <div class="col-xs-6 text-left">
                                             <h6><b>Moderator Name :  </b><span t-esc="o.organizer_id.name"/></h6>
@@ -63,7 +64,8 @@
                                         </div>
                                     </div>
                                     <br/>
-                                    <h4>Key US and non-US people associate with this activity:</h4>
+
+                                    <h4><strong>Key US and non-US people associate with this activity:</strong></h4>
                                     <t t-if="o.event_associate_ids" >
                                         <table class="table table-report-xs table-bordered table-striped">
                                             <thead>
@@ -85,45 +87,49 @@
                                         </table>
                                     </t>
                                     <br/>
+
                                     <div class="row">
                                         <div class="col-xs-12 text-left">
-                                            <h4>One sentence summary about your company:</h4>
+                                            <h4><strong>One sentence summary about your company:</strong></h4>
                                             <p t-raw="o.event_summary"/>
                                         </div>
                                     </div>
                                     <br/>
+
                                     <div class="row">
                                         <div class="col-xs-12 text-left">
-                                            <h4>Did you collaborate with any non-USG organization to carry out this activity?</h4>
+                                            <h4><strong>Did you collaborate with any non-USG organization to carry out this activity?</strong></h4>
                                             <h4>Answer: <span t-esc="o.non_usg"/></h4>
                                         </div>
                                     </div>
                                     <br/>
+
                                     <div class="row">
                                         <div class="col-xs-12 text-left">
-                                            <h4>If yes,please mention:</h4>
+                                            <h4><strong>If yes,please mention:</strong></h4>
                                             <p t-raw="o.comment"/>
                                         </div>
                                     </div>
                                     <br/>
+
                                     <div class="row">
                                         <div class="col-xs-12 text-left">
-                                            <h4>Summary of Event:(Please be specific; include highlights and all segments in the events)</h4>
+                                            <h4><strong>Summary of Event:(Please be specific; include highlights and all segments in the events)</strong></h4>
                                             <p t-raw="o.event_summary"/>
                                             <br/>
-                                            <h4>Please the URL of your organization's websites and social media accounts(if any):</h4>
+                                            <h4><strong>Please the URL of your organization's websites and social media accounts(if any):</strong></h4>
                                             <p t-raw="o.comment"/>
                                             <br/>
-                                            <h4>Please attach a copy/a set of copies of any printed material(if any) that you have distributed to the participants.</h4>
+                                            <h4><strong>Please attach a copy/a set of copies of any printed material(if any) that you have distributed to the participants.</strong></h4>
                                             <t t-foreach="o.attachment_ids" t-as="att">
                                                 <tr>
-                                                    <!--<td class="text-left"><t t-esc="line_index+1"/></td>-->
+                                                    <td class="text-left"><t t-esc="att_index+1"/></td>
                                                     <td class="text-left"><span t-esc="att.name"/></td>
                                                 </tr>
                                                 <br/>
                                             </t>
                                             <br/>
-                                            <h4>Comments:</h4>
+                                            <h4><strong>Comments:</strong></h4>
                                             <p t-raw="o.comment"/>
                                         </div>
                                     </div>
