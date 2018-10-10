@@ -25,12 +25,12 @@
                                 <div class="clearfix">
                                     <h3 class="report-title">Event Completion Form</h3>
                                     <br/>
-                                    <h4>General Information</h4>
+                                    <h4>General Information:</h4>
                                     <div class="row">
                                         <div class="col-xs-6 text-left">
                                             <h6><b>Program Ttle :  </b><span t-esc="o.event_id.name"/></h6>
                                             <h6><b>Program Type :  </b><span t-esc="o.event_type_id.name"/></h6>
-                                            <h6><b>Theme :  </b><span t-esc="o.theme_id.name"/></h6>
+                                            <h6><b>Activity Duration :  </b><span t-esc="o.activity_duration"/></h6>
                                             <h6><b>Total Participants :  </b><span t-esc="o.total_participants"/></h6>
                                             <h6><b>Total Male Participants :  </b><span t-esc="o.male_participants"/></h6>
                                             <h6><b>Total Female Participants :  </b><span t-esc="o.female_participants"/></h6>
@@ -38,7 +38,7 @@
                                         <div class="col-xs-6 text-left">
                                             <h6><b>Start Date :  </b><span t-esc="o.start_date" t-options='{"widget": "date"}'/></h6>
                                             <h6><b>End date :  </b><span t-esc="o.end_date" t-options='{"widget": "date"}'/></h6>
-                                            <h6><b>Activity Duration :  </b><span t-esc="o.activity_duration"/></h6>
+                                            <h6><b>Theme :  </b><span t-esc="o.theme_id.name"/></h6>
                                             <h6><b>Key Audience :  </b><span t-esc="o.audience_id.name"/></h6>
                                             <h6><b>Age Group :  </b>
                                                 <t t-if = "o.age_group == 'one'">Below 18</t>
@@ -50,7 +50,7 @@
                                         </div>
                                     </div>
                                     <br/>
-                                    <h4>Moderator of the event</h4>
+                                    <h4>Moderator of the event:</h4>
                                     <div class="row">
                                         <div class="col-xs-6 text-left">
                                             <h6><b>Moderator Name :  </b><span t-esc="o.organizer_id.name"/></h6>
@@ -63,39 +63,74 @@
                                         </div>
                                     </div>
                                     <br/>
+                                    <h4>Key US and non-US people associate with this activity:</h4>
+                                    <t t-if="o.event_associate_ids" >
+                                        <table class="table table-report-xs table-bordered table-striped">
+                                            <thead>
+                                                <tr class="odo-bg-gray">
+                                                    <th class="text-left">Name</th>
+                                                    <th class="text-left">Designation</th>
+                                                    <th class="text-left">Organization</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <t t-foreach="o.event_associate_ids" t-as="pay">
+                                                    <tr>
+                                                        <td class="text-left"><span t-esc="pay.associate_id.name"/></td>
+                                                        <td class="text-left"><span t-esc="pay.job_title"/></td>
+                                                        <td class="text-left"><span t-esc="pay.organization_id.name"/></td>
+                                                    </tr>
+                                                </t>
+                                            </tbody>
+                                        </table>
+                                    </t>
                                     <br/>
-                                    <!--<h4>Payment Details:</h4>-->
-                                    <!--<table class="table table-report-xs table-bordered table-striped">-->
-                                        <!--<thead>-->
-                                            <!--<tr class="odo-bg-gray">-->
-                                                <!--<t t-foreach="o.payment_ids" t-as="pay">-->
-                                                    <!--<th class="text-center"><span t-esc="pay.name"/></th>-->
-                                                <!--</t>-->
-                                            <!--</tr>-->
-                                        <!--</thead>-->
-                                        <!--<tbody>-->
-                                            <!--<t t-foreach="o.payment_ids" t-as="pay">-->
-                                                <!--<td class="text-center"><span t-esc="'%.2f' %pay.amount"/></td>-->
-                                            <!--</t>-->
-                                        <!--</tbody>-->
-                                    <!--</table>-->
+                                    <div class="row">
+                                        <div class="col-xs-12 text-left">
+                                            <h4>One sentence summary about your company:</h4>
+                                            <p t-raw="o.event_summary"/>
+                                        </div>
+                                    </div>
                                     <br/>
                                     <div class="row">
                                         <div class="col-xs-12 text-left">
                                             <h4>Did you collaborate with any non-USG organization to carry out this activity?</h4>
-                                            <h6><span t-esc="o.non_usg"/></h6>
-                                            <h6><span t-esc="o.website"/></h6>
-                                            <h6> <span t-esc="o.attach_file"/></h6>
+                                            <h4>Answer: <span t-esc="o.non_usg"/></h4>
                                         </div>
                                     </div>
+                                    <br/>
                                     <div class="row">
                                         <div class="col-xs-12 text-left">
-                                            <h4>Event of Summary</h4>
-                                            <p t-raw="o.event_summary"/>
-                                            <h4>Comments</h4>
+                                            <h4>If yes,please mention:</h4>
                                             <p t-raw="o.comment"/>
                                         </div>
                                     </div>
+                                    <br/>
+                                    <div class="row">
+                                        <div class="col-xs-12 text-left">
+                                            <h4>Summary of Event:(Please be specific; include highlights and all segments in the events)</h4>
+                                            <p t-raw="o.event_summary"/>
+                                            <br/>
+                                            <h4>Please the URL of your organization's websites and social media accounts(if any):</h4>
+                                            <p t-raw="o.comment"/>
+                                            <br/>
+                                            <h4>Please attach a copy/a set of copies of any printed material(if any) that you have distributed to the participants.</h4>
+                                            <t t-foreach="o.attachment_ids" t-as="att">
+                                                <tr>
+                                                    <!--<td class="text-left"><t t-esc="line_index+1"/></td>-->
+                                                    <td class="text-left"><span t-esc="att.name"/></td>
+                                                </tr>
+                                                <br/>
+                                            </t>
+                                            <br/>
+                                            <h4>Comments:</h4>
+                                            <p t-raw="o.comment"/>
+                                        </div>
+                                    </div>
+                                    <br/>
+                                    <br/>
+                                    <p>_____________________________</p>
+                                    <h6>Signature of the Moderator</h6>
                                 </div>
                             </div>
                         </div>

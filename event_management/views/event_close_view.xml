@@ -91,7 +91,7 @@
                                     <b>Age Group</b>
                                 </p>
                                 <field name="non_usg" widget="radio" nolabel="1"/>
-                                <group string="One sentence summary about your company ">
+                                <group string="One sentence summary about your company">
                                     <field name="event_summary" nolabel="1" widget="html"/>
                                 </group>
                                 <p>
@@ -110,10 +110,19 @@
                                     <field name="comment" nolabel="1" widget="html"/>
                                 </group>
                             </page>
-                            <page string="Attachment">
-                                <group>
-                                     <field name="attachment_id_1" widget="many2many_binary" />
-                                </group>
+                            <page string="Attachments">
+                                <field name="attachment_ids">
+                                    <tree>
+                                        <field name="name"/>
+                                        <field name="filename"/>
+                                        <field name="description"/>
+                                    </tree>
+                                    <form>
+                                        <field name="name"/>
+                                        <field name="filename"/>
+                                        <field name="description"/>
+                                    </form>
+                                </field>
                             </page>
                         </notebook>
                     </sheet>

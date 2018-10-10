@@ -18,7 +18,7 @@ class EventClose(models.Model):
     audience_id = fields.Many2one('res.users', string='Key Audience')
     space_id = fields.Many2one('res.users', string='Space Used')
     event_associate_ids = fields.One2many('event.associate','event_close_id',string='Event associate')
-    attachment_id_1 = fields.Many2many('ir.attachment', 'orientation_rel_1', string="Attachment")
+    attachment_ids = fields.One2many('event.attachment', 'event_id', string="Attachment")
 
     contract_number = fields.Char(string="Contract Number", readonly=True,
                                related='organizer_id.mobile')
@@ -96,3 +96,10 @@ class EventAssociate(models.Model):
 
 
 
+class EventAttachment(models.Model):
+    _name='event.attachment'
+
+    name=fields.Char(string='Title',required=True)
+    description = fields.Text(string='Description')
+    filename = fields.Binary(string='Filename',required=True)
+    event_id = fields.Many2one('event.close',string='Event')
