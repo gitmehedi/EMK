@@ -1,14 +1,17 @@
-odoo.define('website_event.website_event', function (require) {
+odoo.define('event_registration.eventdfd', function (require) {
+"use strict";
 
-var ajax = require('web.ajax');
-var Widget = require('web.Widget');
-var web_editor_base = require('web_editor.base')
+    var ajax = require('web.ajax');
+    var Widget = require('web.Widget');
+    var web_editor_base = require('web_editor.base')
 
-// Catch registration form event, because of JS for attendee details
-var EventRegistrationForm = Widget.extend({
-    start: function() {
+    var event= require('website_event.website_event');
+    var websiteEvent= event.EventRegistrationForm;
+
+    websiteEvent.include({
+        start: function() {
         var self = this;
-        var res = this._super.apply(this.arguments).then(function() {
+        var res = this._super.apply(this,arguments).then(function() {
             $('#registration_form .a-submit')
                 .off('click')
                 .removeClass('a-submit')
@@ -25,7 +28,7 @@ var EventRegistrationForm = Widget.extend({
         var $form = $(ev.currentTarget).closest('form');
         var post = {};
         $("#registration_form select").each(function() {
-            post[$(this).attr('name')] = $(this).val();
+            post[$(this).attr('name')] = 1;
         });
         return ajax.jsonRpc($form.attr('action'), 'call', post).then(function (modal) {
             var $modal = $(modal);
@@ -36,12 +39,9 @@ var EventRegistrationForm = Widget.extend({
             });
         });
     },
-});
 
-web_editor_base.ready().then(function(){
-    var event_registration_form = new EventRegistrationForm().appendTo($('#registration_form'));
-});
-
-return { EventRegistrationForm: EventRegistrationForm };
+    });
 
 });
+
+
