@@ -9,13 +9,14 @@
     'depends': [
         'product',
         'account',
+        'report_layout',
+        'mail_send',
         'event',
         'website_event',
         'event_user',
         'data_import',
         'event_session',
-        'mail_send',
-        'report_layout'
+        'website_event_filter_selector'
     ],
     'data': [
         'security/security.xml',
