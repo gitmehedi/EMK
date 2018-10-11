@@ -22,7 +22,6 @@ class EventClose(models.Model):
     space_id = fields.Many2one('res.users', string='Space Used')
     event_associate_ids = fields.One2many('event.associate','event_close_id',string='Event associate')
     attachment_ids = fields.One2many('event.attachment', 'event_id', string="Attachment")
-
     contract_number = fields.Char(string="Contract Number", readonly=True,
                                related='organizer_id.mobile')
     designation = fields.Char(string="Designation",readonly=True,related='organizer_id.function')
@@ -87,44 +86,26 @@ class EventClose(models.Model):
     @api.multi
     def act_submit(self):
         if self.state == 'draft':
-            self.state = "confirm"
             vals={
                 'template':'event_management.event_close_email_to_organizer_tmpl',
-                'email to': self.work_email if self.work_email else None,
-                'context': {'event_id':self.event_id.name}
+                'emailto': self.work_email if self.work_email else None,
+                'context': {'organizer_name':self.organizer_id.name,'event_name':self.event_id.name}
             }
 
             self.env['mail.mail'].mailsend(vals)
+            self.state = "confirm"
 
-    @api.model
-    def mailsend(self, vals):
-        template = False
-        try:
-            template = self.env.ref(vals['template'], raise_if_not_found=False)
-        except ValueError:
-            pass
-
-        assert template._name == 'mail.template'
-
-        template.write({
-            'email_to': vals['email_to'] if 'email_to' in vals else '',
-            # 'attachment_ids': vals['attachment_ids'] if 'attachment_ids' in vals else [],
-        })
-
-        context = {
-            'base_url': self.env['ir.config_parameter'].get_param('web.base.url'),
-            'lang': self.env.user.lang,
-        }
-
-        for key, val in vals['context'].iteritems():
-            context[key] = val
-
-        template.with_context(context).send_mail(self.env.user.id, force_send=True, raise_exception=True)
-        _logger.info("Email sending status of user.")
 
     @api.one
     def act_approve(self):
         if self.state=='confirm':
+            vals = {
+                'template': 'event_management.event_clearance_email_to_organizer_tmpl',
+                'emailto': self.work_email if self.work_email else None,
+                'context': {'organizer_name': self.organizer_id.name, 'event_name': self.event_id.name}
+            }
+            self.env['mail.mail'].mailsend(vals)
+
             self.state = "approve"
 
     @api.one
