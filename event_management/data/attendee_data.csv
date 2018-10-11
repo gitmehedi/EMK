@@ -1,3 +1,857 @@
-name,phone,email,date_open,date_closed
-Abdul Khan,1916362514,abc@gmail.com,10/08/2018 11:32:41,10/08/2018 11:32:41
-Mohammad Khan,1915636522,xyz@yahoo.com,10/08/2018 11:32:41,10/08/2018 11:32:41
+name,phone,email,date_open,date_closed,,,
+Abdul Khan,1916362514,abc@gmail.com,10/08/2018 11:32:41,10/08/2018 11:32:41,,,
+Mohammad Khan,1915636522,xyz@yahoo.com,10/08/2018 11:32:41,10/08/2018 11:32:41,,,
+,,,,,,,
+,,,,,,,
+Gender,Date of Birth,Name,Work Email,Work Mobile,Work Phone,Department/Department Name,Job Title/Job Title
+Male,2000-04-02,Abdul Halim,,1856806723,,Blow Mould,Helper
+Male,1975-01-14,Abdul Jabber,abdul.jabber@scclbd.com,1829809769,Ext-123,HR & Admin (SCCL-CTG),Officer
+Male,1977-03-10,Abdul Kader Meah,,1851440347,,Transport, Truck Driver
+,1983-10-15,Abdullah Al Mamun Tarafder,,1729625387,,Production (SCCL-DF),"Operator, Brine"
+,,Abdullah Al Ragib,ragibbuet15@gmail.com,,,Production (SCCL-DF),Engineer
+,1991-12-30,Abdul Mannan,,,,Production (SCCL-DF),"Operator, Chlorine Cylinder Filling"
+Male,1996-08-10,Abdur Rahim,,1831885235,,Blow Mould,Trainee Asst. Operator
+Male,,Abdur Rahim,,,,Transport,Lorry Driver
+,1985-10-15,Abdur Rahman Bhayan,,,,Mechanical (SCCL-DF),Supervisor
+,,Abdur Razzak,,,,,
+Male,1952-03-01,Abdur Rob,,1680236915,Ext-101,HR & Admin (SCCL-CTG),Imam
+,,A.B.M Taufikul Islam,taufiqsccl@gmail.com,1755538330,,Sales & Marketing (H2o2),Assistant. Manager
+,,Abu Hanif,,,,Production (SCCL-DF),"Operator, HCL,Hypo Storage"
+,1956-03-01,Abul Faruque,,1820165465,,Production (SCCL-DF),"Operator, Electrolyzer & Dechlorination"
+,1978-12-31,Abul Hasam,,1721748486,,Production (SCCL-DF),"Operator, Electrolyzer & Dechlorination"
+,1981-06-01,Abul Hasan,abulhasan81@scclbd.com,,,HR & Admin (SCCL-DF),Officer
+Male,1970-08-10,Abul Kalam,,1813202920,Ext-123,Transport,Driver
+,1980-09-30,Abu Shaed Mahbub Hasan,mahbub.hasan@scclbd.com,1755637474,,Electrical & Instrument (SCCL-DF),"Manager, Electrical."
+Male,1985-03-01,Abu Syed,,1811146092,,Electrical & Instrument (SCCL-CTG),Helper
+Male,1988-03-02,Abu taher,,1831186558,,Mechanical (SCCL-CTG),Helper
+Male,1989-01-07,Adesh Barua,,1843394334,,Blow Mould,Helper
+Male,1989-12-21,Adnan Rahman Sourav,adnanrahman.sourav@gmail.com,1732899777,,Electrical & Instrument (SCCL-CTG),S.Asst. Engineer
+Male,,Ahmed Hossain Khan,,,Ext-113,Production (SCCL-CTG),Operator
+,1982-09-28,Alauddin Khan,,1918125860,,Production (SCCL-DF),"Operator, Brine"
+,,Ali Ahmed,ali.ahmed@scclbd.com,1755636942,,HR & Admin (SPL-HO),"Officer, Admin"
+Male,1982-01-20,Alok Dey,,1821448769,Ext-123,Security,Asst.Inspector
+Male,1986-04-10,Amar Kanti Dhar,,1817693740,,Security,Security Guard
+Male,1999-03-15,Anwar Kabir,,1837339307,,Blow Mould,Helper
+Male,2000-10-08,Apon Barua,,1871866511,,Blow Mould,Helper
+,,Arif,,,,Electrical & Instrument (SCCL-DF),Assistant Technician
+Male,1981-01-01,ASM Shahed Hossain Khan,shahed.khan@scclbd.com,1818791255,Ext-113,Production (SCCL-CTG),Deputy Manager
+Male,1979-04-11,ASM Shahidul Alam,jewel.4.11.79@gmail.com,1755656952,,Production (SCCL-CTG),Sr.Officer
+,,ASM Shahidul Alam,,,,,
+,,Ataharul Islam,ataharulpu@gmail.com,,,Electrical & Instrument (SCCL-DF),Engineer
+Male,2001-05-01,Atiqur Rahman,,1861705562,,Quality Assurance (SCCL-CTG),Lab Helper
+Male,1984-04-02,Aynal Hossain,,1736935470,,Blow Mould,Asst.Optr
+Male,1983-01-01,Ayub Ali-1,,1852854457,Ext-123,Transport,Helper
+,1996-06-07,Azizul Haque,alkalishahid@gmail.com,,,Mechanical (SCCL-DF),Assistant Technician
+Male,1962-06-30,Barkat Ali,barkat.ali@scclbd.com,01730-318267,,Production (SCCL-DF),Asst. General Manager
+Male,1991-06-16,Belayet Hossain,,1737389866,,Blow Mould,Asst.Optr
+Male,1996-12-14,Bijoy Das,,,,Blow Mould,Helper
+Male,1981-08-10,Biraj Chandra Pal,biraj.pal@scclbd.com,1755656945,1675630641,Production (SCCL-CTG),Deputy Manager
+Male,1949-02-22,Chandra Kanta Barua,,1866458641,Ext-123,Security,Officer
+,1982-01-01,Debashish Saha,debashishsaha198201@gmail.com,1912676708,,Quality Assurance (SCCL-DF),"Sr.Chemist, QC"
+,,Depankar Basak,depankar09@gmail.com,1755656954,,Quality Assurance (SCCL-CTG),Sr.Chemist
+,,Dewan Mahmudur Rahman,pallab@scclbd.com,1730338424,,Sales & Marketing (Caustic),"DGM, Sales & Marketing"
+Male,1988-12-30,Dostogir Hossain Rony,,1815758401,Ext-123,Transport,Lorry Helper
+Male,1950-06-18,Dulal Chandra Barua,,1918459232,Ext-101,Transport,Driver
+Male,1972-10-19,Entaj Ali Meah,,1734332720,Ext-123,Transport,Lorry Helper
+,,Farhad Ahmed,farhad@scclbd.com,1729256789,,Supply Chain Foreign (SCCL-HO),Manager
+,1990-06-16,Faruque Hossain,,,,Production (SCCL-DF),"Operator, Chlorine Cylinder Filling"
+,,Farzana Afroze,farzana@scclbd.com,,,Management (SCCL-HO),Chirperson
+Male,1964-12-07,Fazal Ahmed,,1859770355,Ext-104,Store (SCCL-CTG),Store Clerk
+,,F.M.Faisail Alam,,,,Sales & Marketing (SSCL-HO),Asst.Officer
+Male,1980-02-08,Gius Uddin,gius@scclbd.com,1817211914,Ext-104,Accounts & Finance (SCCL-CTG),Sr. Manager
+Male,1972-08-10,Hasanur Rashid,,1821779399,,Mechanical (SCCL-CTG),Sr.Mech 
+,,Hasibul Kabir,hasibul.kabir@scclbd.com,1755656936,,Mechanical (SCCL-DF),Deputy Manager
+Male,1993-12-25,Hasin Raihan Rony,,01767-100571,,Electrical & Instrument (SCCL-DF),Trainee Engineer
+,,hsib,,,,,
+Male,2017-05-20,Ibrahim Khalil,hr@scclbd.com,1730318270,9131308,HR & Admin (SCCL-HO),Assistant. Manager
+Male,1957-12-02,Iftekhar Kabir,kabiriftekhar@gmail.com,1730790222,1715057092,Operation (SPPL-HO),Chief Engineer
+Male,,Imam Masud Rony,,,,Mechanical (SCCL-CTG),Lathe Operator
+Male,1993-05-24,Irtiza Hossen,thimuirtiza26@gmail.com,1682788126,,Quality Assurance (SCCL-CTG),T/Chemist
+,1990-06-13,Ismail Hossain,,1815490731,,Production (SCCL-DF),"Operator, CPW"
+Male,1981-01-01,Jabed Chowdhury,smjabed@scclbd.com,1730081274,,HR & Admin (SCCL-CTG),Assistant. Manager
+Male,1984-11-20,Jafor Ahmed,,187143254,Ext-123,Transport,Lorry Helper
+,1965-08-10,Jahidur Rahman,,1755656933,1755656933,HR & Admin (SCCL-DF),Security Officer
+Male,1969-09-13,Jamal Uddin,,1823059490,Ext-123,Transport,Lorry Driver
+Male,1984-10-17,Jamir Uddin,,1825378130,Ext-123,Transport,Lorry Helper
+Male,1989-01-01,Jitu Barua,jitucu11@gmail.com,1846458940,Ext-120,Quality Assurance (SCCL-CTG),"Chemist, QC"
+Male,1986-05-15,Kalim Ullah,k.ullah_29@yahoo.com,1755656948,,Production (SCCL-CTG),"Senior Engineer, DCS"
+Male,1971-12-31,Kamol Kumar Nath,,1813712720,,Blow Mould,Officer
+,,Kazi Md. Altaf Hossain,,,,Mechanical (SCCL-DF),Operator
+Male,1972-07-10,Kazi Md. Babul Mia,,1852723644,,Transport,Lorry Driver
+Male,1996-02-22,Lalin Marma,,1862012191,,HR & Admin (SSCL-CTG),Peon
+Male,1992-11-15,Mahbub Hasan,mahbub.cu@yahoo.com,1848397542,,Quality Assurance (SCCL-CTG),Trainee Chemist
+,,Mahmudul Hasan,mahmudul88@yahoo.com,1750496894,,Quality Assurance (SCCL-DF),"Chemist, QC"
+Male,1986-06-26,Mahmudullah Algalib,mahmud.galib@scclbd.com,1799992804,9131308,HR & Admin (SCCL-HO),Officer
+,,Main Uddin Ahmed,sohayel_sppl@yahoo.com,,,Accounts & Finance (SPPL-HO),Officer
+Male,,M. A. Jabbar,m.a.jabbar635@gmail.com,1799992773,,Regulatory Affairs,Sr. Officer
+,1986-12-25, Mamunur Rashid Patwary,mamuncpw@gmail.com,,,Production (SCCL-DF),"Asst. Manager, CL2,HCL & Hypo"
+Male,1977-07-01,Manjur Alam,,1712176339,,Store (SCCL-CTG),Officer
+Male,1977-03-02,Manjur Hossain,,1859488380,,Blow Mould,Helper
+Male,,Manzurul Alam,,1755656953,1755656953,Production (SCCL-CTG),Sr.Officer
+Male,,Masud Alam,,,,HR & Admin (SSCL-CTG),Driver
+Male,1975-12-10,Masud Rana,masud.rana@scclbd.com,01755-637476,,Quality Assurance (SCCL-DF),"Asst. General Manager,Quality Assurance"
+Male,1983-02-13,Md. Abdul Hannan Ali,,1794890727,,HR & Admin (SCCL-DF),Security Guard
+,1982-01-15,Md.Abdul Hannan Sarker,abdulhannas1234@gmail.com,,,Quality Assurance (SCCL-DF),"Chemist, QC"
+,,Md. Abdul Kader,,,,Operation (SPL-DF),Fitter
+Male,1981-07-03,Md. Abdul Kader,,1851871452,,Transport,Lorry Helper
+,,Md. Abdul Kader,,,,,
+,,Md.Abdul Kaiom Bishas,,,,Service (SPL-DF),Technician
+,,Md.Abdul Kaium Mazumder,abdulkaium1986@gmail.com,,,Sales & Marketing (SSCL-HO),Sr.Executive
+Male,1998-07-01,Md. Abdullah,,1883849241,,Blow Mould,Helper
+Male,1984-10-10,Md. Abdul Mannan,,1815161277,,Transport, Truck Driver
+Male,1994-07-17,Md. Abdul Monnaf,,1737108678,Ext-113,Production (SCCL-CTG),Trainee Engineer
+,1985-01-01,Md.Abdur Rahman 2,,,,Mechanical (SCCL-DF),Assistant Mechanical Fitter
+Male,1994-01-01,Md. Abdur Rauf,,01742-296924,,Mechanical (SCCL-DF),"Operator, Caco3"
+,,Md.Abdur Razzak,,Sirajgonj,,Production (SCCL-DF),"Operator, HCL & Hypo,ETP"
+,,Md. Abdus Samad,,,,Store (SCCL-DF),Store Assistant
+Male,1993-01-20,Md. Abubakar Siddique,,1670843443,,Production (SPPL-CTG),Engineer (Process)
+,,Md. Abu Bakkar,,,,HR & Admin (SCCL-DF),Security Inspector
+,1982-01-01,Md.Abu Jaher,,1756139608,,Electrical & Instrument (SCCL-DF),Technician
+,,Md. Abul Kashem,,,,Mechanical (SCCL-DF),Jr. Technician
+,,Md.Abul Khair Titu,,,,HR & Admin (SCCL-HO),Driver
+Male,,Md.Abu Sayad Khan,,1770059869,,Production (SCCL-CTG),Operator
+Male,,Md. Abu Sufian Khandokar,km.sufian@gmail.com,1777764540,,Sales & Marketing (Caustic),Executive
+Male,1984-10-18,Md. Abu Toyub,,,Ext-123,Transport,Lorry Driver
+,,Md. Abu Yousuf,aymilton.spl@scclbd.com,1755656932,,Service (SPL-DF),"Manager, Electrical."
+Male,1987-10-25,Md. Ahadul Alam,ahadscclbd@gmail.com,1816355545,Ext-101,HR & Admin (SCCL-CTG),Officer
+,,Md.Ahamudul Hoque,ahamudulsppl@gmail.com,1730787003,,Accounts & Finance (SPPL-HO),Sr.Officer
+Male,1989-01-01,Md.Ahsanul Haque Khan,ahsanspecchem@gmail.com,1723779332,,Production (SSCL-CTG),IPE
+,1989-10-10,Md.Akter Hossain,,1920146791,,Production (SCCL-DF),"Operator, Brine"
+Male,1978-02-16,Md.Akter Hossain,,1875964825,Ext-113,Production (SCCL-CTG),Helper
+,,Md.Akther Hossen Rana,,,,HR & Admin (SCCL-HO),Driver
+Male,,Md.Alamgir,,1986492134,1831963628,HR & Admin (SCCL-HO),Peon
+Male,1987-12-16,Md. Alamgir,,1828852232,,Security,Security Guard
+,,Md.Al-Amin,alamin134@gmail.com,,,Sales & Marketing (SSCL-HO),"Sr.Executive,Sales & Marketing"
+Male,1998-06-11,Md. Al Hasan Rabbi,,1864648688,,Blow Mould,Helper
+Male,1993-02-05,MD. Aman Ullah Al-Amin,amanullah214@gmail.com,1915796030,,Production (SSCL-CTG),IPE
+,1982-02-03,Md.Aminur Rahman,,1913572953,,Production (SCCL-DF),"Operator, DM,CW,WP"
+,,Md.Anam Hossain,,,,HR & Admin (SCCL-DF),Driver
+,,Md.Anamul Kibria,rony@scclbd.com,1730338423,,Sales & Marketing (H2o2),"DGM, Sales & Marketing"
+,,Md.Anwar Hossain,,,,HR & Admin (SCCL-HO),Driver
+,1975-07-01,Md.Anwar Hossain,,,,Mechanical (SCCL-DF),Lathe Operator
+,1962-12-08,Md. Anwar Ulla,,1812738850,,Production (SCCL-DF),"Operator, Flaking"
+Male,1997-07-17,Md. Arafath Khan,,1625800715,Ext-113,Production (SCCL-CTG),Operator
+Male,1994-01-01,Md. Arif,,1879638488,Ext-123,Transport,Lorry Helper
+,,Md. Arif Hossain,arif778860@gmail.com,1772670276,,Quality Assurance (SCCL-DF),Lab Assistant
+Male,1993-03-27,Md. Arif Mia,,01755-797117,,Mechanical (SCCL-DF),Jr. Technician
+Male,1994-04-24,Md. Ariful Islam,arif153341@gmail.com,1925005511,,Production (SCCL-CTG), Assistant Engineer
+Male,1997-05-20,Md. Ariful Islam,,01786-858992,,HR & Admin (SCCL-DF),Security Guard
+Male,1993-12-16,Md. Ariful Islam,arifulislam.me@gmail.com,1779111833,,Mechanical (SCCL-DF),Trainee Engineer
+,1986-10-30,Md.Ariful Islam,lasrem@gmail.com,1877393969,,Quality Assurance (SCCL-DF),"Chemist, QC"
+Male,,Md. Ariful Islam (Babul),,18704028126,,Store (SCCL-DF),Store Helper
+,,Md. Asadul Islam,qmasadislam@gmail.com,,,Quality Assurance (SCCL-DF),Trainee Chemist
+,,Md. Asadul Islam,,,,Operation (SPL-DF),Asst. Technician
+,1990-12-04,Md.Asaduzzaman,,,,Production (SCCL-DF),"Operator, Chlorine Drying"
+Male,1987-08-27,Md. Ashraful Alam,rony.ceps.sust@gmail.com,,,Production (SCCL-DF),Sr.Engineer
+,,Md. Ashraful Alam,ashrafulsccl@gmail.com,1799992765,,Mechanical (SCCL-DF),"Engineer, Mechanical"
+,1992-03-16,Md.Ashraful Alam,,1190808195,,HR & Admin (SCCL-DF),Security Guard
+,,Md.Ashraful Alam,,,,Mechanical (SCCL-DF),Assistant Technician
+,1989-01-31,Md.Ashraful Islam,,1921421576,,Production (SCCL-DF),Operator
+,,Md. Asraful Islam,asraful2k12@gmail.com,,,Operation (SPL-DF),Trainee Engineer
+,1982-12-08,Md.Ataur Rahaman,ataur.rahman@scclbd.com,1755637472,,Production (SCCL-DF),Manager
+Male,,Md. Ataur Rahman,,1723755502,,HR & Admin (SCCL-DF),Security Guard
+Male,1974-06-06,Md. Ataur Rahman,shamimshitokai@gmail.com,01767-720407,01644-328748,Regulatory Affairs,Officer
+Male,1976-12-01,Md.Atiar Rahman,,1748443580,,Blow Mould,Helper
+Male,1993-04-11,Md. Atikur Rahman,atikcox80@gmail.com,1612335397,1521236181,Production (SCCL-CTG),Trainee Engineer
+Male,1989-08-01,Md.Atuar Hossain,,1776526405,,Blow Mould,Operator
+Male,1985-11-13,Md.Ayub Ali-2,,,Ext-123,Transport,Helper
+,1979-02-20,Md.Azizul Hoque,alkalishahid@gmail.com,1777764546,,Production (SCCL-DF),Assistant. Manager
+Male,1979-08-10,Md. Babul,,1825516192,Ext-123,Transport, Truck Driver
+,1977-03-07,Md.Babul Islam,,1724911140,,HR & Admin (SCCL-DF),Security Guard
+Male,1972-06-22,Md. Badul,,1925690360,,HR & Admin (SCCL-HO),Driver
+,,Md.Belal Hossain,,,,Production (SCCL-DF),Operator
+Male,1983-11-10,Md. Belal Hossain Mazumder,belal2k1@yahoo.com,01718-583228,,Operation (SPPL-HO),Project Manager
+,,Md.Borhan Ali,,,,Mechanical (SCCL-DF),Assistant Technician
+Male,1990-03-04,Md. Daudul Islam,daud.sppl@gmail.com,,,HR & Admin (SPPL-HO),Officer
+,,Md. Delowar (3),,,,Mechanical (SCCL-DF),Jr. Technician
+,1987-07-25,Md.Delowar Hossain,,,,Production (SCCL-DF),"Operator, Flaking"
+,,Md.Delowar Hossen 2,,,,Mechanical (SCCL-DF),Jr.Technician
+,,Md. Delwar Hossain,,1755636945,,HR & Admin (SCCL-DF),Jr. Officer
+Male,1973-01-14,Md.Easin,,1827794709,Ext-123,Transport,Lorry Helper
+,1990-12-31,Md. Ekramul Haque,,1195374431,,Production (SCCL-DF),"Operator, Brine"
+,,Md. Elias Ahammed,md.eliasahammed@rocketmail.com,1723932936,,Quality Assurance (SCCL-DF),"Chemist, QC"
+Male,1990-02-10,Md. Elius Ovi,,1823861795,,Mechanical (SCCL-CTG),Fitter 
+,1973-04-02,Md.Emdadul Haque ,,1751653102,,HR & Admin (SCCL-DF),Security Guard
+,,Md.Emdadul Huque Mazumder ,emdadhuque2@gmail.com,,,Sales & Marketing (SSCL-HO),Sr.Executive
+,,Md. Eyasin Ali,yeasinalitahin@gmail.com,1730790216,,Production (SPPL-CTG),Engineer
+,,Md. Fajor Ali,,,,HR & Admin (SCCL-HO),Driver
+,1985-12-14,Md.Farid Uddin Masud,mdfariduddinmasud@yahoo.com,,,Production (SCCL-DF),Process Chemist
+Male,1980-01-01,Md.Faruk,,1882776748,Ext-123,Transport,Lorry Driver
+Male,1990-12-19,Md. Faruk,,1764810271,,Production (SCCL-DF),"Operator, Flaking"
+,1986-10-17,Md.Fazlur Rahman,,1734315223,,Electrical & Instrument (SCCL-DF),Electrician
+,1986-06-20,Md.Ferdousur Rahaman,ferdousur.rahaman@gmail.com,,,Production (SCCL-DF),Sr.Officer
+,,Md.Forhad Hossain,,,,Sales & Marketing (H2o2),Assistant Officer
+,1980-05-05,Md.Foridul Hashan,,1710723805,,Production (SCCL-DF),"Operator, Liquid Chlorine"
+Male,1990-11-20,Md. Foysal Monsoor,,,Ext-113,Production (SCCL-CTG),Trainee Engineer
+,1988-01-01,Md.Hafizur Rahman,,1731514486,,Mechanical (SCCL-DF),Asst.Supervisor
+Male,1985-06-05,Md.Hafizur Rahman,hafiz@scclbd.com,1717591900,,HR & Admin (SCCL-DF),Assistant. Manager
+Male,,Md.Haidar Ali ,,1754611775,,HR & Admin (SCCL-HO),Asst.Supervisor
+Male,1980-02-01,Md.Harun,,1830132936,Ext-123,Transport,Driver
+Male,1995-06-15,Md. Hasan,,,,Service (SPL-DF),Technician
+Male,1996-03-15,Md. Hasanur Rahman,,1742583737,,Blow Mould,Asst. Operator
+Male,1989-05-18,Md.Hasanuzzaman,,1791759220,,Electrical & Instrument (SCCL-CTG),Helper
+,,Md.Hazrat Belal,,,,Mechanical (SCCL-DF),Assistant Technician
+Male,1989-02-01,Md. Helal Uddin,,1878503242,Ext-123,Transport,Lorry Helper
+,1982-06-25,Md.Helal Uddin,,1744698235,,Quality Assurance (SCCL-DF),Lab Assistant
+,1966-11-01,Md.Humayun Kabir Chy,,,,HR & Admin (SCCL-DF),Security Inspector
+,,Md.Ibrahim Khalil,,1879895919,,HR & Admin (SCCL-HO),Driver
+Male,1963-05-10,Md.Idrish,,1817272742,Ext-123,Transport,Lorry Driver
+Male,1970-12-12,Md.Idrish (SY),,1840863241,Ext-123,Security,SY.Guard
+,,Md.Imran Ahamed,,1762408605,,HR & Admin (SCCL-HO),Peon
+,1977-06-01,Md.Imran Hossain,,1814170453,,Production (SCCL-DF),"Operator, Boiler"
+Male,1993-09-08,Md. Iqbal Hossain,iqbalctg93@gmail.com,'+8801818227006,,Production (SPPL-CTG),Engineer (Process)
+Male,,Md.Iqbal Hossain,,1836779601,,Quality Assurance (SCCL-CTG),Helper
+,,Md.Iskander ,,1730318274,,Store (SCCL-DF),Officer
+,1971-07-20,Md.Iskander Mirza,,,,Production (SCCL-DF),"Operator, DM,CW,WP"
+,,Md. Ismail Hawlader,,,,HR & Admin (SCCL-HO),Driver
+Male,,Md. Jahangir Alam,,01710-279566,,HR & Admin (SCCL-DF),Security Guard
+,1982-07-28,Md.Jahangir Alam,,1720595353,,Production (SCCL-DF),"Operator, DM,CW,WP"
+,,Md. Jahangir Alam Sumon,,,,HR & Admin (SCCL-DF),Vehicle Mechanic
+,,Md.Jahangir Hossain,,Munshigonj,,Mechanical (SCCL-DF),Mechanical Fitter
+,,Md. Jahed Hossain,jahedhasan500@gmail.com,,,Production (SPPL-CTG),Junior Operator
+,,Md. Jahidul Islam,zahidulsccl@gmail.com,1777764524,,Accounts & Finance (SCCL-DF),"Imam cum Officer, Admin"
+,,Md. Jahirul Islam,,,,Production (SCCL-DF),"Operator, Flaking"
+,,Md. Jakaria,md.jakaria@scclbd.com,1755656960,,Regulatory Affairs,Sr. Officer
+,1987-01-10,Md.Jamal Hossain,,,,Mechanical (SCCL-DF),Technician
+,1985-01-01,Md.Jamal Hossain,,,,Production (SCCL-DF),"Operator, Brine"
+,1972-09-01,Md.Jamshed Hossain,,1718094090,,Production (SCCL-DF),"Operator, CPW"
+Male,1969-06-22,Md.Jashem Uddin Chowdhury,,1825144876,Ext-123,Transport,Driver
+Male,1979-02-07, Md.Jasim uddin ,uddinjasim.spl@gmail.com,1777764530,,Service (SPL-CTG),Technician
+,1983-01-01,Md.Jasim Uddin,,1739507605,,Production (SCCL-DF),"Operator, HCL,Hypo Storage"
+,1992-12-20,Md.Jewel Babu,,,,Production (SCCL-DF),"Operator, DM,CW,WP"
+,1989-03-02,Md.Jobaydur Rahman,jobaydur.rahman@sccl.com,,,Mechanical (SCCL-DF),Deputy Manager
+,,Md. Kabir Ahmed,,,,HR & Admin (SCCL-DF),Security Guard
+,1977-01-01,Md.Kabir Hossain,,1190085866,,Mechanical (SCCL-DF),Asst.Supervisor
+,1982-10-09,Md.Kabir Khan,,1719983288,,Electrical & Instrument (SCCL-DF),Sub Station Tecnician
+,,Md.Kadom Ali,,,,Mechanical (SCCL-DF),Assistant Technician
+,,Md.Kamaruzzaman,m.k.munna@scclbd.com,1755621509,,Supply Chain Foreign (SCCL-HO),Officer
+,,Md.Kamrul Islam(Milon),,,,Mechanical (SCCL-DF),Assistant Technician
+,,Md.Kamruzzaman,kzaman@scclbd.com,1755621500,,Operation (SCCL-HO),Chief Operating Officer
+,1994-08-30,Md.Karimul Haque,,,,Mechanical (SCCL-DF),Assistant Mechanical Fitter
+Male,,Md.Khaled Hossain,hossainkhaled09@gmail.com,1799992772,,Supply Chain Local (SCCL-HO),Jr.Officer
+Male,1996-01-10,Md. Khalil,,1859636283,,HR & Admin (SCCL-CTG),Cook
+,1990-01-02,Md.Khorshed Alam,,,,Production (SCCL-DF),"Operator, Electrolyzer & Dechlorination"
+Male,,Md.Khurshedul Alam,,1799992806,,Electrical & Instrument (SCCL-CTG),Officer
+,,Md.Liton Hasan,,,,Production (SCCL-DF),Boiler Operator
+,,Md.Lokman,,,,Mechanical (SCCL-DF),Jr.Technician
+Male,1979-06-04,Md.Mahabub Alam,,1825286022,Ext-123,Security,SY.Guard
+,1977-12-25,Md.Mahdi Abdullah,,,,Production (SCCL-DF),Process Chemist
+,,Md.Mahedi Hasan 2,,,,Mechanical (SCCL-DF),Assistant Technician
+,1985-05-06,Md.Mahidur Alam,,,,Production (SCCL-DF),Operator
+Male,1997-06-20,Md.Mahmudul Hasan,mahmudulhasan.spl@gmail.com,1730338521,,Service (SPL-DF),Technician
+,1981-11-20,Md.Mahmudul Hasan,mahmudul.hasan@scclbd.com,1755637471,,Production (SCCL-DF),Deputy Manager
+,,Md. Mainnuddin Khan,,,,Operation (SPL-DF),Electrician
+Male,2017-12-30,Md.Mainuddin,,1823842239,,Electrical & Instrument (SCCL-CTG),Helper
+Male,,Md.Main uddin Ahmed,,,Ext-113,Production (SCCL-CTG),"Senior Engineer, DCS"
+Male,1980-06-03,Md.Mamunul Islam,mamunul.islam@scclbd.com,1714031113,Ext-105,Operation (SCCL-CTG),Sr.Deputy General Manager
+,,Md.Mamunur Rashid,,,,HR & Admin (SPL-HO),"Office Assistant , Admin"
+Male,1994-01-01,Md. Masud Rana,masudrana.iu21@gmail.com,01728-029390,,Production (SCCL-DF),"Officer, DCS"
+Male,,Md. Maswoodul Islam,maswoodul.islam@scclbd.com,1755621502,,Operation (SCCL-HO),AGM
+,1984-01-15,Md.Matiar Rahman,,,,Production (SCCL-DF),"Operator, Chlorine Cylinder Filling"
+Male,1987-03-01,Md. Mizanur Rahman,mizanbmcdl@gmail.com,1755656935,1755656935,Sales & Marketing Export (SCCL-CTG),Jr. Officer
+,,Md.Mizanur Rahman,mizanur.rahman@scclbd.com,1799992803,,Supply Chain Foreign (SCCL-HO),Officer
+Male,1994-06-06,Md.Mizanur Rahman,mijan_ri92@yahoo.com,'+8801750414187,,Production (SPPL-CTG),Engineer (Process)
+,1989-01-01,Md.Mizanur Rahman 1,,,,Mechanical (SCCL-DF),Junior Mechanical Fitter
+,1987-04-05,Md.Mizanur Rahman-2,,1748071596,,Production (SCCL-DF),"Operator, Flaking"
+Male,,Md. Moazzem Hossain,,01722-615149,,HR & Admin (SCCL-DF),Security Guard
+Male,1994-07-11,Md. Mohai Minul Islam,,01703-712056,,Electrical & Instrument (SCCL-DF),Trainee Engineer
+,,Md.Mohiuddin Bhuiyan,,,,Mechanical (SCCL-DF),Assistant Technician
+Male,1974-11-14,Md.Mohsin,,1813390059,Ext-123,Transport,Driver
+,1988-01-01,Md.Mojammel Haque,,,,Store (SCCL-DF),Store Assistant
+Male,1987-01-12,Md. Moksedul Momin,mmmurad456@gmail.com,1722535456,,Production (SCCL-DF),Sr.Officer
+Male,1996-12-10,Md. Mokter Hosen,,1836261218,Ext-123,Security,SY.Guard
+Male,1991-02-07,Md. Mominur Rahman,mominur.rahman109@gmail.com,1737094176,,Blow Mould,Production Officer
+Male,1986-10-27,Md. Monir hossain,,1851041408,,Transport,Lorry Helper
+,1994-01-01,Md.Monjurul Hoque,,1812236705,,Production (SCCL-DF),"Operator, Chlorine Cylinder Filling"
+Male,1986-02-11,Md. Monoarul Islam,kajolislam181@gmail.com,,,Accounts & Finance (SCCL-DF),Asst. Manager
+,,Md.Montu Mondol,,,,Mechanical (SCCL-DF),Assistant Technician
+Male,1996-02-02,Md. Morshed Alam,,1869545646,,Blow Mould,Helper
+Male,1969-04-10,Md.Mosharaf Hossain,,1766546363,,HR & Admin (SCCL-DF),Asst.Officer
+,,Md. Mostafizur Rahman,mostafijurbhatty@gmail.com,,,Mechanical (SCCL-DF),sub Asst. Engineer
+,,Md. Mostafizur Rahman,,,,Mechanical (SCCL-DF),Jr.Technician
+Male,,Md. Mostafizur Rahman,mustafiz.rahman@scclbd.com,,,Operation (SPL-HO),Director
+Male,1987-10-20,Md. Mostakim Billah,,1832286609,Ext-123,Transport,Lorry Helper
+Male,1990-06-15,Md. Motaher,,1724204464,1832709377,Transport, Truck Driver
+,1989-01-01,Md.Motiur Rahman Monju,,,,HR & Admin (SCCL-DF),Security Guard
+,1989-01-01,Md.Mozidul Haque,,,,Mechanical (SCCL-DF),Junior Welder
+,1968-10-01,Md. Moznu Molla,,1727161152,,Production (SCCL-DF),"Operator,Pay-loader"
+,,Md. Mustafizur Rahman,mustafiz.spl@scclbd.com,,,Operation (SPL-DF),Asst.Manager
+,,Md. Mustakim Billa,,,,Accounts & Finance (SCCL-DF),"Asst. Officer, Vat & Export"
+Male,1993-12-01,Md. Nahid Hasan,,,,Operation (SPL-DF),Peon
+,,Md.Nahid Hossain,commercial@scclbd.com,1713380899,,Commercial (SCCL-HO),Deputy Manager
+,1989-12-28,Md.Nahid Sultan,,1744607476,,HR & Admin (SCCL-DF),Security Guard
+,,Md.Nahidul Islam,islam.nahid75@gmail.com,1631726282,,Accounts & Finance (SPPL-HO),Assistant Officer
+Male,1995-10-14,Md. Nahiduzzaman,Nz.shochee@yahoo.com,1751377944,Ext-124,Mechanical (SCCL-CTG),"Engineer,Mechanical"
+,,Md. Nannu Mollah,,,,Operation (SPL-DF),Electrician
+,1990-02-13,Md.Nasir Hossen,,,,Production (SCCL-DF),"Operator, Flaking"
+,1983-11-30,Md.Nasiruzzaman,,1734199450,,Production (SCCL-DF),"Operator, Brine"
+,,Md. Nazmul Hasan,,,,HR & Admin (SCCL-DF),Security Guard
+,,Md. Nazmul Hasan,nazmulsccl@gmail.com,1777764513,,Mechanical (SCCL-DF),"Sr. Engineer, Mechanical"
+,1990-02-15,Md. Nazmul Hassan,nazmul.sppl@gmail.com,'+8801730790202,,Accounts & Finance (SPPL-HO),Officer
+Male,1999-12-31,Md. Nazmul Hossain,,1859602211,,Quality Assurance (SPPL-CTG),Lab Helper
+Male,1995-12-18,Md. Niaz Morshed,niazmorshed72798@gmail.com,'+8801718-689251,,Production (SPPL-CTG),Engineer (Process)
+,,Md. Nobiruzzaman,,,,Operation (SPL-DF),Electrician
+Male,1996-09-28,Md. Noor Nabi,,1774610829,,Blow Mould,Asst. Operator
+Male,,Md. Noyab Hossain ,,,,HR & Admin (SPL-HO),Driver
+Male,2000-08-21,Md. Nur Hosen,,1793918667,,HR & Admin (SCCL-DF),Security Guard
+,1987-09-20,Md.Nur Hossain,,1812376617,,Production (SCCL-DF),"Operator, Chlorine Cylinder Filling"
+,,Md. Nur Nabi,nurnabi@scclbd.com,1755538337,,Accounts & Finance (SCCL-HO),Assistant. Manager
+Male,1981-06-05,Md. Nurul Absar,,1822239317,Ext-123,Transport,Lorry Driver
+,,Md. Nurul Abser,,,,HR & Admin (SPPL-CTG),Security Guard
+,,Md. Nurul Amin Chowdhury,,,,HR & Admin (SPPL-CTG),Security Guard
+,1957-01-01,Md. Nurul Hossain,nhossain901@gmail.com,,,Mechanical (SCCL-DF),Manager
+,1984-12-16,Md.Nurul Huda,,1724671126,,Quality Assurance (SCCL-DF),Asst.Officer
+Male,1990-01-01,Md. Nurul Islam,,1778554511,,HR & Admin (SCCL-HO),Driver
+Male,1963-05-18,Md. Nurur Rahman,,1819173212,Ext-124,Mechanical (SCCL-CTG),Sr.Officer
+,,Md.Nuru Zaman Hossen,,1789262327,,HR & Admin (SCCL-HO),Peon
+Male,1994-10-10,Md. Obaidullaho,,01796-382388,,HR & Admin (SCCL-DF),Security Guard
+,1974-01-10,Md.Ohidul Islam,,,,Store (SCCL-DF),Store Helper
+Male,1994-11-18,Md. Oli Ahmed,,1874565627,,Transport,Lorry Helper
+Male,1978-10-19,Md.Osman Ali,,'+8801836600592,Ext-101,HR & Admin (SCCL-CTG),Peon
+Male,1999-03-01,Md. Osman Sheikh,,1742388593,,Store (SCCL-DF),Store Assistant
+Male,1968-05-15,Md. Rafiq,,1820189285,,Transport, Truck Driver
+,,Md.Rafiqul Islam,,,,Operation (SPPL-HO),Advisor
+,1984-02-03,Md.Rafiqul Islam,,'01738510220,,Electrical & Instrument (SCCL-DF),Supervisor
+Male,1994-02-01,Md. Rafi Uddin Basunia,rafibasunia@gmail.com,1787796021,,Production (SCCL-CTG), Assistant Engineer
+,,Md. Rahat Ali,,,,Operation (SPL-DF),Assistant Technician
+,,Md. Rajib Kazi,,,,Store (SCCL-DF),Store Assistant
+Male,1993-11-01,Md. Rakib Uddin,rakibcuet93@gmail.com,'+8801676252926,Ext-113,Production (SCCL-CTG),Trainee Engineer
+Male,1992-02-10,Md. Rana,,1778754837,,Transport, Truck Driver
+Male,1982-09-20,Md.Rasel Mahmud,rasselmahmud09@yahoo.com,1716131622,,Quality Assurance (SCCL-DF),"Chemist, QC"
+Male,1996-10-08,Md. Rasel Mia,,1788584576,,HR & Admin (SCCL-DF),Security Guard
+,,Md.Rashadul Haque,,,,Regulatory Affairs,Officer
+,1990-07-15,Md.Razu Ahmed,,1716713965,,Production (SCCL-DF),"Operator, CPW"
+Male,1981-01-01,Md. Rezaul Karim,rezakarim876@gmail.com,1730318273,,HR & Admin (SCCL-DF),"Sr. Officer, Delivery"
+Male,1984-01-01,Md.Rezaul Karim Shakil,,1813179348,Ext-104,Delivery & VAT (SCCL-CTG),Jr. Officer
+Male,,Md. Riyad Arafin,arafin2012@gmail.com,1710774226,,Accounts & Finance (SSCL-HO),"Officer,Accounts"
+,,Md. Robel Miazi,,1866752205,,Production (SCCL-DF),"Operator, DM,CW,WP"
+Male,,Md. Robiul Hossain,,1845225227,,Mechanical (SCCL-DF),Jr.Technician
+,,Md.Robiul Molla,,,,HR & Admin (SCCL-HO),Driver
+,,Md. Rokibul Hossain,ahmedrakib860@gmail.com,1714872508,,Electrical & Instrument (SCCL-DF),Sub Assistant Engineer
+,,Md. Roni Ali,ronialisccl@gmail.com,1777764512,1777764512,Mechanical (SCCL-DF),"Sr. Engineer, Mechanical"
+,,Md. Rukanuzzaman,rukancuet10@gmail.com,,,Operation (SPL-DF),Engineer
+Male,,Md.Rukunuzzaman Kanchon,rukon.specchem@gmail.com,1755656966,,Commercial (SCCL-HO),Officer
+,,Md.Ruman Mahmud,,1755656962,,Service (SPL-CTG),Technician
+,,Md. Sagor Ali,,,,HR & Admin (SCCL-DF),Security Guard
+Male,,Md. Saidul Islam,,01797-897800,,Mechanical (SCCL-DF),Jr.Technician
+,1987-05-27,Md.Saidur Rahman,,1738177797,,HR & Admin (SCCL-DF),Security Guard
+,,Md.Saiful Alam,,,,HR & Admin (SPPL-CTG),Peon
+,,Md.Saiful Islam,saiful.qms@scclbd.com,1777764509,,Operation (SCCL-HO),Deputy Manager
+Male,1986-01-01,Md. Saiful islam-2,,1986235517,Ext-123,Transport,Lorry Helper
+Male,1983-05-05,Md. Saiful Islam 3,,1862967711,,Transport, Truck Driver
+Male,,Md. Saiful Islam Roni,,1815756336,,Mechanical (SCCL-DF),Jr.Technician
+Male,,Md. Sakhawat Hossain,sakhawat.hossainsohel1988@gmail.com,1799992775,,Supply Chain Local (SCCL-HO),Officer
+Male,1990-08-11,Md. Sakibul Islam,,,,Quality Assurance (SCCL-DF),Lab Assistant
+Male,1987-05-10,Md. Salauddin Bakaul,sbakaul@yahoo.com,1755656955,1911025987,Production (SCCL-CTG),Deputy Manager
+,1970-03-11,Md.Salim,,1195053514,,Production (SCCL-DF),"Operator, DM,CW,WP"
+Male,1995-09-06,Md. Sanwar Hossain,,01772-229993,,Production (SCCL-DF),"Operator, HCL,Hypo Storage"
+,,Md.Sarif Anayet Hossen,,,,Production (SCCL-DF),"Operator, CPW"
+Male,1976-05-15,Md.Sariful Islam,sarifislam212@gmail.com,1730318272,,Accounts & Finance (SCCL-DF),Deputy Manager (Vat)
+Male,1985-01-01,Md. Sarwar Uddin,,1811543409,,Transport, Truck Driver
+,1990-10-11,Md.Selim,,,,Mechanical (SCCL-DF),PVC Helper
+,1992-03-01,Md.Shafiqul Islam-Jr 2,,1727323624,,Mechanical (SCCL-DF),Assistant Rigger
+,1983-10-24,Md.Shahadat Hossain,,,Ext-113,Production (SCCL-CTG),Officer
+,,Md.Shah Alam,,1840522958,,Production (SCCL-DF),"Operator, Chlorine Cylinder Filling"
+Male,1989-04-03,Md. Shahidul Islam,,1815865740,,Mechanical (SCCL-DF),Technician
+,,Md. Shahidul Islam,,1775873276,,Quality Assurance (SCCL-DF),Lab Assistant
+,1986-06-27,Md.Shahidul Islam,,1916415159,,Production (SCCL-DF),"Operator, Electrolyzer & Dechlorination"
+,,Md.Shahid Ullah,shahidullahsccl@gmail.com,1777764523,1777764523,HR & Admin (SCCL-DF),Jr. Officer
+,1977-02-08,Md.Shahjalal,chlorine92@gmail.com,1755637470,,Production (SCCL-DF),"Manager, CL2,HCl & Hypo"
+Male,1982-07-23,Md. Shaidur Rahman,,,,Production (SCCL-DF),Operator
+,,Md. Shajahan Miagi,,,,HR & Admin (SPPL-CTG),Jr. Officer
+,,Md.Shakawath Hossain,shakawat.hossain@scclbd.com,1755621501,,Accounts & Finance (SCCL-HO),Deputy Manager
+,1975-01-01,Md.Shakhawat Hossain,,,,Mechanical (SCCL-DF),Assistant Mechanical Fitter
+,1979-06-10,Md.Shakhawat Hossain,,1919468437,,Production (SCCL-DF),"Operator, Chlorine Bottling"
+,,Md. Shawkat Hossain,apple_shawkat2015@yahoo.com,,,Accounts & Finance (SPPL-HO),Jr. Officer
+Male,1988-06-01,Md. Sheikh Hossain,skhossain_geo35@yahoo.com,'+8801816823904,,Operation (SPPL-CTG),Jr. Officer (operation)
+Male,1998-04-04,Md. Shijen Murad,,1790018557,Ext-113,Production (SCCL-CTG),Trainee Operater
+Male,1986-12-20,Md. Shohrab Hosen,shohrabhosen@gmail.com,,,Accounts & Finance (SSCL-HO),Asst. Manager
+,,Md.Shohrab Mridha,,,,HR & Admin (SPPL-HO),Driver
+Male,1989-09-10,Md Siddiqur Rahaman,,1743452090,,HR & Admin (SCCL-HO),Peon
+Male,1986-10-05,Md. Siraj,,1879130608,,Mechanical (SCCL-CTG),Lathe machine Operator
+,,Md.Sobuj,,,,Mechanical (SCCL-DF),Crane Operator
+Male,1982-10-17,Md. Sohel,,1822531864,,Transport, Truck Driver
+,1984-01-01,Md.Sohel Rana,,,,Production (SCCL-DF),"Operator, Brine"
+,,Md. Sojib Miah,,1787286926,,Quality Assurance (SCCL-DF),Lab Assistant
+,1983-06-26,Md.Suborno Rahman,suborno_ju@yahoo.com,1777764547,,Production (SCCL-DF),Asst. Manager
+,1991-08-18,Md.Suhag Mia,,1735325214,,Quality Assurance (SCCL-DF),Lab Assistant
+Male,1998-01-01,Md. Tareq Rahman,,1766463506,,Production (SCCL-DF),Operator
+Male,1992-01-02,Md.Tariq Bin Wahab,sohag.miu25@gmail.com,01784-875745,,Sales & Marketing,"Assistant Officer, Sales & Marketing"
+,,Md.Topejjal Hossain,,,,HR & Admin (SCCL-DF),Security Guard
+Male,1998-01-01,Md.Towhidul Islam,,1851824250,,Production (SSCL-CTG),Operator
+,,Md. Wahiduzzaman,it@scclbd.com,1755637477,,HR & Admin (SCCL-HO),Sr.Officer
+Male,1970-04-15,Md. Yeakub,,1837236733,Ext-123,Transport,Vehicle Mechanic
+Male,1972-07-25,Md. Yousuf,,1711656940,,Electrical & Instrument (SCCL-CTG),Deputy Manager
+,,Md. Yousuf [Deputy Manager],,,,,
+,,Md.Yousuf Sikder,,,,Electrical & Instrument (SCCL-DF),Assist Electrician cum Diesel Generator Operator
+Male,2000-01-17,Md. Zahid Hasan,,01643-007621,,Mechanical (SCCL-DF),Jr. Technician
+Male,1975-08-25,Md. Zahir Uddin,,1930530855,Ext-123,Quality Assurance (SCCL-CTG),Chemist
+Male,1982-01-01,Md.Zahirul Islam Bhuiyan,zahir@scclbd.com,1710803803,Ext-107,Delivery & VAT (SCCL-CTG),Sr.Officer
+,,Md. Ziaur Rahman,ziaurjmfl@gmail.com,,,Sales & Marketing (SSCL-HO),"Sr.Executive,Sales & Marketing"
+,1988-06-10,Milon Gazi,,1724585501,,Electrical & Instrument (SCCL-DF),Fitter
+Male,,Mizanur Rahman,,1811369408,EXT-113,Production (SCCL-CTG),Operator
+Male,1992-01-20,Mobarak Hossain,,1814442286,,Electrical & Instrument (SCCL-CTG),Operator
+Male,1982-12-17,Mofizul Islam Monir,,1914739116,,Electrical & Instrument (SCCL-CTG),Instrument 
+,,Mohammad Akramuzzaman,ma.zaman@scclbd.com,1730357069,,Accounts & Finance (SCCL-HO),"Sr. DGM, Accounts & Finance"
+Male,1991-03-12, Mohammad Al Ameen,alameen.mjh@gmail.com,1779790810,Ext-113,Production (SCCL-CTG),Engineer
+,,Mohammad Alhaj Mia,alhajsami12@gmail.com,1755656958,1755656958,Store (SCCL-DF),Asst. Manager (Store In-Charge)
+,,Mohammad Arif,,1820189372,,Mechanical (SCCL-CTG),Mech 
+,1980-10-26,Mohammad Arifur Rahman,arifur896@gmail.com,1718312337,,Production (SCCL-DF),"Sr. Officer, Flaking"
+Male,1982-02-01,Mohammad Easin,mohammadeasin@scclbd.com,1817211904,Ext-124,Mechanical (SCCL-CTG),AGM
+,,Mohammad Faisal Matin,faisalmatin1991@gmail.com,1777764543,,Operation (SPL-DF),Engineer
+Male,1976-03-01,Mohammad Ishaque,peroxidestore@gmail.com,1816236978,,Store (SCCL-CTG),Sr.Officer
+Male,1993-01-01,Mohammad Ismail,,1918231063,,Production (SSCL-CTG),Operator
+Male,1992-02-01,Mohammad Ismail Hosen,,1839692602,,Production (SSCL-CTG),Lab. Asst.
+Male,1984-05-10,Mohammad Jahangir Khan,,1811961659,,Transport,Tank Lorry Helper
+Male,1987-09-12,Mohammad Jakir,,1878127543,,Transport,Lorry Helper
+Male,1992-05-10,Mohammad Kausar Uddin,,1812586426,,Service (SPL-CTG),Technician
+Male,1989-03-20,Mohammad Mehedi Hasan,anik.mehadi@gmail.com,1799992767,,Production (SCCL-CTG),Engineer
+,1979-12-07,Mohammad Mohsin,,1777764548,,Production (SCCL-DF),Sr.Officer
+,,Mohammad Mustafa Haider,haider@scclbd.com,,,Management (SCCL-HO),Managing Director
+Male,1992-09-09,Mohammad Osman,,1862754745,,Transport,Lorry Helper
+Male,1994-05-15,Mohammad Shah Newaz,newaz909@gmail.com,1670472909,,Electrical & Instrument (SCCL-CTG),Trainee Engineer
+Male,2000-11-20,Mohammad Shakil hossain,,1850810240,Ext-113,Production (SCCL-CTG),Operator
+Male,2000-09-24,Mohammad Zahed,,1822314489,,Blow Mould,Helper
+Male,1994-08-10,Mohammed Sadmath Islam,sadmathme.ruet@gmail.com,1920012257,1521473646,Mechanical (SCCL-CTG),Trainee Engineer
+,,Mohan Chowhan Shanto,mohon.chowhan@scclbd.com,,,Mechanical (SCCL-DF),Deputy Manager
+,,Mohd. Ohidul Islam,himueeepust@gmail.com,1777764539,,Electrical & Instrument (SCCL-DF),"Sr. Engineer, Electrical"
+Male,1995-12-19,Mohe Uddin,,1821635613,,Production (SSCL-CTG),Operator
+,1986-01-01,Mondol Baspor,,,,HR & Admin (SCCL-DF),Cleaner
+Male,1994-05-14,Mongmongsing Marma,,1879369008,,Blow Mould,Helper
+Male,1997-10-21,Monir Hossain Sayem,,1853806367,,Blow Mould,Helper
+Male,,Monirul Islam,,,Ext-113,Production (SCCL-CTG),Sr.Optr 
+Male,1984-05-01,Morshed Alam,,1813329054,Ext-123,Transport,Lorry Helper
+,,Morshedul Alam,morshed.alam@scclbd.com,1730318257,,Sales & Marketing (Export),Manager
+,1961-03-01,Moslem Miah,,,,Mechanical (SCCL-DF),PVC Fitter
+,1960-01-01,Mostofa Kamal,,,,Mechanical (SCCL-DF),Assistant Rigger
+,,Mr. Abdul Alim,,,,Production (SPPL-CTG),L.P.G Helper
+,,Mr. Abdul Goni,,1730790220,,HR & Admin (SPPL-CTG),Canteen Supervisor
+,,Mr. Abdul Halim,,,,Production (SPPL-CTG),Sr. Movement Operator
+,,Mr. Abdul Malek,,,,HR & Admin (SPPL-CTG),Boat Helper
+,,Mr.Abdul Momen,,,,HR & Admin (SPPL-CTG),Security Inspector
+,,Mr. Abdur Rahman,,,,HR & Admin (SPPL-CTG),Security Guard
+,1982-07-20,Mr.Abdur Rahman,,1731716876,,Production (SCCL-DF),"Operator, Brine"
+Male,,Mr.Abdur Razzak,,1922508074,,Mechanical (SCCL-CTG),Helper
+,1971-01-01,Mr.Abdur Razzaque,,1676012089,,Electrical & Instrument (SCCL-DF),Inst.Technician
+,,Mr. Abdur Rouf,engg.abdurrouf@gmail.com,,,Sales & Marketing (SSCL-HO),Assistant. Manager
+,,Mr. Abu Naser Mohammad (Shahin),shahin72sppl@gmail.com,1730787046,,Inspection & Safety (SPPL-CTG),Officer
+,,Mr.Abu Sufian ,abusufian0309@gmail.com,,,Commercial (SCCL-HO),Assistant Officer
+,,Mr. Abu Taher,abutahersppl@gmail.com,,,Electrical (SPPL-CTG),Technician
+,,Mr. Abu Taher,,,,HR & Admin (SPPL-CTG),Cook
+,,Mr.Abu Taher Sohel,export@scclbd.com,1755656934,,Sales & Marketing (Export),Officer
+,,Mr. Afsar Hossen,,,,Inspection & Safety (SPPL-CTG),Fire Fighter
+,1985-02-01,Mr.Ainal,,,,Mechanical (SCCL-DF),Assistant Technician
+Male,1967-08-06,Mr.Ajit Barua,,1866381785,Ext-123,Security,SY.Guard
+Male,1982-03-29,Mr.A.K.M. Samiul Hossain,samuda.power@scclbd.com,,,Service (SPL-DF),Engineer
+Male,1983-04-28,Mr. Al Ameen,,1727491093,,Transport,Lorry Helper
+,,Mr. Alamgir,,,1825372624,HR & Admin (SCCL-DF),Peon
+,,Mr.Al Amin,,,,Mechanical (SCCL-DF),Assistant Technician
+,,Mr.Alauddin,,,,HR & Admin (SCCL-HO),Driver
+Male,1979-11-20,Mr.Ali Hasan,,1818650386,Ext-123,Transport,Driver
+,,Mr.Ali Nur,alinur3100@gmail.com,,,Production (SPPL-CTG),Junior Operator
+,,Mr. Ali Zaker Showan,azshawon@gmail.com,1730790211,,Production (SPPL-CTG),Engineer
+,,Mr.Amin,,,,HR & Admin (SCCL-HO),Driver
+,,Mr.Amit Das,amitdas99530@gmail.com,1755621505,,Sales & Marketing (H2o2),Assistant. Manager
+,,Mr. Amit Kumar Saha,amitsahasppl65@gmail.com,1730787044,,Store (SPPL-CTG),Officer
+,,Mr. Amit Shor ,scclamit@gmail.com,1777764514,,Mechanical (SCCL-DF),Engineer
+,,Mr. Amjad Hossain,,,,Inspection & Safety (SPPL-CTG),Fire Fighter
+,,Mr.Anamul Hasan,anamul.hn@gmail.com,,,Sales & Marketing (SSCL-HO),Executive (S & M)
+,,Mr. Animesh Saha,,,,Service (SPL-DF),Sr. Technician
+,,Mr. Anowar Hossain,,,,Inspection & Safety (SPPL-CTG),Fire Fighter
+Male,1985-02-10,Mr. Anup Barua,,1841467880,,Service (SPL-CTG),Driver
+,,Mr. Arif  Moinuddin,sanictg76@gmail.com,,,Quality Assurance (SPPL-CTG),Lab Helper
+,,Mr. Arijit Paul,ruble05@hotmail.com,1730787004,,Accounts & Finance (SPPL-CTG),Officer
+,,Mr. Arman Hossain,mdarmanhossain224@gmail.com,,,HR & Admin (SPPL-CTG),Imam
+,1994-02-01,Mr.Asaduzzaman,,,,Mechanical (SCCL-DF),Jr.Technician
+,,Mr.Asaduzzaman,,,,HR & Admin (SCCL-DF),Security Guard
+,,Mr. Ashik-Ul-Alam Bhuiyan,pulokcep17@gmail.com,1730790210,,Production (SPPL-CTG),Engineer
+,,Mr. Atikur Rahaman,atiksppl1995@gmail.com,,,Quality Assurance (SPPL-CTG),Lab Helper
+Male,1995-05-10,Mr. Aunkan Sikder,sikderaunkan@gmail.com,,,Electrical & Instrument (SCCL-DF),Sub Assistant Engineer
+,,Mr. Avijit Dasgupta,avijit.dasgupta@sppl.com.bd,1730787006,,Mechanical (SPPL-CTG),Asst. General Manager
+Male,1986-03-29,Mr.Ayub Khan,,1883668623,Ext-123,Security,SY.Guard
+Male,2017-12-21,Mr.Azam Khan,,1823179798,Ext-123,Transport,Driver
+,,Mr. Azizur Rahman,,,,Mechanical (SPPL-CTG),Sr. Mechanic
+,, Mr. Babla Barua,bablasppl@gmail.com,,,Electrical (SPPL-CTG),Operator
+,, Mr. Badal Kanti Chowdhury,engr.bkchy@sppl.com.bd,1730787030,,Mechanical (SPPL-CTG),Sr.Executive
+,,Mr. Bashu Deb Mozumder,anikmajumder264@gmail.com,,,Store (SPPL-CTG),Store Assistant
+,,Mr. Bekash Barua,,,,Mechanical (SPPL-CTG),Welder
+,,Mr.Bikash Kanti Das,scclh2o2@gmail.com,,,Operation (SCCL-HO),General Manager
+,1963-12-26,Mr.Billal Hossen Babu,,1732131422,,HR & Admin (SCCL-DF),Gardener
+,,Mr. Biplop Saha,biplobsaha3412@gmail.com,1730787036,,Production (SPPL-CTG),Officer
+Male,1988-09-28,Mr. Chaila Marma,,1823955576,Ext-101,HR & Admin (SCCL-CTG),Cook
+Male,1949-02-14,Mr. Chand Mohon Rudra Pal,cmr.pal@scclbd.com,01730-318268,,Electrical & Instrument (SCCL-DF),Chief Engineer
+,1993-04-16,Mr.Delower Hossen 1,,,,Mechanical (SCCL-DF),Assistant Technician
+,,Mr. Devarshi Das,debarshidas35@hotmail.com,1777764544,,Operation (SPL-DF),Engineer
+,,Mr.Didarul Huq,mdidar78@gmail.com,1755538332,,Sales & Marketing (Caustic),Assistant. Manager
+,,Mr. Dipen Saha,,,,Production (SPPL-CTG),Junior Operator
+Male,1979-03-02,Mr.Disher Barua,,1822329545,Ext-123,Transport,Lorry Helper
+Male,1970-06-20,Mr. Elias,,1823861795,,Blow Mould,Helper
+,,Mr. Enamul Hoque,,,,HR & Admin (SPPL-CTG),Security Guard
+,,Mr. Fakhrul Ameen,,,,Operation (SPPL-HO),Advisor
+,,Mr. Forhad Mia,forhad6091@gmail.com,,,Production (SPPL-CTG),Trainee Operater
+,,Mr. Forkan Uddin,mdforkanuddin84@gmail.com,,,Mechanical (SPPL-CTG),Sub Assistant Engineer
+,1989-05-15,Mr.Gaffar,,,,Mechanical (SCCL-DF),Technician
+,,Mr.Gopal Boisnab,,,,HR & Admin (SCCL-CTG),Mali 
+,1992-12-05,Mr.Gourungo Haldar,,,,Production (SCCL-DF),"Operator,Electrolyzer & Dechlorination"
+,,Mr. Habibur Rahman,,,,Production (SPPL-CTG),Operator
+,,Mr.Habibur Rahman,,,,HR & Admin (SCCL-DF),Security Guard
+,1993-06-01,Mr.Hamidul Islam,,,,Mechanical (SCCL-DF),Jr.Technician
+Male,,Mr.Hasan Syed Reza,ctg7reza@yahoo.com,,,Electrical & Instrument (SCCL-CTG),"Engineer, Electrical"
+Male,1976-04-06,Mr.H.M.Shaheed Sarwar,,1673532194,Ext-123,Transport,Officer
+,,Mr.Humayun Kabir,humayunsccl@gmail.com,,,Accounts & Finance (SCCL-HO),"Asst. Officer, Accounts & Finance"
+Male,,Mr. Imam Hossain,,,,Production (SPPL-CTG),Operator
+,,Mr.Istiak Hossain,istiakhossain772@gmail.com,,,Mechanical (SCCL-DF),Trainee SA Engineer
+,,Mr.Jahangin Alam,,,,HR & Admin (SCCL-HO),Driver
+,,Mr. Jahangir Alam,,,,HR & Admin (SPPL-CTG),Driver
+,,Mr. Jahangir Alam,jahangirsppl@gmail.com,,,Electrical (SPPL-CTG),Operator
+,,Mr. Jahirul Alam Papel,johirpapel@yahoo.com,1730787026,,Quality Assurance (SPPL-CTG),"Chemist, QC"
+,,Mr.Jalal Hossain,,,,HR & Admin (SPPL-CTG),Cook Helper
+,,Mr. Jamil Hasan Emon,jamilhasan_emon@yahoo.com,1730787002,,Sales & Marketing (SPPL-HO),Sr.Executive
+,,Mr.Jayanto Prashad Mitra,jmpiyal1992@gmail.com,,,Quality Assurance (SPPL-CTG),Lab Tester
+,,Mr. Jewel Chandra Das,jeweldas1742@gmail.com,,,Production (SPPL-CTG),Junior Operator
+,,Mr. Jiku Saha,jikusaha0182@gmail.com,,,Production (SPPL-CTG),Junior Operator
+Male,,Mr. Jindar Ali Shaikh,jinderalisppl@gmail.com,1926124994,,Instrument & Control (SPPL-CTG),Inst.Technician
+Male,2001-10-10,Mr. Joni Molla,,01766-211692,,Production (SCCL-DF),Operator
+,,Mr. Joy Bhowmick,joybhowmick556@gmail.com,1730787023,,Production (SPPL-CTG),Jr. Officer
+,,Mr. Kamal Hossain,,,,HR & Admin (SPPL-CTG),Security Guard
+Male,,Mr.Kamruzzaman,,,,HR & Admin (SCCL-DF),"Operator, HCL & Hypo,ETP"
+,,Mr. Kawser,,,,HR & Admin (SCCL-DF),Security Guard
+,1993-11-01,Mr.Kawser Hossen,,,,Mechanical (SCCL-DF),Assistant Technician
+,,Mr.Kazi Md.Selim,,,,HR & Admin (SPPL-CTG),Security Guard
+,,Mr. Kazi Muhammed Wazed,kaziwazed77@gmail.com,,,Electrical (SPPL-CTG),Operator
+,,Mr. Khademul Islam,khi.sumon@gmail.com,1730790207,,Production (SPPL-CTG),Jr. Officer
+,,Mr. Khairul Islam,,,,Production (SPPL-CTG),Boiler Operator
+,,Mr.Khalilur Rahman,,,,HR & Admin (SCCL-DF),Security Guard
+Male,,Mr.Khorshed Alam,,,,Store (SSCL-CTG),Asst.Officer
+,,Mr. Khurshed Alam,akhurshed330@gmail.com,,,Production (SPPL-CTG),Operator
+,1983-10-12,Mr.Khurshed Alam,khurshedchemistryju@gmail.com,,,Production (SCCL-DF),Sr.Officer
+,,Mr. Khurshid Alam,,,,Production (SPPL-CTG),Helper
+,,Mr.Liton Mia,,,,Mechanical (SCCL-DF),Jr.Technician
+,,Mr. Maain Uddin,,,,Production (SPPL-CTG),Jetty Operator
+,,Mr. Mahbubul Hasan Khan,mahbub.shojib@sppl.com.bd,1730787012,,Inspection & Safety (SPPL-CTG),Manager
+,1991-12-01,Mr.Mahedi Hasan 1,,,,Mechanical (SCCL-DF),Assistant Technician
+,,Mr.Mahfuzur Rahman,,,,Operation (SCCL-HO),Advisor
+,,Mr. Mahfzul Karim,,,,HR & Admin (SPPL-CTG),Security Guard
+,,Mr.Maksud,maksudulislam01@gmail.com,,,Sales & Marketing (SSCL-HO),Executive (S & M)
+,,Mr. Mamunur Rashid,,,,Inspection & Safety (SPPL-CTG),Fire Fighter
+,,Mr. Manik Chakroborty,,,,Inspection & Safety (SPPL-CTG),Fire Fighter
+Male,1984-02-02,Mr.Mansur Alam,,1849253724,Ext-123,Security,SY.Guard
+,,Mr.Masud Rana,masudrana@scclbd.com,1755636949,,Sales & Marketing (H2o2),Deputy Manager
+,,Mr.Masud Rana,,,,Electrical & Instrument (SCCL-DF),Assistant Electrician
+,,Mr. Masum Billah,masumrodrocepsust@gmail.com,,,Production (SPPL-CTG),Engineer (Process)
+,,Mr.Masum Billah,,,,Mechanical (SCCL-DF),Technician
+,,Mr. Md. Abdul Jynal Wasim,,,,HR & Admin (SPPL-CTG),Cook
+,,Mr. Md Abdullah Al Noman,abdullah.noman@sppl.com.bd,1730787034,,Electrical (SPPL-CTG),Asst. General Manager
+,,Mr. Md. Abdul Latif,,,,HR & Admin (SPPL-CTG),Security Guard
+,,Mr. Md. Abdul Mannan,,1730787039,,Mechanical (SPPL-CTG),Foreman
+,,Mr. Md. Abdur Rahim,,,,Inspection & Safety (SPPL-CTG),Fire Fighter
+,,Mr. Md. Abidur Rahaman,abidur.rahman@sppl.com.bd,1730787017,,Production (SPPL-CTG),Shift-In-Charge
+,,Mr. Md. Abu bakar Siddique,absk.sohel@gmail.com,1730790206,,Accounts & Finance (SPPL-CTG),"Officer,VAT"
+,,Mr. Md. Abul Kalam,mdabulkalamsppl2015@gmail.com,,,Electrical (SPPL-CTG),Technician
+,,Mr. Md. Abul Kasam,,,,Mechanical (SPPL-CTG),Mechanic
+,,Mr. Md. Abul Kashem Miah,,,,HR & Admin (SPPL-CTG),Security Guard
+,,Mr. Md. Abu Naser,abunaser277@gmail.com,,,Production (SPPL-CTG),Sr.Operator
+Male,,Mr. Md. Abu Taher,,,,Inspection & Safety (SPPL-CTG),Fire Attendent Driver
+,,Mr. Md. Afsar Uddin,,,,Production (SPPL-CTG),Sr. Movement Operator
+,,Mr.Md. Ahmed Kabir,ahmedkabir6290@gmail.com,,,Store (SPPL-CTG),Sr.Officer
+,,Mr. Md. Akbar Hossain,akbar.hossain20@yahoo.com,,,Mechanical (SPPL-CTG),Asst Engineer
+,,Mr. Md. Akteruzzaman,,,,Production (SPPL-CTG),Movement Operator
+Male,1990-01-01,Mr. Md. Alamgir,,1829068082,,HR & Admin (SPPL-CTG),Peon
+Male,1994-02-06,Mr. Md. Alauddin,,,,Inspection & Safety (SPPL-CTG),Fire Fighter
+Male,,Mr. Md. Ali Hossain,,,,Inspection & Safety (SPPL-CTG),Trainee Fire Fighter
+Male,1982-12-25,Mr. Md. Aminul Islam,md.aminulislam29@yahoo.com,1730787041,,HR & Admin (SPPL-CTG),Officer
+,,Mr. Md. Anam Hossen,,,,HR & Admin (SPPL-CTG),Security Guard
+Male,,Mr.Md.Arshadul Mustafa,,,,Production (SSCL-CTG),T/Chemist
+,,Mr. Md. Asraful Islam,,,,HR & Admin (SPPL-CTG),Cook
+,,Mr. Md. Belal Hossain,,,,Inspection & Safety (SPPL-CTG),Fire Fighter Shift Leader
+,,Mr. Md. Belel Hossen,,,,HR & Admin (SPPL-CTG),Assistant Security Inspector
+,, Mr. Md. Daloar Hosan  ,mddelowersppl@gmail.com,,,Electrical (SPPL-CTG),Technician
+,,Mr. Md. Didarul Alam,didarulalamsppl@gmail.com,,,Electrical (SPPL-CTG),Sr.Technician
+,,Mr. Md. Emrul Kayes Khan,,,,Production (SPPL-CTG),LPG Operator
+,,Mr. Md. Eyasin,,,,Mechanical (SPPL-CTG),Meachanical Fitter
+,,Mr. Md. Farhad Hossen,,,,Production (SPPL-CTG),Junior Operator
+,,Mr. Md. Faruk-I-Azam,spplfaruk@gmail.com,1730787042,,Accounts & Finance (SPPL-CTG),Sr.Officer
+,,Mr. Md. Harun,,,,HR & Admin (SPPL-CTG),Driver
+,,Mr. Md. Hasan,,,,Inspection & Safety (SPPL-CTG),Fire Attendent Driver
+,,Mr. Md. Helal,,,,Mechanical (SPPL-CTG),Carpenter
+,, Mr. Md. Ibrahim khalil,nksurgicalbd@gmail.com,,,Production (SPPL-CTG),Operator
+,,Mr. Md.Imtiaz Uddin,,,,Production (SPPL-CTG),LPG Operator
+,,Mr. Md. Ishaque Mia,mdishaque98@gmail.com,1730787043,,Store (SPPL-CTG),Officer
+,,Mr. Md. Ismaiel,,,,HR & Admin (SPPL-CTG),Security Guard
+Male,1986-12-30,Mr.Md. Jahangir Alam,jahangir.samuda@gmail.com,1816059478,1799992801,Production (SSCL-CTG),PO
+Male,1996-05-31,Mr. Md. Jahid Hassan Emon,,,,Production (SPPL-CTG),"Helper, process"
+,,Mr. Md. Jashim Uddin,,,,Mechanical (SPPL-CTG),Mechanic
+,,Mr. Md. Jaynal Abdin,,,,Production (SPPL-CTG),Boiler Operator
+,,Mr. Md. Kaiser Hamid,kaisertareq@gmail.com,,,Mechanical (SPPL-CTG),Sub Assistant Engineer
+,,Mr. Md. Kalim Ullah,,,,HR & Admin (SPPL-CTG),Security Guard
+,,Mr. Md. Kayem Hosin,sujontkays1991@gmail.com,,,Production (SPPL-CTG),Operator
+,,Mr. Md. Khokan,,,,HR & Admin (SPPL-CTG),Security Guard
+,,Mr. Md. Khorshed Alam Chy.,kac.alam@yahoo.com,,,Electrical (SPPL-CTG),Asst Engineer
+Male,1993-03-11,Mr. Md. Liton,,,,Mechanical (SPPL-CTG),Fitter
+,,Mr. Md. Lokman Hakim,hlokman141@gmail.com,,,Quality Assurance (SPPL-CTG),Lab Tester
+,,Mr. Md. Mahmudul Hasan,hasan0709@gmail.com,1730790217,,Production (SPPL-CTG),Engineer
+,,Mr. Md. Main Uddin,mainuddinsppl2007@gmail.com,,,Instrument & Control (SPPL-CTG),Sr.Technician
+,,Mr. Md. Manto Mia,,,,HR & Admin (SPPL-CTG),Peon
+,,Mr. Md. Masud Alam Patwary,,,,Production (SPPL-CTG),Operator
+Male,1993-01-02,Mr. Md. Minhajul Siddique,minhaj127013@gmail.com,1916696655,,Production (SSCL-CTG),IPE
+,,Mr. Md. Miraz Hossain,,,,Production (SPPL-CTG),Operator
+,,Mr. Md. Mizanur Rahaman,,,,Inspection & Safety (SPPL-CTG),Fire Fighter
+,,Mr. Md. Mizanur Rahman,,,,Production (SPPL-CTG),Sr.Operator
+,,Mr. Md. Mizanur Rahman,,,,HR & Admin (SPPL-CTG),Security Guard
+Male,,Mr. Md. Mohammad Ullah,,,,Production (SPPL-CTG),Movement Helper
+,,Mr. Md. Mohin Uddin,,,,Production (SPPL-CTG),Jetty Operator
+,,Mr. Md. Moinul Islam Khan,,,,Production (SPPL-CTG),Movement Operator
+Male,1964-07-05,Mr. Md. Mosleh Uddin ,,1730787045,'+8801817077399,HR & Admin (SPPL-CTG),Security In-Charge
+,,Mr. Md. Mubarak Hossen,,,,Mechanical (SPPL-CTG),Crane Operator
+,,Mr. Md. Muksul Miner,minerjubayer@gmail.com,,,Production (SPPL-CTG),Sub Assistant Engineer
+,,Mr. Md Mushfiqur Rahman,mushfiqur.rahman@sppl.com.bd,1730787037,,Instrument & Control (SPPL-CTG),Asst.Manager
+,,Mr. Md. Muzahid Dalim,,,,Production (SPPL-CTG),Movement Helper
+,, Mr. Md. Nazrul Islam,nazrulislam378905@gmail.com,,,Production (SPPL-CTG),Trainee Operater
+,,Mr. Md. Nurul Akhter,,,,Production (SPPL-CTG),Sr. Movement Operator
+,,Mr. Md. Oashim Uddin,,,,HR & Admin (SPPL-CTG),Peon
+,,Mr. Md. Osman Goni,,,,Inspection & Safety (SPPL-CTG),Fire Fighter
+,,Mr. Md. Rajaul Karim,,,,HR & Admin (SPPL-CTG),Security Guard
+,,Mr. Md. Rakibul Islam,,,,Production (SPPL-CTG),Sr. Movement Operator
+,,Mr. Md. Rasel Chowdhury,,,,HR & Admin (SPPL-CTG),Security Guard
+,,Mr. Md. Robiul Islam,,,,Production (SPPL-CTG),Trainee Operater
+,, Mr. Md. Saidul Islam,saidulislamsppl@gmail.com,,,Electrical (SPPL-CTG),Foremen
+,,Mr. Md. Saifuddin,,1730787048,,HR & Admin (SPPL-CTG),Boat Operator 
+,,Mr. Md. Saiful Islam (Babu),,,,HR & Admin (SPPL-CTG),Assistant Security Inspector
+,,Mr. Md. Salauddin,,,,HR & Admin (SPPL-CTG),Assistant Security Inspector
+,,Mr. Md. Sarfuddin Chowdhury Sharif,sharif2102@yahoo.com,1730787033,,Quality Assurance (SPPL-CTG),Asst. General Manager
+,,Mr. Md. Sariful Islam,,,,Production (SPPL-CTG),Trainee Operater
+Male,1993-12-08,Mr. Md. Sazzad Hossain,,,,Mechanical (SPPL-CTG),Fitter
+,,Mr. Md. Shafiqul Islam,shafiqul.islam@sppl.com.bd,1730787018,,Production (SPPL-CTG),Shift-In-Charge
+Male,1988-11-05,Mr. Md. Shahajhan Rashed,shahajhansppl@gmail.com,,,Electrical (SPPL-CTG),Technician
+,,Mr. Md. Shahed Uddin,,,,Inspection & Safety (SPPL-CTG),Fire Fighter
+,,Mr. Md. Shams Uddin Bhuiyan,,,,Production (SPPL-CTG),Boiler Operator
+,,Mr. Md. Sohel,,,,HR & Admin (SPPL-CTG),Boat Helper
+,,Mr. Md. Solaiman,,,,Production (SPPL-CTG),Operator
+,, Mr. Md. Sujan Mia,sujon7647@gmail.com,,,Production (SPPL-CTG),Trainee Operater
+,,Mr. Md. Taraf Ali Rabin,mdrobinsppl@gmail.com,,,Instrument & Control (SPPL-CTG),Sr.Technician
+,,Mr. Md. Tara Mia,,,,HR & Admin (SPPL-CTG),Security Guard
+,,Mr. Md. Tareq Hossain,,,,Production (SPPL-CTG),Movement Operator
+,,Mr. Md. Tawsif Hasan Khan,tawsif.eee@gmail.com,1730790205,'+8801730790205,Electrical (SPPL-CTG),Engineer
+,,Mr. Md. Touhidul Islam,touhid578@gmail.com,1730790221,,Supply Chain Local (SPPL-CTG),Jr. Officer
+,,Mr. Md. Yasin,mdyasinrussel@gmail.com,1730790209,,Production (SPPL-CTG),Engineer
+,,Mr. Md. Yunus,younussppl@gmail.com,,,Electrical (SPPL-CTG),Technician
+,,Mr. Mehidi Hasan,,,,Electrical & Instrument (SCCL-DF),Asst. Electric
+,,Mr. Mijanur Rahaman,purchase@sppl.com.bd,1730787005,,Supply Chain Local (SPPL-CTG),Jr. Officer
+,1990-08-02,Mr.Mir Hossen,,,,Mechanical (SCCL-DF),Assistant Technician
+,,Mr. Mizanur Rahman,,,,HR & Admin (SPPL-CTG),Security Guard
+,,Mr. Mohammad Abul Khair,,,,HR & Admin (SPPL-CTG),Driver
+,,Mr. Mohammad Alamgir Khan,,,,HR & Admin (SPPL-CTG),Security Guard
+,,Mr. Mohammad Ismail,,,,Inspection & Safety (SPPL-CTG),Trainee Fighter Shift Leader
+,,Mr. Mohammad Minhaz Uddin,minhazuddin883@gmail.com,,,Production (SPPL-CTG),Sr.Operator
+,,Mr. Mohammad Rashedul Alam,,,,Inspection & Safety (SPPL-CTG),Fire Fighter
+,,Mr. Mohammad Sadequl Islam,sadequl.islam@sppl.com.bd,1730787011,,Production (SPPL-CTG),Asst. General Manager
+,,Mr. Mohammad Salim,,,,Mechanical (SPPL-CTG),Lathe machine Operator
+,,Mr. Mohammad Shafiqur Rahman,,,,HR & Admin (SPPL-CTG),Assistant Inspector
+,,Mr. Mohammad Towhidul Alam Bhuiyan,shoikot_2214@yahoo.com,1730787038,,Instrument & Control (SPPL-CTG),Asst. General Manager
+,,Mr. Mohammad Yousuf,,,,HR & Admin (SPPL-CTG),Security Guard
+,,Mr. Mohammad Nurul Hoque,,,,HR & Admin (SPPL-CTG),Security Inspector
+,,Mr. Mohammed Nasir Uddin,nasiruddinsppl@gmail.com,,,Production (SPPL-CTG),Sr.Operator
+,, Mr. Mohammed Tipu,mdtipusppl@gmail.com,1811174842,,Electrical (SPPL-CTG),Electrician
+,,Mr. Mohammed Touhidul Alam,touhidul.alam08@gmail.com,1730790204,,Electrical (SPPL-CTG),Engineer
+,,Mr. Mohammed  Belal,,,,Mechanical (SPPL-CTG),Meachanical Techanician
+,,Mr. Mohin Uddin,,,,Production (SPPL-CTG),Movement Helper
+,,Mr. Mokaddes Ali,mokaddesalisppl@gmail.com,,,Instrument & Control (SPPL-CTG),Ins. Helper
+,1995-09-16,Mr.Momin Miah,,'01773549360,,HR & Admin (SCCL-DF),Security Sub Inspector
+,,Mr.Mominul Islam,,,,Store (SCCL-DF),Store Helper
+,,Mr.Mongseu Marma,,1813277768,,Mechanical (SCCL-CTG),Sr.Optr 
+,1984-01-25,Mr.Monjelur Rahman,monzelsikder98@gmail.com,1730057751,,HR & Admin (SCCL-DF),Jr. Officer
+,,Mr.Morshed Alam,,,,Electrical & Instrument (SCCL-DF),Electrician
+Male,,Mr.Morshed Meah,,1813946261,,Mechanical (SCCL-CTG),Mech 
+,,Mr.Mosarouf Hosen,,,,Production (SCCL-DF),"Operator, Brine"
+,,Mr. Moshiur Rahaman,moshiur@scclbd.com,1730318255,,Accounts & Finance (SCCL-HO),Senior Manager
+,,Mr. Muhammed Hasan Mahmud,md.hasan08me@gmail.com,1730790213,,Mechanical (SPPL-CTG),Engineer
+,,Mr. Nahid Hasan,nh_ctg@outlook.com,,,Accounts & Finance (SPPL-CTG),Officer
+,,Mr. Najim Hossen,mdnajimhosennajim@gmail.com,,1773030774,Quality Assurance (SPPL-CTG),Lab Helper
+Male,,Mr.Nasir Hossain,,1852521140,,HR & Admin (SCCL-DF),Peon
+Male,1956-12-20,Mr.Nasir Uddin,,1820028498,Ext-123,Security,Sr.Inspector
+,1987-06-16,Mr.Nazim Uddin,,1718855495,,Production (SCCL-DF),"Operator, Boiler"
+,,Mr. Neloy Saha,mdnajimhosennajim@gmail.com,,,Quality Assurance (SPPL-CTG),Lab Helper
+,,Mr.Nobinur Rahman,nobin.spl@scclbd.com,,,Operation (SPL-DF),Asst. Manager
+,,Mr.Nur Kabir,,1817777906,,Production (SCCL-CTG),Operator
+Male,,Mr.Nur-Mohammad,,1781345788,18129972155,Mechanical (SCCL-CTG),Lathe Operator
+,,Mr.Nur Nabi,,,,Electrical & Instrument (SCCL-DF),Electrician
+,,Mr.Nurul Amin,,,,HR & Admin (SCCL-DF),Driver
+,1991-02-01,Mr.Nurul Huda,,,,Mechanical (SCCL-DF),Assistant Technician
+,1975-11-02,Mr.Nurul Islam,,'01838395419,,Electrical & Instrument (SCCL-DF),Inst.Technician
+Male,1983-10-01,Mr.Nurul Kabir,,,Ext-123,Transport,Driver
+,,Mr. Nuru Safa,,,,HR & Admin (SPPL-CTG),Cleaner
+,1994-02-01,Mr.Omar Faruque,,,,Mechanical (SCCL-DF),Jr.Technician
+Male,1972-04-07,Mr.Osman Gani Bacchu,,,Ext-123,Transport,Mechanics
+,1984-08-15,Mr.Pappu,,,,Mechanical (SCCL-DF),Technician
+,,Mr. Paritush Chandra Pondith,pcpondith.ceps@gmail.com,1730787020,,Production (SPPL-CTG),Engineer
+,,Mr. Pinku Loodh,,,,Production (SPPL-CTG),Movement Operator
+Male,1990-06-25,Mr.Plash Datta,dattapalash02@gmail.com,1611008717,,Production (SSCL-CTG),"Chemist, QC"
+,,Mr.Poritosh Mojumder,poritosh.spl@scclbd.com,,,Service (SPL-DF),Assistant. Manager
+,,Mr. Pradip Kumar Sutra,,,,Mechanical (SCCL-DF),Operator
+,,Mr. Pranab Kumar Saha,pranab@sppl.com.bd,,,Operation (SPPL-CTG),Chief Executive Officer
+,,Mr. Prasenjit Kumar Devsharma,prasenjitsccl@gmail.com,1799992764,,Mechanical (SCCL-DF),Engineer
+,,Mr.Rafee Ahmed,rafee.sccl@gmail.com,1755637479,,Commercial (SCCL-HO),Officer
+,,Mr.Rafiq Ahmad FCMA,,,,Accounts & Finance (SCCL-HO),Advisor
+,,Mr. Rahul Barua,,,,Production (SPPL-CTG),Junior Operator
+Male,,Mr. Rajesh Ghosh,,,,Production (SCCL-DF),Trainee Engineer
+,,Mr. Rajib Chowdhury,r.rajib.chy@gmail.com,1730790212,,Mechanical (SPPL-CTG),Engineer
+,, Mr. Rajib Malakar,rajibmalakarsppl@gmail.com,,,Electrical (SPPL-CTG),Technician
+Male,2017-12-23,Mr. Rana Barua,,1832109822,Ext-123,Security,Inspector
+Male,,Mr. Rasel Iqbal,raseliqbal9194@gmail.com,1721111119,,Production (SPPL-CTG),Sub Assistant Engineer
+,1994-10-10,Mr.Rasel Mahmud,,,,Mechanical (SCCL-DF),Assistant Technician
+,,Mr.Rashidunnabi,,,,Electrical & Instrument (SCCL-DF),Assistant Electrician
+Male,1988-05-12,Mr. Remon Barua,,,,Blow Mould,Helper
+,,Mr.Remon Hossain,,,,Mechanical (SCCL-DF),Technician
+,1991-01-01,Mr.Riad,,,,Mechanical (SCCL-DF),Technician
+,,Mr. Riajul Islam,,1985891367,,Electrical & Instrument (SCCL-DF),Ins. Helper
+,,Mr. Ripan Chakma,ripanchakmapower@gmail.com,,,Electrical (SPPL-CTG),Sub-Asstt Engineer
+Male,,Mr. Rixon Malakar,admin@sppl.com.bd,1730787027,,HR & Admin (SPPL-CTG),"Officer, Admin"
+,,Mr.Rokunuzzaman,rokon@scclbd.com,1755538339,,Accounts & Finance (SCCL-HO),Assistant. Manager
+Male,,Mr. Romgan Ali,,,,Mechanical (SCCL-DF),Technician
+,,Mr.Rubel,,Munshigonj,,Mechanical (SCCL-DF),Assistant Technician
+,,Mr. Ruhul Amin,,,,Service (SPL-DF),Technician
+,, Mr.Sabuj Hossain,,,,HR & Admin (SPL-HO),Caretaker
+,,Mr. Sadhan Kumar Sha,,,,Operation (SPL-DF),Sr. Technician
+,,Mr.Sagor,,,,HR & Admin (SCCL-HO),Peon
+,1993-05-01,Mr. Sahadat Hossain,,1932585314,,Mechanical (SCCL-DF),Operator
+,,Mr. Saidul Hasan,saidul.hasan@sppl.com.bd,1730787013,,Production (SPPL-CTG),Asst. General Manager
+,1994-01-01,Mr. Saidul Islam,,1750795782,,Mechanical (SCCL-DF),Operator
+Male,,Mr.Saidul Islam-2,,,,HR & Admin (SCCL-DF),Operator Brine
+Male,1988-05-13,Mr.Saiful Islam,,1636513709,Ext-123,Security,SY.Guard
+,,Mr.Saiful Islam,,1727866920,,Quality Assurance (SCCL-DF),Lab Assistant
+,,Mr.Saju Mutsuddi,saju.spl@scclbd.com,1818909375,,Service (SPL-CTG),Deputy Manager
+,,Mr.Salauddin Khokon,,,,Production (SCCL-DF),"Operator, Pay-loader"
+,,Mr. Samsul Alam,niaz_starbd@yahoo.com,,,Production (SPPL-CTG),Sub Assistant Engineer
+Male,1983-01-01,Mr.Sanjit Majumder,,1820924536,Ext-101,HR & Admin (SCCL-CTG),Cleaner
+,,Mr.Santash ,,,,Mechanical (SCCL-DF),Jr. Technician
+,,Mr. Sarwar Kamal,sarwarkamalm09@gmail.com,1730787009,,Production (SPPL-CTG),Sr.Officer
+,,Mr. Sayad Ahmed Sikder,,,,HR & Admin (SPPL-CTG),Security Guard
+,,Mr. Saylesh Chandra Pal,sayleshchandrapal2015@gmail.com,,,Instrument & Control (SPPL-CTG),Sr.Technician
+Male,1990-01-01,Mrs.Fatema Tuz Zohora,funzohara8@gmail.com,1827727750,,Quality Assurance (SSCL-CTG),Chemist(R&D)
+,,Mr.Shadiqul Haqe,,,,HR & Admin (SCCL-DF),Security Guard
+,,Mr.Shafiqul Islam,,,,HR & Admin (SCCL-HO),Driver
+,1982-01-01,Mr.Shahab Ali,,1737142696,,HR & Admin (SCCL-DF),Security Guard
+,,Mr. Shahadath Hossan,s.h.sumon18@gmail.com,,,Production (SPPL-CTG),Junior Operator
+,,Mr.Shahidul Islam-2,,,,Mechanical (SCCL-DF),Assistant Technician
+Male,1988-01-01,Mr.Shaifuddin,,1815143131,,Blow Mould,Helper
+,,Mr. Shakawat Hossen,,,,Production (SPPL-CTG),Trainee Operater
+,,Mr. Sharan Barua,skbarua007@gmail.com,1730787028,,Quality Assurance (SPPL-CTG),"Chemist, QC"
+,,Mr.Sheikh Abdullah Shawon,,,,Operation (SPPL-HO),Technician
+,,Mr.Sheikh Ruhul Quddus,ruhul786@scclbd.com,1777764522,,Accounts & Finance (SCCL-HO),"Senior Officer,"
+,,Mr. Shikat Babu Rubal,shikatbaburubal@gmail.com,1730787022,,Production (SPPL-CTG),Officer
+Male,1972-05-02,Mr.Shofi Alam,,1830923447,,Transport,Driver
+,,Mr. Sirajul Munir,sirajul.munir7@gmail.com,1730787025,,Quality Assurance (SPPL-CTG),Asstt. Chemist
+Male,1983-09-17,Mrs.Nipa Das gupta,nipaseamark@gmail.com,1818982296,,Quality Assurance (SSCL-CTG),Chemist(R&D)
+Male,1960-02-24,Mr. Soila Marma,soila.marma@scclbd.com,1755656943,Ext-101,HR & Admin (SCCL-DF),Asst. Manager
+Male,1993-12-04,Mr. Sourav Biswas,sourav.eee@outlook.com,1822000014,,Electrical (SPPL-CTG),Trainee Engineer
+,,Mrs.Shahanara Ferdous,scclfrontdesk@gmail.com,1719275709,,HR & Admin (SCCL-HO),Jr. Officer
+Male,1995-08-16,Mr. Sudipta Mitra,s.mitrabd71@gmail.com,'+8801688562578,,Production (SPPL-CTG),Engineer (Process)
+,,Mr. Sujan Saha,,,,Production (SPPL-CTG),Trainee Operater
+,,Mr. Sujoy Saha,,,,Operation (SPL-DF),Technician
+,,Mr. Sukanta Dev Roy,sukantacu@gmail.com,,,Mechanical (SPPL-CTG),Sub Assistant Engineer
+,,Mr. Sukanto ,,,,Operation (SPL-DF),Asst. Technician
+,,Mr.Sumon Kumar Mondol,,1742758967,,Electrical & Instrument (SCCL-DF),Sub Assistant Engineer
+Male,1996-10-01,Mr. Swadesh Roy,,1705975081,,Production (SCCL-DF),Operator
+,,Mr. Swapan Chandra Mazumdar,,,,Production (SPPL-CTG),Jetty Operator
+,,Mr.Tajul Islam,,,,Mechanical (SCCL-DF),Mechanical Fitter
+,,Mr. Tanvir Ahmed,tanvir544@gmail.com,,,Production (SPPL-CTG),Engineer (Process)
+Male,1973-07-15,Mr.Tapan Das,,1819368919,Ext-123,Security,SY.Guard
+,,Mr. Tapan Dey,tapandeysppl@gmail.com,,,Electrical (SPPL-CTG),"Sr. Operator, Electrical"
+Male,1989-10-09,Mr. Tapas Nag,,1914369450,,Production (SPPL-CTG),Jr. Officer
+,,Mr. Taposh Debnath,,,,Production (SPPL-CTG),Trainee Operater
+,,Mr.Tareq Mahmud,tareqmahmudsakal89@gmail.com,1730787047,,Mechanical (SPPL-CTG),"Sub-Asstt Engineer,Civil"
+Male,,Mr. Thanbir Islam,,,'+8801640754864,Inspection & Safety (SPPL-CTG),Trainee Fire Fighter
+Male,1997-09-01,Mr. Tuhidul Islam,,1872853591,,Production (SSCL-CTG),Operator
+Male,,Mr. Ubaching Marma,,,,Production (SSCL-CTG),Lab. Asst.
+,,Mr. Uttam Kumar Dey,,,,HR & Admin (SPPL-CTG),Driver
+,,Mr. Wahidunnabi,wahid@scclbd.com,1730318254,,Accounts & Finance (SCCL-HO),Senior Manager
+,,Mr. Yeakub Hossain Saiful,islam91saiful@gmail.com,,,Electrical (SPPL-CTG),Helper
+,,Mr. Younus Ali,,,,Production (SPPL-CTG),L.P.G Helper
+Male,1978-05-07,Mr. Zahed,,1839044064,Ext-123,Transport,Lorry Driver
+Male,1994-05-05,Muhammad Alamgir Hossen,alamgirhossen070@gmail.com,1915618081,,Production (SCCL-CTG), Assistant Engineer
+,,Muhammad Rejwan Billah,rejwanbuet@yahoo.com,1730787015,,Production (SPPL-CTG),Engineer
+,,Muhammad Safiuddin,safi23531@gmail.com,1755621508,,Sales & Marketing (Export),"Sr.Executive, Export"
+,,Muzahidul Islam,,,,HR & Admin (SCCL-DF),Security Inspector
+Male,,Naim Uddin,,1824538872,Ext-113,Production (SCCL-CTG),Operator
+,,Najim Uddin Majumder,najimraju.fpi@gmail.com,,,Electrical (SPPL-CTG),Sub-Asstt Engineer
+,,Nasim Anwar,n.anwar@scclbd.com,,,Operation (SCCL-HO),Advisor
+Male,1981-01-01,Nasir Uddin,,1814891279,Ext-123,Transport,Lorry Driver
+Male,,Nayem Uddin,,1840420369,,Quality Assurance (SCCL-CTG),Helper
+,,Nazmul Wadud,adar786adar@gmail.com,,,Sales & Marketing (SSCL-HO),Deputy  Manager (S & M)
+Male,1972-09-12,Nazrul Islam,,1813910797,Ext-123,Transport,fork lift Operator
+,1976-07-20,Nipok Chandra Ghosh,nipok.ghosh@gmail.com,1755637475,,Electrical & Instrument (SCCL-DF),Assistant. Manager
+Male,1982-08-12,Nobel Barua,,1819364879,Ext-123,Transport,Helper
+Male,,Noyon Kumar  Barua,,,,Production (SCCL-CTG),Sr.Optr 
+Male,1982-05-20,Nur Alam,,1867103667,Ext-123,Transport,Helper
+Male,,Nurun Nobi,,1821714033,,Production (SCCL-CTG),Operator
+Male,,Pankaj Chowdhury,,1815196664,,Production (SCCL-CTG),Sr.Optr 
+,1982-10-01,Parimal Chandra Paul,,1710486256,,Electrical & Instrument (SCCL-DF),Asst.Supervisor
+Male,1990-01-16,Parvez Meah,,,Ext-123,Transport,Helper
+Male,1997-03-14,Parwat Bawm,,1531345845,,Quality Assurance (SCCL-CTG),Lab Helper
+Male,1994-07-12,Payer Mohammad,,1851946236,Ext-123,Transport,Lorry Helper
+Male,1993-10-01,Pradip Kumar pal,,1821043445,,Production (SSCL-CTG),Operator
+Male,,Prakash Paul,,1704419142,,Mechanical (SCCL-CTG),Sr.Mech 
+Male,1994-06-01,Rahat Khan Anik,khan.rahat85@gmail.com,1923060930,,Accounts & Finance (SPPL-HO),Officer
+Male,1979-05-21,Rajesh Mutsuddi,rajeshmutsuddi@scclbd.com,1712129455,,Production (SSCL-CTG),AGM
+,1986-12-06,Rajib Debnath,,1721649918,,Production (SCCL-DF),"Operator, Flaking"
+Male,1986-06-30,Rashed Khan,,1823346313,Ext-123,Security,SY.Guard
+Male,2018-09-01,Rashedul Islam,,1812201310,,Delivery & VAT (SSCL-CTG),Jr. Officer
+,1990-10-15,Rezaul Khan,,1734437075,,Mechanical (SCCL-DF),Assistant Technician
+,,Rizwana Kalam,rizwana.kalam@scclbd.com,,,Management (SCCL-HO),Director
+Male,1992-01-01,Ronald Rupam Biswas,rupan.just@gmail.com,1719569466,,Production (SCCL-CTG),Trainee Engineer
+Male,1983-08-01,Rony Barua Chowdhury,,1815698034,Ext-123,Security,Security Guard
+,,Sabbir Ahmed,samudsabbir@gmail.com,1829644916,,Quality Assurance (SCCL-CTG),Lab Assistant
+,1988-03-15,Saidul Islam,,,,Electrical & Instrument (SCCL-DF),Assistant Electrician
+,,Sajjad Hossain,,1877109683,,Production (SCCL-CTG),Operator
+Male,1984-02-01,Salim Ahmed,salim.ahmed@scclbd.com,1755656946,Ext-,Blow Mould,Deputy Manager
+Male,1983-08-04,Santo Talukder,,1850565699,Ext-123,Security,SY.Guard
+Male,1992-12-22,Sarwar Kamal Rayhan,rayhan1993.nstu@gmail.com,1838358062,,Production (SCCL-CTG),Trainee Engineer
+,,Sazzad Hossain,engrsazzad@live.com,,,Electrical (SPPL-CTG),Sub-Asstt Engineer
+,1988-03-01,Shadhan Kumar Kundu,,,,HR & Admin (SCCL-DF),Security Guard
+Male,1990-06-30,Shafayet Jamil,nabil_nstu@yahoo.con,1799992769,,Production (SCCL-CTG),Engineer
+,1969-01-01,"Shafiqul Islam,Sr-01",,,,Mechanical (SCCL-DF),Mechanical Fitter
+Male,1991-07-02,Shafiul Azam Sujan,,1855631266,Ext-123,Transport,Lorry Helper
+,1990-01-01,Shafiul Islam Sumon,,,,Mechanical (SCCL-DF),Technician
+Male,1994-11-11,Shafkat Bin Jamal,mahib.sbj@gmail.com,1846284448,,Production (SCCL-CTG),Trainee Production Engineer
+Male,1983-11-16,Shahinul Islam,shahinbiswas98@gmail.com,1731418348,,Production (SCCL-DF),Process Chemist
+,1984-06-15,Shakauat Hossain Khan Pathan,,1937332248,,Production (SCCL-DF),Operator
+Male,1985-02-19,Shakil,shakilsccl@gmail.com,1777764521,,Accounts & Finance (SCCL-HO),Senior Officer
+,1986-12-25,Sharif Ahmad,sharifahmad08@gmail.com,,,Production (SCCL-DF),"Asst. Manager, Flaking"
+Male,1991-07-07,Shariful Alam,Sharifforce@gmail.com,1672448109,,Production (SCCL-CTG),Engineer
+Male,,Sheikh Md. Rafsan,rafsansheikh@yahoo.com,1799992766,,Sales & Marketing (Caustic),Officer
+Male,1982-05-10,Shifuddin,,1817753508,Ext-123,Transport,Lorry Helper
+Male,1997-02-25,Shiplo Das,,1839163373,,Blow Mould,Helper
+Male,1984-10-15,Showkat Hossen,mdmamunctg302@gmail.com,1814959895,Ext-106,Delivery & VAT (SCCL-CTG),Jr. Officer
+,,Shuvankar Biswas,shuvankarbiswas28@gmail.com,,,Electrical & Instrument (SCCL-DF),Engineer
+Male,1994-05-10,Shuvasis Datta,shuvasisdatta@gmail.com,1676383470,,Instrument & Control (SPPL-CTG),Engineer
+Male,1992-09-06,Shuvo Raj Paul,shuvoraj.paul110@gmail.com,1743653824,,Electrical (SPPL-CTG),"Engineer, Electrical"
+Male,1987-03-08,Siraj Meah,,1811324186,Ext-123,Transport,Helper
+Male,1960-08-12,SM Osman,,1920421598,Ext-104,Store (SCCL-CTG),Store Clerk
+Male,1986-08-10,SM Sarwar Alam,sarwar.alam@scclbd.com,1755656941,,Electrical & Instrument (SCCL-CTG),Sr. Manager
+Male,1983-08-17,Sohel Ahmed,ah_sohel@yahoo.com,1777764528,,Service (SPL-CTG),SAE
+Male,,Sohel Rana,,,,Transport,Lorry Driver
+Male,1992-10-01,Sourav Barua,sourav.cep55@gmail.com,1673967929,Ext-113,Production (SCCL-CTG),Trainee Engineer
+,,Sourov Mutsuddy,sourov.spl@scclbd.com,1730318263,,Operation (SPL-HO),Deputy General Manager
+Male,,Sowmitro Baidho,,1843389820,,Production (SCCL-CTG),Sr.Optr 
+,,Sudham Kumar ,,,,Electrical & Instrument (SCCL-DF),
+Male,1991-02-10,Sugata Chakma,sugatachakma92@gmail.com,1993147620,,Operation (SPPL-CTG),Jr. Officer (operation)
+,1980-12-31,Sujit Kumer Choudhury,sujit.kumar@scclbd.com,1755637473,,Production (SCCL-DF),Manager
+Male,1979-08-10,Sultan Ahmed,,1773443881,,Transport, Truck Driver
+,,Sultan Ahmed,,,,,
+,1982-01-01,Suman Chandra Saha,scsaha_ch@yahoo.com,,,Production (SCCL-DF),Sr.Officer
+Male,1982-02-01,Sumon Barua,,1825269484,,Mechanical (SCCL-CTG),Fitter
+Male,1988-09-25,Suruj Meah,,1728789943,,Electrical & Instrument (SCCL-CTG),Electrician
+Male,1996-12-31,Syed Aminul Islam,aminul.che.just@gmail.com,1963263681,,Production (SCCL-CTG),Trainee Production Engineer
+,,Syed Muhamad Amran,imran@scclbd.com,1730318271,,Supply Chain Local (SCCL-HO),Manager
+Male,1993-11-01,Tamzid Azim,tamzid.azim89@gmail.com,1672907045,,Electrical (SPPL-CTG),"Engineer, Electrical"
+Male,1992-12-30,Tarek Ahmed,tarekahmed646@gmail.com,1940247271,Ext-113,Production (SCCL-CTG),Trainee Engineer
+Male,1997-01-12,Tayab Mostafa Mamun,,1849597885,1832755720,Production (SSCL-CTG),Operater
+Male,1989-02-01,Thaimong Marma,,1864429656,Ext-123,Security,SY.Guard
+Male,1997-11-29,Thuihalau Marma,,1845240153,,Quality Assurance (SCCL-CTG),Helper
+,1989-09-15,Tota Miah,,1914870894,,Production (SCCL-DF),Asst.Officer
+Male,1993-04-25,Uday Som,somuday1105@gmail.com,1772324804,,Production (SCCL-CTG),Trainee Production Engineer
+,1973-09-06,Utpal Komer Prasadi,utpal_chem@scclbd.com,1755538335,,Production (SCCL-DF),Sr. Deputy General Manager (Plant In-charge)
+Male,1981-05-15,Uttam Chakraborty,uttamchem99@gmail.com,1755656947,,Production (SCCL-CTG),Asst. Manager
+Male,1993-06-01,Yasin Arafat,,1789372193,,Electrical & Instrument (SCCL-CTG),Operator
+Male,1995-02-15,Zahidul Islam Sayeem,zahidsayeem@gmail.com,1732200593,1521479219,Production,"Engineer, IPE"
+Male,1983-01-02,Zayed Iqbal Marshal,,1755656950,1811300257,Production (SCCL-CTG),Sr.Officer

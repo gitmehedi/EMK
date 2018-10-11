@@ -7,7 +7,7 @@
     "website": "http://www.genweb2.com",
     'version': '1.0',
     'category': 'Extra Tools',
-    'depends': [],
+    'depends': ['mail'],
     'data': [],
     'installable': True,
 }

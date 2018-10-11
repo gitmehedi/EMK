@@ -1,6 +1,9 @@
 # -*- coding: utf-8 -*-
 
+import logging
 from odoo import models, fields, api, exceptions
+
+_logger = logging.getLogger(__name__)
 
 
 class EventClose(models.Model):
@@ -36,7 +39,7 @@ class EventClose(models.Model):
     age_group = fields.Selection([('one', 'Below 18'),('two', '18-35'),('three', 'Over 18')], 'Age Group')
     non_usg = fields.Selection([('yes', 'Yes'),('no', 'No')])
     event_summary = fields.Text('Summary of event',track_visibility='onchange')
-    state = fields.Selection([('draft', 'Draft'), ('confirm', 'Confirmed'), ('approve', 'Approved'),
+    state = fields.Selection([('draft', 'Draft'), ('confirm', 'Confirmed'), ('approve', 'Approved'),('close','Close'),
                               ('cancel', 'Canceled')], string="State", default="draft",track_visibility='onchange')
 
 
@@ -73,18 +76,61 @@ class EventClose(models.Model):
 
     @api.one
     def act_cancel(self):
-        if self.state=="confirm":
-            self.state = "draft"
+        if self.state=="confirm" or self.state=="approve":
+            self.state = "cancel"
 
     @api.one
-    def act_confirm(self):
+    def act_reset(self):
+        if self.state == "confirm" or self.state == "approve":
+            self.state = "draft"
+
+    @api.multi
+    def act_submit(self):
         if self.state == 'draft':
             self.state = "confirm"
+            vals={
+                'template':'event_management.event_close_email_to_organizer_tmpl',
+                'email to': self.work_email if self.work_email else None,
+                'context': {'event_id':self.event_id.name}
+            }
+
+            self.env['mail.mail'].mailsend(vals)
+
+    @api.model
+    def mailsend(self, vals):
+        template = False
+        try:
+            template = self.env.ref(vals['template'], raise_if_not_found=False)
+        except ValueError:
+            pass
+
+        assert template._name == 'mail.template'
+
+        template.write({
+            'email_to': vals['email_to'] if 'email_to' in vals else '',
+            # 'attachment_ids': vals['attachment_ids'] if 'attachment_ids' in vals else [],
+        })
+
+        context = {
+            'base_url': self.env['ir.config_parameter'].get_param('web.base.url'),
+            'lang': self.env.user.lang,
+        }
+
+        for key, val in vals['context'].iteritems():
+            context[key] = val
+
+        template.with_context(context).send_mail(self.env.user.id, force_send=True, raise_exception=True)
+        _logger.info("Email sending status of user.")
 
     @api.one
     def act_approve(self):
         if self.state=='confirm':
             self.state = "approve"
+
+    @api.one
+    def act_close(self):
+        if self.state == 'approve':
+            self.state = "close"
 
 class EventAssociate(models.Model):
     _name = "event.associate"
