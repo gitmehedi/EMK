@@ -22,12 +22,15 @@
             <field name="arch" type="xml">
                 <form>
                     <header>
-                        <button name="act_confirm" string="Confirm" type="object" class="oe_highlight"
+                        <button name="act_submit" string="Submit" type="object" class="oe_highlight"
                                 states="draft"/>
-                        <button name="act_approve" string="Approve" type="object" states="confirm"
+                        <button name="act_approve" string="Approve" type="object" class="oe_highlight"
+                                states="confirm"/>
+                        <button name="act_close" string="Close Event" type="object" states="approve"
                                 class="oe_highlight"/>
-                        <button name="act_cancel" string="Cancel" type="object" states="draft"/>
-                        <field name="state" widget="statusbar" statusbar_visible="draft,confirm,approve"/>
+                        <button name="act_reset" string="Reset to Draft" type="object" states="confirm,approve"/>
+                        <button name="act_cancel" string="Cancel" type="object" states="confirm,approve"/>
+                        <field name="state" widget="statusbar" statusbar_visible="draft,confirm,approve,close"/>
                     </header>
                     <sheet>
                         <h1>

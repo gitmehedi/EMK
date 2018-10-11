@@ -14,7 +14,7 @@
         'event_user',
         'data_import',
         'event_session',
-        'mail',
+        'mail_send',
         'report_layout'
     ],
     'data': [
@@ -33,6 +33,7 @@
         'views/event_session_view.xml',
         'views/event_close_view.xml',
         'views/res_partner_views.xml',
+        'data/email_template.xml',
         'report/report_event_completion_form.xml',
         'wizard/wizard_event_session_view.xml',
     ],
