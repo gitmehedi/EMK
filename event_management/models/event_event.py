@@ -19,3 +19,12 @@ class EventEvent(models.Model):
     def compute_total_seat(self):
         for record in self:
             record.total_seat_available = sum([rec.seat_no for rec in record.event_book_ids])
+
+
+class EventRegistration(models.Model):
+    _inherit = 'event.registration'
+
+    date_of_birth = fields.Date(string='Date of Birth', required=True)
+    gender = fields.Selection([('male', 'Male'), ('female', 'Female')], default='male', string='Gender')
+    department_name = fields.Char(string='Department Name', required=True, default=False)
+    job_title = fields.Char(string='Job Title', required=True, default=False)

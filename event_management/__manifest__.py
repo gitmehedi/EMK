@@ -9,7 +9,7 @@
     'depends': [
         'product',
         'account',
-        'report_layout'
+        'report_layout',
         'mail_send',
         'event',
         'website_event',

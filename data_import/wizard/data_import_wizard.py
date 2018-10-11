@@ -144,6 +144,10 @@ class DataImportWizard(models.TransientModel):
             vals['phone'] = line['phone'] if 'phone' in line else None
             vals['date_open'] = line['date_open'] if 'date_open' in line else None
             vals['date_closed'] = line['date_closed'] if 'date_closed' in line else None
+            vals['date_fo_birth'] = line['date_fo_birth'] if 'date_fo_birth' in line else None
+            vals['gender'] = line['gender'] if 'gender' in line else None
+            vals['department_name'] = line['department_name'] if 'department_name' in line else None
+            vals['job_title'] = line['job_title'] if 'job_title' in line else None
             vals['partner_id'] = partner.id if partner else None
             vals['event_id'] = event.id
             obj.create(vals)
