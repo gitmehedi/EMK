@@ -11,7 +11,7 @@ class EventClose(models.Model):
     _inherit = ['mail.thread', 'ir.needaction_mixin']
     _rec_name='event_id'
 
-    event_id = fields.Many2one('event.event', string='Event Name', required=True)
+    event_id = fields.Many2one('event.event', string='Event Name', required=True,domain=[('state','=','confirm')])
     event_type_id = fields.Many2one('event.type', string='Event Type', readonly=True,
                                     related='event_id.event_type_id')
     organizer_id = fields.Many2one('res.partner', string='Moderator Name', readonly=True, related='event_id.organizer_id')
@@ -112,6 +112,11 @@ class EventClose(models.Model):
     def act_close(self):
         if self.state == 'approve':
             self.state = "close"
+            self.event_id.button_done()
+
+    @api.model
+    def _needaction_domain_get(self):
+        return [('state', 'in', ['approve','confirm'])]
 
 class EventAssociate(models.Model):
     _name = "event.associate"
