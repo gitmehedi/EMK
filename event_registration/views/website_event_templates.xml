@@ -83,109 +83,111 @@
                 <div class="container">
                     <t t-set="counter_type" t-value="1"/>
                     <t t-set="counter" t-value="0"/>
-                        <t t-foreach="tickets" t-as="ticket">
-                            <t t-foreach="range(1, ticket['quantity'] + 1)" t-as="att_counter"
-                                       name="attendee_loop">
-                                        <t t-set="counter" t-value="counter + 1"/>
-                                    <div class="row mb4">
-                                            <t t-set="attendee_placeholder">Attendee #%s</t>
-                                            <div class="col-sm-6">
-                                                <div class="form-group form-field">
-                                                    <label for="name" class="control-label">Participant Name</label>
-                                                    <input type="text" t-attf-name="#{counter}-name"  id="name"
-                                                           placeholder="Participant Name" required="required"
-                                                           class="form-control input-sm reqfield" data-minlength="2" data-maxlength="100"/>
+                    <t t-foreach="tickets" t-as="ticket">
+                        <t t-foreach="range(1, ticket['quantity'] + 1)" t-as="att_counter"
+                           name="attendee_loop">
+                            <t t-set="counter" t-value="counter + 1"/>
+                            <div class="row mb4">
+                                <t t-set="attendee_placeholder">Attendee #%s</t>
+                                <div class="col-sm-6">
+                                    <div class="form-group form-field">
+                                        <label for="name" class="control-label">Participant Name</label>
+                                        <input type="text" t-attf-name="#{counter}-name" id="name"
+                                               placeholder="Participant Name" required="required"
+                                               class="form-control input-sm reqfield" data-minlength="2"
+                                               data-maxlength="100"/>
 
-                                                </div>
-                                            </div>
-                                            <div class="col-sm-6">
-                                                <div class="form-group form-field">
-                                                    <label for="email" class="control-label">Email</label>
-                                                    <input type="email" t-attf-name="#{counter}-email" id="email"
-                                                           placeholder="Email" required="required"
-                                                           class="form-control input-sm reqfield" data-minlength="2" data-maxlength="100"/>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="form-group form-field">
+                                        <label for="email" class="control-label">Email</label>
+                                        <input type="email" t-attf-name="#{counter}-email" id="email"
+                                               placeholder="Email" required="required"
+                                               class="form-control input-sm reqfield" data-minlength="2"
+                                               data-maxlength="100"/>
 
-                                                </div>
-                                            </div>
-                                            <div class="col-sm-6">
-                                                <div class="form-group form-field">
-                                                    <label for="tel" class="control-label">Mobile Phone</label>
-                                                    <input type="tel" t-attf-name="#{counter}-phone"  id="tel"
-                                                           placeholder="Mobile Phone" required="required"
-                                                           class="form-control input-sm number reqfield" data-minlength="11" data-maxlength="14"/>
-                                                </div>
-                                            </div>
-                                        <div class="col-sm-6">
-                                            <div class="form-group form-field">
-                                                <label for="city" class="control-label">Current City</label>
-                                                <input type="text" t-attf-name="#{counter}-city"  id="city"
-                                                       placeholder="City" required="required"
-                                                       class="form-control input-sm reqfield" data-minlength="11" data-maxlength="14"/>
-                                            </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="form-group form-field">
+                                        <label for="tel" class="control-label">Mobile Phone</label>
+                                        <input type="tel" t-attf-name="#{counter}-phone" id="tel"
+                                               placeholder="Mobile Phone" required="required"
+                                               class="form-control input-sm number reqfield" data-minlength="11"
+                                               data-maxlength="14"/>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="form-group form-field">
+                                        <label for="city" class="control-label">Current City</label>
+                                        <input type="text" t-attf-name="#{counter}-city" id="city"
+                                               placeholder="City" required="required"
+                                               class="form-control input-sm reqfield" data-minlength="11"
+                                               data-maxlength="14"/>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group form-field">
+                                        <label for="birthdate" class="control-label">Date of Birth</label>
+                                        <input type="text" t-attf-name="#{counter}-date_of_birth" maxlength="10"
+                                               placeholder="1960-12-31"
+                                               minlength="10" class="form-control input-sm reqfield"
+                                               id="birthdate" required="required"/>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group form-field">
+                                        <label for="profession" class="control-label">Profession</label>
+                                        <select class="form-control input-sm reqfield"
+                                                t-attf-name="#{counter}-profession" name="profession" id="profession"
+                                                required="required">
+                                            <option value="">--Please Select--</option>
+                                            <t t-foreach="{'goverment':'Goverment','educator':'Educator'}" t-as='label'>
+                                                <option t-att-value="label">
+                                                    <t t-esc="label_value"/>
+                                                </option>
+                                            </t>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group form-field">
+                                        <label for="gender" class="control-label">Gender</label>
+                                        <div class="mar-btm">
+                                            <t t-foreach="{'male':'Male','female':'Female'}" t-as='label'>
+                                                <label class="radio-inline">
+                                                    <input type="radio" t-attf-name="#{counter}-gender"
+                                                           t-att-value="label"
+                                                           t-att-checked="'checked' if label==gender else None"/>
+                                                    <t t-esc="label_value"/>
+                                                </label>
+                                            </t>
                                         </div>
-                                        <div class="col-md-6">
-                                            <div class="form-group form-field">
-                                                <label for="birthdate" class="control-label">Date of Birth</label>
-                                                <input type="text" t-attf-name="#{counter}-date_of_birth" maxlength="10"
-                                                       placeholder="1960-12-31"
-                                                       minlength="10" class="form-control input-sm reqfield"
-                                                       id="birthdate" required="required"/>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <div class="form-group form-field">
-                                                <label for="profession" class="control-label">Profession</label>
-                                                <select class="form-control input-sm reqfield" t-attf-name="#{counter}-profession" name="profession" id="profession"
-                                                        required="required">
-                                                    <option value="">--Please Select--</option>
-                                                    <t t-foreach="{'goverment':'Goverment','educator':'Educator'}" t-as='label'>
-                                                        <option t-att-value="label">
-                                                            <t t-esc="label_value"/>
-                                                        </option>
-                                                    </t>
-                                                </select>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <div class="form-group form-field">
-                                                <label for="gender" class="control-label">Gender</label>
-                                                <div class="mar-btm">
-                                                    <t t-foreach="{'male':'Male','female':'Female'}" t-as='label'>
-                                                        <label class="radio-inline">
-                                                            <input type="radio" t-attf-name="#{counter}-gender" t-att-value="label"
-                                                                   t-att-checked="'checked' if label==gender else None"/>
-                                                            <t t-esc="label_value"/>
-                                                        </label>
-                                                    </t>
-                                                </div>
-                                            </div>
-                                        </div>
+                                    </div>
+                                </div>
 
-                                        <input class='hidden' type='text' t-attf-name="#{counter}-ticket_id"
-                                                   t-attf-value="#{ticket['id']}"/>
-                                        </div>
-                                    </t>
-                                    <t t-set="counter_type" t-value="counter_type + 1"/>
-                                </t>
+                                <input class='hidden' type='text' t-attf-name="#{counter}-ticket_id"
+                                       t-attf-value="#{ticket['id']}"/>
                             </div>
-                        </div>
-            </xpath>
+                        </t>
+                        <t t-set="counter_type" t-value="counter_type + 1"/>
+                    </t>
+                </div>
+            </div>
+        </xpath>
     </template>
 
-    <template id="registration_complete" name="Registration Completed">
-        <t t-call="website.layout">
+    <template inherit_id="website_event.registration_complete" id="inherit_registration_complete">
+        <xpath expr="//div" position="replace">
             <div class="container">
-                <h3>We are glad to confirm your registration to our event</h3>
                 <div class="row">
-                    <div class="col-md-3 mt16">
-                        <h4>Event Details</h4>
-                    </div>
-                    <div class="col-md-9 mt16">
-                        <h4>
+                    <div class="col-md-12" style="text-align: center;">
+                        <h1 style="font-style:italic; ">
                             <a t-attf-href="/event/#{slug(event)}">
                                 <t t-esc="event.name"/>
                             </a>
-                        </h4>
+                        </h1>
                         <i class="fa fa-clock-o"/>
                         <span itemprop="startDate" t-esc="event.date_begin_located[:-3]"></span>
                         <i>to</i>
@@ -195,53 +197,80 @@
                             "fields": ["name", "address", "phone", "mobile", "fax", "email"]
                             }'/>
                     </div>
-                    <div class="col-md-3 mt16">
-                        <h4>Your registration</h4>
+                    <div class="col-md-12" style="margin: 20px 0 20px 0;">
+                        <div class="alert alert-success alert-dismissible fade in" role="alert">
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">×</span>
+                            </button>
+                            <h3>
+                                <strong>Congratulation!</strong>, we are glad to confirm your registration to our event.
+                            </h3>
+                        </div>
                     </div>
-                    <div class="col-md-9 mt16">
-                        <table class='table table-bordered table-striped'>
-                            <thead>
-                                <tr>
-                                    <th>Reference</th>
-                                    <th>Name</th>
-                                    <th>E-mail</th>
-                                    <th>Phone</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <t t-foreach="attendees" t-as="attendee">
-                                    <tr>
-                                        <td>
-                                            <t t-esc="attendee.id"/>
-                                        </td>
-                                        <td>
-                                            <i class="fa fa-user"></i>
-                                            <t t-if='attendee.name'>
-                                                <t t-esc="attendee.name"/>
-                                            </t>
-                                            <t t-if='not attendee.name'>N/A</t>
-                                        </td>
-                                        <td>
-                                            <i class="fa fa-envelope"></i>
-                                            <t t-if='attendee.email'>
-                                                <t t-esc="attendee.email"/>
-                                            </t>
-                                            <t t-if='not attendee.email'>N/A</t>
-                                        </td>
-                                        <td>
-                                            <i class="fa fa-phone"></i>
-                                            <t t-if='attendee.phone'>
-                                                <t t-esc="attendee.phone"/>
-                                            </t>
-                                            <t t-if='not attendee.phone'>N/A</t>
-                                        </td>
-                                    </tr>
-                                </t>
-                            </tbody>
-                        </table>
+                    <div class="col-md-12">
+                        <h2 style="text-align: center; font-weight: bold; forn-style: italic; margin-bottom: 20px;">Registration Details
+                        </h2>
+                        <div class="col-md-6">
+                            <table class='table table-condensed'>
+                                <tbody>
+                                    <t t-foreach="attendees" t-as="attendee">
+                                        <tr class="evc-head">
+                                            <td colspan="2">Temporary Passcode</td>
+                                        </tr>
+                                        <tr class="evc-body">
+                                            <td></td>
+                                            <td>
+                                                <i class="glyphicon glyphicon-th"></i>
+                                                <t t-esc="attendee.temp_seq_name"/>
+                                            </td>
+                                        </tr>
+                                        <tr class="evc-head">
+                                            <td colspan="2">Attendee Name</td>
+                                        </tr>
+                                        <tr class="evc-body">
+                                            <td></td>
+                                            <td>
+                                                <i class="fa fa-user"></i>
+                                                <t t-if='attendee.name'>
+                                                    <t t-esc="attendee.name"/>
+                                                </t>
+                                                <t t-if='not attendee.name'>N/A</t>
+                                            </td>
+                                        </tr>
+                                        <tr class="evc-head">
+                                            <td colspan="2">Email</td>
+                                        </tr>
+                                        <tr class="evc-body">
+                                            <td></td>
+                                            <td>
+                                                <i class="fa fa-envelope"></i>
+                                                <t t-if='attendee.email'>
+                                                    <t t-esc="attendee.email"/>
+                                                </t>
+                                                <t t-if='not attendee.email'>N/A</t>
+                                            </td>
+                                        </tr>
+                                        <tr class="evc-head">
+                                            <td colspan="2">Phone No</td>
+                                        </tr>
+                                        <tr class="evc-body">
+                                            <td></td>
+                                            <td>
+                                                <i class="fa fa-phone"></i>
+                                                <t t-if='attendee.phone'>
+                                                    <t t-esc="attendee.phone"/>
+                                                </t>
+                                                <t t-if='not attendee.phone'>N/A</t>
+                                            </td>
+                                        </tr>
+                                    </t>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
             </div>
-        </t>
+        </xpath>
+
     </template>
 </odoo>
