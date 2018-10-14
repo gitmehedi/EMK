@@ -1,20 +1,27 @@
 $(function()
 {
-//    $(document).on("keydown", '.number', function(e) {
-//
-//        var key = e.charCode || e.keyCode || 0;
-//        debugger;
-//        // allow backspace, tab, delete, arrows, numbers and keypad numbers ONLY
-//        return (
-//                key == 8 ||
-//                key == 9 ||
-//                key == 46 ||
-//                key == 110 ||
-//                key == 190 ||
-//                (key >= 37 && key <= 40) ||
-//                (key >= 48 && key <= 57) ||
-//                (key >= 96 && key <= 105));
-//    });
+    var dateformat = 'yy-mm-dd'
+
+    $("#birthdate").datepicker({
+        changeMonth: true,
+        changeYear: true,
+        yearRange: "-100:+0",
+        dateFormat: dateformat
+    });
+    $('#birthdate').datepicker("option", "dateFormat", dateformat);
+
+    $('#birthdate').change(function(){
+        var currDate = $(this).val();
+        if (currDate){
+            var serverDate = new Date().getTime();
+            var birthDate = new Date(currDate).getTime();
+            if (birthDate >= serverDate){
+                $(this).val('');
+                alert('Birth Date should not greater than current date.');
+            }
+        }
+    });
+
     $(document).on("keydown", '.number', function(e) {
 
         var isModifierkeyPressed = (e.metaKey || e.ctrlKey || e.shiftKey);
