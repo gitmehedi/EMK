@@ -25,6 +25,7 @@ class EventRegistration(models.Model):
     _inherit = 'event.registration'
 
     date_of_birth = fields.Date(string='Date of Birth', required=True)
-    gender = fields.Selection([('male', 'Male'), ('female', 'Female')], default='male', string='Gender')
-    department_name = fields.Char(string='Department Name', required=True, default=False)
-    job_title = fields.Char(string='Job Title', required=True, default=False)
+    gender = fields.Selection([('male', 'Male'), ('female', 'Female')], required=True,
+                              default='male', string='Gender')
+    profession = fields.Char(string='Profession', required=True, default=False)
+

@@ -23,6 +23,20 @@
                 <xpath expr="//field[@name='partner_id']" position="attributes">
                     <attribute name="groups">event_user.group_event_administration</attribute>
                 </xpath>
+                <xpath expr="//field[@name='name']" position="attributes">
+                    <attribute name="required">True</attribute>
+                </xpath>
+                <xpath expr="//field[@name='phone']" position="attributes">
+                    <attribute name="required">True</attribute>
+                </xpath>
+                <xpath expr="//field[@name='email']" position="attributes">
+                    <attribute name="required">True</attribute>
+                </xpath>
+                <xpath expr="//field[@name='email']" position="after">
+                    <field name="date_of_birth"/>
+                    <field name="gender"/>
+                    <field name="profession"/>
+                </xpath>
             </field>
         </record>
     </data>

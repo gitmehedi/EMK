@@ -13,10 +13,7 @@ odoo.define('event_registration.eventdfd', function (require) {
         var self = this;
         var res = this._super.apply(this,arguments).then(function() {
             $('#registration_form .a-submit')
-                .off('click')
-                .removeClass('a-submit')
                 .click(function (ev) {
-                    $(this).attr('disabled', true);
                     self.on_click(ev);
                 });
         });
@@ -25,6 +22,7 @@ odoo.define('event_registration.eventdfd', function (require) {
     on_click: function(ev) {
         ev.preventDefault();
         ev.stopPropagation();
+        debugger;
         var $form = $(ev.currentTarget).closest('form');
         var post = {};
         $("#registration_form select").each(function() {
@@ -32,7 +30,7 @@ odoo.define('event_registration.eventdfd', function (require) {
         });
         return ajax.jsonRpc($form.attr('action'), 'call', post).then(function (modal) {
             var $modal = $(modal);
-            $modal.find('.modal-body > div').removeClass('container'); // retrocompatibility - REMOVE ME in master / saas-19
+            // $modal.find('.modal-body > div').removeClass('container'); // retrocompatibility - REMOVE ME in master / saas-19
             $modal.after($form).modal();
             $modal.on('click', '.js_goto_event', function () {
                 $modal.modal('hide');
