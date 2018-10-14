@@ -36,6 +36,7 @@
                     <field name="date_of_birth"/>
                     <field name="gender"/>
                     <field name="profession"/>
+                    <field name="temp_seq_name" readonly="True"/>
                 </xpath>
             </field>
         </record>
