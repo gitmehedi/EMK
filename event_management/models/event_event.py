@@ -23,9 +23,20 @@ class EventEvent(models.Model):
 
 class EventRegistration(models.Model):
     _inherit = 'event.registration'
+    _order='id desc'
 
+    temp_seq_name = fields.Char(string='Sequence Name')
     date_of_birth = fields.Date(string='Date of Birth', required=True)
     gender = fields.Selection([('male', 'Male'), ('female', 'Female')], required=True,
                               default='male', string='Gender')
     profession = fields.Char(string='Profession', required=True, default=False)
+
+
+    @api.model
+    def create(self, vals):
+        registration = super(EventRegistration, self).create(vals)
+        if registration:
+            sequence = self.env['ir.sequence'].next_by_code('event.attendee') or 'New'
+            registration.write({'temp_seq_name': sequence})
+        return registration
 

@@ -128,3 +128,15 @@ input.reqfield,select.reqfield{
 .margin-left-15 { margin-left: 20px; }
 
 .mar-btm{ margin-bottom: 24px;}
+
+
+
+/* Event management */
+.evc-head{
+    font-style: italic;
+    font-size: 1.5em;
+    font-weight: bold;
+}
+.evc-body{
+    font-size: .9em;
+}

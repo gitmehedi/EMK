@@ -9,6 +9,12 @@
             <field name="number_increment">1</field>
             <field name="padding">2</field>
         </record>
-
+        <record id="sequence_event_attendee" model="ir.sequence">
+            <field name="name">Event Attendee</field>
+            <field name="code">event.attendee</field>
+            <field name="prefix">EM%(year)s%(month)s%(day)s</field>
+            <field name="number_increment">1</field>
+            <field name="padding">4</field>
+        </record>
     </data>
 </odoo>
