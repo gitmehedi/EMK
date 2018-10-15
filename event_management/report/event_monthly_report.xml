@@ -38,11 +38,11 @@
                                     <tr class="odo-bg-gray">
                                         <th>Event Name</th>
                                         <th>Session</th>
-                                        <th>Program Start Time</th>
-                                        <th>Program End Time</th>
-                                        <th>Total Participant</th>
+                                        <th>Start Time</th>
+                                        <th>End Time</th>
+                                        <th>Total Participants</th>
                                         <th>Male</th>
-                                        <th>FeMale</th>
+                                        <th>Female</th>
                                     </tr>
                                 </thead>
                                 <tbody>
