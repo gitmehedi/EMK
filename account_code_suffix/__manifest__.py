@@ -7,6 +7,7 @@
     'depends': [
         'account',
         'account_code_length',
+        'account_accountant',
     ],
 
     'data': [
