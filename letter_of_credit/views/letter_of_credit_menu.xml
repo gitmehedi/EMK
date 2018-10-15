@@ -33,14 +33,14 @@
             <field name="search_view_id" ref="view_letter_credit_filter"/>
         </record>
 
-        <menuitem id="lc_import_creation_menu" parent="purchase.menu_purchase_root"
-            sequence="10" name="Letter of Credit" />
+        <!--<menuitem id="lc_import_creation_menu" parent="purchase.menu_purchase_root"-->
+            <!--sequence="10" name="Letter of Credit" />-->
 
-        <menuitem id="lc_import_creation_submenu" name="Import LC(Foreign)" parent="lc_import_creation_menu"
-                  action="lc_import_foreign_creation_action"/>
+        <!--<menuitem id="lc_import_creation_submenu" name="Import LC(Foreign)" parent="lc_import_creation_menu"-->
+                  <!--action="lc_import_foreign_creation_action"/>-->
 
-        <menuitem id="lc_import_creation_submenu" name="Import LC(Local)" parent="lc_import_creation_menu"
-                  action="lc_import_local_creation_action"/>
+        <!--<menuitem id="lc_import_creation_submenu" name="Import LC(Local)" parent="lc_import_creation_menu"-->
+                  <!--action="lc_import_local_creation_action"/>-->
 
         <menuitem id="lc_commercial_creation_menu" parent="commercial.menu_commercial_root"
             sequence="1" name="Letter of Credit" />
