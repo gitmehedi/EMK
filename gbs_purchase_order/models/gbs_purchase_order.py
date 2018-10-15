@@ -220,14 +220,15 @@ class PurchaseOrder(models.Model):
         return res
 
     def unlink(self):
-        for indent in self:
-            if indent.state != 'draft':
+        for obj in self:
+            if obj.state != 'cancel':
                 raise ValidationError(_('You cannot delete in this state'))
             else:
                 query = """ delete from attachment_po_rel where po_id=%s"""
-                for att in self.attachment_ids:
+                for att in obj.attachment_ids:
                     self._cr.execute(query, tuple([att.res_id]))
                 return super(PurchaseOrder, self).unlink()
+
 
 class PurchaseOrderLine(models.Model):
     _inherit = 'purchase.order.line'
