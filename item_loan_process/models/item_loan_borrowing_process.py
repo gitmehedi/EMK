@@ -17,14 +17,14 @@ class ItemBorrowing(models.Model):
     def _get_default_location_id(self):
         return self.env['stock.location'].search([('usage', '=', 'supplier'),('can_loan_request', '=', True)], limit=1).id
 
-    name = fields.Char('Issue #', size=100, readonly=True, default="/")
+    name = fields.Char('Issue #', size=100, readonly=True, default=lambda self: _('New'),track_visibility='onchange')
     request_date = fields.Datetime('Request Date', required=True, readonly=True,
-                                 default=fields.Datetime.now)
+                                 default=fields.Datetime.now,track_visibility='onchange')
     issuer_id = fields.Many2one('res.users', string='Issuer', required=True, readonly=True,
-                                default=lambda self: self.env.user,
+                                default=lambda self: self.env.user,track_visibility='onchange',
                                 states={'draft': [('readonly', False)]})
     partner_id = fields.Many2one('res.partner', string="Partner Company" ,readonly=True, required=True,
-                                 domain="[('parent_id', '=', False)]",
+                                 domain="[('is_company', '=', True),('parent_id', '=', False)]",track_visibility='onchange',
                                  states={'draft': [('readonly', False)]})
     company_id = fields.Many2one('res.company', 'Company', readonly=True, states={'draft': [('readonly', False)]},
                                  default=lambda self: self.env.user.company_id, required=True)
@@ -45,9 +45,9 @@ class ItemBorrowing(models.Model):
     picking_type_id = fields.Many2one('stock.picking.type', string='Picking Type')
     request_by = fields.Many2one('res.users', string='Request By', required=True, readonly=True,
                                  default=lambda self: self.env.user)
-    approved_date = fields.Datetime('Approved Date', readonly=True)
+    approved_date = fields.Datetime('Approved Date', readonly=True,track_visibility='onchange')
     approver_id = fields.Many2one('res.users', string='Authority', readonly=True,
-                                  help="who have approve or reject.")
+                                  help="who have approve or reject.",track_visibility='onchange')
 
     state = fields.Selection([
         ('draft', 'Draft'),

@@ -35,6 +35,11 @@
             <field name="target">new</field>
         </record>
 
+        <menuitem id="stock.menu_warehouse_report"
+                  name="Reports" sequence="99"
+                  parent="stock.menu_stock_root"
+                  groups="stock.group_stock_user"/>
+
         <menuitem
                 name="Stock Issue Due Report"
                 parent="stock.menu_warehouse_report"

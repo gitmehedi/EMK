@@ -19,17 +19,17 @@ class ItemLoanLending(models.Model):
         return self.env['stock.location'].search([('operating_unit_id', '=', self.env.user.default_operating_unit_id.id),('name','=','Stock')], limit=1).id
 
     name = fields.Char('Issue #', size=100, readonly=True, default=lambda self: _('New'),copy=False,
-                       states={'draft': [('readonly', False)]})
+                       states={'draft': [('readonly', False)]},track_visibility='onchange')
     request_date = fields.Datetime('Request Date', required=True, readonly=True,
-                                  default=fields.Datetime.now)
-    issuer_id = fields.Many2one('res.users', string='Issue By', required=True, readonly=True,
+                                  default=fields.Datetime.now,track_visibility='onchange')
+    issuer_id = fields.Many2one('res.users', string='Issue By', required=True, readonly=True,track_visibility='onchange',
                                   default=lambda self: self.env.user,states={'draft': [('readonly', False)]})
     borrower_id = fields.Many2one('res.partner', string="Request By" ,readonly=True, required=True,
-                                  domain="[('parent_id', '=', False)]",
+                                  domain="[('is_company', '=', True),('parent_id', '=', False)]",track_visibility='onchange',
                                   states={'draft': [('readonly', False)]})
-    approved_date = fields.Datetime('Approved Date', readonly=True)
+    approved_date = fields.Datetime('Approved Date', readonly=True,track_visibility='onchange')
     approver_id = fields.Many2one('res.users', string='Authority', readonly=True,
-                                  help="who have approve or reject.")
+                                  help="who have approve or reject.",track_visibility='onchange')
     company_id = fields.Many2one('res.company', 'Company', readonly=True, states={'draft': [('readonly', False)]},
                                  default=lambda self: self.env.user.company_id, required=True)
     operating_unit_id = fields.Many2one('operating.unit', 'Operating Unit', required=True,readonly=True,
@@ -47,8 +47,8 @@ class ItemLoanLending(models.Model):
 
     picking_id = fields.Many2one('stock.picking', 'Picking', states={'draft': [('readonly', False)]})
     picking_type_id = fields.Many2one('stock.picking.type', string='Picking Type')
-    request_by = fields.Many2one('res.users', string='Request By', required=True, readonly=True,
-                                 default=lambda self: self.env.user)
+    request_by = fields.Many2one('res.users', string='Issue By', required=True, readonly=True,
+                                 default=lambda self: self.env.user,track_visibility='onchange')
 
     state = fields.Selection([
         ('draft', 'Draft'),

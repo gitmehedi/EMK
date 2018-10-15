@@ -49,7 +49,7 @@
                                 invisible= "1"/>
                     </xpath>
                     <xpath expr="//button[@name='button_confirm']" position="replace">
-                        <button name="button_confirm" string="Confirm Order" type="object"
+                        <button name="button_confirm" string="Confirm Order" type="object" class="oe_highlight"
                                 attrs="{'invisible': [('check_po_action_button','=',False)]}"/>
                     </xpath>
                     <xpath expr="//button[@name='button_approve']" position="replace">
