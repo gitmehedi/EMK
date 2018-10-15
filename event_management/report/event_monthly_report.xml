@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--Custom report. -->
+<odoo>
+    <data>
+        <report
+                id="action_report_monthly_report"
+                model="event.event"
+                string="Event Monthly Report"
+                report_type="qweb-pdf"
+                name="event_management.report_event_monthly"
+                file="event_management.report_event_monthly"
+                paperformat="report_layout.paperformat_backend_landscape"
+        />
+
+        <template id="report_event_monthly">
+            <t t-call="report.html_container">
+                <t t-call="report_layout.gbs_internal_layout">
+                    <div class="page" style="page-break-inside:auto">
+                        <div class="row" style="padding-top:5px;">
+                            <style type="text/css">
+                                .report-title { text-align:center; }
+                                .odo-bg-gray, .odo-bg-gray > td { background-color: #f5f5f5; }
+                            </style>
+                            <div class="clearfix">
+                                <h3 class="report-title">Monthly Event Report</h3>
+                                <br/>
+                                <div class="row">
+                                    <div class="col-xs-8 text-left">
+                                        <h6><b>Date From :  </b><span t-esc="date_from"/></h6>
+                                    </div>
+                                    <div class="col-xs-4 text-right">
+                                        <h6><b>Date To :  </b><span t-esc="date_to"/></h6>
+                                    </div>
+                                </div>
+                            </div>
+                            <table class="table table-report-xs table-bordered table-condensed">
+                                <thead>
+                                    <tr class="odo-bg-gray">
+                                        <th>Event Name</th>
+                                        <th>Session</th>
+                                        <th>Program Start Time</th>
+                                        <th>Program End Time</th>
+                                        <th>Total Participant</th>
+                                        <th>Male</th>
+                                        <th>FeMale</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <t t-foreach="lists" t-as="l">
+                                        <td><span t-esc="l"/></td>
+                                        <t t-foreach="l_value['item']" t-as="line">
+                                            <!--<t t-if="line['session_name']">-->
+                                                <tr style="page-break-inside: avoid">
+                                                    <td></td>
+                                                    <td><span t-esc="line['session_name']"/></td>
+                                                    <td><span t-esc="line['start_date']"/></td>
+                                                    <td><span t-esc="line['end_date']"/></td>
+                                                    <td><span t-esc="line['total_participant']"/></td>
+                                                    <td><span t-esc="line['total_participant']"/></td>
+                                                    <td><span t-esc="line['total_participant']"/></td>
+                                                </tr>
+                                            <!--</t>-->
+                                        </t>
+                                    </t>
+                                </tbody>
+                            </table>
+                        </div>
+                        <br/>
+                    </div>
+                </t>
+            </t>
+        </template>
+    </data>
+</odoo>
