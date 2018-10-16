@@ -21,9 +21,7 @@
             <field name="model">event.room.book</field>
             <field name="arch" type="xml">
                 <calendar string="Event Reservation" date_start="event_start" date_stop="event_stop" color="event_id">
-                    <field name="event_id"/>
                     <field name="room_id"/>
-                    <field name="seat_no"/>
                 </calendar>
             </field>
         </record>
@@ -31,6 +29,7 @@
         <record model="ir.actions.act_window" id="action_event_reservation">
             <field name="name">Event Reservation</field>
             <field name="res_model">event.room.book</field>
+            <field name="type">ir.actions.act_window</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,calendar</field>
         </record>
