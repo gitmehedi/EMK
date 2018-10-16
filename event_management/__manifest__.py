@@ -35,6 +35,7 @@
         'views/event_session_view.xml',
         'views/event_close_view.xml',
         'views/res_partner_views.xml',
+        'views/event_reservation_form.xml',
         'data/email_template.xml',
         'report/report_event_completion_form.xml',
         'report/monthly_event_report_view.xml',
