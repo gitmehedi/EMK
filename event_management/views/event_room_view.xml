@@ -18,6 +18,8 @@
                             <group>
                                 <field name="name"/>
                                 <field name="event_count"/>
+                                <field name="service_ids" widget="many2many_tags"
+                                       options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
                             </group>
                             <group>
                                 <field name="max_seat"/>

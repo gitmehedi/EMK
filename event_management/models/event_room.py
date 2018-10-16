@@ -11,8 +11,8 @@ class EventRoom(models.Model):
     name = fields.Char('Room Name', required=True, translate=True, track_visibility='onchange')
     max_seat = fields.Integer(string='Max Seat', required=True, track_visibility='onchange')
     min_seat = fields.Integer(string='Min Seat', required=True, track_visibility='onchange')
+    service_ids = fields.Many2many('event.service.type', string='Services', required=True, track_visibility='onchange')
     status = fields.Boolean(default=True, track_visibility='onchange')
-
     event_count = fields.Integer(string="No of Events", compute='event_count_calculation')
 
     @api.multi
