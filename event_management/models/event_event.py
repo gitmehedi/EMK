@@ -16,8 +16,9 @@ class EventEvent(models.Model):
                                  track_visibility='onchange',
                                  states={'confirm': [('readonly', True)], 'done': [('readonly', True)]})
 
-    payment_type = fields.Selection([('free', 'Free'), ('paid', 'Paid')], default='free', string='Type')
-    mode_of_payment = fields.Selection([('free', 'Free'), ('paid', 'Paid')], default='free', string='Type')
+    payment_type = fields.Selection([('free', 'Free'), ('paid', 'Paid')], required=True, default='free', string='Type')
+    mode_of_payment = fields.Selection([('cash', 'Cash'), ('bank', 'Bank')], required=True, default='cash',
+                                       string='Mode Of Payment')
     paid_amount = fields.Float(string='Paid Amount', digits=(12, 2))
     refundable_amount = fields.Float(string='Refundable Amount', digits=(12, 2))
     rules_regulation = fields.Html(string='Rules and Regulation')

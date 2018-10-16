@@ -74,10 +74,26 @@
                             <field name="auto_confirm"/>
                         </group>
                     </group>
+                    <group string="Payments Information">
+                        <group>
+                            <field name="payment_type"/>
+                            <field name="mode_of_payment"/>
+                            <field name="paid_amount"/>
+                        </group>
+                        <group>
+                            <field name="refundable_amount"/>
+                            <field name="date_of_payment"/>
+                        </group>
+                    </group>
                 </xpath>
                 <xpath expr="//form/sheet/notebook/page[@name='registrations']" position="before">
-                    <page string="Event Description">
+                    <page string="Details &amp; Rules Regulations">
+                        <separator string="Event Description"/>
                         <field name="description" nolabel="1"/>
+                        <separator string="Rules and Regulations"/>
+                        <field name="rules_regulation" nolabel="1"/>
+                        <separator string="Comments/Notes"/>
+                        <field name="notes" nolabel="1"/>
                     </page>
                     <page string="Room Booking">
                         <field name="event_book_ids">
