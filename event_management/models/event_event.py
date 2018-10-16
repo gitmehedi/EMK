@@ -21,6 +21,14 @@ class EventEvent(models.Model):
             record.total_seat_available = sum([rec.seat_no for rec in record.event_book_ids])
 
 
+    @api.multi
+    @api.constrains('date_begin')
+    def _check_date_begin(self):
+        dt = fields.Date.today()
+        if self.date_begin < dt:
+            raise ValidationError(_("Event Start Date cannot be past day from current date"))
+
+
 class EventRegistration(models.Model):
     _inherit = 'event.registration'
     _order='id desc'
