@@ -28,7 +28,7 @@
         'views/event_type_view.xml',
         'views/event_room_view.xml',
         'views/event_room_book_view.xml',
-        'views/event_task_type.xml',
+        'views/event_task_type_view.xml',
         'views/event_event_view.xml',
         'views/event_registration_view.xml',
         'views/event_task_list_view.xml',

@@ -12,9 +12,17 @@ class EventEvent(models.Model):
     total_seat_available = fields.Integer(string="Total Seat Available", compute='compute_total_seat')
     event_book_ids = fields.One2many('event.room.book', 'event_id', string='Event Rooms')
     event_task_ids = fields.One2many('event.task.list', 'event_id', string='Event Tasks')
-    date_begin = fields.Datetime(
-        string='Start Date', required=True,
-        track_visibility='onchange', states={'confirm': [('readonly', True)],'done': [('readonly', True)]})
+    date_begin = fields.Datetime(string='Start Date', required=True,
+                                 track_visibility='onchange',
+                                 states={'confirm': [('readonly', True)], 'done': [('readonly', True)]})
+
+    payment_type = fields.Selection([('free', 'Free'), ('paid', 'Paid')], default='free', string='Type')
+    mode_of_payment = fields.Selection([('free', 'Free'), ('paid', 'Paid')], default='free', string='Type')
+    paid_amount = fields.Float(string='Paid Amount', digits=(12, 2))
+    refundable_amount = fields.Float(string='Refundable Amount', digits=(12, 2))
+    rules_regulation = fields.Html(string='Rules and Regulation')
+    date_of_payment = fields.Date(string="Expected Date for Payment")
+    notes = fields.Html(string="Comments/Notes")
 
     @api.depends('event_book_ids')
     def compute_total_seat(self):
@@ -32,14 +40,13 @@ class EventEvent(models.Model):
 
 class EventRegistration(models.Model):
     _inherit = 'event.registration'
-    _order='id desc'
+    _order = 'id desc'
 
     temp_seq_name = fields.Char(string='Sequence Name')
     date_of_birth = fields.Date(string='Date of Birth', required=True)
     gender = fields.Selection([('male', 'Male'), ('female', 'Female')], required=True,
                               default='male', string='Gender')
     profession = fields.Char(string='Profession', required=True, default=False)
-
 
     @api.model
     def create(self, vals):
@@ -48,4 +55,3 @@ class EventRegistration(models.Model):
             sequence = self.env['ir.sequence'].next_by_code('event.attendee') or 'New'
             registration.write({'temp_seq_name': sequence})
         return registration
-
