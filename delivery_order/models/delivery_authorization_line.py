@@ -10,10 +10,10 @@ class DeliveryAuthorizationLine(models.Model):
     product_id = fields.Many2one('product.product', string="Product", readonly=True, ondelete='cascade')
     uom_id = fields.Many2one('product.uom', string="UoM", ondelete='cascade', readonly=True)
     pack_type = fields.Many2one('product.packaging.mode', string="Packing", ondelete='cascade', readonly=True)
-    quantity = fields.Float(string="Ordered Qty", readonly=True, required=True, default=1,digits=dp.get_precision('Product Price'))
+    quantity = fields.Float(string="Ordered Qty", readonly=True, required=True, default=1)
     price_unit = fields.Float(string="Price Unit", readonly=True,digits=dp.get_precision('Product Price'))
-    commission_rate = fields.Float(string="Commission", readonly=True,digits=dp.get_precision('Product Price'))
-    price_subtotal = fields.Float(string="Subtotal", readonly=True,digits=dp.get_precision('Product Price'))
+    commission_rate = fields.Float(string="Commission", readonly=True)
+    price_subtotal = fields.Float(string="Subtotal", readonly=True)
     tax_id = fields.Many2one('account.tax', string='Tax', readonly=True)
 
     """ Relational Fields """
@@ -31,7 +31,7 @@ class DeliveryAuthorizationLine(models.Model):
         ('vat', 'VAT'),
     ], string='Delivery Mode')
 
-    delivery_qty = fields.Float(string='Delivery Qty',digits=dp.get_precision('Product Price'))
+    delivery_qty = fields.Float(string='Delivery Qty')
 
     sale_order_id = fields.Many2one('sale.order',string='Sale Order',readonly=True,)
 
